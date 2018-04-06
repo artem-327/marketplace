@@ -1,0 +1,199 @@
+@import url(https://fonts.googleapis.com/css?family=Cabin:300,400,500,600,700);
+.LandingPage {
+  font-family: "Cabin", sans-serif; }
+  .LandingPage .landing-wr {
+    width: 80%;
+    margin: auto;
+    position: relative; }
+  .LandingPage header {
+    background: url("/img/static/landingPage/landing-page-header.png") no-repeat center center;
+    background-size: cover; }
+    .LandingPage header .left {
+      color: #222830;
+      width: 40%;
+      padding: 150px 0 120px 0;
+      margin: 0; }
+      .LandingPage header .left h1 {
+        font-weight: 600;
+        line-height: 1.3;
+        max-width: 500px;
+        font-size: 2.3em; }
+      .LandingPage header .left p {
+        font-size: 1.1em;
+        line-height: 1.4; }
+      .LandingPage header .left a {
+        margin-top: 20px;
+        display: inline-block; }
+    .LandingPage header .right {
+      position: absolute;
+      right: -50px;
+      bottom: -170px;
+      width: 45%;
+      min-width: 600px; }
+      .LandingPage header .right img {
+        width: 100%; }
+  .LandingPage .info {
+    background-color: #df4449;
+    padding: 100px 0; }
+    .LandingPage .info h1 {
+      color: white;
+      margin: 0;
+      font-weight: 600; }
+    .LandingPage .info p {
+      color: white;
+      width: 80%;
+      line-height: 1.4;
+      font-size: 1.1em;
+      margin-bottom: 0; }
+  .LandingPage .options {
+    background-color: #c44044;
+    padding: 100px 0 70px 0; }
+    .LandingPage .options .option {
+      width: 50%;
+      float: left;
+      color: white;
+      position: relative;
+      min-height: 150px; }
+      .LandingPage .options .option .left {
+        height: 100px;
+        width: 100px;
+        margin-right: 20px;
+        border-radius: 10px;
+        background-color: #af393d;
+        position: absolute; }
+        .LandingPage .options .option .left img {
+          width: 55%;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          max-height: 58px;
+          transform: translate(-50%, -50%); }
+      .LandingPage .options .option .right {
+        margin-right: 25px;
+        padding-left: 110px;
+        display: inline-block;
+        vertical-align: top; }
+        .LandingPage .options .option .right h4 {
+          margin: 0 0 10px 0;
+          font-weight: bold; }
+        .LandingPage .options .option .right p {
+          line-height: 1.2;
+          margin: 0; }
+  .LandingPage .stats {
+    padding: 50px 0;
+    background: #222830 url("/img/static/landingPage/landing-page-stats.png") no-repeat center center;
+    background-size: cover; }
+    .LandingPage .stats .item {
+      float: left;
+      width: 33%;
+      text-align: center;
+      color: white; }
+      .LandingPage .stats .item h1 {
+        margin: 10px 0 10px 0;
+        font-weight: 600;
+        font-size: 2.8em; }
+      .LandingPage .stats .item p {
+        margin: 0; }
+  .LandingPage .form-place {
+    background-color: #222830;
+    color: white;
+    padding: 50px 0; }
+    .LandingPage .form-place h1 {
+      font-weight: 600; }
+    .LandingPage .form-place h2 {
+      color: #df4449;
+      font-size: 1.8em; }
+    .LandingPage .form-place p {
+      font-size: 1em;
+      margin: 35px 0;
+      line-height: 1.4; }
+    .LandingPage .form-place .left {
+      display: inline-block;
+      width: 50%; }
+      .LandingPage .form-place .left form input {
+        width: 100%;
+        padding: 10px 0;
+        margin-bottom: 10px;
+        border: none;
+        border-bottom: 1px solid #666666;
+        background-color: transparent;
+        color: white;
+        transition: all .2s ease; }
+        .LandingPage .form-place .left form input:hover {
+          border-color: #e35a5e; }
+        .LandingPage .form-place .left form input:focus {
+          border-color: #df4449; }
+      .LandingPage .form-place .left form button {
+        transition: all .2s ease; }
+      .LandingPage .form-place .left form button:hover {
+        transform: translateY(-3px);
+        background-color: #e35a5e; }
+      .LandingPage .form-place .left form label {
+        font-size: .8em; }
+      .LandingPage .form-place .left form .phone {
+        width: 35%;
+        display: inline-block;
+        float: right; }
+      .LandingPage .form-place .left form .email {
+        display: inline-block;
+        width: 60%; }
+    .LandingPage .form-place .right {
+      float: right;
+      width: 40%; }
+      .LandingPage .form-place .right .form-info {
+        margin: 50px auto 0 auto;
+        display: inline-block;
+        padding: 18px 0;
+        border-top: 3px solid #df4449;
+        border-bottom: 3px solid #df4449; }
+        .LandingPage .form-place .right .form-info .tel, .LandingPage .form-place .right .form-info .mail {
+          padding-left: 50px;
+          position: relative; }
+          .LandingPage .form-place .right .form-info .tel a, .LandingPage .form-place .right .form-info .mail a {
+            color: #df4449;
+            text-decoration: none; }
+            .LandingPage .form-place .right .form-info .tel a:hover, .LandingPage .form-place .right .form-info .mail a:hover {
+              color: #e35a5e; }
+        .LandingPage .form-place .right .form-info .tel::before, .LandingPage .form-place .right .form-info .mail::before {
+          width: 30px;
+          height: 30px;
+          content: '';
+          position: absolute;
+          left: 0;
+          top: -5px; }
+        .LandingPage .form-place .right .form-info .tel::before {
+          background: url("/img/static/landingPage/landing-phone.png") no-repeat center center;
+          background-size: contain; }
+        .LandingPage .form-place .right .form-info .mail::before {
+          background: url("/img/static/landingPage/landing-mail.png") no-repeat center center;
+          background-size: contain; }
+  @media (max-width: 1080px) {
+    .LandingPage header .right {
+      min-width: 450px; }
+    .LandingPage header .left {
+      width: 100%; }
+    .LandingPage .landing-wr {
+      width: 90%; }
+    .LandingPage .info p {
+      width: 100%; }
+    .LandingPage .info h1 {
+      width: 100%;
+      line-height: 1.3; }
+    .LandingPage .options .option {
+      width: 100%;
+      margin-bottom: 20px; }
+    .LandingPage .stats .item {
+      width: 100%;
+      margin: 15px 0; }
+    .LandingPage .form-place h1 {
+      line-height: 1.4; }
+    .LandingPage .form-place .left {
+      width: 100%; }
+    .LandingPage .form-place .right {
+      width: 100%;
+      text-align: center; }
+    .LandingPage .form-place .form-info h2 {
+      font-size: 1.4em; } }
+  @media (max-width: 700px) {
+    .LandingPage header .right {
+      display: none; } }
