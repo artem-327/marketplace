@@ -1,0 +1,6 @@
+@import url(https://fonts.googleapis.com/css?family=Cabin:300,400,500,600,700);
+.App-filter {
+  padding: 15px;
+  background-color: gray; }
+  .App-filter .small-inputs input {
+    width: 100px; }

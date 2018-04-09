@@ -6,13 +6,19 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom'
 // import { Router, Route, IndexRoute, hashHistory } from "react-router";
+import {Switch, Route} from 'react-router-dom';
 import registerServiceWorker from './registerServiceWorker';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import Dashboard from "./pages/dashboard";
+import Login from './pages/login'
 
 ReactDOM.render(
     <BrowserRouter>
         <Provider store={store}>
-            <App />
+            <Switch>
+                <Route exact path="/login" component={Login}/>
+                <Route path="/" component={App}/>
+            </Switch>
         </Provider>
     </BrowserRouter>, document.getElementById('root'));
 registerServiceWorker();

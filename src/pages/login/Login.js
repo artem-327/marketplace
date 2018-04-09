@@ -7,9 +7,8 @@ import './login.css'
 const Login = props => {
     return <div className="Login">
         <div className="form-wr">
-            <img src="/img/static/logo-top.png" alt="APPYMARCO"/>
             <div className="form-place">
-                <h1 className="form-header">Přihlášení</h1>
+                <h1 className="form-header">Login to PRODEX</h1>
                 <Form {...props} />
             </div>
         </div>

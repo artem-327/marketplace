@@ -7,24 +7,24 @@ export default class LoginForm extends React.Component {
 
     handleSubmit(input) {
         this.props.login(input.email, input.password).then(()=>{
-            this.props.history.push("/admin");
+            this.props.history.push("/dashboard");
         })
     }
 
     render() {
         let { isFetching, hasError } = this.props.formStatus;
-        let butLogin = isFetching ? "Přihlašování ...": "Přihlásit se!";
+        let butLogin = isFetching ? "Logging ...": "Login!";
 
         return (
             <Form model="forms.loginForm" onSubmit={(val) => this.handleSubmit(val)}>
                 <label  htmlFor="forms.loginForm.email">Email</label>
                 <Control.text model="forms.loginForm.email" />
-                <label htmlFor="forms.loginForm.password">Heslo</label>
+                <label htmlFor="forms.loginForm.password">Password</label>
                 <Control.password model="forms.loginForm.password" />
                 <div className="form-middle">
                 <button className={classnames({"not-valid": hasError},{"loading": isFetching})} >{butLogin}</button>
             </div>
-                <Link className="form-link" to="#" >Zapomenuté heslo</Link>
+                <Link className="form-link" to="#" >Forgotten password</Link>
             </Form>
         );
     }

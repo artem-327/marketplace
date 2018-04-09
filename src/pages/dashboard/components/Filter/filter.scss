@@ -1,0 +1,18 @@
+@import url(https://fonts.googleapis.com/css?family=Cabin:300,400,500,600,700);
+
+$nav-background: rgba(34, 40, 48, 0.85);
+$nav-hover: rgba(34, 40, 48, 1);
+$filter-background-color: gray;
+$font-family: 'Cabin', sans-serif;
+
+$break-tablet: 1025px;
+
+.App-filter{
+  padding: 15px;
+  background-color: $filter-background-color;
+  .small-inputs{
+    input {
+      width: 100px;
+    }
+  }
+}
