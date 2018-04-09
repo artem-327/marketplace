@@ -1,18 +1,13 @@
 import React, { Component } from 'react';
 
+import Nav from '../components/Nav/Nav'
+
 class Header extends Component {
     render() {
         return (
-            <div>
-                {/*<Logo/>*/}
-                {/*<Menu/>*/}
-                {/*<Search/>*/}
-                {/*<Support/>*/}
-                {/*<Profile/>*/}
+            <div className="App-header">
+                <Nav/>
             </div>
-            // <header className="App-header">
-            //     <h1 className="App-title">Welcome to React</h1>
-            // </header>
         );
     }
 }

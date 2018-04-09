@@ -1,16 +1,11 @@
 import React, {Component} from 'react';
 import {startAnimation} from 'react-countup'
 
-import Header from './components/Header'
-import Info from './components/Info'
-import Options from './components/Options';
-import Stats from './components/Stats'
-import FormPlace from './components/FormPlace'
-import './dashboard.css'
+import './reports.css'
 
-import Filter from './components/Filter/Filter'
 
-class Dashboard extends Component {
+
+class Reports extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -43,9 +38,9 @@ class Dashboard extends Component {
     render() {
         return (
             <div className="LandingPage">
-                <Filter/>
+
                 <p>
-                DASHBOARD
+                Reports
                 </p>
                 {/*<Header />*/}
                 {/*<Info/>*/}
@@ -57,5 +52,5 @@ class Dashboard extends Component {
     }
 }
 
-export default Dashboard;
+export default Reports;
 

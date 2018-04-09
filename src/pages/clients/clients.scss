@@ -118,8 +118,8 @@ $break-phone: 700px;
   }
   .stats{
     padding: 50px 0;
-    background: $form-place-background url("/img/static/landingPage/landing-page-stats.png") no-repeat center center;
     background-size: cover;
+    background-color: black;
     .item{
       float: left;
       width: 33%;

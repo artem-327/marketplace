@@ -83,8 +83,8 @@
           margin: 0; }
   .LandingPage .stats {
     padding: 50px 0;
-    background: #222830 url("/img/static/landingPage/landing-page-stats.png") no-repeat center center;
-    background-size: cover; }
+    background-size: cover;
+    background-color: black; }
     .LandingPage .stats .item {
       float: left;
       width: 33%;
