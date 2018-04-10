@@ -44,8 +44,8 @@ class Dashboard extends Component {
         return (
             <div className="LandingPage">
                 <Filter/>
-                <p>
-                DASHBOARD
+                <p >
+                   Dashboard
                 </p>
                 {/*<Header />*/}
                 {/*<Info/>*/}
