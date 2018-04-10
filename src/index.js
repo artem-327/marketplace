@@ -11,7 +11,9 @@ import registerServiceWorker from './registerServiceWorker';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Dashboard from "./pages/dashboard";
 import Login from './pages/login'
+import axios from "axios";
 
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 ReactDOM.render(
     <BrowserRouter>
         <Provider store={store}>

@@ -7,7 +7,7 @@ export default class LoginForm extends React.Component {
 
     handleSubmit(input) {
         this.props.login(input.email, input.password).then(()=>{
-            this.props.history.push("/dashboard");
+            this.props.history.push("/");
         })
     }
 

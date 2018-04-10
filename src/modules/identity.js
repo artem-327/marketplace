@@ -45,7 +45,7 @@ export default function reducer(state = initialState, action) {
                     isFetching: false,
                     hasError: false,
                     isValid: true,
-                    data: action.data.payload
+                    // data: action.data
                 }
             }
         }
@@ -69,20 +69,15 @@ export function login(email, password){
         type: LOGIN,
         payload: axios({
             method: 'post',
-            url: "/api/v1/auth/login",
+            url: "/api/v1/auth/login/",
             data:{
                 email: email,
                 password: password
             }
         }).then((response) => {
-            setAuthToken(response.data.token);
+            setAuthToken(response.data.data.token);
             return jwt.decode(localStorage.jwtoken);
         })
-        // payload: (function () {
-        //     var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6NDAwNC9hcGkvbG9naW4iLCJpYXQiOjE1MjMxOTMyNjMsImV4cCI6MTUyMzE5Njg2MywibmJmIjoxNTIzMTkzMjYzLCJqdGkiOiJqVVo5RFR1dU5IRmNMcEpIIn0.5D7waelVs3z3mN8m1dPV99akDSPrrOBTPCks90on4v4";
-        //     setAuthToken(token);
-        //     return jwt.decode(token);
-        // })()
     }
 
 }
