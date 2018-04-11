@@ -1,0 +1,68 @@
+@import url(https://fonts.googleapis.com/css?family=Cabin:300,400,500,600,700);
+.App-data-table {
+  margin-top: 20px;
+  margin-bottom: 20px; }
+  .App-data-table .product-header {
+    color: white;
+    background-color: #2e363a; }
+    .App-data-table .product-header .product-name {
+      display: block;
+      padding-top: 5px;
+      float: left; }
+    .App-data-table .product-header .product-id {
+      display: block;
+      padding-top: 5px;
+      color: #289ada;
+      font-weight: bold;
+      font-size: 17px; }
+  .App-data-table .product-options .product-options-button {
+    display: inline;
+    cursor: pointer;
+    color: white;
+    padding-right: 20px;
+    background-color: #2e363a;
+    border: 1px solid #2e363a; }
+  .App-data-table .product-options .product-options-button:hover {
+    background-color: #289ada;
+    border: 1px solid #289ada; }
+  .App-data-table .product-options .calculate-delivery-popup {
+    width: 200px;
+    display: block;
+    float: right;
+    background-color: gray; }
+    .App-data-table .product-options .calculate-delivery-popup .delivery-popup-item {
+      padding-top: 10px; }
+      .App-data-table .product-options .calculate-delivery-popup .delivery-popup-item select {
+        background-color: #3d464b;
+        border: 1px solid #3d464b;
+        height: 40px;
+        border-radius: 0px;
+        color: white;
+        width: 88%; }
+      .App-data-table .product-options .calculate-delivery-popup .delivery-popup-item button {
+        width: 88%;
+        height: 40px; }
+  .App-data-table .data-table .data-table-header {
+    display: inline;
+    float: left;
+    width: 100%; }
+    .App-data-table .data-table .data-table-header .data-table-header-item {
+      display: block;
+      float: left;
+      width: 110px;
+      font-weight: bold;
+      font-size: 16px; }
+  .App-data-table .data-table .data-table-line {
+    width: 100%; }
+    .App-data-table .data-table .data-table-line hr {
+      position: relative;
+      top: 30px; }
+  .App-data-table .data-table .data-table-body {
+    display: inline;
+    float: left;
+    width: 100%;
+    margin-top: 20px; }
+    .App-data-table .data-table .data-table-body .data-table-body-item {
+      display: block;
+      float: left;
+      width: 110px; }
