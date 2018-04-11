@@ -1,14 +1,8 @@
 import React, {Component} from 'react';
 import {startAnimation} from 'react-countup'
 
-import Header from './components/Header'
-import Info from './components/Info'
-import Options from './components/Options';
-import Stats from './components/Stats'
-import FormPlace from './components/FormPlace'
 import './dashboard.css'
 
-import Filter from './components/Filter/Filter'
 
 class Dashboard extends Component {
     constructor(props) {
@@ -43,15 +37,9 @@ class Dashboard extends Component {
     render() {
         return (
             <div className="LandingPage">
-                <Filter/>
                 <p >
                    Dashboard
                 </p>
-                {/*<Header />*/}
-                {/*<Info/>*/}
-                {/*<Options/>*/}
-                {/*<Stats callbackParent={(childrenRef) => this.setState({statsRef:childrenRef}) }/>*/}
-                {/*<FormPlace {...this.props}/>*/}
             </div>
         );
     }
