@@ -1,0 +1,105 @@
+@import url(https://fonts.googleapis.com/css?family=Cabin:300,400,500,600,700);
+
+$nav-background: rgba(34, 40, 48, 0.85);
+$nav-hover: rgba(34, 40, 48, 1);
+$data-table-header-background: #2e363a;
+$data-table-header-color : white;
+$data-table-header-margin: 5px;
+$filter-save-search: #289ada;
+$data-table-id-colour :#289ada;
+$set-alerts-background : #899399;
+$filter-input-button-height: 40px;
+$data-table-margin-top: 20px;
+$data-table-margin-bottom: 20px;
+$data-table-hr-margin: 30px;
+$font-family: 'Cabin', sans-serif;
+
+$break-tablet: 1025px;
+
+.App-data-table{
+  margin-top: $data-table-margin-top;
+  margin-bottom:  $data-table-margin-bottom;
+  .product-header{
+    color: $data-table-header-color;
+    background-color: $data-table-header-background;
+    .product-name{
+      display: block;
+      padding-top: $data-table-header-margin;
+      float: left;
+    }
+    .product-id{
+      display: block;
+      padding-top: $data-table-header-margin;
+      color:$data-table-id-colour;
+      font-weight: bold;
+      font-size: 17px;
+    }
+  }
+  .product-options{
+    .product-options-button{
+      display:inline;
+      cursor: pointer;
+      color: $data-table-header-color;
+      padding-right: 20px;
+      background-color: $data-table-header-background;
+      border: 1px solid $data-table-header-background;
+    }
+    .product-options-button:hover{
+      background-color: $data-table-id-colour;
+      border: 1px solid $data-table-id-colour;
+    }
+    .calculate-delivery-popup{
+      width: 200px;
+      display: block;
+      float: right;
+      background-color: gray;
+      .delivery-popup-item{
+        padding-top: 10px;
+        select{
+          background-color: #3d464b;
+          border: 1px solid #3d464b;
+          height: 40px;
+          border-radius: 0px;
+          color: white;
+          width:88%;
+        }
+        button{
+          width:88%;
+          height: 40px;
+        }
+      }
+    }
+  }
+  .data-table{
+    .data-table-header{
+      display: inline;
+      float: left;
+      width: 100%;
+      .data-table-header-item{
+        display: block;
+        float: left;
+        width: 110px;
+        font-weight: bold;
+        font-size: 16px;
+      }
+    }
+    .data-table-line{
+      width: 100%;
+      hr{
+        position: relative;
+        top: $data-table-hr-margin;
+      }
+    }
+    .data-table-body{
+      display: inline;
+      float: left;
+      width: 100%;
+      margin-top: $data-table-margin-top;
+      .data-table-body-item{
+        display: block;
+        float: left;
+        width: 110px;
+      }
+    }
+  }
+}
