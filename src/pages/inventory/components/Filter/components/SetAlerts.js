@@ -3,11 +3,6 @@ import filterEye from '../../../../../images/filter-eye.png'
 
 class SetAlerts extends Component {
 
-    constructor(props) {
-        super(props);
-
-    }
-
     changeSetAlerts() {
         this.props.onChange()
     }
@@ -24,7 +19,7 @@ class SetAlerts extends Component {
                     <div className="col-lg-9 col-md-9 col-sm-9">
                     </div>
                     <div className="col-lg-1 col-md-1 col-sm-1">
-                        <img src={filterEye}/>
+                        <img alt="Filter" src={filterEye}/>
                     </div>
                 </div>
                 <div className="row filter-set-alerts-form">

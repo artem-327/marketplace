@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {startAnimation} from 'react-countup'
 import Filter from './components/Filter'
 import DataTable from './components/DataTable'
 import './inventory.css'

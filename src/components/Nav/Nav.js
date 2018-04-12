@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom'
 import { Motion, spring } from "react-motion"
 
-import {scrollToComponent} from '../../utils/scroll'
-
 import './nav.css'
 
 import logo from '../../images/logo.png';
@@ -92,7 +90,7 @@ class Nav extends Component {
             <div className="nav-inside guest">
                 <div className="nav-wr">
                     <div className="nav-image">
-                        <Link to="/" onClick={() => {this.changeNavState("dashboard")}}><img src={logo}/></Link>
+                        <Link to="/" onClick={() => {this.changeNavState("dashboard")}}><img alt="Logo" src={logo}/></Link>
                     </div>
                     <div className="nav-options">{questLinks}</div>
                     <div className="nav-search">

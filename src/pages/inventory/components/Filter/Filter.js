@@ -4,9 +4,9 @@ import React, {Component} from 'react';
 import './filter.css'
 import lessFilter from '../../../../images/less_filter.png'
 import moreFilter from '../../../../images/more_filter.png'
-import filterEye from '../../../../images/filter-eye.png'
 import SetAlerts from './components/SetAlerts'
 import SaveSearch from './components/SaveSearch'
+import FilterInput from './components/FilterInput'
 
 class Filter extends Component {
     constructor(props) {
@@ -66,9 +66,9 @@ class Filter extends Component {
 
         const small_filter_input = isScreenBig ? "row small-inputs" :  "row" ;
 
-        let set_alert_component = setAlerts? <SetAlerts onClick={()=>{this.changeSetAlerts()}}/> : <div></div>;
+        let set_alert_component = setAlerts? <SetAlerts onClick={()=>{this.changeSetAlerts()}}/> : '';
 
-        let save_search_component = saveSearch ? <SaveSearch onClick={()=>{this.changeSaveSearchAlerts()}}/> : <div></div>;
+        let save_search_component = saveSearch ? <SaveSearch onClick={()=>{this.changeSaveSearchAlerts()}}/> : '';
 
 
         let filter =
@@ -76,38 +76,38 @@ class Filter extends Component {
             <div>
                 <div className="row">
                     <div className="col-lg-2 col-md-12 col-sm-12">
-                        <input placeholder="Chemical name or CAS #"></input>
+                        <FilterInput placeholder="Chemical name or CAS #"/>
                     </div>
                     <div className="col-lg-2 col-md-12 col-sm-12">
                         <div className={small_filter_input}>
                             <div className="col-lg-6 col-md-6 col-sm-6">
-                                <input placeholder="Qty from"></input>
+                                <FilterInput placeholder="Qty from"/>
                             </div>
                             <div className="col-lg-6 col-md-6 col-sm-6">
-                                <input placeholder="Qty to"></input>
+                                <FilterInput placeholder="Qty to"/>
                             </div>
                         </div>
                     </div>
                     <div className="col-lg-2 col-md-12 col-sm-12">
                         <div className={small_filter_input}>
                             <div className="col-lg-6 col-md-6 col-sm-6">
-                                <input placeholder="$ from"></input>
+                                <FilterInput placeholder="$ from"/>
                             </div>
                             <div className="col-lg-6 col-md-6 col-sm-6">
-                                <input placeholder="$ to"></input>
+                                <FilterInput placeholder="$ to"/>
                             </div>
                         </div>
                     </div>
                     <div className="col-lg-2 col-md-12 col-sm-12">
                         <div className={small_filter_input}>
                             <div className="col-lg-5 col-md-5 col-sm-12">
-                                <input placeholder="100 mi."></input>
+                                <FilterInput placeholder="100 mi."/>
                             </div>
                             <div className="col-lg-1 col-md-1 col-sm-12">
                                 <span className="filter-of-description">OF</span>
                             </div>
                             <div className="col-lg-4 col-md-4 col-sm-12">
-                                <input placeholder="95472"></input>
+                                <FilterInput placeholder="95472"/>
                             </div>
                         </div>
                     </div>
@@ -173,7 +173,7 @@ class Filter extends Component {
                 {save_search_component}
                 <div className="row">
                     <div className="col-lg-12 col-md-12 col-sm-12">
-                       <img className="more-filters-button" src={lessFilter} onClick={() => {this.changeFilter()}}/>
+                       <img alt="more-filters" className="more-filters-button" src={lessFilter} onClick={() => {this.changeFilter()}}/>
                     </div>
                 </div>
             </div>
@@ -181,38 +181,38 @@ class Filter extends Component {
                 <div>
                     <div className="row">
                         <div className="col-lg-2 col-md-12 col-sm-12">
-                            <input placeholder="Chemical name or CAS #"></input>
+                            <FilterInput placeholder="Chemical name or CAS #"/>
                         </div>
                         <div className="col-lg-2 col-md-12 col-sm-12">
                             <div className={small_filter_input}>
                                 <div className="col-lg-6 col-md-6 col-sm-12">
-                                    <input placeholder="Qty from"></input>
+                                    <FilterInput placeholder="Qty from"/>
                                 </div>
                                 <div className="col-lg-6 col-md-6 col-sm-12">
-                                    <input placeholder="Qty to"></input>
+                                    <FilterInput placeholder="Qty to"/>
                                 </div>
                             </div>
                         </div>
                         <div className="col-lg-2 col-md-12 col-sm-12">
                             <div className={small_filter_input}>
                                 <div className="col-lg-6 col-md-6 col-sm-12">
-                                    <input placeholder="$ from"></input>
+                                    <FilterInput placeholder="$ from"/>
                                 </div>
                                 <div className="col-lg-6 col-md-6 col-sm-12">
-                                    <input placeholder="$ to"></input>
+                                    <FilterInput placeholder="$ to"/>
                                 </div>
                             </div>
                         </div>
                         <div className="col-lg-2 col-md-12 col-sm-12">
                             <div className={small_filter_input}>
                                 <div className="col-lg-5 col-md-5 col-sm-12">
-                                    <input placeholder="100 mi."></input>
+                                    <FilterInput placeholder="100 mi."/>
                                 </div>
                                 <div className="col-lg-1 col-md-1 col-sm-12">
                                     <span className="filter-of-description">OF</span>
                                 </div>
                                 <div className="col-lg-4 col-md-4 col-sm-12">
-                                    <input placeholder="95472"></input>
+                                    <FilterInput placeholder="95472"/>
                                 </div>
                             </div>
                         </div>
@@ -227,7 +227,7 @@ class Filter extends Component {
                     {save_search_component}
                     <div className="row">
                         <div className="col-lg-12 col-md-12 col-sm-12">
-                            <img className="more-filters-button" src={moreFilter} onClick={() => {this.changeFilter()}}/>
+                            <img alt="more-filters" className="more-filters-button" src={moreFilter} onClick={() => {this.changeFilter()}}/>
                         </div>
                     </div>
                 </div>;
