@@ -4,10 +4,6 @@ import settingsLogo from '../../../../../images/settings.png'
 
 class TableItem extends Component {
 
-    constructor(props) {
-        super(props);
-
-    }
     render() {
         return (
                 <div className="data-table-body">
@@ -51,7 +47,7 @@ class TableItem extends Component {
                         Net 30
                     </span>
                         <span>
-                        <img src={settingsLogo}/>
+                        <img alt="Settings Logo" src={settingsLogo}/>
                     </span>
                 </div>
 

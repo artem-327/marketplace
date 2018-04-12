@@ -6,10 +6,6 @@ import calculateDeliveryLogo from '../../../../../images/calculate-delivery.png'
 
 class TableHeader extends Component {
 
-    constructor(props) {
-        super(props);
-
-    }
     render() {
         return (
             <div className="product-header">
@@ -26,10 +22,10 @@ class TableHeader extends Component {
                     </div>
                     <div className="col-lg-6 col-md-6 col-sm-12">
                         <div className="product-options">
-                            <button className="product-options-button"><img src={addInventoryLogo}/>Add Inventory</button>
-                            <button className="product-options-button"><img src={addFavouriteLogo}/>Add Favourite</button>
-                            <button className="product-options-button"><img src={showStatisticLogo}/>Add Show statistic</button>
-                            <button className="product-options-button"><img src={calculateDeliveryLogo}/>Calculate delivery price</button>
+                            <button className="product-options-button"><img alt="Button" src={addInventoryLogo}/>Add Inventory</button>
+                            <button className="product-options-button"><img alt="Button" src={addFavouriteLogo}/>Add Favourite</button>
+                            <button className="product-options-button"><img alt="Button" src={showStatisticLogo}/>Add Show statistic</button>
+                            <button className="product-options-button"><img alt="Button" src={calculateDeliveryLogo}/>Calculate delivery price</button>
                             {/*{calculate_delivery_component}*/}
                         </div>
                     </div>

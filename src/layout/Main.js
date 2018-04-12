@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {Switch, Route} from 'react-router-dom';
 
 import Dashboard from '../pages/dashboard'
-import Login from '../pages/login'
 import Inventory from "../pages/inventory/Inventory";
 import Orders from "../pages/orders/Orders";
 import Clients from "../pages/clients/Clients"

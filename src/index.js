@@ -9,7 +9,6 @@ import { BrowserRouter } from 'react-router-dom'
 import {Switch, Route} from 'react-router-dom';
 import registerServiceWorker from './registerServiceWorker';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import Dashboard from "./pages/dashboard";
 import Login from './pages/login'
 import axios from "axios";
 

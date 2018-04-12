@@ -4,10 +4,6 @@ import TableItem from './TableItem'
 
 class TableBody extends Component {
 
-    constructor(props) {
-        super(props);
-
-    }
     render() {
         return (
             <div className="data-table">
