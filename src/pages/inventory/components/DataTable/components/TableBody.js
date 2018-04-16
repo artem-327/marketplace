@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import TableItem from './TableItem'
 import {Translate} from 'react-localize-redux'
+import ItemPurchase from './ItemPurchase'
 
 class TableBody extends Component {
 
@@ -52,6 +53,7 @@ class TableBody extends Component {
                     <hr/>
                 </div>
                 <TableItem/>
+                <ItemPurchase/>
             </div>
         );
     }

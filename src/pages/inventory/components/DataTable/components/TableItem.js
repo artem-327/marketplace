@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import settingsLogo from '../../../../../images/settings.png'
+import threeDots from '../../../../../images/data-table/3dots.png'
 
 class TableItem extends Component {
 
@@ -47,7 +47,7 @@ class TableItem extends Component {
                         Net 30
                     </span>
                         <span>
-                        <img alt="Settings Logo" src={settingsLogo}/>
+                        <img alt="Settings Logo" src={threeDots}/>
                     </span>
                 </div>
 

@@ -62,13 +62,14 @@
     .App-nav .nav-inside .nav-search .nav-search-input {
       width: 30%;
       float: left;
-      background-color: #b5acac;
-      margin-top: 2%; }
+      margin-top: 2%;
+      background: url("../../images/nav/search.png") no-repeat scroll 7px 7px #b5acac;
+      background-position: right; }
     .App-nav .nav-inside .nav-search .nav-search-input::placeholder {
       color: white; }
     .App-nav .nav-inside .nav-profile {
       float: right;
-      width: 250px; }
+      width: 200px; }
       .App-nav .nav-inside .nav-profile a {
         color: white;
         padding: 23px 20px;
@@ -82,6 +83,10 @@
           text-decoration: none; }
       .App-nav .nav-inside .nav-profile .nav-menu-profile {
         display: inline; }
+      .App-nav .nav-inside .nav-profile span {
+        width: 100%s; }
+      .App-nav .nav-inside .nav-profile .nav-profile-arrow {
+        margin-left: 10px; }
   .App-nav .ham-position {
     position: absolute;
     right: 5%;

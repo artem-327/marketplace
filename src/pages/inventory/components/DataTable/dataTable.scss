@@ -3,6 +3,8 @@
 $nav-background: rgba(34, 40, 48, 0.85);
 $nav-hover: rgba(34, 40, 48, 1);
 $data-table-header-background: #2e363a;
+$purchase-background-color: #3b3e40;
+$purchase-detail-background-color: #43484b;
 $data-table-header-color : white;
 $data-table-header-margin: 5px;
 $filter-save-search: #289ada;
@@ -78,27 +80,84 @@ $break-tablet: 1025px;
       .data-table-header-item{
         display: block;
         float: left;
-        width: 110px;
+        width: 100px;
         font-weight: bold;
         font-size: 16px;
       }
     }
     .data-table-line{
       width: 100%;
+      height: 40px;
       hr{
         position: relative;
         top: $data-table-hr-margin;
       }
     }
     .data-table-body{
-      display: inline;
-      float: left;
       width: 100%;
-      margin-top: $data-table-margin-top;
       .data-table-body-item{
         display: block;
         float: left;
-        width: 110px;
+        width: 100px;
+      }
+    }
+    .item-purchase{
+      .purchase-title{
+        display: block;
+        color: $data-table-header-color;
+        background-color: $data-table-header-background;
+        font-size: 17px;
+        height: 40px;
+        span{
+          width: 150px;
+          display: block;
+          margin-left: 20px;
+          padding-top: 8px;
+        }
+      }
+      .purchase-product-header{
+        background-color: $purchase-background-color;
+        .purchase-options{
+          float: right;
+        }
+      }
+      .purchase-product-detail{
+        font-size: 13px;
+        color: white;
+        background-color: $purchase-detail-background-color;
+        display: inline-block;
+        height: 60px;
+        width: 100%;
+        padding: 10px;
+        .detail-item{
+          float: left;
+          margin-left: 20px;
+          width: 85px;
+          text-align: left;
+          display: block;
+          .detail-item-header{
+            display: block;
+          }
+          .detail-item-text{
+            display: block;
+            font-size: 16px;
+          }
+        }
+        .detail-item-long{
+          float: left;
+          margin-left: 20px;
+          width: 180px;
+          .detail-item-header{
+            display: block;
+          }
+          .detail-item-text{
+            display: block;
+            font-size: 16px;
+          }
+        }
+        .left-border-line{
+          border-right: 1px solid black;
+        }
       }
     }
   }

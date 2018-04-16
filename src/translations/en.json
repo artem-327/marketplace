@@ -33,7 +33,10 @@
     "conditions" : "Conditions",
     "manufacturers" : "Manufacturers",
     "setAlerts" : "SET ALERTS",
-    "saveSearch" : "SAVE SEARCH"
+    "saveSearch" : "SAVE SEARCH",
+    "selectSavedSearch": "Select Saved Search",
+    "moreFilters" : "More Filters",
+    "lessFilters" : "Less Filters"
   },
   "inventoryTable":{
     "header":{
@@ -43,7 +46,7 @@
       "calculateDeliveryPrice" : "Calculate delivery price"
     },
     "body" :{
-      "vendor" : "Vendor",
+      "vendor" : "VENDOR",
       "mfr" : "MFR.",
       "origin" : "ORIGIN",
       "quantity" : "QUANTITY",
@@ -55,7 +58,11 @@
       "location" : "LOCATION",
       "zipCode" : "ZIP CODE",
       "distance" : "DISTANCE",
-      "terms" : "TERMS"
+      "terms" : "TERMS",
+      "assay" : "ASSAY",
+      "zip" : "ZIP",
+      "packagingWeight" : "PACKAGING WEIGHT",
+      "totalProductAvailable" : "TOTAL PRODUCT AVAILABLE"
     }
   }
 }
