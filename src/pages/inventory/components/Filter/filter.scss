@@ -52,27 +52,53 @@ $break-tablet: 1025px;
     background-color: $filter-input-background-color;
   }
   .filter-set-alerts{
-    width: 100%;
+    width: 49%;
     height: $filter-input-button-height;
+    margin-right: 1%;
   }
   .filter-save-search{
-    width: 100%;
+    width: 49%;
+    margin-left: 1%;
     height: $filter-input-button-height;
     color: $filter-input-color;
     background-color:$filter-save-search;
     border : 1px solid $filter-save-search;
+  }
+  .smaller-lg-inputs{
+    max-width: 13%;
+  }
+  .filter-buttons{
+    max-width: 24%;
+  }
+  .filter-button-image{
+    margin-right: 15px;
   }
   .filter-of-description{
     height: $filter-input-button-height;
     display: block;
     padding-top: 10px;
   }
-  .more-filters-button{
-    position: relative;
-    top: 20px;
-  }
+
   .filter-another-row{
     margin-top: 20px;
+  }
+  .filter-input-div{
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  .more-filters{
+    background-color: #222222;
+    position: relative;
+    top: 20px;
+    .more-filters-button{
+      position: relative;
+      width: 150px;
+      left: 50%;
+      background-color: gray;
+      img{
+        margin-right: 10%;
+      }
+    }
   }
   .filter-set-alerts-div{
     background-color: $set-alerts-background;
@@ -108,5 +134,32 @@ $break-tablet: 1025px;
     }
   }
 
+
+}
+
+@media only screen and (max-width: 1025px)  {
+  .App-filter{
+    .filter-buttons{
+      max-width: 100%;
+    }
+    .filter-buttons{
+      width: 100%;
+    }
+    .filter-set-alerts{
+      width: 100% !important;
+      margin-right: 0;
+    }
+    .filter-save-search{
+      width: 100% !important;
+      margin-left: 0;
+    }
+    .smaller-lg-inputs{
+      max-width: 100%;
+    }
+    .filter-input-div{
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+  }
 
 }

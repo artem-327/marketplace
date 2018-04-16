@@ -89,8 +89,9 @@ $break-tablet: 1025px;
       .nav-search-input{
         width: 30%;
         float: left;
-        background-color: #b5acac;
         margin-top: 2%;
+        background:  url('../../images/nav/search.png') no-repeat scroll 7px 7px #b5acac;
+        background-position: right;
       }
       .nav-search-input::placeholder{
         color:$nav-color;
@@ -111,9 +112,15 @@ $break-tablet: 1025px;
         }
       }
       float: right;
-      width: 250px;
+      width: 200px;
       .nav-menu-profile{
         display: inline;
+      }
+      span{
+        width: 100%s;
+      }
+      .nav-profile-arrow{
+        margin-left: 10px;
       }
     }
   }

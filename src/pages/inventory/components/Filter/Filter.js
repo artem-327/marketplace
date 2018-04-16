@@ -2,8 +2,9 @@ import React, {Component} from 'react';
 
 
 import './filter.css'
-import lessFilter from '../../../../images/less_filter.png'
-import moreFilter from '../../../../images/more_filter.png'
+import moreFilter from '../../../../images/filter/more-filters.png'
+import setAlertsIcon from '../../../../images/filter/set-alerts.png'
+import saveSearchIcon from '../../../../images/filter/save-search.png'
 import SetAlerts from './components/SetAlerts'
 import SaveSearch from './components/SaveSearch'
 import FilterInput from './components/FilterInput'
@@ -78,30 +79,30 @@ class Filter extends Component {
                     {(translate) =>
                         <div>
                             <div className="row">
-                                <div className="col-lg-2 col-md-12 col-sm-12">
+                                <div className="filter-input-div smaller-lg-inputs col-lg-2 col-md-12 col-sm-12">
                                     <FilterInput placeholder={ translate('inventoryFilter.chemicalName') }/>
                                 </div>
-                                <div className="col-lg-2 col-md-12 col-sm-12">
+                                <div className="filter-input-div col-lg-2 col-md-12 col-sm-12">
                                     <div className={small_filter_input}>
-                                        <div className="col-lg-6 col-md-6 col-sm-6">
+                                        <div className="filter-input-div col-lg-6 col-md-6 col-sm-6">
                                             <FilterInput placeholder={ translate('inventoryFilter.QTYFrom') }/>
                                         </div>
-                                        <div className="col-lg-6 col-md-6 col-sm-6">
+                                        <div className="filter-input-div col-lg-6 col-md-6 col-sm-6">
                                             <FilterInput placeholder={ translate('inventoryFilter.QTYTo') }/>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-lg-2 col-md-12 col-sm-12">
+                                <div className="filter-input-div col-lg-2 col-md-12 col-sm-12">
                                     <div className={small_filter_input}>
-                                        <div className="col-lg-6 col-md-6 col-sm-6">
+                                        <div className="filter-input-div col-lg-6 col-md-6 col-sm-6">
                                             <FilterInput placeholder={ translate('inventoryFilter.dollarFrom') }/>
                                         </div>
-                                        <div className="col-lg-6 col-md-6 col-sm-6">
+                                        <div className="filter-input-div col-lg-6 col-md-6 col-sm-6">
                                             <FilterInput placeholder={ translate('inventoryFilter.dollarTo') }/>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-lg-2 col-md-12 col-sm-12">
+                                <div className="filter-input-div col-lg-2 col-md-12 col-sm-12">
                                     <div className={small_filter_input}>
                                         <div className="col-lg-5 col-md-5 col-sm-12">
                                             <FilterInput placeholder={ translate('inventoryFilter.100mi') }/>
@@ -114,7 +115,7 @@ class Filter extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-lg-2 col-md-12 col-sm-12">
+                                <div className="filter-input-div smaller-lg-inputs col-lg-2 col-md-12 col-sm-12">
                                     <select className="form-control filter-select">
                                         <option>{ translate('inventoryFilter.packing') }</option>
                                         <option>2</option>
@@ -122,7 +123,7 @@ class Filter extends Component {
                                         <option>4</option>
                                     </select>
                                 </div>
-                                <div className="col-lg-2 col-md-12 col-sm-12">
+                                <div className="filter-input-div smaller-lg-inputs col-lg-1 col-md-12 col-sm-12">
                                     <select className="form-control filter-select">
                                         <option>{ translate('inventoryFilter.grade') }</option>
                                         <option>2</option>
@@ -130,10 +131,17 @@ class Filter extends Component {
                                         <option>4</option>
                                     </select>
                                 </div>
-
+                                <div className="filter-input-div smaller-lg-inputs col-lg-2 col-md-12 col-sm-12">
+                                    <select className="form-control filter-select">
+                                        <option>{ translate('inventoryFilter.selectSavedSearch') }</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                                </div>
                             </div>
                             <div className="row filter-another-row">
-                                <div className="col-lg-2 col-md-12 col-sm-12">
+                                <div className="filter-input-div col-lg-2 col-md-12 col-sm-12">
                                     <select className="form-control filter-select">
                                         <option>{ translate('inventoryFilter.forms') }</option>
                                         <option>2</option>
@@ -141,7 +149,7 @@ class Filter extends Component {
                                         <option>4</option>
                                     </select>
                                 </div>
-                                <div className="col-lg-2 col-md-12 col-sm-12">
+                                <div className="filter-input-div col-lg-2 col-md-12 col-sm-12">
                                     <select className="form-control filter-select">
                                         <option>{ translate('inventoryFilter.conditions') }</option>
                                         <option>2</option>
@@ -149,7 +157,7 @@ class Filter extends Component {
                                         <option>4</option>
                                     </select>
                                 </div>
-                                <div className="col-lg-2 col-md-12 col-sm-12">
+                                <div className="filter-input-div col-lg-2 col-md-12 col-sm-12">
                                     <select className="form-control filter-select">
                                         <option>{ translate('inventoryFilter.origin') }</option>
                                         <option>2</option>
@@ -157,7 +165,7 @@ class Filter extends Component {
                                         <option>4</option>
                                     </select>
                                 </div>
-                                <div className="col-lg-2 col-md-12 col-sm-12">
+                                <div className="filter-input-div col-lg-2 col-md-12 col-sm-12">
                                     <select className="form-control filter-select">
                                         <option>{ translate('inventoryFilter.manufacturers') }</option>
                                         <option>2</option>
@@ -165,27 +173,26 @@ class Filter extends Component {
                                         <option>4</option>
                                     </select>
                                 </div>
-                                <div className="col-lg-2 col-md-12 col-sm-12">
+                                <div className="filter-input-div col-lg-4 col-md-12 col-sm-12">
                                     <button className="filter-set-alerts" onClick={() => {
                                         this.changeSetAlerts()
-                                    }}>{ translate('inventoryFilter.setAlerts') }
+                                    }}><img alt="set-alerts" src={setAlertsIcon} className="filter-button-image"/>{ translate('inventoryFilter.setAlerts') }
                                     </button>
-                                </div>
-                                <div className="col-lg-2 col-md-12 col-sm-12">
                                     <button className="filter-save-search" onClick={() => {
                                         this.changeSaveSearchAlerts()
-                                    }}>{ translate('inventoryFilter.saveSearch') }
+                                    }}><img alt="save-search" src={saveSearchIcon} className="filter-button-image"/>{ translate('inventoryFilter.saveSearch') }
                                     </button>
                                 </div>
                             </div>
                             {set_alert_component}
                             {save_search_component}
-                            <div className="row">
+                            <div className="row more-filters" onClick={() => {this.changeFilter()}}>
                                 <div className="col-lg-12 col-md-12 col-sm-12">
-                                    <img alt="more-filters" className="more-filters-button" src={lessFilter}
-                                         onClick={() => {
-                                             this.changeFilter()
-                                         }}/>
+                                    <div className="more-filters-button">
+                                        <img alt="more-filters" className="" src={moreFilter}
+                                        />
+                                        <Translate id="inventoryFilter.lessFilters"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -196,30 +203,30 @@ class Filter extends Component {
                     {(translate) =>
                         <div>
                             <div className="row">
-                                <div className="col-lg-2 col-md-12 col-sm-12">
+                                <div className="filter-input-div smaller-lg-inputs col-lg-2 col-md-12 col-sm-12">
                                     <FilterInput placeholder={ translate('inventoryFilter.chemicalName') }/>
                                 </div>
-                                <div className="col-lg-2 col-md-12 col-sm-12">
+                                <div className="filter-input-div col-lg-2 col-md-12 col-sm-12">
                                     <div className={small_filter_input}>
-                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                        <div className="filter-input-div col-lg-6 col-md-6 col-sm-12">
                                             <FilterInput placeholder={ translate('inventoryFilter.QTYFrom') }/>
                                         </div>
-                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                        <div className="filter-input-div col-lg-6 col-md-6 col-sm-12">
                                             <FilterInput placeholder={ translate('inventoryFilter.QTYTo') }/>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-lg-2 col-md-12 col-sm-12">
+                                <div className="filter-input-div col-lg-2 col-md-12 col-sm-12">
                                     <div className={small_filter_input}>
-                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                        <div className="filter-input-div col-lg-6 col-md-6 col-sm-12">
                                             <FilterInput placeholder={ translate('inventoryFilter.dollarFrom') }/>
                                         </div>
-                                        <div className="col-lg-6 col-md-6 col-sm-12">
+                                        <div className="filter-input-div col-lg-6 col-md-6 col-sm-12">
                                             <FilterInput placeholder={ translate('inventoryFilter.dollarTo') }/>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-lg-2 col-md-12 col-sm-12">
+                                <div className="filter-input-div col-lg-2 col-md-12 col-sm-12">
                                     <div className={small_filter_input}>
                                         <div className="col-lg-5 col-md-5 col-sm-12">
                                             <FilterInput placeholder={ translate('inventoryFilter.100mi') }/>
@@ -232,27 +239,34 @@ class Filter extends Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-lg-2 col-md-12 col-sm-12">
+                                <div className="filter-input-div smaller-lg-inputs col-lg-2 col-md-12 col-sm-12">
+                                    <select className="form-control filter-select">
+                                        <option>{ translate('inventoryFilter.selectSavedSearch') }</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                    </select>
+                                </div>
+                                <div className="filter-input-div filter-buttons col-md-12 col-sm-12">
                                     <button className="filter-set-alerts" onClick={() => {
                                         this.changeSetAlerts()
-                                    }}>{ translate('inventoryFilter.setAlerts') }
+                                    }}><img alt="set-alerts" src={setAlertsIcon} className="filter-button-image"/>{ translate('inventoryFilter.setAlerts') }
                                     </button>
-                                </div>
-                                <div className="col-lg-2 col-md-12 col-sm-12">
                                     <button className="filter-save-search" onClick={() => {
                                         this.changeSaveSearchAlerts()
-                                    }}>{ translate('inventoryFilter.saveSearch') }
+                                    }}><img alt="save-search" src={saveSearchIcon} className="filter-button-image"/>{ translate('inventoryFilter.saveSearch') }
                                     </button>
                                 </div>
                             </div>
                             {set_alert_component}
                             {save_search_component}
-                            <div className="row">
+                            <div className="row more-filters" onClick={() => {this.changeFilter()}}>
                                 <div className="col-lg-12 col-md-12 col-sm-12">
-                                    <img alt="more-filters" className="more-filters-button" src={moreFilter}
-                                         onClick={() => {
-                                             this.changeFilter()
-                                         }}/>
+                                    <div className="more-filters-button">
+                                        <img alt="more-filters" className="" src={moreFilter}
+                                             />
+                                        <Translate id="inventoryFilter.moreFilters"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
