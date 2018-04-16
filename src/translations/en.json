@@ -1,0 +1,53 @@
+{
+  "topMenu": {
+    "dashboard": "Dashboard",
+    "inventory": "Inventory",
+    "orders": "Orders",
+    "clients": "Clients",
+    "reports": "Reports",
+    "settings": "Settings",
+    "support": "Support",
+    "searchDots" : "Search..."
+  },
+  "inventoryFilter":{
+    "chemicalName" : "Chemical name or CAS #",
+    "QTYFrom" : "Qty from",
+    "QTYTo" : "Qty to",
+    "dollarFrom" : "$ from",
+    "dollarTo" : "$ to",
+    "100mi": "100 mi.",
+    "of" : "OF",
+    "95472" : "95472",
+    "packing" : "Packing",
+    "origin" : "Origin",
+    "grade" : "Grade",
+    "forms" : "Forms",
+    "conditions" : "Conditions",
+    "manufacturers" : "Manufacturers",
+    "setAlerts" : "SET ALERTS",
+    "saveSearch" : "SAVE SEARCH"
+  },
+  "inventoryTable":{
+    "header":{
+      "addInventory" : "Add Inventory",
+      "addFavourite" : "Add Favourite",
+      "addShowStatistic" : "Add Show statistic",
+      "calculateDeliveryPrice" : "Calculate delivery price"
+    },
+    "body" :{
+      "vendor" : "Vendor",
+      "mfr" : "MFR.",
+      "origin" : "ORIGIN",
+      "quantity" : "QUANTITY",
+      "fobPrice" : "FOB PRICE",
+      "exp" : "EXP.",
+      "condition" : "CONDITION",
+      "packing" : "PACKING",
+      "form" : "FORM",
+      "location" : "LOCATION",
+      "zipCode" : "ZIP CODE",
+      "distance" : "DISTANCE",
+      "terms" : "TERMS"
+    }
+  }
+}
