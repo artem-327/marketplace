@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Link} from 'react-router-dom'
 import { Motion, spring } from "react-motion"
-
+import { Translate } from 'react-localize-redux';
 import './nav.css'
 
 import logo from '../../images/logo.png';
@@ -70,16 +70,33 @@ class Nav extends Component {
         const hamStyle = menuOpen ? "hamburger hamburger-toggled" : "hamburger";
         const mobileStyle = menuOpen ? this.mobileNavStyleInit() : this.mobileNavStyleFinal();
         const questLinks = <div>
-            <Link to="/" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "dashboard" ? 'active': '' } onClick={() => {this.changeNavState("dashboard")}} > <div className="header-menu-item"> <img src={menuIcon} alt="Logo" /></div><span> Dashboard</span></Link>
-            <Link to="/inventory" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "inventory" ? 'active': '' } onClick={() => {this.changeNavState("inventory")}}> <div className="header-menu-item"> <img src={menuIcon} alt="Logo" /></div><span> Inventory</span></Link>
-            <Link to="/orders" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "orders" ? 'active': '' } onClick={() => {this.changeNavState("orders")}}> <div className="header-menu-item"> <img src={menuIcon} alt="Logo" /></div><span> Orders</span></Link>
-            <Link to="/clients" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "clients" ? 'active': '' } onClick={() => {this.changeNavState("clients")}}> <div className="header-menu-item"> <img src={menuIcon} alt="Logo" /></div><span> Clients</span></Link>
-            <Link to="/reports" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "reports" ? 'active': '' } onClick={() => {this.changeNavState("reports")}}> <div className="header-menu-item" > <img src={menuIcon} alt="Logo" /></div><span> Reports</span></Link>
-            <Link to="/settings" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "settings" ? 'active': '' } onClick={() => {this.changeNavState("settings")}}> <div className="header-menu-item"> <img src={menuIcon} alt="Logo" /></div><span> Settings</span></Link>
+            <Link to="/" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "dashboard" ? 'active': '' } onClick={() => {this.changeNavState("dashboard")}} > <div className="header-menu-item"> <img src={menuIcon} alt="Logo" /></div>
+                <span>
+                    <Translate id="topMenu.dashboard" ></Translate>
+                </span>
+            </Link>
+            <Link to="/inventory" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "inventory" ? 'active': '' } onClick={() => {this.changeNavState("inventory")}}> <div className="header-menu-item"> <img src={menuIcon} alt="Logo" /></div>
+                <span><Translate id="topMenu.inventory" ></Translate></span>
+            </Link>
+            <Link to="/orders" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "orders" ? 'active': '' } onClick={() => {this.changeNavState("orders")}}> <div className="header-menu-item"> <img src={menuIcon} alt="Logo" /></div>
+                <span> <Translate id="topMenu.orders" ></Translate>
+                </span>
+            </Link>
+            <Link to="/clients" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "clients" ? 'active': '' } onClick={() => {this.changeNavState("clients")}}> <div className="header-menu-item"> <img src={menuIcon} alt="Logo" /></div>
+                <span> <Translate id="topMenu.clients" ></Translate></span>
+            </Link>
+            <Link to="/reports" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "reports" ? 'active': '' } onClick={() => {this.changeNavState("reports")}}> <div className="header-menu-item" > <img src={menuIcon} alt="Logo" /></div>
+                <span> <Translate id="topMenu.reports" ></Translate></span>
+            </Link>
+            <Link to="/settings" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "settings" ? 'active': '' } onClick={() => {this.changeNavState("settings")}}> <div className="header-menu-item"> <img src={menuIcon} alt="Logo" /></div>
+                <span> <Translate id="topMenu.settings" ></Translate></span>
+            </Link>
         </div>;
 
         const supportLink = <div>
-            <Link to="/support" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "support" ? 'active': '' } onClick={() => {this.changeNavState("support")}} > <div className="header-menu-item"> <img src={menuIcon} alt="Logo" /></div><span> Support</span></Link>
+            <Link to="/support" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "support" ? 'active': '' } onClick={() => {this.changeNavState("support")}} > <div className="header-menu-item"> <img src={menuIcon} alt="Logo" /></div>
+                <span> <Translate id="topMenu.support" ></Translate></span>
+            </Link>
         </div>;
 
         const profileLink = <div>
@@ -119,6 +136,7 @@ class Nav extends Component {
 
         return (
             <nav className="App-nav">
+
                 {guestNav}
                 <div className="clearfix"> </div>
             </nav>

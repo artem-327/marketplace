@@ -11,12 +11,19 @@ import registerServiceWorker from './registerServiceWorker';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Login from './pages/login'
 import axios from "axios";
+import { initialize, addTranslationForLanguage } from 'react-localize-redux';
 
+const enJson = require('./translations/en.json');
+
+const languages = [{ name: 'English', code: 'en' }];
+store.dispatch(initialize(languages, { defaultLanguage: 'en' }));
+
+store.dispatch(addTranslationForLanguage(enJson, 'en'));
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 ReactDOM.render(
     <BrowserRouter>
         <Provider store={store}>
-            <Switch>
+           <Switch>
                 <Route exact path="/login" component={Login}/>
                 <Route path="/" component={App}/>
             </Switch>

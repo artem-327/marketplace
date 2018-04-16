@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-
 import TableItem from './TableItem'
+import {Translate} from 'react-localize-redux'
 
 class TableBody extends Component {
 
@@ -9,43 +9,43 @@ class TableBody extends Component {
             <div className="data-table">
                 <div className="data-table-header">
                 <span className="data-table-header-item">
-                    Vendor
+                    <Translate id="inventoryTable.body.vendor"/>
                 </span>
                     <span className="data-table-header-item">
-                    MFR.
+                         <Translate id="inventoryTable.body.mfr"/>
                 </span>
                     <span className="data-table-header-item">
-                    ORIGIN
+                        <Translate id="inventoryTable.body.origin"/>
                 </span>
                     <span className="data-table-header-item">
-                    QUANTITY
+                        <Translate id="inventoryTable.body.quantity"/>
                 </span>
                     <span className="data-table-header-item">
-                    FOB PRICE
+                        <Translate id="inventoryTable.body.fobPrice"/>
                 </span>
                     <span className="data-table-header-item">
-                    PACKAGING
+                        <Translate id="inventoryTable.body.packing"/>
                 </span>
                     <span className="data-table-header-item">
-                    EXP.
+                        <Translate id="inventoryTable.body.exp"/>
                 </span>
                     <span className="data-table-header-item">
-                    CONDITION
+                        <Translate id="inventoryTable.body.condition"/>
                 </span>
                     <span className="data-table-header-item">
-                    FORM
+                        <Translate id="inventoryTable.body.form"/>
                 </span>
                     <span className="data-table-header-item">
-                    LOCATION
+                        <Translate id="inventoryTable.body.location"/>
                 </span>
                     <span className="data-table-header-item">
-                    ZIP CODE
+                        <Translate id="inventoryTable.body.zipCode"/>
                 </span>
                     <span className="data-table-header-item">
-                    DISTANCE
+                        <Translate id="inventoryTable.body.distance"/>
                 </span>
                     <span className="data-table-header-item">
-                    TERMS
+                        <Translate id="inventoryTable.body.terms"/>
                 </span>
                 </div>
                 <div className="data-table-line">

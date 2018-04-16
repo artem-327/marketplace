@@ -26,25 +26,6 @@ class DataTable extends Component {
 
     render() {
 
-        // const calculate_delivery_component = <div className="calculate-delivery-popup">
-        //     <div className="delivery-popup-item">
-        //         <input placeholder="Quantity"></input>
-        //     </div>
-        //     <div className="delivery-popup-item">
-        //         <input placeholder="Delivery Zip"></input>
-        //     </div>
-        //     <div className="delivery-popup-item">
-        //         <select className="">
-        //             <option>Grade</option>
-        //             <option>2</option>
-        //             <option>3</option>
-        //             <option>4</option>
-        //         </select>
-        //     </div>
-        //     <div className="delivery-popup-item">
-        //         <button>Calculate</button>
-        //     </div>
-        // </div>;
 
 
 
