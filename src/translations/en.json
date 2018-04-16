@@ -1,4 +1,12 @@
 {
+  "login":{
+    "loginToPRODEX" : "Login to PRODEX",
+    "email" : "Email",
+    "password" : "Password",
+    "login" : "LOGIN!",
+    "logging" : "Logging...",
+    "forgottenPassword" : "Forgotten password"
+  },
   "topMenu": {
     "dashboard": "Dashboard",
     "inventory": "Inventory",
