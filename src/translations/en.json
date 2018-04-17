@@ -78,5 +78,32 @@
       "totalCost" : "TOTAL COST",
       "purchase" : "PURCHASE"
     }
+  },
+  "myInventory":{
+    "table":{
+      "myInventory" : "My Inventory",
+      "chemicalName" : "CHEMICAL NAME",
+      "pkgAvbl" : "PKG. AVBL.",
+      "packaging" : "PACKAGING",
+      "pkgSize" : "PKG. SIZE",
+      "quantity" : "QUANTITY",
+      "cost" : "COST",
+      "fobPrice" : "FOB PRICE",
+      "mfr" : "MFR.",
+      "origin" : "ORIGIN",
+      "incoterms" : "INCOTERMS",
+      "exp" : "EXP.",
+      "assay" : "ASSAY",
+      "condition" : "CONDITION",
+      "form" : "FORM",
+      "location" : "LOCATION",
+      "zipCode" : "ZIP CODE",
+      "brd" : "BRD.",
+      "markUps" : "MARK UPS",
+      "anon" : "ANON.",
+      "mapped" : "MAPPED"
+
+    }
   }
+
 }

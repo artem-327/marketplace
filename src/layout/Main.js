@@ -8,6 +8,7 @@ import Clients from "../pages/clients/Clients"
 import Reports from "../pages/reports/Reports"
 import Settings from "../pages/settings/Settings"
 import Support from "../pages/support/Support"
+import MyInventory from "../pages/myInventory/MyInventory";
 
 
 class Main extends Component {
@@ -22,6 +23,7 @@ class Main extends Component {
                     <Route exact path="/reports" component={Reports}/>
                     <Route exact path="/settings" component={Settings}/>
                     <Route exact path="/support" component={Support}/>
+                    <Route exact path="/myInventory" component={MyInventory}/>
                 </Switch>
             </div>
         );
