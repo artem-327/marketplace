@@ -15,7 +15,7 @@
       .App-nav .nav-wr .menu-item .header-menu-item {
         display: block; }
   .App-nav .nav-inside {
-    position: fixed;
+    position: absolute;
     width: 100%;
     top: 0; }
     .App-nav .nav-inside.guest {
@@ -69,7 +69,7 @@
       color: white; }
     .App-nav .nav-inside .nav-profile {
       float: right;
-      width: 200px; }
+      width: 190px; }
       .App-nav .nav-inside .nav-profile a {
         color: white;
         padding: 23px 20px;
@@ -84,7 +84,7 @@
       .App-nav .nav-inside .nav-profile .nav-menu-profile {
         display: inline; }
       .App-nav .nav-inside .nav-profile span {
-        width: 100%s; }
+        width: 100%; }
       .App-nav .nav-inside .nav-profile .nav-profile-arrow {
         margin-left: 10px; }
   .App-nav .ham-position {

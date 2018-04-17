@@ -27,7 +27,7 @@ $break-tablet: 1025px;
     }
   }
   .nav-inside {
-    position: fixed;
+    position: absolute;
     width: 100%;
     top: 0;
     &.guest {
@@ -112,12 +112,12 @@ $break-tablet: 1025px;
         }
       }
       float: right;
-      width: 200px;
+      width: 190px;
       .nav-menu-profile{
         display: inline;
       }
       span{
-        width: 100%s;
+        width: 100%;
       }
       .nav-profile-arrow{
         margin-left: 10px;
