@@ -79,33 +79,89 @@
     background-color: #3b3e40; }
     .App-data-table .data-table .item-purchase .purchase-product-header .purchase-options {
       float: right; }
-  .App-data-table .data-table .item-purchase .purchase-product-detail {
-    font-size: 13px;
-    color: white;
+  .App-data-table .data-table .item-purchase .purchase-product {
     background-color: #43484b;
-    display: inline-block;
-    height: 60px;
-    width: 100%;
-    padding: 10px; }
-    .App-data-table .data-table .item-purchase .purchase-product-detail .detail-item {
-      float: left;
-      margin-left: 20px;
-      width: 85px;
+    color: white; }
+    .App-data-table .data-table .item-purchase .purchase-product .purchase-product-detail {
+      font-size: 13px;
+      display: inline-block;
+      width: 100%;
+      padding: 10px;
       text-align: left;
-      display: block; }
-      .App-data-table .data-table .item-purchase .purchase-product-detail .detail-item .detail-item-header {
-        display: block; }
-      .App-data-table .data-table .item-purchase .purchase-product-detail .detail-item .detail-item-text {
+      margin-left: 10px; }
+      .App-data-table .data-table .item-purchase .purchase-product .purchase-product-detail table tbody {
+        font-size: 17px; }
+      .App-data-table .data-table .item-purchase .purchase-product .purchase-product-detail table th, .App-data-table .data-table .item-purchase .purchase-product .purchase-product-detail table td {
+        padding: 0.5em;
+        border-top: 0;
+        border-bottom: 0;
+        border-right: 1px solid black; }
+    .App-data-table .data-table .item-purchase .purchase-product hr {
+      background-color: black;
+      display: block;
+      width: 100%;
+      margin: 12px 0; }
+    .App-data-table .data-table .item-purchase .purchase-product .purchase-product-form {
+      display: inline-block;
+      width: 100%;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 14px;
+      margin-left: 10px; }
+      .App-data-table .data-table .item-purchase .purchase-product .purchase-product-form .form-item {
+        float: left;
         display: block;
-        font-size: 16px; }
-    .App-data-table .data-table .item-purchase .purchase-product-detail .detail-item-long {
-      float: left;
-      margin-left: 20px;
-      width: 180px; }
-      .App-data-table .data-table .item-purchase .purchase-product-detail .detail-item-long .detail-item-header {
-        display: block; }
-      .App-data-table .data-table .item-purchase .purchase-product-detail .detail-item-long .detail-item-text {
+        width: 160px; }
+        .App-data-table .data-table .item-purchase .purchase-product .purchase-product-form .form-item label {
+          width: 100%; }
+        .App-data-table .data-table .item-purchase .purchase-product .purchase-product-form .form-item select {
+          background-color: #2e363a;
+          border: 1px solid #2e363a;
+          height: 40px;
+          border-radius: 0;
+          color: white; }
+        .App-data-table .data-table .item-purchase .purchase-product .purchase-product-form .form-item input {
+          background-color: #2e363a;
+          border: 1px solid #2e363a;
+          height: 40px;
+          border-radius: 0;
+          color: white; }
+        .App-data-table .data-table .item-purchase .purchase-product .purchase-product-form .form-item .form-item-header {
+          display: block;
+          width: 100%; }
+          .App-data-table .data-table .item-purchase .purchase-product .purchase-product-form .form-item .form-item-header input[type=checkbox] {
+            float: left;
+            height: 19px; }
+          .App-data-table .data-table .item-purchase .purchase-product .purchase-product-form .form-item .form-item-header .shipping-service-description {
+            width: 100%; }
+      .App-data-table .data-table .item-purchase .purchase-product .purchase-product-form .form-item-description {
+        float: left;
         display: block;
-        font-size: 16px; }
-    .App-data-table .data-table .item-purchase .purchase-product-detail .left-border-line {
-      border-right: 1px solid black; }
+        min-width: 150px; }
+        .App-data-table .data-table .item-purchase .purchase-product .purchase-product-form .form-item-description .form-item-header {
+          display: block;
+          width: 100%; }
+      .App-data-table .data-table .item-purchase .purchase-product .purchase-product-form .purchase-button {
+        height: 40px;
+        color: white;
+        background-color: #289ada;
+        border: 1px solid #289ada; }
+      .App-data-table .data-table .item-purchase .purchase-product .purchase-product-form .cancel-button {
+        margin-left: 20px;
+        height: 40px;
+        color: black;
+        width: 40px;
+        background-color: gray;
+        border: 1px solid gray; }
+
+@media only screen and (max-width: 500px) {
+  .App-data-table .data-table .item-purchase .purchase-product .purchase-product-detail table {
+    overflow-x: scroll;
+    display: block; } }
+
+@media only screen and (max-width: 1400px) {
+  .App-data-table .data-table .item-purchase .purchase-product .purchase-product-form {
+    font-size: 12px;
+    text-align: left; }
+    .App-data-table .data-table .item-purchase .purchase-product .purchase-product-form .form-item-description {
+      min-width: 110px; } }
