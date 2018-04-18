@@ -2,13 +2,15 @@ import React, {Component} from 'react';
 import SelectableTable from 'react-selectable-table/build'
 import './dataTable.css'
 import {Translate} from 'react-localize-redux'
-import TableItem from './components/TableItem'
+// import Item from "./components/Item"
+import MappedForm from "./components/MappedForm"
 
 class DataTable extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedIndicies: [ ]
+            selectedIndicies: [ ],
+            showMapped : false
         }
     }
 
@@ -26,7 +28,16 @@ class DataTable extends Component {
         this.setState({ selectedIndicies: this.refs.table.getSelectedIndices() })
     }
 
+    changeShowMapped() {
+        let { showMapped } = this.state;
+        this.setState({
+            showMapped: !showMapped
+        });
+    }
+
     render() {
+        const { showMapped} = this.state;
+
         const bodyRow =  <tr>
             <td>test</td>
             <td>test</td>
@@ -47,8 +58,12 @@ class DataTable extends Component {
             <td>test</td>
             <td>test</td>
             <td>YES</td>
-            <td>NO</td>
+            <td className="table-item-mapped" onClick={() => {
+                this.changeShowMapped()
+            }}>NO</td>
         </tr>;
+
+        let mappedForm = showMapped ? <MappedForm onClick={() => { this.changeShowMapped() }}/> : <div></div>;
 
         return (
             <div className="App-data-table">
@@ -85,9 +100,11 @@ class DataTable extends Component {
                     <tbody>
                         {bodyRow}
                         {bodyRow}
-                        <TableItem/>
+
                     </tbody>
                 </SelectableTable>
+                {mappedForm}
+
                 {/*<p>Selected Indicies: {this.state.selectedIndicies.join(', ')}</p>*/}
                 <div className="clearfix"> </div>
             </div>

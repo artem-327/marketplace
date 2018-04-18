@@ -4,7 +4,7 @@ import filterEye from '../../../../../images/filter-eye.png'
 class SaveSearch extends Component {
 
     changeSaveSearchAlerts() {
-        this.props.onChange()
+        this.props.onClick()
     }
 
     render() {
@@ -33,10 +33,10 @@ class SaveSearch extends Component {
                     <div className="col-lg-3 col-md-12 col-sm-12">
                         <div className="row" style={{marginRight:"0px"}}>
                             <div className="col-lg-6 col-md-6 col-sm-12">
-                                <button className="filter-set-alerts" onClick={() => {this.changeSaveSearchAlerts()}}>Cancel</button>
+                                <button className="filter-set-alerts-popup" onClick={() => {this.changeSaveSearchAlerts()}}>Cancel</button>
                             </div>
                             <div className="col-lg-6 col-md-6 col-sm-12">
-                                <button className="filter-save-search">SAVE SEARCH</button>
+                                <button className="filter-save-search-popup">SAVE SEARCH</button>
                             </div>
                         </div>
                     </div>

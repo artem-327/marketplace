@@ -4,7 +4,7 @@ import filterEye from '../../../../../images/filter-eye.png'
 class SetAlerts extends Component {
 
     changeSetAlerts() {
-        this.props.onChange()
+        this.props.onClick()
     }
 
     render() {
@@ -59,10 +59,10 @@ class SetAlerts extends Component {
                     <div className="col-lg-3 col-md-12 col-sm-12">
                         <div className="row">
                             <div className="col-lg-6 col-md-6 col-sm-12">
-                                <button className="filter-set-alerts" onClick={() => {this.changeSetAlerts()}}>Cancel</button>
+                                <button className="filter-set-alerts-popup" onClick={() => {this.changeSetAlerts()}}>Cancel</button>
                             </div>
                             <div className="col-lg-6 col-md-6 col-sm-12">
-                                <button className="filter-save-search">SET ALERTS</button>
+                                <button className="filter-save-search-popup">SET ALERTS</button>
                             </div>
                         </div>
                     </div>
