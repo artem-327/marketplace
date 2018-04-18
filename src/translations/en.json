@@ -102,7 +102,12 @@
       "markUps" : "MARK UPS",
       "anon" : "ANON.",
       "mapped" : "MAPPED"
-
+    },
+    "mappedForm": {
+      "mapped" : "Mapped",
+      "searchChemicalName" : "Search chemical name...",
+      "createMapping" : "Create mapping rule and apply to all similar chemical listings",
+      "saveRule" : "Save Rule"
     }
   }
 

@@ -40,6 +40,15 @@
     color: white;
     background-color: #289ada;
     border: 1px solid #289ada; }
+  .App-filter .filter-set-alerts-popup {
+    width: 100%;
+    height: 40px; }
+  .App-filter .filter-save-search-popup {
+    width: 90%;
+    height: 40px;
+    color: white;
+    background-color: #289ada;
+    border: 1px solid #289ada; }
   .App-filter .smaller-lg-inputs {
     max-width: 13%; }
   .App-filter .filter-buttons {

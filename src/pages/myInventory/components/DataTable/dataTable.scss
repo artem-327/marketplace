@@ -29,6 +29,11 @@ $break-tablet: 1025px;
     thead{
       border-bottom: 1px solid black;
     }
+    tbody{
+      .table-item-mapped{
+        cursor:pointer;
+      }
+    }
   }
   .table-header{
     text-align: left;

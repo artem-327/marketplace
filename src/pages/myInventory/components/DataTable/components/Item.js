@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
 
 
-class TableItem extends Component {
+class Item extends Component {
 
     render() {
+        alert("test");
         return (
-            <tr>
+            <tr className="sadasdasdasdasd">
                 <td>test</td>
                 <td>test</td>
                 <td>test</td>
@@ -31,4 +32,4 @@ class TableItem extends Component {
     }
 }
 
-export default TableItem
+export default Item

@@ -1,3 +1,47 @@
 @import url(https://fonts.googleapis.com/css?family=Cabin:300,400,500,600,700);
 .MyInventoryPage .App-filter .filter-save-search {
   width: 100%; }
+
+.MyInventoryPage .mapped-form .header {
+  background-color: #222830;
+  color: white;
+  text-align: left;
+  font-size: 16px;
+  padding-left: 10px;
+  padding-top: 10px; }
+
+.MyInventoryPage .mapped-form .body {
+  padding: 10px;
+  background-color: #444a53; }
+  .MyInventoryPage .mapped-form .body .map-form-elem {
+    width: 100%; }
+    .MyInventoryPage .mapped-form .body .map-form-elem input {
+      background-color: #23262a;
+      border: 1px solid #23262a;
+      height: 40px;
+      width: 90%;
+      color: white; }
+    .MyInventoryPage .mapped-form .body .map-form-elem input::placeholder {
+      color: white; }
+    .MyInventoryPage .mapped-form .body .map-form-elem .input-group .input-group-text {
+      color: white;
+      background-color: #23262a;
+      border: 1px solid #23262a; }
+  .MyInventoryPage .mapped-form .body .map-form-checkbox {
+    display: inline-block;
+    float: left;
+    padding: 10px;
+    color: white; }
+    .MyInventoryPage .mapped-form .body .map-form-checkbox input {
+      margin-right: 10px; }
+  .MyInventoryPage .mapped-form .body .map-form-buttons .filter-save-search {
+    margin-left: 1%;
+    height: 40px;
+    color: white;
+    background-color: #289ada;
+    border: 1px solid #289ada;
+    margin-right: 10px; }
+  .MyInventoryPage .mapped-form .body .map-form-buttons .filter-cancel {
+    height: 40px;
+    width: 40px;
+    margin-right: 10%; }

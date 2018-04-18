@@ -8,6 +8,8 @@
     margin-left: 10px; }
     .App-data-table table thead {
       border-bottom: 1px solid black; }
+    .App-data-table table tbody .table-item-mapped {
+      cursor: pointer; }
   .App-data-table .table-header {
     text-align: left;
     width: 100%;

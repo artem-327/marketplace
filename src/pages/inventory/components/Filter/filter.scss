@@ -64,6 +64,17 @@ $break-tablet: 1025px;
     background-color:$filter-save-search;
     border : 1px solid $filter-save-search;
   }
+  .filter-set-alerts-popup{
+    width: 100%;
+    height: $filter-input-button-height;
+  }
+  .filter-save-search-popup{
+    width: 90%;
+    height: $filter-input-button-height;
+    color: $filter-input-color;
+    background-color:$filter-save-search;
+    border : 1px solid $filter-save-search;
+  }
   .smaller-lg-inputs{
     max-width: 13%;
   }
