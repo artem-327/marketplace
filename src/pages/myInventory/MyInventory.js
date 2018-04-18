@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-// import Filter from './components/Filter'
+import Filter from './components/Filter'
 import DataTable from './components/DataTable'
 import './myInventory.css'
 
@@ -16,11 +16,9 @@ class MyInventory extends Component {
 
     render() {
         return (
-            <div className="LandingPage">
-                {/*<Filter/>*/}
-
+            <div className="MyInventoryPage">
+                <Filter/>
                 <DataTable/>
-                {/*asdasdasdasdasdasd*/}
             </div>
         );
     }
