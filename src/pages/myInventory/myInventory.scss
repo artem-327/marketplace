@@ -15,6 +15,10 @@ $header-color: black;
 $break-tablet: 1080px;
 $break-phone: 700px;
 
-.LandingPage {
-
+.MyInventoryPage {
+  .App-filter{
+    .filter-save-search{
+      width: 100%;
+    }
+  }
 }

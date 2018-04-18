@@ -88,7 +88,7 @@ class DataTable extends Component {
                         <TableItem/>
                     </tbody>
                 </SelectableTable>
-                <p>Selected Indicies: {this.state.selectedIndicies.join(', ')}</p>
+                {/*<p>Selected Indicies: {this.state.selectedIndicies.join(', ')}</p>*/}
                 <div className="clearfix"> </div>
             </div>
         );
