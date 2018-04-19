@@ -45,7 +45,7 @@ export default function reducer(state = initialState, action) {
                     isFetching: false,
                     hasError: false,
                     isValid: true,
-                    data: action.data.payload
+                    // data: action.data
                 }
             }
         }
@@ -69,13 +69,13 @@ export function login(email, password){
         type: LOGIN,
         payload: axios({
             method: 'post',
-            url: "/api/v1/login",
+            url: "/api/v1/auth/login/",
             data:{
                 email: email,
                 password: password
             }
         }).then((response) => {
-            setAuthToken(response.data.accessToken);
+            setAuthToken(response.data.data.token);
             return jwt.decode(localStorage.jwtoken);
         })
     }

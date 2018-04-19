@@ -1,0 +1,123 @@
+{
+  "login":{
+    "loginToPRODEX" : "Login to PRODEX",
+    "email" : "Email",
+    "password" : "Password",
+    "login" : "LOGIN!",
+    "logging" : "Logging...",
+    "forgottenPassword" : "Forgotten password"
+  },
+  "topMenu": {
+    "dashboard": "Dashboard",
+    "inventory": "Inventory",
+    "orders": "Orders",
+    "clients": "Clients",
+    "reports": "Reports",
+    "settings": "Settings",
+    "support": "Support",
+    "searchDots" : "Search..."
+  },
+  "inventoryPage": {
+    "products": {
+      "inventoryFilter": {
+        "chemicalName": "Chemical name or CAS #",
+        "QTYFrom": "Qty from",
+        "QTYTo": "Qty to",
+        "dollarFrom": "$ from",
+        "dollarTo": "$ to",
+        "100mi": "100 mi.",
+        "of": "OF",
+        "95472": "95472",
+        "packing": "Packing",
+        "origin": "Origin",
+        "grade": "Grade",
+        "forms": "Forms",
+        "conditions": "Conditions",
+        "manufacturers": "Manufacturers",
+        "setAlerts": "SET ALERTS",
+        "saveSearch": "SAVE SEARCH",
+        "selectSavedSearch": "Select Saved Search",
+        "moreFilters": "More Filters",
+        "lessFilters": "Less Filters"
+      },
+      "inventoryTable": {
+        "header": {
+          "addInventory": "Add Inventory",
+          "addFavourite": "Add Favourite",
+          "addShowStatistic": "Add Show statistic",
+          "calculateDeliveryPrice": "Calculate delivery price"
+        },
+        "body": {
+          "vendor": "VENDOR",
+          "mfr": "MFR.",
+          "origin": "ORIGIN",
+          "quantity": "QUANTITY",
+          "fobPrice": "FOB PRICE",
+          "exp": "EXP.",
+          "condition": "CONDITION",
+          "packing": "PACKING",
+          "form": "FORM",
+          "location": "LOCATION",
+          "zipCode": "ZIP CODE",
+          "distance": "DISTANCE",
+          "terms": "TERMS",
+          "assay": "ASSAY",
+          "zip": "ZIP",
+          "packagingWeight": "PACKAGING WEIGHT",
+          "totalProductAvailable": "TOTAL PRODUCT AVAILABLE"
+        },
+        "purchaseForm": {
+          "shipTo": "SHIP TO",
+          "reqShipDate": "REQST. SHIP DATE",
+          "quantity": "QUANTITY",
+          "incrementalPricing": "Incremental pricing is available",
+          "addShippingService": "ADD SHIPPING SERVICE",
+          "totalQTY": "TOTAL QTY.",
+          "priceLBFOB": "PRICE / LB FOB",
+          "freightCost": "FREIGHT COST/LB",
+          "totalFreightCost": "TOTAL FREIGHT COST",
+          "deliveryCost": "DELIVERY COST/LB",
+          "totalCost": "TOTAL COST",
+          "purchase": "PURCHASE"
+        }
+      }
+    },
+    "myInventory": {
+      "table": {
+        "myInventory": "My Inventory",
+        "chemicalName": "CHEMICAL NAME",
+        "pkgAvbl": "PKG. AVBL.",
+        "packaging": "PACKAGING",
+        "pkgSize": "PKG. SIZE",
+        "quantity": "QUANTITY",
+        "cost": "COST",
+        "fobPrice": "FOB PRICE",
+        "mfr": "MFR.",
+        "origin": "ORIGIN",
+        "incoterms": "INCOTERMS",
+        "exp": "EXP.",
+        "assay": "ASSAY",
+        "condition": "CONDITION",
+        "form": "FORM",
+        "location": "LOCATION",
+        "zipCode": "ZIP CODE",
+        "brd": "BRD.",
+        "markUps": "MARK UPS",
+        "anon": "ANON.",
+        "mapped": "MAPPED"
+      },
+      "mappedForm": {
+        "mapped": "Mapped",
+        "searchChemicalName": "Search chemical name...",
+        "createMapping": "Create mapping rule and apply to all similar chemical listings",
+        "saveRule": "Save Rule"
+      }
+    },
+    "addInventory": {
+      "filter": {
+        "filterPlaceholder": "Search for Chemicals...",
+        "saveSearch" : "Search"
+      }
+    }
+  }
+}

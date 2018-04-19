@@ -1,0 +1,258 @@
+@import url(https://fonts.googleapis.com/css?family=Cabin:300,400,500,600,700);
+
+$nav-background: rgba(34, 40, 48, 0.85);
+$nav-hover: rgba(34, 40, 48, 1);
+$data-table-header-background: #2e363a;
+$purchase-background-color: #3b3e40;
+$purchase-detail-background-color: #43484b;
+$data-table-header-color : white;
+$data-table-header-margin: 5px;
+$filter-save-search: #289ada;
+$data-table-id-colour :#289ada;
+$set-alerts-background : #899399;
+$filter-input-button-height: 40px;
+$data-table-margin-top: 20px;
+$data-table-margin-bottom: 20px;
+$data-table-hr-margin: 30px;
+$font-family: 'Cabin', sans-serif;
+
+$break-tablet: 1025px;
+
+.App-data-table{
+  margin-top: $data-table-margin-top;
+  margin-bottom:  $data-table-margin-bottom;
+  .product-header{
+    color: $data-table-header-color;
+    background-color: $data-table-header-background;
+    .product-name{
+      display: block;
+      padding-top: $data-table-header-margin;
+      float: left;
+    }
+    .product-id{
+      display: block;
+      padding-top: $data-table-header-margin;
+      color:$data-table-id-colour;
+      font-weight: bold;
+      font-size: 17px;
+    }
+  }
+  .product-options{
+    .product-options-button{
+      display:inline;
+      cursor: pointer;
+      color: $data-table-header-color;
+      padding-right: 20px;
+      background-color: $data-table-header-background;
+      border: 1px solid $data-table-header-background;
+    }
+    .product-options-button:hover{
+      background-color: $data-table-id-colour;
+      border: 1px solid $data-table-id-colour;
+    }
+    .calculate-delivery-popup{
+      width: 200px;
+      display: block;
+      float: right;
+      background-color: gray;
+      .delivery-popup-item{
+        padding-top: 10px;
+        select{
+          background-color: #3d464b;
+          border: 1px solid #3d464b;
+          height: 40px;
+          border-radius: 0px;
+          color: white;
+          width:88%;
+        }
+        button{
+          width:88%;
+          height: 40px;
+        }
+      }
+    }
+  }
+  .data-table{
+    .data-table-header{
+      display: inline;
+      float: left;
+      width: 100%;
+      .data-table-header-item{
+        display: block;
+        float: left;
+        width: 100px;
+        font-weight: bold;
+        font-size: 16px;
+      }
+    }
+    .data-table-line{
+      width: 100%;
+      height: 40px;
+      hr{
+        position: relative;
+        top: $data-table-hr-margin;
+      }
+    }
+    .data-table-body{
+      width: 100%;
+      .data-table-body-item{
+        display: block;
+        float: left;
+        width: 100px;
+      }
+    }
+    .item-purchase{
+      .purchase-title{
+        display: block;
+        color: $data-table-header-color;
+        background-color: $data-table-header-background;
+        font-size: 17px;
+        height: 40px;
+        span{
+          width: 150px;
+          display: block;
+          margin-left: 20px;
+          padding-top: 8px;
+        }
+      }
+      .purchase-product-header{
+        background-color: $purchase-background-color;
+        .purchase-options{
+          float: right;
+        }
+      }
+      .purchase-product {
+        background-color: $purchase-detail-background-color;
+        color: white;
+        .purchase-product-detail {
+          font-size: 13px;
+          display: inline-block;
+          width: 100%;
+          padding: 10px;
+          text-align: left;
+          margin-left: 10px;
+          table{
+            tbody{
+              font-size: 17px;
+            }
+            th, td{
+              padding: 0.5em;
+              border-top : 0;
+              border-bottom: 0;
+              border-right: 1px solid black;
+            }
+          }
+        }
+        hr{
+          background-color: black;
+          display: block;
+          width: 100%;
+          margin: 12px 0;
+        }
+        .purchase-product-form{
+          display: inline-block;
+          width: 100%;
+          padding-left: 10px;
+          padding-right: 10px;
+          font-size: 14px;
+          margin-left: 10px;
+          .form-item{
+            float: left;
+            display: block;
+            width: 160px;
+            label{
+              width: 100%;
+            }
+            select{
+              background-color: #2e363a;
+              border: 1px solid #2e363a;
+              height: 40px;
+              border-radius: 0;
+              color: white;
+            }
+            input{
+              background-color: #2e363a;
+              border: 1px solid #2e363a;
+              height: 40px;
+              border-radius: 0;
+              color: white;
+            }
+            .form-item-header{
+              display: block;
+              width: 100%;
+              input[type=checkbox]{
+                float: left;
+                height: 19px;
+              }
+              .shipping-service-description{
+                width: 100%;
+              }
+            }
+          }
+          .form-item-description{
+            float: left;
+            display: block;
+            min-width: 150px;
+            .form-item-header{
+              display: block;
+              width: 100%;
+            }
+          }
+          .purchase-button{
+            height: 40px;
+            color: white;
+            background-color: #289ada;
+            border: 1px solid #289ada;
+          }
+          .cancel-button{
+            margin-left: 20px;
+            height: 40px;
+            color: black;
+            width: 40px;
+            background-color:  gray;
+            border: 1px solid gray;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 500px) {
+
+  .App-data-table {
+    .data-table {
+      .item-purchase {
+          .purchase-product{
+              .purchase-product-detail{
+                table {
+                  overflow-x: scroll;
+                  display: block;
+                }
+            }
+        }
+      }
+    }
+  }
+
+}
+
+@media only screen and (max-width: 1400px) {
+
+  .App-data-table {
+    .data-table {
+      .item-purchase {
+        .purchase-product{
+          .purchase-product-form{
+            font-size: 12px;
+            text-align: left;
+            .form-item-description {
+              min-width: 110px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+}

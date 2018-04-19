@@ -1,13 +1,7 @@
 import React, {Component} from 'react';
 import {startAnimation} from 'react-countup'
 
-import Header from './components/Header'
-import Info from './components/Info'
-import Options from './components/Options';
-import Stats from './components/Stats'
-import FormPlace from './components/FormPlace'
 import './dashboard.css'
-
 
 
 class Dashboard extends Component {
@@ -43,11 +37,9 @@ class Dashboard extends Component {
     render() {
         return (
             <div className="LandingPage">
-                <Header />
-                {/*<Info/>*/}
-                {/*<Options/>*/}
-                {/*<Stats callbackParent={(childrenRef) => this.setState({statsRef:childrenRef}) }/>*/}
-                {/*<FormPlace {...this.props}/>*/}
+                <p >
+                   Dashboard
+                </p>
             </div>
         );
     }

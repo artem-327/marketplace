@@ -6,13 +6,27 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom'
 // import { Router, Route, IndexRoute, hashHistory } from "react-router";
+import {Switch, Route} from 'react-router-dom';
 import registerServiceWorker from './registerServiceWorker';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import Login from './pages/login'
+import axios from "axios";
+import { initialize, addTranslationForLanguage } from 'react-localize-redux';
 
+const enJson = require('./translations/en.json');
+
+const languages = [{ name: 'English', code: 'en' }];
+store.dispatch(initialize(languages, { defaultLanguage: 'en' }));
+
+store.dispatch(addTranslationForLanguage(enJson, 'en'));
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 ReactDOM.render(
     <BrowserRouter>
         <Provider store={store}>
-            <App />
+           <Switch>
+                <Route exact path="/login" component={Login}/>
+                <Route path="/" component={App}/>
+            </Switch>
         </Provider>
     </BrowserRouter>, document.getElementById('root'));
 registerServiceWorker();
