@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Filter from './components/Filter'
 import addInventoryImage from "../../../images/add-inventorty.png"
+import AddInventoryForm from "./components/AddForm"
 import './addInventory.css'
 
 
@@ -26,8 +27,9 @@ class AddInventory extends Component {
 
     render() {
         let addForm =<div/>;
-        if(this.state.selectedOption !== '') {
-            addForm =  <div>saddasdasd</div>;
+        // TODO: CHANGE THIS CONDITION TO !==
+        if(this.state.selectedOption === '') {
+            addForm =  <AddInventoryForm/>;
        }
        else{
             addForm = <img alt="add-inventory" src={addInventoryImage}/>;
