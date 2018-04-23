@@ -78,7 +78,16 @@
           "totalFreightCost": "TOTAL FREIGHT COST",
           "deliveryCost": "DELIVERY COST/LB",
           "totalCost": "TOTAL COST",
-          "purchase": "PURCHASE"
+          "purchase": "PURCHASE",
+          "nickname" : "Nickname",
+          "companyName" : "Company Name",
+          "address" : "Address",
+          "city" : "City",
+          "selectState" : "SelectState",
+          "zip" : "Zip",
+          "contact" : "Contact",
+          "contactNumber" : "Contact Number",
+          "contactEmail": "Contact Email"
         }
       }
     },
