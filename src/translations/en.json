@@ -155,7 +155,16 @@
         "toPackages" : "TO (PACKAGES)",
         "priceLBS" : "PRICE/LBS",
         "yes" : "YES",
-        "no" : "NO"
+        "no" : "NO",
+        "broadcastSettings" : "Broadcast Settings",
+        "listAnonymously" : "LIST ANONYMOUSLY",
+        "restrictedStates" : "RESTRICTED STATES",
+        "restrictedCompanies" : "RESTRICTED COMPANIES",
+        "documents" : "Documents",
+        "attachCofA" : "ATTACH C OF A",
+        "attachSDS" : "ATTACH SDS",
+        "attachSpecSheet" : "ATTACH SPEC SHEET",
+        "addInventoryButton" : "ADD INVENTORY"
       }
     }
   }

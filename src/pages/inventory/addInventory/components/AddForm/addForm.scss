@@ -7,13 +7,13 @@ $filter-input-color : white;
 $filter-save-search: #289ada;
 $filter-input-background-color :#3d464b;
 $set-alerts-background : #899399;
-$texPX: 10px;
+$tenPX: 10px;
 $font-family: 'Cabin', sans-serif;
 
 $break-tablet: 1025px;
 
 .AddInventoryFrom{
-  padding: $texPX;
+  padding: $tenPX;
   .header{
     text-align: left;
     width: 100%;
@@ -30,7 +30,7 @@ $break-tablet: 1025px;
     margin-bottom: 40px;
     .product-id{
       color: #289ada;
-      margin-right: $texPX;
+      margin-right: $tenPX;
     }
   }
   table{
@@ -124,15 +124,22 @@ $break-tablet: 1025px;
         display: block;
         float: left;
         position: relative;
-        top:$texPX;
+        top:$tenPX;
       }
       .input-group{
         width: 75%;
-        padding-left: $texPX;
+        padding-left: $tenPX;
+        .input-group-append{
+          background-color: white;
+          border-right: #222222;
+          border-top: #222222;
+          border-bottom: #222222;
+          border-left: 0;
+        }
       }
     }
     .min-text{
-      padding-right: $texPX;
+      padding-right: $tenPX;
     }
   }
   .rules {
@@ -156,6 +163,44 @@ $break-tablet: 1025px;
       border-right:1px solid gray;
       font-weight: bold;
       width: 10%;
+    }
+  }
+  .broadcast-settings{
+    text-align: left;
+    font-size: 14px;
+    .broadcast-header{
+      font-weight: bold;
+      border-bottom: 1px solid #aaa;
+    }
+    .documents-buttons{
+      padding: $tenPX;
+      button{
+        width: 100%;
+        height: 40px;
+        background-color: transparent;
+        border: 0;
+        color: #289ada;
+        cursor: pointer;
+      }
+      img{
+        height: 30px;
+        padding-right: $tenPX;
+      }
+    }
+    .add-inventory {
+      padding: $tenPX;
+      .add-inventory-button {
+        height: 40px;
+        color: white;
+        background-color: #289ada;
+        border: 1px solid #289ada;
+        width: 100%;
+        cursor: pointer;
+
+        img {
+          padding-right: 20px;
+        }
+      }
     }
   }
 }
