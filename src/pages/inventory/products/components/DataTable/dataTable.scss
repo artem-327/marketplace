@@ -214,6 +214,46 @@ $break-tablet: 1025px;
           }
         }
       }
+      .purchase-address-form{
+        background-color: #3b3e40;
+        .table{
+          width: 90%;
+            th{
+              border-top: 0;
+              border-bottom: 0;
+            }
+            td{
+              border-top: 0;
+            }
+          input{
+            background-color: #2e363a;
+            border: 1px solid #2e363a;
+            height: 40px;
+            border-radius: 0;
+            color: white;
+            width: 100%;
+          }
+          input::placeholder{
+            color: white;
+          }
+          select{
+            background-color: #2e363a;
+            border: 1px solid #2e363a;
+            height: 40px;
+            border-radius: 0;
+            color: white;
+            min-width: 160px;
+          }
+          button{
+            background-color: $purchase-detail-background-color;
+            border: 1px solid $purchase-detail-background-color;
+            cursor: pointer;
+            img {
+              height: 40px;
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -248,6 +288,16 @@ $break-tablet: 1025px;
             text-align: left;
             .form-item-description {
               min-width: 110px;
+            }
+          }
+        }
+        .purchase-address-form{
+          .table{
+            input{
+              min-width: 160px;
+            }
+            select{
+              min-width: 160px;
             }
           }
         }

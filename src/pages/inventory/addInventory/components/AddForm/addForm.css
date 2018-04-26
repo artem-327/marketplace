@@ -1,0 +1,143 @@
+@import url(https://fonts.googleapis.com/css?family=Cabin:300,400,500,600,700);
+.AddInventoryFrom {
+  padding: 10px; }
+  .AddInventoryFrom .header {
+    text-align: left;
+    width: 100%;
+    font-size: 20px;
+    color: #289ada;
+    font-weight: bold;
+    border-bottom: 1px solid; }
+  .AddInventoryFrom .product {
+    text-align: left;
+    width: 100%;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 40px; }
+    .AddInventoryFrom .product .product-id {
+      color: #289ada;
+      margin-right: 10px; }
+  .AddInventoryFrom table select, .AddInventoryFrom table input {
+    height: 40px;
+    width: 100%; }
+  .AddInventoryFrom table td {
+    padding-top: 0.25rem; }
+  .AddInventoryFrom table th {
+    padding-bottom: 0.25rem; }
+  .AddInventoryFrom .location {
+    text-align: left;
+    font-size: 14px; }
+    .AddInventoryFrom .location .location-header {
+      font-weight: bold; }
+    .AddInventoryFrom .location table th {
+      border-bottom: 0;
+      border-top-color: #aaa; }
+    .AddInventoryFrom .location table td {
+      border-top: 0; }
+      .AddInventoryFrom .location table td button {
+        width: 100%;
+        height: 40px;
+        color: white;
+        background-color: #289ada;
+        border: 1px solid #289ada; }
+        .AddInventoryFrom .location table td button span {
+          font-size: 18px;
+          font-weight: bold;
+          padding-right: 5px; }
+  .AddInventoryFrom .details {
+    text-align: left;
+    font-size: 14px; }
+    .AddInventoryFrom .details .location-header {
+      font-weight: bold;
+      border-bottom: 1px solid #aaa; }
+    .AddInventoryFrom .details table th {
+      border-bottom: 0;
+      border-top: 0; }
+    .AddInventoryFrom .details table td {
+      border-top: 0; }
+    .AddInventoryFrom .details table .description {
+      background-color: gray;
+      height: 40px;
+      font-weight: bold; }
+      .AddInventoryFrom .details table .description span {
+        display: block; }
+  .AddInventoryFrom .attributes {
+    text-align: left;
+    font-size: 14px; }
+    .AddInventoryFrom .attributes .attributes-header {
+      font-weight: bold;
+      border-bottom: 1px solid #aaa; }
+    .AddInventoryFrom .attributes table input {
+      width: 60%; }
+    .AddInventoryFrom .attributes table th {
+      border-bottom: 0;
+      border-top: 0; }
+    .AddInventoryFrom .attributes table td {
+      border-top: 0;
+      width: 25%; }
+    .AddInventoryFrom .attributes .min-max-inputs .max-text {
+      display: block;
+      float: left;
+      position: relative;
+      top: 10px; }
+    .AddInventoryFrom .attributes .min-max-inputs .input-group {
+      width: 75%;
+      padding-left: 10px; }
+      .AddInventoryFrom .attributes .min-max-inputs .input-group .input-group-append {
+        background-color: white;
+        border-right: #222222;
+        border-top: #222222;
+        border-bottom: #222222;
+        border-left: 0; }
+    .AddInventoryFrom .attributes .min-text {
+      padding-right: 10px; }
+  .AddInventoryFrom .rules {
+    text-align: left;
+    font-size: 14px; }
+    .AddInventoryFrom .rules .rules-header {
+      font-weight: bold;
+      border-bottom: 1px solid #aaa; }
+    .AddInventoryFrom .rules table th {
+      border-bottom: 0;
+      border-top: 0; }
+    .AddInventoryFrom .rules table td {
+      border-top: 0;
+      width: 25%; }
+    .AddInventoryFrom .rules .rule-id {
+      border-right: 1px solid gray;
+      font-weight: bold;
+      width: 10%; }
+  .AddInventoryFrom .broadcast-settings {
+    text-align: left;
+    font-size: 14px; }
+    .AddInventoryFrom .broadcast-settings .broadcast-header {
+      font-weight: bold;
+      border-bottom: 1px solid #aaa; }
+    .AddInventoryFrom .broadcast-settings .documents-buttons {
+      padding: 10px; }
+      .AddInventoryFrom .broadcast-settings .documents-buttons button {
+        width: 100%;
+        height: 40px;
+        background-color: transparent;
+        border: 0;
+        color: #289ada;
+        cursor: pointer; }
+      .AddInventoryFrom .broadcast-settings .documents-buttons img {
+        height: 30px;
+        padding-right: 10px; }
+    .AddInventoryFrom .broadcast-settings .add-inventory {
+      padding: 10px; }
+      .AddInventoryFrom .broadcast-settings .add-inventory .add-inventory-button {
+        height: 40px;
+        color: white;
+        background-color: #289ada;
+        border: 1px solid #289ada;
+        width: 100%;
+        cursor: pointer; }
+        .AddInventoryFrom .broadcast-settings .add-inventory .add-inventory-button img {
+          padding-right: 20px; }
+
+@media only screen and (max-width: 500px) {
+  .AddInventoryFrom .table {
+    overflow-x: scroll;
+    display: block; } }
