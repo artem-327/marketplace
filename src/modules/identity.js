@@ -128,7 +128,6 @@ export function login(email, password) {
             }
         }).then((response) => {
             setAuthToken(response.data.data.token);
-            return getIdentity();
         })
     }
 }

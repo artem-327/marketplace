@@ -1,11 +1,11 @@
 .registration {
   width: 100%;
   height: 100vh;
-  position: relative;
-  text-align: center; }
+  position: relative; }
   .registration .registration-wr {
     text-align: left;
-    margin-top: 50px;
+    margin-top: 150px;
+    margin-left: 50px;
     display: inline-block; }
   .registration .form-place h1 {
     margin-bottom: 50px; }
