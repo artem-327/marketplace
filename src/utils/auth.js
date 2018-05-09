@@ -8,7 +8,7 @@ export function withAuth(ComposedComponent) {
 
         verify(props) {
             if (!props.isAuthenticated) {
-                props.history.push("/");
+                props.history.push("/login");
             }
         }
 
@@ -33,7 +33,7 @@ export function withAuth(ComposedComponent) {
 
     function mapStateToProps(store) {
         return {
-            isAuthenticated: store.auth.isAuthenticated
+            isAuthenticated: store.identity.isAuthenticated
         }
     }
 
@@ -45,7 +45,7 @@ export function setAuthToken(token) {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 }
 
-export function deteleAuthToken() {
+export function deleteAuthToken() {
     localStorage.removeItem('jwtoken');
     delete axios.defaults.headers.common['Authorization'];
 }

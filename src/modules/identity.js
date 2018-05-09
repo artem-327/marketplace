@@ -1,11 +1,12 @@
 import axios from "axios";
 // import jwt from "jsonwebtoken";
-import {setAuthToken} from '../utils/auth'
+import {setAuthToken, deleteAuthToken} from '../utils/auth'
 import '../utils/constants';
 import {ROLE_GUEST} from "../utils/constants";
 
 const GET_IDENTITY = 'GET_IDENTITY';
 const GET_IDENTITY_FULFILLED = 'GET_IDENTITY_FULFILLED';
+const GET_IDENTITY_REJECTED = 'GET_IDENTITY_REJECTED';
 const LOGIN = 'LOGIN';
 const LOGIN_PENDING = 'LOGIN_PENDING';
 const LOGIN_REJECTED = 'LOGIN_REJECTED';
@@ -16,6 +17,7 @@ const REGISTRATION_REJECTED = 'REGISTRATION_REJECTED';
 const REGISTRATION_FULFILLED = 'REGISTRATION_FULFILLED';
 
 export const initialState = {
+    isAuthenticated: false,
     loginForm: {
         isFetching: false,
         hasError: false,
@@ -50,7 +52,15 @@ export default function reducer(state = initialState, action) {
         case GET_IDENTITY_FULFILLED: {
             return {
                 ...state,
+                isAuthenticated: true,
                 identity: {data: action.payload.data.data}
+            }
+        }
+        case GET_IDENTITY_REJECTED: {
+            return {
+                ...state,
+                isAuthenticated: false,
+                identity: {data: {role: ROLE_GUEST}}
             }
         }
         case LOGIN_PENDING: {
@@ -100,6 +110,7 @@ export function getIdentity() {
             // return jwt.decode(localStorage.jwtoken);
             return response;
         }).catch((er)=>{
+            deleteAuthToken();
             return Promise.reject(new Error(er))
         })
     }
