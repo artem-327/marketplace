@@ -5,16 +5,18 @@ import store from './store';
 import App from './App';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom'
-// import { Router, Route, IndexRoute, hashHistory } from "react-router";
 import {Switch, Route} from 'react-router-dom';
 import registerServiceWorker from './registerServiceWorker';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Login from './pages/login'
+import TestProfile from './pages/test'
 import Registration from './pages/registration'
 import axios from "axios";
 import { initialize, addTranslationForLanguage } from 'react-localize-redux';
 import { setAuthToken } from './utils/auth';
 import {getIdentity}from './modules/identity';
+import { withAuth } from './utils/auth'
+// import { Router, Route, IndexRoute, hashHistory } from "react-router";
 
 const enJson = require('./translations/en.json');
 
@@ -39,6 +41,7 @@ ReactDOM.render(
            <Switch>
                 <Route exact path="/login" component={Login}/>
                 <Route exact path="/registration" component={Registration}/>
+                <Route exact path="/profile-test" component={withAuth(TestProfile)} />
                 <Route path="/" component={App}/>
             </Switch>
         </Provider>
