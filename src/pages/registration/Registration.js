@@ -5,11 +5,11 @@ import './login.css'
 import {Translate} from 'react-localize-redux'
 
 
-const Login = props => {
-    return <div >
-        <div >
+const Registration = props => {
+    return <div className="registration">
+        <div className="registration-wr">
             <div className="form-place">
-                <h1 className="form-header"><Translate id="login.loginToPRODEX"/></h1>
+                <h1 className="form-header"><Translate id="registration.header"/></h1>
                 <Form {...props} />
             </div>
         </div>
@@ -17,4 +17,4 @@ const Login = props => {
 };
 
 
-export default Login;
+export default Registration;
