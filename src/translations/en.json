@@ -7,6 +7,16 @@
     "logging" : "Logging...",
     "forgottenPassword" : "Forgotten password"
   },
+  "registration":{
+    "header" : "Registration",
+    "email" : "Email",
+    "password" : "Password",
+    "firstName" : "First name",
+    "middleName" : "Middle name",
+    "lastName" : "Last name",
+    "submit": "Register",
+    "fetching": "Trying to register ..."
+  },
   "topMenu": {
     "dashboard": "Dashboard",
     "inventory": "Inventory",

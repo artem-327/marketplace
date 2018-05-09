@@ -1,6 +1,6 @@
 import axios from "axios";
 import jwt from "jsonwebtoken";
-import { setAuthToken } from '../utils/auth'
+import {setAuthToken} from '../utils/auth'
 import '../utils/constants';
 import {ROLE_GUEST} from "../utils/constants";
 
@@ -10,15 +10,36 @@ const LOGIN = 'LOGIN';
 const LOGIN_PENDING = 'LOGIN_PENDING';
 const LOGIN_REJECTED = 'LOGIN_REJECTED';
 const LOGIN_FULFILLED = 'LOGIN_FULFILLED';
+const REGISTRATION = 'REGISTRATION';
+const REGISTRATION_PENDING = 'REGISTRATION_PENDING';
+const REGISTRATION_REJECTED = 'REGISTRATION_REJECTED';
+const REGISTRATION_FULFILLED = 'REGISTRATION_FULFILLED';
 
 export const initialState = {
-    identity: {
+    loginForm: {
         isFetching: false,
         hasError: false,
         isValid: false,
         data: {
             email: "",
             password: "",
+            role: ROLE_GUEST
+        }
+    },
+    registrationForm: {
+        isFetching: false,
+        hasError: false,
+        isValid: false,
+        data: {
+            firstName: "",
+            middleName: "",
+            lastName: "",
+            email: "",
+            password: "",
+        }
+    },
+    identity:{
+        data:{
             role: ROLE_GUEST
         }
     }
@@ -29,19 +50,36 @@ export default function reducer(state = initialState, action) {
         case GET_IDENTITY_FULFILLED: {
             return {
                 ...state,
-                identity: {data: action.data.payload}
+                identity: {data: action.payload.data.data}
             }
         }
         case LOGIN_PENDING: {
-            return {...state, identity:{isFetching: true, hasError:false, isValid: false}}
+            return {...state, loginForm: {isFetching: true, hasError: false, isValid: false}}
         }
         case LOGIN_REJECTED: {
-            return {...state, identity:{isFetching: false, hasError:true, isValid: false}}
+            return {...state, loginForm: {isFetching: false, hasError: true, isValid: false}}
         }
         case LOGIN_FULFILLED: {
             return {
                 ...state,
-                identity: {
+                loginForm: {
+                    isFetching: false,
+                    hasError: false,
+                    isValid: true,
+                    // data: action.data
+                }
+            }
+        }
+        case REGISTRATION_PENDING: {
+            return {...state, registrationForm: {isFetching: true, hasError: false, isValid: false}}
+        }
+        case REGISTRATION_REJECTED: {
+            return {...state, registrationForm: {isFetching: false, hasError: true, isValid: false}}
+        }
+        case REGISTRATION_FULFILLED: {
+            return {
+                ...state,
+                registrationForm: {
                     isFetching: false,
                     hasError: false,
                     isValid: true,
@@ -58,19 +96,22 @@ export default function reducer(state = initialState, action) {
 export function getIdentity() {
     return {
         type: GET_IDENTITY,
-        payload: axios.get("/api/v1/user/me").then(() => {
-            return jwt.decode(localStorage.jwtoken);
+        payload: axios.get("/api/v1/users/me/").then((response) => {
+            // return jwt.decode(localStorage.jwtoken);
+            return response;
+        }).catch((er)=>{
+            return Promise.reject(new Error(er))
         })
     }
 }
 
-export function login(email, password){
+export function login(email, password) {
     return {
         type: LOGIN,
         payload: axios({
             method: 'post',
             url: "/api/v1/auth/login/",
-            data:{
+            data: {
                 email: email,
                 password: password
             }
@@ -79,6 +120,22 @@ export function login(email, password){
             return jwt.decode(localStorage.jwtoken);
         })
     }
+}
 
+export function registration(email, password, firstName, middleName, lastName) {
+    return {
+        type: REGISTRATION,
+        payload: axios({
+            method: 'post',
+            url: "/api/v1/users/",
+            data: {
+                email: email,
+                password: password,
+                firstname: firstName,
+                middlename: middleName,
+                lastname: lastName
+            }
+        })
+    }
 }
 
