@@ -5,8 +5,8 @@ import promise from 'redux-promise-middleware'
 
 import { combineReducers } from 'redux'
 import { combineForms } from 'react-redux-form';
-import identity, {initialState as loginFormInit} from './modules/identity';
-import contact, {initialState as landingFormInit} from './modules/contact'
+import identity, {initialState as identityFormInit} from './modules/identity';
+import contact from './modules/contact'
 import { localeReducer as locale } from 'react-localize-redux';
 
 const reducer = combineReducers({
@@ -14,8 +14,8 @@ const reducer = combineReducers({
     contact,
     locale,
     forms: combineForms({
-        loginForm: loginFormInit.identity.data,
-        landingForm: landingFormInit.landingForm.data
+        loginForm: identityFormInit.loginForm.data,
+        registrationForm: identityFormInit.registrationForm.data,
     }, 'forms'),
 });
 
