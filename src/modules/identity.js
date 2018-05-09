@@ -1,5 +1,5 @@
 import axios from "axios";
-import jwt from "jsonwebtoken";
+// import jwt from "jsonwebtoken";
 import {setAuthToken} from '../utils/auth'
 import '../utils/constants';
 import {ROLE_GUEST} from "../utils/constants";
@@ -117,7 +117,7 @@ export function login(email, password) {
             }
         }).then((response) => {
             setAuthToken(response.data.data.token);
-            return jwt.decode(localStorage.jwtoken);
+            return getIdentity();
         })
     }
 }

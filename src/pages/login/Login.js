@@ -6,8 +6,8 @@ import {Translate} from 'react-localize-redux'
 
 
 const Login = props => {
-    return <div >
-        <div >
+    return <div className="registration">
+        <div className="registration-wr">
             <div className="form-place">
                 <h1 className="form-header"><Translate id="login.loginToPRODEX"/></h1>
                 <Form {...props} />
