@@ -110,8 +110,8 @@ export default class AddInventory extends Component {
 
     render() {
         return (
-            <div className="input-group">
-                <h1>Add Inventory</h1>
+            <div className="add-inventory">
+                <h1 className='header'>Add Inventory</h1>
                 <Form model="forms.inventoryLocationForm" onSubmit={(inputs) => this.addLocation(inputs)}>
                     <InputGroup header='Location' inputs={this.getLocationInputs()}/>
                 </Form>

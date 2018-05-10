@@ -24,7 +24,7 @@ export default class InputGroup extends Component {
     render() {
         return (
             <div className="input-group">
-                <h1>{this.props.title}</h1>
+                <h1>{this.props.header}</h1>
                 {this.prepareInputs()}
             </div>
         );
