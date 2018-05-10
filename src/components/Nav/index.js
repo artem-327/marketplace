@@ -1,15 +1,16 @@
-// import {connect} from 'react-redux';
-// import {bindActionCreators} from 'redux'
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux'
 import Nav from './Nav';
 
+function mapStateToProps(store) {
+    return {
+        isAuthenticated: store.identity.isAuthenticated,
+        identity: store.identity.identity
+    }
+}
 
-// function mapStateToProps(store) {
-//     return {
-//     }
-// }
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({}, dispatch)
+}
 
-// function mapDispatchToProps(dispatch){
-//     return bindActionCreators({}, dispatch)
-// }
-
-export default Nav;
+export default connect(mapStateToProps, mapDispatchToProps)(Nav);

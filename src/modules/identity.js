@@ -5,6 +5,7 @@ import '../utils/constants';
 import {ROLE_GUEST} from "../utils/constants";
 
 const GET_IDENTITY = 'GET_IDENTITY';
+const GET_IDENTITY_PENDING = 'GET_IDENTITY_PENDING';
 const GET_IDENTITY_FULFILLED = 'GET_IDENTITY_FULFILLED';
 const GET_IDENTITY_REJECTED = 'GET_IDENTITY_REJECTED';
 const LOGIN = 'LOGIN';
@@ -41,26 +42,35 @@ export const initialState = {
         }
     },
     identity:{
+        isFetching: false,
         data:{
             role: ROLE_GUEST
         }
     }
+
 };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
+        case GET_IDENTITY_PENDING: {
+            return {
+                ...state,
+                isAuthenticated: false,
+                identity: {isFetching: true, data: {role: ROLE_GUEST}}
+            }
+        }
         case GET_IDENTITY_FULFILLED: {
             return {
                 ...state,
                 isAuthenticated: true,
-                identity: {data: action.payload.data.data}
+                identity: {isFetching: false, data: action.payload.data.data}
             }
         }
         case GET_IDENTITY_REJECTED: {
             return {
                 ...state,
                 isAuthenticated: false,
-                identity: {data: {role: ROLE_GUEST}}
+                identity: {isFetching: false, data: {role: ROLE_GUEST}}
             }
         }
         case LOGIN_PENDING: {

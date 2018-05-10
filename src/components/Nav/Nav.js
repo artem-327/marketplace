@@ -105,9 +105,13 @@ class Nav extends Component {
                 <span> <Translate id="topMenu.support" ></Translate></span>
             </Link>
         </div>;
-
-        const profileLink = <div>
-            <Link to="/myInventory" name="ScrollInfo" className={ this.state.navMenuActive === "inventory" ? 'active': '' }  onClick={() => {this.changeNavState("inventory")}}> <div className="nav-menu-profile"> <img src={userIcon} alt="Logo" /></div><span> John Dee <img src={arrowIcon} className="nav-profile-arrow" alt="Logo" /></span></Link>
+        const profileLink = this.props.isAuthenticated ?
+        <div>
+            <Link to="/myInventory" name="ScrollInfo" className={ this.state.navMenuActive === "inventory" ? 'active': '' }  onClick={() => {this.changeNavState("inventory")}}> <div className="nav-menu-profile"> <img src={userIcon} alt="Logo" /></div><span>{this.props.identity.data.user.firstname} {this.props.identity.data.user.lastname} <img src={arrowIcon} className="nav-profile-arrow" alt="Logo" /></span></Link>
+        </div>
+            :
+        <div>
+            <Link to="/myInventory" name="ScrollInfo" className={ this.state.navMenuActive === "inventory" ? 'active': '' }  onClick={() => {this.changeNavState("inventory")}}><span>NOT LOGGED IN</span></Link>
         </div>;
 
         let guestNav = isScreenBig ?

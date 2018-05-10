@@ -9,7 +9,7 @@ export default class LoginForm extends React.Component {
     handleSubmit(input) {
         this.props.login(input.email, input.password).then(() => {
             this.props.getIdentity().then(()=>{
-                this.props.history.push("/profile-test");
+                this.props.history.push("/");
             });
         })
     }
