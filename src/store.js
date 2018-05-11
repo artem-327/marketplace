@@ -18,7 +18,8 @@ const reducer = combineReducers({
     forms: combineForms({
         loginForm: identityFormInit.loginForm.data,
         registrationForm: identityFormInit.registrationForm.data,
-        inventoryLocationForm: inventoryFormInit.location.data
+        inventoryLocationForm: inventoryFormInit.location.data,
+        inventoryProductsForm: inventoryFormInit.products.data
     }, 'forms'),
 });
 

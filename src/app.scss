@@ -29,3 +29,14 @@ button{
 .blue-button{
 
 }
+
+.half-form{
+  display: inline-block;
+  width: 50%;
+  &.left{
+    padding-right: 10px;
+  }
+  &.right{
+    padding-left: 10px;
+  }
+}

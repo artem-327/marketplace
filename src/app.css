@@ -21,3 +21,11 @@
 
 button {
   padding: 5px 10px; }
+
+.half-form {
+  display: inline-block;
+  width: 50%; }
+  .half-form.left {
+    padding-right: 10px; }
+  .half-form.right {
+    padding-left: 10px; }
