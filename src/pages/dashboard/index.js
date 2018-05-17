@@ -1,21 +1,20 @@
 import {connect} from 'react-redux';
 import Dashboard from './Dashboard';
 import {bindActionCreators} from 'redux'
-import {sendMessage} from "../../modules/contact";
+import {addLocation, addProductOffer} from "../../modules/inventory";
 
 
 function mapStateToProps(store) {
     return {
-        formStatus:{
-            isValid:store.contact.landingForm.isValid,
-            isFetching:store.contact.landingForm.isFetching,
-            hasError:store.contact.landingForm.hasError,
+        inventory: {
+            location: store.inventory.location,
+            products: store.inventory.products
         }
     }
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({sendMessage}, dispatch)
+    return bindActionCreators({addLocation, addProductOffer}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

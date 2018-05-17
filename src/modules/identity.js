@@ -1,11 +1,13 @@
 import axios from "axios";
-import jwt from "jsonwebtoken";
-import {setAuthToken} from '../utils/auth'
+// import jwt from "jsonwebtoken";
+import {setAuthToken, deleteAuthToken} from '../utils/auth'
 import '../utils/constants';
 import {ROLE_GUEST} from "../utils/constants";
 
 const GET_IDENTITY = 'GET_IDENTITY';
+const GET_IDENTITY_PENDING = 'GET_IDENTITY_PENDING';
 const GET_IDENTITY_FULFILLED = 'GET_IDENTITY_FULFILLED';
+const GET_IDENTITY_REJECTED = 'GET_IDENTITY_REJECTED';
 const LOGIN = 'LOGIN';
 const LOGIN_PENDING = 'LOGIN_PENDING';
 const LOGIN_REJECTED = 'LOGIN_REJECTED';
@@ -16,6 +18,7 @@ const REGISTRATION_REJECTED = 'REGISTRATION_REJECTED';
 const REGISTRATION_FULFILLED = 'REGISTRATION_FULFILLED';
 
 export const initialState = {
+    isAuthenticated: false,
     loginForm: {
         isFetching: false,
         hasError: false,
@@ -39,18 +42,35 @@ export const initialState = {
         }
     },
     identity:{
+        isFetching: false,
         data:{
             role: ROLE_GUEST
         }
     }
+
 };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
+        case GET_IDENTITY_PENDING: {
+            return {
+                ...state,
+                isAuthenticated: false,
+                identity: {isFetching: true, data: {role: ROLE_GUEST}}
+            }
+        }
         case GET_IDENTITY_FULFILLED: {
             return {
                 ...state,
-                identity: {data: action.payload.data.data}
+                isAuthenticated: true,
+                identity: {isFetching: false, data: action.payload.data.data}
+            }
+        }
+        case GET_IDENTITY_REJECTED: {
+            return {
+                ...state,
+                isAuthenticated: false,
+                identity: {isFetching: false, data: {role: ROLE_GUEST}}
             }
         }
         case LOGIN_PENDING: {
@@ -100,6 +120,7 @@ export function getIdentity() {
             // return jwt.decode(localStorage.jwtoken);
             return response;
         }).catch((er)=>{
+            deleteAuthToken();
             return Promise.reject(new Error(er))
         })
     }
@@ -117,7 +138,6 @@ export function login(email, password) {
             }
         }).then((response) => {
             setAuthToken(response.data.data.token);
-            return jwt.decode(localStorage.jwtoken);
         })
     }
 }

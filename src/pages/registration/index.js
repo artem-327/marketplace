@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux'
 import Registration from './Registration';
-import { registration } from '../../modules/identity'
+import { registration} from '../../modules/identity'
 
 
 function mapStateToProps(store) {

@@ -7,8 +7,8 @@ export function withAuth(ComposedComponent) {
     class requireAuth extends React.Component {
 
         verify(props) {
-            if (!props.isAuthenticated) {
-                props.history.push("/");
+            if (!props.isAuthenticated && !props.isFetchingIdentity) {
+                props.history.push("/login");
             }
         }
 
@@ -21,22 +21,21 @@ export function withAuth(ComposedComponent) {
         }
 
         render() {
-            return (
-                <ComposedComponent {...this.props}/>
-            )
+            return this.props.isFetchingIdentity ? <div> </div> : <ComposedComponent {...this.props}/>
         }
     }
 
     requireAuth.propTypes = {
-        isAuthenticated: PropTypes.bool.isRequired
+        isAuthenticated: PropTypes.bool.isRequired,
+        isFetchingIdentity: PropTypes.bool.isRequired
     };
 
     function mapStateToProps(store) {
         return {
-            isAuthenticated: store.auth.isAuthenticated
+            isAuthenticated: store.identity.isAuthenticated,
+            isFetchingIdentity: store.identity.identity.isFetching
         }
     }
-
     return connect(mapStateToProps)(requireAuth)
 }
 
@@ -45,7 +44,7 @@ export function setAuthToken(token) {
     axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
 }
 
-export function deteleAuthToken() {
+export function deleteAuthToken() {
     localStorage.removeItem('jwtoken');
     delete axios.defaults.headers.common['Authorization'];
 }

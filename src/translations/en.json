@@ -1,9 +1,9 @@
 {
   "login":{
-    "loginToPRODEX" : "Login to PRODEX",
+    "loginToPRODEX" : "Login",
     "email" : "Email",
     "password" : "Password",
-    "login" : "LOGIN!",
+    "login" : "Login",
     "logging" : "Logging...",
     "forgottenPassword" : "Forgotten password"
   },
