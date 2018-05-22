@@ -14,6 +14,7 @@ import reports from '../../images/nav/reports.png';
 import support from '../../images/nav/support.png';
 import userIcon from '../../images/nav/user.png';
 import arrowIcon from '../../images/nav/Arrow.png';
+import NavDropdown from './components/NavDropdown';
 
 class Nav extends Component {
     constructor(props) {
@@ -78,13 +79,14 @@ class Nav extends Component {
         const mobileStyle = menuOpen ? this.mobileNavStyleInit() : this.mobileNavStyleFinal();
         const questLinks = <div>
             <Link to="/" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "dashboard" ? 'active': '' } onClick={() => {this.changeNavState("dashboard")}} > <div className="header-menu-item"> <img src={dashboard} alt="Logo" /></div>
-                <span>
-                    <Translate id="topMenu.dashboard" ></Translate>
+                <span> <Translate id="topMenu.dashboard" ></Translate>
                 </span>
             </Link>
-            <Link to="/inventory" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "inventory" ? 'active': '' } onClick={() => {this.changeNavState("inventory")}}> <div className="header-menu-item"> <img src={inventory} alt="Logo" /></div>
-                <span><Translate id="topMenu.inventory" ></Translate></span>
-            </Link>
+            {/*<Link to="/inventory" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "inventory" ? 'active': '' } onClick={() => {this.changeNavState("inventory")}}> <div className="header-menu-item"> <img src={inventory} alt="Logo" /></div>*/}
+
+            {/*</Link>*/}
+            <NavDropdown />
+
             <Link to="/orders" name="menu-item ScrollInfo" className={ this.state.navMenuActive === "orders" ? 'active': '' } onClick={() => {this.changeNavState("orders")}}> <div className="header-menu-item"> <img src={orders} alt="Logo" /></div>
                 <span> <Translate id="topMenu.orders" ></Translate>
                 </span>
@@ -147,7 +149,6 @@ class Nav extends Component {
 
         return (
             <nav className="App-nav">
-
                 {guestNav}
                 <div className="clearfix"> </div>
             </nav>
