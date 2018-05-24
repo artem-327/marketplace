@@ -1,26 +1,6 @@
+@import url(https://fonts.googleapis.com/css?family=Cabin:300,400,500,600,700);
 .App {
-  text-align: center;
-  font-family: "Myriad Pro", serif !important; }
-
-.App-header {
-  background-color: #222;
-  height: 100px;
-  color: white; }
-
-.App-title {
-  font-size: 1.5em; }
-
-.App-intro {
-  font-size: large; }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg); }
-  to {
-    transform: rotate(360deg); } }
-
-button {
-  padding: 5px 10px; }
+  font-family: "Cabin", sans-serif; }
 
 .half-form {
   display: inline-block;

@@ -1,21 +1,13 @@
 import {connect} from 'react-redux';
 import Clients from './Clients';
 import {bindActionCreators} from 'redux'
-import {sendMessage} from "../../modules/contact";
-
 
 function mapStateToProps(store) {
-    return {
-        formStatus:{
-            isValid:store.contact.landingForm.isValid,
-            isFetching:store.contact.landingForm.isFetching,
-            hasError:store.contact.landingForm.hasError,
-        }
-    }
+    return {}
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({sendMessage}, dispatch)
+    return bindActionCreators({}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Clients);

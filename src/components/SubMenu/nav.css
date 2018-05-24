@@ -1,0 +1,37 @@
+.App-nav {
+  background-color: #33373e; }
+  .App-nav .nav-inside .links {
+    display: inline-block; }
+  .App-nav .nav-inside .logo, .App-nav .nav-inside .nav-link {
+    display: inline-block; }
+  .App-nav .nav-inside .logo {
+    padding-left: 30px;
+    padding-right: 60px;
+    vertical-align: top;
+    margin-top: 16px; }
+    .App-nav .nav-inside .logo img {
+      width: 75px; }
+  .App-nav .nav-inside .nav-link {
+    padding: 5px 5px;
+    transition: all .2s ease;
+    color: #ffffff;
+    font-weight: lighter;
+    font-size: .8em;
+    height: 90px;
+    width: 90px;
+    vertical-align: top;
+    text-align: center;
+    position: relative; }
+    .App-nav .nav-inside .nav-link.active {
+      color: #2599d5; }
+    .App-nav .nav-inside .nav-link .link-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); }
+    .App-nav .nav-inside .nav-link img {
+      display: block;
+      height: 23px;
+      margin: 0 auto 10px auto; }
+    .App-nav .nav-inside .nav-link:hover {
+      background-color: #3f434c; }
