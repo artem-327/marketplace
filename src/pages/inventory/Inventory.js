@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import './settings.css'
+import './inventory.css'
 
-class Settings extends Component {
+class Inventory extends Component {
 
     componentDidMount() {
 
@@ -13,11 +13,11 @@ class Settings extends Component {
     render() {
         return (
             <div>
-                <p>Settings</p>
+                <p>Inventory</p>
             </div>
         );
     }
 }
 
-export default Settings;
+export default Inventory;
 

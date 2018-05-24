@@ -1,5 +1,5 @@
 import {connect} from 'react-redux';
-import Support from './Support';
+import Inventory from './Inventory';
 import {bindActionCreators} from 'redux'
 
 function mapStateToProps(store) {
@@ -10,4 +10,4 @@ function mapDispatchToProps(dispatch){
     return bindActionCreators({}, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Support);
+export default connect(mapStateToProps, mapDispatchToProps)(Inventory);
