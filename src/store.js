@@ -9,12 +9,14 @@ import identity, {initialState as identityFormInit} from './modules/identity';
 import contact from './modules/contact'
 import inventory, {initialState as inventoryFormInit} from './modules/inventory'
 import { localeReducer as locale } from 'react-localize-redux';
+import merchants from './modules/merchants';
 
 const reducer = combineReducers({
     identity,
     contact,
     locale,
     inventory,
+    merchants,
     forms: combineForms({
         loginForm: identityFormInit.loginForm.data,
         registrationForm: identityFormInit.registrationForm.data,
