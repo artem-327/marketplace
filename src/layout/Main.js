@@ -11,6 +11,7 @@ import Support from "../pages/support/Support"
 import MyInventory from "../pages/inventory/myInventory";
 import AddInventory from "../pages/inventory/addInventory";
 import operator from '../pages/operator';
+import productOffer from '../pages/inventory/productOffer'
 
 
 class Main extends Component {
@@ -28,6 +29,7 @@ class Main extends Component {
                     <Route exact path="/myInventory" component={MyInventory}/>
                     <Route exact path="/addInventory" component={AddInventory}/>
                     <Route exact path="/operator" component={operator}/>
+                    <Route exact path="/productoff" component={productOffer}/>
                 </Switch>
             </div>
         );
