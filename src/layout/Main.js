@@ -10,6 +10,7 @@ import Settings from "../pages/settings/Settings"
 import Support from "../pages/support/Support"
 import MyInventory from "../pages/inventory/myInventory";
 import AddInventory from "../pages/inventory/addInventory";
+import operator from '../pages/operator';
 
 
 class Main extends Component {
@@ -26,6 +27,7 @@ class Main extends Component {
                     <Route exact path="/support" component={Support}/>
                     <Route exact path="/myInventory" component={MyInventory}/>
                     <Route exact path="/addInventory" component={AddInventory}/>
+                    <Route exact path="/operator" component={operator}/>
                 </Switch>
             </div>
         );

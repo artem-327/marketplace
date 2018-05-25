@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux'
 import Merchants from './Merchants';
-import {getData, acceptMerchant, rejectMerchant} from '../../../../modules/merchants';
+import {getData, acceptMerchant, rejectMerchant} from '../../modules/merchants';
 
 
 function mapStateToProps(store) {

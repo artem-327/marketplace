@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Button from './components/Button';
+import AcceptTableButton from './merchants/components/AcceptTableButton';
+import RejectTableButton from './merchants/components/AcceptTableButton';
 // import classnames from 'classnames';
 
 class Merchants extends Component {
@@ -31,8 +32,8 @@ class Merchants extends Component {
             return <tr key={'m'+index}>
                     <td>{item.email}</td>
                     <td>{approve}</td>
-                    <td><Button id={item.id} click={(id)=>{this.acceptMerchants(id)}} title="Approve"/></td>
-                    <td><Button id={item.id} click={(id)=>{this.rejectMerchants(id)}} title="Reject"/></td>
+                    <td><AcceptTableButton id={item.id} click={(id)=>{this.acceptMerchants(id)}} title="Approve"/></td>
+                    <td><RejectTableButton id={item.id} click={(id)=>{this.rejectMerchants(id)}} title="Reject"/></td>
                 </tr>;
         })
     }
