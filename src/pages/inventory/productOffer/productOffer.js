@@ -23,7 +23,7 @@ class productOffer extends Component {
     }
 
     render() {
-        let merchants = this.props.isFetching ? <tr><td>Načítání</td></tr> : this.renderProductOffer();
+        let productOff = this.props.isFetching ? <tr><td>Načítání</td></tr> : this.renderProductOffer();
         return (
             <div className="App">
                 <table border="1">
