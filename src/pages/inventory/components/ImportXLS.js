@@ -1,13 +1,9 @@
 import React, {Component} from 'react';
-import Filter from './components/Filter'
-import DataTable from './components/DataTable'
-import './inventory.css'
 import XLSX from 'xlsx';
 import DragDropFile from "../../../components/DragDropFile";
 import FileSelector from "../../../components/FileSelector";
 
-
-class Inventory extends Component {
+class ImportXLS extends Component {
     constructor(props) {
         super(props);
         this.handleFile = this.handleFile.bind(this);
@@ -25,6 +21,10 @@ class Inventory extends Component {
         };
 
         isCsv ? reader.readAsText(file) : reader.readAsArrayBuffer(file);
+        // do proměnné reader se uložil json
+        // v modulu si uděláš akci která jako parametr přebere právě reader např.: saveXls(file)
+        // v indexu připojíš akci do props v mapDispatchToProps
+        // zavoláš akci v této funkci např.: this.props.saveXls(reader)
     };
 
     render() {
@@ -42,13 +42,12 @@ class Inventory extends Component {
                         </div>
                     </div>
                 </DragDropFile>
-                <Filter/>
-                <DataTable/>
             </div>
         );
     }
 }
 
 
-export default Inventory;
+export default ImportXLS;
+
 

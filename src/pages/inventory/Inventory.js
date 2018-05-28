@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './inventory.css';
 import SubMenu from '../../components/SubMenu';
+import ImportXLS from './components/ImportXLS';
 
 class Inventory extends Component {
 
@@ -38,6 +39,7 @@ class Inventory extends Component {
             <div>
                 <SubMenu links={this.submenuLinks()} search filter/>
                 <p>Inventory</p>
+                <ImportXLS />
             </div>
         );
     }
