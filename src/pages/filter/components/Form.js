@@ -60,10 +60,12 @@ export default class FilterForm extends React.Component {
                     <Control.text model="forms.filterForm.maxMilesAway"/>
                 </div>
                 <div className="form-middle">
-                    <button className={classnames({"not-valid": hasError}, {"loading": isFetching})}>{butLogin}</button>
+                    <button className={classnames({"not-valid": hasError}, {"loading": isFetching})}></button> /* {butLogin} */
                 </div>
                 {/*<Link className="form-link" to="#"><Translate id="login.forgottenPassword"/></Link>*/}
             </Form>
         );
     }
 }
+
+

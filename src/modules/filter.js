@@ -85,49 +85,49 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-export function getIdentity() {
-    return {
-        type: GET_IDENTITY,
-        payload: axios.get("/api/v1/users/me/").then((response) => {
-            // return jwt.decode(localStorage.jwtoken);
-            return response;
-        }).catch((er)=>{
-            deleteAuthToken();
-            return Promise.reject(new Error(er))
-        })
-    }
-}
-
-export function login(email, password) {
-    return {
-        type: LOGIN,
-        payload: axios({
-            method: 'post',
-            url: "/api/v1/auth/login/",
-            data: {
-                email: email,
-                password: password
-            }
-        }).then((response) => {
-            setAuthToken(response.data.data.token);
-        })
-    }
-}
-
-export function registration(email, password, firstName, middleName, lastName) {
-    return {
-        type: REGISTRATION,
-        payload: axios({
-            method: 'post',
-            url: "/api/v1/users/",
-            data: {
-                email: email,
-                password: password,
-                firstname: firstName,
-                middlename: middleName,
-                lastname: lastName
-            }
-        })
-    }
-}
+// export function getIdentity() {
+//     return {
+//         type: GET_IDENTITY,
+//         payload: axios.get("/api/v1/users/me/").then((response) => {
+//             // return jwt.decode(localStorage.jwtoken);
+//             return response;
+//         }).catch((er)=>{
+//             deleteAuthToken();
+//             return Promise.reject(new Error(er))
+//         })
+//     }
+// }
+//
+// export function login(email, password) {
+//     return {
+//         type: LOGIN,
+//         payload: axios({
+//             method: 'post',
+//             url: "/api/v1/auth/login/",
+//             data: {
+//                 email: email,
+//                 password: password
+//             }
+//         }).then((response) => {
+//             setAuthToken(response.data.data.token);
+//         })
+//     }
+// }
+//
+// export function registration(email, password, firstName, middleName, lastName) {
+//     return {
+//         type: REGISTRATION,
+//         payload: axios({
+//             method: 'post',
+//             url: "/api/v1/users/",
+//             data: {
+//                 email: email,
+//                 password: password,
+//                 firstname: firstName,
+//                 middlename: middleName,
+//                 lastname: lastName
+//             }
+//         })
+//     }
+// }
 
