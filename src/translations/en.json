@@ -7,6 +7,9 @@
     "logging" : "Logging...",
     "forgottenPassword" : "Forgotten password"
   },
+  "filter":{
+    "newFilter": "New Filter"
+  },
   "registration":{
     "header" : "Registration",
     "email" : "Email",

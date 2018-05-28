@@ -11,7 +11,8 @@ import Support from "../pages/support/Support"
 import MyInventory from "../pages/inventory/myInventory";
 import AddInventory from "../pages/inventory/addInventory";
 import operator from '../pages/operator';
-import productOffer from '../pages/inventory/productOffer'
+import productOffer from '../pages/inventory/productOffer';
+import filter from '../pages/filter';
 
 
 class Main extends Component {
@@ -30,6 +31,7 @@ class Main extends Component {
                     <Route exact path="/addInventory" component={AddInventory}/>
                     <Route exact path="/operator" component={operator}/>
                     <Route exact path="/productoff" component={productOffer}/>
+                    <Route exact path="/filter" component={filter}/>
                 </Switch>
             </div>
         );

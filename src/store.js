@@ -8,11 +8,13 @@ import { combineForms } from 'react-redux-form';
 import identity, {initialState as identityFormInit} from './modules/identity';
 import contact from './modules/contact'
 import inventory, {initialState as inventoryFormInit} from './modules/inventory'
+import filter, {initialState as filterFormInit} from './modules/filter';
 import { localeReducer as locale } from 'react-localize-redux';
 import merchants from './modules/merchants';
 import productOff from './modules/productOff';
 
 const reducer = combineReducers({
+    filter,
     identity,
     contact,
     locale,
@@ -20,6 +22,7 @@ const reducer = combineReducers({
     merchants,
     productOff,
     forms: combineForms({
+        filterForm: filterFormInit.filterForm.data,
         loginForm: identityFormInit.loginForm.data,
         registrationForm: identityFormInit.registrationForm.data,
         inventoryLocationForm: inventoryFormInit.location.data,
