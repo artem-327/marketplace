@@ -3,6 +3,7 @@ import XLSX from 'xlsx';
 import DragDropFile from "../../../components/DragDropFile";
 import FileSelector from "../../../components/FileSelector";
 
+
 class ImportXLS extends Component {
     constructor(props) {
         super(props);
