@@ -31,7 +31,7 @@
       transform: translate(-50%, -50%); }
     .App-nav .nav-inside .nav-link img {
       display: block;
-      max-height: 45px;
+      height: 33px;
       margin: 0 auto 10px auto; }
     .App-nav .nav-inside .nav-link:hover {
       background-color: #3f434c; }
