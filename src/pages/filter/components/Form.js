@@ -3,24 +3,12 @@ import classnames from 'classnames'
 import {Control, Form} from 'react-redux-form';
 import {Link} from 'react-router-dom';
 import {Translate} from 'react-localize-redux'
-import Application from "./checkbox/Application";
+// import Application from "./checkbox/Application";
 
 export default class FilterForm extends React.Component {
 
     handleSubmit(input) {
-        this.props.login(
-            input.chemicalName,
-            input.fromQuantity,
-            input.toQuantity,
-            input.fromPrice,
-            input.toPrice,
-            input.zipCode,
-            input.maxMilesAway
-            ).then(() => {
-            this.props.getIdentity().then(()=>{
-                this.props.history.push("/inventory");
-            });
-        })
+        console.log(input);
     }
 
     render() {
@@ -31,7 +19,7 @@ export default class FilterForm extends React.Component {
         //     <Translate id="login.login"/>;
 
         return (
-            <Form model="forms.loginForm" onSubmit={(val) => this.handleSubmit(val)}>
+            <Form model="forms.filterForm" onSubmit={(val) => this.handleSubmit(val)}>
                 <div>
                     <label htmlFor="forms.filterForm.chemicalName">Chemical name</label>
                     <Control.text model="forms.filterForm.chemicalName"/>
@@ -58,9 +46,18 @@ export default class FilterForm extends React.Component {
                 </div>
                 <div>
                     <label htmlFor="forms.filterForm.maxMilesAway">Max. Miles Away</label>
-                    <Control.text model="forms.filterForm.maxMilesAway"/>
+                    <Control.text model="forms.filterForm.maxMilesAway" defaultValue='testing'/>
                 </div>
-                <Application/>
+                {/*<Application/>*/}
+                <div>
+                    <label htmlFor="forms.filterForm.checkboxBanan">TEST</label>
+                    <Control.checkbox model="forms.filterForm.checkboxBanan" defaultValue={true}/>
+
+                </div>
+                <div>
+                    <label htmlFor="forms.filterForm.checkboxBanan2">TEST</label>
+                    <Control.checkbox model="forms.filterForm.checkboxBanan2"/>
+                </div>
                 {/*<div>*/}
                     {/*<label htmlFor="#">Super Sack</label>*/}
                     {/*<Control.checkbox model="#"/>*/}

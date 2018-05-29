@@ -32,7 +32,8 @@ export const initialState = {
             toPrice: "",
             zipCode: "",
             maxMilesAway: "",
-
+            checkboxBanan: "",
+            checkboxBanan2: ""
         }
     },
 };
