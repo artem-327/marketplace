@@ -1,0 +1,28 @@
+.filter {
+  background-color: #eeeeee;
+  position: absolute;
+  width: 400px;
+  right: 0;
+  top: 120px;
+  border: 2px solid red;
+  padding: 10px;
+  text-align: left; }
+
+.filterGroup {
+  border-bottom: 5px solid lime; }
+
+.label-text {
+  margin-left: 10px;
+  border-radius: 5px;
+  border: 1px solid #B0B0B0; }
+
+.input-checkbox input {
+  position: absolute;
+  opacity: 0; }
+
+.input-checkbox .checkmark {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  background-color: red;
+  float: left; }

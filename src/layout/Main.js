@@ -18,7 +18,7 @@ import filter from '../pages/filter';
 class Main extends Component {
     render() {
         return (
-            <div>
+            <div className='App-main'>
                 <Switch>
                     <Route exact path="/" component={Dashboard}/>
                     <Route exact path="/inventory" component={Inventory}/>

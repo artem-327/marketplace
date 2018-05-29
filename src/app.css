@@ -29,3 +29,6 @@ button {
     padding-right: 10px; }
   .half-form.right {
     padding-left: 10px; }
+
+.App-main {
+  min-height: 100vh; }
