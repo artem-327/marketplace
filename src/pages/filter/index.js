@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux'
+import {bindActionCreators} from 'redux';
 import Login from './Login';
-import { login, getIdentity } from '../../modules/identity'
+import { login, getIdentity } from '../../modules/identity';
 
 
 function mapStateToProps(store) {

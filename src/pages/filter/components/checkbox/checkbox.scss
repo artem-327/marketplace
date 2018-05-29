@@ -1,0 +1,283 @@
+//@import url(https://fonts.googleapis.com/css?family=Cabin:300,400,500,600,700);
+@import url('https://fonts.googleapis.com/css?family=Bowlby+One+SC');
+
+$font-family: 'Bowlby One SC', cursive;
+$info-background: #df4449;
+$info-color: white;
+$header-color:#222830;
+$options-background: #c44044;
+$options-background-2: #af393d;
+$options-color:white;
+$stats-color: white;
+$form-place-background: #222830;
+$form-place-color: white;
+$header-color: black;
+
+$break-tablet: 1080px;
+$break-phone: 700px;
+
+.CheckboxBotton {
+  font-family: $font-family;
+  .landing-wr {
+    width: 80%;
+    margin: auto;
+    position: relative;
+  }
+  header {
+    background-color: $header-color;
+    .left {
+      color: $header-color;
+      width: 40%;
+      padding: 150px 0 120px 0;
+      margin: 0;
+      h1 {
+        font-weight: 600;
+        line-height: 1.3;
+        max-width: 500px;
+        font-size: 2.3em;
+      }
+      p{
+        font-size: 1.1em;
+        line-height: 1.4
+      }
+      a {
+        margin-top: 20px;
+        display: inline-block;
+      }
+    }
+    .right {
+      position: absolute;
+      right: -50px;
+      bottom: -170px;
+      width: 45%;
+      min-width: 600px;
+      img {
+        width: 100%;
+      }
+    }
+    .headerLogo{
+      width: 50px;
+      height: 50px;
+    }
+  }
+  .info{
+    background-color: $info-background;
+    padding: 100px 0;
+    h1{
+      color: $info-color;
+      margin: 0;
+      font-weight: 600;
+    }
+    p{
+      color: $info-color;
+      width: 80%;
+      line-height: 1.4;
+      font-size: 1.1em;
+      margin-bottom: 0;
+    }
+  }
+  .options{
+    background-color: $options-background;
+    padding: 100px 0 70px 0;
+    .option{
+      width: 50%;
+      float: left;
+      color: $options-color;
+      position: relative;
+      min-height: 150px;
+      .left{
+        height: 100px;
+        width: 100px;
+        margin-right: 20px;
+        border-radius: 10px;
+        background-color: $options-background-2;
+        position: absolute;
+        img{
+          width: 55%;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          max-height: 58px;
+          transform: translate(-50%, -50%);
+        }
+      }
+      .right{
+        margin-right: 25px;
+        padding-left: 110px;
+        display: inline-block;
+        vertical-align: top;
+        h4{
+          margin: 0 0 10px 0;
+          font-weight: bold;
+        }
+        p{
+          line-height: 1.2;
+          margin: 0;
+        }
+      }
+    }
+  }
+  .stats{
+    padding: 50px 0;
+    background-size: cover;
+    background-color: black;
+    .item{
+      float: left;
+      width: 33%;
+      text-align: center;
+      color: $stats-color;
+      h1{
+        margin: 10px 0 10px 0;
+        font-weight: 600;
+        font-size: 2.8em;
+      }
+      p{
+        margin: 0;
+      }
+    }
+  }
+  .form-place{
+    background-color: $form-place-background;
+    color: $form-place-color;
+    padding: 50px 0;
+    h1{
+      font-weight: 600;
+    }
+    h2{
+      color: $info-background;
+      font-size: 1.8em;
+    }
+    p{
+      font-size: 1em;
+      margin: 35px 0;
+      line-height: 1.4;
+    }
+    .left{
+      display: inline-block;
+      width: 50%;
+      form{
+        input{
+          width: 100%;
+          padding: 10px 0;
+          margin-bottom: 10px;
+          border: none;
+          border-bottom: 1px solid #666666;
+          background-color: transparent;
+          color: white;
+          transition: all .2s ease;
+          &:hover{
+            border-color: lighten($info-background, 5%);
+          }
+          &:focus{
+            border-color: $info-background;
+          }
+        }
+        button{
+          transition: all .2s ease;
+        }
+        button:hover{
+          transform: translateY(-3px);
+          background-color: lighten($info-background, 5%);
+        }
+        label{
+          font-size: .8em;
+        }
+        .phone{
+          width: 35%;
+          display: inline-block;
+          float: right;
+        }
+        .email{
+          display: inline-block;
+          width: 60%;
+        }
+      }
+    }
+    .right{
+      float: right;
+      width: 40%;
+      .form-info{
+        margin: 50px auto 0 auto;
+        display: inline-block;
+        padding: 18px 0;
+        border-top: 3px solid $info-background;
+        border-bottom: 3px solid $info-background;
+        .tel, .mail{
+          padding-left: 50px;
+          position: relative;
+          a{
+            color: $info-background;
+            text-decoration: none;
+            &:hover{
+              color: lighten($info-background, 5%);
+            }
+          }
+        }
+        .tel::before, .mail::before{
+          width: 30px;
+          height: 30px;
+          content: '';
+          position: absolute;
+          left: 0;
+          top: -5px;
+        }
+        .tel::before{
+          background: url("/img/static/landingPage/landing-phone.png") no-repeat center center;
+          background-size: contain;
+        }
+        .mail::before{
+          background: url("/img/static/landingPage/landing-mail.png") no-repeat center center;
+          background-size: contain;
+        }
+      }
+    }
+  }
+  @media(max-width: $break-tablet){
+    header {
+      .right{
+        min-width: 450px;
+      }
+      .left{
+        width: 100%;
+      }
+    }
+    .landing-wr{
+      width: 90%;
+    }
+    .info p{
+      width: 100%;
+    }
+    .info h1{
+      width: 100%;
+      line-height: 1.3;
+    }
+    .options .option{
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .stats .item{
+      width: 100%;
+      margin: 15px 0;
+    }
+    .form-place h1{
+      line-height: 1.4;
+    }
+    .form-place .left{
+      width: 100%;
+    }
+    .form-place .right{
+      width: 100%;
+      text-align: center;
+    }
+    .form-place .form-info h2{
+      font-size: 1.4em;
+    }
+  }
+  @media(max-width: $break-phone) {
+    header {
+      .right {
+        display: none;
+      }
+    }
+  }
+}
