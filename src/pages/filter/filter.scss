@@ -1,33 +1,72 @@
+@import url(https://fonts.googleapis.com/css?family=Cabin:300,400,500,600,700);
+
+$font-family: 'Cabin', sans-serif;
+
 .filter {
+  font-family: "Cabin", sans-serif;
   background-color: #eeeeee;
   position: absolute;
   width: 400px;
   right: 0;
-  top: 120px;
-  border: 2px solid red;
+  top: 100px;
+  -webkit-box-shadow: -2px 3px 5px 0px rgba(140,140,140,1);
+  -moz-box-shadow: -2px 3px 5px 0px rgba(140,140,140,1);
+  box-shadow: -2px 3px 5px 0px rgba(140,140,140,1);
   padding: 10px;
   text-align: left;
-}
-.filterGroup {
-  border-bottom: 5px solid lime;
+  .header {
+    cursor: pointer;
+    margin-left: 30px;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  .filter-group{
+    border-bottom: 1px solid #D3D3D3;
+    margin-top: 10px;
+  }
+  .filter-button {
+    cursor: pointer;
+    border-radius: 3px;
+    color: #FFFFFF;
+    background-color: #289ada;
+    padding: 5px 25px;
+    border: none;
+    float: right;
+    margin-right: 5px;
+    margin-top: 15px;
+    margin-bottom: 5px;
+  }
+  .label-text {
+    margin-left: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    border: 1px solid #B0B0B0;
+  }
+  .label-title {
+    font-size: 15px;
+    margin-left: 10px;
+  }
+  .dropdown-icon {
+    cursor: pointer;
+    margin-top: 2px;
+    position: absolute;
+    color: #289ada;
+  }
+  .input-checkbox {
+    padding-top: 15px;
+    //display: inline-block;
+    input {
+      position: absolute;
+      opacity: 0;
+    }
+    .checkmark {
+      width: 15px;
+      height: 15px;
+      display: inline-block;
+      background-color: white;
+      float: left;
+      margin-right: 10px;
+    }
+  }
 }
 
-.label-text {
-  margin-left: 10px;
-  border-radius: 5px;
-  border: 1px solid #B0B0B0;
-}
-.input-checkbox {
-  //display: inline-block;
-  input {
-    position: absolute;
-    opacity: 0;
-  }
-  .checkmark {
-    width: 15px;
-    height: 15px;
-    display: inline-block;
-    background-color: red;
-    float: left;
-  }
-}

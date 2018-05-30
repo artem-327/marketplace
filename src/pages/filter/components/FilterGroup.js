@@ -9,7 +9,7 @@ class FilterGroup extends Component {
         super(props);
         this.state = {
             open: false
-        }
+        };
     }
 
     renderInputs() {
@@ -22,7 +22,7 @@ class FilterGroup extends Component {
                             <label key={index} htmlFor={input.model}>
                                 {input.label}
                                 <Control.checkbox model={input.model} id={input.model}/>
-                                <span className="checkmark"> </span>
+                                <span className="checkmark"></span>
                             </label>
                         </div>
                     )
@@ -30,7 +30,7 @@ class FilterGroup extends Component {
                 case 'text':{
                     return (
                         <div key={index} className="input-text">
-                            <label htmlFor={input.model}>{input.label}</label>
+                            <label className="label-title" htmlFor={input.model}>{input.label}</label><br />
                             <Control.text className="label-text" model={input.model} id={input.model}/>
                         </div>
                     )
@@ -45,6 +45,9 @@ class FilterGroup extends Component {
     render() {
         return (
             <div className="filter-group">
+                {/*<div className="dropdown-icon">*/}
+                    {/*&#9660;*/}
+                {/*</div>*/}
                 <div className="header" onClick={() => {
                     this.setState({open: !this.state.open})
                 }}>
