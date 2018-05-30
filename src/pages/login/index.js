@@ -6,6 +6,7 @@ import { login, getIdentity } from '../../modules/identity'
 
 function mapStateToProps(store) {
     return {
+
         formStatus:{
             isValid:store.identity.loginForm.isValid,
             isFetching:store.identity.loginForm.isFetching,

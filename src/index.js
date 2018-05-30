@@ -43,6 +43,7 @@ ReactDOM.render(
                 <Route exact path="/registration" component={Registration}/>
                 <Route exact path="/profile-test" component={withAuth(TestProfile)} />
                 <Route path="/" component={App}/>
+               
             </Switch>
         </Provider>
     </BrowserRouter>, document.getElementById('root'));
