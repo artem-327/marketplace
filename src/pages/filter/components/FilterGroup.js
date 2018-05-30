@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import {Translate} from 'react-localize-redux';
 import PropTypes from 'prop-types';
 import {Control, Form} from 'react-redux-form';
+import check from '../../../images/inv-filter/check.png'
+import dropdown from '../../../images/inv-filter/dropdown.png'
+import dropdownClose from '../../../images/inv-filter/dropdown-close.png'
 
 class FilterGroup extends Component {
 
@@ -18,20 +21,20 @@ class FilterGroup extends Component {
             switch(input.type){
                 case 'checkbox':{
                     return (
-                        <div className="input-checkbox">
+                        <div key={index} className="input-checkbox">
                             <label key={index} htmlFor={input.model}>
                                 {input.label}
                                 <Control.checkbox model={input.model} id={input.model}/>
-                                <span className="checkmark"></span>
+                                <span className="checkmark">  </span>
                             </label>
                         </div>
                     )
                 }
                 case 'text':{
                     return (
-                        <div key={index} className="input-text">
-                            <label className="label-title" htmlFor={input.model}>{input.label}</label><br />
-                            <Control.text className="label-text" model={input.model} id={input.model}/>
+                        <div key={index} className='filter-input-text'>
+                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
+                            <Control.text model={input.model} id={input.model} placeholder='test'/>
                         </div>
                     )
                 }
@@ -45,12 +48,12 @@ class FilterGroup extends Component {
     render() {
         return (
             <div className="filter-group">
-                {/*<div className="dropdown-icon">*/}
-                    {/*&#9660;*/}
-                {/*</div>*/}
                 <div className="header" onClick={() => {
                     this.setState({open: !this.state.open})
                 }}>
+                    <div className="dropdown-icon">
+                        {this.state.open ? <img src={dropdown} /> : <img src={dropdownClose} />}
+                    </div>
                     {this.props.header}
                 </div>
                 {this.renderInputs()}
