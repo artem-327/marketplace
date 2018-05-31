@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Translate} from 'react-localize-redux';
 import PropTypes from 'prop-types';
 import {Control, Form} from 'react-redux-form';
-import check from '../../../images/inv-filter/check.png'
 import dropdown from '../../../images/inv-filter/dropdown.png'
 import dropdownClose from '../../../images/inv-filter/dropdown-close.png'
 

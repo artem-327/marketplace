@@ -3,7 +3,7 @@ import InputGroup from './InputGroup'
 import {Control, Form} from 'react-redux-form';
 // import classnames from "classnames";
 
-export default class AddInventory extends Component {
+export default class AddForm extends Component {
     constructor(props) {
         super(props);
         this.state = {

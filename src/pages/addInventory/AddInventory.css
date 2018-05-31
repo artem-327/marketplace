@@ -1,0 +1,49 @@
+.add-inventory .header {
+  color: #289ada;
+  padding: 5px 15px;
+  border-bottom: 1px solid #289ada;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: left; }
+
+.add-inventory .input-group h1 {
+  color: #222;
+  font-size: 1em;
+  font-weight: bold;
+  padding: 3px 15px;
+  display: block;
+  border-bottom: 1px solid #222;
+  margin: 10px 0;
+  width: 100%;
+  text-align: left; }
+
+.add-inventory .input-group label {
+  font-size: .8rem;
+  display: block; }
+  .add-inventory .input-group label.bigger {
+    font-size: 1.2rem; }
+
+.add-inventory .input-group input, .add-inventory .input-group select {
+  margin: 0 10px 10px 10px;
+  color: gray; }
+
+.add-inventory .input-group select {
+  height: 40px; }
+
+.add-inventory .input-group .add-form {
+  color: white;
+  background-color: #289ada;
+  border: none;
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: .8em; }
+
+.add-inventory .add-inventory {
+  color: white;
+  background-color: #289ada;
+  border: none;
+  margin-top: 20px;
+  margin-right: 50px;
+  font-weight: bold;
+  float: right;
+  font-size: 1em; }

@@ -8,6 +8,8 @@ const ADD_PRODUCT_OFFER = 'ADD_PRODUCT_OFFER';
 // const ADD_PRODUCT_OFFER_PENDING = 'ADD_PRODUCT_OFFER_PENDING';
 const ADD_PRODUCT_OFFER_FULFILLED = 'ADD_PRODUCT_OFFER_FULFILLED';
 // const ADD_PRODUCT_OFFER_REJECTED = 'ADD_PRODUCT_OFFER_REJECTED';
+const GET_PRODUCT = 'GET_PRODUCT';
+const GET_PRODUCT_FULFILLED = 'GET_PRODUCT_FULFILLED';
 
 
 export const initialState = {
@@ -51,7 +53,8 @@ export const initialState = {
             broadcastMinimumPackages: "",
             broadcastIncrementalPricing: "",
         }
-    }
+    },
+    productDetail:{}
 };
 
 export default function reducer(state = initialState, action) {
@@ -96,6 +99,14 @@ export default function reducer(state = initialState, action) {
                 }
             }
         }
+        case GET_PRODUCT_FULFILLED: {
+            return {
+                ...state,
+                //TODO:: doplnit cestu podle api struktury
+                productDetail:action.payload
+
+            }
+        }
         default: {
             return state
         }
@@ -138,4 +149,16 @@ export function addProductOffer(quantity, amount, expirationDate, price, product
     }
 }
 
+export function getProduct(id) {
+    return {
+        type: GET_PRODUCT,
+        payload: axios({
+            method: 'post',
+            url: "/api/v1/product-offer/",
+            data: {
+                id
+            }
+        })
+    }
+}
 
