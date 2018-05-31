@@ -1,13 +1,16 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux'
 import SubMenu from './SubMenu';
+import {toggleFilter} from '../../modules/filter'
 
 function mapStateToProps(store) {
-    return {}
+    return {
+        filterOpen: store.filter.isOpen
+    }
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({}, dispatch)
+    return bindActionCreators({toggleFilter}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(SubMenu);

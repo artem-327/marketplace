@@ -1,11 +1,11 @@
 @import url(https://fonts.googleapis.com/css?family=Cabin:300,400,500,600,700);
 .filter {
   font-family: "Cabin", sans-serif;
-  background-color: #eeeeee;
+  background-color: #fafafa;
   position: absolute;
   width: 400px;
   right: 0;
-  top: 100px;
+  top: 143px;
   -webkit-box-shadow: -2px 3px 5px 0px #8c8c8c;
   -moz-box-shadow: -2px 3px 5px 0px #8c8c8c;
   box-shadow: -2px 3px 5px 0px #8c8c8c;
