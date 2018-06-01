@@ -38,7 +38,7 @@ export default class AddForm extends Component {
             {
                 label: <label htmlFor="forms.inventoryLocationForm.warehouse">WAREHOUSE</label>,
                 component:
-                    <Control.select model="forms.inventoryLocationForm.warehouse" id="forms.inventoryLocationForm.warehouse">
+                    <Control.select className="label-dropdown" model="forms.inventoryLocationForm.warehouse" id="forms.inventoryLocationForm.warehouse">
                         <option value="red">red</option>
                         <option value="green">green</option>
                         <option value="blue">blue</option> /* tady napojim data*/
