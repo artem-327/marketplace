@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import XLSX from 'xlsx';
-import DragDropFile from "../../../components/DragDropFile";
-import FileSelector from "../../../components/FileSelector";
+import DragDropFile from "./DragDropFile";
+import FileSelector from "./FileSelector";
 
 
 class ImportXLS extends Component {

@@ -13,15 +13,14 @@ class SubMenu extends Component {
         super(props);
         this.state = {
             searchOpen: false,
+            filterOpen: false,
         }
     }
 
-    componentDidMount(){
-
-    }
-
-    componentWillUnmount() {
-
+    componentWillReceiveProps(nextProps){
+        this.setState({
+            filterOpen: nextProps.filterOpen
+        })
     }
 
     renderLinks(){
@@ -58,7 +57,7 @@ class SubMenu extends Component {
     renderFilterButton(){
         if(!this.props.filter) return;
         return (
-            <div className='submenu-filter'>
+            <div className='submenu-filter' onClick={()=>{this.props.toggleFilter(!this.state.filterOpen)}}>
                 <img src={filterIcon} alt='open filter' />
                 <span>Filter</span>
             </div>

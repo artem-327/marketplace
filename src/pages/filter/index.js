@@ -4,7 +4,9 @@ import Filter from './Filter';
 
 
 function mapStateToProps(store) {
-    return {}
+    return {
+        isOpen: store.filter.isOpen
+    }
 }
 
 function mapDispatchToProps(dispatch){
