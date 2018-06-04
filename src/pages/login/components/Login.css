@@ -1,3 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Cabin:300,400,500,600,700);
 .Login {
   font-family: "Cabin", sans-serif; }
+  .Login .logoLogin {
+    width: 100px;
+    height: 100px; }

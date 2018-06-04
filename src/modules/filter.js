@@ -97,3 +97,9 @@ export default function reducer(state = initialState, action) {
     }
 }
 
+export function toggleFilter(state) {
+    return {
+        type: TOGGLE_FILTER,
+        payload: state
+    }
+}
