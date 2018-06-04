@@ -3,7 +3,7 @@ import SubMenu from '../../components/SubMenu';
 import Filter from '../../components/Filter';
 
 
-export function inventoryHOC(ComposedComponent) {
+export default function InventoryHOC(ComposedComponent) {
     return class inventoryWrapper extends React.Component {
         submenuLinks() {
             return [

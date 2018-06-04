@@ -71,7 +71,7 @@ class Nav extends Component {
                             DASHBOARD
                         </span>
                     </NavLink>
-                    <NavLink to="/inventory" className='nav-link' activeClassName='active'>
+                    <NavLink to="/inventory/all-inventory" className='nav-link' activeClassName='active'>
                         <span className='link-center'>
                             <img src={inventory}  alt='Navigate to Inventory'/>
                             INVENTORY
