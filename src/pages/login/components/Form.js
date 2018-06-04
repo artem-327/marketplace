@@ -20,21 +20,21 @@ export default class LoginForm extends React.Component {
             <Translate id="login.logging"/>
             :
             <Translate id="login.login"/>;
-
+        console.log();
         return (
             <Form model="forms.loginForm" onSubmit={(val) => this.handleSubmit(val)}>
                 <div>
-                    <label htmlFor="forms.loginForm.email"><Translate id="login.email"/></label>
-                    <Control.text model="forms.loginForm.email"/>
+                    {/*<label htmlFor="forms.loginForm.email"><Translate id="login.email"/></label>*/}
+                    <Control.text model="forms.loginForm.email" placeholder="Username"/>
                 </div>
                 <div>
-                    <label htmlFor="forms.loginForm.password"><Translate id="login.password"/></label>
-                    <Control.password model="forms.loginForm.password"/>
+                    {/*<label htmlFor="forms.loginForm.password"><Translate id="login.password"/></label>*/}
+                    <Control.password model="forms.loginForm.password" placeholder="Password"/>
                 </div>
                 <div className="form-middle">
                     <button className={classnames({"not-valid": hasError}, {"loading": isFetching})}>{butLogin}</button>
                 </div>
-                <Link className="form-link" to="#"><Translate id="login.forgottenPassword"/></Link>
+                {/*<Link className="form-link" to="#"><Translate id="login.forgottenPassword"/></Link>*/}
             </Form>
         );
     }

@@ -1,0 +1,13 @@
+@import url(https://fonts.googleapis.com/css?family=Cabin:300,400,500,600,700);
+
+$app-font-family: 'Cabin', sans-serif;
+
+.Login {
+  font-family: $app-font-family
+
+  .logoLogin {
+    width: 100px;
+    height: 100px;
+  }
+
+}
