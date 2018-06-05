@@ -1,6 +1,7 @@
 .product-offers {
   margin: 20px 20px;
-  text-align: center; }
+  text-align: center;
+  width: calc(100% - 40px); }
   .product-offers th {
     border: 2px solid #e3e2df;
     background-color: #fbfaf7;

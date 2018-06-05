@@ -5,14 +5,40 @@ import {DATE_FORMAT} from "../../../../utils/constants";
 
 class ProductOffers extends Component {
 
-    groupProductOffers(productOffers) {
-        return Object.values(productOffers.reduce((carry, offer) => {
-            (carry[offer.product.cas] = carry[offer.product.cas] || {...offer.product, productOffers: []}).productOffers.push(offer);
-            return carry;
-        }, {}));
+    constructor(props) {
+        super(props);
+        this.toggleProduct = this.toggleProduct.bind(this);
+        this.state = {
+            products: this.groupProductOffers(this.props.productOffers)
+        }
     }
 
+    componentWillReceiveProps(nextProps){
+        this.setState({products: this.groupProductOffers(nextProps.productOffers)});
+    }
+
+    groupProductOffers(productOffers) {
+        return productOffers.reduce((carry, offer) => {
+            (carry[offer.product.id] = carry[offer.product.id] || {...offer.product, visible: true, productOffers: []}).productOffers.push(offer);
+            return carry;
+        }, {});
+    }
+
+   toggleProduct(productId){
+        this.setState({
+            products: {
+                ...this.state.products,
+                [productId]:{
+                    ...this.state.products[productId],
+                    visible: !this.state.products[productId].visible
+                }
+            }
+        })
+   }
+
+
     render() {
+        console.log(this.state.products);
         return (
             <div className="App">
                 <table className="product-offers">
@@ -37,18 +63,20 @@ class ProductOffers extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                    {this.groupProductOffers(this.props.productOffers).reduce((rows, product) => {
-                        rows.push(<tr className="product" key={'m' + product.cas}>
+                    {Object.values(this.state.products).reduce((rows, product) => {
+                        rows.push(
+                        <tr className="product" key={'m' + product.cas} onClick={() => {this.toggleProduct(product.id)}}>
                             <td colSpan="13">
                                 <span><a href="#">{product.cas}</a></span>
                                 <span className="product-name">{product.name}</span>
                             </td>
                             <td colSpan="3" className="quantity">
                                 <span>Total Qty: 100</span>
-                                <i className="icon fas fa-angle-down"/>
+                                {product.visible ? <i className="icon fas fa-angle-down"/> : <i className="icon fas fa-angle-up"/>}
                             </td>
-                        </tr>);
-
+                        </tr>
+                        );
+                        product.visible ?
                         product.productOffers.forEach((offer) => {
                             rows.push(
                                 <tr className="product-offer" key={'m' + offer.id}>
@@ -70,8 +98,7 @@ class ProductOffers extends Component {
                                     <td><button>BUY</button></td>
                                 </tr>
                             )
-                        });
-
+                        }) : null;
                         return rows;
                     }, [])}
                     </tbody>
@@ -80,5 +107,4 @@ class ProductOffers extends Component {
         );
     }
 }
-
 export default ProductOffers;

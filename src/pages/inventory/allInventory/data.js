@@ -6,8 +6,8 @@ export default [
             "name": "Some name"
         },
         "product": {
-            "id": 7,
-            "cas": "67-63-0",
+            "id": 2,
+            "cas": "67-63-055",
             "name": "Isopropyl alchohol (2 - Proponal)"
         },
         "packageAmount": 45,
