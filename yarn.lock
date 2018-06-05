@@ -6217,10 +6217,6 @@ react-select@^1.2.1:
     prop-types "^15.5.8"
     react-input-autosize "^2.1.2"
 
-react-selectable-table@0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/react-selectable-table/-/react-selectable-table-0.0.3.tgz#c47fac8ae7dafca2e87310a8f29b47f25a409105"
-
 react-transition-group@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.3.1.tgz#31d611b33e143a5e0f2d94c348e026a0f3b474b6"
