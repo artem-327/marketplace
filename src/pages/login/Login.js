@@ -2,7 +2,7 @@ import React from 'react';
 import logoLogin from '../../images/login/logo_echo.png';
 
 import Form from './components/Form'
-import {Translate} from 'react-localize-redux'
+// import {Translate} from 'react-localize-redux'
 import './login.css'
 
 

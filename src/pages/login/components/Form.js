@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import {Control, Form} from 'react-redux-form';
-import {Link} from 'react-router-dom';
+// import {Link} from 'react-router-dom';
 import {Translate} from 'react-localize-redux';
 import '../login.css';
 
@@ -23,7 +23,7 @@ export default class LoginForm extends React.Component {
         let {email, password} = this.props.loginInputs;
         let butLogin = isFetching ? <Translate id="login.logging"/> : <Translate id="login.login"/>;
         //TODO:: react to all types of errors
-        let loginErr = /*hasError ?*/ <div className="login-err">Incorrect username or password</div>; /*: null;*/
+        let loginErr = hasError ? <div className="login-err">Incorrect username or password</div> : null;
         return (
             <Form model="forms.loginForm" onSubmit={(val) => this.handleSubmit(val)}>
                 <div>
