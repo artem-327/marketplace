@@ -20,6 +20,12 @@ $app-font-family: 'Cabin', sans-serif;
 .App-main{
   min-height: 100vh;
 }
+.App-footer{
+position: absolute;
+  left: 50%;
+  bottom: 20px;
+  margin: auto;
+}
 
 .input-label{
   font-size: 1rem;
