@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
+import './dropdown.css';
 
 class Dropdown extends Component {
     constructor(props) {
@@ -22,16 +23,17 @@ class Dropdown extends Component {
     render() {
         let {currentValue} = this.state;
         let opt = this.props.options.map((option, index)=>{
-            return <li key={index + 'dropdown'} onClick={()=>{this.setCurrentValue(option.value)}}>{option.value}</li>
+            return <li className='dropdown-options' key={index + 'dropdown'} onClick={()=>{this.setCurrentValue(option.value)}}>{option.value}</li>
         });
         let options = this.state.isOpen ?
-            <ul className='dropdown-options'>
+            <ul>
                 {opt}
             </ul> : null;
         return (
             <div className='dropdown-wr'>
                 <div className='dropdown-trigger' onClick={()=>{this.setState({isOpen: !this.state.isOpen})}}>
-                    <span>{currentValue || this.props.placeholder || 'Select Option'}</span>
+                    <div>{currentValue || this.props.placeholder || 'Select Option'}</div>
+                    <div>{opt.isOpen ? <i className="icon fas fa-angle-down"/> : <i className="icon fas fa-angle-up"/>}</div>
                 </div>
                 {options}
             </div>

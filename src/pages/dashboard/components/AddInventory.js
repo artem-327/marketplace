@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import InputGroup from './InputGroup'
 import {Control, Form} from 'react-redux-form';
+import Dropdown from '../../../components/Dropdown/Dropdown';
 // import classnames from "classnames";
 
 export default class AddInventory extends Component {

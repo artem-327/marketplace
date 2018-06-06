@@ -17,7 +17,7 @@ class Dashboard extends Component {
         ]
         return (
             <div className="dashboard">
-                {/*<AddInventory {...this.props}/>*/}
+                <AddInventory {...this.props}/>
                 <Dropdown options={options} placeholder='Select our option' currentValue='val2'/>
             </div>
         );
