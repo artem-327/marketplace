@@ -31,7 +31,7 @@ class Dropdown extends Component {
         return (
             <div className='dropdown-wr'>
                 <div className='dropdown-trigger' onClick={()=>{this.setState({isOpen: !this.state.isOpen})}}>
-                    <span>{currentValue || this.props.placeholder || 'Select Option'}</span><img src={}
+                    <span>{currentValue || this.props.placeholder || 'Select Option'}</span>
                 </div>
                 {options}
             </div>
