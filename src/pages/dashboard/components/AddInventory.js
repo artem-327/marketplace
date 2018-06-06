@@ -41,7 +41,8 @@ export default class AddInventory extends Component {
                     <Control.select model="forms.inventoryLocationForm.warehouse" id="forms.inventoryLocationForm.warehouse">
                         <option value="red">red</option>
                         <option value="green">green</option>
-                        <option value="blue">blue</option> /* tady napojim data*/
+                        <option value="blue">blue</option>
+                         {/*tady napojim data*/}
                     </Control.select>,
             },
             {

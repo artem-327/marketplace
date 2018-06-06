@@ -21,25 +21,25 @@ export default class extends React.Component {
         return (
             <Form model="forms.registrationForm" onSubmit={(val) => this.handleSubmit(val)}>
                 <div>
-                    <label htmlFor="forms.registrationForm.email"><Translate id="registration.email"/></label>
-                    <Control.text model="forms.registrationForm.email" required/>
+                    {/*<label htmlFor="forms.registrationForm.email"><Translate id="registration.email"/></label>*/}
+                    <Control.text model="forms.registrationForm.email" placeholder="Email" required/>
                 </div>
                 <div>
-                    <label htmlFor="forms.registrationForm.password"><Translate id="registration.password"/></label>
-                    <Control.password model="forms.registrationForm.password" required/>
+                    {/*<label htmlFor="forms.registrationForm.password"><Translate id="registration.password"/></label>*/}
+                    <Control.password model="forms.registrationForm.password" placeholder="Password" required/>
                 </div>
                 <div>
-                    <label htmlFor="forms.registrationForm.firstName"><Translate id="registration.firstName"/></label>
-                    <Control.text model="forms.registrationForm.firstName" required/>
+                    {/*<label htmlFor="forms.registrationForm.firstName"><Translate id="registration.firstName"/></label>*/}
+                    <Control.text model="forms.registrationForm.firstName" placeholder="Your firstname" required/>
                 </div>
                 <div>
-                    <label htmlFor="forms.registrationForm.middleName"><Translate
-                        id="registration.middleName"/></label>
-                    <Control.text model="forms.registrationForm.middleName" required/>
+                    {/*<label htmlFor="forms.registrationForm.middleName"><Translate*/}
+                        {/*id="registration.middleName"/></label>*/}
+                    <Control.text model="forms.registrationForm.middleName" placeholder="Your middle name" required/>
                 </div>
                 <div>
-                    <label htmlFor="forms.registrationForm.lastName"><Translate id="registration.lastName"/></label>
-                    <Control.text model="forms.registrationForm.lastName" required/>
+                    {/*<label htmlFor="forms.registrationForm.lastName"><Translate id="registration.lastName"/></label>*/}
+                    <Control.text model="forms.registrationForm.lastName" placeholder="Your lastname" required/>
                 </div>
                 <div className="form-middle">
                     <button
