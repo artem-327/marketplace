@@ -37,17 +37,16 @@ input[type='text'] {
     padding: 12px 7px;
     font-size: 1.2rem; }
 
-input[type='select'] {
+input[type='number'] {
   font-size: 1rem;
-  border-radius: 2px;
+  border-radius: 4px;
   border: 1px solid #B0B0B0;
   padding: 7px; }
-  input[type='select']:hover, input[type='select']:focus {
-    border-radius: 2px 2px 0px 0px;
+  input[type='number']:hover, input[type='number']:focus {
     border-color: #289ada;
     box-shadow: none;
     outline: none; }
-  input[type='select'].bigger {
+  input[type='number'].bigger {
     padding: 12px 7px;
     font-size: 1.2rem; }
 

@@ -13,7 +13,9 @@ export default class AddInventory extends Component {
                 isValid: false,
                 hasError: false,
             },
-            productDetail:{}
+            // productDetail:{
+            //     options: props
+            // }
         }
     }
 
@@ -24,7 +26,9 @@ export default class AddInventory extends Component {
                 isValid: nextProps.inventory.location.isValid,
                 hasError: nextProps.inventory.location.hasError
             },
-            productDetail: nextProps.inventory.productDetail
+            // productDetail: {
+            // options: nextProps.inventory.productDetail
+            // }
         })
     }
 
@@ -34,17 +38,25 @@ export default class AddInventory extends Component {
 
     getLocationInputs(){
         let { isPending, isValid, hasError } = this.state.location;
+        // let {  } = this.state.productDetail;
         let buttonText = isPending ? "SAVING ..." : isValid ? "SAVED" : hasError ? "ERROR" : "+ ADD";
+        let options = [
+            {
+                value: 'one'
+            }
+        ]
+
         return[
             {
                 label: <label htmlFor="forms.inventoryLocationForm.warehouse">WAREHOUSE</label>,
                 component:
-                    <Control.select model="forms.inventoryLocationForm.warehouse" id="forms.inventoryLocationForm.warehouse">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                         {/*tady napojim data*/}
-                    </Control.select>,
+                    <Dropdown options={options} placeholder='Select'/>
+                    /*<Control.select model="forms.inventoryLocationForm.warehouse" id="forms.inventoryLocationForm.warehouse">*/
+                        /*<option value="red">red</option>*/
+                        /*<option value="green">green</option>*/
+                        /*<option value="blue">blue</option>*/
+                         /*/!*tady napojim data*!/*/
+                    /*</Control.select>*/
             },
             {
                 label: <label htmlFor="forms.inventoryLocationForm.warehouseName">WAREHOUSE NAME</label>,
@@ -64,11 +76,7 @@ export default class AddInventory extends Component {
             {
                 label: <label htmlFor="forms.inventoryLocationForm.state">STATE</label>,
                 component:
-                    <Control.select model="forms.inventoryLocationForm.state" id="forms.inventoryLocationForm.state">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown options={options} placeholder='Select'/>
             },
             {
                 label: <label htmlFor="forms.inventoryLocationForm.zip">ZIP</label>,
@@ -99,6 +107,14 @@ export default class AddInventory extends Component {
     }
 
     getProductDetailInputs(){
+        let options = [
+            {
+                value: 'two'
+            },
+            {
+                value: 'test'
+            }
+        ]
         return[
             {
                 label: <label htmlFor="forms.inventoryProductsForm.totalPackages">TOTAL PACKAGES</label>,
@@ -109,11 +125,7 @@ export default class AddInventory extends Component {
             {
                 label: <label htmlFor="forms.inventoryProductsForm.packaging">PACKAGING</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.packaging" id="forms.inventoryProductsForm.packaging">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown options={options} placeholder='Select'/>
             },
             {
                 label: <label htmlFor="forms.inventoryProductsForm.packageSize">PACKAGE SIZE</label>,
@@ -128,43 +140,32 @@ export default class AddInventory extends Component {
             {
                 label: <label htmlFor="forms.inventoryProductsForm.pricingUnits">PRICING UNITS</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.pricingUnits" id="forms.inventoryProductsForm.pricingUnits">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown options={options} placeholder='Select'/>
             }
         ]
     }
 
     getProductAttributesInputs(){
+        let options = [
+            {
+                value: 'three'
+            }
+        ]
         return[
             {
                 label: <label htmlFor="forms.inventoryProductsForm.manufacturer">MANUFACTURER</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.manufacturer" id="forms.inventoryProductsForm.manufacturer">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown options={options} placeholder='Select'/>
             },
             {
                 label: <label htmlFor="forms.inventoryProductsForm.origin">ORIGIN</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.origin" id="forms.inventoryProductsForm.origin">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown options={options} placeholder='Select'/>
             },
             {
                 label: <label htmlFor="forms.inventoryProductsForm.form">FORM</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.form" id="forms.inventoryProductsForm.form">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown options={options} placeholder='Select'/>
             },
             {
                 label: <label htmlFor="forms.inventoryProductsForm.assayMin">ASSAY</label>,
@@ -181,25 +182,22 @@ export default class AddInventory extends Component {
             {
                 label: <label htmlFor="forms.inventoryProductsForm.grade">GRADE</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.grade" id="forms.inventoryProductsForm.grade">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown options={options} placeholder='Select'/>
             },
             {
                 label: <label htmlFor="forms.inventoryProductsForm.condition">CONDITION</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.condition" id="forms.inventoryProductsForm.condition">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown options={options} placeholder='Select'/>
             }
         ]
     }
 
     getProductSellingRulesInputs(){
+        let options = [
+            {
+                value: 'four'
+            }
+        ]
         return[
             {
                 label: <label htmlFor="forms.inventoryProductsForm.rulesSplitPackages">SPLIT (PACKAGES)</label>,
@@ -218,16 +216,17 @@ export default class AddInventory extends Component {
             {
                 label: <label htmlFor="forms.inventoryProductsForm.rulesIncrementalPricing">INCREMENTAL PRICING</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.rulesIncrementalPricing" id="forms.inventoryProductsForm.rulesIncrementalPricing">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown options={options} placeholder='Select'/>
             },
         ]
     }
 
     getProductBroadcastRulesInputs(){
+        let options = [
+            {
+                value: 'five'
+            }
+        ]
         return[
             {
                 label: <label htmlFor="forms.inventoryProductsForm.broadcastSplitPackages">SPLIT (PACKAGES)</label>,
@@ -246,11 +245,7 @@ export default class AddInventory extends Component {
             {
                 label: <label htmlFor="forms.inventoryProductsForm.broadcastIncrementalPricing">INCREMENTAL PRICING</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.broadcastIncrementalPricing" id="forms.inventoryProductsForm.broadcastIncrementalPricing">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown options={options} placeholder='Select'/>
             },
         ]
     }
