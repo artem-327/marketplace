@@ -1,9 +1,8 @@
 FROM node:9.11 as build
 
 WORKDIR /app
-COPY package.json yarn.lock ./
-RUN yarn
-COPY . ./
+COPY . .
+RUN yarn install --prod
 RUN yarn build
 
 FROM nginx:1.13-alpine
