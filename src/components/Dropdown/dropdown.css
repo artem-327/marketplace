@@ -9,12 +9,13 @@
 
 .dropdown-trigger {
   font-size: 1rem;
-  border-radius: 2px;
+  border-radius: 4px;
   border: 1px solid #B0B0B0;
   padding: 7px; }
+  .dropdown-trigger.open {
+    border-radius: 4px 4px 0 0; }
   .dropdown-trigger:hover, .dropdown-trigger:focus {
     cursor: pointer;
-    border-radius: 2px 2px 0px 0px;
     border-color: #289ada;
     box-shadow: none;
     outline: none; }
@@ -28,8 +29,12 @@
   margin-left: -40px;
   font-size: 1rem;
   border-radius: 0px;
-  border: 1px solid #B0B0B0;
+  border-left: 1px solid #B0B0B0;
+  border-right: 1px solid #B0B0B0;
   padding: 7px; }
+  .dropdown-options:last-child {
+    border-bottom: 1px solid #B0B0B0;
+    border-radius: 0 0 4px 4px; }
   .dropdown-options:hover, .dropdown-options:focus {
     background-color: #289ada;
     color: white;
