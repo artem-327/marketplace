@@ -1,6 +1,5 @@
 import React from 'react';
 import SubMenu from '../../components/SubMenu';
-import Filter from '../../components/Filter';
 
 
 export default function InventoryHOC(ComposedComponent) {
@@ -30,7 +29,6 @@ export default function InventoryHOC(ComposedComponent) {
             return (
                 <div>
                     <SubMenu links={this.submenuLinks()} search filter/>
-                    <Filter/>
                     <ComposedComponent {...this.props}/>
                 </div>
             );
