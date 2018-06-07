@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import './dropdown.css';
 import classnames from 'classnames';
+import ArrowUp from '../../images/inv-filter/dropdown.png';
 
 class Dropdown extends Component {
     constructor(props) {
@@ -39,19 +40,29 @@ class Dropdown extends Component {
     render() {
         let {currentValue, isOpen} = this.state;
         let opt = this.props.options.map((option, index)=>{
-            return <li className='dropdown-options' key={index + 'dropdown'} onClick={()=>{this.setCurrentValue(option.value)}}>{option.value}</li>
+            return <li key={index + 'dropdown'} onClick={()=>{this.setCurrentValue(option.value)}}>{option.value}</li>
         });
         let options = this.state.isOpen ?
-            <ul>
+            <ul className='dropdown-options'>
                 {opt}
             </ul> : null;
         return (
             <div className='dropdown-wr' ref={this.dropdownRef} >
                 <div className={'dropdown-trigger ' + classnames({'open' : isOpen})} onClick={()=>{this.setState({isOpen: !this.state.isOpen})}}>
-                    <div>{currentValue || this.props.placeholder || 'Select Option'}</div>
-                    <div>{this.state.isOpen ? <i className="fas fa-angle-down"/> : <i className="fas fa-angle-up"/>}</div>
+                    <div>{currentValue || this.props.placeholder || 'Select Option'}<img src={ArrowUp} /></div>
                 </div>
                 {options}
+                {/*<div class="sk-cube-grid">*/}
+                    {/*<div class="sk-cube sk-cube1"></div>*/}
+                    {/*<div class="sk-cube sk-cube2"></div>*/}
+                    {/*<div class="sk-cube sk-cube3"></div>*/}
+                    {/*<div class="sk-cube sk-cube4"></div>*/}
+                    {/*<div class="sk-cube sk-cube5"></div>*/}
+                    {/*<div class="sk-cube sk-cube6"></div>*/}
+                    {/*<div class="sk-cube sk-cube7"></div>*/}
+                    {/*<div class="sk-cube sk-cube8"></div>*/}
+                    {/*<div class="sk-cube sk-cube9"></div>*/}
+                {/*</div>*/}
             </div>
         );
     }
@@ -69,3 +80,16 @@ Dropdown.propTypes = {
 
 
 export default Dropdown;
+
+// {Object.values(this.state.products).reduce((rows, product) => {
+//     rows.push(
+//         <tr className="product" key={'m' + product.cas} onClick={() => {this.toggleProduct(product.id)}}>
+//             <td colSpan="13">
+//                 <span><a href="#">{product.cas}</a></span>
+//                 <span className="product-name">{product.name}</span>
+//             </td>
+//             <td colSpan="3" className="quantity">
+//                 <span>Total Qty: 100</span>
+//                 {product.visible ? <i className="icon fas fa-angle-down"/> : <i className="icon fas fa-angle-up"/>}
+//             </td>
+//         </tr>

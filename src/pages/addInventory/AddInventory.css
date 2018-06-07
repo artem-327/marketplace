@@ -24,12 +24,16 @@
     font-size: 1.2rem; }
 
 .add-inventory .input-group .add-form {
+  margin: 0 0 0 10px;
   color: white;
   background-color: #289ada;
   border: none;
+  height: 39px;
+  border-radius: 4px;
+  padding: 0px 22px;
   margin-top: 20px;
   font-weight: bold;
-  font-size: .8em; }
+  font-size: 1em; }
 
 .add-inventory .add-inventory {
   color: white;
@@ -39,7 +43,11 @@
   margin-right: 50px;
   font-weight: bold;
   float: right;
-  font-size: 1em; }
+  font-size: 1em;
+  height: 39px;
+  border-radius: 4px;
+  padding: 0px 22px;
+  margin-top: 20px; }
 
 .add-inventory .label-dropdown {
   font-size: 1rem;
