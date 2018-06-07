@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
 import ProductOffers from "./components/ProductOffers";
-import offers from "./data"
+// import offers from "./data"
+import Filter from '../../../components/Filter';
 
 class AllInventory extends Component {
 
     componentDidMount(){
-        // this.props.getData();
+        this.props.getData({});
     }
 
     render() {
-        // return this.props.isFetching ? <div>načítání</div>: <ProductOffers productOffers={this.props.productOffers}/>;
-        return <ProductOffers productOffers={offers}/>;
-
+        let table = this.props.isFetching ? <div>načítání</div> : <ProductOffers productOffers={this.props.productOffers}/>;
+        return (
+            <div>
+                <Filter filterFunc={(inputs) => {this.props.getData(inputs)}} />
+                {table}
+            </div>
+        )
     }
 }
 
