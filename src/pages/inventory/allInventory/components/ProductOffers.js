@@ -36,9 +36,7 @@ class ProductOffers extends Component {
         })
    }
 
-
     render() {
-        console.log(this.state.products);
         return (
             <div className="App">
                 <table className="product-offers">
