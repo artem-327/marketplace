@@ -1,5 +1,5 @@
-import {Control, Form} from 'react-redux-form';
-import {Translate} from 'react-localize-redux';
+import {Form} from 'react-redux-form';
+// import {Translate} from 'react-localize-redux';
 import './filter.css';
 import FilterGroup from './components/FilterGroup';
 import React, {Component} from 'react';

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import {setAuthToken} from "../utils/auth";
 
 //Veškeré konstanty pro tento reducer
 const GET_PRODUCTOFF = 'GET_PRODUCTOFF';
@@ -32,7 +31,7 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-export function fetchAll(filter) {
+export function fetchAll(filter = {}) {
     return {
         type: GET_PRODUCTOFF,
         payload: axios({

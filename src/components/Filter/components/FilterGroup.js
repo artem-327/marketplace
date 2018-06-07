@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Translate} from 'react-localize-redux';
+// import {Translate} from 'react-localize-redux';
 import PropTypes from 'prop-types';
-import {Control, Form} from 'react-redux-form';
+import {Control} from 'react-redux-form';
 import dropdown from '../../../images/inv-filter/dropdown.png'
 import dropdownClose from '../../../images/inv-filter/dropdown-close.png'
 
@@ -51,7 +51,7 @@ class FilterGroup extends Component {
                     this.setState({open: !this.state.open})
                 }}>
                     <div className="dropdown-icon">
-                        {this.state.open ? <img src={dropdown} /> : <img src={dropdownClose} />}
+                        {this.state.open ? <img src={dropdown} alt='drop'/> : <img src={dropdownClose} alt='drop-close' />}
                     </div>
                     {this.props.header}
                 </div>

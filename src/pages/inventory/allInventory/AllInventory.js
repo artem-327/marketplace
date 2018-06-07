@@ -6,7 +6,7 @@ import Filter from '../../../components/Filter';
 class AllInventory extends Component {
 
     componentDidMount(){
-        this.props.getData({});
+        this.props.getData();
     }
 
     render() {
