@@ -10,12 +10,14 @@ import Settings from "../pages/settings/Settings";
 import Support from "../pages/support/Support";
 import AddInventory from "../pages/addInventory";
 import AllInventory from "../pages/inventory/allInventory";
+import PopUp from '../components/PopUp';
 
 
 class Main extends Component {
     render() {
         return (
             <div>
+                <PopUp />
                 <Switch>
                     <Route exact path="/" component={Dashboard}/>
                     <Route path="/inventory/all-inventory" component={Inventory(AllInventory)}/>
