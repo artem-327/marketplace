@@ -1,7 +1,8 @@
 import {connect} from 'react-redux';
 import AddInventory from './AddInventory';
 import {bindActionCreators} from 'redux'
-import {addLocation, addProductOffer, getProduct} from "../../modules/inventory";
+import {addLocation} from "../../modules/location";
+import {addProductOffer, getProduct} from '../../modules/productOffers';
 
 
 function mapStateToProps(store) {

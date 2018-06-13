@@ -63,7 +63,7 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 isAuthenticated: true,
-                identity: {isFetching: false, data: action.payload.data.data}
+                identity: {isFetching: false, data: action.paylmoad.data.data}
             }
         }
         case GET_IDENTITY_REJECTED: {

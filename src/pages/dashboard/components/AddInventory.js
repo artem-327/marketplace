@@ -13,9 +13,9 @@ export default class AddInventory extends Component {
                 isValid: false,
                 hasError: false,
             },
-            // productDetail:{
-            //     options: props
-            // }
+            productDetail:{
+
+            }
         }
     }
 
@@ -26,25 +26,31 @@ export default class AddInventory extends Component {
                 isValid: nextProps.inventory.location.isValid,
                 hasError: nextProps.inventory.location.hasError
             },
-            // productDetail: {
-            // options: nextProps.inventory.productDetail
+            // productForm: {
+            //     isPending:
             // }
+
+
         })
     }
 
     componentDidMount(){
+        this.props.getProduct(this.props.productType.data.productTypes.id).then(()=>{
+            this.props.getFormOptions(this.props.form.data.productForms);
+            this.props.getConditionOptions(this.props.condition.data.productConditions);
+            this.props.getPackageTypeOptions(this.props.package.data.packageTypes);
 
+        })
     }
+
 
     getLocationInputs(){
         let { isPending, isValid, hasError } = this.state.location;
         // let {  } = this.state.productDetail;
         let buttonText = isPending ? "SAVING ..." : isValid ? "SAVED" : hasError ? "ERROR" : "+ ADD";
-        let options = [
-            {
-                value: 'one'
-            }
-        ]
+
+        let options = this.componentDidMount;
+
 
         return[
             {

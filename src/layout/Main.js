@@ -24,7 +24,8 @@ class Main extends Component {
                     <Route exact path="/reports" component={Reports}/>
                     <Route exact path="/settings" component={Settings}/>
                     <Route exact path="/support" component={Support}/>
-                    <Route exact path="/add-inventory" component={AddInventory}/>
+                    <Route exact path="/add-inventory/:productId" component={AddInventory}/>
+
                 </Switch>
             </div>
         );
