@@ -144,7 +144,6 @@ export function login(email, password) {
 
 export function logout() {
     deleteAuthToken();
-
     return {
         type: LOGOUT
     }
