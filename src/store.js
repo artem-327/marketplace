@@ -18,7 +18,7 @@ const reducer = combineReducers({
     filter,
     identity,
     locale,
-    location,
+    location,-
     productOffers,
     products,
     search,

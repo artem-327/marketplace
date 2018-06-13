@@ -13,9 +13,14 @@ export default class AddInventory extends Component {
                 isValid: false,
                 hasError: false,
             },
-            productDetail:{
-
+            productType:{
+                isPending: false,
+            },
+            productCondition:{
+                isPending: false,
             }
+
+
         }
     }
 
@@ -50,7 +55,7 @@ export default class AddInventory extends Component {
         let buttonText = isPending ? "SAVING ..." : isValid ? "SAVED" : hasError ? "ERROR" : "+ ADD";
 
         let options = this.componentDidMount;
-
+        console.log(this.props.location);
 
         return[
             {

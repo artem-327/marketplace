@@ -37,9 +37,11 @@ class Dropdown extends Component {
         this.setState({isOpen: false})
     }
 
+
+
     render() {
         let {currentValue, isOpen} = this.state;
-        let opt = this.props.options.map((option, index)=>{
+        let opt = this.props.opns.map((option, index)=>{
             return <li key={index + 'dropdown'} onClick={()=>{this.setCurrentValue(option.value)}}>{option.value}</li>
         });
         let options = this.state.isOpen ?
