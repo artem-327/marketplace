@@ -11,6 +11,7 @@ class ProductOffers extends Component {
         this.state = {
             products: this.groupProductOffers(this.props.productOffers)
         }
+        this.props.addPopup(<div>test</div>)
     }
 
     componentWillReceiveProps(nextProps){
