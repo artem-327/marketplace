@@ -7,9 +7,10 @@ import { combineForms } from 'react-redux-form';
 import identity, {initialState as identityFormInit} from './modules/identity';
 import inventory, {initialState as inventoryFormInit} from './modules/inventory'
 import productOffers from './modules/productOffers'
-import filter, {initialState as filterFormInit} from './modules/filter';
+import filter from './modules/filter';
 import { localeReducer as locale } from 'react-localize-redux';
-import search, {initialState as searchFormInit} from './modules/search'
+import search, {initialState as searchFormInit} from './modules/search';
+import popup from './modules/popup';
 
 const reducer = combineReducers({
     filter,
@@ -18,8 +19,9 @@ const reducer = combineReducers({
     inventory,
     productOffers,
     search,
+    popup,
     forms: combineForms({
-        filterForm: filterFormInit.filterForm.data,
+        filter,
         loginForm: identityFormInit.loginForm.data,
         registrationForm: identityFormInit.registrationForm.data,
         inventoryLocationForm: inventoryFormInit.location.data,

@@ -36,9 +36,12 @@ class ProductOffers extends Component {
         })
    }
 
+   //TODO:: Add to cart
+   addCart(name){
+        this.props.addPopup(<div>{name}</div>)
+   }
 
     render() {
-        console.log(this.state.products);
         return (
             <div className="App">
                 <table className="product-offers">
@@ -95,7 +98,7 @@ class ProductOffers extends Component {
                                     <td>{offer.productCondition.name}</td>
                                     <td>{offer.productForm.name}</td>
                                     <td>{offer.currentLocation.name}</td>
-                                    <td><button>BUY</button></td>
+                                    <td><button onClick={()=>{this.addCart(offer.merchant.name)}}>BUY</button></td>
                                 </tr>
                             )
                         }) : null;

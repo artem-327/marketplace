@@ -31,9 +31,23 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-export function fetchAll() {
+export function fetchAll(filter = {}) {
     return {
         type: GET_PRODUCTOFF,
-        payload: axios.get('/api/v1/product-offers/').then(response => response.data.data.productOffers)
+        payload: axios({
+            method: 'get',
+            url: "/api/v1/product-offers/",
+            params: {
+                search: filter.search,
+                qntylb: filter.qntylb,
+                qntyub: filter.qntyub,
+                prclb: filter.prclb,
+                prcub: filter.prcub,
+                loc: filter.loc,
+                pckgs: filter.pckgs
+            }
+        }).then((response) => {
+            return response.data.data.productOffers
+        })
     }
 }
