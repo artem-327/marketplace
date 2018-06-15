@@ -6,19 +6,19 @@ import { combineReducers } from 'redux';
 import { combineForms } from 'react-redux-form';
 import identity, {initialState as identityFormInit} from './modules/identity';
 import location, {initialState as locationFormInit} from './modules/location';
-import productOffers, {initialState as pro} from './modules/productOffers';
+import productOffers from './modules/productOffers';
 import filter from './modules/filter';
 import { localeReducer as locale } from 'react-localize-redux';
 import search, {initialState as searchFormInit} from './modules/search';
 import products from './modules/products';
 import popup from './modules/popup';
-import dropdown, {initialState as productTypeInit} from './modules/dropdown';
+import dropdown from './modules/dropdown';
 
 const reducer = combineReducers({
     filter,
     identity,
     locale,
-    location,-
+    location,
     productOffers,
     products,
     search,
@@ -30,10 +30,6 @@ const reducer = combineReducers({
         registrationForm: identityFormInit.registrationForm.data,
         locationForm: locationFormInit.location.data,
         searchForm: searchFormInit.searchForm.data,
-        productType: productTypeInit.productType.data,
-        form: productTypeInit.form.data.productForms,
-        condition: productTypeInit.condition.data.productConditions,
-        package: productTypeInit.package.data.packageTypes
     }, 'forms'),
 });
 

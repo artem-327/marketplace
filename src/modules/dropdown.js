@@ -1,93 +1,67 @@
 import axios from "axios";
-
-const PRODUCT_TYPE = 'PRODUCT_TYPE';
-const PRODUCT_TYPE_FULFILLED = 'PRODUCT_TYPE_FULFILLED';
+import origin from '../components/Dropdown/unitedStates';
 
 const FORM_OPTIONS = 'FORM_OPTIONS';
 const FORM_OPTIONS_FULFILLED = 'FORM_OPTIONS_FULFILLED';
 const CONDITION_OPTIONS = 'CONDITION_OPTIONS';
 const CONDITION_OPTIONS_FULFILLED = 'CONDITION_OPTIONS_FULFILLED';
-const PACKAGE_TYPE_OPTIONS = 'PACKAGE_TYPE_OPTIONS';
-const PACKAGE_TYPE_OPTIONS_FULFILLED = 'PACKAGE_TYPE_OPTIONS_FULFILLED';
-
+const PACKAGE_OPTIONS = 'PACKAGE_OPTIONS';
+const PACKAGE_OPTIONS_FULFILLED = 'PACKAGE_OPTIONS_FULFILLED';
+const MANUFACTURER = 'MANUFACTURER';
+const MANUFACTURER_FULFILLED = 'MANUFACTURER_FULFILLED';
+const PRICING_UNITS = 'PRICING_UNITS';
+const PRICING_UNITS_FULFILLED = 'PRICING_UNITS_FULFILLED';
 export const initialState = {
-    productType:{
+    warehouse:{
         isPending: false,
-        data:{
-            productTypes: [{
-                id: "",
-                name: "",
-            }]
-        }
+        options: []
     },
-    form:{
+    state:{
         isPending: false,
-        data:{
-            productForms: [{
-                id: "",
-                name: "",
-            }]
-        }
-    },
-    condition:{
-        isPending: false,
-        data:{
-            productConditions: [{
-                id: "",
-                name: "",
-            }]
-        }
+        options: []
     },
     package:{
         isPending: false,
-        data:{
-            packageTypes: [{
-                id: "",
-                name: "",
-            }]
-        }
+        options: []
     },
-};
+    pricingUnits:{
+        isPending: false,
+        options: []
+    },
+    manufacturer:{
+        isPending: false,
+        options: []
+    },
+    origin:{
+        isPending: false,
+        options: origin
+    },
+    form:{
+        isPending: false,
+        options: []
+    },
+    grade:{
+        isPending: false,
+        options: []
+    },
+    condition:{
+        isPending: false,
+        options: []
+    },
+    incrementalPricing:{
+        isPending: false,
+        options: []
+    }
+    };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case PRODUCT_TYPE: {
-            return {
-                ...state,
-                productType: {
-                    isPending: true
-                }
-            }
-        }
-        case PRODUCT_TYPE_FULFILLED: {
-            return {
-                ...state,
-                productType: {
-                    isPending: false
-                }
-            }
-        }
-        case FORM_OPTIONS: {
-            return {
-                ...state,
-                form: {
-                    isPending: true,
-                }
-            }
-        }
         case FORM_OPTIONS_FULFILLED: {
             return {
                 ...state,
                 form: {
                     isPending: false,
-                }
-            }
-        }
-        case CONDITION_OPTIONS: {
-            return {
-                ...state,
-                condition: {
-                    isPending: true,
+                    options: action.payload.data.data.productForms
                 }
             }
         }
@@ -96,22 +70,38 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 condition: {
                     isPending: false,
+                    options: action.payload.data.data.productConditions
                 }
             }
         }
-        case PACKAGE_TYPE_OPTIONS: {
+        case PACKAGE_OPTIONS_FULFILLED: {
             return {
                 ...state,
                 package: {
-                    isPending: true,
-                }
-            }
-        }
-        case PACKAGE_TYPE_OPTIONS_FULFILLED: {
-            return {
-                ...state,
-                package: {
+                    ...state.package,
                     isPending: false,
+                    options: action.payload.data.data.packageTypes
+                }
+            }
+        }
+        case MANUFACTURER_FULFILLED: {
+            return {
+                ...state,
+                manufacturer: {
+                    ...state.manufacturer,
+                    isPending: false,
+                    options: action.payload.data.data.merchants
+                }
+            }
+        }
+        case PRICING_UNITS_FULFILLED: {
+            console.log(action.payload)
+            return {
+                ...state,
+                pricingUnits: {
+                    ...state.pricingUnits,
+                    isPending: false,
+                    options: action.payload.data.pricingUnits
                 }
             }
         }
@@ -121,46 +111,68 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-export function getProduct(id) {
-    return {
-        type: PRODUCT_TYPE,
-        // axios.get('/api/v1/package-type/?' +id)
-        payload: axios({
-            method: 'get',
-            url: '/api/v1/package-type/' + id,
-        })
-    }
-}
-
-export function getFormOptions(id) {
+export function getFormOptions(productType) {
     return {
         type: FORM_OPTIONS,
         payload: axios({
             method: 'get',
-            url: "/api/v1/product-forms/" + id,
+            url: "/api/v1/product-forms/" + productType,
         })
     }
 }
 
-export function getConditionOptions(id) {
+export function getConditionOptions(productType) {
     return {
         type: CONDITION_OPTIONS,
         payload: axios({
             method: 'get',
-            url: "/api/v1/product-conditions/" + id,
+            url: "/api/v1/product-conditions/" + productType,
         })
     }
 }
 
-export function getPackageTypeOptions(id) {
+export function getPackageOptions(productType) {
     return {
-        type: PACKAGE_TYPE_OPTIONS,
+        type: PACKAGE_OPTIONS,
         payload: axios({
             method: 'get',
-            url: "/api/v1/package-types/" + id,
+            url: "/api/v1/package-types/" + productType,
         })
     }
 }
+
+export function getManufacturer() {
+    return {
+        type: MANUFACTURER,
+        payload: axios({
+            method: 'get',
+            url: "/api/v1/manufacturer/",
+        })
+    }
+}
+
+export function getPricingUnits() {
+
+    return {
+        type: PRICING_UNITS,
+        // payload: axios({
+        //     method: 'get',
+        //     url: "/api/v1/manufacturer/",
+        payload: Promise.resolve(
+            {
+                "data": {
+                    "pricingUnits": [
+                        {
+                            "id": 1,
+                            "name": "USD"
+                        }
+                    ]
+                },
+                "status": "success"
+            })
+        }
+    }
+
 
 
 

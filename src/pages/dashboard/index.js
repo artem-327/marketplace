@@ -3,10 +3,7 @@ import Dashboard from './Dashboard';
 import {bindActionCreators} from 'redux'
 import {addLocation} from "../../modules/location";
 import {addProductOffer} from "../../modules/productOffers";
-import {getProduct} from "../../modules/dropdown";
-import {getFormOptions} from '../../modules/dropdown';
-import {getConditionOptions} from "../../modules/dropdown";
-import {getPackageTypeOptions} from "../../modules/dropdown";
+import {getProduct} from "../../modules/productOffers";
 
 function mapStateToProps(store) {
     return {
@@ -37,7 +34,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({addLocation, addProductOffer, getProduct, getFormOptions, getConditionOptions, getPackageTypeOptions}, dispatch)
+    return bindActionCreators({addLocation, addProductOffer, getProduct}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);

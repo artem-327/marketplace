@@ -90,7 +90,10 @@
   border-left: 1px solid #289ada;
   border-right: 1px solid #289ada;
   list-style-type: none;
-  padding: 0; }
+  padding: 0;
+  position: relative;
+  z-index: 2;
+  background-color: white; }
   .dropdown-options li {
     width: 100%;
     margin: 0;
