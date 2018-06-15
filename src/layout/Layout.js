@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Header from "./Header";
 import Footer from "./Footer";
-
+import PopUp from '../components/PopUp';
 
 
 class Layout extends Component {
@@ -9,6 +9,7 @@ class Layout extends Component {
         return (
             <div>
                 <Header/>
+                <PopUp />
                 {this.props.children}
                 <Footer/>
             </div>
