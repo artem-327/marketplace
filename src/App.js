@@ -16,6 +16,7 @@ import Orders from "./pages/orders/Orders";
 import Support from "./pages/support/Support";
 import Dashboard from "./pages/dashboard";
 import Clients from "./pages/clients/Clients";
+import SearchProduct from "./pages/searchProduct";
 
 import {Switch, Route} from 'react-router-dom';
 import Layout from "./layout/Layout";
@@ -40,6 +41,7 @@ class App extends Component {
                     <Route exact path="/settings" component={Settings}/>
                     <Route exact path="/support" component={Support}/>
                     <Route exact path="/add-inventory" component={AddInventory}/>
+                    <Route exact path="/search-product" component={SearchProduct}/>
                 </Layout>
             </Switch>
         </div>
