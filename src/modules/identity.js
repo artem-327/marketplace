@@ -63,7 +63,7 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 isAuthenticated: true,
-                identity: {isFetching: false, data: action.payload.data.data}
+                identity: {isFetching: false, data: action.payload}
             }
         }
         case GET_IDENTITY_REJECTED: {
@@ -116,13 +116,12 @@ export default function reducer(state = initialState, action) {
 export function getIdentity() {
     return {
         type: GET_IDENTITY,
-        payload: axios.get("/api/v1/users/me/").then((response) => {
-            // return jwt.decode(localStorage.jwtoken);
-            return response;
-        }).catch((er)=>{
-            deleteAuthToken();
-            return Promise.reject(new Error(er))
-        })
+        payload: axios.get("/api/v1/users/me/")
+            .then(response => response.data.data.user)
+            .catch(e => {
+                deleteAuthToken();
+                throw e;
+            })
     }
 }
 
@@ -136,9 +135,7 @@ export function login(email, password) {
                 email: email,
                 password: password
             }
-        }).then((response) => {
-            setAuthToken(response.data.data.token);
-        })
+        }).then(response => setAuthToken(response.data.data.token))
     }
 }
 
