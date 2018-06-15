@@ -37,16 +37,17 @@ class Dropdown extends Component {
         this.setState({isOpen: false})
     }
 
-
+    renderDropdown(opt){
+        return opt.map((option, index)=>{
+            return <li key={index + 'dropdown'} onClick={()=>{this.setCurrentValue(option.name)}}>{option.name}</li>
+        });
+    }
 
     render() {
         let {currentValue, isOpen} = this.state;
-        let opt = this.props.opns.map((option, index)=>{
-            return <li key={index + 'dropdown'} onClick={()=>{this.setCurrentValue(option.value)}}>{option.value}</li>
-        });
         let options = this.state.isOpen ?
             <ul className='dropdown-options'>
-                {opt}
+                {this.renderDropdown(this.props.opns)}
             </ul> : null;
         return (
             <div className='dropdown-wr' ref={this.dropdownRef} >
@@ -73,7 +74,7 @@ class Dropdown extends Component {
 Dropdown.propTypes = {
     opns: PropTypes.arrayOf(
         PropTypes.shape({
-            value: PropTypes.string,
+            name: PropTypes.string,
         })
     ).isRequired,
     currentValue: PropTypes.string,

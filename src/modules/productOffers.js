@@ -12,6 +12,7 @@ const GET_PRODUCT_FULFILLED = 'GET_PRODUCT_FULFILLED';
 export const initialState = {
     data: [],
     isFetching: true,
+    productType: null,
     products:{
         isPending: false,
         isValid: false,
@@ -67,9 +68,7 @@ export default function reducer(state = initialState, action) {
         case GET_PRODUCT_FULFILLED: {
             return {
                 ...state,
-                //TODO:: doplnit cestu podle api struktury
-                productDetail:action.payload
-
+                productType: 'ProductType'
             }
         }
         default: {
@@ -123,9 +122,9 @@ export function getProduct(id) {
     return {
         type: GET_PRODUCT,
         payload: axios({
-            method: 'post',
-            url: "/api/v1/product-offers/",
-            data: {
+            method: 'get',
+            url: "/api/v1/product-types/",
+            params: {
                 id
             }
         })

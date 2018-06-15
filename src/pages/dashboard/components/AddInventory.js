@@ -40,12 +40,13 @@ export default class AddInventory extends Component {
     }
 
     componentDidMount(){
-        this.props.getProduct(this.props.productType.data.productTypes.id).then(()=>{
-            this.props.getFormOptions(this.props.form.data.productForms);
-            this.props.getConditionOptions(this.props.condition.data.productConditions);
-            this.props.getPackageTypeOptions(this.props.package.data.packageTypes);
-
-        })
+        console.log(this.props);
+        // this.props.getProduct(this.props.productType.data.productTypes.id).then(()=>{
+        //     this.props.getFormOptions(this.props.form.data.productForms);
+        //     this.props.getConditionOptions(this.props.condition.data.productConditions);
+        //     this.props.getPackageTypeOptions(this.props.package.data.packageTypes);
+        //
+        // })
     }
 
 
@@ -53,8 +54,7 @@ export default class AddInventory extends Component {
         let { isPending, isValid, hasError } = this.state.location;
         // let {  } = this.state.productDetail;
         let buttonText = isPending ? "SAVING ..." : isValid ? "SAVED" : hasError ? "ERROR" : "+ ADD";
-
-        let options = this.componentDidMount;
+        let options = [];
         console.log(this.props.location);
 
         return[
