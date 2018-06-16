@@ -105,7 +105,7 @@ class Nav extends Component {
                         <NavLink to="/login" className='nav-link' activeClassName='active'>
                             <span className='link-center'>
                                 <i className="fas fa-sign-out-alt"/>
-                                Logout
+                                LOGOUT
                             </span>
                         </NavLink>
                     </span>
