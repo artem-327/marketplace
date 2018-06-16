@@ -12,6 +12,7 @@ const LOGIN = 'LOGIN';
 const LOGIN_PENDING = 'LOGIN_PENDING';
 const LOGIN_REJECTED = 'LOGIN_REJECTED';
 const LOGIN_FULFILLED = 'LOGIN_FULFILLED';
+const LOGOUT = 'LOGOUT';
 const REGISTRATION = 'REGISTRATION';
 const REGISTRATION_PENDING = 'REGISTRATION_PENDING';
 const REGISTRATION_REJECTED = 'REGISTRATION_REJECTED';
@@ -19,6 +20,12 @@ const REGISTRATION_FULFILLED = 'REGISTRATION_FULFILLED';
 
 export const initialState = {
     isAuthenticated: false,
+    identity:{
+        isFetching: false,
+        data:{
+            role: ROLE_GUEST
+        }
+    },
     loginForm: {
         isFetching: false,
         hasError: false,
@@ -40,14 +47,7 @@ export const initialState = {
             email: "",
             password: "",
         }
-    },
-    identity:{
-        isFetching: false,
-        data:{
-            role: ROLE_GUEST
-        }
     }
-
 };
 
 export default function reducer(state = initialState, action) {
@@ -63,7 +63,7 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 isAuthenticated: true,
-                identity: {isFetching: false, data: action.payload.data.data}
+                identity: {isFetching: false, data: action.payload}
             }
         }
         case GET_IDENTITY_REJECTED: {
@@ -107,6 +107,9 @@ export default function reducer(state = initialState, action) {
                 }
             }
         }
+        case LOGOUT: {
+            return {...state, identity: initialState.identity, isAuthenticated: false}
+        }
         default: {
             return state
         }
@@ -116,13 +119,12 @@ export default function reducer(state = initialState, action) {
 export function getIdentity() {
     return {
         type: GET_IDENTITY,
-        payload: axios.get("/api/v1/users/me/").then((response) => {
-            // return jwt.decode(localStorage.jwtoken);
-            return response;
-        }).catch((er)=>{
-            deleteAuthToken();
-            return Promise.reject(new Error(er))
-        })
+        payload: axios.get("/api/v1/users/me/")
+            .then(response => response.data.data.user)
+            .catch(e => {
+                deleteAuthToken();
+                throw e;
+            })
     }
 }
 
@@ -136,9 +138,15 @@ export function login(email, password) {
                 email: email,
                 password: password
             }
-        }).then((response) => {
-            setAuthToken(response.data.data.token);
-        })
+        }).then(response => setAuthToken(response.data.data.token))
+    }
+}
+
+export function logout() {
+    deleteAuthToken();
+
+    return {
+        type: LOGOUT
     }
 }
 

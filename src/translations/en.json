@@ -5,7 +5,9 @@
     "password" : "Password",
     "login" : "LOG IN",
     "logging" : "Logging...",
-    "forgottenPassword" : "Forgotten password"
+    "failure" : "Login failed, please check your credentials and try again.",
+    "forgottenPassword" : "Forgotten password",
+    "registration": "Register new account"
   },
   "filter":{
     "newFilter": "New Filter"

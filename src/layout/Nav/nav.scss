@@ -44,6 +44,11 @@ $nav-links-color: #ffffff;
         height: 33px;
         margin: 0 auto 10px auto;
       }
+      i {
+        display: block;
+        font-size: 33px;
+        margin: 0 auto 10px auto;
+      }
       &:hover{
         background-color: lighten($nav-background-color, 5%);
       }

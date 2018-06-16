@@ -7,7 +7,7 @@ export default function InventoryHOC(ComposedComponent) {
         submenuLinks() {
             return [
                 {
-                    url: '/inventory',
+                    url: '/inventory/my-inventory',
                     label: 'My Inventory',
                     exact: true
                 },

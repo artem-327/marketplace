@@ -10,23 +10,22 @@ import Settings from "../pages/settings/Settings";
 import Support from "../pages/support/Support";
 import AddInventory from "../pages/addInventory";
 import AllInventory from "../pages/inventory/allInventory";
-import PopUp from '../components/PopUp';
+import { withAuth } from '../utils/auth'
 
 
 class Main extends Component {
     render() {
         return (
             <div>
-                <PopUp />
                 <Switch>
-                    <Route exact path="/" component={Dashboard}/>
-                    <Route path="/inventory/all-inventory" component={Inventory(AllInventory)}/>
-                    <Route exact path="/orders" component={Orders}/>
-                    <Route exact path="/clients" component={Clients}/>
-                    <Route exact path="/reports" component={Reports}/>
-                    <Route exact path="/settings" component={Settings}/>
-                    <Route exact path="/support" component={Support}/>
-                    <Route exact path="/add-inventory" component={AddInventory}/>
+                    <Route exact path="/" component={withAuth(Dashboard)}/>
+                    <Route path="/inventory/all-inventory" component={withAuth(Inventory(AllInventory))}/>
+                    <Route exact path="/orders" component={withAuth(Orders)}/>
+                    <Route exact path="/clients" component={withAuth(Clients)}/>
+                    <Route exact path="/reports" component={withAuth(Reports)}/>
+                    <Route exact path="/settings" component={withAuth(Settings)}/>
+                    <Route exact path="/support" component={withAuth(Support)}/>
+                    <Route exact path="/add-inventory" component={withAuth(AddInventory)}/>
                 </Switch>
             </div>
         );

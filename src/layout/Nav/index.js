@@ -1,6 +1,7 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux'
 import Nav from './Nav';
+import {logout} from "../../modules/identity";
 
 function mapStateToProps(store) {
     return {
@@ -10,7 +11,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({}, dispatch)
+    return bindActionCreators({logout}, dispatch)
 }
 
 //connect impure, because activeClassName in NavLink (https://github.com/ReactTraining/react-router/issues/3935)

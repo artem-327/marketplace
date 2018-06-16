@@ -27,7 +27,7 @@ store.dispatch(addTranslationForLanguage(enJson, 'en'));
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 axios.defaults.headers.common = {
     "responseType": "json",
-    "Content-Type": "application/json'"
+    "Content-Type": "application/json",
 };
 
 if(localStorage.jwtoken){
@@ -43,7 +43,6 @@ ReactDOM.render(
                 <Route exact path="/registration" component={Registration}/>
                 <Route exact path="/profile-test" component={withAuth(TestProfile)} />
                 <Route path="/" component={App}/>
-               
             </Switch>
         </Provider>
     </BrowserRouter>, document.getElementById('root'));
