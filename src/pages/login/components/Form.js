@@ -34,7 +34,7 @@ export default class LoginForm extends React.Component {
                 <div className="form-middle">
                     <button className={classnames({"not-valid": hasError}, {"loading": isFetching})}>{butLogin}</button>
                 </div>
-                {/*<Link className="form-link" to="#"><Translate id="login.forgottenPassword"/></Link>*/}
+                <Link className="form-link" to="/registration"><Translate id="login.registration"/></Link>
             </Form>
         );
     }
