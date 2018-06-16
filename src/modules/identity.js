@@ -12,6 +12,7 @@ const LOGIN = 'LOGIN';
 const LOGIN_PENDING = 'LOGIN_PENDING';
 const LOGIN_REJECTED = 'LOGIN_REJECTED';
 const LOGIN_FULFILLED = 'LOGIN_FULFILLED';
+const LOGOUT = 'LOGOUT';
 const REGISTRATION = 'REGISTRATION';
 const REGISTRATION_PENDING = 'REGISTRATION_PENDING';
 const REGISTRATION_REJECTED = 'REGISTRATION_REJECTED';
@@ -19,6 +20,12 @@ const REGISTRATION_FULFILLED = 'REGISTRATION_FULFILLED';
 
 export const initialState = {
     isAuthenticated: false,
+    identity:{
+        isFetching: false,
+        data:{
+            role: ROLE_GUEST
+        }
+    },
     loginForm: {
         isFetching: false,
         hasError: false,
@@ -40,14 +47,7 @@ export const initialState = {
             email: "",
             password: "",
         }
-    },
-    identity:{
-        isFetching: false,
-        data:{
-            role: ROLE_GUEST
-        }
     }
-
 };
 
 export default function reducer(state = initialState, action) {
@@ -107,6 +107,9 @@ export default function reducer(state = initialState, action) {
                 }
             }
         }
+        case LOGOUT: {
+            return {...state, identity: initialState.identity, isAuthenticated: false}
+        }
         default: {
             return state
         }
@@ -136,6 +139,14 @@ export function login(email, password) {
                 password: password
             }
         }).then(response => setAuthToken(response.data.data.token))
+    }
+}
+
+export function logout() {
+    deleteAuthToken();
+
+    return {
+        type: LOGOUT
     }
 }
 

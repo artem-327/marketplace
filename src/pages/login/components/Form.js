@@ -20,9 +20,9 @@ export default class LoginForm extends React.Component {
             <Translate id="login.logging"/>
             :
             <Translate id="login.login"/>;
-        console.log();
         return (
             <Form model="forms.loginForm" onSubmit={(val) => this.handleSubmit(val)}>
+                {hasError ? <div style={{color: "red"}}><Translate id="login.failure"/></div> : null}
                 <div>
                     {/*<label htmlFor="forms.loginForm.email"><Translate id="login.email"/></label>*/}
                     <Control.text model="forms.loginForm.email" placeholder="Username"/>
@@ -34,7 +34,7 @@ export default class LoginForm extends React.Component {
                 <div className="form-middle">
                     <button className={classnames({"not-valid": hasError}, {"loading": isFetching})}>{butLogin}</button>
                 </div>
-                {/*<Link className="form-link" to="#"><Translate id="login.forgottenPassword"/></Link>*/}
+                <Link className="form-link" to="/registration"><Translate id="login.registration"/></Link>
             </Form>
         );
     }

@@ -33,5 +33,9 @@
       display: block;
       height: 33px;
       margin: 0 auto 10px auto; }
+    .App-nav .nav-inside .nav-link i {
+      display: block;
+      font-size: 33px;
+      margin: 0 auto 10px auto; }
     .App-nav .nav-inside .nav-link:hover {
       background-color: #3f434c; }
