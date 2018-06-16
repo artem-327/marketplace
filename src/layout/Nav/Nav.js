@@ -101,6 +101,14 @@ class Nav extends Component {
                             SETTINGS
                         </span>
                     </NavLink>
+                    <span onClick={() => this.props.logout()}>
+                        <NavLink to="/login" className='nav-link' activeClassName='active'>
+                            <span className='link-center'>
+                                <i className="fas fa-sign-out-alt"/>
+                                Logout
+                            </span>
+                        </NavLink>
+                    </span>
                 </div>
             </div>
             :
