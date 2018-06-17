@@ -19,7 +19,7 @@ class Search extends Component {
                 {result.primaryName}
                 <span className='search-cas'>{result.casNumber}</span>
             </div>
-        ))
+        ));
     }
 
     searchRedirect(cas) {
@@ -27,11 +27,13 @@ class Search extends Component {
     }
 
     handleChange(e) {
-        this.setState({fulltext: e.target.value}, this.searchProducts(this.state.fulltext))
+        this.setState({fulltext: e.target.value}, () => {
+            if (this.state.fulltext.length > 1)  this.searchProducts(this.state.fulltext);
+        });
     }
 
-    searchProducts(fulltext){
-        if (fulltext.length > 1) this.props.searchProduct(fulltext);
+    searchProducts(){
+        this.props.searchProduct(this.state.fulltext);
     }
 
     render() {

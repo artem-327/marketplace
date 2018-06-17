@@ -6,7 +6,7 @@ const SEARCH_PRODUCT_FULFILLED = 'SEARCH_PRODUCT_FULFILLED';
 const SEARCH_PRODUCT_REJECTED = 'SEARCH_PRODUCT_REJECTED';
 
 export const initialState = {
-    results: [],
+    data: [],
     isFetching: false
 };
 
@@ -28,7 +28,7 @@ export default function reducer(state = initialState, action) {
             return{
                 ...state,
                 isFetching: false,
-                results: action.payload.data.data.products
+                data: action.payload.data.data.products
             }
         }
         default: {
@@ -41,7 +41,7 @@ export default function reducer(state = initialState, action) {
 export function searchProduct(fulltext) {
     return {
         type: SEARCH_PRODUCT,
-        payload: axios.get('/api/v1/products/?search=' + fulltext)
+        payload: axios.get('/api/v1/products/', {params:{search: fulltext}})
     }
 }
 

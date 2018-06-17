@@ -6,7 +6,7 @@ import {searchProduct} from "../../modules/products";
 
 function mapStateToProps(store) {
     return {
-        results: store.products.results,
+        results: store.products.data,
         isFetching: store.products.isFetching,
     }
 }
