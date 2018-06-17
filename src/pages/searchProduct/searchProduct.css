@@ -1,0 +1,21 @@
+.search-products {
+  width: 100%; }
+  .search-products input {
+    width: calc(100% - 200px);
+    padding-left: 10px; }
+  .search-products button {
+    width: 200px; }
+
+.search-status {
+  padding: 10px;
+  width: 100%;
+  text-align: center; }
+
+.search-results {
+  width: 100%; }
+  .search-results .search-product-item {
+    background-color: lightgrey;
+    padding: 10px;
+    font-size: .9em; }
+    .search-results .search-product-item .search-cas {
+      float: right; }
