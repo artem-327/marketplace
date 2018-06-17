@@ -10,6 +10,7 @@ import identity, {initialState as identityFormInit} from './modules/identity';
 import location from './modules/location';
 import search, {initialState as searchFormInit} from './modules/search';
 import products from './modules/products';
+import companies from './modules/companies'
 
 import productOffers from './modules/productOffers'
 import popup from './modules/popup';
@@ -19,6 +20,7 @@ import addInventory from './modules/addInventory';
 
 const reducer = combineReducers({
     identity,
+    companies,
     locale,
     location,
     productOffers,
