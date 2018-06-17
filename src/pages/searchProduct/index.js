@@ -1,15 +1,13 @@
 import {connect} from 'react-redux';
 import SearchProduct from './SearchProduct';
 import {bindActionCreators} from 'redux'
-import {searchProduct} from "../../modules/searchProduct";
+import {searchProduct} from "../../modules/products";
 
 
 function mapStateToProps(store) {
     return {
-        results: store.searchProduct.results,
-        isFetching: store.searchProduct.isFetching,
-        hasError: store.searchProduct.hasError,
-        firstTime: store.searchProduct.firstTime
+        results: store.products.results,
+        isFetching: store.products.isFetching,
     }
 }
 
