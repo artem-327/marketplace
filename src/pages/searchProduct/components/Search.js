@@ -28,7 +28,7 @@ class Search extends Component {
 
     handleChange(e) {
         this.setState({fulltext: e.target.value}, () => {
-            if (this.state.fulltext.length > 1)  this.searchProducts(this.state.fulltext);
+            if (this.state.fulltext.length > 1)  this.searchProducts();
         });
     }
 
