@@ -8,7 +8,7 @@ class Search extends Component {
         this.searchRedirect = this.searchRedirect.bind(this);
         this.searchProducts = debounce(this.searchProducts, 200);
         this.state = {
-            fulltext: ""
+            fulltext: "",
         }
     }
 
@@ -36,13 +36,11 @@ class Search extends Component {
 
     render() {
         let {fulltext} = this.state;
-        let results = this.props.firstTime ? <p className='search-status'>Type to find product</p> :
-            this.props.isFetching ? <p className='search-status'>Loading ...</p> :
-            this.props.hasError ? <p className='search-status err'>Error</p> : this.renderResults();
+        let results = this.props.isFetching ? <p className='search-status'>Loading ...</p> : this.renderResults();
         return (
             <div>
                 <div className='search-products'>
-                    <input value={fulltext} onChange={(e) => this.handleChange(e)}/>
+                    <input value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Type to find products'/>
                     <button onClick={()=>{this.searchProducts(fulltext)}}>Search</button>
                 </div>
                 <div className='search-results'>

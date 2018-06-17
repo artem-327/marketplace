@@ -7,9 +7,7 @@ const SEARCH_PRODUCT_REJECTED = 'SEARCH_PRODUCT_REJECTED';
 
 export const initialState = {
     results: [],
-    isFetching: false,
-    hasError: false,
-    firstTime: true,
+    isFetching: false
 };
 
 export default function reducer(state = initialState, action) {
@@ -18,22 +16,18 @@ export default function reducer(state = initialState, action) {
             return{
                 ...state,
                 isFetching: true,
-                hasError: false,
-                firstTime: false
             }
         }
         case SEARCH_PRODUCT_REJECTED: {
             return{
                 ...state,
                 isFetching: false,
-                hasError: true,
             }
         }
         case SEARCH_PRODUCT_FULFILLED: {
             return{
                 ...state,
                 isFetching: false,
-                hasError: false,
                 results: action.payload.data.data.products
             }
         }
