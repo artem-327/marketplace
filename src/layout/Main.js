@@ -25,7 +25,7 @@ class Main extends Component {
                     <Route exact path="/reports" component={withAuth(Reports)}/>
                     <Route exact path="/settings" component={withAuth(Settings)}/>
                     <Route exact path="/support" component={withAuth(Support)}/>
-                    <Route exact path="/add-inventory" component={withAuth(AddInventory)}/>
+                    <Route exact path="/add-inventory/:productId" component={withAuth(AddInventory)}/>
                 </Switch>
             </div>
         );
