@@ -16,6 +16,10 @@ export default function InventoryHOC(ComposedComponent) {
                     label: 'All Inventory'
                 },
                 {
+                    url: '/inventory/add-inventory/',
+                    label: 'Add inventory'
+                },
+                {
                     url: '/inventory/consilidated',
                     label: 'Consilidated'
                 },

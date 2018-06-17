@@ -28,7 +28,7 @@ export default function reducer(state = initialState, action) {
             return{
                 ...state,
                 isFetching: false,
-                data: action.payload.data.data.products
+                data: action.payload
             }
         }
         default: {
@@ -38,11 +38,9 @@ export default function reducer(state = initialState, action) {
 }
 
 
-export function searchProduct(search) {
+export function searchProducts(search) {
     return {
         type: SEARCH_PRODUCT,
-        payload: axios.get('/api/v1/products/', {params:{search}})
+        payload: axios.get('/api/v1/products/', {params:{search}}).then(response => response.data.data.products)
     }
 }
-
-

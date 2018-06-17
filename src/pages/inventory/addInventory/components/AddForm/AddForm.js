@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
-import InputGroup from './components/InputGroup'
+import InputGroup from './InputGroup'
 import {Control, Form} from 'react-redux-form';
-import Dropdown from '../../components/Dropdown/Dropdown';
-// import classnames from "classnames";
-import './AddInventory.css'
+import Dropdown from "../../../../../components/Dropdown/Dropdown";
 
-export default class AddInventory extends Component {
+export default class AddForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -14,14 +12,7 @@ export default class AddInventory extends Component {
                 isValid: false,
                 hasError: false,
             },
-            productType:{
-                isPending: false,
-            },
-            productCondition:{
-                isPending: false,
-            }
-
-
+            productDetail:{}
         }
     }
 
@@ -32,26 +23,16 @@ export default class AddInventory extends Component {
                 isValid: nextProps.inventory.location.isValid,
                 hasError: nextProps.inventory.location.hasError
             },
-            // productForm: {
-            //     isPending:
-            // }
-
-
+            productDetail: nextProps.inventory.productDetail
         })
     }
 
     componentDidMount(){
-        this.props.getProduct(this.props.match.params.productId).then(()=>{
-            this.props.getFormOptions(this.props.productType);
-            this.props.getConditionOptions(this.props.productType);
-            this.props.getPackageOptions(this.props.productType);
-            this.props.getManufacturer();
-            this.props.getPricingUnits();
-        })
+
     }
 
-
     getLocationInputs(){
+        console.log(this.props);
         let { isPending, isValid, hasError } = this.state.location;
         // let {  } = this.state.productDetail;
         let buttonText = isPending ? "SAVING ..." : isValid ? "SAVED" : hasError ? "ERROR" : "+ ADD";
@@ -60,11 +41,11 @@ export default class AddInventory extends Component {
                 label: <label htmlFor="forms.inventoryLocationForm.warehouse">WAREHOUSE</label>,
                 component:
                     <Dropdown opns={this.props.dropdowns.warehouse} placeholder='Select'/>                /*<Control.select model="forms.inventoryLocationForm.warehouse" id="forms.inventoryLocationForm.warehouse">*/
-                        /*<option value="red">red</option>*/
-                        /*<option value="green">green</option>*/
-                        /*<option value="blue">blue</option>*/
-                         /*/!*tady napojim data*!/*/
-                    /*</Control.select>*/
+                /*<option value="red">red</option>*/
+                /*<option value="green">green</option>*/
+                /*<option value="blue">blue</option>*/
+                /*/!*tady napojim data*!/*/
+                /*</Control.select>*/
             },
             {
                 label: <label htmlFor="forms.inventoryLocationForm.warehouseName">WAREHOUSE NAME</label>,
@@ -166,14 +147,14 @@ export default class AddInventory extends Component {
             {
                 label: <label htmlFor="forms.inventoryProductsForm.assayMin">ASSAY</label>,
                 component: <div>MIN.<Control.text model="forms.inventoryProductsForm.assayMin"
-                                         id="forms.inventoryProductsForm.assayMin"
-                                         type="number"/></div>,
+                                                  id="forms.inventoryProductsForm.assayMin"
+                                                  type="number"/></div>,
             },
             {
                 label: <label htmlFor="forms.inventoryProductsForm.assayMax">&nbsp;</label>,
                 component: <div>MAX.<Control.text model="forms.inventoryProductsForm.assayMax"
-                                         id="forms.inventoryProductsForm.assayMax"
-                                         type="number"/></div>,
+                                                  id="forms.inventoryProductsForm.assayMax"
+                                                  type="number"/></div>,
             },
             {
                 label: <label htmlFor="forms.inventoryProductsForm.grade">GRADE</label>,

@@ -1,9 +1,9 @@
 import {connect} from 'react-redux';
-import AddInventory from './AddInventory';
+import AddForm from './AddForm';
 import {bindActionCreators} from 'redux'
-import {addLocation} from "../../modules/location";
-import {addProductOffer, getProduct} from '../../modules/productOffers';
-import {getFormOptions, getConditionOptions, getPackageOptions, getManufacturer, getPricingUnits} from '../../modules/dropdown';
+import {addLocation} from "../../../../../modules/location";
+import {addProductOffer} from '../../../../../modules/productOffers';
+import {getFormOptions, getConditionOptions, getPackageOptions, getManufacturer, getPricingUnits} from '../../../../../modules/dropdown';
 
 
 function mapStateToProps(store) {
@@ -24,7 +24,7 @@ function mapStateToProps(store) {
         inventory: {
             location: store.location.location,
             products: store.productOffers.products,
-        }
+        },
     }
 }
 
@@ -32,13 +32,12 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         addLocation,
         addProductOffer,
-        getProduct,
         getFormOptions,
         getConditionOptions,
         getPackageOptions,
-        getManufacturer,
-        getPricingUnits
+        getPricingUnits,
+        getManufacturer
     }, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddInventory);
+export default connect(mapStateToProps, mapDispatchToProps)(AddForm);

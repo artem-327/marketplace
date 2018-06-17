@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import debounce from 'debounce';
+import './SearchProducts.css';
+import debounce from "debounce";
 
-class Search extends Component {
+class SearchProducts extends Component {
 
     constructor(props){
         super(props);
-        this.searchRedirect = this.searchRedirect.bind(this);
         this.searchProducts = debounce(this.searchProducts, 200);
         this.state = {
             fulltext: "",
@@ -13,17 +13,13 @@ class Search extends Component {
     }
 
     renderResults() {
-        if (!this.props.results || this.props.results.length === 0) return <p className='search-status'>No results</p>;
-        return this.props.results.map((result, index) => (
-            <div key={index + 'search'} className='search-product-item' onClick={() => this.searchRedirect(result.casNumber)}>
-                {result.primaryName}
-                <span className='search-cas'>{result.casNumber}</span>
+        if (!this.props.searchedProducts || this.props.searchedProducts.length === 0) return <p className='search-status'>No results</p>;
+        return this.props.searchedProducts.map(product => (
+            <div key={product.id} className='search-product-item' onClick={() => this.props.onSelect(product)}>
+                {product.primaryName}
+                <span className='search-cas'>{product.casNumber}</span>
             </div>
         ));
-    }
-
-    searchRedirect(cas) {
-        this.props.history.push('/add-inventory/' + cas);
     }
 
     handleChange(e) {
@@ -33,12 +29,12 @@ class Search extends Component {
     }
 
     searchProducts(){
-        this.props.searchProduct(this.state.fulltext);
+        this.props.searchProducts(this.state.fulltext);
     }
 
     render() {
         let {fulltext} = this.state;
-        let results = this.props.isFetching ? <p className='search-status'>Loading ...</p> : this.renderResults();
+        let results = this.props.isSearching ? <p className='search-status'>Loading ...</p> : this.renderResults();
         return (
             <div>
                 <div className='search-products'>
@@ -53,5 +49,4 @@ class Search extends Component {
     }
 }
 
-export default Search;
-
+export default SearchProducts;

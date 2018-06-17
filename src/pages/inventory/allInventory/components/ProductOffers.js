@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import './ProductOffers.css';
 import moment from "moment";
-import {DATE_FORMAT, PRECISION, PRICE_PRECISION} from "../../../../utils/constants";
-import {round} from "../../../../utils/functions";
+import {DATE_FORMAT, PRICE_PRECISION} from "../../../../utils/constants";
 
 class ProductOffers extends Component {
 
@@ -63,13 +62,13 @@ class ProductOffers extends Component {
                         <th>Condition</th>
                         <th>Form</th>
                         <th>Location</th>
-                        <th><i className="fas fa-cog"></i></th>
+                        <th><i className="fas fa-cog"/></th>
                     </tr>
                     </thead>
                     <tbody>
                     {Object.values(this.state.products).reduce((rows, product) => {
                         rows.push(
-                        <tr className="product" key={'m' + product.cas} onClick={() => {this.toggleProduct(product.id)}}>
+                        <tr className="product" key={product.casNumber} onClick={() => {this.toggleProduct(product.id)}}>
                             <td colSpan="13">
                                 <span><a href="#">{product.casNumber}</a></span>
                                 <span className="product-name">{product.primaryName}</span>
@@ -83,7 +82,7 @@ class ProductOffers extends Component {
                         product.visible ?
                         product.productOffers.forEach((offer) => {
                             rows.push(
-                                <tr className="product-offer" key={'m' + offer.id}>
+                                <tr className="product-offer" key={offer.id}>
                                     <td><input type="checkbox"/></td>
                                     <td>{offer.merchant.email}</td>
                                     <td>{offer.packageAmount}</td>
