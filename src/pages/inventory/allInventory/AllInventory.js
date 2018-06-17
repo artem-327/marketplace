@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ProductOffers from "./components/ProductOffers";
 import Filter from '../../../components/Filter';
-import {addPopup} from "../../../modules/popup";
 
 class AllInventory extends Component {
 
@@ -10,7 +9,7 @@ class AllInventory extends Component {
     }
 
     render() {
-        let content = this.props.isFetching ? <div>načítání</div> :
+        let content = this.props.isFetching ? <div>Loading...</div> :
             <ProductOffers productOffers={this.props.productOffers} addPopup={this.props.addPopup}/>;
         return (
             <div>

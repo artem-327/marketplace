@@ -29,7 +29,7 @@ $app-font-family: 'Cabin', sans-serif;
   }
 }
 
-input[type='text'] {
+input[type='text'], input[type='number'] {
   border-radius: 4px;
   border: 1px solid #B0B0B0;
   padding: 7px;

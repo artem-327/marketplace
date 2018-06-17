@@ -29,11 +29,12 @@ class FilterGroup extends Component {
                         </div>
                     )
                 }
-                case 'text':{
+                case 'text':
+                case 'number': {
                     return (
                         <div key={index} className='filter-input-text'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>
-                            <Control.text model={input.model} id={input.model} placeholder='test'/>
+                            <Control.text type={input.type} model={input.model} id={input.model} placeholder={input.placeholder}/>
                         </div>
                     )
                 }
@@ -65,6 +66,7 @@ FilterGroup.propTypes = {
     inputs: PropTypes.arrayOf(
         PropTypes.shape({
             label: PropTypes.string,
+            placeholder: PropTypes.string,
             model: PropTypes.string.isRequired,
             type: PropTypes.string.isRequired,
         })

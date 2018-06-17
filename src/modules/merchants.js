@@ -13,7 +13,7 @@ const REJECT_MERCHANT_PENDING = 'REJECT_MERCHANT_PENDING';
 
 export const initialState = {
     data:[],
-    isFetching: true,
+    isFetching: false,
 };
 
 export default function reducer(state = initialState, action) {
