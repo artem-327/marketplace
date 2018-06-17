@@ -39,7 +39,7 @@ class Merchants extends Component {
     }
 
     render() {
-        let merchants = this.props.isFetching ? <tr><td>Načítání</td></tr> : this.renderMerchants();
+        let merchants = this.props.isFetching ? <tr><td>Loading...</td></tr> : this.renderMerchants();
         return (
             <div className="App">
                 <table border="1">

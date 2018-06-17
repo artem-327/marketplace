@@ -1,13 +1,13 @@
 import axios from 'axios';
+import {filterNonEmptyAttributes} from "../utils/functions";
 
-//Veškeré konstanty pro tento reducer
 const GET_PRODUCTOFF = 'GET_PRODUCTOFF';
 const GET_PRODUCTOFF_FULFILLED = 'GET_PRODUCTOFF_FULFILLED';
 const GET_PRODUCTOFF_PENDING = 'GET_PRODUCTOFF_PENDING';
 
 export const initialState = {
     data: [],
-    isFetching: true,
+    isFetching: false,
 };
 
 export default function reducer(state = initialState, action) {
@@ -34,20 +34,6 @@ export default function reducer(state = initialState, action) {
 export function fetchAll(filter = {}) {
     return {
         type: GET_PRODUCTOFF,
-        payload: axios({
-            method: 'get',
-            url: "/api/v1/product-offers/",
-            params: {
-                search: filter.search,
-                qntylb: filter.qntylb,
-                qntyub: filter.qntyub,
-                prclb: filter.prclb,
-                prcub: filter.prcub,
-                loc: filter.loc,
-                pckgs: filter.pckgs
-            }
-        }).then((response) => {
-            return response.data.data.productOffers
-        })
+        payload: axios.get("/api/v1/product-offers/", {params: {...filterNonEmptyAttributes(filter)}}).then(response => response.data.data.productOffers)
     }
 }
