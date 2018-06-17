@@ -38,10 +38,10 @@ export default function reducer(state = initialState, action) {
 }
 
 
-export function searchProduct(fulltext) {
+export function searchProduct(search) {
     return {
         type: SEARCH_PRODUCT,
-        payload: axios.get('/api/v1/products/', {params:{search: fulltext}})
+        payload: axios.get('/api/v1/products/', {params:{search}})
     }
 }
 
