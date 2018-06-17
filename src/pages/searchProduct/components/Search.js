@@ -43,7 +43,7 @@ class Search extends Component {
             <div>
                 <div className='search-products'>
                     <input value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Type to find products'/>
-                    <button onClick={()=>{this.searchProducts(fulltext)}}>Search</button>
+                    <button onClick={()=>{this.searchProducts()}}>Search</button>
                 </div>
                 <div className='search-results'>
                     {results}
