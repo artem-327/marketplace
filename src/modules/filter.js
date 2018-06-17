@@ -23,25 +23,16 @@ const TOGGLE_FILTER = "TOGGLE_FILTER";
 
 export const initialState = {
     isOpen: false,
-    filterForm: {
-        isFetching: false,
-        hasError: false,
-        isValid: false,
-        data: {
-            search: "",
-            qntylb: "",
-            qntyub: "",
-            prclb: "",
-            prcub: "",
-            zipCode: "",
-            checkboxes:{
-                1: "",
-                2: "",
-                3: "",
-                4: "",
-            }
-        }
-    },
+    data: {
+        search: null,
+        qntylb: null,
+        qntyub: null,
+        prclb: null,
+        prcub: null,
+        loc: null,
+        cmpny: null,
+        pckgs: {}
+    }
 };
 
 export default function reducer(state = initialState, action) {
@@ -49,7 +40,7 @@ export default function reducer(state = initialState, action) {
         case TOGGLE_FILTER: {
             return {
                 ...state,
-                isOpen: action.payload
+                isOpen: !state.isOpen
             }
         }
         default: {
@@ -58,10 +49,9 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-export function toggleFilter(state) {
+export function toggleFilter() {
     return {
         type: TOGGLE_FILTER,
-        payload: state
     }
 }
 

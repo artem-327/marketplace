@@ -1,17 +1,24 @@
 import axios from 'axios';
+import {filterNonEmptyAttributes} from "../utils/functions";
 
-//Veškeré konstanty pro tento reducer
+
+const GET_PRODUCT_OFFERS = 'GET_PRODUCT_OFFERS';
+const GET_PRODUCT_OFFERS_FULFILLED = 'GET_PRODUCT_OFFERS_FULFILLED';
+const GET_PRODUCT_OFFERS_PENDING = 'GET_PRODUCT_OFFERS_PENDING';
+
 const GET_PRODUCT_OFFER = 'GET_PRODUCT_OFFER';
 const GET_PRODUCT_OFFER_FULFILLED = 'GET_PRODUCT_OFFER_FULFILLED';
 const GET_PRODUCT_OFFER_PENDING = 'GET_PRODUCT_OFFER_PENDING';
+
 const ADD_PRODUCT_OFFER = 'ADD_PRODUCT_OFFER';
 const ADD_PRODUCT_OFFER_FULFILLED = 'ADD_PRODUCT_OFFER_FULFILLED';
+
 const GET_PRODUCT = 'GET_PRODUCT';
 const GET_PRODUCT_FULFILLED = 'GET_PRODUCT_FULFILLED';
 
 export const initialState = {
     data: [],
-    isFetching: true,
+    isFetching: false,
     productType: null,
     products:{
         isPending: false,
@@ -79,22 +86,8 @@ export default function reducer(state = initialState, action) {
 
 export function fetchAll(filter = {}) {
     return {
-        type: GET_PRODUCT_OFFER,
-        payload: axios({
-            method: 'get',
-            url: "/api/v1/product-offers/",
-            params: {
-                search: filter.search,
-                qntylb: filter.qntylb,
-                qntyub: filter.qntyub,
-                prclb: filter.prclb,
-                prcub: filter.prcub,
-                loc: filter.loc,
-                pckgs: filter.pckgs
-            }
-        }).then((response) => {
-            return response.data.data.productOffers
-        })
+        type: GET_PRODUCT_OFFERS,
+        payload: axios.get("/api/v1/product-offers/", {params: {...filterNonEmptyAttributes(filter)}}).then(response => response.data.data.productOffers)
     }
 }
 

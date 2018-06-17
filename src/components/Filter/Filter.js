@@ -16,9 +16,12 @@ class Filter extends Component {
     }
 
     handleSubmit(inputs){
-        console.log(inputs);
-        this.props.filterFunc(inputs);
+        let filter = Object.assign({}, inputs, {pckgs: Object.entries(inputs.pckgs).filter(([key, value]) => value).map(([key]) => key).join(',')});
+        this.props.filterFunc(filter);
+    }
 
+    componentDidMount() {
+        this.props.fetchPackageTypes();
     }
 
     componentWillReceiveProps(nextProps){
@@ -30,14 +33,14 @@ class Filter extends Component {
     render(){
         return this.state.isOpen ?
             <div className="filter">
-                <Form model="forms.filter.filterForm.data" onSubmit={(val) => this.handleSubmit(val)}>
+                <Form model="forms.filter.data" onSubmit={(val) => this.handleSubmit(val)}>
                     <FilterGroup className="filterGroup"
                                  header='Chemical Type'
                                  inputs={[
                                      {
                                          label: 'Chemical name',
-                                         model: 'forms.filter.filterForm.data.search',
-                                         type: 'text'
+                                         model: '.search',
+                                         type: 'text',
                                      }
                                  ]}/>
                     <FilterGroup className="filterGroup"
@@ -45,13 +48,15 @@ class Filter extends Component {
                                  inputs={[
                                      {
                                          label: 'From Quantity',
-                                         model: 'forms.filter.filterForm.data.qntylb',
-                                         type: 'text'
+                                         model: '.qntylb',
+                                         type: 'number',
+                                         placeholder: '0'
                                      },
                                      {
                                          label: 'To Quantity',
-                                         model: 'forms.filter.filterForm.data.qntyub',
-                                         type: 'text'
+                                         model: '.qntyub',
+                                         type: 'number',
+                                         placeholder: '0'
                                      }
                                  ]}/>
                     <FilterGroup className="filterGroup"
@@ -59,73 +64,24 @@ class Filter extends Component {
                                  inputs={[
                                      {
                                          label: 'From Price',
-                                         model: 'forms.filter.filterForm.data.prclb',
-                                         type: 'text'
+                                         model: '.prclb',
+                                         type: 'number',
+                                         placeholder: '0'
                                      },
                                      {
                                          label: 'To Price',
-                                         model: 'forms.filter.filterForm.data.prcub',
-                                         type: 'text'
+                                         model: '.prcub',
+                                         type: 'number',
+                                         placeholder: '0'
                                      }
                                  ]}/>
-                    {/*<FilterGroup className="filterGroup"*/}
-                                 {/*header='Location'*/}
-                                 {/*inputs={[*/}
-                                     {/*{*/}
-                                         {/*label: 'Enter your zip code',*/}
-                                         {/*model: 'forms.filterForm.zipCode',*/}
-                                         {/*type: 'text'*/}
-                                     {/*},*/}
-                                     {/*{*/}
-                                         {/*label: 'Max. Miles Away',*/}
-                                         {/*model: 'forms.filterForm.maxMilesAway',*/}
-                                         {/*type: 'text'*/}
-                                     {/*}*/}
-                                 {/*]}/>*/}
                     <FilterGroup className="filterGroup"
                                  header='Packaging'
-                                 inputs={[
-                                     {
-                                         label: 'Super Sack',
-                                         model: 'forms.filter.filterForm.data.checkboxes[1]',
-                                         type: 'checkbox'
-                                     },
-                                     // {
-                                     //     label: 'Drums',
-                                     //     model: 'forms.filterForm.drums',
-                                     //     type: 'checkbox'
-                                     // },
-                                     // {
-                                     //     label: 'Pails',
-                                     //     model: 'forms.filterForm.pails',
-                                     //     type: 'checkbox'
-                                     // },
-                                     // {
-                                     //     label: 'Bags',
-                                     //     model: 'forms.filterForm.bags',
-                                     //     type: 'checkbox'
-                                     // },
-                                     // {
-                                     //     label: 'Bulk',
-                                     //     model: 'forms.filterForm.bulk',
-                                     //     type: 'checkbox'
-                                     // },
-                                     // {
-                                     //     label: 'Fiber Drums',
-                                     //     model: 'forms.filterForm.fiberDrums',
-                                     //     type: 'checkbox'
-                                     // },
-                                     // {
-                                     //     label: 'Totes',
-                                     //     model: 'forms.filterForm.totes',
-                                     //     type: 'checkbox'
-                                     // },
-                                     // {
-                                     //     label: 'Cartoons / Boxes',
-                                     //     model: 'forms.filterForm.cartoonsBoxes',
-                                     //     type: 'checkbox'
-                                     // }
-                                 ]}/>
+                                 inputs={this.props.packageTypes.map(packageType => ({
+                                        label: packageType.name,
+                                        type: 'checkbox',
+                                        model: `.pckgs[${packageType.id}]`
+                                 }))}/>
                     <div>
                         <button className="filter-button">Apply</button>
                     </div>

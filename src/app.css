@@ -25,15 +25,15 @@
   .input-label.bigger {
     font-size: 1.2rem; }
 
-input[type='text'] {
+input[type='text'], input[type='number'] {
   border-radius: 4px;
   border: 1px solid #B0B0B0;
   padding: 7px; }
-  input[type='text']:hover, input[type='text']:focus {
+  input[type='text']:hover, input[type='text']:focus, input[type='number']:hover, input[type='number']:focus {
     border-color: #289ada;
     box-shadow: none;
     outline: none; }
-  input[type='text'].bigger {
+  input[type='text'].bigger, input[type='number'].bigger {
     padding: 12px 7px;
     font-size: 1.2rem; }
 
