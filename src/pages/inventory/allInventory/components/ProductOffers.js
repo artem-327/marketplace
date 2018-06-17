@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import './ProductOffers.css';
 import moment from "moment";
-import {DATE_FORMAT} from "../../../../utils/constants";
+import {DATE_FORMAT, PRECISION, PRICE_PRECISION} from "../../../../utils/constants";
+import {round} from "../../../../utils/functions";
 
 class ProductOffers extends Component {
 
@@ -70,8 +71,8 @@ class ProductOffers extends Component {
                         rows.push(
                         <tr className="product" key={'m' + product.cas} onClick={() => {this.toggleProduct(product.id)}}>
                             <td colSpan="13">
-                                <span><a href="#">{product.cas}</a></span>
-                                <span className="product-name">{product.name}</span>
+                                <span><a href="#">{product.casNumber}</a></span>
+                                <span className="product-name">{product.primaryName}</span>
                             </td>
                             <td colSpan="3" className="quantity">
                                 <span>Total Qty: 100</span>
@@ -84,16 +85,16 @@ class ProductOffers extends Component {
                             rows.push(
                                 <tr className="product-offer" key={'m' + offer.id}>
                                     <td><input type="checkbox"/></td>
-                                    <td>{offer.merchant.name}</td>
+                                    <td>{offer.merchant.email}</td>
                                     <td>{offer.packageAmount}</td>
                                     <td>{offer.packageType.name}</td>
                                     <td>{offer.packageType.capacity}</td>
-                                    <td>{offer.packageType.quantity}</td>
+                                    <td>{offer.packageAmount}</td>
+                                    <td>{offer.pricePerUnit.toFixed(PRICE_PRECISION)}</td>
                                     <td>unknown</td>
                                     <td>unknown</td>
-                                    <td>unknown</td>
-                                    <td>unknown</td>
-                                    <td>{moment(offer.expirationDate).format(DATE_FORMAT)}</td>
+                                    <td>{offer.origin}</td>
+                                    <td>{offer.expirationDate ? moment(offer.expirationDate).format(DATE_FORMAT) : 'none'}</td>
                                     <td>unknown</td>
                                     <td>{offer.productCondition.name}</td>
                                     <td>{offer.productForm.name}</td>
