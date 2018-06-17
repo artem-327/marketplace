@@ -10,6 +10,7 @@ import Settings from "../pages/settings/Settings";
 import Support from "../pages/support/Support";
 import AddInventory from "../pages/addInventory";
 import AllInventory from "../pages/inventory/allInventory";
+import SearchProducts from "../pages/addInventory/searchProduct";
 import { withAuth } from '../utils/auth'
 
 
@@ -25,6 +26,7 @@ class Main extends Component {
                     <Route exact path="/reports" component={withAuth(Reports)}/>
                     <Route exact path="/settings" component={withAuth(Settings)}/>
                     <Route exact path="/support" component={withAuth(Support)}/>
+                    <Route exact path="/add-inventory/" component={withAuth(SearchProducts)}/>
                     <Route exact path="/add-inventory/:productId" component={withAuth(AddInventory)}/>
                 </Switch>
             </div>
