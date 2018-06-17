@@ -4,17 +4,20 @@ import thunk from 'redux-thunk'
 import promise from 'redux-promise-middleware'
 import { combineReducers } from 'redux'
 import { combineForms } from 'react-redux-form';
-import identity, {initialState as identityFormInit} from './modules/identity';
-import inventory, {initialState as inventoryFormInit} from './modules/inventory'
+import { localeReducer as locale } from 'react-localize-redux';
+
+import companies from './modules/companies'
 import productOffers from './modules/productOffers'
 import filter from './modules/filter';
-import { localeReducer as locale } from 'react-localize-redux';
-import search, {initialState as searchFormInit} from './modules/search';
 import popup from './modules/popup';
+import identity, {initialState as identityFormInit} from './modules/identity';
+import inventory, {initialState as inventoryFormInit} from './modules/inventory'
+import search, {initialState as searchFormInit} from './modules/search'
 
 const reducer = combineReducers({
     filter,
     identity,
+    companies,
     locale,
     inventory,
     productOffers,
