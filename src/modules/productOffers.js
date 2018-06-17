@@ -13,7 +13,6 @@ const ADD_PRODUCT_OFFER_FULFILLED = 'ADD_PRODUCT_OFFER_FULFILLED';
 export const initialState = {
     data: [],
     isFetching: false,
-    productType: null,
     products:{
         isPending: false,
         isValid: false,
@@ -75,7 +74,7 @@ export default function reducer(state = initialState, action) {
 export function fetchAll(filter = {}) {
     return {
         type: GET_PRODUCT_OFFERS,
-        payload: axios.get("/api/v1/product-offers/", {params: {...filterNonEmptyAttributes(filter)}}).then(response => response.data.data.productOffers)
+        payload: axios.get("/api/v1/product-offers/", {params: {...filter}}).then(response => response.data.data.productOffers)
     }
 }
 

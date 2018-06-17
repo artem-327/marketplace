@@ -4,6 +4,7 @@ import './filter.css';
 import FilterGroup from './components/FilterGroup';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import {filterNonEmptyAttributes} from "../../utils/functions";
 
 
 class Filter extends Component {
@@ -17,7 +18,7 @@ class Filter extends Component {
 
     handleSubmit(inputs){
         let filter = Object.assign({}, inputs, {pckgs: Object.entries(inputs.pckgs).filter(([key, value]) => value).map(([key]) => key).join(',')});
-        this.props.filterFunc(filter);
+        this.props.filterFunc(filterNonEmptyAttributes(filter));
     }
 
     componentDidMount() {

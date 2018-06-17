@@ -13,7 +13,9 @@ export default class AddInventory extends Component {
 
     render() {
         return this.state.selectedProduct ? (
-            <AddForm/>
+            <AddForm
+            product={this.state.selectedProduct}
+            />
         ) : (<SearchProducts
                 onSelect={product => this.setState({selectedProduct: product})}
             />

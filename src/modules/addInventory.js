@@ -1,10 +1,7 @@
 import axios from "axios";
 import origin from '../components/Dropdown/unitedStates';
 
-const FORM_OPTIONS = 'FORM_OPTIONS';
-const FORM_OPTIONS_FULFILLED = 'FORM_OPTIONS_FULFILLED';
-const CONDITION_OPTIONS = 'CONDITION_OPTIONS';
-const CONDITION_OPTIONS_FULFILLED = 'CONDITION_OPTIONS_FULFILLED';
+
 const PACKAGE_OPTIONS = 'PACKAGE_OPTIONS';
 const PACKAGE_OPTIONS_FULFILLED = 'PACKAGE_OPTIONS_FULFILLED';
 const MANUFACTURER = 'MANUFACTURER';
@@ -36,10 +33,6 @@ export const initialState = {
         isPending: false,
         options: origin
     },
-    form:{
-        isPending: false,
-        options: []
-    },
     grade:{
         isPending: false,
         options: []
@@ -56,24 +49,6 @@ export const initialState = {
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case FORM_OPTIONS_FULFILLED: {
-            return {
-                ...state,
-                form: {
-                    isPending: false,
-                    options: action.payload.data.data.productForms
-                }
-            }
-        }
-        case CONDITION_OPTIONS_FULFILLED: {
-            return {
-                ...state,
-                condition: {
-                    isPending: false,
-                    options: action.payload.data.data.productConditions
-                }
-            }
-        }
         case PACKAGE_OPTIONS_FULFILLED: {
             return {
                 ...state,
@@ -111,25 +86,7 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-export function getFormOptions(productType) {
-    return {
-        type: FORM_OPTIONS,
-        payload: axios({
-            method: 'get',
-            url: "/api/v1/product-forms/" + productType,
-        })
-    }
-}
 
-export function getConditionOptions(productType) {
-    return {
-        type: CONDITION_OPTIONS,
-        payload: axios({
-            method: 'get',
-            url: "/api/v1/product-conditions/" + productType,
-        })
-    }
-}
 
 export function getPackageOptions(productType) {
     return {

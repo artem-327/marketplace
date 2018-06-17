@@ -15,7 +15,7 @@ import productOffers from './modules/productOffers'
 import popup from './modules/popup';
 import filter from './modules/filter';
 import packageTypes from './modules/packageTypes';
-import dropdown from './modules/dropdown';
+import addInventory from './modules/addInventory';
 
 const reducer = combineReducers({
     identity,
@@ -26,7 +26,7 @@ const reducer = combineReducers({
     packageTypes,
     search,
     popup,
-    dropdown,
+    addInventory,
     forms: combineForms({
         filter,
         loginForm: identityFormInit.loginForm.data,

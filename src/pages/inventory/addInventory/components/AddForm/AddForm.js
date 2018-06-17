@@ -28,24 +28,23 @@ export default class AddForm extends Component {
     }
 
     componentDidMount(){
-
+        this.props.fetchProductForms({productType: this.props.product.productType.id});
+        this.props.fetchProductConditions({productType: this.props.product.productType.id});
+        this.props.getPackageOptions(this.props.product.productType.id);
+        this.props.getManufacturer();
+        this.props.getPricingUnits();
     }
+
 
     getLocationInputs(){
         console.log(this.props);
         let { isPending, isValid, hasError } = this.state.location;
-        // let {  } = this.state.productDetail;
         let buttonText = isPending ? "SAVING ..." : isValid ? "SAVED" : hasError ? "ERROR" : "+ ADD";
         return[
             {
                 label: <label htmlFor="forms.inventoryLocationForm.warehouse">WAREHOUSE</label>,
                 component:
-                    <Dropdown opns={this.props.dropdowns.warehouse} placeholder='Select'/>                /*<Control.select model="forms.inventoryLocationForm.warehouse" id="forms.inventoryLocationForm.warehouse">*/
-                /*<option value="red">red</option>*/
-                /*<option value="green">green</option>*/
-                /*<option value="blue">blue</option>*/
-                /*/!*tady napojim data*!/*/
-                /*</Control.select>*/
+                    <Dropdown opns={this.props.dropdowns.warehouse} placeholder='Select'/>
             },
             {
                 label: <label htmlFor="forms.inventoryLocationForm.warehouseName">WAREHOUSE NAME</label>,
@@ -142,7 +141,7 @@ export default class AddForm extends Component {
             {
                 label: <label htmlFor="forms.inventoryProductsForm.form">FORM</label>,
                 component:
-                    <Dropdown opns={this.props.dropdowns.form} placeholder='Select'/>
+                    <Dropdown opns={this.props.productForms} placeholder='Select'/>
             },
             {
                 label: <label htmlFor="forms.inventoryProductsForm.assayMin">ASSAY</label>,
@@ -164,7 +163,7 @@ export default class AddForm extends Component {
             {
                 label: <label htmlFor="forms.inventoryProductsForm.condition">CONDITION</label>,
                 component:
-                    <Dropdown opns={this.props.dropdowns.condition} placeholder='Select'/>
+                    <Dropdown opns={this.props.productConditions} placeholder='Select'/>
             }
         ]
     }

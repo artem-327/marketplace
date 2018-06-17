@@ -3,23 +3,23 @@ import AddForm from './AddForm';
 import {bindActionCreators} from 'redux'
 import {addLocation} from "../../../../../modules/location";
 import {addProductOffer} from '../../../../../modules/productOffers';
-import {getFormOptions, getConditionOptions, getPackageOptions, getManufacturer, getPricingUnits} from '../../../../../modules/dropdown';
+import {getPackageOptions, getManufacturer, getPricingUnits} from '../../../../../modules/addInventory';
+import {fetchProductConditions, fetchProductForms} from "../../../../../modules/products";
 
 
 function mapStateToProps(store) {
     return {
-        productType: store.productOffers.productType,
+        productForms: store.products.productForms,
+        productConditions: store.products.productConditions,
         dropdowns: {
-            warehouse: store.dropdown.warehouse.options,
-            state: store.dropdown.state.options,
-            package: store.dropdown.package.options,
-            pricingUnits: store.dropdown.pricingUnits.options,
-            manufacturer: store.dropdown.manufacturer.options,
-            origin: store.dropdown.origin.options,
-            form: store.dropdown.form.options,
-            grade: store.dropdown.grade.options,
-            condition: store.dropdown.condition.options,
-            incrementalPricing: store.dropdown.incrementalPricing.options
+            warehouse: store.addInventory.warehouse.options,
+            state: store.addInventory.state.options,
+            package: store.addInventory.package.options,
+            pricingUnits: store.addInventory.pricingUnits.options,
+            manufacturer: store.addInventory.manufacturer.options,
+            origin: store.addInventory.origin.options,
+            grade: store.addInventory.grade.options,
+            incrementalPricing: store.addInventory.incrementalPricing.options
         },
         inventory: {
             location: store.location.location,
@@ -32,8 +32,8 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         addLocation,
         addProductOffer,
-        getFormOptions,
-        getConditionOptions,
+        fetchProductForms,
+        fetchProductConditions,
         getPackageOptions,
         getPricingUnits,
         getManufacturer
