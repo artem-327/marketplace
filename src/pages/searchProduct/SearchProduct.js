@@ -4,8 +4,6 @@ import Search from './components/Search';
 
 
 class AddInventory extends Component {
-
-
     render() {
         return (
             <div>
