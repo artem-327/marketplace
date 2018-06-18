@@ -5,6 +5,14 @@ $app-font-family: 'Cabin', sans-serif;
 .App {
   font-family: $app-font-family
 }
+.header {
+  color: #289ada;
+  padding: 5px 15px;
+  border-bottom: 1px solid #289ada;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: left;
+}
 
 .half-form{
   display: inline-block;
@@ -50,23 +58,6 @@ input[type='text'], input[type='number'] {
   }
 }
 
-//input[type='select'] {
-//  font-size: 1rem;
-//  border-radius: 2px;
-//  border: 1px solid #B0B0B0;
-//  padding: 7px;
-//  &:hover, &:focus{
-//    border-radius: 2px 2px 0px 0px;
-//    border-color: #289ada;
-//    box-shadow: none;
-//    outline: none;
-//  }
-//  &.bigger{
-//    padding: 12px 7px;
-//    font-size: 1.2rem;
-//  }
-//}
-
 input[type='number'] {
   font-size: 1rem;
   border-radius: 4px;
@@ -94,6 +85,9 @@ input[type='number'] {
 }
 :-moz-placeholder { /* Firefox 18- */
   color: lightgray;
+}
+.conMess {
+  padding: 5px 15px;
 }
 
 .input-checkbox {
@@ -139,9 +133,3 @@ input[type='number'] {
   }
 
 }
-//.dropdown {
-//  position: absolute;
-//  top: 100%;
-//  border-radius: 3px;
-//  background-color: ;
-//}

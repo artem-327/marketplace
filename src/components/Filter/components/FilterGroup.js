@@ -48,7 +48,7 @@ class FilterGroup extends Component {
     render() {
         return (
             <div className="filter-group">
-                <div className="header" onClick={() => {
+                <div className="head" onClick={() => {
                     this.setState({open: !this.state.open})
                 }}>
                     <div className="dropdown-icon">
