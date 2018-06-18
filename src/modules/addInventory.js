@@ -110,7 +110,7 @@ export function getPricingUnits() {
                 "data": {
                     "pricingUnits": [
                         {
-                            "id": 1,
+                            "id": "USD",
                             "name": "USD"
                         }
                     ]

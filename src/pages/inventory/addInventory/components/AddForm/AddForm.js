@@ -146,18 +146,6 @@ export default class AddForm extends Component {
                         model="forms.addProductOffer.addProductOffer.productForm" dispatch={this.props.dispatch}/>
             },
             {
-                label: <label htmlFor=".assayMin">ASSAY</label>,
-                component: <div>MIN.<Control.text model=".assayMin"
-                                                  id=".assayMin"
-                                                  type="number"/></div>,
-            },
-            {
-                label: <label htmlFor=".assayMax">&nbsp;</label>,
-                component: <div>MAX.<Control.text model=".assayMax"
-                                                  id=".assayMax"
-                                                  type="number"/></div>,
-            },
-            {
                 label: <label htmlFor=".productGrade">GRADE</label>,
                 component:
                     <DropdownRedux opns={this.props.grade} placeholder='Select'
@@ -239,9 +227,10 @@ export default class AddForm extends Component {
         let params = Object.assign({}, inputs, {
             product: this.state.selectedProduct.id,
             expiresAt:  "1993-03-18T13:09:41.305Z",
-            location: "test location",
+            location: 1,
             merchantVisibility: true,
         });
+        console.log(params);
         this.props.addProductOffer(params).then(() => {
             this.props.history.push("/inventory/my-inventory");
         })
