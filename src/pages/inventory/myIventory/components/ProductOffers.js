@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './ProductOffers.css';
+import {PRICE_PRECISION} from "../../../../utils/constants";
 
 class ProductOffers extends Component {
 
@@ -80,7 +81,7 @@ class ProductOffers extends Component {
                                         <td>{offer.packageType.name}</td>
                                         <td>{offer.packageType.capacity}</td>
                                         <td>{offer.packageAmount}</td>
-                                        <td>unknown</td>
+                                        <td>{offer.pricePerUnit.toFixed(PRICE_PRECISION)}</td>
                                         <td>unknown</td>
                                         <td>unknown</td>
                                         <td>unknown</td>
