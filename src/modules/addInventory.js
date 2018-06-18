@@ -45,7 +45,7 @@ export const initialState = {
         isPending: false,
         options: []
     }
-    };
+};
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
@@ -65,12 +65,11 @@ export default function reducer(state = initialState, action) {
                 manufacturer: {
                     ...state.manufacturer,
                     isPending: false,
-                    options: action.payload.data.data.merchants
+                    options: action.payload.data.data.manufacturers
                 }
             }
         }
         case PRICING_UNITS_FULFILLED: {
-            console.log(action.payload)
             return {
                 ...state,
                 pricingUnits: {
@@ -91,20 +90,14 @@ export default function reducer(state = initialState, action) {
 export function getPackageOptions(productType) {
     return {
         type: PACKAGE_OPTIONS,
-        payload: axios({
-            method: 'get',
-            url: "/api/v1/package-types/" + productType,
-        })
+        payload: axios.get("/api/v1/package-types/", {params:{productType}})
     }
 }
 
 export function getManufacturer() {
     return {
         type: MANUFACTURER,
-        payload: axios({
-            method: 'get',
-            url: "/api/v1/manufacturer/",
-        })
+        payload: axios.get("/api/v1/manufacturers/")
     }
 }
 
@@ -112,9 +105,6 @@ export function getPricingUnits() {
 
     return {
         type: PRICING_UNITS,
-        // payload: axios({
-        //     method: 'get',
-        //     url: "/api/v1/manufacturer/",
         payload: Promise.resolve(
             {
                 "data": {

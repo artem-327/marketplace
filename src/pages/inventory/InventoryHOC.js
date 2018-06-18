@@ -32,7 +32,7 @@ export default function InventoryHOC(ComposedComponent) {
         render() {
             return (
                 <div>
-                    <SubMenu links={this.submenuLinks()} search filter/>
+                    <SubMenu links={this.submenuLinks()} filter/>
                     <ComposedComponent {...this.props}/>
                 </div>
             );

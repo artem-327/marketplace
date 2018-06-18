@@ -6,6 +6,9 @@ const FETCH_PRODUCT_FORMS_FULFILLED = 'PRODUCT_FORMS_FULFILLED';
 const FETCH_PRODUCT_CONDITIONS = 'FETCH_PRODUCT_CONDITIONS';
 const FETCH_PRODUCT_CONDITIONS_FULFILLED = 'FETCH_PRODUCT_CONDITIONS_FULFILLED';
 
+const FETCH_PRODUCT_GRADE = 'FETCH_PRODUCT_GRADE';
+const FETCH_PRODUCT_GRADE_FULFILLED = 'FETCH_PRODUCT_GRADE_FULFILLED';
+
 const SEARCH_PRODUCT = 'SEARCH_PRODUCT';
 const SEARCH_PRODUCT_PENDING = 'SEARCH_PRODUCT_PENDING';
 const SEARCH_PRODUCT_FULFILLED = 'SEARCH_PRODUCT_FULFILLED';
@@ -15,6 +18,7 @@ export const initialState = {
     data: [],
     productForms: [],
     productConditions: [],
+    productGrade: [],
     isFetching: false
 };
 
@@ -30,6 +34,12 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 productConditions: action.payload
+            }
+        }
+        case FETCH_PRODUCT_GRADE_FULFILLED: {
+            return {
+                ...state,
+                productGrade: action.payload
             }
         }
         case SEARCH_PRODUCT_PENDING: {
@@ -76,5 +86,12 @@ export function fetchProductConditions(filter = {}) {
     return {
         type: FETCH_PRODUCT_CONDITIONS,
         payload: axios.get('/api/v1/product-conditions/', {params: {...filter}}).then(result => result.data.data.productConditions)
+    }
+}
+
+export function fetchProductGrade(filter = {}) {
+    return {
+        type: FETCH_PRODUCT_GRADE,
+        payload: axios.get('/api/v1/product-grades/', {params: {...filter}}).then(result => result.data.data.productTypes)
     }
 }
