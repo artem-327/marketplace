@@ -79,19 +79,10 @@ export function fetchAll(filter = {}) {
     }
 }
 
-export function addProductOffer(quantity, amount, expirationDate, price, product, manufacturer, productCondition, productForm) {
+export function addProductOffer(inputs) {
     return {
         type: ADD_PRODUCT_OFFER,
-        payload: axios.post('/api/v1/product-offers/', {
-            quantity,
-            amount,
-            expirationDate,
-            price,
-            product,
-            manufacturer,
-            productCondition,
-            productForm
-        })
+        payload: axios.post('/api/v1/product-offers/', inputs)
     }
 }
 

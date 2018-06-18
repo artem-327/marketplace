@@ -16,12 +16,16 @@ class Dropdown extends Component {
         };
     }
 
-    setCurrentValue(val){
-        this.setState({currentValue: val, isOpen: false})
+    setCurrentValue(id, val){
+        this.setState({currentValue: val, isOpen: false}, ()=>{
+            if(this.props.onCustomChange) this.props.onCustomChange(id);
+        })
     }
 
     componentWillReceiveProps(nextProps){
-        this.setState({currentValue: nextProps.currentValue, isOpen: false})
+        if(nextProps.currentValue){
+            this.setState({currentValue: nextProps.currentValue, isOpen: false})
+        }
     }
 
     componentWillMount(){
@@ -39,7 +43,7 @@ class Dropdown extends Component {
 
     renderDropdown(opt){
         return opt.map((option, index)=>{
-            return <li key={index + 'dropdown'} onClick={()=>{this.setCurrentValue(option.name)}}>{option.name}</li>
+            return <li key={index + 'dropdown'} onClick={()=>{this.setCurrentValue(option.id, option.name)}}>{option.name}</li>
         });
     }
 
@@ -67,7 +71,8 @@ Dropdown.propTypes = {
         })
     ).isRequired,
     currentValue: PropTypes.string,
-    placeholder: PropTypes.string
+    placeholder: PropTypes.string,
+    onCustomChange: PropTypes.func
 };
 
 
