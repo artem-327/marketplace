@@ -238,19 +238,12 @@ export default class AddForm extends Component {
         //TODO:: Add new form for mock inputs
         let params = Object.assign({}, inputs, {
             product: this.state.selectedProduct.id,
-            expirationDate:  "1993-03-18T13:09:41.305Z",
+            expiresAt:  "1993-03-18T13:09:41.305Z",
             location: "test location",
+            merchantVisibility: true,
         });
         this.props.addProductOffer(params).then(() => {
-            setTimeout(function(){
-                this.setState({
-                    products: {
-                        isPending: false,
-                        isValid: false,
-                        hasError: false,
-                    }
-                })
-            }.bind(this), 2000);
+            this.props.history.push("/inventory/my-inventory");
         })
     }
 
