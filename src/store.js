@@ -29,7 +29,7 @@ const reducer = combineReducers({
     addInventory,
     forms: combineForms({
         filter,
-        addInventory,
+        addProductOffer: productOffers,
         loginForm: identityFormInit.loginForm.data,
         registrationForm: identityFormInit.registrationForm.data,
         locationForm: locationFormInit.location.data,

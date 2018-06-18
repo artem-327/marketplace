@@ -260,7 +260,7 @@ export default class AddForm extends Component {
                 <Form model="forms.inventoryLocationForm" onSubmit={(inputs) => this.addLocation(inputs)}>
                     <InputGroup header='Location' inputs={this.getLocationInputs()}/>
                 </Form>
-                <Form model="forms.addInvenory.data" onSubmit={(inputs) => this.addProductOffer(inputs)}>
+                <Form model="forms.addProductOffer.addProductOffer" onSubmit={(inputs) => this.addProductOffer(inputs)}>
                     <div className="half-form left">
                         <InputGroup header='Details' inputs={this.getProductDetailInputs()}/>
                     </div>

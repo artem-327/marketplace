@@ -12,6 +12,7 @@ const ADD_PRODUCT_OFFER_FULFILLED = 'ADD_PRODUCT_OFFER_FULFILLED';
 
 export const initialState = {
     data: [],
+    addProductOffer: {},
     isFetching: false,
     products:{
         isPending: false,
