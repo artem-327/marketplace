@@ -10,6 +10,7 @@ import Settings from "../pages/settings/Settings";
 import Support from "../pages/support/Support";
 import AddInventory from "../pages/inventory/addInventory";
 import AllInventory from "../pages/inventory/allInventory";
+import MyInventory from "../pages/inventory/myIventory";
 import { withAuth } from '../utils/auth'
 
 
@@ -19,6 +20,7 @@ class Main extends Component {
             <div>
                 <Switch>
                     <Route exact path="/" component={withAuth(Dashboard)}/>
+                    <Route exact path="/inventory/my-inventory" component={withAuth(Inventory(MyInventory))}/>
                     <Route exact path="/inventory/all-inventory" component={withAuth(Inventory(AllInventory))}/>
                     <Route exact path="/inventory/add-inventory" component={withAuth(Inventory(AddInventory))}/>
                     <Route exact path="/orders" component={withAuth(Orders)}/>
