@@ -19,7 +19,7 @@
     "firstName" : "First name",
     "middleName" : "Middle name",
     "lastName" : "Last name",
-    "submit": "Register",
+    "submit": "REGISTER",
     "fetching": "Trying to register ..."
   },
   "topMenu": {
