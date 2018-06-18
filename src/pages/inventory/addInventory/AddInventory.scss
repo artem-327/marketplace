@@ -21,11 +21,19 @@
       text-align: left;
     }
     label{
-      font-size: .8rem;
       display: block;
-      &.bigger{
-        font-size: 1.2rem;
-      }
+      color: #222;
+      text-align: left;
+      font-size: .8em;
+      font-weight: bold;
+      margin: 0 0 0 10px;
+    }
+    input, select{
+      margin: 0 10px 10px 10px;
+      color: gray;
+    }
+    select{
+      height: 40px;
     }
     .add-form{
       color: white;
@@ -33,41 +41,22 @@
       border: none;
       margin-top: 20px;
       font-weight: bold;
-      font-size: .8em;
+      font-size: 1em;
+      padding: 8px 20px;
+      border-radius: 4px;
+      margin-top: 20px;
     }
   }
-
   .add-inventory{
     color: white;
     background-color: #289ada;
     border: none;
+    padding: 8px 20px;
+    border-radius: 4px;
     margin-top: 20px;
     margin-right: 50px;
     font-weight: bold;
     float: right;
     font-size: 1em;
-  }
-  .label-dropdown {
-    font-size: 1rem;
-    width: 120px;
-    height: 40px;
-    border-radius: 4px;
-    border: 1px solid #B0B0B0;
-    padding: 7px;
-    &:hover {
-      border-color: #289ada;
-      box-shadow: none;
-      outline: none;
-    }
-    &:focus{
-      border-radius: 4px 4px 0px 0px;
-      border-color: #289ada;
-      box-shadow: none;
-      outline: none;
-    }
-    &.bigger{
-      padding: 12px 7px;
-      font-size: 1.2rem;
-    }
   }
 }

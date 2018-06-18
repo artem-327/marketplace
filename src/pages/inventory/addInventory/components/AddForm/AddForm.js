@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import InputGroup from './InputGroup'
 import {Control, Form} from 'react-redux-form';
-// import classnames from "classnames";
+import Dropdown from "../../../../../components/Dropdown/Dropdown";
 
 export default class AddForm extends Component {
     constructor(props) {
@@ -28,21 +28,24 @@ export default class AddForm extends Component {
     }
 
     componentDidMount(){
-
+        this.props.fetchProductForms({productType: this.props.product.productType.id});
+        this.props.fetchProductConditions({productType: this.props.product.productType.id});
+        this.props.fetchProductGrade({productType: this.props.product.productType.id});
+        this.props.getPackageOptions(this.props.product.productType.id);
+        this.props.getManufacturer();
+        this.props.getPricingUnits();
     }
 
+
     getLocationInputs(){
+        console.log(this.props);
         let { isPending, isValid, hasError } = this.state.location;
         let buttonText = isPending ? "SAVING ..." : isValid ? "SAVED" : hasError ? "ERROR" : "+ ADD";
         return[
             {
                 label: <label htmlFor="forms.inventoryLocationForm.warehouse">WAREHOUSE</label>,
                 component:
-                    <Control.select className="label-dropdown" model="forms.inventoryLocationForm.warehouse" id="forms.inventoryLocationForm.warehouse">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option> /* tady napojim data*/
-                    </Control.select>,
+                    <Dropdown opns={this.props.warehouse} placeholder='Select'/>
             },
             {
                 label: <label htmlFor="forms.inventoryLocationForm.warehouseName">WAREHOUSE NAME</label>,
@@ -62,11 +65,7 @@ export default class AddForm extends Component {
             {
                 label: <label htmlFor="forms.inventoryLocationForm.state">STATE</label>,
                 component:
-                    <Control.select model="forms.inventoryLocationForm.state" id="forms.inventoryLocationForm.state">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown opns={this.props.state} placeholder='Select'/>
             },
             {
                 label: <label htmlFor="forms.inventoryLocationForm.zip">ZIP</label>,
@@ -99,38 +98,30 @@ export default class AddForm extends Component {
     getProductDetailInputs(){
         return[
             {
-                label: <label htmlFor="forms.inventoryProductsForm.totalPackages">TOTAL PACKAGES</label>,
-                component: <Control.text model="forms.inventoryProductsForm.totalPackages"
-                                         id="forms.inventoryProductsForm.totalPackages"
+                label: <label htmlFor=".totalPackages">TOTAL PACKAGES</label>,
+                component: <Control.text model=".totalPackages"
+                                         id=".totalPackages"
                                          type="number"/>,
             },
             {
-                label: <label htmlFor="forms.inventoryProductsForm.packaging">PACKAGING</label>,
+                label: <label htmlFor=".packaging">PACKAGING</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.packaging" id="forms.inventoryProductsForm.packaging">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown opns={this.props.package} placeholder='Select'/>
             },
             {
-                label: <label htmlFor="forms.inventoryProductsForm.packageSize">PACKAGE SIZE</label>,
-                component: <Control.text model="forms.inventoryProductsForm.packageSize"
-                                         id="forms.inventoryProductsForm.packageSize"/>,
+                label: <label htmlFor=".packageSize">PACKAGE SIZE</label>,
+                component: <Control.text model=".packageSize"
+                                         id=".packageSize"/>,
             },
             {
-                label: <label htmlFor="forms.inventoryProductsForm.price">PRICE</label>,
-                component: <Control.text model="forms.inventoryProductsForm.price"
-                                         id="forms.inventoryProductsForm.price"/>,
+                label: <label htmlFor=".price">PRICE</label>,
+                component: <Control.text model=".price"
+                                         id=".price"/>,
             },
             {
-                label: <label htmlFor="forms.inventoryProductsForm.pricingUnits">PRICING UNITS</label>,
+                label: <label htmlFor=".pricingUnits">PRICING UNITS</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.pricingUnits" id="forms.inventoryProductsForm.pricingUnits">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown opns={this.props.pricingUnits} placeholder='Select'/>
             }
         ]
     }
@@ -138,61 +129,41 @@ export default class AddForm extends Component {
     getProductAttributesInputs(){
         return[
             {
-                label: <label htmlFor="forms.inventoryProductsForm.manufacturer">MANUFACTURER</label>,
+                label: <label htmlFor=".manufacturer">MANUFACTURER</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.manufacturer" id="forms.inventoryProductsForm.manufacturer">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown opns={this.props.manufacturer} placeholder='Select'/>
             },
             {
-                label: <label htmlFor="forms.inventoryProductsForm.origin">ORIGIN</label>,
+                label: <label htmlFor=".origin">ORIGIN</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.origin" id="forms.inventoryProductsForm.origin">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown opns={this.props.origin} placeholder='Select'/>
             },
             {
-                label: <label htmlFor="forms.inventoryProductsForm.form">FORM</label>,
+                label: <label htmlFor=".form">FORM</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.form" id="forms.inventoryProductsForm.form">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown opns={this.props.productForms} placeholder='Select'/>
             },
             {
-                label: <label htmlFor="forms.inventoryProductsForm.assayMin">ASSAY</label>,
-                component: <div>MIN.<Control.text model="forms.inventoryProductsForm.assayMin"
-                                         id="forms.inventoryProductsForm.assayMin"
-                                         type="number"/></div>,
+                label: <label htmlFor=".assayMin">ASSAY</label>,
+                component: <div>MIN.<Control.text model=".assayMin"
+                                                  id=".assayMin"
+                                                  type="number"/></div>,
             },
             {
-                label: <label htmlFor="forms.inventoryProductsForm.assayMax">&nbsp;</label>,
-                component: <div>MAX.<Control.text model="forms.inventoryProductsForm.assayMax"
-                                         id="forms.inventoryProductsForm.assayMax"
-                                         type="number"/></div>,
+                label: <label htmlFor=".assayMax">&nbsp;</label>,
+                component: <div>MAX.<Control.text model=".assayMax"
+                                                  id=".assayMax"
+                                                  type="number"/></div>,
             },
             {
-                label: <label htmlFor="forms.inventoryProductsForm.grade">GRADE</label>,
+                label: <label htmlFor=".grade">GRADE</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.grade" id="forms.inventoryProductsForm.grade">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown opns={this.props.grade} placeholder='Select'/>
             },
             {
-                label: <label htmlFor="forms.inventoryProductsForm.condition">CONDITION</label>,
+                label: <label htmlFor=".condition">CONDITION</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.condition" id="forms.inventoryProductsForm.condition">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown opns={this.props.productConditions} placeholder='Select'/>
             }
         ]
     }
@@ -216,11 +187,7 @@ export default class AddForm extends Component {
             {
                 label: <label htmlFor="forms.inventoryProductsForm.rulesIncrementalPricing">INCREMENTAL PRICING</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.rulesIncrementalPricing" id="forms.inventoryProductsForm.rulesIncrementalPricing">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown opns={this.props.incrementalPricing} placeholder='Select'/>
             },
         ]
     }
@@ -244,11 +211,7 @@ export default class AddForm extends Component {
             {
                 label: <label htmlFor="forms.inventoryProductsForm.broadcastIncrementalPricing">INCREMENTAL PRICING</label>,
                 component:
-                    <Control.select model="forms.inventoryProductsForm.broadcastIncrementalPricing" id="forms.inventoryProductsForm.broadcastIncrementalPricing">
-                        <option value="red">red</option>
-                        <option value="green">green</option>
-                        <option value="blue">blue</option>
-                    </Control.select>,
+                    <Dropdown opns={this.props.incrementalPricing} placeholder='Select'/>
             },
         ]
     }
@@ -268,25 +231,26 @@ export default class AddForm extends Component {
     }
 
     addProductOffer(input){
-        this.props.addProductOffer(
-            input.totalPackages,
-            input.totalPackages,
-            input.packaging,
-            input.price,
-            input.packaging,
-            input.manufacturer,
-            input.condition,
-            input.form).then(() => {
-            setTimeout(function(){
-                this.setState({
-                    products: {
-                        isPending: false,
-                        isValid: false,
-                        hasError: false,
-                    }
-                })
-            }.bind(this), 2000);
-        })
+        console.log(input);
+        // this.props.addProductOffer(
+        //     input.totalPackages,
+        //     input.totalPackages,
+        //     input.packaging,
+        //     input.price,
+        //     input.packaging,
+        //     input.manufacturer,
+        //     input.condition,
+        //     input.form).then(() => {
+        //     setTimeout(function(){
+        //         this.setState({
+        //             products: {
+        //                 isPending: false,
+        //                 isValid: false,
+        //                 hasError: false,
+        //             }
+        //         })
+        //     }.bind(this), 2000);
+        // })
     }
 
     render() {
@@ -296,19 +260,19 @@ export default class AddForm extends Component {
                 <Form model="forms.inventoryLocationForm" onSubmit={(inputs) => this.addLocation(inputs)}>
                     <InputGroup header='Location' inputs={this.getLocationInputs()}/>
                 </Form>
-                <Form model="forms.inventoryProductsForm" onSubmit={(inputs) => this.addProductOffer(inputs)}>
+                <Form model="forms.addProductOffer.addProductOffer" onSubmit={(inputs) => this.addProductOffer(inputs)}>
                     <div className="half-form left">
                         <InputGroup header='Details' inputs={this.getProductDetailInputs()}/>
                     </div>
                     <div className="half-form right">
                         <InputGroup header='Attributes' inputs={this.getProductAttributesInputs()}/>
                     </div>
-                    <div className="half-form left">
-                        <InputGroup header='Rules' inputs={this.getProductSellingRulesInputs()}/>
-                    </div>
-                    <div className="half-form right">
-                        <InputGroup header='Broadcast rules' inputs={this.getProductBroadcastRulesInputs()}/>
-                    </div>
+                    {/*<div className="half-form left">*/}
+                        {/*<InputGroup header='Rules' inputs={this.getProductSellingRulesInputs()}/>*/}
+                    {/*</div>*/}
+                    {/*<div className="half-form right">*/}
+                        {/*<InputGroup header='Broadcast rules' inputs={this.getProductBroadcastRulesInputs()}/>*/}
+                    {/*</div>*/}
                     <button className='add-inventory'>ADD INVENTORY</button>
                 </Form>
             </div>

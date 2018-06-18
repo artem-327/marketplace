@@ -20,6 +20,12 @@ $app-font-family: 'Cabin', sans-serif;
 .App-main{
   min-height: 100vh;
 }
+.App-footer{
+position: absolute;
+  left: 50%;
+  bottom: 20px;
+  margin: auto;
+}
 
 .input-label{
   font-size: 1rem;
@@ -44,13 +50,29 @@ input[type='text'], input[type='number'] {
   }
 }
 
-input[type='select'] {
+//input[type='select'] {
+//  font-size: 1rem;
+//  border-radius: 2px;
+//  border: 1px solid #B0B0B0;
+//  padding: 7px;
+//  &:hover, &:focus{
+//    border-radius: 2px 2px 0px 0px;
+//    border-color: #289ada;
+//    box-shadow: none;
+//    outline: none;
+//  }
+//  &.bigger{
+//    padding: 12px 7px;
+//    font-size: 1.2rem;
+//  }
+//}
+
+input[type='number'] {
   font-size: 1rem;
-  border-radius: 2px;
+  border-radius: 4px;
   border: 1px solid #B0B0B0;
   padding: 7px;
   &:hover, &:focus{
-    border-radius: 2px 2px 0px 0px;
     border-color: #289ada;
     box-shadow: none;
     outline: none;

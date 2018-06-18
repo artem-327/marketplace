@@ -1,17 +1,10 @@
+import '../utils/constants';
+
 const TOGGLE_FILTER = "TOGGLE_FILTER";
 
 export const initialState = {
     isOpen: false,
-    data: {
-        search: null,
-        qntylb: null,
-        qntyub: null,
-        prclb: null,
-        prcub: null,
-        loc: null,
-        cmpny: null,
-        pckgs: {}
-    }
+    data: {}
 };
 
 export default function reducer(state = initialState, action) {

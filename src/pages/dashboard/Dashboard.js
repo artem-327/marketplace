@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import './dashboard.css'
-import AddInventory from './components/AddInventory';
 
 
 class Dashboard extends Component {
@@ -8,7 +7,7 @@ class Dashboard extends Component {
     render() {
         return (
             <div className="dashboard">
-                <AddInventory {...this.props}/>
+                Dashboard
             </div>
         );
     }
