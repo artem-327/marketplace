@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import './reports.css'
+import ConMess from '../../components/constructionMessage';
+
 
 class Reports extends Component {
 
@@ -13,7 +15,8 @@ class Reports extends Component {
     render() {
         return (
             <div>
-                <p>Reports</p>
+                <h1 className="header">Reports</h1>
+                <ConMess />
             </div>
         );
     }

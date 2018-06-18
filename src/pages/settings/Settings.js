@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './settings.css'
+import ConMess from '../../components/constructionMessage';
 
 class Settings extends Component {
 
@@ -13,7 +14,9 @@ class Settings extends Component {
     render() {
         return (
             <div>
-                <p>Settings</p>
+                <h1 className="header">Settings</h1>
+                <ConMess/>
+
             </div>
         );
     }

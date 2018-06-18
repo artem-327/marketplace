@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './support.css'
+import ConMess from '../../components/constructionMessage';
 
 class Support extends Component {
 
@@ -14,7 +15,8 @@ class Support extends Component {
     render() {
         return (
             <div>
-                <p>Support</p>
+                <h1 className="header">Support</h1>
+                <ConMess/>
             </div>
         );
     }
