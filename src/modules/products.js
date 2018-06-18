@@ -92,6 +92,6 @@ export function fetchProductConditions(filter = {}) {
 export function fetchProductGrade(filter = {}) {
     return {
         type: FETCH_PRODUCT_GRADE,
-        payload: axios.get('/api/v1/product-grades/', {params: {...filter}}).then(result => result.data.data.productTypes)
+        payload: axios.get('/api/v1/product-grades/', {params: {...filter}}).then(result => result.data.data.productGrades)
     }
 }
