@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import InputGroup from './InputGroup'
 import {Control, Form} from 'react-redux-form';
 import Dropdown from "../../../../../components/Dropdown/Dropdown";
+import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
 
 export default class AddForm extends Component {
     constructor(props) {
@@ -12,7 +13,8 @@ export default class AddForm extends Component {
                 isValid: false,
                 hasError: false,
             },
-            productDetail:{}
+            productDetail:{},
+            selectedProduct: {}
         }
     }
 
@@ -28,6 +30,7 @@ export default class AddForm extends Component {
     }
 
     componentDidMount(){
+        this.setState({selectedProduct: this.props.product});
         this.props.fetchProductForms({productType: this.props.product.productType.id});
         this.props.fetchProductConditions({productType: this.props.product.productType.id});
         this.props.fetchProductGrade({productType: this.props.product.productType.id});
@@ -38,7 +41,6 @@ export default class AddForm extends Component {
 
 
     getLocationInputs(){
-        console.log(this.props);
         let { isPending, isValid, hasError } = this.state.location;
         let buttonText = isPending ? "SAVING ..." : isValid ? "SAVED" : hasError ? "ERROR" : "+ ADD";
         return[
@@ -98,30 +100,27 @@ export default class AddForm extends Component {
     getProductDetailInputs(){
         return[
             {
-                label: <label htmlFor=".totalPackages">TOTAL PACKAGES</label>,
-                component: <Control.text model=".totalPackages"
-                                         id=".totalPackages"
+                label: <label htmlFor=".packageAmount">TOTAL PACKAGES</label>,
+                component: <Control.text model=".packageAmount"
+                                         id=".packageAmount"
                                          type="number"/>,
             },
             {
-                label: <label htmlFor=".packaging">PACKAGING</label>,
+                label: <label htmlFor=".packageType">PACKAGING</label>,
                 component:
-                    <Dropdown opns={this.props.package} placeholder='Select'/>
+                    <DropdownRedux opns={this.props.package} placeholder='Select'
+                        model="forms.addProductOffer.addProductOffer.packageType" dispatch={this.props.dispatch}/>
             },
             {
-                label: <label htmlFor=".packageSize">PACKAGE SIZE</label>,
-                component: <Control.text model=".packageSize"
-                                         id=".packageSize"/>,
+                label: <label htmlFor=".pricePerUnit">PRICE</label>,
+                component: <Control.text model=".pricePerUnit"
+                                         id=".pricePerUnit"/>,
             },
             {
-                label: <label htmlFor=".price">PRICE</label>,
-                component: <Control.text model=".price"
-                                         id=".price"/>,
-            },
-            {
-                label: <label htmlFor=".pricingUnits">PRICING UNITS</label>,
+                label: <label htmlFor=".currency">PRICING UNITS</label>,
                 component:
-                    <Dropdown opns={this.props.pricingUnits} placeholder='Select'/>
+                    <DropdownRedux opns={this.props.pricingUnits} placeholder='Select'
+                        model="forms.addProductOffer.addProductOffer.currency" dispatch={this.props.dispatch}/>
             }
         ]
     }
@@ -131,39 +130,32 @@ export default class AddForm extends Component {
             {
                 label: <label htmlFor=".manufacturer">MANUFACTURER</label>,
                 component:
-                    <Dropdown opns={this.props.manufacturer} placeholder='Select'/>
+                    <DropdownRedux opns={this.props.manufacturer} placeholder='Select'
+                        model="forms.addProductOffer.addProductOffer.manufacturer" dispatch={this.props.dispatch}/>
             },
             {
                 label: <label htmlFor=".origin">ORIGIN</label>,
                 component:
-                    <Dropdown opns={this.props.origin} placeholder='Select'/>
+                    <DropdownRedux opns={this.props.origin} placeholder='Select'
+                        model="forms.addProductOffer.addProductOffer.origin" dispatch={this.props.dispatch}/>
             },
             {
-                label: <label htmlFor=".form">FORM</label>,
+                label: <label htmlFor=".productForm">FORM</label>,
                 component:
-                    <Dropdown opns={this.props.productForms} placeholder='Select'/>
+                    <DropdownRedux opns={this.props.productForms} placeholder='Select'
+                        model="forms.addProductOffer.addProductOffer.productForm" dispatch={this.props.dispatch}/>
             },
             {
-                label: <label htmlFor=".assayMin">ASSAY</label>,
-                component: <div>MIN.<Control.text model=".assayMin"
-                                                  id=".assayMin"
-                                                  type="number"/></div>,
-            },
-            {
-                label: <label htmlFor=".assayMax">&nbsp;</label>,
-                component: <div>MAX.<Control.text model=".assayMax"
-                                                  id=".assayMax"
-                                                  type="number"/></div>,
-            },
-            {
-                label: <label htmlFor=".grade">GRADE</label>,
+                label: <label htmlFor=".productGrade">GRADE</label>,
                 component:
-                    <Dropdown opns={this.props.grade} placeholder='Select'/>
+                    <DropdownRedux opns={this.props.grade} placeholder='Select'
+                        model="forms.addProductOffer.addProductOffer.productGrade" dispatch={this.props.dispatch}/>
             },
             {
-                label: <label htmlFor=".condition">CONDITION</label>,
+                label: <label htmlFor=".productCondition">CONDITION</label>,
                 component:
-                    <Dropdown opns={this.props.productConditions} placeholder='Select'/>
+                    <DropdownRedux opns={this.props.productConditions} placeholder='Select'
+                        model="forms.addProductOffer.addProductOffer.productCondition" dispatch={this.props.dispatch}/>
             }
         ]
     }
@@ -230,27 +222,18 @@ export default class AddForm extends Component {
         })
     }
 
-    addProductOffer(input){
-        console.log(input);
-        // this.props.addProductOffer(
-        //     input.totalPackages,
-        //     input.totalPackages,
-        //     input.packaging,
-        //     input.price,
-        //     input.packaging,
-        //     input.manufacturer,
-        //     input.condition,
-        //     input.form).then(() => {
-        //     setTimeout(function(){
-        //         this.setState({
-        //             products: {
-        //                 isPending: false,
-        //                 isValid: false,
-        //                 hasError: false,
-        //             }
-        //         })
-        //     }.bind(this), 2000);
-        // })
+    addProductOffer(inputs){
+        //TODO:: Add new form for mock inputs
+        let params = Object.assign({}, inputs, {
+            product: this.state.selectedProduct.id,
+            expiresAt:  "1993-03-18T13:09:41.305Z",
+            location: 1,
+            merchantVisibility: true,
+        });
+        console.log(params);
+        this.props.addProductOffer(params).then(() => {
+            this.props.history.push("/inventory/my-inventory");
+        })
     }
 
     render() {
