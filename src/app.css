@@ -2,6 +2,14 @@
 .App {
   font-family: "Cabin", sans-serif; }
 
+.header {
+  color: #289ada;
+  padding: 5px 15px;
+  border-bottom: 1px solid #289ada;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: left; }
+
 .half-form {
   display: inline-block;
   width: 50%; }
@@ -12,6 +20,12 @@
 
 .App-main {
   min-height: 100vh; }
+
+.App-footer {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  margin: auto; }
 
 .input-label {
   font-size: 1rem;
@@ -31,17 +45,16 @@ input[type='text'], input[type='number'] {
     padding: 12px 7px;
     font-size: 1.2rem; }
 
-input[type='select'] {
+input[type='number'] {
   font-size: 1rem;
-  border-radius: 2px;
+  border-radius: 4px;
   border: 1px solid #B0B0B0;
   padding: 7px; }
-  input[type='select']:hover, input[type='select']:focus {
-    border-radius: 2px 2px 0px 0px;
+  input[type='number']:hover, input[type='number']:focus {
     border-color: #289ada;
     box-shadow: none;
     outline: none; }
-  input[type='select'].bigger {
+  input[type='number'].bigger {
     padding: 12px 7px;
     font-size: 1.2rem; }
 
@@ -60,6 +73,9 @@ input[type='select'] {
 :-moz-placeholder {
   /* Firefox 18- */
   color: lightgray; }
+
+.conMess {
+  padding: 5px 15px; }
 
 .input-checkbox {
   padding-top: 15px; }

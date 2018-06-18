@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import ConMess from '../../components/constructionMessage';
 
 import './orders.css'
 
@@ -14,7 +15,8 @@ class Orders extends Component {
     render() {
         return (
             <div>
-                <p>Orders</p>
+                <h1 className='header'>Orders</h1>
+                <ConMess/>
             </div>
         );
     }

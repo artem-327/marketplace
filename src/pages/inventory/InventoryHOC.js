@@ -16,6 +16,10 @@ export default function InventoryHOC(ComposedComponent) {
                     label: 'All Inventory'
                 },
                 {
+                    url: '/inventory/add-inventory/',
+                    label: 'Add inventory'
+                },
+                {
                     url: '/inventory/consilidated',
                     label: 'Consilidated'
                 },
@@ -28,7 +32,7 @@ export default function InventoryHOC(ComposedComponent) {
         render() {
             return (
                 <div>
-                    <SubMenu links={this.submenuLinks()} search filter/>
+                    <SubMenu links={this.submenuLinks()} filter/>
                     <ComposedComponent {...this.props}/>
                 </div>
             );

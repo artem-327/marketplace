@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './dashboard.css'
-import AddInventory from './components/AddInventory';
+import ConMess from '../../components/constructionMessage';
 
 
 class Dashboard extends Component {
@@ -8,7 +8,8 @@ class Dashboard extends Component {
     render() {
         return (
             <div className="dashboard">
-                <AddInventory {...this.props}/>
+                <h1 className='header'>Dashboard</h1>
+                <ConMess/>
             </div>
         );
     }
