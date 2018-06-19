@@ -15,6 +15,7 @@ export default class AddInventory extends Component {
         return this.state.selectedProduct ? (
             <AddForm
             product={this.state.selectedProduct}
+            {...this.props}
             />
         ) : (<SearchProducts
                 onSelect={product => this.setState({selectedProduct: product})}
