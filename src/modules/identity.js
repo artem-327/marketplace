@@ -131,14 +131,7 @@ export function getIdentity() {
 export function login(email, password) {
     return {
         type: LOGIN,
-        payload: axios({
-            method: 'post',
-            url: "/api/v1/auth/login/",
-            data: {
-                email: email,
-                password: password
-            }
-        }).then(response => setAuthToken(response.data.data.token))
+        payload: axios.post("/api/v1/auth/login/", {email, password}).then(response => setAuthToken(response.data.data.token))
     }
 }
 
