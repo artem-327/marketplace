@@ -34,7 +34,7 @@ export default class LoginForm extends React.Component {
                     {/*<label htmlFor="forms.loginForm.password"><Translate id="login.password"/></label>*/}
                     <Control.password model="forms.loginForm.password" placeholder="Password"/>
                 </div>
-                {loginErr}
+                <div className='error-holder'>{loginErr}</div>
                 <div className="form-middle">
                     <button className={classnames({"loading": isFetching}, {"disabled": (!email || !password)})}>{butLogin}</button>
                 </div>

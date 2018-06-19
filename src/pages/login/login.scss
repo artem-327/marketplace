@@ -29,7 +29,7 @@
     }
     //border-style: solid;
     //border-width: 0px;
-    background-color: white;
+    background-color: #fafafa;
     margin: auto;
     padding: 40px;
     -webkit-box-shadow: 2px 2px 9px 1px rgba(152,152,152,1);
@@ -42,8 +42,12 @@
       margin-bottom: 50px;
     }
     form{
-      div{
-        margin: 10px;
+      .login-err{
+      }
+      .error-holder{
+        height: 18px;
+        margin: 5px;
+        font-size: .9rem;
       }
       label{
         display: block;
@@ -55,6 +59,7 @@
         border: none;
         border-bottom: 1px solid #33373e;
         outline: none;
+        margin-bottom: 15px;
       }
       input[type='text'] {
         font-size: 14px;

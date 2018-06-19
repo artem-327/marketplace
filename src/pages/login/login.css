@@ -18,7 +18,7 @@
     font-size: 14px;
     margin-right: 8px; }
   .login .logForm {
-    background-color: white;
+    background-color: #fafafa;
     margin: auto;
     padding: 40px;
     -webkit-box-shadow: 2px 2px 9px 1px #989898;
@@ -30,8 +30,10 @@
       height: 35%; }
   .login .form-place h1 {
     margin-bottom: 50px; }
-  .login .form-place form div {
-    margin: 10px; }
+  .login .form-place form .error-holder {
+    height: 18px;
+    margin: 5px;
+    font-size: .9rem; }
   .login .form-place form label {
     display: block;
     font-size: .7em;
@@ -40,7 +42,8 @@
   .login .form-place form input {
     border: none;
     border-bottom: 1px solid #33373e;
-    outline: none; }
+    outline: none;
+    margin-bottom: 15px; }
   .login .form-place form input[type='text'] {
     font-size: 14px;
     margin-top: 35px;
