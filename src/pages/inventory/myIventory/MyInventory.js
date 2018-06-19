@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import ProductOffers from "./components/ProductOffers";
 import Filter from '../../../components/Filter';
+import Spinner from '../../../components/Spinner/Spinner';
 
 class MyInventory extends Component {
 
@@ -9,7 +10,7 @@ class MyInventory extends Component {
     }
 
     render() {
-        let content = this.props.isFetching ? <div>Loading...</div> :
+        let content = this.props.isFetching ? <div><Spinner/></div> :
             <ProductOffers productOffers={this.props.productOffers} addPopup={this.props.addPopup}/>;
         return (
             <div>
