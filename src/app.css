@@ -149,43 +149,36 @@ input[type='number'] {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none; }
-
-.rbutton input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer; }
-
-.radiomark {
-  border: 1px solid #B0B0B0;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 22px;
-  width: 22px;
-  border-radius: 50%; }
-
-.rbutton:hover input ~ .radiomark {
-  border-color: #289ada; }
+  .rbutton input {
+    display: none; }
+  .rbutton .radiomark {
+    border: 1px solid #B0B0B0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 22px;
+    width: 22px;
+    border-radius: 50%; }
+    .rbutton .radiomark.small {
+      height: 16px;
+      width: 16px; }
+    .rbutton .radiomark:hover {
+      border-color: #289ada; }
+    .rbutton .radiomark:after {
+      content: "";
+      position: absolute;
+      display: none;
+      top: 5px;
+      left: 5px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #289ada; }
 
 /* When the radio button is checked, add a blue background */
 .rbutton input:checked ~ .radiomark {
   background-color: #ffffff; }
 
-/* Create the indicator (the dot/circle - hidden when not checked) */
-.radiomark:after {
-  content: "";
-  position: absolute;
-  display: none; }
-
 /* Show the indicator (dot/circle) when checked */
 .rbutton input:checked ~ .radiomark:after {
   display: block; }
-
-/* Style the indicator (dot/circle) */
-.rbutton .radiomark:after {
-  top: 5px;
-  left: 5px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #289ada; }
