@@ -13,6 +13,13 @@ $app-font-family: 'Cabin', sans-serif;
   font-weight: bold;
   text-align: left;
 }
+.inventory-header {
+  color: #212529;
+  padding: 5px 15px;
+  margin: 15px 0 0 5px;
+  font-size: 1.6em;
+  text-align: left;
+}
 
 .half-form{
   display: inline-block;
@@ -43,7 +50,7 @@ position: absolute;
   }
 }
 
-input[type='text'], input[type='number'] {
+input {
   border-radius: 4px;
   border: 1px solid #B0B0B0;
   padding: 7px;
@@ -55,24 +62,24 @@ input[type='text'], input[type='number'] {
   &.bigger{
     padding: 12px 7px;
     font-size: 1.2rem;
+  }
+  &[type='number']{
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #B0B0B0;
+    padding: 7px;
+    &:hover, &:focus{
+      border-color: #289ada;
+      box-shadow: none;
+      outline: none;
+    }
+    &.bigger{
+      padding: 12px 7px;
+      font-size: 1.2rem;
+    }
   }
 }
 
-input[type='number'] {
-  font-size: 1rem;
-  border-radius: 4px;
-  border: 1px solid #B0B0B0;
-  padding: 7px;
-  &:hover, &:focus{
-    border-color: #289ada;
-    box-shadow: none;
-    outline: none;
-  }
-  &.bigger{
-    padding: 12px 7px;
-    font-size: 1.2rem;
-  }
-}
 
 ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
   color: #a8a8a8;
