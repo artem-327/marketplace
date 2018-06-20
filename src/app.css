@@ -47,6 +47,7 @@
     box-shadow: none;
     outline: none; }
   .button.small {
+    border-radius: 3px;
     padding: 6px 15px;
     font-size: 1em;
     width: 110px;
@@ -114,6 +115,30 @@ input[type='number'] {
     border: 1px solid #B0B0B0;
     border-radius: 4px;
     position: relative; }
+    .input-checkbox .checkmark.small {
+      width: 15px;
+      height: 15px; }
+      .input-checkbox .checkmark.small:after {
+        left: 5px;
+        top: 3px;
+        width: 4px;
+        height: 7px;
+        border-width: 0 2px 2px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg); }
+    .input-checkbox .checkmark.big {
+      width: 25px;
+      height: 25px; }
+      .input-checkbox .checkmark.big:after {
+        left: 8px;
+        top: 3px;
+        width: 7px;
+        height: 12px;
+        border-width: 0 2px 2px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg); }
     .input-checkbox .checkmark:hover, .input-checkbox .checkmark:focus {
       border-color: #289ada;
       box-shadow: none;
@@ -137,48 +162,3 @@ input[type='number'] {
     cursor: pointer; }
     .input-checkbox input:checked ~ .checkmark::after {
       display: block; }
-
-.rbutton {
-  display: block;
-  position: relative;
-  padding-left: 35px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  font-size: 16px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none; }
-  .rbutton input {
-    display: none; }
-  .rbutton .radiomark {
-    border: 1px solid #B0B0B0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 22px;
-    width: 22px;
-    border-radius: 50%; }
-    .rbutton .radiomark.small {
-      height: 16px;
-      width: 16px; }
-    .rbutton .radiomark:hover {
-      border-color: #289ada; }
-    .rbutton .radiomark:after {
-      content: "";
-      position: absolute;
-      display: none;
-      top: 5px;
-      left: 5px;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #289ada; }
-
-/* When the radio button is checked, add a blue background */
-.rbutton input:checked ~ .radiomark {
-  background-color: #ffffff; }
-
-/* Show the indicator (dot/circle) when checked */
-.rbutton input:checked ~ .radiomark:after {
-  display: block; }
