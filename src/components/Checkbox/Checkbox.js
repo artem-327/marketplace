@@ -16,14 +16,13 @@ class Checkbox extends Component {
 
     render() {
         return (
-            <div className="input-checkbox">
-                <label><p>{this.props.label}</p>
+                <label className="input-checkbox"><p>{this.props.label}</p>
                     <input type="checkbox" name={this.props.name}
                            onChange={(e) => {this.handleChange(e)}}
                            checked={this.state.checked}/>
                     <span className={"checkmark " + (this.props.style || '')}>  </span>
                 </label>
-            </div>
+
         )
     }
 }
