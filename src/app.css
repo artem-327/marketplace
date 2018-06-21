@@ -40,6 +40,32 @@
   .input-label.bigger {
     font-size: 1.2rem; }
 
+.button {
+  color: white;
+  background-color: #289ada;
+  border: none;
+  width: 130px;
+  height: 40px;
+  border-radius: 4px;
+  font-size: 1.2em; }
+  .button:hover, .button:focus {
+    cursor: pointer;
+    border-color: #0d82bf;
+    box-shadow: none;
+    outline: none; }
+  .button.small {
+    border-radius: 3px;
+    padding: 6px 15px;
+    font-size: 1em;
+    width: 110px;
+    height: 35px; }
+  .button.big {
+    font-size: 1.4em;
+    width: 160px;
+    height: 45px; }
+  .button.disabled {
+    background-color: #cfe6f3; }
+
 input {
   border-radius: 4px;
   border: 1px solid #B0B0B0;
@@ -82,39 +108,3 @@ input {
 
 .conMess {
   padding: 5px 15px; }
-
-.input-checkbox {
-  padding-top: 15px; }
-  .input-checkbox .checkmark {
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    background-color: white;
-    float: left;
-    margin: 1px 15px 0px 0px;
-    border: 1px solid #B0B0B0;
-    border-radius: 4px;
-    position: relative; }
-    .input-checkbox .checkmark:hover, .input-checkbox .checkmark:focus {
-      border-color: #289ada;
-      box-shadow: none;
-      outline: none; }
-    .input-checkbox .checkmark:after {
-      content: "";
-      position: absolute;
-      display: none;
-      left: 7px;
-      top: 3px;
-      width: 5px;
-      height: 10px;
-      border: solid #289ada;
-      border-width: 0 2px 2px 0;
-      -webkit-transform: rotate(45deg);
-      -ms-transform: rotate(45deg);
-      transform: rotate(45deg); }
-  .input-checkbox input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer; }
-    .input-checkbox input:checked ~ .checkmark::after {
-      display: block; }

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './SearchProducts.css';
 import debounce from "debounce";
+import Spinner from '../../../../../components/Spinner/Spinner';
 
 class SearchProducts extends Component {
 
@@ -34,7 +35,7 @@ class SearchProducts extends Component {
 
     render() {
         let {fulltext} = this.state;
-        let results = this.props.isSearching ? <p className='search-status'>Loading ...</p> : this.renderResults();
+        let results = this.props.isSearching ? <p className='search-status'><Spinner/></p> : this.renderResults();
         return (
             <div>
                 <div className='search-products'>
