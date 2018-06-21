@@ -16,16 +16,15 @@ class Radio extends Component {
         return opt.map((radio, index)=>{
             return <label className="radioButton" key={index}><p>{radio.label}</p>
                     <input type="radio" onClick={(e)=>{this.handleChange(e)}} name={this.props.name} value={radio.value} defaultChecked={radio.value === this.props.checked}/>
-                    <span className="checkmark"></span>
+                    <span className={"radiomark " + this.props.style}></span>
                     </label>
         });
     }
 
     render () {
-        let radios = this.renderRadio(this.props.opns);
         return (
             <div>
-                {radios}
+                {this.renderRadio(this.props.opns)}
             </div>
         )
     }
@@ -34,13 +33,13 @@ class Radio extends Component {
 Radio.propTypes = {
     opns: PropTypes.arrayOf(
         PropTypes.shape({
-            value: PropTypes.oneOf(PropTypes.string, PropTypes.number, PropTypes.bool),
+            value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
             label: PropTypes.string,
         })
     ).isRequired,
     name: PropTypes.string,
-    checked: PropTypes.PropTypes.oneOf(PropTypes.string, PropTypes.number, PropTypes.bool),
-    css: PropTypes.string
+    checked: PropTypes.PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
+    style: PropTypes.string
 };
 
 export default Radio;
