@@ -17,8 +17,8 @@ class SearchProducts extends Component {
         if (!this.props.searchedProducts || this.props.searchedProducts.length === 0) return <p className='search-status'>No results</p>;
         return this.props.searchedProducts.map(product => (
             <div key={product.id} className='search-product-item' onClick={() => this.props.onSelect(product)}>
-                {product.primaryName}
                 <span className='search-cas'>{product.casNumber}</span>
+                {product.primaryName}
             </div>
         ));
     }
