@@ -11,6 +11,9 @@
     margin-top: 16px; }
     .App-nav .nav-inside .logo img {
       width: 75px; }
+  .App-nav .nav-inside .logout {
+    position: absolute;
+    right: 20px; }
   .App-nav .nav-inside .nav-link {
     padding: 5px 5px;
     transition: all .2s ease;

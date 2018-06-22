@@ -10,6 +10,7 @@ import settings from '../../images/nav/settings.png';
 import clients from '../../images/nav/clients.png';
 import inventory from '../../images/nav/inventory.png';
 import reports from '../../images/nav/reports.png';
+import myAccount from '../../images/nav/myAccount.svg';
 // import support from '../../images/nav/support.png';
 // import userIcon from '../../images/nav/user.png';
 // import arrowIcon from '../../images/nav/Arrow.png';
@@ -101,10 +102,11 @@ class Nav extends Component {
                             SETTINGS
                         </span>
                     </NavLink>
-                    <span onClick={() => this.props.logout()}>
+                    <span className="logout" onClick={() => this.props.logout()}>
                         <NavLink to="/login" className='nav-link' activeClassName='active'>
                             <span className='link-center'>
-                                <i className="fas fa-sign-out-alt"/>
+                                <img src={myAccount} />
+                                {/*<i className="fas fa-sign-out-alt"/>*/}
                                 LOGOUT
                             </span>
                         </NavLink>
