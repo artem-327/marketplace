@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {NavLink} from 'react-router-dom'
-// import { Translate } from 'react-localize-redux';
 import './nav.css'
 
 import logo from '../../images/nav/Logo.png';
@@ -10,10 +9,7 @@ import settings from '../../images/nav/settings.png';
 import clients from '../../images/nav/clients.png';
 import inventory from '../../images/nav/inventory.png';
 import reports from '../../images/nav/reports.png';
-// import support from '../../images/nav/support.png';
-// import userIcon from '../../images/nav/user.png';
-// import arrowIcon from '../../images/nav/Arrow.png';
-// import NavDropdown from './components/NavDropdown';
+import myAccount from '../../images/nav/myAccount.svg';
 
 class Nav extends Component {
     constructor(props) {
@@ -101,10 +97,10 @@ class Nav extends Component {
                             SETTINGS
                         </span>
                     </NavLink>
-                    <span onClick={() => this.props.logout()}>
+                    <span className="logout" onClick={() => this.props.logout()}>
                         <NavLink to="/login" className='nav-link' activeClassName='active'>
                             <span className='link-center'>
-                                <i className="fas fa-sign-out-alt"/>
+                                <img src={myAccount} />
                                 LOGOUT
                             </span>
                         </NavLink>
