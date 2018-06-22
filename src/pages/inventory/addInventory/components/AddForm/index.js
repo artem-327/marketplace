@@ -35,7 +35,7 @@ function mapDispatchToProps(dispatch) {
         fetchProductGrade,
         getPackageOptions,
         getPricingUnits,
-        getManufacturer
+        getManufacturer,
     }, dispatch)
 }
 

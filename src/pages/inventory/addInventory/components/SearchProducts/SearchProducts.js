@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './SearchProducts.css';
 import debounce from "debounce";
 import Spinner from '../../../../../components/Spinner/Spinner';
+import RecentProducts from "./components/RecentProducts";
 
 class SearchProducts extends Component {
 
@@ -42,6 +43,10 @@ class SearchProducts extends Component {
                     <label>Chemical Name or CAS #</label>
                     <i className="fas fa-search search-icon" onClick={()=>{this.searchProducts()}}/>
                     <input value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Search'/>
+                </div>
+                <div className='recent-products'>
+                    <RecentProducts setProduct={(product)=>this.props.onSelect(product)}
+                                    recentProduct={this.props.recentProducts}/>
                 </div>
                 <div className='search-results'>
                     {results}
