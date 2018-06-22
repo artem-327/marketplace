@@ -7,14 +7,18 @@ export default class Details extends Component {
     render() {
         return (
             <div>
-                <label htmlFor=".packageAmount">TOTAL PACKAGES</label>
-                <Control.text model=".packageAmount"
-                              id=".packageAmount"
-                              type="number"/>
-                <label htmlFor=".packageType">PACKAGING</label>
-                <DropdownRedux opns={this.props.package} placeholder='Select'
-                               model="forms.addProductOffer.addProductOffer.packageType"
-                               dispatch={this.props.dispatch}/>
+                <div className='group-item-wr'>
+                    <label htmlFor=".packageAmount">Total packages</label>
+                    <Control.text model=".packageAmount"
+                                  id=".packageAmount"
+                                  type="number"/>
+                </div>
+                <div className='group-item-wr'>
+                    <label htmlFor=".packageType">Packaging</label>
+                    <DropdownRedux opns={this.props.package} placeholder='Select'
+                                   model="forms.addProductOffer.addProductOffer.packageType"
+                                   dispatch={this.props.dispatch}/>
+                </div>
             </div>
         );
     }

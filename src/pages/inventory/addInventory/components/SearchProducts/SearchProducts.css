@@ -1,21 +1,39 @@
 .search-products {
-  width: 100%; }
+  width: 40%;
+  min-width: 500px;
+  position: relative; }
+  .search-products .search-icon {
+    position: absolute;
+    bottom: 11px;
+    left: 11px;
+    color: #a9a9a9;
+    font-size: 18px; }
   .search-products input {
-    width: calc(100% - 200px);
-    padding-left: 10px; }
+    width: 100%;
+    padding-left: 40px; }
   .search-products button {
     width: 200px; }
 
 .search-status {
   padding: 10px;
   width: 100%;
+  margin: 0;
   text-align: center; }
 
 .search-results {
-  width: 100%; }
+  width: 100%;
+  color: #4e5157; }
+  .search-results .spinner {
+    margin-top: 20px; }
   .search-results .search-product-item {
-    background-color: lightgrey;
     padding: 10px;
-    font-size: .9em; }
+    font-size: .9em;
+    border-radius: 7px;
+    margin: 7px 0;
+    border: 1px solid #eeeeee;
+    transition: all .2s ease; }
+    .search-results .search-product-item:hover {
+      cursor: pointer;
+      background-color: #eeeeee; }
     .search-results .search-product-item .search-cas {
       margin-right: 10px; }

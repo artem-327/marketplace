@@ -15,7 +15,7 @@ class MyInventory extends Component {
         return (
 
             <div>
-                <h1 className='inventory-header'>INVENTORY OVERVIEW</h1>
+                <h1 className='header'>INVENTORY OVERVIEW</h1>
                 <Filter filterFunc={(filter) => {this.props.getData({...filter, mrchnt: true})}} />
                 {content}
             </div>

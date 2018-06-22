@@ -10,7 +10,8 @@
     border: 1px solid #B0B0B0;
     border-radius: 4px;
     position: absolute;
-    left: 0; }
+    left: 0;
+    top: 0; }
     .input-checkbox .checkmark.small {
       width: 15px;
       height: 15px; }

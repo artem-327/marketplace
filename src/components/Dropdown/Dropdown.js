@@ -42,6 +42,7 @@ class Dropdown extends Component {
     }
 
     renderDropdown(opt){
+        if(this.props.disable) return
         return opt.map((option, index)=>{
             return <li key={index + 'dropdown'} onClick={()=>{this.setCurrentValue(option.id, option.name)}}>{option.name}</li>
         });
@@ -72,7 +73,8 @@ Dropdown.propTypes = {
     ).isRequired,
     currentValue: PropTypes.string,
     placeholder: PropTypes.string,
-    onCustomChange: PropTypes.func
+    onCustomChange: PropTypes.func,
+    disable: PropTypes.bool,
 };
 
 
