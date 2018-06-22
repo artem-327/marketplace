@@ -127,7 +127,6 @@ export default class AddForm extends Component {
             expiresAt:  "1993-03-18T13:09:41.305Z",
             location: 1,
         });
-        console.log(params);
         // this.props.addProductOffer(params).then(() => {
         //     this.props.history.push("/inventory/my-inventory");
         // })
