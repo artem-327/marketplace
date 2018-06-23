@@ -16,6 +16,9 @@ export default class RecentProducts extends Component {
     }
 
     render() {
-        return <div>{this.renderRecentProducts()}</div>
+        return <div>
+            <div className='recent-header'>Recently Added</div>
+            {this.renderRecentProducts()}
+            </div>
     }
 }

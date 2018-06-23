@@ -47,10 +47,6 @@ export default class AddForm extends Component {
         }
     }
 
-    addLocation(input){
-        this.props.addLocation(input.country, input.state, input.city, input.address)
-    }
-
     addProductOffer(inputs){
         //TODO:: Add new form for mock inputs
         let params = Object.assign({}, inputs, {

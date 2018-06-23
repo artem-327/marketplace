@@ -42,7 +42,7 @@ class Dropdown extends Component {
     }
 
     renderDropdown(opt){
-        if(this.props.disable) return
+        if(this.props.disable) return;
         return opt.map((option, index)=>{
             return <li key={index + 'dropdown'} onClick={()=>{this.setCurrentValue(option.id, option.name)}}>{option.name}</li>
         });

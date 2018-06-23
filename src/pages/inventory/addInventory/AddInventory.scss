@@ -154,4 +154,30 @@
     font-size: 1rem;
     float: right;
   }
+  .location-submenu{
+    margin-bottom: 20px;
+    div{
+      display: inline-block;
+      padding: 0 5px;
+      margin: 0 10px 0 0;
+      font-size: .9rem;
+      transition: all .2s ease;
+      &:hover{
+        cursor: pointer;
+        color: #3b98d3;
+      }
+    }
+    &.saved{
+      .saved{
+        border-bottom: 1px solid #3b98d3;
+        font-weight: bold;
+      }
+    }
+    &.new{
+      .new{
+        border-bottom: 1px solid #3b98d3;
+        font-weight: bold;
+      }
+    }
+  }
 }

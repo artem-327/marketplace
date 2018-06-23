@@ -118,3 +118,21 @@
   margin: 20px;
   font-size: 1rem;
   float: right; }
+
+.add-inventory .location-submenu {
+  margin-bottom: 20px; }
+  .add-inventory .location-submenu div {
+    display: inline-block;
+    padding: 0 5px;
+    margin: 0 10px 0 0;
+    font-size: .9rem;
+    transition: all .2s ease; }
+    .add-inventory .location-submenu div:hover {
+      cursor: pointer;
+      color: #3b98d3; }
+  .add-inventory .location-submenu.saved .saved {
+    border-bottom: 1px solid #3b98d3;
+    font-weight: bold; }
+  .add-inventory .location-submenu.new .new {
+    border-bottom: 1px solid #3b98d3;
+    font-weight: bold; }
