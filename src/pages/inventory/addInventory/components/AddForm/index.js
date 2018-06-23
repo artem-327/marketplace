@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import AddForm from './AddForm';
 import {bindActionCreators} from 'redux'
-import {addLocation} from "../../../../../modules/location";
+import {addLocation, editLocation, fetchWarehouse} from "../../../../../modules/location";
 import {addProductOffer} from '../../../../../modules/productOffers';
 import {getPackageOptions, getManufacturer, getPricingUnits} from '../../../../../modules/addInventory';
 import {fetchProductConditions, fetchProductForms, fetchProductGrade} from "../../../../../modules/products";
@@ -11,7 +11,6 @@ function mapStateToProps(store) {
     return {
         productForms: store.products.productForms,
         productConditions: store.products.productConditions,
-        warehouse: store.addInventory.warehouse.options,
         state: store.addInventory.state.options,
         package: store.addInventory.package.options,
         pricingUnits: store.addInventory.pricingUnits.options,
@@ -19,17 +18,17 @@ function mapStateToProps(store) {
         origin: store.addInventory.origin.options,
         grade: store.products.productGrade,
         incrementalPricing: store.addInventory.incrementalPricing.options,
-        inventory: {
-            location: store.location.location,
-            products: store.productOffers.products,
-        },
+        warehouse: store.location.warehouse,
+        location: store.location,
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         addLocation,
+        editLocation,
         addProductOffer,
+        fetchWarehouse,
         fetchProductForms,
         fetchProductConditions,
         fetchProductGrade,

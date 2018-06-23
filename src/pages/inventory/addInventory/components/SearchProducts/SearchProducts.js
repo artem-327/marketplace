@@ -45,8 +45,7 @@ class SearchProducts extends Component {
                     <input value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Search'/>
                 </div>
                 <div className='recent-products'>
-                    <RecentProducts setProduct={(product)=>this.props.onSelect(product)}
-                                    recentProduct={this.props.recentProducts}/>
+                    <RecentProducts setProduct={(product)=>this.props.onSelect(product)} {...this.props}/>
                 </div>
                 <div className='search-results'>
                     {results}

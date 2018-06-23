@@ -7,6 +7,7 @@ export default class RecentProducts extends Component {
     }
 
     renderRecentProducts() {
+        console.log(this.props);
         return this.props.recentProducts.map((product, index)=>{
             return <div key={index} className='recent-product' onClick={()=>{this.props.setProduct(this.props.recentProducts[index])}}>
                 {product.primaryName}

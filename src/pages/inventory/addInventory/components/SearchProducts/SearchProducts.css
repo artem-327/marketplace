@@ -1,6 +1,6 @@
 .search-products {
   width: 40%;
-  min-width: 500px;
+  display: inline-block;
   position: relative; }
   .search-products .search-icon {
     position: absolute;
@@ -37,3 +37,8 @@
       background-color: #eeeeee; }
     .search-results .search-product-item .search-cas {
       margin-right: 10px; }
+
+.recent-products {
+  width: 60%;
+  float: right;
+  display: inline-block; }

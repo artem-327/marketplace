@@ -13,11 +13,6 @@ export default class AddForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            location:{
-                isPending: false,
-                isValid: false,
-                hasError: false,
-            },
             selectedProduct: {}
         }
     }
@@ -38,13 +33,6 @@ export default class AddForm extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        this.setState({
-            location: {
-                isPending: nextProps.inventory.location.isPending,
-                isValid: nextProps.inventory.location.isValid,
-                hasError: nextProps.inventory.location.hasError
-            }
-        });
         if(nextProps.product && nextProps.product!== this.state.selectedProduct){
             this.setState({selectedProduct: nextProps.product}, () => {
                 let productType = this.state.selectedProduct.productType.id;
@@ -52,72 +40,15 @@ export default class AddForm extends Component {
                 this.props.fetchProductConditions({productType});
                 this.props.fetchProductGrade({productType});
                 this.props.getPackageOptions(productType);
+                this.props.fetchWarehouse();
                 this.props.getManufacturer();
                 this.props.getPricingUnits();
             });
         }
     }
 
-    getProductSellingRulesInputs(){
-        return[
-            {
-                label: <label htmlFor="forms.inventoryProductsForm.rulesSplitPackages">SPLIT (PACKAGES)</label>,
-                component:
-                    <Control.text model="forms.inventoryProductsForm.rulesSplitPackages"
-                                  id="forms.inventoryProductsForm.rulesSplitPackages"
-                                  type="number" />
-            },
-            {
-                label: <label htmlFor="forms.inventoryProductsForm.rulesMinimumPackages">MINIMUM (PACKAGES)</label>,
-                component:
-                    <Control.text model="forms.inventoryProductsForm.rulesMinimumPackages"
-                                  id="forms.inventoryProductsForm.rulesMinimumPackages"
-                                  type="number" />
-            },
-            {
-                label: <label htmlFor="forms.inventoryProductsForm.rulesIncrementalPricing">INCREMENTAL PRICING</label>,
-                component:
-                    <Dropdown opns={this.props.incrementalPricing} placeholder='Select'/>
-            },
-        ]
-    }
-
-    getProductBroadcastRulesInputs(){
-        return[
-            {
-                label: <label htmlFor="forms.inventoryProductsForm.broadcastSplitPackages">SPLIT (PACKAGES)</label>,
-                component:
-                    <Control.text model="forms.inventoryProductsForm.broadcastSplitPackages"
-                                  id="forms.inventoryProductsForm.broadcastSplitPackages"
-                                  type="number" />
-            },
-            {
-                label: <label htmlFor="forms.inventoryProductsForm.broadcastMinimumPackages">MINIMUM (PACKAGES)</label>,
-                component:
-                    <Control.text model="forms.inventoryProductsForm.broadcastMinimumPackages"
-                                  id="forms.inventoryProductsForm.broadcastMinimumPackages"
-                                  type="number" />
-            },
-            {
-                label: <label htmlFor="forms.inventoryProductsForm.broadcastIncrementalPricing">INCREMENTAL PRICING</label>,
-                component:
-                    <Dropdown opns={this.props.incrementalPricing} placeholder='Select'/>
-            },
-        ]
-    }
-
     addLocation(input){
-        this.props.addLocation(input.country, input.state, input.city, input.address).then(() => {
-            setTimeout(function(){
-                this.setState({
-                    location: {
-                        isPending: false,
-                        isValid: false,
-                        hasError: false,
-                    }
-                })
-            }.bind(this), 2000);
-        })
+        this.props.addLocation(input.country, input.state, input.city, input.address)
     }
 
     addProductOffer(inputs){
@@ -125,11 +56,10 @@ export default class AddForm extends Component {
         let params = Object.assign({}, inputs, {
             product: this.state.selectedProduct.id,
             expiresAt:  "1993-03-18T13:09:41.305Z",
-            location: 1,
         });
-        // this.props.addProductOffer(params).then(() => {
-        //     this.props.history.push("/inventory/my-inventory");
-        // })
+        this.props.addProductOffer(params).then(() => {
+            this.props.history.push("/inventory/my-inventory");
+        })
     }
 
     render() {
