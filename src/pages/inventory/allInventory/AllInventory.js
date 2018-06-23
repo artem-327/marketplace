@@ -14,7 +14,7 @@ class AllInventory extends Component {
             <ProductOffers productOffers={this.props.productOffers} addPopup={this.props.addPopup}/>;
         return (
             <div>
-                <h1 className='inventory-header'>INVENTORY OVERVIEW</h1>
+                <h1 className='header'>INVENTORY OVERVIEW</h1>
                 <Filter filterFunc={(inputs) => {this.props.getData(inputs)}} />
                 {content}
             </div>

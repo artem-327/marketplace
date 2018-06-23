@@ -1,25 +1,138 @@
-.add-inventory .input-group h1 {
-  color: #222;
-  font-size: 1em;
-  font-weight: bold;
-  padding: 3px 15px;
-  display: block;
-  border-bottom: 1px solid #222;
-  margin: 10px 0;
-  width: 100%;
-  text-align: left; }
+.add-group {
+  border-radius: 8px;
+  border: 1px solid #eeeeee;
+  margin: 20px; }
+  .add-group .location-wr .edit-location {
+    background-color: #d4eaf7;
+    color: #3b98d3;
+    border: 2px solid #3b98d3;
+    border-radius: 5px;
+    width: 110px;
+    height: 38px;
+    font-weight: bold;
+    margin-left: 25px;
+    transition: all .2s ease; }
+    .add-group .location-wr .edit-location:hover {
+      cursor: pointer;
+      background-color: #3b98d3;
+      color: white; }
+  .add-group .incremental-pricing-table td input {
+    margin: 0 20px 0 0; }
+  .add-group .incremental-pricing-table th {
+    font-weight: lighter; }
+  .add-group .incremental-pricing-table .incremental-button {
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 22px;
+    width: 39px;
+    transition: all .2s ease; }
+    .add-group .incremental-pricing-table .incremental-button:hover {
+      cursor: pointer; }
+    .add-group .incremental-pricing-table .incremental-button.add {
+      background-color: #dcf7d8;
+      border: 2px solid #56d347;
+      color: #56d347; }
+      .add-group .incremental-pricing-table .incremental-button.add:hover {
+        background-color: #56d347;
+        color: white; }
+    .add-group .incremental-pricing-table .incremental-button.remove {
+      border: 2px solid #d32a2e;
+      color: #d32a2e;
+      background-color: #f7ddd3; }
+      .add-group .incremental-pricing-table .incremental-button.remove:hover {
+        background-color: #d32a2e;
+        color: white; }
+  .add-group .incremental-pricing-table .incremental-index {
+    background-color: #d4eaf7;
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+    margin: 7px 25px 0 0;
+    border-radius: 50%;
+    position: relative;
+    color: #3b98d3;
+    border: 2px solid #3b98d3; }
+    .add-group .incremental-pricing-table .incremental-index span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); }
+  .add-group label {
+    display: block;
+    margin: 0;
+    font-size: .9rem; }
+  .add-group .incremental-wr {
+    border-top: 1px solid #eeeeee;
+    margin: 15px 10px;
+    padding: 15px 0; }
+    .add-group .incremental-wr h4 {
+      font-size: 1rem; }
+  .add-group .group-inside {
+    display: inline-block;
+    padding: 10px;
+    vertical-align: top; }
+    .add-group .group-inside .incremental, .add-group .group-inside .anonymous {
+      margin: 10px; }
+    .add-group .group-inside:first-child {
+      border-right: 1px solid #eeeeee; }
+  .add-group .group-item-wr {
+    display: inline-block;
+    margin: 10px; }
+  .add-group .dropdown-wr {
+    width: 200px;
+    display: inline-block; }
+  .add-group .add-body {
+    margin: 10px;
+    display: none; }
+    .add-group .add-body.open {
+      display: block; }
+  .add-group .header-group {
+    background-color: #eeeeee;
+    border: none;
+    border-radius: 8px; }
+    .add-group .header-group.open {
+      border-radius: 8px 8px 0 0; }
+    .add-group .header-group h1 {
+      font-size: 1rem;
+      display: inline-block;
+      font-weight: bold;
+      margin: 0;
+      padding: 15px;
+      color: #3997d2;
+      border: none; }
+    .add-group .header-group i {
+      float: right;
+      padding-top: 17px;
+      padding-right: 17px; }
+  .add-group .group-inside h4 {
+    font-size: 1rem; }
 
-.add-inventory .input-group label {
-  display: block;
-  color: #222;
-  text-align: left;
-  font-size: .8em;
-  font-weight: bold;
-  margin: 0 0 0 10px; }
+.inventory-product {
+  color: #B0B0B0;
+  margin: 10px 0 10px 20px; }
 
-.add-inventory .input-group input, .add-inventory .input-group select {
-  margin: 0 10px 10px 10px;
-  color: gray; }
+.add-inventory.disable {
+  opacity: .5; }
 
-.add-inventory .input-group select {
-  height: 40px; }
+.add-inventory .add-inventory {
+  margin: 20px;
+  font-size: 1rem;
+  float: right; }
+
+.add-inventory .location-submenu {
+  margin-bottom: 20px; }
+  .add-inventory .location-submenu div {
+    display: inline-block;
+    padding: 0 5px;
+    margin: 0 10px 0 0;
+    font-size: .9rem;
+    transition: all .2s ease; }
+    .add-inventory .location-submenu div:hover {
+      cursor: pointer;
+      color: #3b98d3; }
+  .add-inventory .location-submenu.saved .saved {
+    border-bottom: 1px solid #3b98d3;
+    font-weight: bold; }
+  .add-inventory .location-submenu.new .new {
+    border-bottom: 1px solid #3b98d3;
+    font-weight: bold; }
