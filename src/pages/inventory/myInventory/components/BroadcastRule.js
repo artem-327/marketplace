@@ -12,6 +12,7 @@ class BroadcastRule extends Component {
                             <div>CUSTOM BROADCAST</div>
                             <div>Broadcasting to: x/x</div>
                         </span>
+
                         <span className="right">
                             <input type="text"/>
                         </span>
