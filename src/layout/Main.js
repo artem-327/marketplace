@@ -14,7 +14,6 @@ import MyInventory from "../pages/inventory/myIventory";
 import TestPage from "../pages/test";
 import { withAuth } from '../utils/auth';
 
-
 class Main extends Component {
     render() {
         return (

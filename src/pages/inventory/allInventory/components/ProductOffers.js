@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './ProductOffers.css';
 import moment from "moment";
+import AddCart from '../../../../components/Cart/AddCart'
 import {DATE_FORMAT, PRICE_PRECISION} from "../../../../utils/constants";
 
 class ProductOffers extends Component {
@@ -10,8 +11,7 @@ class ProductOffers extends Component {
         this.toggleProduct = this.toggleProduct.bind(this);
         this.state = {
             products: this.groupProductOffers(this.props.productOffers)
-        }
-        this.props.addPopup(<div>test</div>)
+        };
     }
 
     componentWillReceiveProps(nextProps){
@@ -38,8 +38,8 @@ class ProductOffers extends Component {
    }
 
    //TODO:: Add to cart
-   addCart(name){
-        this.props.addPopup(<div>{name}</div>)
+   addCart(){
+        this.props.addPopup(<AddCart/>)
    }
 
     render() {
@@ -99,7 +99,7 @@ class ProductOffers extends Component {
                                     <td>{offer.productCondition.name}</td>
                                     <td>{offer.productForm.name}</td>
                                     <td>{offer.location.country} ({offer.location.state})</td>
-                                    <td><button onClick={()=>{this.addCart(offer.merchant.name)}}>BUY</button></td>
+                                    <td><button onClick={()=>{this.addCart()}}>BUY</button></td>
                                 </tr>
                             )
                         }) : null;
