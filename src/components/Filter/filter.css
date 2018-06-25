@@ -1,9 +1,9 @@
 @import url(https://fonts.googleapis.com/css?family=Cabin:300,400,500,600,700);
 .filter {
   font-family: "Cabin", sans-serif;
-  background-color: #fafafa;
+  background-color: #fbfbfb;
   position: absolute;
-  width: 400px;
+  width: 500px;
   right: 0;
   top: 143px;
   -webkit-box-shadow: -2px 3px 5px 0px #8c8c8c;
@@ -22,20 +22,30 @@
     border-bottom: 1px solid #D3D3D3;
     margin-top: 10px; }
     .filter .filter-group .filter-input-text label, .filter .filter-group .filter-input-text input {
-      margin-left: 15px; }
+      margin-left: 12px; }
     .filter .filter-group .filter-input-text input {
-      margin-bottom: 15px; }
+      width: 380px;
+      margin-bottom: 15px;
+      margin-left: 10px; }
+  .filter .split .filter-input-text {
+    display: inline-block;
+    float: left;
+    width: calc(50% - 70px);
+    margin: 0 25px 15px 10px; }
+    .filter .split .filter-input-text label {
+      margin-left: 2px; }
+    .filter .split .filter-input-text input {
+      width: 100%;
+      margin: 0; }
+  .filter .filterBottom {
+    background-color: #eeeeee;
+    width: 480px;
+    height: 70px; }
   .filter .filter-button {
-    cursor: pointer;
-    border-radius: 3px;
-    color: #FFFFFF;
-    background-color: #289ada;
-    padding: 5px 25px;
-    border: none;
     float: right;
-    margin-right: 5px;
-    margin-top: 15px;
-    margin-bottom: 5px; }
+    margin: 20px 10px 10px 5px; }
+    .filter .filter-button.disabled {
+      background-color: #a8a8a8; }
   .filter .dropdown-icon {
     width: 5%;
     cursor: pointer;
