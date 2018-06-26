@@ -27,16 +27,16 @@ class PopUp extends Component {
         })
     }
 
-    closePopup(event, index){
+    closePopup(event){
         if(event.target === event.currentTarget) {
-            this.props.removePopup(index)
+            this.props.removePopup()
         }
     }
 
     render() {
         let {isOpen, component} = this.state;
         return isOpen ?
-            <div className='popup-wr' onClick={(e)=>{this.closePopup(e, this.props.components.length - 1)}}>
+            <div className='popup-wr' onClick={(e)=>{this.closePopup(e)}}>
                 <div className='popup'>{component}</div>
             </div> : null
     }
