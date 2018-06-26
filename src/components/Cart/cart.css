@@ -1,0 +1,59 @@
+.add-cart {
+  background-color: white;
+  padding: 30px;
+  min-width: 500px;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+  border-radius: 5px; }
+  .add-cart .close-mark {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    color: #a1a2a5;
+    font-size: 1.2rem;
+    transition: all .2s ease;
+    transform: rotate(0deg); }
+    .add-cart .close-mark:hover {
+      cursor: pointer;
+      transform: rotate(-180deg); }
+  .add-cart .dropdown-wr {
+    margin: 20px 0 0 0;
+    width: 45%; }
+  .add-cart .button {
+    margin: 0 0 0 20px; }
+  .add-cart .button-group {
+    text-align: right; }
+  .add-cart p {
+    color: #a1a2a5;
+    font-size: .9rem;
+    font-weight: bold;
+    margin: 5px 0; }
+    .add-cart p.name {
+      color: #43464d;
+      margin: 20px 0 0 0; }
+    .add-cart p.price {
+      color: #43464d;
+      margin: 15px 0;
+      text-align: right;
+      font-size: 1rem; }
+  .add-cart .check-mark {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    margin: -5px 10px 0 0;
+    vertical-align: middle;
+    border-radius: 50%;
+    background-color: #4cd136; }
+    .add-cart .check-mark:after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 45%;
+      transform: translate(-50%, -50%) rotate(45deg);
+      width: 8px;
+      height: 13px;
+      border: solid white;
+      border-width: 0 2px 2px 0; }
+  .add-cart h1 {
+    font-size: 1.1rem;
+    position: relative; }

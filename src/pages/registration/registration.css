@@ -1,6 +1,6 @@
 .registration {
   height: 100vh;
-  background-color: #eeeeee;
+  background-color: #f2f2f2;
   width: 100%;
   position: relative; }
   .registration .registration-wr {
@@ -11,12 +11,12 @@
     transform: translate(-50%, -50%);
     display: inline-block; }
   .registration .regForm {
-    background-color: white;
+    background-color: #fafafa;
     margin: auto;
     padding: 40px;
-    -webkit-box-shadow: 3px 4px 5px 0px rgba(140, 140, 140, 0.7);
-    -moz-box-shadow: 3px 4px 5px 0px rgba(140, 140, 140, 0.7);
-    box-shadow: 3px 4px 5px 0px rgba(140, 140, 140, 0.7);
+    -webkit-box-shadow: 2px 2px 9px 1px #989898;
+    -moz-box-shadow: 2px 2px 9px 1px #989898;
+    box-shadow: 2px 2px 9px 1px #989898;
     width: 450px; }
     .registration .regForm img {
       width: 35%;
@@ -39,7 +39,7 @@
     font-size: 14px;
     margin-top: 5px;
     border-radius: 4px;
-    border: 1px solid #B0B0B0;
+    border: 1px solid #33373e;
     padding: 5px 10px;
     width: 300px; }
     .registration .form-place form input[type='text']:hover, .registration .form-place form input[type='text']:focus {
@@ -52,7 +52,7 @@
   .registration .form-place form input[type='password'] {
     font-size: 14px;
     border-radius: 4px;
-    border: 1px solid #B0B0B0;
+    border: 1px solid #33373e;
     padding: 5px 10px;
     width: 300px; }
     .registration .form-place form input[type='password']:hover, .registration .form-place form input[type='password']:focus {
@@ -65,15 +65,14 @@
   .registration .form-place form .form-middle {
     text-align: center; }
     .registration .form-place form .form-middle .disabled {
-      background-color: #eeeeee;
-      color: #222222;
-      border-style: solid;
-      border-width: 1px;
-      border-color: #222222; }
+      background-color: #f6f6f6;
+      color: #a8a8a8;
+      border: 1px solid #a8a8a8; }
       .registration .form-place form .form-middle .disabled:hover {
         cursor: pointer;
-        background-color: #eeeeee; }
+        background-color: #f6f6f6; }
     .registration .form-place form .form-middle button {
+      font-weight: bold;
       border-radius: 4px;
       margin-top: 30px;
       margin-bottom: 30px;

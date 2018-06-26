@@ -1,62 +1,183 @@
 
-.add-inventory {
-  //.header {
-  //  color: #289ada;
-  //  padding: 5px 15px;
-  //  border-bottom: 1px solid #289ada;
-  //  font-size: 1.2em;
-  //  font-weight: bold;
-  //  text-align: left;
-  //}
-  .input-group {
-    h1 {
-      color: #222;
-      font-size: 1em;
+.add-group{
+  border-radius: 8px;
+  border: 1px solid #eeeeee;
+  margin: 20px;
+  .location-wr{
+    .edit-location{
+      background-color: #d4eaf7;
+      color: #3b98d3;
+      border: 2px solid #3b98d3;
+      border-radius: 5px;
+      width: 110px;
+      height: 38px;
       font-weight: bold;
-      padding: 3px 15px;
-      display: block;
-      border-bottom: 1px solid #222;
-      margin: 10px 0;
-      width: 100%;
-      text-align: left;
-    }
-    label{
-      display: block;
-      color: #222;
-      text-align: left;
-      font-size: .8em;
-      font-weight: bold;
-      margin: 0 0 0 10px;
-    }
-    input, select{
-      margin: 0 10px 10px 10px;
-      color: gray;
-    }
-    select{
-      height: 40px;
-    }
-    .add-form{
-      color: white;
-      background-color: #289ada;
-      border: none;
-      margin-top: 20px;
-      font-weight: bold;
-      font-size: 1em;
-      padding: 8px 20px;
-      border-radius: 4px;
-      margin-top: 20px;
+      margin-left: 25px;
+      transition: all .2s ease;
+      &:hover{
+        cursor: pointer;
+        background-color: #3b98d3;
+        color: white;
+      }
     }
   }
-  .add-inventory{
-    color: white;
-    background-color: #289ada;
+  .incremental-pricing-table{
+    td input{
+      margin: 0 20px 0 0;
+    }
+    th{
+      font-weight: lighter;
+    }
+    .incremental-button{
+      border-radius: 5px;
+      font-weight: bold;
+      font-size: 22px;
+      width: 39px;
+      transition: all .2s ease;
+      &:hover{
+        cursor: pointer;
+      }
+      &.add{
+        background-color: #dcf7d8;
+        border: 2px solid #56d347;
+        color: #56d347;
+        &:hover{
+          background-color: #56d347;
+          color: white;
+        }
+      }
+      &.remove{
+        border: 2px solid #d32a2e;
+        color: #d32a2e;
+        background-color: #f7ddd3;
+        &:hover{
+          background-color: #d32a2e;
+          color: white;
+        }
+      }
+    }
+    .incremental-index{
+      background-color: #d4eaf7;
+      width: 35px;
+      height: 35px;
+      display: inline-block;
+      margin: 7px 25px 0 0 ;
+      border-radius: 50%;
+      position: relative;
+      color: #3b98d3;
+      border: 2px solid #3b98d3;
+      span{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+  label{
+    display: block;
+    margin: 0;
+    font-size: .9rem;
+  }
+  .incremental-wr{
+    border-top: 1px solid #eeeeee;
+    margin: 15px 10px;
+    padding: 15px 0;
+    h4{
+      font-size: 1rem;
+    }
+  }
+  .group-inside{
+    display: inline-block;
+    padding: 10px;
+    vertical-align: top;
+    .incremental, .anonymous{
+      margin: 10px;
+    }
+    &:first-child{
+      border-right: 1px solid #eeeeee;
+    }
+  }
+  .group-item-wr{
+    display: inline-block;
+    margin: 10px;
+  }
+  .dropdown-wr{
+    width: 200px;
+    display: inline-block;
+  }
+  .add-body{
+    margin: 10px;
+    display: none;
+    &.open{
+      display: block;
+    }
+  }
+  .header-group{
+    background-color: #eeeeee;
     border: none;
-    padding: 8px 20px;
-    border-radius: 4px;
-    margin-top: 20px;
-    margin-right: 50px;
-    font-weight: bold;
+    border-radius: 8px;
+    &.open{
+      border-radius: 8px 8px 0 0;
+    }
+    h1{
+      font-size: 1rem;
+      display: inline-block;
+      font-weight: bold;
+      margin: 0;
+      padding: 15px;
+      color: #3997d2;
+      border: none;
+    }
+    i{
+      float: right;
+      padding-top: 17px;
+      padding-right: 17px;
+    }
+  }
+  .group-inside{
+    h4{
+      font-size: 1rem;
+    }
+  }
+}
+.inventory-product{
+  color: #B0B0B0;
+  margin: 10px 0 10px 20px;
+}
+.add-inventory {
+  &.disable {
+    opacity: .5;
+  }
+  .add-inventory{
+    margin: 20px;
+    font-size: 1rem;
     float: right;
-    font-size: 1em;
+  }
+  .location-submenu{
+    margin-bottom: 20px;
+    div{
+      display: inline-block;
+      padding: 0 5px;
+      margin: 0 10px 0 0;
+      font-size: .9rem;
+      transition: all .2s ease;
+      &:hover{
+        cursor: pointer;
+        color: #3b98d3;
+      }
+    }
+    &.saved{
+      .saved{
+        border-bottom: 1px solid #3b98d3;
+        font-weight: bold;
+      }
+    }
+    &.new{
+      .new{
+        border-bottom: 1px solid #3b98d3;
+        font-weight: bold;
+      }
+    }
   }
 }

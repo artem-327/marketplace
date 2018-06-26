@@ -1,0 +1,50 @@
+.radioButton {
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  user-select: none; }
+  .radioButton input {
+    display: none; }
+  .radioButton .radiomark {
+    border: 1px solid #B0B0B0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 22px;
+    width: 22px;
+    border-radius: 50%; }
+    .radioButton .radiomark.small {
+      height: 16px;
+      width: 16px; }
+      .radioButton .radiomark.small:after {
+        content: "";
+        position: absolute;
+        display: none;
+        top: 4px;
+        left: 4px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #289ada; }
+    .radioButton .radiomark:hover {
+      border-color: #289ada; }
+    .radioButton .radiomark:after {
+      content: "";
+      position: absolute;
+      display: none;
+      top: 5px;
+      left: 5px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #289ada; }
+
+/* When the radio button is checked, add a blue background */
+.radioButton input:checked ~ .radiomark {
+  background-color: #ffffff; }
+
+/* Show the indicator (dot/circle) when checked */
+.radioButton input:checked ~ .radiomark:after {
+  display: block; }

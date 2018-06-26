@@ -1,6 +1,4 @@
 import axios from 'axios';
-import {filterNonEmptyAttributes} from "../utils/functions";
-
 
 const GET_PRODUCT_OFFERS = 'GET_PRODUCT_OFFERS';
 const GET_PRODUCT_OFFERS_FULFILLED = 'GET_PRODUCT_OFFERS_FULFILLED';

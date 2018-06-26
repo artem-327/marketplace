@@ -13,7 +13,7 @@ export default class LoginForm extends React.Component {
         if(!email || !password) return;
         this.props.login(input.email, input.password).then(() => {
             this.props.getIdentity().then(()=>{
-                this.props.history.push("/");
+                this.props.history.push("/inventory/my-inventory");
             });
         })
     }
@@ -23,7 +23,7 @@ export default class LoginForm extends React.Component {
         let {email, password} = this.props.loginInputs;
         let butLogin = isFetching ? <Translate id="login.logging"/> : <Translate id="login.login"/>;
         //TODO:: react to all types of errors
-        let loginErr = hasError ? <div className="login-err">Incorrect username or password</div> : null;
+        let loginErr = hasError ? <div className="login-err"><i class="fas fa-exclamation-triangle"></i>Incorrect username or password</div> : null;
         return (
             <Form model="forms.loginForm" onSubmit={(val) => this.handleSubmit(val)}>
                 <div>
@@ -34,7 +34,7 @@ export default class LoginForm extends React.Component {
                     {/*<label htmlFor="forms.loginForm.password"><Translate id="login.password"/></label>*/}
                     <Control.password model="forms.loginForm.password" placeholder="Password"/>
                 </div>
-                {loginErr}
+                <div className='error-holder'>{loginErr}</div>
                 <div className="form-middle">
                     <button className={classnames({"loading": isFetching}, {"disabled": (!email || !password)})}>{butLogin}</button>
                 </div>

@@ -9,6 +9,9 @@ const FETCH_PRODUCT_CONDITIONS_FULFILLED = 'FETCH_PRODUCT_CONDITIONS_FULFILLED';
 const FETCH_PRODUCT_GRADE = 'FETCH_PRODUCT_GRADE';
 const FETCH_PRODUCT_GRADE_FULFILLED = 'FETCH_PRODUCT_GRADE_FULFILLED';
 
+const FETCH_RECEANT_ADDED_PRODUCTS = 'FETCH_RECEANT_ADDED_PRODUCTS';
+const FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED = 'FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED';
+
 const SEARCH_PRODUCT = 'SEARCH_PRODUCT';
 const SEARCH_PRODUCT_PENDING = 'SEARCH_PRODUCT_PENDING';
 const SEARCH_PRODUCT_FULFILLED = 'SEARCH_PRODUCT_FULFILLED';
@@ -19,6 +22,7 @@ export const initialState = {
     productForms: [],
     productConditions: [],
     productGrade: [],
+    recentProducts: [],
     isFetching: false
 };
 
@@ -40,6 +44,12 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 productGrade: action.payload
+            }
+        }
+        case FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED: {
+            return {
+                ...state,
+                recentProducts: action.payload
             }
         }
         case SEARCH_PRODUCT_PENDING: {
@@ -93,5 +103,14 @@ export function fetchProductGrade(filter = {}) {
     return {
         type: FETCH_PRODUCT_GRADE,
         payload: axios.get('/api/v1/product-grades/', {params: {...filter}}).then(result => result.data.data.productGrades)
+    }
+}
+
+export function fetchRecentAddedProducts(limit = 3) {
+    return {
+        type: FETCH_RECEANT_ADDED_PRODUCTS,
+        payload: axios.get('/api/v1/products/', {params:{
+            srtb: 'updatedAt', lmt: limit
+        }}).then(result => result.data.data.products)
     }
 }

@@ -7,7 +7,7 @@ import { combineReducers } from 'redux'
 import { combineForms } from 'react-redux-form';
 
 import identity, {initialState as identityFormInit} from './modules/identity';
-import location, {initialState as locationFormInit} from './modules/location';
+import location from './modules/location';
 import search, {initialState as searchFormInit} from './modules/search';
 import products from './modules/products';
 
@@ -16,6 +16,7 @@ import popup from './modules/popup';
 import filter from './modules/filter';
 import packageTypes from './modules/packageTypes';
 import addInventory from './modules/addInventory';
+import cart from "./modules/cart";
 
 const reducer = combineReducers({
     identity,
@@ -24,6 +25,7 @@ const reducer = combineReducers({
     productOffers,
     products,
     packageTypes,
+    cart,
     search,
     popup,
     addInventory,
@@ -32,7 +34,6 @@ const reducer = combineReducers({
         addProductOffer: productOffers,
         loginForm: identityFormInit.loginForm.data,
         registrationForm: identityFormInit.registrationForm.data,
-        locationForm: locationFormInit.location.data,
         searchForm: searchFormInit.searchForm.data,
     }, 'forms'),
 });

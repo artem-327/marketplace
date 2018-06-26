@@ -1,62 +1,25 @@
 import axios from "axios";
 
-const ADD_LOCATION = 'ADD_LOCATION';
-const ADD_LOCATION_PENDING = 'ADD_LOCATION_PENDING';
-const ADD_LOCATION_FULFILLED = 'ADD_LOCATION_FULFILLED';
-const ADD_LOCATION_REJECTED = 'ADD_LOCATION_REJECTED';
+const FETCH_WAREHOUSE = 'FETCH_WAREHOUSE';
+const FETCH_WAREHOUSE_FULFILLED = 'FETCH_WAREHOUSE_FULFILLED';
 
+const SAVE_WAREHOUSE = 'SAVE_WAREHOUSE';
+const UPDATE_WAREHOUSE = 'UPDATE_WAREHOUSE';
 
 export const initialState = {
-    location:{
-        isPending: false,
-        isValid: false,
-        hasError: false,
-        data:{
-            warehouse: "",
-            warehouseName: "",
-            address: "",
-            city: "",
-            state: "",
-            zip: "",
-            contact: "",
-            number: "",
-            email: "",
-        }
-    },
-
-
+    isPending: false,
+    isValid: false,
+    hasError: false,
+    warehouse: [],
+    data:{}
 };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case ADD_LOCATION_PENDING: {
+        case FETCH_WAREHOUSE_FULFILLED: {
             return {
                 ...state,
-                location:{
-                    isPending: true,
-                    isValid: false,
-                    hasError: false,
-                }
-            }
-        }
-        case ADD_LOCATION_FULFILLED: {
-            return {
-                ...state,
-                location:{
-                    isPending: false,
-                    isValid: true,
-                    hasError: false,
-                }
-            }
-        }
-        case ADD_LOCATION_REJECTED: {
-            return {
-                ...state,
-                location:{
-                    isPending: false,
-                    isValid: false,
-                    hasError: true,
-                }
+                warehouse: action.payload
             }
         }
 
@@ -66,19 +29,24 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-export function addLocation(country, state, city, address) {
+export function fetchWarehouse(){
     return {
-        type: ADD_LOCATION,
-        payload: axios({
-            method: 'post',
-            url: "/api/v1/locations/",
-            data: {
-                country,
-                state,
-                city,
-                address
-            }
-        })
+        type: FETCH_WAREHOUSE,
+        payload: axios.get('/api/v1/warehouses/').then(result => {return result.data.data.warehouses})
+    }
+}
+
+export function saveWarehouse(name, address, city, state, contactName, contactNumber, contactEmail, zip) {
+    return {
+        type: SAVE_WAREHOUSE,
+        payload: axios.post('/api/v1/warehouses/', {name, address, city, state, contactName, contactNumber, contactEmail, zip})
+    }
+}
+
+export function updateWarehouse(id, name, address, city, state, contactName, contactNumber, contactEmail, zip){
+    return {
+        type: UPDATE_WAREHOUSE,
+        payload: axios.put('/api/v1/warehouses/' + id, {name, address, city, state, contactName, contactNumber, contactEmail, zip})
     }
 }
 

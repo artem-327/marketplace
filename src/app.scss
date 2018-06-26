@@ -5,12 +5,16 @@ $app-font-family: 'Cabin', sans-serif;
 .App {
   font-family: $app-font-family
 }
+
+.clearfix{
+  clear: both;
+}
+
 .header {
-  color: #289ada;
+  color: #4e5157;
   padding: 5px 15px;
-  border-bottom: 1px solid #289ada;
-  font-size: 1.2em;
-  font-weight: bold;
+  margin: 15px 0 0 5px;
+  font-size: 1.6em;
   text-align: left;
 }
 
@@ -42,8 +46,42 @@ position: absolute;
     font-size: 1.2rem;
   }
 }
+.button {
+  color: white;
+  background-color: #289ada;
+  border: none;
+  width: 130px;
+  height: 40px;
+  border-radius: 4px;
+  font-size: 1.2em;
+  &.green{
+    background-color: #4cd136;
+  }
+  &:hover, &:focus{
+    cursor: pointer;
+    border-color: #0d82bf;
+    box-shadow: none;
+    outline: none;
+  }
+  &.small {
+    border-radius: 3px;
+    padding: 6px 15px;
+    font-size: 1em;
+    width: 110px;
+    height: 35px;
+  }
+  &.big {
+    font-size: 1.4em;
+    width: 160px;
+    height: 45px;
+  }
+  &.disabled{
+    background-color: #cfe6f3;
+  }
+}
 
-input[type='text'], input[type='number'] {
+
+input {
   border-radius: 4px;
   border: 1px solid #B0B0B0;
   padding: 7px;
@@ -56,80 +94,39 @@ input[type='text'], input[type='number'] {
     padding: 12px 7px;
     font-size: 1.2rem;
   }
-}
-
-input[type='number'] {
-  font-size: 1rem;
-  border-radius: 4px;
-  border: 1px solid #B0B0B0;
-  padding: 7px;
-  &:hover, &:focus{
-    border-color: #289ada;
-    box-shadow: none;
-    outline: none;
-  }
-  &.bigger{
-    padding: 12px 7px;
-    font-size: 1.2rem;
-  }
-}
-
-::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-  color: lightgray;
-}
-::-moz-placeholder { /* Firefox 19+ */
-  color: lightgray;
-}
-:-ms-input-placeholder { /* IE 10+ */
-  color: lightgray;
-}
-:-moz-placeholder { /* Firefox 18- */
-  color: lightgray;
-}
-.conMess {
-  padding: 5px 15px;
-}
-
-.input-checkbox {
-  padding-top: 15px;
-  //display: inline-block;
-  .checkmark {
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    background-color: white;
-    float: left;
-    margin: 1px 15px 0px 0px;
-    border: 1px solid #B0B0B0;
+  &[type='number']{
+    font-size: 1rem;
     border-radius: 4px;
-    position: relative;
+    border: 1px solid #B0B0B0;
+    padding: 7px;
     &:hover, &:focus{
       border-color: #289ada;
       box-shadow: none;
       outline: none;
     }
-    &:after {
-      content: "";
-      position: absolute;
-      display: none;
-      left: 7px;
-      top: 3px;
-      width: 5px;
-      height: 10px;
-      border: solid #289ada;
-      border-width: 0 2px 2px 0;
-      -webkit-transform: rotate(45deg);
-      -ms-transform: rotate(45deg);
-      transform: rotate(45deg);
+    &.bigger{
+      padding: 12px 7px;
+      font-size: 1.2rem;
     }
   }
-  input {
-    position: absolute;
-    opacity: 0;
-    cursor:pointer;
-    &:checked ~ .checkmark::after {
-      display: block;
-    }
-  }
-
 }
+
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #a8a8a8;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: #a8a8a8;
+}
+:-ms-input-placeholder { /* IE 10+ */
+  color: #a8a8a8;
+}
+:-moz-placeholder { /* Firefox 18- */
+  color: #a8a8a8;
+}
+.conMess {
+  padding: 5px 15px;
+}
+
+
+

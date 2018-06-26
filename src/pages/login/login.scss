@@ -1,7 +1,7 @@
 .login{
 
   height: 100vh;
-  background-color: #eeeeee;
+  background-color: #f2f2f2;
   width: 100%;
 
   position: relative;
@@ -13,6 +13,15 @@
     transform: translate(-50%, -50%);
     display: inline-block;
   }
+  .login-err {
+    font-size: 12px;
+    margin-bottom: 10px;
+  }
+  .fa-exclamation-triangle {
+    color: #33373e;
+    font-size: 14px;
+    margin-right: 8px;
+  }
   .logForm {
     img {
       width: 35%;
@@ -20,12 +29,12 @@
     }
     //border-style: solid;
     //border-width: 0px;
-    background-color: white;
+    background-color: #fafafa;
     margin: auto;
     padding: 40px;
-    -webkit-box-shadow: 3px 4px 5px 0px rgba(140,140,140,.7);
-    -moz-box-shadow: 3px 4px 5px 0px rgba(140,140,140,.7);
-    box-shadow: 3px 4px 5px 0px rgba(140,140,140,.7);
+    -webkit-box-shadow: 2px 2px 9px 1px rgba(152,152,152,1);
+    -moz-box-shadow: 2px 2px 9px 1px rgba(152,152,152,1);
+    box-shadow: 2px 2px 9px 1px rgba(152,152,152,1);
     width: 450px;
   }
   .form-place{
@@ -33,8 +42,12 @@
       margin-bottom: 50px;
     }
     form{
-      div{
-        margin: 10px;
+      .login-err{
+      }
+      .error-holder{
+        height: 18px;
+        margin: 5px;
+        font-size: .9rem;
       }
       label{
         display: block;
@@ -44,14 +57,15 @@
       }
       input{
         border: none;
-        border-bottom: 1px solid #222;
+        border-bottom: 1px solid #33373e;
         outline: none;
+        margin-bottom: 15px;
       }
       input[type='text'] {
         font-size: 14px;
         margin-top: 35px;
         border-radius: 4px;
-        border: 1px solid #B0B0B0;
+        border: 1px solid #33373e;
         padding: 5px 10px;
         width: 300px;
         &:hover, &:focus{
@@ -66,9 +80,9 @@
       }
       input[type='password'] {
         font-size: 14px;
-        margin-bottom: 40px;
+        margin-bottom: 15px;
         border-radius: 4px;
-        border: 1px solid #B0B0B0;
+        border: 1px solid #33373e;
         padding: 5px 10px;
         width: 300px;
         &:hover, &:focus{
@@ -84,19 +98,19 @@
       .form-middle{
         text-align: center;
         .disabled {
-          background-color: #eeeeee;
-          color: #222222;
-          border-style: solid;
-          border-width: 1px;
-          border-color: #222222;
+          background-color: #f6f6f6;
+          color: #a8a8a8;
+          border: 1px solid #a8a8a8;
           &:hover{
-            cursor: pointer;
-            background-color: #eeeeee;
+            cursor: not-allowed;
+            background-color: #f6f6f6;
           }
 
         }
         button{
-          margin-bottom: 30px;
+          font-weight: bold;
+          margin-top: 10px;
+          margin-bottom: 40px;
           background-color: #289ada;
           color: white;
           border: none;

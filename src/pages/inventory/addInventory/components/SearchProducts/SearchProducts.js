@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import './SearchProducts.css';
 import debounce from "debounce";
+import Spinner from '../../../../../components/Spinner/Spinner';
+import RecentProducts from "./components/RecentProducts";
 
 class SearchProducts extends Component {
 
@@ -16,15 +18,15 @@ class SearchProducts extends Component {
         if (!this.props.searchedProducts || this.props.searchedProducts.length === 0) return <p className='search-status'>No results</p>;
         return this.props.searchedProducts.map(product => (
             <div key={product.id} className='search-product-item' onClick={() => this.props.onSelect(product)}>
-                {product.primaryName}
                 <span className='search-cas'>{product.casNumber}</span>
+                {product.primaryName}
             </div>
         ));
     }
 
     handleChange(e) {
         this.setState({fulltext: e.target.value}, () => {
-            if (this.state.fulltext.length > 1)  this.searchProducts();
+            if (this.state.fulltext.length > 0) this.searchProducts();
         });
     }
 
@@ -34,12 +36,16 @@ class SearchProducts extends Component {
 
     render() {
         let {fulltext} = this.state;
-        let results = this.props.isSearching ? <p className='search-status'>Loading ...</p> : this.renderResults();
+        let results = this.props.isSearching ? <div className='search-status'><Spinner/></div> : this.renderResults();
         return (
             <div>
                 <div className='search-products'>
-                    <input value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Type to find products'/>
-                    <button onClick={()=>{this.searchProducts()}}>Search</button>
+                    <label>Chemical Name or CAS #</label>
+                    <i className="fas fa-search search-icon" onClick={()=>{this.searchProducts()}}/>
+                    <input value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Search'/>
+                </div>
+                <div className='recent-products'>
+                    <RecentProducts setProduct={(product)=>this.props.onSelect(product)} {...this.props}/>
                 </div>
                 <div className='search-results'>
                     {results}

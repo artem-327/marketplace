@@ -18,8 +18,7 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 components: [
-                    ...state.components.slice(0, action.payload),
-                    ...state.components.slice(action.payload + 1)
+                    ...state.components.slice(0, -1)
                 ]
             }
         }
@@ -42,10 +41,9 @@ export function addPopup(component) {
     }
 }
 
-export function removePopup(index) {
+export function removePopup() {
     return {
-        type: REMOVE_POPUP,
-        payload: index
+        type: REMOVE_POPUP
     }
 }
 
