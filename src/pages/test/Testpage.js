@@ -2,6 +2,7 @@ import React from 'react';
 import Spinner from "../../components/Spinner/Spinner";
 import Radio from "../../components/Radio/Radio";
 import Checkbox from "../../components/Checkbox/Checkbox";
+import FilterTag from "../../components/Filter/components/FilterTag/FilterTag";
 
 const TestPage = props => {
     return<div>
@@ -15,6 +16,7 @@ const TestPage = props => {
             <Radio className='small' name='foo2' opns={[{value:25, label:'jihocesky'}, {value:26, label:'Jihlava'}]} checked={25}/>
             <Checkbox name='fee3' label='foo' onChange={(value) => {console.log(value)}} />
             <Spinner/>
+            <FilterTag/>
         </div>
     </div>;
 };
