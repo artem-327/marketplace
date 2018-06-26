@@ -11,6 +11,7 @@ export default class Location extends Component {
             location: 'saved',
             edit: false,
             warehouseIndex: '',
+            warehouseName: '',
             street: '',
             city: '',
             state: '',
@@ -26,7 +27,11 @@ export default class Location extends Component {
             this.setState({
                 street: this.props.warehouse[this.state.warehouseIndex].address,
                 city: this.props.warehouse[this.state.warehouseIndex].city,
-                state: this.props.warehouse[this.state.warehouseIndex].state,
+                state: this.props.warehouse[this.state.warehouseIndex].location.state,
+                contact: this.props.warehouse[this.state.warehouseIndex].contactName,
+                phone: this.props.warehouse[this.state.warehouseIndex].contactNumber,
+                email: this.props.warehouse[this.state.warehouseIndex].contactEmail,
+                zip: this.props.warehouse[this.state.warehouseIndex].zip,
             })
         }
     }
@@ -47,26 +52,45 @@ export default class Location extends Component {
             warehouseIndex: index,
             street: this.props.warehouse[index].address,
             city: this.props.warehouse[index].city,
-            state: this.props.warehouse[index].state,
+            state: this.props.warehouse[index].location.state,
+            contact: this.props.warehouse[index].contactName,
+            phone: this.props.warehouse[index].contactNumber,
+            email: this.props.warehouse[index].contactEmail,
+            zip: this.props.warehouse[index].zip,
         })
     }
 
     changeMode(e){
         e.preventDefault();
+        if(this.state.warehouseIndex === '')return;
         this.setState({edit: !this.state.edit})
     }
 
     saveLocation(e, edit = !this.state.edit){
         e.preventDefault();
-        let { street, city, state, zip, contact, phone, email } = this.state;
-        console.log(street, city, state, zip, contact, phone, email);
-        this.setState({edit: edit})
+        let { warehouseName, street, city, state, zip, contact, phone, email } = this.state;
+        this.props.saveWarehouse(warehouseName, street, city, state, contact, phone, email, zip).then(()=>{
+            this.props.fetchWarehouse().then(()=>{
+                this.setState({edit: edit}, ()=> this.changeLocation('saved'))
+            })
+        });
+    }
+
+    updateLocation(e){
+        e.preventDefault();
+        let {street, city, state, zip, contact, phone, email } = this.state;
+        this.props.updateWarehouse(this.props.warehouse[this.state.warehouseIndex].id, this.props.warehouse[this.state.warehouseIndex].name, street, city, state, contact, phone, email, zip).then(()=>{
+            this.props.fetchWarehouse().then(()=>{
+                this.setState({edit: false})
+            })
+        });
     }
 
     renderSavedLocation() {
-        let button = this.state.edit ? <button onClick={(e)=>this.saveLocation(e)} className='edit-location'>Save</button> :
+        console.log(this.props.warehouse);
+        let button = this.state.edit ? <button onClick={(e)=>this.updateLocation(e)} className='edit-location'>Save</button> :
             <button className='edit-location' onClick={(e)=>this.changeMode(e)}>Edit</button>;
-        let currentLocation = this.state.warehouseIndex !== '' ? this.props.warehouse[this.state.warehouseIndex].name: null
+        let currentLocation = this.state.warehouseIndex !== '' ? this.props.warehouse[this.state.warehouseIndex].name: null;
         return (
             <div>
                 <div>
@@ -147,6 +171,12 @@ export default class Location extends Component {
             <div>
                 <div>
                     <div className='group-item-wr'>
+                        <label htmlFor="street">Warehouse Name</label>
+                        <input id="name"
+                               value={this.state.warehouseName}
+                               onChange={(e)=>{this.handleInputs(e.target.value, 'warehouseName')}}/>
+                    </div>
+                    <div className='group-item-wr'>
                         <label htmlFor="street">Street Address</label>
                         <input id="street"
                                value={this.state.street}
@@ -199,18 +229,26 @@ export default class Location extends Component {
 
     changeLocation(loc){
         if(loc === 'saved'){
-            if(this.props.warehouseIndex === ''){
+            if(this.state.warehouseIndex === ''){
                 this.setState({
                     street: '',
                     city: '',
                     state: '',
+                    zip: '',
+                    contact: '',
+                    phone: '',
+                    email: '',
                     location: 'saved'
                 })
             }else{
                 this.setState({
                     street: this.props.warehouse[this.state.warehouseIndex].address,
                     city: this.props.warehouse[this.state.warehouseIndex].city,
-                    state: this.props.warehouse[this.state.warehouseIndex].state,
+                    state: this.props.warehouse[this.state.warehouseIndex].location.state,
+                    contact: this.props.warehouse[this.state.warehouseIndex].contactName,
+                    phone: this.props.warehouse[this.state.warehouseIndex].contactNumber,
+                    email: this.props.warehouse[this.state.warehouseIndex].contactEmail,
+                    zip: this.props.warehouse[this.state.warehouseIndex].zip,
                     location: 'saved'
                 })
             }
@@ -219,6 +257,11 @@ export default class Location extends Component {
                 street: '',
                 city: '',
                 state: '',
+                zip: '',
+                contact: '',
+                phone: '',
+                email: '',
+                warehouseName: '',
                 location: 'new'
             })
         }

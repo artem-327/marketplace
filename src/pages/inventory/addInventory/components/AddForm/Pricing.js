@@ -33,32 +33,32 @@ export default class Pricing extends Component {
                                        model="forms.addProductOffer.addProductOffer.currency"
                                        dispatch={this.props.dispatch}/>
                     </div>
-                    <div className='incremental'>
-                        <Checkbox name='incremental'
-                                  label='Incremental Pricing'
-                                  onChange={(value) => this.setState({incrementalPricing: value})} />
-                    </div>
-                </div>
-                <div className='group-inside'>
-                    <h4>Rules</h4>
-                    <div className='group-item-wr'>
-                        <label htmlFor=".splits">Splits</label>
-                        <Control.text model=".splits"
-                                      id=".splits"/>
-                    </div>
-                    <div className='group-item-wr'>
-                        <label htmlFor=".minimum">Minimum</label>
-                        <DropdownRedux opns={[{id: 10, name: '10'}]} placeholder='Select'
-                                       model="forms.addProductOffer.addProductOffer.minimum"
-                                       dispatch={this.props.dispatch}/>
-                    </div>
                     <div className='anonymous'>
                         <CheckboxRedux model="forms.addProductOffer.addProductOffer.merchantVisibility"
                                        name="merchantVisibility"
                                        label="List Anonymously"
                                        dispatch={this.props.dispatch}/>
                     </div>
+                    {/*<div className='incremental'>*/}
+                        {/*<Checkbox name='incremental'*/}
+                                  {/*label='Incremental Pricing'*/}
+                                  {/*onChange={(value) => this.setState({incrementalPricing: value})} />*/}
+                    {/*</div>*/}
                 </div>
+                {/*<div className='group-inside'>*/}
+                    {/*<h4>Rules</h4>*/}
+                    {/*<div className='group-item-wr'>*/}
+                        {/*<label htmlFor=".splits">Splits</label>*/}
+                        {/*<Control.text model=".splits"*/}
+                                      {/*id=".splits"/>*/}
+                    {/*</div>*/}
+                    {/*<div className='group-item-wr'>*/}
+                        {/*<label htmlFor=".minimum">Minimum</label>*/}
+                        {/*<DropdownRedux opns={[{id: 10, name: '10'}]} placeholder='Select'*/}
+                                       {/*model="forms.addProductOffer.addProductOffer.minimum"*/}
+                                       {/*dispatch={this.props.dispatch}/>*/}
+                    {/*</div>*/}
+                {/*</div>*/}
                 {incremental}
             </div>
         );
