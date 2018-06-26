@@ -48,15 +48,35 @@ export default class AddForm extends Component {
     }
 
     addProductOffer(inputs){
-        //TODO:: Add new form for mock inputs
-        let params = Object.assign({}, inputs, {
-            product: this.state.selectedProduct.id,
-            expiresAt:  "1993-03-18T13:09:41.305Z",
-        });
-        this.props.addProductOffer(params).then(() => {
-            this.props.history.push("/inventory/my-inventory");
-        })
+        console.log(this.props.form);
+        let pckgs = this.props.form.addProductOffer;
+        let pckgName = "";
+        let measureType = "";
+        try{
+            for(let i = 0; i < this.props.package.length; i++){
+                if(this.props.package[i].id === pckgs.packageType){
+                    pckgName = this.props.package[i].name;
+                    measureType = this.props.package[i].measureType
+                }
+            }
+            this.props.validatePackageType(pckgName, measureType, pckgs.packageSize, pckgs.units).then(()=>{
+                //TODO:: Add new form for mock inputs
+                let params = Object.assign({}, inputs, {
+                    product: this.state.selectedProduct.id,
+                    expiresAt:  "1993-03-18T13:09:41.305Z",
+                    packageType: this.props.packageTypeId,
+                });
+                this.props.addProductOffer(params).then(() => {
+                    this.props.history.push("/inventory/my-inventory");
+                })
+
+            })
+        }catch (err){
+            console.log(err)
+        }
+
     }
+
 
     render() {
         return (

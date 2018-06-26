@@ -5,6 +5,7 @@ import {saveWarehouse, updateWarehouse, fetchWarehouse} from "../../../../../mod
 import {addProductOffer} from '../../../../../modules/productOffers';
 import {getPackageOptions, getManufacturer, getPricingUnits} from '../../../../../modules/addInventory';
 import {fetchProductConditions, fetchProductForms, fetchProductGrade} from "../../../../../modules/products";
+import {validatePackageType} from "../../../../../modules/packageTypes";
 
 
 function mapStateToProps(store) {
@@ -21,13 +22,15 @@ function mapStateToProps(store) {
         incrementalPricing: store.addInventory.incrementalPricing.options,
         warehouse: store.location.warehouse,
         location: store.location,
-        form: store.forms.addProductOffer
+        form: store.forms.addProductOffer,
+        packageTypeId: store.packageTypes.packageTypeId
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
         saveWarehouse,
+        validatePackageType,
         updateWarehouse,
         addProductOffer,
         fetchWarehouse,
