@@ -87,7 +87,6 @@ export default class Location extends Component {
     }
 
     renderSavedLocation() {
-        console.log(this.props.warehouse);
         let button = this.state.edit ? <button onClick={(e)=>this.updateLocation(e)} className='edit-location'>Save</button> :
             <button className='edit-location' onClick={(e)=>this.changeMode(e)}>Edit</button>;
         let currentLocation = this.state.warehouseIndex !== '' ? this.props.warehouse[this.state.warehouseIndex].name: null;
