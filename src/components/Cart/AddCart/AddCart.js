@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 // import { Translate } from 'react-localize-redux';
 import '../cart.css';
 import Dropdown from "../../Dropdown/Dropdown";
-import {removePopup} from "../../../modules/popup";
 
 class AddCart extends Component {
 
@@ -11,7 +10,7 @@ class AddCart extends Component {
     }
 
     render() {
-        let {name, merchant, availableProducts, packageSize, quantity } = this.props
+        let {name, merchant, availableProducts, packageSize, quantity } = this.props;
         return (
             <div className="add-cart">
                 <i className="fas fa-times close-mark" onClick={()=>this.props.removePopup()}> </i>
