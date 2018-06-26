@@ -19,6 +19,18 @@ export default class Details extends Component {
                                    model="forms.addProductOffer.addProductOffer.packageType"
                                    dispatch={this.props.dispatch}/>
                 </div>
+                <div className='group-item-wr'>
+                    <label htmlFor=".packageSize">Package Size</label>
+                    <Control.text model=".packageSize"
+                                  id=".packageSize"
+                                  type="number"/>
+                </div>
+                <div className='group-item-wr'>
+                    <label htmlFor=".packageType">Unit of Measure</label>
+                    <DropdownRedux opns={this.props.units} placeholder='Select'
+                                   model="forms.addProductOffer.addProductOffer.units"
+                                   dispatch={this.props.dispatch}/>
+                </div>
             </div>
         );
     }
