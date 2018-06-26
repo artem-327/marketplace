@@ -54,6 +54,9 @@ position: absolute;
   height: 40px;
   border-radius: 4px;
   font-size: 1.2em;
+  &.green{
+    background-color: #4cd136;
+  }
   &:hover, &:focus{
     cursor: pointer;
     border-color: #0d82bf;

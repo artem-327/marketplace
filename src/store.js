@@ -16,6 +16,7 @@ import popup from './modules/popup';
 import filter from './modules/filter';
 import packageTypes from './modules/packageTypes';
 import addInventory from './modules/addInventory';
+import cart from "./modules/cart";
 
 const reducer = combineReducers({
     identity,
@@ -24,6 +25,7 @@ const reducer = combineReducers({
     productOffers,
     products,
     packageTypes,
+    cart,
     search,
     popup,
     addInventory,
