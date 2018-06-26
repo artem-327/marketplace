@@ -4,14 +4,12 @@ $font-family: 'Cabin', sans-serif;
 
 .filter {
   font-family: "Cabin", sans-serif;
-  background-color: #fbfbfb;
+  background-color: #ffffff;
   position: absolute;
   width: 500px;
   right: 0;
   top: 143px;
-  -webkit-box-shadow: -2px 3px 5px 0px rgba(140,140,140,1);
-  -moz-box-shadow: -2px 3px 5px 0px rgba(140,140,140,1);
-  box-shadow: -2px 3px 5px 0px rgba(140,140,140,1);
+  box-shadow: -2px 0px 5px 0px rgba(140,140,140,1);
   padding: 10px;
   text-align: left;
   .header {
@@ -23,7 +21,10 @@ $font-family: 'Cabin', sans-serif;
     position: relative;
   }
   .filter-group{
-    border-bottom: 1px solid #D3D3D3;
+    border-bottom: 1px solid #f0f0f0;
+    &:nth-child(4){
+      border-bottom: 0px;
+    }
     margin-top: 10px;
     .filter-input-text{
       label, input{
@@ -50,11 +51,23 @@ $font-family: 'Cabin', sans-serif;
         margin: 0;
       }
     }
+    .input-checkbox{
+      display: inline-block;
+      float: left;
+      width: calc(50% - 70px);
+      margin: 0 25px 15px 10px;
+    }
   }
   .filterBottom {
+    position: absolute;
+    z-index: 0;
     background-color: #eeeeee;
-    width: 480px;
-    height: 70px;
+    left: 0;
+    margin-top: 7px;
+    padding-right: 10px;
+    width: 500px;
+    height: 80px;
+    box-shadow: -2px 3px 5px 0px rgba(140,140,140,1);
   }
   .filter-button {
     //cursor: pointer;

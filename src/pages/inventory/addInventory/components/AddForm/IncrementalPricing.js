@@ -1,7 +1,4 @@
 import React, {Component} from 'react';
-import {Control, Form} from 'react-redux-form';
-import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
-import Checkbox from "../../../../../components/Checkbox/Checkbox";
 
 export default class IncrementalPricing extends Component {
     constructor(props){

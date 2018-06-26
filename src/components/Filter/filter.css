@@ -1,14 +1,12 @@
 @import url(https://fonts.googleapis.com/css?family=Cabin:300,400,500,600,700);
 .filter {
   font-family: "Cabin", sans-serif;
-  background-color: #fbfbfb;
+  background-color: #ffffff;
   position: absolute;
   width: 500px;
   right: 0;
   top: 143px;
-  -webkit-box-shadow: -2px 3px 5px 0px #8c8c8c;
-  -moz-box-shadow: -2px 3px 5px 0px #8c8c8c;
-  box-shadow: -2px 3px 5px 0px #8c8c8c;
+  box-shadow: -2px 0px 5px 0px #8c8c8c;
   padding: 10px;
   text-align: left; }
   .filter .header {
@@ -19,8 +17,10 @@
     margin-bottom: 10px;
     position: relative; }
   .filter .filter-group {
-    border-bottom: 1px solid #D3D3D3;
+    border-bottom: 1px solid #f0f0f0;
     margin-top: 10px; }
+    .filter .filter-group:nth-child(4) {
+      border-bottom: 0px; }
     .filter .filter-group .filter-input-text label, .filter .filter-group .filter-input-text input {
       margin-left: 12px; }
     .filter .filter-group .filter-input-text input {
@@ -37,10 +37,21 @@
     .filter .split .filter-input-text input {
       width: 100%;
       margin: 0; }
+  .filter .split .input-checkbox {
+    display: inline-block;
+    float: left;
+    width: calc(50% - 70px);
+    margin: 0 25px 15px 10px; }
   .filter .filterBottom {
+    position: absolute;
+    z-index: 0;
     background-color: #eeeeee;
-    width: 480px;
-    height: 70px; }
+    left: 0;
+    margin-top: 7px;
+    padding-right: 10px;
+    width: 500px;
+    height: 80px;
+    box-shadow: -2px 3px 5px 0px #8c8c8c; }
   .filter .filter-button {
     float: right;
     margin: 20px 10px 10px 5px; }

@@ -98,7 +98,7 @@ class Filter extends Component {
 
                         {/*<button className="filter-button">Apply</button>*/}
                         <button className='button filter-button'>Apply</button>
-                        <button className='button disabled filter-button'>Clear filter</button>
+                        <button className='button disabled filter-button' onClick={()=>{this.props.resetForm()}}>Clear filter</button>
 
                     </div>
                 </Form>

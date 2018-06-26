@@ -2,14 +2,16 @@ import '../utils/constants';
 
 const TOGGLE_FILTER = "TOGGLE_FILTER";
 const TOGGLE_FILTER_GROUP = 'TOGGLE_FILTER_GROUP';
+const CLEAR_FILTER = 'CLEAR_FILTER';
+const RESET_FORM = 'RESET_FORM';
 
 export const initialState = {
     isOpen: false,
     data: {},
     filterGroup: {
-        chemName: false,
-        quantity: false,
-        price: false,
+        chemName: true,
+        quantity: true,
+        price: true,
         packaging: false
     }
 };
@@ -28,10 +30,16 @@ export default function reducer(state = initialState, action) {
                 filterGroup: {
                     ...state.filterGroup,
                     [action.payload.name]: action.payload.value
+
                 }
             }
         }
-
+        case RESET_FORM: {
+            return {
+                ...state,
+                data: {}
+            }
+        }
         default: {
             return state
         }
@@ -50,6 +58,13 @@ export function toggleFilterGroup(name, value) {
         payload: {name, value}
     }
 }
+
+export function resetForm() {
+    return {
+        type: RESET_FORM,
+    }
+}
+
 
 
 

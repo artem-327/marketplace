@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {Control, Form} from 'react-redux-form';
-import Dropdown from "../../../../../components/Dropdown/Dropdown";
+import {Control} from 'react-redux-form';
 import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
 
 export default class Details extends Component {
