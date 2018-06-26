@@ -35,17 +35,22 @@ class Filter extends Component {
         return this.state.isOpen ?
             <div className="filter">
                 <Form model="forms.filter.data" onSubmit={(val) => this.handleSubmit(val)}>
-                    <FilterGroup className="filterGroup"
+                    <FilterGroup className="filterGroup, {}"
                                  header='Chemical Type'
+                                 isOpen={this.props.filterGroupStatus.chemName}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('chemName', value)}}
                                  inputs={[
                                      {
-                                         label: 'Chemical name',
+                                         label: 'Chemical name / CAS #',
                                          model: '.search',
                                          type: 'text',
                                      }
                                  ]}/>
                     <FilterGroup className="filterGroup"
+                                 isOpen={this.props.filterGroupStatus.quantity}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('quantity', value)}}
                                  header='Quantity'
+                                 split
                                  inputs={[
                                      {
                                          label: 'From Quantity',
@@ -62,6 +67,9 @@ class Filter extends Component {
                                  ]}/>
                     <FilterGroup className="filterGroup"
                                  header='Price'
+                                 split
+                                 isOpen={this.props.filterGroupStatus.price}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('price', value)}}
                                  inputs={[
                                      {
                                          label: 'From Price',
@@ -78,13 +86,20 @@ class Filter extends Component {
                                  ]}/>
                     <FilterGroup className="filterGroup"
                                  header='Packaging'
+                                 split
+                                 isOpen={this.props.filterGroupStatus.packaging}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('packaging', value)}}
                                  inputs={this.props.packageTypes.map(packageType => ({
                                         label: packageType.name,
                                         type: 'checkbox',
                                         model: `.pckgs[${packageType.id}]`
                                  }))}/>
-                    <div>
-                        <button className="filter-button">Apply</button>
+                    <div className="filterBottom">
+
+                        {/*<button className="filter-button">Apply</button>*/}
+                        <button className='button filter-button'>Apply</button>
+                        <button className='button disabled filter-button' onClick={()=>{this.props.resetForm()}}>Clear filter</button>
+
                     </div>
                 </Form>
             </div> : null;
@@ -93,7 +108,7 @@ class Filter extends Component {
 }
 
 Filter.propTypes = {
-    filterFunc: PropTypes.func
+    filterFunc: PropTypes.func,
 };
 
 
