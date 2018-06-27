@@ -8,6 +8,7 @@ import Pricing from './Pricing';
 import Location from './Location';
 import classnames from 'classnames';
 import Attributes from "./Attributes";
+import {fetchLocations} from "../../../../../modules/location";
 
 export default class AddForm extends Component {
     constructor(props) {
@@ -43,6 +44,7 @@ export default class AddForm extends Component {
                 this.props.fetchWarehouse();
                 this.props.getManufacturer();
                 this.props.getPricingUnits();
+                this.props.fetchLocations();
             });
         }
     }

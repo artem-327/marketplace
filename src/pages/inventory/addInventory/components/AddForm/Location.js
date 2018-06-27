@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
+import Dropdown from "../../../../../components/Dropdown/Dropdown";
 
 export default class Location extends Component {
 
@@ -25,7 +26,7 @@ export default class Location extends Component {
             this.setState({
                 street: this.props.warehouse[this.state.warehouseIndex].address,
                 city: this.props.warehouse[this.state.warehouseIndex].city,
-                state: this.props.warehouse[this.state.warehouseIndex].location.state,
+                state: this.props.warehouse[this.state.warehouseIndex].location.id,
                 contact: this.props.warehouse[this.state.warehouseIndex].contactName,
                 phone: this.props.warehouse[this.state.warehouseIndex].contactNumber,
                 email: this.props.warehouse[this.state.warehouseIndex].contactEmail,
@@ -50,7 +51,7 @@ export default class Location extends Component {
             warehouseIndex: index,
             street: this.props.warehouse[index].address,
             city: this.props.warehouse[index].city,
-            state: this.props.warehouse[index].location.state,
+            state: this.props.warehouse[index].location.id,
             contact: this.props.warehouse[index].contactName,
             phone: this.props.warehouse[index].contactNumber,
             email: this.props.warehouse[index].contactEmail,
@@ -82,6 +83,16 @@ export default class Location extends Component {
                 this.setState({edit: false})
             })
         });
+    }
+
+    getCurrentValueById(id, opns){
+        if(id === '') return 'Select';
+        for(let i = 0; i < opns.length; i++){
+            if(id === opns[i].id){
+                return opns[i].name
+            }
+        }
+        return 'error'
     }
 
     renderSavedLocation() {
@@ -120,10 +131,10 @@ export default class Location extends Component {
                     </div>
                     <div className='group-item-wr'>
                         <label>State</label>
-                        <input id="state"
-                               disabled={!this.state.edit}
-                               value={this.state.state}
-                               onChange={(e)=>{this.handleInputs(e.target.value, 'state')}}/>
+                        <Dropdown opns={this.props.locations}
+                                  disable={!this.state.edit}
+                                  currentValue={this.getCurrentValueById(this.state.state, this.props.locations)}
+                                  onCustomChange={(value) => {this.handleInputs(value, 'state')}}/>
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor="zip">Zip Code</label>
@@ -187,9 +198,9 @@ export default class Location extends Component {
                     </div>
                     <div className='group-item-wr'>
                         <label>State</label>
-                        <input id="state"
-                               value={this.state.state}
-                               onChange={(e)=>{this.handleInputs(e.target.value, 'state')}}/>
+                        <Dropdown opns={this.props.locations}
+                                  currentValue={this.getCurrentValueById(this.state.state, this.props.locations)}
+                                  onCustomChange={(value) => {this.handleInputs(value, 'state')}}/>
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor="zip">Zip Code</label>
@@ -241,7 +252,7 @@ export default class Location extends Component {
                 this.setState({
                     street: this.props.warehouse[this.state.warehouseIndex].address,
                     city: this.props.warehouse[this.state.warehouseIndex].city,
-                    state: this.props.warehouse[this.state.warehouseIndex].location.state,
+                    state: this.props.warehouse[this.state.warehouseIndex].location.id,
                     contact: this.props.warehouse[this.state.warehouseIndex].contactName,
                     phone: this.props.warehouse[this.state.warehouseIndex].contactNumber,
                     email: this.props.warehouse[this.state.warehouseIndex].contactEmail,
