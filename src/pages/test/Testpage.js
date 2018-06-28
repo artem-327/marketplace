@@ -2,7 +2,7 @@ import React from 'react';
 import Spinner from "../../components/Spinner/Spinner";
 import Radio from "../../components/Radio/Radio";
 import Checkbox from "../../components/Checkbox/Checkbox";
-import FilterTag from "../../components/Filter/components/FilterTag/FilterTag";
+import FilterTag from "../../components/Filter/components/FilterTag";
 
 const TestPage = props => {
     return<div>
