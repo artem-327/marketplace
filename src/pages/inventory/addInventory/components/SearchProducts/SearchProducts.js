@@ -11,6 +11,7 @@ class SearchProducts extends Component {
         this.searchProducts = debounce(this.searchProducts, 200);
         this.state = {
             fulltext: "",
+            results_count: 10
         }
     }
 
@@ -47,7 +48,7 @@ class SearchProducts extends Component {
                 <div className='recent-products'>
                     <RecentProducts setProduct={(product)=>this.props.onSelect(product)} {...this.props}/>
                 </div>
-                <div className='search-results'>
+                <div className='search-results' style={{maxHeight: 50*this.state.results_count}}>
                     {results}
                 </div>
             </div>
