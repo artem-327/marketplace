@@ -26,6 +26,7 @@ export default class AddForm extends Component {
                 this.props.fetchProductConditions({productType});
                 this.props.fetchProductGrade({productType});
                 this.props.getPackageOptions(productType);
+                this.props.fetchWarehouse();
                 this.props.getManufacturer();
                 this.props.getPricingUnits();
             });
@@ -51,7 +52,7 @@ export default class AddForm extends Component {
         //TODO:: Add new form for mock inputs
         let params = Object.assign({}, inputs, {
             product: this.state.selectedProduct.id,
-            expiresAt:  "1993-03-18T13:09:41.305Z",
+            expiresAt:  "2022-03-18T13:09:41.305Z",
         });
         this.props.addProductOffer(params).then(() => {
             this.props.history.push("/inventory/my-inventory");
