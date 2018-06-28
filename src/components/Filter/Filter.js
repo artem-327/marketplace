@@ -18,7 +18,14 @@ class Filter extends Component {
 
     handleSubmit(inputs){
         let filter = Object.assign({}, inputs, {pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key).join(',')});
-        this.props.filterFunc(filterNonEmptyAttributes(filter));
+        let params = filterNonEmptyAttributes(filter);
+        this.props.filterFunc(params);
+        let filterTags = [];
+        console.log(this.props.packageTypes);
+        for(let tag in params){
+            filterTags.push({name: tag, value: params[tag]})
+        }
+
     }
 
     componentDidMount() {

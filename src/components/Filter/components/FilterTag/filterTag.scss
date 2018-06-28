@@ -1,7 +1,17 @@
 .filterTag {
   background-color: #e7e7e7;
   border: 1px solid #c6c6c6;
-  padding: 8px 20px;
-  width: 250px;
+  padding: 6px 4px 6px 20px;
   border-radius: 25px;
+  display: inline-block;
+  i {
+    position: relative;
+    float: right;
+    margin-top: -3px;
+    background-color: #c6c6c6;
+    margin-left: 10px;
+    padding: 6px 8px;
+    border: 1px solid #c6c6c6;
+    border-radius: 50%;
+  }
 }
