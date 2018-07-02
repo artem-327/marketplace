@@ -21,7 +21,7 @@ export default class AddInventory extends Component {
                 Selected product: {this.state.selectedProduct.casNumber} {this.state.selectedProduct.primaryName}</p> : null}
             <AddGroup
                 header='CHEMICAL'
-                component={<SearchProducts onSelect={product => this.setState({selectedProduct: product})} />}/>
+                component={<SearchProducts onSelect={product => {this.setState({selectedProduct: product}, ()=>this.props.resetForm())}} />}/>
             <AddForm product={this.state.selectedProduct} disable={disable} {...this.props}/>
         </div>)
     }
