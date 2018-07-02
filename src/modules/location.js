@@ -42,7 +42,6 @@ export function fetchLocations(){
     return {
         type: FETCH_LOCATIONS,
         payload: axios.get('/api/v1/locations/').then(result => {
-            console.log(result);
             return result.data.data.locations.map((loc)=> {
                 return {
                     id: loc.id,

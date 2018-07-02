@@ -100,7 +100,7 @@ class Nav extends Component {
                     <span className="logout" onClick={() => this.props.logout()}>
                         <NavLink to="/login" className='nav-link' activeClassName='active'>
                             <span className='link-center'>
-                                <img src={myAccount} />
+                                <img src={myAccount} alt='My account'/>
                                 LOGOUT
                             </span>
                         </NavLink>

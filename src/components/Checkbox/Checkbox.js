@@ -22,7 +22,7 @@ class Checkbox extends Component {
                     <input type="checkbox" name={this.props.name}
                            onChange={(e) => {this.handleChange(e)}}
                            checked={this.state.checked}/>
-                    <span className={"checkmark " + (this.props.style || '')}>  </span>
+                    <span className={"checkmark " + (this.props.className || '')}>  </span>
                 </label>
 
         )
@@ -32,7 +32,7 @@ class Checkbox extends Component {
 Checkbox.propTypes = {
     label: PropTypes.string,
     name: PropTypes.string,
-    style: PropTypes.string,
+    className: PropTypes.string,
     onChange: PropTypes.func
 };
 

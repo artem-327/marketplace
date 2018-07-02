@@ -4,7 +4,6 @@ import './BroadcastTargets.css';
 class BroadcastTargets extends Component {
     render() {
         if(!this.props.targetGroups) return null;
-        console.log(this.props.targetGroups)
         return (
             <div>
                 {this.props.targetGroups.map((group, index) => (

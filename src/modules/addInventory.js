@@ -103,7 +103,6 @@ export function getPackageOptions(productType) {
                     }
                 }
             });
-            console.log(final);
             return {packageTypes: final, units: units}
         })
     }

@@ -16,7 +16,7 @@ class Radio extends Component {
         return opt.map((radio, index)=>{
             return <label className="radioButton" key={index}><p>{radio.label}</p>
                     <input type="radio" onClick={(e)=>{this.handleChange(e)}} name={this.props.name} value={radio.value} defaultChecked={radio.value === this.props.checked}/>
-                    <span className={"radiomark " + (this.props.style || '')}></span>
+                    <span className={"radiomark " + (this.props.className || '')}></span>
                     </label>
         });
     }
@@ -39,7 +39,7 @@ Radio.propTypes = {
     ).isRequired,
     name: PropTypes.string,
     checked: PropTypes.PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
-    style: PropTypes.string
+    className: PropTypes.string
 };
 
 export default Radio;
