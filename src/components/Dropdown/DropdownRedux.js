@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import Dropdown from './Dropdown';
 import { actions } from 'react-redux-form';
+import { Control } from 'react-redux-form';
 
 class DropdownRedux extends Component {
 
@@ -12,7 +13,14 @@ class DropdownRedux extends Component {
     }
 
     render() {
-        return <Dropdown onCustomChange={value => this.handleChange(value)} {...this.props} />
+        return <Control
+            model={this.props.model}
+            component={Dropdown}
+            redux
+            onCustomChange={value => this.handleChange(value)}
+            {...this.props}
+        />
+
     }
 }
 

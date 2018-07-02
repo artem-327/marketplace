@@ -23,7 +23,8 @@ class Dropdown extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.currentValue){
+        if(nextProps.redux) this.setState({currentValue: nextProps.value, isOpen: false});
+        else if(nextProps.currentValue){
             this.setState({currentValue: nextProps.currentValue, isOpen: false})
         }
     }
@@ -49,6 +50,7 @@ class Dropdown extends Component {
     }
 
     render() {
+        console.log(this.props);
         let {currentValue, isOpen} = this.state;
         let options = this.state.isOpen ?
             <ul className='dropdown-options'>

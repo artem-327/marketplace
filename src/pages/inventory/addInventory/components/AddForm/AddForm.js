@@ -52,7 +52,6 @@ export default class AddForm extends Component {
     }
 
     addProductOffer(inputs){
-        console.log(this.props.form);
         let pckgs = this.props.form.addProductOffer;
         let pckgName = "";
         let measureType = "";
@@ -61,15 +60,14 @@ export default class AddForm extends Component {
                 if(this.props.package[i].id === pckgs.packageType){
                     pckgName = this.props.package[i].name;
                     measureType = this.props.package[i].measureType;
-                    console.log(this.props.package[i])
                 }
             }
-            measureType = "weight";
             this.props.validatePackageType(pckgName, measureType, pckgs.packageSize, pckgs.units).then(()=>{
                 //TODO:: Add new form for mock inputs
                 let params = Object.assign({}, inputs, {
                     product: this.state.selectedProduct.id,
                     expiresAt:  "1993-03-18T13:09:41.305Z",
+                    merchantVisibility: (inputs.merchantVisibility || false),
                     packageType: this.props.packageTypeId,
                 });
                 this.props.addProductOffer(params).then(() => {
