@@ -59,7 +59,7 @@ class ProductOffers extends Component {
                     <tbody>
                     {Object.values(this.state.products).reduce((rows, product) => {
                         rows.push(
-                        <tr className="product" key={'m' + product.cas} onClick={() => {this.toggleProduct(product.id)}}>
+                        <tr className="product" key={'p' + product.id} onClick={() => {this.toggleProduct(product.id)}}>
                             <td colSpan="11">
                                 <span><a href="#">{product.cas}</a></span>
                                 <span className="product-name">{product.name}</span>
@@ -73,7 +73,7 @@ class ProductOffers extends Component {
                         product.visible ?
                         product.productOffers.forEach((offer) => {
                             rows.push(
-                                <tr className="product-offer" key={'m' + offer.id}>
+                                <tr className="product-offer" key={'o' + offer.id}>
                                     <td><input type="checkbox"/></td>
                                     <td>{offer.product.name}</td>
                                     <td>{offer.packageAmount}</td>

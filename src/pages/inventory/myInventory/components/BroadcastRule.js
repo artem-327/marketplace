@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './BroadcastRule.css';
 import BroadcastTargets from "./BroadcastTargets";
+import Dropdown from "../../../../components/Dropdown/Dropdown";
 
 class BroadcastRule extends Component {
     render() {
@@ -12,23 +13,13 @@ class BroadcastRule extends Component {
                             <div>CUSTOM BROADCAST</div>
                             <div>Broadcasting to: x/x</div>
                         </span>
-
-                        <span className="right">
-                            <input type="text"/>
-                        </span>
                     </div>
                     <div>
                         <span className="left">
-                            <select>
-                                {this.props.selections.map((selection, index) => (
-                                    <option key={index} selected={selection.active}  onClick={selection.callback()}>{selection.name}</option>
-                                ))}
-                            </select>
-                        </span>
-                        <span className="right">
-                            <select>
-                                <option value="">Select template</option>
-                            </select>
+                            <Dropdown opns={this.props.selections}
+                                      onCustomChange={(type) => this.props.setFilter(type)}
+                                      placeholder='Select filter'
+                                      currentValue={this.props.currentSelected} />
                         </span>
                     </div>
                 </div>

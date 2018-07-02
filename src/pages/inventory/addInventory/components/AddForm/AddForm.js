@@ -9,6 +9,7 @@ import Location from './Location';
 import classnames from 'classnames';
 import Attributes from "./Attributes";
 import {fetchLocations} from "../../../../../modules/location";
+import {resetForm} from "../../../../../modules/productOffers";
 
 export default class AddForm extends Component {
     constructor(props) {
@@ -59,9 +60,11 @@ export default class AddForm extends Component {
             for(let i = 0; i < this.props.package.length; i++){
                 if(this.props.package[i].id === pckgs.packageType){
                     pckgName = this.props.package[i].name;
-                    measureType = this.props.package[i].measureType
+                    measureType = this.props.package[i].measureType;
+                    console.log(this.props.package[i])
                 }
             }
+            measureType = "weight";
             this.props.validatePackageType(pckgName, measureType, pckgs.packageSize, pckgs.units).then(()=>{
                 //TODO:: Add new form for mock inputs
                 let params = Object.assign({}, inputs, {
@@ -70,6 +73,7 @@ export default class AddForm extends Component {
                     packageType: this.props.packageTypeId,
                 });
                 this.props.addProductOffer(params).then(() => {
+                    this.props.resetForm();
                     this.props.history.push("/inventory/my-inventory");
                 })
 
