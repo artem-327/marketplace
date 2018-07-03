@@ -2,7 +2,7 @@ import '../utils/constants';
 
 const TOGGLE_FILTER = "TOGGLE_FILTER";
 const TOGGLE_FILTER_GROUP = 'TOGGLE_FILTER_GROUP';
-const CLEAR_FILTER = 'CLEAR_FILTER';
+// const CLEAR_FILTER = 'CLEAR_FILTER';
 const RESET_FORM = 'RESET_FORM';
 
 export const initialState = {

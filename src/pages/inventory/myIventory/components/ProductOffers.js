@@ -36,6 +36,7 @@ class ProductOffers extends Component {
     }
 
     render() {
+
         return (
             <div className="App">
                 <table className="product-offers">
@@ -62,7 +63,7 @@ class ProductOffers extends Component {
                         rows.push(
                             <tr className="product" key={product.casNumber} onClick={() => {this.toggleProduct(product.id)}}>
                                 <td colSpan="11">
-                                    <span><a href="#">{product.casNumber}</a></span>
+                                    <span>{product.casNumber}</span>
                                     <span className="product-name">{product.primaryName}</span>
                                 </td>
                                 <td colSpan="3" className="quantity">
@@ -71,7 +72,7 @@ class ProductOffers extends Component {
                                 </td>
                             </tr>
                         );
-                        product.visible ?
+                        if(product.visible){
                             product.productOffers.forEach((offer) => {
                                 rows.push(
                                     <tr className="product-offer" key={offer.id}>
@@ -91,7 +92,8 @@ class ProductOffers extends Component {
                                         <td>unkown</td>
                                     </tr>
                                 );
-                            }) : null;
+                            })
+                        }
                         return rows;
                     }, [])}
                     </tbody>

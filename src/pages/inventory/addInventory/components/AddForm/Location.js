@@ -22,17 +22,18 @@ export default class Location extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.warehouse !== this.props.warehouse && this.state.warehouseIndex !== ''){
+         if(nextProps.warehouse !== this.props.warehouse && this.state.warehouseIndex !== ''){
             this.setState({
-                street: this.props.warehouse[this.state.warehouseIndex].address,
-                city: this.props.warehouse[this.state.warehouseIndex].city,
-                state: this.props.warehouse[this.state.warehouseIndex].location.id,
-                contact: this.props.warehouse[this.state.warehouseIndex].contactName,
-                phone: this.props.warehouse[this.state.warehouseIndex].contactNumber,
-                email: this.props.warehouse[this.state.warehouseIndex].contactEmail,
-                zip: this.props.warehouse[this.state.warehouseIndex].zip,
+                street: nextProps.warehouse[this.state.warehouseIndex].address,
+                city: nextProps.warehouse[this.state.warehouseIndex].city,
+                state: nextProps.warehouse[this.state.warehouseIndex].location.id,
+                contact: nextProps.warehouse[this.state.warehouseIndex].contactName,
+                phone: nextProps.warehouse[this.state.warehouseIndex].contactNumber,
+                email: nextProps.warehouse[this.state.warehouseIndex].contactEmail,
+                zip: nextProps.warehouse[this.state.warehouseIndex].zip,
             })
         }
+
     }
 
     handleInputs(value, name){

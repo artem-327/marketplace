@@ -61,7 +61,7 @@ class ProductOffers extends Component {
                         rows.push(
                         <tr className="product" key={'p' + product.id} onClick={() => {this.toggleProduct(product.id)}}>
                             <td colSpan="11">
-                                <span><a href="#">{product.cas}</a></span>
+                                <span>{product.cas}</span>
                                 <span className="product-name">{product.name}</span>
                             </td>
                             <td colSpan="3" className="quantity">

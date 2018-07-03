@@ -16,7 +16,7 @@ export default class IncrementalPricing extends Component {
 
     handleChange(e, index, type){
         if(e.target.value < 0) return;
-        let value = e.target.value ? parseInt(e.target.value) : '';
+        let value = e.target.value ? parseInt(e.target.value, 10) : '';
         let newIncremental = this.state.incrementalPricing.slice(0);
         newIncremental[index][type] = value;
         this.setState({
@@ -26,7 +26,7 @@ export default class IncrementalPricing extends Component {
 
     validateInputs(){
         let newIncremental = this.state.incrementalPricing.slice(0);
-        let splits = parseInt(this.state.splits);
+        let splits = parseInt(this.state.splits, 10);
         newIncremental.map((item, index)=>{
             let difference = item.to % splits;
             if(difference > splits / 2){
@@ -40,6 +40,7 @@ export default class IncrementalPricing extends Component {
             if(newIncremental[index+1] !== undefined){
                 newIncremental[index+1].from =  item.to + splits ;
             }
+            return true;
         });
         this.setState({incrementalPricing: newIncremental})
     }
@@ -47,7 +48,7 @@ export default class IncrementalPricing extends Component {
     addNewIncrementalPricing(index){
         let newIncremental = this.state.incrementalPricing.slice(0);
         newIncremental.push({
-            from: parseInt(this.state.incrementalPricing[index].to) + parseInt(this.state.splits),
+            from: parseInt(this.state.incrementalPricing[index].to, 10) + parseInt(this.state.splits, 10),
             to: '',
             price: ''
         });

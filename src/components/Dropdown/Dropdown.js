@@ -23,7 +23,16 @@ class Dropdown extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.redux) this.setState({currentValue: nextProps.value, isOpen: false});
+        if(nextProps.redux){
+            let cv = nextProps.value;
+            for(let i = 0; i < nextProps.opns.length; i++){
+                if(nextProps.opns[i].id === nextProps.value){
+                    cv = nextProps.opns[i].name;
+                    break;
+                }
+            }
+            this.setState({currentValue: cv, isOpen: false})
+        }
         else if(nextProps.currentValue){
             this.setState({currentValue: nextProps.currentValue, isOpen: false})
         }
@@ -50,7 +59,6 @@ class Dropdown extends Component {
     }
 
     render() {
-        console.log(this.props);
         let {currentValue, isOpen} = this.state;
         let options = this.state.isOpen ?
             <ul className='dropdown-options'>
@@ -59,7 +67,7 @@ class Dropdown extends Component {
         return (
             <div className='dropdown-wr' ref={this.dropdownRef} >
                 <div className={'dropdown-trigger ' + classnames({'open' : isOpen})} onClick={()=>{this.setState({isOpen: !this.state.isOpen})}}>
-                    <div>{currentValue || this.props.placeholder || 'Select Option'}<img src={ArrowUp} /></div>
+                    <div>{currentValue || this.props.placeholder || 'Select Option'}<img alt="up" src={ArrowUp} /></div>
                 </div>
                 {options}
             </div>

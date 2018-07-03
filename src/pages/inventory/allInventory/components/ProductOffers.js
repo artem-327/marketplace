@@ -71,7 +71,7 @@ class ProductOffers extends Component {
                         rows.push(
                         <tr className="product" key={product.casNumber} onClick={() => {this.toggleProduct(product.id)}}>
                             <td colSpan="13">
-                                <span><a href="#">{product.casNumber}</a></span>
+                                <span>{product.casNumber}</span>
                                 <span className="product-name">{product.primaryName}</span>
                             </td>
                             <td colSpan="3" className="quantity">
@@ -80,29 +80,30 @@ class ProductOffers extends Component {
                             </td>
                         </tr>
                         );
-                        product.visible ?
-                        product.productOffers.forEach((offer) => {
-                            rows.push(
-                                <tr className="product-offer" key={offer.id}>
-                                    <td><input type="checkbox"/></td>
-                                    <td>{offer.merchant.email}</td>
-                                    <td>{offer.packageAmount}</td>
-                                    <td>{offer.packageType.name}</td>
-                                    <td>{offer.packageType.capacity}</td>
-                                    <td>{offer.packageAmount}</td>
-                                    <td>{offer.pricePerUnit.toFixed(PRICE_PRECISION)}</td>
-                                    <td>unknown</td>
-                                    <td>unknown</td>
-                                    <td>{offer.origin}</td>
-                                    <td>{offer.expirationDate ? moment(offer.expirationDate).format(DATE_FORMAT) : 'none'}</td>
-                                    <td>unknown</td>
-                                    <td>{offer.productCondition.name}</td>
-                                    <td>{offer.productForm.name}</td>
-                                    <td>{offer.location.country} ({offer.location.state})</td>
-                                    <td><button onClick={()=>{this.addCart()}}>BUY</button></td>
-                                </tr>
-                            )
-                        }) : null;
+                        if(product.visible){
+                            product.productOffers.forEach((offer) => {
+                                rows.push(
+                                    <tr className="product-offer" key={offer.id}>
+                                        <td><input type="checkbox"/></td>
+                                        <td>{offer.merchant.email}</td>
+                                        <td>{offer.packageAmount}</td>
+                                        <td>{offer.packageType.name}</td>
+                                        <td>{offer.packageType.capacity}</td>
+                                        <td>{offer.packageAmount}</td>
+                                        <td>{offer.pricePerUnit.toFixed(PRICE_PRECISION)}</td>
+                                        <td>unknown</td>
+                                        <td>unknown</td>
+                                        <td>{offer.origin}</td>
+                                        <td>{offer.expirationDate ? moment(offer.expirationDate).format(DATE_FORMAT) : 'none'}</td>
+                                        <td>unknown</td>
+                                        <td>{offer.productCondition.name}</td>
+                                        <td>{offer.productForm.name}</td>
+                                        <td>{offer.location.country} ({offer.location.state})</td>
+                                        <td><button onClick={()=>{this.addCart()}}>BUY</button></td>
+                                    </tr>
+                                )
+                            })
+                        }
                         return rows;
                     }, [])}
                     </tbody>
