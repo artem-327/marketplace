@@ -102,6 +102,7 @@ export function getPackageOptions(productType) {
                         units.push({id: pck.unit, name: pck.unit})
                     }
                 }
+                return true;
             });
             return {packageTypes: final, units: units}
         })

@@ -1,15 +1,11 @@
 import React, {Component} from 'react';
 import AddGroup from '../AddGroup'
-import {Control, Form} from 'react-redux-form';
-import Dropdown from "../../../../../components/Dropdown/Dropdown";
-import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
+import {Form} from 'react-redux-form';
 import Details from './Details';
 import Pricing from './Pricing';
 import Location from './Location';
 import classnames from 'classnames';
 import Attributes from "./Attributes";
-import {fetchLocations} from "../../../../../modules/location";
-import {resetForm} from "../../../../../modules/productOffers";
 
 export default class AddForm extends Component {
     constructor(props) {

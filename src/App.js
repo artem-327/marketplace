@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import './app.css';
 
-import Footer from './layout/Footer'
 import Main   from './layout/Main'
 import Header from './layout/Header'
 import PopUp from './components/PopUp'

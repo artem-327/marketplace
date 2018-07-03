@@ -23,7 +23,6 @@ class Dropdown extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        console.log(nextProps.opns);
         if(nextProps.redux){
             let cv = nextProps.value;
             for(let i = 0; i < nextProps.opns.length; i++){
@@ -68,7 +67,7 @@ class Dropdown extends Component {
         return (
             <div className='dropdown-wr' ref={this.dropdownRef} >
                 <div className={'dropdown-trigger ' + classnames({'open' : isOpen})} onClick={()=>{this.setState({isOpen: !this.state.isOpen})}}>
-                    <div>{currentValue || this.props.placeholder || 'Select Option'}<img src={ArrowUp} /></div>
+                    <div>{currentValue || this.props.placeholder || 'Select Option'}<img alt="up" src={ArrowUp} /></div>
                 </div>
                 {options}
             </div>

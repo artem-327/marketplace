@@ -22,21 +22,7 @@ export default class Location extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        console.log('///////////////');
-        console.log(this.state.warehouseIndex);
-        if(!nextProps.warehouse){
-            this.setState({
-                warehouseIndex: '',
-                warehouseName: '',
-                street: '',
-                city: '',
-                state: '',
-                zip: '',
-                contact: '',
-                phone: '',
-                email: '',
-            })
-        }else if(nextProps.warehouse !== this.props.warehouse && this.state.warehouseIndex !== ''){
+         if(nextProps.warehouse !== this.props.warehouse && this.state.warehouseIndex !== ''){
             this.setState({
                 street: nextProps.warehouse[this.state.warehouseIndex].address,
                 city: nextProps.warehouse[this.state.warehouseIndex].city,

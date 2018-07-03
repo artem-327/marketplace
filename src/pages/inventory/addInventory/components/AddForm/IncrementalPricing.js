@@ -48,7 +48,7 @@ export default class IncrementalPricing extends Component {
     addNewIncrementalPricing(index){
         let newIncremental = this.state.incrementalPricing.slice(0);
         newIncremental.push({
-            from: parseInt(this.state.incrementalPricing[index].to) + parseInt(this.state.splits, 10),
+            from: parseInt(this.state.incrementalPricing[index].to, 10) + parseInt(this.state.splits, 10),
             to: '',
             price: ''
         });

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Control} from 'react-redux-form';
 import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
-import Checkbox from "../../../../../components/Checkbox/Checkbox";
+// import Checkbox from "../../../../../components/Checkbox/Checkbox";
 import IncrementalPricing from './IncrementalPricing';
 import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
 
