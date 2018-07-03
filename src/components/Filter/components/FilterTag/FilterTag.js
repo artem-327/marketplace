@@ -6,21 +6,19 @@ class FilterTag extends Component {
 
     checkName(name){
         switch(name){
-            case 'search': return 'Chemical name / CAS #';
+            case 'search': return 'Chemical name';
             case 'qntylb': return 'From Quantity';
             case 'qntyub': return 'To Quantity';
             case 'prclb': return 'From Price';
             case 'prcub': return 'To Price';
-            case 'pckgs': return '';
-
-
+            case 'pckgs': return 'Package type';
             default: return 'unknown';
         }
     }
 
     render () {
         return (
-            <div className="filterTag">{this.checkName(this.props.name)}: {this.props.value}<i onClick={()=>this.props.close()} class="fas fa-times"></i></div>
+            <div className="filterTag"><span>{this.checkName(this.props.name)}: {this.props.value}</span><i onClick={()=>this.props.close()} className="fas fa-times"></i></div>
     )}
 }
 

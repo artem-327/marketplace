@@ -21,10 +21,11 @@ class Filter extends Component {
         let params = filterNonEmptyAttributes(filter);
         this.props.filterFunc(params);
         let filterTags = [];
-        console.log(this.props.packageTypes);
+        console.log(this.props);
         for(let tag in params){
             filterTags.push({name: tag, value: params[tag]})
         }
+        this.props.addFilterTag(filterTags);
 
     }
 
