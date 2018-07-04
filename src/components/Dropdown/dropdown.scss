@@ -1,5 +1,6 @@
 .dropdown-wr {
   position: relative;
+
   .dropdown-trigger {
     width: 100%;
     font-size: 1rem;
@@ -30,6 +31,8 @@
     }
   }
   .dropdown-options {
+    max-height: 190px;
+    overflow-y: auto;
     width: 100%;
     margin-top: -1px;
     font-size: 1rem;
