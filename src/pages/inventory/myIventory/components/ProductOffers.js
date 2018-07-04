@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import './ProductOffers.css';
 import {PRICE_PRECISION} from "../../../../utils/constants";
+import Checkbox from "../../../../components/Checkbox/Checkbox";
+import ThreeDots from "../../../../components/ThreeDots/ThreeDots";
 
 class ProductOffers extends Component {
 
@@ -42,7 +44,8 @@ class ProductOffers extends Component {
                 <table className="product-offers">
                     <thead>
                     <tr>
-                        <th><input type="checkbox" /></th>
+                        <th><Checkbox onChange={(value) => {console.log(value)}}/></th>
+                        <th><ThreeDots/></th>
                         <th>Product Name</th>
                         <th>Available</th>
                         <th>Packaging</th>
@@ -62,13 +65,16 @@ class ProductOffers extends Component {
                     {Object.values(this.state.products).reduce((rows, product) => {
                         rows.push(
                             <tr className="product" key={product.casNumber} onClick={() => {this.toggleProduct(product.id)}}>
-                                <td colSpan="11">
+                                <td colSpan="1">
+                                    <Checkbox onChange={(value) => {console.log(value)}}/>
+                                </td>
+                                <td colSpan="10">
                                     <span>{product.casNumber}</span>
                                     <span className="product-name">{product.primaryName}</span>
                                 </td>
                                 <td colSpan="3" className="quantity">
                                     <span>Product offerings: {product.productOffers.length}</span>
-                                    {product.visible ? <i className="icon fas fa-angle-down"/> : <i className="icon fas fa-angle-up"/>}
+                                    {product.visible}
                                 </td>
                             </tr>
                         );
@@ -76,7 +82,8 @@ class ProductOffers extends Component {
                             product.productOffers.forEach((offer) => {
                                 rows.push(
                                     <tr className="product-offer" key={offer.id}>
-                                        <td><input type="checkbox"/></td>
+                                        <td><Checkbox onChange={(value) => {console.log(value)}}/></td>
+                                        <th><ThreeDots className='small'/></th>
                                         <td>{offer.product.primaryName}</td>
                                         <td>{offer.packageAmount}</td>
                                         <td>{offer.packageType.name}</td>

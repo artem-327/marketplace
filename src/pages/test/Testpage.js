@@ -2,6 +2,7 @@ import React from 'react';
 import Spinner from "../../components/Spinner/Spinner";
 import Radio from "../../components/Radio/Radio";
 import Checkbox from "../../components/Checkbox/Checkbox";
+import ThreeDots from "../../components/ThreeDots/ThreeDots";
 
 const TestPage = props => {
     return<div>
@@ -14,6 +15,9 @@ const TestPage = props => {
             <Radio name='foo' opns={[{value:23, label:'vysocina'}, {value:24, label:'Brno'}]} checked={24}/>
             <Radio className='small' name='foo2' opns={[{value:25, label:'jihocesky'}, {value:26, label:'Jihlava'}]} checked={25}/>
             <Checkbox name='fee3' label='foo' onChange={(value) => {console.log(value)}} />
+            <ThreeDots/>
+            <br/>
+            <ThreeDots className="small"/>
             <Spinner/>
         </div>
     </div>;
