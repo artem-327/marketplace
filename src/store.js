@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware } from 'redux'
-// import { createLogger } from 'redux-logger'
+import { createLogger } from 'redux-logger'
 import { localeReducer as locale } from 'react-localize-redux';
 import thunk from 'redux-thunk'
 import promise from 'redux-promise-middleware'
@@ -41,7 +41,7 @@ const reducer = combineReducers({
 });
 
 
-// const middleware = applyMiddleware(thunk, promise(), createLogger());
-const middleware = applyMiddleware(thunk, promise());
+const middleware = applyMiddleware(thunk, promise(), createLogger());
+// const middleware = applyMiddleware(thunk, promise());
 
 export default createStore(reducer, middleware)
