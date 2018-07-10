@@ -24,6 +24,9 @@ $app-font-family: 'Cabin', sans-serif;
     text-align: left;
   }
 }
+.inv-header {
+  display: inline-block;
+}
 
 .half-form{
   display: inline-block;
@@ -39,6 +42,11 @@ $app-font-family: 'Cabin', sans-serif;
 .App-main{
   min-height: 100vh;
 }
+
+.app-inner-main{
+  position: relative;
+}
+
 .App-footer{
 position: absolute;
   left: 50%;

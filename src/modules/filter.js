@@ -5,6 +5,7 @@ const TOGGLE_FILTER_GROUP = 'TOGGLE_FILTER_GROUP';
 // const CLEAR_FILTER = 'CLEAR_FILTER';
 const ADD_FILTER_TAG = 'ADD_FILTER_TAG';
 const CLOSE_FILTER_TAG = 'CLOSE_FILTER_TAG';
+const CLOSE_FILTER_TAG_FULFILLED = 'CLOSE_FILTER_TAG_FULFILLED';
 const RESET_FORM = 'RESET_FORM';
 
 export const initialState = {
@@ -49,7 +50,8 @@ export default function reducer(state = initialState, action) {
                 filterTags: action.payload
             }
         }
-        case CLOSE_FILTER_TAG: {
+        case CLOSE_FILTER_TAG_FULFILLED: {
+            console.log(action.payload);
             return {
                 ...state,
                 filterTags: [...state.filterTags.slice(0,action.payload), ...state.filterTags.slice(action.payload+1)]
@@ -85,7 +87,7 @@ export function addFilterTag(data) {
 export function closeFilterTag(index) {
     return {
         type: CLOSE_FILTER_TAG,
-        payload: index
+        payload: Promise.resolve(index)
     }
 }
 
