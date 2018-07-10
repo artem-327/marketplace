@@ -6,7 +6,7 @@
     display: inline-block;
     float: right;
     margin: 0 6px;
-    padding: 0 20px;
+    padding: 0 22px;
     height: 51px;
     background-color: #f4f4fb;
     transition: all .2s ease; }
@@ -23,6 +23,14 @@
       display: inline-block;
       vertical-align: top;
       margin-top: 10px; }
+    .submenu .submenu-filter .arrow-down {
+      width: 0;
+      height: 0;
+      margin-left: 15px;
+      margin-bottom: 1px;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 6px solid black; }
   .submenu .submenu-search {
     display: inline-block;
     float: right;

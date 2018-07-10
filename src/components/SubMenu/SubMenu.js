@@ -60,6 +60,7 @@ class SubMenu extends Component {
             <div className='submenu-filter' onClick={()=>{this.props.toggleFilter()}}>
                 <img src={filterIcon} alt='open filter' />
                 <span>Filters</span>
+                <span className="arrow-down"></span>
             </div>
         )
     }
