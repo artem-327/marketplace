@@ -16,8 +16,8 @@ class MyInventory extends Component {
         return (
 
             <div>
-                <h1 className='header'>INVENTORY OVERVIEW</h1>
-                <FilterTag/>
+                <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
+                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getData({...filter, mrchnt: true})}}/>
                 <Filter filterFunc={(filter) => {this.props.getData({...filter, mrchnt: true})}} />
                 {content}
             </div>
