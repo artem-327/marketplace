@@ -72,7 +72,7 @@ class ProductOffers extends Component {
                                     <span>{product.casNumber}</span>
                                     <span className="product-name">{product.primaryName}</span>
                                 </td>
-                                <td colSpan="3" className="quantity">
+                                <td colSpan="4" className="quantity">
                                     <span>Product offerings: {product.productOffers.length}</span>
                                     {product.visible}
                                 </td>
@@ -83,7 +83,7 @@ class ProductOffers extends Component {
                                 rows.push(
                                     <tr className="product-offer" key={offer.id}>
                                         <td><Checkbox onChange={(value) => {console.log(value)}}/></td>
-                                        <th><ThreeDots className='small'/></th>
+                                        <td><ThreeDots className='small'/></td>
                                         <td>{offer.product.primaryName}</td>
                                         <td>{offer.packageAmount}</td>
                                         <td>{offer.packageType.name}</td>
@@ -96,7 +96,7 @@ class ProductOffers extends Component {
                                         <td>{offer.productCondition.name}</td>
                                         <td>unknown</td>
                                         <td>unkown</td>
-                                        <td>unkown</td>
+                                        <td> </td>
                                     </tr>
                                 );
                             })
