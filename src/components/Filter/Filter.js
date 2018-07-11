@@ -5,6 +5,7 @@ import FilterGroup from './components/FilterGroup';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {filterNonEmptyAttributes} from "../../utils/functions";
+import classnames from "classnames";
 
 
 class Filter extends Component {
@@ -18,6 +19,7 @@ class Filter extends Component {
 
     handleSubmit(inputs){
         let filter = Object.assign({}, inputs, {pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key).join(',')});
+
         let params = filterNonEmptyAttributes(filter);
         this.props.filterFunc(params);
         let filterTags = [];
@@ -45,6 +47,7 @@ class Filter extends Component {
                 <Form model="forms.filter.data" onSubmit={(val) => this.handleSubmit(val)}>
                     <FilterGroup className="filterGroup, {}"
                                  header='Chemical Type'
+                                 data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.chemName}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('chemName', value)}}
                                  inputs={[
@@ -58,6 +61,7 @@ class Filter extends Component {
                                  isOpen={this.props.filterGroupStatus.quantity}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('quantity', value)}}
                                  header='Quantity'
+                                 data={this.props.filterData}
                                  split
                                  inputs={[
                                      {
@@ -76,6 +80,7 @@ class Filter extends Component {
                     <FilterGroup className="filterGroup"
                                  header='Price'
                                  split
+                                 data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.price}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('price', value)}}
                                  inputs={[
@@ -95,11 +100,14 @@ class Filter extends Component {
                     <FilterGroup className="filterGroup"
                                  header='Packaging'
                                  split
+                                 data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.packaging}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('packaging', value)}}
+                                 checkboxModel='pckgs'
                                  inputs={this.props.packageTypes.map(packageType => ({
                                         label: packageType.name,
                                         type: 'checkbox',
+                                        id: packageType.id,
                                         model: `.pckgs[${packageType.id}]`
                                  }))}/>
                     <div className="filterBottom">
