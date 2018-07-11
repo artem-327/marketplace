@@ -5,7 +5,6 @@ import './myInventory.css';
 import BroadcastRule from "./components/BroadcastRule";
 import Spinner from "../../../components/Spinner/Spinner";
 import FilterTag from "../../../components/Filter/components/FilterTag";
-import {fetchAll as getProductOffers} from "../../../modules/productOffers";
 
 const GROUP_BY_ALL_COMPANIES = 1;
 const GROUP_BY_REGIONS = 2;
