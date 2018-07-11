@@ -13,6 +13,7 @@ class Dropdown extends Component {
         this.state = {
             isOpen: false,
             currentValue: this.props.currentValue,
+            results_count: 5
         };
     }
 
@@ -61,7 +62,7 @@ class Dropdown extends Component {
     render() {
         let {currentValue, isOpen} = this.state;
         let options = this.state.isOpen ?
-            <ul className='dropdown-options'>
+            <ul className='dropdown-options' style={{maxHeight: 39*this.state.results_count}}>
                 {this.renderDropdown(this.props.opns)}
             </ul> : null;
         return (
