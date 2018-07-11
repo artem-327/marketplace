@@ -98,8 +98,8 @@ class ProductOffers extends Component {
                                         <td>unknown</td>
                                         <td>unknown</td>
                                         <td>{offer.productCondition.name}</td>
-                                        <td><span className='broadcast-mark' onClick={(e)=>this.toggleBroadcastRule(e, offer.id)}> </span></td>
                                         <td>unknown</td>
+                                        <td><span className='broadcast-mark' onClick={(e)=>this.toggleBroadcastRule(e, offer.id)}> </span></td>
                                         <td> </td>
                                     </tr>
                                 );
