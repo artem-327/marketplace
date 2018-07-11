@@ -4,6 +4,8 @@ import Filter from '../../../components/Filter';
 import './myInventory.css';
 import BroadcastRule from "./components/BroadcastRule";
 import Spinner from "../../../components/Spinner/Spinner";
+import FilterTag from "../../../components/Filter/components/FilterTag";
+import {fetchAll as getProductOffers} from "../../../modules/productOffers";
 
 const GROUP_BY_ALL_COMPANIES = 1;
 const GROUP_BY_REGIONS = 2;
@@ -82,7 +84,10 @@ class MyInventory extends Component {
             />;
         return (
             <div className='my-inventory'>
-                <Filter filterFunc={(inputs) => {this.props.getData(inputs)}}/>
+                <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
+                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getProductOffers({...filter, mrchnt: true})}}/>
+                <h3 className='header small'>Undefined product offerings selected</h3>
+                <Filter filterFunc={(filter) => {this.props.getProductOffers({...filter, mrchnt: true})}} />
                 {content}
                 <BroadcastRule
                     targetGroups={this.state.targetGroups}
