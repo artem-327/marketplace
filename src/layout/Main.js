@@ -10,7 +10,7 @@ import Settings from "../pages/settings/Settings";
 import Support from "../pages/support/Support";
 import AddInventory from "../pages/inventory/addInventory";
 import AllInventory from "../pages/inventory/allInventory";
-import MyInventory from "../pages/inventory/myIventory";
+import MyInventory from "../pages/inventory/myInventory";
 import TestPage from "../pages/test";
 import { withAuth } from '../utils/auth';
 

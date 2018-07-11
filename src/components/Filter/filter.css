@@ -8,6 +8,7 @@
   top: 53px;
   box-shadow: -2px 0px 5px 0px #8c8c8c;
   padding: 10px;
+  z-index: 2;
   text-align: left; }
   .filter .header {
     font-weight: bold;

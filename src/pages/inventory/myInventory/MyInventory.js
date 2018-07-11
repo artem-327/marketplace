@@ -4,6 +4,8 @@ import Filter from '../../../components/Filter';
 import './myInventory.css';
 import BroadcastRule from "./components/BroadcastRule";
 import Spinner from "../../../components/Spinner/Spinner";
+import FilterTag from "../../../components/Filter/components/FilterTag";
+import {fetchAll as getProductOffers} from "../../../modules/productOffers";
 
 const GROUP_BY_ALL_COMPANIES = 1;
 const GROUP_BY_REGIONS = 2;
@@ -15,6 +17,9 @@ class MyInventory extends Component {
         this.state = {
             targetGroups: [],
             currentSelected: 'All companies',
+            brVisible: false,
+            brPosition: null,
+            productOffersSelection: [],
             selections: [
                 {name: 'All companies', id: GROUP_BY_ALL_COMPANIES},
                 {name: 'Region', id: GROUP_BY_REGIONS}
@@ -34,20 +39,21 @@ class MyInventory extends Component {
     setFilter(type, companies = this.props.companies) {
         switch (type) {
             case GROUP_BY_ALL_COMPANIES: {
-                this.setState({currentSelected: 'All companies'}, ()=> this.groupByAllCompanies(companies));
+                this.groupByAllCompanies(companies);
                 break;
             }
             case GROUP_BY_REGIONS: {
-                this.setState({currentSelected: 'Regions'}, ()=> this.groupByRegions(companies));
+                this.groupByRegions(companies);
                 break;
             }
-            default: this.setState({currentSelected: 'All companies'}, ()=> this.groupByAllCompanies(companies));
+            default: this.groupByAllCompanies(companies)
         }
     }
 
     groupByAllCompanies(companies) {
         let targets = companies.map(company => ({name: company.name}));
         this.setState({
+            currentSelected: 'All companies',
             targetGroups: [{name: 'All Companies', visible: true, targets: targets}],
         });
     }
@@ -65,20 +71,32 @@ class MyInventory extends Component {
 
         this.setState({
             targetGroups: targetsGroups,
+            currentSelected: 'Regions'
         });
     }
 
     render() {
-        let content = this.props.isFetching ? <Spinner/> : <ProductOffers productOffers={this.props.productOffers}/>;
+        let content = this.props.isFetching ? <Spinner/> :
+            <ProductOffers productOffers={this.props.productOffers}
+                toggleBroadcastRule={(state, position, selection) => this.setState(
+                    {brVisible: state, brPosition: position, productOffersSelection: selection}
+                )}
+            />;
         return (
             <div className='my-inventory'>
-                <Filter filterFunc={(inputs) => {this.props.getData(inputs)}} />
+                <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
+                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getProductOffers({...filter, mrchnt: true})}}/>
+                <h3 className='header small'>Undefined product offerings selected</h3>
+                <Filter filterFunc={(filter) => {this.props.getProductOffers({...filter, mrchnt: true})}} />
                 {content}
                 <BroadcastRule
                     targetGroups={this.state.targetGroups}
                     selections={this.state.selections}
                     setFilter={(type) => this.setFilter(type)}
                     currentSelected={this.state.currentSelected}
+                    visible={this.state.brVisible}
+                    position={this.state.brPosition}
+                    productOffersSelection={this.state.productOffersSelection}
                 />
             </div>
         )
