@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import './ProductOffers.css';
+import Checkbox from "../../../../components/Checkbox/Checkbox";
 
 class ProductOffers extends Component {
 
@@ -40,7 +41,8 @@ class ProductOffers extends Component {
                 <table className="product-offers">
                     <thead>
                     <tr>
-                        <th><input type="checkbox" /></th>
+                        {/*<th><input type="checkbox" /></th>*/}
+                        <th><Checkbox/></th>
                         <th>Product Name</th>
                         <th>Available</th>
                         <th>Packaging</th>
@@ -74,7 +76,8 @@ class ProductOffers extends Component {
                         product.productOffers.forEach((offer) => {
                             rows.push(
                                 <tr className="product-offer" key={'o' + offer.id}>
-                                    <td><input type="checkbox"/></td>
+                                    {/*<td><input type="checkbox"/></td>*/}
+                                    <td><Checkbox/></td>
                                     <td>{offer.product.name}</td>
                                     <td>{offer.packageAmount}</td>
                                     <td>{offer.packageType.name}</td>

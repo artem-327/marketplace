@@ -2,7 +2,7 @@ $borderColor: #e3e2df;
 
 .product-offers {
   margin: 20px 20px;
-  text-align: center;
+  text-align: left;
   width: calc(100% - 40px);
   th {
     border: 2px solid $borderColor;
@@ -17,6 +17,9 @@ $borderColor: #e3e2df;
 
   th:nth-child(2) {
     border-left: 0px;
+  }
+  th:last-child {
+    text-align: center;
   }
 
   .product {
@@ -39,6 +42,7 @@ $borderColor: #e3e2df;
 
     .quantity {
       text-align: right;
+      padding-right: 30px;
     }
   }
 

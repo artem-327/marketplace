@@ -16,6 +16,7 @@ class MyInventory extends Component {
 
             <div>
                 <h1 className='header'>INVENTORY OVERVIEW</h1>
+                <h3 className='header small'>Undefined product offerings selected</h3>
                 <Filter filterFunc={(filter) => {this.props.getData({...filter, mrchnt: true})}} />
                 {content}
             </div>
