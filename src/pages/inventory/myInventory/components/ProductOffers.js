@@ -34,6 +34,10 @@ class ProductOffers extends Component {
         })
    }
 
+   toggleBroadcastRule(e, id){
+        if(this.props.toggleBroadcastRule) this.props.toggleBroadcastRule(true, {x: e.clientX, y: e.clientY}, [id])
+   }
+
     render() {
         return (
             <div className="App">
@@ -70,8 +74,8 @@ class ProductOffers extends Component {
                             </td>
                         </tr>
                         );
-                        product.visible ?
-                        product.productOffers.forEach((offer) => {
+                        if(product.visible){
+                            product.productOffers.forEach((offer) => {
                             rows.push(
                                 <tr className="product-offer" key={'o' + offer.id}>
                                     <td><input type="checkbox"/></td>
@@ -86,11 +90,12 @@ class ProductOffers extends Component {
                                     <td>unknown</td>
                                     <td>{offer.productCondition.name}</td>
                                     <td>unknown</td>
-                                    <td>unkown</td>
+                                    <td><span className='broadcast-mark' onClick={(e)=>this.toggleBroadcastRule(e, offer.id)}> </span></td>
                                     <td>unkown</td>
                                 </tr>
                             );
-                        }) : null;
+                        })
+                        }
                         return rows;
                     }, [])}
                     </tbody>

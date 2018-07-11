@@ -34,3 +34,25 @@
       background-color: #00c500;
       border-radius: 3px;
       border: 0; }
+
+.broadcast-mark {
+  background-color: #b5b5b5;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  vertical-align: middle;
+  display: inline-block;
+  position: relative; }
+  .broadcast-mark:hover {
+    cursor: pointer; }
+  .broadcast-mark::after {
+    content: '';
+    background-color: #7f7f7f;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -6px;
+    margin-top: -6px; }
