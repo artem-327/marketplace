@@ -74,7 +74,7 @@ class ProductOffers extends Component {
                                 </td>
                                 <td colSpan="4" className="quantity">
                                     <span>Product offerings: {product.productOffers.length}</span>
-                                    {product.visible}
+                                    {product.visible ? <i className="icon fas fa-angle-down"/> : <i className="icon fas fa-angle-up"/>}
                                 </td>
                             </tr>
                         );
