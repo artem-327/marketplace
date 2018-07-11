@@ -18,6 +18,12 @@
     font-size: 1em;
     text-align: left; }
 
+.inv-header {
+  display: inline-block; }
+
+.inv-header {
+  display: inline-block; }
+
 .half-form {
   display: inline-block;
   width: 50%; }
@@ -28,6 +34,9 @@
 
 .App-main {
   min-height: 100vh; }
+
+.app-inner-main {
+  position: relative; }
 
 .App-footer {
   position: absolute;

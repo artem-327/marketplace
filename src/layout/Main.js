@@ -17,7 +17,7 @@ import { withAuth } from '../utils/auth';
 class Main extends Component {
     render() {
         return (
-            <div>
+            <div className="app-inner-main">
                 <Switch>
                     <Route exact path="/" component={withAuth(Dashboard)}/>
                     <Route exact path="/inventory/my-inventory" component={withAuth(Inventory(MyInventory))}/>

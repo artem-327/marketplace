@@ -2,7 +2,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Filter from './Filter';
 import {fetchAll as fetchPackageTypes} from "../../modules/packageTypes";
-import {toggleFilterGroup, resetForm} from '../../modules/filter';
+import {toggleFilterGroup, resetForm, addFilterTag} from '../../modules/filter';
 
 
 function mapStateToProps(store) {
@@ -10,12 +10,11 @@ function mapStateToProps(store) {
         isOpen: store.forms.filter.isOpen,
         packageTypes: store.packageTypes.data,
         filterGroupStatus: store.forms.filter.filterGroup,
-
     }
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({fetchPackageTypes, toggleFilterGroup, resetForm}, dispatch)
+    return bindActionCreators({fetchPackageTypes, toggleFilterGroup, resetForm, addFilterTag}, dispatch)
 }
 
 

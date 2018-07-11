@@ -2,6 +2,7 @@ import React from 'react';
 import Spinner from "../../components/Spinner/Spinner";
 import Radio from "../../components/Radio/Radio";
 import Checkbox from "../../components/Checkbox/Checkbox";
+import FilterTag from "../../components/Filter/components/FilterTag/FilterTag";
 import ThreeDots from "../../components/ThreeDots/ThreeDots";
 
 const TestPage = props => {
@@ -19,6 +20,7 @@ const TestPage = props => {
             <br/>
             <ThreeDots className="small"/>
             <Spinner/>
+            <FilterTag/>
         </div>
     </div>;
 };
