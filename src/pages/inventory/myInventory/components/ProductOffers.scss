@@ -6,7 +6,7 @@ $borderColor: #e3e2df;
   width: calc(100% - 40px);
   th {
     border: 2px solid $borderColor;
-    background-color: #fbfaf7;
+    background-color: #f6f6f6;
     padding: 10px;
     font-weight: normal;
   }
@@ -18,10 +18,13 @@ $borderColor: #e3e2df;
   th:nth-child(2) {
     border-left: 0px;
   }
+  th:last-child {
+    text-align: center;
+  }
 
   .product {
     border: 2px solid $borderColor;
-    background-color: #dbdad7;
+    background-color: #ebeaed;
     font-weight: bold;
     text-align: left;
 
@@ -39,7 +42,8 @@ $borderColor: #e3e2df;
 
     .quantity {
       text-align: right;
-      padding-right: 75px;
+      color: #9b9ca0;
+
     }
   }
 
@@ -57,6 +61,9 @@ $borderColor: #e3e2df;
       border-radius: 3px;
       border: 0;
     }
+  }
+  .fa-cog {
+    font-size: 25px;
   }
 }
 

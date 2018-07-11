@@ -37,6 +37,10 @@ class ProductOffers extends Component {
         })
     }
 
+    toggleBroadcastRule(e, id){
+        if(this.props.toggleBroadcastRule) this.props.toggleBroadcastRule(true, {x: e.clientX, y: e.clientY - 90}, [id])
+    }
+
     render() {
 
         return (
@@ -94,8 +98,8 @@ class ProductOffers extends Component {
                                         <td>unknown</td>
                                         <td>unknown</td>
                                         <td>{offer.productCondition.name}</td>
+                                        <td><span className='broadcast-mark' onClick={(e)=>this.toggleBroadcastRule(e, offer.id)}> </span></td>
                                         <td>unknown</td>
-                                        <td>unkown</td>
                                         <td> </td>
                                     </tr>
                                 );
