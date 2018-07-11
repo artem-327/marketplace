@@ -36,7 +36,7 @@ class ProductOffers extends Component {
    }
 
    toggleBroadcastRule(e, id){
-        if(this.props.toggleBroadcastRule) this.props.toggleBroadcastRule(true, {x: e.clientX, y: e.clientY}, [id])
+        if(this.props.toggleBroadcastRule) this.props.toggleBroadcastRule(true, {x: e.clientX, y: e.clientY - 90}, [id])
    }
 
     render() {
