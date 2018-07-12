@@ -15,7 +15,10 @@ export const initialState = {
         chemName: true,
         quantity: true,
         price: true,
-        packaging: false
+        packaging: false,
+        chemSearch: false,
+        productAge: false,
+        location: false
     },
     filterTags: []
 };

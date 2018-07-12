@@ -112,52 +112,52 @@ class Filter extends Component {
                                         id: packageType.id,
                                         model: `.pckgs[${packageType.id}]`
                                  }))}/>
+
+                    <FilterGroup className="filterGroup"
+                                 header='Chemical Search'
+                                 location='myInventory'
+                                 data={this.props.filterData}
+                                 isOpen={this.props.filterGroupStatus.chemSearch}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('chemSearch', value)}}
+                                 inputs={[
+                                     {
+                                         label: 'Chemical search',
+                                         model: '.chemSearch',
+                                         type: 'text',
+                                     }
+                                 ]}/>
+                    <FilterGroup className="filterGroup"
+                                 header='Product Age'
+                                 location='myInventory'
+                                 split
+                                 data={this.props.filterData}
+                                 isOpen={this.props.filterGroupStatus.productAge}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('productAge', value)}}
+                                 checkboxModel='pckgs'
+                                 inputs={this.props.packageTypes.map(productAge => ({
+                                     label: productAge.name,
+                                     type: 'radio',
+                                     id: productAge.id,
+                                     model: `.productAge[${productAge.id}]`
+                                 }))}/>
+                    <FilterGroup className="filterGroup"
+                                 header='Location'
+                                 location='myInventory'
+                                 data={this.props.filterData}
+                                 isOpen={this.props.filterGroupStatus.location}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('location', value)}}
+                                 inputs={[
+                                     {
+                                         label: 'Location',
+                                         model: '.location',
+                                         type: 'dropdown',
+                                     }
+                                 ]}/>
                     <div className="filterBottom">
 
                         {/*<button className="filter-button">Apply</button>*/}
                         <button className='button filter-button'>Apply</button>
                         <button className='button disabled filter-button' onClick={()=>{this.props.resetForm()}}>Clear filter</button>
-                        {/*<FilterGroup className="filterGroup"*/}
-                                     {/*header='Chemical Search'*/}
-                                     {/*location='myInventory'*/}
-                                     {/*data={this.props.filterData}*/}
-                                     {/*isOpen={this.props.filterGroupStatus.chemName}*/}
-                                     {/*onOpen={(value)=>{this.props.toggleFilterGroup('chemName', value)}}*/}
-                                     {/*inputs={[*/}
-                                         {/*{*/}
-                                             {/*label: 'Chemical name / CAS #',*/}
-                                             {/*model: '.search',*/}
-                                             {/*type: 'text',*/}
-                                         {/*}*/}
-                                     {/*]}/>*/}
-                        {/*<FilterGroup className="filterGroup"*/}
-                                     {/*header='Product Age'*/}
-                                     {/*location='myInventory'*/}
-                                     {/*split*/}
-                                     {/*data={this.props.filterData}*/}
-                                     {/*isOpen={this.props.filterGroupStatus.packaging}*/}
-                                     {/*onOpen={(value)=>{this.props.toggleFilterGroup('packaging', value)}}*/}
-                                     {/*checkboxModel='pckgs'*/}
-                                     {/*inputs={this.props.packageTypes.map(packageType => ({*/}
-                                         {/*label: packageType.name,*/}
-                                         {/*type: 'checkbox',*/}
-                                         {/*id: packageType.id,*/}
-                                         {/*model: `.pckgs[${packageType.id}]`*/}
-                                     {/*}))}/>*/}
-                        {/*<FilterGroup className="filterGroup"*/}
-                                     {/*header='Location'*/}
-                                     {/*location='myInventory'*/}
-                                     {/*data={this.props.filterData}*/}
-                                     {/*isOpen={this.props.filterGroupStatus.chemName}*/}
-                                     {/*onOpen={(value)=>{this.props.toggleFilterGroup('chemName', value)}}*/}
-                                     {/*inputs={[*/}
-                                         {/*{*/}
-                                             {/*label: 'Chemical name / CAS #',*/}
-                                             {/*model: '.search',*/}
-                                             {/*type: 'text',*/}
-                                         {/*}*/}
-                                     {/*]}/>*/}
-
                     </div>
                 </Form>
             </div> : null;

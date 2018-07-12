@@ -4,6 +4,8 @@ import {Control} from 'react-redux-form';
 import dropdown from '../../../images/inv-filter/dropdown.png'
 import dropdownClose from '../../../images/inv-filter/dropdown-close.png'
 import classnames from "classnames";
+import Dropdown from "../../Dropdown/Dropdown";
+import Checkbox from "../../Checkbox/Checkbox";
 
 class FilterGroup extends Component {
 
@@ -32,6 +34,23 @@ class FilterGroup extends Component {
         if(nextProps.isOpen !== this.state.isOpen) this.setState({isOpen: nextProps.isOpen})
     }
 
+    // getLocation(){
+    //     switch (location.type){
+    //         case 'allInventory':{
+    //             return ('bla'
+    //
+    //             )
+    //         }
+    //         case 'myInventory':{
+    //                 return ('ble'
+    //
+    //                 )
+    //         }
+    //         default:{
+    //             return null
+    //         }
+    //     }
+    // }
     renderInputs() {
         if (!this.props.inputs) return;
         return this.state.isOpen ? this.props.inputs.map((input, index) => {
@@ -47,8 +66,24 @@ class FilterGroup extends Component {
                         </div>
                     )
                 }
+                case 'dropdown' : {
+                    return (
+                        <Dropdown opns={[{name: 'test dropdown'}]}/>
+                    )
+                }
+                case 'radio': {
+                    return (
+                    <div key={index} className="input-radio">
+                        <label key={index} htmlFor={input.model}>
+                            {input.label}
+                            <Control.radio model={input.model} id={input.model}/>
+                            <span className="radiomark">  </span>
+                        </label>
+                    </div>
+                    )
+                }
                 case 'text':
-                case 'number': {
+                 case 'number': {
                     return (
                         <div key={index} className='filter-input-text'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>

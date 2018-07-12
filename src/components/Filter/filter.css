@@ -20,7 +20,7 @@
   .filter .filter-group {
     border-bottom: 1px solid #f0f0f0;
     margin-top: 10px; }
-    .filter .filter-group:nth-child(4) {
+    .filter .filter-group:nth-child(7) {
       border-bottom: 0px; }
     .filter .filter-group .filter-input-text label, .filter .filter-group .filter-input-text input {
       margin-left: 12px; }
