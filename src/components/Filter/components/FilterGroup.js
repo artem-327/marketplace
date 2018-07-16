@@ -6,6 +6,7 @@ import dropdownClose from '../../../images/inv-filter/dropdown-close.png'
 import classnames from "classnames";
 import Dropdown from "../../Dropdown/Dropdown";
 import Checkbox from "../../Checkbox/Checkbox";
+import Radio from "../../Radio/Radio";
 
 class FilterGroup extends Component {
 
@@ -68,18 +69,15 @@ class FilterGroup extends Component {
                 }
                 case 'dropdown' : {
                     return (
-                        <Dropdown opns={[{name: 'test dropdown'}]}/>
+                        <div className='filter-input-dropdown'>
+                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
+                        <Dropdown opns={[{name:'100'}, {name:'500'}, {name:'1000'}]}/>
+                        </div>
                     )
                 }
                 case 'radio': {
                     return (
-                    <div key={index} className="input-radio">
-                        <label key={index} htmlFor={input.model}>
-                            {input.label}
-                            <Control.radio model={input.model} id={input.model}/>
-                            <span className="radiomark">  </span>
-                        </label>
-                    </div>
+                        {/*<Radio name='foo' opns={[{value:(this.props.productGrade)}, {name:(this.props)}]}/>*/}
                     )
                 }
                 case 'text':
@@ -126,7 +124,8 @@ FilterGroup.propTypes = {
         })
     ),
     split: PropTypes.bool,
-    open: PropTypes.bool
+    open: PropTypes.bool,
+    location: PropTypes. bool
 };
 
 

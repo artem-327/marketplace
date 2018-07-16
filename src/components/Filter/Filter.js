@@ -40,6 +40,8 @@ class Filter extends Component {
     }
 
     render(){
+        console.log(this.props);
+        // (this.props.data.locations.state)
         return this.state.isOpen ?
             <div className="filter">
                 <Form model="forms.filter.data" onSubmit={(val) => this.handleSubmit(val)}>
@@ -133,8 +135,7 @@ class Filter extends Component {
                                  data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.productAge}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('productAge', value)}}
-                                 checkboxModel='pckgs'
-                                 inputs={this.props.packageTypes.map(productAge => ({
+                                 inputs={this.props.productAge.map(productAge => ({
                                      label: productAge.name,
                                      type: 'radio',
                                      id: productAge.id,
@@ -148,7 +149,7 @@ class Filter extends Component {
                                  onOpen={(value)=>{this.props.toggleFilterGroup('location', value)}}
                                  inputs={[
                                      {
-                                         label: 'Location',
+                                         label: 'Max. miles away',
                                          model: '.location',
                                          type: 'dropdown',
                                      }

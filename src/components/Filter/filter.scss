@@ -37,6 +37,14 @@ $font-family: 'Cabin', sans-serif;
         margin-left: 10px;
       }
     }
+    .filter-input-dropdown{
+      height: 240px;
+      margin-left: 12px;
+      width: 380px;
+      p {
+        margin-bottom: 3px;
+      }
+    }
   }
   .split{
     .filter-input-text{
@@ -57,6 +65,9 @@ $font-family: 'Cabin', sans-serif;
       float: left;
       width: calc(50% - 70px);
       margin: 0 25px 15px 10px;
+    }
+    .filter-input-dropdown{
+      height: 240px;
     }
   }
   .filterBottom {

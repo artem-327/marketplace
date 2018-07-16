@@ -28,6 +28,12 @@
       width: 380px;
       margin-bottom: 15px;
       margin-left: 10px; }
+    .filter .filter-group .filter-input-dropdown {
+      height: 240px;
+      margin-left: 12px;
+      width: 380px; }
+      .filter .filter-group .filter-input-dropdown p {
+        margin-bottom: 3px; }
   .filter .split .filter-input-text {
     display: inline-block;
     float: left;
@@ -43,6 +49,8 @@
     float: left;
     width: calc(50% - 70px);
     margin: 0 25px 15px 10px; }
+  .filter .split .filter-input-dropdown {
+    height: 240px; }
   .filter .filterBottom {
     position: absolute;
     z-index: 0;

@@ -17,7 +17,7 @@ class AllInventory extends Component {
             <div>
                 <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
                 <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getData({...filter, mrchnt: true})}}/>
-                <Filter filterFunc={(inputs) => this.props.getData(inputs)} />
+                <Filter location='allInventory' filterFunc={(inputs) => this.props.getData(inputs)} />
                 {content}
             </div>
         )

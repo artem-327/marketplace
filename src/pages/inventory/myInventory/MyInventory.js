@@ -85,7 +85,7 @@ class MyInventory extends Component {
                 <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
                 <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getProductOffers({...filter, mrchnt: true})}}/>
                 <h3 className='header small'>Undefined product offerings selected</h3>
-                <Filter filterFunc={(filter) => {this.props.getProductOffers({...filter, mrchnt: true})}} />
+                <Filter location='myInventory' filterFunc={(filter) => {this.props.getProductOffers({...filter, mrchnt: true})}} />
                 {content}
                 <BroadcastRule
                     targetGroups={this.state.targetGroups}
