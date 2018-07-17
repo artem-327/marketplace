@@ -53,7 +53,7 @@ class BroadcastRule extends Component {
                     </div>
                 </div>
                 <div>
-                    <BroadcastTargets targetGroups={this.props.targetGroups} />
+                    <BroadcastTargets targetGroups={this.props.targetGroups} filter={this.props.currentSelected}/>
                 </div>
             </div>
         );

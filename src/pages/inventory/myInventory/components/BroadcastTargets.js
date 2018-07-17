@@ -8,7 +8,7 @@ class BroadcastTargets extends Component {
         return (
             <div>
                 {this.props.targetGroups.map((group, index) => (
-                    <BroadcastTargetGroup key={index} name={group.name} items={group.targets}/>
+                    <BroadcastTargetGroup filter={this.props.filter} key={index} name={group.name} items={group.targets}/>
                 ))}
             </div>
         );
