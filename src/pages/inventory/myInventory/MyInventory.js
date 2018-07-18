@@ -50,10 +50,10 @@ class MyInventory extends Component {
     }
 
     groupByAllCompanies(companies) {
-        let targets = companies.map(company => ({name: company.name}));
+        let targets = companies.map(company => ({name: company.name, id: company.id}));
         this.setState({
             currentSelected: 'All companies',
-            targetGroups: [{name: 'All Companies', visible: true, targets: targets}],
+            targetGroups: [{name: 'All Companies', type:'company', visible: true, targets: targets}],
         });
     }
 
@@ -61,13 +61,12 @@ class MyInventory extends Component {
         let targetsGroups = Object.values(companies.reduce((carry, company) => {
             let locations = company.offices.map(office => office.location);
             locations.forEach(location => {
-                (carry[location.id] = carry[location.id] || {name: location.state, visible: true, targets: []})
+                (carry[location.id] = carry[location.id] || {name: location.state, type:'location', id: location.id, visible: true, targets: []})
                     .targets
-                    .push({name: company.name});
+                    .push({name: company.name, id: company.id});
             });
             return carry;
         }, {}));
-
         this.setState({
             targetGroups: targetsGroups,
             currentSelected: 'Regions'

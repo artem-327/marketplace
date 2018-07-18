@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import BroadcastTargetGroup from './BroadcastTargetGroup';
 import './BroadcastTargets.css';
 
 class BroadcastTargets extends Component {
@@ -7,12 +8,7 @@ class BroadcastTargets extends Component {
         return (
             <div>
                 {this.props.targetGroups.map((group, index) => (
-                    <div key={index}>
-                        {group.name}
-                        {group.targets.map((target, index2) => (
-                            <div key={index2 + target.name}>{target.name}</div>
-                        ))}
-                    </div>
+                    <BroadcastTargetGroup filter={this.props.filter} key={index} name={group.name} items={group.targets}/>
                 ))}
             </div>
         );
