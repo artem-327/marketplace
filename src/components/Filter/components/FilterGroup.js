@@ -35,25 +35,30 @@ class FilterGroup extends Component {
         if(nextProps.isOpen !== this.state.isOpen) this.setState({isOpen: nextProps.isOpen})
     }
 
-    // getLocation(){
-    //     switch (location.type){
-    //         case 'allInventory':{
-    //             return ('bla'
-    //
-    //             )
-    //         }
-    //         case 'myInventory':{
-    //                 return ('ble'
-    //
-    //                 )
-    //         }
-    //         default:{
-    //             return null
-    //         }
-    //     }
-    // }
-    renderInputs() {
+    renderInputsGroup () {
+        switch (this.props.renderAsGroup) {
+            case 'radio': {
+                return this.state.isOpen ? this.props.inputs.map((input, index) => {
+                    return (
+                    <div className='input-radio'>
+                    <label className="radioButton" key={index}><p>{input.label}</p>
+                        <Control.radio defaultChecked={true} name={this.props.name} value={input.id}
+                                       model={input.model}/>
+                        <span className={"radiomark"}></span>
+                    </label>
+                    </div>
+                    )
+                }) : null
+            }
+            default: {
+                return null
+            }
+        }
+    }
+
+    renderInputs () {
         if (!this.props.inputs) return;
+        if (this.props.renderAsGroup) return this.renderInputsGroup();
         return this.state.isOpen ? this.props.inputs.map((input, index) => {
             switch(input.type){
                 case 'checkbox':{
@@ -69,15 +74,10 @@ class FilterGroup extends Component {
                 }
                 case 'dropdown' : {
                     return (
-                        <div className='filter-input-dropdown'>
+                        <div key={index} className='filter-input-dropdown'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>
-                        <Dropdown opns={[{name:'100'}, {name:'500'}, {name:'1000'}]}/>
+                        <DropdownRedux dispatch={this.props.dispatch} model={input.model} opns={[{name:'100', id:'100'}, {name:'500', id:'500'}, {name:'1000', id:'1000'}]}/>
                         </div>
-                    )
-                }
-                case 'radio': {
-                    return (
-                        {/*<Radio name='foo' opns={[{value:(this.props.productGrade)}, {name:(this.props)}]}/>*/}
                     )
                 }
                 case 'text':
@@ -97,6 +97,7 @@ class FilterGroup extends Component {
     }
 
     render() {
+        if(!this.props.isVisible) return null;
         return (
             <div className={classnames("filter-group", {"split" : (this.props.split)})}>
                 <div className="header" onClick={() => {
@@ -125,7 +126,7 @@ FilterGroup.propTypes = {
     ),
     split: PropTypes.bool,
     open: PropTypes.bool,
-    location: PropTypes. bool
+    location: PropTypes. string
 };
 
 

@@ -16,6 +16,7 @@ class Filter extends Component {
     }
 
     handleSubmit(inputs){
+        console.log(inputs)
         let filter = Object.assign({}, inputs, {pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key).join(',')});
 
         let params = filterNonEmptyAttributes(filter);
@@ -147,10 +148,11 @@ class Filter extends Component {
                                  data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.location}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('location', value)}}
+                                 dispatch={this.props.dispatch}
                                  inputs={[
                                      {
                                          label: 'Max. miles away',
-                                         model: '.location',
+                                         model: 'forms.filter.data.location',
                                          type: 'dropdown',
                                      }
                                  ]}/>
