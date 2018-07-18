@@ -10,6 +10,7 @@ function mapStateToProps(store) {
         isOpen: store.forms.filter.isOpen,
         packageTypes: store.packageTypes.data,
         filterGroupStatus: store.forms.filter.filterGroup,
+        filterData: store.forms.filter.data
     }
 }
 

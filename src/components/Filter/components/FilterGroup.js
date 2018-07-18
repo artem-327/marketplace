@@ -6,9 +6,35 @@ import dropdownClose from '../../../images/inv-filter/dropdown-close.png'
 import classnames from "classnames";
 
 class FilterGroup extends Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            isOpen: this.props.isOpen
+        }
+    }
+
+    componentDidMount(){
+        for(let i = 0; i < this.props.inputs.length; i++){
+            if(this.props.inputs[i].type === 'checkbox'){
+                if(this.props.data[this.props.checkboxModel] && this.props.data[this.props.checkboxModel][this.props.inputs[i].id]){
+                    this.props.onOpen(true)
+                }
+            }else{
+                if(this.props.data[this.props.inputs[i].model.substring(1)] && this.props.data[this.props.inputs[i].model.substring(1)] !== ''){
+                    this.props.onOpen(true)
+                }
+            }
+        }
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.isOpen !== this.state.isOpen) this.setState({isOpen: nextProps.isOpen})
+    }
+
     renderInputs() {
         if (!this.props.inputs) return;
-        return this.props.isOpen ? this.props.inputs.map((input, index) => {
+        return this.state.isOpen ? this.props.inputs.map((input, index) => {
             switch(input.type){
                 case 'checkbox':{
                     return (
@@ -41,10 +67,10 @@ class FilterGroup extends Component {
         return (
             <div className={classnames("filter-group", {"split" : (this.props.split)})}>
                 <div className="header" onClick={() => {
-                   this.props.onOpen(!this.props.isOpen)
+                   this.props.onOpen(!this.state.isOpen)
                 }}>
                     <div className="dropdown-icon">
-                        {this.props.isOpen ? <img src={dropdown} alt='drop'/> : <img src={dropdownClose} alt='drop-close' />}
+                        {this.state.isOpen ? <img src={dropdown} alt='drop'/> : <img src={dropdownClose} alt='drop-close' />}
                     </div>
                     {this.props.header}
                 </div>
