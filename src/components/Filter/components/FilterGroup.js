@@ -7,6 +7,7 @@ import classnames from "classnames";
 import Dropdown from "../../Dropdown/Dropdown";
 import Checkbox from "../../Checkbox/Checkbox";
 import Radio from "../../Radio/Radio";
+import DropdownRedux from "../../Dropdown/DropdownRedux";
 
 class FilterGroup extends Component {
 

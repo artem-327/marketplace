@@ -57,14 +57,6 @@ export default function reducer(state = initialState, action) {
                 productAge: action.payload
             }
         }
-        case FETCH_LOCATION_FULFILLED: {
-            return {
-                ...state,
-                location: action.payload
-            }
-        }
-
-
         case FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED: {
             return {
                 ...state,
