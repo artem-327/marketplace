@@ -19,6 +19,13 @@ class BroadcastTargetGroup extends Component {
         }
     }
 
+    getGroupType(){
+        switch(this.props.filter){
+            case "Regions": return 'location';
+            default: return null;
+        }
+    }
+
     handleChangeGroup(id, value){
         let newTarget = this.state.target.slice();
         if(value === 'include' || value === 'exclude'){
@@ -27,6 +34,8 @@ class BroadcastTargetGroup extends Component {
                 newTarget.push({visibility: value === 'include', id: this.props.items[i].id})
             }
         }
+        let groupType = this.getGroupType();
+        // if(groupType) this.updateResponse({[groupType]: id});
         this.setState({
             groupSelected: value,
             target: newTarget
@@ -34,15 +43,16 @@ class BroadcastTargetGroup extends Component {
     }
 
     handleChangeItem(id, value){
+        let newGroupState = value === this.state.groupSelected ? value : 'custom';
         for(let i = 0; i < this.state.target.length; i++){
             if(this.state.target[i].id === id){
                 let newTarget = this.state.target.slice();
                 newTarget[i].visibility = value === 'include';
-                this.setState({target: newTarget});
+                this.setState({target: newTarget, groupSelected: newGroupState});
                 return;
             }
         }
-        this.setState({target: [...this.state.target, {visibility: value === 'include', id}]})
+        this.setState({target: [...this.state.target, {visibility: value === 'include', id}], groupSelected: newGroupState})
     }
 
     checkItemValue(id){
@@ -73,10 +83,6 @@ class BroadcastTargetGroup extends Component {
         })
     }
 
-    checkGroupSelection(){
-
-    }
-
     render() {
         return (
             <div>
@@ -86,7 +92,11 @@ class BroadcastTargetGroup extends Component {
                        {this.props.name}
                        {!this.state.isOpen ? <span className='no-targets'>undefined / {this.props.items.length} Companies</span> : null}
                    </div>
-                   <BroadcastConfig name={this.props.name} id={this.props.id} value={this.state.groupSelected} changeBrConfig={(id, value)=>this.handleChangeGroup(id, value)}/>
+                   <BroadcastConfig
+                       name={this.props.name}
+                       id={this.props.id}
+                       value={this.state.groupSelected}
+                       changeBrConfig={(id, value)=>this.handleChangeGroup(id, value)}/>
                    <div className='clearfix' > </div>
                </div>
                 {this.state.isOpen ? this.renderItems() : null}

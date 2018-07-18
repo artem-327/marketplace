@@ -10,7 +10,6 @@ class BroadcastConfig extends Component {
     }
 
     render() {
-        console.log(this.props.item, this.props.value);
         let brOpns = this.props.item ? [{value:'include', label:'Include'}, {value:'exclude', label:'Exclude'}] :
             [{value:'include', label:'Include'}, {value:'exclude', label:'Exclude'}, {value:'custom', label:'Custom'}];
         return (

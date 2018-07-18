@@ -6,18 +6,29 @@ class Radio extends Component {
     constructor(props) {
         super (props);
         this.handleChange = this.handleChange.bind(this);
+        this.state = {
+            checked: this.props.checked
+        }
     }
 
-    handleChange(e){
-        if(this.props.onChange) this.props.onChange(e.target.value);
+    componentWillReceiveProps(nextProps){
+        this.setState({checked: nextProps.checked})
+    }
+
+    handleChange(event){
+        let value = event.target.value;
+        this.setState({checked: value}, ()=>{
+            if(this.props.onChange) this.props.onChange(value);
+        });
+
     }
 
     renderRadio(opt){
         return opt.map((radio, index)=>{
             return <label className="radioButton" key={index}><p>{radio.label}</p>
-                    <input type="radio" onClick={(e)=>{this.handleChange(e)}} name={this.props.name} value={radio.value} defaultChecked={radio.value === this.props.checked}/>
-                    <span className={"radiomark " + (this.props.className || '')}> </span>
-                    </label>
+                <input type="radio" onChange={this.handleChange} name={this.props.name} value={radio.value} checked={radio.value === this.state.checked}/>
+                <span className={"radiomark " + (this.props.className || '')}> </span>
+            </label>
         });
     }
 
