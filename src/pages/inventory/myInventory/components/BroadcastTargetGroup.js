@@ -34,7 +34,7 @@ class BroadcastTargetGroup extends Component {
                 newTarget.push({visibility: value === 'include', id: this.props.items[i].id})
             }
         }
-        let groupType = this.getGroupType();
+        // let groupType = this.getGroupType();
         // if(groupType) this.updateResponse({[groupType]: id});
         this.setState({
             groupSelected: value,

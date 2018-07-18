@@ -1,4 +1,4 @@
-import axios from 'axios';
+// import axios from 'axios';
 
 const GET_COMPANIES = 'GET_COMPANIES';
 const GET_COMPANIES_FULFILLED = 'GET_COMPANIES_FULFILLED';
