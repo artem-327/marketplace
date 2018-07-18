@@ -22,7 +22,7 @@ class AllInventory extends Component {
             <div>
                 <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
                 <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getData({...filter, mrchnt: true})}}/>
-                <Filter location='allInventory' filterFunc={(inputs) => this.props.getData(inputs)} />
+                <Filter chemicalName quantity price package filterFunc={(inputs) => this.props.getData(inputs)} />
                 {content}
             </div>
         )

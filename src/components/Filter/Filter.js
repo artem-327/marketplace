@@ -48,7 +48,7 @@ class Filter extends Component {
                 <Form model="forms.filter.data" onSubmit={(val) => this.handleSubmit(val)}>
                     <FilterGroup className="filterGroup"
                                  header='Chemical Type'
-                                 location='allInventory'
+                                 isVisible={!!this.props.chemicalName}
                                  data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.chemName}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('chemName', value)}}
@@ -60,7 +60,7 @@ class Filter extends Component {
                                      }
                                  ]}/>
                     <FilterGroup className="filterGroup"
-                                 location='allInventory'
+                                 isVisible={!!this.props.quantity}
                                  isOpen={this.props.filterGroupStatus.quantity}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('quantity', value)}}
                                  header='Quantity'
@@ -83,7 +83,7 @@ class Filter extends Component {
                     <FilterGroup className="filterGroup"
                                  header='Price'
                                  split
-                                 location='allInventory'
+                                 isVisible={!!this.props.price}
                                  data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.price}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('price', value)}}
@@ -103,7 +103,7 @@ class Filter extends Component {
                                  ]}/>
                     <FilterGroup className="filterGroup"
                                  header='Packaging'
-                                 location='allInventory'
+                                 isVisible={!!this.props.package}
                                  split
                                  data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.packaging}
@@ -118,7 +118,7 @@ class Filter extends Component {
 
                     <FilterGroup className="filterGroup"
                                  header='Chemical Search'
-                                 location='myInventory'
+                                 isVisible={!!this.props.chemicalSearch}
                                  data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.chemSearch}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('chemSearch', value)}}
@@ -131,7 +131,7 @@ class Filter extends Component {
                                  ]}/>
                     <FilterGroup className="filterGroup"
                                  header='Product Age'
-                                 location='myInventory'
+                                 isVisible={!!this.props.productsAge}
                                  split
                                  data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.productAge}
@@ -144,7 +144,7 @@ class Filter extends Component {
                                  }))}/>
                     <FilterGroup className="filterGroup"
                                  header='Location'
-                                 location='myInventory'
+                                 isVisible={!!this.props.locate}
                                  data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.location}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('location', value)}}

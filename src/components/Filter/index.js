@@ -19,7 +19,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({fetchPackageTypes, toggleFilterGroup, resetForm, addFilterTag, toggleFilter, fetchProductAge}, dispatch)
+    return bindActionCreators({fetchPackageTypes, toggleFilterGroup, resetForm, addFilterTag, toggleFilter, fetchProductAge, dispatch}, dispatch)
 }
 
 
