@@ -5,8 +5,6 @@ import FilterGroup from './components/FilterGroup';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {filterNonEmptyAttributes} from "../../utils/functions";
-import classnames from "classnames";
-
 
 class Filter extends Component {
 
