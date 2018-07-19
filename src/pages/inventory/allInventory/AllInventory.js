@@ -7,7 +7,7 @@ import FilterTag from "../../../components/Filter/components/FilterTag";
 class AllInventory extends Component {
 
     componentDidMount(){
-        this.props.getData();
+        this.props.getData({}, false);
     }
 
     componentWillUnmount(){
@@ -21,8 +21,8 @@ class AllInventory extends Component {
         return (
             <div>
                 <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
-                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getData({...filter, mrchnt: true})}}/>
-                <Filter chemicalName quantity price package filterFunc={(inputs) => this.props.getData(inputs)} />
+                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getData({...filter}, false)}}/>
+                <Filter chemicalName quantity price package filterFunc={(inputs) => this.props.getData(inputs, false)} />
                 {content}
             </div>
         )

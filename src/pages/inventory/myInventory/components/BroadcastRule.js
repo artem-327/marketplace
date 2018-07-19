@@ -55,6 +55,7 @@ class BroadcastRule extends Component {
                 <div>
                     <BroadcastTargets targetGroups={this.props.targetGroups} filter={this.props.currentSelected}/>
                 </div>
+                <div><button className='button disabled'>Component under construction</button></div>
             </div>
         );
     }
