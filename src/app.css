@@ -11,6 +11,18 @@
   margin: 15px 0 0 5px;
   font-size: 1.6em;
   text-align: left; }
+  .header.small {
+    color: #b3b4b6;
+    padding: 0;
+    margin: 0 0 0 20px;
+    font-size: 1em;
+    text-align: left; }
+
+.inv-header {
+  display: inline-block; }
+
+.inv-header {
+  display: inline-block; }
 
 .half-form {
   display: inline-block;
@@ -22,6 +34,9 @@
 
 .App-main {
   min-height: 100vh; }
+
+.app-inner-main {
+  position: relative; }
 
 .App-footer {
   position: absolute;

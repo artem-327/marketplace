@@ -22,14 +22,15 @@
 
 .search-results {
   width: 100%;
-  color: #4e5157; }
+  color: #4e5157;
+  overflow-y: auto; }
   .search-results .spinner {
     margin-top: 20px; }
   .search-results .search-product-item {
     padding: 10px;
     font-size: .9em;
     border-radius: 7px;
-    margin: 7px 0;
+    margin: 7px 0 0 0;
     border: 1px solid #eeeeee;
     transition: all .2s ease; }
     .search-results .search-product-item:hover {

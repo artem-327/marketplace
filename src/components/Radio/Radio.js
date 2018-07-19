@@ -6,18 +6,30 @@ class Radio extends Component {
     constructor(props) {
         super (props);
         this.handleChange = this.handleChange.bind(this);
+        this.state = {
+            checked: this.props.checked
+        }
     }
 
-    handleChange(e){
-        console.log(e.target.value);
+    componentWillReceiveProps(nextProps){
+        this.setState({checked: nextProps.checked})
+    }
+
+    handleChange(event){
+        let value = event.target.value;
+        this.setState({checked: value}, ()=>{
+            if(this.props.onChange) this.props.onChange(value);
+        });
+
     }
 
     renderRadio(opt){
+        console.log(this.props.name);
         return opt.map((radio, index)=>{
             return <label className="radioButton" key={index}><p>{radio.label}</p>
-                    <input type="radio" onClick={(e)=>{this.handleChange(e)}} name={this.props.name} value={radio.value} defaultChecked={radio.value === this.props.checked}/>
-                    <span className={"radiomark " + (this.props.style || '')}></span>
-                    </label>
+                <input type="radio" onChange={this.handleChange} name={this.props.name} value={radio.value} checked={radio.value === this.state.checked}/>
+                <span className={"radiomark " + (this.props.className || '')}> </span>
+            </label>
         });
     }
 
@@ -39,7 +51,8 @@ Radio.propTypes = {
     ).isRequired,
     name: PropTypes.string,
     checked: PropTypes.PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
-    style: PropTypes.string
+    className: PropTypes.string,
+    onChange: PropTypes.func
 };
 
 export default Radio;

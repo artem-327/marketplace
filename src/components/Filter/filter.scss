@@ -8,9 +8,10 @@ $font-family: 'Cabin', sans-serif;
   position: absolute;
   width: 500px;
   right: 0;
-  top: 143px;
+  top: 53px;
   box-shadow: -2px 0px 5px 0px rgba(140,140,140,1);
   padding: 10px;
+  z-index: 2;
   text-align: left;
   .header {
     font-weight: bold;
@@ -22,7 +23,7 @@ $font-family: 'Cabin', sans-serif;
   }
   .filter-group{
     border-bottom: 1px solid #f0f0f0;
-    &:nth-child(4){
+    &:nth-child(7){
       border-bottom: 0px;
     }
     margin-top: 10px;
@@ -34,6 +35,14 @@ $font-family: 'Cabin', sans-serif;
         width: 380px;
         margin-bottom: 15px;
         margin-left: 10px;
+      }
+    }
+    .filter-input-dropdown{
+      height: 240px;
+      margin-left: 12px;
+      width: 380px;
+      p {
+        margin-bottom: 3px;
       }
     }
   }
@@ -56,6 +65,9 @@ $font-family: 'Cabin', sans-serif;
       float: left;
       width: calc(50% - 70px);
       margin: 0 25px 15px 10px;
+    }
+    .filter-input-dropdown{
+      height: 240px;
     }
   }
   .filterBottom {

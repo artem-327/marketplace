@@ -7,6 +7,8 @@ const GET_PRODUCT_OFFERS_PENDING = 'GET_PRODUCT_OFFERS_PENDING';
 const ADD_PRODUCT_OFFER = 'ADD_PRODUCT_OFFER';
 const ADD_PRODUCT_OFFER_FULFILLED = 'ADD_PRODUCT_OFFER_FULFILLED';
 
+const RESET_PRODUCT_OFFER = 'RESET_PRODUCT_OFFER';
+
 
 export const initialState = {
     data: [],
@@ -64,16 +66,22 @@ export default function reducer(state = initialState, action) {
                 }
             }
         }
+        case RESET_PRODUCT_OFFER: {
+            return {
+                ...state,
+                addProductOffer: {}
+            }
+        }
         default: {
             return state
         }
     }
 }
 
-export function fetchAll(filter = {}) {
+export function fetchAll(filter = {}, mrchnt=true) {
     return {
         type: GET_PRODUCT_OFFERS,
-        payload: axios.get("/api/v1/product-offers/", {params: {...filter}}).then(response => response.data.data.productOffers)
+        payload: axios.get("/api/v1/product-offers/", {params: {...filter, mrchnt}}).then(response => response.data.data.productOffers)
     }
 }
 
@@ -81,6 +89,12 @@ export function addProductOffer(inputs) {
     return {
         type: ADD_PRODUCT_OFFER,
         payload: axios.post('/api/v1/product-offers/', inputs)
+    }
+}
+
+export function resetForm() {
+    return {
+        type: RESET_PRODUCT_OFFER,
     }
 }
 

@@ -16,6 +16,19 @@ $app-font-family: 'Cabin', sans-serif;
   margin: 15px 0 0 5px;
   font-size: 1.6em;
   text-align: left;
+  &.small {
+    color: #b3b4b6;
+    padding: 0;
+    margin: 0 0 0 20px;
+    font-size: 1em;
+    text-align: left;
+  }
+}
+.inv-header {
+  display: inline-block;
+}
+.inv-header {
+  display: inline-block;
 }
 
 .half-form{
@@ -32,6 +45,11 @@ $app-font-family: 'Cabin', sans-serif;
 .App-main{
   min-height: 100vh;
 }
+
+.app-inner-main{
+  position: relative;
+}
+
 .App-footer{
 position: absolute;
   left: 50%;
@@ -127,6 +145,8 @@ input {
 .conMess {
   padding: 5px 15px;
 }
+
+
 
 
 

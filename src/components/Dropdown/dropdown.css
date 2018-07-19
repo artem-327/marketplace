@@ -5,7 +5,8 @@
     font-size: 1rem;
     border-radius: 4px;
     border: 1px solid #B0B0B0;
-    padding: 7px; }
+    padding: 7px;
+    color: #a8a8a8; }
     .dropdown-wr .dropdown-trigger img {
       position: relative;
       float: right;
@@ -24,6 +25,8 @@
       padding: 12px 7px;
       font-size: 1.2rem; }
   .dropdown-wr .dropdown-options {
+    color: #a8a8a8;
+    overflow-y: auto;
     width: 100%;
     margin-top: -1px;
     font-size: 1rem;

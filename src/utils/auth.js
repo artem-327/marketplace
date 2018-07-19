@@ -7,7 +7,6 @@ export function withAuth(ComposedComponent) {
     class requireAuth extends React.Component {
 
         verify(props) {
-            console.log(props);
             if (!props.isAuthenticated && !props.isFetchingIdentity) {
                 if(props.location.pathname !== "/login") props.history.push("/login");
             }

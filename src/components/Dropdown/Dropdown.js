@@ -13,6 +13,7 @@ class Dropdown extends Component {
         this.state = {
             isOpen: false,
             currentValue: this.props.currentValue,
+            results_count: 5
         };
     }
 
@@ -23,7 +24,17 @@ class Dropdown extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.currentValue){
+        if(nextProps.redux){
+            let cv = nextProps.value;
+            for(let i = 0; i < nextProps.opns.length; i++){
+                if(nextProps.opns[i].id === nextProps.value){
+                    cv = nextProps.opns[i].name;
+                    break;
+                }
+            }
+            this.setState({currentValue: cv, isOpen: false})
+        }
+        else if(nextProps.currentValue){
             this.setState({currentValue: nextProps.currentValue, isOpen: false})
         }
     }
@@ -51,13 +62,13 @@ class Dropdown extends Component {
     render() {
         let {currentValue, isOpen} = this.state;
         let options = this.state.isOpen ?
-            <ul className='dropdown-options'>
+            <ul className='dropdown-options' style={{maxHeight: 39*this.state.results_count}}>
                 {this.renderDropdown(this.props.opns)}
             </ul> : null;
         return (
             <div className='dropdown-wr' ref={this.dropdownRef} >
                 <div className={'dropdown-trigger ' + classnames({'open' : isOpen})} onClick={()=>{this.setState({isOpen: !this.state.isOpen})}}>
-                    <div>{currentValue || this.props.placeholder || 'Select Option'}<img src={ArrowUp} /></div>
+                    <div>{currentValue || this.props.placeholder || 'Select'}<img alt="up" src={ArrowUp} /></div>
                 </div>
                 {options}
             </div>

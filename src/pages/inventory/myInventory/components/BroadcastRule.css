@@ -1,0 +1,21 @@
+.broadcast-rule {
+  border: 1px solid #dedede;
+  margin: 20px;
+  width: calc(100% - 40px);
+  background-color: white;
+  position: absolute;
+  left: 0;
+  display: none; }
+  .broadcast-rule .br-header {
+    color: #4e5157;
+    font-size: 1.6rem; }
+  .broadcast-rule .header-section {
+    padding: 20px;
+    display: block; }
+  .broadcast-rule .dropdown-wr {
+    max-width: 300px;
+    margin: 0 0 20px 20px; }
+  .broadcast-rule .br-target {
+    color: #a8a8a8; }
+  .broadcast-rule.open {
+    display: block; }

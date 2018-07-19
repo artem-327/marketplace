@@ -1,0 +1,20 @@
+.filterTag {
+  background-color: #e7e7e7;
+  border: 1px solid #c6c6c6;
+  padding: 4px 4px 4px 20px;
+  border-radius: 25px;
+  display: inline-block;
+  margin-left: 10px;
+  margin-top: 10px; }
+  .filterTag span {
+    padding-top: 5px; }
+  .filterTag i {
+    position: relative;
+    float: right;
+    background-color: #c6c6c6;
+    margin-left: 10px;
+    padding: 6px 8px;
+    border: 1px solid #c6c6c6;
+    border-radius: 50%; }
+    .filterTag i:hover {
+      cursor: pointer; }

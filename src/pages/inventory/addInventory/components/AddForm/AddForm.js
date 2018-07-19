@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import AddGroup from '../AddGroup'
-import {Control, Form} from 'react-redux-form';
-import Dropdown from "../../../../../components/Dropdown/Dropdown";
-import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
+import {Form} from 'react-redux-form';
 import Details from './Details';
 import Pricing from './Pricing';
 import Location from './Location';
@@ -26,6 +24,7 @@ export default class AddForm extends Component {
                 this.props.fetchProductConditions({productType});
                 this.props.fetchProductGrade({productType});
                 this.props.getPackageOptions(productType);
+                this.props.fetchWarehouse();
                 this.props.getManufacturer();
                 this.props.getPricingUnits();
             });
@@ -43,12 +42,12 @@ export default class AddForm extends Component {
                 this.props.fetchWarehouse();
                 this.props.getManufacturer();
                 this.props.getPricingUnits();
+                this.props.fetchLocations();
             });
         }
     }
 
     addProductOffer(inputs){
-        console.log(this.props.form);
         let pckgs = this.props.form.addProductOffer;
         let pckgName = "";
         let measureType = "";
@@ -56,7 +55,7 @@ export default class AddForm extends Component {
             for(let i = 0; i < this.props.package.length; i++){
                 if(this.props.package[i].id === pckgs.packageType){
                     pckgName = this.props.package[i].name;
-                    measureType = this.props.package[i].measureType
+                    measureType = this.props.package[i].measureType;
                 }
             }
             this.props.validatePackageType(pckgName, measureType, pckgs.packageSize, pckgs.units).then(()=>{
@@ -64,9 +63,11 @@ export default class AddForm extends Component {
                 let params = Object.assign({}, inputs, {
                     product: this.state.selectedProduct.id,
                     expiresAt:  "1993-03-18T13:09:41.305Z",
+                    merchantVisibility: (inputs.merchantVisibility || false),
                     packageType: this.props.packageTypeId,
                 });
                 this.props.addProductOffer(params).then(() => {
+                    this.props.resetForm();
                     this.props.history.push("/inventory/my-inventory");
                 })
 
@@ -76,7 +77,6 @@ export default class AddForm extends Component {
         }
 
     }
-
 
     render() {
         return (
