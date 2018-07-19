@@ -10,6 +10,11 @@ class AllInventory extends Component {
         this.props.getData();
     }
 
+    componentWillUnmount(){
+        this.props.resetFilterTags();
+        this.props.resetForm();
+    }
+
     render() {
         let content = this.props.isFetching ? <div><Spinner/></div> :
             <ProductOffers productOffers={this.props.productOffers} addPopup={this.props.addPopup}/>;
@@ -17,7 +22,7 @@ class AllInventory extends Component {
             <div>
                 <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
                 <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getData({...filter, mrchnt: true})}}/>
-                <Filter filterFunc={(inputs) => this.props.getData(inputs)} />
+                <Filter chemicalName quantity price package filterFunc={(inputs) => this.props.getData(inputs)} />
                 {content}
             </div>
         )

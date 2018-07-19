@@ -4,6 +4,8 @@ import {Control} from 'react-redux-form';
 import dropdown from '../../../images/inv-filter/dropdown.png'
 import dropdownClose from '../../../images/inv-filter/dropdown-close.png'
 import classnames from "classnames";
+import DropdownRedux from "../../Dropdown/DropdownRedux";
+import RadioRedux from "../../Radio/RadioRedux";
 
 class FilterGroup extends Component {
 
@@ -32,8 +34,30 @@ class FilterGroup extends Component {
         if(nextProps.isOpen !== this.state.isOpen) this.setState({isOpen: nextProps.isOpen})
     }
 
-    renderInputs() {
+    // renderInputsGroup () {
+    //     switch (this.props.renderAsGroup) {
+    //         case 'radio': {
+    //             return this.state.isOpen ? this.props.inputs.map((input, index) => {
+    //                 return (
+    //                 <div className='input-radio'>
+    //                 <label className="radioButton" key={index}><p>{input.label}</p>
+    //                     <Control.radio name={this.props.name} value={input.id}
+    //                                    model={input.model}/>
+    //                     <span className={"radiomark"}></span>
+    //                 </label>
+    //                 </div>
+    //                 )
+    //             }) : null
+    //         }
+    //         default: {
+    //             return null
+    //         }
+    //     }
+    // }
+
+    renderInputs () {
         if (!this.props.inputs) return;
+        if (this.props.renderAsGroup) return this.renderInputsGroup();
         return this.state.isOpen ? this.props.inputs.map((input, index) => {
             switch(input.type){
                 case 'checkbox':{
@@ -47,8 +71,24 @@ class FilterGroup extends Component {
                         </div>
                     )
                 }
+                case 'radio' : {
+                    return (
+                        <div key={index} className='filter-input-radio'>
+                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
+                            <RadioRedux dispatch={this.props.dispatch} model={input.model} opns={[{name:'100', value:'10'}, {name:'500', value:'50'}, {name:'1000', value:'100'}]}/>
+                        </div>
+                    )
+                }
+                case 'dropdown' : {
+                    return (
+                        <div key={index} className='filter-input-dropdown'>
+                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
+                        <DropdownRedux dispatch={this.props.dispatch} model={input.model} opns={[{name:'100', id:'100'}, {name:'500', id:'500'}, {name:'1000', id:'1000'}]}/>
+                        </div>
+                    )
+                }
                 case 'text':
-                case 'number': {
+                 case 'number': {
                     return (
                         <div key={index} className='filter-input-text'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>
@@ -64,6 +104,7 @@ class FilterGroup extends Component {
     }
 
     render() {
+        if(!this.props.isVisible) return null;
         return (
             <div className={classnames("filter-group", {"split" : (this.props.split)})}>
                 <div className="header" onClick={() => {
@@ -91,7 +132,8 @@ FilterGroup.propTypes = {
         })
     ),
     split: PropTypes.bool,
-    open: PropTypes.bool
+    open: PropTypes.bool,
+    location: PropTypes.string
 };
 
 
