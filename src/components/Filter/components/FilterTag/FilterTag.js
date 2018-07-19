@@ -15,7 +15,7 @@ class FilterTag extends Component {
             case 'pckgs': return 'Package type';
             case 'chemSearch': return 'Chemical search';
             case 'productAge': return 'Product Age';
-            case 'location': return 'Location';
+            case 'loc': return 'Location';
             default: return 'unknown';
         }
     }

@@ -136,23 +136,27 @@ class Filter extends Component {
                                  data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.productAge}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('productAge', value)}}
-                                 inputs={this.props.productAge.map(productAge => ({
-                                     label: productAge.name,
-                                     type: 'radio',
-                                     id: productAge.id,
-                                     model: `.productAge[${productAge.id}]`
-                                 }))}/>
+                                 dispatch={this.props.dispatch}
+                                 inputs={[
+                                     {
+                                         model: 'forms.filter.data.productAge',
+                                         type: 'radio',
+                                     }
+                                 ]}/>
+
+
+
                     <FilterGroup className="filterGroup"
                                  header='Location'
-                                 isVisible={!!this.props.locate}
+                                 isVisible={!!this.props.loc}
                                  data={this.props.filterData}
-                                 isOpen={this.props.filterGroupStatus.location}
-                                 onOpen={(value)=>{this.props.toggleFilterGroup('location', value)}}
+                                 isOpen={this.props.filterGroupStatus.loc}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('loc', value)}}
                                  dispatch={this.props.dispatch}
                                  inputs={[
                                      {
                                          label: 'Max. miles away',
-                                         model: 'forms.filter.data.location',
+                                         model: 'forms.filter.data.loc',
                                          type: 'dropdown',
                                      }
                                  ]}/>

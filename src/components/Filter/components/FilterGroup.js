@@ -4,10 +4,8 @@ import {Control} from 'react-redux-form';
 import dropdown from '../../../images/inv-filter/dropdown.png'
 import dropdownClose from '../../../images/inv-filter/dropdown-close.png'
 import classnames from "classnames";
-import Dropdown from "../../Dropdown/Dropdown";
-import Checkbox from "../../Checkbox/Checkbox";
-import Radio from "../../Radio/Radio";
 import DropdownRedux from "../../Dropdown/DropdownRedux";
+import RadioRedux from "../../Radio/RadioRedux";
 
 class FilterGroup extends Component {
 
@@ -36,26 +34,26 @@ class FilterGroup extends Component {
         if(nextProps.isOpen !== this.state.isOpen) this.setState({isOpen: nextProps.isOpen})
     }
 
-    renderInputsGroup () {
-        switch (this.props.renderAsGroup) {
-            case 'radio': {
-                return this.state.isOpen ? this.props.inputs.map((input, index) => {
-                    return (
-                    <div className='input-radio'>
-                    <label className="radioButton" key={index}><p>{input.label}</p>
-                        <Control.radio defaultChecked={true} name={this.props.name} value={input.id}
-                                       model={input.model}/>
-                        <span className={"radiomark"}></span>
-                    </label>
-                    </div>
-                    )
-                }) : null
-            }
-            default: {
-                return null
-            }
-        }
-    }
+    // renderInputsGroup () {
+    //     switch (this.props.renderAsGroup) {
+    //         case 'radio': {
+    //             return this.state.isOpen ? this.props.inputs.map((input, index) => {
+    //                 return (
+    //                 <div className='input-radio'>
+    //                 <label className="radioButton" key={index}><p>{input.label}</p>
+    //                     <Control.radio name={this.props.name} value={input.id}
+    //                                    model={input.model}/>
+    //                     <span className={"radiomark"}></span>
+    //                 </label>
+    //                 </div>
+    //                 )
+    //             }) : null
+    //         }
+    //         default: {
+    //             return null
+    //         }
+    //     }
+    // }
 
     renderInputs () {
         if (!this.props.inputs) return;
@@ -70,6 +68,14 @@ class FilterGroup extends Component {
                                 <Control.checkbox model={input.model} id={input.model}/>
                                 <span className="checkmark">  </span>
                             </label>
+                        </div>
+                    )
+                }
+                case 'radio' : {
+                    return (
+                        <div key={index} className='filter-input-radio'>
+                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
+                            <RadioRedux dispatch={this.props.dispatch} model={input.model} opns={[{name:'100', value:'10'}, {name:'500', value:'50'}, {name:'1000', value:'100'}]}/>
                         </div>
                     )
                 }
@@ -127,7 +133,7 @@ FilterGroup.propTypes = {
     ),
     split: PropTypes.bool,
     open: PropTypes.bool,
-    location: PropTypes. string
+    location: PropTypes.string
 };
 
 
