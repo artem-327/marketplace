@@ -27,7 +27,7 @@ class BroadcastConfig extends Component {
                     <Radio onChange={(value)=>this.changeRadio('mark', value)}
                            name={this.props.name + 'mark'}
                            className='small br-config-radio'
-                           opns={[{value:'prcnt', label:'%'}, {value:'dolar', label:'$'}]}
+                           opns={[{value:'priceMultiplication', label:'%'}, {value:'priceAddition', label:'$'}]}
                            />
                 </div>
             </div>
