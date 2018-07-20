@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {NavLink} from 'react-router-dom';
 import './submenu.css';
 import {Control, Form} from 'react-redux-form';
-
 import searchIcon from '../../images/subMenu/search-icon-transparent.png';
 import filterIcon from '../../images/subMenu/filter-icon-transparent.png';
 
@@ -14,6 +13,7 @@ class SubMenu extends Component {
         this.state = {
             searchOpen: false,
             filterOpen: false,
+            filterVisible: false
         }
     }
 
@@ -66,10 +66,11 @@ class SubMenu extends Component {
     }
 
     render() {
+        console.log(this.props.filterVisible);
         return (
             <div className="submenu">
                 {this.renderLinks()}
-                {this.renderFilterButton()}
+                {this.props.filterVisible ? this.renderFilterButton() : null}
                 {this.renderSearch()}
             </div>
         );
@@ -87,9 +88,90 @@ SubMenu.propTypes = {
     ),
     search: PropTypes.bool,
     filter: PropTypes.bool,
+    filterVisible: PropTypes.bool
 };
 
 
 
 
 export default SubMenu;
+
+
+
+// constructor(props) {
+//     super(props);
+//     this.state = {
+//         loginMenuVisible : false,
+//         registerMenuVisible : false,
+//         mainMenuVisible : false
+//     };
+//     console.log(this.state);
+//     //this.triggerMenu = this.triggerMenu.bind(this);
+// }
+//
+// render() {
+//     return (
+//         <div className="site__navigation">
+//             <Menu />
+//             <header className="site__header">
+//
+//                 <a href="/"><img src="img/logo-full-color.png" alt="meatFree" /></a>
+//
+//                 <ul className="header__navigation">
+//                     <li className="header__navigation__item">
+//                         <a href="/register"  onClick={this.toggleMenu.bind(this, 'register')}>Register</a>
+//                         <ul className={this.state.registerMenuVisible ? "dropdown visible" : "dropdown"}>
+//                             <li>
+//                                 <LoginForm />
+//                             </li>
+//                         </ul>
+//                     </li>
+//                     <li className="header__navigation__item">
+//                         <a href="#" onClick={this.toggleMenu.bind(this, 'login')}>Login</a>
+//                         <ul className={this.state.loginMenuVisible ? "dropdown visible" : "dropdown"}>
+//                             <li>
+//                                 <LoginForm />
+//                             </li>
+//                         </ul>
+//                     </li>
+//                     <li className="header__navigation__item">
+//                         <a href="" className="nav__toggle">
+//                             Menu
+//                         </a>
+//                     </li>
+//                 </ul>
+//
+//             </header>
+//         </div>
+//     );
+// }
+//
+// toggleMenu(type, e) {
+//     e.preventDefault();
+//     console.log(type);
+//     switch(type) {
+//         case 'login':
+//             if(this.state.loginMenuVisible) {
+//                 this.setState({loginMenuVisible : false});
+//             } else {
+//                 this.setState({
+//                     registerMenuVisible : false,
+//                     loginMenuVisible :  true
+//                 });
+//             }
+//             break;
+//
+//         case 'register':
+//             if(this.state.registerMenuVisible) {
+//                 this.setState({registerMenu : false});
+//             } else {
+//                 this.setState({
+//                     registerMenuVisible : true
+//                 });
+//             }
+//             break;
+//
+//         case 'menu':
+//             this.setState({mainMenuVisible : true });
+//     }
+// }
