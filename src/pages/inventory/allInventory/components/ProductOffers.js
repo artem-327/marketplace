@@ -38,8 +38,8 @@ class ProductOffers extends Component {
    }
 
    //TODO:: Add to cart
-   addCart(){
-        this.props.addPopup(<AddCart/>)
+   addCart(id){
+        this.props.addPopup(<AddCart id={id}/>)
    }
 
     render() {
@@ -97,12 +97,12 @@ class ProductOffers extends Component {
                                         <td>unknown</td>
                                         <td>unknown</td>
                                         <td>{offer.origin}</td>
-                                        <td>{offer.expirationDate ? moment(offer.expirationDate).format(DATE_FORMAT) : 'none'}</td>
+                                        <td>{offer.expiresAt ? moment(offer.expiresAt).format(DATE_FORMAT) : 'none'}</td>
                                         <td>unknown</td>
                                         <td>{offer.productCondition.name}</td>
                                         <td>{offer.productForm.name}</td>
                                         <td>{offer.warehouse.name} ({offer.warehouse.location.state})</td>
-                                        <td><button onClick={()=>{this.addCart()}}>BUY</button></td>
+                                        <td><button onClick={()=>{this.addCart(offer.id)}}>BUY</button></td>
                                     </tr>
                                 )
                             })

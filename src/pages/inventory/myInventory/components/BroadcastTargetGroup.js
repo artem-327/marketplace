@@ -5,6 +5,7 @@ class BroadcastTargetGroup extends Component {
 
     constructor(props){
         super(props);
+        this.brRef = React.createRef();
         this.state = {
             isOpen: false,
             target: [],
@@ -19,23 +20,19 @@ class BroadcastTargetGroup extends Component {
         }
     }
 
-    getGroupType(){
-        switch(this.props.filter){
-            case "Regions": return 'location';
-            default: return null;
-        }
-    }
-
     handleChangeGroup(id, value){
         let newTarget = this.state.target.slice();
         if(value === 'include' || value === 'exclude'){
             newTarget = [];
             for(let i = 0; i < this.props.items.length; i++){
-                newTarget.push({visibility: value === 'include', id: this.props.items[i].id})
+                newTarget.push({visibility: value === 'include', 'company': this.props.items[i].company})
+            }
+            if(this.props.type !== 'company') {
+                this.props.updateTargets(this.props.index, [{[this.props.type]: this.props.id, visibility: value === 'include'}])
+            }else{
+                this.props.updateTargets(this.props.index, newTarget)
             }
         }
-        // let groupType = this.getGroupType();
-        // if(groupType) this.updateResponse({[groupType]: id});
         this.setState({
             groupSelected: value,
             target: newTarget
@@ -45,19 +42,23 @@ class BroadcastTargetGroup extends Component {
     handleChangeItem(id, value){
         let newGroupState = value === this.state.groupSelected ? value : 'custom';
         for(let i = 0; i < this.state.target.length; i++){
-            if(this.state.target[i].id === id){
+            if(this.state.target[i].company === id){
                 let newTarget = this.state.target.slice();
                 newTarget[i].visibility = value === 'include';
-                this.setState({target: newTarget, groupSelected: newGroupState});
+                this.setState({target: newTarget, groupSelected: newGroupState},()=>{
+                    this.props.updateTargets(this.props.index, this.state.target)
+                });
                 return;
             }
         }
-        this.setState({target: [...this.state.target, {visibility: value === 'include', id}], groupSelected: newGroupState})
+        this.setState({target: [...this.state.target, {visibility: value === 'include', company: id}], groupSelected: newGroupState},()=>{
+            this.props.updateTargets(this.props.index, this.state.target)
+        })
     }
 
     checkItemValue(id){
         for(let i = 0; i < this.state.target.length; i++){
-            if(this.state.target[i].id === id){
+            if(this.state.target[i].company === id){
                 if(this.state.target[i].visibility){
                     return 'include'
                 }
@@ -71,33 +72,40 @@ class BroadcastTargetGroup extends Component {
         return this.props.items.map((item, index) => {
             let value = this.state.groupSelected;
             if(value === 'custom'){
-                value = this.checkItemValue(item.id)
+                value = this.checkItemValue(item.company)
             }
             return (<div key={index} className='br-item-header'>
                 <div className='left-group'>
                     {item.name}
                 </div>
-                <BroadcastConfig item name={item.name + index} value={value} id={item.id} changeBrConfig={(id, value)=>this.handleChangeItem(id, value)}/>
+                <BroadcastConfig item name={item.name + index} value={value} id={item.company} changeBrConfig={(id, value)=>this.handleChangeItem(id, value)}/>
                 <div className='clearfix' > </div>
             </div>)
         })
     }
 
+    toggleGroup(e){
+        if (this.brRef.current.contains(e.target)) return;
+        this.setState({isOpen: !this.state.isOpen})
+    }
+
     render() {
         return (
             <div>
-               <div className='br-group-header' onClick={()=>this.setState({isOpen: !this.state.isOpen})}>
+               <div className='br-group-header' onClick={(e)=>this.toggleGroup(e)}>
                    <div className='left-group'>
                        {this.state.isOpen ? <i className="icon fas fa-angle-up"/> : <i className="icon fas fa-angle-down"/>}
                        {this.props.name}
                        {!this.state.isOpen ? <span className='no-targets'>undefined / {this.props.items.length} Companies</span> : null}
                    </div>
-                   <BroadcastConfig
-                       name={this.props.name}
-                       id={this.props.id}
-                       value={this.state.groupSelected}
-                       changeBrConfig={(id, value)=>this.handleChangeGroup(id, value)}/>
-                   <div className='clearfix' > </div>
+                   <span ref={this.brRef}>
+                       <BroadcastConfig
+                           name={this.props.name}
+                           id={this.props.id}
+                           value={this.state.groupSelected}
+                           changeBrConfig={(id, value)=>this.handleChangeGroup(id, value)}/>
+                       <div className='clearfix' > </div>
+                   </span>
                </div>
                 {this.state.isOpen ? this.renderItems() : null}
             </div>

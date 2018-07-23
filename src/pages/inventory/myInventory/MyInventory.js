@@ -35,6 +35,11 @@ class MyInventory extends Component {
         this.setFilter(GROUP_BY_ALL_COMPANIES, nextProps.companies)
     }
 
+    componentWillUnmount(){
+        this.props.resetFilterTags();
+        this.props.resetForm();
+    }
+
     setFilter(type, companies = this.props.companies) {
         switch (type) {
             case GROUP_BY_ALL_COMPANIES: {
@@ -50,7 +55,7 @@ class MyInventory extends Component {
     }
 
     groupByAllCompanies(companies) {
-        let targets = companies.map(company => ({name: company.name, id: company.id}));
+        let targets = companies.map(company => ({name: company.name, company: company.id}));
         this.setState({
             currentSelected: 'All companies',
             targetGroups: [{name: 'All Companies', type:'company', visible: true, targets: targets}],
@@ -63,7 +68,7 @@ class MyInventory extends Component {
             locations.forEach(location => {
                 (carry[location.id] = carry[location.id] || {name: location.state, type:'location', id: location.id, visible: true, targets: []})
                     .targets
-                    .push({name: company.name, id: company.id});
+                    .push({name: company.name, company: company.id});
             });
             return carry;
         }, {}));
@@ -83,9 +88,9 @@ class MyInventory extends Component {
         return (
             <div className='my-inventory'>
                 <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
-                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getProductOffers({...filter, mrchnt: true})}}/>
+                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getProductOffers({...filter}, true)}}/>
                 <h3 className='header small'>Undefined product offerings selected</h3>
-                <Filter filterFunc={(filter) => {this.props.getProductOffers({...filter, mrchnt: true})}} />
+                <Filter chemicalName filterFunc={(filter) => {this.props.getProductOffers({...filter}, true)}} />
                 {content}
                 <BroadcastRule
                     targetGroups={this.state.targetGroups}

@@ -3,6 +3,7 @@ import {bindActionCreators} from 'redux';
 import Filter from './Filter';
 import {fetchAll as fetchPackageTypes} from "../../modules/packageTypes";
 import {toggleFilterGroup, resetForm, addFilterTag, toggleFilter} from '../../modules/filter';
+import {fetchProductAge} from '../../modules/products';
 
 
 function mapStateToProps(store) {
@@ -10,12 +11,15 @@ function mapStateToProps(store) {
         isOpen: store.forms.filter.isOpen,
         packageTypes: store.packageTypes.data,
         filterGroupStatus: store.forms.filter.filterGroup,
-        filterData: store.forms.filter.data
+        filterData: store.forms.filter.data,
+        productAge:store.products.productAge,
+        location:store.products.location,
+
     }
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({fetchPackageTypes, toggleFilterGroup, resetForm, addFilterTag, toggleFilter}, dispatch)
+    return bindActionCreators({fetchPackageTypes, toggleFilterGroup, resetForm, addFilterTag, toggleFilter, fetchProductAge, dispatch}, dispatch)
 }
 
 
