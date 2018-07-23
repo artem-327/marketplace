@@ -13,7 +13,6 @@ class SubMenu extends Component {
         this.state = {
             searchOpen: false,
             filterOpen: false,
-            filterVisible: false
         }
     }
 
