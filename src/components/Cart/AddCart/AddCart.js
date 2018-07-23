@@ -6,16 +6,11 @@ import Dropdown from "../../Dropdown/Dropdown";
 class AddCart extends Component {
 
     componentDidMount(){
-        console.log("mount up");
         this.props.getCurrentAdded(this.props.id)
-
-        
-        
     }
 
     render() {
-        let {name,merchant,availableProducts,packageSize,quantity} = this.props;
-        console.log(this.props.id);
+        
         return (
             
             <div className="add-cart">
@@ -35,7 +30,7 @@ class AddCart extends Component {
                             <div><b>Packaging: </b></div>
                             <div><b>Package Size: </b>{this.props.packageSize}</div>
                             <div><b>Form: </b></div>
-                            <div><b>Location: </b></div>
+                            <div><b>Location: </b> {this.props.location}</div>
 
                         </div>
                         <div className="add-cart-body-info-attachments">
@@ -48,10 +43,10 @@ class AddCart extends Component {
                     <div className="add-cart-body-selection-schroll">
                             <h1>Product Info</h1>
                             <div><b>Select Price Level</b></div>
-                            <div><Dropdown opns={quantity} placeholder='Select Quantity'/></div>
+                            <div><Dropdown opns={[]} placeholder='Select Quantity'/></div>
                             <div><b>Select Quantity</b></div>
-                            <div><Dropdown opns={quantity} placeholder='Select Quantity'/></div>
-                        </div>
+                            <div><Dropdown opns={[]} placeholder='Select Quantity'/></div>
+                    </div>
                         <div className="add-cart-body-selection-totals">
                             <div><b>Total Quantity: </b></div>
                             <div><b>Price/LB: </b></div>

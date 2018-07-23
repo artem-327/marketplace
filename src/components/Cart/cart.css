@@ -14,11 +14,12 @@
     margin-left: -4.5%; }
   .add-cart .close-mark {
     position: absolute;
-    justify-self: end;
     color: #a1a2a5;
     font-size: 2rem;
     transition: all .2s ease;
-    transform: rotate(0deg); }
+    transform: rotate(0deg);
+    top: 23px;
+    right: 20px; }
     .add-cart .close-mark:hover {
       cursor: pointer;
       transform: rotate(-180deg); }
