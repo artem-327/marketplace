@@ -1,6 +1,7 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux'
 import TestPage from './Testpage';
+import {addPopup} from '../../modules/popup';
 
 function mapStateToProps(store) {
     return {
@@ -9,7 +10,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({},dispatch)
+    return bindActionCreators({addPopup},dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TestPage);
