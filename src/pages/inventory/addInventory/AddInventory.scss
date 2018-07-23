@@ -1,6 +1,6 @@
 
 .add-group{
-  border-radius: 8px;
+  border-radius: 4px;
   border: 1px solid #eeeeee;
   margin: 20px;
   .location-wr{
@@ -114,11 +114,11 @@
     }
   }
   .header-group{
-    background-color: #eeeeee;
+    background-color: #f5f5f5;
     border: none;
-    border-radius: 8px;
+    border-radius: 4px;
     &.open{
-      border-radius: 8px 8px 0 0;
+      border-radius: 4px 4px 0 0;
     }
     h1{
       font-size: 1rem;
@@ -126,7 +126,7 @@
       font-weight: bold;
       margin: 0;
       padding: 15px;
-      color: #3997d2;
+      color:#373b42;
       border: none;
     }
     i{
@@ -134,11 +134,17 @@
       padding-top: 17px;
       padding-right: 17px;
     }
+    img {
+      padding-left: 20px;
+    }
   }
   .group-inside{
     h4{
       font-size: 1rem;
     }
+  }
+  h6{
+    margin: 25px 0 25px 10px;
   }
 }
 .inventory-product{
