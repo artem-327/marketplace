@@ -1,4 +1,8 @@
+import axios from "axios";
+
 const CURRENT_ADDED = "CURRENT_ADDED";
+const CURRENT_ADDED_FULLFILLED = "CURRENT_ADDED_FULLFILLED";
+
 
 export const initialState = {
     addCart:{
@@ -21,12 +25,12 @@ export const initialState = {
             }
         ]
     }
-
+    
 };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case CURRENT_ADDED: {
+        case CURRENT_ADDED_FULLFILLED: {
             return {
                 ...state,
             }
@@ -40,6 +44,7 @@ export default function reducer(state = initialState, action) {
 export function getCurrentAdded() {
     return {
         type: CURRENT_ADDED,
+        action: axios.get("/api/v1/product-offers/1/")
     }
 }
 
