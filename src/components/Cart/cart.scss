@@ -1,25 +1,120 @@
 .add-cart{
+  display: grid;
+  min-width: 700px;
+
+  min-height: 300px;
+  padding: 15px 30px 30px 30px;
+
   background-color: white;
-  padding: 30px;
-  min-width: 500px;
-  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
-  border-radius: 5px;
+
+  hr {
+    display: block;
+    height: 1px;
+
+    border-top: 2px solid #ccc;
+
+    /*margin: 1em 0;*/
+    padding-top: 20px;
+    width: 109%;
+    margin-left: -4.5%;
+  }
+ 
   .close-mark{
     position: absolute;
-    right: 20px;
-    top: 15px;
     color: #a1a2a5;
-    font-size: 1.2rem;
+    font-size: 2rem;
     transition: all .2s ease;
     transform: rotate(0deg);
+    top: 23px;
+    right: 20px;
     &:hover{
       cursor: pointer;
       transform: rotate(-180deg);
     }
   }
+  .add-cart-header{
+    display: grid;
+    align-items: center;
+    min-width: 500px;
+    grid-template-columns: 1fr 1fr;
+    font-size: 25px;
+    grid-template-rows: 50px;
+  }
+  .add-cart-footer{
+    display: grid;
+    grid-template-columns: 150px 150px;
+    grid-template-rows: 40px;
+    justify-content: end;
+
+  }
+  .add-cart-body{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-content: space-between;
+    grid-template-rows: 400px; 
+
+    .vl{
+      border: 0;
+      height: 380px;
+      top: 90px;
+      width: 1px;
+      border-left: 1px solid #ccc;
+      box-shadow: 0px 0px;
+      opacity: 0.5;
+      position: absolute;
+      z-index: 100;
+      left: 54.5%;
+      
+    }
+
+    b{
+      font-weight: 700;
+    }
+    
+    .add-cart-body-info{
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      padding: 0px 40px 0px 20px;
+      
+      align-content: space-between;
+      grid-row-gap: 10px;
+      .add-cart-body-info-data{
+        display: grid;
+        align-content: start;
+        grid-row-gap: 10px;
+      }
+      .add-cart-body-info-attachments{
+        display: grid;
+        align-content: start;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+      }
+    }
+    .add-cart-body-selecion{
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      align-content: start;
+      grid-row-gap: 10px;
+      padding: 0px 20px 0px 40px;
+      align-content: space-between;
+      
+      .add-cart-body-selection-schroll{
+        display: grid;
+        align-content: start;
+        align-items: center; 
+        grid-row-gap: 10px;
+
+      }
+      .add-cart-body-selection-totals{
+        display: grid;
+        align-content: center;
+        grid-row-gap: 10px;
+      }
+    }
+  }
+
+
   .dropdown-wr{
-    margin: 20px 0 0 0;
-    width: 45%;
+    width: 80%;
   }
   .button{
     margin: 0 0 0 20px;
