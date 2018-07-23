@@ -16,6 +16,7 @@ class Filter extends Component {
     }
 
     handleSubmit(inputs){
+        console.log(inputs)
         let filter = Object.assign({}, inputs, {pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key).join(',')});
 
         let params = filterNonEmptyAttributes(filter);
@@ -40,11 +41,14 @@ class Filter extends Component {
     }
 
     render(){
+        console.log(this.props);
+        // (this.props.data.locations.state)
         return this.state.isOpen ?
             <div className="filter">
                 <Form model="forms.filter.data" onSubmit={(val) => this.handleSubmit(val)}>
-                    <FilterGroup className="filterGroup, {}"
+                    <FilterGroup className="filterGroup"
                                  header='Chemical Type'
+                                 isVisible={!!this.props.chemicalName}
                                  data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.chemName}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('chemName', value)}}
@@ -56,6 +60,7 @@ class Filter extends Component {
                                      }
                                  ]}/>
                     <FilterGroup className="filterGroup"
+                                 isVisible={!!this.props.quantity}
                                  isOpen={this.props.filterGroupStatus.quantity}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('quantity', value)}}
                                  header='Quantity'
@@ -78,6 +83,7 @@ class Filter extends Component {
                     <FilterGroup className="filterGroup"
                                  header='Price'
                                  split
+                                 isVisible={!!this.props.price}
                                  data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.price}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('price', value)}}
@@ -97,6 +103,7 @@ class Filter extends Component {
                                  ]}/>
                     <FilterGroup className="filterGroup"
                                  header='Packaging'
+                                 isVisible={!!this.props.package}
                                  split
                                  data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.packaging}
@@ -108,12 +115,56 @@ class Filter extends Component {
                                         id: packageType.id,
                                         model: `.pckgs[${packageType.id}]`
                                  }))}/>
+
+                    <FilterGroup className="filterGroup"
+                                 header='Chemical Search'
+                                 isVisible={!!this.props.chemicalSearch}
+                                 data={this.props.filterData}
+                                 isOpen={this.props.filterGroupStatus.chemSearch}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('chemSearch', value)}}
+                                 inputs={[
+                                     {
+                                         label: 'Chemical search',
+                                         model: '.chemSearch',
+                                         type: 'text',
+                                     }
+                                 ]}/>
+                    <FilterGroup className="filterGroup"
+                                 header='Product Age'
+                                 isVisible={!!this.props.productsAge}
+                                 split
+                                 data={this.props.filterData}
+                                 isOpen={this.props.filterGroupStatus.productAge}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('productAge', value)}}
+                                 dispatch={this.props.dispatch}
+                                 inputs={[
+                                     {
+                                         model: 'forms.filter.data.productAge',
+                                         type: 'radio',
+                                     }
+                                 ]}/>
+
+
+
+                    <FilterGroup className="filterGroup"
+                                 header='Location'
+                                 isVisible={!!this.props.loc}
+                                 data={this.props.filterData}
+                                 isOpen={this.props.filterGroupStatus.loc}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('loc', value)}}
+                                 dispatch={this.props.dispatch}
+                                 inputs={[
+                                     {
+                                         label: 'Max. miles away',
+                                         model: 'forms.filter.data.loc',
+                                         type: 'dropdown',
+                                     }
+                                 ]}/>
                     <div className="filterBottom">
 
                         {/*<button className="filter-button">Apply</button>*/}
                         <button className='button filter-button'>Apply</button>
                         <button className='button disabled filter-button' onClick={()=>{this.props.resetForm()}}>Clear filter</button>
-
                     </div>
                 </Form>
             </div> : null;

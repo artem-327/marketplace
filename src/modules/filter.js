@@ -7,6 +7,7 @@ const ADD_FILTER_TAG = 'ADD_FILTER_TAG';
 const CLOSE_FILTER_TAG = 'CLOSE_FILTER_TAG';
 const CLOSE_FILTER_TAG_FULFILLED = 'CLOSE_FILTER_TAG_FULFILLED';
 const RESET_FORM = 'RESET_FORM';
+const RESET_TAGS = 'RESET_TAGS';
 
 export const initialState = {
     isOpen: false,
@@ -15,7 +16,10 @@ export const initialState = {
         chemName: true,
         quantity: true,
         price: true,
-        packaging: false
+        packaging: false,
+        chemSearch: false,
+        productAge: false,
+        location: false
     },
     filterTags: []
 };
@@ -51,13 +55,17 @@ export default function reducer(state = initialState, action) {
             }
         }
         case CLOSE_FILTER_TAG_FULFILLED: {
-            console.log(action.payload);
             return {
                 ...state,
                 filterTags: [...state.filterTags.slice(0,action.payload), ...state.filterTags.slice(action.payload+1)]
             }
         }
-
+        case RESET_TAGS:{
+            return {
+                ...state,
+                filterTags: []
+            }
+        }
 
         default: {
             return state
@@ -97,6 +105,11 @@ export function resetForm() {
     }
 }
 
+export function resetFilterTags(){
+    return {
+        type: RESET_TAGS
+    }
+}
 
 
 

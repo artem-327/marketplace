@@ -97,7 +97,7 @@ class ProductOffers extends Component {
                                         <td>unknown</td>
                                         <td>unknown</td>
                                         <td>{offer.origin}</td>
-                                        <td>{offer.expirationDate ? moment(offer.expirationDate).format(DATE_FORMAT) : 'none'}</td>
+                                        <td>{offer.expiresAt ? moment(offer.expiresAt).format(DATE_FORMAT) : 'none'}</td>
                                         <td>unknown</td>
                                         <td>{offer.productCondition.name}</td>
                                         <td>{offer.productForm.name}</td>

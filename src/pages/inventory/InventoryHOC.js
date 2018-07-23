@@ -22,9 +22,10 @@ export default function InventoryHOC(ComposedComponent) {
             ]
         }
         render() {
+            let filter = this.props.location.pathname !== '/inventory/add-inventory/';
             return (
                 <div>
-                    <SubMenu links={this.submenuLinks()} filter/>
+                    <SubMenu links={this.submenuLinks()} filter={filter}/>
                     <ComposedComponent {...this.props}/>
                 </div>
             );

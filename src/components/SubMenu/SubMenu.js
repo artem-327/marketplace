@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import {NavLink} from 'react-router-dom';
 import './submenu.css';
 import {Control, Form} from 'react-redux-form';
-
 import searchIcon from '../../images/subMenu/search-icon-transparent.png';
 import filterIcon from '../../images/subMenu/filter-icon-transparent.png';
 
@@ -86,7 +85,7 @@ SubMenu.propTypes = {
         })
     ),
     search: PropTypes.bool,
-    filter: PropTypes.bool,
+    filter: PropTypes.bool
 };
 
 

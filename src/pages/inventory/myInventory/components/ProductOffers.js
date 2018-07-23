@@ -42,7 +42,6 @@ class ProductOffers extends Component {
     }
 
     render() {
-
         return (
             <div className="App">
                 <table className="product-offers">

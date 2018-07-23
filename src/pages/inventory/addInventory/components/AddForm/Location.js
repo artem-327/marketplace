@@ -106,7 +106,7 @@ export default class Location extends Component {
                     <div className='group-item-wr'>
                         <label>Warehouse</label>
                         <DropdownRedux
-                            model="forms.addProductOffer.addProductOffer.location"
+                            model="forms.addProductOffer.addProductOffer.warehouse"
                             dispatch={this.props.dispatch}
                             opns={this.props.warehouse}
                             currentValue={currentLocation}
@@ -143,7 +143,7 @@ export default class Location extends Component {
                                disabled={!this.state.edit}
                                value={this.state.zip}
                                onChange={(e)=>{this.handleInputs(e.target.value, 'zip')}}
-                               type="number"/>
+                               type="text"/>
                     </div>
                 </div>
                 <div>
