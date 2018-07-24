@@ -1,6 +1,7 @@
 .search-products {
-  width: 30%;
+  width: calc(50% - 25px);
   display: inline-block;
+  margin: 0 15px 12px 10px;
   position: relative; }
   .search-products .search-icon {
     position: absolute;
@@ -13,6 +14,45 @@
     padding-left: 40px; }
   .search-products button {
     width: 200px; }
+
+.mapped-products {
+  width: calc(50% - 25px);
+  display: inline-block;
+  margin: 0 10px 12px 15px;
+  position: relative; }
+  .mapped-products .search-icon {
+    position: absolute;
+    bottom: 11px;
+    left: 11px;
+    color: #a9a9a9;
+    font-size: 18px; }
+  .mapped-products input {
+    width: 100%;
+    padding-left: 40px; }
+  .mapped-products button {
+    width: 200px; }
+
+.infoLabel {
+  position: relative;
+  padding: 10px 0;
+  border: 1px solid #289ada;
+  color: #a7a9ab;
+  border-radius: 4px;
+  width: calc(100% - 20px); }
+  .infoLabel label {
+    display: inline-block;
+    width: calc(100% - 40px);
+    float: right; }
+  .infoLabel .info-icon {
+    font-weight: bold;
+    color: #289ada;
+    border: 1px solid #289ada;
+    border-radius: 50%;
+    padding: 0px 9px;
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%); }
 
 .search-status {
   padding: 10px;

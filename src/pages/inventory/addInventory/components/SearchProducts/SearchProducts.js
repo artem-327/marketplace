@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import './SearchProducts.css';
 import debounce from "debounce";
 import Spinner from '../../../../../components/Spinner/Spinner';
-import RecentProducts from "./components/RecentProducts";
+import InfoLabel from "../AddForm/InfoLabel";
+import ProductMapping from "../AddForm/ProductMapping";
+
 
 class SearchProducts extends Component {
 
@@ -18,12 +20,15 @@ class SearchProducts extends Component {
     renderResults() {
         if (!this.props.searchedProducts || this.props.searchedProducts.length === 0) return <p className='search-status'>No results</p>;
         return this.props.searchedProducts.map(product => (
+            <div>
             <div key={product.id} className='search-product-item' onClick={() => this.props.onSelect(product)}>
                 <span className='search-cas'>{product.casNumber}</span>
                 {product.primaryName}
             </div>
+            </div>
         ));
     }
+
 
     handleChange(e) {
         this.setState({fulltext: e.target.value}, () => {
@@ -40,14 +45,19 @@ class SearchProducts extends Component {
         let results = this.props.isSearching ? <div className='search-status'><Spinner/></div> : this.renderResults();
         return (
             <div>
+                <h6>CHEMICAL SEARCH</h6>
                 <div className='search-products'>
-                    <label>Chemical Name or CAS #</label>
+                    <label>CAS Search</label>
                     <i className="fas fa-search search-icon" onClick={()=>{this.searchProducts()}}/>
                     <input value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Search'/>
                 </div>
-                <div className='recent-products'>
-                    <RecentProducts setProduct={(product)=>this.props.onSelect(product)} {...this.props}/>
+                <div className='mapped-products'>
+                    <label>Mapped Products Search</label>
+                    <i className="fas fa-search search-icon" onClick={()=>{this.searchProducts()}}/>
+                    <input value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Search by Product Name or Product Number'/>
                 </div>
+                <InfoLabel/>
+                <ProductMapping/>
                 <div className='search-results' style={{maxHeight: 50*this.state.results_count}}>
                     {results}
                 </div>
