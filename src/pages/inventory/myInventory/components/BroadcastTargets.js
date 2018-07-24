@@ -18,7 +18,7 @@ class BroadcastTargets extends Component {
     render() {
         if(!this.props.targetGroups) return null;
         return (
-            <div>
+            <div className='broadcast-rule-targets'>
                 {this.props.targetGroups.map((group, index) => (
                     <BroadcastTargetGroup updateTargets={(id, targets)=>this.addToTargets(id, targets)}
                                           index={index}

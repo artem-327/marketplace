@@ -168,7 +168,7 @@ class BroadcastTargetGroup extends Component {
                    <div className='left-group'>
                        {this.state.isOpen ? <i className="icon fas fa-angle-up"/> : <i className="icon fas fa-angle-down"/>}
                        {this.props.name}
-                       {!this.state.isOpen ? <span className='no-targets'>undefined / {this.props.items.length} Companies</span> : null}
+                       {!this.state.isOpen ? <span className='no-targets'>{this.state.target.length} / {this.props.items.length} Companies</span> : null}
                    </div>
                    <span ref={this.brRef}>
                        <BroadcastConfig
