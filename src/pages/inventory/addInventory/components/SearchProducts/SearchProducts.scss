@@ -1,3 +1,25 @@
+.edit-productMapping {
+  padding: 0 25px;
+  background-color: #dbf6d7;
+  color: #4cd136;
+  border: 2px solid #4cd136;
+  border-radius: 5px;
+  height: 38px;
+  font-weight: bold;
+  margin-left: 25px;
+  transition: all .2s ease;
+  .saved {
+    background-color: #4cd136;
+    color: white;
+  }
+  &:hover{
+    cursor: pointer;
+    background-color: #4cd136;
+    color: white;
+  }
+    
+}
+
 .search-products{
   width: calc(50% - 25px);
   display: inline-block;

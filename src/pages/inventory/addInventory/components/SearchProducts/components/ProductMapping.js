@@ -6,7 +6,7 @@ export default class ProductMapping extends Component {
     constructor(props){
         super(props);
         this.state = {
-            edit: false,
+            save: false,
         }
     }
 
@@ -15,14 +15,20 @@ export default class ProductMapping extends Component {
         this.props.getUnitOfPackaging();
     }
 
+    saveMapping(e){
+        e.preventDefault();
+        if(this.state.warehouseIndex === '')return;
+        this.setState({save: !this.state.save})
+    }
+
     render() {
-        let button = this.state.edit ? <button onClick={(e)=>this.updateLocation(e)} className='edit-productMapping'>Save</button> :
-            <button className='edit-productMapping' onClick={(e)=>this.changeMode(e)}>Save Mapping</button>;
+        let button = this.state.edit ? <button onClick={(e)=>this.updateLocation(e)} className='edit-productMapping saved'>Saved</button> :
+            <button className='edit-productMapping' onClick={(e)=>this.saveMapping(e)}>Save Mapping</button>;
         return (
 
             <div>
                 <h6 className=''>PRODUCT MAPPING</h6>
-                <Form model="forms.addProductOffer.data">
+                <Form model="forms.addProductOffer.addProductOffer">
                 <div>
                     <div className='group-item-wr'>
                         <label htmlFor=".indexName">CAS Index Name</label>
