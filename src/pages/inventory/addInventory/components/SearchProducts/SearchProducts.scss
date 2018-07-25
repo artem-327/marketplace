@@ -1,4 +1,5 @@
-.edit-productMapping {
+.save-productMapping {
+  width: 155px;
   padding: 0 25px;
   background-color: #dbf6d7;
   color: #4cd136;
@@ -18,6 +19,18 @@
     color: white;
   }
     
+}
+.saved-productMapping {
+  width: 155px;
+  padding: 0 25px;
+  background-color: #4cd136;
+  color: white;
+  border: 2px solid #4cd136;
+  border-radius: 5px;
+  height: 38px;
+  font-weight: bold;
+  margin-left: 25px;
+
 }
 
 .search-products{

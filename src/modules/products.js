@@ -20,9 +20,13 @@ const SEARCH_PRODUCT_PENDING = 'SEARCH_PRODUCT_PENDING';
 const SEARCH_PRODUCT_FULFILLED = 'SEARCH_PRODUCT_FULFILLED';
 const SEARCH_PRODUCT_REJECTED = 'SEARCH_PRODUCT_REJECTED';
 
+const SAVE_MAPPING = 'SAVE_MAPPING';
+const SAVE_MAPPING_FULFILLED = 'SAVE_MAPPING_FULFILLED';
+
 export const initialState = {
     data: [],
     productForms: [],
+    productsMapping: {},
     productConditions: [],
     productGrade: [],
     productAge: [],
@@ -80,6 +84,14 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 isFetching: false,
                 data: action.payload
+            }
+        }
+        case SAVE_MAPPING_FULFILLED: {
+            return{
+                ...state,
+                products: {
+                isFetching: false,
+                }
             }
         }
         default: {
@@ -155,5 +167,12 @@ export function fetchRecentAddedProducts(limit = 3) {
         payload: axios.get('/api/v1/products/', {params:{
             srtb: 'updatedAt', lmt: limit
         }}).then(result => result.data.data.products)
+    }
+}
+
+export function saveMapping(values) {
+    return {
+        type: SAVE_MAPPING,
+        payload: axios.post("/api/v1/?????????????", values)
     }
 }
