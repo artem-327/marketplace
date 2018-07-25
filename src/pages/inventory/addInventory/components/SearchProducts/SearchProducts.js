@@ -63,7 +63,7 @@ class SearchProducts extends Component {
 
         let {fulltextSearch, fulltextMap} = this.state;
         let results = this.props.isSearching ? <div className='search-status'><Spinner/></div> : this.renderResults();
-        let resultsMap = this.props.isSearching ? <div className='search-status'><Spinner/></div> : this.renderResultsMap();
+        let resultsMap = this.props.isSearching ? <div className='map-status'><Spinner/></div> : this.renderResultsMap();
         return (
             <div>
                 <h6>CHEMICAL SEARCH</h6>
@@ -71,16 +71,17 @@ class SearchProducts extends Component {
                     <label>CAS Search</label>
                     <i className="fas fa-search search-icon" onClick={()=>{this.searchProducts()}}/>
                     <input value={fulltextSearch} onChange={(e) => this.handleChangeSearch(e)} placeholder='Search'/>
+
+                    {results}
                 </div>
                 <div className='mapped-products'>
                     <label>Mapped Products Search</label>
                     <i className="fas fa-search search-icon" onClick={()=>{this.mappedProducts()}}/>
                     <input value={fulltextMap} onChange={(e) => this.handleChangeMap(e)} placeholder='Search by Product Name or Product Number'/>
+                    {resultsMap}
                 </div>
                 <InfoLabel/>
                 <div className='search-results' style={{maxHeight: 50*this.state.results_count}}>
-                    {results}
-                    {resultsMap}
                 </div>
             </div>
         );

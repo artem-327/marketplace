@@ -69,6 +69,16 @@
 
 
 .search-status{
+  position: absolute;
+  z-index: +1;
+  padding: 10px;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+}
+.map-status{
+  position: absolute;
+  z-index: +1;
   padding: 10px;
   width: 100%;
   margin: 0;
