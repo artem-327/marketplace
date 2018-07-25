@@ -45,18 +45,6 @@ class SearchProducts extends Component {
         let results = this.props.isSearching ? <div className='search-status'><Spinner/></div> : this.renderResults();
         return (
             <div>
-                <h6>CHEMICAL SEARCH</h6>
-                <div className='search-products'>
-                    <label>CAS Search</label>
-                    <i className="fas fa-search search-icon" onClick={()=>{this.searchProducts()}}/>
-                    <input value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Search'/>
-                </div>
-                <div className='mapped-products'>
-                    <label>Mapped Products Search</label>
-                    <i className="fas fa-search search-icon" onClick={()=>{this.searchProducts()}}/>
-                    <input value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Search by Product Name or Product Number'/>
-                </div>
-                <InfoLabel/>
                 <ProductMapping  {...this.props}/>
                 <div className='search-results' style={{maxHeight: 50*this.state.results_count}}>
                     {results}
