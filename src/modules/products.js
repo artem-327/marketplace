@@ -17,6 +17,11 @@ const FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED = 'FETCH_RECEANT_ADDED_PRODUCTS_FUL
 
 const SEARCH_PRODUCT = 'SEARCH_PRODUCT';
 const SEARCH_PRODUCT_PENDING = 'SEARCH_PRODUCT_PENDING';
+
+const MAP_PRODUCT = 'MAP_PRODUCT';
+const MAP_PRODUCT_PENDING = 'MAP_PRODUCT_PENDING';
+const MAP_PRODUCT_FULFILLED = 'MAP_PRODUCT_FULFILLED';
+
 const SEARCH_PRODUCT_FULFILLED = 'SEARCH_PRODUCT_FULFILLED';
 const SEARCH_PRODUCT_REJECTED = 'SEARCH_PRODUCT_REJECTED';
 
@@ -69,6 +74,12 @@ export default function reducer(state = initialState, action) {
                 isFetching: true,
             }
         }
+        case MAP_PRODUCT_PENDING: {
+            return{
+                ...state,
+                isFetching: true,
+            }
+        }
         case SEARCH_PRODUCT_REJECTED: {
             return{
                 ...state,
@@ -76,6 +87,13 @@ export default function reducer(state = initialState, action) {
             }
         }
         case SEARCH_PRODUCT_FULFILLED: {
+            return{
+                ...state,
+                isFetching: false,
+                data: action.payload
+            }
+        }
+        case MAP_PRODUCT_FULFILLED: {
             return{
                 ...state,
                 isFetching: false,
@@ -92,6 +110,12 @@ export default function reducer(state = initialState, action) {
 export function searchProducts(search) {
     return {
         type: SEARCH_PRODUCT,
+        payload: axios.get('/api/v1/products/', {params:{search}}).then(response => response.data.data.products)
+    }
+}
+export function mappedProducts(search) {
+    return {
+        type: MAP_PRODUCT,
         payload: axios.get('/api/v1/products/', {params:{search}}).then(response => response.data.data.products)
     }
 }
