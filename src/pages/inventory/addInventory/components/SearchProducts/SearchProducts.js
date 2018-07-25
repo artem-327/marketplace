@@ -3,7 +3,7 @@ import './SearchProducts.css';
 import debounce from "debounce";
 import Spinner from '../../../../../components/Spinner/Spinner';
 import InfoLabel from "../AddForm/InfoLabel";
-import ProductMapping from "../AddForm/ProductMapping";
+import ProductMapping from "./components/ProductMapping";
 
 
 class SearchProducts extends Component {
@@ -57,7 +57,7 @@ class SearchProducts extends Component {
                     <input value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Search by Product Name or Product Number'/>
                 </div>
                 <InfoLabel/>
-                <ProductMapping/>
+                <ProductMapping  {...this.props}/>
                 <div className='search-results' style={{maxHeight: 50*this.state.results_count}}>
                     {results}
                 </div>
