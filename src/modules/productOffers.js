@@ -4,6 +4,12 @@ const GET_PRODUCT_OFFERS = 'GET_PRODUCT_OFFERS';
 const GET_PRODUCT_OFFERS_FULFILLED = 'GET_PRODUCT_OFFERS_FULFILLED';
 const GET_PRODUCT_OFFERS_PENDING = 'GET_PRODUCT_OFFERS_PENDING';
 
+const GET_UNIT_OF_MEASUREMENT = 'GET_UNIT_OF_MEASUREMENT';
+const GET_UNIT_OF_MEASUREMENT_FULFILLED = 'GET_UNIT_OF_MEASUREMENT_FULFILLED';
+
+const GET_UNIT_OF_PACKAGING = 'GET_UNIT_OF_PACKAGING';
+const GET_UNIT_OF_PACKAGING_FULFILLED = 'GET_UNIT_OF_PACKAGING_FULFILLED';
+
 const ADD_PRODUCT_OFFER = 'ADD_PRODUCT_OFFER';
 const ADD_PRODUCT_OFFER_FULFILLED = 'ADD_PRODUCT_OFFER_FULFILLED';
 
@@ -14,6 +20,8 @@ export const initialState = {
     data: [],
     addProductOffer: {},
     isFetching: false,
+    unitOfMeasurement: [],
+    unitOfPackaging: [],
     products:{
         isPending: false,
         isValid: false,
@@ -66,6 +74,18 @@ export default function reducer(state = initialState, action) {
                 }
             }
         }
+        case GET_UNIT_OF_MEASUREMENT_FULFILLED: {
+            return {
+                ...state,
+                unitOfMeasurement: action.payload
+            }
+        }
+        case GET_UNIT_OF_PACKAGING_FULFILLED: {
+            return {
+                ...state,
+                unitOfPackaging: action.payload
+            }
+        }
         case RESET_PRODUCT_OFFER: {
             return {
                 ...state,
@@ -89,6 +109,30 @@ export function addProductOffer(inputs) {
     return {
         type: ADD_PRODUCT_OFFER,
         payload: axios.post('/api/v1/product-offers/', inputs)
+    }
+}
+
+export function getUnitOfMeasurement() {
+    return {
+        type: GET_UNIT_OF_MEASUREMENT,
+        payload:Promise.resolve([
+            {
+                id:1,
+                name:'#'
+            }
+        ])
+    }
+}
+
+export function getUnitOfPackaging() {
+    return {
+        type: GET_UNIT_OF_PACKAGING,
+        payload:Promise.resolve([
+            {
+                id:1,
+                name:'Bag'
+            }
+        ])
     }
 }
 

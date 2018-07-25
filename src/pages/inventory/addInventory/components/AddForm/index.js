@@ -24,7 +24,7 @@ function mapStateToProps(store) {
         locations: store.location.locations,
         location: store.location,
         form: store.forms.addProductOffer,
-        packageTypeId: store.packageTypes.packageTypeId
+        packageTypeId: store.packageTypes.packageTypeId,
     }
 }
 
