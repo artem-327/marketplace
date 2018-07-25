@@ -11,10 +11,12 @@ class FilterGroup extends Component {
         super(props);
         this.state = {
             isOpen: this.props.isOpen
+            
         }
     }
 
     componentDidMount(){
+        
         for(let i = 0; i < this.props.inputs.length; i++){
             if(this.props.inputs[i].type === 'checkbox'){
                 if(this.props.data[this.props.checkboxModel] && this.props.data[this.props.checkboxModel][this.props.inputs[i].id]){

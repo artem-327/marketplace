@@ -4,7 +4,6 @@ import "./keepshopping.css";
 class KeepShopping extends Component {
 
     render(){
-        console.log(this.props);
         return (
             <div className="message">
                 <div className="shopping-header">

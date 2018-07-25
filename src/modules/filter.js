@@ -51,7 +51,6 @@ export default function reducer(state = initialState, action) {
             }
         }
         case CLOSE_FILTER_TAG_FULFILLED: {
-            console.log(action.payload);
             return {
                 ...state,
                 filterTags: [...state.filterTags.slice(0,action.payload), ...state.filterTags.slice(action.payload+1)]

@@ -3,10 +3,10 @@ import {bindActionCreators} from 'redux';
 import FilterTags from './FilterTags';
 import {closeFilterTag} from '../../../../modules/filter';
 
-
 function mapStateToProps(store) {
     return {
-        filterTags: store.forms.filter.filterTags
+        filterTags: store.forms.filter.filterTags,
+        packageTypes:store.packageTypes.data
     }
 }
 
