@@ -12,6 +12,7 @@ class SearchProducts extends Component {
         this.searchProducts = debounce(this.searchProducts, 200);
         this.mappedProducts = debounce(this.mappedProducts, 200);
         this.state = {
+            isOpen: false,
             fulltextSearch: "",
             fulltextMap: "",
             results_count: 10
@@ -19,7 +20,7 @@ class SearchProducts extends Component {
     }
 
     renderResults() {
-        if (!this.props.searchedProducts || this.props.searchedProducts.length === 0) return <p className='search-status'>No results</p>;
+        if (!this.props.searchedProducts || this.props.searchedProducts.length === 0) return null;
         return this.props.searchedProducts.map(product => (
             <div>
             <div key={product.id} className='search-product-item' onClick={() => this.props.onSelect(product)}>
@@ -29,7 +30,7 @@ class SearchProducts extends Component {
             </div>
         ))};
     renderResultsMap() {
-            if (!this.props.mappedProducts || this.props.mappedProducts.length === 0) return <p className='search-status'>No results</p>;
+            if (!this.props.mappedProducts || this.props.mappedProducts.length === 0) return null;
             return this.props.mappedProducts.map(product => (
                 <div>
                     <div key={product.id} className='search-product-item' onClick={() => this.props.onSelect(product)}>
@@ -39,6 +40,18 @@ class SearchProducts extends Component {
                 </div>
         ))};
 
+    // componentWillMount(){
+    //     document.addEventListener('mousedown', this.handleClickOutside, false);
+    // }
+    //
+    // componentWillUnmount(){
+    //     document.removeEventListener('mousedown', this.handleClickOutside, false);
+    // }
+    //
+    // handleClickOutside(e) {
+    //     if (this.dropdownRef.current.contains(e.target)) return;
+    //     this.setState({isOpen: false})
+    // }
 
     handleChangeSearch(e) {
         this.setState({fulltextSearch: e.target.value}, () => {
@@ -63,7 +76,7 @@ class SearchProducts extends Component {
 
         let {fulltextSearch, fulltextMap} = this.state;
         let results = this.props.isSearching ? <div className='search-status'><Spinner/></div> : this.renderResults();
-        let resultsMap = this.props.isSearching ? <div className='map-status'><Spinner/></div> : this.renderResultsMap();
+        let resultsMap = this.props.isSearchingMap ? <div className='map-status'><Spinner/></div> : this.renderResultsMap();
         return (
             <div>
                 <h6>CHEMICAL SEARCH</h6>
