@@ -15,7 +15,7 @@ class FilterTag extends Component {
             case 'prclb': return 'From Price';
             case 'prcub': return 'To Price';
             case 'pckgs':{ 
-                this.pickPackageName();
+                
                 return 'Package type';}
             default: return 'unknown';
         }
@@ -28,18 +28,33 @@ class FilterTag extends Component {
     pickPackageName(){
         this.packageName = [];
         var array = this.props.value.split(',');
-        this.props.packageTypes.map((info, index)=>{
-            
-            if(info.id.toString() === array[index]){
-                //console.log(info.name, array[index], info.id, index);
-                this.packageName.push(info.name);
+
+        for (let i = 0; i < array.length; i++) {
+            this.props.packageTypes.map((info)=>{
+                if((info.id).toString() === array[i]){
+                    this.packageName.push(info.name);
+                }
+                return null;
+            })
+        }
+        
+    }
+
+    chooseFilter(name){
+        switch(name){
+            case 'pckgs':{
+                this.pickPackageName();
+                return this.packageName.join(',');
             }
-        })
+            default: {
+                return this.props.value;
+            }
+        }
     }
 
     render () {
         return (
-            <div className="filterTag"><span>{this.checkName(this.props.name)}: {this.packageName.join(',')}</span>
+            <div className="filterTag"><span>{this.checkName(this.props.name)}: {this.chooseFilter(this.props.name)}</span>
                 <i onClick={()=>{this.props.dispatch(actions.change('forms.filter.data.' + this.props.name, ''));this.props.close()}} className="fas fa-times"> </i>
             </div>
     )}
