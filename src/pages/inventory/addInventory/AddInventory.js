@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import './AddInventory.css'
-import SearchProducts from "./components/SearchProducts";
 import AddForm from "./components/AddForm";
 import AddGroup from './components/AddGroup';
+import ProductOffering from "./components/SearchProducts/ProductOffering";
 
 export default class AddInventory extends Component {
     constructor(props) {
@@ -21,7 +21,7 @@ export default class AddInventory extends Component {
                 Selected product: {this.state.selectedProduct.casNumber} {this.state.selectedProduct.primaryName}</p> : null}
             <AddGroup
                 header='CHEMICAL'
-                component={<SearchProducts onSelect={product => {this.setState({selectedProduct: product}, ()=>this.props.resetForm())}} />}/>
+                component={<ProductOffering>}/>
             <AddForm product={this.state.selectedProduct} disable={disable} {...this.props}/>
         </div>)
     }
