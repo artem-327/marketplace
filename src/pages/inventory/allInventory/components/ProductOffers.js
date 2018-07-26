@@ -38,8 +38,8 @@ class ProductOffers extends Component {
    }
 
    //TODO:: Add to cart
-   addCart(){
-        this.props.addPopup(<AddCart/>)
+   addCart(id){
+        this.props.addPopup(<AddCart id={id}/>)
    }
 
     render() {
@@ -102,7 +102,7 @@ class ProductOffers extends Component {
                                         <td>{offer.productCondition.name}</td>
                                         <td>{offer.productForm.name}</td>
                                         <td>{offer.warehouse.name} ({offer.warehouse.location.state})</td>
-                                        <td><button onClick={()=>{this.addCart()}}>BUY</button></td>
+                                        <td><button onClick={()=>{this.addCart(offer.id)}}>BUY</button></td>
                                     </tr>
                                 )
                             })

@@ -9,6 +9,9 @@ const FETCH_PRODUCT_CONDITIONS_FULFILLED = 'FETCH_PRODUCT_CONDITIONS_FULFILLED';
 const FETCH_PRODUCT_GRADE = 'FETCH_PRODUCT_GRADE';
 const FETCH_PRODUCT_GRADE_FULFILLED = 'FETCH_PRODUCT_GRADE_FULFILLED';
 
+const FETCH_PRODUCT_AGE = 'FETCH_PRODUCT_AGE';
+const FETCH_PRODUCT_AGE_FULFILLED = 'FETCH_PRODUCT_AGE_FULFILLED';
+
 const FETCH_RECEANT_ADDED_PRODUCTS = 'FETCH_RECEANT_ADDED_PRODUCTS';
 const FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED = 'FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED';
 
@@ -22,6 +25,8 @@ export const initialState = {
     productForms: [],
     productConditions: [],
     productGrade: [],
+    productAge: [],
+    location: [],
     recentProducts: [],
     isFetching: false
 };
@@ -44,6 +49,12 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 productGrade: action.payload
+            }
+        }
+        case FETCH_PRODUCT_AGE_FULFILLED: {
+            return {
+                ...state,
+                productAge: action.payload
             }
         }
         case FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED: {
@@ -103,6 +114,38 @@ export function fetchProductGrade(filter = {}) {
     return {
         type: FETCH_PRODUCT_GRADE,
         payload: axios.get('/api/v1/product-grades/', {params: {...filter}}).then(result => result.data.data.productGrades)
+    }
+}
+
+export function fetchProductAge() {
+    return {
+        type: FETCH_PRODUCT_AGE,
+        payload: [
+            {
+                id:1,
+                name:'0 - 3 months'
+            },
+            {
+                id:2,
+                name:'3 - 6 months'
+            },
+            {
+                id:3,
+                name:'6 - 9 months'
+            },
+            {
+                id:4,
+                name:'9 - 12 months'
+            },
+            {
+                id:5,
+                name:'12+ months'
+            },
+            {
+                id:6,
+                name:'Custom Product Age'
+            }
+        ]
     }
 }
 

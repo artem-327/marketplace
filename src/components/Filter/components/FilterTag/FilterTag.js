@@ -13,6 +13,9 @@ class FilterTag extends Component {
             case 'prclb': return 'From Price';
             case 'prcub': return 'To Price';
             case 'pckgs': return 'Package type';
+            case 'chemSearch': return 'Chemical search';
+            case 'productAge': return 'Product Age';
+            case 'loc': return 'Location';
             default: return 'unknown';
         }
     }

@@ -78,10 +78,10 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-export function fetchAll(filter = {}) {
+export function fetchAll(filter = {}, mrchnt=true) {
     return {
         type: GET_PRODUCT_OFFERS,
-        payload: axios.get("/api/v1/product-offers/", {params: {...filter}}).then(response => response.data.data.productOffers)
+        payload: axios.get("/api/v1/product-offers/", {params: {...filter, mrchnt}}).then(response => response.data.data.productOffers)
     }
 }
 
