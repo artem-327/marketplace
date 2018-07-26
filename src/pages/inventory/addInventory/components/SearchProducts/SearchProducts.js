@@ -3,6 +3,7 @@ import './SearchProducts.css';
 import debounce from "debounce";
 import Spinner from '../../../../../components/Spinner/Spinner';
 import RecentProducts from "./components/RecentProducts";
+import ProductOffering from "./ProductOffering";
 
 class SearchProducts extends Component {
 
@@ -46,6 +47,7 @@ class SearchProducts extends Component {
                     <input value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Search'/>
                 </div>
                 <div className='recent-products'>
+                    <ProductOffering {...this.props}/>
                     <RecentProducts setProduct={(product)=>this.props.onSelect(product)} {...this.props}/>
                 </div>
                 <div className='search-results' style={{maxHeight: 50*this.state.results_count}}>
