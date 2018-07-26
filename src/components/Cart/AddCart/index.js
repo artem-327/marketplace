@@ -7,11 +7,12 @@ import {removePopup} from "../../../modules/popup";
 
 function mapStateToProps(store) {
     return {
-        name: store.cart.addCart.name,
-        merchant: store.cart.addCart.merchant,
-        availableProducts: store.cart.addCart.availableProducts,
-        packageSize: store.cart.addCart.packageSize,
-        quantity: store.cart.addCart.quantity
+        name: store.cart.addCart.data.productOffer.product.primaryName,
+        merchant: store.cart.addCart.data.productOffer.manufacturer.name,
+        packageSize: store.cart.addCart.data.productOffer.packageAmount,
+        location: store.cart.addCart.data.productOffer.location.state,
+        //availableProducs:,
+        //quantity:
     }
 }
 

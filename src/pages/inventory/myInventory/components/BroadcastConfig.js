@@ -8,6 +8,14 @@ class BroadcastConfig extends Component {
         this.props.changeBrConfig(this.props.id, value)
     }
 
+    changeUpdateType(value){
+        this.props.changeUpdateType(this.props.id, value)
+    }
+
+    changeAmount(e){
+        this.props.changeAmount(this.props.id, e.target.value)
+    }
+
     render() {
         let brOpns = this.props.item ? [{value:'include', label:'Include'}, {value:'exclude', label:'Exclude'}] :
             [{value:'include', label:'Include'}, {value:'exclude', label:'Exclude'}, {value:'custom', label:'Custom'}];
@@ -23,11 +31,12 @@ class BroadcastConfig extends Component {
                 </div>
                 <div className='br-config-divider price'>
                     <span className='br-config-header'>Mark Up/Down</span>
-                    <input />
-                    <Radio onChange={(value)=>this.changeRadio('mark', value)}
+                    <input value={this.props.amount} onChange={(e)=>this.changeAmount(e)} />
+                    <Radio onChange={(value)=>this.changeUpdateType(value)}
                            name={this.props.name + 'mark'}
                            className='small br-config-radio'
                            opns={[{value:'priceMultiplication', label:'%'}, {value:'priceAddition', label:'$'}]}
+                           checked={this.props.updateType}
                            />
                 </div>
             </div>
