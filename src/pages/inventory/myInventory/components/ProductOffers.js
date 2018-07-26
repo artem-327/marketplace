@@ -14,9 +14,9 @@ class ProductOffers extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps){
-        this.setState({products: this.groupProductOffers(nextProps.productOffers)});
-    }
+    //componentWillReceiveProps(nextProps){
+        //this.setState({products: this.groupProductOffers(nextProps.productOffers)});
+    //}
 
     groupProductOffers(productOffers) {
         return productOffers.reduce((carry, offer) => {
@@ -25,7 +25,7 @@ class ProductOffers extends Component {
         }, {});
     }
 
-    toggleProduct(productId){
+    toggleProduct(e, productId){
         this.setState({
             products: {
                 ...this.state.products,
@@ -38,7 +38,7 @@ class ProductOffers extends Component {
     }
 
     toggleBroadcastRule(e, id){
-        if(this.props.toggleBroadcastRule) this.props.toggleBroadcastRule(true, {x: e.clientX, y: e.clientY - 90}, [id])
+        if(this.props.toggleBroadcastRule) this.props.toggleBroadcastRule(true, {x: e.clientX, y: e.clientY - 90}, id)
     }
 
     render() {
@@ -67,7 +67,7 @@ class ProductOffers extends Component {
                     <tbody>
                     {Object.values(this.state.products).reduce((rows, product) => {
                         rows.push(
-                            <tr className="product" key={product.casNumber} onClick={() => {this.toggleProduct(product.id)}}>
+                            <tr className="product" key={product.casNumber}  onClick={(e) => {this.toggleProduct(e, product.id)}}>
                                 <td colSpan="1">
                                     <Checkbox onChange={(value) => {console.log(value)}}/>
                                 </td>
