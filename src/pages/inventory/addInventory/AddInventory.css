@@ -1,5 +1,5 @@
 .add-group {
-  border-radius: 8px;
+  border-radius: 4px;
   border: 1px solid #eeeeee;
   margin: 20px; }
   .add-group .location-wr .edit-location {
@@ -87,25 +87,29 @@
     .add-group .add-body.open {
       display: block; }
   .add-group .header-group {
-    background-color: #eeeeee;
+    background-color: #f5f5f5;
     border: none;
-    border-radius: 8px; }
+    border-radius: 4px; }
     .add-group .header-group.open {
-      border-radius: 8px 8px 0 0; }
+      border-radius: 4px 4px 0 0; }
     .add-group .header-group h1 {
       font-size: 1rem;
       display: inline-block;
       font-weight: bold;
       margin: 0;
       padding: 15px;
-      color: #3997d2;
+      color: #373b42;
       border: none; }
     .add-group .header-group i {
       float: right;
       padding-top: 17px;
       padding-right: 17px; }
+    .add-group .header-group img {
+      padding-left: 20px; }
   .add-group .group-inside h4 {
     font-size: 1rem; }
+  .add-group h6 {
+    margin: 25px 0 25px 10px; }
 
 .inventory-product {
   color: #B0B0B0;

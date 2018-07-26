@@ -33,7 +33,8 @@ export const initialState = {
     productAge: [],
     location: [],
     recentProducts: [],
-    isFetching: false
+    isFetching: false,
+    isMapFetching: false
 };
 
 export default function reducer(state = initialState, action) {
@@ -77,7 +78,7 @@ export default function reducer(state = initialState, action) {
         case MAP_PRODUCT_PENDING: {
             return{
                 ...state,
-                isFetching: true,
+                isMapFetching: true,
             }
         }
         case SEARCH_PRODUCT_REJECTED: {
@@ -96,7 +97,7 @@ export default function reducer(state = initialState, action) {
         case MAP_PRODUCT_FULFILLED: {
             return{
                 ...state,
-                isFetching: false,
+                isMapFetching: false,
                 data: action.payload
             }
         }

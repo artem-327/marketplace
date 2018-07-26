@@ -22,7 +22,7 @@ class SearchProducts extends Component {
     renderResults() {
         if (!this.props.searchedProducts || this.props.searchedProducts.length === 0) return null;
         return this.props.searchedProducts.map(product => (
-            <div>
+            <div className='search-status'>
             <div key={product.id} className='search-product-item' onClick={() => this.props.onSelect(product)}>
                 <span className='search-cas'>{product.casNumber}</span>
                 {product.primaryName}
@@ -32,26 +32,13 @@ class SearchProducts extends Component {
     renderResultsMap() {
             if (!this.props.mappedProducts || this.props.mappedProducts.length === 0) return null;
             return this.props.mappedProducts.map(product => (
-                <div>
+                <div className='search-status'>
                     <div key={product.id} className='search-product-item' onClick={() => this.props.onSelect(product)}>
                         <span className='search-cas'>{product.productName}</span>
                         {product.productNumber}
                     </div>
                 </div>
         ))};
-
-    // componentWillMount(){
-    //     document.addEventListener('mousedown', this.handleClickOutside, false);
-    // }
-    //
-    // componentWillUnmount(){
-    //     document.removeEventListener('mousedown', this.handleClickOutside, false);
-    // }
-    //
-    // handleClickOutside(e) {
-    //     if (this.dropdownRef.current.contains(e.target)) return;
-    //     this.setState({isOpen: false})
-    // }
 
     handleChangeSearch(e) {
         this.setState({fulltextSearch: e.target.value}, () => {
@@ -84,7 +71,6 @@ class SearchProducts extends Component {
                     <label>CAS Search</label>
                     <i className="fas fa-search search-icon" onClick={()=>{this.searchProducts()}}/>
                     <input value={fulltextSearch} onChange={(e) => this.handleChangeSearch(e)} placeholder='Search'/>
-
                     {results}
                 </div>
                 <div className='mapped-products'>

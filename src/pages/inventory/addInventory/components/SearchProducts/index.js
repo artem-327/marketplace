@@ -6,7 +6,7 @@ import {searchProducts, mappedProducts, fetchRecentAddedProducts} from "../../..
 
 const mapStateToProps = store => ({
     isSearching: store.products.isFetching,
-    isSearchingMap: store.products.isFetching,
+    isSearchingMap: store.products.isMapFetching,
     searchedProducts: store.products.data,
     recentProducts: store.products.recentProducts,
 });

@@ -64,6 +64,8 @@
   width: 100%;
   margin: -2px 0 0 0;
   text-align: center; }
+  .search-status:hover {
+    cursor: pointer; }
 
 .map-status {
   position: absolute;
