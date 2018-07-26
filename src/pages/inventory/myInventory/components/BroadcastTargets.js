@@ -11,14 +11,17 @@ class BroadcastTargets extends Component {
 
     addToTargets(id, targets){
         this.setState({[id]: targets},()=>{
-            console.log(this.state)
+            console.log("BRCTargets", id, targets);
+            this.props.getData(this.state);
         })
     }
 
+
     render() {
+        
         if(!this.props.targetGroups) return null;
         return (
-            <div>
+            <div className='broadcast-rule-targets'>
                 {this.props.targetGroups.map((group, index) => (
                     <BroadcastTargetGroup updateTargets={(id, targets)=>this.addToTargets(id, targets)}
                                           index={index}

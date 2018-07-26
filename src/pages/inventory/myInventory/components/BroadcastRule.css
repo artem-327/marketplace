@@ -19,3 +19,25 @@
     color: #a8a8a8; }
   .broadcast-rule.open {
     display: block; }
+
+.br-buttons-wr {
+  padding: 20px;
+  background-color: #fafafa; }
+  .br-buttons-wr button {
+    float: right; }
+
+.br-rules-add {
+  background-color: white;
+  padding: 30px;
+  min-width: 500px;
+  text-align: center;
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+  border-radius: 5px; }
+  .br-rules-add label {
+    display: block;
+    font-size: 1.1rem; }
+  .br-rules-add input {
+    width: 100%; }
+  .br-rules-add button {
+    margin-top: 10px; }

@@ -93,6 +93,10 @@ class MyInventory extends Component {
                 <Filter chemicalName filterFunc={(filter) => {this.props.getProductOffers({...filter}, true)}} />
                 {content}
                 <BroadcastRule
+                    submitRules={this.props.sendRules}
+                    addPopup={this.props.addPopup}
+                    removePopup={this.props.removePopup}
+                    getProductOffers={this.props.getProductOffers}
                     targetGroups={this.state.targetGroups}
                     selections={this.state.selections}
                     setFilter={(type) => this.setFilter(type)}
