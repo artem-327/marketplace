@@ -41,8 +41,9 @@ class Filter extends Component {
     }
 
     render(){
-        console.log(this.props);
-        // (this.props.data.locations.state)
+    
+        console.log("productAge: ",this.props);
+
         return this.state.isOpen ?
             <div className="filter">
                 <Form model="forms.filter.data" onSubmit={(val) => this.handleSubmit(val)}>
@@ -130,8 +131,8 @@ class Filter extends Component {
                                      }
                                  ]}/>
                     <FilterGroup className="filterGroup"
-                                 header='Product Age'
-                                 isVisible={!!this.props.productsAge}
+                                header='Product Age'
+                                 isVisible={!!this.props.productAge}
                                  split
                                  data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.productAge}
@@ -143,7 +144,6 @@ class Filter extends Component {
                                          type: 'radio',
                                      }
                                  ]}/>
-
 
 
                     <FilterGroup className="filterGroup"

@@ -8,11 +8,13 @@ class RadioRedux extends Component {
 
     handleChange(value){
         const { model, dispatch } = this.props;
+        console.log("handleChange model ",this.props.model.value);
         dispatch(actions.change(model, value));
         if(this.props.onChange) this.props.onChange(value);
     }
 
     render() {
+        console.log("radioredux: ",this.props)
         return <Control
             model={this.props.model}
             component={Radio}

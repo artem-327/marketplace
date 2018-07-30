@@ -23,7 +23,9 @@ class BroadcastRule extends Component {
         Object.values(this.state.rawData).map((item)=>{
             item.map((item1)=>{
                 tmp.push({visibility: item1.visibility, company: item1.company, [item1.updateType]: item1.amount})
+                return null;
             })
+            return null;
         })
         
         this.props.addPopup(<BroadcastAdd getProductOffers={this.props.getProductOffers} removePopup={this.props.removePopup} submitRules={this.props.submitRules} subjects={[{productOffer: this.props.productOffersSelection}]} targets={tmp} />)
