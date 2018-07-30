@@ -1,0 +1,15 @@
+.datepicker {
+  position: relative;
+  input {
+    width: 192px;
+  padding-left: 30px;
+  }
+  .datepicker-icon {
+  position: absolute;
+  font-size: 18px;
+    top: 10px;
+  left: 5px;
+  color: #a8a8a8;
+  z-index: 1;
+  }
+}
