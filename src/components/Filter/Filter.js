@@ -132,7 +132,7 @@ class Filter extends Component {
                                  ]}/>
                     <FilterGroup className="filterGroup"
                                 header='Product Age'
-                                 isVisible={!!this.props.productAge}
+                                 isVisible={!!this.props.productAgeFilter}
                                  split
                                  data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.productAge}
