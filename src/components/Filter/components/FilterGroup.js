@@ -58,7 +58,6 @@ class FilterGroup extends Component {
     renderInputs () {
 
         if (this.props.header ==='Product Age'){
-            console.log("isVisible: ",this.props);
         }
 
         if (!this.props.inputs) return;

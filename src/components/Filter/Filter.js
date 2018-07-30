@@ -41,8 +41,6 @@ class Filter extends Component {
     }
 
     render(){
-    
-        console.log("productAge: ",this.props);
 
         return this.state.isOpen ?
             <div className="filter">
