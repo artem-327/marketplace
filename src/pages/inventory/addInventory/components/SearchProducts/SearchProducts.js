@@ -25,6 +25,11 @@ class SearchProducts extends Component {
             </div>
         ));
     }
+    componentDidMount () {
+        this.props.fetchProductForms();
+        this.props.fetchProductGrade();
+        this.props.fetchProductConditions();
+    }
 
     handleChange(e) {
         this.setState({fulltext: e.target.value}, () => {
@@ -47,12 +52,12 @@ class SearchProducts extends Component {
                     <input value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Search'/>
                 </div>
                 <div className='recent-products'>
-                    <ProductOffering {...this.props}/>
                     <RecentProducts setProduct={(product)=>this.props.onSelect(product)} {...this.props}/>
                 </div>
                 <div className='search-results' style={{maxHeight: 50*this.state.results_count}}>
                     {results}
                 </div>
+                <ProductOffering {...this.props}/>
             </div>
         );
     }

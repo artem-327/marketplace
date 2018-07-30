@@ -10,7 +10,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({addPopup},dispatch)
+    return bindActionCreators({addPopup, dispatch},dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TestPage);

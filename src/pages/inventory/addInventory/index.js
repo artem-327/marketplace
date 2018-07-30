@@ -3,14 +3,14 @@ import AddInventory from './AddInventory';
 import {resetForm} from "../../../modules/productOffers";
 import {bindActionCreators} from 'redux'
 
-function mapStateToProps(store) {
+function mapStateToProps() {
     return {}
 }
 
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        resetForm
+        resetForm,
     }, dispatch)
 }
 
