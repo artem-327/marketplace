@@ -1,0 +1,12 @@
+.product-offering {
+  position: relative; }
+
+.saved-productOffering {
+  float: right;
+  margin-right: 20px;
+  padding: 15px; }
+
+.save-productOffering {
+  float: right;
+  margin-right: 25px;
+  margin-top: 110px; }

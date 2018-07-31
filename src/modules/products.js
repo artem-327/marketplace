@@ -23,6 +23,7 @@ const SEARCH_PRODUCT_REJECTED = 'SEARCH_PRODUCT_REJECTED';
 export const initialState = {
     data: [],
     productForms: [],
+    productOffering: {},
     productConditions: [],
     productGrade: [],
     productAge: [],

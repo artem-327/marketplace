@@ -3,6 +3,7 @@ import {Control, Form} from 'react-redux-form';
 import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
 import DatepickerRedux from "../../../../../components/Datepicker/DatepickerRedux";
 import SearchOrigin from "./SearchOrigin";
+import './ProductOffering.css'
 
 export default class ProductOffering extends Component {
     constructor(props){
@@ -13,7 +14,8 @@ export default class ProductOffering extends Component {
     }
 
     render() {
-        let button = 1;
+        let button = this.state.save ? <button onClick={(e)=>e.preventDefault()} className='button big disabled saved-productOffering'>Added</button> :
+            <button className='button big disabled save-productOffering'>Add Lot</button>;
         console.log(this.props.productForms);
         return (
             <div>
@@ -92,9 +94,18 @@ export default class ProductOffering extends Component {
                         </div>
                         </div>
                     </div>
-                    <div>
-                        {button}
-                    </div>
+                        <div>
+                            <div className="group-item-wr">
+                                <label htmlFor=".externalNotes">External notes</label>
+                                <Control.textarea model=".externalNotes" id=".externalNotes" className="textarea" placeholder="Enter notes here" />
+                            </div>
+                            <div className="group-item-wr">
+                                <label htmlFor=".internalNotes">Internal Notes</label>
+                                <Control.textarea model=".internalNotes" id=".internalNotes" className="textarea" placeholder="Enter notes here" />
+
+                        </div>
+                            {button}
+                        </div>
                 </Form>
             </div>
         );
