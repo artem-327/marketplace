@@ -4,6 +4,7 @@ import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
 import DatepickerRedux from "../../../../../components/Datepicker/DatepickerRedux";
 import SearchOrigin from "./SearchOrigin";
 import './ProductOffering.css'
+import {fetchProductConditions, fetchProductForms, fetchProductGrade} from "../../../../../modules/products";
 
 export default class ProductOffering extends Component {
     constructor(props){
@@ -11,6 +12,20 @@ export default class ProductOffering extends Component {
         this.state = {
             save: false,
         }
+    }
+
+    saveOffering(values){
+        this.setState({save: true}
+            // this.saveMapping.then(()=>{
+            // this.setState({save: true}, ()=>{
+            //     let that = this;
+            //     setTimeout(function(){
+            //         that.setState({save: false});
+            //     }, 3000)
+            // }
+            // )
+            // }
+        )
     }
 
     render() {
