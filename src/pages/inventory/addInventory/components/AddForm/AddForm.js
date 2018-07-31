@@ -34,11 +34,10 @@ export default class AddForm extends Component {
     componentWillReceiveProps(nextProps){
         if(nextProps.product && nextProps.product!== this.state.selectedProduct){
             this.setState({selectedProduct: nextProps.product}, () => {
-                let productType = this.state.selectedProduct.productType.id;
-                this.props.fetchProductForms({productType});
-                this.props.fetchProductConditions({productType});
-                this.props.fetchProductGrade({productType});
-                this.props.getPackageOptions(productType);
+                this.props.fetchProductForms();
+                this.props.fetchProductConditions();
+                this.props.fetchProductGrade();
+                this.props.getPackageOptions();
                 this.props.fetchWarehouse();
                 this.props.getManufacturer();
                 this.props.getPricingUnits();

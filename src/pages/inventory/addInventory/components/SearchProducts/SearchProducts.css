@@ -45,21 +45,21 @@
   .search-products button {
     width: 200px; }
 
-.mapped-products {
+.map-products {
   width: calc(50% - 25px);
   display: inline-block;
   margin: 0 10px 12px 15px;
   position: relative; }
-  .mapped-products .search-icon {
+  .map-products .search-icon {
     position: absolute;
     bottom: 11px;
     left: 11px;
     color: #a9a9a9;
     font-size: 18px; }
-  .mapped-products input {
+  .map-products input {
     width: 100%;
     padding-left: 40px; }
-  .mapped-products button {
+  .map-products button {
     width: 200px; }
 
 .infoLabel {
@@ -85,9 +85,27 @@
     transform: translateY(-50%); }
 
 .search-status {
+  position: absolute;
+  z-index: +1;
+  border: 1px solid #b0b0b0;
+  border-radius: 0 0 4px 4px;
+  background-color: white;
   padding: 10px;
   width: 100%;
-  margin: 0;
+  margin: -2px 0 0 0;
+  text-align: center; }
+  .search-status:hover {
+    cursor: pointer; }
+
+.map-status {
+  position: absolute;
+  z-index: +1;
+  border: 1px solid #b0b0b0;
+  border-radius: 0 0 4px 4px;
+  background-color: white;
+  padding: 10px;
+  width: 100%;
+  margin: -2px 0 0 0;
   text-align: center; }
 
 .search-results {
