@@ -80,7 +80,7 @@ class FilterGroup extends Component {
                     return (
                         <div key={index} className='filter-input-radio'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>
-                            <RadioRedux dispatch={this.props.dispatch} model={input.model} opns={[{label:'100', value:'100'}, {label:'500', value:'500'}, {label:'1000', value:'1000'}]}/>
+                            <RadioRedux dispatch={this.props.dispatch} model={input.model} opns={[{label:'0-3 months', value:'100'}, {label:'3-6 months', value:'500'}, {label:'6-9 months', value:'1000'}, {label:'Custom Product Age', value:'10000'}]} productAgeModel = {this.props.productAgeModel} productAgeCustomModel={this.props.productAgeCustomModel}/>
                         </div>
                     )
                 }

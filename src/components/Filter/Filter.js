@@ -19,6 +19,15 @@ class Filter extends Component {
         console.log(inputs)
         let filter = Object.assign({}, inputs, {pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key).join(',')});
 
+        console.log("filter ",filter);
+
+        if (filter.productAgeCustom){
+            filter.productAge = filter.productAgeCustom;
+            filter.productAgeCustom = null;
+        }
+
+        console.log("newfilter ",filter);
+
         let params = filterNonEmptyAttributes(filter);
         this.props.filterFunc(params);
         let filterTags = [];
@@ -136,6 +145,8 @@ class Filter extends Component {
                                  isOpen={this.props.filterGroupStatus.productAge}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('productAge', value)}}
                                  dispatch={this.props.dispatch}
+                                 productAgeModel={this.props.productAgeModel}
+                                 productAgeCustomModel={this.props.productAgeCustomModel}
                                  inputs={[
                                      {
                                          model: 'forms.filter.data.productAge',
@@ -151,6 +162,7 @@ class Filter extends Component {
                                  isOpen={this.props.filterGroupStatus.loc}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('loc', value)}}
                                  dispatch={this.props.dispatch}
+                                 
                                  inputs={[
                                      {
                                          label: 'Max. miles away',
