@@ -14,13 +14,12 @@ export default class ProductOffering extends Component {
     }
 
     render() {
-        let button = this.state.save ? <button onClick={(e)=>e.preventDefault()} className='button big disabled saved-productOffering'>Added</button> :
-            <button className='button big disabled save-productOffering'>Add Lot</button>;
-        console.log(this.props.productForms);
+        let button = this.state.save ? <button onClick={(e)=>e.preventDefault()} className='button big disabled added-productOffering'>Added</button> :
+            <button className='button big disabled add-productOffering'>Add Lot</button>;
         return (
             <div>
                 <h6 className=''>PRODUCT OFFERING</h6>
-                <Form model="forms.products.productsOffering" onSubmit={(values)=>this.saveMapping(values)}>
+                <Form model="forms.products.productsOffering" onSubmit={(values)=>this.saveOffering(values)}>
                     <div>
                         <div className='group-item-wr'>
                             <label htmlFor=".totalPackages">Total Packages</label>

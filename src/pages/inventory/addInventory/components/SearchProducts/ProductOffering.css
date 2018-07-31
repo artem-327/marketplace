@@ -1,12 +1,12 @@
 .product-offering {
   position: relative; }
 
-.saved-productOffering {
+.added-productOffering {
   float: right;
   margin-right: 20px;
   padding: 15px; }
 
-.save-productOffering {
+.add-productOffering {
   float: right;
   margin-right: 25px;
   margin-top: 110px; }
