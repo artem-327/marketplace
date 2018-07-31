@@ -10,7 +10,7 @@ class SearchProducts extends Component {
     constructor(props){
         super(props);
         this.searchProducts = debounce(this.searchProducts, 200);
-        this.mappedProducts = debounce(this.mappedProducts, 200);
+        this.mapProducts = debounce(this.mapProducts, 200);
         this.state = {
             isOpen: false,
             fulltextSearch: "",
@@ -31,11 +31,11 @@ class SearchProducts extends Component {
         ))};
     renderResultsMap() {
             if (!this.props.mappedProducts || this.props.mappedProducts.length === 0) return null;
-            return this.props.mappedProducts.map(product => (
+            return this.props.mappedProducts.map(productTemplate => (
                 <div className='search-status'>
-                    <div key={product.id} className='search-product-item' onClick={() => this.props.onSelect(product)}>
-                        <span className='search-cas'>{product.productName}</span>
-                        {product.productNumber}
+                    <div key={productTemplate.product.id} className='search-product-item' onClick={() => this.props.onSelect(productTemplate)}>
+                        <span className='search-cas'>{productTemplate.product.casNumber}</span>
+                        {productTemplate.product.chemicalName}
                     </div>
                 </div>
         ))};
@@ -47,23 +47,23 @@ class SearchProducts extends Component {
     }
     handleChangeMap(e) {
         this.setState({fulltextMap: e.target.value}, () => {
-            if (this.state.fulltextMap.length > 0) this.mappedProducts();
+            if (this.state.fulltextMap.length > 0) this.mapProducts();
         });
     }
 
     searchProducts(){
         this.props.searchProducts(this.state.fulltextSearch);
     }
-    mappedProducts(){
-        this.props.mappedProducts(this.state.fulltextMap);
+    mapProducts(){
+        this.props.mapProducts(this.state.fulltextMap);
     }
 
 
     render() {
-
+        console.log(this.props);
         let {fulltextSearch, fulltextMap} = this.state;
         let results = this.props.isSearching ? <div className='search-status'><Spinner/></div> : this.renderResults();
-        let resultsMap = this.props.isSearchingMap ? <div className='map-status'><Spinner/></div> : this.renderResultsMap();
+        let resultsMap = this.props.isMapping ? <div className='map-status'><Spinner/></div> : this.renderResultsMap();
         return (
             <div>
                 <h6>CHEMICAL SEARCH</h6>
@@ -73,9 +73,9 @@ class SearchProducts extends Component {
                     <input value={fulltextSearch} onChange={(e) => this.handleChangeSearch(e)} placeholder='Search'/>
                     {results}
                 </div>
-                <div className='mapped-products'>
+                <div className='map-products'>
                     <label>Mapped Products Search</label>
-                    <i className="fas fa-search search-icon" onClick={()=>{this.mappedProducts()}}/>
+                    <i className="fas fa-search search-icon" onClick={()=>{this.mapProducts()}}/>
                     <input value={fulltextMap} onChange={(e) => this.handleChangeMap(e)} placeholder='Search by Product Name or Product Number'/>
                     {resultsMap}
                 </div>

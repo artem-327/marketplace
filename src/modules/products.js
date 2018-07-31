@@ -20,6 +20,7 @@ const SEARCH_PRODUCT_PENDING = 'SEARCH_PRODUCT_PENDING';
 
 const MAP_PRODUCT = 'MAP_PRODUCT';
 const MAP_PRODUCT_PENDING = 'MAP_PRODUCT_PENDING';
+const MAP_PRODUCT_REJECTED = 'MAP_PRODUCT_REJECTED';
 const MAP_PRODUCT_FULFILLED = 'MAP_PRODUCT_FULFILLED';
 
 const SEARCH_PRODUCT_FULFILLED = 'SEARCH_PRODUCT_FULFILLED';
@@ -27,6 +28,7 @@ const SEARCH_PRODUCT_REJECTED = 'SEARCH_PRODUCT_REJECTED';
 
 export const initialState = {
     data: [],
+    mappedData: [],
     productForms: [],
     productConditions: [],
     productGrade: [],
@@ -75,12 +77,6 @@ export default function reducer(state = initialState, action) {
                 isFetching: true,
             }
         }
-        case MAP_PRODUCT_PENDING: {
-            return{
-                ...state,
-                isMapFetching: true,
-            }
-        }
         case SEARCH_PRODUCT_REJECTED: {
             return{
                 ...state,
@@ -94,11 +90,23 @@ export default function reducer(state = initialState, action) {
                 data: action.payload
             }
         }
+        case MAP_PRODUCT_PENDING: {
+            return{
+                ...state,
+                isMapFetching: true,
+            }
+        }
+        case MAP_PRODUCT_REJECTED: {
+            return{
+                ...state,
+                isMapFetching: false,
+            }
+        }
         case MAP_PRODUCT_FULFILLED: {
             return{
                 ...state,
                 isMapFetching: false,
-                data: action.payload
+                mappedData: action.payload
             }
         }
         default: {
@@ -114,10 +122,10 @@ export function searchProducts(search) {
         payload: axios.get('/api/v1/products/', {params:{search}}).then(response => response.data.data.products)
     }
 }
-export function mappedProducts(search) {
+export function mapProducts(map) {
     return {
         type: MAP_PRODUCT,
-        payload: axios.get('/api/v1/products/', {params:{search}}).then(response => response.data.data.products)
+        payload: axios.get('/api/v1/product-templates/', {params:{map}}).then(response => response.data.data.productTemplates)
     }
 }
 

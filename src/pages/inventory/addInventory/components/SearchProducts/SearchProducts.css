@@ -15,21 +15,21 @@
   .search-products button {
     width: 200px; }
 
-.mapped-products {
+.map-products {
   width: calc(50% - 25px);
   display: inline-block;
   margin: 0 10px 12px 15px;
   position: relative; }
-  .mapped-products .search-icon {
+  .map-products .search-icon {
     position: absolute;
     bottom: 11px;
     left: 11px;
     color: #a9a9a9;
     font-size: 18px; }
-  .mapped-products input {
+  .map-products input {
     width: 100%;
     padding-left: 40px; }
-  .mapped-products button {
+  .map-products button {
     width: 200px; }
 
 .infoLabel {
