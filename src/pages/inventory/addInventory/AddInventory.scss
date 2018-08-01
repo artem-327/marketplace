@@ -103,7 +103,7 @@
     margin: 10px;
   }
   .dropdown-wr{
-    width: 200px;
+    width: 192px;
     display: inline-block;
   }
   .add-body{
@@ -126,7 +126,7 @@
       font-weight: bold;
       margin: 0;
       padding: 15px;
-      color: #373b42;
+      color:#373b42;
       border: none;
     }
     i{
@@ -186,4 +186,7 @@
       }
     }
   }
+}
+.datepicker .react-datepicker__input-container input {
+
 }

@@ -34,6 +34,7 @@ export const initialState = {
     mappedData: [],
     productForms: [],
     productsMapping: {},
+    productOffering: {},
     productConditions: [],
     productGrade: [],
     productAge: [],

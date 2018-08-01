@@ -98,6 +98,38 @@ position: absolute;
   }
 }
 
+.textarea {
+  width: 405px;
+  height: 130px;
+  border-radius: 4px;
+  border: 1px solid #B0B0B0;
+  padding: 7px;
+  &:hover, &:focus{
+    border-color: #289ada;
+    box-shadow: none;
+    outline: none;
+  }
+  &.bigger{
+    padding: 12px 7px;
+    font-size: 1.2rem;
+  }
+  &[type='number']{
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #B0B0B0;
+    padding: 7px;
+    &:hover, &:focus{
+      border-color: #289ada;
+      box-shadow: none;
+      outline: none;
+    }
+    &.bigger{
+      padding: 12px 7px;
+      font-size: 1.2rem;
+    }
+  }
+}
+
 
 input {
   border-radius: 4px;

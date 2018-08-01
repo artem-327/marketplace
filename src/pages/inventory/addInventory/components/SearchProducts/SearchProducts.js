@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 import './SearchProducts.css';
 import debounce from "debounce";
 import Spinner from '../../../../../components/Spinner/Spinner';
+import RecentProducts from "./components/RecentProducts";
+import ProductOffering from "./ProductOffering";
 import InfoLabel from "../AddForm/InfoLabel";
 import ProductMapping from "./components/ProductMapping";
-
 
 class SearchProducts extends Component {
 
@@ -40,7 +41,11 @@ class SearchProducts extends Component {
                     </div>
                 </div>
         ))};
-
+    componentDidMount () {
+        this.props.fetchProductForms();
+        this.props.fetchProductGrade();
+        this.props.fetchProductConditions();
+    }
     handleChangeSearch(e) {
         this.setState({fulltextSearch: e.target.value}, () => {
             if (this.state.fulltextSearch.length > 0) this.searchProducts();
@@ -83,6 +88,7 @@ class SearchProducts extends Component {
                 <ProductMapping  {...this.props}/>
                 <div className='search-results' style={{maxHeight: 50*this.state.results_count}}>
                 </div>
+                <ProductOffering {...this.props}/>
             </div>
         );
     }
