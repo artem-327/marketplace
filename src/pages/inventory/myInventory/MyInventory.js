@@ -90,9 +90,13 @@ class MyInventory extends Component {
                 <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
                 <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getProductOffers({...filter}, true)}}/>
                 <h3 className='header small'>Undefined product offerings selected</h3>
-                <Filter chemicalName filterFunc={(filter) => {this.props.getProductOffers({...filter}, true)}} />
+                <Filter chemicalName productAgeFilter filterFunc={(filter) => {this.props.getProductOffers({...filter}, true)}} />
                 {content}
                 <BroadcastRule
+                    submitRules={this.props.sendRules}
+                    addPopup={this.props.addPopup}
+                    removePopup={this.props.removePopup}
+                    getProductOffers={this.props.getProductOffers}
                     targetGroups={this.state.targetGroups}
                     selections={this.state.selections}
                     setFilter={(type) => this.setFilter(type)}

@@ -3,6 +3,8 @@ import {bindActionCreators} from 'redux'
 import MyInventory from './MyInventory';
 import {fetchAll as getProductOffers} from '../../../modules/productOffers';
 import {fetchAll as getCompanies} from '../../../modules/companies';
+import {sendRules} from "../../../modules/broadcastRule";
+import {addPopup, removePopup} from "../../../modules/popup";
 import {resetFilterTags, resetForm} from "../../../modules/filter";
 
 const mapStateToProps = store => ({
@@ -12,7 +14,7 @@ const mapStateToProps = store => ({
 });
 
 const mapDispatchToProps = dispatch => (
-    bindActionCreators({getProductOffers, getCompanies, resetFilterTags, resetForm}, dispatch)
+    bindActionCreators({getProductOffers, getCompanies, sendRules, addPopup, removePopup, resetFilterTags, resetForm}, dispatch)
 );
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyInventory);
