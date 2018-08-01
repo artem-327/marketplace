@@ -32,6 +32,7 @@ export default class ProductMapping extends Component {
     render() {
         let button = this.state.save ? <button onClick={(e)=>e.preventDefault()} className='saved-productMapping'>SAVED</button> :
             <button className='save-productMapping'>Save Mapping</button>;
+            console.log(this.props);
         return (
 
             <div>
@@ -56,14 +57,14 @@ export default class ProductMapping extends Component {
                 </div>
                 <div>
                     <div className='group-item-wr'>
-                        <label htmlFor=".productNamess">Product Name</label>
-                        <Control.text model=".productNames"
-                                      id=".productNames"/>
+                        <label htmlFor=".productName">Product Name</label>
+                        <Control.text model=".productName"
+                                      id=".productName"/>
                     </div>
                     <div className='group-item-wr'>
-                        <label htmlFor=".productNumbers">Product Number</label>
-                        <Control.text model=".productNumbers"
-                                      id=".productNumbers"/>
+                        <label htmlFor=".productNumber">Product Number</label>
+                        <Control.text model=".productNumber"
+                                      id=".productNumber"/>
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor=".measurements">Measurement</label>
@@ -73,13 +74,13 @@ export default class ProductMapping extends Component {
                     <div className='group-item-wr'>
                         <label htmlFor=".productGrade">U/M</label>
                         <DropdownRedux opns={this.props.unitOfMeasurement} placeholder='Select'
-                                       model="forms.products.productsMapping.getUnitOfMeasurement"
+                                       model="forms.products.productsMapping.UnitOfMeasurement"
                                        dispatch={this.props.dispatch}/>
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor=".productCondition">U/P</label>
                         <DropdownRedux opns={this.props.unitOfPackaging} placeholder='Select'
-                                       model="forms.products.productsMapping.getUnitOfPackaging"
+                                       model="forms.products.productsMapping.UnitOfPackaging"
                                        dispatch={this.props.dispatch}/>
                     </div>
                     {button}

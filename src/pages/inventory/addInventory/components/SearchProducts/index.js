@@ -1,15 +1,14 @@
 import {connect} from 'react-redux';
 import SearchProducts from './SearchProducts';
 import {bindActionCreators} from 'redux'
-import {searchProducts,
-        mapProducts,
+import {mapProducts,
+        searchProducts,
+        saveMapping,
         fetchRecentAddedProducts,
         fetchProductForms,
         fetchProductGrade,
-        fetchProductConditions
-        saveMapping} from "../../../../../modules/products";
-import {searchOrigin} from "../../../../../modules/productOffers";
-import {getUnitOfMeasurement, getUnitOfPackaging} from "../../../../../modules/productOffers";
+        fetchProductConditions} from "../../../../../modules/products";
+import {searchOrigin, getUnitOfMeasurement, getUnitOfPackaging} from "../../../../../modules/productOffers";
 
 
 const mapStateToProps = store => ({
@@ -27,8 +26,7 @@ const mapStateToProps = store => ({
 });
 
 const mapDispatchToProps = dispatch => (
-    bindActionCreators({
-                        mapProducts,
+    bindActionCreators({mapProducts,
                         searchProducts,
                         saveMapping,
                         fetchRecentAddedProducts,

@@ -29,6 +29,8 @@ const SEARCH_PRODUCT_REJECTED = 'SEARCH_PRODUCT_REJECTED';
 const SAVE_MAPPING = 'SAVE_MAPPING';
 const SAVE_MAPPING_FULFILLED = 'SAVE_MAPPING_FULFILLED';
 
+const LOAD_PRODUCT_MAPPING = 'LOAD_PRODUCT_MAPPING';
+
 export const initialState = {
     data: [],
     mappedData: [],
@@ -122,12 +124,24 @@ export default function reducer(state = initialState, action) {
                 mappedData: action.payload
             }
         }
+        case LOAD_PRODUCT_MAPPING: {
+            return{
+                ...state,
+                productsMapping: action.payload
+            }
+        }
         default: {
             return state
         }
     }
 }
 
+export function loadProductMapping(inputs){
+    return{
+        type: LOAD_PRODUCT_MAPPING,
+        payload: inputs
+    }
+}
 
 export function searchProducts(search) {
     return {

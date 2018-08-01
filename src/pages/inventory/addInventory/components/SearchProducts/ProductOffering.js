@@ -4,7 +4,6 @@ import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
 import DatepickerRedux from "../../../../../components/Datepicker/DatepickerRedux";
 import SearchOrigin from "./SearchOrigin";
 import './ProductOffering.css'
-import {fetchProductConditions, fetchProductForms, fetchProductGrade} from "../../../../../modules/products";
 
 export default class ProductOffering extends Component {
     constructor(props){
@@ -29,6 +28,7 @@ export default class ProductOffering extends Component {
     }
 
     render() {
+        console.log(this.props)
         let button = this.state.save ? <button onClick={(e)=>e.preventDefault()} className='button big disabled added-productOffering'>Added</button> :
             <button className='button big disabled add-productOffering'>Add Lot</button>;
         return (
@@ -109,11 +109,11 @@ export default class ProductOffering extends Component {
                         </div>
                     </div>
                         <div>
-                            <div className="group-item-wr">
+                            <div className="group-item-wr notes-textarea">
                                 <label htmlFor=".externalNotes">External notes</label>
                                 <Control.textarea model=".externalNotes" id=".externalNotes" className="textarea" placeholder="Enter notes here" />
                             </div>
-                            <div className="group-item-wr">
+                            <div className="group-item-wr notes-textarea">
                                 <label htmlFor=".internalNotes">Internal Notes</label>
                                 <Control.textarea model=".internalNotes" id=".internalNotes" className="textarea" placeholder="Enter notes here" />
 

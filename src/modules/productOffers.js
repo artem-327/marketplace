@@ -33,6 +33,7 @@ export const initialState = {
         hasError: false,
         data:{
             totalPackages: "",
+            pack: "",
             packaging: "",
             packageSize: "",
             price: "",
@@ -155,17 +156,12 @@ export function getUnitOfMeasurement() {
     }
 }
 
-export function getUnitOfPackaging() {
-    return {
-        type: GET_UNIT_OF_PACKAGING,
-        payload:Promise.resolve([
-            {
-                id:1,
-                name:'Bag'
-            }
-        ])
+export function getUnitOfPackaging(pack) {
+        return {
+            type: GET_UNIT_OF_PACKAGING,
+            payload: axios.get('/api/v1/containers/', {params: {...pack}}).then(response => response.data.data.containers)
+        }
     }
-}
 
 export function resetForm() {
     return {

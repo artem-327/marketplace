@@ -35,7 +35,7 @@ class SearchProducts extends Component {
             if (!this.props.mappedProducts || this.props.mappedProducts.length === 0) return null;
             return this.props.mappedProducts.map(productTemplate => (
                 <div className='search-status'>
-                    <div key={productTemplate.chemical.id} className='search-product-item' onClick={() => this.props.onSelect(productTemplate)}>
+                    <div key={productTemplate.chemical.id} className='search-product-item' onClick={() => this.props.onSelectProductMapping(productTemplate)}>
                         <span className='search-cas'>{productTemplate.chemical.casNumber}</span>
                         {productTemplate.chemical.casIndexName}
                     </div>
