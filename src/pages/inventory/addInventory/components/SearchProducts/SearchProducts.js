@@ -26,7 +26,7 @@ class SearchProducts extends Component {
             <div className='search-status'>
             <div key={product.id} className='search-product-item' onClick={() => this.props.onSelect(product)}>
                 <span className='search-cas'>{product.casNumber}</span>
-                {product.primaryName}
+                {product.casIndexName}
             </div>
             </div>
         ))};
@@ -34,9 +34,9 @@ class SearchProducts extends Component {
             if (!this.props.mappedProducts || this.props.mappedProducts.length === 0) return null;
             return this.props.mappedProducts.map(productTemplate => (
                 <div className='search-status'>
-                    <div key={productTemplate.product.id} className='search-product-item' onClick={() => this.props.onSelect(productTemplate)}>
-                        <span className='search-cas'>{productTemplate.product.casNumber}</span>
-                        {productTemplate.product.chemicalName}
+                    <div key={productTemplate.chemical.id} className='search-product-item' onClick={() => this.props.onSelect(productTemplate)}>
+                        <span className='search-cas'>{productTemplate.chemical.casNumber}</span>
+                        {productTemplate.chemical.casIndexName}
                     </div>
                 </div>
         ))};

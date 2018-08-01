@@ -26,7 +26,6 @@ export default class AddForm extends Component {
                 this.props.getPackageOptions(productType);
                 this.props.fetchWarehouse();
                 this.props.getManufacturer();
-                this.props.getPricingUnits();
             });
         }
     }
@@ -40,7 +39,6 @@ export default class AddForm extends Component {
                 this.props.getPackageOptions();
                 this.props.fetchWarehouse();
                 this.props.getManufacturer();
-                this.props.getPricingUnits();
                 this.props.fetchLocations();
             });
         }

@@ -116,25 +116,6 @@ export function getManufacturer() {
     }
 }
 
-export function getPricingUnits() {
-
-    return {
-        type: PRICING_UNITS,
-        payload: Promise.resolve(
-            {
-                "data": {
-                    "pricingUnits": [
-                        {
-                            "id": "USD",
-                            "name": "USD"
-                        }
-                    ]
-                },
-                "status": "success"
-            })
-        }
-    }
-
 
 
 
