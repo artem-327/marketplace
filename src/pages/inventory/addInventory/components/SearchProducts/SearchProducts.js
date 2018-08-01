@@ -6,6 +6,7 @@ import RecentProducts from "./components/RecentProducts";
 import ProductOffering from "./ProductOffering";
 import InfoLabel from "../AddForm/InfoLabel";
 import ProductMapping from "./components/ProductMapping";
+import AddedLots from "./AddedLots/AddedLots";
 
 class SearchProducts extends Component {
 
@@ -89,6 +90,7 @@ class SearchProducts extends Component {
                 <div className='search-results' style={{maxHeight: 50*this.state.results_count}}>
                 </div>
                 <ProductOffering {...this.props}/>
+                <AddedLots />
             </div>
         );
     }

@@ -79,11 +79,8 @@ export default class AddForm extends Component {
         return (
             <div className={classnames('add-inventory', {'disable' : this.props.disable})} >
                 <Form model="forms.addProductOffer.addProductOffer" onSubmit={(inputs) => this.addProductOffer(inputs)}>
-                    <AddGroup header='DETAILS' disable={this.props.disable} component = {<Details {...this.props}/>} />
                     <AddGroup header='PRICING' disable={this.props.disable} component = {<Pricing {...this.props}/>} />
-                    {/*Location - handle submit inside*/}
                     <AddGroup header='LOCATION' disable={this.props.disable} component = {<Location {...this.props}/>} />
-                    <AddGroup header='ATTRIBUTES' disable={this.props.disable} component = {<Attributes {...this.props}/>} />
                     <button disabled={this.props.disable}
                             className={classnames('button add-inventory big', {'disabled' : this.props.disable})}>
                         ADD INVENTORY
