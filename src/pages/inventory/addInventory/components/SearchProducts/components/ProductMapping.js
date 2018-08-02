@@ -7,6 +7,7 @@ export default class ProductMapping extends Component {
         super(props);
         this.state = {
             save: false,
+            value: {}
         }
     }
 
@@ -16,21 +17,13 @@ export default class ProductMapping extends Component {
     }
 
     saveMapping(values){
-        this.setState({save: true}
-        // this.saveMapping.then(()=>{
-            // this.setState({save: true}, ()=>{
-            //     let that = this;
-            //     setTimeout(function(){
-            //         that.setState({save: false});
-            //     }, 3000)
-            // }
-            // )
-        // }
-        )
+        this.setState({save: true, value: values})
+        this.props.updateMapping(this.state.value);
     }
 
+
     render() {
-        let button = this.state.save ? <button onClick={(e)=>e.preventDefault()} className='saved-productMapping'>SAVED</button> :
+        let button = this.state.save ? <button className='saved-productMapping'>SAVED</button> :
             <button className='save-productMapping'>Save Mapping</button>;
             console.log(this.props);
         return (

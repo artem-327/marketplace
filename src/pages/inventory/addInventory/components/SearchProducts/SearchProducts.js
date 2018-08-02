@@ -18,7 +18,9 @@ class SearchProducts extends Component {
             isOpen: false,
             fulltextSearch: "",
             fulltextMap: "",
-            results_count: 10
+            results_count: 10,
+            mapping:{},
+            offering:{}
         }
     }
 
@@ -65,6 +67,15 @@ class SearchProducts extends Component {
         this.props.mapProducts(this.state.fulltextMap);
     }
 
+    updateOffering(value){
+        this.setState({offering:value});
+    }
+
+    updateMapping(value){
+        this.setState({mapping:value});
+    }
+    
+
 
     render() {
         let {fulltextSearch, fulltextMap} = this.state;
@@ -86,11 +97,11 @@ class SearchProducts extends Component {
                     {resultsMap}
                 </div>
                 <InfoLabel/>
-                <ProductMapping  {...this.props}/>
+                <ProductMapping  {...this.props} updateMapping={(value)=>{this.updateMapping(value)}}/>
                 <div className='search-results' style={{maxHeight: 50*this.state.results_count}}>
                 </div>
-                <ProductOffering {...this.props}/>
-                <AddedLots />
+                <ProductOffering {...this.props} updateOffering={(value)=>{this.updateOffering(value)}}/>
+                <AddedLots mapping={this.state.mapping} selectedProduct={this.props.selectedProduct} selectedMapping={this.props.selectedMapping}/>
             </div>
         );
     }

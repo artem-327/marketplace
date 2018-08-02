@@ -10,26 +10,19 @@ export default class ProductOffering extends Component {
         super(props);
         this.state = {
             save: false,
+            value: {}
         }
     }
 
     saveOffering(values){
-        this.setState({save: true}
-            // this.saveMapping.then(()=>{
-            // this.setState({save: true}, ()=>{
-            //     let that = this;
-            //     setTimeout(function(){
-            //         that.setState({save: false});
-            //     }, 3000)
-            // }
-            // )
-            // }
-        )
+        this.setState({save: true,value:values});
+        this.props.updateOffering(this.state.value);
+        
     }
 
+
     render() {
-        console.log(this.props)
-        let button = this.state.save ? <button onClick={(e)=>e.preventDefault()} className='button big disabled added-productOffering'>Added</button> :
+        let button = this.state.save ? <button className='button big disabled added-productOffering'>Added</button> :
             <button className='button big disabled add-productOffering'>Add Lot</button>;
         return (
             <div>
@@ -39,7 +32,8 @@ export default class ProductOffering extends Component {
                         <div className='group-item-wr'>
                             <label htmlFor=".totalPackages">Total Packages</label>
                             <Control.text model=".totalPackages"
-                                          id=".totalPackages"/>
+                                          id=".totalPackages"
+                                          required/>
                         </div>
                         <div className='group-item-wr'>
                             <label htmlFor=".lotNumber">Lot Number</label>
@@ -51,14 +45,14 @@ export default class ProductOffering extends Component {
                             <DatepickerRedux placeholder={'test'}
                                              dispatch={this.props.dispatch}
                                              onChange={(value)=>console.log(value)}
-                                             model='forms.addProductOffer.addProductOffer.createdDate' />
+                                             model='forms.products.productsOffering.createdDate' />
                         </div>
                         <div className='group-item-wr'>
                             <label htmlFor=".expirationDate">Expiration Date</label>
                             <DatepickerRedux placeholder={'test'}
                                              dispatch={this.props.dispatch}
                                              onChange={(value)=>console.log(value)}
-                                             model='forms.addProductOffer.addProductOffer.expirationDate' />
+                                             model='forms.products.productsOffering.expirationDate' />
                         </div>
                     </div>
                     <div>
@@ -74,7 +68,7 @@ export default class ProductOffering extends Component {
                         <div className='group-item-wr'>
                             <label htmlFor=".form">Form</label>
                             <DropdownRedux opns={this.props.productForms} placeholder='Select'
-                                           model="forms.products.productForms"
+                                           model="forms.products.productsOffering.productForms"
                                            dispatch={this.props.dispatch}/>
                         </div>
                         <div className='group-item-wr'>
@@ -97,13 +91,13 @@ export default class ProductOffering extends Component {
                         <div className='group-item-wr'>
                             <label htmlFor=".grade">Grade</label>
                             <DropdownRedux opns={this.props.productGrade} placeholder='Select'
-                                           model="forms.products.productGrade"
+                                           model="forms.products.productsOffering.productGrade"
                                            dispatch={this.props.dispatch}/>
                         </div>
                         <div className='group-item-wr'>
                             <label htmlFor=".condition">Condition</label>
                             <DropdownRedux opns={this.props.productConditions} placeholder='Select'
-                                           model="forms.products.productConditions"
+                                           model="forms.products.productsOffering.productConditions"
                                            dispatch={this.props.dispatch}/>
                         </div>
                         </div>
