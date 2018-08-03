@@ -17,18 +17,33 @@ const FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED = 'FETCH_RECEANT_ADDED_PRODUCTS_FUL
 
 const SEARCH_PRODUCT = 'SEARCH_PRODUCT';
 const SEARCH_PRODUCT_PENDING = 'SEARCH_PRODUCT_PENDING';
+
+const MAP_PRODUCT = 'MAP_PRODUCT';
+const MAP_PRODUCT_PENDING = 'MAP_PRODUCT_PENDING';
+const MAP_PRODUCT_REJECTED = 'MAP_PRODUCT_REJECTED';
+const MAP_PRODUCT_FULFILLED = 'MAP_PRODUCT_FULFILLED';
+
 const SEARCH_PRODUCT_FULFILLED = 'SEARCH_PRODUCT_FULFILLED';
 const SEARCH_PRODUCT_REJECTED = 'SEARCH_PRODUCT_REJECTED';
 
+const SAVE_MAPPING = 'SAVE_MAPPING';
+const SAVE_MAPPING_FULFILLED = 'SAVE_MAPPING_FULFILLED';
+
+const LOAD_PRODUCT_MAPPING = 'LOAD_PRODUCT_MAPPING';
+
 export const initialState = {
     data: [],
+    mappedData: [],
     productForms: [],
+    productsMapping: {},
+    productOffering: {},
     productConditions: [],
     productGrade: [],
     productAge: [],
     location: [],
     recentProducts: [],
-    isFetching: false
+    isFetching: false,
+    isMapFetching: false
 };
 
 export default function reducer(state = initialState, action) {
@@ -82,17 +97,62 @@ export default function reducer(state = initialState, action) {
                 data: action.payload
             }
         }
+        case SAVE_MAPPING_FULFILLED: {
+            return{
+                ...state,
+                products: {
+                    isFetching: false,
+                }
+            }
+        }
+        case MAP_PRODUCT_PENDING: {
+            return{
+                ...state,
+                isMapFetching: true,
+            }
+        }
+        case MAP_PRODUCT_REJECTED: {
+            return{
+                ...state,
+                isMapFetching: false,
+            }
+        }
+        case MAP_PRODUCT_FULFILLED: {
+            return{
+                ...state,
+                isMapFetching: false,
+                mappedData: action.payload
+            }
+        }
+        case LOAD_PRODUCT_MAPPING: {
+            return{
+                ...state,
+                productsMapping: {...state.productsMapping, ...action.payload}
+            }
+        }
         default: {
             return state
         }
     }
 }
 
+export function loadProductMapping(inputs){
+    return{
+        type: LOAD_PRODUCT_MAPPING,
+        payload: inputs
+    }
+}
 
 export function searchProducts(search) {
     return {
         type: SEARCH_PRODUCT,
         payload: axios.get('/api/v1/products/', {params:{search}}).then(response => response.data.data.products)
+    }
+}
+export function mapProducts(map) {
+    return {
+        type: MAP_PRODUCT,
+        payload: axios.get('/api/v1/product-templates/', {params:{map}}).then(response => response.data.data.productTemplates)
     }
 }
 
@@ -155,5 +215,12 @@ export function fetchRecentAddedProducts(limit = 3) {
         payload: axios.get('/api/v1/products/', {params:{
             srtb: 'updatedAt', lmt: limit
         }}).then(result => result.data.data.products)
+    }
+}
+
+export function saveMapping(values) {
+    return {
+        type: SAVE_MAPPING,
+        payload: axios.post("/api/v1/product-templates/", values)
     }
 }

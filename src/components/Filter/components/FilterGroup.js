@@ -56,6 +56,10 @@ class FilterGroup extends Component {
     // }
 
     renderInputs () {
+
+        if (this.props.header ==='Product Age'){
+        }
+
         if (!this.props.inputs) return;
         if (this.props.renderAsGroup) return this.renderInputsGroup();
         return this.state.isOpen ? this.props.inputs.map((input, index) => {
@@ -72,10 +76,11 @@ class FilterGroup extends Component {
                     )
                 }
                 case 'radio' : {
+                    
                     return (
                         <div key={index} className='filter-input-radio'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>
-                            <RadioRedux dispatch={this.props.dispatch} model={input.model} opns={[{name:'100', value:'10'}, {name:'500', value:'50'}, {name:'1000', value:'100'}]}/>
+                            <RadioRedux dispatch={this.props.dispatch} model={input.model} opns={[{label:'0-3 months', value:'100'}, {label:'3-6 months', value:'500'}, {label:'6-9 months', value:'1000'}, {label:'Custom Product Age', value:'10000'}]} productAgeModel = {this.props.productAgeModel} productAgeCustomModel={this.props.productAgeCustomModel}/>
                         </div>
                     )
                 }

@@ -1,0 +1,47 @@
+.lots-container{
+    background-color: rgb(252, 252, 252);
+    .lots-header{
+        background-color: rgb(245, 245, 245);
+        position: relative;
+        padding: 12px 12px 12px 20px;
+        border-bottom: 1.3px solid rgb(239, 239, 239);
+    }
+    .lots-item-container{
+        display: flex;
+        
+        
+        border-bottom: 1.3px solid rgb(239, 239, 239);
+        .vl{
+            
+            margin: 3px 0px 3px 0px;
+            border-left: 1.3px solid rgb(239, 239, 239);
+        }
+
+        .lots-item-info{
+            position: relative;
+            float: left;
+            flex:1;
+            align-self: center;
+            padding: 10px 10px 10px 20px;
+        }
+        .lots-item-docs{
+            position: relative;
+            float: left;
+            flex:1;
+            align-self: center;
+            padding: 10px 10px 10px 20px;
+        }
+        .lots-item-button-text{
+            color: rgb(165, 165, 165);
+            position: relative;
+            float: left;
+            align-self: center;
+            padding: 10px 10px 10px 20px;
+        }
+        .lots-item-button{
+            align-self: center;
+           margin: 0px 10px 0px 10px;
+        }
+    }
+
+}

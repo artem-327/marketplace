@@ -1,0 +1,34 @@
+.search-origin {
+  width: 192px;
+  display: inline-block;
+  position: relative; }
+  .search-origin .search-icon {
+    position: absolute;
+    top: 32px;
+    left: 11px;
+    color: #a9a9a9;
+    font-size: 18px; }
+  .search-origin input {
+    width: 100%;
+    padding-left: 40px; }
+  .search-origin button {
+    width: 200px; }
+
+.origin-results {
+  position: absolute;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #b0b0b0;
+  border-radius: 0 0 4px 4px;
+  margin-top: -3px;
+  overflow-y: auto; }
+  .origin-results .origin-no-result {
+    padding: 10px;
+    margin: 0; }
+  .origin-results .search-origin-item {
+    padding: 10px; }
+    .origin-results .search-origin-item:hover {
+      cursor: pointer;
+      background-color: #eeeeee; }
+    .origin-results .search-origin-item .search-cas {
+      margin-right: 10px; }
