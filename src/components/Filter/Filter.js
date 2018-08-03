@@ -16,7 +16,6 @@ class Filter extends Component {
     }
 
     handleSubmit(inputs){
-        console.log(inputs)
         let filter = Object.assign({}, inputs, {pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key).join(',')});
 
         let params = filterNonEmptyAttributes(filter);
@@ -31,7 +30,7 @@ class Filter extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchPackageTypes();
+        // this.props.fetchPackageTypes();
     }
 
     componentWillReceiveProps(nextProps){
@@ -41,8 +40,7 @@ class Filter extends Component {
     }
 
     render(){
-        console.log(this.props);
-        // (this.props.data.locations.state)
+
         return this.state.isOpen ?
             <div className="filter">
                 <Form model="forms.filter.data" onSubmit={(val) => this.handleSubmit(val)}>

@@ -22,6 +22,7 @@ export const initialState = {
         location: false
     },
     filterTags: []
+    
 };
 
 export default function reducer(state = initialState, action) {

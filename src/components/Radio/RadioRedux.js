@@ -12,13 +12,21 @@ class RadioRedux extends Component {
         if(this.props.onChange) this.props.onChange(value);
     }
 
+    handleCustom(model, value){
+        console.log(model);
+            this.props.dispatch(actions.change(model, value));
+    }
+
     render() {
         return <Control
             model={this.props.model}
             component={Radio}
             redux
-            onCustomChange={value => this.handleChange(value)}
+            onChange={value => this.handleChange(value)}
+            productAgeModel={this.props.productAgeModel}
+            productAgeCustomModel={this.props.productAgeCustomModel}
             {...this.props}
+            handleCustom = {model => this.handleCustom(model)}
         />
 
     }

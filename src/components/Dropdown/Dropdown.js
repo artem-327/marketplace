@@ -25,7 +25,7 @@ class Dropdown extends Component {
 
     componentWillReceiveProps(nextProps){
         if(nextProps.redux){
-            let cv = nextProps.value;
+            let cv = '';
             for(let i = 0; i < nextProps.opns.length; i++){
                 if(nextProps.opns[i].id === nextProps.value){
                     cv = nextProps.opns[i].name;
