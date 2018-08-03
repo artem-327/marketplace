@@ -1,13 +1,12 @@
 import axios from "axios";
-import origin from '../components/Dropdown/unitedStates';
+import origin from '../components/unitedStates';
 
 
 const PACKAGE_OPTIONS = 'PACKAGE_OPTIONS';
 const PACKAGE_OPTIONS_FULFILLED = 'PACKAGE_OPTIONS_FULFILLED';
 const MANUFACTURER = 'MANUFACTURER';
 const MANUFACTURER_FULFILLED = 'MANUFACTURER_FULFILLED';
-const PRICING_UNITS = 'PRICING_UNITS';
-const PRICING_UNITS_FULFILLED = 'PRICING_UNITS_FULFILLED';
+
 export const initialState = {
     units:{
         isPending: false,
@@ -17,18 +16,11 @@ export const initialState = {
         isPending: false,
         options: []
     },
-    pricingUnits:{
-        isPending: false,
-        options: []
-    },
     manufacturer:{
         isPending: false,
         options: []
     },
-    origin:{
-        isPending: false,
-        options: origin
-    },
+    origin: origin,
     state:{
         isPending: false,
         options: []
@@ -62,16 +54,6 @@ export default function reducer(state = initialState, action) {
                     ...state.manufacturer,
                     isPending: false,
                     options: action.payload.data.data.manufacturers
-                }
-            }
-        }
-        case PRICING_UNITS_FULFILLED: {
-            return {
-                ...state,
-                pricingUnits: {
-                    ...state.pricingUnits,
-                    isPending: false,
-                    options: action.payload.data.pricingUnits
                 }
             }
         }

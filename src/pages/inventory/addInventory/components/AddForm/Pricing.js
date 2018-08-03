@@ -4,7 +4,6 @@ import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
 // import Checkbox from "../../../../../components/Checkbox/Checkbox";
 import IncrementalPricing from './IncrementalPricing';
 import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
-import Checkbox from "../../../../../components/Checkbox/Checkbox";
 
 export default class Pricing extends Component {
     constructor(props){
@@ -26,19 +25,19 @@ export default class Pricing extends Component {
                 <div>
                     <div className='group-item-wr'>
                         <label htmlFor=".pricePr">Price pr (lb)</label>
-                        <Control.text model=".pricePr"
+                        <Control.text model=".pricing.price"
                                       id=".pricePr"
                                       placeholder="$"/>
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor=".costPr">Cost pr (lb)</label>
-                        <Control.text model=".costPr"
+                        <Control.text model=".pricing.cost"
                                       id=".costPr"
                                       placeholder="$"/>
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor=".grossMargin">Gross Margin %</label>
-                        <Control.text model=".grossMargin"
+                        <Control.text model=".pricing.margin"
                                       id=".grossMargin"
                                       placeholder="$"/>
                     </div>
@@ -47,13 +46,13 @@ export default class Pricing extends Component {
                         <h6>$ UNDEFINED</h6>
                     </div>
                 </div>
-                <div>
-                    <div className='group-item-wr'>
-                        <Checkbox name='incremental'
-                                  label='Tiered Pricing'
-                                  onChange={(value) => this.setState({incrementalPricing: value})} />
-                    </div>
-                </div>
+                {/*<div>*/}
+                    {/*<div className='group-item-wr'>*/}
+                        {/*<Checkbox name='incremental'*/}
+                                  {/*label='Tiered Pricing'*/}
+                                  {/*onChange={(value) => this.setState({incrementalPricing: value})} />*/}
+                    {/*</div>*/}
+                {/*</div>*/}
                 <div>
                 <div className='group-item-wr'>
                 <label htmlFor=".splits">Splits</label>

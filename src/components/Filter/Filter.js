@@ -30,7 +30,7 @@ class Filter extends Component {
     }
 
     componentDidMount() {
-        this.props.fetchPackageTypes();
+        // this.props.fetchPackageTypes();
     }
 
     componentWillReceiveProps(nextProps){

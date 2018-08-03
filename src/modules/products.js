@@ -127,7 +127,7 @@ export default function reducer(state = initialState, action) {
         case LOAD_PRODUCT_MAPPING: {
             return{
                 ...state,
-                productsMapping: action.payload
+                productsMapping: {...state.productsMapping, ...action.payload}
             }
         }
         default: {
@@ -221,6 +221,6 @@ export function fetchRecentAddedProducts(limit = 3) {
 export function saveMapping(values) {
     return {
         type: SAVE_MAPPING,
-        payload: axios.post("/api/v1/?????????????", values)
+        payload: axios.post("/api/v1/product-templates/", values)
     }
 }

@@ -18,7 +18,6 @@ class Datepicker extends React.Component {
 
     render () {
         const { value, placeholder,} = this.props;
-        console.log(value);
         return (
             <div className='datepicker'>
                 <i className="far fa-calendar-alt datepicker-icon"></i>

@@ -7,8 +7,10 @@ class AddedLot extends Component {
         return (
         <div className='lots-item-container'>
             <div className='lots-item-info'>
-        {this.props.info.casNumber} • {this.props.mapping.productName}
-                
+                {this.props.position + ' ' +
+                this.props.lot.productName + ' ' +
+                this.props.lot.casNumber + ' ' +
+                this.props.lot.lotNumber}
             </div>
             <div className="vl"></div>
             <div className='lots-item-docs'>

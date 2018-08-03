@@ -1,8 +1,7 @@
 import {connect} from 'react-redux';
 import AddInventory from './AddInventory';
-import {resetForm} from "../../../modules/productOffers";
-import {loadProductMapping} from "../../../modules/products";
 import {bindActionCreators} from 'redux'
+import {resetForm} from "../../../modules/productOffers";
 
 function mapStateToProps() {
     return {}
@@ -11,8 +10,7 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({
-        resetForm,
-        loadProductMapping
+        resetForm
     }, dispatch)
 }
 

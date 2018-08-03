@@ -8,15 +8,18 @@
   height: 38px;
   font-weight: bold;
   margin-left: 25px;
-  transition: all .2s ease; }
-  .save-productMapping .saved {
+  transition: all .2s ease;
+  .saved {
     background-color: #4cd136;
-    color: white; }
-  .save-productMapping:hover {
+    color: white;
+  }
+  &:hover{
     cursor: pointer;
     background-color: #4cd136;
-    color: white; }
-
+    color: white;
+  }
+    
+}
 .saved-productMapping {
   width: 155px;
   padding: 0 25px;
@@ -26,41 +29,53 @@
   border-radius: 5px;
   height: 38px;
   font-weight: bold;
-  margin-left: 25px; }
+  margin-left: 25px;
 
-.search-products {
+}
+
+.search-products{
   width: calc(50% - 25px);
   display: inline-block;
   margin: 0 15px 12px 10px;
-  position: relative; }
-  .search-products .search-icon {
+  //min-width: 500px;
+  position: relative;
+  .search-icon{
     position: absolute;
-    bottom: 11px;
+    top: 32px;
     left: 11px;
     color: #a9a9a9;
-    font-size: 18px; }
-  .search-products input {
+    font-size: 18px;
+  }
+  input{
     width: 100%;
-    padding-left: 40px; }
-  .search-products button {
-    width: 200px; }
+    padding-left: 40px;
+  }
+  button{
+    width: 200px;
+  }
+}
 
-.map-products {
+.map-products{
   width: calc(50% - 25px);
   display: inline-block;
   margin: 0 10px 12px 15px;
-  position: relative; }
-  .map-products .search-icon {
+  //min-width: 500px;
+  position: relative;
+  .search-icon{
     position: absolute;
-    bottom: 11px;
+    top: 32px;
     left: 11px;
     color: #a9a9a9;
-    font-size: 18px; }
-  .map-products input {
+    font-size: 18px;
+  }
+  input{
     width: 100%;
-    padding-left: 40px; }
-  .map-products button {
-    width: 200px; }
+    padding-left: 40px;
+  }
+  button{
+    width: 200px;
+  }
+}
 
 .infoLabel {
   position: relative;
@@ -68,12 +83,13 @@
   border: 1px solid #289ada;
   color: #a7a9ab;
   border-radius: 4px;
-  width: calc(100% - 20px); }
-  .infoLabel label {
+  width: calc(100% - 20px);
+  label{
     display: inline-block;
     width: calc(100% - 40px);
-    float: right; }
-  .infoLabel .info-icon {
+    float: right;
+  }
+  .info-icon{
     font-weight: bold;
     color: #289ada;
     border: 1px solid #289ada;
@@ -82,9 +98,12 @@
     position: absolute;
     left: 5px;
     top: 50%;
-    transform: translateY(-50%); }
+    transform: translateY(-50%);
+  }
+}
 
-.search-status {
+
+.search-status{
   position: absolute;
   z-index: +1;
   border: 1px solid #b0b0b0;
@@ -93,11 +112,15 @@
   padding: 10px;
   width: 100%;
   margin: -2px 0 0 0;
-  text-align: center; }
-  .search-status:hover {
-    cursor: pointer; }
-
-.map-status {
+  text-align: center;
+  &:hover{
+    cursor: pointer;
+  }
+  .spinner{
+    margin-top: 5px;
+  }
+}
+.map-status{
   position: absolute;
   z-index: +1;
   border: 1px solid #b0b0b0;
@@ -106,32 +129,41 @@
   padding: 10px;
   width: 100%;
   margin: -2px 0 0 0;
-  text-align: center; }
+  text-align: center;
+  .spinner{
+    margin-top: 5px;
+  }
+}
 
-.search-results {
+.search-results{
   width: 100%;
   color: #4e5157;
-  overflow-y: auto; }
-  .search-results .spinner {
-    margin-top: 20px; }
-  .search-results .search-product-item {
+  overflow-y: auto;
+  .spinner{
+    margin-top: 20px;
+  }
+  .search-product-item{
     padding: 10px;
     font-size: .9em;
     border-radius: 7px;
     margin: 7px 0 0 0;
     border: 1px solid #eeeeee;
-    transition: all .2s ease; }
-    .search-results .search-product-item:hover {
+    transition: all .2s ease;
+    &:hover{
       cursor: pointer;
-      background-color: #eeeeee; }
-    .search-results .search-product-item .search-cas {
-      margin-right: 10px; }
-
-.recent-products {
+      background-color: #eeeeee;
+    }
+    .search-cas{
+      margin-right: 10px;
+      //float: right;
+    }
+  }
+}
+.recent-products{
   width: calc(70% - 25px);
   float: right;
-  display: inline-block; }
-  .recent-products .recent-product {
+  display: inline-block;
+  .recent-product{
     background-color: #d4eaf7;
     display: inline-block;
     border-radius: 25px;
@@ -139,12 +171,16 @@
     padding: 3px 20px;
     margin: 2px 5px 2px 0;
     border: 2px solid #3b98d3;
-    transition: all .2s ease; }
-    .recent-products .recent-product:hover {
+    transition: all .2s ease;
+    &:hover{
       cursor: pointer;
       background-color: #3b98d3;
-      color: white; }
-  .recent-products .recent-header {
+      color: white;
+    }
+  }
+  .recent-header{
     color: #c3c3c3;
     font-size: .9rem;
-    font-weight: lighter; }
+    font-weight: lighter;
+  }
+}

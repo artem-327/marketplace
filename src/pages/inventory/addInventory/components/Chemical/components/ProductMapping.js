@@ -7,7 +7,6 @@ export default class ProductMapping extends Component {
         super(props);
         this.state = {
             save: false,
-            value: {}
         }
     }
 
@@ -15,17 +14,18 @@ export default class ProductMapping extends Component {
         this.props.getUnitOfMeasurement();
         this.props.getUnitOfPackaging();
     }
-
     saveMapping(values){
-        this.setState({save: true, value: values})
-        this.props.updateMapping(this.state.value);
+        values = Object.assign({}, values, {
+            product: this.props.productID
+        });
+        this.setState({save: true}, ()=>{
+            this.props.saveMapping(values);
+        });
     }
-
 
     render() {
         let button = this.state.save ? <button className='saved-productMapping'>SAVED</button> :
             <button className='save-productMapping'>Save Mapping</button>;
-            console.log(this.props);
         return (
 
             <div>
@@ -61,19 +61,19 @@ export default class ProductMapping extends Component {
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor=".measurements">Measurement</label>
-                        <Control.text model=".measurements"
+                        <Control.text model=".packaging.capacity"
                                       id=".measurements"/>
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor=".productGrade">U/M</label>
                         <DropdownRedux opns={this.props.unitOfMeasurement} placeholder='Select'
-                                       model="forms.products.productsMapping.UnitOfMeasurement"
+                                       model="forms.products.productsMapping.packaging.unit"
                                        dispatch={this.props.dispatch}/>
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor=".productCondition">U/P</label>
                         <DropdownRedux opns={this.props.unitOfPackaging} placeholder='Select'
-                                       model="forms.products.productsMapping.UnitOfPackaging"
+                                       model="forms.products.productsMapping.packaging.container"
                                        dispatch={this.props.dispatch}/>
                     </div>
                     {button}

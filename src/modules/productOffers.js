@@ -15,11 +15,6 @@ const ADD_PRODUCT_OFFER_FULFILLED = 'ADD_PRODUCT_OFFER_FULFILLED';
 
 const RESET_PRODUCT_OFFER = 'RESET_PRODUCT_OFFER';
 
-const SEARCH_ORIGIN = 'SEARCH_ORIGIN';
-const SEARCH_ORIGIN_PENDING = 'SEARCH_ORIGIN_PENDING';
-const SEARCH_ORIGIN_FULFILLED = 'SEARCH_ORIGIN_FULFILLED';
-const SEARCH_ORIGIN_REJECTED = 'SEARCH_ORIGIN_REJECTED';
-
 
 export const initialState = {
     data: [],
@@ -98,25 +93,7 @@ export default function reducer(state = initialState, action) {
                 addProductOffer: {}
             }
         }
-        case SEARCH_ORIGIN_PENDING: {
-            return{
-                ...state,
-                isFetching: true,
-            }
-        }
-        case SEARCH_ORIGIN_REJECTED: {
-            return{
-                ...state,
-                isFetching: false,
-            }
-        }
-        case SEARCH_ORIGIN_FULFILLED: {
-            return{
-                ...state,
-                isFetching: false,
-                data: action.payload
-            }
-        }
+
         default: {
             return state
         }
@@ -130,12 +107,6 @@ export function fetchAll(filter = {}, mrchnt=true) {
     }
 }
 
-export function searchOrigin(origin) {
-    return {
-        type: SEARCH_ORIGIN,
-        payload: axios.get("/api/v1/product-offers/", {params: {...origin}}).then(response => response.data.data.productOffers)
-    }
-}
 
 export function addProductOffer(inputs) {
     return {
