@@ -17,6 +17,9 @@ class DatepickerRedux extends React.Component {
     render () {
         return <Control model={this.props.model}
                         component={DatePicker}
+                        validators={{
+                            required: (val) => val && val.length
+                        }}
                         placeholder={this.props.placeholder}
                         onChange={value => this.handleChange(value)} />
     }

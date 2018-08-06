@@ -198,3 +198,32 @@
 .datepicker .react-datepicker__input-container input {
 
 }
+.form-error {
+  position: relative;
+  display: inline-block;
+  span {
+  position: absolute;
+    top: 40px;
+    left: 105px;
+    width: 190px;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  background-color: #ebebe4;
+    border-radius: 4px;
+  padding: 10px;
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border: 20px solid transparent;
+      border-bottom-color: #ebebe4;
+      border-top: 0;
+      border-left: 0;
+      margin-left: -16.5px;
+      margin-top: -20px;
+    }
+  }
+}
