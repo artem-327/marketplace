@@ -109,11 +109,19 @@ export default class ProductOffering extends Component {
                         <div className='group-item-wr'>
                             <SearchOrigin {...this.props}/>
                         </div>
-
+                        <Errors
+                            className="form-error"
+                            model="forms.productOffering.productForm"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                            }}
+                        />
                         <div className='group-item-wr'>
                             <label htmlFor=".form">Form</label>
                             <DropdownRedux opns={this.props.productForms} placeholder='Select'
                                            model="forms.productOffering.productForm"
+                                           validators={{required}}
                                            dispatch={this.props.dispatch}/>
                         </div>
                         <Errors
@@ -165,17 +173,34 @@ export default class ProductOffering extends Component {
                                               type="number"
                                               id=".assayMax"/>
                             </div>
-
+                            <Errors
+                                className="form-error"
+                                model="forms.productOffering.productGrade"
+                                show="touched"
+                                messages={{
+                                    required: messages.required,
+                                }}
+                            />
                         <div className='group-item-wr'>
                             <label htmlFor=".grade">Grade</label>
                             <DropdownRedux opns={this.props.productGrade} placeholder='Select'
                                            model="forms.productOffering.productGrade"
+                                           validators={{required}}
                                            dispatch={this.props.dispatch}/>
                         </div>
+                            <Errors
+                                className="form-error"
+                                model="forms.productOffering.productCondition"
+                                show="touched"
+                                messages={{
+                                    required: messages.required,
+                                }}
+                            />
                         <div className='group-item-wr'>
                             <label htmlFor=".condition">Condition</label>
                             <DropdownRedux opns={this.props.productConditions} placeholder='Select'
                                            model="forms.productOffering.productCondition"
+                                           validators={{required}}
                                            dispatch={this.props.dispatch}/>
                         </div>
                         </div>
