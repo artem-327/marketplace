@@ -1,5 +1,4 @@
 import axios from "axios";
-import origin from '../components/unitedStates';
 
 
 const PACKAGE_OPTIONS = 'PACKAGE_OPTIONS';
@@ -8,28 +7,12 @@ const MANUFACTURER = 'MANUFACTURER';
 const MANUFACTURER_FULFILLED = 'MANUFACTURER_FULFILLED';
 
 export const initialState = {
-    units:{
-        isPending: false,
-        options: []
-    },
-    package:{
-        isPending: false,
-        options: []
-    },
-    manufacturer:{
-        isPending: false,
-        options: []
-    },
-    origin: origin,
-    state:{
-        isPending: false,
-        options: []
-    },
-    incrementalPricing:{
-        isPending: false,
-        options: []
-    }
+    package: [],
+    units: [],
+    manufacturer: [],
 };
+
+//Currently unused
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {

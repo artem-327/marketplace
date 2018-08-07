@@ -35,7 +35,7 @@ export default class ProductOffering extends Component {
         return (
             <div>
                 <h6 className=''>PRODUCT OFFERING</h6>
-                <Form model="forms.products.productsOffering" onSubmit={(values)=>this.saveOffering(values)}>
+                <Form model="forms.productOffering" onSubmit={(values)=>this.saveOffering(values)}>
                     <div>
                         <Errors
                             className="form-error"
@@ -77,8 +77,8 @@ export default class ProductOffering extends Component {
                             <DatepickerRedux placeholder={'test'}
                                              dispatch={this.props.dispatch}
                                              onChange={(value)=>console.log(value)}
-                                             model='forms.products.productsOffering.creationDate'/>
-                            <Errors model='forms.products.productsOffering.creationDate'
+                                             model='forms.productOffering.creationDate'/>
+                            <Errors model='forms.productOffering.creationDate'
                                     show="touched"
                                     messages={{required: 'Required'}} />
                         </div>
@@ -87,7 +87,7 @@ export default class ProductOffering extends Component {
                             <DatepickerRedux placeholder={'test'}
                                              dispatch={this.props.dispatch}
                                              onChange={(value)=>console.log(value)}
-                                             model='forms.products.productsOffering.expirationDate' />
+                                             model='forms.productOffering.expirationDate' />
                         </div>
                     </div>
                     <div>
@@ -113,7 +113,7 @@ export default class ProductOffering extends Component {
                         <div className='group-item-wr'>
                             <label htmlFor=".form">Form</label>
                             <DropdownRedux opns={this.props.productForms} placeholder='Select'
-                                           model="forms.products.productsOffering.productForm"
+                                           model="forms.productOffering.productForm"
                                            dispatch={this.props.dispatch}/>
                         </div>
                         <Errors
@@ -169,13 +169,13 @@ export default class ProductOffering extends Component {
                         <div className='group-item-wr'>
                             <label htmlFor=".grade">Grade</label>
                             <DropdownRedux opns={this.props.productGrade} placeholder='Select'
-                                           model="forms.products.productsOffering.productGrade"
+                                           model="forms.productOffering.productGrade"
                                            dispatch={this.props.dispatch}/>
                         </div>
                         <div className='group-item-wr'>
                             <label htmlFor=".condition">Condition</label>
                             <DropdownRedux opns={this.props.productConditions} placeholder='Select'
-                                           model="forms.products.productsOffering.productCondition"
+                                           model="forms.productOffering.productCondition"
                                            dispatch={this.props.dispatch}/>
                         </div>
                         </div>

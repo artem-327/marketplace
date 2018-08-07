@@ -31,7 +31,7 @@ export default class ProductMapping extends Component {
         return (
             <div>
                 <h6 className=''>PRODUCT MAPPING</h6>
-                <Form model="forms.products.productsMapping" onSubmit={(values)=>this.saveMapping(values)}>
+                <Form model="forms.productMapping" onSubmit={(values)=>this.saveMapping(values)} >
                 <div>
                     <Errors
                         className="form-error"
@@ -130,7 +130,7 @@ export default class ProductMapping extends Component {
                     </div>
                     <Errors
                         className="form-error"
-                        model="forms.products.productsMapping.packaging.unit"
+                        model="forms.productMapping.packaging.unit"
                         show="touched"
                         messages={{
                             required: messages.required,
@@ -139,13 +139,13 @@ export default class ProductMapping extends Component {
                     <div className='group-item-wr'>
                         <label htmlFor=".productGrade">U/M</label>
                         <DropdownRedux opns={this.props.unitOfMeasurement} placeholder='Select'
-                                       model="forms.products.productsMapping.packaging.unit"
+                                       model="forms.productMapping.packaging.unit"
                                        validators={{required}}
                                        dispatch={this.props.dispatch}/>
                     </div>
                     <Errors
                         className="form-error"
-                        model="forms.products.productsMapping.packaging.container"
+                        model="forms.productMapping.packaging.container"
                         show="touched"
                         messages={{
                             required: messages.required,
@@ -154,7 +154,7 @@ export default class ProductMapping extends Component {
                     <div className='group-item-wr'>
                         <label htmlFor=".productCondition">U/P</label>
                         <DropdownRedux opns={this.props.unitOfPackaging} placeholder='Select'
-                                       model="forms.products.productsMapping.packaging.container"
+                                       model="forms.productMapping.packaging.container"
                                        dispatch={this.props.dispatch}
                                        validators={{required}}/>
                     </div>
