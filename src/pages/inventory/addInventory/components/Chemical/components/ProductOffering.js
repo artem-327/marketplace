@@ -5,7 +5,7 @@ import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerR
 import SearchOrigin from "./SearchOrigin";
 import './ProductOffering.css'
 import {actions} from "react-redux-form";
-import {required} from "../../../../../../utils/validation";
+import {required, messages, min, isNumber} from "../../../../../../utils/validation";
 
 
 export default class ProductOffering extends Component {
@@ -42,31 +42,34 @@ export default class ProductOffering extends Component {
                             model=".totalPackages"
                             show="touched"
                             messages={{
-                                required: 'required packages',
+                                required: messages.required,
+                                min: messages.min,
+                                isNumber: messages.isNumber
                             }}
                         />
                         <div className='group-item-wr'>
                             <label htmlFor=".totalPackages">Total Packages</label>
                             <Control.text model=".totalPackages"
-                                          validators={{required}}
+                                          validators={{min: (val) => min(val, 0), isNumber, required}}
                                           id=".totalPackages"
                                           type="number"
-                                          min={0}/>
+                                          />
                         </div>
                         <Errors
                             className="form-error"
                             model=".lotNumber"
                             show="touched"
                             messages={{
-                                required: 'required lot number',
+                                required: messages.required,
+                                min: messages.min,
+                                isNumber: messages.isNumber
                             }}
                         />
                         <div className='group-item-wr'>
                             <label htmlFor=".lotNumber">Lot Number</label>
                             <Control.text model=".lotNumber"
-                                          validators={{required}}
+                                          validators={{min: (val) => min(val, 0), isNumber, required}}
                                           type="number"
-                                          min={0}
                                           id=".lotNumber"/>
                         </div>
                         <div className='group-item-wr'>
@@ -93,7 +96,7 @@ export default class ProductOffering extends Component {
                             model=".manufacturer"
                             show="touched"
                             messages={{
-                                required: 'required manufacturer',
+                                required: messages.required,
                             }}
                         />
                         <div className='group-item-wr'>
@@ -115,10 +118,10 @@ export default class ProductOffering extends Component {
                         </div>
                         <Errors
                             className="form-error"
-                            model=".tradeName"
+                            model=".name"
                             show="touched"
                             messages={{
-                                required: 'required Trade Name',
+                                required: messages.required,
                             }}
                         />
                         <div className='group-item-wr'>
@@ -133,15 +136,16 @@ export default class ProductOffering extends Component {
                                 model=".assayMin"
                                 show="touched"
                                 messages={{
-                                    required: 'required Assay Min',
+                                    required: messages.required,
+                                    min: messages.min,
+                                    isNumber: messages.isNumber
                                 }}
                             />
                         <div className='group-item-wr'>
                             <label htmlFor=".assayMin">Assay Min %</label>
                             <Control.text model=".assayMin"
-                                          validators={{required}}
+                                          validators={{min: (val) => min(val, 0), isNumber, required}}
                                           type="number"
-                                          min={0}
                                           id=".assayMin"/>
                         </div>
                             <Errors
@@ -149,15 +153,16 @@ export default class ProductOffering extends Component {
                                 model=".assayMax"
                                 show="touched"
                                 messages={{
-                                    required: 'required Assay Max',
+                                    required: messages.required,
+                                    min: messages.min,
+                                    isNumber: messages.isNumber
                                 }}
                             />
                             <div className='group-item-wr'>
                                 <label htmlFor=".assayMax">Assay Max %</label>
                                 <Control.text model=".assayMax"
-                                              validators={{required}}
+                                              validators={{min: (val) => min(val, 0), isNumber, required}}
                                               type="number"
-                                              min={0}
                                               id=".assayMax"/>
                             </div>
 

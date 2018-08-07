@@ -208,22 +208,22 @@
     width: 190px;
     transform: translate(-50%, -50%);
     z-index: 2;
-  background-color: #ebebe4;
+  background-color: #289ada;
     border-radius: 4px;
+    color: white;
+    font-size: .9rem;
   padding: 10px;
     &:before {
       content: '';
       position: absolute;
-      top: 0;
+      top: -11px;
       left: 50%;
+      transform: translateX(-50%);
       width: 0;
       height: 0;
-      border: 20px solid transparent;
-      border-bottom-color: #ebebe4;
-      border-top: 0;
-      border-left: 0;
-      margin-left: -16.5px;
-      margin-top: -20px;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-bottom: 12px solid #289ada;
     }
   }
 }

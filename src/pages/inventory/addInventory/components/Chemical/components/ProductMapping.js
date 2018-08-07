@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
-import {required} from "../../../../../../utils/validation";
+import {required, isNumber, min, isCasNumber, messages} from "../../../../../../utils/validation";
 
 export default class ProductMapping extends Component {
     constructor(props){
@@ -27,8 +27,8 @@ export default class ProductMapping extends Component {
     render() {
         let button = this.state.save ? <button className='saved-productMapping'>SAVED</button> :
             <button className='save-productMapping'>Save Mapping</button>;
-        return (
 
+        return (
             <div>
                 <h6 className=''>PRODUCT MAPPING</h6>
                 <Form model="forms.products.productsMapping" onSubmit={(values)=>this.saveMapping(values)}>
@@ -38,13 +38,15 @@ export default class ProductMapping extends Component {
                         model=".indexName"
                         show="touched"
                         messages={{
-                            required: 'required Index Name',
+                            required: messages.required,
                         }}
                     />
                     <div className='group-item-wr'>
                         <label htmlFor=".indexName">CAS Index Name</label>
                         <Control.text model=".indexName"
-                                      validators={{required}}
+                                      validators={{
+                                          required,
+                                      }}
                                       id=".indexName"/>
                     </div>
                     <Errors
@@ -52,15 +54,14 @@ export default class ProductMapping extends Component {
                         model=".casNumber"
                         show="touched"
                         messages={{
-                            required: 'required CAS Number',
+                            required: messages.required,
+                            isCasNumber: messages.isCasNumber
                         }}
                     />
                     <div className='group-item-wr'>
                         <label htmlFor=".casNumber">CAS Number</label>
                         <Control.text model=".casNumber"
-                                      validators={{required}}
-                                      type="number"
-                                      min={0}
+                                      validators={{isCasNumber, required}}
                                       id=".casNumber"/>
                     </div>
                     <Errors
@@ -68,7 +69,7 @@ export default class ProductMapping extends Component {
                         model=".chemicalName"
                         show="touched"
                         messages={{
-                            required: 'required Chemical Name',
+                            required: messages.required,
                         }}
                     />
                     <div className='group-item-wr'>
@@ -84,7 +85,7 @@ export default class ProductMapping extends Component {
                         model=".productName"
                         show="touched"
                         messages={{
-                            required: 'required Product Name',
+                            required: messages.required,
                         }}
                     />
                     <div className='group-item-wr'>
@@ -98,42 +99,64 @@ export default class ProductMapping extends Component {
                         model=".productNumber"
                         show="touched"
                         messages={{
-                            required: 'required Product Number',
+                            required: messages.required,
+                            min: messages.min,
+                            isNumber: messages.isNumber
+
                         }}
                     />
                     <div className='group-item-wr'>
                         <label htmlFor=".productNumber">Product Number</label>
                         <Control.text model=".productNumber"
-                                      validators={{required}}
-                                      type="number"
-                                      min={0}
+                                      validators={{min: (val) => min(val, 0), isNumber, required}}
                                       id=".productNumber"/>
                     </div>
                     <Errors
                         className="form-error"
-                        model=".measurements"
+                        model=".packaging.capacity"
                         show="touched"
                         messages={{
-                            required: 'required Measurement',
+                            required: messages.required,
+                            min: messages.min,
+                            isNumber: messages.isNumber
+
                         }}
                     />
                     <div className='group-item-wr'>
                         <label htmlFor=".measurements">Measurement</label>
                         <Control.text model=".packaging.capacity"
-                                      validators={{required}}
+                                      validators={{min: (val) => min(val, 0), isNumber, required}}
                                       id=".measurements"/>
                     </div>
+                    <Errors
+                        className="form-error"
+                        model="forms.products.productsMapping.packaging.unit"
+                        show="touched"
+                        messages={{
+                            required: messages.required,
+                        }}
+                    />
                     <div className='group-item-wr'>
                         <label htmlFor=".productGrade">U/M</label>
                         <DropdownRedux opns={this.props.unitOfMeasurement} placeholder='Select'
                                        model="forms.products.productsMapping.packaging.unit"
+                                       validators={{required}}
                                        dispatch={this.props.dispatch}/>
                     </div>
+                    <Errors
+                        className="form-error"
+                        model="forms.products.productsMapping.packaging.container"
+                        show="touched"
+                        messages={{
+                            required: messages.required,
+                        }}
+                    />
                     <div className='group-item-wr'>
                         <label htmlFor=".productCondition">U/P</label>
                         <DropdownRedux opns={this.props.unitOfPackaging} placeholder='Select'
                                        model="forms.products.productsMapping.packaging.container"
-                                       dispatch={this.props.dispatch}/>
+                                       dispatch={this.props.dispatch}
+                                       validators={{required}}/>
                     </div>
                     {button}
                 </div>
