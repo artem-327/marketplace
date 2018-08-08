@@ -1,0 +1,11 @@
+.merchant-table {
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+  width: 640px;
+  table-layout: fixed; }
+  .merchant-table .merch-header-item {
+    height: 30px;
+    background: #F3F3F3;
+    font-weight: bold;
+    text-align: center; }

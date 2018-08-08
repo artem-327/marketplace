@@ -18,6 +18,7 @@ import packageTypes from './modules/packageTypes';
 import addInventory from './modules/addInventory';
 import cart from "./modules/cart";
 import broadcastRules from "./modules/broadcastRule";
+import merchants from "./modules/merchants";
 
 const reducer = combineReducers({
     identity,
@@ -30,10 +31,12 @@ const reducer = combineReducers({
     cart,
     search,
     popup,
+    
     addInventory,
     broadcastRules,
     forms: combineForms({
         filter,
+        merchants,
         addProductOffer: productOffers,
         products,
         loginForm: identityFormInit.loginForm.data,

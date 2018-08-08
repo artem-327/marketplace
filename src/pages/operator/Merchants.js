@@ -19,7 +19,7 @@ class Merchants extends Component {
 
 
     renderMerchants () {
-        return this.props.data.data.merchants.map((item, index)=>{
+        return this.props.data.map((item, index)=>{
             // bud if nebo ternarni operator
 
             let approve = null;
