@@ -14,9 +14,7 @@ class FilterTag extends Component {
             case 'qntyub': return 'To Quantity';
             case 'prclb': return 'From Price';
             case 'prcub': return 'To Price';
-            case 'pckgs':{ 
-                
-                return 'Package type';}
+            case 'pckgs':return 'Package type';
             default: return 'unknown';
         }
     }
