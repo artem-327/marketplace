@@ -4,7 +4,6 @@ import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerRedux";
 import SearchOrigin from "./SearchOrigin";
 import './ProductOffering.css'
-import {actions} from "react-redux-form";
 import {required, messages, min, isNumber} from "../../../../../../utils/validation";
 
 
