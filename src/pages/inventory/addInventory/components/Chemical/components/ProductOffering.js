@@ -52,7 +52,6 @@ export default class ProductOffering extends Component {
                             <Control.text model=".totalPackages"
                                           validators={{min: (val) => min(val, 0), isNumber, required}}
                                           id=".totalPackages"
-                                          type="number"
                                           />
                         </div>
                         <Errors
@@ -69,7 +68,6 @@ export default class ProductOffering extends Component {
                             <label htmlFor=".lotNumber">Lot Number</label>
                             <Control.text model=".lotNumber"
                                           validators={{min: (val) => min(val, 0), isNumber, required}}
-                                          type="number"
                                           id=".lotNumber"/>
                         </div>
                         <div className='group-item-wr'>
@@ -153,7 +151,6 @@ export default class ProductOffering extends Component {
                             <label htmlFor=".assayMin">Assay Min %</label>
                             <Control.text model=".assayMin"
                                           validators={{min: (val) => min(val, 0), isNumber, required}}
-                                          type="number"
                                           id=".assayMin"/>
                         </div>
                             <Errors
@@ -170,7 +167,6 @@ export default class ProductOffering extends Component {
                                 <label htmlFor=".assayMax">Assay Max %</label>
                                 <Control.text model=".assayMax"
                                               validators={{min: (val) => min(val, 0), isNumber, required}}
-                                              type="number"
                                               id=".assayMax"/>
                             </div>
                             <Errors

@@ -198,32 +198,51 @@
 .datepicker .react-datepicker__input-container input {
 
 }
+//.form-error {
+//  position: relative;
+//  display: inline-block;
+//  span {
+//  position: absolute;
+//    top: 40px;
+//    left: 105px;
+//    width: 190px;
+//    transform: translate(-50%, -50%);
+//    z-index: 2;
+//  background-color: #289ada;
+//    border-radius: 4px;
+//    color: white;
+//    font-size: .9rem;
+//  padding: 10px;
+//    &:before {
+//      content: '';
+//      position: absolute;
+//      top: -11px;
+//      left: 50%;
+//      transform: translateX(-50%);
+//      width: 0;
+//      height: 0;
+//      border-left: 12px solid transparent;
+//      border-right: 12px solid transparent;
+//      border-bottom: 12px solid #289ada;
+//    }
+//  }
+//}
+
 .form-error {
   position: relative;
   display: inline-block;
   span {
-  position: absolute;
-    top: 40px;
-    left: 105px;
-    width: 190px;
+    position: absolute;
+    top: 25px;
+    right:-307px;
+    width: 192px;
+    text-align: right;
+    z-index: -1;
+    background-color: white;
     transform: translate(-50%, -50%);
-    z-index: 2;
-  background-color: #289ada;
     border-radius: 4px;
-    color: white;
+    color: red;
     font-size: .9rem;
-  padding: 10px;
-    &:before {
-      content: '';
-      position: absolute;
-      top: -11px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0;
-      height: 0;
-      border-left: 12px solid transparent;
-      border-right: 12px solid transparent;
-      border-bottom: 12px solid #289ada;
-    }
+    padding: 10px;
   }
 }
