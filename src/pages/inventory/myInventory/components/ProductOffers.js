@@ -92,7 +92,7 @@ class ProductOffers extends Component {
                                     <tr className="product-offer" key={offer.id}>
                                         <td><Checkbox onChange={(value) => {console.log(value)}}/></td>
                                         <td><ThreeDots className='small'/></td>
-                                        <td>{offer.product.casIndexName}</td>
+                                        <td>{this.capitalizeFirstLetter(offer.product.casIndexName)}</td>
                                         {/*<td>{offer.packaging.amount}</td>*/}
                                         {/*<td>{offer.packaging.container.name}</td>*/}
                                         {/*<td>{offer.packaging.capacity}</td>*/}
