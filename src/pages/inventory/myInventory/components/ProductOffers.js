@@ -36,6 +36,10 @@ class ProductOffers extends Component {
         })
     }
 
+    capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
     toggleBroadcastRule(e, id){
         if(this.props.toggleBroadcastRule) this.props.toggleBroadcastRule(true, {x: e.clientX, y: e.clientY - 90}, id)
     }
@@ -71,8 +75,9 @@ class ProductOffers extends Component {
                                     <Checkbox onChange={(value) => {console.log(value)}}/>
                                 </td>
                                 <td colSpan="10">
-                                    <span>{product.casNumber}</span>
-                                    <span className="product-name">{product.primaryName}</span>
+                                    <span className="product-casnumber">{product.casNumber}</span>
+                                    <span className="text-capitalize product-name">{this.capitalizeFirstLetter(product.casIndexName)}</span>
+                                    <span className="text-capitalize product-name">{product.primaryName}</span>
                                 </td>
                                 <td colSpan="4" className="quantity">
                                     <span>Product offerings: {product.productOffers.length}</span>
@@ -88,12 +93,12 @@ class ProductOffers extends Component {
                                         <td><Checkbox onChange={(value) => {console.log(value)}}/></td>
                                         <td><ThreeDots className='small'/></td>
                                         <td>{offer.product.casIndexName}</td>
-                                        <td>{offer.packaging.amount}</td>
-                                        <td>{offer.packaging.container.name}</td>
-                                        <td>{offer.packaging.capacity}</td>
-                                        <td>{parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)}</td>
-                                        <td>{offer.pricing.cost}</td>
-                                        <td>{offer.pricing.price}</td>
+                                        {/*<td>{offer.packaging.amount}</td>*/}
+                                        {/*<td>{offer.packaging.container.name}</td>*/}
+                                        {/*<td>{offer.packaging.capacity}</td>*/}
+                                        {/*<td>{parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)}</td>*/}
+                                        {/*<td>{offer.pricing.cost}</td>*/}
+                                        {/*<td>{offer.pricing.price}</td>*/}
                                         <td>{offer.name}</td>
                                         <td>{offer.manufacturer}</td>
                                         <td>{offer.productCondition.name}</td>
