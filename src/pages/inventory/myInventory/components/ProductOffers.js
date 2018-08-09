@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import './ProductOffers.css';
 import Checkbox from "../../../../components/Checkbox/Checkbox";
 import ThreeDots from "../../../../components/ThreeDots/ThreeDots";
+import {capitalizeFirstLetter} from "../../../../utils/functions";
+
 
 class ProductOffers extends Component {
 
@@ -34,10 +36,6 @@ class ProductOffers extends Component {
                 }
             }
         })
-    }
-
-    capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
     toggleBroadcastRule(e, id){
@@ -76,7 +74,7 @@ class ProductOffers extends Component {
                                 </td>
                                 <td colSpan="10">
                                     <span className="product-casnumber">{product.casNumber}</span>
-                                    <span className="text-capitalize product-name">{this.capitalizeFirstLetter(product.casIndexName)}</span>
+                                    <span className="text-capitalize product-name">{capitalizeFirstLetter(product.casIndexName)}</span>
                                     <span className="text-capitalize product-name">{product.primaryName}</span>
                                 </td>
                                 <td colSpan="4" className="quantity">
@@ -92,7 +90,7 @@ class ProductOffers extends Component {
                                     <tr className="product-offer" key={offer.id}>
                                         <td><Checkbox onChange={(value) => {console.log(value)}}/></td>
                                         <td><ThreeDots className='small'/></td>
-                                        <td>{this.capitalizeFirstLetter(offer.product.casIndexName)}</td>
+                                        <td>{capitalizeFirstLetter(offer.product.casIndexName)}</td>
                                         {/*<td>{offer.packaging.amount}</td>*/}
                                         {/*<td>{offer.packaging.container.name}</td>*/}
                                         {/*<td>{offer.packaging.capacity}</td>*/}

@@ -4,6 +4,7 @@ import moment from "moment";
 import AddCart from '../../../../components/Cart/AddCart'
 import {DATE_FORMAT} from "../../../../utils/constants";
 import Checkbox from "../../../../components/Checkbox/Checkbox";
+import {capitalizeFirstLetter} from "../../../../utils/functions";
 class ProductOffers extends Component {
 
     constructor(props) {
@@ -74,7 +75,8 @@ class ProductOffers extends Component {
                                 <Checkbox onChange={(value) => {console.log(value)}}/>
                             </td>
                             <td colSpan="12">
-                                <span>{product.casNumber}</span>
+                                <span className="product-casnumber">{product.casNumber}</span>
+                                <span className="product-name">{capitalizeFirstLetter(product.casIndexName)}</span>
                                 <span className="product-name">{product.primaryName}</span>
                             </td>
                             <td colSpan="3" className="quantity">
