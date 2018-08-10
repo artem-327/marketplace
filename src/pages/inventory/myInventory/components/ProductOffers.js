@@ -89,7 +89,7 @@ class ProductOffers extends Component {
                                 rows.push(
                                     <tr className="product-offer" key={offer.id}>
                                         <td><Checkbox onChange={(value) => {console.log(value)}}/></td>
-                                        <td><ThreeDots className='small'/></td>
+                                        <td onClick={(e)=>this.toggleBroadcastRule(e, offer.id)}><ThreeDots className='small'/></td>
                                         <td>{capitalizeFirstLetter(offer.product.casIndexName)}</td>
                                         {/*<td>{offer.packaging.amount}</td>*/}
                                         {/*<td>{offer.packaging.container.name}</td>*/}
@@ -101,7 +101,7 @@ class ProductOffers extends Component {
                                         <td>{offer.manufacturer}</td>
                                         <td>{offer.productCondition.name}</td>
                                         <td>unknown</td>
-                                        <td><span className='broadcast-mark' onClick={(e)=>this.toggleBroadcastRule(e, offer.id)}> </span></td>
+                                        <td><span className='broadcast-mark'> </span></td>
                                         <td> </td>
                                     </tr>
                                 );

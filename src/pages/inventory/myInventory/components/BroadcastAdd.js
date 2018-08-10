@@ -9,6 +9,7 @@ class BroadcastAdd extends Component {
         this.state = {
             name: "",
             fulfilled: "Set Rules",
+            brActive: false,
         }
     }
 
@@ -19,7 +20,7 @@ class BroadcastAdd extends Component {
     submitRules(){
         
         this.props.submitRules({name: this.state.name, subjects: this.props.subjects, targets: this.props.targets}).then(()=>{
-            this.setState({fulfilled: "Success"}, ()=>{
+            this.setState({fulfilled: "Success", brActive: true}, ()=>{
                 setTimeout(function () {
                     this.setState({fulfilled: "Set Rules"},() => {this.props.removePopup(); this.props.getProductOffers()});
                   }.bind(this), 2000)

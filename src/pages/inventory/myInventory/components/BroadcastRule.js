@@ -50,9 +50,8 @@ class BroadcastRule extends Component {
     }
 
     render() {
-
         return (
-            <div ref={this.broadcastRef} className={classnames("broadcast-rule", {'open': this.state.isOpen})}
+            <div  ref={this.broadcastRef} className={classnames("broadcast-rule", {'open': this.state.isOpen})}
                  style={{top: this.props.position ? this.props.position.y : 0}}>
                 <div>
                     <div>
