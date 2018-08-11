@@ -8,10 +8,28 @@ import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
 export default class Pricing extends Component {
     constructor(props){
         super(props);
-        this.state = {incrementalPricing: false}
+        this.state = {
+            incrementalPricing: false,
+            margin:"",
+        }
     }
 
+    componentWillReceiveProps(nextProps){
+       
+            if(typeof nextProps.form.addProductOffer.pricing === "undefined"){
+                return;
+            }
+            let tmp = ((parseInt(nextProps.form.addProductOffer.pricing.price,10)-parseInt(nextProps.form.addProductOffer.pricing.cost,10)) / parseInt(nextProps.form.addProductOffer.pricing.price,10)) * 100;
+            //let gg =String(tmp);
+            //console.log("!! ",tmp,this.props.form.addProductOffer.pricing.price,this.props.form.addProductOffer.pricing.cost);
+            this.setState({margin:String(tmp)});
+       
+    }
+
+    
+
     render() {
+        console.log("margin ",this.state.margin);
         let incremental = this.state.incrementalPricing ?
             <div className='incremental-wr'>
                 <h4>Tiered Pricing</h4>
@@ -22,25 +40,32 @@ export default class Pricing extends Component {
             <div>
 
                     <h6>SET PRICE & RULES</h6>
-                <div>
+                <div>         
                     <div className='group-item-wr'>
                         <label htmlFor=".pricePr">Price pr (lb)</label>
                         <Control.text model=".pricing.price"
                                       id=".pricePr"
-                                      placeholder="$"/>
+                                      placeholder="$"
+                                      defaultValue=""                                      
+                                      />
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor=".costPr">Cost pr (lb)</label>
                         <Control.text model=".pricing.cost"
                                       id=".costPr"
-                                      placeholder="$"/>
+                                      placeholder="$"
+                                      defaultValue=""                                                                            
+                                      />
                     </div>
-                    <div className='group-item-wr'>
+
+                    {/*<div className='group-item-wr'>
                         <label htmlFor=".grossMargin">Gross Margin %</label>
                         <Control.text model=".pricing.margin"
                                       id=".grossMargin"
                                       placeholder="$"/>
-                    </div>
+                    </div>*/}
+                    <div className='group-item-wr'>{this.state.margin}</div>
+
                     <div className='group-item-wr'>
                         <h6>Total Sales Price</h6>
                         <h6>$ UNDEFINED</h6>
