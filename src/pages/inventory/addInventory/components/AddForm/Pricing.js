@@ -8,8 +8,11 @@ import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
 export default class Pricing extends Component {
     constructor(props){
         super(props);
-        this.state = {incrementalPricing: false}
+        this.state = {
+            incrementalPricing: false,
+        }
     }
+
 
     render() {
         let incremental = this.state.incrementalPricing ?
@@ -27,7 +30,8 @@ export default class Pricing extends Component {
                         <label htmlFor=".pricePr">Price pr (lb)</label>
                         <Control.text model=".pricing.price"
                                       id=".pricePr"
-                                      placeholder="$"/>
+                                      placeholder="$"
+                                      />
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor=".costPr">Cost pr (lb)</label>

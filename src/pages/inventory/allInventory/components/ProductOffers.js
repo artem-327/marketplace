@@ -105,7 +105,7 @@ class ProductOffers extends Component {
                                         <td>{offer.productCondition.name}</td>
                                         <td>{offer.productForm.name}</td>
                                         <td>{offer.warehouse.name} ({offer.warehouse.location.state})</td>
-                                        <td><button onClick={()=>{this.addCart(offer.id)}}>BUY</button></td>
+                                        <td><button onClick={()=>{this.addCart(offer.id)}}>INFO</button></td>
                                     </tr>
                                 )
                             })
