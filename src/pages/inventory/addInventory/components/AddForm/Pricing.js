@@ -27,7 +27,7 @@ export default class Pricing extends Component {
     
 
     render() {
-        console.log("margin ",this.state.margin);
+
         let incremental = this.state.incrementalPricing ?
             <div className='incremental-wr'>
                 <h4>Tiered Pricing</h4>
