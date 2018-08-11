@@ -19,10 +19,8 @@ export default class Pricing extends Component {
             if(typeof nextProps.form.addProductOffer.pricing === "undefined"){
                 return;
             }
-            let tmp = ((parseInt(nextProps.form.addProductOffer.pricing.price,10)-parseInt(nextProps.form.addProductOffer.pricing.cost,10)) / parseInt(nextProps.form.addProductOffer.pricing.price,10)) * 100;
-            //let gg =String(tmp);
-            //console.log("!! ",tmp,this.props.form.addProductOffer.pricing.price,this.props.form.addProductOffer.pricing.cost);
-            this.setState({margin:String(tmp)});
+            let total = ((parseInt(nextProps.form.addProductOffer.pricing.price,10)-parseInt(nextProps.form.addProductOffer.pricing.cost,10)) / parseInt(nextProps.form.addProductOffer.pricing.price,10)) * 100;
+            this.setState({margin:String(total)});
        
     }
 
