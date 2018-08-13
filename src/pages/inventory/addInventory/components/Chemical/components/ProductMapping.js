@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
-import {required, isNumber, min, isCasNumber, messages} from "../../../../../../utils/validation";
+import {required, isNumber, min, messages} from "../../../../../../utils/validation";
 
 export default class ProductMapping extends Component {
     constructor(props){
@@ -61,7 +61,7 @@ export default class ProductMapping extends Component {
                     <div className='group-item-wr'>
                         <label htmlFor=".casNumber">CAS Number</label>
                         <Control.text model=".casNumber"
-                                      validators={{isCasNumber, required}}
+                                      validators={{required}}
                                       id=".casNumber"/>
                     </div>
                     <Errors
