@@ -91,12 +91,12 @@ class ProductOffers extends Component {
                                         <td><Checkbox onChange={(value) => {console.log(value)}}/></td>
                                         <td><ThreeDots className='small'/></td>
                                         <td>{capitalizeFirstLetter(offer.product.casIndexName)}</td>
-                                        {/*<td>{offer.packaging.amount}</td>*/}
-                                        {/*<td>{offer.packaging.container.name}</td>*/}
-                                        {/*<td>{offer.packaging.capacity}</td>*/}
-                                        {/*<td>{parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)}</td>*/}
-                                        {/*<td>{offer.pricing.cost}</td>*/}
-                                        {/*<td>{offer.pricing.price}</td>*/}
+                                        <td>{offer.packaging.amount}</td>
+                                        <td>{offer.packaging.container.name}</td>
+                                        <td>{offer.packaging.capacity}</td>
+                                        <td>{parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)}</td>
+                                        <td>{offer.pricing.cost}</td>
+                                        <td>{offer.pricing.price}</td>
                                         <td>{offer.name}</td>
                                         <td>{offer.manufacturer}</td>
                                         <td>{offer.productCondition.name}</td>
