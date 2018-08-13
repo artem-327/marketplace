@@ -1,5 +1,6 @@
 .save-productMapping {
   width: 170px;
+  min-height: 40px;
   padding: 0 25px;
   background-color: #dbf6d7;
   color: #4cd136;
@@ -19,6 +20,7 @@
 
 .saved-productMapping {
   width: 170px;
+  min-height: 40px;
   padding: 0 25px;
   background-color: #4cd136;
   color: white;
