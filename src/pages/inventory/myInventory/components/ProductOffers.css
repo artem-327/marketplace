@@ -8,9 +8,11 @@
     padding: 10px;
     font-weight: normal; }
   .product-offers th:first-child {
-    border-right: 0px; }
+    border-right: 0px;
+    width: 1px; }
   .product-offers th:nth-child(2) {
-    border-left: 0px; }
+    border-left: 0px;
+    width: 1px; }
   .product-offers th:last-child {
     text-align: center; }
   .product-offers .product {
@@ -50,8 +52,6 @@
   vertical-align: middle;
   display: inline-block;
   position: relative; }
-  .broadcast-mark:hover {
-    cursor: pointer; }
   .broadcast-mark::after {
     content: '';
     background-color: #7f7f7f;
@@ -63,3 +63,7 @@
     top: 50%;
     margin-left: -6px;
     margin-top: -6px; }
+  .broadcast-mark.open {
+    background-color: #66d66a; }
+    .broadcast-mark.open::after {
+      background-color: #00a005; }

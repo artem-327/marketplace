@@ -17,6 +17,10 @@ class BroadcastRule extends Component {
         }
     }
 
+    activeBroadcastButton(active){
+        this.props.setActiveBroadcastButton(active)
+    }
+
     submitBroadcastData(){
         
         var tmp = [];
@@ -28,7 +32,7 @@ class BroadcastRule extends Component {
             return null;
         })
         
-        this.props.addPopup(<BroadcastAdd getProductOffers={this.props.getProductOffers} removePopup={this.props.removePopup} submitRules={this.props.submitRules} subjects={[{productOffer: this.props.productOffersSelection}]} targets={tmp} />)
+        this.props.addPopup(<BroadcastAdd getProductOffers={this.props.getProductOffers} active={value=>this.activeBroadcastButton(value)} removePopup={this.props.removePopup} submitRules={this.props.submitRules} subjects={[{productOffer: this.props.productOffersSelection}]} targets={tmp}/>)
         this.setState({isOpen: false})
     }
 
@@ -49,10 +53,11 @@ class BroadcastRule extends Component {
         this.setState({isOpen: false})
     }
 
-    render() {
 
+
+    render() {
         return (
-            <div ref={this.broadcastRef} className={classnames("broadcast-rule", {'open': this.state.isOpen})}
+            <div  ref={this.broadcastRef} className={classnames("broadcast-rule", {'open': this.state.isOpen})}
                  style={{top: this.props.position ? this.props.position.y : 0}}>
                 <div>
                     <div>

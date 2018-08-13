@@ -9,15 +9,14 @@ import { combineForms } from 'react-redux-form';
 import identity, {initialState as identityFormInit} from './modules/identity';
 import location from './modules/location';
 import search, {initialState as searchFormInit} from './modules/search';
-import products from './modules/products';
 import companies from './modules/companies';
 import productOffers from './modules/productOffers';
 import popup from './modules/popup';
 import filter from './modules/filter';
 import packageTypes from './modules/packageTypes';
-import addInventory from './modules/addInventory';
 import cart from "./modules/cart";
 import broadcastRules from "./modules/broadcastRule";
+import products, {initialState as productsInit} from './modules/products';
 
 const reducer = combineReducers({
     identity,
@@ -30,12 +29,12 @@ const reducer = combineReducers({
     cart,
     search,
     popup,
-    addInventory,
     broadcastRules,
     forms: combineForms({
         filter,
         addProductOffer: productOffers,
-        products,
+        productMapping: productsInit.productsMapping,
+        productOffering: productsInit.productOffering,
         loginForm: identityFormInit.loginForm.data,
         registrationForm: identityFormInit.registrationForm.data,
         searchForm: searchFormInit.searchForm.data,
