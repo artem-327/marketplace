@@ -92,11 +92,11 @@ class ProductOffers extends Component {
                                     <tr className="product-offer" key={offer.id}>
                                         <td><Checkbox onChange={(value) => {console.log(value)}}/></td>
                                         <td>{offer.merchant.email}</td>
-                                        {/*<td>{offer.packaging.amount}</td>*/}
-                                        {/*<td>{offer.packaging.container.name}</td>*/}
-                                        {/*<td>{offer.packaging.capacity}</td>*/}
-                                        {/*<td>{parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)}</td>*/}
-                                        {/*<td>{offer.pricing.price}</td>*/}
+                                        <td>{offer.packaging.amount}</td>
+                                        <td>{offer.packaging.container.name}</td>
+                                        <td>{offer.packaging.capacity}</td>
+                                        <td>{parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)}</td>
+                                        <td>{offer.pricing.price}</td>
                                         <td>{offer.name}</td>
                                         <td>{offer.manufacturer}</td>
                                         <td>{offer.origin}</td>
