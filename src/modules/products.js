@@ -1,4 +1,5 @@
 import axios from "axios";
+import origin from "../components/unitedStates";
 
 const FETCH_PRODUCT_FORMS = 'PRODUCT_FORMS';
 const FETCH_PRODUCT_FORMS_FULFILLED = 'PRODUCT_FORMS_FULFILLED';
@@ -29,19 +30,18 @@ const SEARCH_PRODUCT_REJECTED = 'SEARCH_PRODUCT_REJECTED';
 const SAVE_MAPPING = 'SAVE_MAPPING';
 const SAVE_MAPPING_FULFILLED = 'SAVE_MAPPING_FULFILLED';
 
-const LOAD_PRODUCT_MAPPING = 'LOAD_PRODUCT_MAPPING';
-
 export const initialState = {
+    productsMapping: {},
+    productOffering: {},
     data: [],
     mappedData: [],
     productForms: [],
-    productsMapping: {},
-    productOffering: {},
     productConditions: [],
     productGrade: [],
     productAge: [],
     location: [],
     recentProducts: [],
+    origin: origin,
     isFetching: false,
     isMapFetching: false
 };
@@ -124,22 +124,9 @@ export default function reducer(state = initialState, action) {
                 mappedData: action.payload
             }
         }
-        case LOAD_PRODUCT_MAPPING: {
-            return{
-                ...state,
-                productsMapping: {...state.productsMapping, ...action.payload}
-            }
-        }
         default: {
             return state
         }
-    }
-}
-
-export function loadProductMapping(inputs){
-    return{
-        type: LOAD_PRODUCT_MAPPING,
-        payload: inputs
     }
 }
 

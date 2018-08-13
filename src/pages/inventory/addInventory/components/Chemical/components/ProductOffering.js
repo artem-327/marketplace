@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
-import {Control, Form} from 'react-redux-form';
+import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerRedux";
 import SearchOrigin from "./SearchOrigin";
 import './ProductOffering.css'
+import {required, messages, min, isNumber} from "../../../../../../utils/validation";
+
 
 export default class ProductOffering extends Component {
     constructor(props){
@@ -18,10 +20,10 @@ export default class ProductOffering extends Component {
         this.props.fetchProductForms();
         this.props.fetchProductGrade();
         this.props.fetchProductConditions();
+        if(this.state.firstValue) localStorage.removeItem('productLots');
     }
 
     saveOffering(values){
-        if(this.state.firstValue) localStorage.removeItem('productLots');
         this.setState({save: true, firstValue: false});
         this.props.addLot(values);
     }
@@ -32,17 +34,39 @@ export default class ProductOffering extends Component {
         return (
             <div>
                 <h6 className=''>PRODUCT OFFERING</h6>
-                <Form model="forms.products.productsOffering" onSubmit={(values)=>this.saveOffering(values)}>
+                <Form model="forms.productOffering" onSubmit={(values)=>this.saveOffering(values)}>
                     <div>
+                        <Errors
+                            className="form-error"
+                            model=".totalPackages"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                                min: messages.min,
+                                isNumber: messages.isNumber
+                            }}
+                        />
                         <div className='group-item-wr'>
                             <label htmlFor=".totalPackages">Total Packages</label>
                             <Control.text model=".totalPackages"
+                                          validators={{min: (val) => min(val, 0), isNumber, required}}
                                           id=".totalPackages"
-                                          required/>
+                                          />
                         </div>
+                        <Errors
+                            className="form-error"
+                            model=".lotNumber"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                                min: messages.min,
+                                isNumber: messages.isNumber
+                            }}
+                        />
                         <div className='group-item-wr'>
                             <label htmlFor=".lotNumber">Lot Number</label>
                             <Control.text model=".lotNumber"
+                                          validators={{min: (val) => min(val, 0), isNumber, required}}
                                           id=".lotNumber"/>
                         </div>
                         <div className='group-item-wr'>
@@ -50,59 +74,128 @@ export default class ProductOffering extends Component {
                             <DatepickerRedux placeholder={'test'}
                                              dispatch={this.props.dispatch}
                                              onChange={(value)=>console.log(value)}
-                                             model='forms.products.productsOffering.creationDate' />
+                                             model='forms.productOffering.creationDate'/>
+                            <Errors model='forms.productOffering.creationDate'
+                                    show="touched"
+                                    messages={{required: 'Required'}} />
                         </div>
                         <div className='group-item-wr'>
                             <label htmlFor=".expirationDate">Expiration Date</label>
                             <DatepickerRedux placeholder={'test'}
                                              dispatch={this.props.dispatch}
                                              onChange={(value)=>console.log(value)}
-                                             model='forms.products.productsOffering.expirationDate' />
+                                             model='forms.productOffering.expirationDate' />
                         </div>
                     </div>
                     <div>
+                        <Errors
+                            className="form-error"
+                            model=".manufacturer"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                            }}
+                        />
                         <div className='group-item-wr'>
                             <label htmlFor=".manufacturer">Manufacturer</label>
                             <Control.text model=".manufacturer"
+                                          validators={{required}}
                                           id=".manufacturer"/>
                         </div>
+
                         <div className='group-item-wr'>
                             <SearchOrigin {...this.props}/>
                         </div>
-
+                        <Errors
+                            className="form-error"
+                            model="forms.productOffering.productForm"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                            }}
+                        />
                         <div className='group-item-wr'>
                             <label htmlFor=".form">Form</label>
                             <DropdownRedux opns={this.props.productForms} placeholder='Select'
-                                           model="forms.products.productsOffering.productForm"
+                                           model="forms.productOffering.productForm"
+                                           validators={{required}}
                                            dispatch={this.props.dispatch}/>
                         </div>
+                        <Errors
+                            className="form-error"
+                            model=".name"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                            }}
+                        />
                         <div className='group-item-wr'>
                             <label htmlFor=".tradeName">Trade Name</label>
                             <Control.text model=".name"
+                                          validators={{required}}
                                           id=".tradeName"/>
                         </div>
                         <div>
+                            <Errors
+                                className="form-error"
+                                model=".assayMin"
+                                show="touched"
+                                messages={{
+                                    required: messages.required,
+                                    min: messages.min,
+                                    isNumber: messages.isNumber
+                                }}
+                            />
                         <div className='group-item-wr'>
                             <label htmlFor=".assayMin">Assay Min %</label>
                             <Control.text model=".assayMin"
+                                          validators={{min: (val) => min(val, 0), isNumber, required}}
                                           id=".assayMin"/>
                         </div>
+                            <Errors
+                                className="form-error"
+                                model=".assayMax"
+                                show="touched"
+                                messages={{
+                                    required: messages.required,
+                                    min: messages.min,
+                                    isNumber: messages.isNumber
+                                }}
+                            />
                             <div className='group-item-wr'>
                                 <label htmlFor=".assayMax">Assay Max %</label>
                                 <Control.text model=".assayMax"
+                                              validators={{min: (val) => min(val, 0), isNumber, required}}
                                               id=".assayMax"/>
                             </div>
-
+                            <Errors
+                                className="form-error"
+                                model="forms.productOffering.productGrade"
+                                show="touched"
+                                messages={{
+                                    required: messages.required,
+                                }}
+                            />
                         <div className='group-item-wr'>
                             <label htmlFor=".grade">Grade</label>
                             <DropdownRedux opns={this.props.productGrade} placeholder='Select'
-                                           model="forms.products.productsOffering.productGrade"
+                                           model="forms.productOffering.productGrade"
+                                           validators={{required}}
                                            dispatch={this.props.dispatch}/>
                         </div>
+                            <Errors
+                                className="form-error"
+                                model="forms.productOffering.productCondition"
+                                show="touched"
+                                messages={{
+                                    required: messages.required,
+                                }}
+                            />
                         <div className='group-item-wr'>
                             <label htmlFor=".condition">Condition</label>
                             <DropdownRedux opns={this.props.productConditions} placeholder='Select'
-                                           model="forms.products.productsOffering.productCondition"
+                                           model="forms.productOffering.productCondition"
+                                           validators={{required}}
                                            dispatch={this.props.dispatch}/>
                         </div>
                         </div>

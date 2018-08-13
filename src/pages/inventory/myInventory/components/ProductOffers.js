@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import './ProductOffers.css';
 import Checkbox from "../../../../components/Checkbox/Checkbox";
 import ThreeDots from "../../../../components/ThreeDots/ThreeDots";
+import {capitalizeFirstLetter} from "../../../../utils/functions";
+import classnames from "classnames";
+
 
 class ProductOffers extends Component {
 
@@ -9,7 +12,9 @@ class ProductOffers extends Component {
         super(props);
         this.toggleProduct = this.toggleProduct.bind(this);
         this.state = {
-            products: this.groupProductOffers(this.props.productOffers)
+            products: this.groupProductOffers(this.props.productOffers),
+            isOpen: false,
+            brActive: false,
         }
     }
 
@@ -71,8 +76,9 @@ class ProductOffers extends Component {
                                     <Checkbox onChange={(value) => {console.log(value)}}/>
                                 </td>
                                 <td colSpan="10">
-                                    <span>{product.casNumber}</span>
-                                    <span className="product-name">{product.primaryName}</span>
+                                    <span className="product-casnumber">{product.casNumber}</span>
+                                    <span className="text-capitalize product-name">{capitalizeFirstLetter(product.casIndexName)}</span>
+                                    <span className="text-capitalize product-name">{product.primaryName}</span>
                                 </td>
                                 <td colSpan="4" className="quantity">
                                     <span>Product offerings: {product.productOffers.length}</span>
@@ -86,8 +92,8 @@ class ProductOffers extends Component {
                                 rows.push(
                                     <tr className="product-offer" key={offer.id}>
                                         <td><Checkbox onChange={(value) => {console.log(value)}}/></td>
-                                        <td><ThreeDots className='small'/></td>
-                                        <td>{offer.product.casIndexName}</td>
+                                        <td onClick={()=>{this.setState({isOpen: !this.state.isOpen})}}><span onClick={this.state.isOpen ? (e)=>this.toggleBroadcastRule(e, offer.id) : null}><ThreeDots className='small'/></span></td>
+                                        <td>{capitalizeFirstLetter(offer.product.casIndexName)}</td>
                                         <td>{offer.packaging.amount}</td>
                                         <td>{offer.packaging.container.name}</td>
                                         <td>{offer.packaging.capacity}</td>
@@ -98,7 +104,7 @@ class ProductOffers extends Component {
                                         <td>{offer.manufacturer}</td>
                                         <td>{offer.productCondition.name}</td>
                                         <td>unknown</td>
-                                        <td><span className='broadcast-mark' onClick={(e)=>this.toggleBroadcastRule(e, offer.id)}> </span></td>
+                                        <td><span className={'broadcast-mark' + classnames({' open' : this.props.broadcastActive})}> </span></td>
                                         <td> </td>
                                     </tr>
                                 );

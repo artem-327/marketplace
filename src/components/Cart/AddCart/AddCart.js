@@ -6,7 +6,7 @@ import Dropdown from "../../Dropdown/Dropdown";
 class AddCart extends Component {
 
     componentDidMount(){
-        this.props.getCurrentAdded(this.props.id)
+        //this.props.getCurrentAdded(this.props.id)
     }
 
     render() {
@@ -24,7 +24,7 @@ class AddCart extends Component {
                     <div className="add-cart-body-info">
                         <div className="add-cart-body-info-data">
                             <h1>Product Info</h1>
-                            <div><b>{this.props.name}</b></div>
+                            <div><b>{this.props.info.product.casIndexName}</b></div>
                             <div><b>Merchant: </b> {this.props.merchant}</div>
                             <div><b>Available Products: </b> {this.props.availableProducts}</div>
                             <div><b>Packaging: </b></div>
@@ -57,8 +57,8 @@ class AddCart extends Component {
                 </div>
 
                 <div className="add-cart-footer">
-                    <button className='button'>Button1</button>
-                    <button className='button green'>Button2</button>
+                    <button className='button'>Cancel</button>
+                    <button className='button green'>Continue</button>
                 </div>
             </div>
         );

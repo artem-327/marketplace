@@ -27,6 +27,8 @@
     .product-offers .product .quantity {
       text-align: right;
       padding-right: 30px; }
+    .product-offers .product .product-casnumber {
+      color: #4e92df; }
   .product-offers .product-offer {
     border-bottom: 2px solid #e3e2df; }
     .product-offers .product-offer td {
