@@ -13,10 +13,12 @@ $borderColor: #e3e2df;
 
   th:first-child {
     border-right: 0px;
+    width: 1px;
   }
 
   th:nth-child(2) {
     border-left: 0px;
+    width: 1px;
   }
   th:last-child {
     text-align: center;
@@ -78,9 +80,6 @@ $borderColor: #e3e2df;
   vertical-align: middle;
   display: inline-block;
   position: relative;
-  &:hover{
-    cursor: pointer;
-  }
   &::after{
     content: '';
     background-color: #7f7f7f;
@@ -92,5 +91,11 @@ $borderColor: #e3e2df;
     top: 50%;
     margin-left: -6px;
     margin-top: -6px;
+  }
+  &.open {
+    background-color: #66d66a;
+    &::after{
+      background-color: #00a005;
+    }
   }
 }

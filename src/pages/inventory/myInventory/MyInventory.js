@@ -16,6 +16,7 @@ class MyInventory extends Component {
         this.state = {
             targetGroups: [],
             currentSelected: 'All companies',
+            brActive: false,
             brVisible: false,
             brPosition: null,
             productOffersSelection: [],
@@ -38,6 +39,10 @@ class MyInventory extends Component {
     componentWillUnmount(){
         this.props.resetFilterTags();
         this.props.resetForm();
+    }
+
+    setActiveBroadcastButton(active){
+        this.setState({brActive:active})
     }
 
     setFilter(type, companies = this.props.companies) {
@@ -84,6 +89,7 @@ class MyInventory extends Component {
                 toggleBroadcastRule={(state, position, selection) => this.setState(
                     {brVisible: state, brPosition: position, productOffersSelection: selection}
                 )}
+                broadcastActive={this.state.brActive}
             />;
         return (
             <div className='my-inventory'>
@@ -104,6 +110,7 @@ class MyInventory extends Component {
                     visible={this.state.brVisible}
                     position={this.state.brPosition}
                     productOffersSelection={this.state.productOffersSelection}
+                    setActiveBroadcastButton={active => this.setActiveBroadcastButton(active)}
                 />
             </div>
         )
