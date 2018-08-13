@@ -92,4 +92,10 @@ $borderColor: #e3e2df;
     margin-left: -6px;
     margin-top: -6px;
   }
+  &.open {
+    background-color: #66d66a;
+    &::after{
+      background-color: #00a005;
+    }
+  }
 }

@@ -63,3 +63,7 @@
     top: 50%;
     margin-left: -6px;
     margin-top: -6px; }
+  .broadcast-mark.open {
+    background-color: #66d66a; }
+    .broadcast-mark.open::after {
+      background-color: #00a005; }
