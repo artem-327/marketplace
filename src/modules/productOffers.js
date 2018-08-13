@@ -22,32 +22,6 @@ export const initialState = {
     isFetching: false,
     unitOfMeasurement: [],
     unitOfPackaging: [],
-    products:{
-        isPending: false,
-        isValid: false,
-        hasError: false,
-        data:{
-            totalPackages: "",
-            pack: "",
-            packaging: "",
-            packageSize: "",
-            price: "",
-            pricingUnits: "",
-            manufacturer: "",
-            origin: "",
-            form: "",
-            assayMin: "",
-            assayMax: "",
-            grade: "",
-            condition: "",
-            rulesSplitPackages: "",
-            rulesMinimumPackages: "",
-            rulesIncrementalPricing: "",
-            broadcastSplitPackages: "",
-            broadcastMinimumPackages: "",
-            broadcastIncrementalPricing: "",
-        }
-    },
 };
 
 export default function reducer(state = initialState, action) {

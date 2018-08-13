@@ -83,6 +83,10 @@
     margin: 10px; }
     .add-group .group-item-wr.notes {
       vertical-align: top; }
+    .add-group .group-item-wr .gross-margin {
+      position: relative;
+      display: inline-block;
+      margin: 10px; }
   .add-group .dropdown-wr {
     width: 192px;
     display: inline-block; }
@@ -145,3 +149,20 @@
   .add-inventory .location-submenu.new .new {
     border-bottom: 1px solid #3b98d3;
     font-weight: bold; }
+
+.form-error {
+  position: relative;
+  display: inline-block; }
+  .form-error span {
+    position: absolute;
+    top: 25px;
+    right: -307px;
+    width: 192px;
+    text-align: right;
+    z-index: -1;
+    background-color: white;
+    transform: translate(-50%, -50%);
+    border-radius: 4px;
+    color: #ef3157;
+    font-size: .9rem;
+    padding: 10px; }
