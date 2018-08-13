@@ -92,7 +92,8 @@ export default class ProductMapping extends Component {
                         <label htmlFor=".productName">Product Name</label>
                         <Control.text model=".productName"
                                       validators={{required}}
-                                      id=".productName"/>
+                                      id=".productName"
+                                      defaultValue=""/>
                     </div>
                     <Errors
                         className="form-error"
@@ -109,7 +110,8 @@ export default class ProductMapping extends Component {
                         <label htmlFor=".productNumber">Product Number</label>
                         <Control.text model=".productNumber"
                                       validators={{min: (val) => min(val, 0), isNumber, required}}
-                                      id=".productNumber"/>
+                                      id=".productNumber"
+                                      defaultValue=""/>
                     </div>
                     <Errors
                         className="form-error"
@@ -126,7 +128,8 @@ export default class ProductMapping extends Component {
                         <label htmlFor=".measurements">Measurement</label>
                         <Control.text model=".packaging.capacity"
                                       validators={{min: (val) => min(val, 0), isNumber, required}}
-                                      id=".measurements"/>
+                                      id=".measurements"
+                                      defaultValue=""/>
                     </div>
                     <Errors
                         className="form-error"

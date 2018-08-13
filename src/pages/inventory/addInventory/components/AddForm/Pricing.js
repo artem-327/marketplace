@@ -9,8 +9,30 @@ import {required, isNumber, min, isCasNumber, messages} from "../../../../../uti
 export default class Pricing extends Component {
     constructor(props){
         super(props);
-        this.state = {incrementalPricing: false}
+        this.state = {
+            incrementalPricing: false,
+            margin:" ",
+        }
     }
+
+    componentWillReceiveProps(nextProps){
+
+            if(typeof nextProps.form.addProductOffer.pricing === "undefined"){
+                this.setState({margin:" "});
+                return;
+            }
+            let total = ((parseInt(nextProps.form.addProductOffer.pricing.price,10)-parseInt(nextProps.form.addProductOffer.pricing.cost,10)) / parseInt(nextProps.form.addProductOffer.pricing.price,10)) * 100;
+
+            if(isNaN(total) || total < 0){
+                this.setState({margin:" "});
+                return;
+            }
+            total = total.toFixed(2);
+            this.setState({margin:String(total)});
+
+    }
+
+
 
     render() {
         let incremental = this.state.incrementalPricing ?
@@ -20,8 +42,8 @@ export default class Pricing extends Component {
             </div>
             : null;
         return (
-
             <div>
+
                     <h6>SET PRICE & RULES</h6>
                 <div>
                     <Errors
@@ -42,7 +64,9 @@ export default class Pricing extends Component {
                                           required,
 
                                       }}
-                                      placeholder="$"/>
+                                      placeholder="$"
+                                      defaultValue=""
+                        />
                     </div>
                     <Errors
                         className="form-error"
@@ -61,27 +85,15 @@ export default class Pricing extends Component {
                                           isNumber,
                                           required,
                                       }}
+                                      defaultValue=""
                                       placeholder="$"/>
                     </div>
-                    <Errors
-                        className="form-error"
-                        model=".pricing.margin"
-                        show="touched"
-                        messages={{
-                            required: messages.required,
-                            isNumber: messages.isNumber
-                        }}
-                    />
+
+
                     <div className='group-item-wr'>
-                        <label htmlFor=".grossMargin">Gross Margin %</label>
-                        <Control.text model=".pricing.margin"
-                                      id=".grossMargin"
-                                      validators={{
-                                          isNumber,
-                                          required,
-                                      }}
-                                      placeholder="$"/>
-                    </div>
+                        <h6>Gross Margin</h6>
+                        <div className='gross-margin'>{this.state.margin}%</div>
+
                     <div className='group-item-wr'>
                         <h6>Total Sales Price</h6>
                         <h6>$ UNDEFINED</h6>

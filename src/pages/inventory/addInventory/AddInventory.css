@@ -83,6 +83,9 @@
     margin: 10px; }
     .add-group .group-item-wr.notes {
       vertical-align: top; }
+    .add-group .group-item-wr .gross-margin {
+      position: relative;
+      margin: 10px; }
   .add-group .dropdown-wr {
     width: 192px;
     display: inline-block; }

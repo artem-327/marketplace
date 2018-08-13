@@ -23,7 +23,7 @@ function mapDispatchToProps(dispatch) {
         updateWarehouse,
         addProductOffer,
         fetchWarehouse,
-        resetForm,
+        resetForm
     }, dispatch)
 }
 
