@@ -293,8 +293,8 @@ export default class Location extends Component {
         return (
             <div className='location-wr'>
                 <div className={'location-submenu ' + this.state.location}>
-                    <div className='saved' onClick={()=>this.changeLocation('saved')}>SAVED LOCATIONS</div>
-                    <div className='new' onClick={()=>this.changeLocation('new')}>NEW LOCATION</div>
+                    <div className='saved' onClick={()=>this.changeLocation('saved')}>SAVED WAREHOUSE</div>
+                    <div className='new' onClick={()=>this.changeLocation('new')}>NEW WAREHOUSE</div>
                 </div>
                 {location}
             </div>

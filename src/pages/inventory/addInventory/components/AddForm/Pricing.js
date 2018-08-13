@@ -110,51 +110,7 @@ export default class Pricing extends Component {
                                   {/*onChange={(value) => this.setState({incrementalPricing: value})} />*/}
                     {/*</div>*/}
                 {/*</div>*/}
-                <div>
-                    <Errors
-                        className="form-error"
-                        model=".splits"
-                        show="touched"
-                        messages={{
-                            required: messages.required,
-                            isNumber: messages.isNumber
-                        }}
-                    />
-                <div className='group-item-wr'>
-                <label htmlFor=".splits">Splits</label>
-                <Control.text model=".splits"
-                              id=".splits"
-                              validators={{
-                                  isNumber,
-                                  required,
-                              }}
-                              placeholder="Packages"/>
-                </div>
-                    <Errors
-                        className="form-error"
-                        model="forms.addProductOffer.addProductOffer.minimum"
-                        show="touched"
-                        messages={{
-                            required: messages.required,
-                        }}
-                    />
-                <div className='group-item-wr'>
-                <label htmlFor=".minimum">Minimum</label>
-                <DropdownRedux opns={[{id: 10, name: '10'}]}
-                               placeholder='Packages'
-                               model="forms.addProductOffer.addProductOffer.minimum"
-                               validators={{required}}
-                               dispatch={this.props.dispatch}/>
-                </div>
-                </div>
-                <div className='group-item-wr'>
-                        <CheckboxRedux model="forms.addProductOffer.addProductOffer.merchantVisibility"
-                                       name="merchantVisibility"
-                                       label="List Anonymously"
-                                       dispatch={this.props.dispatch}/>
-                </div>
 
-                {incremental}
             </div>
             </div>
         );

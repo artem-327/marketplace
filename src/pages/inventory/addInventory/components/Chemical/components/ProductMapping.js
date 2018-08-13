@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import {required, isNumber, min, messages} from "../../../../../../utils/validation";
+import WarningLabel from "./WarningLabel";
 
 export default class ProductMapping extends Component {
     constructor(props){
@@ -47,6 +48,7 @@ export default class ProductMapping extends Component {
                                       validators={{
                                           required,
                                       }}
+                                      disabled={true}
                                       id=".indexName"/>
                     </div>
                     <Errors
@@ -62,6 +64,7 @@ export default class ProductMapping extends Component {
                         <label htmlFor=".casNumber">CAS Number</label>
                         <Control.text model=".casNumber"
                                       validators={{required}}
+                                      disabled={true}
                                       id=".casNumber"/>
                     </div>
                     <Errors
@@ -76,6 +79,7 @@ export default class ProductMapping extends Component {
                         <label htmlFor=".chemicalName">Chemical Name</label>
                         <Control.text model=".chemicalName"
                                       validators={{required}}
+                                      disabled={true}
                                       id=".chemicalName"/>
                     </div>
                 </div>
