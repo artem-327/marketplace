@@ -1,16 +1,12 @@
 import React, {Component} from 'react';
 import {Control, Errors} from 'react-redux-form';
-import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
-// import Checkbox from "../../../../../components/Checkbox/Checkbox";
-import IncrementalPricing from './IncrementalPricing';
-import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
-import {required, isNumber, min, isCasNumber, messages} from "../../../../../utils/validation";
+import {required, isNumber, min, messages} from "../../../../../utils/validation";
 
 export default class Pricing extends Component {
     constructor(props){
         super(props);
         this.state = {
-            incrementalPricing: false,
+            //incrementalPricing: false,
             margin:" ",
         }
     }
@@ -35,12 +31,14 @@ export default class Pricing extends Component {
 
 
     render() {
+        /*
         let incremental = this.state.incrementalPricing ?
             <div className='incremental-wr'>
                 <h4>Tiered Pricing</h4>
                 <IncrementalPricing splits={15} minimum={20} />
             </div>
             : null;
+        */
         return (
             <div>
 

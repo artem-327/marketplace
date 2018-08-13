@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import {required, isNumber, min, messages} from "../../../../../../utils/validation";
-import WarningLabel from "./WarningLabel";
 
 export default class ProductMapping extends Component {
     constructor(props){
