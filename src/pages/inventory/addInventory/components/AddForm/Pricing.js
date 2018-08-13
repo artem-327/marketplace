@@ -52,7 +52,8 @@ export default class Pricing extends Component {
                         show="touched"
                         messages={{
                             required: messages.required,
-                            isNumber: messages.isNumber
+                            isNumber: messages.isNumber,
+                            min: messages.min
                         }}
                     />
                     <div className='group-item-wr'>
@@ -60,9 +61,9 @@ export default class Pricing extends Component {
                         <Control.text model=".pricing.price"
                                       id=".pricePr"
                                       validators={{
+                                          min: (val) => min(val, 0),
                                           isNumber,
-                                          required,
-
+                                          required
                                       }}
                                       placeholder="$"
                                       defaultValue=""
@@ -74,7 +75,8 @@ export default class Pricing extends Component {
                         show="touched"
                         messages={{
                             required: messages.required,
-                            isNumber: messages.isNumber
+                            isNumber: messages.isNumber,
+                            min: messages.min
                         }}
                     />
                     <div className='group-item-wr'>
@@ -82,8 +84,9 @@ export default class Pricing extends Component {
                         <Control.text model=".pricing.cost"
                                       id=".costPr"
                                       validators={{
+                                          min: (val) => min(val, 0),
                                           isNumber,
-                                          required,
+                                          required
                                       }}
                                       defaultValue=""
                                       placeholder="$"/>
@@ -91,9 +94,10 @@ export default class Pricing extends Component {
 
 
                     <div className='group-item-wr'>
+                        <div className='gross-margin'>
                         <h6>Gross Margin</h6>
-                        <div className='gross-margin'>{this.state.margin}%</div>
-
+                        <div>{this.state.margin}%</div>
+                        </div>
                     <div className='group-item-wr'>
                         <h6>Total Sales Price</h6>
                         <h6>$ UNDEFINED</h6>
@@ -151,6 +155,7 @@ export default class Pricing extends Component {
                 </div>
 
                 {incremental}
+            </div>
             </div>
         );
     }

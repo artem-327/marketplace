@@ -85,6 +85,7 @@
       vertical-align: top; }
     .add-group .group-item-wr .gross-margin {
       position: relative;
+      display: inline-block;
       margin: 10px; }
   .add-group .dropdown-wr {
     width: 192px;
