@@ -10,16 +10,25 @@ export default class Pricing extends Component {
         super(props);
         this.state = {
             incrementalPricing: false,
-            margin:"",
+            margin:" ",
         }
     }
 
     componentWillReceiveProps(nextProps){
+            console.log("recv props: ", nextProps.form.addProductOffer);
        
             if(typeof nextProps.form.addProductOffer.pricing === "undefined"){
+                this.setState({margin:" "});
                 return;
             }
             let total = ((parseInt(nextProps.form.addProductOffer.pricing.price,10)-parseInt(nextProps.form.addProductOffer.pricing.cost,10)) / parseInt(nextProps.form.addProductOffer.pricing.price,10)) * 100;
+
+            if(isNaN(total) || total < 0){
+                this.setState({margin:" "});
+                return;
+            }
+            console.log("rerender");
+            total = total.toFixed(2);
             this.setState({margin:String(total)});
        
     }
@@ -52,7 +61,7 @@ export default class Pricing extends Component {
                         <Control.text model=".pricing.cost"
                                       id=".costPr"
                                       placeholder="$"
-                                      defaultValue=""                                                                            
+                                      defaultValue=""                                                                           
                                       />
                     </div>
 
@@ -62,7 +71,11 @@ export default class Pricing extends Component {
                                       id=".grossMargin"
                                       placeholder="$"/>
                     </div>*/}
-                    <div className='group-item-wr'>{this.state.margin}</div>
+
+                    <div className='group-item-wr'>
+                        <h6>Gross Margin</h6>
+                        <div className='gross-margin'>{this.state.margin}%</div>
+                    </div>
 
                     <div className='group-item-wr'>
                         <h6>Total Sales Price</h6>
