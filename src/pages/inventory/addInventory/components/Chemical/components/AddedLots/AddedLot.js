@@ -1,7 +1,5 @@
 import React,{Component} from 'react';
 import './AddedLots.css';
-import upload from '../../../../../../../images/upload/upload.png';
-import uploaded from '../../../../../../../images/upload/uploaded.png';
 
 
 class AddedLot extends Component {
