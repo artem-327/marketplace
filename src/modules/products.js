@@ -34,7 +34,56 @@ export const initialState = {
     productsMapping: {},
     productOffering: {},
     data: [],
-    mappedData: [],
+    mappedData: [
+                {
+                  id: 0,
+                  product: {
+                    id: 1,
+                    casIndexName: "primary",
+                    casNumber: "77-77-7",
+                    chemicalName: "H3NO4"
+                  },
+                  productName: "TEMP",
+                  productNumber: "112",
+                  packaging: {
+                    capacity: 12,
+                    unit: {
+                      id: 1,
+                      name: "gram",
+                      dimension: "g"
+                    },
+                    container: {
+                      id: 1,
+                      name: "sack",
+                      dimension: "g"
+                    }
+                  }
+                },
+                {
+                    id: 1,
+                    product: {
+                      id: 1,
+                      casIndexName: "primary",
+                      casNumber: "77-77-7",
+                      chemicalName: "H3NO4"
+                    },
+                    productName: "GG",
+                    productNumber: "112",
+                    packaging: {
+                      capacity: 12,
+                      unit: {
+                        id: 1,
+                        name: "gram",
+                        dimension: "g"
+                      },
+                      container: {
+                        id: 1,
+                        name: "sack",
+                        dimension: "g"
+                      }
+                    }
+                  }
+    ],
     productForms: [],
     productConditions: [],
     productGrade: [],
@@ -121,7 +170,7 @@ export default function reducer(state = initialState, action) {
             return{
                 ...state,
                 isMapFetching: false,
-                mappedData: action.payload
+                //mappedData: action.payload
             }
         }
         default: {

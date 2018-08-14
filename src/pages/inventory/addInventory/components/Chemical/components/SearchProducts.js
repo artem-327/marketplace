@@ -61,6 +61,7 @@ class SearchProducts extends Component {
                     <div className='search-product-item' onClick={() => {this.setState({fulltextMap: productTemplate.productName, mapOpen: false}, () => {
                         this.props.onSelectProductMapping(productTemplate)
                     })}} >
+                        {console.log(productTemplate)}
                         <span className='search-cas'>{productTemplate.productName}</span>
                     </div>
                 </div>
@@ -87,18 +88,18 @@ class SearchProducts extends Component {
 
     render() {
         let {fulltextSearch, fulltextMap} = this.state;
-        let results = this.props.isSearching ? <div className='search-status'><Spinner/></div> : this.renderResults();
-        let resultsMap = this.props.isMapping ? <div className='map-status'><Spinner/></div> : this.renderResultsMap();
+        let results = this.props.isSearching ? <div className='search-loading'><Spinner/></div> : <div className='result-container'>{this.renderResults()}</div>;
+        let resultsMap = this.props.isMapping ? <div className='search-loading'><Spinner/></div> : <div className='result-container'>{this.renderResultsMap()}</div>;
         return (
             <div>
                 <h6>CHEMICAL SEARCH</h6>
-                <div className='search-products' ref={this.searchRef} >
+                <div className='search-map-products' ref={this.searchRef} >
                     <label>CAS Search</label>
                     <i className="fas fa-search search-icon" onClick={()=>{this.searchProducts()}}/>
                     <input value={fulltextSearch} onChange={(e) => this.handleChangeSearch(e)} placeholder='Search'/>
                     {results}
                 </div>
-                <div className='map-products' ref={this.mapRef}>
+                <div className='search-map-products' ref={this.mapRef}>
                     <label>Mapped Products Search</label>
                     <i className="fas fa-search search-icon" onClick={()=>{this.mapProducts()}}/>
                     <input value={fulltextMap} onChange={(e) => this.handleChangeMap(e)} placeholder='Search by Product Name or Product Number'/>

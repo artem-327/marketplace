@@ -35,7 +35,7 @@
 
 }
 
-.search-products{
+.search-map-products{
   width: calc(50% - 25px);
   display: inline-block;
   margin: 0 15px 12px 10px;
@@ -55,27 +55,9 @@
   button{
     width: 200px;
   }
-}
-
-.map-products{
-  width: calc(50% - 25px);
-  display: inline-block;
-  margin: 0 10px 12px 15px;
-  //min-width: 500px;
-  position: relative;
-  .search-icon{
+  .result-container{
     position: absolute;
-    top: 32px;
-    left: 11px;
-    color: #a9a9a9;
-    font-size: 18px;
-  }
-  input{
     width: 100%;
-    padding-left: 40px;
-  }
-  button{
-    width: 200px;
   }
 }
 
@@ -103,36 +85,11 @@
     transform: translateY(-50%);
   }
 }
-.warningLabel {
-  position: relative;
-  display: inline-block;
-  padding: 10px 0;
-  border: 1px solid #dc3545;
-  color: #a7a9ab;
-  border-radius: 4px;
-  width: 200px;
-  label{
-    display: inline-block;
-    width: calc(100% - 40px);
-    float: right;
-  }
-.warning-icon{
-  font-weight: bold;
-  color: #dc3545;
-  border: 1px solid #dc3545;
-  border-radius: 50%;
-  padding: 0px 9px;
-  position: absolute;
-  left: 5px;
-  top: 50%;
-  transform: translateY(-50%);
-}
-}
 
 
 .search-status{
-  position: absolute;
-  z-index: +1;
+  position: relative;
+  z-index: +2;
   border: 1px solid #b0b0b0;
   border-radius: 0 0 4px 4px;
   background-color: white;
@@ -147,7 +104,8 @@
     margin-top: 5px;
   }
 }
-.map-status{
+
+.search-loading{
   position: absolute;
   z-index: +1;
   border: 1px solid #b0b0b0;
@@ -170,6 +128,7 @@
     margin-top: 20px;
   }
   .search-product-item{
+    position: relative;
     padding: 10px;
     font-size: .9em;
     border-radius: 7px;
@@ -211,3 +170,4 @@
     font-weight: lighter;
   }
 }
+

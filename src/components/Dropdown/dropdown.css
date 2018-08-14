@@ -13,6 +13,13 @@
       transform: rotate(180deg);
       margin: 8px 4px 0 0;
       width: 13px; }
+    .dropdown-wr .dropdown-trigger.disable {
+      background-color: #ebebe4; }
+      .dropdown-wr .dropdown-trigger.disable:hover, .dropdown-wr .dropdown-trigger.disable:focus {
+        border-color: #B0B0B0;
+        cursor: not-allowed;
+        box-shadow: none;
+        outline: none; }
     .dropdown-wr .dropdown-trigger.open {
       border-radius: 4px 4px 0 0;
       border-color: #289ada; }
