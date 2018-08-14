@@ -56,13 +56,11 @@ class SearchProducts extends Component {
 
     renderResultsMap() {
             if (!this.props.mappedProducts || this.props.mappedProducts.length === 0 || !this.state.mapOpen) return null;
-            console.log(this.props.mappedProducts);
             return this.props.mappedProducts.map((productTemplate, index) => (
                 <div key={index + 'map'} className='search-status' style={{maxHeight: 50 * this.state.results_count}}>
                     <div className='search-product-item' onClick={() => {this.setState({fulltextMap: productTemplate.productName, mapOpen: false}, () => {
                         this.props.onSelectProductMapping(productTemplate)
                     })}} >
-                        {console.log(productTemplate)}
                         <span className='search-cas'>{productTemplate.productName}</span>
                     </div>
                 </div>
