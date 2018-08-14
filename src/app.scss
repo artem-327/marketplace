@@ -133,6 +133,7 @@ position: absolute;
 
 
 input {
+  width: 192px;
   border-radius: 4px;
   border: 1px solid #B0B0B0;
   padding: 7px;
@@ -176,6 +177,38 @@ input {
 }
 .conMess {
   padding: 5px 15px;
+}
+
+.warningLabel {
+  position: relative;
+  display: inline-block;
+  .warningBody{
+    position: absolute;
+    left: 10px;
+    top: -25px;
+    padding: 10px 0;
+    border: 1px solid #dc3545;
+    color: #a7a9ab;
+    border-radius: 4px;
+    height: 40px;
+    width: 192px;
+  }
+  label{
+    display: inline-block;
+    width: calc(100% - 40px);
+    float: right;
+  }
+  .warning-icon{
+    font-weight: bold;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    border-radius: 50%;
+    padding: 0px 9px;
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }
 
 
