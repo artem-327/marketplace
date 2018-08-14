@@ -19,6 +19,7 @@ export default class ProductMapping extends Component {
         values = Object.assign({}, values, {
             product: this.props.productID
         });
+        console.log(values);
         this.setState({save: true}, ()=>{
             this.props.saveMapping(values);
         });
