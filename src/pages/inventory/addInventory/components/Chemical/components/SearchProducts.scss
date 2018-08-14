@@ -113,7 +113,7 @@
 
 
 .search-status{
-  position: absolute;
+  position: relative;
   z-index: +1;
   border: 1px solid #b0b0b0;
   border-radius: 0 0 4px 4px;
@@ -129,7 +129,8 @@
     margin-top: 5px;
   }
 }
-.map-status{
+
+.search-loading{
   position: absolute;
   z-index: +1;
   border: 1px solid #b0b0b0;

@@ -61,6 +61,7 @@ class SearchProducts extends Component {
                     <div className='search-product-item' onClick={() => {this.setState({fulltextMap: productTemplate.productName, mapOpen: false}, () => {
                         this.props.onSelectProductMapping(productTemplate)
                     })}} >
+                        {console.log(productTemplate)}
                         <span className='search-cas'>{productTemplate.productName}</span>
                     </div>
                 </div>
@@ -87,8 +88,8 @@ class SearchProducts extends Component {
 
     render() {
         let {fulltextSearch, fulltextMap} = this.state;
-        let results = this.props.isSearching ? <div className='search-status'><Spinner/></div> : <div className='result-container'>{this.renderResults()}</div>;
-        let resultsMap = this.props.isMapping ? <div className='map-status'><Spinner/></div> : <div className='result-container'>{this.renderResultsMap()}</div>;
+        let results = this.props.isSearching ? <div className='search-loading'><Spinner/></div> : <div className='result-container'>{this.renderResults()}</div>;
+        let resultsMap = this.props.isMapping ? <div className='search-loading'><Spinner/></div> : <div className='result-container'>{this.renderResultsMap()}</div>;
         return (
             <div>
                 <h6>CHEMICAL SEARCH</h6>
