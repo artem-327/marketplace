@@ -48,7 +48,9 @@ export default class ProductMapping extends Component {
                                           required,
                                       }}
                                       disabled={true}
-                                      id=".indexName"/>
+                                      id=".indexName"
+                                      defaultValue={""}
+                        />
                     </div>
                     <Errors
                         className="form-error"
@@ -104,15 +106,12 @@ export default class ProductMapping extends Component {
                         show="touched"
                         messages={{
                             required: messages.required,
-                            min: messages.min,
-                            isNumber: messages.isNumber
-
                         }}
                     />
                     <div className='group-item-wr'>
                         <label htmlFor=".productNumber">Product Number</label>
                         <Control.text model=".productNumber"
-                                      validators={{min: (val) => min(val, 0), isNumber, required}}
+                                      validators={{required}}
                                       id=".productNumber"
                                       defaultValue=""/>
                     </div>

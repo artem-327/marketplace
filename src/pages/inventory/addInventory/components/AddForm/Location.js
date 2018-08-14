@@ -3,6 +3,7 @@ import {Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
 import Dropdown from "../../../../../components/Dropdown/Dropdown";
 import {messages, required} from "../../../../../utils/validation";
+import classnames from "classnames";
 
 export default class Location extends Component {
 
@@ -99,8 +100,9 @@ export default class Location extends Component {
     }
 
     renderSavedLocation() {
+        let disabled = this.state.warehouseIndex === '';
         let button = this.state.edit ? <button onClick={(e)=>this.updateLocation(e)} className='edit-location'>Save</button> :
-            <button className='edit-location' onClick={(e)=>this.changeMode(e)}>Edit</button>;
+            <button className={'edit-location' + classnames({" disabled": (disabled)})} onClick={(e)=>this.changeMode(e)}>Edit</button>;
         let currentLocation = this.state.warehouseIndex !== '' ? this.props.warehouse[this.state.warehouseIndex].name: null;
         return (
             <div>
@@ -289,7 +291,7 @@ export default class Location extends Component {
     }
 
     render() {
-        let location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation()
+        let location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation();
         return (
             <div className='location-wr'>
                 <div className={'location-submenu ' + this.state.location}>
