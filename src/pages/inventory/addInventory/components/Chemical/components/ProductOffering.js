@@ -125,14 +125,10 @@ export default class ProductOffering extends Component {
                             className="form-error"
                             model=".name"
                             show="touched"
-                            messages={{
-                                required: messages.required,
-                            }}
                         />
                         <div className='group-item-wr'>
                             <label htmlFor=".tradeName">Trade Name</label>
                             <Control.text model=".name"
-                                          validators={{required}}
                                           id=".tradeName"/>
                         </div>
                         <div>
