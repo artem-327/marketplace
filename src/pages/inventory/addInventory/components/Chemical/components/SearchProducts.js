@@ -86,16 +86,12 @@ class SearchProducts extends Component {
     searchProductsCas(){
         this.props.searchProducts(this.state.fulltextSearchCas);
     }
-    searchProductsName(){
-        this.props.searchProducts(this.state.fulltextSearchName);
-    }
     mapProducts(){
         this.props.mapProducts(this.state.fulltextMap);
     }
 
     render() {
-        console.log(this.props.fulltextSearchName);
-        let {fulltextSearchCas, fulltextSearchName, fulltextMap} = this.state;
+        let {fulltextSearchCas, fulltextMap} = this.state;
         let results = this.props.isSearching ? <div className='search-loading'><Spinner/></div> : <div className='result-container'>{this.renderResults()}</div>;
         let resultsMap = this.props.isMapping ? <div className='search-loading'><Spinner/></div> : <div className='result-container'>{this.renderResultsMap()}</div>;
         return (
