@@ -182,7 +182,10 @@ export default function reducer(state = initialState, action) {
 export function searchProducts(search) {
     return {
         type: SEARCH_PRODUCT,
-        payload: axios.get('/api/v1/products/', {params:{search}}).then(response => response.data.data.products)
+        payload: axios.get('/api/v1/products/', {params:{search}}).then(response => {
+            console.log(response.data.data.products);
+            return response.data.data.products;
+        })
     }
 }
 export function mapProducts(map) {
