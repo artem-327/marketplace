@@ -16,11 +16,8 @@ import filter from './modules/filter';
 import packageTypes from './modules/packageTypes';
 import cart from "./modules/cart";
 import broadcastRules from "./modules/broadcastRule";
-<<<<<<< HEAD
 import merchants from "./modules/merchants";
-=======
 import products, {initialState as productsInit} from './modules/products';
->>>>>>> master
 
 const reducer = combineReducers({
     identity,
@@ -33,11 +30,6 @@ const reducer = combineReducers({
     cart,
     search,
     popup,
-<<<<<<< HEAD
-    
-    addInventory,
-=======
->>>>>>> master
     broadcastRules,
     forms: combineForms({
         filter,
