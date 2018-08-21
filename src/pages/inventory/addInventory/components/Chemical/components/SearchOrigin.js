@@ -36,7 +36,7 @@ class SearchOrigin extends Component {
         if (this.state.results.length === 0) return  <div className={'origin-results'} style={{maxHeight: 44 * this.state.results_count}}><p className='origin-no-result'>No results</p></div>;
         let res = this.state.results.map(origin => (
             <div key={origin.id} className='search-origin-item' onClick={() => {this.setState({fulltext: origin.name, hasSearched: false}, ()=>{
-                this.props.dispatch(actions.change('forms.products.productsOffering.origin', origin.name));
+                this.props.dispatch(actions.change('forms.productOffering.origin', origin.name));
             })}}>
                 <span className='search-cas'>{origin.name}</span>
             </div>
@@ -46,7 +46,7 @@ class SearchOrigin extends Component {
 
     handleChange(e) {
         this.setState({fulltext: e.target.value, hasSearched: true}, () => {
-            this.props.dispatch(actions.change('forms.products.productsOffering.origin', this.state.fulltext));
+            this.props.dispatch(actions.change('forms.productOffering.origin', this.state.fulltext));
             if (this.state.fulltext.length > 0) this.searchOrigin();
         });
     }

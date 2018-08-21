@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
+import {Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
 import Dropdown from "../../../../../components/Dropdown/Dropdown";
+import {messages, required} from "../../../../../utils/validation";
+import classnames from "classnames";
 
 export default class Location extends Component {
 
@@ -97,12 +100,21 @@ export default class Location extends Component {
     }
 
     renderSavedLocation() {
+        let disabled = this.state.warehouseIndex === '';
         let button = this.state.edit ? <button onClick={(e)=>this.updateLocation(e)} className='edit-location'>Save</button> :
-            <button className='edit-location' onClick={(e)=>this.changeMode(e)}>Edit</button>;
+            <button className={'edit-location' + classnames({" disabled": (disabled)})} onClick={(e)=>this.changeMode(e)}>Edit</button>;
         let currentLocation = this.state.warehouseIndex !== '' ? this.props.warehouse[this.state.warehouseIndex].name: null;
         return (
             <div>
                 <div>
+                    <Errors
+                        className="form-error"
+                        model="forms.addProductOffer.addProductOffer.warehouse"
+                        show="touched"
+                        messages={{
+                            required: messages.required,
+                        }}
+                    />
                     <div className='group-item-wr'>
                         <label>Warehouse</label>
                         <DropdownRedux
@@ -110,6 +122,7 @@ export default class Location extends Component {
                             dispatch={this.props.dispatch}
                             opns={this.props.warehouse}
                             currentValue={currentLocation}
+                            validators={{required}}
                             onChange={(id)=> this.setLocation(id)}
                             placeholder='Select Location'
                         />
@@ -278,12 +291,12 @@ export default class Location extends Component {
     }
 
     render() {
-        let location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation()
+        let location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation();
         return (
             <div className='location-wr'>
                 <div className={'location-submenu ' + this.state.location}>
-                    <div className='saved' onClick={()=>this.changeLocation('saved')}>SAVED LOCATIONS</div>
-                    <div className='new' onClick={()=>this.changeLocation('new')}>NEW LOCATION</div>
+                    <div className='saved' onClick={()=>this.changeLocation('saved')}>SAVED WAREHOUSE</div>
+                    <div className='new' onClick={()=>this.changeLocation('new')}>NEW WAREHOUSE</div>
                 </div>
                 {location}
             </div>

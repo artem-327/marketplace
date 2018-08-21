@@ -15,6 +15,15 @@
 
       width: 13px;
     }
+    &.disable {
+      background-color: #ebebe4;
+      &:hover, &:focus {
+        border-color: #B0B0B0;
+        cursor: not-allowed;
+        box-shadow: none;
+        outline: none;
+      }
+    }
     &.open {
       border-radius: 4px 4px 0 0;
       border-color: #289ada;

@@ -8,8 +8,6 @@ import {validatePackageType} from "../../../../../modules/packageTypes";
 
 function mapStateToProps(store) {
     return {
-        state: store.addInventory.state.options,
-        incrementalPricing: store.addInventory.incrementalPricing.options,
         warehouse: store.location.warehouse,
         locations: store.location.locations,
         location: store.location,
@@ -25,7 +23,7 @@ function mapDispatchToProps(dispatch) {
         updateWarehouse,
         addProductOffer,
         fetchWarehouse,
-        resetForm,
+        resetForm
     }, dispatch)
 }
 

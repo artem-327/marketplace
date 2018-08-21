@@ -1,6 +1,7 @@
 import {connect} from 'react-redux';
 import Chemical from './Chemical';
 import {bindActionCreators} from 'redux'
+import {actions} from "react-redux-form"
 import {
     mapProducts,
     searchProducts,
@@ -9,7 +10,6 @@ import {
     fetchProductForms,
     fetchProductGrade,
     fetchProductConditions,
-    loadProductMapping,
 } from "../../../../../modules/products";
 import { getUnitOfMeasurement, getUnitOfPackaging, resetForm} from "../../../../../modules/productOffers";
 
@@ -21,16 +21,17 @@ const mapStateToProps = store => ({
     productForms: store.products.productForms,
     productGrade: store.products.productGrade,
     productConditions: store.products.productConditions,
-    originData: store.addInventory.origin,
+    originData: store.products.origin,
     recentProducts: store.products.recentProducts,
     unitOfMeasurement: store.productOffers.unitOfMeasurement,
     unitOfPackaging: store.productOffers.unitOfPackaging,
-    productMapping: store.forms.products.productsMapping,
+    productMapping: store.forms.productMapping,
 });
 
 const mapDispatchToProps = dispatch => (
     bindActionCreators({
         mapProducts,
+        setMapping: (values) => actions.merge('forms.productMapping', values),
         searchProducts,
         saveMapping,
         fetchRecentAddedProducts,
@@ -40,7 +41,6 @@ const mapDispatchToProps = dispatch => (
         getUnitOfMeasurement,
         fetchProductConditions,
         resetForm,
-        loadProductMapping,
         dispatch
     }, dispatch)
 );

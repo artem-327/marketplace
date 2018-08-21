@@ -22,32 +22,6 @@ export const initialState = {
     isFetching: false,
     unitOfMeasurement: [],
     unitOfPackaging: [],
-    products:{
-        isPending: false,
-        isValid: false,
-        hasError: false,
-        data:{
-            totalPackages: "",
-            pack: "",
-            packaging: "",
-            packageSize: "",
-            price: "",
-            pricingUnits: "",
-            manufacturer: "",
-            origin: "",
-            form: "",
-            assayMin: "",
-            assayMax: "",
-            grade: "",
-            condition: "",
-            rulesSplitPackages: "",
-            rulesMinimumPackages: "",
-            rulesIncrementalPricing: "",
-            broadcastSplitPackages: "",
-            broadcastMinimumPackages: "",
-            broadcastIncrementalPricing: "",
-        }
-    },
 };
 
 export default function reducer(state = initialState, action) {
@@ -108,22 +82,37 @@ export function fetchAll(filter = {}, mrchnt=true) {
 }
 
 
-export function addProductOffer(inputs) {
+export function addProductOffer({lotNumber, name, merchantVisibility, product, productCondition, productForm, productGrade, manufacturer, origin, assayMin, assayMax, creationDate, expirationDate, externalNotes, internalNotes, packaging, pricing}) {
+    const obj = {
+        lotNumber,
+        name,
+        merchantVisibility,
+        product,
+        productCondition,
+        productForm,
+        productGrade,
+        manufacturer,
+        origin,
+        assayMin,
+        assayMax,
+        creationDate,
+        expirationDate,
+        externalNotes,
+        internalNotes,
+        packaging,
+        pricing
+    };
+    console.log(obj);
     return {
         type: ADD_PRODUCT_OFFER,
-        payload: axios.post('/api/v1/product-offers/', inputs)
+        payload: axios.post('/api/v1/product-offers/', obj).catch(it => console.log(it))
     }
 }
 
 export function getUnitOfMeasurement() {
     return {
         type: GET_UNIT_OF_MEASUREMENT,
-        payload:Promise.resolve([
-            {
-                id:1,
-                name:'#'
-            }
-        ])
+        payload: axios.get("/api/v1/units/").then(result => result.data.data.units)
     }
 }
 
