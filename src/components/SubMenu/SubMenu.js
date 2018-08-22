@@ -2,8 +2,6 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {NavLink} from 'react-router-dom';
 import './submenu.css';
-import {Control, Form} from 'react-redux-form';
-import searchIcon from '../../images/subMenu/search-icon-transparent.png';
 import filterIcon from '../../images/subMenu/filter-icon-transparent.png';
 
 class SubMenu extends Component {
@@ -31,24 +29,6 @@ class SubMenu extends Component {
         return <div className='submenu-links'>{links}</div>;
     };
 
-    renderSearch() {
-        if (!this.props.search) return;
-        let searchInput = this.state.searchOpen ?
-            <Form model="forms.searchForm" onSubmit={(val) => this.handleSubmit(val)}>
-                <Control.text model="forms.searchForm.fulltext"/>
-            </Form> : null;
-        return (
-            <div className='submenu-search'>
-                {searchInput}
-                <div className='search-icon' onClick={() => {
-                    this.setState({searchOpen: !this.state.searchOpen})
-                }}>
-                    <img src={searchIcon} alt='open search'/>
-                </div>
-            </div>
-        )
-    }
-
     renderFilterButton() {
         if (!this.props.filter) return;
         return (
@@ -65,7 +45,6 @@ class SubMenu extends Component {
             <div className="submenu">
                 {this.renderLinks()}
                 {this.renderFilterButton()}
-                {this.renderSearch()}
             </div>
         );
     }

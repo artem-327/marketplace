@@ -8,15 +8,14 @@ import {fetchProductAge} from '../../modules/products';
 
 function mapStateToProps(store) {
     return {
-        isOpen: store.forms.filter.isOpen,
+        isOpen: store.filter.isOpen,
         packageTypes: store.packageTypes.data,
-        filterGroupStatus: store.forms.filter.filterGroup,
-        filterData: store.forms.filter.data,
+        filterGroupStatus: store.filter.filterGroup,
+        filterData: store.forms.filter,
         productAge:store.products.productAge,
-        productAgeModel: store.forms.filter.data.productAge,
-        productAgeCustomModel: store.forms.filter.data.productAgeCustom,
+        productAgeModel: store.forms.filter.productAge,
+        productAgeCustomModel: store.forms.filter.productAgeCustom,
         location:store.products.location,
-
     }
 }
 

@@ -109,7 +109,7 @@ export default class Location extends Component {
                 <div>
                     <Errors
                         className="form-error"
-                        model="forms.addProductOffer.addProductOffer.warehouse"
+                        model="forms.addProductOffer.warehouse"
                         show="touched"
                         messages={{
                             required: messages.required,
@@ -118,7 +118,7 @@ export default class Location extends Component {
                     <div className='group-item-wr'>
                         <label>Warehouse</label>
                         <DropdownRedux
-                            model="forms.addProductOffer.addProductOffer.warehouse"
+                            model="forms.addProductOffer.warehouse"
                             dispatch={this.props.dispatch}
                             opns={this.props.warehouse}
                             currentValue={currentLocation}
