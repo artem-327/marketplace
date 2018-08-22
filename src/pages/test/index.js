@@ -5,7 +5,8 @@ import {addPopup} from '../../modules/popup';
 
 function mapStateToProps(store) {
     return {
-        identity: store.identity.identity.data
+        identity: store.identity.identity.data,
+        comboData: store.products.origin
     }
 }
 

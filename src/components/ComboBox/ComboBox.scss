@@ -1,0 +1,44 @@
+.comboBox{
+  width: 192px;
+  display: inline-block;
+  //min-width: 500px;
+  position: relative;
+  .combo-icon{
+    position: absolute;
+    top: 32px;
+    left: 11px;
+    color: #a9a9a9;
+    font-size: 18px;
+  }
+  input{
+    width: 100%;
+    padding-left: 40px;
+  }
+  button{
+    width: 200px;
+  }
+}
+.combo-results{
+  position: absolute;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #b0b0b0;
+  border-radius: 0 0 4px 4px;
+  margin-top: -3px;
+  overflow-y: auto;
+  .combo-no-result{
+    padding: 10px;
+    margin: 0;
+  }
+  .combo-item{
+    padding: 10px;
+    &:hover{
+      cursor: pointer;
+      background-color: #eeeeee;
+    }
+    .combo-cas{
+      margin-right: 10px;
+      //float: right;
+    }
+  }
+}
