@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
 import {Control, Errors} from 'react-redux-form';
 import {required, isNumber, min, messages} from "../../../../../utils/validation";
+import IncrementalPricing from "./IncrementalPricing";
+import Checkbox from "../../../../../components/Checkbox/Checkbox"
+
 
 export default class Pricing extends Component {
     constructor(props){
         super(props);
         this.state = {
-            //incrementalPricing: false,
+            incrementalPricing: false,
             margin:" ",
         }
     }
@@ -31,14 +34,14 @@ export default class Pricing extends Component {
 
 
     render() {
-        /*
+        
         let incremental = this.state.incrementalPricing ?
             <div className='incremental-wr'>
                 <h4>Tiered Pricing</h4>
                 <IncrementalPricing splits={15} minimum={20} />
             </div>
             : null;
-        */
+        
         return (
             <div>
 
@@ -101,14 +104,15 @@ export default class Pricing extends Component {
                         <h6>$ UNDEFINED</h6>
                     </div>
                 </div>
-                {/*<div>*/}
-                    {/*<div className='group-item-wr'>*/}
-                        {/*<Checkbox name='incremental'*/}
-                                  {/*label='Tiered Pricing'*/}
-                                  {/*onChange={(value) => this.setState({incrementalPricing: value})} />*/}
-                    {/*</div>*/}
-                {/*</div>*/}
+                <div>
+                    <div className='group-item-wr'>
+                        <Checkbox name='incremental'
+                                  label='Tiered Pricing'
+                                  onChange={(value) => this.setState({incrementalPricing: value})} />
+                    </div>
 
+                </div>
+                {incremental}
             </div>
             </div>
         );
