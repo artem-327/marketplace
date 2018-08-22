@@ -18,6 +18,7 @@ import cart from "./modules/cart";
 import broadcastRules from "./modules/broadcastRule";
 import products, {initialState as productsInit} from './modules/products';
 
+//TODO::unite forms reducers
 const reducer = combineReducers({
     identity,
     companies,

@@ -14,7 +14,6 @@ class App extends Component {
             <PopUp/>
             <Header/>
             <Main/>
-            {/*<Footer/>*/}
         </div>
     );
   }

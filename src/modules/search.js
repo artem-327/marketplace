@@ -11,7 +11,6 @@ export const initialState = {
             fulltext: "",
         }
     },
-
 };
 
 export default function reducer(state = initialState, action) {

@@ -69,7 +69,7 @@ class BroadcastRule extends Component {
                     <div>
                         <span className="left">
                             <Dropdown opns={this.props.selections}
-                                      onCustomChange={(type) => this.props.setFilter(type)}
+                                      onChange={(type) => this.props.setFilter(type)}
                                       placeholder='Select filter'
                                       currentValue={this.props.currentSelected} />
                         </span>

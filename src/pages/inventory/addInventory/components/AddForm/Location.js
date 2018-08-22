@@ -148,7 +148,7 @@ export default class Location extends Component {
                         <Dropdown opns={this.props.locations}
                                   disable={!this.state.edit}
                                   currentValue={this.getCurrentValueById(this.state.state, this.props.locations)}
-                                  onCustomChange={(value) => {this.handleInputs(value, 'state')}}/>
+                                  onChange={(value) => {this.handleInputs(value, 'state')}}/>
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor="zip">Zip Code</label>
@@ -214,7 +214,7 @@ export default class Location extends Component {
                         <label>State</label>
                         <Dropdown opns={this.props.locations}
                                   currentValue={this.getCurrentValueById(this.state.state, this.props.locations)}
-                                  onCustomChange={(value) => {this.handleInputs(value, 'state')}}/>
+                                  onChange={(value) => {this.handleInputs(value, 'state')}}/>
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor="zip">Zip Code</label>

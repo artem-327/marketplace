@@ -141,9 +141,6 @@ class Filter extends Component {
                                          type: 'radio',
                                      }
                                  ]}/>
-
-
-
                     <FilterGroup className="filterGroup"
                                  header='Location'
                                  isVisible={!!this.props.loc}

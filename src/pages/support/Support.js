@@ -3,15 +3,6 @@ import './support.css'
 import ConMess from '../../components/constructionMessage';
 
 class Support extends Component {
-
-    componentDidMount() {
-
-    }
-
-    componentWillUnmount() {
-
-    }
-
     render() {
         return (
             <div>

@@ -13,8 +13,7 @@ class RadioRedux extends Component {
     }
 
     handleCustom(model, value){
-        console.log(model);
-            this.props.dispatch(actions.change(model, value));
+        this.props.dispatch(actions.change(model, value));
     }
 
     render() {
