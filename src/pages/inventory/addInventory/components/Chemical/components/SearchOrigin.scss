@@ -10,6 +10,17 @@
     color: #a9a9a9;
     font-size: 18px;
   }
+
+  .disabled {
+    background-color: #ebebe4;
+    &:hover, &:focus {
+      border-color: #B0B0B0;
+      cursor: not-allowed;
+      box-shadow: none;
+      outline: none;
+    }
+  }
+
   input{
     width: 100%;
     padding-left: 40px;

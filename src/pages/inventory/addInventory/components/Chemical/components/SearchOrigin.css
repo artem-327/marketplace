@@ -8,6 +8,13 @@
     left: 11px;
     color: #a9a9a9;
     font-size: 18px; }
+  .search-origin .disabled {
+    background-color: #ebebe4; }
+    .search-origin .disabled:hover, .search-origin .disabled:focus {
+      border-color: #B0B0B0;
+      cursor: not-allowed;
+      box-shadow: none;
+      outline: none; }
   .search-origin input {
     width: 100%;
     padding-left: 40px; }
