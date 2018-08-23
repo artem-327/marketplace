@@ -7,7 +7,8 @@ class SearchProducts extends Component {
 
     constructor(props){
         super(props);
-        this.searchProducts = debounce(this.searchProducts, 200);
+        this.searchProductsCas = debounce(this.searchProductsCas, 200);
+        this.searchProductsName = debounce(this.searchProductsName, 200);
         this.mapProducts = debounce(this.mapProducts, 200);
         this.handleClickOutside = this.handleClickOutside.bind(this);
         this.searchRef = React.createRef();
@@ -15,7 +16,8 @@ class SearchProducts extends Component {
         this.state = {
             searchOpen: false,
             mapOpen: false,
-            fulltextSearch: "",
+            fulltextSearchCas: "",
+            fulltextSearchName: "",
             fulltextMap: "",
             results_count: 10,
         }
@@ -44,19 +46,20 @@ class SearchProducts extends Component {
 
     renderResults() {
         if (!this.props.searchedProducts || this.props.searchedProducts.length === 0 || !this.state.searchOpen) return null;
-        return this.props.searchedProducts.map((product, index) => (
+        return this.props.searchedProducts.slice(0, 5).map((product, index) => (
             <div key={index + 'search'} className='search-status' style={{maxHeight: 50 * this.state.results_count}}>
-                <div className='search-product-item' onClick={() => {this.setState({fulltextSearch: product.casNumber, searchOpen: false}, ()=>{
+                <div className='search-product-item' onClick={() => {this.setState({fulltextSearchCas: product.casNumber, fulltextSearchName:product.chemicalName, searchOpen: false}, ()=>{
                     this.props.onSelect(product)
                 })}}>
                     <span className='search-cas'>{product.casNumber}</span>
+                    <span>{product.chemicalName}</span>
                 </div>
             </div>
         ))};
 
     renderResultsMap() {
             if (!this.props.mappedProducts || this.props.mappedProducts.length === 0 || !this.state.mapOpen) return null;
-            return this.props.mappedProducts.map((productTemplate, index) => (
+            return this.props.mappedProducts.slice(0, 5).map((productTemplate, index) => (
                 <div key={index + 'map'} className='search-status' style={{maxHeight: 50 * this.state.results_count}}>
                     <div className='search-product-item' onClick={() => {this.setState({fulltextMap: productTemplate.productName, mapOpen: false}, () => {
                         this.props.onSelectProductMapping(productTemplate)
@@ -68,8 +71,9 @@ class SearchProducts extends Component {
         ))};
 
     handleChangeSearch(e) {
-        this.setState({fulltextSearch: e.target.value, searchOpen: true}, () => {
-            if (this.state.fulltextSearch.length > 0) this.searchProducts();
+        this.setState({fulltextSearchCas: e.target.value, fulltextSearchName:e.target.value,  searchOpen: true}, () => {
+            if (this.state.fulltextSearchCas.length > 0 || this.state.fulltextSearchName.length > 0) this.searchProductsCas();
+            if (this.state.fulltextSearchCas.length > 0 || this.state.fulltextSearchName.length > 0) this.searchProductsName();
         });
     }
 
@@ -79,15 +83,15 @@ class SearchProducts extends Component {
         });
     }
 
-    searchProducts(){
-        this.props.searchProducts(this.state.fulltextSearch);
+    searchProductsCas(){
+        this.props.searchProducts(this.state.fulltextSearchCas);
     }
     mapProducts(){
         this.props.mapProducts(this.state.fulltextMap);
     }
 
     render() {
-        let {fulltextSearch, fulltextMap} = this.state;
+        let {fulltextSearchCas, fulltextMap} = this.state;
         let results = this.props.isSearching ? <div className='search-loading'><Spinner/></div> : <div className='result-container'>{this.renderResults()}</div>;
         let resultsMap = this.props.isMapping ? <div className='search-loading'><Spinner/></div> : <div className='result-container'>{this.renderResultsMap()}</div>;
         return (
@@ -95,8 +99,8 @@ class SearchProducts extends Component {
                 <h6>CHEMICAL SEARCH</h6>
                 <div className='search-map-products' ref={this.searchRef} >
                     <label>CAS Search</label>
-                    <i className="fas fa-search search-icon" onClick={()=>{this.searchProducts()}}/>
-                    <input value={fulltextSearch} onChange={(e) => this.handleChangeSearch(e)} placeholder='Search'/>
+                    <i className="fas fa-search search-icon" onClick={()=>{this.searchProductsCas(); this.searchProductsName();}}/>
+                    <input value={fulltextSearchCas} onChange={(e) => this.handleChangeSearch(e)} placeholder='Search'/>
                     {results}
                 </div>
                 <div className='search-map-products' ref={this.mapRef}>

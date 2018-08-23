@@ -43,7 +43,7 @@ class Filter extends Component {
 
         return this.state.isOpen ?
             <div className="filter">
-                <Form model="forms.filter.data" onSubmit={(val) => this.handleSubmit(val)}>
+                <Form model="forms.filter" onSubmit={(val) => this.handleSubmit(val)}>
                     <FilterGroup className="filterGroup"
                                  header='Chemical Type'
                                  isVisible={!!this.props.chemicalName}
@@ -141,9 +141,6 @@ class Filter extends Component {
                                          type: 'radio',
                                      }
                                  ]}/>
-
-
-
                     <FilterGroup className="filterGroup"
                                  header='Location'
                                  isVisible={!!this.props.loc}

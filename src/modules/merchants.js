@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-//Veškeré konstanty pro tento reducer
 const GET_MERCHANT = 'GET_MERCHANT';
 const GET_MERCHANT_FULFILLED = 'GET_MERCHANT_FULFILLED';
 const GET_MERCHANT_PENDING = 'GET_MERCHANT_PENDING';

@@ -27,6 +27,7 @@ const mapStateToProps = store => ({
     unitOfMeasurement: store.productOffers.unitOfMeasurement,
     unitOfPackaging: store.productOffers.unitOfPackaging,
     productMapping: store.forms.productMapping,
+    comboData: store.products.origin
 });
 
 const mapDispatchToProps = dispatch => (

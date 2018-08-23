@@ -19,7 +19,7 @@ class Dropdown extends Component {
 
     setCurrentValue(id, val){
         this.setState({currentValue: val, isOpen: false}, ()=>{
-            if(this.props.onCustomChange) this.props.onCustomChange(id);
+            if(this.props.onChange) this.props.onChange(id);
         })
     }
 
@@ -84,7 +84,7 @@ Dropdown.propTypes = {
     ).isRequired,
     currentValue: PropTypes.string,
     placeholder: PropTypes.string,
-    onCustomChange: PropTypes.func,
+    onChange: PropTypes.func,
     disable: PropTypes.bool,
 };
 

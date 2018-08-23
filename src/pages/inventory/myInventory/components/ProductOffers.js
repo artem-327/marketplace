@@ -2,9 +2,7 @@ import React, {Component} from 'react';
 import './ProductOffers.css';
 import Checkbox from "../../../../components/Checkbox/Checkbox";
 import ThreeDots from "../../../../components/ThreeDots/ThreeDots";
-import {capitalizeFirstLetter} from "../../../../utils/functions";
 import classnames from "classnames";
-
 
 class ProductOffers extends Component {
 
@@ -77,8 +75,7 @@ class ProductOffers extends Component {
                                 </td>
                                 <td colSpan="10">
                                     <span className="product-casnumber">{product.casNumber}</span>
-                                    <span className="text-capitalize product-name">{capitalizeFirstLetter(product.casIndexName)}</span>
-                                    <span className="text-capitalize product-name">{product.primaryName}</span>
+                                    <span className="product-name capitalize">{product.casIndexName}</span>
                                 </td>
                                 <td colSpan="4" className="quantity">
                                     <span>Product offerings: {product.productOffers.length}</span>
@@ -88,12 +85,11 @@ class ProductOffers extends Component {
                         );
                         if(product.visible){
                             product.productOffers.forEach((offer) => {
-                                console.log(offer);
                                 rows.push(
                                     <tr className="product-offer" key={offer.id}>
                                         <td><Checkbox onChange={(value) => {console.log(value)}}/></td>
                                         <td onClick={()=>{this.setState({isOpen: !this.state.isOpen})}}><span onClick={this.state.isOpen ? (e)=>this.toggleBroadcastRule(e, offer.id) : null}><ThreeDots className='small'/></span></td>
-                                        <td>{capitalizeFirstLetter(offer.product.casIndexName)}</td>
+                                        <td className="capitalize">{offer.product.casIndexName}</td>
                                         <td>{offer.packaging.amount}</td>
                                         <td>{offer.packaging.container.name}</td>
                                         <td>{offer.packaging.capacity}</td>
