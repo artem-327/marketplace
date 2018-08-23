@@ -18,7 +18,7 @@
       }
 }
 .shopping-header{
-    background-color: #a1a2a5;
+    background-color: rgb(250, 250, 250);
     position: absolute;
     border-radius: 5px 5px 0px 0px;
     padding: 30px;
@@ -36,7 +36,7 @@
     position: absolute;
     right: 30px;
     top: 24px;
-    color: black;
+    color: rgb(93, 96, 101);
     font-size: 2.2rem;
     transition: all .2s ease;
     transform: rotate(0deg);
@@ -58,12 +58,15 @@
     border-radius: 0px 0px 5px 5px;
     padding: 30px;
     
+    .continue-advice{
+        margin: 40px 0px 40px 0px;
+    }
 }
 .line-break{
     display: block;
     height: 1px;
     border: 0;
-    border-top: 1px solid black;
+    border-top: 1px solid rgb(238, 238, 238);
     padding: 0;
     margin: 0;
     

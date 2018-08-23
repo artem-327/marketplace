@@ -19,13 +19,13 @@ class Dropdown extends Component {
 
     setCurrentValue(id, val){
         this.setState({currentValue: val, isOpen: false}, ()=>{
-            if(this.props.onCustomChange) this.props.onCustomChange(id);
+            if(this.props.onChange) this.props.onChange(id);
         })
     }
 
     componentWillReceiveProps(nextProps){
         if(nextProps.redux){
-            let cv = nextProps.value;
+            let cv = '';
             for(let i = 0; i < nextProps.opns.length; i++){
                 if(nextProps.opns[i].id === nextProps.value){
                     cv = nextProps.opns[i].name;
@@ -67,8 +67,8 @@ class Dropdown extends Component {
             </ul> : null;
         return (
             <div className='dropdown-wr' ref={this.dropdownRef} >
-                <div className={'dropdown-trigger ' + classnames({'open' : isOpen})} onClick={()=>{this.setState({isOpen: !this.state.isOpen})}}>
-                    <div>{currentValue || this.props.placeholder || 'Select Option'}<img alt="up" src={ArrowUp} /></div>
+                <div className={'dropdown-trigger ' + classnames({'disable' : this.props.disable, 'open' : isOpen})} onClick={()=>{this.setState({isOpen: !this.state.isOpen})}}>
+                    <div>{currentValue || this.props.placeholder || 'Select'}<img alt="up" src={ArrowUp} /></div>
                 </div>
                 {options}
             </div>
@@ -84,7 +84,7 @@ Dropdown.propTypes = {
     ).isRequired,
     currentValue: PropTypes.string,
     placeholder: PropTypes.string,
-    onCustomChange: PropTypes.func,
+    onChange: PropTypes.func,
     disable: PropTypes.bool,
 };
 

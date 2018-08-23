@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import './ProductOffers.css';
-import {PRICE_PRECISION} from "../../../../utils/constants";
 import Checkbox from "../../../../components/Checkbox/Checkbox";
 import ThreeDots from "../../../../components/ThreeDots/ThreeDots";
+import classnames from "classnames";
 
 class ProductOffers extends Component {
 
@@ -10,13 +10,15 @@ class ProductOffers extends Component {
         super(props);
         this.toggleProduct = this.toggleProduct.bind(this);
         this.state = {
-            products: this.groupProductOffers(this.props.productOffers)
+            products: this.groupProductOffers(this.props.productOffers),
+            isOpen: false,
+            brActive: false,
         }
     }
 
-    componentWillReceiveProps(nextProps){
-        this.setState({products: this.groupProductOffers(nextProps.productOffers)});
-    }
+    //componentWillReceiveProps(nextProps){
+        //this.setState({products: this.groupProductOffers(nextProps.productOffers)});
+    //}
 
     groupProductOffers(productOffers) {
         return productOffers.reduce((carry, offer) => {
@@ -25,7 +27,7 @@ class ProductOffers extends Component {
         }, {});
     }
 
-    toggleProduct(productId){
+    toggleProduct(e, productId){
         this.setState({
             products: {
                 ...this.state.products,
@@ -38,11 +40,10 @@ class ProductOffers extends Component {
     }
 
     toggleBroadcastRule(e, id){
-        if(this.props.toggleBroadcastRule) this.props.toggleBroadcastRule(true, {x: e.clientX, y: e.clientY - 90}, [id])
+        if(this.props.toggleBroadcastRule) this.props.toggleBroadcastRule(true, {x: e.clientX, y: e.clientY - 90}, id)
     }
 
     render() {
-
         return (
             <div className="App">
                 <table className="product-offers">
@@ -68,13 +69,13 @@ class ProductOffers extends Component {
                     <tbody>
                     {Object.values(this.state.products).reduce((rows, product) => {
                         rows.push(
-                            <tr className="product" key={product.casNumber} onClick={() => {this.toggleProduct(product.id)}}>
+                            <tr className="product" key={product.casNumber}  onClick={(e) => {this.toggleProduct(e, product.id)}}>
                                 <td colSpan="1">
                                     <Checkbox onChange={(value) => {console.log(value)}}/>
                                 </td>
                                 <td colSpan="10">
-                                    <span>{product.casNumber}</span>
-                                    <span className="product-name">{product.primaryName}</span>
+                                    <span className="product-casnumber">{product.casNumber}</span>
+                                    <span className="product-name capitalize">{product.casIndexName}</span>
                                 </td>
                                 <td colSpan="4" className="quantity">
                                     <span>Product offerings: {product.productOffers.length}</span>
@@ -87,19 +88,19 @@ class ProductOffers extends Component {
                                 rows.push(
                                     <tr className="product-offer" key={offer.id}>
                                         <td><Checkbox onChange={(value) => {console.log(value)}}/></td>
-                                        <td><ThreeDots className='small'/></td>
-                                        <td>{offer.product.primaryName}</td>
-                                        <td>{offer.packageAmount}</td>
-                                        <td>{offer.packageType.name}</td>
-                                        <td>{offer.packageType.capacity}</td>
-                                        <td>{offer.packageAmount}</td>
-                                        <td>{offer.pricePerUnit.toFixed(PRICE_PRECISION)}</td>
-                                        <td>unknown</td>
-                                        <td>unknown</td>
-                                        <td>unknown</td>
+                                        <td onClick={()=>{this.setState({isOpen: !this.state.isOpen})}}><span onClick={this.state.isOpen ? (e)=>this.toggleBroadcastRule(e, offer.id) : null}><ThreeDots className='small'/></span></td>
+                                        <td className="capitalize">{offer.product.casIndexName}</td>
+                                        <td>{offer.packaging.amount}</td>
+                                        <td>{offer.packaging.container.name}</td>
+                                        <td>{offer.packaging.capacity}</td>
+                                        <td>{parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)}</td>
+                                        <td>{offer.pricing.cost}</td>
+                                        <td>{offer.pricing.price}</td>
+                                        <td>{offer.name}</td>
+                                        <td>{offer.manufacturer}</td>
                                         <td>{offer.productCondition.name}</td>
                                         <td>unknown</td>
-                                        <td><span className='broadcast-mark' onClick={(e)=>this.toggleBroadcastRule(e, offer.id)}> </span></td>
+                                        <td><span className={'broadcast-mark' + classnames({' open' : this.props.broadcastActive})}> </span></td>
                                         <td> </td>
                                     </tr>
                                 );

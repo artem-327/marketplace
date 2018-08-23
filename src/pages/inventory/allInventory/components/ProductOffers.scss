@@ -4,6 +4,8 @@ $borderColor: #e3e2df;
   margin: 20px 20px;
   text-align: left;
   width: calc(100% - 40px);
+  
+
   th {
     border: 2px solid $borderColor;
     background-color: #fbfaf7;
@@ -43,6 +45,10 @@ $borderColor: #e3e2df;
     .quantity {
       text-align: right;
       padding-right: 30px;
+    }
+
+    .product-casnumber {
+      color: rgb(78, 146, 223);
     }
   }
 

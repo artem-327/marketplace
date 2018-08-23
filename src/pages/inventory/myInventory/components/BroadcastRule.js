@@ -3,6 +3,7 @@ import './BroadcastRule.css';
 import BroadcastTargets from "./BroadcastTargets";
 import Dropdown from "../../../../components/Dropdown/Dropdown";
 import classnames from 'classnames';
+import BroadcastAdd from "./BroadcastAdd";
 
 class BroadcastRule extends Component {
 
@@ -11,8 +12,28 @@ class BroadcastRule extends Component {
         this.broadcastRef = React.createRef();
         this.handleClickOutside = this.handleClickOutside.bind(this);
         this.state = {
-            isOpen: this.props.visible
+            isOpen: this.props.visible,
+            rawData:[]
         }
+    }
+
+    activeBroadcastButton(active){
+        this.props.setActiveBroadcastButton(active)
+    }
+
+    submitBroadcastData(){
+        
+        var tmp = [];
+        Object.values(this.state.rawData).map((item)=>{
+            item.map((item1)=>{
+                tmp.push({visibility: item1.visibility, company: item1.company, [item1.updateType]: item1.amount})
+                return null;
+            })
+            return null;
+        })
+        
+        this.props.addPopup(<BroadcastAdd getProductOffers={this.props.getProductOffers} active={value=>this.activeBroadcastButton(value)} removePopup={this.props.removePopup} submitRules={this.props.submitRules} subjects={[{productOffer: this.props.productOffersSelection}]} targets={tmp}/>)
+        this.setState({isOpen: false})
     }
 
     componentWillReceiveProps(nextProps){
@@ -32,9 +53,11 @@ class BroadcastRule extends Component {
         this.setState({isOpen: false})
     }
 
+
+
     render() {
         return (
-            <div ref={this.broadcastRef} className={classnames("broadcast-rule", {'open': this.state.isOpen})}
+            <div  ref={this.broadcastRef} className={classnames("broadcast-rule", {'open': this.state.isOpen})}
                  style={{top: this.props.position ? this.props.position.y : 0}}>
                 <div>
                     <div>
@@ -46,14 +69,18 @@ class BroadcastRule extends Component {
                     <div>
                         <span className="left">
                             <Dropdown opns={this.props.selections}
-                                      onCustomChange={(type) => this.props.setFilter(type)}
+                                      onChange={(type) => this.props.setFilter(type)}
                                       placeholder='Select filter'
                                       currentValue={this.props.currentSelected} />
                         </span>
                     </div>
                 </div>
                 <div>
-                    <BroadcastTargets targetGroups={this.props.targetGroups} filter={this.props.currentSelected}/>
+                    <BroadcastTargets targetGroups={this.props.targetGroups} filter={this.props.currentSelected} getData={(data) => this.setState({rawData:data})}/>
+                </div>
+                <div className="br-buttons-wr">
+                    <button className='button br-apply' onClick={()=>this.submitBroadcastData()}>Apply</button>
+                    <div className="clearfix" />
                 </div>
             </div>
         );

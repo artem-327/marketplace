@@ -16,6 +16,7 @@ class MyInventory extends Component {
         this.state = {
             targetGroups: [],
             currentSelected: 'All companies',
+            brActive: false,
             brVisible: false,
             brPosition: null,
             productOffersSelection: [],
@@ -40,6 +41,15 @@ class MyInventory extends Component {
         this.setFilter(GROUP_BY_ALL_COMPANIES, nextProps.companies)
     }
 
+    componentWillUnmount(){
+        this.props.resetFilterTags();
+        this.props.resetForm();
+    }
+
+    setActiveBroadcastButton(active){
+        this.setState({brActive:active})
+    }
+
     setFilter(type, companies = this.props.companies) {
         switch (type) {
             case GROUP_BY_ALL_COMPANIES: {
@@ -55,7 +65,7 @@ class MyInventory extends Component {
     }
 
     groupByAllCompanies(companies) {
-        let targets = companies.map(company => ({name: company.name, id: company.id}));
+        let targets = companies.map(company => ({name: company.name, company: company.id}));
         this.setState({
             currentSelected: 'All companies',
             targetGroups: [{name: 'All Companies', type:'company', visible: true, targets: targets}],
@@ -68,7 +78,7 @@ class MyInventory extends Component {
             locations.forEach(location => {
                 (carry[location.id] = carry[location.id] || {name: location.state, type:'location', id: location.id, visible: true, targets: []})
                     .targets
-                    .push({name: company.name, id: company.id});
+                    .push({name: company.name, company: company.id});
             });
             return carry;
         }, {}));
@@ -84,15 +94,20 @@ class MyInventory extends Component {
                 toggleBroadcastRule={(state, position, selection) => this.setState(
                     {brVisible: state, brPosition: position, productOffersSelection: selection}
                 )}
+                broadcastActive={this.state.brActive}
             />;
         return (
             <div className='my-inventory'>
                 <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
-                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getProductOffers({...filter, mrchnt: true})}}/>
+                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getProductOffers({...filter}, true)}}/>
                 <h3 className='header small'>Undefined product offerings selected</h3>
-                <Filter filterFunc={(filter) => {this.props.getProductOffers({...filter, mrchnt: true})}} />
+                <Filter chemicalName productAgeFilter filterFunc={(filter) => {this.props.getProductOffers({...filter}, true)}} />
                 {content}
                 <BroadcastRule
+                    submitRules={this.props.sendRules}
+                    addPopup={this.props.addPopup}
+                    removePopup={this.props.removePopup}
+                    getProductOffers={this.props.getProductOffers}
                     targetGroups={this.state.targetGroups}
                     selections={this.state.selections}
                     setFilter={(type) => this.setFilter(type)}
@@ -100,6 +115,7 @@ class MyInventory extends Component {
                     visible={this.state.brVisible}
                     position={this.state.brPosition}
                     productOffersSelection={this.state.productOffersSelection}
+                    setActiveBroadcastButton={active => this.setActiveBroadcastButton(active)}
                 />
             </div>
         )

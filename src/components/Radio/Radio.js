@@ -1,18 +1,21 @@
 import React, {Component} from 'react';
 import './radioButton.css';
 import PropTypes from "prop-types";
+import { Control } from 'react-redux-form';
 
 class Radio extends Component {
     constructor(props) {
         super (props);
         this.handleChange = this.handleChange.bind(this);
-        this.state = {
-            checked: this.props.checked
-        }
+        this.state = {}
     }
-
+    componentWillMount(){
+        let checked = this.props.redux ? this.props.value : this.props.checked;
+        this.setState({checked});
+    }
     componentWillReceiveProps(nextProps){
-        this.setState({checked: nextProps.checked})
+        let checked = nextProps.redux ? nextProps.value : nextProps.checked;
+        this.setState({checked});
     }
 
     handleChange(event){
@@ -22,7 +25,6 @@ class Radio extends Component {
         });
 
     }
-
     renderRadio(opt){
         return opt.map((radio, index)=>{
             return <label className="radioButton" key={index}><p>{radio.label}</p>
@@ -32,10 +34,19 @@ class Radio extends Component {
         });
     }
 
+
     render () {
+        let custom = null;
+           if(this.state.checked === "10000"){
+                custom = <div><Control.text type={"text"} model={"form.filter.data.productAgeCustom"} placeholder={"months"}/></div>
+           }
+           else if(this.props.productAgeCustomModel != null) { 
+                this.props.handleCustom("form.filter.data.productAgeCustom", null);
+            }
         return (
             <div>
                 {this.renderRadio(this.props.opns)}
+                {custom}
             </div>
         )
     }

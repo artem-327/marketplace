@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import dropdown from '../../../../images/inv-filter/dropdown.png'
+import dropdownClose from '../../../../images/inv-filter/dropdown-close.png'
 
 export default class AddGroup extends Component {
     constructor(props) {
@@ -19,8 +21,9 @@ export default class AddGroup extends Component {
         return (
             <div className="add-group">
                 <div className={'header-group' + styleOpen} onClick={() => this.handleOpen()}>
+
+                    {this.state.open ? <img src={dropdown} alt='drop'/> : <img src={dropdownClose} alt='drop-close' />}
                     <h1>{this.props.header}</h1>
-                    {this.state.open ? <i className="icon fas fa-angle-down"/> : <i className="icon fas fa-angle-up"/>}
                 </div>
                     <div className={'add-body' + styleOpen} > {this.props.component} </div>
             </div>

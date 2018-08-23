@@ -70,17 +70,19 @@ export default class IncrementalPricing extends Component {
             let minusButton = (index !== 0) ?
                 <button onClick={()=>this.removeIncrementalPricing(index)} className='incremental-button remove'>-</button> : null;
             return <tr key={index}>
-                <td><span className='incremental-index'><span>{index + 1}</span></span></td>
+                {/*<td><span className='incremental-index'><span>{index + 1}</span></span></td>*/}
                 <td>
-                    <input type='number' step={this.state.splits}
-                           value={item.from}
-                           disabled
-                           onChange={(e)=>this.handleChange(e, index, 'from')}
-                           onBlur={()=>{this.validateInputs()}}
+                    <input  className='tieredPricing'
+                            type='number'
+                            step={this.state.splits}
+                            value={item.from}
+                            onChange={(e)=>this.handleChange(e, index, 'from')}
+                            onBlur={()=>{this.validateInputs()}}
                     />
                 </td>
                 <td>
                     <input type='number'
+                           className='tieredPricing'
                            step={this.state.splits}
                            value={item.to}
                            onBlur={()=>{this.validateInputs()}}
@@ -88,9 +90,16 @@ export default class IncrementalPricing extends Component {
                 </td>
                 <td>
                     <input type='number'
+                           className='tieredPricing'
                            value={item.price}
                            onBlur={()=>{this.validateInputs()}}
                            onChange={(e)=>this.handleChange(e, index, 'price')}/>
+                </td>
+                <td>
+                    <input type='number'
+                           className='tieredPricing'
+                           onBlur={()=>{this.validateInputs()}}
+                           onChange={(e)=>this.handleChange(e, index, 'margin')}/>
                 </td>
                 <td>{minusButton}</td>
                 <td>{plusButton}</td>
@@ -103,11 +112,10 @@ export default class IncrementalPricing extends Component {
             <table className='incremental-pricing-table'>
                 <thead>
                     <tr>
-                        <th> </th>
                         <th>Quantity From</th>
                         <th>Quantity To</th>
-                        <th>Price per {this.props.unit}</th>
-                        <th> </th>
+                        <th>Price per lb {this.props.unit}</th>
+                        <th>Gross Margin %</th>
                         <th> </th>
                     </tr>
                 </thead>

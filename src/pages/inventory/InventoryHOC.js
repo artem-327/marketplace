@@ -17,14 +17,16 @@ export default function InventoryHOC(ComposedComponent) {
                 },
                 {
                     url: '/inventory/add-inventory/',
-                    label: 'Add inventory'
+                    label: 'Add Inventory'
                 }
             ]
         }
+
         render() {
+            let filter = this.props.location.pathname !== '/inventory/add-inventory/';
             return (
                 <div>
-                    <SubMenu links={this.submenuLinks()} filter/>
+                    <SubMenu links={this.submenuLinks()} filter={filter}/>
                     <ComposedComponent {...this.props}/>
                 </div>
             );

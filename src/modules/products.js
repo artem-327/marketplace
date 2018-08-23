@@ -2,28 +2,43 @@ import axios from "axios";
 
 const FETCH_PRODUCT_FORMS = 'PRODUCT_FORMS';
 const FETCH_PRODUCT_FORMS_FULFILLED = 'PRODUCT_FORMS_FULFILLED';
-
 const FETCH_PRODUCT_CONDITIONS = 'FETCH_PRODUCT_CONDITIONS';
 const FETCH_PRODUCT_CONDITIONS_FULFILLED = 'FETCH_PRODUCT_CONDITIONS_FULFILLED';
-
 const FETCH_PRODUCT_GRADE = 'FETCH_PRODUCT_GRADE';
 const FETCH_PRODUCT_GRADE_FULFILLED = 'FETCH_PRODUCT_GRADE_FULFILLED';
-
+const FETCH_PRODUCT_AGE = 'FETCH_PRODUCT_AGE';
+const FETCH_PRODUCT_AGE_FULFILLED = 'FETCH_PRODUCT_AGE_FULFILLED';
 const FETCH_RECEANT_ADDED_PRODUCTS = 'FETCH_RECEANT_ADDED_PRODUCTS';
 const FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED = 'FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED';
 
+const FETCH_ORIGIN = 'FETCH_ORIGIN';
+const FETCH_ORIGIN_FULFILLED = 'FETCH_ORIGIN_FULFILLED';
+
 const SEARCH_PRODUCT = 'SEARCH_PRODUCT';
 const SEARCH_PRODUCT_PENDING = 'SEARCH_PRODUCT_PENDING';
+const MAP_PRODUCT = 'MAP_PRODUCT';
+const MAP_PRODUCT_PENDING = 'MAP_PRODUCT_PENDING';
+const MAP_PRODUCT_REJECTED = 'MAP_PRODUCT_REJECTED';
+const MAP_PRODUCT_FULFILLED = 'MAP_PRODUCT_FULFILLED';
 const SEARCH_PRODUCT_FULFILLED = 'SEARCH_PRODUCT_FULFILLED';
 const SEARCH_PRODUCT_REJECTED = 'SEARCH_PRODUCT_REJECTED';
+const SAVE_MAPPING = 'SAVE_MAPPING';
+const SAVE_MAPPING_FULFILLED = 'SAVE_MAPPING_FULFILLED';
 
 export const initialState = {
+    productsMapping: {},
+    productOffering: {},
     data: [],
+    mappedData: [],
     productForms: [],
     productConditions: [],
     productGrade: [],
+    productAge: [],
+    location: [],
     recentProducts: [],
-    isFetching: false
+    origin: [],
+    isFetching: false,
+    isMapFetching: false
 };
 
 export default function reducer(state = initialState, action) {
@@ -44,6 +59,18 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 productGrade: action.payload
+            }
+        }
+        case FETCH_ORIGIN_FULFILLED: {
+            return {
+                ...state,
+                origin: action.payload
+            }
+        }
+        case FETCH_PRODUCT_AGE_FULFILLED: {
+            return {
+                ...state,
+                productAge: action.payload
             }
         }
         case FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED: {
@@ -71,17 +98,50 @@ export default function reducer(state = initialState, action) {
                 data: action.payload
             }
         }
+        case SAVE_MAPPING_FULFILLED: {
+            return{
+                ...state,
+                products: {
+                    isFetching: false,
+                }
+            }
+        }
+        case MAP_PRODUCT_PENDING: {
+            return{
+                ...state,
+                isMapFetching: true,
+            }
+        }
+        case MAP_PRODUCT_REJECTED: {
+            return{
+                ...state,
+                isMapFetching: false,
+            }
+        }
+        case MAP_PRODUCT_FULFILLED: {
+            return{
+                ...state,
+                isMapFetching: false,
+                mappedData: action.payload
+            }
+        }
         default: {
             return state
         }
     }
 }
 
-
 export function searchProducts(search) {
     return {
         type: SEARCH_PRODUCT,
         payload: axios.get('/api/v1/products/', {params:{search}}).then(response => response.data.data.products)
+    }
+}
+
+export function mapProducts(map) {
+    return {
+        type: MAP_PRODUCT,
+        payload: axios.get('/api/v1/product-templates/', {params:{map}}).then(response => response.data.data.productTemplates)
     }
 }
 
@@ -106,11 +166,57 @@ export function fetchProductGrade(filter = {}) {
     }
 }
 
+export function fetchOrigin(filter = {}) {
+    return {
+        type: FETCH_ORIGIN,
+        payload: axios.get('/api/v1/origins/', {params: {...filter}}).then(result => result.data.data.origins)
+    }
+}
+
+export function fetchProductAge() {
+    return {
+        type: FETCH_PRODUCT_AGE,
+        payload: [
+            {
+                id:1,
+                name:'0 - 3 months'
+            },
+            {
+                id:2,
+                name:'3 - 6 months'
+            },
+            {
+                id:3,
+                name:'6 - 9 months'
+            },
+            {
+                id:4,
+                name:'9 - 12 months'
+            },
+            {
+                id:5,
+                name:'12+ months'
+            },
+            {
+                id:6,
+                name:'Custom Product Age'
+            }
+        ]
+    }
+}
+
 export function fetchRecentAddedProducts(limit = 3) {
     return {
         type: FETCH_RECEANT_ADDED_PRODUCTS,
         payload: axios.get('/api/v1/products/', {params:{
             srtb: 'updatedAt', lmt: limit
         }}).then(result => result.data.data.products)
+    }
+}
+
+export function saveMapping(values) {
+    return {
+        type: SAVE_MAPPING,
+        payload: axios.post("/api/v1/product-templates/", values)
     }
 }

@@ -1,43 +1,17 @@
 import axios from "axios";
-import origin from '../components/Dropdown/unitedStates';
-
 
 const PACKAGE_OPTIONS = 'PACKAGE_OPTIONS';
 const PACKAGE_OPTIONS_FULFILLED = 'PACKAGE_OPTIONS_FULFILLED';
 const MANUFACTURER = 'MANUFACTURER';
 const MANUFACTURER_FULFILLED = 'MANUFACTURER_FULFILLED';
-const PRICING_UNITS = 'PRICING_UNITS';
-const PRICING_UNITS_FULFILLED = 'PRICING_UNITS_FULFILLED';
+
 export const initialState = {
-    units:{
-        isPending: false,
-        options: []
-    },
-    package:{
-        isPending: false,
-        options: []
-    },
-    pricingUnits:{
-        isPending: false,
-        options: []
-    },
-    manufacturer:{
-        isPending: false,
-        options: []
-    },
-    origin:{
-        isPending: false,
-        options: origin
-    },
-    state:{
-        isPending: false,
-        options: []
-    },
-    incrementalPricing:{
-        isPending: false,
-        options: []
-    }
+    package: [],
+    units: [],
+    manufacturer: [],
 };
+
+//Currently unused
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
@@ -62,16 +36,6 @@ export default function reducer(state = initialState, action) {
                     ...state.manufacturer,
                     isPending: false,
                     options: action.payload.data.data.manufacturers
-                }
-            }
-        }
-        case PRICING_UNITS_FULFILLED: {
-            return {
-                ...state,
-                pricingUnits: {
-                    ...state.pricingUnits,
-                    isPending: false,
-                    options: action.payload.data.pricingUnits
                 }
             }
         }
@@ -115,25 +79,6 @@ export function getManufacturer() {
         payload: axios.get("/api/v1/manufacturers/")
     }
 }
-
-export function getPricingUnits() {
-
-    return {
-        type: PRICING_UNITS,
-        payload: Promise.resolve(
-            {
-                "data": {
-                    "pricingUnits": [
-                        {
-                            "id": "USD",
-                            "name": "USD"
-                        }
-                    ]
-                },
-                "status": "success"
-            })
-        }
-    }
 
 
 

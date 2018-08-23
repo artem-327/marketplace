@@ -4,7 +4,11 @@ import Radio from "../../components/Radio/Radio";
 import Checkbox from "../../components/Checkbox/Checkbox";
 import FilterTag from "../../components/Filter/components/FilterTag/FilterTag";
 import ThreeDots from "../../components/ThreeDots/ThreeDots";
-import KeepShopping from "../../components/KeepShopping/";
+import KeepShopping from "../../components/KeepShopping";
+import DatepickerRedux from "../../components/Datepicker/DatepickerRedux";
+import RemoteComboBox from "../../components/ComboBox/RemoteComboBox";
+import {searchProducts} from "../../modules/products";
+
 
 class TestPage extends Component {
 
@@ -14,6 +18,7 @@ class TestPage extends Component {
     }
 
     render(){
+        console.log(this.props);
         return (
             <div>
                 <div>
@@ -30,6 +35,9 @@ class TestPage extends Component {
                     <ThreeDots className="small"/>
                     <Spinner/>
                     <FilterTag/>
+                    <br />
+                    <DatepickerRedux placeholder={'test'} dispatch={this.props.dispatch} onChange={(value)=>console.log(value)} model='forms.addProductOffer.addProductOffer.test' />
+                    <RemoteComboBox items={this.props.searchProductsItems} api={(fulltext)=>{this.props.searchProducts(fulltext)}} displayAttr="chemicalName"/>
                 </div>
             </div>
         )
