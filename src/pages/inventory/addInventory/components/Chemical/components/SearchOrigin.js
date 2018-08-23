@@ -69,7 +69,7 @@ class SearchOrigin extends Component {
                 <div className='search-origin'>
                     <label>Origin</label>
                     <i className="fas fa-search search-icon" onClick={()=>{this.searchOrigin()}}/>
-                    <input disabled={this.props.disable ? "disabled" : null} value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Search' ref={this.originRef}/>
+                    <input disabled={this.props.disable} value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Search' ref={this.originRef}/>
                     {results}
                 </div>
             </div>
