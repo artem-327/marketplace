@@ -101,12 +101,12 @@ export default class ProductOffering extends Component {
                             <Control.text model=".manufacturer"
                                           validators={{required}}
                                           id=".manufacturer"
-                                          disabled={this.state.firstValue ? false : true}
+                                          disabled={!this.state.firstValue}
                                           />
                         </div>
 
                         <div className='group-item-wr'>
-                            <SearchOrigin disable={this.state.firstValue ? false : true} { ...this.props}/>
+                            <SearchOrigin disable={!this.state.firstValue} { ...this.props}/>
                         </div>
                         <Errors
                             className="form-error"
@@ -122,7 +122,7 @@ export default class ProductOffering extends Component {
                                            model="forms.productOffering.productForm"
                                            validators={{required}}
                                            dispatch={this.props.dispatch}
-                                           disable={this.state.firstValue ? false : true}
+                                           disable={!this.state.firstValue}
                                            />
                         </div>
                         <Errors
@@ -138,7 +138,7 @@ export default class ProductOffering extends Component {
                             <Control.text model=".name"
                                           validators={{required}}
                                           id=".tradeName"
-                                          disabled={this.state.firstValue ? false : true}
+                                          disabled={!this.state.firstValue}
                                           />
                         </div>
                         <div>
@@ -157,7 +157,7 @@ export default class ProductOffering extends Component {
                             <Control.text model=".assayMin"
                                           validators={{min: (val) => min(val, 0), isNumber, required}}
                                           id=".assayMin"
-                                          disabled={this.state.firstValue ? false : true}
+                                          disabled={!this.state.firstValue}
                                           />
                         </div>
                             <Errors
@@ -175,7 +175,7 @@ export default class ProductOffering extends Component {
                                 <Control.text model=".assayMax"
                                               validators={{min: (val) => min(val, 0), isNumber, required}}
                                               id=".assayMax"
-                                              disabled={this.state.firstValue ? false : true}
+                                              disabled={!this.state.firstValue}
                                               />
                             </div>
                             <Errors
@@ -192,7 +192,7 @@ export default class ProductOffering extends Component {
                                            model="forms.productOffering.productGrade"
                                            validators={{required}}
                                            dispatch={this.props.dispatch}
-                                           disable={this.state.firstValue ? false : true}
+                                           disable={!this.state.firstValue}
                                            />
                         </div>
                             <Errors
@@ -209,7 +209,7 @@ export default class ProductOffering extends Component {
                                            model="forms.productOffering.productCondition"
                                            validators={{required}}
                                            dispatch={this.props.dispatch}
-                                           disable={this.state.firstValue ? false : true}
+                                           disable={!this.state.firstValue}
                                            />
                         </div>
                         </div>
@@ -217,11 +217,11 @@ export default class ProductOffering extends Component {
                         <div>
                             <div className="group-item-wr notes-textarea">
                                 <label htmlFor=".externalNotes">External notes</label>
-                                <Control.textarea model=".externalNotes" id=".externalNotes" className="textarea" placeholder="Enter notes here" disabled={this.state.firstValue ? false : true} />
+                                <Control.textarea model=".externalNotes" id=".externalNotes" className="textarea" placeholder="Enter notes here" disabled={!this.state.firstValue} />
                             </div>
                             <div className="group-item-wr notes-textarea">
                                 <label htmlFor=".internalNotes">Internal Notes</label>
-                                <Control.textarea model=".internalNotes" id=".internalNotes" className="textarea" placeholder="Enter notes here" disabled={this.state.firstValue ? false : true} />
+                                <Control.textarea model=".internalNotes" id=".internalNotes" className="textarea" placeholder="Enter notes here" disabled={!this.state.firstValue} />
 
                         </div>
                             {button}
