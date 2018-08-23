@@ -7,8 +7,6 @@ import ThreeDots from "../../components/ThreeDots/ThreeDots";
 import KeepShopping from "../../components/KeepShopping";
 import DatepickerRedux from "../../components/Datepicker/DatepickerRedux";
 import RemoteComboBox from "../../components/ComboBox/RemoteComboBox";
-import {searchProducts} from "../../modules/products";
-
 
 class TestPage extends Component {
 
