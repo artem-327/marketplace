@@ -3,6 +3,16 @@
   display: inline-block;
   //min-width: 500px;
   position: relative;
+  &.cas-search{
+    width: calc(50% - 25px);
+    margin: 0 15px 12px 10px;
+    z-index: +2;
+  }
+  &.map-search{
+    width: calc(50% - 25px);
+    margin: 0 15px 12px 10px;
+    z-index: +2;
+  }
   .combo-icon{
     position: absolute;
     top: 32px;
