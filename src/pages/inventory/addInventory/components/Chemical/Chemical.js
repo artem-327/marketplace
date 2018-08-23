@@ -38,7 +38,7 @@ class Chemical extends Component {
                     capacity: this.state.selectedProductMapping.packaging.capacity
                 }
             };
-            this.props.loadProductMapping(inputs);
+            this.props.setMapping(inputs);
         })
     }
 
@@ -49,7 +49,7 @@ class Chemical extends Component {
                 casNumber: this.state.selectedProduct.casNumber,
                 chemicalName: this.state.selectedProduct.chemicalName,
             };
-            this.props.loadProductMapping(inputs);
+            this.props.setMapping(inputs);
         })
     }
 

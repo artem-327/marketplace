@@ -1,4 +1,5 @@
 import axios from "axios";
+import origin from "../components/unitedStates";
 
 const FETCH_PRODUCT_FORMS = 'PRODUCT_FORMS';
 const FETCH_PRODUCT_FORMS_FULFILLED = 'PRODUCT_FORMS_FULFILLED';
@@ -29,19 +30,67 @@ const SEARCH_PRODUCT_REJECTED = 'SEARCH_PRODUCT_REJECTED';
 const SAVE_MAPPING = 'SAVE_MAPPING';
 const SAVE_MAPPING_FULFILLED = 'SAVE_MAPPING_FULFILLED';
 
-const LOAD_PRODUCT_MAPPING = 'LOAD_PRODUCT_MAPPING';
-
 export const initialState = {
-    data: [],
-    mappedData: [],
-    productForms: [],
     productsMapping: {},
     productOffering: {},
+    data: [],
+    mappedData: [
+                {
+                  id: 0,
+                  product: {
+                    id: 1,
+                    casIndexName: "primary",
+                    casNumber: "77-77-7",
+                    chemicalName: "H3NO4"
+                  },
+                  productName: "TEMP",
+                  productNumber: "112",
+                  packaging: {
+                    capacity: 12,
+                    unit: {
+                      id: 1,
+                      name: "gram",
+                      dimension: "g"
+                    },
+                    container: {
+                      id: 1,
+                      name: "sack",
+                      dimension: "g"
+                    }
+                  }
+                },
+                {
+                    id: 1,
+                    product: {
+                      id: 1,
+                      casIndexName: "primary",
+                      casNumber: "77-77-7",
+                      chemicalName: "H3NO4"
+                    },
+                    productName: "GG",
+                    productNumber: "112",
+                    packaging: {
+                      capacity: 12,
+                      unit: {
+                        id: 1,
+                        name: "gram",
+                        dimension: "g"
+                      },
+                      container: {
+                        id: 1,
+                        name: "sack",
+                        dimension: "g"
+                      }
+                    }
+                  }
+    ],
+    productForms: [],
     productConditions: [],
     productGrade: [],
     productAge: [],
     location: [],
     recentProducts: [],
+    origin: origin,
     isFetching: false,
     isMapFetching: false
 };
@@ -121,25 +170,12 @@ export default function reducer(state = initialState, action) {
             return{
                 ...state,
                 isMapFetching: false,
-                mappedData: action.payload
-            }
-        }
-        case LOAD_PRODUCT_MAPPING: {
-            return{
-                ...state,
-                productsMapping: {...state.productsMapping, ...action.payload}
+                //mappedData: action.payload
             }
         }
         default: {
             return state
         }
-    }
-}
-
-export function loadProductMapping(inputs){
-    return{
-        type: LOAD_PRODUCT_MAPPING,
-        payload: inputs
     }
 }
 

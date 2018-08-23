@@ -1,5 +1,6 @@
 .save-productMapping {
-  width: 155px;
+  width: 170px;
+  min-height: 40px;
   padding: 0 25px;
   background-color: #dbf6d7;
   color: #4cd136;
@@ -21,7 +22,8 @@
     
 }
 .saved-productMapping {
-  width: 155px;
+  width: 170px;
+  min-height: 40px;
   padding: 0 25px;
   background-color: #4cd136;
   color: white;
@@ -33,7 +35,7 @@
 
 }
 
-.search-products{
+.search-map-products{
   width: calc(50% - 25px);
   display: inline-block;
   margin: 0 15px 12px 10px;
@@ -53,27 +55,9 @@
   button{
     width: 200px;
   }
-}
-
-.map-products{
-  width: calc(50% - 25px);
-  display: inline-block;
-  margin: 0 10px 12px 15px;
-  //min-width: 500px;
-  position: relative;
-  .search-icon{
+  .result-container{
     position: absolute;
-    top: 32px;
-    left: 11px;
-    color: #a9a9a9;
-    font-size: 18px;
-  }
-  input{
     width: 100%;
-    padding-left: 40px;
-  }
-  button{
-    width: 200px;
   }
 }
 
@@ -104,8 +88,8 @@
 
 
 .search-status{
-  position: absolute;
-  z-index: +1;
+  position: relative;
+  z-index: +2;
   border: 1px solid #b0b0b0;
   border-radius: 0 0 4px 4px;
   background-color: white;
@@ -120,7 +104,8 @@
     margin-top: 5px;
   }
 }
-.map-status{
+
+.search-loading{
   position: absolute;
   z-index: +1;
   border: 1px solid #b0b0b0;
@@ -143,6 +128,7 @@
     margin-top: 20px;
   }
   .search-product-item{
+    position: relative;
     padding: 10px;
     font-size: .9em;
     border-radius: 7px;
@@ -184,3 +170,4 @@
     font-weight: lighter;
   }
 }
+

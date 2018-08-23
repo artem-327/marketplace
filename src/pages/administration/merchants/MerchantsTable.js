@@ -23,10 +23,12 @@ class MerchantsTable extends Component {
                 <h1 className="header">MerchantsTable</h1>
                 <table className="merchant-table">
                     <thead className="merch-table">
-                        <th className="merch-header-item">Name</th>
-                        <th className="merch-header-item">Surname</th>
-                        <th className="merch-header-item">E-mail</th>
-                        <th className="merch-header-item">Approve</th>
+                        <tr>
+                            <th className="merch-header-item">Name</th>
+                            <th className="merch-header-item">Surname</th>
+                            <th className="merch-header-item">E-mail</th>
+                            <th className="merch-header-item">Approve</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {this.renderMerchants()}

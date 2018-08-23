@@ -4,7 +4,7 @@ const CHANGE_RULES = "CHANGE_RULES";
 
 export const initialState = {
     rules:[]
-}
+};
 
 
 export default function reducer(state = initialState, action) {

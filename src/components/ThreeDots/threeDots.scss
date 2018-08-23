@@ -1,3 +1,8 @@
+.open-menu{
+  width: 20px;
+  cursor: pointer;
+  padding:0 10px 0 10px;
+}
 .threeDots {
   position: relative;
   display: inline-block;
@@ -46,5 +51,4 @@
     background-color: #343545;
     border-radius: 50%;
   }
-
 }
