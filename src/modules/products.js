@@ -1,5 +1,4 @@
 import axios from "axios";
-import origin from "../components/unitedStates";
 
 const FETCH_PRODUCT_FORMS = 'PRODUCT_FORMS';
 const FETCH_PRODUCT_FORMS_FULFILLED = 'PRODUCT_FORMS_FULFILLED';
@@ -11,6 +10,10 @@ const FETCH_PRODUCT_AGE = 'FETCH_PRODUCT_AGE';
 const FETCH_PRODUCT_AGE_FULFILLED = 'FETCH_PRODUCT_AGE_FULFILLED';
 const FETCH_RECEANT_ADDED_PRODUCTS = 'FETCH_RECEANT_ADDED_PRODUCTS';
 const FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED = 'FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED';
+
+const FETCH_ORIGIN = 'FETCH_ORIGIN';
+const FETCH_ORIGIN_FULFILLED = 'FETCH_ORIGIN_FULFILLED';
+
 const SEARCH_PRODUCT = 'SEARCH_PRODUCT';
 const SEARCH_PRODUCT_PENDING = 'SEARCH_PRODUCT_PENDING';
 const MAP_PRODUCT = 'MAP_PRODUCT';
@@ -33,7 +36,7 @@ export const initialState = {
     productAge: [],
     location: [],
     recentProducts: [],
-    origin: origin,
+    origin: [],
     isFetching: false,
     isMapFetching: false
 };
@@ -56,6 +59,12 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 productGrade: action.payload
+            }
+        }
+        case FETCH_ORIGIN_FULFILLED: {
+            return {
+                ...state,
+                origin: action.payload
             }
         }
         case FETCH_PRODUCT_AGE_FULFILLED: {
@@ -154,6 +163,13 @@ export function fetchProductGrade(filter = {}) {
     return {
         type: FETCH_PRODUCT_GRADE,
         payload: axios.get('/api/v1/product-grades/', {params: {...filter}}).then(result => result.data.data.productGrades)
+    }
+}
+
+export function fetchOrigin(filter = {}) {
+    return {
+        type: FETCH_ORIGIN,
+        payload: axios.get('/api/v1/origins/', {params: {...filter}}).then(result => result.data.data.origins)
     }
 }
 
