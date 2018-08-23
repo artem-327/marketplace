@@ -4,8 +4,8 @@ export default class IncrementalPricing extends Component {
     constructor(props){
         super(props);
         this.state = {
-            splits: '1',
-            minimum: '0',
+            splits: '',
+            minimum: '',
             unit: 'lb',
             incrementalPricing: [{
                 from: '',
