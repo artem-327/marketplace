@@ -2,9 +2,10 @@ import React, {Component} from 'react';
 import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerRedux";
-import SearchOrigin from "./SearchOrigin";
 import './ProductOffering.css'
 import {required, messages, min, isNumber} from "../../../../../../utils/validation";
+import unitedStates from "../../../../../../components/unitedStates";
+import ComboBoxRedux from "../../../../../../components/ComboBox/ComboBoxRedux";
 
 
 export default class ProductOffering extends Component {
@@ -106,7 +107,15 @@ export default class ProductOffering extends Component {
                         </div>
 
                         <div className='group-item-wr'>
-                            <SearchOrigin disable={!this.state.firstValue} { ...this.props}/>
+                            <Errors
+                                className="form-error"
+                                model="forms.productOffering.origin"
+                                show="touched"
+                                messages={{
+                                    required: messages.required,
+                                }}
+                            />
+                            <ComboBoxRedux opns={unitedStates} validators={{required}} model="forms.productOffering.origin" dispatch={this.props.dispatch}/>
                         </div>
                         <Errors
                             className="form-error"
@@ -129,9 +138,6 @@ export default class ProductOffering extends Component {
                             className="form-error"
                             model=".name"
                             show="touched"
-                            messages={{
-                                required: messages.required,
-                            }}
                         />
                         <div className='group-item-wr'>
                             <label htmlFor=".tradeName">Trade Name</label>

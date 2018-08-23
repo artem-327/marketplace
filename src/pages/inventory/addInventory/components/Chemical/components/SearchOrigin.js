@@ -19,6 +19,7 @@ class SearchOrigin extends Component {
     }
 
     componentWillMount(){
+        this.props.fetchOrigin();
         document.addEventListener('mousedown', this.handleClickOutside, false);
     }
 

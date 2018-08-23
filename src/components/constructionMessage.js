@@ -1,13 +1,9 @@
 import React from "react";
 
-class constructionMessage extends React.Component {
+const constructionMessage = () => {
+    return (
+        <div className="conMess">This page is still under construction</div>
+    )
+};
 
-
-
-    render() {
-        return (
-            <div className="conMess">This page is still under construction</div>
-        )
-    }
-}
 export default constructionMessage;

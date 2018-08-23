@@ -1,11 +1,10 @@
 import axios from 'axios';
-const CHANGE_RULES = "CHANGE_RULES";
 
+const CHANGE_RULES = "CHANGE_RULES";
 
 export const initialState = {
     rules:[]
 };
-
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
@@ -22,6 +21,3 @@ export function sendRules(data) {
         payload: axios.post("/api/v1/broadcast-rules/",data)
     }
 }
-
-
-
