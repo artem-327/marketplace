@@ -101,7 +101,9 @@ export default class ProductOffering extends Component {
                             <label htmlFor=".manufacturer">Manufacturer</label>
                             <Control.text model=".manufacturer"
                                           validators={{required}}
-                                          id=".manufacturer"/>
+                                          id=".manufacturer"
+                                          disabled={!this.state.firstValue}
+                                          />
                         </div>
 
                         <div className='group-item-wr'>
@@ -128,7 +130,9 @@ export default class ProductOffering extends Component {
                             <DropdownRedux opns={this.props.productForms} placeholder='Select'
                                            model="forms.productOffering.productForm"
                                            validators={{required}}
-                                           dispatch={this.props.dispatch}/>
+                                           dispatch={this.props.dispatch}
+                                           disable={!this.state.firstValue}
+                                           />
                         </div>
                         <Errors
                             className="form-error"
@@ -138,7 +142,10 @@ export default class ProductOffering extends Component {
                         <div className='group-item-wr'>
                             <label htmlFor=".tradeName">Trade Name</label>
                             <Control.text model=".name"
-                                          id=".tradeName"/>
+                                          validators={{required}}
+                                          id=".tradeName"
+                                          disabled={!this.state.firstValue}
+                                          />
                         </div>
                         <div>
                             <Errors
@@ -155,7 +162,9 @@ export default class ProductOffering extends Component {
                             <label htmlFor=".assayMin">Assay Min %</label>
                             <Control.text model=".assayMin"
                                           validators={{min: (val) => min(val, 0), isNumber, required}}
-                                          id=".assayMin"/>
+                                          id=".assayMin"
+                                          disabled={!this.state.firstValue}
+                                          />
                         </div>
                             <Errors
                                 className="form-error"
@@ -171,7 +180,9 @@ export default class ProductOffering extends Component {
                                 <label htmlFor=".assayMax">Assay Max %</label>
                                 <Control.text model=".assayMax"
                                               validators={{min: (val) => min(val, 0), isNumber, required}}
-                                              id=".assayMax"/>
+                                              id=".assayMax"
+                                              disabled={!this.state.firstValue}
+                                              />
                             </div>
                             <Errors
                                 className="form-error"
@@ -186,7 +197,9 @@ export default class ProductOffering extends Component {
                             <DropdownRedux opns={this.props.productGrade} placeholder='Select'
                                            model="forms.productOffering.productGrade"
                                            validators={{required}}
-                                           dispatch={this.props.dispatch}/>
+                                           dispatch={this.props.dispatch}
+                                           disable={!this.state.firstValue}
+                                           />
                         </div>
                             <Errors
                                 className="form-error"
@@ -201,18 +214,20 @@ export default class ProductOffering extends Component {
                             <DropdownRedux opns={this.props.productConditions} placeholder='Select'
                                            model="forms.productOffering.productCondition"
                                            validators={{required}}
-                                           dispatch={this.props.dispatch}/>
+                                           dispatch={this.props.dispatch}
+                                           disable={!this.state.firstValue}
+                                           />
                         </div>
                         </div>
                     </div>
                         <div>
                             <div className="group-item-wr notes-textarea">
                                 <label htmlFor=".externalNotes">External notes</label>
-                                <Control.textarea model=".externalNotes" id=".externalNotes" className="textarea" placeholder="Enter notes here" />
+                                <Control.textarea model=".externalNotes" id=".externalNotes" className="textarea" placeholder="Enter notes here" disabled={!this.state.firstValue} />
                             </div>
                             <div className="group-item-wr notes-textarea">
                                 <label htmlFor=".internalNotes">Internal Notes</label>
-                                <Control.textarea model=".internalNotes" id=".internalNotes" className="textarea" placeholder="Enter notes here" />
+                                <Control.textarea model=".internalNotes" id=".internalNotes" className="textarea" placeholder="Enter notes here" disabled={!this.state.firstValue} />
 
                         </div>
                             {button}
