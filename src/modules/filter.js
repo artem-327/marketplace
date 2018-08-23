@@ -1,13 +1,10 @@
-import '../utils/constants';
-
+const RESET_TAGS = "RESET_TAGS";
 const TOGGLE_FILTER = "TOGGLE_FILTER";
 const TOGGLE_FILTER_GROUP = 'TOGGLE_FILTER_GROUP';
-// const CLEAR_FILTER = 'CLEAR_FILTER';
 const ADD_FILTER_TAG = 'ADD_FILTER_TAG';
 const CLOSE_FILTER_TAG = 'CLOSE_FILTER_TAG';
 const CLOSE_FILTER_TAG_FULFILLED = 'CLOSE_FILTER_TAG_FULFILLED';
 const RESET_FORM = 'RESET_FORM';
-const RESET_TAGS = 'RESET_TAGS';
 
 export const initialState = {
     isOpen: false,
@@ -22,7 +19,6 @@ export const initialState = {
         location: false
     },
     filterTags: []
-    
 };
 
 export default function reducer(state = initialState, action) {
@@ -39,7 +35,6 @@ export default function reducer(state = initialState, action) {
                 filterGroup: {
                     ...state.filterGroup,
                     [action.payload.name]: action.payload.value
-
                 }
             }
         }
@@ -61,13 +56,12 @@ export default function reducer(state = initialState, action) {
                 filterTags: [...state.filterTags.slice(0,action.payload), ...state.filterTags.slice(action.payload+1)]
             }
         }
-        case RESET_TAGS:{
+        case RESET_TAGS: {
             return {
                 ...state,
                 filterTags: []
             }
         }
-
         default: {
             return state
         }
@@ -90,7 +84,6 @@ export function addFilterTag(data) {
     return {
         type: ADD_FILTER_TAG,
         payload: data
-
     }
 }
 export function closeFilterTag(index) {

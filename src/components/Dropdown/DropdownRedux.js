@@ -18,7 +18,7 @@ class DropdownRedux extends Component {
             component={Dropdown}
             redux
             validators={this.props.validators}
-            onCustomChange={value => this.handleChange(value)}
+            onChange={value => this.handleChange(value)}
             {...this.props}
         />
 

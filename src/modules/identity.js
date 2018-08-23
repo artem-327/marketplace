@@ -1,5 +1,4 @@
 import axios from "axios";
-// import jwt from "jsonwebtoken";
 import {setAuthToken, deleteAuthToken} from '../utils/auth'
 import '../utils/constants';
 import {ROLE_GUEST} from "../utils/constants";
@@ -86,7 +85,6 @@ export default function reducer(state = initialState, action) {
                     isFetching: false,
                     hasError: false,
                     isValid: true,
-                    // data: action.data
                 }
             }
         }
@@ -103,7 +101,6 @@ export default function reducer(state = initialState, action) {
                     isFetching: false,
                     hasError: false,
                     isValid: true,
-                    // data: action.data
                 }
             }
         }

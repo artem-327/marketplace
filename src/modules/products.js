@@ -2,16 +2,12 @@ import axios from "axios";
 
 const FETCH_PRODUCT_FORMS = 'PRODUCT_FORMS';
 const FETCH_PRODUCT_FORMS_FULFILLED = 'PRODUCT_FORMS_FULFILLED';
-
 const FETCH_PRODUCT_CONDITIONS = 'FETCH_PRODUCT_CONDITIONS';
 const FETCH_PRODUCT_CONDITIONS_FULFILLED = 'FETCH_PRODUCT_CONDITIONS_FULFILLED';
-
 const FETCH_PRODUCT_GRADE = 'FETCH_PRODUCT_GRADE';
 const FETCH_PRODUCT_GRADE_FULFILLED = 'FETCH_PRODUCT_GRADE_FULFILLED';
-
 const FETCH_PRODUCT_AGE = 'FETCH_PRODUCT_AGE';
 const FETCH_PRODUCT_AGE_FULFILLED = 'FETCH_PRODUCT_AGE_FULFILLED';
-
 const FETCH_RECEANT_ADDED_PRODUCTS = 'FETCH_RECEANT_ADDED_PRODUCTS';
 const FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED = 'FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED';
 
@@ -20,15 +16,12 @@ const FETCH_ORIGIN_FULFILLED = 'FETCH_ORIGIN_FULFILLED';
 
 const SEARCH_PRODUCT = 'SEARCH_PRODUCT';
 const SEARCH_PRODUCT_PENDING = 'SEARCH_PRODUCT_PENDING';
-
 const MAP_PRODUCT = 'MAP_PRODUCT';
 const MAP_PRODUCT_PENDING = 'MAP_PRODUCT_PENDING';
 const MAP_PRODUCT_REJECTED = 'MAP_PRODUCT_REJECTED';
 const MAP_PRODUCT_FULFILLED = 'MAP_PRODUCT_FULFILLED';
-
 const SEARCH_PRODUCT_FULFILLED = 'SEARCH_PRODUCT_FULFILLED';
 const SEARCH_PRODUCT_REJECTED = 'SEARCH_PRODUCT_REJECTED';
-
 const SAVE_MAPPING = 'SAVE_MAPPING';
 const SAVE_MAPPING_FULFILLED = 'SAVE_MAPPING_FULFILLED';
 
@@ -36,56 +29,7 @@ export const initialState = {
     productsMapping: {},
     productOffering: {},
     data: [],
-    mappedData: [
-                {
-                  id: 0,
-                  product: {
-                    id: 1,
-                    casIndexName: "primary",
-                    casNumber: "77-77-7",
-                    chemicalName: "H3NO4"
-                  },
-                  productName: "TEMP",
-                  productNumber: "112",
-                  packaging: {
-                    capacity: 12,
-                    unit: {
-                      id: 1,
-                      name: "gram",
-                      dimension: "g"
-                    },
-                    container: {
-                      id: 1,
-                      name: "sack",
-                      dimension: "g"
-                    }
-                  }
-                },
-                {
-                    id: 1,
-                    product: {
-                      id: 1,
-                      casIndexName: "primary",
-                      casNumber: "77-77-7",
-                      chemicalName: "H3NO4"
-                    },
-                    productName: "GG",
-                    productNumber: "112",
-                    packaging: {
-                      capacity: 12,
-                      unit: {
-                        id: 1,
-                        name: "gram",
-                        dimension: "g"
-                      },
-                      container: {
-                        id: 1,
-                        name: "sack",
-                        dimension: "g"
-                      }
-                    }
-                  }
-    ],
+    mappedData: [],
     productForms: [],
     productConditions: [],
     productGrade: [],
@@ -178,7 +122,7 @@ export default function reducer(state = initialState, action) {
             return{
                 ...state,
                 isMapFetching: false,
-                //mappedData: action.payload
+                mappedData: action.payload
             }
         }
         default: {
@@ -193,6 +137,7 @@ export function searchProducts(search) {
         payload: axios.get('/api/v1/products/', {params:{search}}).then(response => response.data.data.products)
     }
 }
+
 export function mapProducts(map) {
     return {
         type: MAP_PRODUCT,

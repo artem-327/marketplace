@@ -7,13 +7,7 @@ import {removePopup} from "../../../modules/popup";
 
 function mapStateToProps(store) {
     return {
-        //name: store.cart.addCart.data.productOffer.product.primaryName,
-        //merchant: store.cart.addCart.data.productOffer.manufacturer.name,
-        //packageSize: store.cart.addCart.data.productOffer.packageAmount,
-        //location: store.cart.addCart.data.productOffer.location.state,
-        //availableProducs:,
-        //quantity:
-        info: store.cart.addCart.data.productOffer,
+        info: store.cart.addCart,
     }
 }
 

@@ -13,10 +13,12 @@ class FilterGroup extends Component {
         super(props);
         this.state = {
             isOpen: this.props.isOpen
+            
         }
     }
 
     componentDidMount(){
+        
         for(let i = 0; i < this.props.inputs.length; i++){
             if(this.props.inputs[i].type === 'checkbox'){
                 if(this.props.data[this.props.checkboxModel] && this.props.data[this.props.checkboxModel][this.props.inputs[i].id]){
@@ -76,7 +78,7 @@ class FilterGroup extends Component {
                     )
                 }
                 case 'radio' : {
-                    
+
                     return (
                         <div key={index} className='filter-input-radio'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>
@@ -108,6 +110,7 @@ class FilterGroup extends Component {
         }) : null;
     }
 
+    //TODO::refactor render
     render() {
         if(!this.props.isVisible) return null;
         return (

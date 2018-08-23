@@ -13,6 +13,9 @@ import AllInventory from "../pages/inventory/allInventory";
 import MyInventory from "../pages/inventory/myInventory";
 import TestPage from "../pages/test";
 import { withAuth } from '../utils/auth';
+import Administration from '../pages/administration/';
+import Merchants from '../pages/operator/';
+
 
 class Main extends Component {
     render() {
@@ -29,6 +32,8 @@ class Main extends Component {
                     <Route exact path="/settings" component={withAuth(Settings)}/>
                     <Route exact path="/support" component={withAuth(Support)}/>
                     <Route exact path="/test-page" component={TestPage}/>
+                    <Route exact path="/administration" component={Administration}/>
+                    <Route exact path="/operator" component={Merchants}/>
                 </Switch>
             </div>
         );

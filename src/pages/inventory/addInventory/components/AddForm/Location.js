@@ -109,7 +109,7 @@ export default class Location extends Component {
                 <div>
                     <Errors
                         className="form-error"
-                        model="forms.addProductOffer.addProductOffer.warehouse"
+                        model="forms.addProductOffer.warehouse"
                         show="touched"
                         messages={{
                             required: messages.required,
@@ -118,7 +118,7 @@ export default class Location extends Component {
                     <div className='group-item-wr'>
                         <label>Warehouse</label>
                         <DropdownRedux
-                            model="forms.addProductOffer.addProductOffer.warehouse"
+                            model="forms.addProductOffer.warehouse"
                             dispatch={this.props.dispatch}
                             opns={this.props.warehouse}
                             currentValue={currentLocation}
@@ -148,7 +148,7 @@ export default class Location extends Component {
                         <Dropdown opns={this.props.locations}
                                   disable={!this.state.edit}
                                   currentValue={this.getCurrentValueById(this.state.state, this.props.locations)}
-                                  onCustomChange={(value) => {this.handleInputs(value, 'state')}}/>
+                                  onChange={(value) => {this.handleInputs(value, 'state')}}/>
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor="zip">Zip Code</label>
@@ -214,7 +214,7 @@ export default class Location extends Component {
                         <label>State</label>
                         <Dropdown opns={this.props.locations}
                                   currentValue={this.getCurrentValueById(this.state.state, this.props.locations)}
-                                  onCustomChange={(value) => {this.handleInputs(value, 'state')}}/>
+                                  onChange={(value) => {this.handleInputs(value, 'state')}}/>
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor="zip">Zip Code</label>

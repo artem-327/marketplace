@@ -119,7 +119,10 @@
     margin-top: 5px;
   }
 }
-
+.search-cas{
+  margin-right: 15px;
+  //float: right;
+}
 .search-results{
   width: 100%;
   color: #4e5157;
@@ -138,10 +141,6 @@
     &:hover{
       cursor: pointer;
       background-color: #eeeeee;
-    }
-    .search-cas{
-      margin-right: 10px;
-      //float: right;
     }
   }
 }
