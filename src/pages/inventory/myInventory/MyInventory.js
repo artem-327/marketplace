@@ -27,6 +27,11 @@ class MyInventory extends Component {
         };
     }
 
+    componentWillUnmount(){
+        this.props.resetFilterTags();
+        this.props.resetForm();
+    }
+
     componentDidMount() {
         this.props.getProductOffers();
         this.props.getCompanies();

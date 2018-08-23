@@ -1,4 +1,4 @@
-
+const RESET_TAGS = "RESET_TAGS";
 const TOGGLE_FILTER = "TOGGLE_FILTER";
 const TOGGLE_FILTER_GROUP = 'TOGGLE_FILTER_GROUP';
 const ADD_FILTER_TAG = 'ADD_FILTER_TAG';
@@ -57,7 +57,7 @@ export default function reducer(state = initialState, action) {
                 filterTags: [...state.filterTags.slice(0,action.payload), ...state.filterTags.slice(action.payload+1)]
             }
         }
-        case RESET_TAGS:{
+        case RESET_TAGS: {
             return {
                 ...state,
                 filterTags: []
