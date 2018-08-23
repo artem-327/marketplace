@@ -12,7 +12,7 @@ class ComboBox extends Component {
         this.state = {
             fulltext: "",
             isOpen: false,
-            results_count: 5,
+            results_count: this.props.limit,
             results: [],
             hasSearched: false,
         }
@@ -60,9 +60,9 @@ class ComboBox extends Component {
 
     filterData(){
         let results = [];
-        for(let i = 0; i < this.props.opns.length; i++){
-            if(this.props.opns[i].name.search(new RegExp(this.state.fulltext, "i")) !== -1){
-                results.push(this.props.opns[i]);
+        for(let i = 0; i < this.props.items.length; i++){
+            if(this.props.items[i].name.search(new RegExp(this.state.fulltext, "i")) !== -1){
+                results.push(this.props.items[i]);
             }
         }
         this.setState({results})
@@ -73,8 +73,8 @@ class ComboBox extends Component {
         let results = this.renderResults();
         return (
             <div ref={this.comboRef}>
-                <div className='comboBox'>
-                    <label>Origin</label>
+                <div className={'comboBox ' + this.props.className}>
+                    <label>{this.props.label}</label>
                     <i className="fas fa-search combo-icon" />
                     <input value={fulltext} onChange={(e) => this.handleChange(e)} disabled={this.props.disabled || false} placeholder={this.props.placeholder || "Search"}/>
                     {results}
@@ -85,11 +85,14 @@ class ComboBox extends Component {
 }
 
 ComboBox.propTypes = {
-    opns: PropTypes.arrayOf(
+    items: PropTypes.arrayOf(
         PropTypes.shape({
             name: PropTypes.string,
         })
     ).isRequired,
+    className: PropTypes.string,
+    limit: PropTypes.number,
+    label: PropTypes.string,
     currentValue: PropTypes.string,
     placeholder: PropTypes.string,
     onChange: PropTypes.func,

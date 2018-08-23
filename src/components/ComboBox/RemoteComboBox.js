@@ -12,7 +12,7 @@ class RemoteComboBox extends Component {
         this.state = {
             fulltext: "",
             isOpen: false,
-            results_count: 5,
+            results_count: this.props.limit,
             hasSearched: false,
         }
     }
@@ -67,8 +67,8 @@ class RemoteComboBox extends Component {
         let results = this.renderResults();
         return (
             <div ref={this.comboRef}>
-                <div className='comboBox'>
-                    <label>Origin</label>
+                <div className={'comboBox ' + this.props.className}>
+                    <label>{this.props.label}</label>
                     <i className="fas fa-search combo-icon" />
                     <input value={fulltext} onChange={(e) => this.handleChange(e)} disabled={this.props.disabled || false} placeholder={this.props.placeholder || "Search"}/>
                     {results}
@@ -85,6 +85,9 @@ RemoteComboBox.propTypes = {
         })
     ).isRequired,
     api: PropTypes.func,
+    className: PropTypes.string,
+    limit:PropTypes.number,
+    label:PropTypes.string,
     currentValue: PropTypes.string,
     displayAttr: PropTypes.string,
     placeholder: PropTypes.string,
