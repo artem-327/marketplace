@@ -5,14 +5,10 @@ class Switcher extends Component {
     constructor(props) {
         super (props);
         this.handleChange = this.handleChange.bind(this);
-        this.state = {
-            
-        }
     }
 
     componentWillMount(){
         let checked = this.props.value;
-        console.log(this.props.value);
         this.setState({checked});
     }
 
@@ -23,7 +19,6 @@ class Switcher extends Component {
 
     handleChange(){
         this.setState({checked:!this.state.checked})
-        
         if(this.props.onChange)
                 this.props.onChange(this.state.checked);
     }
@@ -38,7 +33,6 @@ class Switcher extends Component {
             </div>
     }
 
-
     render(){
         return (
             <div className="switch-container">
@@ -46,7 +40,6 @@ class Switcher extends Component {
             </div>
         )
     }
-
 }
 
 export default Switcher;

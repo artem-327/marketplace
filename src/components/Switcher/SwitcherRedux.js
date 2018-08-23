@@ -5,12 +5,6 @@ import Switcher from './Switcher';
 
 class SwitcherRedux extends Component {
 
-    handleChange(value){
-        //const { model, dispatch } = this.props;
-        //dispatch(actions.change(model, value));
-    }
-
-
     render() {
         return <Control
             model={this.props.model}
@@ -19,7 +13,6 @@ class SwitcherRedux extends Component {
             onChange={value => this.handleChange(value)}
             {...this.props}
         />
-
     }
 }
 

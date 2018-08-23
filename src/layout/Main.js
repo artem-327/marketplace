@@ -34,7 +34,6 @@ class Main extends Component {
                     <Route exact path="/test-page" component={TestPage}/>
                     <Route exact path="/administration" component={Administration}/>
                     <Route exact path="/operator" component={Merchants}/>
-                    
                 </Switch>
             </div>
         );
