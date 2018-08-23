@@ -34,9 +34,9 @@ const reducer = combineReducers({
     
     addInventory,
     broadcastRules,
+    merchants,
     forms: combineForms({
         filter,
-        merchants,
         addProductOffer: productOffers,
         products,
         loginForm: identityFormInit.loginForm.data,

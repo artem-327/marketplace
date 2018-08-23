@@ -23,14 +23,6 @@ export default function reducer(state = initialState, action) {
                 isFetching: false
             }
         }
-
-        case UPDATE_APPROVE: {
-            return {
-                
-                ...state,
-                
-            }
-        }
         default: {
             return state
         }
