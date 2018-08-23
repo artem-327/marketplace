@@ -89,6 +89,10 @@ export default class IncrementalPricing extends Component {
         this.setState({minimum:tmpMin.toString()},() => this.validateInputs());
     }
 
+    calculateGrossMargin(){
+        
+    }
+
     renderSplits(){
         return (
             <div>
@@ -149,10 +153,7 @@ export default class IncrementalPricing extends Component {
                            onChange={(e)=>this.handleChange(e, index, 'price')}/>
                 </td>
                 <td>
-                    <input type='number'
-                           className='tieredPricing'
-                           onBlur={()=>{this.validateInputs()}}
-                           onChange={(e)=>this.handleChange(e, index, 'margin')}/>
+                    <div>{}</div>
                 </td>
                 <td>{minusButton}</td>
                 <td>{plusButton}</td>
