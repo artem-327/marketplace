@@ -5,7 +5,6 @@ const ADD_FILTER_TAG = 'ADD_FILTER_TAG';
 const CLOSE_FILTER_TAG = 'CLOSE_FILTER_TAG';
 const CLOSE_FILTER_TAG_FULFILLED = 'CLOSE_FILTER_TAG_FULFILLED';
 const RESET_FORM = 'RESET_FORM';
-const RESET_TAGS = 'RESET_TAGS';
 
 export const initialState = {
     isOpen: false,
