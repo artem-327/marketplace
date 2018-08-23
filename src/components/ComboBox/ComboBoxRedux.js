@@ -13,6 +13,9 @@ class ComboBoxRedux extends Component {
 
     render() {
         return <Control
+            className={this.props.className}
+            limit={this.props.limit}
+            label={this.props.label}
             model={this.props.model}
             placeholder={this.props.placeholder}
             component={ComboBox}
@@ -26,11 +29,14 @@ class ComboBoxRedux extends Component {
 }
 
 ComboBoxRedux.propTypes = {
-    opns: PropTypes.arrayOf(
+    items: PropTypes.arrayOf(
         PropTypes.shape({
             name: PropTypes.string,
         })
     ).isRequired,
+    className: PropTypes.string,
+    limit: PropTypes.number,
+    label: PropTypes.string,
     currentValue: PropTypes.string,
     placeholder: PropTypes.string,
     onChange: PropTypes.func,
