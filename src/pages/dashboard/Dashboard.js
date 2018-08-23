@@ -3,7 +3,6 @@ import './dashboard.css'
 import ConMess from '../../components/constructionMessage';
 
 class Dashboard extends Component {
-
     render() {
         return (
             <div>

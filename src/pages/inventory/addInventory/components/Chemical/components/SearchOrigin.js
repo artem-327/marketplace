@@ -19,6 +19,7 @@ class SearchOrigin extends Component {
     }
 
     componentWillMount(){
+        this.props.fetchOrigin();
         document.addEventListener('mousedown', this.handleClickOutside, false);
     }
 
@@ -69,7 +70,7 @@ class SearchOrigin extends Component {
                 <div className='search-origin'>
                     <label>Origin</label>
                     <i className="fas fa-search search-icon" onClick={()=>{this.searchOrigin()}}/>
-                    <input value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Search' ref={this.originRef}/>
+                    <input disabled={this.props.disable} value={fulltext} onChange={(e) => this.handleChange(e)} placeholder='Search' ref={this.originRef}/>
                     {results}
                 </div>
             </div>

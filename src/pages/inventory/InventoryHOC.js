@@ -21,6 +21,7 @@ export default function InventoryHOC(ComposedComponent) {
                 }
             ]
         }
+
         render() {
             let filter = this.props.location.pathname !== '/inventory/add-inventory/';
             return (

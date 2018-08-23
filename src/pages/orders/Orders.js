@@ -4,14 +4,6 @@ import ConMess from '../../components/constructionMessage';
 import './orders.css'
 
 class Orders extends Component {
-
-    componentDidMount() {
-
-    }
-    componentWillUnmount() {
-
-    }
-
     render() {
         return (
             <div>

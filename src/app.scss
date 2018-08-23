@@ -6,6 +6,10 @@ $app-font-family: 'AvenirLTPro-Roman', sans-serif;
   font-family: $app-font-family;
 }
 
+.capitalize{
+  text-transform: capitalize;
+}
+
 .clearfix{
   clear: both;
 }

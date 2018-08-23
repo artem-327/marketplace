@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-//Veškeré konstanty pro tento reducer
 const GET_MERCHANT = 'GET_MERCHANT';
 const ACCEPT_MERCHANT = 'ACCEPT_MERCHANT';
 const REJECT_MERCHANT = 'REJECT_MERCHANT';

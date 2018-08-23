@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import AcceptTableButton from './merchants/components/AcceptTableButton';
 import RejectTableButton from './merchants/components/AcceptTableButton';
-// import classnames from 'classnames';
 
 class Merchants extends Component {
 
@@ -16,7 +15,6 @@ class Merchants extends Component {
     rejectMerchants(id){
         this.props.rejectMerchant(id)
     }
-
 
     renderMerchants () {
         return this.props.data.map((item, index)=>{

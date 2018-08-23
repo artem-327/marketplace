@@ -4,7 +4,6 @@ import moment from "moment";
 import AddCart from '../../../../components/Cart/AddCart'
 import {DATE_FORMAT} from "../../../../utils/constants";
 import Checkbox from "../../../../components/Checkbox/Checkbox";
-import {capitalizeFirstLetter} from "../../../../utils/functions";
 class ProductOffers extends Component {
 
     constructor(props) {
@@ -76,8 +75,7 @@ class ProductOffers extends Component {
                             </td>
                             <td colSpan="12">
                                 <span className="product-casnumber">{product.casNumber}</span>
-                                <span className="product-name">{capitalizeFirstLetter(product.casIndexName)}</span>
-                                <span className="product-name">{product.primaryName}</span>
+                                <span className="product-name capitalize">{product.casIndexName}</span>
                             </td>
                             <td colSpan="3" className="quantity">
                                 <span>Total Qty: 100</span>
@@ -87,7 +85,6 @@ class ProductOffers extends Component {
                         );
                         if(product.visible){
                             product.productOffers.forEach((offer) => {
-                                console.log(offer);
                                 rows.push(
                                     <tr className="product-offer" key={offer.id}>
                                         <td><Checkbox onChange={(value) => {console.log(value)}}/></td>

@@ -6,6 +6,7 @@ import FilterTag from "../../components/Filter/components/FilterTag/FilterTag";
 import ThreeDots from "../../components/ThreeDots/ThreeDots";
 import KeepShopping from "../../components/KeepShopping";
 import DatepickerRedux from "../../components/Datepicker/DatepickerRedux";
+import RemoteComboBox from "../../components/ComboBox/RemoteComboBox";
 
 class TestPage extends Component {
 
@@ -34,6 +35,7 @@ class TestPage extends Component {
                     <FilterTag/>
                     <br />
                     <DatepickerRedux placeholder={'test'} dispatch={this.props.dispatch} onChange={(value)=>console.log(value)} model='forms.addProductOffer.addProductOffer.test' />
+                    <RemoteComboBox items={this.props.searchProductsItems} api={(fulltext)=>{this.props.searchProducts(fulltext)}} displayAttr="chemicalName"/>
                 </div>
             </div>
         )

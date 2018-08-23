@@ -4,13 +4,6 @@ import ConMess from '../../components/constructionMessage';
 
 class Clients extends Component {
 
-    componentDidMount() {
-
-    }
-    componentWillUnmount() {
-
-    }
-
     render() {
         return (
             <div>
