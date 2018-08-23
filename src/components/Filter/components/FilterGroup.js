@@ -76,7 +76,7 @@ class FilterGroup extends Component {
                     )
                 }
                 case 'radio' : {
-                    
+
                     return (
                         <div key={index} className='filter-input-radio'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>
@@ -108,6 +108,7 @@ class FilterGroup extends Component {
         }) : null;
     }
 
+    //TODO::refactor render
     render() {
         if(!this.props.isVisible) return null;
         return (

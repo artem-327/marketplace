@@ -2,6 +2,9 @@
 .App {
   font-family: "AvenirLTPro-Roman", sans-serif; }
 
+.capitalize {
+  text-transform: capitalize; }
+
 .clearfix {
   clear: both; }
 

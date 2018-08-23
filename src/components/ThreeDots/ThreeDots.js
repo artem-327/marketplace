@@ -3,7 +3,9 @@ import './threeDots.css';
 import PropTypes from "prop-types";
 
 const ThreeDots = props => {
-        return <div className="open-menu"><span className={"threeDots " + (props.className || '')}></span></div>
+        return <div className="open-menu">
+            <span className={"threeDots " + (props.className || '')} />
+        </div>
 };
 
 ThreeDots.propTypes = {

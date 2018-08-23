@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import AcceptTableButton from './merchants/components/AcceptTableButton';
 import RejectTableButton from './merchants/components/AcceptTableButton';
-// import classnames from 'classnames';
 
 class Merchants extends Component {
 
@@ -17,10 +16,8 @@ class Merchants extends Component {
         this.props.rejectMerchant(id)
     }
 
-
     renderMerchants () {
         return this.props.data.data.merchants.map((item, index)=>{
-            // bud if nebo ternarni operator
 
             let approve = null;
             if (item.approve) {

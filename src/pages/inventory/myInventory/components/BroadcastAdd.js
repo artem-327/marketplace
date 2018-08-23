@@ -3,7 +3,6 @@ import React, {Component} from 'react';
 class BroadcastAdd extends Component {
 
     constructor(props){
-        
         super(props)
         this.submitRules = this.submitRules.bind(this);
         this.state = {
