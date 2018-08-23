@@ -4,7 +4,6 @@ import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerRedux";
 import './ProductOffering.css'
 import {required, messages, min, isNumber} from "../../../../../../utils/validation";
-import unitedStates from "../../../../../../components/unitedStates";
 import ComboBoxRedux from "../../../../../../components/ComboBox/ComboBoxRedux";
 
 
@@ -21,6 +20,7 @@ export default class ProductOffering extends Component {
         this.props.fetchProductForms();
         this.props.fetchProductGrade();
         this.props.fetchProductConditions();
+        this.props.fetchOrigin();
         if(this.state.firstValue) localStorage.removeItem('productLots');
     }
 
@@ -113,7 +113,7 @@ export default class ProductOffering extends Component {
                                     required: messages.required,
                                 }}
                             />
-                            <ComboBoxRedux opns={unitedStates} validators={{required}} model="forms.productOffering.origin" dispatch={this.props.dispatch}/>
+                            <ComboBoxRedux className="origin" label="Origin" limit={5} items={this.props.originData} validators={{required}} model="forms.productOffering.origin" dispatch={this.props.dispatch}/>
                         </div>
                         <Errors
                             className="form-error"
