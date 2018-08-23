@@ -37,7 +37,7 @@ export default class Pricing extends Component {
         
         let incremental = this.state.incrementalPricing ?
             <div className='incremental-wr'>
-                <IncrementalPricing splits={15} minimum={20} />
+                <IncrementalPricing cost={this.props.form.addProductOffer.pricing.cost} />
             </div>
             : null;
         

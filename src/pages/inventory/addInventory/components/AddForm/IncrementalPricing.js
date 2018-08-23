@@ -8,7 +8,7 @@ export default class IncrementalPricing extends Component {
             minimum: '0',
             unit: 'lb',
             incrementalPricing: [{
-                from: this.props.minimum,
+                from: '',
                 to: '',
                 price: ''
             }]
@@ -89,8 +89,14 @@ export default class IncrementalPricing extends Component {
         this.setState({minimum:tmpMin.toString()},() => this.validateInputs());
     }
 
-    calculateGrossMargin(){
-        
+    calculateGrossMargin(index){
+        console.log(this.state.incrementalPricing[index], this.props.cost);
+        let margin = ((this.state.incrementalPricing[index].price - parseInt(this.props.cost,10)) / this.state.incrementalPricing[index].price * 100);
+        console.log(margin);
+        if(isNaN(margin) || margin < 0){
+            return " ";
+        }
+        return margin.toFixed(2);
     }
 
     renderSplits(){
@@ -153,7 +159,7 @@ export default class IncrementalPricing extends Component {
                            onChange={(e)=>this.handleChange(e, index, 'price')}/>
                 </td>
                 <td>
-                    <div>{}</div>
+                    <div>{this.calculateGrossMargin(index)}%</div>
                 </td>
                 <td>{minusButton}</td>
                 <td>{plusButton}</td>
