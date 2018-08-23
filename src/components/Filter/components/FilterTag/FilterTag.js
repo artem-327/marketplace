@@ -14,14 +14,10 @@ class FilterTag extends Component {
             case 'qntyub': return 'To Quantity';
             case 'prclb': return 'From Price';
             case 'prcub': return 'To Price';
-<<<<<<< src/components/Filter/components/FilterTag/FilterTag.js
-            case 'pckgs':return 'Package type';
-=======
             case 'pckgs': return 'Package type';
             case 'chemSearch': return 'Chemical search';
             case 'productAge': return 'Product Age';
             case 'loc': return 'Location';
->>>>>>> src/components/Filter/components/FilterTag/FilterTag.js
             default: return 'unknown';
         }
     }
