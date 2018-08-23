@@ -4,7 +4,8 @@ export default class IncrementalPricing extends Component {
     constructor(props){
         super(props);
         this.state = {
-            splits: this.props.splits,
+            splits: 0,
+            minimum: 0,
             unit: 'lb',
             incrementalPricing: [{
                 from: this.props.minimum,
@@ -63,6 +64,43 @@ export default class IncrementalPricing extends Component {
         }, ()=>this.validateInputs())
     }
 
+    splitsMinimumChange(e){
+        var newstate = {};
+        newstate[e.target.className] = e.target.value;
+        this.setState(newstate);
+    }
+    
+    validateSplitsMinimum(){
+        let newsplit = this.state.splits;
+        if (this.state.minimum > this.state.splits){
+            newsplit = this.state.minimum;
+        }
+        this.setState({splits:newsplit});
+    }
+
+    renderSplits(){
+        return (
+            <div>
+                <label>Splits</label>
+                <input
+                    className='splits'
+                    type='number'
+                    onChange={e => this.splitsMinimumChange(e)}
+                    onBlur={()=> this.validateSplitsMinimum()}
+                    min={this.state.minimum}
+                />
+                <label>Minimum</label>
+                <input
+                    className='minimum'    
+                    type='number'
+                    onChange={e => this.splitsMinimumChange(e)}
+                    onBlur={()=> this.validateSplitsMinimum()}
+                />
+            </div>
+        )
+           
+    }
+
     renderIncrementalPricing(){
         return this.state.incrementalPricing.map((item, index)=>{
             let plusButton = (item.to !== '' && item.price !== '' && index === this.state.incrementalPricing.length-1) ?
@@ -109,20 +147,24 @@ export default class IncrementalPricing extends Component {
 
     render() {
         return(
-            <table className='incremental-pricing-table'>
-                <thead>
-                    <tr>
-                        <th>Quantity From</th>
-                        <th>Quantity To</th>
-                        <th>Price per lb {this.props.unit}</th>
-                        <th>Gross Margin %</th>
-                        <th> </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.renderIncrementalPricing()}
-                </tbody>
-            </table>
+            <div>
+                {this.renderSplits()}
+                <h4>Tiered Pricing</h4>
+                <table className='incremental-pricing-table'>
+                    <thead>
+                        <tr>
+                            <th>Quantity From</th>
+                            <th>Quantity To</th>
+                            <th>Price per lb {this.props.unit}</th>
+                            <th>Gross Margin %</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.renderIncrementalPricing()}
+                    </tbody>
+                </table>
+            </div>
         )
     }
 }
