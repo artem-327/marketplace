@@ -15,6 +15,7 @@ import filter, {initialState as filterInit} from './modules/filter';
 import packageTypes from './modules/packageTypes';
 import cart from "./modules/cart";
 import broadcastRules from "./modules/broadcastRule";
+import merchants from "./modules/merchants";
 import products, {initialState as productsInit} from './modules/products';
 
 //TODO::unite forms reducers
@@ -29,6 +30,7 @@ const reducer = combineReducers({
     cart,
     popup,
     broadcastRules,
+    merchants,
     filter,
     forms: combineForms({
         filter: filterInit.data,

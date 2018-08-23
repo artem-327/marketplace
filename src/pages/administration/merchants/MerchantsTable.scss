@@ -1,0 +1,17 @@
+.merchant-table{
+   // border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 640px;
+    table-layout: fixed;
+
+    .merch-header-item{
+        //border: 1px solid #CCC;
+        height: 30px; 
+        background: #F3F3F3;
+        font-weight: bold;
+        text-align: center;
+    }
+}
+
