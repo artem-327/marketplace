@@ -34,6 +34,7 @@ ComboBoxRedux.propTypes = {
             name: PropTypes.string,
         })
     ).isRequired,
+    getObject: PropTypes.func,
     className: PropTypes.string,
     limit: PropTypes.number,
     label: PropTypes.string,

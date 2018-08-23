@@ -4,7 +4,7 @@ import debounce from "debounce";
 import PropTypes from "prop-types";
 
 class RemoteComboBox extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.filterData = debounce(this.filterData, 200);
         this.handleClickOutside = this.handleClickOutside.bind(this);
@@ -17,19 +17,19 @@ class RemoteComboBox extends Component {
         }
     }
 
-    componentWillMount(){
+    componentWillMount() {
         document.addEventListener('mousedown', this.handleClickOutside, false);
     }
 
-    componentDidMount(){
-        if(this.props.currentValue){
-            this.setState({fulltext: this.props.currentValue}, ()=>{
-                if(this.props.onChange) this.props.onChange(this.state.fulltext);
+    componentDidMount() {
+        if (this.props.currentValue) {
+            this.setState({fulltext: this.props.currentValue}, () => {
+                if (this.props.onChange) this.props.onChange(this.state.fulltext);
             })
         }
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         document.removeEventListener('mousedown', this.handleClickOutside, false);
     }
 
@@ -39,17 +39,23 @@ class RemoteComboBox extends Component {
     }
 
     renderResults() {
-        if(!this.state.hasSearched || !this.state.isOpen) return;
-        if (this.props.items.length === 0) return  <div className={'combo-results'} style={{maxHeight: 44 * this.state.results_count}}><p className='combo-no-result'>No results</p></div>;
+        if (!this.state.hasSearched || !this.state.isOpen) return;
+        if (this.props.items.length === 0) return <div className={'combo-results'}
+                                                       style={{maxHeight: 44 * this.state.results_count}}><p
+            className='combo-no-result'>No results</p></div>;
         console.log(this.props.items);
         let res = this.props.items.map((combo, index) => (
-            <div key={index + combo.id} className='combo-item' onClick={() => {this.setState({fulltext: (combo[this.props.displayAttr] || combo.name), hasSearched: false}, ()=>{
-                if(this.props.onChange) this.props.onChange(this.state.fulltext);
-            })}}>
+            <div key={index + combo.id} className='combo-item' onClick={() => {
+                this.setState({fulltext: (combo[this.props.displayAttr] || combo.name), hasSearched: false}, () => {
+                    if (this.props.onChange) this.props.onChange(this.state.fulltext);
+                    if (this.props.getObject) this.props.getObject(combo);
+
+                })
+            }}>
                 <span className='combo-cas'>{(combo[this.props.displayAttr] || combo.name)}</span>
             </div>
         ));
-        return <div className={'combo-results'} style={{maxHeight: 44* this.state.results_count}}>{res}</div>
+        return <div className={'combo-results'} style={{maxHeight: 44 * this.state.results_count}}>{res}</div>
     }
 
     handleChange(e) {
@@ -58,7 +64,7 @@ class RemoteComboBox extends Component {
         });
     }
 
-    filterData(){
+    filterData() {
         this.props.api(this.state.fulltext);
     }
 
@@ -66,13 +72,12 @@ class RemoteComboBox extends Component {
         let {fulltext} = this.state;
         let results = this.renderResults();
         return (
-            <div ref={this.comboRef}>
-                <div className={'comboBox ' + this.props.className}>
-                    <label>{this.props.label}</label>
-                    <i className="fas fa-search combo-icon" />
-                    <input value={fulltext} onChange={(e) => this.handleChange(e)} disabled={this.props.disabled || false} placeholder={this.props.placeholder || "Search"}/>
-                    {results}
-                </div>
+            <div className={'comboBox ' + this.props.className} ref={this.comboRef}>
+                <label>{this.props.label}</label>
+                <i className="fas fa-search combo-icon"/>
+                <input value={fulltext} onChange={(e) => this.handleChange(e)} disabled={this.props.disabled || false}
+                       placeholder={this.props.placeholder || "Search"}/>
+                {results}
             </div>
         );
     }
@@ -84,10 +89,11 @@ RemoteComboBox.propTypes = {
             name: PropTypes.string,
         })
     ).isRequired,
+    getObject: PropTypes.func,
     api: PropTypes.func,
     className: PropTypes.string,
-    limit:PropTypes.number,
-    label:PropTypes.string,
+    limit: PropTypes.number,
+    label: PropTypes.string,
     currentValue: PropTypes.string,
     displayAttr: PropTypes.string,
     placeholder: PropTypes.string,
