@@ -99,7 +99,7 @@ export function addProductOffer({lotNumber, name, merchantVisibility, product, p
     };
     return {
         type: ADD_PRODUCT_OFFER,
-        payload: axios.post('/api/v1/product-offers/', obj).catch(it => console.log(it))
+        payload: axios.post('/api/v1/product-offers/', obj)
     }
 }
 
