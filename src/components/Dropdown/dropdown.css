@@ -13,9 +13,9 @@
       transform: rotate(180deg);
       margin: 8px 4px 0 0;
       width: 13px; }
-    .dropdown-wr .dropdown-trigger.disable {
+    .dropdown-wr .dropdown-trigger.disabled {
       background-color: #ebebe4; }
-      .dropdown-wr .dropdown-trigger.disable:hover, .dropdown-wr .dropdown-trigger.disable:focus {
+      .dropdown-wr .dropdown-trigger.disabled:hover, .dropdown-wr .dropdown-trigger.disabled:focus {
         border-color: #B0B0B0;
         cursor: not-allowed;
         box-shadow: none;
