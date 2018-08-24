@@ -9,14 +9,16 @@ class SearchProducts extends Component {
             <div className="test">
                 <h6>CHEMICAL SEARCH</h6>
 
-                    <RemoteComboBox items={this.props.searchedProducts} api={(text) => this.props.searchProducts(text)}
-                                    className="cas-search" limit={5} placeholder="Search" label="CAS Search"
-                                    getObject={(product) => this.props.onSelect(product)} displayAttr="chemicalName"/>
+                <RemoteComboBox items={this.props.searchedProducts} api={(text) => this.props.searchProducts(text)}
+                                className="cas-search" limit={5} placeholder="Search" label="CAS Search"
+                                isFetching={this.props.isSearching}
+                                getObject={(product) => this.props.onSelect(product)} displayAttr="chemicalName"/>
 
-                    <RemoteComboBox items={this.props.mappedProducts} api={(text) => this.props.mapProducts(text)}
-                                    className="map-search" limit={5} placeholder="Search" label="Mapped Products Search"
-                                    getObject={(productTemplate) => this.props.onSelectProductMapping(productTemplate)}
-                                    displayAttr="productName"/>
+                <RemoteComboBox items={this.props.mappedProducts} api={(text) => this.props.mapProducts(text)}
+                                isFetching={this.props.isMapping}
+                                className="map-search" limit={5} placeholder="Search" label="Mapped Products Search"
+                                getObject={(productTemplate) => this.props.onSelectProductMapping(productTemplate)}
+                                displayAttr="productName"/>
 
             </div>
         );
