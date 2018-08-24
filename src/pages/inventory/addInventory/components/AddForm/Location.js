@@ -146,7 +146,7 @@ export default class Location extends Component {
                     <div className='group-item-wr'>
                         <label>State</label>
                         <Dropdown opns={this.props.locations}
-                                  disable={!this.state.edit}
+                                  disabled={!this.state.edit}
                                   currentValue={this.getCurrentValueById(this.state.state, this.props.locations)}
                                   onChange={(value) => {this.handleInputs(value, 'state')}}/>
                     </div>
