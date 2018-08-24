@@ -30,6 +30,9 @@
   border-radius: 0 0 4px 4px;
   margin-top: -3px;
   overflow-y: auto; }
+  .combo-results .spinner {
+    margin-top: 11px;
+    margin-bottom: 6px; }
   .combo-results .combo-no-result {
     padding: 10px;
     margin: 0; }

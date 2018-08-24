@@ -2,11 +2,13 @@ import React, {Component} from 'react';
 import './ComboBox.css';
 import debounce from "debounce";
 import PropTypes from "prop-types";
+import {DEBOUNCE_TIME} from "../../utils/constants";
+import Spinner from "../Spinner/Spinner";
 
 class ComboBox extends Component {
     constructor(props) {
         super(props);
-        this.filterData = debounce(this.filterData, 200);
+        this.filterData = debounce(this.filterData, DEBOUNCE_TIME);
         this.handleClickOutside = this.handleClickOutside.bind(this);
         this.comboRef = React.createRef();
         this.state = {
@@ -41,6 +43,7 @@ class ComboBox extends Component {
 
     renderResults() {
         if (!this.state.hasSearched || !this.state.isOpen) return;
+        if(this.props.isFetching) return <div className="combo-results"><Spinner /></div>;
         if (this.state.results.length === 0) return <div className={'combo-results'}
                                                          style={{maxHeight: 44 * this.state.results_count}}><p
             className='combo-no-result'>No results</p></div>;
@@ -98,6 +101,7 @@ ComboBox.propTypes = {
     className: PropTypes.string,
     limit: PropTypes.number,
     label: PropTypes.string,
+    isFetching: PropTypes.bool,
     currentValue: PropTypes.string,
     placeholder: PropTypes.string,
     onChange: PropTypes.func,
