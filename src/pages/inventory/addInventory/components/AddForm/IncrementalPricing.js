@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import './IncrementalPricing.css';
 
 export default class IncrementalPricing extends Component {
     constructor(props){
@@ -102,24 +103,28 @@ export default class IncrementalPricing extends Component {
     renderSplits(){
         return (
             <div>
-                <label>Splits</label>
-                <input
-                    className='splits'
-                    type='number'
-                    value={this.state.splits}
-                    min={'1'}
-                    onChange={e => this.splitsMinimumChange(e)}
-                    onBlur={()=> this.validateMinimum()}
-                />
-                <label>Minimum</label>
-                <input
-                    className='minimum'    
-                    type='number'
-                    min={'0'}
-                    value={this.state.minimum}
-                    onChange={e => this.splitsMinimumChange(e)}
-                    onBlur={()=> this.validateMinimum()}
-                />
+                <div className='inc-pricing-splits'>
+                    <label>Splits</label>
+                    <input
+                        className='splits'
+                        type='number'
+                        value={this.state.splits}
+                        min={'1'}
+                        onChange={e => this.splitsMinimumChange(e)}
+                        onBlur={()=> this.validateMinimum()}
+                    />
+                </div>
+                <div className='inc-pricing-splits'>
+                    <label>Minimum</label>
+                    <input
+                        className='minimum'    
+                        type='number'
+                        min={'0'}
+                        value={this.state.minimum}
+                        onChange={e => this.splitsMinimumChange(e)}
+                        onBlur={()=> this.validateMinimum()}
+                    />
+                </div>
             </div>
         )
            
