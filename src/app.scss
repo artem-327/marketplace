@@ -6,6 +6,10 @@ $app-font-family: 'AvenirLTPro-Roman', sans-serif;
   font-family: $app-font-family;
 }
 
+.capitalize{
+  text-transform: capitalize;
+}
+
 .clearfix{
   clear: both;
 }
@@ -211,6 +215,41 @@ input {
   }
 }
 
+.errors-handler{
+  position: fixed;
+  z-index: 999;
+  text-align: center;
+  width: 100%;
+  bottom: 200px;
+  .error-close{
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    z-index: 1000;
+    right: 4px;
+    top: 4px;
+    background: url("./images/cross.svg") no-repeat center center;
+    background-size: contain;
+    transition: all .2s ease;
+    &:hover{
+      transform: rotate(-180deg);
+      cursor: pointer;
+    }
+  }
+  .error-item{
+    p{
+      position: relative;
+      -webkit-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.2);
+      -moz-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.2);
+      box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.2);
+      padding: 10px 30px;
+      background-color: #e0463c;
+      border-radius: 6px;
+      display: inline-block;
+      color: white;
+    }
+  }
+}
 
 
 

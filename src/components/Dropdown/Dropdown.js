@@ -19,7 +19,7 @@ class Dropdown extends Component {
 
     setCurrentValue(id, val){
         this.setState({currentValue: val, isOpen: false}, ()=>{
-            if(this.props.onCustomChange) this.props.onCustomChange(id);
+            if(this.props.onChange) this.props.onChange(id);
         })
     }
 
@@ -53,10 +53,15 @@ class Dropdown extends Component {
     }
 
     renderDropdown(opt){
-        if(this.props.disable) return;
+        if(this.props.disabled) return;
         return opt.map((option, index)=>{
             return <li key={index + 'dropdown'} onClick={()=>{this.setCurrentValue(option.id, option.name)}}>{option.name}</li>
         });
+    }
+
+    toggleDropdown(){
+        if(this.props.disabled) return;
+        this.setState({isOpen: !this.state.isOpen})
     }
 
     render() {
@@ -67,7 +72,7 @@ class Dropdown extends Component {
             </ul> : null;
         return (
             <div className='dropdown-wr' ref={this.dropdownRef} >
-                <div className={'dropdown-trigger ' + classnames({'disable' : this.props.disable, 'open' : isOpen})} onClick={()=>{this.setState({isOpen: !this.state.isOpen})}}>
+                <div className={'dropdown-trigger ' + classnames({'disabled' : this.props.disabled, 'open' : isOpen})} onClick={()=>this.toggleDropdown()}>
                     <div>{currentValue || this.props.placeholder || 'Select'}<img alt="up" src={ArrowUp} /></div>
                 </div>
                 {options}
@@ -84,8 +89,8 @@ Dropdown.propTypes = {
     ).isRequired,
     currentValue: PropTypes.string,
     placeholder: PropTypes.string,
-    onCustomChange: PropTypes.func,
-    disable: PropTypes.bool,
+    onChange: PropTypes.func,
+    disabled: PropTypes.bool,
 };
 
 

@@ -16,11 +16,11 @@ export default class Pricing extends Component {
 
     componentWillReceiveProps(nextProps){
 
-            if(typeof nextProps.form.addProductOffer.pricing === "undefined"){
+            if(typeof nextProps.form.pricing === "undefined"){
                 this.setState({margin:" "});
                 return;
             }
-            let total = ((parseInt(nextProps.form.addProductOffer.pricing.price,10)-parseInt(nextProps.form.addProductOffer.pricing.cost,10)) / parseInt(nextProps.form.addProductOffer.pricing.price,10)) * 100;
+            let total = ((parseInt(nextProps.form.pricing.price,10)-parseInt(nextProps.form.pricing.cost,10)) / parseInt(nextProps.form.pricing.price,10)) * 100;
 
             if(isNaN(total) || total < 0){
                 this.setState({margin:" "});

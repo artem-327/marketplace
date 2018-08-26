@@ -1,20 +1,28 @@
-.search-origin {
+.comboBox {
   width: 192px;
   display: inline-block;
   position: relative; }
-  .search-origin .search-icon {
+  .comboBox.cas-search {
+    width: calc(50% - 25px);
+    margin: 0 15px 12px 10px;
+    z-index: +2; }
+  .comboBox.map-search {
+    width: calc(50% - 25px);
+    margin: 0 15px 12px 10px;
+    z-index: +2; }
+  .comboBox .combo-icon {
     position: absolute;
     top: 32px;
     left: 11px;
     color: #a9a9a9;
     font-size: 18px; }
-  .search-origin input {
+  .comboBox input {
     width: 100%;
     padding-left: 40px; }
-  .search-origin button {
+  .comboBox button {
     width: 200px; }
 
-.origin-results {
+.combo-results {
   position: absolute;
   width: 100%;
   background-color: white;
@@ -22,13 +30,16 @@
   border-radius: 0 0 4px 4px;
   margin-top: -3px;
   overflow-y: auto; }
-  .origin-results .origin-no-result {
+  .combo-results .spinner {
+    margin-top: 11px;
+    margin-bottom: 6px; }
+  .combo-results .combo-no-result {
     padding: 10px;
     margin: 0; }
-  .origin-results .search-origin-item {
+  .combo-results .combo-item {
     padding: 10px; }
-    .origin-results .search-origin-item:hover {
+    .combo-results .combo-item:hover {
       cursor: pointer;
       background-color: #eeeeee; }
-    .origin-results .search-origin-item .search-cas {
+    .combo-results .combo-item .combo-cas {
       margin-right: 10px; }

@@ -8,16 +8,18 @@ import { combineForms } from 'react-redux-form';
 
 import identity, {initialState as identityFormInit} from './modules/identity';
 import location from './modules/location';
-import search, {initialState as searchFormInit} from './modules/search';
 import companies from './modules/companies';
-import productOffers from './modules/productOffers';
+import productOffers, {initialState as addProductsInit} from './modules/productOffers';
 import popup from './modules/popup';
-import filter from './modules/filter';
+import filter, {initialState as filterInit} from './modules/filter';
 import packageTypes from './modules/packageTypes';
 import cart from "./modules/cart";
 import broadcastRules from "./modules/broadcastRule";
+import merchants from "./modules/merchants";
 import products, {initialState as productsInit} from './modules/products';
+import errors from "./modules/errors";
 
+//TODO::unite forms reducers
 const reducer = combineReducers({
     identity,
     companies,
@@ -27,17 +29,18 @@ const reducer = combineReducers({
     products,
     packageTypes,
     cart,
-    search,
     popup,
     broadcastRules,
+    merchants,
+    filter,
+    errors,
     forms: combineForms({
-        filter,
-        addProductOffer: productOffers,
+        filter: filterInit.data,
+        addProductOffer: addProductsInit.addProductOffer,
         productMapping: productsInit.productsMapping,
         productOffering: productsInit.productOffering,
         loginForm: identityFormInit.loginForm.data,
         registrationForm: identityFormInit.registrationForm.data,
-        searchForm: searchFormInit.searchForm.data,
     }, 'forms'),
 });
 

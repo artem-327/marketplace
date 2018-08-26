@@ -1,18 +1,11 @@
 import React, {Component} from 'react';
-// import { Translate } from 'react-localize-redux';
 import '../cart.css';
 import Dropdown from "../../Dropdown/Dropdown";
 
-class AddCart extends Component {
-
-    componentDidMount(){
-        //this.props.getCurrentAdded(this.props.id)
-    }
+export default class AddCart extends Component {
 
     render() {
-        
         return (
-            
             <div className="add-cart">
                 <div className="add-cart-header">
                     <div>PURCHASE</div>
@@ -64,19 +57,3 @@ class AddCart extends Component {
         );
     }
 }
-
-AddCart.propTypes = {
-    // links: PropTypes.arrayOf(
-    //     PropTypes.shape({
-    //         label: PropTypes.string,
-    //         url: PropTypes.string,
-    //         class: PropTypes.string,
-    //         exact: PropTypes.bool,
-    //     })
-    // ),
-    // search: PropTypes.bool,
-    // filter: PropTypes.bool,
-};
-
-
-export default AddCart;

@@ -1,0 +1,38 @@
+import React from 'react';
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {closeMessage} from "../modules/errors";
+
+export default function errorsHandler(ComposedComponent) {
+    class errorWrapper extends React.Component {
+
+        renderErrors(){
+            let errors = this.props.messages.map((message, index) => {
+                return <div key={index} className="error-item">
+                    <p><span className="error-close" onClick={()=>this.props.closeMessage(index)}/>{message}</p>
+                </div>
+            });
+            return <div className="errors-handler">{errors}</div>
+        }
+
+        render() {
+            return <div className="main-wr">
+                {this.renderErrors()}
+                <ComposedComponent {...this.props}/>
+            </div>
+        }
+    }
+
+    function mapStateToProps(store) {
+        return {
+            messages: store.errors.messages
+        }
+    }
+
+    function mapDispatchToProps(dispatch){
+        return bindActionCreators({closeMessage},dispatch)
+    }
+
+    return connect(mapStateToProps, mapDispatchToProps)(errorWrapper)
+}
+

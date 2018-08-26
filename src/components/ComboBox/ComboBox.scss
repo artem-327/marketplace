@@ -1,9 +1,19 @@
-.search-origin{
+.comboBox{
   width: 192px;
   display: inline-block;
   //min-width: 500px;
   position: relative;
-  .search-icon{
+  &.cas-search{
+    width: calc(50% - 25px);
+    margin: 0 15px 12px 10px;
+    z-index: +2;
+  }
+  &.map-search{
+    width: calc(50% - 25px);
+    margin: 0 15px 12px 10px;
+    z-index: +2;
+  }
+  .combo-icon{
     position: absolute;
     top: 32px;
     left: 11px;
@@ -18,7 +28,7 @@
     width: 200px;
   }
 }
-.origin-results{
+.combo-results{
   position: absolute;
   width: 100%;
   background-color: white;
@@ -26,17 +36,21 @@
   border-radius: 0 0 4px 4px;
   margin-top: -3px;
   overflow-y: auto;
-  .origin-no-result{
+  .spinner{
+    margin-top: 11px;
+    margin-bottom: 6px;
+  }
+  .combo-no-result{
     padding: 10px;
     margin: 0;
   }
-  .search-origin-item{
+  .combo-item{
     padding: 10px;
     &:hover{
       cursor: pointer;
       background-color: #eeeeee;
     }
-    .search-cas{
+    .combo-cas{
       margin-right: 10px;
       //float: right;
     }

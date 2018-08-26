@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerRedux";
-import SearchOrigin from "./SearchOrigin";
 import './ProductOffering.css'
 import {required, messages, min, isNumber} from "../../../../../../utils/validation";
+import ComboBoxRedux from "../../../../../../components/ComboBox/ComboBoxRedux";
 
 
 export default class ProductOffering extends Component {
@@ -20,6 +20,7 @@ export default class ProductOffering extends Component {
         this.props.fetchProductForms();
         this.props.fetchProductGrade();
         this.props.fetchProductConditions();
+        this.props.fetchOrigin();
         if(this.state.firstValue) localStorage.removeItem('productLots');
     }
 
@@ -100,11 +101,20 @@ export default class ProductOffering extends Component {
                             <label htmlFor=".manufacturer">Manufacturer</label>
                             <Control.text model=".manufacturer"
                                           validators={{required}}
-                                          id=".manufacturer"/>
+                                          id=".manufacturer"
+                                          />
                         </div>
 
                         <div className='group-item-wr'>
-                            <SearchOrigin {...this.props}/>
+                            <Errors
+                                className="form-error"
+                                model="forms.productOffering.origin"
+                                show="touched"
+                                messages={{
+                                    required: messages.required,
+                                }}
+                            />
+                            <ComboBoxRedux className="origin" label="Origin" limit={5} items={this.props.originData} validators={{required}} model="forms.productOffering.origin" dispatch={this.props.dispatch}/>
                         </div>
                         <Errors
                             className="form-error"
@@ -119,21 +129,20 @@ export default class ProductOffering extends Component {
                             <DropdownRedux opns={this.props.productForms} placeholder='Select'
                                            model="forms.productOffering.productForm"
                                            validators={{required}}
-                                           dispatch={this.props.dispatch}/>
+                                           dispatch={this.props.dispatch}
+                                           />
                         </div>
                         <Errors
                             className="form-error"
                             model=".name"
                             show="touched"
-                            messages={{
-                                required: messages.required,
-                            }}
                         />
                         <div className='group-item-wr'>
                             <label htmlFor=".tradeName">Trade Name</label>
                             <Control.text model=".name"
                                           validators={{required}}
-                                          id=".tradeName"/>
+                                          id=".tradeName"
+                                          />
                         </div>
                         <div>
                             <Errors
@@ -150,7 +159,8 @@ export default class ProductOffering extends Component {
                             <label htmlFor=".assayMin">Assay Min %</label>
                             <Control.text model=".assayMin"
                                           validators={{min: (val) => min(val, 0), isNumber, required}}
-                                          id=".assayMin"/>
+                                          id=".assayMin"
+                                          />
                         </div>
                             <Errors
                                 className="form-error"
@@ -166,7 +176,8 @@ export default class ProductOffering extends Component {
                                 <label htmlFor=".assayMax">Assay Max %</label>
                                 <Control.text model=".assayMax"
                                               validators={{min: (val) => min(val, 0), isNumber, required}}
-                                              id=".assayMax"/>
+                                              id=".assayMax"
+                                              />
                             </div>
                             <Errors
                                 className="form-error"
@@ -181,7 +192,8 @@ export default class ProductOffering extends Component {
                             <DropdownRedux opns={this.props.productGrade} placeholder='Select'
                                            model="forms.productOffering.productGrade"
                                            validators={{required}}
-                                           dispatch={this.props.dispatch}/>
+                                           dispatch={this.props.dispatch}
+                                           />
                         </div>
                             <Errors
                                 className="form-error"
@@ -196,14 +208,15 @@ export default class ProductOffering extends Component {
                             <DropdownRedux opns={this.props.productConditions} placeholder='Select'
                                            model="forms.productOffering.productCondition"
                                            validators={{required}}
-                                           dispatch={this.props.dispatch}/>
+                                           dispatch={this.props.dispatch}
+                                           />
                         </div>
                         </div>
                     </div>
                         <div>
                             <div className="group-item-wr notes-textarea">
                                 <label htmlFor=".externalNotes">External notes</label>
-                                <Control.textarea model=".externalNotes" id=".externalNotes" className="textarea" placeholder="Enter notes here" />
+                                <Control.textarea model=".externalNotes" id=".externalNotes" className="textarea" placeholder="Enter notes here"  />
                             </div>
                             <div className="group-item-wr notes-textarea">
                                 <label htmlFor=".internalNotes">Internal Notes</label>
