@@ -1,10 +1,10 @@
+import { actions } from 'react-redux-form';
 const RESET_TAGS = "RESET_TAGS";
 const TOGGLE_FILTER = "TOGGLE_FILTER";
 const TOGGLE_FILTER_GROUP = 'TOGGLE_FILTER_GROUP';
 const ADD_FILTER_TAG = 'ADD_FILTER_TAG';
 const CLOSE_FILTER_TAG = 'CLOSE_FILTER_TAG';
 const CLOSE_FILTER_TAG_FULFILLED = 'CLOSE_FILTER_TAG_FULFILLED';
-const RESET_FORM = 'RESET_FORM';
 
 export const initialState = {
     isOpen: false,
@@ -36,12 +36,6 @@ export default function reducer(state = initialState, action) {
                     ...state.filterGroup,
                     [action.payload.name]: action.payload.value
                 }
-            }
-        }
-        case RESET_FORM: {
-            return {
-                ...state,
-                data: {}
             }
         }
         case ADD_FILTER_TAG: {
@@ -94,9 +88,9 @@ export function closeFilterTag(index) {
 }
 
 export function resetForm() {
-    return {
-        type: RESET_FORM,
-    }
+    return dispatch => {
+        dispatch(actions.reset("forms.filter"));
+    };
 }
 
 export function resetFilterTags(){
