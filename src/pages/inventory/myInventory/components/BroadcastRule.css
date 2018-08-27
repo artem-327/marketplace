@@ -3,8 +3,6 @@
   margin: 20px;
   width: calc(100% - 40px);
   background-color: white;
-  position: absolute;
-  left: 0;
   display: none; }
   .broadcast-rule .br-header {
     color: #4e5157;

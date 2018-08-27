@@ -12,7 +12,6 @@ class BroadcastRule extends Component {
         this.broadcastRef = React.createRef();
         this.handleClickOutside = this.handleClickOutside.bind(this);
         this.state = {
-            isOpen: this.props.visible,
             rawData:[]
         }
     }
@@ -36,10 +35,6 @@ class BroadcastRule extends Component {
         this.setState({isOpen: false})
     }
 
-    componentWillReceiveProps(nextProps){
-        if(nextProps.visible && nextProps.visible !== this.state.isOpen) this.setState({isOpen: nextProps.visible})
-    }
-
     componentWillMount(){
         document.addEventListener('mousedown', this.handleClickOutside, false);
     }
@@ -50,15 +45,12 @@ class BroadcastRule extends Component {
 
     handleClickOutside(e) {
         if (this.broadcastRef.current.contains(e.target)) return;
-        this.setState({isOpen: false})
+        if (this.props.visible) this.props.closeRules();
     }
-
-
 
     render() {
         return (
-            <div  ref={this.broadcastRef} className={classnames("broadcast-rule", {'open': this.state.isOpen})}
-                 style={{top: this.props.position ? this.props.position.y : 0}}>
+            <div  ref={this.broadcastRef} className={classnames("broadcast-rule", {'open': this.props.visible})}>
                 <div>
                     <div>
                         <span className="left header-section">
