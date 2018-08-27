@@ -95,7 +95,7 @@ class MyInventory extends Component {
             <div className='my-inventory'>
                 <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
                 <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getProductOffers({...filter}, true)}}/>
-                <h3 className='header small'>Undefined product offerings selected</h3>
+                <h3 className='header small'>0 product offerings selected</h3>
                 <Filter chemicalName productAgeFilter filterFunc={(filter) => {this.props.getProductOffers({...filter}, true)}} />
                 {content}
                 <BroadcastRule
