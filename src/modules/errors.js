@@ -1,5 +1,5 @@
 const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
-
+const ADD_MESSAGE = 'ADD_MESSAGE';
 //register const for all axios endpoints
 const ADD_PRODUCT_OFFER_REJECTED = 'ADD_PRODUCT_OFFER_REJECTED';
 // const SAVE_MAPPING_REJECTED = 'SAVE_MAPPING_REJECTED';
@@ -25,7 +25,6 @@ const GET_PRODUCT_OFFERS_REJECTED = 'GET_PRODUCT_OFFERS_REJECTED';
 // const CHANGE_RULES_REJECTED = "CHANGE_RULES_REJECTED";
 // const PACKAGE_OPTIONS_REJECTED = 'PACKAGE_OPTIONS_REJECTED';
 // const MANUFACTURER_REJECTED = 'MANUFACTURER_REJECTED';
-
 
 
 export const initialState = {
@@ -70,6 +69,12 @@ export default function reducer(state = initialState, action) {
                     ...state.messages.slice(action.payload + 1)]
             }
         }
+        case ADD_MESSAGE: {
+            return {
+                ...state,
+                messages: [...state.messages, action.payload]
+            }
+        }
         default: {
             return state
         }
@@ -80,5 +85,12 @@ export function closeMessage(index) {
     return {
         type: CLOSE_MESSAGE,
         payload: index
+    }
+}
+
+export function addMessage(message) {
+    return {
+        type: ADD_MESSAGE,
+        payload: message
     }
 }
