@@ -17,7 +17,6 @@ class Filter extends Component {
 
     handleSubmit(inputs){
         let filter = Object.assign({}, inputs, {pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key).join(',')});
-        
         let params = filterNonEmptyAttributes(filter);
         this.props.filterFunc(params);
         let filterTags = [];
@@ -26,7 +25,13 @@ class Filter extends Component {
         }
         this.props.addFilterTag(filterTags);
         this.props.toggleFilter();
+    }
 
+    handleReset(e){
+        e.preventDefault();
+        this.props.resetForm();
+        this.props.filterFunc({});
+        this.props.addFilterTag([]);
     }
 
     componentDidMount() {
@@ -159,7 +164,7 @@ class Filter extends Component {
 
                         {/*<button className="filter-button">Apply</button>*/}
                         <button className='button filter-button'>Apply</button>
-                        <button className='button disabled filter-button' onClick={()=>{this.props.resetForm()}}>Clear filter</button>
+                        <button className='button disabled filter-button' onClick={(e)=>{this.handleReset(e)}}>Clear filter</button>
                     </div>
                 </Form>
             </div> : null;
