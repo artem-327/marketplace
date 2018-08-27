@@ -26,9 +26,18 @@ export default class IncrementalPricing extends Component {
         newIncremental.map((item, index)=>{
 
             let difference = item.to % splits;
+            let differenceFrom = item.from % splits;
 
-            if(item.from < this.state.minimum){
+            if(item.from <= this.state.minimum){
                 item.from = this.state.minimum;
+            }
+            else{
+                if(differenceFrom * 2 > splits){
+                    item.from = item.from - differenceFrom + splits;
+                }
+                else{
+                    item.from = item.from - differenceFrom;
+                }
             }
             if(difference > splits / 2){
                 item.to += splits-difference
@@ -81,36 +90,34 @@ export default class IncrementalPricing extends Component {
             incrementalPricing: newIncremental
         })
     }
-
-    validateSplits(){
-        if (this.state.splits < 1){
-            this.setState({splits:''},() => this.disableInput());
+  
+    validateMinimum(form){
+        
+        if( form === 'minimum'){
+            if (this.state.minimum < 0 || this.state.minimum === ''){
+                this.setState({minimum:''},() => this.disableInput());
+                return;
+            }
         }
+        else if ( form === 'splits'){
+            if(this.state.splits < 1 || this.state.splits === ''){
+                this.setState({splits:''},() => this.disableInput());
+                return;
+            }
+            else if(this.state.minimum === ''){
+                return;
+            }
+        }
+        
+        let difference = this.state.minimum % this.state.splits;
+        let tmpMin = '';
+        
+        if (this.state.minimum < this.state.splits)
+            tmpMin = (this.state.splits - this.state.minimum) > this.state.minimum ? 0 : this.state.splits;
+
         else
-            this.validateInputs();
-    }
-
-    validateMinimum(){
-        
-        if(this.state.minimum < 0 || this.state.splits === '' || this.state.minimum === ''){
-            this.setState({minimum:''},() => this.disableInput());
-            return;
-        }
-        
-        let difference = parseInt(this.state.minimum, 10) % parseInt(this.state.splits, 10);
-        
-        let tmpMin;
-        
-        if(parseInt(this.state.splits, 10) < 2 * difference){
+            tmpMin = this.state.splits < 2 * difference ? this.state.minimum + this.state.splits - difference : tmpMin = this.state.minimum - difference;
             
-            if(parseInt(this.state.minimum, 10) < parseInt(this.state.splits, 10))
-                tmpMin = difference > parseInt(this.state.splits, 10) - parseInt(this.state.minimum, 10) ? this.state.splits : 0;
-            else
-                tmpMin = parseInt(this.state.minimum, 10) + difference;
-        }
-        else{
-            tmpMin = parseInt(this.state.minimum, 10) - difference;
-        }
         this.setState({minimum:tmpMin},() => {this.disableInput(); this.validateInputs()});   
     }
 
@@ -141,7 +148,7 @@ export default class IncrementalPricing extends Component {
                         value={this.state.splits}
                         min={'1'}
                         onChange={e => this.splitsMinimumChange(e)}
-                        onBlur={()=> this.validateSplits()}
+                        onBlur={()=> this.validateMinimum('splits')}
                     />
                 </div>
                 <div className='inc-pricing-splits'>
@@ -152,7 +159,7 @@ export default class IncrementalPricing extends Component {
                         min={'0'}
                         value={this.state.minimum}
                         onChange={e => this.splitsMinimumChange(e)}
-                        onBlur={(e)=> this.validateMinimum()}
+                        onBlur={(e)=> this.validateMinimum('minimum')}
                     />
                 </div>
             </div>
