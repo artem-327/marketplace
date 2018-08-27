@@ -23,6 +23,9 @@ export default class AddForm extends Component {
             let lots = JSON.parse(localStorage.getItem('productLots'));
             this.addLot(lots, inputs, 0)
         }
+        else {
+            this.props.addMessage('You must add lot first.')
+        }
     }
 
     addLot(lots, inputs, index){
