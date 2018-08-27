@@ -8,6 +8,8 @@ export default class IncrementalPricing extends Component {
             splits: '',
             minimum: '',
             unit: 'lb',
+            disabled: true,
+            margin:'',
             incrementalPricing: [{
                 from: '',
                 to: '',
@@ -16,21 +18,13 @@ export default class IncrementalPricing extends Component {
         }
     }
 
-    handleChange(e, index, type){
-        if(e.target.value < 0) return;
-        let value = e.target.value ? parseInt(e.target.value, 10) : '';
-        let newIncremental = this.state.incrementalPricing.slice(0);
-        newIncremental[index][type] = value;
-        this.setState({
-            incrementalPricing: newIncremental
-        })
-    }
+    
 
     validateInputs(){
-        if(this.state.splits === '') return;
         let newIncremental = this.state.incrementalPricing.slice(0);
         let splits = parseInt(this.state.splits, 10);
         newIncremental.map((item, index)=>{
+
             let difference = item.to % splits;
 
             if(item.from < this.state.minimum){
@@ -76,25 +70,61 @@ export default class IncrementalPricing extends Component {
     splitsMinimumChange(e){
         var newstate = {};
         newstate[e.target.className] = e.target.value ? parseInt(e.target.value, 10) : '';
-        this.setState(newstate);
+        this.setState(newstate);  
+    }
+
+    handleChange(e, index, type){
+        let value = e.target.value ? parseInt(e.target.value, 10) : '';
+        let newIncremental = this.state.incrementalPricing.slice(0);
+        newIncremental[index][type] = value;
+        this.setState({
+            incrementalPricing: newIncremental
+        })
+    }
+
+    validateSplits(){
+        if (this.state.splits < 1){
+            this.setState({splits:''},() => this.disableInput());
+        }
+        else
+            this.validateInputs();
     }
 
     validateMinimum(){
+        
+        if(this.state.minimum < 0 || this.state.splits === '' || this.state.minimum === ''){
+            this.setState({minimum:''},() => this.disableInput());
+            return;
+        }
+        
         let difference = parseInt(this.state.minimum, 10) % parseInt(this.state.splits, 10);
         
-        if(parseInt(this.state.minimum, 10) < parseInt(this.state.splits, 10)){
-            this.setState({minimum:'0'});
-            return;
-        } 
-        let tmpMin = parseInt(this.state.minimum, 10) - difference;
-        this.setState({minimum:tmpMin.toString()},() => this.validateInputs());
+        let tmpMin;
+        
+        if(parseInt(this.state.splits, 10) < 2 * difference){
+            
+            if(parseInt(this.state.minimum, 10) < parseInt(this.state.splits, 10))
+                tmpMin = difference > parseInt(this.state.splits, 10) - parseInt(this.state.minimum, 10) ? this.state.splits : 0;
+            else
+                tmpMin = parseInt(this.state.minimum, 10) + difference;
+        }
+        else{
+            tmpMin = parseInt(this.state.minimum, 10) - difference;
+        }
+        this.setState({minimum:tmpMin},() => {this.disableInput(); this.validateInputs()});   
+    }
+
+    disableInput(){
+        if(this.state.splits === '' || this.state.minimum === ''){
+            this.setState({disabled:true});
+        }
+        else
+            this.setState({disabled:false});
     }
 
     calculateGrossMargin(index){
-        console.log(this.state.incrementalPricing[index], this.props.cost);
         let margin = ((this.state.incrementalPricing[index].price - parseInt(this.props.cost,10)) / this.state.incrementalPricing[index].price * 100);
-        console.log(margin);
-        if(isNaN(margin) || margin < 0){
+        if(isNaN(margin) || margin < 0){   
             return " ";
         }
         return margin.toFixed(2);
@@ -111,7 +141,7 @@ export default class IncrementalPricing extends Component {
                         value={this.state.splits}
                         min={'1'}
                         onChange={e => this.splitsMinimumChange(e)}
-                        onBlur={()=> this.validateMinimum()}
+                        onBlur={()=> this.validateSplits()}
                     />
                 </div>
                 <div className='inc-pricing-splits'>
@@ -122,7 +152,7 @@ export default class IncrementalPricing extends Component {
                         min={'0'}
                         value={this.state.minimum}
                         onChange={e => this.splitsMinimumChange(e)}
-                        onBlur={()=> this.validateMinimum()}
+                        onBlur={(e)=> this.validateMinimum()}
                     />
                 </div>
             </div>
@@ -132,7 +162,8 @@ export default class IncrementalPricing extends Component {
 
     renderIncrementalPricing(){
         return this.state.incrementalPricing.map((item, index)=>{
-            let plusButton = (item.to !== '' && item.price !== '' && index === this.state.incrementalPricing.length-1) ?
+            let grossMargin = this.calculateGrossMargin(index);
+            let plusButton = (item.to !== '' && item.price !== '' && index === this.state.incrementalPricing.length-1) && grossMargin !== ' ' ?
                 <button onClick={()=>this.addNewIncrementalPricing(index)} className='incremental-button add'>+</button> : null;
             let minusButton = (index !== 0) ?
                 <button onClick={()=>this.removeIncrementalPricing(index)} className='incremental-button remove'>-</button> : null;
@@ -146,6 +177,7 @@ export default class IncrementalPricing extends Component {
                             min={this.state.minimum}
                             onChange={(e)=>this.handleChange(e, index, 'from')}
                             onBlur={()=>{this.validateInputs()}}
+                            disabled={this.state.disabled}
                     />
                 </td>
                 <td>
@@ -154,17 +186,21 @@ export default class IncrementalPricing extends Component {
                            step={this.state.splits}
                            value={item.to}
                            onBlur={()=>{this.validateInputs()}}
-                           onChange={(e)=>this.handleChange(e, index, 'to')}/>
+                           onChange={(e)=>this.handleChange(e, index, 'to')}
+                           disabled={this.state.disabled}
+                           />
                 </td>
                 <td>
                     <input type='number'
                            className='tieredPricing'
                            value={item.price}
                            onBlur={()=>{this.validateInputs()}}
-                           onChange={(e)=>this.handleChange(e, index, 'price')}/>
+                           onChange={(e)=>this.handleChange(e, index, 'price')}
+                           disabled={this.state.disabled}
+                           />
                 </td>
                 <td>
-                    <div>{this.calculateGrossMargin(index)}%</div>
+                    <div>{grossMargin}%</div>
                 </td>
                 <td>{minusButton}</td>
                 <td>{plusButton}</td>
