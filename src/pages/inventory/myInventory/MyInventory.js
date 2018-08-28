@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import ProductOffers from "./components/ProductOffers";
 import Filter from '../../../components/Filter';
 import './myInventory.css';
-import BroadcastRule from "./components/BroadcastRule";
 import Spinner from "../../../components/Spinner/Spinner";
 import FilterTag from "../../../components/Filter/components/FilterTag";
 
@@ -16,10 +15,6 @@ class MyInventory extends Component {
         this.state = {
             targetGroups: [],
             currentSelected: 'All companies',
-            brActive: false,
-            brVisible: false,
-            brPosition: null,
-            productOffersSelection: [],
             selections: [
                 {name: 'All companies', id: GROUP_BY_ALL_COMPANIES},
                 {name: 'Region', id: GROUP_BY_REGIONS}
@@ -85,12 +80,18 @@ class MyInventory extends Component {
 
     render() {
         let content = this.props.isFetching ? <Spinner/> :
-            <ProductOffers productOffers={this.props.productOffers}
-                toggleBroadcastRule={(state, position, selection) => this.setState(
-                    {brVisible: state, brPosition: position, productOffersSelection: selection}
-                )}
-                broadcastActive={this.state.brActive}
-            />;
+            <ProductOffers
+                productOffers={this.props.productOffers}
+                submitRules={this.props.sendRules}
+                addPopup={this.props.addPopup}
+                removePopup={this.props.removePopup}
+                getProductOffers={this.props.getProductOffers}
+                targetGroups={this.state.targetGroups}
+                selections={this.state.selections}
+                setFilter={(type) => this.setFilter(type)}
+                currentSelected={this.state.currentSelected}
+                setActiveBroadcastButton={active => this.setActiveBroadcastButton(active)}
+                broadcastActive={this.state.brActive}/>;
         return (
             <div className='my-inventory'>
                 <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
@@ -98,20 +99,6 @@ class MyInventory extends Component {
                 <h3 className='header small'>0 product offerings selected</h3>
                 <Filter chemicalName productAgeFilter filterFunc={(filter) => {this.props.getProductOffers({...filter}, true)}} />
                 {content}
-                <BroadcastRule
-                    submitRules={this.props.sendRules}
-                    addPopup={this.props.addPopup}
-                    removePopup={this.props.removePopup}
-                    getProductOffers={this.props.getProductOffers}
-                    targetGroups={this.state.targetGroups}
-                    selections={this.state.selections}
-                    setFilter={(type) => this.setFilter(type)}
-                    currentSelected={this.state.currentSelected}
-                    visible={this.state.brVisible}
-                    position={this.state.brPosition}
-                    productOffersSelection={this.state.productOffersSelection}
-                    setActiveBroadcastButton={active => this.setActiveBroadcastButton(active)}
-                />
             </div>
         )
     }

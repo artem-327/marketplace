@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './ProductOffers.css';
 import Checkbox from "../../../../components/Checkbox/Checkbox";
 import ThreeDots from "../../../../components/ThreeDots/ThreeDots";
-import classnames from "classnames";
+import ProductOfferItem from "./ProductOfferItem";
 
 class ProductOffers extends Component {
 
@@ -39,9 +39,9 @@ class ProductOffers extends Component {
         })
     }
 
-    toggleBroadcastRule(e, id){
-        if(this.props.toggleBroadcastRule) this.props.toggleBroadcastRule(true, {x: e.clientX, y: e.clientY - 90}, id)
-    }
+    // toggleBroadcastRule(e, id){
+    //     if(this.props.toggleBroadcastRule) this.props.toggleBroadcastRule(true, {x: e.clientX, y: e.clientY - 90}, id)
+    // }
 
     render() {
         return (
@@ -86,23 +86,18 @@ class ProductOffers extends Component {
                         if(product.visible){
                             product.productOffers.forEach((offer) => {
                                 rows.push(
-                                    <tr className="product-offer" key={offer.id}>
-                                        <td><Checkbox onChange={(value) => {console.log(value)}}/></td>
-                                        <td onClick={()=>{this.setState({isOpen: !this.state.isOpen})}}><span onClick={this.state.isOpen ? (e)=>this.toggleBroadcastRule(e, offer.id) : null}><ThreeDots className='small'/></span></td>
-                                        <td className="capitalize">{offer.product.casIndexName}</td>
-                                        <td>{offer.packaging.amount}</td>
-                                        <td>{offer.packaging.container.name}</td>
-                                        <td>{offer.packaging.capacity}</td>
-                                        <td>{parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)}</td>
-                                        <td>{offer.pricing.cost}</td>
-                                        <td>{offer.pricing.price}</td>
-                                        <td>{offer.name}</td>
-                                        <td>{offer.manufacturer}</td>
-                                        <td>{offer.productCondition.name}</td>
-                                        <td>unknown</td>
-                                        <td><span className={'broadcast-mark' + classnames({' open' : this.props.broadcastActive})}> </span></td>
-                                        <td> </td>
-                                    </tr>
+                                    <ProductOfferItem
+                                        key={offer.id}
+                                        submitRules={this.props.submitRules}
+                                        addPopup={this.props.addPopup}
+                                        removePopup={this.props.removePopup}
+                                        getProductOffers={this.props.getProductOffers}
+                                        targetGroups={this.props.targetGroups}
+                                        selections={this.props.selections}
+                                        setFilter={(type) => this.props.setFilter(type)}
+                                        currentSelected={this.props.currentSelected}
+                                        setActiveBroadcastButton={active => this.props.setActiveBroadcastButton(active)}
+                                        offer={offer}/>
                                 );
                             })
                         }

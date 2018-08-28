@@ -49,6 +49,7 @@
       transform: rotate(45deg); }
   .input-checkbox input {
     position: absolute;
+    width: 0;
     opacity: 0;
     cursor: pointer; }
     .input-checkbox input:checked ~ .checkmark::after {

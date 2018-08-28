@@ -9,10 +9,7 @@ class BroadcastRule extends Component {
 
     constructor(props) {
         super(props);
-        this.broadcastRef = React.createRef();
-        this.handleClickOutside = this.handleClickOutside.bind(this);
         this.state = {
-            isOpen: this.props.visible,
             rawData:[]
         }
     }
@@ -23,42 +20,22 @@ class BroadcastRule extends Component {
 
     submitBroadcastData(){
         
-        var tmp = [];
+        let tmp = [];
         Object.values(this.state.rawData).map((item)=>{
             item.map((item1)=>{
-                tmp.push({visibility: item1.visibility, company: item1.company, [item1.updateType]: item1.amount})
+                tmp.push({visibility: item1.visibility, company: item1.company, [item1.updateType]: item1.amount});
                 return null;
-            })
+            });
             return null;
-        })
+        });
         
         this.props.addPopup(<BroadcastAdd getProductOffers={this.props.getProductOffers} active={value=>this.activeBroadcastButton(value)} removePopup={this.props.removePopup} submitRules={this.props.submitRules} subjects={[{productOffer: this.props.productOffersSelection}]} targets={tmp}/>)
         this.setState({isOpen: false})
     }
 
-    componentWillReceiveProps(nextProps){
-        if(nextProps.visible && nextProps.visible !== this.state.isOpen) this.setState({isOpen: nextProps.visible})
-    }
-
-    componentWillMount(){
-        document.addEventListener('mousedown', this.handleClickOutside, false);
-    }
-
-    componentWillUnmount(){
-        document.removeEventListener('mousedown', this.handleClickOutside, false);
-    }
-
-    handleClickOutside(e) {
-        if (this.broadcastRef.current.contains(e.target)) return;
-        this.setState({isOpen: false})
-    }
-
-
-
     render() {
         return (
-            <div  ref={this.broadcastRef} className={classnames("broadcast-rule", {'open': this.state.isOpen})}
-                 style={{top: this.props.position ? this.props.position.y : 0}}>
+            <div ref={this.props.brRef} className={classnames("broadcast-rule", {'open': this.props.visible})}>
                 <div>
                     <div>
                         <span className="left header-section">
