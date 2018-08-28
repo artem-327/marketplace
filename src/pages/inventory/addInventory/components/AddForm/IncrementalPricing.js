@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
-import './IncrementalPricing.css';
+import './Pricing.css';
+import classnames from 'classnames';
+
 
 export default class IncrementalPricing extends Component {
     constructor(props){
@@ -132,9 +134,8 @@ export default class IncrementalPricing extends Component {
         
         let margin = ((this.state.incrementalPricing[index].price - parseInt(this.props.cost,10)) / this.state.incrementalPricing[index].price * 100);
         if(isNaN(margin) || this.state.incrementalPricing[index].price === ''){   
-            return " ";
+            return '';
         }
-        console.log(margin);
         return margin.toFixed(2);
     }
 
@@ -165,7 +166,6 @@ export default class IncrementalPricing extends Component {
                 </div>
             </div>
         )
-           
     }
 
     renderIncrementalPricing(){
@@ -209,7 +209,7 @@ export default class IncrementalPricing extends Component {
                            />
                 </td>
                 <td>
-                    <div>{grossMargin}%</div>
+                    <div className={classnames({inRed:grossMargin < 0})}>{grossMargin}%</div>
                 </td>
                 <td>{minusButton}</td>
                 <td>{plusButton}</td>

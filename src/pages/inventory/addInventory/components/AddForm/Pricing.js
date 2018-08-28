@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import {Control, Errors} from 'react-redux-form';
 import {required, isNumber, min, messages} from "../../../../../utils/validation";
 import IncrementalPricing from "./IncrementalPricing";
-import Checkbox from "../../../../../components/Checkbox/Checkbox"
+import Checkbox from "../../../../../components/Checkbox/Checkbox";
+import './Pricing.css';
+import classnames from 'classnames';
 
 
 export default class Pricing extends Component {
@@ -94,7 +96,7 @@ export default class Pricing extends Component {
                     <div className='group-item-wr'>
                         <div className='gross-margin'>
                         <h6>Gross Margin</h6>
-                        <div>{this.state.margin}%</div>
+                        <div className={classnames({inRed:this.state.margin < 0})}>{this.state.margin}%</div>
                         </div>
                     <div className='group-item-wr'>
                         <h6>Total Sales Price</h6>
