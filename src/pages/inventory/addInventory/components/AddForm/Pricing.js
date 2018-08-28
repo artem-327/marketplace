@@ -22,7 +22,7 @@ export default class Pricing extends Component {
             }
             let total = ((parseInt(nextProps.form.pricing.price,10)-parseInt(nextProps.form.pricing.cost,10)) / parseInt(nextProps.form.pricing.price,10)) * 100;
 
-            if(isNaN(total) || total < 0){
+            if(isNaN(total)){
                 this.setState({margin:" "});
                 return;
             }
@@ -31,13 +31,11 @@ export default class Pricing extends Component {
 
     }
 
-
-
     render() {
         
         let incremental = this.state.incrementalPricing ?
             <div className='incremental-wr'>
-                <IncrementalPricing cost={this.props.form.pricing.cost}/>
+                <IncrementalPricing cost={this.props.form.pricing.cost} getIncPricing={(data)=>this.props.getIncPricing(data)}/>
             </div>
             : null;
         

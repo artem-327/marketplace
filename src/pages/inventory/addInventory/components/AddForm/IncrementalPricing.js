@@ -4,21 +4,19 @@ import './IncrementalPricing.css';
 export default class IncrementalPricing extends Component {
     constructor(props){
         super(props);
+
         this.state = {
             splits: '',
             minimum: '',
             unit: 'lb',
             disabled: true,
-            margin:'',
             incrementalPricing: [{
                 from: '',
                 to: '',
-                price: ''
+                price: '',
             }]
         }
     }
-
-    
 
     validateInputs(){
         let newIncremental = this.state.incrementalPricing.slice(0);
@@ -32,29 +30,31 @@ export default class IncrementalPricing extends Component {
                 item.from = this.state.minimum;
             }
             else{
-                if(differenceFrom * 2 > splits){
+                if(differenceFrom * 2 > splits)
                     item.from = item.from - differenceFrom + splits;
-                }
-                else{
+                
+                else
                     item.from = item.from - differenceFrom;
-                }
+                
             }
-            if(difference > splits / 2){
+            if(difference > splits / 2)
                 item.to += splits-difference
-            }else{
+            else
                 item.to -= difference
-            }
-            if(item.to !== '' && item.to <= item.from){
+            
+            if(item.to !== '' && item.to <= item.from)
                 item.to = item.from + splits
-            }
+            
             if(newIncremental[index+1] !== undefined){
-
-                if(newIncremental[index+1].from <= item.to){
-                    newIncremental[index+1].from =  item.to + splits;
-                }
+                
+                if(newIncremental[index+1].from <= item.to)
+                    newIncremental[index+1].from =  item.to + splits;   
             }
             return true;
         });
+
+        this.props.getIncPricing(newIncremental);
+
         this.setState({incrementalPricing: newIncremental})
     }
 
@@ -92,10 +92,12 @@ export default class IncrementalPricing extends Component {
     }
   
     validateMinimum(form){
-        
         if( form === 'minimum'){
             if (this.state.minimum < 0 || this.state.minimum === ''){
                 this.setState({minimum:''},() => this.disableInput());
+                return;
+            }
+            else if(this.state.splits === ''){
                 return;
             }
         }
@@ -108,15 +110,12 @@ export default class IncrementalPricing extends Component {
                 return;
             }
         }
-        
         let difference = this.state.minimum % this.state.splits;
         let tmpMin = '';
-        
         if (this.state.minimum < this.state.splits)
             tmpMin = (this.state.splits - this.state.minimum) > this.state.minimum ? 0 : this.state.splits;
-
         else
-            tmpMin = this.state.splits < 2 * difference ? this.state.minimum + this.state.splits - difference : tmpMin = this.state.minimum - difference;
+            tmpMin = this.state.splits < 2 * difference ? this.state.minimum + this.state.splits - difference : this.state.minimum - difference;
             
         this.setState({minimum:tmpMin},() => {this.disableInput(); this.validateInputs()});   
     }
@@ -130,10 +129,12 @@ export default class IncrementalPricing extends Component {
     }
 
     calculateGrossMargin(index){
+        
         let margin = ((this.state.incrementalPricing[index].price - parseInt(this.props.cost,10)) / this.state.incrementalPricing[index].price * 100);
-        if(isNaN(margin) || margin < 0){   
+        if(isNaN(margin) || this.state.incrementalPricing[index].price === ''){   
             return " ";
         }
+        console.log(margin);
         return margin.toFixed(2);
     }
 
@@ -204,6 +205,7 @@ export default class IncrementalPricing extends Component {
                            onBlur={()=>{this.validateInputs()}}
                            onChange={(e)=>this.handleChange(e, index, 'price')}
                            disabled={this.state.disabled}
+                           
                            />
                 </td>
                 <td>
