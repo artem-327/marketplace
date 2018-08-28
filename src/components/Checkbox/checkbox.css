@@ -33,13 +33,13 @@
       .input-checkbox .checkmark.mark-allInv.small {
         left: 3px; }
     .input-checkbox .checkmark.big {
-      width: 25px;
-      height: 25px; }
+      width: 22px;
+      height: 22px; }
       .input-checkbox .checkmark.big:after {
-        left: 8px;
-        top: 3px;
-        width: 7px;
-        height: 12px;
+        left: 7px;
+        top: 4px;
+        width: 6px;
+        height: 10px;
         border-width: 0 2px 2px 0;
         transform: rotate(45deg); }
     .input-checkbox .checkmark:hover, .input-checkbox .checkmark:focus {

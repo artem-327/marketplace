@@ -49,7 +49,7 @@ class ProductOffers extends Component {
                 <table className="product-offers">
                     <thead>
                     <tr>
-                        <th><Checkbox className='mark-myInv' inputClass='input-myInv' onChange={(value) => {console.log(value)}}/></th>
+                        <th><Checkbox className='mark-myInv big' inputClass='input-myInv' onChange={(value) => {console.log(value)}}/></th>
                         <th><ThreeDots/></th>
                         <th>Product Name</th>
                         <th>Available</th>
