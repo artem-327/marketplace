@@ -87,18 +87,18 @@ class ProductOffers extends Component {
                             product.productOffers.forEach((offer) => {
                                 rows.push(
                                     <tr className="product-offer" key={offer.id}>
-                                        <td><Checkbox onChange={(value) => {console.log(value)}}/></td>
+                                        <td><Checkbox className='mark-allInv small' onChange={(value) => {console.log(value)}}/></td>
                                         <td>{offer.merchant.email}</td>
-                                        <td>{offer.packaging.amount}</td>
+                                        <td>{offer.packaging.amount.formatNumber()}</td>
                                         <td>{offer.packaging.container.name}</td>
                                         <td>{offer.packaging.capacity}</td>
-                                        <td>{parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)}</td>
-                                        <td>{offer.pricing.price}</td>
+                                        <td>{(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()}</td>
+                                        <td>$ {offer.pricing.price.formatMoney(2)}</td>
                                         <td>{offer.name}</td>
                                         <td>{offer.manufacturer}</td>
                                         <td>{offer.origin}</td>
                                         <td>{offer.expirationDate ? moment(offer.expirationDate).format(DATE_FORMAT) : 'none'}</td>
-                                        <td>unknown</td>
+                                        <td>Unknown</td>
                                         <td>{offer.productCondition.name}</td>
                                         <td>{offer.productForm.name}</td>
                                         <td>{offer.warehouse.name} ({offer.warehouse.location.state})</td>

@@ -1,27 +1,42 @@
 .input-checkbox {
   position: relative;
   padding-left: 35px;
+  &.input-myInv {
+    padding-left: 15px;
+  }
   .checkmark {
     width: 20px;
     height: 20px;
     display: inline-block;
     background-color: white;
-    margin: 1px 15px 0px 0px;
+    margin: 1px 15px 0 0;
     border: 1px solid #B0B0B0;
     border-radius: 4px;
     position: absolute;
     left: 0;
     top: 0;
     &.small {
-      width: 15px;
-      height: 15px;
+      width: 17px;
+      height: 17px;
       &:after {
-        left: 5px;
+        left: 6px;
         top: 3px;
         width: 4px;
         height: 7px;
         border-width: 0 2px 2px 0;
         transform: rotate(45deg);
+      }
+    }
+    &.mark-myInv {
+      margin: 4px 0 0 0;
+      &.small {
+        left: 3px;
+      }
+    }
+    &.mark-allInv {
+      margin: 4px 0 0 0;
+      &.small {
+        left: 3px;
       }
     }
     &.big {

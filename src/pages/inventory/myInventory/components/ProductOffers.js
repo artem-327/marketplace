@@ -49,7 +49,7 @@ class ProductOffers extends Component {
                 <table className="product-offers">
                     <thead>
                     <tr>
-                        <th><Checkbox onChange={(value) => {console.log(value)}}/></th>
+                        <th><Checkbox className='mark-myInv' inputClass='input-myInv' onChange={(value) => {console.log(value)}}/></th>
                         <th><ThreeDots/></th>
                         <th>Product Name</th>
                         <th>Available</th>
@@ -71,7 +71,7 @@ class ProductOffers extends Component {
                         rows.push(
                             <tr className="product" key={product.casNumber}  onClick={(e) => {this.toggleProduct(e, product.id)}}>
                                 <td colSpan="1">
-                                    <Checkbox onChange={(value) => {console.log(value)}}/>
+                                    <Checkbox className='mark-myInv' inputClass='input-myInv' onChange={(value) => {console.log(value)}}/>
                                 </td>
                                 <td colSpan="10">
                                     <span className="product-casnumber">{product.casNumber}</span>
