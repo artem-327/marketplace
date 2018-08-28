@@ -49,7 +49,6 @@ export default class AddForm extends Component {
         let data = this.validateIncPricing();
         if(data.length > 0){
             data.map((item)=>{
-                console.log(item);
                 this.props.saveIncrementalPricing(item.from, item.to, item.price);
                 return null;
             })
@@ -57,9 +56,7 @@ export default class AddForm extends Component {
     }
 
     validateIncPricing(){
-        console.log(this.state.incrementalPricing)
         let tmp = this.state.incrementalPricing.filter(data => data.from !=='' && data.to !== '' && data.price !== '');
-        console.log(tmp);
         return tmp;
     }
 

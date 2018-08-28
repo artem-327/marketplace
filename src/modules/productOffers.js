@@ -125,14 +125,12 @@ export function resetForm() {
 }
 
 export function saveIncrementalPricing(from, to, price, quantityDiscount = 1){
-    console.log(from,to,price);
     const data = {
         quantityFrom:from,
         quantityTo:to,
         price:price,
         quantityDiscount,
     }
-    console.log("data ",data);
     return {
         type: SAVE_INCREMENTAL_PRICING,
         payload: axios.post('/api/v1/discount-level/', data)

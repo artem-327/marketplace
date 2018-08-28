@@ -54,9 +54,7 @@ export default class IncrementalPricing extends Component {
             }
             return true;
         });
-
         this.props.getIncPricing(newIncremental);
-
         this.setState({incrementalPricing: newIncremental})
     }
 
