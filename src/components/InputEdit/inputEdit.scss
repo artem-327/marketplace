@@ -1,0 +1,16 @@
+.input-edit{
+  i{
+    color: #a9a9a9;
+  }
+  input{
+    width: calc(100% - 25px);
+    margin: 0 0 0 10px;
+  }
+  p{
+    width: calc(100% - 33px);
+    margin: 0 0 0 10px;
+    display: inline-block;
+    text-align: left;
+    padding: 8px 7px;
+  }
+}
