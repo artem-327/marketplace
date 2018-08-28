@@ -9,8 +9,6 @@ class BroadcastRule extends Component {
 
     constructor(props) {
         super(props);
-        this.broadcastRef = React.createRef();
-        this.handleClickOutside = this.handleClickOutside.bind(this);
         this.state = {
             rawData:[]
         }
@@ -22,35 +20,22 @@ class BroadcastRule extends Component {
 
     submitBroadcastData(){
         
-        var tmp = [];
+        let tmp = [];
         Object.values(this.state.rawData).map((item)=>{
             item.map((item1)=>{
-                tmp.push({visibility: item1.visibility, company: item1.company, [item1.updateType]: item1.amount})
+                tmp.push({visibility: item1.visibility, company: item1.company, [item1.updateType]: item1.amount});
                 return null;
-            })
+            });
             return null;
-        })
+        });
         
         this.props.addPopup(<BroadcastAdd getProductOffers={this.props.getProductOffers} active={value=>this.activeBroadcastButton(value)} removePopup={this.props.removePopup} submitRules={this.props.submitRules} subjects={[{productOffer: this.props.productOffersSelection}]} targets={tmp}/>)
         this.setState({isOpen: false})
     }
 
-    componentWillMount(){
-        document.addEventListener('mousedown', this.handleClickOutside, false);
-    }
-
-    componentWillUnmount(){
-        document.removeEventListener('mousedown', this.handleClickOutside, false);
-    }
-
-    handleClickOutside(e) {
-        if (this.broadcastRef.current.contains(e.target)) return;
-        if (this.props.visible) this.props.closeRules();
-    }
-
     render() {
         return (
-            <div  ref={this.broadcastRef} className={classnames("broadcast-rule", {'open': this.props.visible})}>
+            <div ref={this.props.brRef} className={classnames("broadcast-rule", {'open': this.props.visible})}>
                 <div>
                     <div>
                         <span className="left header-section">

@@ -8,10 +8,26 @@ import BroadcastRule from "./BroadcastRule";
 class ProductOfferItem extends Component {
     constructor(props) {
         super(props);
+        this.broadcastRef = React.createRef();
+        this.threeDotsRef = React.createRef();
+        this.handleClickOutsideBr = this.handleClickOutsideBr.bind(this);
         this.state = {
             isOpen: false,
             productOffersSelection: []
         }
+    }
+
+    componentWillMount(){
+        document.addEventListener('mousedown', this.handleClickOutsideBr, false);
+    }
+
+    componentWillUnmount(){
+        document.removeEventListener('mousedown', this.handleClickOutsideBr, false);
+    }
+
+    handleClickOutsideBr(e) {
+        if (this.broadcastRef.current.contains(e.target) || this.threeDotsRef.current.contains(e.target)) return;
+        this.setState({isOpen: false})
     }
 
     render () {
@@ -20,7 +36,7 @@ class ProductOfferItem extends Component {
             <React.Fragment>
             <tr className="product-offer">
                 <td><Checkbox onChange={(value) => {console.log(value)}}/></td>
-                <td onClick={()=>{this.setState({isOpen: !this.state.isOpen, productOffersSelection: [offer.id]})}}><ThreeDots className='small'/></td>
+                <td ref={this.threeDotsRef} onClick={()=> this.setState({isOpen: !this.state.isOpen, productOffersSelection: [offer.id]})}><ThreeDots className='small'/></td>
                 <td className="capitalize">{offer.product.casIndexName}</td>
                 <td>{offer.packaging.amount}</td>
                 <td>{offer.packaging.container.name}</td>
@@ -38,9 +54,9 @@ class ProductOfferItem extends Component {
             <tr>
                 <td colSpan="15">
                     <BroadcastRule
+                        brRef={this.broadcastRef}
                         submitRules={this.props.submitRules}
                         addPopup={this.props.addPopup}
-                        closeRules={() => this.setState({isOpen: false})}
                         removePopup={this.props.removePopup}
                         getProductOffers={this.props.getProductOffers}
                         targetGroups={this.props.targetGroups}
