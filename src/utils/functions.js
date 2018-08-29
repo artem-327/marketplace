@@ -15,7 +15,7 @@ Number.prototype.formatMoney = function(c){
         s = n < 0 ? "-" : "",
         i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c), 10)),
         j = i.length;
-        j = j > 3 ? j % 3 : 0;
+    j = j > 3 ? j % 3 : 0;
     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };
 
@@ -25,3 +25,9 @@ export const resetForm = function(model){
         dispatch(actions.reset(model));
     };
 }
+
+// eslint-disable-next-line
+Number.prototype.formatNumber = function(){
+    return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+

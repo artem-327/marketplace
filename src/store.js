@@ -44,8 +44,10 @@ const reducer = combineReducers({
     }, 'forms'),
 });
 
+const logger = createLogger({
+    predicate: (getState, action) => process.env.NODE_ENV === "development"
+});
 
-const middleware = applyMiddleware(thunk, promise(), createLogger());
-// const middleware = applyMiddleware(thunk, promise());
+const middleware = applyMiddleware(thunk, promise(), logger);
 
 export default createStore(reducer, middleware)
