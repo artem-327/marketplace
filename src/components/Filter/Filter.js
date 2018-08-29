@@ -29,7 +29,7 @@ class Filter extends Component {
 
     handleReset(e){
         e.preventDefault();
-        this.props.resetForm();
+        this.props.resetForm('forms.filter');
         this.props.filterFunc({});
         this.props.addFilterTag([]);
     }

@@ -5,6 +5,7 @@ import Pricing from './Pricing';
 import Location from './Location';
 import classnames from 'classnames';
 
+
 export default class AddForm extends Component {
     constructor(props) {
         super(props);
@@ -16,6 +17,10 @@ export default class AddForm extends Component {
     componentWillMount(){
         this.props.fetchWarehouse();
         this.props.fetchLocations();
+    }
+
+    componentWillUnmount(){
+        this.props.resetForm('forms.addProductOffer');
     }
 
     addProductOffer(inputs){

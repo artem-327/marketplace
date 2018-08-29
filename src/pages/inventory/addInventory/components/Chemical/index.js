@@ -1,7 +1,8 @@
 import {connect} from 'react-redux';
 import Chemical from './Chemical';
-import {bindActionCreators} from 'redux'
-import {actions} from "react-redux-form"
+import {bindActionCreators} from 'redux';
+import {actions} from "react-redux-form";
+import {resetForm} from '../../../../../utils/functions';
 import {
     mapProducts,
     searchProducts,
@@ -12,7 +13,7 @@ import {
     fetchProductConditions,
     fetchOrigin,
 } from "../../../../../modules/products";
-import { getUnitOfMeasurement, getUnitOfPackaging, resetForm} from "../../../../../modules/productOffers";
+import { getUnitOfMeasurement, getUnitOfPackaging} from "../../../../../modules/productOffers";
 
 const mapStateToProps = store => ({
     isSearching: store.products.isFetching,
@@ -42,8 +43,8 @@ const mapDispatchToProps = dispatch => (
         fetchProductGrade,
         getUnitOfMeasurement,
         fetchProductConditions,
-        resetForm,
         fetchOrigin,
+        resetForm,
         dispatch
     }, dispatch)
 );

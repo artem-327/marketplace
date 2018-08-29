@@ -16,12 +16,16 @@ export default class ProductOffering extends Component {
         }
     }
 
-    componentDidMount () {
+    componentDidMount(){
         this.props.fetchProductForms();
         this.props.fetchProductGrade();
         this.props.fetchProductConditions();
         this.props.fetchOrigin();
         if(this.state.firstValue) localStorage.removeItem('productLots');
+    }
+
+    componentWillUnmount(){
+        this.props.resetForm('forms.productOffering');
     }
 
     saveOffering(values){

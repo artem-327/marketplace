@@ -2,10 +2,10 @@ import {connect} from 'react-redux';
 import AddForm from './AddForm';
 import {bindActionCreators} from 'redux'
 import {saveWarehouse, updateWarehouse, fetchWarehouse, fetchLocations} from "../../../../../modules/location";
-import {addProductOffer, resetForm} from '../../../../../modules/productOffers';
+import {addProductOffer} from '../../../../../modules/productOffers';
 import {validatePackageType} from "../../../../../modules/packageTypes";
 import {addMessage} from "../../../../../modules/errors";
-
+import {resetForm} from '../../../../../utils/functions';
 
 function mapStateToProps(store) {
     return {
@@ -24,8 +24,8 @@ function mapDispatchToProps(dispatch) {
         updateWarehouse,
         addProductOffer,
         fetchWarehouse,
-        resetForm,
-        addMessage
+        addMessage,
+        resetForm
     }, dispatch)
 }
 

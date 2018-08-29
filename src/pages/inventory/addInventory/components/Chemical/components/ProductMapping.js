@@ -11,10 +11,15 @@ export default class ProductMapping extends Component {
         }
     }
 
-    componentDidMount () {
+    componentDidMount(){
         this.props.getUnitOfMeasurement();
         this.props.getUnitOfPackaging();
     }
+
+    componentWillUnmount(){
+        this.props.resetForm('forms.productMapping');
+    }
+
     saveMapping(values){
         values = Object.assign({}, values, {
             product: this.props.productID
