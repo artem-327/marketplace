@@ -115,12 +115,5 @@ export function getUnitOfPackaging(pack) {
             type: GET_UNIT_OF_PACKAGING,
             payload: axios.get('/api/v1/containers/', {params: {...pack}}).then(response => response.data.data.containers)
         }
-    }
-
-export function resetForm() {
-    return {
-        type: RESET_PRODUCT_OFFER,
-    }
 }
-
 

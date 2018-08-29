@@ -1,4 +1,3 @@
-import { actions } from 'react-redux-form';
 const RESET_TAGS = "RESET_TAGS";
 const TOGGLE_FILTER = "TOGGLE_FILTER";
 const TOGGLE_FILTER_GROUP = 'TOGGLE_FILTER_GROUP';
@@ -85,12 +84,6 @@ export function closeFilterTag(index) {
         type: CLOSE_FILTER_TAG,
         payload: Promise.resolve(index)
     }
-}
-
-export function resetForm() {
-    return dispatch => {
-        dispatch(actions.reset("forms.filter"));
-    };
 }
 
 export function resetFilterTags(){
