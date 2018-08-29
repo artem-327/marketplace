@@ -5,7 +5,6 @@ import {saveWarehouse, updateWarehouse, fetchWarehouse, fetchLocations} from "..
 import {addProductOffer} from '../../../../../modules/productOffers';
 import {validatePackageType} from "../../../../../modules/packageTypes";
 import {addMessage} from "../../../../../modules/errors";
-import {resetForm} from '../../../../../utils/functions';
 
 function mapStateToProps(store) {
     return {
@@ -25,7 +24,6 @@ function mapDispatchToProps(dispatch) {
         addProductOffer,
         fetchWarehouse,
         addMessage,
-        resetForm
     }, dispatch)
 }
 

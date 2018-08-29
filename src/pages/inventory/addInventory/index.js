@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import AddInventory from './AddInventory';
 import {bindActionCreators} from 'redux'
-import {resetForm} from "../../../modules/productOffers";
+import {resetForm} from "../../../utils/functions";
 
 function mapStateToProps() {
     return {}

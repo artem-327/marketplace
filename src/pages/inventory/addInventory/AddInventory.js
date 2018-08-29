@@ -9,7 +9,7 @@ export default class AddInventory extends Component {
         return(
         <div>
             <h1 className='header'>ADD INVENTORY</h1>
-            <AddGroup header='CHEMICAL' component={<Chemical/>}/>
+            <AddGroup header='CHEMICAL' component={<Chemical resetForm={this.props.resetForm}/>}/>
             <AddForm {...this.props}/>
         </div>)
     }
