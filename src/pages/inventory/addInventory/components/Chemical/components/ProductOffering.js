@@ -21,7 +21,6 @@ export default class ProductOffering extends Component {
         this.props.fetchProductGrade();
         this.props.fetchProductConditions();
         this.props.fetchOrigin();
-        if(this.state.firstValue) localStorage.removeItem('productLots');
     }
 
     componentWillUnmount(){

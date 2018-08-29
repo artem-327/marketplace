@@ -36,6 +36,7 @@ export default class AddForm extends Component {
     addLot(lots, inputs, index){
         if(index === lots.length){
             if(index === 0) return;
+            localStorage.removeItem('productLots');
             this.props.history.push("/inventory/my-inventory");
             return;
         }
