@@ -2,8 +2,9 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Filter from './Filter';
 import {fetchAll as fetchPackageTypes} from "../../modules/packageTypes";
-import {toggleFilterGroup, resetForm, addFilterTag, toggleFilter} from '../../modules/filter';
+import {toggleFilterGroup, addFilterTag, toggleFilter} from '../../modules/filter';
 import {fetchProductAge} from '../../modules/products';
+import {resetForm} from '../../utils/functions';
 
 
 function mapStateToProps(store) {
@@ -20,7 +21,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({fetchPackageTypes, toggleFilterGroup, resetForm, addFilterTag, toggleFilter, fetchProductAge, dispatch}, dispatch)
+    return bindActionCreators({fetchPackageTypes, toggleFilterGroup, addFilterTag, toggleFilter, fetchProductAge, resetForm, dispatch}, dispatch)
 }
 
 

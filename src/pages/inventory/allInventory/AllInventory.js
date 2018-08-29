@@ -12,7 +12,7 @@ class AllInventory extends Component {
 
     componentWillUnmount(){
         this.props.resetFilterTags();
-        this.props.resetForm();
+        this.props.resetForm('forms.filter');
     }
 
     render() {
