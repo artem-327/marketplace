@@ -3,6 +3,7 @@ import Chemical from './Chemical';
 import {bindActionCreators} from 'redux';
 import {actions} from "react-redux-form";
 //import {resetForm} from '../../../../../utils/functions';
+import {addMessage} from '../../../../../modules/errors';
 import {
     mapProducts,
     searchProducts,
@@ -44,6 +45,7 @@ const mapDispatchToProps = dispatch => (
         getUnitOfMeasurement,
         fetchProductConditions,
         fetchOrigin,
+        addMessage,
         dispatch
     }, dispatch)
 );
