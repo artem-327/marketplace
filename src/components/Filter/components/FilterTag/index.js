@@ -2,6 +2,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import FilterTags from './FilterTags';
 import {closeFilterTag} from '../../../../modules/filter';
+import {resetForm} from "../../../../utils/functions";
 
 function mapStateToProps(store) {
     return {
@@ -11,7 +12,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({closeFilterTag}, dispatch)
+    return bindActionCreators({closeFilterTag, resetForm}, dispatch)
 }
 
 
