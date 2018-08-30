@@ -28,7 +28,8 @@ const mapStateToProps = store => ({
     unitOfMeasurement: store.productOffers.unitOfMeasurement,
     unitOfPackaging: store.productOffers.unitOfPackaging,
     productMapping: store.forms.productMapping,
-    comboData: store.products.origin
+    comboData: store.products.origin,
+    productOffering: store.forms.productOffering
 });
 
 const mapDispatchToProps = dispatch => (

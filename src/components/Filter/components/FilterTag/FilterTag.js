@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import './filterTag.css'
 import PropTypes from "prop-types";
-import { actions } from 'react-redux-form';
 
 class FilterTag extends Component {
 
@@ -56,7 +55,7 @@ class FilterTag extends Component {
     render () {
         return (
             <div className="filterTag"><span>{this.checkName(this.props.name)}: {this.chooseFilter(this.props.name)}</span>
-                <i onClick={()=>{this.props.dispatch(actions.change('forms.filter.data.' + this.props.name, ''));this.props.close()}} className="fas fa-times"> </i>
+                <i onClick={()=>{this.props.resetForm('forms.filter.' + this.props.name);this.props.close()}} className="fas fa-times"> </i>
             </div>
     )}
 }
