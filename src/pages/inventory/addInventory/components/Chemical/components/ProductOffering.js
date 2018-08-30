@@ -27,7 +27,17 @@ export default class ProductOffering extends Component {
         this.props.resetForm('forms.productOffering');
     }
 
+    validateMapping(){
+        if(this.props.productMapping.indexName === '' || this.props.productMapping.casNumber === '' || this.props.productMapping.chemicalName === '' || this.props.productMapping.productName === '' || this.props.productMapping.productNumber === '' || this.props.productMapping.measurements === '' || this.props.productMapping.packaging.container === undefined || this.props.productMapping.packaging.unit === undefined){
+            return true;
+        }
+    }
+
     saveOffering(values){
+        if(this.validateMapping){
+            this.props.addMessage("Please fill mapping forms before you add new lot.");
+            return;
+        }
         this.setState({save: true, firstValue: false});
         this.props.addLot(values);
     }
