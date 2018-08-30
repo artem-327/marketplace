@@ -153,7 +153,6 @@ export default class ProductOffering extends Component {
                         <div className='group-item-wr'>
                             <label htmlFor=".tradeName">Trade Name</label>
                             <Control.text model=".name"
-                                          validators={{required}}
                                           id=".tradeName"
                                           />
                         </div>
