@@ -3,7 +3,7 @@ import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerRedux";
 import './ProductOffering.css'
-import {required, messages, min, isNumber} from "../../../../../../utils/validation";
+import {required, messages, min, isNumber, maxPercent, bigger} from "../../../../../../utils/validation";
 import ComboBoxRedux from "../../../../../../components/ComboBox/ComboBoxRedux";
 
 
@@ -155,13 +155,14 @@ export default class ProductOffering extends Component {
                                 messages={{
                                     required: messages.required,
                                     min: messages.min,
-                                    isNumber: messages.isNumber
+                                    isNumber: messages.isNumber,
+                                    maxPercent: messages.maxPercent
                                 }}
                             />
                         <div className='group-item-wr'>
                             <label htmlFor=".assayMin">Assay Min %</label>
                             <Control.text model=".assayMin"
-                                          validators={{min: (val) => min(val, 0), isNumber, required}}
+                                          validators={{min: (val) => min(val, 0), isNumber, required, maxPercent}}
                                           id=".assayMin"
                                           />
                         </div>
@@ -172,13 +173,15 @@ export default class ProductOffering extends Component {
                                 messages={{
                                     required: messages.required,
                                     min: messages.min,
-                                    isNumber: messages.isNumber
+                                    isNumber: messages.isNumber,
+                                    maxPercent: messages.maxPercent,
+                                    bigger: messages.bigger
                                 }}
                             />
                             <div className='group-item-wr'>
                                 <label htmlFor=".assayMax">Assay Max %</label>
                                 <Control.text model=".assayMax"
-                                              validators={{min: (val) => min(val, 0), isNumber, required}}
+                                              validators={{min: (val) => min(val, 0), bigger: (val) =>bigger(val, this.props.productOffering.assayMin), isNumber, required, maxPercent}}
                                               id=".assayMax"
                                               />
                             </div>
