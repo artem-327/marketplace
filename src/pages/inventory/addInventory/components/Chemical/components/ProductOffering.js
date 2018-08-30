@@ -34,7 +34,7 @@ export default class ProductOffering extends Component {
     }
 
     saveOffering(values){
-        if(this.validateMapping){
+        if(this.validateMapping()){
             this.props.addMessage("Please fill mapping forms before you add new lot.");
             return;
         }
