@@ -3,7 +3,6 @@ export const isNumber = (val) => !isNaN(parseFloat(val)) && isFinite(val);
 export const min = (val, min) => val > min;
 export const maxPercent = (val) => val < 101;
 export const bigger = (val, min) => {
-    console.log(val, min);
     return val > min;
 }
 
