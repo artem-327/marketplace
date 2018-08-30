@@ -11,6 +11,5 @@ export const messages = {
     isNumber: "Must be number",
     min: "Must be grater then 0",
     maxPercent: "Maximum is 100%",
-    bigger: "Must be bigger than min"
-
+    bigger: "Must be bigger than minimum"
 };
