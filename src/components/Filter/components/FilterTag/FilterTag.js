@@ -13,6 +13,8 @@ class FilterTag extends Component {
             case 'qntyub': return 'To Quantity';
             case 'prclb': return 'From Price';
             case 'prcub': return 'To Price';
+            case 'dtfr': return 'Expiration From';
+            case 'dtto': return 'Expiration To';
             case 'pckgs': return 'Package type';
             case 'chemSearch': return 'Chemical search';
             case 'productAge': return 'Product Age';

@@ -15,7 +15,8 @@ export const initialState = {
         packaging: false,
         chemSearch: false,
         productAge: false,
-        location: false
+        location: false,
+        date: false
     },
     filterTags: []
 };

@@ -160,6 +160,47 @@ class Filter extends Component {
                                          type: 'dropdown',
                                      }
                                  ]}/>
+                    <FilterGroup className="filterGroup"
+                                 header='Expiration'
+                                 split
+                                 isVisible={!!this.props.date}
+                                 data={this.props.filterData}
+                                 isOpen={this.props.filterGroupStatus.date}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('date', value)}}
+                                 dispatch={this.props.dispatch}
+                                 inputs={[
+                                     {
+                                         label: 'From',
+                                         model: '.dtfr',
+                                         type: 'date',
+                                     },
+                                     {
+                                         label: 'To',
+                                         model: '.dtto',
+                                         type: 'date',
+                                     }
+                                 ]}/>
+                    <FilterGroup className="filterGroup"
+                                 isVisible={!!this.props.assay}
+                                 isOpen={this.props.filterGroupStatus.assay}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('assay', value)}}
+                                 header='Assay'
+                                 data={this.props.filterData}
+                                 split
+                                 inputs={[
+                                     {
+                                         label: 'Minimum()',
+                                         model: '.qntylb',
+                                         type: 'number',
+                                         placeholder: '0'
+                                     },
+                                     {
+                                         label: 'Maximum',
+                                         model: '.qntyub',
+                                         type: 'number',
+                                         placeholder: '0'
+                                     }
+                                 ]}/>
                     <div className="filterBottom">
 
                         {/*<button className="filter-button">Apply</button>*/}

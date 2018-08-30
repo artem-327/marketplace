@@ -6,6 +6,7 @@ import dropdownClose from '../../../images/inv-filter/dropdown-close.png'
 import classnames from "classnames";
 import DropdownRedux from "../../Dropdown/DropdownRedux";
 import RadioRedux from "../../Radio/RadioRedux";
+import DatepickerRedux from "../../Datepicker/DatepickerRedux";
 
 class FilterGroup extends Component {
 
@@ -91,6 +92,14 @@ class FilterGroup extends Component {
                         <div key={index} className='filter-input-dropdown'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>
                         <DropdownRedux dispatch={this.props.dispatch} model={input.model} opns={[{name:'100', id:'100'}, {name:'500', id:'500'}, {name:'1000', id:'1000'}]}/>
+                        </div>
+                    )
+                }
+                case 'date' : {
+                    return (
+                        <div key={index} className='filter-input-date'>
+                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
+                            <DatepickerRedux dispatch={this.props.dispatch} model={input.model}/>
                         </div>
                     )
                 }
