@@ -16,6 +16,8 @@ class FilterTag extends Component {
             case 'dtfr': return 'Expiration From';
             case 'dtto': return 'Expiration To';
             case 'pckgs': return 'Package type';
+            case 'assmin': return 'Assay Min';
+            case 'assmax': return 'Assay Max';
             case 'chemSearch': return 'Chemical search';
             case 'productAge': return 'Product Age';
             case 'loc': return 'Location';

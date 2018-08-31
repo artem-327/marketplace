@@ -45,7 +45,7 @@ class Filter extends Component {
     }
 
     render(){
-
+        console.log(this.props.conditions);
         return this.state.isOpen ?
             <div className="filter">
                 <Form model="forms.filter" onSubmit={(val) => this.handleSubmit(val)}>
@@ -161,6 +161,20 @@ class Filter extends Component {
                                      }
                                  ]}/>
                     <FilterGroup className="filterGroup"
+                                 header='Condition'
+                                 isVisible={!!this.props.condition}
+                                 data={this.props.conditions}
+                                 isOpen={this.props.filterGroupStatus.condition}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('condition', value)}}
+                                 dispatch={this.props.dispatch}
+                                 inputs={[
+                                     {
+                                         label: 'Condition',
+                                         model: 'forms.filter.data.condition',
+                                         type: 'checkbox',
+                                     }
+                                 ]}/>
+                    <FilterGroup className="filterGroup"
                                  header='Expiration'
                                  split
                                  isVisible={!!this.props.date}
@@ -189,14 +203,14 @@ class Filter extends Component {
                                  split
                                  inputs={[
                                      {
-                                         label: 'Minimum()',
-                                         model: '.qntylb',
+                                         label: 'Minimum (%)',
+                                         model: '.assmin',
                                          type: 'number',
                                          placeholder: '0'
                                      },
                                      {
-                                         label: 'Maximum',
-                                         model: '.qntyub',
+                                         label: 'Maximum (%)',
+                                         model: '.assmax',
                                          type: 'number',
                                          placeholder: '0'
                                      }

@@ -13,6 +13,8 @@ function mapStateToProps(store) {
         packageTypes: store.packageTypes.data,
         filterGroupStatus: store.filter.filterGroup,
         filterData: store.forms.filter,
+        conditions: store.products.productConditions,
+        forms: store.products.productForms,
         productAge:store.products.productAge,
         productAgeModel: store.forms.filter.productAge,
         productAgeCustomModel: store.forms.filter.productAgeCustom,

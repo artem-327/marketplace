@@ -7,6 +7,7 @@ import classnames from "classnames";
 import DropdownRedux from "../../Dropdown/DropdownRedux";
 import RadioRedux from "../../Radio/RadioRedux";
 import DatepickerRedux from "../../Datepicker/DatepickerRedux";
+import ComboBoxRedux from "../../ComboBox/ComboBoxRedux";
 
 class FilterGroup extends Component {
 
@@ -91,7 +92,17 @@ class FilterGroup extends Component {
                     return (
                         <div key={index} className='filter-input-dropdown'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>
-                        <DropdownRedux dispatch={this.props.dispatch} model={input.model} opns={[{name:'100', id:'100'}, {name:'500', id:'500'}, {name:'1000', id:'1000'}]}/>
+                            <DropdownRedux dispatch={this.props.dispatch} model={input.model}
+                                           opns={input.data}
+                            />
+                        </div>
+                    )
+                }
+                case 'comboBox' : {
+                    return (
+                        <div key={index} className='filter-input-dropdown'>
+                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
+                            <ComboBoxRedux dispatch={this.props.dispatch} model={input.model} limit={3} placeholder="Select Condition" items={input.data}  />
                         </div>
                     )
                 }
