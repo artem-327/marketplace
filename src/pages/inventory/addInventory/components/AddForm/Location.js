@@ -36,7 +36,6 @@ export default class Location extends Component {
                 zip: nextProps.warehouse[this.state.warehouseIndex].zip,
             })
         }
-
     }
 
     handleInputs(value, name){
@@ -65,13 +64,32 @@ export default class Location extends Component {
 
     changeMode(e){
         e.preventDefault();
-        if(this.state.warehouseIndex === '')return;
+        if(this.state.warehouseIndex === '') return;
         this.setState({edit: !this.state.edit})
+    }
+
+    validateEmail(){
+        let re = /^\S+@\S+$/;
+        let test = re.test(String(this.state.email).toLowerCase());
+        return test;
+    }
+
+    validateForms(){
+        if(this.state.warehouseName === '' || this.state.street === '' || this.state.city === '' || this.state.state === '' || this.state.zip === '' || this.state.contact === '' || this.state.phone === '' || this.state.email === ''){
+            this.props.addMessage("Fill all forms please.");
+            return false;
+        }
+        else if(!this.validateEmail()){
+            this.props.addMessage("Bad email adress format.");
+            return false;
+        }
+        return true;
     }
 
     saveLocation(e, edit = !this.state.edit){
         e.preventDefault();
         let { warehouseName, street, city, state, zip, contact, phone, email } = this.state;
+        if(!this.validateForms()) return;
         this.props.saveWarehouse(warehouseName, street, city, state, contact, phone, email, zip).then(()=>{
             this.props.fetchWarehouse().then(()=>{
                 this.setState({edit: edit}, ()=> this.changeLocation('saved'))
@@ -82,6 +100,7 @@ export default class Location extends Component {
     updateLocation(e){
         e.preventDefault();
         let {street, city, state, zip, contact, phone, email } = this.state;
+        if(!this.validateForms()) return;
         this.props.updateWarehouse(this.props.warehouse[this.state.warehouseIndex].id, this.props.warehouse[this.state.warehouseIndex].name, street, city, state, contact, phone, email, zip).then(()=>{
             this.props.fetchWarehouse().then(()=>{
                 this.setState({edit: false})
@@ -196,7 +215,8 @@ export default class Location extends Component {
                         <label htmlFor="street">Warehouse Name</label>
                         <input id="name"
                                value={this.state.warehouseName}
-                               onChange={(e)=>{this.handleInputs(e.target.value, 'warehouseName')}}/>
+                               onChange={(e)=>{this.handleInputs(e.target.value, 'warehouseName')}}
+                               />
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor="street">Street Address</label>
