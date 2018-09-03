@@ -5,7 +5,7 @@ import {toggleFilter} from '../../modules/filter'
 
 function mapStateToProps(store) {
     return {
-        filterOpen: store.forms.filter.isOpen
+        filterOpen: store.filter.isOpen
     }
 }
 
