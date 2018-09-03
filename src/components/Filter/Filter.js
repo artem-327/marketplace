@@ -16,7 +16,12 @@ class Filter extends Component {
     }
 
     handleSubmit(inputs){
-        let filter = Object.assign({}, inputs, {pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key).join(',')});
+        let filter = Object.assign({}, inputs,
+            {pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key).join(',')},
+            {condition: Object.entries(inputs.condition || {}).filter(([key, value]) => value).map(([key]) => key).join(',')},
+            {form: Object.entries(inputs.form || {}).filter(([key, value]) => value).map(([key]) => key).join(',')}
+            );
+        console.log(filter);
         let params = filterNonEmptyAttributes(filter);
         this.props.filterFunc(params);
         let filterTags = [];
@@ -35,7 +40,8 @@ class Filter extends Component {
     }
 
     componentDidMount() {
-        // this.props.fetchPackageTypes();
+    this.props.fetchProductConditions();
+    this.props.fetchProductForms();
     }
 
     componentWillReceiveProps(nextProps){
@@ -45,7 +51,6 @@ class Filter extends Component {
     }
 
     render(){
-        console.log(this.props.conditions);
         return this.state.isOpen ?
             <div className="filter">
                 <Form model="forms.filter" onSubmit={(val) => this.handleSubmit(val)}>
@@ -118,6 +123,34 @@ class Filter extends Component {
                                         id: packageType.id,
                                         model: `.pckgs[${packageType.id}]`
                                  }))}/>
+                    <FilterGroup className="filterGroup"
+                                 header='Condition'
+                                 isVisible={!!this.props.condition}
+                                 split
+                                 data={this.props.productConditions}
+                                 isOpen={this.props.filterGroupStatus.condition}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('condition', value)}}
+                                 checkboxModel='condition'
+                                 inputs={this.props.productConditions.map(condition => ({
+                                     label: condition.name,
+                                     type: 'checkbox',
+                                     id: condition.id,
+                                     model: `.condition[${condition.id}]`
+                                 }))}/>
+                    <FilterGroup className="filterGroup"
+                                 header='Form'
+                                 isVisible={!!this.props.form}
+                                 split
+                                 data={this.props.productForms}
+                                 isOpen={this.props.filterGroupStatus.form}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('form', value)}}
+                                 checkboxModel='form'
+                                 inputs={this.props.productForms.map(form => ({
+                                     label: form.name,
+                                     type: 'checkbox',
+                                     id: form.id,
+                                     model: `.form[${form.id}]`
+                                 }))}/>
 
                     <FilterGroup className="filterGroup"
                                  header='Chemical Search'
@@ -158,20 +191,6 @@ class Filter extends Component {
                                          label: 'Max. miles away',
                                          model: 'forms.filter.data.loc',
                                          type: 'dropdown',
-                                     }
-                                 ]}/>
-                    <FilterGroup className="filterGroup"
-                                 header='Condition'
-                                 isVisible={!!this.props.condition}
-                                 data={this.props.conditions}
-                                 isOpen={this.props.filterGroupStatus.condition}
-                                 onOpen={(value)=>{this.props.toggleFilterGroup('condition', value)}}
-                                 dispatch={this.props.dispatch}
-                                 inputs={[
-                                     {
-                                         label: 'Condition',
-                                         model: 'forms.filter.data.condition',
-                                         type: 'checkbox',
                                      }
                                  ]}/>
                     <FilterGroup className="filterGroup"

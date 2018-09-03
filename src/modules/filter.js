@@ -16,7 +16,9 @@ export const initialState = {
         chemSearch: false,
         productAge: false,
         location: false,
-        date: false
+        date: false,
+        condition: false,
+        form: false
     },
     filterTags: []
 };

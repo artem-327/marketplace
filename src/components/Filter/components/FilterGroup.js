@@ -38,34 +38,8 @@ class FilterGroup extends Component {
         if(nextProps.isOpen !== this.state.isOpen) this.setState({isOpen: nextProps.isOpen})
     }
 
-    // renderInputsGroup () {
-    //     switch (this.props.renderAsGroup) {
-    //         case 'radio': {
-    //             return this.state.isOpen ? this.props.inputs.map((input, index) => {
-    //                 return (
-    //                 <div className='input-radio'>
-    //                 <label className="radioButton" key={index}><p>{input.label}</p>
-    //                     <Control.radio name={this.props.name} value={input.id}
-    //                                    model={input.model}/>
-    //                     <span className={"radiomark"}></span>
-    //                 </label>
-    //                 </div>
-    //                 )
-    //             }) : null
-    //         }
-    //         default: {
-    //             return null
-    //         }
-    //     }
-    // }
-
     renderInputs () {
-
-        if (this.props.header ==='Product Age'){
-        }
-
         if (!this.props.inputs) return;
-        if (this.props.renderAsGroup) return this.renderInputsGroup();
         return this.state.isOpen ? this.props.inputs.map((input, index) => {
             switch(input.type){
                 case 'checkbox':{
@@ -80,7 +54,6 @@ class FilterGroup extends Component {
                     )
                 }
                 case 'radio' : {
-
                     return (
                         <div key={index} className='filter-input-radio'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>
@@ -102,7 +75,7 @@ class FilterGroup extends Component {
                     return (
                         <div key={index} className='filter-input-dropdown'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>
-                            <ComboBoxRedux dispatch={this.props.dispatch} model={input.model} limit={3} placeholder="Select Condition" items={input.data}  />
+                            <ComboBoxRedux dispatch={this.props.dispatch} model={input.model} limit={input.limit} placeholder="Select Condition" items={input.data}  />
                         </div>
                     )
                 }

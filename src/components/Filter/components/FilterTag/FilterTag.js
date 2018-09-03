@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 class FilterTag extends Component {
 
     packageName = [];
+    conditionName = [];
+    formName = [];
 
     checkName(name){
         switch(name){
@@ -20,7 +22,9 @@ class FilterTag extends Component {
             case 'assmax': return 'Assay Max';
             case 'chemSearch': return 'Chemical search';
             case 'productAge': return 'Product Age';
+            case 'form': return 'Form';
             case 'loc': return 'Location';
+            case 'condition': return 'Condition';
             default: return 'unknown';
         }
     }
@@ -31,7 +35,7 @@ class FilterTag extends Component {
 
     pickPackageName(){
         this.packageName = [];
-        var array = this.props.value.split(',');
+        let array = this.props.value.split(',');
 
         for (let i = 0; i < array.length; i++) {
             this.props.packageTypes.map((info)=>{
@@ -43,6 +47,34 @@ class FilterTag extends Component {
         }
         
     }
+    pickConditionName(){
+        this.conditionName = [];
+        let array = this.props.value.split(',');
+
+        for (let i = 0; i < array.length; i++) {
+            this.props.productConditions.map((info)=>{
+                if((info.id).toString() === array[i]){
+                    this.conditionName.push(info.name);
+                }
+                return null;
+            })
+        }
+
+    }
+    pickFormName(){
+        this.formName = [];
+        let array = this.props.value.split(',');
+
+        for (let i = 0; i < array.length; i++) {
+            this.props.productForms.map((info)=>{
+                if((info.id).toString() === array[i]){
+                    this.formName.push(info.name);
+                }
+                return null;
+            })
+        }
+
+    }
 
     chooseFilter(name){
         switch(name){
@@ -50,12 +82,19 @@ class FilterTag extends Component {
                 this.pickPackageName();
                 return this.packageName.join(',');
             }
+            case 'condition':{
+                this.pickConditionName();
+                return this.conditionName.join(',');
+            }
+            case 'form':{
+                this.pickFormName();
+                return this.formName.join(',');
+            }
             default: {
                 return this.props.value;
             }
         }
     }
-
     render () {
         return (
             <div className="filterTag"><span>{this.checkName(this.props.name)}: {this.chooseFilter(this.props.name)}</span>
