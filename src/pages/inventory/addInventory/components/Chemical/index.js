@@ -12,7 +12,7 @@ import {
     fetchProductForms,
     fetchProductGrade,
     fetchProductConditions,
-    fetchOrigin,
+    fetchOrigin, fetchManufacturer,
 } from "../../../../../modules/products";
 import { getUnitOfMeasurement, getUnitOfPackaging} from "../../../../../modules/productOffers";
 
@@ -25,6 +25,8 @@ const mapStateToProps = store => ({
     productGrade: store.products.productGrade,
     productConditions: store.products.productConditions,
     originData: store.products.origin,
+    manufacturer: store.products.manufacturer,
+    isFetchingManufacturer: store.products.isFetchingManufacturer,
     recentProducts: store.products.recentProducts,
     unitOfMeasurement: store.productOffers.unitOfMeasurement,
     unitOfPackaging: store.productOffers.unitOfPackaging,
@@ -42,6 +44,7 @@ const mapDispatchToProps = dispatch => (
         fetchRecentAddedProducts,
         getUnitOfPackaging,
         fetchProductForms,
+        fetchManufacturer,
         fetchProductGrade,
         getUnitOfMeasurement,
         fetchProductConditions,
