@@ -1,0 +1,34 @@
+.uploadLot {
+  label {
+    position: relative;
+    display: inline-block;
+    margin-left: 15px;
+    font-size: 1.1rem;
+    color: #289ada;
+    vertical-align: middle;
+  }
+}
+.upload-item{
+  input{
+    &:hover, &:focus{
+      cursor: pointer;
+    }
+  }
+  width: 250px;
+  height: 50px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: +1;
+  &:hover, &:focus{
+    cursor: pointer;
+  }
+}
+.upload {
+  height: 32px;
+  margin-top: 5px;
+}
+.uploaded {
+  height: 32px;
+  margin-top: 5px;
+}
