@@ -13,6 +13,7 @@ const Login = props => {
                 <img className="logoLogin" src={logoLogin}  alt='Login'/>
                 <Form {...props} />
                 </div>
+                <div className="form-place version">0.1.0</div>
             </div>
         </div>
     </div>;
