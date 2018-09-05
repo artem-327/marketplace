@@ -22,6 +22,9 @@ const SEARCH_PRODUCT_FULFILLED = 'SEARCH_PRODUCT_FULFILLED';
 const SEARCH_PRODUCT_REJECTED = 'SEARCH_PRODUCT_REJECTED';
 const SAVE_MAPPING = 'SAVE_MAPPING';
 const SAVE_MAPPING_FULFILLED = 'SAVE_MAPPING_FULFILLED';
+const FETCH_MANUFACTURER = 'FETCH_MANUFACTURER';
+const FETCH_MANUFACTURER_PENDING = 'FETCH_MANUFACTURER_PENDING';
+const FETCH_MANUFACTURER_FULFILLED = 'FETCH_MANUFACTURER_FULFILLED';
 
 export const initialState = {
     productsMapping: {},
@@ -35,6 +38,8 @@ export const initialState = {
     location: [],
     recentProducts: [],
     origin: [],
+    manufacturer:[],
+    isFetchingManufacturer: false,
     isFetching: false,
     isMapFetching: false
 };
@@ -45,6 +50,19 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 productForms: action.payload
+            }
+        }
+        case FETCH_MANUFACTURER_PENDING:{
+            return {
+                ...state,
+                isFetchingManufacturer: true
+            }
+        }
+        case FETCH_MANUFACTURER_FULFILLED:{
+            return {
+                ...state,
+                isFetchingManufacturer: false,
+                manufacturer: action.payload
             }
         }
         case FETCH_PRODUCT_CONDITIONS_FULFILLED: {
@@ -140,6 +158,13 @@ export function mapProducts(map) {
     return {
         type: MAP_PRODUCT,
         payload: axios.get('/api/v1/product-templates/', {params:{map}}).then(response => response.data.data.productTemplates)
+    }
+}
+
+export function fetchManufacturer(filter = {}) {
+    return {
+        type: FETCH_MANUFACTURER,
+        payload: axios.get('/api/pu3wz7/manufacturers/', {params: {...filter}}).then(result => result.data.data.manufacturers)
     }
 }
 
