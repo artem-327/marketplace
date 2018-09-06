@@ -4,7 +4,7 @@ import {Form} from 'react-redux-form';
 import Pricing from './Pricing';
 import Location from './Location';
 import classnames from 'classnames';
-import Attachment from "../../../../../components/Upload/Attachment";
+import Attachment from "../Upload/Attachment";
 
 
 export default class AddForm extends Component {
