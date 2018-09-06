@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import './AddedLots.css';
-import UploadLot from "../../../../../../../components/Upload/UploadLot";
+import UploadLot from "../../../Upload/UploadLot";
 
 class AddedLot extends Component {
 
@@ -23,7 +23,6 @@ class AddedLot extends Component {
             <div className="vm">
             <div className='lots-item-docs'>
                 <UploadLot/>
-                {/*<p className="uploadText">Click to upload C of A</p>*/}
             </div>
             </div>
             <div className="vl"></div>

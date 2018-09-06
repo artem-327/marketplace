@@ -12,9 +12,7 @@
   opacity: 0;
   overflow: hidden;
   position: absolute;
-  z-index: +1; }
-  .upload-item input:hover, .upload-item input:focus {
-    cursor: pointer; }
+  z-index: 3; }
   .upload-item:hover, .upload-item:focus {
     cursor: pointer; }
 

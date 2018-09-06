@@ -9,17 +9,12 @@
   }
 }
 .upload-item{
-  input{
-    &:hover, &:focus{
-      cursor: pointer;
-    }
-  }
   width: 250px;
   height: 50px;
   opacity: 0;
   overflow: hidden;
   position: absolute;
-  z-index: +1;
+  z-index: 3;
   &:hover, &:focus{
     cursor: pointer;
   }
