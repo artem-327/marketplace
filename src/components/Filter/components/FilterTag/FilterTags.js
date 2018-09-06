@@ -5,9 +5,8 @@ class FilterTags extends Component {
 
 
     renderTags() {
-        
         return this.props.filterTags.map((tag, index)=>{
-            return <FilterTag packageTypes={this.props.packageTypes} resetForm={this.props.resetForm}  key={index} name={tag.name} dispatch={this.props.dispatch} value={tag.value} close={()=>this.props.closeFilterTag(index).then(()=>{
+            return <FilterTag packageTypes={this.props.packageTypes} productConditions={this.props.productConditions} productForms={this.props.productForms} resetForm={this.props.resetForm}  key={index} name={tag.name} dispatch={this.props.dispatch} value={tag.value} close={()=>this.props.closeFilterTag(index).then(()=>{
                 let filter = {};
                 this.props.filterTags.map((input)=>{
                     filter[input.name] = input.value;
