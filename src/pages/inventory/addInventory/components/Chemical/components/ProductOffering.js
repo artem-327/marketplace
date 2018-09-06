@@ -5,8 +5,6 @@ import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerR
 import './ProductOffering.css'
 import {required, messages, min, isNumber, maxPercent, bigger} from "../../../../../../utils/validation";
 import RemoteComboBoxRedux from "../../../../../../components/ComboBox/RemoteComboBoxRedux";
-import ComboBoxRedux from "../../../../../../components/ComboBox/ComboBoxRedux";
-
 
 export default class ProductOffering extends Component {
     constructor(props) {
@@ -21,7 +19,6 @@ export default class ProductOffering extends Component {
         this.props.fetchProductForms();
         this.props.fetchProductGrade();
         this.props.fetchProductConditions();
-        this.props.fetchOrigin();
     }
 
     componentWillUnmount() {
@@ -129,9 +126,12 @@ export default class ProductOffering extends Component {
                                     required: messages.required,
                                 }}
                             />
-                            <ComboBoxRedux className="origin" label="Origin" limit={5} items={this.props.originData}
-                                           validators={{required}} model="forms.productOffering.origin"
-                                           dispatch={this.props.dispatch}/>
+                            <RemoteComboBoxRedux items={this.props.originData}
+                                                 api={(text) => this.props.fetchOrigin(text)}
+                                                 className="origin" limit={5} label="Origin"
+                                                 isFetching={this.props.isFetchingOrigin}
+                                                 validators={{required}} dispatch={this.props.dispatch}
+                                                 model="forms.productOffering.origin"/>
                         </div>
                         <Errors
                             className="form-error"

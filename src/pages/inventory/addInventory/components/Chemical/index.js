@@ -27,6 +27,7 @@ const mapStateToProps = store => ({
     originData: store.products.origin,
     manufacturer: store.products.manufacturer,
     isFetchingManufacturer: store.products.isFetchingManufacturer,
+    isFetchingOrigin: store.products.isFetchingOrigin,
     recentProducts: store.products.recentProducts,
     unitOfMeasurement: store.productOffers.unitOfMeasurement,
     unitOfPackaging: store.productOffers.unitOfPackaging,
