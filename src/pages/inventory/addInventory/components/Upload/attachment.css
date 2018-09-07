@@ -13,6 +13,42 @@
   .attachment .upload:hover {
     cursor: pointer; }
 
+.attachment .image-wrapper {
+  position: relative;
+  display: inline-block; }
+
+.attachment .upload-image {
+  padding: 10px 0 0 15px; }
+
+.attachment .delete-image {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  left: 15px;
+  width: 135px;
+  height: 90px;
+  background-color: white;
+  opacity: 0; }
+
+.attachment .delete-image:hover {
+  opacity: 0.5;
+  transition: all .2s ease; }
+
+.attachment .delete-image:before, .attachment .delete-image:after {
+  position: relative;
+  top: 3px;
+  left: 8px;
+  content: ' ';
+  height: 25px;
+  width: 1px;
+  background-color: black; }
+
+.attachment .delete-image:before {
+  transform: rotate(45deg); }
+
+.attachment .delete-image:after {
+  transform: rotate(-45deg); }
+
 .attachment .dropzone {
   font-size: 1.3rem;
   position: relative;
