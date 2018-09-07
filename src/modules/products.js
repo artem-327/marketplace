@@ -11,6 +11,7 @@ const FETCH_PRODUCT_AGE_FULFILLED = 'FETCH_PRODUCT_AGE_FULFILLED';
 const FETCH_RECEANT_ADDED_PRODUCTS = 'FETCH_RECEANT_ADDED_PRODUCTS';
 const FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED = 'FETCH_RECEANT_ADDED_PRODUCTS_FULFILLED';
 const FETCH_ORIGIN = 'FETCH_ORIGIN';
+const FETCH_ORIGIN_PENDING = 'FETCH_ORIGIN_PENDING';
 const FETCH_ORIGIN_FULFILLED = 'FETCH_ORIGIN_FULFILLED';
 const SEARCH_PRODUCT = 'SEARCH_PRODUCT';
 const SEARCH_PRODUCT_PENDING = 'SEARCH_PRODUCT_PENDING';
@@ -22,6 +23,9 @@ const SEARCH_PRODUCT_FULFILLED = 'SEARCH_PRODUCT_FULFILLED';
 const SEARCH_PRODUCT_REJECTED = 'SEARCH_PRODUCT_REJECTED';
 const SAVE_MAPPING = 'SAVE_MAPPING';
 const SAVE_MAPPING_FULFILLED = 'SAVE_MAPPING_FULFILLED';
+const FETCH_MANUFACTURER = 'FETCH_MANUFACTURER';
+const FETCH_MANUFACTURER_PENDING = 'FETCH_MANUFACTURER_PENDING';
+const FETCH_MANUFACTURER_FULFILLED = 'FETCH_MANUFACTURER_FULFILLED';
 
 export const initialState = {
     productsMapping: {},
@@ -35,6 +39,8 @@ export const initialState = {
     location: [],
     recentProducts: [],
     origin: [],
+    manufacturer:[],
+    isFetchingManufacturer: false,
     isFetching: false,
     isMapFetching: false
 };
@@ -45,6 +51,19 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 productForms: action.payload
+            }
+        }
+        case FETCH_MANUFACTURER_PENDING:{
+            return {
+                ...state,
+                isFetchingManufacturer: true
+            }
+        }
+        case FETCH_MANUFACTURER_FULFILLED:{
+            return {
+                ...state,
+                isFetchingManufacturer: false,
+                manufacturer: action.payload
             }
         }
         case FETCH_PRODUCT_CONDITIONS_FULFILLED: {
@@ -59,9 +78,16 @@ export default function reducer(state = initialState, action) {
                 productGrade: action.payload
             }
         }
+        case FETCH_ORIGIN_PENDING: {
+            return {
+                ...state,
+                isFetchingOrigin: true,
+            }
+        }
         case FETCH_ORIGIN_FULFILLED: {
             return {
                 ...state,
+                isFetchingOrigin: false,
                 origin: action.payload
             }
         }
@@ -143,6 +169,13 @@ export function mapProducts(map) {
     }
 }
 
+export function fetchManufacturer(filter = "") {
+    return {
+        type: FETCH_MANUFACTURER,
+        payload: axios.get('/api/pu3wz7/manufacturers/', {params: {search: filter}}).then(result => result.data.data.manufacturers)
+    }
+}
+
 export function fetchProductForms(filter = {}) {
     return {
         type: FETCH_PRODUCT_FORMS,
@@ -164,10 +197,10 @@ export function fetchProductGrade(filter = {}) {
     }
 }
 
-export function fetchOrigin(filter = {}) {
+export function fetchOrigin(filter = "") {
     return {
         type: FETCH_ORIGIN,
-        payload: axios.get('/api/v1/origins/', {params: {...filter}}).then(result => result.data.data.origins)
+        payload: axios.get('/api/v1/origins/', {params: {search: filter}}).then(result => result.data.data.origins)
     }
 }
 

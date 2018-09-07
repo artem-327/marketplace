@@ -41,11 +41,6 @@ class BroadcastTargetGroup extends Component {
             let itemValues = this.checkItemValue(this.props.items[i].company);
             newTarget.push({visibility: itemValues[0] === 'include', 'company': this.props.items[i].company, updateType: value,  amount: itemValues[2]})
         }
-        // if(this.props.type !== 'company') {
-        //     this.props.updateTargets(this.props.index, [{[this.props.type]: this.props.id, updateType: value, amount: this.state.groupAmount, visibility: this.state.groupSelected}])
-        // }else{
-        //     this.props.updateTargets(this.props.index, newTarget)
-        // }
         this.setState({
             groupChangeType: value,
             target: newTarget
@@ -60,11 +55,6 @@ class BroadcastTargetGroup extends Component {
                 let itemValues = this.checkItemValue(this.props.items[i].company);
                 newTarget.push({visibility: value === 'include', 'company': this.props.items[i].company, amount: itemValues[2], updateType: itemValues[1]})
             }
-            // if(this.props.type !== 'company') {
-            //     this.props.updateTargets(this.props.index, [{[this.props.type]: this.props.id, visibility: value === 'include', updateType: this.state.groupChangeType, amount: this.state.groupAmount}])
-            // }else{
-            //     this.props.updateTargets(this.props.index, newTarget)
-            // }
         }
         this.setState({
             groupSelected: value,

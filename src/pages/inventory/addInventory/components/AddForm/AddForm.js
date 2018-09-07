@@ -5,6 +5,7 @@ import Pricing from './Pricing';
 import Location from './Location';
 import classnames from 'classnames';
 
+
 export default class AddForm extends Component {
     constructor(props) {
         super(props);
@@ -18,16 +19,24 @@ export default class AddForm extends Component {
         this.props.fetchLocations();
     }
 
+    componentWillUnmount(){
+        this.props.resetForm('forms.addProductOffer');
+    }
+
     addProductOffer(inputs){
         if(localStorage.getItem('productLots')){
             let lots = JSON.parse(localStorage.getItem('productLots'));
             this.addLot(lots, inputs, 0)
+        }
+        else {
+            this.props.addMessage('You must add lot first.')
         }
     }
 
     addLot(lots, inputs, index){
         if(index === lots.length){
             if(index === 0) return;
+            localStorage.removeItem('productLots');
             this.props.history.push("/inventory/my-inventory");
             return;
         }

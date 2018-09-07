@@ -6,6 +6,8 @@ import dropdownClose from '../../../images/inv-filter/dropdown-close.png'
 import classnames from "classnames";
 import DropdownRedux from "../../Dropdown/DropdownRedux";
 import RadioRedux from "../../Radio/RadioRedux";
+import DatepickerRedux from "../../Datepicker/DatepickerRedux";
+import ComboBoxRedux from "../../ComboBox/ComboBoxRedux";
 
 class FilterGroup extends Component {
 
@@ -36,34 +38,8 @@ class FilterGroup extends Component {
         if(nextProps.isOpen !== this.state.isOpen) this.setState({isOpen: nextProps.isOpen})
     }
 
-    // renderInputsGroup () {
-    //     switch (this.props.renderAsGroup) {
-    //         case 'radio': {
-    //             return this.state.isOpen ? this.props.inputs.map((input, index) => {
-    //                 return (
-    //                 <div className='input-radio'>
-    //                 <label className="radioButton" key={index}><p>{input.label}</p>
-    //                     <Control.radio name={this.props.name} value={input.id}
-    //                                    model={input.model}/>
-    //                     <span className={"radiomark"}></span>
-    //                 </label>
-    //                 </div>
-    //                 )
-    //             }) : null
-    //         }
-    //         default: {
-    //             return null
-    //         }
-    //     }
-    // }
-
     renderInputs () {
-
-        if (this.props.header ==='Product Age'){
-        }
-
         if (!this.props.inputs) return;
-        if (this.props.renderAsGroup) return this.renderInputsGroup();
         return this.state.isOpen ? this.props.inputs.map((input, index) => {
             switch(input.type){
                 case 'checkbox':{
@@ -78,7 +54,6 @@ class FilterGroup extends Component {
                     )
                 }
                 case 'radio' : {
-
                     return (
                         <div key={index} className='filter-input-radio'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>
@@ -90,7 +65,25 @@ class FilterGroup extends Component {
                     return (
                         <div key={index} className='filter-input-dropdown'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>
-                        <DropdownRedux dispatch={this.props.dispatch} model={input.model} opns={[{name:'100', id:'100'}, {name:'500', id:'500'}, {name:'1000', id:'1000'}]}/>
+                            <DropdownRedux dispatch={this.props.dispatch} model={input.model}
+                                           opns={input.data}
+                            />
+                        </div>
+                    )
+                }
+                case 'comboBox' : {
+                    return (
+                        <div key={index} className='filter-input-dropdown'>
+                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
+                            <ComboBoxRedux dispatch={this.props.dispatch} model={input.model} limit={input.limit} placeholder="Select Condition" items={input.data}  />
+                        </div>
+                    )
+                }
+                case 'date' : {
+                    return (
+                        <div key={index} className='filter-input-date'>
+                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
+                            <DatepickerRedux dispatch={this.props.dispatch} model={input.model}/>
                         </div>
                     )
                 }

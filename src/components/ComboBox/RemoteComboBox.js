@@ -48,13 +48,15 @@ class RemoteComboBox extends Component {
             className='combo-no-result'>No results</p></div>;
         let res = this.props.items.map((combo, index) => (
             <div key={index + combo.id} className='combo-item' onClick={() => {
-                this.setState({fulltext: (combo[this.props.displayAttr] || combo.name), hasSearched: false}, () => {
+                this.setState({fulltext: this.props.displayName ? this.props.displayName(combo) : (combo[this.props.displayAttr] || combo.name), hasSearched: false}, () => {
                     if (this.props.onChange) this.props.onChange(this.state.fulltext);
                     if (this.props.getObject) this.props.getObject(combo);
-
                 })
             }}>
-                <span className='combo-cas'>{(combo[this.props.displayAttr] || combo.name)}</span>
+                <span className='combo-cas'>
+                    {this.props.displayName ? this.props.displayName(combo) : (combo[this.props.displayAttr] || combo.name)}
+                </span>
+
             </div>
         ));
         return <div className={'combo-results'} style={{maxHeight: 44 * this.state.results_count}}>{res}</div>

@@ -6,7 +6,7 @@
     border: 2px solid #e3e2df;
     background-color: #f6f6f6;
     padding: 10px;
-    font-weight: normal; }
+    font-weight: bold; }
   .product-offers th:first-child {
     border-right: 0px;
     width: 1px; }
