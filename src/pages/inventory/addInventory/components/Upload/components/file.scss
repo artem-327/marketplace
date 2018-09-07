@@ -3,18 +3,24 @@
   font-size: 0.9rem;
   padding: 4px 4px 4px 15px;
   border-radius: 25px;
+  position: relative;
   display: inline-block;
   &.lot {
-    color: black;
-    font-size: 1.1rem;
     padding: 4px 4px 4px 15px;
+    font-size: 1.1rem;
+    vertical-align: bottom;
+    color: black;
     border-radius: 25px;
-    display: inline-block;
     i {
-      margin-left: 5px;
+      margin: 5px 0 0 7px;
       padding: 2px 4px;
-      border: 1px solid #333;
+      border: 1px solid #555;
       border-radius: 50%;
+    }
+    .close{
+      &:before, &:after {
+        background-color: #555;
+      }
     }
   }
   span {
@@ -35,25 +41,24 @@
   .close {
     width: 20px;
     height: 20px;
-    //opacity: 0.6;
+    opacity: 0.6;
+    &:hover {
+      opacity: 1;
+    }
+    &:before, &:after {
+      position: absolute;
+      top: 3px;
+      left: 8px;
+      content: ' ';
+      height: 12px;
+      width: 1px;
+      background-color: #333;
+    }
+    &:before {
+      transform: rotate(45deg);
+    }
+    &:after {
+      transform: rotate(-45deg);
+    }
   }
-  .close:hover {
-  opacity: 1;
-  }
-  .close:before, .close:after {
-    position: absolute;
-    top: 3px;
-    left: 8px;
-    content: ' ';
-    height: 12px;
-    width: 1px;
-    background-color: #333;
-  }
-  .close:before {
-    transform: rotate(45deg);
-  }
-  .close:after {
-    transform: rotate(-45deg);
-  }
-
 }

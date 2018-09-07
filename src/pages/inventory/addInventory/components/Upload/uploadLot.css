@@ -6,8 +6,7 @@
 
 .file-space {
   position: relative;
-  display: inline-block;
-  float: right; }
+  display: inline-block; }
 
 .upload {
   height: 32px;
