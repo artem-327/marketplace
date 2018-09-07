@@ -76,11 +76,11 @@ export default class Location extends Component {
 
     validateForms(){
         if(this.state.warehouseName === '' || this.state.street === '' || this.state.city === '' || this.state.state === '' || this.state.zip === '' || this.state.contact === '' || this.state.phone === '' || this.state.email === ''){
-            this.props.addMessage("Fill all forms please.");
+            this.props.addMessage("Fill all inputs please.");
             return false;
         }
         else if(!this.validateEmail()){
-            this.props.addMessage("Bad email adress format.");
+            this.props.addMessage("Bad email address format.");
             return false;
         }
         return true;

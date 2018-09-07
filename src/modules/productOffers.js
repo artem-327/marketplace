@@ -77,29 +77,10 @@ export function fetchAll(filter = {}, mrchnt=true) {
 }
 
 
-export function addProductOffer({lotNumber, name, merchantVisibility, product, productCondition, productForm, productGrade, manufacturer, origin, assayMin, assayMax, creationDate, expirationDate, externalNotes, internalNotes, packaging, pricing}) {
-    const obj = {
-        lotNumber,
-        name,
-        merchantVisibility,
-        product,
-        productCondition,
-        productForm,
-        productGrade,
-        manufacturer,
-        origin,
-        assayMin,
-        assayMax,
-        creationDate,
-        expirationDate,
-        externalNotes,
-        internalNotes,
-        packaging,
-        pricing
-    };
+export function addProductOffer(inputs) {
     return {
         type: ADD_PRODUCT_OFFER,
-        payload: axios.post('/api/v1/product-offers/', obj)
+        payload: axios.post('/api/v1/product-offers/', inputs)
     }
 }
 
