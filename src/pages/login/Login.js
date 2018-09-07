@@ -10,10 +10,9 @@ const Login = props => {
         <div className="login-wr">
             <div className="form-place">
                 <div className="logForm">
-                <img className="logoLogin" src={logoLogin}  alt='Login'/>
-                <Form {...props} />
+                    <img className="logoLogin" src={logoLogin} alt='Login'/>
+                    <Form {...props} />
                 </div>
-                <div className="form-place version">0.1.0</div>
             </div>
         </div>
     </div>;

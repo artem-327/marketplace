@@ -18,7 +18,12 @@ export default class LoginForm extends React.Component {
         })
     }
 
+    componentWillMount () {
+        this.props.getVersion()
+    }
+
     render() {
+        console.log(this.props.getVersion);
         let {isFetching, hasError} = this.props.formStatus;
         let {email, password} = this.props.loginInputs;
         let butLogin = isFetching ? <Translate id="login.logging"/> : <Translate id="login.login"/>;
@@ -38,6 +43,7 @@ export default class LoginForm extends React.Component {
                 <div className="form-middle">
                     <button className={classnames({"loading": isFetching}, {"disabled": (!email || !password)})}>{butLogin}</button>
                 </div>
+                <div className="form-place version">{this.props.version}</div>
                 {/*<Link className="form-link" to="/registration"><Translate id="login.registration"/></Link>*/}
             </Form>
         );
