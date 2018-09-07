@@ -11,6 +11,10 @@
     vertical-align: bottom;
     color: black;
     border-radius: 25px;
+    max-width: 200px;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
     i {
       margin: 5px 0 0 7px;
       padding: 2px 4px;
