@@ -1,13 +1,38 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
+import ReactDropzone from "react-dropzone";
+import File from "./File";
 
 class UploadFile extends Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            files: []
+        }
+    }
+
+    removeFile(index){
+        this.setState({files: [
+                ...this.state.files.slice(0, index),
+                ...this.state.files.slice(index + 1)
+            ]})
+    }
+
+    onPreviewDrop = (files) => {
+        this.setState({
+            files: this.state.files.concat(files),
+        });
+    };
+
     render () {
+        let files = this.state.files.map((file, index) => (<File onRemove={()=>this.removeFile(index)} name={file.name} />));
         return (
             <div className="file-wrapper">
-            <div className="upload-file"><input type='file' className="upload"/>{this.props.content}
-            </div>
-            <div className="file-space">{this.props.files}</div>
+            <ReactDropzone className="dropzone" activeClassName="active" rejectClassName="dropzone-rejected" onDrop={this.onPreviewDrop}>
+                {this.props.header}
+            </ReactDropzone>
+            <div className="file-space">{files}</div>
             </div>
         )
     }
