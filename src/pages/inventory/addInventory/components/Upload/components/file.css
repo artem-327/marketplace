@@ -4,7 +4,11 @@
   padding: 4px 4px 4px 15px;
   border-radius: 25px;
   position: relative;
-  display: inline-block; }
+  display: inline-block;
+  max-width: 150px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis; }
   .file.lot {
     padding: 4px 4px 4px 15px;
     font-size: 1.1rem;
