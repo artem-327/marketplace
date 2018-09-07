@@ -31,6 +31,7 @@
   opacity: 0; }
 
 .attachment .delete-image:hover {
+  cursor: pointer;
   opacity: 0.5;
   transition: all .2s ease; }
 
