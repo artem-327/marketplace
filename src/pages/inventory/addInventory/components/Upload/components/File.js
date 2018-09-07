@@ -7,7 +7,7 @@ class File extends Component {
     render () {
         return (
             <div id={this.props.name} className="file">
-                <i className="close"></i>
+                <i className="close" onClick={()=>this.props.onRemove()} />
                 {this.props.name}
             </div>
         )}
@@ -15,7 +15,8 @@ class File extends Component {
 
 File.propTypes = {
     name: PropTypes.string,
-    close: PropTypes.func
+    close: PropTypes.func,
+    onRemove: PropTypes.func,
 };
 
 export default File;

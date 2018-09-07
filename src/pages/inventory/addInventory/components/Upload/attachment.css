@@ -1,6 +1,7 @@
 .attachment .file-wrapper {
   display: inline-block;
-  width: 33.333%; }
+  width: 33.333%;
+  vertical-align: top; }
 
 .attachment .upload {
   position: absolute;
@@ -12,7 +13,7 @@
   .attachment .upload:hover {
     cursor: pointer; }
 
-.attachment .upload-file, .attachment .upload-image {
+.attachment .dropzone {
   font-size: 1.3rem;
   position: relative;
   text-align: center;
@@ -21,8 +22,15 @@
   margin: 10px;
   border: 1px dashed #b0b0b0;
   border-radius: 4px;
-  color: #b0b0b0; }
-  .attachment .upload-file:hover, .attachment .upload-file:focus, .attachment .upload-image:hover, .attachment .upload-image:focus {
+  color: #b0b0b0;
+  transition: all .2s ease; }
+  .attachment .dropzone.active {
+    border: 1px dashed #4cd136;
+    color: #4cd136; }
+  .attachment .dropzone.dropzone-rejected {
+    border: 1px dashed #dc3545;
+    color: #dc3545; }
+  .attachment .dropzone:hover, .attachment .dropzone:focus {
     cursor: pointer;
     border-color: #4e5157;
     color: #4e5157; }
