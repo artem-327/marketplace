@@ -15,6 +15,42 @@
       cursor: pointer;
     }
   }
+  .image-wrapper{
+    position: relative;
+    display: inline-block;
+  }
+  .upload-image{
+    padding: 10px 0 0 15px;
+  }
+  .delete-image {
+    position: absolute;
+    z-index: 1;
+    top: 10px;
+    left: 15px;
+    width: 135px;
+    height: 90px;
+    background-color: white;
+    opacity: 0;
+  }
+  .delete-image:hover {
+    opacity: 0.5;
+    transition: all .2s ease;
+  }
+  .delete-image:before, .delete-image:after {
+    position: relative;
+    top: 3px;
+    left: 8px;
+    content: ' ';
+    height: 25px;
+    width: 1px;
+    background-color: black;
+  }
+  .delete-image:before {
+    transform: rotate(45deg);
+  }
+  .delete-image:after {
+    transform: rotate(-45deg);
+  }
   .dropzone {
     font-size: 1.3rem;
     position: relative;

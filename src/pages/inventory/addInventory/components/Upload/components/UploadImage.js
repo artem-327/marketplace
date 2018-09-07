@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import ReactDropzone from "react-dropzone";
+import delete_image from '../../../../../../images/upload/delete_image.jpg';
 
 class UploadImage extends Component {
     constructor(props) {
@@ -14,33 +15,48 @@ class UploadImage extends Component {
         this.setState({
             files: this.state.files.concat(files),
         });
+    };
+
+    removeFile(index) {
+        this.setState({
+            files: [
+                ...this.state.files.slice(0, index),
+                ...this.state.files.slice(index + 1)
+            ]
+        })
     }
 
-    render () {
+    render() {
         const previewStyle = {
-            display: 'inline',
-            maxWidth: 100
+            width: 150,
+            height: 100
         };
+        // let files = this.state.files.map((file, index) => (<File onRemove={()=>this.removeFile(index)} className="file" name={file.name} />));
 
         return (
             <div className="file-wrapper">
-            <ReactDropzone accept="image/*" className="dropzone" activeClassName="active" rejectClassName="dropzone-rejected" onDrop={this.onPreviewDrop}>
-                {this.props.header}
-            </ReactDropzone>
+                <ReactDropzone accept="image/*" className="dropzone" activeClassName="active"
+                               rejectClassName="dropzone-rejected" onDrop={this.onPreviewDrop}>
+                    {this.props.header}
+                </ReactDropzone>
                 {this.state.files.length > 0 &&
                 <React.Fragment>
-                    {this.state.files.map((file) => (
-                        <img
-                            alt="Preview"
-                            key={file.preview}
-                            src={file.preview}
-                            style={previewStyle}
-                        />
+                    {this.state.files.map((file, index) => (
+                        <div className="image-wrapper">
+                            <img src={delete_image} className="delete-image" onClick={() => this.removeFile(index)} />
+                            <img
+                                className="upload-image"
+                                alt="Preview"
+                                key={file.preview}
+                                src={file.preview}
+                                style={previewStyle}
+                            />
+                        </div>
                     ))}
                 </React.Fragment>
                 }
             </div>
-    )
+        )
     }
 }
 

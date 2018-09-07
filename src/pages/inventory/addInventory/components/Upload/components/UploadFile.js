@@ -26,7 +26,7 @@ class UploadFile extends Component {
     };
 
     render () {
-        let files = this.state.files.map((file, index) => (<File onRemove={()=>this.removeFile(index)} name={file.name} />));
+        let files = this.state.files.map((file, index) => (<File onRemove={()=>this.removeFile(index)} className="file" name={file.name} />));
         return (
             <div className="file-wrapper">
             <ReactDropzone className="dropzone" activeClassName="active" rejectClassName="dropzone-rejected" onDrop={this.onPreviewDrop}>

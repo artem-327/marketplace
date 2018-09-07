@@ -1,25 +1,30 @@
 .uploadLot label {
-  position: relative;
-  display: inline-block;
-  margin-left: 15px;
+  margin-left: 45px;
   font-size: 1.1rem;
   color: #289ada;
-  vertical-align: middle; }
+  vertical-align: bottom; }
 
-.upload-item {
-  width: 250px;
-  height: 50px;
-  opacity: 0;
-  overflow: hidden;
-  position: absolute;
-  z-index: 3; }
-  .upload-item:hover, .upload-item:focus {
-    cursor: pointer; }
+.file-space {
+  position: relative;
+  display: inline-block;
+  float: right; }
 
 .upload {
   height: 32px;
-  margin-top: 5px; }
+  float: left; }
 
 .uploaded {
   height: 32px;
-  margin-top: 5px; }
+  float: left; }
+
+.dropzoneLot {
+  font-size: 1.1rem;
+  color: black;
+  margin-top: 10px;
+  transition: all .2s ease; }
+  .dropzoneLot.active {
+    color: #4cd136; }
+  .dropzoneLot:hover, .dropzoneLot:focus {
+    cursor: pointer;
+    border-color: #4e5157;
+    color: #4e5157; }

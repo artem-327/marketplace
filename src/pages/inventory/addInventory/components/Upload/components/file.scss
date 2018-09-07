@@ -4,6 +4,19 @@
   padding: 4px 4px 4px 15px;
   border-radius: 25px;
   display: inline-block;
+  &.lot {
+    color: black;
+    font-size: 1.1rem;
+    padding: 4px 4px 4px 15px;
+    border-radius: 25px;
+    display: inline-block;
+    i {
+      margin-left: 5px;
+      padding: 2px 4px;
+      border: 1px solid #333;
+      border-radius: 50%;
+    }
+  }
   span {
     padding-top: 5px;
   }
@@ -22,7 +35,7 @@
   .close {
     width: 20px;
     height: 20px;
-    opacity: 0.6;
+    //opacity: 0.6;
   }
   .close:hover {
   opacity: 1;
