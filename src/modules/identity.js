@@ -13,6 +13,7 @@ const LOGIN_REJECTED = 'LOGIN_REJECTED';
 const LOGIN_FULFILLED = 'LOGIN_FULFILLED';
 const LOGOUT = 'LOGOUT';
 const GET_VERSION = 'GET_VERSION';
+const GET_VERSION_FULFILLED = 'GET_VERSION_FULFILLED';
 const REGISTRATION = 'REGISTRATION';
 const REGISTRATION_PENDING = 'REGISTRATION_PENDING';
 const REGISTRATION_REJECTED = 'REGISTRATION_REJECTED';
@@ -109,11 +110,11 @@ export default function reducer(state = initialState, action) {
         case LOGOUT: {
             return {...state, identity: initialState.identity, isAuthenticated: false}
         }
+        case GET_VERSION_FULFILLED: {
+            return {...state, version: action.payload}
+        }
         default: {
             return state
-        }
-        case GET_VERSION: {
-            return {...state, version: action.payload}
         }
     }
 }

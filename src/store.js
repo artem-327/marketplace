@@ -41,7 +41,6 @@ const reducer = combineReducers({
         productOffering: productsInit.productOffering,
         loginForm: identityFormInit.loginForm.data,
         registrationForm: identityFormInit.registrationForm.data,
-        version: identityFormInit.version,
     }, 'forms'),
 });
 
