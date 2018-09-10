@@ -12,6 +12,8 @@ const LOGIN_PENDING = 'LOGIN_PENDING';
 const LOGIN_REJECTED = 'LOGIN_REJECTED';
 const LOGIN_FULFILLED = 'LOGIN_FULFILLED';
 const LOGOUT = 'LOGOUT';
+const GET_VERSION = 'GET_VERSION';
+const GET_VERSION_FULFILLED = 'GET_VERSION_FULFILLED';
 const REGISTRATION = 'REGISTRATION';
 const REGISTRATION_PENDING = 'REGISTRATION_PENDING';
 const REGISTRATION_REJECTED = 'REGISTRATION_REJECTED';
@@ -46,7 +48,8 @@ export const initialState = {
             email: "",
             password: "",
         }
-    }
+    },
+    version: "0",
 };
 
 export default function reducer(state = initialState, action) {
@@ -107,6 +110,9 @@ export default function reducer(state = initialState, action) {
         case LOGOUT: {
             return {...state, identity: initialState.identity, isAuthenticated: false}
         }
+        case GET_VERSION_FULFILLED: {
+            return {...state, version: action.payload}
+        }
         default: {
             return state
         }
@@ -132,6 +138,12 @@ export function login(email, password) {
     }
 }
 
+export function getVersion() {
+    return {
+        type: GET_VERSION,
+        payload: axios.get("/api/p1e342/version/").then(result => result.data.data.version)
+    }
+}
 export function logout() {
     deleteAuthToken();
     return {

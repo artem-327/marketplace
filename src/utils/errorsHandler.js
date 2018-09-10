@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {closeMessage} from "../modules/errors";
 
-export default function errorsHandler(ComposedComponent) {
+
     class errorWrapper extends React.Component {
 
         renderErrors(){
@@ -18,7 +18,6 @@ export default function errorsHandler(ComposedComponent) {
         render() {
             return <div className="main-wr">
                 {this.renderErrors()}
-                <ComposedComponent {...this.props}/>
             </div>
         }
     }
@@ -33,6 +32,5 @@ export default function errorsHandler(ComposedComponent) {
         return bindActionCreators({closeMessage},dispatch)
     }
 
-    return connect(mapStateToProps, mapDispatchToProps)(errorWrapper)
-}
+    export default connect(mapStateToProps, mapDispatchToProps)(errorWrapper)
 

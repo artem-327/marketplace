@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {NavLink} from 'react-router-dom';
 import './submenu.css';
-import filterIcon from '../../images/subMenu/filter-icon-transparent.png';
+import filterIconClose from '../../images/subMenu/filter-icon-transparent.png';
+import filterIconOpen from '../../images/subMenu/old/filter-icon-transparent.png';
+
 
 class SubMenu extends Component {
     constructor(props) {
@@ -14,9 +16,7 @@ class SubMenu extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({
-            filterOpen: nextProps.filterOpen
-        })
+        this.setState({filterOpen:nextProps.filterOpen});
     }
 
     renderLinks() {
@@ -31,6 +31,7 @@ class SubMenu extends Component {
 
     renderFilterButton() {
         if (!this.props.filter) return;
+        let filterIcon = this.props.filterOpen ? filterIconOpen : filterIconClose;
         return (
             <div className='submenu-filter' onClick={() => this.props.toggleFilter()}>
                 <img src={filterIcon} alt='open filter'/>

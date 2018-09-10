@@ -35,19 +35,19 @@ class ProductOfferItem extends Component {
         return (
             <React.Fragment>
             <tr className="product-offer">
-                <td><Checkbox onChange={(value) => {console.log(value)}}/></td>
+                <td><Checkbox inputClass='input-myInv' className='mark-myInv small' onChange={(value) => {console.log(value)}}/></td>
                 <td ref={this.threeDotsRef} onClick={()=> this.setState({isOpen: !this.state.isOpen, productOffersSelection: [offer.id]})}><ThreeDots className='small'/></td>
                 <td className="capitalize">{offer.product.casIndexName}</td>
-                <td>{offer.packaging.amount}</td>
+                <td>{offer.packaging.amount.formatNumber()}</td>
                 <td>{offer.packaging.container.name}</td>
                 <td>{offer.packaging.capacity}</td>
-                <td>{parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)}</td>
-                <td>{offer.pricing.cost}</td>
-                <td>{offer.pricing.price}</td>
+                <td>{(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()}</td>
+                <td>$ {offer.pricing.cost.formatMoney(2)}</td>
+                <td>$ {offer.pricing.price.formatMoney(2)}</td>
                 <td>{offer.name}</td>
                 <td>{offer.manufacturer}</td>
                 <td>{offer.productCondition.name}</td>
-                <td>unknown</td>
+                <td>Unknown</td>
                 <td><span className={'broadcast-mark' + classnames({' open' : this.props.brActive})}> </span></td>
                 <td> </td>
             </tr>

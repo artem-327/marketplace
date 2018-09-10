@@ -1,7 +1,9 @@
 import {connect} from 'react-redux';
 import Chemical from './Chemical';
-import {bindActionCreators} from 'redux'
-import {actions} from "react-redux-form"
+import {bindActionCreators} from 'redux';
+import {actions} from "react-redux-form";
+//import {resetForm} from '../../../../../utils/functions';
+import {addMessage} from '../../../../../modules/errors';
 import {
     mapProducts,
     searchProducts,
@@ -10,9 +12,9 @@ import {
     fetchProductForms,
     fetchProductGrade,
     fetchProductConditions,
-    fetchOrigin,
+    fetchOrigin, fetchManufacturer,
 } from "../../../../../modules/products";
-import { getUnitOfMeasurement, getUnitOfPackaging, resetForm} from "../../../../../modules/productOffers";
+import { getUnitOfMeasurement, getUnitOfPackaging} from "../../../../../modules/productOffers";
 
 const mapStateToProps = store => ({
     isSearching: store.products.isFetching,
@@ -23,11 +25,15 @@ const mapStateToProps = store => ({
     productGrade: store.products.productGrade,
     productConditions: store.products.productConditions,
     originData: store.products.origin,
+    manufacturer: store.products.manufacturer,
+    isFetchingManufacturer: store.products.isFetchingManufacturer,
+    isFetchingOrigin: store.products.isFetchingOrigin,
     recentProducts: store.products.recentProducts,
     unitOfMeasurement: store.productOffers.unitOfMeasurement,
     unitOfPackaging: store.productOffers.unitOfPackaging,
     productMapping: store.forms.productMapping,
-    comboData: store.products.origin
+    comboData: store.products.origin,
+    productOffering: store.forms.productOffering
 });
 
 const mapDispatchToProps = dispatch => (
@@ -39,11 +45,12 @@ const mapDispatchToProps = dispatch => (
         fetchRecentAddedProducts,
         getUnitOfPackaging,
         fetchProductForms,
+        fetchManufacturer,
         fetchProductGrade,
         getUnitOfMeasurement,
         fetchProductConditions,
-        resetForm,
         fetchOrigin,
+        addMessage,
         dispatch
     }, dispatch)
 );

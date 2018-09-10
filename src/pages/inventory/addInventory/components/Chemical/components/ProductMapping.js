@@ -11,10 +11,15 @@ export default class ProductMapping extends Component {
         }
     }
 
-    componentDidMount () {
+    componentDidMount(){
         this.props.getUnitOfMeasurement();
         this.props.getUnitOfPackaging();
     }
+
+    componentWillUnmount(){
+        this.props.resetForm('forms.productMapping');
+    }
+
     saveMapping(values){
         values = Object.assign({}, values, {
             product: this.props.productID
@@ -66,7 +71,9 @@ export default class ProductMapping extends Component {
                         <Control.text model=".casNumber"
                                       validators={{required}}
                                       disabled={true}
-                                      id=".casNumber"/>
+                                      id=".casNumber"
+                                      defaultValue={""}
+                        />
                     </div>
                     <Errors
                         className="form-error"
@@ -81,7 +88,9 @@ export default class ProductMapping extends Component {
                         <Control.text model=".chemicalName"
                                       validators={{required}}
                                       disabled={true}
-                                      id=".chemicalName"/>
+                                      id=".chemicalName"
+                                      defaultValue={""}
+                        />
                     </div>
                 </div>
                 <div>

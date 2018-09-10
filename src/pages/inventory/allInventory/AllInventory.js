@@ -12,7 +12,7 @@ class AllInventory extends Component {
 
     componentWillUnmount(){
         this.props.resetFilterTags();
-        this.props.resetForm();
+        this.props.resetForm('forms.filter');
     }
 
     render() {
@@ -22,7 +22,7 @@ class AllInventory extends Component {
             <div>
                 <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
                 <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getData({...filter}, false)}}/>
-                <Filter chemicalName quantity price filterFunc={(inputs) => this.props.getData(inputs, false)} />
+                <Filter chemicalName quantity date price assay condition form filterFunc={(inputs) => this.props.getData(inputs, false)} />
                 {content}
             </div>
         )

@@ -2,16 +2,20 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import FilterTags from './FilterTags';
 import {closeFilterTag} from '../../../../modules/filter';
+import {resetForm} from "../../../../utils/functions";
+import {fetchProductConditions, fetchProductForms} from "../../../../modules/products";
 
 function mapStateToProps(store) {
     return {
         filterTags: store.filter.filterTags,
-        productAge: store.forms.filter.productAge
+        productAge: store.forms.filter.productAge,
+        productConditions: store.products.productConditions,
+        productForms: store.products.productForms
     }
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({closeFilterTag}, dispatch)
+    return bindActionCreators({closeFilterTag, resetForm, fetchProductConditions, fetchProductForms}, dispatch)
 }
 
 
