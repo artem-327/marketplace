@@ -30,6 +30,11 @@
       height: 35%; }
   .login .form-place h1 {
     margin-bottom: 50px; }
+  .login .form-place.version {
+    position: absolute;
+    right: 15px;
+    bottom: 10px;
+    color: #b0b0b0; }
   .login .form-place form .error-holder {
     height: 18px;
     margin: 5px;
