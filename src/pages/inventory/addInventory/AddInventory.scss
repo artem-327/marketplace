@@ -7,6 +7,24 @@
     vertical-align: top;
   }
   .location-wr{
+    .warehouse-val{
+      position: relative;
+      display: inline-block;
+      span {
+        position: absolute;
+        top: 25px;
+        right:-105px;
+        width: 192px;
+        text-align: right;
+        z-index: -1;
+        background-color: white;
+        transform: translate(-50%, -50%);
+        border-radius: 4px;
+        color: #ef3157;
+        font-size: .9rem;
+        padding: 10px;
+      }
+    }
     .edit-location{
       background-color: #d4eaf7;
       color: #3b98d3;

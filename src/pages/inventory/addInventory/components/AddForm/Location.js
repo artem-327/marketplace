@@ -21,6 +21,7 @@ export default class Location extends Component {
             contact: '',
             phone: '',
             email: '',
+            isSubmitted: false,
         }
     }
 
@@ -69,14 +70,14 @@ export default class Location extends Component {
     }
 
     validateEmail(){
+        if(this.state.email === "") return true;
         let re = /^\S+@\S+$/;
         let test = re.test(String(this.state.email).toLowerCase());
         return test;
     }
 
     validateForms(){
-        if(this.state.warehouseName === '' || this.state.street === '' || this.state.city === '' || this.state.state === '' || this.state.zip === '' || this.state.contact === '' || this.state.phone === '' || this.state.email === ''){
-            this.props.addMessage("Fill all inputs please.");
+        if(this.state.street === '' || this.state.city === '' || this.state.state === '' || this.state.zip === ''){
             return false;
         }
         else if(!this.validateEmail()){
@@ -88,6 +89,7 @@ export default class Location extends Component {
 
     saveLocation(e, edit = !this.state.edit){
         e.preventDefault();
+        this.setState({isSubmitted: true});
         let { warehouseName, street, city, state, zip, contact, phone, email } = this.state;
         if(!this.validateForms()) return;
         this.props.saveWarehouse(warehouseName, street, city, state, contact, phone, email, zip).then(()=>{
@@ -223,18 +225,24 @@ export default class Location extends Component {
                         <input id="street"
                                value={this.state.street}
                                onChange={(e)=>{this.handleInputs(e.target.value, 'street')}}/>
+                        {(this.state.isSubmitted && this.state.street === '') ?
+                        <div className='warehouse-val'><span>Required</span></div>:null}
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor="city">City</label>
                         <input id="city"
                                value={this.state.city}
                                onChange={(e)=>{this.handleInputs(e.target.value, 'city')}}/>
+                        {(this.state.isSubmitted && this.state.city === '') ?
+                            <div className='warehouse-val'><span>Required</span></div>:null}
                     </div>
                     <div className='group-item-wr'>
                         <label>State</label>
                         <Dropdown opns={this.props.locations}
                                   currentValue={this.getCurrentValueById(this.state.state, this.props.locations)}
                                   onChange={(value) => {this.handleInputs(value, 'state')}}/>
+                        {(this.state.isSubmitted && this.getCurrentValueById(this.state.state, this.props.locations) === 'Select') ?
+                            <div className='warehouse-val'><span>Required</span></div>:null}
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor="zip">Zip Code</label>
@@ -242,6 +250,8 @@ export default class Location extends Component {
                                value={this.state.zip}
                                onChange={(e)=>{this.handleInputs(e.target.value, 'zip')}}
                                type="number"/>
+                        {(this.state.isSubmitted && this.state.zip === '') ?
+                            <div className='warehouse-val'><span>Required</span></div>:null}
                     </div>
                 </div>
                 <div>
