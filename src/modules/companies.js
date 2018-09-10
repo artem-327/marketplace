@@ -1,8 +1,7 @@
-import axios from 'axios';
 
-const GET_COMPANIES = 'GET_COMPANIES';
-const GET_COMPANIES_FULFILLED = 'GET_COMPANIES_FULFILLED';
-const GET_COMPANIES_PENDING = 'GET_COMPANIES_PENDING';
+const COMPANIES_FETCH_REQUESTED = 'COMPANIES_FETCH_REQUESTED';
+const COMPANIES_FETCH_SUCCEEDED = 'COMPANIES_FETCH_SUCCEEDED';
+// const COMPANIES_FETCH_FAILED = 'COMPANIES_FETCH_FAILED';
 
 export const initialState = {
     data: [],
@@ -11,13 +10,13 @@ export const initialState = {
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case GET_COMPANIES_PENDING: {
-            return {
-                ...state,
-                isFetching: true,
-            }
-        }
-        case GET_COMPANIES_FULFILLED: {
+        // case GET_COMPANIES_PENDING: {
+        //     return {
+        //         ...state,
+        //         isFetching: true,
+        //     }
+        // }
+        case COMPANIES_FETCH_SUCCEEDED: {
             return {
                 ...state,
                 data: action.payload,
@@ -32,7 +31,6 @@ export default function reducer(state = initialState, action) {
 
 export function fetchAll() {
     return {
-        type: GET_COMPANIES,
-        payload: axios.get('/api/v1/companies/').then(response => response.data.data.companies)
+        type: COMPANIES_FETCH_REQUESTED,
     }
 }

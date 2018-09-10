@@ -13,10 +13,9 @@ import AllInventory from "../pages/inventory/allInventory";
 import MyInventory from "../pages/inventory/myInventory";
 import TestPage from "../pages/test";
 import { withAuth } from '../utils/auth';
-import Administration from '../pages/administration/';
-import Merchants from '../pages/operator/';
+import Merchants from '../pages/administration/merchants';
 import NamesSynonyms from "../pages/administration/namesSynonyms/";
-
+import Companies from "../pages/administration/companiesOffices/";
 
 class Main extends Component {
     render() {
@@ -32,9 +31,9 @@ class Main extends Component {
                     <Route exact path="/reports" component={withAuth(Reports)}/>
                     <Route exact path="/settings" component={withAuth(Settings)}/>
                     <Route exact path="/support" component={withAuth(Support)}/>
-                    <Route exact path="/administration" component={withAuth(Administration)}/>
+                    <Route exact path="/administration/merchants" component={withAuth(Merchants)}/>
                     <Route exact path="/administration/names-synonyms" component={withAuth(NamesSynonyms)}/>
-                    <Route exact path="/operator" component={withAuth(Merchants)}/>
+                    <Route exact path="/administration/companies" component={withAuth(Companies)}/>
                     <Route exact path="/test-page" component={TestPage}/>
                 </Switch>
             </div>
