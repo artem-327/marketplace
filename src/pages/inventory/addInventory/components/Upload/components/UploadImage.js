@@ -43,7 +43,7 @@ class UploadImage extends Component {
                 <React.Fragment>
                     {this.state.files.map((file, index) => (
                         <div className="image-wrapper">
-                            <img src={delete_image} className="delete-image" onClick={() => this.removeFile(index)} />
+                            <img src={delete_image} className="delete-image" alt="Delete image" onClick={() => this.removeFile(index)} />
                             <img
                                 className="upload-image"
                                 alt="Preview"

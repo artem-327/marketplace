@@ -28,22 +28,22 @@ class UploadLot extends Component {
         let hasFile = this.state.files.length !== 0;
         return (
             <div className="uploadLot">
-                <ReactDropzone className="dropzoneLot" activeClassName="active" onDrop={this.onPreviewDrop}>
-                    {this.props.header}
-                    {hasFile ?
-                        <React.Fragment>
+                {this.props.header}
+                {hasFile ?
+                    <React.Fragment>
+                        <ReactDropzone className="dropzoneLot" activeClassName="active" onDrop={this.onPreviewDrop}>
                             <img className="uploaded" src={uploaded} alt='drop'/>
-                            <div className="file-space">{files}</div>
-                        </React.Fragment>
-                        :
-                        <React.Fragment>
-                            <img className="upload" src={upload} alt='drop-close'/>
-                            <div>
-                                <label>Click to upload C of A</label>
-                            </div>
-                        </React.Fragment>
-                    }
-                </ReactDropzone>
+                        </ReactDropzone>
+                        <div className="file-space">{files}</div>
+                    </React.Fragment>
+                    :
+                    <ReactDropzone className="dropzoneLot" activeClassName="active" onDrop={this.onPreviewDrop}>
+                        <img className="upload" src={upload} alt='drop-close'/>
+                        <div>
+                            <label>Click to upload C of A</label>
+                        </div>
+                    </ReactDropzone>
+                }
             </div>
         )
     }
