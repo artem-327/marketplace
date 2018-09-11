@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import ProductOffering from "./components/ProductOffering";
-import InfoLabel from "./components/InfoLabel";
 import ProductMapping from "./components/ProductMapping";
 import AddedLots from "./components/AddedLots/AddedLots";
 import SearchProducts from './components/SearchProducts';
+import Tooltip from "../../../../../components/Tooltip/Tooltip";
 
 class Chemical extends Component {
 
@@ -85,7 +85,8 @@ class Chemical extends Component {
                                 onSelect={product => this.setSelectedProduct(product)}
                                 {...this.props}
                 />
-                <InfoLabel/>
+                <Tooltip content="By selecting 'Save Mapping' CAS Name, CAS Number, Product Name and Product Number will be mapped
+                                  in our system. Next time you enter this product these fields will be pre-populated for you."/>
                 <ProductMapping productID={this.state.productID} {...this.props} />
                 <ProductOffering addLot={(lots) => this.addLot(lots)} {...this.props} />
                 <AddedLots lots={this.state.lots} removeLot={(index) => this.removeLots(index)}/>
