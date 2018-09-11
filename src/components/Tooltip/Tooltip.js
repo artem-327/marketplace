@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import './tooltip.css'
+import classnames from 'classnames';
 
 class Tooltip extends Component {
     constructor(props){
@@ -9,16 +10,16 @@ class Tooltip extends Component {
             isVisible: false
         }
     }
-    showTip = () => {
-        this.setState({isVisible: true})
-        };
+
+    showTip(type) {
+        this.setState({isVisible: type})
+    };
+
     render() {
-        console.log(this.state);
-        let label = this.state.isVisible ? <label>{this.props.content}</label> : null;
         return (
             <div className={'tooltip-component ' + this.props.className}>
-                <span className='tooltip-icon' onMouseOver={this.showTip}>i</span>
-                {label}
+                <span className='tooltip-icon' onMouseEnter={() => this.showTip(true)} onMouseLeave={() => this.showTip(false)}>i</span>
+                <label className={classnames({show: this.state.isVisible})}>{this.props.content}</label>
             </div>
         )
     }
