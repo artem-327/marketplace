@@ -4,6 +4,7 @@ import classnames from "classnames";
 import Checkbox from "../../../../components/Checkbox/Checkbox";
 import ThreeDots from "../../../../components/ThreeDots/ThreeDots";
 import BroadcastRule from "./BroadcastRule";
+import DotsMenuHOC from "../../../../components/ThreeDots/DotsMenuHOC";
 
 class ProductOfferItem extends Component {
     constructor(props) {
@@ -13,10 +14,14 @@ class ProductOfferItem extends Component {
         this.handleClickOutsideBr = this.handleClickOutsideBr.bind(this);
         this.state = {
             isOpen: false,
+            trDotsOpen: false,
             productOffersSelection: []
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({trDotsOpen:nextProps.trDotsOpen});
+    }
     componentWillMount(){
         document.addEventListener('mousedown', this.handleClickOutsideBr, false);
     }
@@ -32,11 +37,12 @@ class ProductOfferItem extends Component {
 
     render () {
         const {offer} = this.props;
+        const trDotsMenuActive = this.state.trDotsOpen ? {borderBottom: '4px solid #289ada'} : null;
         return (
             <React.Fragment>
             <tr className="product-offer">
                 <td><Checkbox inputClass='input-myInv' className='mark-myInv small' onChange={(value) => {console.log(value)}}/></td>
-                <td ref={this.threeDotsRef} onClick={()=> this.setState({isOpen: !this.state.isOpen, productOffersSelection: [offer.id]})}><ThreeDots className='small'/></td>
+                <td style={trDotsMenuActive} ref={this.threeDotsRef} onClick={()=> this.setState({trDotsOpen: !this.state.trDotsOpen})}><ThreeDots className={'small'+ classnames({" active": (this.state.trDotsOpen)})}/><DotsMenuHOC isOpen={this.state.trDotsOpen}/></td>
                 <td className="capitalize">{offer.product.casIndexName}</td>
                 <td>{offer.packaging.amount.formatNumber()}</td>
                 <td>{offer.packaging.container.name}</td>
