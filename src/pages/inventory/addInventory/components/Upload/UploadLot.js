@@ -27,7 +27,7 @@ class UploadLot extends Component {
             <File onRemove={() => this.removeFile(index)} className="file lot" name={file.name}/>));
         let hasFile = this.state.files.length !== 0;
         return (
-            <div className="uploadLot">
+            <div className={"uploadLot " + this.props.className}>
                 {this.props.header}
                 {hasFile ?
                     <React.Fragment>

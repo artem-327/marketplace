@@ -4,6 +4,7 @@ import ProductMapping from "./components/ProductMapping";
 import AddedLots from "./components/AddedLots/AddedLots";
 import SearchProducts from './components/SearchProducts';
 import Tooltip from "../../../../../components/Tooltip/Tooltip";
+import AdditionalDocuments from "./components/AdditionalDocuments";
 
 class Chemical extends Component {
 
@@ -90,6 +91,7 @@ class Chemical extends Component {
                 <ProductMapping productID={this.state.productID} {...this.props} />
                 <ProductOffering addLot={(lots) => this.addLot(lots)} {...this.props} />
                 <AddedLots lots={this.state.lots} removeLot={(index) => this.removeLots(index)}/>
+                <AdditionalDocuments/>
             </div>
         );
     }
