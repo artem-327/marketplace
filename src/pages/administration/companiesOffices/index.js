@@ -3,7 +3,6 @@ import {bindActionCreators} from 'redux'
 import CompaniesOffices from "./CompaniesOffices";
 import {fetchAll} from "../../../modules/companies";
 
-
 function mapStateToProps(store) {
     return {
     }

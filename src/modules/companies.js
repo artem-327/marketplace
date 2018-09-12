@@ -1,7 +1,4 @@
-
-const COMPANIES_FETCH_REQUESTED = 'COMPANIES_FETCH_REQUESTED';
-const COMPANIES_FETCH_SUCCEEDED = 'COMPANIES_FETCH_SUCCEEDED';
-// const COMPANIES_FETCH_FAILED = 'COMPANIES_FETCH_FAILED';
+import {COMPANIES_FETCH_REQUESTED, COMPANIES_FETCH_SUCCEEDED} from "../constants/companiesOffices";
 
 export const initialState = {
     data: [],
@@ -30,7 +27,5 @@ export default function reducer(state = initialState, action) {
 }
 
 export function fetchAll() {
-    return {
-        type: COMPANIES_FETCH_REQUESTED,
-    }
+    return {type: COMPANIES_FETCH_REQUESTED,}
 }
