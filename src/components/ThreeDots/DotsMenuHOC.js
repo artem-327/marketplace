@@ -10,15 +10,15 @@ class DotsMenuHOC extends React.Component {
             let dotsMenuLinks =
                 [
                     {
-                        url: '/inventory/my-inventory',
+                        url: '#',
                         label: 'Edit Listing',
                     },
                 {
-                    url: '/inventory/all-inventory',
+                    url: '#',
                     label: 'Custom Broadcast'
                 },
                 {
-                    url: '/inventory/add-inventory/',
+                    url: '#',
                     label: 'Delete Listing'
                 }
         ];
