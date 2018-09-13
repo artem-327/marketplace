@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
-import React,{Component} from 'react';
+import React, {Component} from 'react';
 import './popup.css';
 
 class PopUp extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.isVisible = this.isVisible.bind(this);
         this.state = {
@@ -27,8 +27,8 @@ class PopUp extends Component {
         })
     }
 
-    closePopup(event){
-        if(event.target === event.currentTarget) {
+    closePopup(event) {
+        if (event.target === event.currentTarget) {
             this.props.removePopup()
         }
     }
@@ -36,7 +36,9 @@ class PopUp extends Component {
     render() {
         let {isOpen, component} = this.state;
         return isOpen ?
-            <div className='popup-wr' onClick={(e)=>{this.closePopup(e)}}>
+            <div className='popup-wr' onClick={(e) => {
+                this.closePopup(e)
+            }}>
                 <div className='popup'>{component}</div>
             </div> : null
     }

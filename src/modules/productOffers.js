@@ -10,6 +10,7 @@ const GET_UNIT_OF_PACKAGING_FULFILLED = 'GET_UNIT_OF_PACKAGING_FULFILLED';
 const ADD_PRODUCT_OFFER = 'ADD_PRODUCT_OFFER';
 const ADD_PRODUCT_OFFER_FULFILLED = 'ADD_PRODUCT_OFFER_FULFILLED';
 const RESET_PRODUCT_OFFER = 'RESET_PRODUCT_OFFER';
+const SAVE_INCREMENTAL_PRICING = 'SAVE_INCREMENTAL_PRICING';
 
 export const initialState = {
     data: [],
@@ -96,5 +97,19 @@ export function getUnitOfPackaging(pack) {
             type: GET_UNIT_OF_PACKAGING,
             payload: axios.get('/api/v1/containers/', {params: {...pack}}).then(response => response.data.data.containers)
         }
+    }
+
+export function saveIncrementalPricing(from, to, price, quantityDiscount = 1){
+    const data = {
+        quantityFrom:from,
+        quantityTo:to,
+        price:price,
+        quantityDiscount,
+    }
+    return {
+        type: SAVE_INCREMENTAL_PRICING,
+        payload: axios.post('/api/v1/discount-level/', data)
+    }
 }
+
 

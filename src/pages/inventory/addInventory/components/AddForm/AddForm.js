@@ -5,12 +5,16 @@ import Pricing from './Pricing';
 import Location from './Location';
 import classnames from 'classnames';
 
-
 export default class AddForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            selectedProduct: {}
+            selectedProduct: {},
+            incrementalPricing: [{
+                quantityFrom:'',
+                quantityTo:'',
+                price:'',
+            }]
         }
     }
 
@@ -40,8 +44,13 @@ export default class AddForm extends Component {
             this.props.history.push("/inventory/my-inventory");
             return;
         }
+        let newPricing = inputs['pricing'];
+        if(inputs['incrementalSelected']){
+            newPricing = {...inputs['pricing'], tiersRequests: this.validateIncPricing()};
+        }
         let params = Object.assign({}, inputs, {
                 merchantVisibility: (inputs.merchantVisibility || false),
+                pricing: newPricing,
                 ...lots[index]
         });
         this.props.addProductOffer(params).then(() => {
@@ -49,11 +58,20 @@ export default class AddForm extends Component {
         })
     }
 
+    validateIncPricing(){
+        let tmp = this.state.incrementalPricing.filter(data => data.quantityFrom !=='' && data.quantityTo !== '' && data.price !== '');
+        return tmp;
+    }
+
+    getIncPricing(data){
+        this.setState({incrementalPricing:data},()=>this.validateIncPricing());
+    }
+
     render() {
         return (
             <div className={classnames('add-inventory', {'disable' : this.props.disable})} >
                 <Form model="forms.addProductOffer" onSubmit={(inputs) => this.addProductOffer(inputs)}>
-                    <AddGroup header='PRICING' disable={this.props.disable} component = {<Pricing {...this.props}/>} />
+                    <AddGroup header='PRICING' disable={this.props.disable} component = {<Pricing {...this.props} getIncPricing={(data)=>this.getIncPricing(data)}/>} />
                     <AddGroup header='WAREHOUSE' disable={this.props.disable} component = {<Location {...this.props}/>} />
                     <button disabled={this.props.disable}
                             className={classnames('button add-inventory big', {'disabled' : this.props.disable})}>
