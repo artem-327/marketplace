@@ -5,11 +5,13 @@ import UploadLot from "../../Upload/UploadLot";
 class AdditionalDocuments extends Component {
     render () {
         return (
-            <div className="add-documents">
-                <h6>ADDITIONAL DOCUMENTS</h6>
-                <UploadLot className="add-doc"/>
-                <UploadLot className="add-doc"/>
-                <UploadLot className="add-doc"/>
+            <div>
+                <h6 className="add-doc-title">ADDITIONAL DOCUMENTS</h6>
+                <div className="add-documents">
+                <UploadLot className="add-doc" content="Click to upload MSDS"/>
+                <UploadLot className="add-doc" content="Click to upload Spec Sheet"/>
+                <UploadLot className="add-doc" content="Click to upload Product Image"/>
+                </div>
             </div>
         )
     }

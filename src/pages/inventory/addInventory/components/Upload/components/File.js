@@ -6,10 +6,12 @@ class File extends Component {
 
     render () {
         return (
-            <div id={this.props.name} className={this.props.className}>
+            <React.Fragment>
+            <span id={this.props.name} className={this.props.className}>
                 <i className="close" onClick={()=>this.props.onRemove()} />
                 {this.props.name}
-            </div>
+            </span>
+            </React.Fragment>
         )}
 }
 

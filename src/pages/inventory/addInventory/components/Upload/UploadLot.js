@@ -26,6 +26,7 @@ class UploadLot extends Component {
         let files = this.state.files.map((file, index) => (
             <File onRemove={() => this.removeFile(index)} className="file lot" name={file.name}/>));
         let hasFile = this.state.files.length !== 0;
+        let content = this.props.content ? this.props.content : 'Click to upload C of A';
         return (
             <div className={"uploadLot " + this.props.className}>
                 {this.props.header}
@@ -34,7 +35,7 @@ class UploadLot extends Component {
                         <ReactDropzone className="dropzoneLot" activeClassName="active" onDrop={this.onPreviewDrop}>
                             <img className="uploaded" src={uploaded} alt='drop'/>
                         </ReactDropzone>
-                        <div className="file-space">{files}</div>
+                        <span className="file-space">{files}</span>
                     </React.Fragment>
                     :
                     <ReactDropzone className="dropzoneLot" activeClassName="active" onDrop={this.onPreviewDrop}>
@@ -52,7 +53,9 @@ class UploadLot extends Component {
 UploadLot.propTypes = {
     className: PropTypes.string,
     content: PropTypes.string,
-    files: PropTypes.array
+    files: PropTypes.array,
+    uploadClass: PropTypes.string,
+    uploadedClass: PropTypes.string
 };
 
 export default UploadLot;
