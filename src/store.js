@@ -15,7 +15,7 @@ import filter, {initialState as filterInit} from './modules/filter';
 import packageTypes from './modules/packageTypes';
 import cart from "./modules/cart";
 import broadcastRules from "./modules/broadcastRule";
-import merchants from "./modules/merchants";
+import merchants, {initialState as merchantsInit} from "./modules/merchants";
 import products, {initialState as productsInit} from './modules/products';
 import errors from "./modules/errors";
 
@@ -41,11 +41,14 @@ const reducer = combineReducers({
         productOffering: productsInit.productOffering,
         loginForm: identityFormInit.loginForm.data,
         registrationForm: identityFormInit.registrationForm.data,
+        merchants: merchantsInit,
     }, 'forms'),
 });
 
+const logger = createLogger({
+    predicate: (getState, action) => process.env.NODE_ENV === "development"
+});
 
-const middleware = applyMiddleware(thunk, promise(), createLogger());
-// const middleware = applyMiddleware(thunk, promise());
+const middleware = applyMiddleware(thunk, promise(), logger);
 
 export default createStore(reducer, middleware)

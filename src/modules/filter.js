@@ -4,7 +4,6 @@ const TOGGLE_FILTER_GROUP = 'TOGGLE_FILTER_GROUP';
 const ADD_FILTER_TAG = 'ADD_FILTER_TAG';
 const CLOSE_FILTER_TAG = 'CLOSE_FILTER_TAG';
 const CLOSE_FILTER_TAG_FULFILLED = 'CLOSE_FILTER_TAG_FULFILLED';
-const RESET_FORM = 'RESET_FORM';
 
 export const initialState = {
     isOpen: false,
@@ -16,7 +15,10 @@ export const initialState = {
         packaging: false,
         chemSearch: false,
         productAge: false,
-        location: false
+        location: false,
+        date: false,
+        condition: false,
+        form: false
     },
     filterTags: []
 };
@@ -36,12 +38,6 @@ export default function reducer(state = initialState, action) {
                     ...state.filterGroup,
                     [action.payload.name]: action.payload.value
                 }
-            }
-        }
-        case RESET_FORM: {
-            return {
-                ...state,
-                data: {}
             }
         }
         case ADD_FILTER_TAG: {
@@ -90,12 +86,6 @@ export function closeFilterTag(index) {
     return {
         type: CLOSE_FILTER_TAG,
         payload: Promise.resolve(index)
-    }
-}
-
-export function resetForm() {
-    return {
-        type: RESET_FORM,
     }
 }
 

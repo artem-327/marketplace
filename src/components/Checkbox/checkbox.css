@@ -1,35 +1,45 @@
 .input-checkbox {
   position: relative;
   padding-left: 35px; }
+  .input-checkbox.input-myInv {
+    padding-left: 15px; }
   .input-checkbox .checkmark {
     width: 20px;
     height: 20px;
     display: inline-block;
     background-color: white;
-    margin: 1px 15px 0px 0px;
+    margin: 1px 15px 0 0;
     border: 1px solid #B0B0B0;
     border-radius: 4px;
     position: absolute;
     left: 0;
     top: 0; }
     .input-checkbox .checkmark.small {
-      width: 15px;
-      height: 15px; }
+      width: 17px;
+      height: 17px; }
       .input-checkbox .checkmark.small:after {
-        left: 5px;
+        left: 6px;
         top: 3px;
         width: 4px;
         height: 7px;
         border-width: 0 2px 2px 0;
         transform: rotate(45deg); }
+    .input-checkbox .checkmark.mark-myInv {
+      margin: 4px 0 0 0; }
+      .input-checkbox .checkmark.mark-myInv.small {
+        left: 3px; }
+    .input-checkbox .checkmark.mark-allInv {
+      margin: 4px 0 0 0; }
+      .input-checkbox .checkmark.mark-allInv.small {
+        left: 3px; }
     .input-checkbox .checkmark.big {
-      width: 25px;
-      height: 25px; }
+      width: 22px;
+      height: 22px; }
       .input-checkbox .checkmark.big:after {
-        left: 8px;
-        top: 3px;
-        width: 7px;
-        height: 12px;
+        left: 7px;
+        top: 4px;
+        width: 6px;
+        height: 10px;
         border-width: 0 2px 2px 0;
         transform: rotate(45deg); }
     .input-checkbox .checkmark:hover, .input-checkbox .checkmark:focus {
@@ -49,6 +59,7 @@
       transform: rotate(45deg); }
   .input-checkbox input {
     position: absolute;
+    width: 0;
     opacity: 0;
     cursor: pointer; }
     .input-checkbox input:checked ~ .checkmark::after {

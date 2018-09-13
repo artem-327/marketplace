@@ -4,6 +4,22 @@
   margin: 20px; }
   .add-group .notes-textarea {
     vertical-align: top; }
+  .add-group .location-wr .warehouse-val {
+    position: relative;
+    display: inline-block; }
+    .add-group .location-wr .warehouse-val span {
+      position: absolute;
+      top: 25px;
+      right: -105px;
+      width: 192px;
+      text-align: right;
+      z-index: -1;
+      background-color: white;
+      transform: translate(-50%, -50%);
+      border-radius: 4px;
+      color: #ef3157;
+      font-size: .9rem;
+      padding: 10px; }
   .add-group .location-wr .edit-location {
     background-color: #d4eaf7;
     color: #3b98d3;

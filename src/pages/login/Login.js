@@ -10,8 +10,8 @@ const Login = props => {
         <div className="login-wr">
             <div className="form-place">
                 <div className="logForm">
-                <img className="logoLogin" src={logoLogin}  alt='Login'/>
-                <Form {...props} />
+                    <img className="logoLogin" src={logoLogin} alt='Login'/>
+                    <Form {...props} />
                 </div>
             </div>
         </div>

@@ -5,7 +5,8 @@ import {fetchAll as getProductOffers} from '../../../modules/productOffers';
 import {fetchAll as getCompanies} from '../../../modules/companies';
 import {sendRules} from "../../../modules/broadcastRule";
 import {addPopup, removePopup} from "../../../modules/popup";
-import {resetFilterTags, resetForm} from "../../../modules/filter";
+import {resetFilterTags} from "../../../modules/filter";
+import {resetForm} from '../../../utils/functions';
 
 const mapStateToProps = store => ({
     productOffers: store.productOffers.data,

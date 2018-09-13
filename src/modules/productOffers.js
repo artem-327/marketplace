@@ -78,29 +78,10 @@ export function fetchAll(filter = {}, mrchnt=true) {
 }
 
 
-export function addProductOffer({lotNumber, name, merchantVisibility, product, productCondition, productForm, productGrade, manufacturer, origin, assayMin, assayMax, creationDate, expirationDate, externalNotes, internalNotes, packaging, pricing}) {
-    const obj = {
-        lotNumber,
-        name,
-        merchantVisibility,
-        product,
-        productCondition,
-        productForm,
-        productGrade,
-        manufacturer,
-        origin,
-        assayMin,
-        assayMax,
-        creationDate,
-        expirationDate,
-        externalNotes,
-        internalNotes,
-        packaging,
-        pricing
-    };
+export function addProductOffer(inputs) {
     return {
         type: ADD_PRODUCT_OFFER,
-        payload: axios.post('/api/v1/product-offers/', obj)
+        payload: axios.post('/api/v1/product-offers/', inputs)
     }
 }
 
@@ -117,12 +98,6 @@ export function getUnitOfPackaging(pack) {
             payload: axios.get('/api/v1/containers/', {params: {...pack}}).then(response => response.data.data.containers)
         }
     }
-
-export function resetForm() {
-    return {
-        type: RESET_PRODUCT_OFFER,
-    }
-}
 
 export function saveIncrementalPricing(from, to, price, quantityDiscount = 1){
     const data = {

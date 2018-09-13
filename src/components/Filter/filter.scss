@@ -37,6 +37,15 @@ $font-family: 'Cabin', sans-serif;
         margin-left: 10px;
       }
     }
+    .filter-input-date{
+      label, input{
+        margin-left: 12px;
+      }
+      input{
+        margin-bottom: 15px;
+        margin-left: 10px;
+      }
+    }
     .filter-input-dropdown{
       height: 240px;
       margin-left: 12px;
@@ -68,6 +77,19 @@ $font-family: 'Cabin', sans-serif;
     }
     .filter-input-dropdown{
       height: 240px;
+    }
+    .filter-input-date{
+      display: inline-block;
+      float: left;
+      width: calc(50% - 70px);
+      margin: 0 25px 15px 10px;
+      label {
+        margin-left: 2px;
+      }
+      input{
+        width: 100%;
+        margin: 0;
+      }
     }
   }
   .filterBottom {

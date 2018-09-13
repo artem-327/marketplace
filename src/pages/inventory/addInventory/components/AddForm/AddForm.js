@@ -8,7 +8,6 @@ import classnames from 'classnames';
 export default class AddForm extends Component {
     constructor(props) {
         super(props);
-        this.myRef = React.createRef();
         this.state = {
             selectedProduct: {},
             incrementalPricing: [{
@@ -22,19 +21,26 @@ export default class AddForm extends Component {
     componentWillMount(){
         this.props.fetchWarehouse();
         this.props.fetchLocations();
-        
+    }
+
+    componentWillUnmount(){
+        this.props.resetForm('forms.addProductOffer');
     }
 
     addProductOffer(inputs){
         if(localStorage.getItem('productLots')){
             let lots = JSON.parse(localStorage.getItem('productLots'));
             this.addLot(lots, inputs, 0)
-        }      
+        }
+        else {
+            this.props.addMessage('You must add lot first.')
+        }
     }
 
     addLot(lots, inputs, index){
         if(index === lots.length){
             if(index === 0) return;
+            localStorage.removeItem('productLots');
             this.props.history.push("/inventory/my-inventory");
             return;
         }
@@ -45,7 +51,7 @@ export default class AddForm extends Component {
         this.props.addProductOffer(params).then(() => {
             this.addLot(lots, inputs, ++index);
         })
-        
+
         let data = this.validateIncPricing();
         if(data.length > 0){
             data.map((item)=>{
@@ -66,7 +72,6 @@ export default class AddForm extends Component {
 
     render() {
         return (
-            
             <div className={classnames('add-inventory', {'disable' : this.props.disable})} >
                 <Form model="forms.addProductOffer" onSubmit={(inputs) => this.addProductOffer(inputs)}>
                     <AddGroup header='PRICING' disable={this.props.disable} component = {<Pricing {...this.props} getIncPricing={(data)=>this.getIncPricing(data)}/>} />

@@ -16,8 +16,12 @@ class Filter extends Component {
     }
 
     handleSubmit(inputs){
-        let filter = Object.assign({}, inputs, {pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key).join(',')});
-        
+        let filter = Object.assign({}, inputs,
+            {pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key).join(',')},
+            {condition: Object.entries(inputs.condition || {}).filter(([key, value]) => value).map(([key]) => key).join(',')},
+            {form: Object.entries(inputs.form || {}).filter(([key, value]) => value).map(([key]) => key).join(',')}
+            );
+        console.log(filter);
         let params = filterNonEmptyAttributes(filter);
         this.props.filterFunc(params);
         let filterTags = [];
@@ -26,11 +30,18 @@ class Filter extends Component {
         }
         this.props.addFilterTag(filterTags);
         this.props.toggleFilter();
+    }
 
+    handleReset(e){
+        e.preventDefault();
+        this.props.resetForm('forms.filter');
+        this.props.filterFunc({});
+        this.props.addFilterTag([]);
     }
 
     componentDidMount() {
-        // this.props.fetchPackageTypes();
+    this.props.fetchProductConditions();
+    this.props.fetchProductForms();
     }
 
     componentWillReceiveProps(nextProps){
@@ -40,7 +51,6 @@ class Filter extends Component {
     }
 
     render(){
-
         return this.state.isOpen ?
             <div className="filter">
                 <Form model="forms.filter" onSubmit={(val) => this.handleSubmit(val)}>
@@ -113,6 +123,34 @@ class Filter extends Component {
                                         id: packageType.id,
                                         model: `.pckgs[${packageType.id}]`
                                  }))}/>
+                    <FilterGroup className="filterGroup"
+                                 header='Condition'
+                                 isVisible={!!this.props.condition}
+                                 split
+                                 data={this.props.productConditions}
+                                 isOpen={this.props.filterGroupStatus.condition}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('condition', value)}}
+                                 checkboxModel='condition'
+                                 inputs={this.props.productConditions.map(condition => ({
+                                     label: condition.name,
+                                     type: 'checkbox',
+                                     id: condition.id,
+                                     model: `.condition[${condition.id}]`
+                                 }))}/>
+                    <FilterGroup className="filterGroup"
+                                 header='Form'
+                                 isVisible={!!this.props.form}
+                                 split
+                                 data={this.props.productForms}
+                                 isOpen={this.props.filterGroupStatus.form}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('form', value)}}
+                                 checkboxModel='form'
+                                 inputs={this.props.productForms.map(form => ({
+                                     label: form.name,
+                                     type: 'checkbox',
+                                     id: form.id,
+                                     model: `.form[${form.id}]`
+                                 }))}/>
 
                     <FilterGroup className="filterGroup"
                                  header='Chemical Search'
@@ -155,11 +193,52 @@ class Filter extends Component {
                                          type: 'dropdown',
                                      }
                                  ]}/>
+                    <FilterGroup className="filterGroup"
+                                 header='Expiration'
+                                 split
+                                 isVisible={!!this.props.date}
+                                 data={this.props.filterData}
+                                 isOpen={this.props.filterGroupStatus.date}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('date', value)}}
+                                 dispatch={this.props.dispatch}
+                                 inputs={[
+                                     {
+                                         label: 'From',
+                                         model: '.dtfr',
+                                         type: 'date',
+                                     },
+                                     {
+                                         label: 'To',
+                                         model: '.dtto',
+                                         type: 'date',
+                                     }
+                                 ]}/>
+                    <FilterGroup className="filterGroup"
+                                 isVisible={!!this.props.assay}
+                                 isOpen={this.props.filterGroupStatus.assay}
+                                 onOpen={(value)=>{this.props.toggleFilterGroup('assay', value)}}
+                                 header='Assay'
+                                 data={this.props.filterData}
+                                 split
+                                 inputs={[
+                                     {
+                                         label: 'Minimum (%)',
+                                         model: '.assmin',
+                                         type: 'number',
+                                         placeholder: '0'
+                                     },
+                                     {
+                                         label: 'Maximum (%)',
+                                         model: '.assmax',
+                                         type: 'number',
+                                         placeholder: '0'
+                                     }
+                                 ]}/>
                     <div className="filterBottom">
 
                         {/*<button className="filter-button">Apply</button>*/}
                         <button className='button filter-button'>Apply</button>
-                        <button className='button disabled filter-button' onClick={()=>{this.props.resetForm()}}>Clear filter</button>
+                        <button className='button disabled filter-button' onClick={(e)=>{this.handleReset(e)}}>Clear filter</button>
                     </div>
                 </Form>
             </div> : null;

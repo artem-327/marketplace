@@ -1,0 +1,45 @@
+.tooltip-component {
+  margin: 5px 0 0 10px;
+  position: relative;
+  display: inline-block; }
+  .tooltip-component.notes {
+    position: absolute;
+    margin-left: 110px; }
+    .tooltip-component.notes .tooltip-icon {
+      font-weight: bold;
+      color: #289ada;
+      border: 1px solid #289ada;
+      border-radius: 50%;
+      padding: 0px 6px;
+      font-size: 0.8rem;
+      transform: translateY(-50%); }
+  .tooltip-component.save-mapping {
+    position: absolute;
+    margin: 0 0 10px 25px; }
+    .tooltip-component.save-mapping .tooltip-icon {
+      font-weight: bold;
+      color: #289ada;
+      border: 1px solid #289ada;
+      border-radius: 50%;
+      padding: 0px 6px;
+      font-size: 0.8rem;
+      transform: translateY(-50%); }
+  .tooltip-component .tooltip-icon {
+    font-weight: bold;
+    color: #289ada;
+    border: 1px solid #289ada;
+    border-radius: 50%;
+    padding: 1px 9px;
+    transform: translateY(-50%); }
+  .tooltip-component label {
+    position: absolute;
+    bottom: 35px;
+    display: none;
+    width: 250px;
+    z-index: 2;
+    padding: 10px;
+    border: 1px solid #289ada;
+    background-color: white;
+    border-radius: 4px; }
+    .tooltip-component label.show {
+      display: block; }

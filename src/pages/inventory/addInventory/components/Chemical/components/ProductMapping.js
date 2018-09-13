@@ -3,6 +3,7 @@ import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import {required, isNumber, min, messages} from "../../../../../../utils/validation";
 import './ProductMapping.css'
+import Tooltip from "../../../../../../components/Tooltip/Tooltip";
 export default class ProductMapping extends Component {
     constructor(props){
         super(props);
@@ -11,10 +12,15 @@ export default class ProductMapping extends Component {
         }
     }
 
-    componentDidMount () {
+    componentDidMount(){
         this.props.getUnitOfMeasurement();
         this.props.getUnitOfPackaging();
     }
+
+    componentWillUnmount(){
+        this.props.resetForm('forms.productMapping');
+    }
+
     saveMapping(values){
         values = Object.assign({}, values, {
             product: this.props.productID
@@ -66,7 +72,9 @@ export default class ProductMapping extends Component {
                         <Control.text model=".casNumber"
                                       validators={{required}}
                                       disabled={true}
-                                      id=".casNumber"/>
+                                      id=".casNumber"
+                                      defaultValue={""}
+                        />
                     </div>
                     <Errors
                         className="form-error"
@@ -81,7 +89,9 @@ export default class ProductMapping extends Component {
                         <Control.text model=".chemicalName"
                                       validators={{required}}
                                       disabled={true}
-                                      id=".chemicalName"/>
+                                      id=".chemicalName"
+                                      defaultValue={""}
+                        />
                     </div>
                 </div>
                 <div>
@@ -163,7 +173,8 @@ export default class ProductMapping extends Component {
                                        dispatch={this.props.dispatch}
                                        validators={{required}}/>
                     </div>
-                    {button}
+                    <Tooltip className="save-mapping" content="add inventory 1"/>
+                        {button}
                 </div>
                 </Form>
             </div>

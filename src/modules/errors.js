@@ -1,5 +1,5 @@
 const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
-
+const ADD_MESSAGE = 'ADD_MESSAGE';
 //register const for all axios endpoints
 const ADD_PRODUCT_OFFER_REJECTED = 'ADD_PRODUCT_OFFER_REJECTED';
 // const SAVE_MAPPING_REJECTED = 'SAVE_MAPPING_REJECTED';
@@ -10,7 +10,7 @@ const ADD_PRODUCT_OFFER_REJECTED = 'ADD_PRODUCT_OFFER_REJECTED';
 // const FETCH_PRODUCT_FORMS_REJECTED = 'PRODUCT_FORMS_REJECTED';
 // const GET_UNIT_OF_PACKAGING_REJECTED = 'GET_UNIT_OF_PACKAGING_REJECTED';
 // const GET_UNIT_OF_MEASUREMENT_REJECTED = 'GET_UNIT_OF_MEASUREMENT_REJECTED';
-const GET_PRODUCT_OFFERS_REJECTED = 'GET_PRODUCT_OFFERS_REJECTED';
+// const GET_PRODUCT_OFFERS_REJECTED = 'GET_PRODUCT_OFFERS_REJECTED';
 // const GET_PACKAGE_TYPES_REJECTED = 'GET_PACKAGE_TYPES_REJECTED';
 // const VALIDATE_PACKAGE_TYPE_REJECTED = 'VALIDATE_PACKAGE_TYPE_REJECTED';
 // const ACCEPT_MERCHANT_REJECTED = 'ACCEPT_MERCHANT_REJECTED';
@@ -25,7 +25,6 @@ const GET_PRODUCT_OFFERS_REJECTED = 'GET_PRODUCT_OFFERS_REJECTED';
 // const CHANGE_RULES_REJECTED = "CHANGE_RULES_REJECTED";
 // const PACKAGE_OPTIONS_REJECTED = 'PACKAGE_OPTIONS_REJECTED';
 // const MANUFACTURER_REJECTED = 'MANUFACTURER_REJECTED';
-
 
 
 export const initialState = {
@@ -56,8 +55,7 @@ export default function reducer(state = initialState, action) {
         // case CHANGE_RULES_REJECTED:
         // case PACKAGE_OPTIONS_REJECTED:
         // case MANUFACTURER_REJECTED:
-        case ADD_PRODUCT_OFFER_REJECTED:
-        case GET_PRODUCT_OFFERS_REJECTED: {
+        case ADD_PRODUCT_OFFER_REJECTED: {
             return {
                 ...state,
                 messages: [...state.messages, action.payload.message]
@@ -70,6 +68,12 @@ export default function reducer(state = initialState, action) {
                     ...state.messages.slice(action.payload + 1)]
             }
         }
+        case ADD_MESSAGE: {
+            return {
+                ...state,
+                messages: [...state.messages, action.payload]
+            }
+        }
         default: {
             return state
         }
@@ -80,5 +84,12 @@ export function closeMessage(index) {
     return {
         type: CLOSE_MESSAGE,
         payload: index
+    }
+}
+
+export function addMessage(message) {
+    return {
+        type: ADD_MESSAGE,
+        payload: message
     }
 }
