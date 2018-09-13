@@ -4,9 +4,20 @@ import Checkbox from './Checkbox';
 import { actions } from 'react-redux-form';
 
 class CheckboxRedux extends Component {
-    render() {
+
+    handleChange(value){
         const { model, dispatch } = this.props;
-        return <Checkbox onChange={value => dispatch(actions.change(model, value))} {...this.props} />
+        dispatch(actions.change(model, value));
+        if(this.props.onChange) this.props.onChange(value);
+    }
+
+    render() {
+        return <Checkbox
+            label={this.props.label}
+            name={this.props.name}
+            style={this.props.style}
+            onChange={value => this.handleChange(value)}
+        />
     }
 }
 

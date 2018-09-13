@@ -11,8 +11,8 @@ export default class AddForm extends Component {
         this.state = {
             selectedProduct: {},
             incrementalPricing: [{
-                from:'',
-                to:'',
+                quantityFrom:'',
+                quantityTo:'',
                 price:'',
             }]
         }
@@ -44,25 +44,22 @@ export default class AddForm extends Component {
             this.props.history.push("/inventory/my-inventory");
             return;
         }
+        let newPricing = inputs['pricing'];
+        if(inputs['incrementalSelected']){
+            newPricing = {...inputs['pricing'], tiersRequests: this.validateIncPricing()};
+        }
         let params = Object.assign({}, inputs, {
                 merchantVisibility: (inputs.merchantVisibility || false),
+                pricing: newPricing,
                 ...lots[index]
         });
         this.props.addProductOffer(params).then(() => {
             this.addLot(lots, inputs, ++index);
         })
-
-        let data = this.validateIncPricing();
-        if(data.length > 0){
-            data.map((item)=>{
-                this.props.saveIncrementalPricing(item.from, item.to, item.price);
-                return null;
-            })
-        }
     }
 
     validateIncPricing(){
-        let tmp = this.state.incrementalPricing.filter(data => data.from !=='' && data.to !== '' && data.price !== '');
+        let tmp = this.state.incrementalPricing.filter(data => data.quantityFrom !=='' && data.quantityTo !== '' && data.price !== '');
         return tmp;
     }
 

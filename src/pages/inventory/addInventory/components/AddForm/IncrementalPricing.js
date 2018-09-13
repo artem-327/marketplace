@@ -13,8 +13,8 @@ export default class IncrementalPricing extends Component {
             unit: 'lb',
             disabled: true,
             incrementalPricing: [{
-                from: '',
-                to: '',
+                quantityFrom: '',
+                quantityTo: '',
                 price: '',
             }]
         }
@@ -25,32 +25,32 @@ export default class IncrementalPricing extends Component {
         let splits = parseInt(this.state.splits, 10);
         newIncremental.map((item, index)=>{
 
-            let difference = item.to % splits;
-            let differenceFrom = item.from % splits;
+            let difference = item.quantityTo % splits;
+            let differenceFrom = item.quantityFrom % splits;
 
-            if(item.from <= this.state.minimum){
-                item.from = this.state.minimum;
+            if(item.quantityFrom <= this.state.minimum){
+                item.quantityFrom = this.state.minimum;
             }
             else{
                 if(differenceFrom * 2 > splits)
-                    item.from = item.from - differenceFrom + splits;
+                    item.quantityFrom = item.quantityFrom - differenceFrom + splits;
                 
                 else
-                    item.from = item.from - differenceFrom;
+                    item.quantityFrom = item.quantityFrom - differenceFrom;
                 
             }
             if(difference > splits / 2)
-                item.to += splits-difference
+                item.quantityTo += splits-difference
             else
-                item.to -= difference
+                item.quantityTo -= difference
             
-            if(item.to !== '' && item.to <= item.from)
-                item.to = item.from + splits
+            if(item.quantityTo !== '' && item.quantityTo <= item.quantityFrom)
+                item.quantityTo = item.quantityFrom + splits
             
             if(newIncremental[index+1] !== undefined){
                 
-                if(newIncremental[index+1].from <= item.to)
-                    newIncremental[index+1].from =  item.to + splits;   
+                if(newIncremental[index+1].quantityFrom <= item.quantityTo)
+                    newIncremental[index+1].quantityFrom =  item.quantityTo + splits;
             }
             return true;
         });
@@ -58,11 +58,12 @@ export default class IncrementalPricing extends Component {
         this.setState({incrementalPricing: newIncremental})
     }
 
-    addNewIncrementalPricing(index){
+    addNewIncrementalPricing(e, index){
+        e.preventDefault();
         let newIncremental = this.state.incrementalPricing.slice(0);
         newIncremental.push({
-            from: parseInt(this.state.incrementalPricing[index].to, 10) + parseInt(this.state.splits, 10),
-            to: '',
+            quantityFrom: parseInt(this.state.incrementalPricing[index].quantityTo, 10) + parseInt(this.state.splits, 10),
+            quantityTo: '',
             price: ''
         });
         this.setState({
@@ -70,7 +71,8 @@ export default class IncrementalPricing extends Component {
         })
     }
 
-    removeIncrementalPricing(index){
+    removeIncrementalPricing(e, index){
+        e.preventDefault();
         this.setState({
             incrementalPricing: [...this.state.incrementalPricing.slice(0,index), ...this.state.incrementalPricing.slice(index+1)]
         }, ()=>this.validateInputs())
@@ -169,19 +171,19 @@ export default class IncrementalPricing extends Component {
     renderIncrementalPricing(){
         return this.state.incrementalPricing.map((item, index)=>{
             let grossMargin = this.calculateGrossMargin(index);
-            let plusButton = (item.to !== '' && item.price !== '' && index === this.state.incrementalPricing.length-1) && grossMargin !== ' ' ?
-                <button onClick={()=>this.addNewIncrementalPricing(index)} className='incremental-button add'>+</button> : null;
+            let plusButton = (item.quantityTo !== '' && item.price !== '' && index === this.state.incrementalPricing.length-1) && grossMargin !== ' ' ?
+                <button onClick={(e)=>this.addNewIncrementalPricing(e, index)} className='incremental-button add'>+</button> : null;
             let minusButton = (index !== 0) ?
-                <button onClick={()=>this.removeIncrementalPricing(index)} className='incremental-button remove'>-</button> : null;
+                <button onClick={(e)=>this.removeIncrementalPricing(e, index)} className='incremental-button remove'>-</button> : null;
             return <tr key={index}>
                 {/*<td><span className='incremental-index'><span>{index + 1}</span></span></td>*/}
                 <td>
                     <input  className='tieredPricing'
                             type='number'
                             step={this.state.splits}
-                            value={item.from}
+                            value={item.quantityFrom}
                             min={this.state.minimum}
-                            onChange={(e)=>this.handleChange(e, index, 'from')}
+                            onChange={(e)=>this.handleChange(e, index, 'quantityFrom')}
                             onBlur={()=>{this.validateInputs()}}
                             disabled={this.state.disabled}
                     />
@@ -190,9 +192,9 @@ export default class IncrementalPricing extends Component {
                     <input type='number'
                            className='tieredPricing'
                            step={this.state.splits}
-                           value={item.to}
+                           value={item.quantityTo}
                            onBlur={()=>{this.validateInputs()}}
-                           onChange={(e)=>this.handleChange(e, index, 'to')}
+                           onChange={(e)=>this.handleChange(e, index, 'quantityTo')}
                            disabled={this.state.disabled}
                            />
                 </td>
