@@ -5,6 +5,7 @@ import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerR
 import './ProductOffering.css'
 import {required, messages, min, isNumber, maxPercent, bigger} from "../../../../../../utils/validation";
 import RemoteComboBoxRedux from "../../../../../../components/ComboBox/RemoteComboBoxRedux";
+import Tooltip from "../../../../../../components/Tooltip/Tooltip";
 
 export default class ProductOffering extends Component {
     constructor(props) {
@@ -239,11 +240,13 @@ export default class ProductOffering extends Component {
                         </div>
                     </div>
                     <div>
+                        <Tooltip className="notes" content="add inventory 2"/>
                         <div className="group-item-wr notes-textarea">
                             <label htmlFor=".externalNotes">External notes</label>
                             <Control.textarea model=".externalNotes" id=".externalNotes" className="textarea"
                                               placeholder="Enter notes here"/>
                         </div>
+                        <Tooltip className="notes" content="add inventory 3"/>
                         <div className="group-item-wr notes-textarea">
                             <label htmlFor=".internalNotes">Internal Notes</label>
                             <Control.textarea model=".internalNotes" id=".internalNotes" className="textarea"

@@ -23,6 +23,8 @@ const SEARCH_PRODUCT_FULFILLED = 'SEARCH_PRODUCT_FULFILLED';
 const SEARCH_PRODUCT_REJECTED = 'SEARCH_PRODUCT_REJECTED';
 const SAVE_MAPPING = 'SAVE_MAPPING';
 const SAVE_MAPPING_FULFILLED = 'SAVE_MAPPING_FULFILLED';
+const FETCH_ALTERNATIVE_NAMES = 'FETCH_ALTERNATIVE_NAMES';
+const FETCH_ALTERNATIVE_NAMES_FULFILLED = 'FETCH_ALTERNATIVE_NAMES_FULFILLED';
 const FETCH_MANUFACTURER = 'FETCH_MANUFACTURER';
 const FETCH_MANUFACTURER_PENDING = 'FETCH_MANUFACTURER_PENDING';
 const FETCH_MANUFACTURER_FULFILLED = 'FETCH_MANUFACTURER_FULFILLED';
@@ -42,7 +44,8 @@ export const initialState = {
     manufacturer:[],
     isFetchingManufacturer: false,
     isFetching: false,
-    isMapFetching: false
+    isMapFetching: false,
+    alternativeNames: [],
 };
 
 export default function reducer(state = initialState, action) {
@@ -149,6 +152,12 @@ export default function reducer(state = initialState, action) {
                 mappedData: action.payload
             }
         }
+        case FETCH_ALTERNATIVE_NAMES_FULFILLED:{
+            return{
+                ...state,
+                alternativeNames: action.payload
+            }
+        }
         default: {
             return state
         }
@@ -249,5 +258,34 @@ export function saveMapping(values) {
     return {
         type: SAVE_MAPPING,
         payload: axios.post("/api/v1/product-templates/", values)
+    }
+}
+
+export function fetchAlternativeNames(id){
+    return {
+        type: FETCH_ALTERNATIVE_NAMES,
+        payload: Promise.resolve({
+            "data": {
+                "alternativeNames": [
+                    {
+                        "id": 1,
+                        "alternativeName": "Elon"
+                    },
+                    {
+                        "id": 2,
+                        "alternativeName": "Musk"
+                    },
+                    {
+                        "id": 3,
+                        "alternativeName": "Must"
+                    },
+                    {
+                        "id": 4,
+                        "alternativeName": "Sleep"
+                    },
+                ]
+            },
+            "status": "success"
+        }).then(result => result.data.alternativeNames)
     }
 }

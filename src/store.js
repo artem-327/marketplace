@@ -15,7 +15,7 @@ import filter, {initialState as filterInit} from './modules/filter';
 import packageTypes from './modules/packageTypes';
 import cart from "./modules/cart";
 import broadcastRules from "./modules/broadcastRule";
-import merchants from "./modules/merchants";
+import merchants, {initialState as merchantsInit} from "./modules/merchants";
 import products, {initialState as productsInit} from './modules/products';
 import errors from "./modules/errors";
 
@@ -41,6 +41,7 @@ const reducer = combineReducers({
         productOffering: productsInit.productOffering,
         loginForm: identityFormInit.loginForm.data,
         registrationForm: identityFormInit.registrationForm.data,
+        merchants: merchantsInit,
     }, 'forms'),
 });
 
