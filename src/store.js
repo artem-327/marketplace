@@ -19,7 +19,7 @@ import broadcastRules from "./modules/broadcastRule";
 import merchants, {initialState as merchantsInit} from "./modules/merchants";
 import products, {initialState as productsInit} from './modules/products';
 import errors from "./modules/errors";
-import companiesOfficesSaga from "./pages/administration/companiesOffices/saga/companiesOffices";
+import companiesOfficesSaga from "./pages/administration/companiesAdmin/saga/companiesAdmin";
 
 //TODO::unite forms reducers
 const reducer = combineReducers({
