@@ -26,7 +26,7 @@ class InputEdit extends Component {
         return <div className="input-edit">{edit ?
             <React.Fragment>
                 <span onClick={this.save.bind(this)}><i className="fas fa-save"/></span>
-                < input value = {text} onChange={(e) => this.setState({text: e.target.value})}/>
+                <input value = {text} onChange={(e) => this.setState({text: e.target.value})}/>
             </React.Fragment>
             :
             <React.Fragment>

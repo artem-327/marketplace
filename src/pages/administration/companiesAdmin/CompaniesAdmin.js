@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import './companiesAdmin.css';
 import Company from "./components/Company";
-import AddItem from "./components/AddItem";
+import AddCompany from "./components/AddCompany";
+import Spinner from "../../../components/Spinner/Spinner";
 
 class CompaniesAdmin extends Component {
 
@@ -17,9 +18,10 @@ class CompaniesAdmin extends Component {
     }
 
     renderCompanies() {
-        return this.props.companies.map((company) => (
-            <Company key={company.id} id={company.id} name={company.name} noOffices={company.offices.length}
-                     history={this.props.history}/>
+        return this.props.isFetching ?
+            <Spinner/>
+        : this.props.companies.map((company) => (
+            <Company key={company.id} id={company.id} name={company.name} history={this.props.history}/>
         ));
     }
 
@@ -28,7 +30,7 @@ class CompaniesAdmin extends Component {
             <div className="admin-companies">
                 <h1 className='header'>Companies administration</h1>
                 <div className="list-companies">
-                    <AddItem addItem={(text) => this.props.createCompany(text, () => this.setState({addMode: false}))}
+                    <AddCompany addItem={(text) => this.props.createCompany(text, () => this.setState({addMode: false}))}
                              text="Add new company" addMode={this.state.addMode} changeMode={(state)=>this.setState({addMode: state})}/>
                     {this.renderCompanies()}
                 </div>

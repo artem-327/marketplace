@@ -1,21 +1,33 @@
 import React, {Component} from 'react';
 import './companiesAdmin.css';
 import {connect} from "react-redux";
-import {fetchDetail} from "../../../modules/companies";
+import {createOffice, editCompany, fetchDetail, removeOffice} from "../../../modules/companies";
 import {bindActionCreators} from "redux";
 import InputEdit from "../../../components/InputEdit/InputEdit";
 import Office from "./components/Office";
+import AddOffice from "./components/AddOffice";
+import {fetchLocations} from "../../../modules/location";
+import Spinner from "../../../components/Spinner/Spinner";
 
 class CompaniesDetailAdmin extends Component {
 
-    componentDidMount() {
+    constructor(props){
+        super(props);
+        this.state = {
+            addMode: false
+        }
+    }
+
+    componentWillMount() {
         this.props.fetchDetail(this.props.match.params.id);
     }
 
     renderOffices() {
-        if(!this.props.company.offices) return;
-        return this.props.company.offices.map((office) => (
-            <Office key={office.id} id={office.id} name={office.name} history={this.props.history}/>
+        if(!this.props.isFetching && !this.props.company.offices) return;
+        return this.props.isFetching ?
+            <Spinner/>
+        : this.props.company.offices.map((office) => (
+            <Office removeOffice={(id)=>this.props.removeOffice(id, this.props.company)} key={office.id} id={office.id} name={office.name} history={this.props.history}/>
         ));
     }
 
@@ -25,8 +37,18 @@ class CompaniesDetailAdmin extends Component {
                 <h1 className='header'>Companies administration - {this.props.company.name}</h1>
                 <div className="list-companies">
                     <h4>Company Name</h4>
-                    <InputEdit value={this.props.company.name} onSave={(text) => console.log(text)}/>
+                    <InputEdit value={this.props.company.name} onSave={(text) => {
+                        this.props.editCompany(Object.assign({}, this.props.company, {name: text}))}}
+                    />
                     <h4>Company Offices</h4>
+                    <AddOffice
+                        changeMode={(state)=>this.setState({addMode: state})}
+                        addMode={this.state.addMode}
+                        text="Add new office and connect to company"
+                        locations={this.props.locations}
+                        isFetchingLocation={this.props.isFetchingLocation}
+                        addItem={(payload)=>this.props.createOffice(Object.assign({}, payload, {company: this.props.company}), ()=>this.setState({addMode: false}))}
+                        fetchLocation={(text)=>this.props.fetchLocations({search: text})}/>
                     {this.renderOffices()}
                 </div>
             </div>
@@ -37,12 +59,14 @@ class CompaniesDetailAdmin extends Component {
 function mapStateToProps(store) {
     return {
         isFetching: store.companies.isFetching,
-        company: store.companies.detail
+        company: store.companies.detail,
+        isFetchingLocation: store.location.locationFetching,
+        locations: store.location.locations,
     }
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({fetchDetail}, dispatch)
+    return bindActionCreators({fetchDetail, editCompany, fetchLocations, createOffice, removeOffice}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CompaniesDetailAdmin);

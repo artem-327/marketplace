@@ -19,7 +19,8 @@ import broadcastRules from "./modules/broadcastRule";
 import merchants, {initialState as merchantsInit} from "./modules/merchants";
 import products, {initialState as productsInit} from './modules/products';
 import errors from "./modules/errors";
-import companiesOfficesSaga from "./pages/administration/companiesAdmin/saga/companiesAdmin";
+import companiesAdminSaga from "./pages/administration/companiesAdmin/saga/companiesAdmin";
+import officesAdminSaga from "./pages/administration/officesAdmin/saga/officesAdmin";
 
 //TODO::unite forms reducers
 const reducer = combineReducers({
@@ -58,4 +59,5 @@ const middleware = applyMiddleware(thunk, promise(), sagaMiddleware, logger);
 
 export default createStore(reducer, middleware)
 
-sagaMiddleware.run(companiesOfficesSaga);
+sagaMiddleware.run(companiesAdminSaga);
+sagaMiddleware.run(officesAdminSaga);

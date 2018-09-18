@@ -17,6 +17,8 @@ import Merchants from '../pages/administration/merchants';
 import NamesSynonyms from "../pages/administration/namesSynonyms/";
 import Companies from "../pages/administration/companiesAdmin/";
 import CompaniesDetail from "../pages/administration/companiesAdmin/CompaniesDetailAdmin";
+import OfficesDetail from "../pages/administration/officesAdmin/OfficesDetailAdmin";
+import NoMatch from "../components/404";
 
 class Main extends Component {
     render() {
@@ -36,7 +38,9 @@ class Main extends Component {
                     <Route exact path="/administration/names-synonyms" component={withAuth(NamesSynonyms)}/>
                     <Route exact path="/administration/companies/" component={withAuth(Companies)}/>
                     <Route exact path="/administration/companies/:id" component={withAuth(CompaniesDetail)}/>
+                    <Route exact path="/administration/offices/:id" component={withAuth(OfficesDetail)}/>
                     <Route exact path="/test-page" component={TestPage}/>
+                    <Route component={NoMatch}/>
                 </Switch>
             </div>
         );
