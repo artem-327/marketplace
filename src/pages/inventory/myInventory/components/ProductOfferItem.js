@@ -4,7 +4,7 @@ import classnames from "classnames";
 import Checkbox from "../../../../components/Checkbox/Checkbox";
 import ThreeDots from "../../../../components/ThreeDots/ThreeDots";
 import BroadcastRule from "./BroadcastRule";
-import DotsMenuHOC from "../../../../components/ThreeDots/DotsMenuHOC";
+import ThreeDotsMenu from "../../../../components/ThreeDots/ThreeDotsMenu";
 
 class ProductOfferItem extends Component {
     constructor(props) {
@@ -38,11 +38,29 @@ class ProductOfferItem extends Component {
     render () {
         const {offer} = this.props;
         const trDotsMenuActive = this.state.trDotsOpen ? {borderBottom: '4px solid #289ada'} : null;
+        const dotsMenuLinks =
+            [
+                {
+                    action: ()=>console.log('edit'),
+                    label: 'Edit Listing',
+                },
+                {
+                    action: ()=>console.log('BR'),
+                    label: 'Custom Broadcast'
+                },
+                {
+                    action: ()=>console.log('delete'),
+                    label: 'Delete Listing'
+                }
+            ];
         return (
             <React.Fragment>
             <tr className="product-offer">
                 <td><Checkbox inputClass='input-myInv' className='mark-myInv small' onChange={(value) => {console.log(value)}}/></td>
-                <td style={trDotsMenuActive} ref={this.threeDotsRef} onClick={()=> this.setState({trDotsOpen: !this.state.trDotsOpen})}><ThreeDots className={'small'+ classnames({" active": (this.state.trDotsOpen)})}/><DotsMenuHOC isOpen={this.state.trDotsOpen}/></td>
+                <td style={trDotsMenuActive} ref={this.threeDotsRef} onClick={()=> this.setState({trDotsOpen: !this.state.trDotsOpen})}>
+                    <ThreeDots className={'small'+ classnames({" active": (this.state.trDotsOpen)})}/>
+                    <ThreeDotsMenu links={dotsMenuLinks} isOpen={this.state.trDotsOpen}/>
+                </td>
                 <td className="capitalize">{offer.product.casIndexName}</td>
                 <td>{offer.packaging.amount.formatNumber()}</td>
                 <td>{offer.packaging.container.name}</td>
