@@ -11,9 +11,17 @@
   margin-bottom: 10px;
   background-color: #343545;
   border-radius: 50%;
+  &.active{
+    background-color: #289ada;
+  }
   &.small {
     width: 3px;
     height: 3px;
+    &.active{
+      &:before, &:after{
+        background-color: #289ada;
+      }
+    }
     &:before {
       content: "";
       position: absolute;
