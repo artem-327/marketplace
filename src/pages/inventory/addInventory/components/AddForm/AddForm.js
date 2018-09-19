@@ -68,7 +68,6 @@ export default class AddForm extends Component {
     }
 
     render() {
-        console.log(this.props);
         return (
             <div className={classnames('add-inventory', {'disable' : this.props.disable})} >
                 <Form model="forms.addProductOffer" onSubmit={(inputs) => this.addProductOffer(inputs)}>
