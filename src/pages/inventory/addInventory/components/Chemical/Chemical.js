@@ -81,6 +81,7 @@ class Chemical extends Component {
             <div>
                 <SearchProducts selectedMapping={this.state.selectedProductMapping}
                                 selectedProduct={this.state.selectedProduct}
+                                isVisible={this.state.lots.length === 0}
                                 onSelectProductMapping={mapping => this.setProductMapping(mapping)}
                                 onSelect={product => this.setSelectedProduct(product)}
                                 {...this.props}
