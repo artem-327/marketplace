@@ -3,8 +3,12 @@ import AddInventory from './AddInventory';
 import {bindActionCreators} from 'redux'
 import {resetForm} from "../../../utils/functions";
 
-function mapStateToProps() {
-    return {}
+function mapStateToProps(store) {
+    return {
+        mappingForm: store.forms.productMapping,
+        productOfferingForm: store.forms.productOffering,
+        addProductOfferForm: store.forms.addProductOffer
+    }
 }
 
 

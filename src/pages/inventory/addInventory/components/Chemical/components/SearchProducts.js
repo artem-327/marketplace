@@ -6,6 +6,7 @@ class SearchProducts extends Component {
 
     render() {
         return (
+            this.props.isVisible ?
             <div className="test">
                 <h6>CHEMICAL SEARCH</h6>
 
@@ -21,7 +22,7 @@ class SearchProducts extends Component {
                                 getObject={(productTemplate) => this.props.onSelectProductMapping(productTemplate)}
                                 displayAttr="productName"/>
 
-            </div>
+            </div> : null
         );
     }
 }

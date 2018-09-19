@@ -34,14 +34,18 @@ export default class Pricing extends Component {
     }
 
     render() {
-
         let incremental = this.state.incrementalPricing ?
             <div className='incremental-wr'>
                 <IncrementalPricing cost={this.props.form.pricing.cost}
                                     getIncPricing={(data) => this.props.getIncPricing(data)}/>
             </div>
             : null;
-
+        let measurement = null;
+        let totalPackages = null;
+        let price = null;
+        if(this.props.mappingForm.packaging) measurement = this.props.mappingForm.packaging.capacity;
+        if(this.props.productOfferingForm.totalPackages) totalPackages = this.props.productOfferingForm.totalPackages;
+        if(this.props.addProductOfferForm.pricing) price = this.props.addProductOfferForm.pricing.price;
         return (
             <div>
 
@@ -101,7 +105,7 @@ export default class Pricing extends Component {
                         </div>
                         <div className='group-item-wr'>
                             <h6>Total Sales Price</h6>
-                            <h6>$ UNDEFINED</h6>
+                            <h6>$ {(measurement * totalPackages * price).formatMoney(2)}</h6>
                         </div>
                     </div>
                     <div>
