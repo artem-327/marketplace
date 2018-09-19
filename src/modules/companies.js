@@ -1,10 +1,10 @@
 import {
     COMPANIES_FETCH_REQUESTED, COMPANIES_FETCH_SUCCEEDED, COMPANY_CREATE_REQUESTED, COMPANY_EDIT_REQUESTED,
     COMPANY_FETCH_REQUESTED,
-    COMPANY_FETCH_SUCCEEDED
+    COMPANY_FETCH_SUCCEEDED, COMPANY_REMOVE_REQUESTED
 } from "../constants/companies";
 import {
-    OFFICE_CREATE_REQUESTED, OFFICE_FETCH_REQUESTED, OFFICE_FETCH_SUCCEEDED,
+    OFFICE_CREATE_REQUESTED, OFFICE_EDIT_REQUESTED, OFFICE_FETCH_REQUESTED, OFFICE_FETCH_SUCCEEDED,
     OFFICE_REMOVE_REQUESTED
 } from "../constants/offices";
 
@@ -68,6 +68,10 @@ export function editCompany(company) {
     return {type: COMPANY_EDIT_REQUESTED, payload: {company}}
 }
 
+export function removeCompany(id, onSuccess) {
+    return {type: COMPANY_REMOVE_REQUESTED, payload: {id, onSuccess}}
+}
+
 export function createOffice(office, onSuccess) {
     return {type: OFFICE_CREATE_REQUESTED, payload: {office, onSuccess}}
 }
@@ -78,4 +82,8 @@ export function removeOffice(id, company) {
 
 export function fetchOffice(id) {
     return {type: OFFICE_FETCH_REQUESTED, payload: {id}}
+}
+
+export function editOffice(office) {
+    return {type: OFFICE_EDIT_REQUESTED, payload: {office}}
 }

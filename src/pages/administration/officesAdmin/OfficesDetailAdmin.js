@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import InputEdit from "../../../components/InputEdit/InputEdit";
 import Spinner from "../../../components/Spinner/Spinner";
-import {fetchOffice} from "../../../modules/companies";
+import {editOffice, fetchOffice} from "../../../modules/companies";
 
 class CompaniesDetailAdmin extends Component {
 
@@ -26,7 +26,9 @@ class CompaniesDetailAdmin extends Component {
                 <h1 className='header'>Office administration - {this.props.office.name}</h1>
                 <div className="list-companies">
                     <h4>Office Name</h4>
-                    <InputEdit value={this.props.office.name} onSave={(text) => {console.log(text)}}/>
+                    <InputEdit value={this.props.office.name} onSave={(text) => {
+                        this.props.editOffice({name: text, location: this.props.office.location.id, company: this.props.office.company.id})
+                    }}/>
                 </div>
             </div>
         )
@@ -41,7 +43,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({fetchOffice}, dispatch)
+    return bindActionCreators({fetchOffice, editOffice}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CompaniesDetailAdmin);
