@@ -40,7 +40,7 @@ class Main extends Component {
                     <Route exact path="/administration/companies/:id" component={withAuth(CompaniesDetail)}/>
                     <Route exact path="/administration/offices/:id" component={withAuth(OfficesDetail)}/>
                     <Route exact path="/test-page" component={TestPage}/>
-                    <Route component={NoMatch}/>
+                    <Route component={withAuth(NoMatch)}/>
                 </Switch>
             </div>
         );
