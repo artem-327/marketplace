@@ -57,7 +57,7 @@ class Nav extends Component {
         const activeClass = this.props.location.pathname.split('/')[1] === 'administration' ? 'active' : null;
         const dropdown = <div className="dropdown-nav-inside">
             {links.map((link, index) => {
-            return <NavLink key={index} exact to={link.url} className='dropdown-nav-item' activeClassName='active'>
+            return <NavLink key={index} to={link.url} className='dropdown-nav-item' activeClassName='active'>
                 {link.name}
             </NavLink>
             })}</div>;
