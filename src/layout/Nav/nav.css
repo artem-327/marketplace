@@ -2,7 +2,7 @@
   background-color: #33373e; }
   .App-nav .nav-inside .links {
     display: inline-block; }
-  .App-nav .nav-inside .logo, .App-nav .nav-inside .nav-link {
+  .App-nav .nav-inside .logo, .App-nav .nav-inside .nav-link, .App-nav .nav-inside .dropdown-nav {
     display: inline-block; }
   .App-nav .nav-inside .logo {
     padding-left: 30px;
@@ -41,4 +41,54 @@
       font-size: 33px;
       margin: 0 auto 10px auto; }
     .App-nav .nav-inside .nav-link:hover {
+      background-color: #3f434c; }
+  .App-nav .nav-inside .dropdown-nav {
+    padding: 5px 5px;
+    transition: all .2s ease;
+    color: #ffffff;
+    font-weight: lighter;
+    font-size: .8em;
+    height: 90px;
+    width: 90px;
+    vertical-align: top;
+    text-align: center;
+    position: relative;
+    z-index: 2; }
+    .App-nav .nav-inside .dropdown-nav .dropdown-nav-inside {
+      position: absolute;
+      vertical-align: bottom;
+      width: 100%;
+      top: 90px;
+      left: 0;
+      text-align: center; }
+      .App-nav .nav-inside .dropdown-nav .dropdown-nav-inside .dropdown-nav-item {
+        width: 100%;
+        padding: 8px 0;
+        display: block;
+        color: white;
+        background-color: #33373e; }
+        .App-nav .nav-inside .dropdown-nav .dropdown-nav-inside .dropdown-nav-item:last-child {
+          border-radius: 0 0 4px 4px; }
+        .App-nav .nav-inside .dropdown-nav .dropdown-nav-inside .dropdown-nav-item.active {
+          color: #2599d5; }
+        .App-nav .nav-inside .dropdown-nav .dropdown-nav-inside .dropdown-nav-item:hover {
+          cursor: pointer;
+          background-color: #3f434c; }
+    .App-nav .nav-inside .dropdown-nav.active {
+      color: #2599d5; }
+    .App-nav .nav-inside .dropdown-nav .link-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); }
+    .App-nav .nav-inside .dropdown-nav img {
+      display: block;
+      height: 33px;
+      margin: 0 auto 10px auto; }
+    .App-nav .nav-inside .dropdown-nav i {
+      display: block;
+      font-size: 33px;
+      margin: 0 auto 10px auto; }
+    .App-nav .nav-inside .dropdown-nav:hover {
+      cursor: pointer;
       background-color: #3f434c; }
