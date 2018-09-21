@@ -121,6 +121,7 @@ class Nav extends Component {
                         {name: 'Companies', url: '/administration/companies/'},
                         {name: 'Names', url: '/administration/names-synonyms'},
                         {name: 'Merchants', url: '/administration/merchants'},
+                        {name: 'New users', url: '/administration/users'},
                         ], 'ADMIN', admin)}
                     <span className="logout" onClick={() => this.props.logout()}>
                         <NavLink to="/login" className='nav-link' activeClassName='active'>

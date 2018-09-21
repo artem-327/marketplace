@@ -77,6 +77,8 @@ $nav-links-color: #ffffff;
         top: 90px;
         left: 0;
         text-align: center;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+        border-radius: 0 0 4px 4px;
         .dropdown-nav-item{
           width: 100%;
           padding: 8px 0;
@@ -92,6 +94,7 @@ $nav-links-color: #ffffff;
           &:hover{
             cursor: pointer;
             background-color: #3f434c;
+            text-decoration: none;
           }
         }
       }
