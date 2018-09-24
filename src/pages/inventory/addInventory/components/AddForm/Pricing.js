@@ -1,23 +1,40 @@
 import React, {Component} from 'react';
-import {Control, Errors} from 'react-redux-form';
+import {Control, Errors, actions} from 'react-redux-form';
 import {required, isNumber, min, messages} from "../../../../../utils/validation";
 import IncrementalPricing from "./IncrementalPricing";
 import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
 import './Pricing.css';
 import classnames from 'classnames';
 
-
 export default class Pricing extends Component {
     constructor(props) {
         super(props);
         this.state = {
             incrementalPricing: false,
-            margin: " ",
+            margin: '',
+            priceFlag:false,
+            costFlag:false,
+            marginFlag:false,
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    handleChange(model,value){
+        this.props.dispatch(actions.change(model, value));
+    }
 
+    checkFilledInputs(){
+
+        this.setState({priceFlag:false});
+        this.setState({costFlag:false});
+        this.setState({marginFlag:false});
+
+        if(this.props.form.pricing.cost !== ''){ this.setState({costFlag:true}); }
+        if(this.props.form.pricing.price !== ''){ this.setState({priceFlag:true}); }
+        if(this.state.margin !== ''){ this.setState({marginFlag:true}); }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        /*
         if (typeof nextProps.form.pricing === "undefined") {
             this.setState({margin: " "});
             return;
@@ -30,7 +47,105 @@ export default class Pricing extends Component {
         }
         total = total.toFixed(2);
         this.setState({margin: String(total)});
+        */
+    }
 
+    calculatePricing(e){
+
+        let price = this.props.form.pricing.price;
+        let cost = this.props.form.pricing.cost;
+        let margin = this.state.margin;
+        let active = e.target.name;
+        let activeVal = e.target.value;
+        if (this.state.priceFlag && this.state.costFlag && this.state.marginFlag){
+            switch(active){
+                case 'price':{
+                    margin = ((parseInt(activeVal,10) - parseInt(this.props.form.pricing.cost,10)) / parseInt(activeVal,10)) * 100;
+                    
+                    margin = String(margin.toFixed(2));
+                    if(activeVal === '') margin = '';
+                    this.setState({margin});
+                    console.log('!',margin);
+                    break;
+                }
+                case 'cost':
+                case 'margin':{
+                    console.log('flag margin',margin);
+                    let tmp = 100 - parseInt(margin,10); 
+                    
+                    price = parseInt(activeVal,10) / tmp;
+                    if(activeVal === '') price = '';
+                    this.handleChange('forms.addProductOffer.pricing.price', price);
+                    
+                    break;
+                }
+                default:
+            }
+        }
+        else {
+            switch(active){
+                case 'price':{
+                    if(this.state.marginFlag){
+                        cost = parseInt(activeVal,10) - (parseInt(margin,10) / 100 * parseInt(activeVal,10));
+                        if(activeVal === '') cost = '';
+                        this.handleChange('forms.addProductOffer.pricing.cost', cost);
+                    }
+                    else if (this.state.costFlag){
+                        margin = ((parseInt(activeVal,10) - parseInt(cost,10)) / parseInt(activeVal,10)) * 100;
+                        
+                        margin = String(margin.toFixed(2));
+                        console.log('non ',margin);
+                        if(activeVal === '') margin = '';
+                        this.setState({margin});
+                    }
+                    break;
+                }
+                case 'cost':{
+                    if(this.state.marginFlag){
+                        let tmp = 100 - parseInt(margin,10);
+                        
+                        price = parseInt(activeVal,10) / tmp;
+                        if(activeVal === '') price = '';
+                        this.handleChange('forms.addProductOffer.pricing.price', price);
+                    }
+                    else if(this.state.priceFlag){
+                        margin = ((parseInt(price,10) - parseInt(activeVal,10)) / parseInt(price,10)) * 100;
+                        
+                        margin = String(margin.toFixed(2));
+                        console.log('non2 ',margin);
+                        if(activeVal === '') margin = '';
+                        this.setState({margin});
+                    }
+                    break;
+                }
+                case 'margin':{
+                    console.log( typeof activeVal);
+                    
+                    if (activeVal === ''){
+                        this.setState({margin: activeVal});
+                        break;
+                    }   
+                    if(this.state.costFlag){
+                        let tmp = 100 - parseInt(activeVal,10);
+                        price = parseInt(cost,10) / tmp;
+                        this.handleChange('forms.addProductOffer.pricing.price', price);
+                    }
+                    else if(this.state.priceFlag){
+                        cost = parseInt(price,10) - (parseInt(activeVal,10) * parseInt(price,10) / 100);
+                        this.handleChange('forms.addProductOffer.pricing.cost', cost);
+                    }
+                    
+                   console.log(typeof activeVal);
+
+                    this.setState({margin: activeVal});
+                    
+                    break;
+                }
+                default:
+            }
+
+        }
+        console.log(price,cost,margin);
     }
 
     render() {
@@ -70,6 +185,9 @@ export default class Pricing extends Component {
                                           isNumber,
                                           required
                                       }}
+                                      name='price'
+                                      onChange={(e)=>this.calculatePricing(e)}
+                                      onBlur={()=>this.checkFilledInputs()}
                                       placeholder="$"
                                       defaultValue=""
                         />
@@ -91,8 +209,10 @@ export default class Pricing extends Component {
                                       validators={{
                                           min: (val) => min(val, 0),
                                           isNumber,
-                                          required
                                       }}
+                                      name='cost'
+                                      onChange={(e)=>this.calculatePricing(e)}
+                                      onBlur={()=>this.checkFilledInputs()}
                                       defaultValue=""
                                       placeholder="$"/>
                     </div>
@@ -101,7 +221,10 @@ export default class Pricing extends Component {
                     <div className='group-item-wr'>
                         <div className='gross-margin'>
                             <h6>Gross Margin</h6>
-                            <div className={classnames({inRed: this.state.margin < 0})}>{this.state.margin}%</div>
+                            <div className={classnames({inRed: this.state.margin < 0})}>
+                                <input name='margin' type='text' className='pricing-gross-margin' onChange={(e)=>this.calculatePricing(e)} onBlur={()=>this.checkFilledInputs()} value={this.state.margin}></input>
+                                %
+                            </div>
                         </div>
                         <div className='group-item-wr'>
                             <h6>Total Sales Price</h6>
