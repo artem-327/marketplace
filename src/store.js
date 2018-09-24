@@ -8,6 +8,7 @@ import { combineForms } from 'react-redux-form';
 import createSagaMiddleware from 'redux-saga'
 
 import identity, {initialState as identityFormInit} from './modules/identity';
+import users from './modules/users';
 import location from './modules/location';
 import companies from './modules/companies';
 import productOffers, {initialState as addProductsInit} from './modules/productOffers';
@@ -21,12 +22,14 @@ import products, {initialState as productsInit} from './modules/products';
 import errors from "./modules/errors";
 import companiesAdminSaga from "./pages/administration/companiesAdmin/saga/companiesAdmin";
 import officesAdminSaga from "./pages/administration/officesAdmin/saga/officesAdmin";
+import usersSaga from "./pages/administration/users/saga/users";
 
 //TODO::unite forms reducers
 const reducer = combineReducers({
     identity,
     companies,
     locale,
+    users,
     location,
     productOffers,
     products,
@@ -53,7 +56,7 @@ const logger = createLogger({
 });
 
 // create the saga middleware
-const sagaMiddleware = createSagaMiddleware()
+const sagaMiddleware = createSagaMiddleware();
 
 const middleware = applyMiddleware(thunk, promise(), sagaMiddleware, logger);
 
@@ -61,3 +64,5 @@ export default createStore(reducer, middleware)
 
 sagaMiddleware.run(companiesAdminSaga);
 sagaMiddleware.run(officesAdminSaga);
+sagaMiddleware.run(officesAdminSaga);
+sagaMiddleware.run(usersSaga);
