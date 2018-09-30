@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import './AddedLots.css';
-
+import UploadLot from "../../../Upload/UploadLot";
 
 class AddedLot extends Component {
 
@@ -21,10 +21,9 @@ class AddedLot extends Component {
                 this.props.lot.lotNumber}
             </div>
             <div className="vm">
-            {/*<div className='lots-item-docs'>*/}
-                {/*{this.state.isUploaded ? <img className="upload" src={uploaded} alt='drop'/> : <img className="uploaded" src={upload} alt='drop-close' />}*/}
-                {/*<p className="uploadText">Click to upload C of A</p>*/}
-            {/*</div>*/}
+            <div className='lots-item-docs'>
+                <UploadLot/>
+            </div>
             </div>
             <div className="vl"></div>
             <div className='lots-item-button-text'>
