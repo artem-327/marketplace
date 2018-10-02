@@ -61,22 +61,28 @@ export default class Pricing extends Component {
             switch(active){
                 case 'price':{
                     margin = ((parseInt(activeVal,10) - parseInt(this.props.form.pricing.cost,10)) / parseInt(activeVal,10)) * 100;
-                    
                     margin = String(margin.toFixed(2));
                     if(activeVal === '') margin = '';
                     this.setState({margin});
-                    console.log('!',margin);
                     break;
                 }
                 case 'cost':
+                    let tmp = 100 - parseInt(margin,10);                     
+                    price = parseInt(activeVal,10) / tmp * 100;
+                    price.toFixed(2);
+                    if(activeVal === '') price = '';
+                    this.handleChange('forms.addProductOffer.pricing.price', price);                  
+                    break;
                 case 'margin':{
-                    console.log('flag margin',margin);
-                    let tmp = 100 - parseInt(margin,10); 
-                    
-                    price = parseInt(activeVal,10) / tmp;
+                    console.log('margin ', activeVal);
+                    let tmp = 100 - parseInt(activeVal,10); 
+                    console.log('tmp ', tmp);                    
+                    price = parseInt(cost,10) / tmp * 100;
+                    price.toFixed(2);
+                    console.log('price ',price);
                     if(activeVal === '') price = '';
                     this.handleChange('forms.addProductOffer.pricing.price', price);
-                    
+                    this.setState({margin:activeVal});                  
                     break;
                 }
                 default:
@@ -87,14 +93,13 @@ export default class Pricing extends Component {
                 case 'price':{
                     if(this.state.marginFlag){
                         cost = parseInt(activeVal,10) - (parseInt(margin,10) / 100 * parseInt(activeVal,10));
+                        cost.toFixed(2);
                         if(activeVal === '') cost = '';
                         this.handleChange('forms.addProductOffer.pricing.cost', cost);
                     }
                     else if (this.state.costFlag){
-                        margin = ((parseInt(activeVal,10) - parseInt(cost,10)) / parseInt(activeVal,10)) * 100;
-                        
+                        margin = ((parseInt(activeVal,10) - parseInt(cost,10)) / parseInt(activeVal,10)) * 100;  
                         margin = String(margin.toFixed(2));
-                        console.log('non ',margin);
                         if(activeVal === '') margin = '';
                         this.setState({margin});
                     }
@@ -102,25 +107,21 @@ export default class Pricing extends Component {
                 }
                 case 'cost':{
                     if(this.state.marginFlag){
-                        let tmp = 100 - parseInt(margin,10);
-                        
+                        let tmp = 100 - parseInt(margin,10); 
                         price = parseInt(activeVal,10) / tmp;
+                        price.toFixed(2);
                         if(activeVal === '') price = '';
                         this.handleChange('forms.addProductOffer.pricing.price', price);
                     }
                     else if(this.state.priceFlag){
-                        margin = ((parseInt(price,10) - parseInt(activeVal,10)) / parseInt(price,10)) * 100;
-                        
+                        margin = ((parseInt(price,10) - parseInt(activeVal,10)) / parseInt(price,10)) * 100;       
                         margin = String(margin.toFixed(2));
-                        console.log('non2 ',margin);
                         if(activeVal === '') margin = '';
                         this.setState({margin});
                     }
                     break;
                 }
                 case 'margin':{
-                    console.log( typeof activeVal);
-                    
                     if (activeVal === ''){
                         this.setState({margin: activeVal});
                         break;
@@ -128,17 +129,17 @@ export default class Pricing extends Component {
                     if(this.state.costFlag){
                         let tmp = 100 - parseInt(activeVal,10);
                         price = parseInt(cost,10) / tmp;
+                        price.toFixed(2);
                         this.handleChange('forms.addProductOffer.pricing.price', price);
                     }
                     else if(this.state.priceFlag){
                         cost = parseInt(price,10) - (parseInt(activeVal,10) * parseInt(price,10) / 100);
+                        cost.toFixed(2);
                         this.handleChange('forms.addProductOffer.pricing.cost', cost);
                     }
-                    
-                   console.log(typeof activeVal);
-
+                    console.log(this.state.margin, activeVal);
                     this.setState({margin: activeVal});
-                    
+                    console.log(this.state.margin);       
                     break;
                 }
                 default:
@@ -222,7 +223,11 @@ export default class Pricing extends Component {
                         <div className='gross-margin'>
                             <h6>Gross Margin</h6>
                             <div className={classnames({inRed: this.state.margin < 0})}>
-                                <input name='margin' type='text' className='pricing-gross-margin' onChange={(e)=>this.calculatePricing(e)} onBlur={()=>this.checkFilledInputs()} value={this.state.margin}></input>
+                                <input name='margin' type='text' className='pricing-gross-margin' 
+                                    onChange={(e)=>this.calculatePricing(e)} 
+                                    onBlur={()=>this.checkFilledInputs()} 
+                                    value={this.state.margin}>
+                                </input>
                                 %
                             </div>
                         </div>
