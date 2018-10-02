@@ -39,7 +39,7 @@ export default class Pricing extends Component {
         this.setState({margin: String(total)});
     }
 
-    validateInputs(){
+    validateInputs = () => {
       let newIncremental = this.state.incrementalPricing.slice(0);
       let splits = parseInt(this.state.splits, 10);
       newIncremental.map((item, index)=>{
@@ -77,7 +77,7 @@ export default class Pricing extends Component {
       this.setState({incrementalPricing: newIncremental})
     }
 
-    validateMinimum(form){
+    validateMinimum = (form) => {
       if( form === 'minimum'){
           if (this.state.minimum < 0 || this.state.minimum === ''){
               this.setState({minimum:''},() => this.disableInput());
@@ -105,25 +105,25 @@ export default class Pricing extends Component {
       this.setState({minimum:tmpMin},() => {this.disableInput(); this.validateInputs()});   
     }
 
-    splitsMinimumChange(e){
+    splitsMinimumChange = e => {
       var newstate = {};
       newstate[e.target.className] = e.target.value ? parseInt(e.target.value, 10) : '';
       this.setState(newstate);  
     }
 
-    disableInput(){
-      if(this.props.splits === '' || this.props.minimum === ''){
+    disableInput = () => {
+      if(this.state.splits === '' || this.state.minimum === ''){
           this.setState({disabled:true});
       }
       else
           this.setState({disabled:false});
     }
 
-    addNewIncrementalPricing(e, index){
+    addNewIncrementalPricing = (e,index) => {
       e.preventDefault();
-      let newIncremental = this.props.incrementalPricing.slice(0);
+      let newIncremental = this.state.incrementalPricing.slice(0);
       newIncremental.push({
-          quantityFrom: parseInt(this.props.incrementalPricing[index].quantityTo, 10) + parseInt(this.props.splits, 10),
+          quantityFrom: parseInt(this.state.incrementalPricing[index].quantityTo, 10) + parseInt(this.state.splits, 10),
           quantityTo: '',
           price: ''
       });
@@ -132,16 +132,16 @@ export default class Pricing extends Component {
       })
     }
 
-    removeIncrementalPricing(e, index){
+    removeIncrementalPricing = (e,index) => {
       e.preventDefault();
       this.setState({
-          incrementalPricing: [...this.props.incrementalPricing.slice(0,index), ...this.props.incrementalPricing.slice(index+1)]
+          incrementalPricing: [...this.state.incrementalPricing.slice(0,index), ...this.state.incrementalPricing.slice(index+1)]
       }, ()=>this.validateInputs())
     }
 
-    handleChange(e, index, type){
+    handleChange = (e, index, type) => {
       let value = e.target.value ? parseInt(e.target.value, 10) : '';
-      let newIncremental = this.props.incrementalPricing.slice(0);
+      let newIncremental = this.state.incrementalPricing.slice(0);
       newIncremental[index][type] = value;
       this.setState({
           incrementalPricing: newIncremental
@@ -262,7 +262,8 @@ export default class Pricing extends Component {
                         incrementalPricing={incrementalPricing}
                         addNewIncrementalPricing={this.addNewIncrementalPricing}
                         removeIncrementalPricing={this.removeIncrementalPricing}
-                        handleChange={this.handleChange}                
+                        handleChange={this.handleChange}
+                        validateInputs={this.validateInputs}                
                       />
                     </div>}
                 </div>
