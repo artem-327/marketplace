@@ -10,7 +10,6 @@ export default class IncrementalPricing extends Component {
         this.state = {
             splits: '',
             minimum: '',
-            unit: 'lb',
             disabled: true,
             incrementalPricing: [{
                 quantityFrom: '',
@@ -227,7 +226,7 @@ export default class IncrementalPricing extends Component {
                         <tr>
                             <th>Quantity From</th>
                             <th>Quantity To</th>
-                            <th>Price per lb {this.props.unit}</th>
+                            <th>Price per lb</th>
                             <th>Gross Margin %</th>
                             <th> </th>
                         </tr>
