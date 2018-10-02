@@ -65,21 +65,20 @@ export default class Pricing extends Component {
         //console.log(active);
         //console.log(typeof active);
         let activeVal = parseInt(e.target.value,10);
-        //console.log(activeVal);
+        console.log(activeVal);
         //console.log(typeof activeVal);
 
+        if(isNaN(activeVal)) {margin = ''; this.setState({margin}); return;}
         
         if (this.state.priceFlag && this.state.costFlag && this.state.marginFlag){
             switch(active){
                 case 'price':{
-                    if(isNaN(activeVal)) {margin = ''; this.setState({margin});}
                     margin = ((activeVal - this.props.form.pricing.cost) / activeVal) * 100;
                     margin = Number(margin.toFixed(4));
                     this.setState({margin});
                     break;
                 }
                 case 'cost':{
-                    if(isNaN(activeVal)) break;
                     let tmp = 100 - (margin);                     
                     price = (activeVal) / tmp * 100;
                     price = Number(price.toFixed(4));
@@ -87,7 +86,6 @@ export default class Pricing extends Component {
                     break;
                 }
                 case 'margin':{
-                    if(isNaN(activeVal)){this.setState({margin: ''}); break;}
                     let tmp = 100 - (activeVal);                    
                     price = (cost) / tmp * 100;
                     price = Number(price.toFixed(4));                   
@@ -102,13 +100,11 @@ export default class Pricing extends Component {
             switch(active){
                 case 'price':{
                     if(this.state.marginFlag){
-                        if(isNaN(activeVal)) break;
                         cost = (activeVal) - ((margin) / 100 * (activeVal));
                         cost = Number(cost.toFixed(4));
                         this.handleChange('forms.addProductOffer.pricing.cost', cost);
                     }
                     else if (this.state.costFlag){
-                        if(isNaN(activeVal)) margin = '';
                         margin = (((activeVal) - (cost)) / (activeVal)) * 100;  
                         margin = Number(margin.toFixed(4));
                         this.setState({margin});
@@ -117,23 +113,21 @@ export default class Pricing extends Component {
                 }
                 case 'cost':{
                     if(this.state.marginFlag){
-                        if(isNaN(activeVal)) break;
                         let tmp = 100 - (margin); 
                         price = (activeVal) / tmp * 100;
                         price = Number(price.toFixed(4));
                         this.handleChange('forms.addProductOffer.pricing.price', price);
                     }
                     else if(this.state.priceFlag){
-                        if(isNaN(activeVal)) margin = '';
+
                         margin = (((price) - (activeVal)) / (price)) * 100;       
                         margin = Number(margin.toFixed(4));
                         this.setState({margin});
                     }
                     break;
                 }
-                case 'margin':{
-                    if (isNaN(activeVal)){this.setState({margin: ''}); break;}   
-                    else if(this.state.costFlag){
+                case 'margin':{ 
+                    if(this.state.costFlag){
                         let tmp = 100 - (activeVal);
                         price = (cost) / tmp * 100;
                         price = Number(price.toFixed(4));
