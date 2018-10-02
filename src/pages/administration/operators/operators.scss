@@ -1,0 +1,21 @@
+.admin-operators{
+  max-width: 1400px;
+  margin: auto;
+  .admin-operators-new-item{
+    text-align: right;
+    margin: 10px 20px ;
+    box-shadow: 0 1px 1px 0 rgba(60,64,67,.08), 0 1px 3px 1px rgba(60,64,67,.16);
+    padding: 5px 0;
+    border-radius: 6px;
+    .info{
+      float: left;
+    }
+    span{
+      margin: 8px 10px;
+      display: inline-block;
+    }
+    button{
+
+    }
+  }
+}

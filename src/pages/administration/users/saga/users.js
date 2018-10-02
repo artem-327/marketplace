@@ -30,8 +30,9 @@ function* fetchOffices() {
 
 function* promoteToMerchant(action) {
     try {
-        yield call(Api.promoteToMerchant(action.payload.id));
+        yield call(Api.promoteToMerchant, action.payload);
         yield put({type: PROMOTE_TO_MERCHANT_SUCCEEDED});
+        yield put({type: USERS_FETCH_NEW_REQUESTED});
     } catch (e) {
         yield put({type: PROMOTE_TO_MERCHANT_FAILED, message: e.message});
     }
@@ -39,8 +40,9 @@ function* promoteToMerchant(action) {
 
 function* promoteToOperator(action) {
     try {
-        yield call(Api.promoteToOperator(action.payload.id));
+        yield call(Api.promoteToOperator, action.payload);
         yield put({type: PROMOTE_TO_OPERATOR_SUCCEEDED});
+        yield put({type: USERS_FETCH_NEW_REQUESTED});
     } catch (e) {
         yield put({type: PROMOTE_TO_OPERATOR_FAILED, message: e.message});
     }

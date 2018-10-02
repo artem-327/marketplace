@@ -19,6 +19,7 @@ import Companies from "../pages/administration/companiesAdmin/";
 import CompaniesDetail from "../pages/administration/companiesAdmin/CompaniesDetailAdmin";
 import OfficesDetail from "../pages/administration/officesAdmin/OfficesDetailAdmin";
 import UsersNew from "../pages/administration/users";
+import Operators from "../pages/administration/operators";
 import NoMatch from "../components/404";
 
 class Main extends Component {
@@ -41,6 +42,7 @@ class Main extends Component {
                     <Route exact path="/administration/companies/:id" component={withAuth(CompaniesDetail)}/>
                     <Route exact path="/administration/offices/:id" component={withAuth(OfficesDetail)}/>
                     <Route exact path="/administration/users" component={withAuth(UsersNew)}/>
+                    <Route exact path="/administration/operators" component={withAuth(Operators)}/>
                     <Route exact path="/test-page" component={TestPage}/>
                     <Route component={withAuth(NoMatch)}/>
                 </Switch>

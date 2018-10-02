@@ -23,6 +23,7 @@ import errors from "./modules/errors";
 import companiesAdminSaga from "./pages/administration/companiesAdmin/saga/companiesAdmin";
 import officesAdminSaga from "./pages/administration/officesAdmin/saga/officesAdmin";
 import usersSaga from "./pages/administration/users/saga/users";
+import operatorsSaga from "./pages/administration/operators/saga/operators";
 
 //TODO::unite forms reducers
 const reducer = combineReducers({
@@ -64,5 +65,5 @@ export default createStore(reducer, middleware)
 
 sagaMiddleware.run(companiesAdminSaga);
 sagaMiddleware.run(officesAdminSaga);
-sagaMiddleware.run(officesAdminSaga);
 sagaMiddleware.run(usersSaga);
+sagaMiddleware.run(operatorsSaga);
