@@ -4,7 +4,7 @@ import {required, isNumber, min, messages} from "../../../../../utils/validation
 import IncrementalPricing from "./IncrementalPricing";
 import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
 import './Pricing.css';
-import classnames from 'classnames';
+import classNames from 'classnames';
 
 export default class Pricing extends Component {
     constructor(props) {
@@ -36,20 +36,10 @@ export default class Pricing extends Component {
     calculatePricing(e){
 
         let price = parseInt(this.props.form.pricing.price,10);
-        //console.log(typeof price);
-        //console.log(price);
-        let cost = parseInt(this.props.form.pricing.cost,10);
-        //console.log(cost);
-        //console.log(typeof cost);
+        let cost = parseInt(this.props.form.pricing.cost,10);;
         let margin = parseInt(this.state.margin,10);
-        //console.log(margin);
-        //console.log(typeof margin);
         let active = e.target.name;
-        //console.log(active);
-        //console.log(typeof active);
         let activeVal = parseInt(e.target.value,10);
-        console.log(activeVal);
-        //console.log(typeof activeVal);
 
         if(isNaN(activeVal)) {margin = ''; this.setState({margin}); return;}
         
@@ -209,14 +199,16 @@ export default class Pricing extends Component {
                     <div className='group-item-wr'>
                         <div className='gross-margin'>
                             <h6>Gross Margin %</h6>
-                            <div className={classnames({inRed: this.state.margin < 0})}>
+                            <div>
                                 <h6>
-                                    <input name='margin' type='text' className='pricing-gross-margin' 
+                                    <input 
+                                        className= {classNames({inRed: this.state.margin < 0},  'pricing-gross-margin')}
+                                        name='margin' type='text'
                                         onChange={(e)=>this.calculatePricing(e)} 
                                         onBlur={()=>this.checkFilledInputs()} 
                                         value={this.state.margin}
                                         placeholder='%'
-                                        />   
+                                    />   
                                 </h6>
                             </div>
                         </div>
