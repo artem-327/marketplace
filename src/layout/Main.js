@@ -20,6 +20,8 @@ import CompaniesDetail from "../pages/administration/companiesAdmin/CompaniesDet
 import OfficesDetail from "../pages/administration/officesAdmin/OfficesDetailAdmin";
 import NoMatch from "../components/404";
 
+import {withEdit} from '../pages/inventory/addInventory/EditInventoryHOC';
+
 class Main extends Component {
     render() {
         return (
@@ -29,6 +31,7 @@ class Main extends Component {
                     <Route exact path="/inventory/my-inventory" component={withAuth(Inventory(MyInventory))}/>
                     <Route exact path="/inventory/all-inventory" component={withAuth(Inventory(AllInventory))}/>
                     <Route exact path="/inventory/add-inventory" component={withAuth(Inventory(AddInventory))}/>
+                    <Route exact path="/inventory/edit-inventory/:id" component={withAuth(Inventory(withEdit(AddInventory)))}/>
                     <Route exact path="/orders" component={withAuth(Orders)}/>
                     <Route exact path="/clients" component={withAuth(Clients)}/>
                     <Route exact path="/reports" component={withAuth(Reports)}/>

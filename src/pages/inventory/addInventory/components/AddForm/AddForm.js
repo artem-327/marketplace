@@ -67,15 +67,29 @@ export default class AddForm extends Component {
         this.setState({incrementalPricing:data},()=>this.validateIncPricing());
     }
 
+    editProductOffer(inputs){
+        let newPricing = inputs['pricing'];
+        if(inputs['incrementalSelected']){
+            newPricing = {...inputs['pricing'], tiersRequests: this.validateIncPricing()};
+        }
+        let params = Object.assign({}, inputs, {
+            merchantVisibility: (inputs.merchantVisibility || false),
+            pricing: newPricing,
+            ...this.props.mappingForm,
+            ...this.props.productOfferingForm,
+        });
+        console.log(params);
+    }
+
     render() {
         return (
             <div className={classnames('add-inventory', {'disable' : this.props.disable})} >
-                <Form model="forms.addProductOffer" onSubmit={(inputs) => this.addProductOffer(inputs)}>
+                <Form model="forms.addProductOffer" onSubmit={(inputs) => this.props.edit ? this.editProductOffer(inputs) : this.addProductOffer(inputs)}>
                     <AddGroup header='PRICING' disable={this.props.disable} component = {<Pricing {...this.props} getIncPricing={(data)=>this.getIncPricing(data)}/>} />
                     <AddGroup header='WAREHOUSE' disable={this.props.disable} component = {<Location {...this.props}/>} />
                     <button disabled={this.props.disable}
                             className={classnames('button add-inventory big', {'disabled' : this.props.disable})}>
-                        Add Product Offer
+                        {!this.props.edit ? 'Add Product Offer' : 'Edit Product Offer' }
                     </button>
                 </Form>
             </div> )

@@ -23,6 +23,9 @@ class Chemical extends Component {
         if(localStorage.getItem('productLots')){
             this.setState({lots: JSON.parse(localStorage.getItem('productLots'))})
         }
+        if(this.props.edit){
+            this.setState({productID: this.props.productOffer.product.id})
+        }
     }
 
     setProductMapping(mapping) {
@@ -87,11 +90,13 @@ class Chemical extends Component {
                                 onSelect={product => this.setSelectedProduct(product)}
                                 {...this.props}
                 />
-                <Tooltip content="By selecting 'Save Mapping' CAS Name, CAS Number, Product Name and Product Number will be mapped
-                                  in our system. Next time you enter this product these fields will be pre-populated for you."/>
+                {!this.props.edit ?
+                    <Tooltip content="By selecting 'Save Mapping' CAS Name, CAS Number, Product Name and Product Number will be mapped
+                                  in our system. Next time you enter this product these fields will be pre-populated for you."/> : null}
                 <ProductMapping productID={this.state.productID} {...this.props} />
                 <ProductOffering addLot={(lots) => this.addLot(lots)} {...this.props} />
-                <AddedLots lots={this.state.lots} removeLot={(index) => this.removeLots(index)}/>
+                {!this.props.edit ?
+                <AddedLots lots={this.state.lots} removeLot={(index) => this.removeLots(index)}/> : null }
                 <AdditionalDocuments/>
             </div>
         );

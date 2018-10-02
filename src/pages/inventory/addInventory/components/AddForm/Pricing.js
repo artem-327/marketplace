@@ -71,7 +71,7 @@ export default class Pricing extends Component {
                                           required
                                       }}
                                       placeholder="$"
-                                      defaultValue=""
+                                      defaultValue={this.props.edit ? this.props.productOffer.pricing.price : null}
                         />
                     </div>
                     <Errors
@@ -93,7 +93,7 @@ export default class Pricing extends Component {
                                           isNumber,
                                           required
                                       }}
-                                      defaultValue=""
+                                      defaultValue={this.props.edit ? this.props.productOffer.pricing.cost : null}
                                       placeholder="$"/>
                     </div>
 

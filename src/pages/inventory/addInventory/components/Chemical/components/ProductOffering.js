@@ -112,6 +112,7 @@ export default class ProductOffering extends Component {
                         <div className='group-item-wr'>
                             <RemoteComboBoxRedux items={this.props.manufacturer}
                                                  api={(text) => this.props.fetchManufacturer(text)}
+                                                 currentValue={this.props.edit ? this.props.productOffer.manufacturer : null}
                                                  className="manufacturer" limit={5} label="Manufacturer"
                                                  isFetching={this.props.isFetchingManufacturer}
                                                  validators={{required}} dispatch={this.props.dispatch}
@@ -130,6 +131,7 @@ export default class ProductOffering extends Component {
                             <RemoteComboBoxRedux items={this.props.originData}
                                                  api={(text) => this.props.fetchOrigin(text)}
                                                  className="origin" limit={5} label="Origin"
+                                                 currentValue={this.props.edit ? this.props.productOffer.origin : null}
                                                  isFetching={this.props.isFetchingOrigin}
                                                  validators={{required}} dispatch={this.props.dispatch}
                                                  model="forms.productOffering.origin"/>
@@ -253,7 +255,7 @@ export default class ProductOffering extends Component {
                                               placeholder="Enter notes here"/>
 
                         </div>
-                        {button}
+                        {!this.props.edit ? button : null}
                     </div>
                 </Form>
             </div>
