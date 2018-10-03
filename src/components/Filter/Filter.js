@@ -224,14 +224,15 @@ class Filter extends Component {
                                      {
                                          label: 'Minimum (%)',
                                          model: '.assmin',
-                                         type: 'number',
+                                         type: 'assay',
                                          placeholder: '0'
                                      },
                                      {
                                          label: 'Maximum (%)',
                                          model: '.assmax',
-                                         type: 'number',
-                                         placeholder: '0'
+                                         type: 'assay',
+                                         placeholder: '0',
+                                         bigger:true
                                      }
                                  ]}/>
                     <div className="filterBottom">

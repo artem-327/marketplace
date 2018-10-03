@@ -26,19 +26,19 @@
       margin-left: 12px; }
     .filter .filter-group .filter-input-text input {
       width: 380px;
-      margin-bottom: 15px;
+      margin-bottom: 35px;
       margin-left: 10px; }
     .filter .filter-group .filter-input-date label, .filter .filter-group .filter-input-date input {
       margin-left: 12px; }
     .filter .filter-group .filter-input-date input {
-      margin-bottom: 15px;
+      margin-bottom: 35px;
       margin-left: 10px; }
     .filter .filter-group .filter-input-dropdown {
       height: 240px;
       margin-left: 12px;
       width: 380px; }
       .filter .filter-group .filter-input-dropdown p {
-        margin-bottom: 3px; }
+        margin-bottom: 23px; }
   .filter .split .filter-input-text {
     display: inline-block;
     float: left;
@@ -48,12 +48,12 @@
       margin-left: 2px; }
     .filter .split .filter-input-text input {
       width: 100%;
-      margin: 0; }
+      margin: 0 0 20px 0; }
   .filter .split .input-checkbox {
     display: inline-block;
     float: left;
     width: calc(50% - 70px);
-    margin: 0 25px 15px 10px; }
+    margin: 0 25px 35px 10px; }
   .filter .split .filter-input-dropdown {
     height: 240px; }
   .filter .split .filter-input-date {
@@ -65,7 +65,7 @@
       margin-left: 2px; }
     .filter .split .filter-input-date input {
       width: 100%;
-      margin: 0; }
+      margin: 0 0 20px 0; }
   .filter .filterBottom {
     position: absolute;
     z-index: 0;
@@ -88,3 +88,18 @@
     left: 6px;
     position: absolute;
     color: #289ada; }
+  .filter .form-error {
+    position: relative;
+    display: inline-block; }
+    .filter .form-error span {
+      position: absolute;
+      top: 30px;
+      left: 88px;
+      text-align: left;
+      z-index: -1;
+      background-color: white;
+      transform: translate(-50%, -50%);
+      border-radius: 4px;
+      color: #ef3157;
+      font-size: .9rem;
+      padding: 10px; }
