@@ -4,7 +4,7 @@ import {required, isNumber, min, messages} from "../../../../../utils/validation
 import IncrementalPricing from "./IncrementalPricing";
 import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
 import './Pricing.css';
-import classnames from 'classnames';
+import classNames from 'classnames';
 
 
 export default class Pricing extends Component {
@@ -24,6 +24,20 @@ export default class Pricing extends Component {
               quantityTo: '',
               price: '',
           }]
+        }
+    }
+
+    componentDidMount(){
+        if(this.props.edit){
+            if(this.props.productOffer.pricing.tiers.length !== 0){
+                this.props.dispatch(actions.change('forms.addProductOffer.incrementalSelected', true));
+                this.setState({
+                    showIncrementalPricing: true,
+                    splits: this.props.productOffer.packaging.splits,
+                    minimum: this.props.productOffer.packaging.minimum,
+                    incrementalPricing: this.props.productOffer.pricing.tiers,
+                }, ()=>this.validateInputs())
+            }
         }
     }
 
@@ -132,7 +146,6 @@ export default class Pricing extends Component {
                 }
             }
         }
-        console.log(price,cost,margin);
     }
 
     validateInputs = () => {
@@ -200,7 +213,7 @@ export default class Pricing extends Component {
     }
 
     splitsMinimumChange = e => {
-      var newstate = {};
+      let newstate = {};
       newstate[e.target.className] = e.target.value ? parseInt(e.target.value, 10) : '';
       this.setState(newstate);
     }
@@ -331,25 +344,26 @@ export default class Pricing extends Component {
                     <div>
                       <div className='group-item-wr'>
                           <label>Splits</label>
-                          <input
-                              className='splits'
-                              type='number'
-                              value={this.state.splits}
-                              min={'1'}
-                              onChange={e => this.splitsMinimumChange(e)}
-                              onBlur={() => this.validateMinimum('splits')}
-                          />
+                          <Control.text model="forms.productMapping.packaging.splits"
+                                        id="forms.productMapping.packaging.splits"
+                                        defaultValue={this.props.edit ? this.props.productOffer.packaging.splits : null}
+                                        onChange={e => this.splitsMinimumChange(e)}
+                                        onBlur={() => this.validateMinimum('splits')}
+                                        className='splits'
+                                        type='number'
+                                        min={'1'}
+                                        placeholder="$"/>
                       </div>
                       <div className='group-item-wr'>
                           <label>Minimum</label>
-                          <input
-                              className='minimum'
-                              type='number'
-                              min={'0'}
-                              value={this.state.minimum}
-                              onChange={e => this.splitsMinimumChange(e)}
-                              onBlur={e => this.validateMinimum('minimum')}
-                          />
+                          <Control.text model="forms.productMapping.packaging.minimum"
+                                        id="forms.productMapping.packaging.minimum"
+                                        defaultValue={this.props.edit ? this.props.productOffer.packaging.minimum : null}
+                                        onChange={e => this.splitsMinimumChange(e)}
+                                        onBlur={e => this.validateMinimum('minimum')}
+                                        className='minimum'
+                                        type='number'
+                                        min={'0'}/>
                       </div>
                   </div>
 
@@ -357,6 +371,7 @@ export default class Pricing extends Component {
                         <div className='group-item-wr'>
                             <CheckboxRedux name='incremental'
                                            label='Tiered Pricing'
+                                           defaultValue={this.state.showIncrementalPricing}
                                            dispatch={this.props.dispatch}
                                            model={'forms.addProductOffer.incrementalSelected'}
                                            onChange={value => this.setState({showIncrementalPricing: value})}/>

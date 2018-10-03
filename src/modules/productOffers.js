@@ -6,6 +6,7 @@ const GET_PRODUCT_OFFERS_PENDING = 'GET_PRODUCT_OFFERS_PENDING';
 const GET_PRODUCT_OFFER = 'GET_PRODUCT_OFFER';
 const GET_PRODUCT_OFFER_FULFILLED = 'GET_PRODUCT_OFFER_FULFILLED';
 const GET_PRODUCT_OFFER_PENDING = 'GET_PRODUCT_OFFER_PENDING';
+const EDIT_PRODUCT_OFFER = 'EDIT_PRODUCT_OFFER';
 const GET_UNIT_OF_MEASUREMENT = 'GET_UNIT_OF_MEASUREMENT';
 const GET_UNIT_OF_MEASUREMENT_FULFILLED = 'GET_UNIT_OF_MEASUREMENT_FULFILLED';
 const GET_UNIT_OF_PACKAGING = 'GET_UNIT_OF_PACKAGING';
@@ -102,12 +103,17 @@ export function fetchProductOffer(id) {
     }
 }
 
-
+export function editProductOffer(id, inputs) {
+    return {
+        type: EDIT_PRODUCT_OFFER,
+        payload: axios.put(`/api/96knjR/product-offers/${id}`, inputs)
+    }
+}
 
 export function addProductOffer(inputs) {
     return {
         type: ADD_PRODUCT_OFFER,
-        payload: axios.post('/api/v1/product-offers/', inputs)
+        payload: axios.post('/api/ea54g6/product-offers/', inputs)
     }
 }
 

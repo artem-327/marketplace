@@ -99,7 +99,10 @@ export default IncrementalPricing;
 
 IncrementalPricing.propTypes = {
   addNewIncrementalPricing: PropTypes.func,
-  cost: PropTypes.string,
+  cost: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number
+  ]),
   disabled: PropTypes.bool,
   handleChange: PropTypes.func,
   incrementalPricing: PropTypes.arrayOf(PropTypes.object),

@@ -77,10 +77,14 @@ export default class AddForm extends Component {
             ...this.props.productOfferingForm,
             merchantVisibility: (inputs.merchantVisibility || false),
             pricing: newPricing,
+            creationDate: this.props.productOffer.creationDate,
+            expirationDate: this.props.productOffer.expirationDate,
             product: this.props.productOffer.product.id,
             packaging: {...this.props.mappingForm.packaging, amount: this.props.productOfferingForm.totalPackages}
         });
-        console.log(params);
+        this.props.editProductOffer(this.props.productOffer.id, params).then(()=>{
+            this.props.history.push("/inventory/my-inventory");
+        });
     }
 
     render() {
