@@ -235,6 +235,11 @@ class Filter extends Component {
                                          bigger:true
                                      }
                                  ]}/>
+                    <div className="save-filter">
+                    <div className="header">Save Filter</div>
+
+                    </div>
+
                     <div className="filterBottom">
 
                         {/*<button className="filter-button">Apply</button>*/}
