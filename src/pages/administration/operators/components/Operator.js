@@ -13,7 +13,7 @@ class Operator extends Component {
                     <span>{email}</span>
                     <span>{login}</span>
                 </div>
-                <button className="button small red">Delete</button>
+                <button className="button small red" onClick={()=>this.props.removeOperator(this.props.id)}>Delete</button>
             </div>
         )
     }

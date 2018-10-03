@@ -15,7 +15,8 @@ const api = {
                 "login": "test"
             }
         ]
-    )
+    ),
+    removeOperator: (id) => axios.delete('/api/j94weq/operators/' + id),
 };
 
 
