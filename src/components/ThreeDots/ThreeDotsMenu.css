@@ -2,9 +2,10 @@
   position: absolute;
   list-style: none;
   padding-left: 0;
+  z-index: 99;
   left: 55px;
   font-size: 0.9rem;
-  margin-top: 15px;
+  margin-top: 12px;
   box-shadow: 2px 2px 4px 0px #ddddde; }
   .three-dots-menu li {
     background-color: #fafafa;
