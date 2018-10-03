@@ -1,2 +1,8 @@
 .inRed {
   color: red; }
+
+.pricing-gross-margin {
+  padding: 0px;
+  border-width: 0px;
+  border: none;
+  width: 100px; }

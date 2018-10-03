@@ -1,18 +1,20 @@
 import React, {Component} from 'react';
-import {Control, Errors} from 'react-redux-form';
+import {Control, Errors, actions} from 'react-redux-form';
 import {required, isNumber, min, messages} from "../../../../../utils/validation";
 import IncrementalPricing from "./IncrementalPricing";
 import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
 import './Pricing.css';
-import classnames from 'classnames';
-
+import classNames from 'classnames';
 
 export default class Pricing extends Component {
     constructor(props) {
         super(props);
         this.state = {
             showIncrementalPricing: false,
-            margin: " ",
+             margin: '',
+            priceFlag:false,
+            costFlag:false,
+            marginFlag:false,
             splits: '',
             minimum: '',
             disabled: true,
@@ -24,19 +26,112 @@ export default class Pricing extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (typeof nextProps.form.pricing === "undefined") {
-            this.setState({margin: " "});
-            return;
-        }
-        let total = ((parseInt(nextProps.form.pricing.price, 10) - parseInt(nextProps.form.pricing.cost, 10)) / parseInt(nextProps.form.pricing.price, 10)) * 100;
+    handleChange(model,value){
+        this.props.dispatch(actions.change(model, value));
+    }
 
-        if (isNaN(total)) {
-            this.setState({margin: " "});
-            return;
+    checkFilledInputs(){
+
+        this.setState({priceFlag:false});
+        this.setState({costFlag:false});
+        this.setState({marginFlag:false});
+
+        if(this.props.form.pricing.cost !== ''){ this.setState({costFlag:true}); }
+        if(this.props.form.pricing.price !== ''){ this.setState({priceFlag:true}); }
+        if(this.state.margin !== ''){ this.setState({marginFlag:true}); }
+    }
+
+    calculatePricing(e){
+
+        let price = parseInt(this.props.form.pricing.price,10);
+        let cost = parseInt(this.props.form.pricing.cost,10);;
+        let margin = parseInt(this.state.margin,10);
+        let active = e.target.name;
+        let activeVal = parseInt(e.target.value,10);
+
+        if(isNaN(activeVal)) {margin = ''; this.setState({margin}); return;}
+        
+        if (this.state.priceFlag && this.state.costFlag && this.state.marginFlag){
+            switch(active){
+                case 'price':{
+                    margin = ((activeVal - this.props.form.pricing.cost) / activeVal) * 100;
+                    margin = Number(margin.toFixed(4));
+                    this.setState({margin});
+                    break;
+                }
+                case 'cost':{
+                    let tmp = 100 - (margin);                     
+                    price = (activeVal) / tmp * 100;
+                    price = Number(price.toFixed(4));
+                    this.handleChange('forms.addProductOffer.pricing.price', price);                  
+                    break;
+                }
+                case 'margin':{
+                    let tmp = 100 - (activeVal);                    
+                    price = (cost) / tmp * 100;
+                    price = Number(price.toFixed(4));                   
+                    this.setState({margin: activeVal});
+                    this.handleChange('forms.addProductOffer.pricing.price', price);          
+                    break;
+                }
+                default:{ 
+                    console.log('pricing.js bad target name');
+                    break;
+                }
+            }
         }
-        total = total.toFixed(2);
-        this.setState({margin: String(total)});
+        else {
+            switch(active){
+                case 'price':{
+                    if(this.state.marginFlag){
+                        cost = (activeVal - margin) / 100 * activeVal;
+                        cost = Number(cost.toFixed(4));
+                        this.handleChange('forms.addProductOffer.pricing.cost', cost);
+                    }
+                    else if (this.state.costFlag){
+                        margin = (activeVal - cost) / activeVal * 100;  
+                        margin = Number(margin.toFixed(4));
+                        this.setState({margin});
+                    }
+                    break;
+                }
+                case 'cost':{
+                    if(this.state.marginFlag){
+                        let tmp = 100 - margin; 
+                        price = activeVal / tmp * 100;
+                        price = Number(price.toFixed(4));
+                        this.handleChange('forms.addProductOffer.pricing.price', price);
+                    }
+                    else if(this.state.priceFlag){
+
+                        margin = (price - activeVal) / price * 100;       
+                        margin = Number(margin.toFixed(4));
+                        this.setState({margin});
+                    }
+                    break;
+                }
+                case 'margin':{ 
+                    if(this.state.costFlag){
+                        let tmp = 100 - activeVal;
+                        price = cost / tmp * 100;
+                        price = Number(price.toFixed(4));
+                        this.handleChange('forms.addProductOffer.pricing.price', price);
+                    }
+                    else if(this.state.priceFlag){
+                        cost = (price - activeVal) * price / 100;
+                        cost = Number(cost.toFixed(4));
+                        this.handleChange('forms.addProductOffer.pricing.cost', cost);
+                    }
+                    this.setState({margin: activeVal});      
+                    break;
+                }
+                default:{ 
+                    console.log('pricing.js bad target name');
+                    break;
+                }
+            }
+        }
+        console.log(price,cost,margin);
     }
 
     validateInputs = () => {
@@ -178,6 +273,9 @@ export default class Pricing extends Component {
                                           isNumber,
                                           required
                                       }}
+                                      name='price'
+                                      onChange={(e)=>this.calculatePricing(e)}
+                                      onBlur={()=>this.checkFilledInputs()}
                                       placeholder="$"
                                       defaultValue=""
                         />
@@ -199,15 +297,28 @@ export default class Pricing extends Component {
                                       validators={{
                                           min: (val) => min(val, 0),
                                           isNumber,
-                                          required
                                       }}
+                                      name='cost'
+                                      onChange={(e)=>this.calculatePricing(e)}
+                                      onBlur={()=>this.checkFilledInputs()}
                                       defaultValue=""
                                       placeholder="$"/>
                     </div>
                     <div className='group-item-wr'>
                         <div className='gross-margin'>
-                            <h6>Gross Margin</h6>
-                            <div className={classnames({inRed: this.state.margin < 0})}>{this.state.margin}%</div>
+                            <h6>Gross Margin %</h6>
+                            <div>
+                                <h6>
+                                    <input 
+                                        className= {classNames({inRed: this.state.margin < 0},  'pricing-gross-margin')}
+                                        name='margin' type='text'
+                                        onChange={(e)=>this.calculatePricing(e)} 
+                                        onBlur={()=>this.checkFilledInputs()} 
+                                        value={this.state.margin}
+                                        placeholder='%'
+                                    />   
+                                </h6>
+                            </div>
                         </div>
                         <div className='group-item-wr'>
                             <h6>Total Sales Price</h6>
