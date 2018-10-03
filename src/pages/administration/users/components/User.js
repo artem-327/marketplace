@@ -65,20 +65,20 @@ class User extends Component {
     render() {
         let {firstname, middlename, lastname, email} = this.props;
         return (
-            <div className="admin-users-new-item">
-                <div className="info">
-                    <span>{firstname}</span>
-                    <span>{middlename}</span>
-                    <span>{lastname}</span>
-                    <span>{email}</span>
-                </div>
-                <Dropdown
-                    opns={[{id: MERCHANT, name: 'Merchant'}, {id: OPERATOR, name: 'Operator'}]}
-                    onChange={(value) => this.setState({mode: value})}
-                    currentValue={this.state.mode}
-                />
-                {this.renderMode()}
-            </div>
+            <tr className="admin-users-new-item">
+                    <td>{firstname}</td>
+                    <td>{middlename}</td>
+                    <td>{lastname}</td>
+                    <td>{email}</td>
+                    <td>
+                      <Dropdown
+                          opns={[{id: MERCHANT, name: 'Merchant'}, {id: OPERATOR, name: 'Operator'}]}
+                          onChange={(value) => this.setState({mode: value})}
+                          currentValue={this.state.mode}
+                      />
+                      {this.renderMode()}
+                    </td>
+            </tr>
         )
     }
 }

@@ -1,18 +1,29 @@
+$borderColor: #e3e2df;
+
 .admin-users-new{
   max-width: 1400px;
   margin: auto;
+  width: calc(100% - 40px);
+
+  th {
+    border: 2px solid $borderColor;
+    background-color: #fbfaf7;
+    padding: 10px;
+    font-weight: bold;
+  }
+
   .admin-users-new-item{
     text-align: right;
     margin: 10px 20px ;
     box-shadow: 0 1px 1px 0 rgba(60,64,67,.08), 0 1px 3px 1px rgba(60,64,67,.16);
     padding: 5px 0;
     border-radius: 6px;
-    .info{
-      float: left;
+    td{
+      text-align: left;
+      padding: 10px;
     }
-    span{
-      margin: 8px 10px;
-      display: inline-block;
+    td:last-child {
+      float: right;
     }
     .dropdown-wr{
       width: 200px;
