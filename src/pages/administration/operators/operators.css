@@ -1,6 +1,12 @@
 .admin-operators {
   max-width: 1400px;
-  margin: auto; }
+  margin: auto;
+  width: calc(100% - 40px); }
+  .admin-operators th {
+    border: 2px solid #e3e2df;
+    background-color: #fbfaf7;
+    padding: 10px;
+    font-weight: bold; }
   .admin-operators .admin-operators-new-item {
     text-align: right;
     margin: 10px 20px;
@@ -12,3 +18,8 @@
     .admin-operators .admin-operators-new-item span {
       margin: 8px 10px;
       display: inline-block; }
+    .admin-operators .admin-operators-new-item td {
+      text-align: left;
+      padding: 10px; }
+    .admin-operators .admin-operators-new-item td:last-child {
+      float: right; }

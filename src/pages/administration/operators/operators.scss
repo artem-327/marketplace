@@ -1,6 +1,15 @@
+$borderColor: #e3e2df;
+
 .admin-operators{
   max-width: 1400px;
   margin: auto;
+  width: calc(100% - 40px);
+  th {
+    border: 2px solid $borderColor;
+    background-color: #fbfaf7;
+    padding: 10px;
+    font-weight: bold;
+  }
   .admin-operators-new-item{
     text-align: right;
     margin: 10px 20px ;
@@ -14,8 +23,12 @@
       margin: 8px 10px;
       display: inline-block;
     }
-    button{
-
+    td{
+      text-align: left;
+      padding: 10px;
+    }
+    td:last-child {
+      float: right;
     }
   }
 }

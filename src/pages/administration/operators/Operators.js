@@ -18,9 +18,21 @@ class Operators extends Component {
         return (
             <div className="admin-operators-wr">
                 <h1 className="header">Operators</h1>
-                <div className="admin-operators">
-                    {this.renderOperators()}
-                </div>
+                <table className="admin-operators">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Middle Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Login</th>
+                        <th className="settings"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {this.renderOperators()}
+                    </tbody>
+                </table>
             </div>
         )
     }

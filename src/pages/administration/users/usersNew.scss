@@ -4,14 +4,12 @@ $borderColor: #e3e2df;
   max-width: 1400px;
   margin: auto;
   width: calc(100% - 40px);
-
   th {
     border: 2px solid $borderColor;
     background-color: #fbfaf7;
     padding: 10px;
     font-weight: bold;
   }
-
   .admin-users-new-item{
     text-align: right;
     margin: 10px 20px ;
