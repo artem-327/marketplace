@@ -10,7 +10,13 @@ class Operators extends Component {
 
     renderOperators(){
         return this.props.operators.map((operator, index) => {
-            return <Operator removeOperator={this.props.removeOperator}  {...operator} key={index}/>
+            return (
+              <Operator 
+                removeOperator={this.props.removeOperator} 
+                editOperator={this.props.editOperator}
+                {...operator} 
+                key={index}
+              />)
         })
     }
 

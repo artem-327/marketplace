@@ -30,5 +30,11 @@ $borderColor: #e3e2df;
     td:last-child {
       float: right;
     }
+    button{
+      margin-right: 10px;
+      &.red{
+        background-color: red;
+      }
+    }
   }
 }

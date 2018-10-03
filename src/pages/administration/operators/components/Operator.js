@@ -13,6 +13,7 @@ class Operator extends Component {
                     <td>{login}</td>
                     <td>
                         <button className="button small red" onClick={()=>this.props.removeOperator(this.props.id)}>Delete</button>
+                        <button className="button small" onClick={()=>this.props.editOperator({...this.props})}>Edit</button>
                     </td>
             </tr>
         )

@@ -17,7 +17,7 @@ const api = {
         ]
     ),
     removeOperator: (id) => axios.delete('/api/j94weq/operators/' + id),
+    editOperator: (operator) => axios.put('/api/fcn0ij/operators/' + operator.id, {...operator}),
 };
-
 
 export default api;
