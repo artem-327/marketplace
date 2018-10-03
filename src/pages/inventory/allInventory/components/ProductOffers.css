@@ -1,39 +1,35 @@
-.product-offers {
+.all-product-offers {
   margin: 20px 20px;
   text-align: left;
   width: calc(100% - 40px); }
-  .product-offers th {
+  .all-product-offers th {
     border: 2px solid #e3e2df;
     background-color: #fbfaf7;
     padding: 10px;
     font-weight: bold; }
-  .product-offers th:first-child {
-    border-right: 0px; }
-  .product-offers th:nth-child(2) {
-    border-left: 0px; }
-  .product-offers th:last-child {
+  .all-product-offers th:last-child {
     text-align: center; }
-  .product-offers .product {
+  .all-product-offers .product {
     border: 2px solid #e3e2df;
     background-color: #dbdad7;
     font-weight: bold;
     text-align: left; }
-    .product-offers .product td {
+    .all-product-offers .product td {
       padding: 10px; }
-    .product-offers .product .product-name {
+    .all-product-offers .product .product-name {
       padding: 0 10px; }
-    .product-offers .product .icon {
+    .all-product-offers .product .icon {
       padding: 0 10px; }
-    .product-offers .product .quantity {
+    .all-product-offers .product .quantity {
       text-align: right;
       padding-right: 30px; }
-    .product-offers .product .product-casnumber {
+    .all-product-offers .product .product-casnumber {
       color: #4e92df; }
-  .product-offers .product-offer {
+  .all-product-offers .product-offer {
     border-bottom: 2px solid #e3e2df; }
-    .product-offers .product-offer td {
+    .all-product-offers .product-offer td {
       padding: 10px; }
-    .product-offers .product-offer button {
+    .all-product-offers .product-offer button {
       padding: 3px 20px;
       color: white;
       background-color: #00c500;

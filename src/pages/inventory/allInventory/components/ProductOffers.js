@@ -45,10 +45,9 @@ class ProductOffers extends Component {
     render() {
         return (
             <div className="App">
-                <table className="product-offers">
+                <table className="all-product-offers">
                     <thead>
                     <tr>
-                        <th><Checkbox className='big' onChange={(value) => {console.log(value)}}/></th>
                         <th>Merchant</th>
                         <th>Available</th>
                         <th>Packaging</th>
@@ -70,9 +69,6 @@ class ProductOffers extends Component {
                     {Object.values(this.state.products).reduce((rows, product) => {
                         rows.push(
                         <tr className="product" key={product.casNumber} onClick={() => {this.toggleProduct(product.id)}}>
-                            <td colSpan="1">
-                                <Checkbox onChange={(value) => {console.log(value)}}/>
-                            </td>
                             <td colSpan="12">
                                 <span className="product-casnumber">{product.casNumber}</span>
                                 <span className="product-name capitalize">{product.casIndexName}</span>
@@ -87,7 +83,6 @@ class ProductOffers extends Component {
                             product.productOffers.forEach((offer) => {
                                 rows.push(
                                     <tr className="product-offer" key={offer.id}>
-                                        <td><Checkbox className='mark-allInv small' onChange={(value) => {console.log(value)}}/></td>
                                         <td>{offer.merchant.email}</td>
                                         <td>{offer.packaging.amount.formatNumber()}</td>
                                         <td>{offer.packaging.container.name}</td>

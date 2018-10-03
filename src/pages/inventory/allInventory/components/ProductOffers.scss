@@ -1,6 +1,6 @@
 $borderColor: #e3e2df;
 
-.product-offers {
+.all-product-offers {
   margin: 20px 20px;
   text-align: left;
   width: calc(100% - 40px);
@@ -13,13 +13,6 @@ $borderColor: #e3e2df;
     font-weight: bold;
   }
 
-  th:first-child {
-    border-right: 0px;
-  }
-
-  th:nth-child(2) {
-    border-left: 0px;
-  }
   th:last-child {
     text-align: center;
   }
