@@ -106,9 +106,10 @@ class FilterGroup extends Component {
                                 show="touched"
                                 messages={{
                                     isNumber: messages.isNumber,
+                                    min: messages.min
                                 }}
                             />
-                            <Control.text type={input.type} model={input.model} id={input.model} placeholder={input.placeholder} validators={{isNumber}}/>
+                            <Control.text type={input.type} model={input.model} id={input.model} placeholder={input.placeholder} validators={{min: (val) => min(val, 0), isNumber}}/>
                         </div>
                     )
                 }
