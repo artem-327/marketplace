@@ -73,10 +73,12 @@ export default class AddForm extends Component {
             newPricing = {...inputs['pricing'], tiersRequests: this.validateIncPricing()};
         }
         let params = Object.assign({}, inputs, {
-            merchantVisibility: (inputs.merchantVisibility || false),
-            pricing: newPricing,
             ...this.props.mappingForm,
             ...this.props.productOfferingForm,
+            merchantVisibility: (inputs.merchantVisibility || false),
+            pricing: newPricing,
+            product: this.props.productOffer.product.id,
+            packaging: {...this.props.mappingForm.packaging, amount: this.props.productOfferingForm.totalPackages}
         });
         console.log(params);
     }

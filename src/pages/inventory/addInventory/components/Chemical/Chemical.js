@@ -83,13 +83,14 @@ class Chemical extends Component {
     render() {
         return (
             <div>
+                {!this.props.edit ?
                 <SearchProducts selectedMapping={this.state.selectedProductMapping}
                                 selectedProduct={this.state.selectedProduct}
                                 isVisible={this.state.lots.length === 0}
                                 onSelectProductMapping={mapping => this.setProductMapping(mapping)}
                                 onSelect={product => this.setSelectedProduct(product)}
                                 {...this.props}
-                />
+                /> : null}
                 {!this.props.edit ?
                     <Tooltip content="By selecting 'Save Mapping' CAS Name, CAS Number, Product Name and Product Number will be mapped
                                   in our system. Next time you enter this product these fields will be pre-populated for you."/> : null}

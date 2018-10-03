@@ -173,8 +173,14 @@ export default class ProductMapping extends Component {
                                        dispatch={this.props.dispatch}
                                        validators={{required}}/>
                     </div>
-                    <Tooltip className="save-mapping" content="add inventory 1"/>
+                    {!this.props.edit ?
+                    <React.Fragment>
+                        <Tooltip className="save-mapping" content="add inventory 1"/>
                         {button}
+                    </React.Fragment>
+                    : null
+                    }
+
                 </div>
                 </Form>
             </div>
