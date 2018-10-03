@@ -99,21 +99,21 @@ export function fetchAll(filter = {}, mrchnt=true) {
 export function fetchProductOffer(id) {
     return {
         type: GET_PRODUCT_OFFER,
-        payload: axios.get(`/api/ux92h9/product-offers/${id}`).then(response => response.data.data.productOffer)
+        payload: axios.get(`/api/ux92h9/product-offers/${id}/`).then(response => response.data.data.productOffer)
     }
 }
 
 export function editProductOffer(id, inputs) {
     return {
         type: EDIT_PRODUCT_OFFER,
-        payload: axios.put(`/api/96knjR/product-offers/${id}`, inputs)
+        payload: axios.put(`/api/96knjR/product-offers/${id}/`, inputs)
     }
 }
 
 export function addProductOffer(inputs) {
     return {
         type: ADD_PRODUCT_OFFER,
-        payload: axios.post('/api/ea54g6/product-offers/', inputs)
+        payload: axios.post('/api/v1/product-offers/', inputs)
     }
 }
 
