@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Control} from 'react-redux-form';
+import {Control, Errors} from 'react-redux-form';
+import {isNumber, min, messages, maxPercent, bigger, required} from "../../../utils/validation";
 import dropdown from '../../../images/inv-filter/dropdown.png'
 import dropdownClose from '../../../images/inv-filter/dropdown-close.png'
 import classnames from "classnames";
@@ -87,12 +88,55 @@ class FilterGroup extends Component {
                         </div>
                     )
                 }
-                case 'text':
-                 case 'number': {
+                case 'text':{
                     return (
                         <div key={index} className='filter-input-text'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>
                             <Control.text type={input.type} model={input.model} id={input.model} placeholder={input.placeholder}/>
+                        </div>
+                    )
+            }
+                 case 'number': {
+                    return (
+                        <div key={index} className='filter-input-text'>
+                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
+                            <Errors
+                                className="form-error"
+                                model={input.model}
+                                show="touched"
+                                messages={{
+                                    isNumber: messages.isNumber,
+                                    min: messages.min
+                                }}
+                            />
+                            <Control.text type={input.type} model={input.model} id={input.model} placeholder={input.placeholder} validators={{min: (val) => min(val, 0), isNumber}}/>
+                        </div>
+                    )
+                }
+                case 'assay': {
+                    let validator = input.bigger ?
+                        {bigger: (val) => bigger(val, this.props.data.assmin), min: (val) => min(val, 0), maxPercent, isNumber} :
+                        {min: (val) => min(val, 0), maxPercent, isNumber};
+                    return (
+                        <div key={index} className='filter-input-text'>
+                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
+                            <Errors
+                                className="form-error"
+                                model={input.model}
+                                show="touched"
+                                messages={{
+                                    bigger: input.bigger ? messages.bigger : null,
+                                    maxPercent: messages.maxPercent,
+                                    isNumber: messages.isNumber,
+                                    min: messages.min,
+                                }}
+                            />
+                            <Control.text type={input.type}
+                                          model={input.model}
+                                          id={input.model}
+                                          placeholder={input.placeholder}
+                                          validators={validator}
+                            />
                         </div>
                     )
                 }

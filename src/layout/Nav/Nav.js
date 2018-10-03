@@ -10,6 +10,7 @@ import clients from '../../images/nav/clients.png';
 import inventory from '../../images/nav/inventory.png';
 import reports from '../../images/nav/reports.png';
 import myAccount from '../../images/nav/myAccount.svg';
+import admin from '../../images/nav/admin.svg';
 
 class Nav extends Component {
     constructor(props) {
@@ -18,6 +19,9 @@ class Nav extends Component {
         this.state = {
             isScreenBig: true,
             menuOpen: false,
+            dropdown: {
+                administration: false
+            }
         }
     }
 
@@ -49,6 +53,22 @@ class Nav extends Component {
         });
     }
 
+    renderDropdown(id, links, name, img = null){
+        const activeClass = this.props.location.pathname.split('/')[1] === 'administration' ? 'active' : null;
+        const dropdown = <div className="dropdown-nav-inside">
+            {links.map((link, index) => {
+            return <NavLink key={index} to={link.url} className='dropdown-nav-item' activeClassName='active'>
+                {link.name}
+            </NavLink>
+            })}</div>;
+        return <div className={"dropdown-nav " + activeClass} onClick={()=>this.setState({dropdown: {[id]: !this.state.dropdown[id]}})}>
+            <span className='link-center'>
+                {img ? <img src={img}  alt={"Dropdown " + name}/> : null}
+                {name}
+            </span>
+            {this.state.dropdown[id] ? dropdown : null}
+        </div>
+    }
 
     render() {
         const { isScreenBig } = this.state;
@@ -97,6 +117,11 @@ class Nav extends Component {
                             SETTINGS
                         </span>
                     </NavLink>
+                    {this.renderDropdown('administration', [
+                        {name: 'Companies', url: '/administration/companies/'},
+                        {name: 'Names', url: '/administration/names-synonyms'},
+                        {name: 'Merchants', url: '/administration/merchants'},
+                        ], 'ADMIN', admin)}
                     <span className="logout" onClick={() => this.props.logout()}>
                         <NavLink to="/login" className='nav-link' activeClassName='active'>
                             <span className='link-center'>

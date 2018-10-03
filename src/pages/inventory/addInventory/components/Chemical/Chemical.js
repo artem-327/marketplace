@@ -4,6 +4,7 @@ import ProductMapping from "./components/ProductMapping";
 import AddedLots from "./components/AddedLots/AddedLots";
 import SearchProducts from './components/SearchProducts';
 import Tooltip from "../../../../../components/Tooltip/Tooltip";
+import AdditionalDocuments from "./components/AdditionalDocuments";
 
 class Chemical extends Component {
 
@@ -21,6 +22,9 @@ class Chemical extends Component {
     componentDidMount(){
         if(localStorage.getItem('productLots')){
             this.setState({lots: JSON.parse(localStorage.getItem('productLots'))})
+        }
+        if(this.props.edit){
+            this.setState({productID: this.props.productOffer.product.id})
         }
     }
 
@@ -79,17 +83,22 @@ class Chemical extends Component {
     render() {
         return (
             <div>
+                {!this.props.edit ?
                 <SearchProducts selectedMapping={this.state.selectedProductMapping}
                                 selectedProduct={this.state.selectedProduct}
+                                isVisible={this.state.lots.length === 0}
                                 onSelectProductMapping={mapping => this.setProductMapping(mapping)}
                                 onSelect={product => this.setSelectedProduct(product)}
                                 {...this.props}
-                />
-                <Tooltip content="By selecting 'Save Mapping' CAS Name, CAS Number, Product Name and Product Number will be mapped
-                                  in our system. Next time you enter this product these fields will be pre-populated for you."/>
+                /> : null}
+                {!this.props.edit ?
+                    <Tooltip content="By selecting 'Save Mapping' CAS Name, CAS Number, Product Name and Product Number will be mapped
+                                  in our system. Next time you enter this product these fields will be pre-populated for you."/> : null}
                 <ProductMapping productID={this.state.productID} {...this.props} />
                 <ProductOffering addLot={(lots) => this.addLot(lots)} {...this.props} />
-                <AddedLots lots={this.state.lots} removeLot={(index) => this.removeLots(index)}/>
+                {!this.props.edit ?
+                <AddedLots lots={this.state.lots} removeLot={(index) => this.removeLots(index)}/> : null }
+                <AdditionalDocuments/>
             </div>
         );
     }

@@ -15,17 +15,11 @@
       margin-left: 16px;
       vertical-align: center;
       padding-top: 5px; }
-    .lots-container .lots-item-container .upload {
-      height: 35px;
-      margin-top: 0; }
-    .lots-container .lots-item-container .uploaded {
-      height: 35px;
-      margin: 0; }
     .lots-container .lots-item-container .vl {
       margin: 3px 0px 3px 0px;
       border-left: 1.3px solid #ededed; }
     .lots-container .lots-item-container .vm {
-      width: 400px;
+      width: 300px;
       position: relative;
       float: left; }
     .lots-container .lots-item-container .lots-item-info {

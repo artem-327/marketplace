@@ -95,6 +95,8 @@ export default class ProductMapping extends Component {
                     </div>
                 </div>
                 <div>
+                {!this.props.edit ?
+                    <React.Fragment>
                     <Errors
                         className="form-error"
                         model=".productName"
@@ -125,6 +127,8 @@ export default class ProductMapping extends Component {
                                       id=".productNumber"
                                       defaultValue=""/>
                     </div>
+                    </React.Fragment>
+                    : null }
                     <Errors
                         className="form-error"
                         model=".packaging.capacity"
@@ -173,8 +177,14 @@ export default class ProductMapping extends Component {
                                        dispatch={this.props.dispatch}
                                        validators={{required}}/>
                     </div>
-                    <Tooltip className="save-mapping" content="add inventory 1"/>
+                    {!this.props.edit ?
+                    <React.Fragment>
+                        <Tooltip className="save-mapping" content="add inventory 1"/>
                         {button}
+                    </React.Fragment>
+                    : null
+                    }
+
                 </div>
                 </Form>
             </div>

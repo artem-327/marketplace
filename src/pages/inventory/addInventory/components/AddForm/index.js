@@ -2,7 +2,7 @@ import {connect} from 'react-redux';
 import AddForm from './AddForm';
 import {bindActionCreators} from 'redux'
 import {saveWarehouse, updateWarehouse, fetchWarehouse, fetchLocations} from "../../../../../modules/location";
-import {addProductOffer} from '../../../../../modules/productOffers';
+import {addProductOffer, editProductOffer} from '../../../../../modules/productOffers';
 import {validatePackageType} from "../../../../../modules/packageTypes";
 import {addMessage} from "../../../../../modules/errors";
 
@@ -24,6 +24,7 @@ function mapDispatchToProps(dispatch) {
         addProductOffer,
         fetchWarehouse,
         addMessage,
+        editProductOffer
     }, dispatch)
 }
 
