@@ -42,11 +42,9 @@ export default class Pricing extends Component {
     validateInputs = () => {
       let newIncremental = this.state.incrementalPricing.slice(0);
       let splits = parseInt(this.state.splits, 10);
-      newIncremental.map((item, index)=>{
-
+      newIncremental.map((item, index) => {
           let difference = item.quantityTo % splits;
           let differenceFrom = item.quantityFrom % splits;
-
           if(item.quantityFrom <= this.state.minimum){
               item.quantityFrom = this.state.minimum;
           }
@@ -56,7 +54,7 @@ export default class Pricing extends Component {
               
               else
                   item.quantityFrom = item.quantityFrom - differenceFrom;
-              
+           
           }
           if(difference > splits / 2)
               item.quantityTo += splits-difference
@@ -78,7 +76,7 @@ export default class Pricing extends Component {
     }
 
     validateMinimum = (form) => {
-      if( form === 'minimum'){
+      if(form === 'minimum'){
           if (this.state.minimum < 0 || this.state.minimum === ''){
               this.setState({minimum:''},() => this.disableInput());
               return;
@@ -87,7 +85,7 @@ export default class Pricing extends Component {
               return;
           }
       }
-      else if ( form === 'splits'){
+      else if (form === 'splits'){
           if(this.state.splits < 1 || this.state.splits === ''){
               this.setState({splits:''},() => this.disableInput());
               return;
@@ -150,15 +148,13 @@ export default class Pricing extends Component {
     render() {
       const {
         mappingForm: {packaging},
-        productOfferingForm: {totalPackages = null},
+        productOfferingForm: {totalPackages = 50},
         addProductOfferForm: {pricing}
       } = this.props
-      console.log('%c State ', 'background: #222; color: #bada55', this.state);
       const {showIncrementalPricing, splits, minimum, disabled, incrementalPricing} = this.state
 
       const measurement = packaging ? packaging.capacity : null
       const price = pricing ? pricing.price : null
-
         return (
             <div>
                 <h6>SET PRICE & RULES</h6>

@@ -1,10 +1,12 @@
-import React, {Component} from 'react';
+import React from 'react';
 import './Pricing.css';
 import classnames from 'classnames';
+import PropTypes from 'prop-types';
 
-const IncrementalPricing = ({incrementalPricing, validateInputs, handleChange, splits, minimum, disabled, ...props}) => {
+const IncrementalPricing = (props) => {
     const calculateGrossMargin = index => {
-        const margin = ((incrementalPricing[index].price - parseInt(props.cost,10)) / incrementalPricing[index].price * 100);
+        const {cost, incrementalPricing} = props
+        const margin = ((incrementalPricing[index].price - parseInt(cost,10)) / incrementalPricing[index].price * 100);
         if(isNaN(margin) || incrementalPricing[index].price === ''){   
             return '';
         }
@@ -12,13 +14,23 @@ const IncrementalPricing = ({incrementalPricing, validateInputs, handleChange, s
       }
 
       const renderIncrementalPricing = () => {
+        const {
+          addNewIncrementalPricing, 
+          disabled, 
+          handleChange, 
+          incrementalPricing, 
+          minimum, 
+          removeIncrementalPricing,  
+          splits, 
+          validateInputs
+        } = props
         return incrementalPricing.map((item, index) => {
             const grossMargin = calculateGrossMargin(index)
             const plusButton = (item.quantityTo !== '' && item.price !== '' && index === incrementalPricing.length-1) && grossMargin !== ' ' 
-              ? <button onClick={e => props.addNewIncrementalPricing(e, index)} className='incremental-button add'>+</button> 
+              ? <button onClick={e => addNewIncrementalPricing(e, index)} className='incremental-button add'>+</button> 
               : null
             const minusButton = (index !== 0) 
-              ? <button onClick={e => props.removeIncrementalPricing(e, index)} className='incremental-button remove'>-</button> 
+              ? <button onClick={e => removeIncrementalPricing(e, index)} className='incremental-button remove'>-</button> 
               : null
             return <tr key={index}>
                 {/*<td><span className='incremental-index'><span>{index + 1}</span></span></td>*/}
@@ -29,7 +41,7 @@ const IncrementalPricing = ({incrementalPricing, validateInputs, handleChange, s
                     value={item.quantityFrom}
                     min={minimum}
                     onChange={e => handleChange(e, index, 'quantityFrom')}
-                    onBlur={()=>{validateInputs()}}
+                    onBlur={validateInputs}
                     disabled={disabled}
                   />
                 </td>
@@ -38,7 +50,7 @@ const IncrementalPricing = ({incrementalPricing, validateInputs, handleChange, s
                     className='tieredPricing'
                     step={splits}
                     value={item.quantityTo}
-                    onBlur={() => validateInputs()}
+                    onBlur={validateInputs}
                     onChange={e => handleChange(e, index, 'quantityTo')}
                     disabled={disabled}
                     />
@@ -47,7 +59,7 @@ const IncrementalPricing = ({incrementalPricing, validateInputs, handleChange, s
                   <input type='number'
                     className='tieredPricing'
                     value={item.price}
-                    onBlur={() => validateInputs()}
+                    onBlur={validateInputs}
                     onChange={e => handleChange(e, index, 'price')}
                     disabled={disabled}
                   />
@@ -83,3 +95,22 @@ const IncrementalPricing = ({incrementalPricing, validateInputs, handleChange, s
 };
 
 export default IncrementalPricing;
+
+
+IncrementalPricing.propTypes = {
+  addNewIncrementalPricing: PropTypes.func,
+  cost: PropTypes.string,
+  disabled: PropTypes.bool,
+  handleChange: PropTypes.func,
+  incrementalPricing: PropTypes.arrayOf(PropTypes.object),
+  minimum: PropTypes.oneOfType([
+    PropTypes.string, //initial state is string, but input value is a number
+    PropTypes.number
+  ]),
+  removeIncrementalPricing: PropTypes.func,
+  splits: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number
+  ]),
+  validateInputs: PropTypes.func
+};
