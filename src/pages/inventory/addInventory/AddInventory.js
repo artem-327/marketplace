@@ -17,8 +17,6 @@ export default class AddInventory extends Component {
                     container: this.props.productOffer.packaging.container.id,
                     unit: this.props.productOffer.packaging.unit.id
                 },
-                // productName: this.props.productOffer.name,
-                // productNumber: this.props.productOffer.lotNumber
             }));
             this.props.dispatch(actions.merge('forms.productOffering', {
                 // assayMax: "54"
