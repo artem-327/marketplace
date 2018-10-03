@@ -2,6 +2,7 @@ import axios from "axios";
 import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types'
+import Spinner from "../components/Spinner/Spinner";
 
 export function withAuth(ComposedComponent) {
     class requireAuth extends React.Component {
@@ -21,7 +22,7 @@ export function withAuth(ComposedComponent) {
         }
 
         render() {
-            return this.props.isFetchingIdentity ? <div> </div> : <ComposedComponent {...this.props}/>
+            return this.props.isFetchingIdentity ? <Spinner /> : <ComposedComponent {...this.props}/>
         }
     }
 

@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from 'redux-saga/effects'
-import Api from '../../../../api/companies';
+import Api from '../api/companies';
 import {
     COMPANIES_FETCH_FAILED, COMPANIES_FETCH_REQUESTED,
     COMPANIES_FETCH_SUCCEEDED, COMPANY_CREATE_FAILED, COMPANY_CREATE_REQUESTED, COMPANY_CREATE_SUCCEEDED,
@@ -8,7 +8,7 @@ import {
     COMPANY_FETCH_FAILED,
     COMPANY_FETCH_REQUESTED,
     COMPANY_FETCH_SUCCEEDED, COMPANY_REMOVE_REQUESTED, COMPANY_REMOVE_SUCCEEDED
-} from "../../../../constants/companies";
+} from "../constants/companies";
 
 
 function* fetchCompanies() {

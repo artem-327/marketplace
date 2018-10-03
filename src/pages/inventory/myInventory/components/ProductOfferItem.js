@@ -5,6 +5,7 @@ import Checkbox from "../../../../components/Checkbox/Checkbox";
 import ThreeDots from "../../../../components/ThreeDots/ThreeDots";
 import BroadcastRule from "./BroadcastRule";
 import ThreeDotsMenu from "../../../../components/ThreeDots/ThreeDotsMenu";
+import {withRouter} from 'react-router-dom';
 
 class ProductOfferItem extends Component {
     constructor(props) {
@@ -41,7 +42,7 @@ class ProductOfferItem extends Component {
         const dotsMenuLinks =
             [
                 {
-                    action: ()=>console.log('edit'),
+                    action: ()=>this.props.history.push(`/inventory/edit-inventory/${this.props.offer.id}`),
                     label: 'Edit Listing',
                 },
                 {
@@ -99,4 +100,4 @@ class ProductOfferItem extends Component {
 }
 
 
-export default ProductOfferItem;
+export default withRouter(ProductOfferItem);

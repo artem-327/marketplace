@@ -16,6 +16,7 @@ class CheckboxRedux extends Component {
             label={this.props.label}
             name={this.props.name}
             style={this.props.style}
+            defaultValue={this.props.defaultValue}
             onChange={value => this.handleChange(value)}
         />
     }
@@ -27,6 +28,7 @@ CheckboxRedux.propTypes = {
     style: PropTypes.string,
     onChange: PropTypes.func,
     model: PropTypes.string,
+    defaultValue: PropTypes.bool,
     dispatch: PropTypes.func
 };
 
