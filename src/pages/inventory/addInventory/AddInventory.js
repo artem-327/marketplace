@@ -27,6 +27,7 @@ export default class AddInventory extends Component {
                 internalNotes: this.props.productOffer.externalNotes,
                 lotNumber: this.props.productOffer.lotNumber,
                 manufacturer: this.props.productOffer.manufacturer,
+                merchantVisibility: this.props.productOffer.merchantVisibility,
                 name: this.props.productOffer.name,
                 origin: this.props.productOffer.origin,
                 productCondition: this.props.productOffer.productCondition.id,

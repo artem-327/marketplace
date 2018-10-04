@@ -84,9 +84,10 @@ class ProductOffers extends Component {
                         if(product.visible){
                             product.productOffers.forEach((offer) => {
                                 const unit = getUnit(offer.packaging.unit.name);
+                                const merchantName = offer.merchantVisibility ? offer.merchant.email : "Anonymous"
                                 rows.push(
                                     <tr className="product-offer" key={offer.id}>
-                                        <td>{offer.merchant.email}</td>
+                                        <td>{merchantName}</td>
                                         <td>{offer.packaging.amount.formatNumber()}</td>
                                         <td>{offer.packaging.container.name}</td>
                                         <td>{offer.packaging.capacity}</td>
