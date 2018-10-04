@@ -141,7 +141,7 @@ export default class ProductMapping extends Component {
                         }}
                     />
                     <div className='group-item-wr'>
-                        <label htmlFor=".measurements">Measurement</label>
+                        <label htmlFor=".measurements">Measure</label>
                         <Control.text model=".packaging.capacity"
                                       validators={{min: (val) => min(val, 0), isNumber, required}}
                                       id=".measurements"
