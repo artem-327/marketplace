@@ -13,6 +13,14 @@ const api = {
                 "middlename": "Me",
                 "lastname": "Again",
                 "login": "test"
+            },
+            {
+                "id": "2",
+                "email": "second@example.com",
+                "firstname": "Second",
+                "middlename": "Operator",
+                "lastname": "Test",
+                "login": "testSecond"
             }
         ]
     ),
