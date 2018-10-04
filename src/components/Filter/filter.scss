@@ -15,17 +15,18 @@ $font-family: 'Cabin', sans-serif;
   text-align: left;
   .filter-switch {
     margin: auto;
-    width: 80%;
+    text-align: center;
     padding: 10px 0 10px 0;
     font-weight: bold;
     font-size: 1.1rem;
     .set-filters {
+      cursor: pointer;
       color: #289ada;
       padding: 7px 25px;
       height: 40px;
       border: 1px solid #289ada;
       border-radius: 4px 0 0 4px;
-      &.active{
+      &.active {
         background-color: #e7e7e7;
         border-color: #d4d4d4;
         color: #76797d;
@@ -33,12 +34,13 @@ $font-family: 'Cabin', sans-serif;
       }
     }
     .saved-filters {
+      cursor: pointer;
       color: #289ada;
       padding: 7px 15px;
       height: 40px;
       border: 1px solid #289ada;
       border-radius: 0 4px 4px 0;
-      &.active{
+      &.active {
         background-color: #e7e7e7;
         border-color: #d4d4d4;
         border-left: none;
@@ -180,21 +182,30 @@ $font-family: 'Cabin', sans-serif;
       width: 300px;
     }
     .saveButton {
+      vertical-align: top;
+      display: inline-block;
+      width: 120px;
       min-height: 40px;
-      padding: 7px 40px;
+      padding: 7px 35px;
       color: #289ada;
       border: 2px solid #289ada;
       border-radius: 5px;
       height: 38px;
       font-weight: bold;
-      font-size: 1.1rem;
+      text-align: center;
       margin-left: 20px;
       transition: all .2s ease;
+      &:hover, &:focus {
+        cursor: pointer;
+      }
     }
     .savedButton {
-      width: 250px;
+      vertical-align: top;
+      display: inline-block;
+      width: 120px;
       min-height: 40px;
       min-width: unset;
+      text-align: center;
       padding: 7px 35px;
       background-color: #289ada;
       color: #fff;
@@ -202,26 +213,28 @@ $font-family: 'Cabin', sans-serif;
       border-radius: 5px;
       height: 38px;
       font-weight: bold;
-      font-size: 1.1rem;
       margin-left: 20px;
       transition: all .2s ease;
+      &:hover, &:focus {
+        cursor: pointer;
+      }
     }
-  }
-  .form-error {
-    position: relative;
-    display: inline-block;
-    span {
-      position: absolute;
-      top: 30px;
-      left: 88px;
-      text-align: left;
-      z-index: -1;
-      background-color: white;
-      transform: translate(-50%, -50%);
-      border-radius: 4px;
-      color: #ef3157;
-      font-size: .9rem;
-      padding: 10px;
+    .form-error {
+      position: relative;
+      display: inline-block;
+      span {
+        position: absolute;
+        top: 30px;
+        left: 88px;
+        text-align: left;
+        z-index: -1;
+        background-color: white;
+        transform: translate(-50%, -50%);
+        border-radius: 4px;
+        color: #ef3157;
+        font-size: .9rem;
+        padding: 10px;
+      }
     }
   }
 }
