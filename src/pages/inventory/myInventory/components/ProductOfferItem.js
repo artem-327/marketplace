@@ -5,6 +5,7 @@ import Checkbox from "../../../../components/Checkbox/Checkbox";
 import ThreeDots from "../../../../components/ThreeDots/ThreeDots";
 import BroadcastRule from "./BroadcastRule";
 import ThreeDotsMenu from "../../../../components/ThreeDots/ThreeDotsMenu";
+import {getUnit} from "../../../../utils/functions";
 import {withRouter} from 'react-router-dom';
 
 class ProductOfferItem extends Component {
@@ -54,6 +55,7 @@ class ProductOfferItem extends Component {
                     label: 'Delete Listing'
                 }
             ];
+        const unit = getUnit(offer.packaging.unit.name);
         return (
             <React.Fragment>
             <tr className="product-offer">
@@ -66,9 +68,9 @@ class ProductOfferItem extends Component {
                 <td>{offer.packaging.amount.formatNumber()}</td>
                 <td>{offer.packaging.container.name}</td>
                 <td>{offer.packaging.capacity}</td>
-                <td>{(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()}</td>
-                <td>$ {offer.pricing.cost.formatMoney(2)}</td>
-                <td>$ {offer.pricing.price.formatMoney(2)}</td>
+                <td>{(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()} {unit}</td>
+                <td>$ {offer.pricing.cost.formatMoney(2)}/{unit}</td>
+                <td>$ {offer.pricing.price.formatMoney(2)}/{unit}</td>
                 <td>{offer.name}</td>
                 <td>{offer.manufacturer}</td>
                 <td>{offer.productCondition.name}</td>
