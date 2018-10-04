@@ -3,7 +3,9 @@ import './ProductOffers.css';
 import moment from "moment";
 import AddCart from '../../../../components/Cart/AddCart'
 import {DATE_FORMAT} from "../../../../utils/constants";
+import {getUnit} from "../../../../utils/functions";
 import Checkbox from "../../../../components/Checkbox/Checkbox";
+
 class ProductOffers extends Component {
 
     constructor(props) {
@@ -81,14 +83,15 @@ class ProductOffers extends Component {
                         );
                         if(product.visible){
                             product.productOffers.forEach((offer) => {
+                                const unit = getUnit(offer.packaging.unit.name);
                                 rows.push(
                                     <tr className="product-offer" key={offer.id}>
                                         <td>{offer.merchant.email}</td>
                                         <td>{offer.packaging.amount.formatNumber()}</td>
                                         <td>{offer.packaging.container.name}</td>
                                         <td>{offer.packaging.capacity}</td>
-                                        <td>{(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()}</td>
-                                        <td>$ {offer.pricing.price.formatMoney(2)}</td>
+                                        <td>{(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()} {unit}</td>
+                                        <td>$ {offer.pricing.price.formatMoney(2)}/{unit}</td>
                                         <td>{offer.name}</td>
                                         <td>{offer.manufacturer}</td>
                                         <td>{offer.origin}</td>
