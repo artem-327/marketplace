@@ -27,3 +27,5 @@
       margin-right: 10px; }
       .admin-operators .admin-operators-new-item button.red {
         background-color: red; }
+      .admin-operators .admin-operators-new-item button.green {
+        background-color: green; }

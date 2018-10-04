@@ -23,7 +23,6 @@ class OperatorEditation extends Component {
     }
 
     render() {
-        console.log(this.state)
         const { operator, editOperator, toogleEditation } = this.props
         return (
             <tr className="admin-operators-new-item">
@@ -53,7 +52,7 @@ class OperatorEditation extends Component {
                     name="login"
                 />
                 <td>
-                    <button className="button small" onClick={this.saveEditation}>Edit</button>
+                    <button className="button small green" onClick={this.saveEditation}>Save</button>
                     <button className="button small" onClick={toogleEditation}>Cancel</button> 
                 </td>
             </tr>
