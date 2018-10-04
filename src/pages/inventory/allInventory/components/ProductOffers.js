@@ -3,7 +3,6 @@ import './ProductOffers.css';
 import moment from "moment";
 import AddCart from '../../../../components/Cart/AddCart'
 import {DATE_FORMAT} from "../../../../utils/constants";
-import Checkbox from "../../../../components/Checkbox/Checkbox";
 class ProductOffers extends Component {
 
     constructor(props) {

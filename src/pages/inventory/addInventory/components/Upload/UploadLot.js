@@ -26,7 +26,6 @@ class UploadLot extends Component {
         let files = this.state.files.map((file, index) => (
             <File onRemove={() => this.removeFile(index)} className="file lot" name={file.name}/>));
         let hasFile = this.state.files.length !== 0;
-        let content = this.props.content ? this.props.content : 'Click to upload C of A';
         return (
             <div className={"uploadLot " + this.props.className}>
                 {this.props.header}
