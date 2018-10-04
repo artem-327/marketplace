@@ -10,6 +10,34 @@
   padding: 10px;
   z-index: 2;
   text-align: left; }
+  .filter .filter-switch {
+    margin: auto;
+    width: 80%;
+    padding: 10px 0 10px 0;
+    font-weight: bold;
+    font-size: 1.1rem; }
+    .filter .filter-switch .set-filters {
+      color: #289ada;
+      padding: 7px 25px;
+      height: 40px;
+      border: 1px solid #289ada;
+      border-radius: 4px 0 0 4px; }
+      .filter .filter-switch .set-filters.active {
+        background-color: #e7e7e7;
+        border-color: #d4d4d4;
+        color: #76797d;
+        border-right: none; }
+    .filter .filter-switch .saved-filters {
+      color: #289ada;
+      padding: 7px 15px;
+      height: 40px;
+      border: 1px solid #289ada;
+      border-radius: 0 4px 4px 0; }
+      .filter .filter-switch .saved-filters.active {
+        background-color: #e7e7e7;
+        border-color: #d4d4d4;
+        border-left: none;
+        color: #76797d; }
   .filter .header {
     font-weight: bold;
     cursor: pointer;
@@ -20,6 +48,8 @@
   .filter .filter-group {
     border-bottom: 1px solid #f0f0f0;
     margin-top: 10px; }
+    .filter .filter-group:nth-child(1) {
+      border-top: 1px solid #f0f0f0; }
     .filter .filter-group:nth-child(7) {
       border-bottom: 0px; }
     .filter .filter-group .filter-input-text label, .filter .filter-group .filter-input-text input {
@@ -90,10 +120,41 @@
     color: #289ada; }
   .filter .save-filter {
     border-top: 1px solid #f0f0f0;
-    border-bottom: 1px solid #f0f0f0; }
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 20px; }
+    .filter .save-filter label {
+      margin-left: 10px; }
     .filter .save-filter .header {
       padding-left: 5px;
       cursor: auto; }
+    .filter .save-filter .input {
+      margin-left: 10px;
+      width: 300px; }
+    .filter .save-filter .saveButton {
+      min-height: 40px;
+      padding: 7px 40px;
+      color: #289ada;
+      border: 2px solid #289ada;
+      border-radius: 5px;
+      height: 38px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-left: 20px;
+      transition: all .2s ease; }
+    .filter .save-filter .savedButton {
+      width: 250px;
+      min-height: 40px;
+      min-width: unset;
+      padding: 7px 35px;
+      background-color: #289ada;
+      color: #fff;
+      border: 2px solid #289ada;
+      border-radius: 5px;
+      height: 38px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-left: 20px;
+      transition: all .2s ease; }
   .filter .form-error {
     position: relative;
     display: inline-block; }
