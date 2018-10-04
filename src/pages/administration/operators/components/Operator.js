@@ -1,23 +1,44 @@
-import React from 'react';
+import React, { Component } from 'react'
 import PropTypes from "prop-types";
+import OperatorEditation from "./OperatorEditation"
 
-const Operator = ({ firstname, middlename, lastname, email, login }) => {
+class Operator extends Component {
+  state = {
+      isEditation: false
+  }
+
+  toogleEditation = () => {
+    this.setState(prevState => ({
+        isEditation: !prevState.isEditation
+      }));
+  };
+
+  render() {
+    const {removeOperator, editOperator, ...operator} = this.props;
+    const {isEditation} = this.state;
+    if(isEditation) {
+        return (
+        <OperatorEditation 
+            operator={operator} 
+            editOperator={editOperator} 
+            toogleEditation={this.toogleEditation}
+        />);
+    }
     return (
         <tr className="admin-operators-new-item">
-            <td>{firstname}</td>
-            <td>{middlename}</td>
-            <td>{lastname}</td>
-            <td>{email}</td>
-            <td>{login}</td>
+            <td>{operator.firstname}</td>
+            <td>{operator.middlename}</td>
+            <td>{operator.lastname}</td>
+            <td>{operator.email}</td>
+            <td>{operator.login}</td>
             <td>
-                <button className="button small red" onClick={() => this.props.removeOperator(this.props.id)}>Delete</button>
-                <button className="button small" onClick={() => this.props.editOperator({ ...this.props })}>Edit</button>
+                <button className="button small red" onClick={() => removeOperator(operator.id)}>Delete</button>
+                <button className="button small" onClick={this.toogleEditation}>Edit</button>
             </td>
         </tr>
-    );
-};
-
-export default Operator;
+    )
+  }
+}
 
 Operator.propTypes = {
     firstname: PropTypes.string,
@@ -26,3 +47,5 @@ Operator.propTypes = {
     email: PropTypes.string,
     login: PropTypes.string,
 };
+
+export default Operator;
