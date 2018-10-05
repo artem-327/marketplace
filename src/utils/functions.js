@@ -40,6 +40,6 @@ export const getUnit = function(unitName) {
             return "gal";
             break;
         default:
-            return "unknown";
+            return "#";
     }
 }
