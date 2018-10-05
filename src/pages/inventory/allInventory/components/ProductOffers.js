@@ -53,7 +53,6 @@ class ProductOffers extends Component {
                         <th>Merchant</th>
                         <th>Available</th>
                         <th>Packaging</th>
-                        <th>Pkg. size</th>
                         <th>Quantity</th>
                         <th>FOB Price</th>
                         <th>Trade Name</th>
@@ -84,12 +83,14 @@ class ProductOffers extends Component {
                         if(product.visible){
                             product.productOffers.forEach((offer) => {
                                 const unit = getUnit(offer.packaging.unit.name);
+                                const packageSize = offer.packaging.capacity;
+                                const packageUnit = offer.packaging.container.name;
+                                const packaging = `${packageSize} ${unit} ${packageUnit}`;
                                 rows.push(
                                     <tr className="product-offer" key={offer.id}>
                                         <td>{offer.merchant.email}</td>
                                         <td>{offer.packaging.amount.formatNumber()}</td>
-                                        <td>{offer.packaging.container.name}</td>
-                                        <td>{offer.packaging.capacity}</td>
+                                        <td>{packaging}</td>
                                         <td>{(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()} {unit}</td>
                                         <td>$ {offer.pricing.price.formatMoney(2)}/{unit}</td>
                                         <td>{offer.name}</td>
