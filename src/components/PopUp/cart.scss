@@ -1,4 +1,4 @@
-@import "../../styles/breakpoints";
+@import "../../styles/breakpoints.scss";
 
 $base-color: #EBEBEA;
 
@@ -29,6 +29,7 @@ $base-color: #EBEBEA;
         font-size: 1.5rem;
         font-weight: bold;
         color: darken( $base-color, 30% );
+        text-transform: uppercase;
         margin: 0;
       }
 

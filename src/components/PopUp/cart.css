@@ -20,6 +20,7 @@
       font-size: 1.5rem;
       font-weight: bold;
       color: #a0a09c;
+      text-transform: uppercase;
       margin: 0; }
     .add-cart header .close-mark {
       cursor: pointer;

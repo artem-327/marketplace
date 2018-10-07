@@ -1,29 +1,26 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import '../cart.css'
 import Dropdown from '../../Dropdown/Dropdown'
-import Spinner from "../../../components/Spinner/Spinner";
+import Spinner from '../../../components/Spinner/Spinner'
 import {getUnit} from '../../../utils/functions'
+import KeepShopingPopup from '../KeepShopingPopup'
+import PopupComponent from '../../PopUp/PopupComponent'
 
 class AddCart extends Component {
-  componentDidMount(){
-     this.props.getCurrentAdded(this.props.id)
+  componentDidMount() {
+    this.props.getCurrentAdded(this.props.id)
   }
 
   render() {
-    if(this.props.isFetching) return <Spinner/>
-    const {cart, removePopup} = this.props
+    const {cart, removePopup, isFetching} = this.props
+    if (isFetching) return <Spinner />
     const location = `${cart.warehouse.location.country}, ${cart.warehouse.location.state}` //imho location should return state and city...(just US market?)
     const unit = getUnit(cart.packaging.unit.name)
     const packageSize = `${cart.packaging.capacity} ${unit}${cart.packaging.capacity > 1 && 's'}`
     return (
-      <div className="add-cart">
-        <header className="add-cart-header">
-          <h1>PURCHASE</h1>
-          <i className="fas fa-times close-mark" onClick={removePopup} />
-        </header>
-
-        <div className="add-cart-body">
+      <>
+        <KeepShopingPopup removePopup={removePopup} />
+        <PopupComponent removePopup={removePopup} headerTitle="Purchase">
           <div className="add-cart-body-section">
             <h3>Product Info</h3>
             <div>
@@ -83,13 +80,8 @@ class AddCart extends Component {
               <b>Total: </b>
             </div>
           </div>
-        </div>
-
-        <footer className="add-cart-footer">
-          <button className="button">Cancel</button>
-          <button className="button green">Continue</button>
-        </footer>
-      </div>
+        </PopupComponent>
+      </>
     )
   }
 }
@@ -98,5 +90,6 @@ export default AddCart
 
 AddCart.propTypes = {
   id: PropTypes.number,
+  isFetching: PropTypes.bool,
   removePopup: PropTypes.func
 }
