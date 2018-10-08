@@ -6,9 +6,9 @@ import './popupComponent.css'
 
 const PopupComponent = ({removePopup, footerContinueText, headerTitle, children}) => {
     return (
-        <div className="add-cart">
+        <div className="popup-component">
         <PopupHeader title={headerTitle} removePopup={removePopup} />
-        <div className="add-cart-body">
+        <div className="popup-component-body">
           {children}
         </div>
         <PopupFooter continueText={footerContinueText} removePopup={removePopup} />

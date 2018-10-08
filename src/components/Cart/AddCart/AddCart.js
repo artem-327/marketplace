@@ -5,6 +5,7 @@ import Spinner from '../../../components/Spinner/Spinner'
 import {getUnit} from '../../../utils/functions'
 import KeepShopingPopup from '../KeepShopingPopup'
 import PopupComponent from '../../PopUp/PopupComponent'
+import './AddCart.css';
 
 class AddCart extends Component {
   componentDidMount() {
@@ -19,6 +20,7 @@ class AddCart extends Component {
     const packageSize = `${cart.packaging.capacity} ${unit}${cart.packaging.capacity > 1 && 's'}`
     return (
         <PopupComponent removePopup={removePopup} headerTitle="Purchase">
+        <div className="add-cart-body">
           <div className="add-cart-body-section">
             <h3>Product Info</h3>
             <div>
@@ -77,6 +79,7 @@ class AddCart extends Component {
             <div>
               <b>Total: </b>
             </div>
+          </div>
           </div>
         </PopupComponent>
     )

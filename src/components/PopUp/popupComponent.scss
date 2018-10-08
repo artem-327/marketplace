@@ -7,14 +7,13 @@ $base-color: #EBEBEA;
   margin-bottom: 10px;
 }
 
-.add-cart {
+.popup-component {
   display: grid;
   grid-template-rows: 100px 1fr 70px;
   background-color: white;
   @include mq('m') {
     min-width: 50vh;
   }
-
 
   header {
     @extend %section-shared;
@@ -56,46 +55,7 @@ $base-color: #EBEBEA;
     }
   }
 
-  .add-cart-body {
+  .popup-component-body {
     @extend %section-shared;
-    display: flex;
-    justify-content: space-between;
-    @include mq('m', max) {
-      flex-wrap: wrap;
-    }
-
-     .divider {
-      width: 2px;
-      margin: 0 30px;
-      background: $base-color;
-      @include mq('m', max) {
-        display: none;
-      }
-    }
-
-    .add-cart-body-section {
-      flex: 1;
-      padding: 10px 20px;
-      min-width: 250px;
-      @include mq('m', max) {
-        &:first-child{
-          border-bottom: 2px solid $base-color;
-        }
-      }
-
-      h3 {
-        font-size: 1.5rem;
-        font-weight: bold;
-      }
-
-      > div {
-        padding: 10px 0;
-      }
-    }
-  }
-
-
-  .dropdown-wr {
-    width: 80%;
   }
 }

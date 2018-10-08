@@ -36,3 +36,32 @@
         justify-self: center; } }
     .popup-component footer button {
       margin-left: 15px; }
+
+.add-cart-body {
+  display: flex;
+  justify-content: space-between; }
+  @media only screen and (max-width: 767px) {
+    .add-cart-body {
+      flex-wrap: wrap; } }
+  .add-cart-body .divider {
+    width: 2px;
+    margin: 0 30px;
+    background: #EBEBEA; }
+    @media only screen and (max-width: 767px) {
+      .add-cart-body .divider {
+        display: none; } }
+  .add-cart-body .add-cart-body-section {
+    flex: 1;
+    padding: 10px 20px;
+    min-width: 250px; }
+    @media only screen and (max-width: 767px) {
+      .add-cart-body .add-cart-body-section:first-child {
+        border-bottom: 2px solid #EBEBEA; } }
+    .add-cart-body .add-cart-body-section h3 {
+      font-size: 1.5rem;
+      font-weight: bold; }
+    .add-cart-body .add-cart-body-section > div {
+      padding: 10px 0; }
+
+.dropdown-wr {
+  width: 80%; }
