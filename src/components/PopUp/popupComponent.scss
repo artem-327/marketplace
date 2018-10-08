@@ -59,15 +59,17 @@ $base-color: #EBEBEA;
   .add-cart-body {
     @extend %section-shared;
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
+    @include mq('m', max) {
+      flex-wrap: wrap;
+    }
 
      .divider {
       width: 2px;
       margin: 0 30px;
       background: $base-color;
       @include mq('m', max) {
-        display: none
+        display: none;
       }
     }
 

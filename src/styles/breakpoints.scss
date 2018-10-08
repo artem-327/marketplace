@@ -1,9 +1,9 @@
 $breakpoints: (
-  'xs': 479px,
-  's': 639px,
-  'm': 959px,
-  'l': 1239px,
-  'xl': 1240px
+  'xs': 480px,
+  's': 640px,
+  'm': 768px,
+  'l': 1024px,
+  'xl': 1600px
 );
 @mixin mq($width, $type: min) {
   @if map_has_key($breakpoints, $width) {
