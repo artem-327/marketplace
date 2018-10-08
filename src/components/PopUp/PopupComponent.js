@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from "prop-types"
 import PopupFooter from './PopupFooter'
 import PopupHeader from './PopupHeader'
-import './cart.css'
+import './popupComponent.css'
 
 const PopupComponent = ({removePopup, footerContinueText, headerTitle, children}) => {
     return (

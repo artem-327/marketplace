@@ -18,7 +18,7 @@ class AddCart extends Component {
     const unit = getUnit(cart.packaging.unit.name)
     const packageSize = `${cart.packaging.capacity} ${unit}${cart.packaging.capacity > 1 && 's'}`
     return (
-      <>
+      <React.Fragment>
         <KeepShopingPopup removePopup={removePopup} />
         <PopupComponent removePopup={removePopup} headerTitle="Purchase">
           <div className="add-cart-body-section">
@@ -81,7 +81,7 @@ class AddCart extends Component {
             </div>
           </div>
         </PopupComponent>
-      </>
+      </React.Fragment>
     )
   }
 }
