@@ -39,7 +39,7 @@
   .saved-filters .filter-name {
     width: 360px;
     float: left;
-    padding: 10px 0 10px 10px; }
+    padding: 10px 0 10px 0; }
     .saved-filters .filter-name:hover, .saved-filters .filter-name:focus {
       border-right: 1px solid #c1c8cd; }
   .saved-filters .filter-delete {

@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
-import './tooltip.css'
+import './TooltipFilter.css'
 import classnames from 'classnames';
 
-class Tooltip extends Component {
+class TooltipFilter extends Component {
     constructor(props){
         super(props);
         this.state = {
@@ -18,16 +18,17 @@ class Tooltip extends Component {
     render() {
         return (
             <div className={'tooltip-component ' + this.props.className}>
-                <span className='tooltip-icon' onMouseEnter={() => this.showTip(true)} onMouseLeave={() => this.showTip(false)}>i</span>
+                <span onMouseEnter={() => this.showTip(true)} onMouseLeave={() => this.showTip(false)}>{this.props.name}</span>
                 <label className={classnames({show: this.state.isVisible})}>{this.props.content}</label>
             </div>
         )
     }
 }
 
-Tooltip.propTypes = {
+TooltipFilter.propTypes = {
     content: PropTypes.string,
     className: PropTypes.string,
+    name: PropTypes.string
 };
 
-export default Tooltip;
+export default TooltipFilter;
