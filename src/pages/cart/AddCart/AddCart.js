@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import Dropdown from '../../Dropdown/Dropdown'
+import Dropdown from '../../../components/Dropdown/Dropdown'
 import Spinner from '../../../components/Spinner/Spinner'
+import PopupComponent from '../../../components/PopUp/PopupComponent'
 import {getUnit} from '../../../utils/functions'
-import KeepShopingPopup from '../KeepShopingPopup'
-import PopupComponent from '../../PopUp/PopupComponent'
+
 import './AddCart.css';
 
 class AddCart extends Component {

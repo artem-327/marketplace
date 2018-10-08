@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
 import './ProductOffers.css';
 import moment from "moment";
-import AddCart from '../../../../components/Cart/AddCart'
+import AddCart from '../../../cart/AddCart'
 import {DATE_FORMAT} from "../../../../utils/constants";
 import {getUnit} from "../../../../utils/functions";
-import Checkbox from "../../../../components/Checkbox/Checkbox";
 
 class ProductOffers extends Component {
 

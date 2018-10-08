@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from "prop-types"
-import PopupComponent from '../PopUp/PopupComponent'
+import PopupComponent from '../../components/PopUp/PopupComponent'
 
 const KeepShopingPopup = ({removePopup}) => {
   return (
