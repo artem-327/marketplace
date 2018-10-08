@@ -6,6 +6,7 @@ import FilterGroup from './components/FilterGroup';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {filterNonEmptyAttributes} from "../../utils/functions";
+import SavedFilters from "./components/SavedFilters/SavedFilters";
 
 class Filter extends Component {
 
@@ -261,7 +262,7 @@ class Filter extends Component {
                             <button className='button disabled filter-button' onClick={(e)=>{this.handleReset(e)}}>Clear filter</button>
                         </div>
                     </Form>
-                    : null
+                    : <SavedFilters/>
                 }
             </div>
             : null;

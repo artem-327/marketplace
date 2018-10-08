@@ -1,0 +1,96 @@
+.saved-filters{
+  margin-top: 10px;
+  padding-left: 0px;
+  tr {
+    border-bottom: 1px solid #f4f4f4;
+    padding: 15px 0 15px 7px;
+    &:hover, &:focus {
+      background-color: #e0eef6;
+      font-weight: bold;
+      border-top: 1px solid #c1c8cd;
+      border-bottom: 1px solid #c1c8cd;
+    }
+    tr:nth-child(1) {
+      border-top: 1px solid #c1c8cd;
+    }
+    #filter{
+      &:hover +#filter2{
+        color: black;
+        .close {
+          position: absolute;
+          right: 15px;
+          top: 3px;
+          width: 32px;
+          height: 32px;
+          opacity: 0.3;
+        }
+        .close:hover {
+          opacity: 1;
+        }
+        .close:before, .close:after {
+          position: absolute;
+          left: 15px;
+          content: ' ';
+          height: 17px;
+          width: 2px;
+          background-color: #333;
+        }
+        .close:before {
+          transform: rotate(45deg);
+        }
+        .close:after {
+          transform: rotate(-45deg);
+        }
+      }
+      }
+    }
+    .close-external{
+      position: relative;
+      float: right;
+    }
+    .filter-name{
+      width: 360px;
+      float: left;
+      padding: 10px 0 10px 10px;
+      &:hover, &:focus{
+        border-right: 1px solid #c1c8cd;
+      }
+    }
+    .filter-delete{
+      position: relative;
+      width: 120px;
+      padding: 10px 0 10px 15px;
+      margin-bottom: 0;
+      color: transparent;
+      font-weight: initial;
+      &:hover, &:focus{
+        color: black;
+        border-left: 1px solid #c1c8cd;
+        .close {
+          position: absolute;
+          right: 15px;
+          top: 3px;
+          width: 32px;
+          height: 32px;
+          opacity: 0.3;
+        }
+        .close:hover {
+          opacity: 1;
+        }
+        .close:before, .close:after {
+          position: absolute;
+          left: 15px;
+          content: ' ';
+          height: 17px;
+          width: 2px;
+          background-color: #333;
+        }
+        .close:before {
+          transform: rotate(45deg);
+        }
+        .close:after {
+          transform: rotate(-45deg);
+        }
+      }
+    }
+}

@@ -1,0 +1,74 @@
+.saved-filters {
+  margin-top: 10px;
+  padding-left: 0px; }
+  .saved-filters tr {
+    border-bottom: 1px solid #f4f4f4;
+    padding: 15px 0 15px 7px; }
+    .saved-filters tr:hover, .saved-filters tr:focus {
+      background-color: #e0eef6;
+      font-weight: bold;
+      border-top: 1px solid #c1c8cd;
+      border-bottom: 1px solid #c1c8cd; }
+    .saved-filters tr tr:nth-child(1) {
+      border-top: 1px solid #c1c8cd; }
+    .saved-filters tr #filter:hover + #filter2 {
+      color: black; }
+      .saved-filters tr #filter:hover + #filter2 .close {
+        position: absolute;
+        right: 15px;
+        top: 3px;
+        width: 32px;
+        height: 32px;
+        opacity: 0.3; }
+      .saved-filters tr #filter:hover + #filter2 .close:hover {
+        opacity: 1; }
+      .saved-filters tr #filter:hover + #filter2 .close:before, .saved-filters tr #filter:hover + #filter2 .close:after {
+        position: absolute;
+        left: 15px;
+        content: ' ';
+        height: 17px;
+        width: 2px;
+        background-color: #333; }
+      .saved-filters tr #filter:hover + #filter2 .close:before {
+        transform: rotate(45deg); }
+      .saved-filters tr #filter:hover + #filter2 .close:after {
+        transform: rotate(-45deg); }
+  .saved-filters .close-external {
+    position: relative;
+    float: right; }
+  .saved-filters .filter-name {
+    width: 360px;
+    float: left;
+    padding: 10px 0 10px 10px; }
+    .saved-filters .filter-name:hover, .saved-filters .filter-name:focus {
+      border-right: 1px solid #c1c8cd; }
+  .saved-filters .filter-delete {
+    position: relative;
+    width: 120px;
+    padding: 10px 0 10px 15px;
+    margin-bottom: 0;
+    color: transparent;
+    font-weight: initial; }
+    .saved-filters .filter-delete:hover, .saved-filters .filter-delete:focus {
+      color: black;
+      border-left: 1px solid #c1c8cd; }
+      .saved-filters .filter-delete:hover .close, .saved-filters .filter-delete:focus .close {
+        position: absolute;
+        right: 15px;
+        top: 3px;
+        width: 32px;
+        height: 32px;
+        opacity: 0.3; }
+      .saved-filters .filter-delete:hover .close:hover, .saved-filters .filter-delete:focus .close:hover {
+        opacity: 1; }
+      .saved-filters .filter-delete:hover .close:before, .saved-filters .filter-delete:hover .close:after, .saved-filters .filter-delete:focus .close:before, .saved-filters .filter-delete:focus .close:after {
+        position: absolute;
+        left: 15px;
+        content: ' ';
+        height: 17px;
+        width: 2px;
+        background-color: #333; }
+      .saved-filters .filter-delete:hover .close:before, .saved-filters .filter-delete:focus .close:before {
+        transform: rotate(45deg); }
+      .saved-filters .filter-delete:hover .close:after, .saved-filters .filter-delete:focus .close:after {
+        transform: rotate(-45deg); }
