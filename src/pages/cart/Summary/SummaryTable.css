@@ -1,0 +1,36 @@
+.summary-table {
+  max-width: 400px;
+  border: 1px solid #E7E7E7;
+  border-radius: 7px; }
+  .summary-table header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #E7E7E7;
+    padding: 15px 30px;
+    border-radius: 7px 7px 0 0; }
+    .summary-table header h1 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      background-color: #E7E7E7;
+      margin: 0; }
+    .summary-table header i {
+      font-size: 1.5rem;
+      color: #329ED6; }
+  .summary-table main {
+    padding: 20px 30px; }
+    .summary-table main table {
+      width: 100%; }
+    .summary-table main td {
+      padding: 5px 0; }
+    .summary-table main td:first-child {
+      width: 80%; }
+  .summary-table footer button {
+    width: 100%;
+    padding: 10px;
+    border: 0;
+    border-radius: 0 0 7px 7px;
+    background-color: #329ED6;
+    color: white;
+    font-size: 1.5rem; }

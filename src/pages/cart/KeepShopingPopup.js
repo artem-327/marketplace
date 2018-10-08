@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from "prop-types"
 import PopupComponent from '../../components/PopUp/PopupComponent'
 
-const KeepShopingPopup = ({removePopup}) => {
+const KeepShopping= ({removePopup}) => {
   return (
     <PopupComponent removePopup={removePopup} footerContinueText="Yes" headerTitle="KEEP SHOPPING?">
       <p>You can only add items from the same merchant and same location to a single purchase order.</p>
@@ -11,8 +11,8 @@ const KeepShopingPopup = ({removePopup}) => {
   )
 }
 
-export default KeepShopingPopup
+export default KeepShopping
 
-KeepShopingPopup.propTypes = {
+KeepShopping.propTypes = {
     removePopup: PropTypes.func
   }
