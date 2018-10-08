@@ -21,6 +21,7 @@ import products, {initialState as productsInit} from './modules/products';
 import errors from "./modules/errors";
 import companiesSaga from "./saga/companies";
 import officesSaga from "./saga/offices";
+import cartSaga from "./pages/inventory/saga/cart";
 
 const reducer = combineReducers({
     identity,
@@ -60,3 +61,4 @@ export default createStore(reducer, middleware)
 
 sagaMiddleware.run(companiesSaga);
 sagaMiddleware.run(officesSaga);
+sagaMiddleware.run(cartSaga);
