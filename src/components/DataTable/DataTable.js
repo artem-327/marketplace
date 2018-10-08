@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import Header from "./components/Header";
+import Rows from "./components/Rows";
 
 class DataTable extends Component {
 
@@ -10,35 +11,48 @@ class DataTable extends Component {
     }
 
     initDataTable(){
-        if(!this.props.dataTables[this.props.id]){
-            this.props.initDataTable(this.props.id, this.props.header);
+        if(!this.props.dataTable){
+            let header = this.props.headerInit.map((item, index) => ({
+                id: item.id || index,
+                name: item.name,
+                sort: item.sort || false,
+                visible: item.visible || true,
+            }));
+            let rows = this.props.rowsInit.map((item) => (
+                {
+                    ...item,
+                    rows: item.rows.map((row)=>({selected: false, row}))
+                }
+            ));
+            this.props.initDataTable(this.props.id, header, rows);
         }
     }
 
-
     render() {
-        if(!this.props.dataTables[this.props.id]) return null;
+        if(!this.props.dataTable) return null;
         return <table>
-            <Header header={this.props.header} />
-
+            <Header data={this.props.dataTable.header} sortFunc={this.props.sortFunc}/>
+            <Rows data={this.props.dataTable.rows}/>
         </table>
     }
 }
 
 DataTable.propTypes = {
-    dataTables: PropTypes.any,
+    dataTable: PropTypes.any,
     id: PropTypes.string,
-    rows: PropTypes.arrayOf(
-        PropTypes.object
+    rowsInit: PropTypes.arrayOf(
+        PropTypes.arrayOf(PropTypes.any)
     ),
-    header: PropTypes.arrayOf(
+    headerInit: PropTypes.arrayOf(
         PropTypes.shape({
             id: PropTypes.string,
-            name: PropTypes.string,
+            name: PropTypes.string.isRequired,
             sort: PropTypes.bool,
             visible: PropTypes.bool,
         })
-    )
+    ),
+    sortFunc: PropTypes.func,
+
 };
 
 export default DataTable;

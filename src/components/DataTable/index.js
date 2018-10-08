@@ -3,9 +3,9 @@ import {bindActionCreators} from 'redux';
 import DataTable from './DataTable';
 import {initDataTable} from "../../modules/dataTables";
 
-function mapStateToProps(store) {
+function mapStateToProps(store, ownProps) {
     return {
-        dataTables: store.dataTables
+        dataTable: store.dataTables[ownProps.id]
     }
 }
 
