@@ -1,0 +1,20 @@
+@import "../../../components/PopUp/popupComponent.scss";
+$beige-color: #E7E7E7;
+
+.item-cart-body {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid darken( $beige-color, 10% );
+    @include mq('m', max) {
+      flex-wrap: wrap;
+    }
+    .item-cart-body-section {
+        flex: 1;
+        padding: 10px 20px;
+        min-width: 250px;
+        font-weight: 1.25rem;
+        div {
+           padding: 2px 0;
+        }
+    }
+}
