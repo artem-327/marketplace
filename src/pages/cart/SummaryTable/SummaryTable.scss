@@ -4,6 +4,7 @@ $side-padding: 30px;
 $border-rounding: 7px;
 
 .summary-table {
+  min-width: 300px;
   max-width: 400px;
   border: 1px solid $beige-color;
   border-radius: $border-rounding;

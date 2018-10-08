@@ -1,0 +1,65 @@
+$beige-color: #E7E7E7;
+$border-rounding: 7px;
+$side-padding: 30px;
+@import "../../../components/PopUp/popupComponent.scss";
+
+.shopping-cart {
+    display: flex;
+    justify-content: center;
+  
+    .shopping-cart-items {
+        flex: 1;
+        margin-right: 20px;
+        max-width: 600px;
+        border: 2px solid $beige-color;
+        border-radius: $border-rounding;
+        header {
+            padding: 15px $side-padding;
+            background-color:  lighten( $beige-color, 7% );
+            border-radius: $border-rounding $border-rounding 0 0;
+            h1 {
+                font-size: 1.5rem;
+                font-weight: bold;
+                text-transform: uppercase;
+                margin: 0;
+              }
+        }
+        .item-cart:last-child {
+            border: none;
+        }
+        .item-cart {
+            border-bottom: 1px solid darken( $beige-color, 10% );
+            margin: 10px;
+            .item-cart-body {
+                display: flex;
+                justify-content: space-between;
+                @include mq('m', max) {
+                  flex-wrap: wrap;
+                }
+          
+                .item-cart-body-section {
+                    flex: 1;
+                    padding: 10px 20px;
+                    min-width: 250px;
+                    font-weight: 1.25rem;
+                    div {
+                        padding: 2px 0;
+                    }
+                }
+            }
+            
+            footer {
+                display: flex;
+                @extend %section-shared;
+                justify-content: flex-end;
+                @include mq('m', max) {
+                  justify-content: center;
+                }
+            
+                button {
+                  margin-left: 15px;
+                }
+              }
+          }
+    }
+}

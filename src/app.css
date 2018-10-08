@@ -63,6 +63,9 @@
   font-size: 1.2em; }
   .button.green {
     background-color: #4cd136; }
+  .button.grey {
+    background-color: #E7E7E7;
+    color: #4E5157; }
   .button:hover, .button:focus {
     cursor: pointer;
     border-color: #0d82bf;
