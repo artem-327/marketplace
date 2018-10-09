@@ -12,6 +12,7 @@ import AddInventory from "../pages/inventory/addInventory";
 import AllInventory from "../pages/inventory/allInventory";
 import MyInventory from "../pages/inventory/myInventory";
 import TestPage from "../pages/test";
+import ShoppingCart from "../pages/cart/ShoppingCart";
 import { withAuth } from '../utils/auth';
 import Merchants from '../pages/administration/merchants';
 import NamesSynonyms from "../pages/administration/namesSynonyms/";
@@ -43,6 +44,7 @@ class Main extends Component {
                     <Route exact path="/administration/companies/:id" component={withAuth(CompaniesDetail)}/>
                     <Route exact path="/administration/offices/:id" component={withAuth(OfficesDetail)}/>
                     <Route exact path="/test-page" component={TestPage}/>
+                    <Route exact path="/shopping-cart" component={withAuth(ShoppingCart)}/>
                     <Route component={withAuth(NoMatch)}/>
                 </Switch>
             </div>

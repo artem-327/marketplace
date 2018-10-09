@@ -13,7 +13,7 @@ class ShoppingCart extends Component {
     const CartItems = cartItems.map(cartItem => <CartItem key={cartItem.productOffer.id} cartItem={cartItem}/>);
     const itemsNumber = cartItems.length;
     return (
-      <React.Fragment>
+      <div className="app-inner-main">
       <div className="submenu">
         <div className="submenu-link"> 
           <i className="fas fa-angle-left"></i>
@@ -33,10 +33,9 @@ class ShoppingCart extends Component {
           </div>
         </div>
       </div>
-    </React.Fragment>
+    </div>
     )
   }
 }
-
 
 export default ShoppingCart;
