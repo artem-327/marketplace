@@ -1,33 +1,27 @@
 import axios from "axios";
-
-const CURRENT_ADDED = "CURRENT_ADDED";
-const CURRENT_ADDED_FULFILLED = "CURRENT_ADDED_FULFILLED";
+import {
+    OFFER_FETCH_SUCCEEDED, OFFER_FETCH_REQUESTED
+} from "../constants/cart";
 
 export const initialState = {
-    addCart:{
-        id: null,
-        product: {
-            id: null,
-            primaryName: ""
-        },
-        manufacturer: {
-            name: ""
-        },
-        packageAmount: "",
-        location: {
-            id: null,
-            country: "",
-            state: ""
-        }
-    }
+    data:[],
+    isFetching: true,
 };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case CURRENT_ADDED_FULFILLED: {
+
+        case OFFER_FETCH_REQUESTED: {
             return {
                 ...state,
-                addCart: action.payload.data.data
+                isFetching: true,
+            }
+        }
+        case OFFER_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                data: action.payload,
+                isFetching: false
             }
         }
         default: {
@@ -38,7 +32,6 @@ export default function reducer(state = initialState, action) {
 
 export function getCurrentAdded(id) {
     return {
-        type: CURRENT_ADDED,
-        payload: axios.get("/api/v1/product-offers/"+id+"/")
+        type: OFFER_FETCH_REQUESTED, payload: {id}
     }
 }
