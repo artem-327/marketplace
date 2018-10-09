@@ -8,7 +8,7 @@ class Rows extends Component {
     render() {
         let rows = this.props.data.map((item, index) => {
             if(item.group) return <GroupRow key={index} {...item} />;
-            return <Row key={index} data={item.rows}/>
+            return item.rows.map((row, index) => (<Row data={row} key={index}/>))
         });
         return (
             <tbody>
