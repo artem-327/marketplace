@@ -72,7 +72,7 @@ class ProductOfferItem extends Component {
                 <td>$ {offer.pricing.cost.formatMoney(2)}/{unit}</td>
                 <td>$ {offer.pricing.price.formatMoney(2)}/{unit}</td>
                 <td>{offer.name}</td>
-                <td>{offer.manufacturer}</td>
+                <td>{offer.manufacturer.name}</td>
                 <td>{offer.productCondition.name}</td>
                 <td>Unknown</td>
                 <td><span className={'broadcast-mark' + classnames({' open' : this.props.brActive})}> </span></td>
