@@ -17,7 +17,7 @@ class TooltipFilter extends Component {
 
     render() {
         return (
-            <div className={'tooltip-component ' + this.props.className}>
+            <div className={'tooltipFilter-component ' + this.props.className}>
                 <span onMouseEnter={() => this.showTip(true)} onMouseLeave={() => this.showTip(false)}>{this.props.name}</span>
                 <label className={classnames({show: this.state.isVisible})}>{this.props.content}</label>
             </div>
