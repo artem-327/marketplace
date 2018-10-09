@@ -1,7 +1,8 @@
 import React from 'react';
+import "./ShoppingCart.css"
 import SummaryTable from "../SummaryTable/SummaryTable"
 import CartItem from "../CartItem/CartItem"
-import "./ShoppingCart.css"
+import Button from '../../../components/Button/Button'
 
 const items = [{id: 1}, {id: 2}]
 
@@ -16,6 +17,7 @@ const ShoppingCart = () => {
             </div>
             <div>
             <SummaryTable />
+            <Button size="large" color="light-blue">Keep Shopping</Button>
             </div>
         </div>
     );

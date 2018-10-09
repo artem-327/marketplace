@@ -1,8 +1,7 @@
 @import url(./fonts/MyFontsWebfontsKit.css);
+@import "./styles/main.scss";
 
 $app-font-family: 'AvenirLTPro-Roman', sans-serif;
-$beige-color: #E7E7E7;
-$brown-color:#4E5157;
 
 .App {
   font-family: $app-font-family;
@@ -17,7 +16,7 @@ $brown-color:#4E5157;
 }
 
 .header {
-  color: #4e5157;
+  color: $brown-color;
   padding: 5px 15px;
   margin: 15px 0 0 5px;
   font-size: 1.6em;

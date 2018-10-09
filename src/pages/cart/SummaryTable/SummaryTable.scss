@@ -1,13 +1,13 @@
-$beige-color: #E7E7E7;
-$blue-color: #329ED6;
+@import "../../../styles/main.scss";
 $side-padding: 30px;
-$border-rounding: 7px;
+
 
 .summary-table {
   min-width: 300px;
   max-width: 400px;
   border: 1px solid $beige-color;
   border-radius: $border-rounding;
+  margin-bottom: 10px;
 
   header {
     display: flex;
@@ -44,18 +44,6 @@ $border-rounding: 7px;
 
     td:first-child{
       width: 80%;
-    }
-  }
-
-  footer {
-    button{
-      width: 100%;
-      padding: 10px;
-      border: 0;
-      border-radius: 0 0 $border-rounding $border-rounding;
-      background-color: $blue-color;
-      color: white;
-      font-size: 1.5rem;
     }
   }
 }

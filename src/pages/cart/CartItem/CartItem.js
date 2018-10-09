@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '../../../components/Button/Button'
 
 const CartItem = () => {
   return (
@@ -37,8 +38,8 @@ const CartItem = () => {
         </div>
       </div>
       <footer className="add-cart-footer">
-        <button className="button grey">Remove</button>
-        <button className="button blue">Edit</button>
+        <Button color="grey">Remove</Button>
+        <Button color="blue">Edit</Button>
       </footer>
     </div>
   );

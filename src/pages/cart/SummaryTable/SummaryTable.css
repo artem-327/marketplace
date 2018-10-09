@@ -2,14 +2,15 @@
   min-width: 300px;
   max-width: 400px;
   border: 1px solid #E7E7E7;
-  border-radius: 7px; }
+  border-radius: 4px;
+  margin-bottom: 10px; }
   .summary-table header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     background-color: #E7E7E7;
     padding: 15px 30px;
-    border-radius: 7px 7px 0 0; }
+    border-radius: 4px 4px 0 0; }
     .summary-table header h1 {
       font-size: 1.5rem;
       font-weight: bold;
@@ -27,11 +28,3 @@
       padding: 5px 0; }
     .summary-table main td:first-child {
       width: 80%; }
-  .summary-table footer button {
-    width: 100%;
-    padding: 10px;
-    border: 0;
-    border-radius: 0 0 7px 7px;
-    background-color: #329ED6;
-    color: white;
-    font-size: 1.5rem; }

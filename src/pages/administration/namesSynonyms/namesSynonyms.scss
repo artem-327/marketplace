@@ -1,16 +1,18 @@
-.names-synonyms{
+@import "../../../styles/main.scss";
+
+names-synonyms{
   text-align: center;
   .edit{
     max-width: 700px;
     margin: 100px auto 0 auto;
     h2{
       font-size: 1.4rem;
-      color: #4e5157;
+      color: $brown-color;
       margin-bottom: 40px;
     }
     h3{
       font-size: 1.2rem;
-      color: #4e5157;
+      color: $brown-color;
       margin: 20px 0 10px 0;
       text-align: left;
     }

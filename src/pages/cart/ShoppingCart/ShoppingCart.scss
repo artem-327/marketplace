@@ -1,7 +1,7 @@
-$beige-color: #E7E7E7;
-$border-rounding: 7px;
+@import "../../../styles/main.scss";
+$border-rounding: 4px;
 $side-padding: 30px;
-@import "../../../components/PopUp/popupComponent.scss";
+
 
 .shopping-cart {
     display: flex;
@@ -15,7 +15,7 @@ $side-padding: 30px;
         border-radius: $border-rounding;
         header {
             padding: 15px $side-padding;
-            background-color:  lighten( $beige-color, 7% );
+            background-color: lighten( $beige-color, 7% );
             border-radius: $border-rounding $border-rounding 0 0;
             h1 {
                 font-size: 1.5rem;

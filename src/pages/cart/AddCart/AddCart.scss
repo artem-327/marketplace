@@ -1,4 +1,4 @@
-@import "../../../components/PopUp/popupComponent.scss";
+@import "../../../styles/main.scss";
 
   .add-cart-body {
     display: flex;
@@ -10,7 +10,7 @@
      .divider {
       width: 2px;
       margin: 0 30px;
-      background: $base-color;
+      background: $beige-color;
       @include mq('m', max) {
         display: none;
       }
@@ -22,7 +22,7 @@
       min-width: 250px;
       @include mq('m', max) {
         &:first-child{
-          border-bottom: 2px solid $base-color;
+          border-bottom: 2px solid $beige-color;
         }
       }
 

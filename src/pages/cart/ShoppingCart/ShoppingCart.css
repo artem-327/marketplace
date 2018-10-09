@@ -1,41 +1,6 @@
-.popup-component header, .popup-component footer, .popup-component .popup-component-body, .shopping-cart .shopping-cart-items .item-cart footer {
+.shopping-cart .shopping-cart-items .item-cart footer {
   padding: 20px 30px;
   margin-bottom: 10px; }
-
-.popup-component {
-  display: grid;
-  grid-template-rows: 100px 1fr 70px;
-  background-color: white; }
-  @media only screen and (min-width: 768px) {
-    .popup-component {
-      min-width: 50vh; } }
-  .popup-component header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #f7f7f7;
-    border-bottom: 2px solid #EBEBEA;
-    box-shadow: 0px 1px 1px #f7f7f7; }
-    .popup-component header h1 {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #a0a09c;
-      text-transform: uppercase;
-      margin: 0; }
-    .popup-component header .close-mark {
-      cursor: pointer;
-      color: #a0a09c;
-      font-size: 2rem;
-      transition: all .2s ease; }
-      .popup-component header .close-mark:hover {
-        transform: rotate(-180deg); }
-  .popup-component footer {
-    place-self: center end; }
-    @media only screen and (max-width: 767px) {
-      .popup-component footer {
-        justify-self: center; } }
-    .popup-component footer button {
-      margin-left: 15px; }
 
 .shopping-cart {
   display: flex;
@@ -45,11 +10,11 @@
     margin-right: 20px;
     max-width: 600px;
     border: 2px solid #E7E7E7;
-    border-radius: 7px; }
+    border-radius: 4px; }
     .shopping-cart .shopping-cart-items header {
       padding: 15px 30px;
       background-color: #f9f9f9;
-      border-radius: 7px 7px 0 0; }
+      border-radius: 4px 4px 0 0; }
       .shopping-cart .shopping-cart-items header h1 {
         font-size: 1.5rem;
         font-weight: bold;

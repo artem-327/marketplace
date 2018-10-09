@@ -1,5 +1,6 @@
 import React from 'react';
 import "./SummaryTable.css"
+import Button from '../../../components/Button/Button'
 
 const SummaryTable = () => {
   return (
@@ -19,7 +20,7 @@ const SummaryTable = () => {
         </table>
       </main>
       <footer>
-        <button>Continue</button>
+        <Button size="large" color="blue" rounded="down">Continue</Button>
       </footer>
     </div>
   );
