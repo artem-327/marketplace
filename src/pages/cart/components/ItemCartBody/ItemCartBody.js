@@ -1,7 +1,7 @@
 import React from 'react';
-import Button from '../../../components/Button/Button'
+import Button from '../../../../components/Button/Button'
 
-const CartItem = ({cartItem}) => {
+const ItemCartBody = ({cartItem}) => {
   const {productOffer} = cartItem;
   const location = `${productOffer.warehouse.location.country}, ${productOffer.warehouse.location.state}`
   return (
@@ -47,4 +47,4 @@ const CartItem = ({cartItem}) => {
   );
 };
 
-export default CartItem;
+export default ItemCartBody;

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './ProductOffers.css';
 import moment from "moment";
-import AddCart from '../../../cart/AddCart'
+import AddCart from '../../../cart/components/AddCart'
 import {DATE_FORMAT} from "../../../../utils/constants";
 import {getUnit} from "../../../../utils/functions";
 

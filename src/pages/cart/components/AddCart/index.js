@@ -1,8 +1,8 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import AddCart from './AddCart';
-import {getCurrentAdded} from "../../../modules/cart";
-import {removePopup} from "../../../modules/popup";
+import {getCurrentAdded} from "../../../../modules/cart";
+import {removePopup} from "../../../../modules/popup";
 
 
 function mapStateToProps(store) {

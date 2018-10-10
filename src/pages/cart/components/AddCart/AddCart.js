@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import Dropdown from '../../../components/Dropdown/Dropdown'
-import Spinner from '../../../components/Spinner/Spinner'
-import PopupComponent from '../../../components/PopUp/PopupComponent'
-import {getUnit} from '../../../utils/functions'
+import Dropdown from '../../../../components/Dropdown/Dropdown'
+import Spinner from '../../../../components/Spinner/Spinner'
+import PopupComponent from '../../../../components/PopUp/PopupComponent'
+import {getUnit} from '../../../../utils/functions'
 
 import './AddCart.css';
 
@@ -15,7 +15,7 @@ class AddCart extends Component {
   render() {
     const {cart, removePopup, isFetching} = this.props
     if (isFetching) return <Spinner />
-    const location = `${cart.warehouse.location.country}, ${cart.warehouse.location.state}` //imho location should return state and city...(just US market?)
+    const location = `${cart.warehouse.location.country}, ${cart.warehouse.location.state}`
     const unit = getUnit(cart.packaging.unit.name)
     const packageSize = `${cart.packaging.capacity} ${unit}${cart.packaging.capacity > 1 && 's'}`
     return (

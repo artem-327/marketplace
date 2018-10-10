@@ -13,7 +13,10 @@
     .shopping-cart .shopping-cart-body .shopping-cart-items {
       margin-right: 20px;
       border: 2px solid #E7E7E7;
-      border-radius: 4px; }
+      border-radius: 4px;
+      margin-bottom: 1rem; }
+      .shopping-cart .shopping-cart-body .shopping-cart-items .purchase-order-section {
+        padding: 20px; }
       .shopping-cart .shopping-cart-body .shopping-cart-items header {
         padding: 15px 30px;
         background-color: #f9f9f9;

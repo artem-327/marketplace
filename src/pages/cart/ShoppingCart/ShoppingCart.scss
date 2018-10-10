@@ -14,6 +14,12 @@ $side-padding: 30px;
             margin-right: 20px;
             border: 2px solid $beige-color;
             border-radius: $border-rounding;
+            margin-bottom: 1rem;
+            
+            .purchase-order-section {
+                padding: 20px;
+            }
+
             header {
                 padding: 15px $side-padding;
                 background-color: lighten( $beige-color, 7% );
