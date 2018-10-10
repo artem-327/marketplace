@@ -1,11 +1,13 @@
-import axios from "axios";
 import {
-    OFFER_FETCH_SUCCEEDED, OFFER_FETCH_REQUESTED
+    OFFER_FETCH_SUCCEEDED, OFFER_FETCH_REQUESTED, 
+    CARTITEMS_FETCH_SUCCEEDED, CARTITEMS_FETCH_REQUESTED
 } from "../constants/cart";
 
 export const initialState = {
-    data:[],
+    offers: [],
+    cartItems: [],
     isFetching: true,
+    offersAreFetching: true
 };
 
 export default function reducer(state = initialState, action) {
@@ -14,16 +16,30 @@ export default function reducer(state = initialState, action) {
         case OFFER_FETCH_REQUESTED: {
             return {
                 ...state,
-                isFetching: true,
+                offersAreFetching: true,
             }
         }
         case OFFER_FETCH_SUCCEEDED: {
             return {
                 ...state,
-                data: action.payload,
+                offers: action.payload,
+                offersAreFetching: false
+            }
+        }
+        case CARTITEMS_FETCH_REQUESTED: {
+            return {
+                ...state,
+                isFetching: true,
+            }
+        }
+        case CARTITEMS_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                cartItems: action.payload,
                 isFetching: false
             }
         }
+
         default: {
             return state
         }
@@ -34,4 +50,8 @@ export function getCurrentAdded(id) {
     return {
         type: OFFER_FETCH_REQUESTED, payload: {id}
     }
+}
+
+export function fetchCartItems(){
+    return {type: CARTITEMS_FETCH_REQUESTED}
 }

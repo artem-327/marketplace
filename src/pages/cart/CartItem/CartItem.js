@@ -1,39 +1,41 @@
 import React from 'react';
 import Button from '../../../components/Button/Button'
 
-const CartItem = () => {
+const CartItem = ({cartItem}) => {
+  const {productOffer} = cartItem;
+  const location = `${productOffer.warehouse.location.country}, ${productOffer.warehouse.location.state}`
   return (
     <div className="item-cart">
       <div className="item-cart-body">
         <div className="item-cart-body-section">
           <div>
-            <b>product.casIndexName</b>
+            <b>{productOffer.product.casIndexName}</b>
           </div>
           <div>
-            Merchant:
+            Merchant: {productOffer.merchant.email}
         </div>
           <div>
-            Location:
+            Location:{location}
         </div>
           <div>
-            Price Per Lb:
+            Price Per Lb: productOffer.pricing.price (?)
         </div>
           <div>
-            Total Weight:
+            Total Weight: quantity * neco (?)
         </div>
         </div>
         <div className="item-cart-body-section">
           <div>
-            Origin:
+            Origin: {productOffer.origin}
         </div>
           <div>
-            Assay:
+            Assay: (?)
         </div>
           <div>
-            Condition:
+            Condition: {productOffer.productCondition.name}
         </div>
           <div>
-            Liquid:
+            Form: {productOffer.productForm.name}
         </div>
         </div>
       </div>

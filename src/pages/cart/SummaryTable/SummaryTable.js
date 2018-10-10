@@ -7,7 +7,7 @@ const SummaryTable = () => {
     <div className="summary-table">
       <header>
         <h1>Summary</h1>
-        <i class="fas fa-info-circle"></i>
+        <i className="fas fa-info-circle"></i>
       </header>
       <main>
         <table>

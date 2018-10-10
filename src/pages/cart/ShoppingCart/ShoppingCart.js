@@ -1,19 +1,22 @@
-import React from 'react';
+import React, { Component } from 'react'
 import "./ShoppingCart.css"
 import SummaryTable from "../SummaryTable/SummaryTable"
 import CartItem from "../CartItem/CartItem"
 import Button from '../../../components/Button/Button'
 
-const items = [{ id: 1 }, { id: 2 }]
-
-const ShoppingCart = () => {
-  const CartItems = items.map(cartItem => <CartItem key={cartItem.id} />);
-  const itemsNumber = items.length;
-  return (
-    <React.Fragment>
+class ShoppingCart extends Component {
+  componentDidMount(){
+    this.props.fetchCartItems()
+  }
+  render() {
+    const {cartItems} = this.props;
+    const CartItems = cartItems.map(cartItem => <CartItem key={cartItem.productOffer.id} cartItem={cartItem}/>);
+    const itemsNumber = cartItems.length;
+    return (
+      <div className="app-inner-main">
       <div className="submenu">
         <div className="submenu-link"> 
-          <i class="fas fa-angle-left"></i>
+          <i className="fas fa-angle-left"></i>
           <b> Back to Product/Purchase info</b>
         </div>
       </div>
@@ -30,8 +33,9 @@ const ShoppingCart = () => {
           </div>
         </div>
       </div>
-    </React.Fragment>
-  );
-};
+    </div>
+    )
+  }
+}
 
 export default ShoppingCart;
