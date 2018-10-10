@@ -7,7 +7,7 @@ export const initialState = {
     offers: [],
     cartItems: [],
     isFetching: true,
-    cartIsFetching: true //TODO: fix isFetching
+    offersAreFetching: true
 };
 
 export default function reducer(state = initialState, action) {
@@ -16,27 +16,27 @@ export default function reducer(state = initialState, action) {
         case OFFER_FETCH_REQUESTED: {
             return {
                 ...state,
-                isFetching: true,
+                offersAreFetching: true,
             }
         }
         case OFFER_FETCH_SUCCEEDED: {
             return {
                 ...state,
                 offers: action.payload,
-                isFetching: false
+                offersAreFetching: false
             }
         }
         case CARTITEMS_FETCH_REQUESTED: {
             return {
                 ...state,
-                cartIsFetching: true,
+                isFetching: true,
             }
         }
         case CARTITEMS_FETCH_SUCCEEDED: {
             return {
                 ...state,
                 cartItems: action.payload,
-                cartIsFetching: false
+                isFetching: false
             }
         }
 
