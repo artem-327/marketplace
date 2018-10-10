@@ -79,7 +79,7 @@ const checkTokenExpirationMiddleware = store => next => action => {
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware();
 
-const middleware = applyMiddleware(thunk, promise(), sagaMiddleware, logger, checkTokenExpirationMiddleware);
+const middleware = applyMiddleware(thunk, promise(), sagaMiddleware, logger);
 
 export default createStore(reducer, middleware)
 
