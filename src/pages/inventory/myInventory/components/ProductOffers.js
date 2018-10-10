@@ -54,7 +54,6 @@ class ProductOffers extends Component {
                         <th>Product Name</th>
                         <th>Available</th>
                         <th>Packaging</th>
-                        <th>Pkg. size</th>
                         <th>Quantity</th>
                         <th>Cost</th>
                         <th>FOB Price</th>
