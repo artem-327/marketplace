@@ -10,7 +10,13 @@ class Operators extends Component {
 
     renderOperators(){
         return this.props.operators.map((operator, index) => {
-            return <Operator {...operator} key={index}/>
+            return (
+              <Operator 
+                removeOperator={this.props.removeOperator} 
+                editOperator={this.props.editOperator}
+                {...operator} 
+                key={index}
+              />)
         })
     }
 
@@ -18,9 +24,21 @@ class Operators extends Component {
         return (
             <div className="admin-operators-wr">
                 <h1 className="header">Operators</h1>
-                <div className="admin-operators">
-                    {this.renderOperators()}
-                </div>
+                <table className="admin-operators">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Middle Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Login</th>
+                        <th className="settings"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {this.renderOperators()}
+                    </tbody>
+                </table>
             </div>
         )
     }

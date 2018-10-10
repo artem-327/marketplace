@@ -23,9 +23,20 @@ class UsersNew extends Component {
         return (
             <div >
                 <h1 className="header">New users administration</h1>
-                <div className="admin-users-new">
+                <table className="admin-users-new">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Middle Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th className="settings"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
                     {this.renderUsers()}
-                </div>
+                    </tbody>
+                </table>
             </div>
         )
     }
