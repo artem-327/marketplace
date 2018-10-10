@@ -1,0 +1,31 @@
+@import "../../styles/main.scss";
+$border-rounding: 4px;
+
+button {
+    border-radius: $border-rounding;
+    background-color: $blue-color;
+    color: white;
+    font-size: 1.5rem;
+    &.rounded-down {
+        border-radius: 0 0 $border-rounding $border-rounding;
+    }
+    &.rounded-up {
+        border-radius: $border-rounding $border-rounding 0 0;
+    }
+    &.size-large {
+        width: 100%;
+    }
+    &.light-blue {
+        border: 1px solid $blue-color;
+        color: $blue-color;
+        background-color: lighten( $blue-color, 30% ) 
+    }
+    &.blue {
+        background-color: $blue-color;
+    }
+    &.grey{
+        background-color: $beige-color;
+        color: $brown-color;
+      }
+  }
+

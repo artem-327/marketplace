@@ -1,35 +1,45 @@
-import axios from "axios";
-
-const CURRENT_ADDED = "CURRENT_ADDED";
-const CURRENT_ADDED_FULFILLED = "CURRENT_ADDED_FULFILLED";
+import {
+    OFFER_FETCH_SUCCEEDED, OFFER_FETCH_REQUESTED, 
+    CARTITEMS_FETCH_SUCCEEDED, CARTITEMS_FETCH_REQUESTED
+} from "../constants/cart";
 
 export const initialState = {
-    addCart:{
-        id: null,
-        product: {
-            id: null,
-            primaryName: ""
-        },
-        manufacturer: {
-            name: ""
-        },
-        packageAmount: "",
-        location: {
-            id: null,
-            country: "",
-            state: ""
-        }
-    }
+    offers: [],
+    cartItems: [],
+    isFetching: true,
+    offersAreFetching: true
 };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case CURRENT_ADDED_FULFILLED: {
+
+        case OFFER_FETCH_REQUESTED: {
             return {
                 ...state,
-                addCart: action.payload.data.data
+                offersAreFetching: true,
             }
         }
+        case OFFER_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                offers: action.payload,
+                offersAreFetching: false
+            }
+        }
+        case CARTITEMS_FETCH_REQUESTED: {
+            return {
+                ...state,
+                isFetching: true,
+            }
+        }
+        case CARTITEMS_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                cartItems: action.payload,
+                isFetching: false
+            }
+        }
+
         default: {
             return state
         }
@@ -38,7 +48,10 @@ export default function reducer(state = initialState, action) {
 
 export function getCurrentAdded(id) {
     return {
-        type: CURRENT_ADDED,
-        payload: axios.get("/api/v1/product-offers/"+id+"/")
+        type: OFFER_FETCH_REQUESTED, payload: {id}
     }
+}
+
+export function fetchCartItems(){
+    return {type: CARTITEMS_FETCH_REQUESTED}
 }
