@@ -1,0 +1,71 @@
+.file {
+  color: #b0b0b0;
+  font-size: 0.9rem;
+  padding: 4px 4px 4px 15px;
+  border-radius: 25px;
+  position: relative;
+  display: inline-block;
+  max-width: 150px;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow: ellipsis;
+  &.lot {
+    padding: 4px 4px 4px 17px;
+    font-size: 1.1rem;
+    color: black;
+    border-radius: 25px;
+    max-width: 200px;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
+    i {
+      margin: 5px 0 0 7px;
+      padding: 2px 4px;
+      border: 1px solid #555;
+      border-radius: 50%;
+    }
+    .close{
+      &:before, &:after {
+        background-color: #555;
+      }
+    }
+  }
+  span {
+    padding-top: 5px;
+  }
+  i {
+    &:hover {
+      cursor: pointer;
+    }
+    position: relative;
+    float: right;
+    background-color: #f3f3f3;
+    margin-left: 5px;
+    padding: 2px 4px;
+    border: 1px solid #aeaeae;
+    border-radius: 50%;
+  }
+  .close {
+    width: 20px;
+    height: 20px;
+    opacity: 0.6;
+    &:hover {
+      opacity: 1;
+    }
+    &:before, &:after {
+      position: absolute;
+      top: 3px;
+      left: 8px;
+      content: ' ';
+      height: 12px;
+      width: 1px;
+      background-color: #333;
+    }
+    &:before {
+      transform: rotate(45deg);
+    }
+    &:after {
+      transform: rotate(-45deg);
+    }
+  }
+}

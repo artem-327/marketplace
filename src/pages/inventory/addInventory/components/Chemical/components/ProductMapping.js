@@ -95,6 +95,8 @@ export default class ProductMapping extends Component {
                     </div>
                 </div>
                 <div>
+                {!this.props.edit ?
+                    <React.Fragment>
                     <Errors
                         className="form-error"
                         model=".productName"
@@ -125,6 +127,8 @@ export default class ProductMapping extends Component {
                                       id=".productNumber"
                                       defaultValue=""/>
                     </div>
+                    </React.Fragment>
+                    : null }
                     <Errors
                         className="form-error"
                         model=".packaging.capacity"
@@ -137,7 +141,7 @@ export default class ProductMapping extends Component {
                         }}
                     />
                     <div className='group-item-wr'>
-                        <label htmlFor=".measurements">Measurement</label>
+                        <label htmlFor=".measurements">Measure</label>
                         <Control.text model=".packaging.capacity"
                                       validators={{min: (val) => min(val, 0), isNumber, required}}
                                       id=".measurements"
@@ -173,8 +177,15 @@ export default class ProductMapping extends Component {
                                        dispatch={this.props.dispatch}
                                        validators={{required}}/>
                     </div>
-                    <Tooltip className="save-mapping" content="add inventory 1"/>
+                    {!this.props.edit ?
+                    <React.Fragment>
+                        <Tooltip className="save-mapping" content="By selecting 'Save Mapping' CAS Name, CAS Number, Product Name and Product Number will be mapped
+                                  in our system. Next time you enter this product these fields will be pre-populated for you."/>
                         {button}
+                    </React.Fragment>
+                    : null
+                    }
+
                 </div>
                 </Form>
             </div>

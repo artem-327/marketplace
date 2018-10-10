@@ -10,6 +10,12 @@ class Checkbox extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps){
+        if(nextProps.defaultValue){
+            this.setState({checked: nextProps.defaultValue})
+        }
+    }
+
     handleChange () {
         this.setState({checked: !this.state.checked}, ()=>{
             this.props.onChange(this.state.checked);
@@ -33,7 +39,8 @@ Checkbox.propTypes = {
     name: PropTypes.string,
     className: PropTypes.string,
     inputClass: PropTypes.string,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    defaultValue: PropTypes.bool
 };
 
 export default Checkbox;

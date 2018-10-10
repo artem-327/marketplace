@@ -1,0 +1,46 @@
+.uploadLot {
+  label {
+    margin-left: 45px;
+    font-size: 1.1rem;
+    color: #289ada;
+    vertical-align: bottom;
+  }
+  &.add-doc{
+    position: relative;
+    display: inline-block;
+    margin: 0 10px;
+    padding: 2px 10px 2px 10px;
+    border: 1px solid #289ada;
+    border-radius: 4px;
+  }
+}
+.file-space{
+  position: relative;
+  display: inline-block;
+}
+.upload {
+  height: 32px;
+  float: left;
+  margin-bottom: 7px;
+}
+.uploaded {
+  height: 32px;
+  float: left;
+}
+
+.dropzoneLot {
+  position: relative;
+  display: inline-block;
+  font-size: 1.1rem;
+  color: black;
+  padding-top: 7px;
+  transition: all .2s ease;
+  &.active{
+    color: #4cd136;
+  }
+  &:hover, &:focus {
+    cursor: pointer;
+    border-color: #4e5157;
+    color: #4e5157;
+  }
+}
