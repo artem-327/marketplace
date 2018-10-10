@@ -1,0 +1,31 @@
+.admin-operators {
+  max-width: 1400px;
+  margin: auto;
+  width: calc(100% - 40px); }
+  .admin-operators th {
+    border: 2px solid #e3e2df;
+    background-color: #fbfaf7;
+    padding: 10px;
+    font-weight: bold; }
+  .admin-operators .admin-operators-new-item {
+    text-align: right;
+    margin: 10px 20px;
+    box-shadow: 0 1px 1px 0 rgba(60, 64, 67, 0.08), 0 1px 3px 1px rgba(60, 64, 67, 0.16);
+    padding: 5px 0;
+    border-radius: 6px; }
+    .admin-operators .admin-operators-new-item .info {
+      float: left; }
+    .admin-operators .admin-operators-new-item span {
+      margin: 8px 10px;
+      display: inline-block; }
+    .admin-operators .admin-operators-new-item td {
+      text-align: left;
+      padding: 10px; }
+    .admin-operators .admin-operators-new-item td:last-child {
+      float: right; }
+    .admin-operators .admin-operators-new-item button {
+      margin-right: 10px; }
+      .admin-operators .admin-operators-new-item button.red {
+        background-color: red; }
+      .admin-operators .admin-operators-new-item button.green {
+        background-color: green; }

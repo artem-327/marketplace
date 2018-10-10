@@ -9,7 +9,10 @@ import createSagaMiddleware from 'redux-saga'
 import jwtDecode from 'jwt-decode';
 import moment from "moment";
 
+
 import identity, {initialState as identityFormInit, logout} from './modules/identity';
+import users from './modules/users';
+
 import location from './modules/location';
 import companies from './modules/companies';
 import productOffers, {initialState as addProductsInit} from './modules/productOffers';
@@ -23,12 +26,17 @@ import products, {initialState as productsInit} from './modules/products';
 import errors from "./modules/errors";
 import companiesSaga from "./saga/companies";
 import officesSaga from "./saga/offices";
+
+import usersSaga from "./pages/administration/users/saga/users";
+import operatorsSaga from "./pages/administration/operators/saga/operators";
 import cartSaga from "./pages/cart/saga/cart";
+
 
 const reducer = combineReducers({
     identity,
     companies,
     locale,
+    users,
     location,
     productOffers,
     products,
@@ -77,4 +85,7 @@ export default createStore(reducer, middleware)
 
 sagaMiddleware.run(companiesSaga);
 sagaMiddleware.run(officesSaga);
+sagaMiddleware.run(usersSaga);
+sagaMiddleware.run(operatorsSaga);
 sagaMiddleware.run(cartSaga);
+
