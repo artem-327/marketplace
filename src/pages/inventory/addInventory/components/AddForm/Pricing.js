@@ -3,6 +3,7 @@ import {Control, Errors, actions} from 'react-redux-form';
 import {required, isNumber, min, messages} from "../../../../../utils/validation";
 import IncrementalPricing from "./IncrementalPricing";
 import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
+import Checkbox from "../../../../../components/Checkbox/Checkbox";
 import './Pricing.css';
 import classNames from 'classnames';
 
@@ -365,6 +366,14 @@ export default class Pricing extends Component {
                                         type='number'
                                         min={'0'}/>
                       </div>
+                      <div className='group-item-wr'>
+                            <Control.checkbox 
+                                name='merchantVisibility'
+                                model='forms.addProductOffer.merchantVisibility'
+                                component={Checkbox}
+                                label="List Anonymously"
+                            />
+                        </div>
                   </div>
 
                     <div>
