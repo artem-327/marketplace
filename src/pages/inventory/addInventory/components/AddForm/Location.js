@@ -43,7 +43,7 @@ export default class Location extends Component {
         this.setState({[name]: value})
     }
 
-    setLocation(id) {
+    setLocation = id => {
         let index = 0;
         for (let i = 0; i < this.props.warehouse.length; i++) {
             if (this.props.warehouse[i].id === id) {
@@ -93,7 +93,7 @@ export default class Location extends Component {
         let {warehouseName, street, city, state, zip, contact, phone, email} = this.state;
         if (!this.validateForms()) return;
         this.props.saveWarehouse(warehouseName, street, city, state, contact, phone, email, zip).then(() => {
-            this.props.fetchWarehouse().then(() => {
+            this.props.fetchWarehouses().then(() => {
                 this.setState({edit: edit}, () => this.changeLocation('saved'))
             })
         });
@@ -104,7 +104,7 @@ export default class Location extends Component {
         let {street, city, state, zip, contact, phone, email} = this.state;
         if (!this.validateForms()) return;
         this.props.updateWarehouse(this.props.warehouse[this.state.warehouseIndex].id, this.props.warehouse[this.state.warehouseIndex].name, street, city, state, contact, phone, email, zip).then(() => {
-            this.props.fetchWarehouse().then(() => {
+            this.props.fetchWarehouses().then(() => {
                 this.setState({edit: false})
             })
         });
@@ -128,7 +128,6 @@ export default class Location extends Component {
                     onClick={(e) => this.changeMode(e)}>Edit</button>;
         const currentLocation = this.state.warehouseIndex !== '' ? this.props.warehouse[this.state.warehouseIndex].name : null;
         return (
-            <div>
                 <div>
                     <Errors
                         className="form-error"

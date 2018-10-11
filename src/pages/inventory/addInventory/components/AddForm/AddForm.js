@@ -19,7 +19,7 @@ export default class AddForm extends Component {
     }
 
     componentWillMount(){
-        this.props.fetchWarehouse();
+        this.props.fetchWarehouses();
         this.props.fetchLocations();
     }
 
