@@ -1,17 +1,83 @@
-.data-table-header{
-  th{
-    position: relative;
+.data-table-wr{
+  width: 100%;
+  overflow-x: auto;
+}
+.data-table {
+  border-collapse:separate;
+  border-spacing: 0 1px;
+  width: 100%;
+  min-width: 1100px;
+  //text-align: center;
+  .three-dots-menu{
+    z-index: 2;
   }
-  .data-table-context-th{
-    position: absolute;
-    top: 26px;
-    left: 0;
-    background: orangered;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    li{
-      padding: 5px 20px;
+  td{
+    border-bottom: 1px solid #eeeeee;
+    padding: 3px 10px;
+  }
+  .data-table-select, .data-table-context-td, .data-table-arrow{width: 30px}
+  .data-table-arrow{text-align: center}
+  .checkmark{margin-top: 4px; margin-right: 0}
+  .input-checkbox{padding-left: 20px}
+  .data-table-context-td{position: relative}
+  .data-table-context-holder{width: 1px; padding: 0}
+  .data-table-group-header {
+    background-color: #efeff1;
+    border: 1px solid #e0e0e0;
+    color: black;
+    font-weight: bold;
+    padding: 10px;
+    box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.15);
+    .fas{
+      margin-top: 6px;
+    }
+    .fa-angle-down:before{
+      color: #2599d5;
+    }
+    .data-table-group-count{
+      float: right;
+      font-weight: normal;
+    }
+    .group-header{
+      text-align: left;
+    }
+  }
+  .data-table-header {
+    th {
+      position: relative;
+      font-weight: bold;
+      color: #474a50;
+      padding: 3px 10px;
+    }
+    .data-table-context-th {
+      position: absolute;
+      top: 30px;
+      left: 0;
+      padding: 0;
+      margin: 0;
+      font-size: 0.9rem;
+      box-shadow: 2px 2px 4px 0px #ddddde;
+      list-style-type: none;
+      li {
+        background-color: #fafafa;
+        width: 150px;
+        font-weight: normal;
+        padding: 10px;
+        border: 1px solid #ececec;
+        &:hover, &:focus {
+          cursor: pointer;
+          text-decoration: none;
+          &::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            margin-top: -10px;
+            width: 3px;
+            height: 40px;
+            background-color: #289ada;
+          }
+        }
+      }
     }
   }
 }

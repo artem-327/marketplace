@@ -16,6 +16,10 @@ class Header extends Component {
         this.setState({open: {}})
     }
 
+    componentWillUnmount(){
+        document.removeEventListener('click', this.handleClickOutside, false);
+    }
+
     handleClick(e, name) {
         e.preventDefault();
         if (!this.state.open[name]) {
@@ -24,7 +28,7 @@ class Header extends Component {
             document.removeEventListener('click', this.handleClickOutside, false);
         }
         if(name !== null){
-            this.setState({open: {[name]: true}})
+            this.setState({open: {[name]: !this.state.open[name]}})
         }
     }
 
@@ -38,6 +42,7 @@ class Header extends Component {
             <thead className='data-table-header'>
             <tr>
                 {this.props.selectable ? <th/> : null}
+                {this.props.contextMenu ? <React.Fragment><th/><th/></React.Fragment> : null}
                 {this.props.data.map((item, index) => (
                     item.visible ?
                     <th  ref={this.node} onClick={() => this.leftClickSort(item.name)}
@@ -46,7 +51,7 @@ class Header extends Component {
                         {this.state.open[item.name] ?
                             <ul className="data-table-context-th">
                                 <li onClick={() => this.props.sortFunc(item.name)}>Sort</li>
-                                <li onClick={() => this.props.toggleColumn(item.id, false)}>Hide</li>
+                                <li onClick={() => this.props.toggleColumn(item.index, false)}>Hide</li>
                             </ul> : null}
                     </th> : null
                 ))}
@@ -60,7 +65,7 @@ class Header extends Component {
 Header.propTypes = {
     data: PropTypes.arrayOf(
         PropTypes.shape({
-            name: PropTypes.string.isRequired,
+            name: PropTypes.string,
         })
     )
 };

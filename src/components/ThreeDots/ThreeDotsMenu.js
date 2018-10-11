@@ -6,7 +6,7 @@ class ThreeDotsMenu extends Component {
     renderLinks() {
         if (!this.props.links) return;
         let links = this.props.links.map((link, index) => {
-            return <li key={index} onClick={()=>link.action()}>
+            return <li key={index} onClick={()=>link.action(this.props.id)}>
                 {link.label}
             </li>
         });
@@ -22,7 +22,7 @@ class ThreeDotsMenu extends Component {
 ThreeDotsMenu.propTypes = {
     isOpen: PropTypes.bool,
     links: PropTypes.array,
-
+    id: PropTypes.any,
 };
 
 export default ThreeDotsMenu;

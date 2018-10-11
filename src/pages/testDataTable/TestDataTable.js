@@ -12,20 +12,26 @@ class TestPage extends Component {
                            selectable
                            sortFunc={(nameColumn) => console.log(nameColumn)}
                            headerInit={[{name: 'test'}, {name: 'test2'}, {name: null}]}
+                           contextMenu={
+                               [
+                                   {action: (id)=>this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'Edit Listing',},
+                                   {action: (id)=>console.log('BR'), label: 'Custom Broadcast'},
+                                   {action: (id)=>console.log('delete'), label: 'Delete Listing'}
+                               ]
+                           }
                            rowsInit={[
                                {
                                    group: 'test',
+                                   countLabel: 'Product Offerings: ',
                                    rows: [
-                                       ['text', 'testtest1', <button className='info-button'>INFO</button>],
-                                       ['text2', 'testtest2', <button className='info-button'>INFO</button>],
-                                       ['text3', 'testtest3', <button className='info-button'>INFO</button>]
-                                   ]
-                               },
-                               {
-                                   rows: [
-                                       ['text4', 'testtest4', <button className='info-button'>INFO</button>],
-                                       ['text5', 'testtest5', <button className='info-button'>INFO</button>],
-                                       ['text6', 'testtest6', <button className='info-button'>INFO</button>]
+                                       {
+                                           id:24,
+                                           data:['text', 'testtest1', <button className='info-button'>INFO</button>]
+                                       },
+                                       {
+                                           id:24,
+                                           data:['text', 'testtest1', <button className='info-button'>INFO2</button>]
+                                       }
                                    ]
                                },
                            ]}

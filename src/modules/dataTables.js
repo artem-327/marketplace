@@ -24,10 +24,10 @@ export default function reducer(state = initialState, action) {
                 [action.payload.id]: {
                     ...state[action.payload.id],
                     rows: state[action.payload.id].rows.map((row) => (
-                        row.id === action.payload.groupId ?
+                        row.index === action.payload.groupId ?
                             {...state[action.payload.id].rows[action.payload.groupId],
                                 rows: state[action.payload.id].rows[action.payload.groupId].rows.map((rw) => (
-                                    rw.id === action.payload.rowId ?
+                                    rw.index === action.payload.rowId ?
                                         {...state[action.payload.id].rows[action.payload.groupId].rows[action.payload.rowId],
                                             selected: action.payload.value
                                         } : rw
@@ -43,7 +43,7 @@ export default function reducer(state = initialState, action) {
                 [action.payload.id]: {
                     ...state[action.payload.id],
                     rows: state[action.payload.id].rows.map((row) => (
-                        row.id === action.payload.groupId ?
+                        row.index === action.payload.groupId ?
                             {...state[action.payload.id].rows[action.payload.groupId],
                                 rows: action.payload.rows
                             } : row
@@ -57,7 +57,7 @@ export default function reducer(state = initialState, action) {
                 [action.payload.id]: {
                     ...state[action.payload.id],
                     header: state[action.payload.id].header.map((h) => (
-                        h.id === action.payload.headerId ?
+                        h.index === action.payload.headerId ?
                             {...state[action.payload.id].rows[action.payload.headerId],
                                 visible: action.payload.value
                             } : h
