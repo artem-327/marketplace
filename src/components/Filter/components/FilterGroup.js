@@ -109,7 +109,7 @@ class FilterGroup extends Component {
                                     min: messages.min
                                 }}
                             />
-                            <Control.text type={input.type} model={input.model} id={input.model} placeholder={input.placeholder} validators={{min: (val) => min(val, 0), isNumber}}/>
+                            <Control.text type={input.type} model={input.model} id={input.model} placeholder={input.placeholder} validators={{min: (val) => min(val, 0) || !val}}/>
                         </div>
                     )
                 }
