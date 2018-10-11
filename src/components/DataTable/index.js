@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import DataTable from './DataTable';
-import {initDataTable} from "../../modules/dataTables";
+import {initDataTable, selectGroup, selectRow, toggleVisibleColumn} from "../../modules/dataTables";
 
 function mapStateToProps(store, ownProps) {
     return {
@@ -10,7 +10,7 @@ function mapStateToProps(store, ownProps) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({initDataTable}, dispatch)
+    return bindActionCreators({initDataTable, selectRow, selectGroup, toggleVisibleColumn}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DataTable);
