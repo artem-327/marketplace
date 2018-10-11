@@ -1,18 +1,18 @@
-.names-synonyms {
+names-synonyms {
   text-align: center; }
-  .names-synonyms .edit {
+  names-synonyms .edit {
     max-width: 700px;
     margin: 100px auto 0 auto; }
-    .names-synonyms .edit h2 {
+    names-synonyms .edit h2 {
       font-size: 1.4rem;
-      color: #4e5157;
+      color: #4E5157;
       margin-bottom: 40px; }
-    .names-synonyms .edit h3 {
+    names-synonyms .edit h3 {
       font-size: 1.2rem;
-      color: #4e5157;
+      color: #4E5157;
       margin: 20px 0 10px 0;
       text-align: left; }
-    .names-synonyms .edit .synonyms-list {
+    names-synonyms .edit .synonyms-list {
       text-align: left;
       list-style-type: none;
       margin: 0;

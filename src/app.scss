@@ -1,4 +1,5 @@
 @import url(./fonts/MyFontsWebfontsKit.css);
+@import "./styles/main.scss";
 
 $app-font-family: 'AvenirLTPro-Roman', sans-serif;
 
@@ -15,7 +16,7 @@ $app-font-family: 'AvenirLTPro-Roman', sans-serif;
 }
 
 .header {
-  color: #4e5157;
+  color: $brown-color;
   padding: 5px 15px;
   margin: 15px 0 0 5px;
   font-size: 1.6em;
@@ -78,6 +79,10 @@ position: absolute;
   font-size: 1.2em;
   &.green{
     background-color: #4cd136;
+  }
+  &.grey{
+    background-color: $beige-color;
+    color: $brown-color;
   }
   &:hover, &:focus{
     cursor: pointer;

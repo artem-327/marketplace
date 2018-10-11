@@ -121,12 +121,12 @@ export default class Location extends Component {
     }
 
     renderSavedLocation() {
-        let disabled = this.state.warehouseIndex === '';
-        let button = this.state.edit ?
+        const disabled = this.state.warehouseIndex === '';
+        const button = this.state.edit ?
             <button onClick={(e) => this.updateLocation(e)} className='edit-location'>Save</button> :
             <button className={'edit-location' + classnames({" disabled": (disabled)})}
                     onClick={(e) => this.changeMode(e)}>Edit</button>;
-        let currentLocation = this.state.warehouseIndex !== '' ? this.props.warehouse[this.state.warehouseIndex].name : null;
+        const currentLocation = this.state.warehouseIndex !== '' ? this.props.warehouse[this.state.warehouseIndex].name : null;
         return (
             <div>
                 <div>
@@ -140,7 +140,6 @@ export default class Location extends Component {
                     />
                     <div className='group-item-wr'>
                         <label>Warehouse</label>
-                        {!this.props.edit ?
                             <DropdownRedux
                                 model="forms.addProductOffer.warehouse"
                                 dispatch={this.props.dispatch}
@@ -149,17 +148,9 @@ export default class Location extends Component {
                                 validators={{required}}
                                 onChange={(id) => this.setLocation(id)}
                                 placeholder='Select Location'
-                            /> :
-                            <DropdownRedux
-                                model="forms.addProductOffer.warehouse"
-                                dispatch={this.props.dispatch}
-                                opns={this.props.warehouse}
-                                validators={{required}}
-                                placeholder='Select Location'
-                            />}
+                            />
                     </div>
                 </div>
-                {!this.props.edit ?
                     <React.Fragment>
                         <div>
                             <div className='group-item-wr'>
@@ -227,10 +218,10 @@ export default class Location extends Component {
                                        onChange={(e) => {
                                            this.handleInputs(e.target.value, 'email')
                                        }}/>
-                                {button}
+                                {!this.props.edit && button}
                             </div>
                         </div>
-                    </React.Fragment> : null}
+                    </React.Fragment>
             </div>
         )
     }
@@ -364,7 +355,7 @@ export default class Location extends Component {
     }
 
     render() {
-        let location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation();
+        const location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation();
         return (
             <div className='location-wr'>
                 {!this.props.edit ?

@@ -83,7 +83,7 @@ export default class ProductOffering extends Component {
                                           id=".lotNumber"/>
                         </div>
                         <div className='group-item-wr'>
-                            <label htmlFor=".creationDate">Created Date</label>
+                            <label htmlFor=".creationDate">MFG Date</label>
                             <DatepickerRedux placeholder={'test'}
                                              dispatch={this.props.dispatch}
                                              onChange={(value) => console.log(value)}
@@ -242,13 +242,13 @@ export default class ProductOffering extends Component {
                         </div>
                     </div>
                     <div>
-                        <Tooltip className="notes" content="add inventory 2"/>
+                        <Tooltip className="notes" content="External notes are visible to other merchants."/>
                         <div className="group-item-wr notes-textarea">
                             <label htmlFor=".externalNotes">External notes</label>
                             <Control.textarea model=".externalNotes" id=".externalNotes" className="textarea"
                                               placeholder="Enter notes here"/>
                         </div>
-                        <Tooltip className="notes" content="add inventory 3"/>
+                        <Tooltip className="notes" content="Internal notes are visible to you or other users of your company only."/>
                         <div className="group-item-wr notes-textarea">
                             <label htmlFor=".internalNotes">Internal Notes</label>
                             <Control.textarea model=".internalNotes" id=".internalNotes" className="textarea"
