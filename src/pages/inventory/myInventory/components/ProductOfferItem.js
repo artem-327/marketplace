@@ -46,14 +46,15 @@ class ProductOfferItem extends Component {
                     action: ()=>this.props.history.push(`/inventory/edit-inventory/${this.props.offer.id}`),
                     label: 'Edit Listing',
                 },
-                {
-                    action: ()=>console.log('BR'),
-                    label: 'Custom Broadcast'
-                },
-                {
-                    action: ()=>console.log('delete'),
-                    label: 'Delete Listing'
-                }
+                // Temporary hide
+                // {
+                //     action: ()=>console.log('BR'),
+                //     label: 'Custom Broadcast'
+                // },
+                // {
+                //     action: ()=>console.log('delete'),
+                //     label: 'Delete Listing'
+                // }
             ];
         const unit = getUnit(offer.packaging.unit.name);
         const packageSize = offer.packaging.capacity;
