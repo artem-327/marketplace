@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Control, Errors} from 'react-redux-form';
-import {isNumber, min, messages, maxPercent, bigger, required} from "../../../utils/validation";
+import {isNumber, min, messages, maxPercent, bigger} from "../../../utils/validation";
 import dropdown from '../../../images/inv-filter/dropdown.png'
 import dropdownClose from '../../../images/inv-filter/dropdown-close.png'
 import classnames from "classnames";
