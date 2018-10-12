@@ -92,7 +92,7 @@ export default function reducer(state = initialState, action) {
 export function fetchAll(filter = {}, mrchnt=true) {
     return {
         type: GET_PRODUCT_OFFERS,
-        payload: axios.get("/api/v1/product-offers/", {params: {...filter, mrchnt}}).then(response => response.data.data.productOffers)
+        payload: axios.get("/api/3f36ea/product-offers/", {params: {...filter, mrchnt}}).then(response => response.data.data.productOffers)
     }
 }
 
@@ -113,7 +113,7 @@ export function editProductOffer(id, inputs) {
 export function addProductOffer(inputs) {
     return {
         type: ADD_PRODUCT_OFFER,
-        payload: axios.post('/api/v1/product-offers/', inputs)
+        payload: axios.post('/api/65f6b4/product-offers/', inputs)
     }
 }
 
