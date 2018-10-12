@@ -3,11 +3,9 @@ import ProductOffering from "./components/ProductOffering";
 import ProductMapping from "./components/ProductMapping";
 import AddedLots from "./components/AddedLots/AddedLots";
 import SearchProducts from './components/SearchProducts';
-import Tooltip from "../../../../../components/Tooltip/Tooltip";
 import AdditionalDocuments from "./components/AdditionalDocuments";
 
 class Chemical extends Component {
-
     constructor(props) {
         super(props);
         this.setProductMapping = this.setProductMapping.bind(this);

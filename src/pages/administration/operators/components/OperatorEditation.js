@@ -23,7 +23,7 @@ class OperatorEditation extends Component {
     }
 
     render() {
-        const { operator, editOperator, toogleEditation } = this.props
+        const { toogleEditation } = this.props
         return (
             <tr className="admin-operators-new-item">
                 <InputControlled
