@@ -49,7 +49,7 @@ export default class AddForm extends Component {
             newPricing = {...inputs['pricing'], tiersRequests: this.validateIncPricing()};
         }
         let params = Object.assign({}, inputs, {
-                merchantVisibility: (inputs.merchantVisibility || false),
+                merchantVisibility: !inputs.merchantVisibility,
                 pricing: newPricing,
                 ...lots[index]
         });
@@ -75,7 +75,7 @@ export default class AddForm extends Component {
         let params = Object.assign({}, inputs, {
             ...this.props.mappingForm,
             ...this.props.productOfferingForm,
-            merchantVisibility: (inputs.merchantVisibility || false),
+            merchantVisibility: !inputs.merchantVisibility,
             pricing: newPricing,
             creationDate: this.props.productOffer.creationDate,
             expirationDate: this.props.productOffer.expirationDate,

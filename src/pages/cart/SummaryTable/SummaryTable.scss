@@ -1,0 +1,49 @@
+@import "../../../styles/main.scss";
+$side-padding: 30px;
+
+
+.summary-table {
+  min-width: 300px;
+  max-width: 400px;
+  border: 1px solid $beige-color;
+  border-radius: $border-rounding;
+  margin-bottom: 10px;
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $beige-color;
+    padding: 15px $side-padding;
+    border-radius: $border-rounding $border-rounding 0 0;
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      background-color: $beige-color;
+      margin: 0;
+    }
+
+    i {
+      font-size: 1.5rem;
+      color: $blue-color;
+    }
+  }
+
+  main {
+    padding: 20px $side-padding;
+
+    table {
+      width: 100%;
+    }
+
+    td {
+      padding: 5px 0;
+    }
+
+    td:first-child{
+      width: 80%;
+    }
+  }
+}

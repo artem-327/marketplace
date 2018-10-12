@@ -28,13 +28,14 @@ export default class Location extends Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.warehouse !== this.props.warehouse && this.state.warehouseIndex !== '') {
             this.setState({
-                street: nextProps.warehouse[this.state.warehouseIndex].address,
-                city: nextProps.warehouse[this.state.warehouseIndex].city,
-                state: nextProps.warehouse[this.state.warehouseIndex].location.id,
-                contact: nextProps.warehouse[this.state.warehouseIndex].contactName,
-                phone: nextProps.warehouse[this.state.warehouseIndex].contactNumber,
-                email: nextProps.warehouse[this.state.warehouseIndex].contactEmail,
-                zip: nextProps.warehouse[this.state.warehouseIndex].zip,
+                
+                street: nextProps.warehouse[this.state.warehouseIndex].address.streetAddress,
+                city: nextProps.warehouse[this.state.warehouseIndex].address.city,
+                state: nextProps.warehouse[this.state.warehouseIndex].address.province.name,
+                contact: nextProps.warehouse[this.state.warehouseIndex].contact.name,
+                phone: nextProps.warehouse[this.state.warehouseIndex].contact.number,
+                email: nextProps.warehouse[this.state.warehouseIndex].contact.email,
+                zip: nextProps.warehouse[this.state.warehouseIndex].address.zip.zip,
             })
         }
     }
@@ -53,13 +54,13 @@ export default class Location extends Component {
         }
         this.setState({
             warehouseIndex: index,
-            street: this.props.warehouse[index].address,
-            city: this.props.warehouse[index].city,
-            state: this.props.warehouse[index].location.id,
-            contact: this.props.warehouse[index].contactName,
-            phone: this.props.warehouse[index].contactNumber,
-            email: this.props.warehouse[index].contactEmail,
-            zip: this.props.warehouse[index].zip,
+            street: this.props.warehouse[index].address.streetAddress,
+            city: this.props.warehouse[index].address.city,
+            state: this.props.warehouse[index].address.province.name,
+            contact: this.props.warehouse[index].contact.name,
+            phone: this.props.warehouse[index].contact.number,
+            email: this.props.warehouse[index].contact.email,
+            zip: this.props.warehouse[index].address.zip.zip,
         })
     }
 
@@ -121,12 +122,12 @@ export default class Location extends Component {
     }
 
     renderSavedLocation() {
-        let disabled = this.state.warehouseIndex === '';
-        let button = this.state.edit ?
+        const disabled = this.state.warehouseIndex === '';
+        const button = this.state.edit ?
             <button onClick={(e) => this.updateLocation(e)} className='edit-location'>Save</button> :
             <button className={'edit-location' + classnames({" disabled": (disabled)})}
                     onClick={(e) => this.changeMode(e)}>Edit</button>;
-        let currentLocation = this.state.warehouseIndex !== '' ? this.props.warehouse[this.state.warehouseIndex].name : null;
+        const currentLocation = this.state.warehouseIndex !== '' ? this.props.warehouse[this.state.warehouseIndex].name : null;
         return (
             <div>
                 <div>
@@ -140,7 +141,6 @@ export default class Location extends Component {
                     />
                     <div className='group-item-wr'>
                         <label>Warehouse</label>
-                        {!this.props.edit ?
                             <DropdownRedux
                                 model="forms.addProductOffer.warehouse"
                                 dispatch={this.props.dispatch}
@@ -149,17 +149,9 @@ export default class Location extends Component {
                                 validators={{required}}
                                 onChange={(id) => this.setLocation(id)}
                                 placeholder='Select Location'
-                            /> :
-                            <DropdownRedux
-                                model="forms.addProductOffer.warehouse"
-                                dispatch={this.props.dispatch}
-                                opns={this.props.warehouse}
-                                validators={{required}}
-                                placeholder='Select Location'
-                            />}
+                            />
                     </div>
                 </div>
-                {!this.props.edit ?
                     <React.Fragment>
                         <div>
                             <div className='group-item-wr'>
@@ -227,10 +219,10 @@ export default class Location extends Component {
                                        onChange={(e) => {
                                            this.handleInputs(e.target.value, 'email')
                                        }}/>
-                                {button}
+                                {!this.props.edit && button}
                             </div>
                         </div>
-                    </React.Fragment> : null}
+                    </React.Fragment>
             </div>
         )
     }
@@ -364,7 +356,7 @@ export default class Location extends Component {
     }
 
     render() {
-        let location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation();
+        const location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation();
         return (
             <div className='location-wr'>
                 {!this.props.edit ?

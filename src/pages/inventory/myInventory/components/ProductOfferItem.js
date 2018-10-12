@@ -5,6 +5,7 @@ import Checkbox from "../../../../components/Checkbox/Checkbox";
 import ThreeDots from "../../../../components/ThreeDots/ThreeDots";
 import BroadcastRule from "./BroadcastRule";
 import ThreeDotsMenu from "../../../../components/ThreeDots/ThreeDotsMenu";
+import {getUnit} from "../../../../utils/functions";
 import {withRouter} from 'react-router-dom';
 
 class ProductOfferItem extends Component {
@@ -45,15 +46,20 @@ class ProductOfferItem extends Component {
                     action: ()=>this.props.history.push(`/inventory/edit-inventory/${this.props.offer.id}`),
                     label: 'Edit Listing',
                 },
-                {
-                    action: ()=>console.log('BR'),
-                    label: 'Custom Broadcast'
-                },
-                {
-                    action: ()=>console.log('delete'),
-                    label: 'Delete Listing'
-                }
+                // Temporary hide
+                // {
+                //     action: ()=>console.log('BR'),
+                //     label: 'Custom Broadcast'
+                // },
+                // {
+                //     action: ()=>console.log('delete'),
+                //     label: 'Delete Listing'
+                // }
             ];
+        const unit = getUnit(offer.packaging.unit.name);
+        const packageSize = offer.packaging.capacity;
+        const packageUnit = offer.packaging.container.name;
+        const packaging = `${packageSize} ${unit} ${packageUnit}`;
         return (
             <React.Fragment>
             <tr className="product-offer">
@@ -64,13 +70,12 @@ class ProductOfferItem extends Component {
                 </td>
                 <td className="capitalize">{offer.product.casIndexName}</td>
                 <td>{offer.packaging.amount.formatNumber()}</td>
-                <td>{offer.packaging.container.name}</td>
-                <td>{offer.packaging.capacity}</td>
-                <td>{(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()}</td>
-                <td>$ {offer.pricing.cost.formatMoney(2)}</td>
-                <td>$ {offer.pricing.price.formatMoney(2)}</td>
+                <td>{packaging}</td>
+                <td>{(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()} {unit}</td>
+                <td>$ {offer.pricing.cost.formatMoney(2)}/{unit}</td>
+                <td>$ {offer.pricing.price.formatMoney(2)}/{unit}</td>
                 <td>{offer.name}</td>
-                <td>{offer.manufacturer}</td>
+                <td>{offer.manufacturer.name}</td>
                 <td>{offer.productCondition.name}</td>
                 <td>Unknown</td>
                 <td><span className={'broadcast-mark' + classnames({' open' : this.props.brActive})}> </span></td>

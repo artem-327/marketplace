@@ -5,13 +5,14 @@ import {
 } from "../constants/companies";
 import {
     OFFICE_CREATE_REQUESTED, OFFICE_EDIT_REQUESTED, OFFICE_FETCH_REQUESTED, OFFICE_FETCH_SUCCEEDED,
-    OFFICE_REMOVE_REQUESTED
+    OFFICE_REMOVE_REQUESTED, OFFICES_FETCH_REQUESTED, OFFICES_FETCH_SUCCEEDED
 } from "../constants/offices";
 
 export const initialState = {
     data: [],
     detail: {},
     office: {},
+    offices: {},
     isFetching: true,
 };
 
@@ -19,10 +20,18 @@ export default function reducer(state = initialState, action) {
     switch (action.type) {
         case COMPANY_FETCH_REQUESTED:
         case OFFICE_FETCH_REQUESTED:
+        case OFFICES_FETCH_REQUESTED:
         case COMPANIES_FETCH_REQUESTED: {
             return {
                 ...state,
                 isFetching: true,
+            }
+        }
+        case OFFICES_FETCH_SUCCEEDED:{
+            return {
+                ...state,
+                offices: action.payload,
+                isFetching: false
             }
         }
         case COMPANIES_FETCH_SUCCEEDED: {
@@ -86,4 +95,8 @@ export function fetchOffice(id) {
 
 export function editOffice(office) {
     return {type: OFFICE_EDIT_REQUESTED, payload: {office}}
+}
+
+export function fetchOffices() {
+    return {type: OFFICES_FETCH_REQUESTED}
 }
