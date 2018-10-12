@@ -128,6 +128,7 @@ export default class Location extends Component {
                     onClick={(e) => this.changeMode(e)}>Edit</button>;
         const currentLocation = this.state.warehouseIndex !== '' ? this.props.warehouse[this.state.warehouseIndex].name : null;
         return (
+            <div>
                 <div>
                     <Errors
                         className="form-error"
