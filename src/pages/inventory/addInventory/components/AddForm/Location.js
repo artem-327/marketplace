@@ -28,13 +28,14 @@ export default class Location extends Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.warehouse !== this.props.warehouse && this.state.warehouseIndex !== '') {
             this.setState({
-                street: nextProps.warehouse[this.state.warehouseIndex].address,
-                city: nextProps.warehouse[this.state.warehouseIndex].city,
-                state: nextProps.warehouse[this.state.warehouseIndex].location.id,
-                contact: nextProps.warehouse[this.state.warehouseIndex].contactName,
-                phone: nextProps.warehouse[this.state.warehouseIndex].contactNumber,
-                email: nextProps.warehouse[this.state.warehouseIndex].contactEmail,
-                zip: nextProps.warehouse[this.state.warehouseIndex].zip,
+                
+                street: nextProps.warehouse[this.state.warehouseIndex].address.streetAddress,
+                city: nextProps.warehouse[this.state.warehouseIndex].address.city,
+                state: nextProps.warehouse[this.state.warehouseIndex].address.province.name,
+                contact: nextProps.warehouse[this.state.warehouseIndex].contact.name,
+                phone: nextProps.warehouse[this.state.warehouseIndex].contact.number,
+                email: nextProps.warehouse[this.state.warehouseIndex].contact.email,
+                zip: nextProps.warehouse[this.state.warehouseIndex].address.zip.zip,
             })
         }
     }
@@ -53,13 +54,13 @@ export default class Location extends Component {
         }
         this.setState({
             warehouseIndex: index,
-            street: this.props.warehouse[index].address,
-            city: this.props.warehouse[index].city,
-            state: this.props.warehouse[index].location.id,
-            contact: this.props.warehouse[index].contactName,
-            phone: this.props.warehouse[index].contactNumber,
-            email: this.props.warehouse[index].contactEmail,
-            zip: this.props.warehouse[index].zip,
+            street: this.props.warehouse[index].address.streetAddress,
+            city: this.props.warehouse[index].address.city,
+            state: this.props.warehouse[index].address.province.name,
+            contact: this.props.warehouse[index].contact.name,
+            phone: this.props.warehouse[index].contact.number,
+            email: this.props.warehouse[index].contact.email,
+            zip: this.props.warehouse[index].address.zip.zip,
         })
     }
 

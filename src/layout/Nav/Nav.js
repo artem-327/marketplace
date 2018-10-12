@@ -10,7 +10,6 @@ import clients from '../../images/nav/clients.png';
 import inventory from '../../images/nav/inventory.png';
 import reports from '../../images/nav/reports.png';
 import myAccount from '../../images/nav/myAccount.svg';
-import admin from '../../images/nav/admin.svg';
 
 class Nav extends Component {
     constructor(props) {
