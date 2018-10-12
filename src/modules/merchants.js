@@ -1,6 +1,8 @@
 import axios from 'axios';
 import {
-    MERCHANT_FETCH_REQUESTED, MERCHANT_FETCH_SUCCEEDED
+    MERCHANT_FETCH_REQUESTED, MERCHANT_FETCH_SUCCEEDED,
+    MERCHANT_EDIT_REQUESTED,
+    MERCHANTS_FETCH_REQUESTED, MERCHANTS_FETCH_SUCCEEDED,
 } from "../constants/merchants";
 
 const GET_MERCHANT = 'GET_MERCHANT';
@@ -18,14 +20,18 @@ export const initialState = {
 export default function reducer(state = initialState, action) {
     switch (action.type) {
         
-        case GET_MERCHANT: {
+        case MERCHANTS_FETCH_REQUESTED: {
+            return {
+                ...state,
+                isFetching: true,
+            }
+        }
+        case MERCHANTS_FETCH_SUCCEEDED: {
             return {
                 ...state,
                 data: action.payload,
-                isFetching: false
             }
         }
-
         case MERCHANT_FETCH_REQUESTED: {
             return {
                 ...state,
@@ -42,28 +48,6 @@ export default function reducer(state = initialState, action) {
         default: {
             return state
         }
-    }
-}
-
-export function getData() {
-    return {
-        type: GET_MERCHANT,
-        payload:[
-            {
-                id:1,
-                name:"Mic",
-                surname:"Hal",
-                email:"gg@nore.com",
-                approve:true
-            },
-            {
-                id:2,
-                name:"Hor",
-                surname:"Nak",
-                email:"rip@inpc.com",
-                approve:false
-            }
-        ]
     }
 }
 
@@ -97,8 +81,18 @@ export function rejectMerchant(id) {
     }
 }
 
+export function fetchMerchants() {
+    return {type: MERCHANTS_FETCH_REQUESTED}
+}
+
 export function fetchMerchant(id){
     return {
         type: MERCHANT_FETCH_REQUESTED, payload: {id}
+    }
+}
+
+export function editMerchant(merchant){
+    return {
+        type: MERCHANT_EDIT_REQUESTED, payload: {merchant}
     }
 }

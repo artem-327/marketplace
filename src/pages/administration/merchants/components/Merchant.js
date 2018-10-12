@@ -4,13 +4,14 @@ import Switcher from '../../../../components/Switcher/Switcher';
 class Merchant extends Component {
 
     render(){
-        console.log(this.props.merch.approve)
+        const approveToggleMerchant = {...this.props.merch, approved: !this.props.merch.approve}
         return (
             <tr className="merch-row">
-                <td className="merch-row-item">{this.props.merch.name}</td>
-                <td className="merch-row-item">{this.props.merch.surname}</td>
+                <td className="merch-row-item">{this.props.merch.firstname}</td>
+                <td className="merch-row-item">{this.props.merch.middlename}</td>
+                <td className="merch-row-item">{this.props.merch.lastname}</td>
                 <td className="merch-row-item">{this.props.merch.email}</td>
-                <td className="merch-row-item"><Switcher onChange={() => this.props.approveMerchant(this.props.id)} value={this.props.merch.approve} id={this.props.id}/></td>
+                <td className="merch-row-item"><Switcher onChange={() => this.props.editMerchant(approveToggleMerchant)} value={this.props.merch.approved} id={this.props.id}/></td>
             </tr>
         )
     }

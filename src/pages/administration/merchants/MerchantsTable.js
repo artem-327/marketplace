@@ -6,12 +6,12 @@ class MerchantsTable extends Component {
 
     renderMerchants(){
         return this.props.merchants.data.map((val,index)=>{
-            return <Merchant merch={val} key={index} id={val.id} approveMerchant={this.props.approveMerchant}/>
+            return <Merchant merch={val} key={index} id={val.id} editMerchant={this.props.editMerchant}/>
                 });
     }
 
     componentDidMount(){
-        this.props.getData();
+        this.props.fetchMerchants();
     }
 
     render(){
@@ -23,6 +23,7 @@ class MerchantsTable extends Component {
                     <thead className="merch-table">
                         <tr>
                             <th className="merch-header-item">Name</th>
+                            <th className="merch-header-item">MiddleName</th>
                             <th className="merch-header-item">Surname</th>
                             <th className="merch-header-item">E-mail</th>
                             <th className="merch-header-item">Approve</th>
