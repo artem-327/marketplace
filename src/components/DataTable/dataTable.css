@@ -1,6 +1,8 @@
 .data-table-wr {
   width: 100%;
-  overflow-x: auto; }
+  min-height: 180px;
+  overflow-x: auto;
+  overflow-y: visible; }
 
 .data-table {
   border-collapse: separate;
@@ -34,7 +36,7 @@
     padding: 10px;
     box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.15); }
     .data-table .data-table-group-header .fas {
-      margin-top: 6px; }
+      margin: 6px 20px 0 20px; }
     .data-table .data-table-group-header .fa-angle-down:before {
       color: #2599d5; }
     .data-table .data-table-group-header .data-table-group-count {

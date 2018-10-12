@@ -2,10 +2,9 @@ const INIT_DATA_TABLE = 'INIT_DATA_TABLE';
 const SELECT_ROW = 'SELECT_ROW';
 const SELECT_GROUP = 'SELECT_GROUP';
 const TOGGLE_VISIBLE_COLUMN = 'TOGGLE_VISIBLE_COLUMN';
+const SELECT_DATA_TABLE = 'SELECT_DATA_TABLE';
 
-export const initialState = {
-
-};
+export const initialState = {};
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
@@ -51,6 +50,15 @@ export default function reducer(state = initialState, action) {
                 }
             }
         }
+        case SELECT_DATA_TABLE:{
+            return{
+                ...state,
+                [action.payload.id]: {
+                    ...state[action.payload.id],
+                    rows: action.payload.rows,
+                }
+            }
+        }
         case TOGGLE_VISIBLE_COLUMN: {
             return{
                 ...state,
@@ -87,6 +95,13 @@ export function selectGroup(id, groupId, rows){
     return {
         type: SELECT_GROUP,
         payload: {id, groupId, rows}
+    }
+}
+
+export function selectDataTable(id, rows){
+    return {
+        type: SELECT_DATA_TABLE,
+        payload: {id, rows}
     }
 }
 

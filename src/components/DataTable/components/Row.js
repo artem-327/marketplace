@@ -38,7 +38,7 @@ class Row extends Component {
                 {this.props.selectable ? <td className="data-table-select"><CheckboxControlled value={this.props.data.selected} onChange={(value) => this.props.selectFunc(this.props.groupId, this.props.data.index, value)}/></td> : null}
                 {this.props.contextMenu ? <React.Fragment >
                     <td className="data-table-context-td" ref={this.row} onClick={(e)=>this.handleClick(e)}><ThreeDots className={'small'+ classnames({" active": (this.state.openContext)})}/></td>
-                    <td className="data-table-context-holder"><ThreeDotsMenu id={this.props.data.id} links={this.props.contextMenu} isOpen={this.state.openContext}/></td>
+                    <td className="data-table-context-holder"><ThreeDotsMenu callback={(id)=>console.log('show broadcast for: ' + id)} id={this.props.data.id} links={this.props.contextMenu} isOpen={this.state.openContext}/></td>
                 </React.Fragment> : null}
                 {this.props.data.row.map((cell, index) => {
                     if (!this.props.headers[index].visible) return null;

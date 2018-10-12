@@ -26,9 +26,7 @@ class GroupRow extends Component {
                     {this.props.selectable ? <td className="data-table-select"><CheckboxControlled value={this.isSelected()} onChange={(value) => this.selectGroup(value)}/></td> : null}
                     {this.props.contextMenu ? <React.Fragment><td/><td/></React.Fragment> : null}
                     <td  className="group-header" colSpan={(this.props.headers.length)} >{this.props.group}
-                    {this.props.countLabel ? <span className="data-table-group-count">{this.props.countLabel + this.props.rows.length}</span> : null}</td>
-                    {this.state.open ? <td className="data-table-arrow"><i className="icon fas fa-angle-down"/></td> : <td className="data-table-arrow"><i className="icon fas fa-angle-up"/></td>}
-                </tr>
+                    <span className="data-table-group-count">{this.props.countLabel ? this.props.countLabel + this.props.rows.length : null} {this.state.open ? <i className="icon fas fa-angle-down"/> : <i className="icon fas fa-angle-up"/>}</span></td></tr>
                 {this.state.open ? this.props.rows.map((row, index) => (
                     <Row selectable={this.props.selectable} id={row.id} contextMenu={this.props.contextMenu} headers={this.props.headers} data={row} selectFunc={this.props.selectFunc} groupId={this.props.index} key={index}/>
                 )) : null}

@@ -1,6 +1,8 @@
 .data-table-wr{
   width: 100%;
+  min-height: 180px;
   overflow-x: auto;
+  overflow-y: visible;
 }
 .data-table {
   border-collapse:separate;
@@ -20,7 +22,7 @@
   .checkmark{margin-top: 4px; margin-right: 0}
   .input-checkbox{padding-left: 20px}
   .data-table-context-td{position: relative}
-  .data-table-context-holder{width: 1px; padding: 0}
+  .data-table-context-holder{width: 1px; padding: 0;}
   .data-table-group-header {
     background-color: #efeff1;
     border: 1px solid #e0e0e0;
@@ -29,7 +31,7 @@
     padding: 10px;
     box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.15);
     .fas{
-      margin-top: 6px;
+      margin: 6px 20px 0 20px;
     }
     .fa-angle-down:before{
       color: #2599d5;

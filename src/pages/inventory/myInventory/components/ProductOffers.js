@@ -9,7 +9,6 @@ class ProductOffers extends Component {
 
     constructor(props) {
         super(props);
-        this.toggleProduct = this.toggleProduct.bind(this);
         this.state = {
             products: this.groupProductOffers(this.props.productOffers),
             isOpen: false,
@@ -27,22 +26,6 @@ class ProductOffers extends Component {
             return carry;
         }, {});
     }
-
-    toggleProduct(e, productId){
-        this.setState({
-            products: {
-                ...this.state.products,
-                [productId]:{
-                    ...this.state.products[productId],
-                    visible: !this.state.products[productId].visible
-                }
-            }
-        })
-    }
-
-    // toggleBroadcastRule(e, id){
-    //     if(this.props.toggleBroadcastRule) this.props.toggleBroadcastRule(true, {x: e.clientX, y: e.clientY - 90}, id)
-    // }
 
     render() {
         if(this.props.productOffers.length === 0) return null;
@@ -66,7 +49,6 @@ class ProductOffers extends Component {
                     }))
                 };
             });
-        console.log(rowInit)
         return (
             <div className="App">
                 <DataTable id="myInventoryTable"
@@ -76,7 +58,7 @@ class ProductOffers extends Component {
                            contextMenu={
                                [
                                    {action: (id)=>this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'Edit Listing',},
-                                   {action: (id)=>console.log('BR'), label: 'Custom Broadcast'},
+                                   {action: (id, callback)=>callback(id), label: 'Custom Broadcast'},
                                    {action: (id)=>console.log('delete'), label: 'Delete Listing'}
                                ]
                            }

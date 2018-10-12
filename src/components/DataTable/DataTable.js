@@ -33,9 +33,10 @@ class DataTable extends Component {
     render() {
         if(!this.props.dataTable) return null;
         return <div className="data-table-wr"><table className="data-table">
-            <Header data={this.props.dataTable.header}
+            <Header data={this.props.dataTable}
                     sortFunc={this.props.sortFunc}
-                    contextMenu={this.props.contextMenu.length !== 0}
+                    selectTable={(rows)=>this.props.selectDataTable(this.props.id, rows)}
+                    contextMenu={this.props.contextMenu && this.props.contextMenu.length !== 0}
                     toggleColumn={(headerId, value) => this.props.toggleVisibleColumn(this.props.id, headerId, value)}
                     selectable={this.props.selectable}/>
             <Rows data={this.props.dataTable.rows}

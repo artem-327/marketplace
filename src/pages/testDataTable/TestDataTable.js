@@ -34,6 +34,20 @@ class TestPage extends Component {
                                        }
                                    ]
                                },
+                               {
+                                   group: 'test',
+                                   countLabel: 'Product Offerings: ',
+                                   rows: [
+                                       {
+                                           id:55,
+                                           data:['text', 'testtest1', <button className='info-button'>INFO</button>]
+                                       },
+                                       {
+                                           id:66,
+                                           data:['text', 'testtest1', <button className='info-button'>INFO2</button>]
+                                       }
+                                   ]
+                               },
                            ]}
                 />
             </div>

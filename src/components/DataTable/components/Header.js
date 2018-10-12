@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import PropTypes from "prop-types";
+import CheckboxControlled from "../../Checkbox/CheckboxControlled";
 
 class Header extends Component {
 
@@ -37,13 +37,33 @@ class Header extends Component {
         this.props.sortFunc(name)
     }
 
+    selectTable(value){
+        let rows = this.props.data.rows.map((r)=>({
+            ...r,
+            rows: r.rows.map((r2)=>({
+                ...r2, selected: value
+            }))}
+        ));
+        this.props.selectTable(rows);
+    }
+
+    isSelected(){
+        for(let i = 0; i < this.props.data.rows.length; i++){
+            for(let j = 0; j < this.props.data.rows[i].rows.length; j++){
+                if(!this.props.data.rows[i].rows[j].selected) return false
+            }
+        }
+        return true
+    }
+
+
     render() {
         return (
             <thead className='data-table-header'>
             <tr>
-                {this.props.selectable ? <th/> : null}
+                {this.props.selectable ? <th className="data-table-select"><CheckboxControlled value={this.isSelected()} onChange={(value)=>this.selectTable(value)}/></th> : null}
                 {this.props.contextMenu ? <React.Fragment><th/><th/></React.Fragment> : null}
-                {this.props.data.map((item, index) => (
+                {this.props.data.header.map((item, index) => (
                     item.visible ?
                     <th  ref={this.node} onClick={() => this.leftClickSort(item.name)}
                         onContextMenu={(e) => this.handleClick(e, item.name)} key={index}>
@@ -61,13 +81,5 @@ class Header extends Component {
 
     }
 }
-
-Header.propTypes = {
-    data: PropTypes.arrayOf(
-        PropTypes.shape({
-            name: PropTypes.string,
-        })
-    )
-};
 
 export default Header;
