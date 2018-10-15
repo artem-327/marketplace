@@ -94,13 +94,13 @@ class ProductOffers extends Component {
                                         <td>{(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()} {unit}</td>
                                         <td>$ {offer.pricing.price.formatMoney(2)}/{unit}</td>
                                         <td>{offer.name}</td>
-                                        <td>{offer.manufacturer}</td>
-                                        <td>{offer.origin}</td>
+                                        <td>{offer.manufacturer.name}</td>
+                                        <td>{offer.origin.name}</td>
                                         <td>{offer.expirationDate ? moment(offer.expirationDate).format(DATE_FORMAT) : 'none'}</td>
                                         <td>Unknown</td>
                                         <td>{offer.productCondition.name}</td>
                                         <td>{offer.productForm.name}</td>
-                                        <td>{offer.warehouse.name} ({offer.warehouse.location.state})</td>
+                                        <td>{offer.warehouse.name} ({offer.warehouse.address.province.name})</td>
                                         <td><button className='info-button' onClick={()=>{this.addCart(offer.id)}}>BUY</button></td>
                                     </tr>
                                 )

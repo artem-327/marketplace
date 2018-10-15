@@ -35,10 +35,8 @@ export const getUnit = function(unitName) {
     switch (unitName) {
         case "pound":
             return "lb";
-            break;
         case "gallon":
             return "gal";
-            break;
         default:
             return "#";
     }

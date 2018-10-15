@@ -10,7 +10,6 @@ import clients from '../../images/nav/clients.png';
 import inventory from '../../images/nav/inventory.png';
 import reports from '../../images/nav/reports.png';
 import myAccount from '../../images/nav/myAccount.svg';
-import admin from '../../images/nav/admin.svg';
 
 class Nav extends Component {
     constructor(props) {
@@ -117,13 +116,14 @@ class Nav extends Component {
                             SETTINGS
                         </span>
                     </NavLink>
-                    {this.renderDropdown('administration', [
+                    {/* Temporary hide */}
+                    {/* {this.renderDropdown('administration', [
                         {name: 'Companies', url: '/administration/companies/'},
                         {name: 'Names', url: '/administration/names-synonyms'},
                         {name: 'Merchants', url: '/administration/merchants'},
                         {name: 'New users', url: '/administration/users'},
                         {name: 'Operators', url: '/administration/operators'},
-                        ], 'ADMIN', admin)}
+                        ], 'ADMIN', admin)} */}
                     <span className="logout" onClick={() => this.props.logout()}>
                         <NavLink to="/login" className='nav-link' activeClassName='active'>
                             <span className='link-center'>

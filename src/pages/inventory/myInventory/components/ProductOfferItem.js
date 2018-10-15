@@ -46,14 +46,15 @@ class ProductOfferItem extends Component {
                     action: ()=>this.props.history.push(`/inventory/edit-inventory/${this.props.offer.id}`),
                     label: 'Edit Listing',
                 },
-                {
-                    action: ()=>console.log('BR'),
-                    label: 'Custom Broadcast'
-                },
-                {
-                    action: ()=>console.log('delete'),
-                    label: 'Delete Listing'
-                }
+                // Temporary hide
+                // {
+                //     action: ()=>console.log('BR'),
+                //     label: 'Custom Broadcast'
+                // },
+                // {
+                //     action: ()=>console.log('delete'),
+                //     label: 'Delete Listing'
+                // }
             ];
         const unit = getUnit(offer.packaging.unit.name);
         const packageSize = offer.packaging.capacity;
@@ -74,7 +75,7 @@ class ProductOfferItem extends Component {
                 <td>$ {offer.pricing.cost.formatMoney(2)}/{unit}</td>
                 <td>$ {offer.pricing.price.formatMoney(2)}/{unit}</td>
                 <td>{offer.name}</td>
-                <td>{offer.manufacturer}</td>
+                <td>{offer.manufacturer.name}</td>
                 <td>{offer.productCondition.name}</td>
                 <td>Unknown</td>
                 <td><span className={'broadcast-mark' + classnames({' open' : this.props.brActive})}> </span></td>

@@ -3,7 +3,7 @@ import Button from '../../../../components/Button/Button'
 
 const ItemCartBody = ({cartItem}) => {
   const {productOffer} = cartItem;
-  const location = `${productOffer.warehouse.location.country}, ${productOffer.warehouse.location.state}`
+  const location = productOffer.warehouse.address.province.name;
   return (
     <div className="item-cart">
       <div className="item-cart-body">
