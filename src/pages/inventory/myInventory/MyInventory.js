@@ -4,6 +4,7 @@ import Filter from '../../../components/Filter';
 import './myInventory.css';
 import Spinner from "../../../components/Spinner/Spinner";
 import FilterTag from "../../../components/Filter/components/FilterTag";
+import {getSelectedDataTable} from "../../../utils/functions";
 
 const GROUP_BY_ALL_COMPANIES = 1;
 const GROUP_BY_REGIONS = 2;
@@ -87,9 +88,7 @@ class MyInventory extends Component {
                 removePopup={this.props.removePopup}
                 getProductOffers={this.props.getProductOffers}
                 targetGroups={this.state.targetGroups}
-                selections={this.state.selections}
                 setFilter={(type) => this.setFilter(type)}
-                currentSelected={this.state.currentSelected}
                 history={this.props.history}
                 setActiveBroadcastButton={active => this.setActiveBroadcastButton(active)}
                 broadcastActive={this.state.brActive}/>;
@@ -97,7 +96,7 @@ class MyInventory extends Component {
             <div className='my-inventory'>
                 <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
                 <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getProductOffers({...filter}, true)}}/>
-                <h3 className='header small'>0 product offerings selected</h3>
+                <h3 className='header small'>{getSelectedDataTable(this.props.productOffersTable)} product offerings selected</h3>
                 <Filter chemicalName productAgeFilter date assay quantity price condition form filterFunc={(filter) => {this.props.getProductOffers({...filter}, true)}} />
                 {content}
             </div>

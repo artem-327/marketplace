@@ -11,7 +11,8 @@ import {resetForm} from '../../../utils/functions';
 const mapStateToProps = store => ({
     productOffers: store.productOffers.data,
     companies: store.companies.data,
-    isFetching: store.productOffers.isFetching
+    isFetching: store.productOffers.isFetching,
+    productOffersTable: store.dataTables.myInventoryTable,
 });
 
 const mapDispatchToProps = dispatch => (
