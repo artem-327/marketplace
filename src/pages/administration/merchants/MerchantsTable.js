@@ -27,6 +27,7 @@ class MerchantsTable extends Component {
                             <th className="merch-header-item">Surname</th>
                             <th className="merch-header-item">E-mail</th>
                             <th className="merch-header-item">Approve</th>
+                            <th className="merch-header-item"></th>
                         </tr>
                     </thead>
                     <tbody>

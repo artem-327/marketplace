@@ -41,6 +41,7 @@ class Main extends Component {
                     <Route exact path="/settings" component={withAuth(Settings)}/>
                     <Route exact path="/support" component={withAuth(Support)}/>
                     <Route exact path="/administration/merchants" component={withAuth(Merchants)}/>
+                    <Route exact path="/administration/merchants/:id" component={withAuth(Merchants)}/>
                     <Route exact path="/administration/names-synonyms" component={withAuth(NamesSynonyms)}/>
                     <Route exact path="/administration/companies/" component={withAuth(Companies)}/>
                     <Route exact path="/administration/companies/:id" component={withAuth(CompaniesDetail)}/>
