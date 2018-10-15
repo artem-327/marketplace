@@ -13,7 +13,7 @@ import AllInventory from "../pages/inventory/allInventory";
 import MyInventory from "../pages/inventory/myInventory";
 import TestPage from "../pages/test";
 import ShoppingCart from "../pages/cart/ShoppingCart";
-import PurchaseOrder from "../pages/cart/PurchaseOrder/PurchaseOrder";
+import PurchaseOrder from "../pages/cart/PurchaseOrder";
 import { withAuth } from '../utils/auth';
 import Merchants from '../pages/administration/merchants';
 import NamesSynonyms from "../pages/administration/namesSynonyms/";

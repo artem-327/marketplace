@@ -2,7 +2,8 @@ import { call, put, takeEvery } from 'redux-saga/effects'
 import Api from '../../../api/cart';
 import {
     OFFER_FETCH_SUCCEEDED, OFFER_FETCH_FAILED, OFFER_FETCH_REQUESTED,
-    CARTITEMS_FETCH_SUCCEEDED, CARTITEMS_FETCH_FAILED, CARTITEMS_FETCH_REQUESTED
+    CARTITEMS_FETCH_SUCCEEDED, CARTITEMS_FETCH_FAILED, CARTITEMS_FETCH_REQUESTED,
+    DELIVERYADDRESSES_FETCH_REQUESTED, DELIVERYADDRESSES_FETCH_FAILED, DELIVERYADDRESSES_FETCH_SUCCEEDED
 } from "../../../constants/cart";
 
 function* getCurrentAdded(action) {
@@ -23,9 +24,19 @@ function* fetchCartItems() {
     }
 }
 
+function* fetchDeliveryAddresses() {
+    try {
+        const addresses = yield call(Api.fetchDeliveryAddresses);
+        yield put({type: DELIVERYADDRESSES_FETCH_SUCCEEDED, payload: addresses});
+    } catch (e) {
+        yield put({type: DELIVERYADDRESSES_FETCH_FAILED, message: e.message});
+    }
+}
+
 function* cartSaga() {
     yield takeEvery(OFFER_FETCH_REQUESTED, getCurrentAdded);
     yield takeEvery(CARTITEMS_FETCH_REQUESTED, fetchCartItems);
+    yield takeEvery(DELIVERYADDRESSES_FETCH_REQUESTED, fetchDeliveryAddresses);
 }
 
 export default cartSaga;
