@@ -3,11 +3,9 @@ import ProductOffering from "./components/ProductOffering";
 import ProductMapping from "./components/ProductMapping";
 import AddedLots from "./components/AddedLots/AddedLots";
 import SearchProducts from './components/SearchProducts';
-import Tooltip from "../../../../../components/Tooltip/Tooltip";
 import AdditionalDocuments from "./components/AdditionalDocuments";
 
 class Chemical extends Component {
-
     constructor(props) {
         super(props);
         this.setProductMapping = this.setProductMapping.bind(this);
@@ -91,9 +89,6 @@ class Chemical extends Component {
                                 onSelect={product => this.setSelectedProduct(product)}
                                 {...this.props}
                 /> : null}
-                {!this.props.edit ?
-                    <Tooltip content="By selecting 'Save Mapping' CAS Name, CAS Number, Product Name and Product Number will be mapped
-                                  in our system. Next time you enter this product these fields will be pre-populated for you."/> : null}
                 <ProductMapping productID={this.state.productID} {...this.props} />
                 <ProductOffering addLot={(lots) => this.addLot(lots)} {...this.props} />
                 {!this.props.edit ?

@@ -1,0 +1,67 @@
+@import "../../../styles/main.scss";
+$side-padding: 30px;
+
+.shopping-cart {
+    margin: 0 20px;
+    h1 {
+        margin-bottom: 20px;
+        margin-left: 0; 
+        padding-left: 0;   
+    }
+    .shopping-cart-body {
+        display: flex;
+        .shopping-cart-items {
+            margin-right: 20px;
+            border: 2px solid $beige-color;
+            border-radius: $border-rounding;
+            header {
+                padding: 15px $side-padding;
+                background-color: lighten( $beige-color, 7% );
+                border-radius: $border-rounding $border-rounding 0 0;
+                h1 {
+                    font-size: 1.5rem;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    margin: 0;
+                }
+            }
+            .item-cart:last-child {
+                border: none;
+            }
+            .item-cart {
+                border-bottom: 1px solid darken( $beige-color, 10% );
+                margin: 10px;
+                .item-cart-body {
+                    display: flex;
+                    justify-content: space-between;
+                    @include mq('m', max) {
+                    flex-wrap: wrap;
+                    }
+            
+                    .item-cart-body-section {
+                        padding: 10px 20px;
+                        font-weight: 1.25rem;
+                        min-width: 300px;
+                        div {
+                            padding: 2px 0;
+                            white-space: nowrap;
+                        }
+                    }
+                }
+                
+                footer {
+                    display: flex;
+                    @extend %section-shared;
+                    justify-content: flex-end;
+                    @include mq('m', max) {
+                    justify-content: center;
+                    }
+                
+                    button {
+                    margin-left: 15px;
+                    }
+                }
+            }
+        }  
+    }
+}

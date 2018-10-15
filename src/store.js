@@ -6,8 +6,13 @@ import promise from 'redux-promise-middleware'
 import { combineReducers } from 'redux'
 import { combineForms } from 'react-redux-form';
 import createSagaMiddleware from 'redux-saga'
+// import jwtDecode from 'jwt-decode';
+// import moment from "moment";
 
+// import identity, {initialState as identityFormInit, logout} from './modules/identity';
 import identity, {initialState as identityFormInit} from './modules/identity';
+import users from './modules/users';
+
 import location from './modules/location';
 import companies from './modules/companies';
 import productOffers, {initialState as addProductsInit} from './modules/productOffers';
@@ -23,10 +28,16 @@ import companiesSaga from "./saga/companies";
 import officesSaga from "./saga/offices";
 import dataTables from "./modules/dataTables";
 
+import usersSaga from "./pages/administration/users/saga/users";
+import operatorsSaga from "./pages/administration/operators/saga/operators";
+import cartSaga from "./pages/cart/saga/cart";
+
+
 const reducer = combineReducers({
     identity,
     companies,
     locale,
+    users,
     location,
     productOffers,
     products,
@@ -53,6 +64,20 @@ const logger = createLogger({
     predicate: (getState, action) => process.env.NODE_ENV === "development"
 });
 
+// Middleware to check token expiration and potentially redirect user to login package
+// const checkTokenExpirationMiddleware = store => next => action => {
+//     const token = localStorage.getItem('jwtoken');
+//     if (token) {
+//         const expirationTime = moment(jwtDecode(token).exp);
+//         const nowTime = moment(Date.now() / 1000)
+//       if (expirationTime < nowTime) {
+//         next(action);  
+//         store.dispatch(logout());
+//       }
+//     }
+//     next(action);
+//   };
+
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware();
 
@@ -62,3 +87,7 @@ export default createStore(reducer, middleware)
 
 sagaMiddleware.run(companiesSaga);
 sagaMiddleware.run(officesSaga);
+sagaMiddleware.run(usersSaga);
+sagaMiddleware.run(operatorsSaga);
+sagaMiddleware.run(cartSaga);
+

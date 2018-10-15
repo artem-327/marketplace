@@ -51,19 +51,64 @@ class ProductOffers extends Component {
             });
         return (
             <div className="App">
-                <DataTable id="myInventoryTable"
-                           selectable
-                           sortFunc={(nameColumn) => console.log(nameColumn)}
-                           headerInit={[{name: 'Product Name'}, {name: 'Available'}, {name: 'Packaging'}, {name: 'Pkg. size'}, {name: 'Quantity'}, {name: 'Cost'}, {name: 'FOB Price'}, {name: 'Trade Name'}, {name: 'MFR.'}, {name: 'Condition'}, {name: 'MFG Date'}]}
-                           contextMenu={
-                               [
-                                   {action: (id)=>this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'Edit Listing',},
-                                   {action: (id, callback)=>callback(id), label: 'Custom Broadcast'},
-                                   {action: (id)=>console.log('delete'), label: 'Delete Listing'}
-                               ]
-                           }
-                           rowsInit={rowInit}
-                />
+                <table className="product-offers">
+                    <thead>
+                    <tr>
+                        <th><Checkbox className='mark-myInv big' inputClass='input-myInv' onChange={(value) => {console.log(value)}}/></th>
+                        <th><ThreeDots/></th>
+                        <th>Product Name</th>
+                        <th>Available</th>
+                        <th>Packaging</th>
+                        <th>Quantity</th>
+                        <th>Cost</th>
+                        <th>FOB Price</th>
+                        <th>Trade Name</th>
+                        <th>MFR.</th>
+                        <th>Condition</th>
+                        <th>MFG Date</th>
+                        <th>Broadcast</th>
+                        <th><i className="fas fa-cog"></i></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {Object.values(this.state.products).reduce((rows, product) => {
+                        rows.push(
+                            <tr className="product" key={product.casNumber}  onClick={(e) => {this.toggleProduct(e, product.id)}}>
+                                <td colSpan="1">
+                                    <Checkbox className='mark-myInv' inputClass='input-myInv' onChange={(value) => {console.log(value)}}/>
+                                </td>
+                                <td colSpan="10">
+                                    <span className="product-casnumber">{product.casNumber}</span>
+                                    <span className="product-name capitalize">{product.casIndexName}</span>
+                                </td>
+                                <td colSpan="4" className="quantity">
+                                    <span>Product offerings: {product.productOffers.length}</span>
+                                    {product.visible ? <i className="icon fas fa-angle-down"/> : <i className="icon fas fa-angle-up"/>}
+                                </td>
+                            </tr>
+                        );
+                        if(product.visible){
+                            product.productOffers.forEach((offer) => {
+                                rows.push(
+                                    <ProductOfferItem
+                                        key={offer.id}
+                                        submitRules={this.props.submitRules}
+                                        addPopup={this.props.addPopup}
+                                        removePopup={this.props.removePopup}
+                                        getProductOffers={this.props.getProductOffers}
+                                        targetGroups={this.props.targetGroups}
+                                        selections={this.props.selections}
+                                        setFilter={(type) => this.props.setFilter(type)}
+                                        currentSelected={this.props.currentSelected}
+                                        setActiveBroadcastButton={active => this.props.setActiveBroadcastButton(active)}
+                                        offer={offer}/>
+                                );
+                            })
+                        }
+                        return rows;
+                    }, [])}
+                    </tbody>
+                </table>
             </div>
         );
     }

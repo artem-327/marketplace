@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import './ProductOffers.css';
 import moment from "moment";
-import AddCart from '../../../../components/Cart/AddCart'
+import AddCart from '../../../cart/AddCart'
 import {DATE_FORMAT} from "../../../../utils/constants";
-import Checkbox from "../../../../components/Checkbox/Checkbox";
+import {getUnit} from "../../../../utils/functions";
+
 class ProductOffers extends Component {
 
     constructor(props) {
@@ -51,7 +52,6 @@ class ProductOffers extends Component {
                         <th>Merchant</th>
                         <th>Available</th>
                         <th>Packaging</th>
-                        <th>Pkg. size</th>
                         <th>Quantity</th>
                         <th>FOB Price</th>
                         <th>Trade Name</th>
@@ -81,23 +81,27 @@ class ProductOffers extends Component {
                         );
                         if(product.visible){
                             product.productOffers.forEach((offer) => {
+                                const unit = getUnit(offer.packaging.unit.name);
+                                const packageSize = offer.packaging.capacity;
+                                const packageUnit = offer.packaging.container.name;
+                                const packaging = `${packageSize} ${unit} ${packageUnit}`;
+                                const merchantName = offer.merchantVisibility ? offer.merchant.email : "Anonymous"
                                 rows.push(
                                     <tr className="product-offer" key={offer.id}>
-                                        <td>{offer.merchant.email}</td>
+                                        <td>{merchantName}</td>
                                         <td>{offer.packaging.amount.formatNumber()}</td>
-                                        <td>{offer.packaging.container.name}</td>
-                                        <td>{offer.packaging.capacity}</td>
-                                        <td>{(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()}</td>
-                                        <td>$ {offer.pricing.price.formatMoney(2)}</td>
+                                        <td>{packaging}</td>
+                                        <td>{(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()} {unit}</td>
+                                        <td>$ {offer.pricing.price.formatMoney(2)}/{unit}</td>
                                         <td>{offer.name}</td>
-                                        <td>{offer.manufacturer}</td>
-                                        <td>{offer.origin}</td>
+                                        <td>{offer.manufacturer.name}</td>
+                                        <td>{offer.origin.name}</td>
                                         <td>{offer.expirationDate ? moment(offer.expirationDate).format(DATE_FORMAT) : 'none'}</td>
                                         <td>Unknown</td>
                                         <td>{offer.productCondition.name}</td>
                                         <td>{offer.productForm.name}</td>
-                                        <td>{offer.warehouse.name} ({offer.warehouse.location.state})</td>
-                                        <td><button className='info-button' onClick={()=>{this.addCart(offer.id)}}>INFO</button></td>
+                                        <td>{offer.warehouse.name} ({offer.warehouse.address.province.name})</td>
+                                        <td><button className='info-button' onClick={()=>{this.addCart(offer.id)}}>BUY</button></td>
                                     </tr>
                                 )
                             })

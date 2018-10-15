@@ -31,3 +31,13 @@ Number.prototype.formatNumber = function(){
     return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
+export const getUnit = function(unitName) {
+    switch (unitName) {
+        case "pound":
+            return "lb";
+        case "gallon":
+            return "gal";
+        default:
+            return "#";
+    }
+}

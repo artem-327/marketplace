@@ -141,7 +141,7 @@ export default class ProductMapping extends Component {
                         }}
                     />
                     <div className='group-item-wr'>
-                        <label htmlFor=".measurements">Measurement</label>
+                        <label htmlFor=".measurements">Measure</label>
                         <Control.text model=".packaging.capacity"
                                       validators={{min: (val) => min(val, 0), isNumber, required}}
                                       id=".measurements"
@@ -179,7 +179,8 @@ export default class ProductMapping extends Component {
                     </div>
                     {!this.props.edit ?
                     <React.Fragment>
-                        <Tooltip className="save-mapping" content="add inventory 1"/>
+                        <Tooltip className="save-mapping" content="By selecting 'Save Mapping' CAS Name, CAS Number, Product Name and Product Number will be mapped
+                                  in our system. Next time you enter this product these fields will be pre-populated for you."/>
                         {button}
                     </React.Fragment>
                     : null
