@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import "./SummaryTable.css"
 import Button from '../../../../components/Button/Button'
 
-const SummaryTable = ({hasButton, children, title}) => {
+const SummaryTable = ({hasButton, children, title, handleContinue}) => {
   return (
     <div className="summary-table">
       <header>
@@ -14,7 +14,7 @@ const SummaryTable = ({hasButton, children, title}) => {
         {children}
       </main>
       {hasButton && <footer>
-        <Button size="large" color="blue" rounded="down">Continue</Button>
+        <Button size="large" color="blue" rounded="down" onClick={handleContinue}>Continue</Button>
       </footer>}
     </div>
   );

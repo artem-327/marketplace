@@ -17,7 +17,7 @@ class AllInventory extends Component {
 
     render() {
         let content = this.props.isFetching ? <div><Spinner/></div> :
-            <ProductOffers productOffers={this.props.productOffers} addPopup={this.props.addPopup}/>;
+            <ProductOffers productOffers={this.props.productOffers} addPopup={this.props.addPopup} history={this.props.history}/>;
         return (
             <div>
                 <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>

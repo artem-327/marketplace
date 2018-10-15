@@ -12,6 +12,14 @@ class AddCart extends Component {
     this.props.getCurrentAdded(this.props.id)
   }
 
+  handleContinue = () => {
+    const {removePopup} = this.props;
+    //todo Create new cart item /api/tz6pap/cart/ and then history.push
+    removePopup()
+    this.props.history.push("/cart/shopping-cart")
+
+  }
+
   render() {
     const {cart, removePopup, isFetching} = this.props
     if (isFetching) return <Spinner />
@@ -19,7 +27,7 @@ class AddCart extends Component {
     const unit = getUnit(cart.packaging.unit.name)
     const packageSize = `${cart.packaging.capacity} ${unit}${cart.packaging.capacity > 1 && 's'}`
     return (
-        <PopupComponent removePopup={removePopup} headerTitle="Purchase">
+        <PopupComponent handleContinue={this.handleContinue} removePopup={removePopup} headerTitle="Purchase">
         <div className="add-cart-body">
           <div className="add-cart-body-section">
             <h3>Product Info</h3>
@@ -90,6 +98,7 @@ export default AddCart
 
 AddCart.propTypes = {
   id: PropTypes.number,
+  cart: PropTypes.node,
   isFetching: PropTypes.bool,
   removePopup: PropTypes.func
 }

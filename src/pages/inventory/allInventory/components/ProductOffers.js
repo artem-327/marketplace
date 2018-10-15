@@ -40,7 +40,7 @@ class ProductOffers extends Component {
 
    //TODO:: Add to cart
    addCart(id){
-        this.props.addPopup(<AddCart id={id}/>)
+        this.props.addPopup(<AddCart id={id} history={this.props.history}/>)
    }
 
     render() {

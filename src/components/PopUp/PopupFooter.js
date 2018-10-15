@@ -1,24 +1,27 @@
 import React from 'react'
-import PropTypes from "prop-types"
+import PropTypes from 'prop-types'
 
-const CartFooter = ({continueText, removePopup}) => {
+const PopupFooter = ({continueText, removePopup, handleContinue}) => {
   return (
     <footer className="add-cart-footer">
       <button className="button" onClick={removePopup}>
         Cancel
       </button>
-      <button className="button green">{continueText}</button>
+      <button className="button green" onClick={handleContinue}>
+        {continueText}
+      </button>
     </footer>
   )
 }
 
-export default CartFooter
+export default PopupFooter
 
-CartFooter.propTypes = {
+PopupFooter.propTypes = {
   continueText: PropTypes.string,
-  removePopup: PropTypes.func
+  removePopup: PropTypes.func,
+  handleContinue: PropTypes.func
 }
 
-CartFooter.defaultProps = {
+PopupFooter.defaultProps = {
   continueText: 'Continue'
 }

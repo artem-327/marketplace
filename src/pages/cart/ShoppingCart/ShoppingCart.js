@@ -5,10 +5,25 @@ import CartWrapper from "../components/CartWrapper/CartWrapper"
 import Button from '../../../components/Button/Button'
 import CartItem from "../components/CartItem/CartItem"
 import ItemCartBody from "../components/ItemCartBody/ItemCartBody"
+import KeepShoppingPopup from "../components/KeepShoppingPopup/KeepShoppingPopup"
 
 class ShoppingCart extends Component {
   componentDidMount(){
     this.props.fetchCartItems()
+  }
+
+  handleContinueShopping = () => {
+    this.props.removePopup()
+    this.props.history.push("/inventory/all-inventory")
+  }
+
+  handleContinue = () => {
+    this.props.history.push("/cart/purchase-order")
+  }
+
+  keepShopping = () => {
+    const {addPopup, removePopup, history} = this.props
+    addPopup(<KeepShoppingPopup removePopup={removePopup} handleContinue={this.handleContinueShopping}/>)
   }
 
   renderSummary(){
@@ -32,7 +47,7 @@ class ShoppingCart extends Component {
     return (
       <div className="app-inner-main">
       <div className="submenu">
-        <div className="submenu-link"> 
+        <div className="submenu-link">
           <i className="fas fa-angle-left"></i>
           <b> Back to Product/Purchase info</b>
         </div>
@@ -42,10 +57,10 @@ class ShoppingCart extends Component {
           {itemContent}
         </CartItem>
         <div>
-          <SummaryTable title="Summary" hasButton={true}>
+          <SummaryTable title="Summary" hasButton={true} handleContinue={this.handleContinue}>
             {this.renderSummary()}
-          </SummaryTable>  
-          <Button size="large" color="light-blue">Keep Shopping</Button>
+          </SummaryTable>
+          <Button size="large" color="light-blue"onClick={this.keepShopping}>Keep Shopping</Button>
         </div>
       </CartWrapper>
     </div>

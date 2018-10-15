@@ -4,14 +4,14 @@ import PopupFooter from './PopupFooter'
 import PopupHeader from './PopupHeader'
 import './popupComponent.css'
 
-const PopupComponent = ({removePopup, footerContinueText, headerTitle, children}) => {
+const PopupComponent = ({removePopup, footerContinueText, headerTitle, children, handleContinue}) => {
     return (
         <div className="popup-component">
         <PopupHeader title={headerTitle} removePopup={removePopup} />
         <div className="popup-component-body">
           {children}
         </div>
-        <PopupFooter continueText={footerContinueText} removePopup={removePopup} />
+        <PopupFooter continueText={footerContinueText} removePopup={removePopup} handleContinue={handleContinue}/>
       </div>
     );
 };
@@ -23,7 +23,8 @@ PopupComponent.propTypes = {
     continueText: PropTypes.string,
     headerTitle: PropTypes.string,
     children: PropTypes.node,
-    removePopup: PropTypes.func
+    removePopup: PropTypes.func,
+    handleContinue: PropTypes.func,
   }
 
   PopupComponent.defaultProps = {
