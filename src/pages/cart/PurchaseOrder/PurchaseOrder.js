@@ -2,9 +2,17 @@ import React, { Component } from 'react'
 import { NavLink } from 'react-router-dom';
 import SummaryTable from "../components/SummaryTable/SummaryTable"
 import CartWrapper from "../components/CartWrapper/CartWrapper"
+import Shipping from "./components/Shipping"
 import CartItem from "../components/CartItem/CartItem"
+import Button from '../../../components/Button/Button'
+import CartItemSummary from './components/CartItemSummary'
+import "./PurchaseOrder.css"
 
-export default class PurchaseOrder extends Component {
+class PurchaseOrder extends Component {
+  componentDidMount(){
+    this.props.fetchCartItems()
+    this.props.fetchDeliveryAddresses()
+  }
   //TODO:: same function in Shopping cart, define it just at one place   
   renderSummary() {
     return (
@@ -36,6 +44,8 @@ export default class PurchaseOrder extends Component {
   }
 
   render() {
+    const {cartItems} = this.props;
+    const itemContent = cartItems.map(cartItem => <CartItemSummary  cartItem={cartItem}/>);
     return (
       <div className="app-inner-main">
         <div className="submenu">
@@ -48,11 +58,7 @@ export default class PurchaseOrder extends Component {
         </div>
         <CartWrapper mainTitle="Purchase Order">
           <div>
-            <CartItem headerTitle="1. Shipping">
-              <div className="purchase-order-section">
-                <div>Shipping Address</div>
-              </div>
-            </CartItem>
+            <Shipping warehouses={this.props.warehouses} dispatch={this.props.dispatch}/>
 
             <CartItem headerTitle="2. Payment">
               <div className="purchase-order-section">
@@ -63,7 +69,11 @@ export default class PurchaseOrder extends Component {
             <CartItem headerTitle="3. Terms and Agreement">
               <div className="purchase-order-section">
                 <div>Legal Language</div>
-                <div>Terms and Agreement</div></div>
+                <div>Terms and Agreement</div>
+                <footer className="add-cart-footer">
+                  <Button color="blue">Place order</Button>
+                </footer>
+                </div>  
             </CartItem>
 
           </div>
@@ -72,7 +82,7 @@ export default class PurchaseOrder extends Component {
               {this.renderSummary()}
             </SummaryTable>
             <SummaryTable title="Your Cart">
-              {this.renderCartSummary()}
+              {itemContent}
             </SummaryTable>
           </div>
         </CartWrapper></div>
@@ -80,3 +90,4 @@ export default class PurchaseOrder extends Component {
   }
 }
 
+export default PurchaseOrder;

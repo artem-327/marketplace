@@ -1,0 +1,5 @@
+.purchase-order-section footer {
+  display: flex;
+  justify-content: flex-end; }
+  .purchase-order-section footer button {
+    margin-left: 15px; }

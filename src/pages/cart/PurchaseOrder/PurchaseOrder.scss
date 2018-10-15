@@ -1,0 +1,11 @@
+@import "../../../styles/main.scss";
+
+.purchase-order-section {
+    footer {
+        display: flex;
+        justify-content: flex-end;
+        button {
+            margin-left: 15px;
+        }
+    }
+}

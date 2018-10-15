@@ -3,7 +3,7 @@ import Button from '../../../../components/Button/Button'
 
 const ItemCartBody = ({cartItem}) => {
   const {productOffer} = cartItem;
-  const location = productOffer.warehouse.address.province.name;
+  //const location = productOffer.warehouse.address.province.name;
   return (
     <div className="item-cart">
       <div className="item-cart-body">
@@ -15,10 +15,10 @@ const ItemCartBody = ({cartItem}) => {
             Merchant: {productOffer.merchant.email}
         </div>
           <div>
-            Location:{location}
+            Location: location (!!)
         </div>
           <div>
-            Price Per Lb: productOffer.pricing.price (?)
+            Price Per Lb: {productOffer.pricing.price}
         </div>
           <div>
             Total Weight: quantity * neco (?)
