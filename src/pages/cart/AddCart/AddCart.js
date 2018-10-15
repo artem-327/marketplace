@@ -15,7 +15,7 @@ class AddCart extends Component {
   render() {
     const {cart, removePopup, isFetching} = this.props
     if (isFetching) return <Spinner />
-    const location = `${cart.warehouse.location.country}, ${cart.warehouse.location.state}` //imho location should return state and city...(just US market?)
+    const location = cart.warehouse.address.province.name;
     const unit = getUnit(cart.packaging.unit.name)
     const packageSize = `${cart.packaging.capacity} ${unit}${cart.packaging.capacity > 1 && 's'}`
     return (
