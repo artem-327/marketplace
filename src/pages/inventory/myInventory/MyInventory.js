@@ -18,7 +18,7 @@ class MyInventory extends Component {
             currentSelected: 'All companies',
             selections: [
                 {name: 'All companies', id: GROUP_BY_ALL_COMPANIES},
-                {name: 'Region', id: GROUP_BY_REGIONS}
+                // {name: 'Region', id: GROUP_BY_REGIONS}
             ]
         };
     }
@@ -90,6 +90,8 @@ class MyInventory extends Component {
                 targetGroups={this.state.targetGroups}
                 setFilter={(type) => this.setFilter(type)}
                 history={this.props.history}
+                selections={this.state.selections}
+                currentSelected={this.state.currentSelected}
                 setActiveBroadcastButton={active => this.setActiveBroadcastButton(active)}
                 broadcastActive={this.state.brActive}/>;
         return (

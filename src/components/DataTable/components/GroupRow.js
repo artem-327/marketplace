@@ -33,7 +33,7 @@ class GroupRow extends Component {
                     <td  className="group-header" colSpan={(this.props.headers.length)} >{this.props.group}
                     <span className="data-table-group-count">{this.props.countLabel ? this.props.countLabel + this.props.rows.length : null} {this.state.open ? <i className="icon fas fa-angle-down"/> : <i className="icon fas fa-angle-up"/>}</span></td></tr>
                 {this.state.open ? this.props.rows.map((row, index) => (
-                    <Row selectable={this.props.selectable} id={row.id} contextMenu={this.props.contextMenu} headers={this.props.headers} data={row} selectFunc={this.props.selectFunc} groupId={this.props.index} key={index}/>
+                    <Row selectable={this.props.selectable} id={row.id} rowComponent={this.props.rowComponent} contextMenu={this.props.contextMenu} headers={this.props.headers} data={row} selectFunc={this.props.selectFunc} groupId={this.props.index} key={index}/>
                 )) : null}
             </React.Fragment>
         )

@@ -42,6 +42,7 @@ class DataTable extends Component {
             <Rows data={this.props.dataTable.rows}
                   selectable={this.props.selectable}
                   contextMenu={this.props.contextMenu}
+                  rowComponent={this.props.rowComponent}
                   headers={this.props.dataTable.header}
                   selectGroupFunc={(groupId, rows) => this.props.selectGroup(this.props.id, groupId, rows)}
                   selectFunc={(groupId, rowId, value) => this.props.selectRow(this.props.id, groupId, rowId, value)}
@@ -68,7 +69,7 @@ DataTable.propTypes = {
         })
     ),
     sortFunc: PropTypes.func,
-
+    rowComponent: PropTypes.element
 };
 
 export default DataTable;

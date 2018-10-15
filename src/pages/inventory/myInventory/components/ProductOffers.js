@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './ProductOffers.css';
 import DataTable from "../../../../components/DataTable";
+import BroadcastRule from "./BroadcastRule";
 
 class ProductOffers extends Component {
 
@@ -54,11 +55,23 @@ class ProductOffers extends Component {
                            contextMenu={
                                [
                                    {action: (id)=>this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'Edit Listing',},
-                                   {action: (id, callback)=>callback(id), label: 'Custom Broadcast'},
-                                   {action: (id)=>console.log('delete'), label: 'Delete Listing'}
+                                   {action: (id, callback, e)=>callback(e), label: 'Custom Broadcast'},
+                                   // {action: (id)=>console.log('delete'), label: 'Delete Listing'}
                                ]
                            }
                            rowsInit={rowInit}
+                           rowComponent={<BroadcastRule
+                               brRef={this.broadcastRef}
+                               submitRules={this.props.submitRules}
+                               addPopup={this.props.addPopup}
+                               removePopup={this.props.removePopup}
+                               getProductOffers={this.props.getProductOffers}
+                               targetGroups={this.props.targetGroups}
+                               selections={this.props.selections}
+                               setFilter={(type) => this.props.setFilter(type)}
+                               currentSelected={this.props.currentSelected}
+                               productOffersSelection={this.state.productOffersSelection}
+                               setActiveBroadcastButton={active => this.props.setActiveBroadcastButton(active)}/>}
                 />
             </div>
         );
