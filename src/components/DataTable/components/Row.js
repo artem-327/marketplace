@@ -36,12 +36,12 @@ class Row extends Component {
         return (
             <React.Fragment>
                 <tr>
-                    {this.props.selectable ? <td className="data-table-select"><CheckboxControlled value={this.props.data.selected} onChange={(value) => this.props.selectFunc(this.props.groupId, this.props.data.index, value)}/></td> : null}
+                    {this.props.selectable ? <td className="data-table-select"><CheckboxControlled value={this.props.rowOpns.selected} onChange={(value) => this.props.selectFunc(this.props.groupId, this.props.rowOpns.index, value)}/></td> : null}
                     {this.props.contextMenu ? <React.Fragment >
                         <td className="data-table-context-td" ref={this.row} onClick={(e)=>this.handleClick(e)}><ThreeDots className={'small'+ classnames({" active": (this.state.openContext)})}/></td>
-                        <td className="data-table-context-holder"><ThreeDotsMenu callback={()=>this.setState({openRowComponent: !this.state.openRowComponent})} id={this.props.data.id} links={this.props.contextMenu} isOpen={this.state.openContext}/></td>
+                        <td className="data-table-context-holder"><ThreeDotsMenu callback={()=>this.setState({openRowComponent: !this.state.openRowComponent})} id={this.props.rowOpns.id} links={this.props.contextMenu} isOpen={this.state.openContext}/></td>
                     </React.Fragment> : null}
-                    {this.props.data.row.map((cell, index) => {
+                    {this.props.data.map((cell, index) => {
                         if (!this.props.headers[index].visible) return null;
                         return <td key={index}>{cell}</td>
                     })}
@@ -49,7 +49,10 @@ class Row extends Component {
                 {this.props.rowComponent && this.state.openRowComponent ?
                     <tr>
                         <td colSpan={this.props.data.row.length + 3}>
-                            {React.cloneElement(this.props.rowComponent, {visible: this.state.openRowComponent, id: this.props.data.id})}
+                            {React.cloneElement(this.props.rowComponent,
+                                {visible: this.state.openRowComponent,
+                                id: this.props.data.id,
+                                closeRowComponent: ()=>this.setState({openRowComponent: false})})}
                         </td>
                     </tr> : null}
             </React.Fragment>

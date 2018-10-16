@@ -19,16 +19,17 @@ class DataTable extends Component {
                 sort: item.sort !== undefined ? item.sort : true,
                 visible: item.visible !== undefined ? item.visible : true,
             }));
-            let rows = this.props.rowsInit.map((item, index) => (
+            let rowsOpns = this.props.rows.map((item, index) => (
                 {
                     ...item,
                     index: index,
-                    rows: item.rows.map((row, index2)=>({selected: false, index: index2, row: row.data, id: row.id}))
+                    rows: item.rows.map((row, index2)=>({selected: false, index: index2, id: row.id}))
                 }
             ));
-            this.props.initDataTable(this.props.id, header, rows);
+            this.props.initDataTable(this.props.id, header, rowsOpns);
         }
     }
+
 
     render() {
         if(!this.props.dataTable) return null;
@@ -39,7 +40,8 @@ class DataTable extends Component {
                     contextMenu={this.props.contextMenu && this.props.contextMenu.length !== 0}
                     toggleColumn={(headerId, value) => this.props.toggleVisibleColumn(this.props.id, headerId, value)}
                     selectable={this.props.selectable}/>
-            <Rows data={this.props.dataTable.rows}
+            <Rows rows={this.props.rows}
+                  rowsOpns={this.props.dataTable.rowsOpns}
                   selectable={this.props.selectable}
                   contextMenu={this.props.contextMenu}
                   rowComponent={this.props.rowComponent}
@@ -57,7 +59,10 @@ DataTable.propTypes = {
     selectable: PropTypes.bool,
     contextMenu: PropTypes.array,
     selectGroupFunc: PropTypes.func,
-    rowsInit: PropTypes.arrayOf(
+    rows: PropTypes.arrayOf(
+        PropTypes.object
+    ),
+    rowsOpns: PropTypes.arrayOf(
         PropTypes.object
     ),
     headerInit: PropTypes.arrayOf(

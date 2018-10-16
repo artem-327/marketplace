@@ -4,12 +4,25 @@
   width: calc(100% - 40px);
   background-color: white;
   display: none; }
+  .broadcast-rule .close-mark-br {
+    display: block;
+    position: absolute;
+    right: 25px;
+    top: 15px;
+    color: #4e5157;
+    font-size: 2.2rem;
+    transition: all .2s ease;
+    transform: rotate(0deg); }
+    .broadcast-rule .close-mark-br:hover {
+      cursor: pointer;
+      transform: rotate(-180deg); }
   .broadcast-rule .br-header {
     color: #4e5157;
     font-size: 1.6rem; }
   .broadcast-rule .header-section {
     padding: 20px;
-    display: block; }
+    display: block;
+    position: relative; }
   .broadcast-rule .dropdown-wr {
     max-width: 300px;
     margin: 0 0 20px 20px; }

@@ -38,19 +38,19 @@ class Header extends Component {
     }
 
     selectTable(value){
-        let rows = this.props.data.rows.map((r)=>({
+        let rowsOpns = this.props.data.rowsOpns.map((r)=>({
             ...r,
-            rows: r.rows.map((r2)=>({
+            rowsOpns: r.rowsOpns.map((r2)=>({
                 ...r2, selected: value
             }))}
         ));
-        this.props.selectTable(rows);
+        this.props.selectTable(rowsOpns);
     }
 
     isSelected(){
-        for(let i = 0; i < this.props.data.rows.length; i++){
-            for(let j = 0; j < this.props.data.rows[i].rows.length; j++){
-                if(!this.props.data.rows[i].rows[j].selected) return false
+        for(let i = 0; i < this.props.data.rowsOpns.length; i++){
+            for(let j = 0; j < this.props.data.rowsOpns[i].rowsOpns.length; j++){
+                if(!this.props.data.rowsOpns[i].rowsOpns[j].selected) return false
             }
         }
         return true

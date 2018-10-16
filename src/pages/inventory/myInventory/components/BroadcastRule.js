@@ -33,6 +33,10 @@ class BroadcastRule extends Component {
         this.setState({isOpen: false})
     }
 
+    closeBroadcastRule(){
+        if(this.props.closeRowComponent) this.props.closeRowComponent();
+    }
+
     render() {
         return (
             <div ref={this.props.brRef} className={classnames("broadcast-rule", {'open': this.props.visible})}>
@@ -41,6 +45,7 @@ class BroadcastRule extends Component {
                         <span className="left header-section">
                             <h1 className='br-header'>CUSTOM BROADCAST</h1>
                             <div className='br-target'>Broadcasting to: x/x</div>
+                             <i className="fas fa-times close-mark-br" onClick={()=>this.closeBroadcastRule()} />
                         </span>
                     </div>
                     <div>
