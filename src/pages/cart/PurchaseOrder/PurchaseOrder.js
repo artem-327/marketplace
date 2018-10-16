@@ -120,7 +120,7 @@ class PurchaseOrder extends Component {
 export default PurchaseOrder;
 
 PurchaseOrder.propTypes = {
-  cartItem: PropTypes.array,
+  cartItem: PropTypes.object,
   deliveryAddresses: PropTypes.array,
   dispatch: PropTypes.func,
   fetchCartItems: PropTypes.func,

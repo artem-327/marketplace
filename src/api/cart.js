@@ -5,6 +5,7 @@ const api = {
     fetchCartItems: () => axios.get('/api/25tjry/cart/').then(response => response.data.data.cart),
     fetchDeliveryAddresses: () => axios.get('/api/51zjrk/delivery-addresses/').then(response => response.data.data),
     removeProductFromCart: (id) => axios.delete(`api/jdr9gj/cart/${id}/`),
+    createCartItem: (product) => axios.post('api/tz6pap/cart/', product),
 };
 
 export default api;

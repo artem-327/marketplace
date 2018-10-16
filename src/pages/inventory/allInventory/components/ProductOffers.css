@@ -32,6 +32,7 @@
     .all-product-offers .product-offer button {
       padding: 3px 20px;
       color: white;
+      cursor: pointer;
       background-color: #00c500;
       border-radius: 3px;
       border: 0; }

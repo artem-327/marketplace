@@ -51,6 +51,6 @@ const ItemCartBody = ({cartItem, removeProductFromCart}) => {
 export default ItemCartBody;
 
 ItemCartBody.propTypes = {
-  cartItem: PropTypes.array,
+  cartItem: PropTypes.object,
   removeProductFromCart: PropTypes.func
 }

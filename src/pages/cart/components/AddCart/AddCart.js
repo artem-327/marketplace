@@ -12,16 +12,16 @@ class AddCart extends Component {
     this.props.getProductOffer(this.props.id)
   }
 
+  //TODO Fix cart to send edited data
   handleContinue = () => {
-    const {removePopup} = this.props;
-    //todo Create new cart item /api/tz6pap/cart/ and then history.push
-    removePopup()
+    const {removePopup, createCartItem} = this.props;
+    createCartItem(this.props.cart)
     this.props.history.push("/cart/shopping-cart")
-
+    removePopup()
   }
 
   render() {
-    const {cart, removePopup, isFetching} = this.props
+    const {cart, removePopup, isFetching} = this.props;
     if (isFetching) return <Spinner />
     const location = cart.warehouse.address.province.name;
     const unit = getUnit(cart.packaging.unit.name)
@@ -97,8 +97,9 @@ class AddCart extends Component {
 export default AddCart
 
 AddCart.propTypes = {
+  cart: PropTypes.object,
+  createCartItem: PropTypes.func,
   id: PropTypes.number,
-  cart: PropTypes.node,
   isFetching: PropTypes.bool,
-  removePopup: PropTypes.func
+  removePopup: PropTypes.func,
 }

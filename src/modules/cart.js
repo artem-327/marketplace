@@ -3,11 +3,12 @@ import {
     CARTITEMS_FETCH_SUCCEEDED, CARTITEMS_FETCH_REQUESTED,
     DELIVERYADDRESSES_FETCH_SUCCEEDED,
     DELIVERYADDRESSES_FETCH_REQUESTED,
-    PRODUCTFROMCART_REMOVE_REQUESTED
+    PRODUCTFROMCART_REMOVE_REQUESTED,
+    CARTITEM_CREATE_REQUESTED
 } from "../constants/cart";
 
 export const initialState = {
-    offers: [],
+    offers: {},
     cartItems: [],
     deliveryAddresses: [],
     isFetching: true,
@@ -79,4 +80,8 @@ export function fetchDeliveryAddresses(){
 
 export function removeProductFromCart(id) {
     return {type: PRODUCTFROMCART_REMOVE_REQUESTED, payload: {id}}
+}
+
+export function createCartItem(product) {
+    return {type: CARTITEM_CREATE_REQUESTED, payload: {product}}
 }
