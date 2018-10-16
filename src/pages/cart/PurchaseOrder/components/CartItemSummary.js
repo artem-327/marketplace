@@ -24,6 +24,6 @@ const CartItemSummary = ({cartItem,  removeProductFromCart}) => {
 export default CartItemSummary;
 
 CartItemSummary.propTypes = {
-  cartItem: PropTypes.array,
+  cartItem: PropTypes.object,
   removeProductFromCart: PropTypes.func
 }

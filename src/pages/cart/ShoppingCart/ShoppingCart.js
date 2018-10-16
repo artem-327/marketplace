@@ -41,8 +41,17 @@ class ShoppingCart extends Component {
   }
 
   render() {
-    const {cartItems, removeProductFromCart} = this.props;
-    const itemContent = cartItems.map(cartItem => <ItemCartBody key={cartItem.productOffer.id} cartItem={cartItem} removeProductFromCart={removeProductFromCart}/>);
+    const {cartItems, removeProductFromCart, history, addPopup} = this.props;
+    const itemContent = cartItems.map(cartItem => {
+    return (
+      <ItemCartBody 
+        addPopup={addPopup} 
+        history={history} 
+        key={cartItem.productOffer.id} 
+        cartItem={cartItem} 
+        removeProductFromCart={removeProductFromCart} 
+        />)
+  });
     const itemsNumber = cartItems.length;
     const headerTitle = `Items (${itemsNumber})`
     return (
