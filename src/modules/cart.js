@@ -2,7 +2,8 @@ import {
     OFFER_FETCH_SUCCEEDED, OFFER_FETCH_REQUESTED,
     CARTITEMS_FETCH_SUCCEEDED, CARTITEMS_FETCH_REQUESTED,
     DELIVERYADDRESSES_FETCH_SUCCEEDED,
-    DELIVERYADDRESSES_FETCH_REQUESTED
+    DELIVERYADDRESSES_FETCH_REQUESTED,
+    PRODUCTFROMCART_REMOVE_REQUESTED
 } from "../constants/cart";
 
 export const initialState = {
@@ -62,7 +63,7 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-export function getCurrentAdded(id) {
+export function getProductOffer(id) {
     return {
         type: OFFER_FETCH_REQUESTED, payload: {id}
     }
@@ -74,4 +75,8 @@ export function fetchCartItems(){
 
 export function fetchDeliveryAddresses(){
     return {type: DELIVERYADDRESSES_FETCH_REQUESTED}
+}
+
+export function removeProductFromCart(id) {
+    return {type: PRODUCTFROMCART_REMOVE_REQUESTED, payload: {id}}
 }

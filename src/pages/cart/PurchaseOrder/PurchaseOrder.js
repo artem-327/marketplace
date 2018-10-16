@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from "prop-types"
 import { NavLink } from 'react-router-dom';
 import SummaryTable from "../components/SummaryTable/SummaryTable"
 import CartWrapper from "../components/CartWrapper/CartWrapper"
@@ -57,8 +58,15 @@ class PurchaseOrder extends Component {
   }
 
   render() {
-    const {cartItems, deliveryAddresses, dispatch, selectedAddressId} = this.props;
-    const itemContent = cartItems.map(cartItem => <CartItemSummary  cartItem={cartItem}/>);
+    const {cartItems, deliveryAddresses, dispatch, selectedAddressId, removeProductFromCart} = this.props;
+    const itemContent = cartItems.map(cartItem => {
+      return (
+      <CartItemSummary 
+        removeProductFromCart={removeProductFromCart} 
+        cartItem={cartItem}
+        key={cartItem.productOffer.id}
+      />)
+    });
     return (
       <div className="app-inner-main">
         <div className="submenu">
@@ -110,3 +118,13 @@ class PurchaseOrder extends Component {
 }
 
 export default PurchaseOrder;
+
+PurchaseOrder.propTypes = {
+  cartItem: PropTypes.array,
+  deliveryAddresses: PropTypes.array,
+  dispatch: PropTypes.func,
+  fetchCartItems: PropTypes.func,
+  fetchDeliveryAddresses: PropTypes.func,
+  removeProductFromCart: PropTypes.func,
+  selectedAddressId: PropTypes.number,
+}

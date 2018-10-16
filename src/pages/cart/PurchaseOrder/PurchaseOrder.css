@@ -7,3 +7,14 @@
 .purchase-order-section .text-section > div {
   margin: 10px 0;
   color: #4E5157; }
+
+.cart-item-summary:not(:last-child) {
+  border-bottom: 2px solid #E7E7E7;
+  margin-bottom: 15px;
+  padding-bottom: 15px; }
+
+.remove {
+  color: #329ED6;
+  cursor: pointer;
+  display: block;
+  float: right; }

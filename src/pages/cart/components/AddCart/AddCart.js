@@ -9,7 +9,7 @@ import './AddCart.css';
 
 class AddCart extends Component {
   componentDidMount() {
-    this.props.getCurrentAdded(this.props.id)
+    this.props.getProductOffer(this.props.id)
   }
 
   handleContinue = () => {

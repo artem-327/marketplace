@@ -13,3 +13,16 @@
         color: $grey-color;
     }
 }
+
+.cart-item-summary:not(:last-child) {
+    border-bottom: 2px solid $beige-color;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+}
+
+.remove {
+    color: $blue-color;
+    cursor: pointer;
+    display: block;
+    float: right;
+}

@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from "prop-types";
 import Button from '../../../../components/Button/Button'
 
-const ItemCartBody = ({cartItem}) => {
+const ItemCartBody = ({cartItem, removeProductFromCart}) => {
   const {productOffer} = cartItem;
   //const location = productOffer.warehouse.address.province.name;
   return (
@@ -40,7 +41,7 @@ const ItemCartBody = ({cartItem}) => {
         </div>
       </div>
       <footer className="add-cart-footer">
-        <Button color="grey">Remove</Button>
+        <Button color="grey" onClick={() => removeProductFromCart(productOffer.id)}>Remove</Button>
         <Button color="blue">Edit</Button>
       </footer>
     </div>
@@ -48,3 +49,8 @@ const ItemCartBody = ({cartItem}) => {
 };
 
 export default ItemCartBody;
+
+ItemCartBody.propTypes = {
+  cartItem: PropTypes.array,
+  removeProductFromCart: PropTypes.func
+}

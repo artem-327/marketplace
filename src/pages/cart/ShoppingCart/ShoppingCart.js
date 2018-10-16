@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from "prop-types";
 import "./ShoppingCart.css"
 import SummaryTable from "../components/SummaryTable/SummaryTable"
 import CartWrapper from "../components/CartWrapper/CartWrapper"
@@ -22,7 +23,7 @@ class ShoppingCart extends Component {
   }
 
   keepShopping = () => {
-    const {addPopup, removePopup, history} = this.props
+    const {addPopup, removePopup} = this.props
     addPopup(<KeepShoppingPopup removePopup={removePopup} handleContinue={this.handleContinueShopping}/>)
   }
 
@@ -40,8 +41,8 @@ class ShoppingCart extends Component {
   }
 
   render() {
-    const {cartItems} = this.props;
-    const itemContent = cartItems.map(cartItem => <ItemCartBody key={cartItem.productOffer.id} cartItem={cartItem}/>);
+    const {cartItems, removeProductFromCart} = this.props;
+    const itemContent = cartItems.map(cartItem => <ItemCartBody key={cartItem.productOffer.id} cartItem={cartItem} removeProductFromCart={removeProductFromCart}/>);
     const itemsNumber = cartItems.length;
     const headerTitle = `Items (${itemsNumber})`
     return (
@@ -69,3 +70,11 @@ class ShoppingCart extends Component {
 }
 
 export default ShoppingCart;
+
+ShoppingCart.propTypes = {
+  addPopup: PropTypes.func,
+  cartItem: PropTypes.array,
+  history: PropTypes.object,
+  removePopup: PropTypes.func,
+  removeProductFromCart: PropTypes.func,
+}

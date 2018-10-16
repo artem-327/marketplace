@@ -3,12 +3,13 @@ import Api from '../../../api/cart';
 import {
     OFFER_FETCH_SUCCEEDED, OFFER_FETCH_FAILED, OFFER_FETCH_REQUESTED,
     CARTITEMS_FETCH_SUCCEEDED, CARTITEMS_FETCH_FAILED, CARTITEMS_FETCH_REQUESTED,
-    DELIVERYADDRESSES_FETCH_REQUESTED, DELIVERYADDRESSES_FETCH_FAILED, DELIVERYADDRESSES_FETCH_SUCCEEDED
+    DELIVERYADDRESSES_FETCH_REQUESTED, DELIVERYADDRESSES_FETCH_FAILED, DELIVERYADDRESSES_FETCH_SUCCEEDED,
+    PRODUCTFROMCART_REMOVE_REQUESTED, PRODUCTFROMCART_REMOVE_FAILED, PRODUCTFROMCART_REMOVE_SUCCEEDED
 } from "../../../constants/cart";
 
-function* getCurrentAdded(action) {
+function* getProductOffer(action) {
     try {
-        const offers = yield call(Api.getCurrentAdded, action.payload.id);
+        const offers = yield call(Api.getProductOffer, action.payload.id);
         yield put({type: OFFER_FETCH_SUCCEEDED, payload: offers});
     } catch (e) {
         yield put({type: OFFER_FETCH_FAILED, message: e.message});
@@ -33,10 +34,23 @@ function* fetchDeliveryAddresses() {
     }
 }
 
+
+function* removeProductFromCart(action) {
+    try {
+        yield call(Api.removeProductFromCart, action.payload.id);
+        yield put({type: PRODUCTFROMCART_REMOVE_SUCCEEDED});
+        const cart = yield call(Api.fetchCartItems);
+        yield put({type: CARTITEMS_FETCH_SUCCEEDED, payload: cart});
+    } catch (e) {
+        yield put({type: PRODUCTFROMCART_REMOVE_FAILED, message: e.message});
+    }
+}
+
 function* cartSaga() {
-    yield takeEvery(OFFER_FETCH_REQUESTED, getCurrentAdded);
+    yield takeEvery(OFFER_FETCH_REQUESTED, getProductOffer);
     yield takeEvery(CARTITEMS_FETCH_REQUESTED, fetchCartItems);
     yield takeEvery(DELIVERYADDRESSES_FETCH_REQUESTED, fetchDeliveryAddresses);
+    yield takeEvery(PRODUCTFROMCART_REMOVE_REQUESTED, removeProductFromCart);
 }
 
 export default cartSaga;
