@@ -3,12 +3,12 @@ import './ProductOffers.css';
 import Checkbox from "../../../../components/Checkbox/Checkbox";
 import ThreeDots from "../../../../components/ThreeDots/ThreeDots";
 import ProductOfferItem from "./ProductOfferItem";
+import DataTable from "../../../../components/DataTable";
 
 class ProductOffers extends Component {
 
     constructor(props) {
         super(props);
-        this.toggleProduct = this.toggleProduct.bind(this);
         this.state = {
             products: this.groupProductOffers(this.props.productOffers),
             isOpen: false,
@@ -27,23 +27,28 @@ class ProductOffers extends Component {
         }, {});
     }
 
-    toggleProduct(e, productId){
-        this.setState({
-            products: {
-                ...this.state.products,
-                [productId]:{
-                    ...this.state.products[productId],
-                    visible: !this.state.products[productId].visible
-                }
-            }
-        })
-    }
-
-    // toggleBroadcastRule(e, id){
-    //     if(this.props.toggleBroadcastRule) this.props.toggleBroadcastRule(true, {x: e.clientX, y: e.clientY - 90}, id)
-    // }
-
     render() {
+        if(this.props.productOffers.length === 0) return null;
+        let rowInit = Object.values(this.state.products).map((product) => {
+                return {
+                    group: product.casIndexName,
+                    countLabel: 'Product Offerings: ',
+                    rows: product.productOffers.map((offer)=>({
+                        id: offer.id,
+                        data: [offer.product.casIndexName,
+                            offer.packaging.amount.formatNumber(),
+                            offer.packaging.container.name,
+                            offer.packaging.capacity,
+                            (parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber(),
+                            "$ " + offer.pricing.cost.formatMoney(2),
+                            "$ " + offer.pricing.price.formatMoney(2),
+                            offer.name,
+                            offer.manufacturer.name,
+                            offer.productCondition.name,
+                            'Unknown']
+                    }))
+                };
+            });
         return (
             <div className="App">
                 <table className="product-offers">

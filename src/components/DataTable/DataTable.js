@@ -1,126 +1,74 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
-import Checkbox from "../../components/Checkbox/Checkbox";
+import Header from "./components/Header";
+import Rows from "./components/Rows";
+import './dataTable.css';
 
 class DataTable extends Component {
-    constructor(props) {
+
+    constructor(props){
         super(props);
-        this.handleHeaderChecked = this.handleHeaderChecked.bind(this);
-        this.state = {
-            checkboxes: this.props.checkboxes,
-            bodyGroups: this.props.bodyGroups,
-            header: this.props.header,
-            headerChecked: this.props.headerChecked,
-        };
+        this.initDataTable();
     }
 
-    handleHeaderChecked(checked){
-        console.log(checked);
+    initDataTable(){
+        if(!this.props.dataTable){
+            let header = this.props.headerInit.map((item, index) => ({
+                index: index,
+                name: item.name,
+                sort: item.sort !== undefined ? item.sort : true,
+                visible: item.visible !== undefined ? item.visible : true,
+            }));
+            let rows = this.props.rowsInit.map((item, index) => (
+                {
+                    ...item,
+                    index: index,
+                    rows: item.rows.map((row, index2)=>({selected: false, index: index2, row: row.data, id: row.id}))
+                }
+            ));
+            this.props.initDataTable(this.props.id, header, rows);
+        }
     }
-
-    handleBodyChecked(bodyKey, checked) {
-
-    }
-
-    handleGroupChecked(groupId, checked) {
-
-    }
-
-    handleHeaderReorder(cell, order) {
-
-    }
-
-    componentWillReceiveProps(props){
-        console.log(props);
-        console.log(this.state);
-    }
-
-    componentWillMount(){
-    }
-
-    componentWillUnmount(){
-    }
-
-    renderHeader() {
-        let head = [];
-        this.state.header.forEach((item,index) => {
-            head.push(<th key={index}>{item}</th>)
-        });
-
-        return (<thead>
-        <tr>
-            <th className="checkbox">
-                <Checkbox name="checkboxAll"
-                          onChange={(value) => {this.handleHeaderChecked(value)}}
-                          checked={this.state.headerChecked}/>
-            </th>
-            {head}
-        </tr>
-        </thead>);
-    }
-
 
     render() {
-        return (
-            <div className='data-table'>
-                <table>
-                    {this.renderHeader()}
-                    {this.renderBodyGroup(this.state.bodyGroups[0])}
-                </table>
-            </div>
-        );
-    }
-
-    renderBodyGroup(group) {
-
-        return (
-            <tbody>
-            <tr className="product">
-                <td colspan="10" className="checkbox-group">
-                    <Checkbox className="checkbox"/>
-                    <span>
-                            {group.id}
-                            </span>
-                    <span>
-                            {group.name}
-                            </span>
-                </td>
-            </tr>
-            {this.renderBodyGroupData(group.data)}
-            </tbody>);
-    }
-    renderBodyGroupRow(data){
-        let cells = [];
-        data.forEach((item,index) => {
-            cells.push(<td key={index}>{item}</td>)
-        });
-
-        return (
-            <tr>
-                <td>
-                    <Checkbox name="row-checkbox"
-                    />
-                </td>
-                {cells}
-            </tr>
-        );
-    }
-    renderBodyGroupData(data){
-        let rows = [];
-        data.forEach((item,index) => {
-            rows.push(this.renderBodyGroupRow(item))
-        });
-
-        return rows;
+        if(!this.props.dataTable) return null;
+        return <div className="data-table-wr"><table className="data-table">
+            <Header data={this.props.dataTable}
+                    sortFunc={this.props.sortFunc}
+                    selectTable={(rows)=>this.props.selectDataTable(this.props.id, rows)}
+                    contextMenu={this.props.contextMenu && this.props.contextMenu.length !== 0}
+                    toggleColumn={(headerId, value) => this.props.toggleVisibleColumn(this.props.id, headerId, value)}
+                    selectable={this.props.selectable}/>
+            <Rows data={this.props.dataTable.rows}
+                  selectable={this.props.selectable}
+                  contextMenu={this.props.contextMenu}
+                  headers={this.props.dataTable.header}
+                  selectGroupFunc={(groupId, rows) => this.props.selectGroup(this.props.id, groupId, rows)}
+                  selectFunc={(groupId, rowId, value) => this.props.selectRow(this.props.id, groupId, rowId, value)}
+            />
+        </table></div>
     }
 }
 
 DataTable.propTypes = {
-    checkboxes: PropTypes.array,
-    bodyGroups: PropTypes.object,
-    header: PropTypes.array,
-    tableOrder: PropTypes.string,
-    headerChecked: PropTypes.bool,
+    dataTable: PropTypes.any,
+    id: PropTypes.string,
+    selectable: PropTypes.bool,
+    contextMenu: PropTypes.array,
+    selectGroupFunc: PropTypes.func,
+    rowsInit: PropTypes.arrayOf(
+        PropTypes.object
+    ),
+    headerInit: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string,
+            name: PropTypes.string,
+            sort: PropTypes.bool,
+            visible: PropTypes.bool,
+        })
+    ),
+    sortFunc: PropTypes.func,
+
 };
 
 export default DataTable;

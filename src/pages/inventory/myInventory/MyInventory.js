@@ -90,6 +90,7 @@ class MyInventory extends Component {
                 selections={this.state.selections}
                 setFilter={(type) => this.setFilter(type)}
                 currentSelected={this.state.currentSelected}
+                history={this.props.history}
                 setActiveBroadcastButton={active => this.setActiveBroadcastButton(active)}
                 broadcastActive={this.state.brActive}/>;
         return (
