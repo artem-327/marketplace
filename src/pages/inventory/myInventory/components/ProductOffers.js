@@ -27,9 +27,9 @@ class ProductOffers extends Component {
 
     render() {
         if(this.props.productOffers.length === 0) return null;
-        let rowInit = Object.values(this.state.products).map((product) => {
+        let rows = Object.values(this.state.products).map((product) => {
                 return {
-                    group:  <React.Fragment><span className="product-casnumber">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></React.Fragment>,
+                    group:  <React.Fragment><span className="product-casnumber ">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></React.Fragment>,
                     countLabel: 'Product Offerings: ',
                     rows: product.productOffers.map((offer)=>({
                         id: offer.id,
@@ -50,6 +50,7 @@ class ProductOffers extends Component {
         return (<div className="App">
                 <DataTable id="myInventoryTable"
                            selectable
+                           isFetching={this.props.isFetching}
                            sortFunc={(nameColumn) => console.log(nameColumn)}
                            headerInit={[{name: 'Product Name'}, {name: 'Available'}, {name: 'Packaging'}, {name: 'Pkg. size'}, {name: 'Quantity'}, {name: 'Cost'}, {name: 'FOB Price'}, {name: 'Trade Name'}, {name: 'MFR.'}, {name: 'Condition'}, {name: 'MFG Date'}]}
                            contextMenu={
@@ -59,7 +60,7 @@ class ProductOffers extends Component {
                                    // {action: (id)=>console.log('delete'), label: 'Delete Listing'}
                                ]
                            }
-                           rowsInit={rowInit}
+                           rows={rows}
                            rowComponent={<BroadcastRule
                                brRef={this.broadcastRef}
                                submitRules={this.props.submitRules}

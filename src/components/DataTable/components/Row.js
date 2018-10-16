@@ -48,10 +48,10 @@ class Row extends Component {
                 </tr>
                 {this.props.rowComponent && this.state.openRowComponent ?
                     <tr>
-                        <td colSpan={this.props.data.row.length + 3}>
+                        <td colSpan={this.props.data.length + 3}>
                             {React.cloneElement(this.props.rowComponent,
                                 {visible: this.state.openRowComponent,
-                                id: this.props.data.id,
+                                id: this.props.rowOpns.id,
                                 closeRowComponent: ()=>this.setState({openRowComponent: false})})}
                         </td>
                     </tr> : null}

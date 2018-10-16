@@ -1,38 +1,14 @@
 .product-casnumber {
   color: #4e92df !important;
-  margin-right: 10px; }
+  margin-right: 10px;
+  vertical-align: middle; }
 
 .data-table {
   margin-top: 20px; }
 
-.product {
-  border: 2px solid #e3e2df;
-  background-color: #ebeaed;
-  font-weight: bold;
-  text-align: left; }
-  .product td {
-    padding: 5px 10px 5px 10px; }
-  .product .product-name {
-    padding: 0 10px; }
-  .product .icon {
-    padding: 0 10px; }
-  .product .quantity {
-    text-align: right;
-    color: #9b9ca0; }
-
-.product-offer {
-  border-bottom: 2px solid #e3e2df; }
-  .product-offer td {
-    padding: 1px 10px 1px 10px; }
-  .product-offer button {
-    padding: 3px 20px;
-    color: white;
-    background-color: #289ada;
-    border-radius: 3px;
-    border: 0; }
-
-.fa-cog {
-  font-size: 25px; }
+.product-name {
+  padding: 0 10px;
+  vertical-align: middle; }
 
 .broadcast-mark {
   background-color: #b5b5b5;

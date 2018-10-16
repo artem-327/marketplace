@@ -40,7 +40,7 @@ class Header extends Component {
     selectTable(value){
         let rowsOpns = this.props.data.rowsOpns.map((r)=>({
             ...r,
-            rowsOpns: r.rowsOpns.map((r2)=>({
+            rows: r.rows.map((r2)=>({
                 ...r2, selected: value
             }))}
         ));
@@ -49,8 +49,8 @@ class Header extends Component {
 
     isSelected(){
         for(let i = 0; i < this.props.data.rowsOpns.length; i++){
-            for(let j = 0; j < this.props.data.rowsOpns[i].rowsOpns.length; j++){
-                if(!this.props.data.rowsOpns[i].rowsOpns[j].selected) return false
+            for(let j = 0; j < this.props.data.rowsOpns[i].rows.length; j++){
+                if(!this.props.data.rowsOpns[i].rows[j].selected) return false
             }
         }
         return true

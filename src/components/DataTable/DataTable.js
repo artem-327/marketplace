@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import Header from "./components/Header";
 import Rows from "./components/Rows";
 import './dataTable.css';
+import Spinner from "../Spinner/Spinner";
 
 class DataTable extends Component {
 
-    constructor(props){
-        super(props);
+    componentDidMount(){
         this.initDataTable();
     }
 
@@ -32,7 +32,8 @@ class DataTable extends Component {
 
 
     render() {
-        if(!this.props.dataTable) return null;
+        if(!this.props.dataTable || !this.props.rows) return null;
+        if(this.props.isFetching) return <Spinner/>;
         return <div className="data-table-wr"><table className="data-table">
             <Header data={this.props.dataTable}
                     sortFunc={this.props.sortFunc}
