@@ -3,3 +3,7 @@
   justify-content: flex-end; }
   .purchase-order-section footer button {
     margin-left: 15px; }
+
+.purchase-order-section .text-section > div {
+  margin: 10px 0;
+  color: #4E5157; }
