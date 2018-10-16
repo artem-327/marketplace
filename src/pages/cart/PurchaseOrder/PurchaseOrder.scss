@@ -20,9 +20,10 @@
     padding-bottom: 15px;
 }
 
-.remove {
+.headerAddtext {
     color: $blue-color;
     cursor: pointer;
     display: block;
     float: right;
+    text-transform: lowercase;
 }

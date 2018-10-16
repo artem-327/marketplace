@@ -8,7 +8,7 @@ const CartItemSummary = ({cartItem,  removeProductFromCart}) => {
       <div className="cart-item-summary">
         <table>
           <tbody>
-            <tr><td><b>{productOffer.product.casIndexName}</b></td><td><span className="remove" onClick={() => removeProductFromCart(productOffer.id)}>remove</span></td></tr>
+            <tr><td><b>{productOffer.product.casIndexName}</b></td><td><span className="headerAddtext" onClick={() => removeProductFromCart(productOffer.id)}>remove</span></td></tr>
             <tr><td>Merchant</td><td>{productOffer.merchant.email}</td></tr>
             <tr><td>Location</td><td></td></tr>
             <tr><td>Quantity</td><td>{cartItem.quantity} packs</td></tr>

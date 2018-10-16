@@ -20,9 +20,9 @@ const mockAddress = [
   }
 ]
 
-const Shipping = ({deliveryAddresses, dispatch, getAddress, selectedAddress}) => {
+const Shipping = ({deliveryAddresses, dispatch, getAddress, selectedAddress, toggleShippingEdit}) => {
   return (
-    <CartItem headerTitle="1. Shipping">
+    <CartItem headerTitle="1. Shipping" edit="edit" toggleShippingEdit={toggleShippingEdit}>
       <div className="purchase-order-section">
         <div className="group-item-wr">
           <DropdownRedux
@@ -53,4 +53,5 @@ Shipping.propTypes = {
   dispatch: PropTypes.func,
   getAddress: PropTypes.func,
   selectedAddress: PropTypes.object,
+  toggleShippingEdit: PropTypes.func
 }

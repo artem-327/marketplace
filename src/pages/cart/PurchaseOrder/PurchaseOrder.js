@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import SummaryTable from "../components/SummaryTable/SummaryTable"
 import CartWrapper from "../components/CartWrapper/CartWrapper"
 import Shipping from "./components/Shipping"
+import ShippingEdit from "./components/ShippingEdit"
 import Payment from "./components/Payment"
 import CartItem from "../components/CartItem/CartItem"
 import Button from '../../../components/Button/Button'
@@ -14,7 +15,8 @@ const mockAddress = [{"id":5,"name": "adresa1", "first name":"FirstName","last n
 
 class PurchaseOrder extends Component {
   state = {
-    selectedAddress: {}
+    selectedAddress: {},
+    isShippingEdit: false
   }
 
   componentDidMount(){
@@ -26,7 +28,13 @@ class PurchaseOrder extends Component {
     const {deliveryAddresses} = this.props;
     const selectedAddress = mockAddress.find(i => i.id === selectedAddressId);
     this.setState({selectedAddress});
-}
+  }
+
+  toggleShippingEdit = () => {
+    this.setState(prevState => ({
+      isShippingEdit: !prevState.isShippingEdit
+    }));
+  }
 
   //TODO:: same function in Shopping cart, define it just at one place
   renderSummary() {
@@ -80,13 +88,17 @@ class PurchaseOrder extends Component {
         </div>
         <CartWrapper mainTitle="Purchase Order">
           <div>
-            <Shipping
+            {this.state.isShippingEdit ? <ShippingEdit
+                toggleShippingEdit={this.toggleShippingEdit}
+              />
+              : <Shipping
               deliveryAddresses={deliveryAddresses}
               dispatch={dispatch}
+              toggleShippingEdit={this.toggleShippingEdit}
               selectedAddressId={selectedAddressId}
               getAddress={this.getAddress}
               selectedAddress={this.state.selectedAddress}
-              />
+              />}
             <Payment
               dispatch={dispatch}
               selectedAddress={this.state.selectedAddress}
