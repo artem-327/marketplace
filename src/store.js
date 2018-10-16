@@ -26,6 +26,7 @@ import products, {initialState as productsInit} from './modules/products';
 import errors from "./modules/errors";
 import companiesSaga from "./saga/companies";
 import officesSaga from "./saga/offices";
+import dataTables from "./modules/dataTables";
 
 import usersSaga from "./pages/administration/users/saga/users";
 import operatorsSaga from "./pages/administration/operators/saga/operators";
@@ -47,6 +48,7 @@ const reducer = combineReducers({
     merchants,
     filter,
     errors,
+    dataTables,
     forms: combineForms({
         filter: filterInit.data,
         addProductOffer: addProductsInit.addProductOffer,
