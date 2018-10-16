@@ -1,5 +1,5 @@
 import {
-    OFFER_FETCH_SUCCEEDED, OFFER_FETCH_REQUESTED, 
+    OFFER_FETCH_SUCCEEDED, OFFER_FETCH_REQUESTED,
     CARTITEMS_FETCH_SUCCEEDED, CARTITEMS_FETCH_REQUESTED,
     DELIVERYADDRESSES_FETCH_SUCCEEDED,
     DELIVERYADDRESSES_FETCH_REQUESTED
@@ -10,7 +10,8 @@ export const initialState = {
     cartItems: [],
     deliveryAddresses: [],
     isFetching: true,
-    offersAreFetching: true
+    offersAreFetching: true,
+    selectedAddressId: null
 };
 
 export default function reducer(state = initialState, action) {

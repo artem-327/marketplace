@@ -7,7 +7,8 @@ function mapStateToProps(store) {
     return {
         cartItems: store.cart.cartItems,
         deliveryAddresses: store.cart.deliveryAddresses,
-        isFetching: store.cart.isFetching
+        isFetching: store.cart.isFetching,
+        selectedAddressId: store.forms.cart.selectedAddressId,
     }
 }
 

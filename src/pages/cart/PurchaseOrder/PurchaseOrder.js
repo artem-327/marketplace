@@ -8,12 +8,25 @@ import Button from '../../../components/Button/Button'
 import CartItemSummary from './components/CartItemSummary'
 import "./PurchaseOrder.css"
 
+const mockAddress = [{"id":5,"name": "adresa1", "first name":"FirstName","last name":"LastName","address":"TestAddress","city":"CityName","location":{"id":2,"country":"USA","state":"Dallas"},"zipCode":"97 201","email":"mail@mail.com","phone number":"721 584 362"}]
+
 class PurchaseOrder extends Component {
+  state = {
+    selectedAddress: {}
+  }
+
   componentDidMount(){
     this.props.fetchCartItems()
     this.props.fetchDeliveryAddresses()
   }
-  //TODO:: same function in Shopping cart, define it just at one place   
+
+  getAddress = (selectedAddressId) => {
+    const {deliveryAddresses} = this.props;
+    const selectedAddress = mockAddress.find(i => i.id === selectedAddressId);
+    this.setState({selectedAddress});
+}
+
+  //TODO:: same function in Shopping cart, define it just at one place
   renderSummary() {
     return (
       <table>
@@ -44,7 +57,7 @@ class PurchaseOrder extends Component {
   }
 
   render() {
-    const {cartItems} = this.props;
+    const {cartItems, deliveryAddresses, dispatch, selectedAddressId} = this.props;
     const itemContent = cartItems.map(cartItem => <CartItemSummary  cartItem={cartItem}/>);
     return (
       <div className="app-inner-main">
@@ -58,7 +71,13 @@ class PurchaseOrder extends Component {
         </div>
         <CartWrapper mainTitle="Purchase Order">
           <div>
-            <Shipping warehouses={this.props.warehouses} dispatch={this.props.dispatch}/>
+            <Shipping
+              deliveryAddresses={deliveryAddresses}
+              dispatch={dispatch}
+              selectedAddressId={selectedAddressId}
+              getAddress={this.getAddress}
+              selectedAddress={this.state.selectedAddress}
+              />
 
             <CartItem headerTitle="2. Payment">
               <div className="purchase-order-section">
@@ -73,7 +92,7 @@ class PurchaseOrder extends Component {
                 <footer className="add-cart-footer">
                   <Button color="blue">Place order</Button>
                 </footer>
-                </div>  
+                </div>
             </CartItem>
 
           </div>
