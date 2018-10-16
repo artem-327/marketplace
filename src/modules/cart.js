@@ -13,7 +13,8 @@ export const initialState = {
     deliveryAddresses: [],
     isFetching: true,
     offersAreFetching: true,
-    selectedAddressId: null
+    selectedAddressId: null,
+    selectedCardId: null,
 };
 
 export default function reducer(state = initialState, action) {

@@ -9,6 +9,7 @@ function mapStateToProps(store) {
         deliveryAddresses: store.cart.deliveryAddresses,
         isFetching: store.cart.isFetching,
         selectedAddressId: store.forms.cart.selectedAddressId,
+        selectedCardId: store.forms.cart.selectedCardId,
     }
 }
 

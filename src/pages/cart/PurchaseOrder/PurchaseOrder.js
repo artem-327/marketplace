@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import SummaryTable from "../components/SummaryTable/SummaryTable"
 import CartWrapper from "../components/CartWrapper/CartWrapper"
 import Shipping from "./components/Shipping"
+import Payment from "./components/Payment"
 import CartItem from "../components/CartItem/CartItem"
 import Button from '../../../components/Button/Button'
 import CartItemSummary from './components/CartItemSummary'
@@ -86,12 +87,15 @@ class PurchaseOrder extends Component {
               getAddress={this.getAddress}
               selectedAddress={this.state.selectedAddress}
               />
-
-            <CartItem headerTitle="2. Payment">
+            <Payment
+              dispatch={dispatch}
+              selectedAddress={this.state.selectedAddress}
+              />
+            {/* <CartItem headerTitle="2. Payment">
               <div className="purchase-order-section">
                 <div>Payment Method</div>
                 <div>Billing Info</div></div>
-            </CartItem>
+            </CartItem> */}
 
             <CartItem headerTitle="3. Terms and Agreement">
               <div className="purchase-order-section">
