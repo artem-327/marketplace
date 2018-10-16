@@ -76,7 +76,7 @@ export function getPackageOptions(productType) {
 export function getManufacturer() {
     return {
         type: MANUFACTURER,
-        payload: axios.get("/api/v1/manufacturers/")
+        payload: axios.get("/api/pu3wz7/manufacturers/")
     }
 }
 
