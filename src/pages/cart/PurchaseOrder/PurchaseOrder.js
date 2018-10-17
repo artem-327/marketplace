@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from "prop-types"
+import { actions } from 'react-redux-form';
 import { NavLink } from 'react-router-dom';
 import SummaryTable from "../components/SummaryTable/SummaryTable"
 import CartWrapper from "../components/CartWrapper/CartWrapper"
@@ -12,16 +13,38 @@ import CartItemSummary from './components/CartItemSummary'
 import "./PurchaseOrder.css"
 
 class PurchaseOrder extends Component {
+  //TODO: maybe move internal state to redux? decide it later 
   state = {
     selectedAddress: {},
     selectedPayment: {},
-    isShippingEdit: false
+    isShippingEdit: false,
+    isNewAddress: "isNew"
   }
 
   componentDidMount(){
     this.props.fetchCartItems()
     this.props.fetchDeliveryAddresses()
     this.props.fetchPayments()
+  }
+
+  handleIsEdit = (value) => {
+    const {selectedAddress} = this.state;
+    this.setState({isNewAddress: value});
+
+    value === "isNew"
+    ? this.props.dispatch(actions.reset('forms.shippingEdit'))
+    : this.props.dispatch(actions.merge('forms.shippingEdit', {
+      firstName: selectedAddress["first name"],
+      lastName: selectedAddress["last name"],
+      address: {
+        streetAddress: selectedAddress.address.streetAddress,
+        city: selectedAddress.address.city,
+        province: selectedAddress.address.province.name
+      },
+      zipCode: selectedAddress.address.zip.zip,
+      email: selectedAddress.email,
+      phoneNumber: selectedAddress["phone number"]
+  }));
   }
 
   getAddress = (selectedAddressId) => {
@@ -96,6 +119,9 @@ class PurchaseOrder extends Component {
           <div>
             {this.state.isShippingEdit ? <ShippingEdit
                 toggleShippingEdit={this.toggleShippingEdit}
+                selectedAddress={this.state.selectedAddress}
+                isNewAddress={this.state.isNewAddress}
+                handleIsEdit={this.handleIsEdit}
               />
               : <Shipping
               deliveryAddresses={deliveryAddresses}

@@ -1,7 +1,7 @@
 @import "../../../../styles/main.scss";
 .shipping-edit {
     display: grid;
-    grid-gap: 20px;
+    grid-gap: 5px 20px;
     grid-template-columns: repeat(4, 1fr);
     max-width: 1000px;
     @include mq('l', max) {
