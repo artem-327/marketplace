@@ -1,7 +1,13 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import DataTable from './DataTable';
-import {initDataTable, selectDataTable, selectGroup, selectRow, toggleVisibleColumn} from "../../modules/dataTables";
+import {
+    initDataTable,
+    selectDataTable,
+    selectGroup,
+    selectRow,
+    toggleVisibleColumn,
+} from "../../modules/dataTables";
 
 function mapStateToProps(store, ownProps) {
     return {

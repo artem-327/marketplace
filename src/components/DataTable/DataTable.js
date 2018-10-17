@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import Header from "./components/Header";
 import Rows from "./components/Rows";
 import './dataTable.css';
+import Spinner from "../Spinner/Spinner";
 
 class DataTable extends Component {
 
-    constructor(props){
-        super(props);
+    componentDidMount(){
         this.initDataTable();
     }
 
@@ -19,19 +19,22 @@ class DataTable extends Component {
                 sort: item.sort !== undefined ? item.sort : true,
                 visible: item.visible !== undefined ? item.visible : true,
             }));
-            let rows = this.props.rowsInit.map((item, index) => (
+            let rowsOpns = this.props.rows.map((item, index) => (
                 {
                     ...item,
                     index: index,
-                    rows: item.rows.map((row, index2)=>({selected: false, index: index2, row: row.data, id: row.id}))
+                    rows: item.rows.map((row, index2)=>({selected: false, index: index2, id: row.id}))
                 }
             ));
-            this.props.initDataTable(this.props.id, header, rows);
+            this.props.initDataTable(this.props.id, header, rowsOpns);
         }
     }
 
+
     render() {
-        if(!this.props.dataTable) return null;
+        if(!this.props.dataTable || !this.props.rows) return null;
+        if(this.props.isFetching) return <Spinner/>;
+        if(this.props.rows.length !== this.props.dataTable.rowsOpns.length) {console.error("DataTable error, rowsOpns don't belong to rows");return <h4>DataTable Error</h4>}
         return <div className="data-table-wr"><table className="data-table">
             <Header data={this.props.dataTable}
                     sortFunc={this.props.sortFunc}
@@ -39,13 +42,14 @@ class DataTable extends Component {
                     contextMenu={this.props.contextMenu && this.props.contextMenu.length !== 0}
                     toggleColumn={(headerId, value) => this.props.toggleVisibleColumn(this.props.id, headerId, value)}
                     selectable={this.props.selectable}/>
-            <Rows data={this.props.dataTable.rows}
+            <Rows rows={this.props.rows}
+                  rowsOpns={this.props.dataTable.rowsOpns}
                   selectable={this.props.selectable}
                   contextMenu={this.props.contextMenu}
+                  rowComponent={this.props.rowComponent}
                   headers={this.props.dataTable.header}
                   selectGroupFunc={(groupId, rows) => this.props.selectGroup(this.props.id, groupId, rows)}
-                  selectFunc={(groupId, rowId, value) => this.props.selectRow(this.props.id, groupId, rowId, value)}
-            />
+                  selectFunc={(groupId, rowId, value) => this.props.selectRow(this.props.id, groupId, rowId, value)}/>
         </table></div>
     }
 }
@@ -56,7 +60,11 @@ DataTable.propTypes = {
     selectable: PropTypes.bool,
     contextMenu: PropTypes.array,
     selectGroupFunc: PropTypes.func,
-    rowsInit: PropTypes.arrayOf(
+    isFetching: PropTypes.bool,
+    rows: PropTypes.arrayOf(
+        PropTypes.object
+    ),
+    rowsOpns: PropTypes.arrayOf(
         PropTypes.object
     ),
     headerInit: PropTypes.arrayOf(
@@ -68,7 +76,7 @@ DataTable.propTypes = {
         })
     ),
     sortFunc: PropTypes.func,
-
+    rowComponent: PropTypes.element
 };
 
 export default DataTable;

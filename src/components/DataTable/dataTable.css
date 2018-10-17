@@ -52,6 +52,7 @@
   .data-table .data-table-header .data-table-context-th {
     position: absolute;
     top: 30px;
+    z-index: 2;
     left: 0;
     padding: 0;
     margin: 0;
