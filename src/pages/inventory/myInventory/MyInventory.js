@@ -24,7 +24,7 @@ class MyInventory extends Component {
     }
 
     componentDidMount() {
-        this.props.getProductOffers();
+        this.props.fetchMyProductOffers();
         this.props.getCompanies();
     }
 
@@ -34,6 +34,7 @@ class MyInventory extends Component {
 
     componentWillUnmount(){
         this.props.resetFilterTags();
+        this.props.deleteProductOffersList();
         this.props.resetForm('forms.filter');
     }
 
@@ -86,7 +87,7 @@ class MyInventory extends Component {
                 submitRules={this.props.sendRules}
                 addPopup={this.props.addPopup}
                 removePopup={this.props.removePopup}
-                getProductOffers={this.props.getProductOffers}
+                getProductOffers={this.props.fetchMyProductOffers}
                 targetGroups={this.state.targetGroups}
                 setFilter={(type) => this.setFilter(type)}
                 history={this.props.history}
@@ -97,9 +98,9 @@ class MyInventory extends Component {
         return (
             <div className='my-inventory'>
                 <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
-                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getProductOffers({...filter}, true)}}/>
+                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}}/>
                 <h3 className='header small'>{getSelectedDataTable(this.props.productOffersTable)} product offerings selected</h3>
-                <Filter chemicalName productAgeFilter date assay quantity price condition form filterFunc={(filter) => {this.props.getProductOffers({...filter}, true)}} />
+                <Filter chemicalName productAgeFilter date assay quantity price condition form filterFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}} />
                 {content}
             </div>
         )

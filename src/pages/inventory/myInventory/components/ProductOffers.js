@@ -5,18 +5,7 @@ import BroadcastRule from "./BroadcastRule";
 
 class ProductOffers extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            products: this.groupProductOffers(this.props.productOffers),
-            isOpen: false,
-            brActive: false,
-        }
-    }
-
-    //componentWillReceiveProps(nextProps){
-        //this.setState({products: this.groupProductOffers(nextProps.productOffers)});
-    //}
+    state={isOpen: false, brActive: false};
 
     groupProductOffers(productOffers) {
         return productOffers.reduce((carry, offer) => {
@@ -27,7 +16,7 @@ class ProductOffers extends Component {
 
     render() {
         if(this.props.productOffers.length === 0) return null;
-        let rows = Object.values(this.state.products).map((product) => {
+        let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
                 return {
                     group:  <React.Fragment><span className="product-casnumber ">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></React.Fragment>,
                     countLabel: 'Product Offerings: ',
@@ -50,7 +39,6 @@ class ProductOffers extends Component {
         return (<div className="App">
                 <DataTable id="myInventoryTable"
                            selectable
-                           isFetching={this.props.isFetching}
                            sortFunc={(nameColumn) => console.log(nameColumn)}
                            headerInit={[{name: 'Product Name'}, {name: 'Available'}, {name: 'Packaging'}, {name: 'Pkg. size'}, {name: 'Quantity'}, {name: 'Cost'}, {name: 'FOB Price'}, {name: 'Trade Name'}, {name: 'MFR.'}, {name: 'Condition'}, {name: 'MFG Date'}]}
                            contextMenu={
@@ -62,11 +50,10 @@ class ProductOffers extends Component {
                            }
                            rows={rows}
                            rowComponent={<BroadcastRule
-                               brRef={this.broadcastRef}
                                submitRules={this.props.submitRules}
                                addPopup={this.props.addPopup}
                                removePopup={this.props.removePopup}
-                               getProductOffers={this.props.getProductOffers}
+                               getProductOffers={this.props.fetchMyProductOffers}
                                targetGroups={this.props.targetGroups}
                                selections={this.props.selections}
                                setFilter={(type) => this.props.setFilter(type)}

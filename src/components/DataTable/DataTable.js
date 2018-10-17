@@ -34,6 +34,7 @@ class DataTable extends Component {
     render() {
         if(!this.props.dataTable || !this.props.rows) return null;
         if(this.props.isFetching) return <Spinner/>;
+        if(this.props.rows.length !== this.props.dataTable.rowsOpns.length) {console.error("DataTable error, rowsOpns don't belong to rows");return <h4>DataTable Error</h4>}
         return <div className="data-table-wr"><table className="data-table">
             <Header data={this.props.dataTable}
                     sortFunc={this.props.sortFunc}
@@ -48,8 +49,7 @@ class DataTable extends Component {
                   rowComponent={this.props.rowComponent}
                   headers={this.props.dataTable.header}
                   selectGroupFunc={(groupId, rows) => this.props.selectGroup(this.props.id, groupId, rows)}
-                  selectFunc={(groupId, rowId, value) => this.props.selectRow(this.props.id, groupId, rowId, value)}
-            />
+                  selectFunc={(groupId, rowId, value) => this.props.selectRow(this.props.id, groupId, rowId, value)}/>
         </table></div>
     }
 }
@@ -60,6 +60,7 @@ DataTable.propTypes = {
     selectable: PropTypes.bool,
     contextMenu: PropTypes.array,
     selectGroupFunc: PropTypes.func,
+    isFetching: PropTypes.bool,
     rows: PropTypes.arrayOf(
         PropTypes.object
     ),

@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from "prop-types";
 import Row from "./Row";
 import CheckboxControlled from "../../Checkbox/CheckboxControlled";
 
@@ -40,9 +39,4 @@ class GroupRow extends Component {
 
     }
 }
-
-GroupRow.propTypes = {
-
-};
-
 export default GroupRow;

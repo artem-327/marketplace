@@ -4,21 +4,9 @@ import moment from "moment";
 import AddCart from '../../../cart/AddCart'
 import {DATE_FORMAT} from "../../../../utils/constants";
 import {getUnit} from "../../../../utils/functions";
-import BroadcastRule from "../../myInventory/components/BroadcastRule";
 import DataTable from "../../../../components/DataTable";
 
 class ProductOffers extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            products: this.groupProductOffers(this.props.productOffers)
-        };
-    }
-
-    componentWillReceiveProps(nextProps){
-        this.setState({products: this.groupProductOffers(nextProps.productOffers)});
-    }
 
     groupProductOffers(productOffers) {
         return productOffers.reduce((carry, offer) => {
@@ -34,7 +22,7 @@ class ProductOffers extends Component {
 
     render() {
         if(this.props.productOffers.length === 0) return null;
-        let rows = Object.values(this.state.products).map((product) => {
+        let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
             return {
                 group:  <React.Fragment><span className="product-casnumber">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></React.Fragment>,
                 rows: product.productOffers.map((offer)=>{
@@ -63,7 +51,6 @@ class ProductOffers extends Component {
         return (
             <div className="App ">
                 <DataTable id="allInventoryTable"
-                           isFetching={this.props.isFetching}
                            sortFunc={(nameColumn) => console.log(nameColumn)}
                            headerInit={[{name: 'Merchant'}, {name: 'Available'}, {name: 'Packaging'}, {name: 'Quantity'}, {name: 'FOB Price'}, {name: 'Trade Name'}, {name: 'MFR.'}, {name: 'Origin'}, {name: 'Expiration'}, {name: 'Assay'}, {name: 'Condition'}, {name: 'Form'}, {name: 'Location'}, {name: null}]}
                            rows={rows}
