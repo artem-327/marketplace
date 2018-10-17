@@ -70,7 +70,7 @@ class Header extends Component {
                             {item.name}
                             {this.state.open[item.name] ?
                                 <ul className="data-table-context-th">
-                                    <li onClick={() => this.props.sortFunc(item.name)}>Sort</li>
+                                    {/*<li onClick={() => this.props.sortFunc(item.name)}>Sort</li>*/}
                                     <li onClick={() => this.props.toggleColumn(item.index, false)}>Hide</li>
                                 </ul> : null}
                         </th> : null
