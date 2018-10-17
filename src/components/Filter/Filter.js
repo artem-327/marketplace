@@ -52,7 +52,6 @@ class Filter extends Component {
     }
 
     render(){
-        console.log(this.props);
         return this.state.isOpen ?
             <div className="filter">
                 <Form model="forms.filter" onSubmit={(val) => this.handleSubmit(val)}>
