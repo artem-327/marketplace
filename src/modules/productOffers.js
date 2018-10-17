@@ -120,14 +120,14 @@ export function addProductOffer(inputs) {
 export function getUnitOfMeasurement() {
     return {
         type: GET_UNIT_OF_MEASUREMENT,
-        payload: axios.get("/api/v1/units/").then(result => result.data.data.units)
+        payload: axios.get("/api/8xsgcx/units/").then(result => result.data.data.units)
     }
 }
 
 export function getUnitOfPackaging(pack) {
         return {
             type: GET_UNIT_OF_PACKAGING,
-            payload: axios.get('/api/v1/containers/', {params: {...pack}}).then(response => response.data.data.containers)
+            payload: axios.get('/api/e49sy3/containers/', {params: {...pack}}).then(response => response.data.data.containers)
         }
     }
 
