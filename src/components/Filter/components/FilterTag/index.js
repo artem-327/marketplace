@@ -10,7 +10,8 @@ function mapStateToProps(store) {
         filterTags: store.filter.filterTags,
         productAge: store.forms.filter.productAge,
         productConditions: store.products.productConditions,
-        productForms: store.products.productForms
+        productForms: store.products.productForms,
+        packagingTypes: store.products.packagingTypes,
     }
 }
 

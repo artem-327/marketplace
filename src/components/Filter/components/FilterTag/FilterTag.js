@@ -34,11 +34,12 @@ class FilterTag extends Component {
     }
 
     pickPackageName(){
+        console.log(this.props.value, this.props.packagingTypes);
         this.packageName = [];
         let array = this.props.value.split(',');
 
         for (let i = 0; i < array.length; i++) {
-            this.props.packageTypes.map((info)=>{
+            this.props.packagingTypes.map((info)=>{
                 if((info.id).toString() === array[i]){
                     this.packageName.push(info.name);
                 }

@@ -55,7 +55,10 @@
     width: calc(50% - 70px);
     margin: 0 25px 35px 10px; }
   .filter .split .filter-input-dropdown {
-    height: 240px; }
+    display: inline-block;
+    float: left;
+    width: calc(50% - 70px);
+    margin: 0 25px 35px 10px; }
   .filter .split .filter-input-date {
     display: inline-block;
     float: left;

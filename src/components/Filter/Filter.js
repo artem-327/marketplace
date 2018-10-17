@@ -16,6 +16,7 @@ class Filter extends Component {
     }
 
     handleSubmit(inputs){
+        console.log(inputs);
         let filter = Object.assign({}, inputs,
             {pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key).join(',')},
             {condition: Object.entries(inputs.condition || {}).filter(([key, value]) => value).map(([key]) => key).join(',')},
@@ -43,6 +44,7 @@ class Filter extends Component {
     this.props.fetchProductConditions();
     this.props.fetchProductForms();
     this.props.fetchPackagingTypes();
+    this.props.fetchWarehouseDistances();
     }
 
     componentWillReceiveProps(nextProps){
@@ -182,16 +184,23 @@ class Filter extends Component {
                                  ]}/>
                     <FilterGroup className="filterGroup"
                                  header='Location'
+                                 split
                                  isVisible={!!this.props.loc}
                                  data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.loc}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('loc', value)}}
                                  dispatch={this.props.dispatch}
                                  inputs={[
-                                     {
+                                    {
+                                        label: 'Enter your zip code',
+                                        model: '.zipcode',
+                                        type: 'number'
+                                    }, 
+                                    {
                                          label: 'Max. miles away',
-                                         model: 'forms.filter.data.loc',
+                                         model: '.distance',
                                          type: 'dropdown',
+                                         data: this.props.warehouseDistances,
                                      }
                                  ]}/>
                     <FilterGroup className="filterGroup"
