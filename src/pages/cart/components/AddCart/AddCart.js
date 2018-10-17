@@ -14,37 +14,41 @@ class AddCart extends Component {
 
   //TODO Fix cart to send edited data
   handleContinue = () => {
-    const {removePopup, createCartItem} = this.props;
-    createCartItem(this.props.cart)
+    const {removePopup, createCartItem, offer} = this.props;
+    const offerpayload= {
+        "productOffer": offer.id,
+        "quantity": 62607202
+    }
+    createCartItem(offerpayload)
     this.props.history.push("/cart/shopping-cart")
     removePopup()
   }
 
   render() {
-    const {cart, removePopup, isFetching} = this.props;
+    const {offer, removePopup, isFetching} = this.props;
     if (isFetching) return <Spinner />
-    const location = cart.warehouse.address.province.name;
-    const unit = getUnit(cart.packaging.unit.name)
-    const packageSize = `${cart.packaging.capacity} ${unit}${cart.packaging.capacity > 1 && 's'}`
+    const location = offer.warehouse.address.province.name;
+    const unit = getUnit(offer.packaging.unit.name)
+    const packageSize = `${offer.packaging.capacity} ${unit}${offer.packaging.capacity > 1 && 's'}`
     return (
         <PopupComponent handleContinue={this.handleContinue} removePopup={removePopup} headerTitle="Purchase">
         <div className="add-cart-body">
           <div className="add-cart-body-section">
             <h3>Product Info</h3>
             <div>
-              <b>{cart.product.casIndexName}</b>
+              <b>{offer.product.casIndexName}</b>
             </div>
             <div>
               <b>Merchant: </b>
-              {cart.merchant.email}
+              {offer.merchant.email}
             </div>
             <div>
               <b>Available Products: </b>
-              {cart.packaging.amount.formatNumber()}
+              {offer.packaging.amount.formatNumber()}
             </div>
             <div>
               <b>Packaging: </b>
-              {cart.packaging.container.name}
+              {offer.packaging.container.name}
             </div>
             <div>
               <b>Package Size: </b>
@@ -52,7 +56,7 @@ class AddCart extends Component {
             </div>
             <div>
               <b>Form: </b>
-              {cart.productForm.name}
+              {offer.productForm.name}
             </div>
             <div>
               <b>Location: </b>
@@ -97,7 +101,7 @@ class AddCart extends Component {
 export default AddCart
 
 AddCart.propTypes = {
-  cart: PropTypes.object,
+  offer: PropTypes.object,
   createCartItem: PropTypes.func,
   id: PropTypes.number,
   isFetching: PropTypes.bool,

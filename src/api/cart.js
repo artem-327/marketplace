@@ -6,6 +6,7 @@ const api = {
     fetchDeliveryAddresses: () => axios.get('/api/1t8e2h/delivery-addresses/').then(response => response.data.data["delivery addresses"]),
     removeProductFromCart: (id) => axios.delete(`api/jdr9gj/cart/${id}/`),
     createCartItem: (product) => axios.post('api/tz6pap/cart/', product),
+    fetchPayments: () => axios.get('/api/jklpuz/payments').then(response => response.data.data.payments),
 };
 
 export default api;

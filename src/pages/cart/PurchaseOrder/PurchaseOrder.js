@@ -11,23 +11,29 @@ import Button from '../../../components/Button/Button'
 import CartItemSummary from './components/CartItemSummary'
 import "./PurchaseOrder.css"
 
-const mockAddress = [{"id":5,"name": "adresa1", "first name":"FirstName","last name":"LastName","address":"TestAddress","city":"CityName","location":{"id":2,"country":"USA","state":"Dallas"},"zipCode":"97 201","email":"mail@mail.com","phone number":"721 584 362"}]
-
 class PurchaseOrder extends Component {
   state = {
     selectedAddress: {},
+    selectedPayment: {},
     isShippingEdit: false
   }
 
   componentDidMount(){
     this.props.fetchCartItems()
     this.props.fetchDeliveryAddresses()
+    this.props.fetchPayments()
   }
 
   getAddress = (selectedAddressId) => {
     const {deliveryAddresses} = this.props;
-    const selectedAddress = mockAddress.find(i => i.id === selectedAddressId);
+    const selectedAddress = deliveryAddresses.find(i => i.id === selectedAddressId);
     this.setState({selectedAddress});
+  }
+
+  getPayment = (selectedPaymentId) => {
+    const {payments} = this.props;
+    const selectedPayment = payments.find(i => i.id === selectedPaymentId);
+    this.setState({selectedPayment});
   }
 
   toggleShippingEdit = () => {
@@ -67,7 +73,7 @@ class PurchaseOrder extends Component {
   }
 
   render() {
-    const {cartItems, deliveryAddresses, dispatch, selectedAddressId, removeProductFromCart} = this.props;
+    const {cartItems, deliveryAddresses, payments, dispatch, selectedAddressId, removeProductFromCart} = this.props;
     const itemContent = cartItems.map(cartItem => {
       return (
       <CartItemSummary 
@@ -95,19 +101,16 @@ class PurchaseOrder extends Component {
               deliveryAddresses={deliveryAddresses}
               dispatch={dispatch}
               toggleShippingEdit={this.toggleShippingEdit}
-              selectedAddressId={selectedAddressId}
               getAddress={this.getAddress}
               selectedAddress={this.state.selectedAddress}
               />}
             <Payment
               dispatch={dispatch}
               selectedAddress={this.state.selectedAddress}
+              selectedPayment={this.state.selectedPayment}
+              payments={payments}
+              getPayment={this.getPayment}
               />
-            {/* <CartItem headerTitle="2. Payment">
-              <div className="purchase-order-section">
-                <div>Payment Method</div>
-                <div>Billing Info</div></div>
-            </CartItem> */}
 
             <CartItem headerTitle="3. Terms and Agreement">
               <div className="purchase-order-section">

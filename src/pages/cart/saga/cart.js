@@ -2,6 +2,7 @@ import { call, put, takeEvery } from 'redux-saga/effects'
 import Api from '../../../api/cart';
 import {
     OFFER_FETCH_SUCCEEDED, OFFER_FETCH_FAILED, OFFER_FETCH_REQUESTED,
+    PAYMENTS_FETCH_SUCCEEDED, PAYMENTS_FETCH_FAILED, PAYMENTS_FETCH_REQUESTED,
     CARTITEMS_FETCH_SUCCEEDED, CARTITEMS_FETCH_FAILED, CARTITEMS_FETCH_REQUESTED,
     DELIVERYADDRESSES_FETCH_REQUESTED, DELIVERYADDRESSES_FETCH_FAILED, DELIVERYADDRESSES_FETCH_SUCCEEDED,
     PRODUCTFROMCART_REMOVE_REQUESTED, PRODUCTFROMCART_REMOVE_FAILED, PRODUCTFROMCART_REMOVE_SUCCEEDED,
@@ -35,6 +36,14 @@ function* fetchDeliveryAddresses() {
     }
 }
 
+function* fetchPayments() {
+    try {
+        const addresses = yield call(Api.fetchPayments);
+        yield put({type: PAYMENTS_FETCH_SUCCEEDED, payload: addresses});
+    } catch (e) {
+        yield put({type: PAYMENTS_FETCH_FAILED, message: e.message});
+    }
+}
 
 function* removeProductFromCart(action) {
     try {
@@ -60,6 +69,7 @@ function* cartSaga() {
     yield takeEvery(OFFER_FETCH_REQUESTED, getProductOffer);
     yield takeEvery(CARTITEMS_FETCH_REQUESTED, fetchCartItems);
     yield takeEvery(DELIVERYADDRESSES_FETCH_REQUESTED, fetchDeliveryAddresses);
+    yield takeEvery(PAYMENTS_FETCH_REQUESTED, fetchPayments);
     yield takeEvery(PRODUCTFROMCART_REMOVE_REQUESTED, removeProductFromCart);
     yield takeEvery(CARTITEM_CREATE_REQUESTED, createCartItem);
 }

@@ -7,7 +7,7 @@ import {removePopup} from "../../../../modules/popup";
 
 function mapStateToProps(store) {
     return {
-        cart: store.cart.offers,
+        offer: store.cart.offers,
         isFetching: store.cart.offersAreFetching
     }
 }

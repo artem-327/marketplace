@@ -1,6 +1,7 @@
 import {
     OFFER_FETCH_SUCCEEDED, OFFER_FETCH_REQUESTED,
     CARTITEMS_FETCH_SUCCEEDED, CARTITEMS_FETCH_REQUESTED,
+    PAYMENTS_FETCH_REQUESTED, PAYMENTS_FETCH_SUCCEEDED,
     DELIVERYADDRESSES_FETCH_SUCCEEDED,
     DELIVERYADDRESSES_FETCH_REQUESTED,
     PRODUCTFROMCART_REMOVE_REQUESTED,
@@ -11,6 +12,7 @@ export const initialState = {
     offers: {},
     cartItems: [],
     deliveryAddresses: [],
+    payments: [],
     isFetching: true,
     offersAreFetching: true,
     selectedAddressId: null,
@@ -29,6 +31,19 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 deliveryAddresses: action.payload,
+                isFetching: false
+            }
+        }
+        case PAYMENTS_FETCH_REQUESTED: {
+            return {
+                ...state,
+                isFetching: true,
+            }
+        }
+        case PAYMENTS_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                payments: action.payload,
                 isFetching: false
             }
         }
@@ -77,6 +92,10 @@ export function fetchCartItems(){
 
 export function fetchDeliveryAddresses(){
     return {type: DELIVERYADDRESSES_FETCH_REQUESTED}
+}
+
+export function fetchPayments(){
+    return {type: PAYMENTS_FETCH_REQUESTED}
 }
 
 export function removeProductFromCart(id) {

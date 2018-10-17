@@ -57,7 +57,8 @@ const reducer = combineReducers({
         loginForm: identityFormInit.loginForm.data,
         registrationForm: identityFormInit.registrationForm.data,
         merchants: merchantsInit,
-        cart: cartInit
+        cart: cartInit,
+        shippingEdit: {},
     }, 'forms'),
 });
 
