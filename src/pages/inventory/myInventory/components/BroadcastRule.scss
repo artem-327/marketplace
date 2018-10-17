@@ -5,6 +5,21 @@
   background-color: white;
 
   display: none;
+  .close-mark-br{
+    display: block;
+    position: absolute;
+    right: 25px;
+    top: 15px;
+    color: #4e5157;
+    font-size: 2.2rem;
+    transition: all .2s ease;
+    transform: rotate(0deg);
+
+    &:hover{
+      cursor: pointer;
+      transform: rotate(-180deg);
+    }
+  }
   .br-header{
     color: #4e5157;
     font-size: 1.6rem;
@@ -12,6 +27,7 @@
   .header-section{
     padding: 20px;
     display: block;
+    position: relative;
   }
   .dropdown-wr{
     max-width: 300px;

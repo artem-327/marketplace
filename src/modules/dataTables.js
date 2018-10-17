@@ -13,7 +13,7 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 [action.payload.id]: {
                     header: action.payload.header,
-                    rows: action.payload.rows
+                    rowsOpns: action.payload.rowsOpns
                 }
             }
         }
@@ -22,12 +22,12 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 [action.payload.id]: {
                     ...state[action.payload.id],
-                    rows: state[action.payload.id].rows.map((row) => (
+                    rowsOpns: state[action.payload.id].rowsOpns.map((row) => (
                         row.index === action.payload.groupId ?
-                            {...state[action.payload.id].rows[action.payload.groupId],
-                                rows: state[action.payload.id].rows[action.payload.groupId].rows.map((rw) => (
+                            {...state[action.payload.id].rowsOpns[action.payload.groupId],
+                                rows: state[action.payload.id].rowsOpns[action.payload.groupId].rows.map((rw) => (
                                     rw.index === action.payload.rowId ?
-                                        {...state[action.payload.id].rows[action.payload.groupId].rows[action.payload.rowId],
+                                        {...state[action.payload.id].rowsOpns[action.payload.groupId].rows[action.payload.rowId],
                                             selected: action.payload.value
                                         } : rw
                                 ))
@@ -41,9 +41,9 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 [action.payload.id]: {
                     ...state[action.payload.id],
-                    rows: state[action.payload.id].rows.map((row) => (
+                    rowsOpns: state[action.payload.id].rowsOpns.map((row) => (
                         row.index === action.payload.groupId ?
-                            {...state[action.payload.id].rows[action.payload.groupId],
+                            {...state[action.payload.id].rowsOpns[action.payload.groupId],
                                 rows: action.payload.rows
                             } : row
                     ))
@@ -55,7 +55,7 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 [action.payload.id]: {
                     ...state[action.payload.id],
-                    rows: action.payload.rows,
+                    rowsOpns: action.payload.rowsOpns,
                 }
             }
         }
@@ -66,7 +66,7 @@ export default function reducer(state = initialState, action) {
                     ...state[action.payload.id],
                     header: state[action.payload.id].header.map((h) => (
                         h.index === action.payload.headerId ?
-                            {...state[action.payload.id].rows[action.payload.headerId],
+                            {...state[action.payload.id].rowsOpns[action.payload.headerId],
                                 visible: action.payload.value
                             } : h
                     ))
@@ -77,10 +77,10 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-export function initDataTable(id, header, rows){
+export function initDataTable(id, header, rowsOpns){
     return {
         type: INIT_DATA_TABLE,
-        payload: {id, header, rows}
+        payload: {id, header, rowsOpns}
     }
 }
 
@@ -98,10 +98,10 @@ export function selectGroup(id, groupId, rows){
     }
 }
 
-export function selectDataTable(id, rows){
+export function selectDataTable(id, rowsOpns){
     return {
         type: SELECT_DATA_TABLE,
-        payload: {id, rows}
+        payload: {id, rowsOpns}
     }
 }
 
