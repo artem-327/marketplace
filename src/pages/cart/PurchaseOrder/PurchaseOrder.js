@@ -73,7 +73,7 @@ class PurchaseOrder extends Component {
   }
 
   render() {
-    const {cartItems, deliveryAddresses, payments, dispatch, selectedAddressId, removeProductFromCart} = this.props;
+    const {cartItems, deliveryAddresses, payments, dispatch, removeProductFromCart} = this.props;
     const itemContent = cartItems.map(cartItem => {
       return (
       <CartItemSummary 

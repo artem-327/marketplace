@@ -5,6 +5,7 @@ import DropdownRedux from '../../../../components/Dropdown/DropdownRedux'
 import {required} from '../../../../utils/validation'
 
 const Shipping = ({deliveryAddresses, dispatch, getAddress, selectedAddress, toggleShippingEdit}) => {
+  //dropdown component requires object with name key
   const deliveryAddressesWithName = deliveryAddresses.map(i => {
     i.name = `${i.address.streetAddress}, ${i.address.city}`;
     return i;

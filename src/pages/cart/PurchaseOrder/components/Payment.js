@@ -5,6 +5,7 @@ import DropdownRedux from '../../../../components/Dropdown/DropdownRedux'
 import {required} from '../../../../utils/validation'
 
 const Payment = ({dispatch, payments, selectedAddress, selectedPayment, getPayment}) => {
+  //dropdown component requires object with name key
   const paymentsWithName = payments.map(i => {
     i.name = `${i.cardType}`;
     return i;

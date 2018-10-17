@@ -4,25 +4,7 @@ import "./ShippingEdit.css"
 import CartItem from '../../components/CartItem/CartItem'
 import Button from '../../../../components/Button/Button'
 import FormInput from '../../../../components/Form/FormInput'
-import DropdownRedux from '../../../../components/Dropdown/DropdownRedux'
-import { required, messages } from '../../../../utils/validation'
-import { Control, Form, Errors } from 'react-redux-form';
-
-//there is no name in real data!
-const mockAddress = [
-  {
-    id: 5,
-    name: 'adresa1',
-    firstName: 'FirstName',
-    lastName: 'LastName',
-    address: 'TestAddress',
-    city: 'CityName',
-    location: { id: 2, country: 'USA', state: 'Dallas' },
-    zipCode: '97 201',
-    email: 'mail@mail.com',
-    phoneNumber: '721 584 362'
-  }
-]
+import { Form } from 'react-redux-form';
 
 const ShippingEdit = ({ toggleShippingEdit }) => {
   return (
