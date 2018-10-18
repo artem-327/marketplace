@@ -5,7 +5,8 @@ import {
     DELIVERYADDRESSES_FETCH_SUCCEEDED,
     DELIVERYADDRESSES_FETCH_REQUESTED,
     PRODUCTFROMCART_REMOVE_REQUESTED,
-    CARTITEM_CREATE_REQUESTED
+    CARTITEM_CREATE_REQUESTED,
+    DELIVERYADDRESS_CREATE_REQUESTED
 } from "../constants/cart";
 
 export const initialState = {
@@ -105,4 +106,8 @@ export function removeProductFromCart(id) {
 
 export function createCartItem(product) {
     return {type: CARTITEM_CREATE_REQUESTED, payload: {product}}
+}
+
+export function createDeliveryAddress(address) {
+    return {type: DELIVERYADDRESS_CREATE_REQUESTED, payload: {address}}
 }

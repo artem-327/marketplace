@@ -7,7 +7,7 @@ import FormInput from '../../../../components/Form/FormInput'
 import Radio from "../../../../components/Radio/Radio";
 import { Form } from 'react-redux-form';
 
-const ShippingEdit = ({ toggleShippingEdit, isNewAddress, handleIsEdit, selectedAddress }) => {
+const ShippingEdit = ({ toggleShippingEdit, isNewAddress, handleIsEdit, selectedAddress, createDeliveryAddress }) => {
   const radioOptions = [{value:"isEdit", label:'Saved Address'}, {value:"isNew", label:'Add New Address'}]
   return (
     <CartItem headerTitle="1. Shipping">
@@ -19,7 +19,10 @@ const ShippingEdit = ({ toggleShippingEdit, isNewAddress, handleIsEdit, selected
           checked={isNewAddress}
           disabled={!Object.keys(selectedAddress).length ? true : false}
       />
-        <Form model="forms.shippingEdit" onSubmit={(values) => console.log(values)} className="shipping-edit">
+        {/* TODO: send id instead of string to province - waiting for backend endpoint */}
+        {/* TODO: now just create new address, add PUT in future - waiting for backend endpoint */}
+        {/* TODO: which fields are required? */}
+        <Form model="forms.shippingEdit" onSubmit={(values) => createDeliveryAddress(values)} className="shipping-edit">
           <FormInput name=".firstName" label="First Name" />
           <FormInput name=".lastName" label="Last Name" />
           <FormInput name=".address.streetAddress" label="Address" />
