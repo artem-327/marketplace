@@ -30,6 +30,11 @@ class AddCart extends Component {
     const location = offer.warehouse.address.province.name;
     const unit = getUnit(offer.packaging.unit.name)
     const packageSize = `${offer.packaging.capacity} ${unit}${offer.packaging.capacity > 1 && 's'}`
+    const {tiers} = offer.pricing
+    const priceLevelOptions = tiers.map(i => {
+      i.name = `${i.quantityFrom} - ${i.quantityTo} / $${i.price}`;
+      return i;
+    })
     return (
         <PopupComponent handleContinue={this.handleContinue} removePopup={removePopup} headerTitle="Purchase">
         <div className="add-cart-body">
@@ -73,7 +78,7 @@ class AddCart extends Component {
             <h3>Purchase Info</h3>
             <div>
               <b>Select Price Level</b>
-              <Dropdown opns={[{id: 1, name: 'test'}]} placeholder="Select Price Level" />
+              <Dropdown opns={priceLevelOptions} placeholder="Select Price Level" />
             </div>
             <div>
               <b>Select Quantity</b>
