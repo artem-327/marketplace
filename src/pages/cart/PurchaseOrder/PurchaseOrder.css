@@ -4,9 +4,13 @@
   .purchase-order-section footer button {
     margin-left: 15px; }
 
-.purchase-order-section .text-section > div {
-  margin: 10px 0;
-  color: #4E5157; }
+.purchase-order-section .text-section {
+  margin-top: 15px; }
+  .purchase-order-section .text-section div {
+    margin: 3px 0;
+    color: #9a9da4; }
+    .purchase-order-section .text-section div b {
+      color: #4E5157; }
 
 .cart-item-summary:not(:last-child) {
   border-bottom: 2px solid #E7E7E7;

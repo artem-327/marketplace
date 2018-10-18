@@ -25,14 +25,14 @@ const Payment = ({dispatch, payments, selectedAddress, selectedPayment, getPayme
         </div>
         {!!Object.keys(selectedPayment).length && 
         <div  className="text-section">
-            <div>Payment Method</div>
+            <div><b>Payment Method</b></div>
             <div>{selectedPayment.cardNumber} {selectedPayment.cardType} Exp: {selectedPayment.expirationDate}</div>
             
         </div>}
         {!!Object.keys(selectedAddress).length && 
         <React.Fragment>
-        <div>Billing Info</div>
         <div className="text-section">
+          <div><b>Billing Info</b></div>
           <div>{selectedAddress["first name"]} {selectedAddress["last name"]}</div>
           <div>{selectedAddress.address.streetAddress}</div>
           <div>{selectedAddress.address.city}, {selectedAddress.address.province.name}, {selectedAddress.address.zip.zip}</div>

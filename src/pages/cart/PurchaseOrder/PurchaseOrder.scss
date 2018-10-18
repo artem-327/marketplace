@@ -1,17 +1,23 @@
 @import "../../../styles/main.scss";
 
 .purchase-order-section {
-    footer {
-        display: flex;
-        justify-content: flex-end;
-        button {
-            margin-left: 15px;
-        }
+  footer {
+    display: flex;
+    justify-content: flex-end;
+    button {
+        margin-left: 15px;
     }
-    .text-section > div {
-        margin: 10px 0;
+  }
+  .text-section { 
+    margin-top: 15px;
+    div {
+      margin: 3px 0;
+      color: $light-30-grey-color;
+      b {
         color: $grey-color;
+      }
     }
+  }
 }
 
 .cart-item-summary:not(:last-child) {

@@ -2,20 +2,30 @@
 $side-padding: 30px;
 
 .shopping-cart {
-    margin: 0 20px;
+    display: grid;
+    grid-template-columns: 15% auto 15%;
+
     h1 {
         margin-bottom: 20px;
         margin-left: 0; 
-        padding-left: 0;   
+        padding-left: 0;
+        grid-column: 2 / 3;   
     }
     .shopping-cart-body {
+        grid-column: 2 / 3; 
+        grid-row: 2;
         display: flex;
         .shopping-cart-items {
             margin-right: 20px;
             border: 2px solid $beige-color;
             border-radius: $border-rounding;
             margin-bottom: 1rem;
-            
+            min-width: 70vh;
+
+            .dropdown-wr{
+                max-width: 450px;
+            }
+
             .purchase-order-section {
                 padding: 20px;
             }
