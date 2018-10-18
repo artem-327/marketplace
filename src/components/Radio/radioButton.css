@@ -1,6 +1,7 @@
 .radioButton {
   position: relative;
   padding-left: 35px;
+  margin-right: 12px;
   margin-bottom: 12px;
   cursor: pointer;
   font-size: 16px;
@@ -27,9 +28,9 @@
         width: 6px;
         height: 6px;
         border-radius: 50%;
-        background: #289ada; }
+        background: #329ED6; }
     .radioButton .radiomark:hover {
-      border-color: #289ada; }
+      border-color: #329ED6; }
     .radioButton .radiomark:after {
       content: "";
       position: absolute;
@@ -39,11 +40,19 @@
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: #289ada; }
+      background: #329ED6; }
+    .radioButton .radiomark.disabled {
+      background: #d0d1d4; }
+    .radioButton .radiomark.disabled:hover {
+      border-color: #B0B0B0; }
 
 /* When the radio button is checked, add a blue background */
 .radioButton input:checked ~ .radiomark {
   background-color: #ffffff; }
+  .radioButton input:checked ~ .radiomark.disabled {
+    background: #d0d1d4; }
+  .radioButton input:checked ~ .radiomark.disabled:after {
+    background: #4E5157; }
 
 /* Show the indicator (dot/circle) when checked */
 .radioButton input:checked ~ .radiomark:after {

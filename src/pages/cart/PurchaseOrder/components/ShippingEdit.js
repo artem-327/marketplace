@@ -11,6 +11,7 @@ const ShippingEdit = ({ toggleShippingEdit, isNewAddress, handleIsEdit, selected
   const radioOptions = [{value:"isEdit", label:'Saved Address'}, {value:"isNew", label:'Add New Address'}]
   return (
     <CartItem headerTitle="1. Shipping">
+      <div className="purchase-order-section">
       <Radio onChange={value => handleIsEdit(value)}
           name='isNewAddress'
           className='br-config-radio'
@@ -18,7 +19,6 @@ const ShippingEdit = ({ toggleShippingEdit, isNewAddress, handleIsEdit, selected
           checked={isNewAddress}
           disabled={!Object.keys(selectedAddress).length ? true : false}
       />
-      <div className="purchase-order-section">
         <Form model="forms.shippingEdit" onSubmit={(values) => console.log(values)} className="shipping-edit">
           <FormInput name=".firstName" label="First Name" />
           <FormInput name=".lastName" label="Last Name" />

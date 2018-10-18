@@ -4,23 +4,21 @@ import PropTypes from "prop-types";
 import { Control } from 'react-redux-form';
 
 class Radio extends Component {
-    constructor(props) {
-        super (props);
-        this.handleChange = this.handleChange.bind(this);
-        this.state = {}
-    }
+    state = {}
+
     componentWillMount(){
         let checked = this.props.redux ? this.props.value : this.props.checked;
         this.setState({checked});
     }
+
     componentWillReceiveProps(nextProps){
         let checked = nextProps.redux ? nextProps.value : nextProps.checked;
         this.setState({checked});
     }
 
-    handleChange(event){
-        let value = event.target.value;
-        this.setState({checked: value}, ()=>{
+    handleChange = event => {
+        const {value} = event.target;
+        this.setState({checked: value}, () => {
             if(this.props.onChange) this.props.onChange(value);
         });
 
@@ -35,7 +33,7 @@ class Radio extends Component {
                     value={radio.value} 
                     checked={radio.value === this.state.checked}
                     disabled={this.props.disabled}/>
-                <span className={"radiomark " + (this.props.className || '')}> </span>
+                <span className={"radiomark " + (this.props.className || '') + (this.props.disabled ? ' disabled' : '')}> </span>
             </label>
         });
     }
