@@ -1,8 +1,11 @@
 import axios from 'axios';
 
-const GET_PRODUCT_OFFERS = 'GET_PRODUCT_OFFERS';
-const GET_PRODUCT_OFFERS_FULFILLED = 'GET_PRODUCT_OFFERS_FULFILLED';
-const GET_PRODUCT_OFFERS_PENDING = 'GET_PRODUCT_OFFERS_PENDING';
+const GET_PRODUCT_OFFERS_MY = 'GET_PRODUCT_OFFERS_MY';
+const GET_PRODUCT_OFFERS_MY_FULFILLED = 'GET_PRODUCT_OFFERS_MY_FULFILLED';
+const GET_PRODUCT_OFFERS_MY_PENDING = 'GET_PRODUCT_OFFERS_MY_PENDING';
+const GET_PRODUCT_OFFERS_ALL = 'GET_PRODUCT_OFFERS_ALL';
+const GET_PRODUCT_OFFERS_ALL_FULFILLED = 'GET_PRODUCT_OFFERS_ALL_FULFILLED';
+const GET_PRODUCT_OFFERS_ALL_PENDING = 'GET_PRODUCT_OFFERS_ALL_PENDING';
 const GET_PRODUCT_OFFER = 'GET_PRODUCT_OFFER';
 const GET_PRODUCT_OFFER_FULFILLED = 'GET_PRODUCT_OFFER_FULFILLED';
 const GET_PRODUCT_OFFER_PENDING = 'GET_PRODUCT_OFFER_PENDING';
@@ -15,11 +18,13 @@ const ADD_PRODUCT_OFFER = 'ADD_PRODUCT_OFFER';
 const ADD_PRODUCT_OFFER_FULFILLED = 'ADD_PRODUCT_OFFER_FULFILLED';
 const RESET_PRODUCT_OFFER = 'RESET_PRODUCT_OFFER';
 const SAVE_INCREMENTAL_PRICING = 'SAVE_INCREMENTAL_PRICING';
+const DELETE_PRODUCT_OFFERS_LIST = 'DELETE_PRODUCT_OFFERS_LIST';
 
 export const initialState = {
-    data: [],
+    myProductOffers: [],
+    allProductOffers: [],
     addProductOffer: {},
-    isFetching: false,
+    isFetching: true,
     unitOfMeasurement: [],
     unitOfPackaging: [],
     productOffer: {},
@@ -28,16 +33,39 @@ export const initialState = {
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case GET_PRODUCT_OFFERS_PENDING: {
+        case DELETE_PRODUCT_OFFERS_LIST: {
             return {
                 ...state,
                 isFetching: true,
+                myProductOffers: [],
+                allProductOffers: []
             }
         }
-        case GET_PRODUCT_OFFERS_FULFILLED: {
+        case GET_PRODUCT_OFFERS_MY_PENDING: {
             return {
                 ...state,
-                data: action.payload,
+                myProductOffers: [],
+                isFetching: true,
+            }
+        }
+        case GET_PRODUCT_OFFERS_MY_FULFILLED: {
+            return {
+                ...state,
+                myProductOffers: action.payload,
+                isFetching: false
+            }
+        }
+        case GET_PRODUCT_OFFERS_ALL_PENDING: {
+            return {
+                ...state,
+                allProductOffers: [],
+                isFetching: true,
+            }
+        }
+        case GET_PRODUCT_OFFERS_ALL_FULFILLED: {
+            return {
+                ...state,
+                allProductOffers: action.payload,
                 isFetching: false
             }
         }
@@ -89,9 +117,22 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-export function fetchAll(filter = {}, mrchnt=true) {
+export function deleteProductOffersList(){
+    return {type: DELETE_PRODUCT_OFFERS_LIST}
+}
+
+export function fetchMyProductOffers(filter = {}) {
+    let mrchnt = true;
     return {
-        type: GET_PRODUCT_OFFERS,
+        type: GET_PRODUCT_OFFERS_MY,
+        payload: axios.get("/api/3f36ea/product-offers/", {params: {...filter, mrchnt}}).then(response => response.data.data.productOffers)
+    }
+}
+
+export function fetchAllProductOffers(filter = {}) {
+    let mrchnt = false;
+    return {
+        type: GET_PRODUCT_OFFERS_ALL,
         payload: axios.get("/api/3f36ea/product-offers/", {params: {...filter, mrchnt}}).then(response => response.data.data.productOffers)
     }
 }

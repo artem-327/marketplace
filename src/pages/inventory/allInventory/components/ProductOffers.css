@@ -1,38 +1,18 @@
-.all-product-offers {
-  margin: 20px 20px;
-  text-align: left;
-  width: calc(100% - 40px); }
-  .all-product-offers th {
-    border: 2px solid #e3e2df;
-    background-color: #fbfaf7;
-    padding: 10px;
-    font-weight: bold; }
-  .all-product-offers th:last-child {
-    text-align: center; }
-  .all-product-offers .product {
-    border: 2px solid #e3e2df;
-    background-color: #dbdad7;
-    font-weight: bold;
-    text-align: left; }
-    .all-product-offers .product td {
-      padding: 10px; }
-    .all-product-offers .product .product-name {
-      padding: 0 10px; }
-    .all-product-offers .product .icon {
-      padding: 0 10px; }
-    .all-product-offers .product .quantity {
-      text-align: right;
-      padding-right: 30px; }
-    .all-product-offers .product .product-casnumber {
-      color: #4e92df; }
-  .all-product-offers .product-offer {
-    border-bottom: 2px solid #e3e2df; }
-    .all-product-offers .product-offer td {
-      padding: 10px; }
-    .all-product-offers .product-offer button {
-      padding: 3px 20px;
-      color: white;
-      cursor: pointer;
-      background-color: #00c500;
-      border-radius: 3px;
-      border: 0; }
+.product-casnumber {
+  color: #4e92df !important;
+  margin-right: 10px;
+  vertical-align: middle; }
+
+.data-table {
+  margin-top: 20px; }
+
+.product-name {
+  padding: 0 10px;
+  vertical-align: middle; }
+
+.info-button {
+  padding: 3px 20px;
+  color: white;
+  background-color: #00c500;
+  border-radius: 3px;
+  border: 0; }

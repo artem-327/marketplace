@@ -7,11 +7,12 @@ import FilterTag from "../../../components/Filter/components/FilterTag";
 class AllInventory extends Component {
 
     componentDidMount(){
-        this.props.getData({}, false);
+        this.props.fetchAllProductOffers();
     }
 
     componentWillUnmount(){
         this.props.resetFilterTags();
+        this.props.deleteProductOffersList();
         this.props.resetForm('forms.filter');
     }
 
@@ -21,8 +22,8 @@ class AllInventory extends Component {
         return (
             <div>
                 <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
-                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getData({...filter}, false)}}/>
-                <Filter chemicalName quantity date price assay condition form filterFunc={(inputs) => this.props.getData(inputs, false)} />
+                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchAllProductOffers({...filter})}}/>
+                <Filter chemicalName quantity date price assay condition form package filterFunc={(inputs) => this.props.fetchAllProductOffers(inputs)} />
                 {content}
             </div>
         )

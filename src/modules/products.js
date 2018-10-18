@@ -28,6 +28,7 @@ const FETCH_ALTERNATIVE_NAMES_FULFILLED = 'FETCH_ALTERNATIVE_NAMES_FULFILLED';
 const FETCH_MANUFACTURER = 'FETCH_MANUFACTURER';
 const FETCH_MANUFACTURER_PENDING = 'FETCH_MANUFACTURER_PENDING';
 const FETCH_MANUFACTURER_FULFILLED = 'FETCH_MANUFACTURER_FULFILLED';
+const FETCH_PACKAGING_TYPES = 'FETCH_PACKAGING_TYPES';
 
 export const initialState = {
     productsMapping: {},
@@ -42,6 +43,7 @@ export const initialState = {
     recentProducts: [],
     origin: [],
     manufacturer:[],
+    packagingTypes:[],
     isFetchingManufacturer: false,
     isFetching: false,
     isMapFetching: false,
@@ -156,6 +158,12 @@ export default function reducer(state = initialState, action) {
             return{
                 ...state,
                 alternativeNames: action.payload
+            }
+        }
+        case FETCH_PACKAGING_TYPES:{
+            return{
+                ...state,
+                packagingTypes: action.payload
             }
         }
         default: {
@@ -287,5 +295,17 @@ export function fetchAlternativeNames(id){
             },
             "status": "success"
         }).then(result => result.data.alternativeNames)
+    }
+}
+
+export function fetchPackagingTypes(){
+    return {
+        type: FETCH_PACKAGING_TYPES,
+        payload: [
+            {id: 0, name:'Super Sack'},
+            {id: 1, name:'Pails'},
+            {id: 2, name:'Bulk'},
+            {id: 3, name:'Totes'},
+        ]
     }
 }
