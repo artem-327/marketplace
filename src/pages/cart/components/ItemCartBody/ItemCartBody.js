@@ -4,7 +4,7 @@ import Button from '../../../../components/Button/Button'
 import AddCart from "../AddCart"
 const ItemCartBody = ({cartItem, addPopup, removeProductFromCart, history}) => {
   const {productOffer} = cartItem;
-  //const location = productOffer.warehouse.address.province.name;
+  const location =`${productOffer.warehouse.address.city}, ${productOffer.warehouse.address.province.name}`;
   return (
     <div className="item-cart">
       <div className="item-cart-body">
@@ -16,7 +16,7 @@ const ItemCartBody = ({cartItem, addPopup, removeProductFromCart, history}) => {
             Merchant: {productOffer.merchant.email}
         </div>
           <div>
-            Location: location (!!)
+            Location: {location}
         </div>
           <div>
             Price Per Lb: {productOffer.pricing.price}
@@ -27,7 +27,7 @@ const ItemCartBody = ({cartItem, addPopup, removeProductFromCart, history}) => {
         </div>
         <div className="item-cart-body-section">
           <div>
-            Origin: {productOffer.origin}
+            Origin: {productOffer.origin.name}
         </div>
           <div>
             Assay: (?)

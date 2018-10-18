@@ -1,6 +1,6 @@
 import {
     OFFER_FETCH_SUCCEEDED, OFFER_FETCH_REQUESTED,
-    CARTITEMS_FETCH_SUCCEEDED, CARTITEMS_FETCH_REQUESTED,
+    CART_FETCH_SUCCEEDED, CART_FETCH_REQUESTED,
     PAYMENTS_FETCH_REQUESTED, PAYMENTS_FETCH_SUCCEEDED,
     DELIVERYADDRESSES_FETCH_SUCCEEDED,
     DELIVERYADDRESSES_FETCH_REQUESTED,
@@ -10,10 +10,11 @@ import {
 
 export const initialState = {
     offers: {},
-    cartItems: [],
+    cart: {},
     deliveryAddresses: [],
     payments: [],
     isFetching: true,
+    cartIsFetching: true,
     offersAreFetching: true,
     selectedAddressId: null,
     selectedCardId: null,
@@ -60,17 +61,17 @@ export default function reducer(state = initialState, action) {
                 offersAreFetching: false
             }
         }
-        case CARTITEMS_FETCH_REQUESTED: {
+        case CART_FETCH_REQUESTED: {
             return {
                 ...state,
-                isFetching: true,
+                cartIsFetching: true,
             }
         }
-        case CARTITEMS_FETCH_SUCCEEDED: {
+        case CART_FETCH_SUCCEEDED: {
             return {
                 ...state,
-                cartItems: action.payload,
-                isFetching: false
+                cart: action.payload,
+                cartIsFetching: false
             }
         }
 
@@ -86,8 +87,8 @@ export function getProductOffer(id) {
     }
 }
 
-export function fetchCartItems(){
-    return {type: CARTITEMS_FETCH_REQUESTED}
+export function fetchCart(){
+    return {type: CART_FETCH_REQUESTED}
 }
 
 export function fetchDeliveryAddresses(){

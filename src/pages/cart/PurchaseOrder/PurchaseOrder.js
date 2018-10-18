@@ -8,8 +8,9 @@ import Shipping from "./components/Shipping"
 import ShippingEdit from "./components/ShippingEdit"
 import Payment from "./components/Payment"
 import CartItem from "../components/CartItem/CartItem"
-import Button from '../../../components/Button/Button'
 import CartItemSummary from './components/CartItemSummary'
+import Button from '../../../components/Button/Button'
+import Spinner from '../../../components/Spinner/Spinner'
 import "./PurchaseOrder.css"
 
 class PurchaseOrder extends Component {
@@ -22,7 +23,7 @@ class PurchaseOrder extends Component {
   }
 
   componentDidMount(){
-    this.props.fetchCartItems()
+    this.props.fetchCart()
     this.props.fetchDeliveryAddresses()
     this.props.fetchPayments()
   }
@@ -67,13 +68,14 @@ class PurchaseOrder extends Component {
 
   //TODO:: same function in Shopping cart, define it just at one place
   renderSummary() {
+    const {totalPrice} = this.props.cart;
     return (
       <table>
         <tbody>
           <tr><td>Subtotal</td><td>$111</td></tr>
           <tr><td>Estimated Shipping</td><td>$111</td></tr>
           <tr><td>Estimated Tax</td><td>$111</td></tr>
-          <tr><td><b>Total</b></td><td>$111</td></tr>
+          <tr><td><b>Total</b></td><td>${totalPrice}</td></tr>
         </tbody>
       </table>
     )
@@ -96,8 +98,9 @@ class PurchaseOrder extends Component {
   }
 
   render() {
-    const {cartItems, deliveryAddresses, payments, dispatch, removeProductFromCart} = this.props;
-    const itemContent = cartItems.map(cartItem => {
+    const {cart, deliveryAddresses, payments, dispatch, removeProductFromCart, cartIsFetching} = this.props;
+    if (cartIsFetching) return <Spinner />
+    const itemContent = cart.orders.map(cartItem => {
       return (
       <CartItemSummary 
         removeProductFromCart={removeProductFromCart} 
@@ -168,7 +171,7 @@ PurchaseOrder.propTypes = {
   cartItem: PropTypes.object,
   deliveryAddresses: PropTypes.array,
   dispatch: PropTypes.func,
-  fetchCartItems: PropTypes.func,
+  fetchCart: PropTypes.func,
   fetchDeliveryAddresses: PropTypes.func,
   removeProductFromCart: PropTypes.func,
   selectedAddressId: PropTypes.number,

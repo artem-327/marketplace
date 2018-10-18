@@ -3,14 +3,15 @@ import PropTypes from "prop-types";
 import "./ShoppingCart.css"
 import SummaryTable from "../components/SummaryTable/SummaryTable"
 import CartWrapper from "../components/CartWrapper/CartWrapper"
-import Button from '../../../components/Button/Button'
 import CartItem from "../components/CartItem/CartItem"
 import ItemCartBody from "../components/ItemCartBody/ItemCartBody"
 import KeepShoppingPopup from "../components/KeepShoppingPopup/KeepShoppingPopup"
+import Spinner from '../../../components/Spinner/Spinner'
+import Button from '../../../components/Button/Button'
 
 class ShoppingCart extends Component {
   componentDidMount(){
-    this.props.fetchCartItems()
+    this.props.fetchCart()
   }
 
   handleContinueShopping = () => {
@@ -41,8 +42,9 @@ class ShoppingCart extends Component {
   }
 
   render() {
-    const {cartItems, removeProductFromCart, history, addPopup} = this.props;
-    const itemContent = cartItems.map(cartItem => {
+    const {cart, removeProductFromCart, history, addPopup, cartIsFetching} = this.props;
+    if (cartIsFetching) return <Spinner />
+    const itemContent = cart.orders.map(cartItem => {
     return (
       <ItemCartBody 
         addPopup={addPopup} 
@@ -52,7 +54,7 @@ class ShoppingCart extends Component {
         removeProductFromCart={removeProductFromCart} 
         />)
   });
-    const itemsNumber = cartItems.length;
+    const itemsNumber = cart.orders.length;
     const headerTitle = `Items (${itemsNumber})`
     return (
       <div className="app-inner-main">
