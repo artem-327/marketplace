@@ -53,8 +53,12 @@
     position: relative;
     z-index: 2; }
     .App-nav .nav-inside .dropdown-nav .dropdown-link-center {
-      padding: 15px 15px 14px 15px;
+      padding: 14px 15px 10px 15px;
       display: inline-block; }
+      .App-nav .nav-inside .dropdown-nav .dropdown-link-center .dropdown-nav-icon {
+        display: inline-block;
+        font-size: .8rem;
+        margin-left: 15px; }
     .App-nav .nav-inside .dropdown-nav .dropdown-nav-inside {
       position: absolute;
       vertical-align: bottom;

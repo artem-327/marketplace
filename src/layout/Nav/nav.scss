@@ -69,8 +69,13 @@ $nav-links-color: #b0b2b4;
       position: relative;
       z-index: 2;
       .dropdown-link-center{
-        padding: 15px 15px 14px 15px;
+        padding: 14px 15px 10px 15px;
         display: inline-block;
+        .dropdown-nav-icon{
+          display: inline-block;
+          font-size: .8rem;
+          margin-left: 15px;
+        }
       }
       .dropdown-nav-inside{
         position: absolute;

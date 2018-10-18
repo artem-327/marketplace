@@ -15,6 +15,7 @@ class Nav extends Component {
     constructor(props) {
         super(props);
         this.toggleMenu = this.toggleMenu.bind(this);
+        this.handleClickOutside = this.handleClickOutside.bind(this);
         this.state = {
             isScreenBig: true,
             menuOpen: false,
@@ -28,6 +29,18 @@ class Nav extends Component {
                 dashboard: false
             }
         }
+    }
+
+    handleClickOutside() {
+        this.setState({dropdown: {
+                administration: false,
+                settings: false,
+                reports: false,
+                clients: false,
+                orders: false,
+                inventory: false,
+                dashboard: false
+            }}, () => document.removeEventListener('click', this.handleClickOutside, false))
     }
 
     handleResize() {
@@ -58,13 +71,18 @@ class Nav extends Component {
         });
     }
 
+    openDropdown(id){
+        document.addEventListener('click', this.handleClickOutside, false);
+        this.setState({dropdown: {[id]: !this.state.dropdown[id]}})
+    }
+
     renderDropdown(id, links, name, img = null){
         const activeClass = this.props.location.pathname.split('/')[1] === id || this.state.dropdown[id] ? 'active' : null;
         const dropdown = <div className="dropdown-nav-inside">
             {links.map((link, index) => (<NavLink key={index} to={link.url} className='dropdown-nav-item' activeClassName='active'>{link.name}</NavLink>
             ))}</div>;
-        return <div className={"dropdown-nav " + activeClass} onClick={()=>this.setState({dropdown: {[id]: !this.state.dropdown[id]}})}>
-            <span className='dropdown-link-center'>{img ? <img src={img}  alt={"Dropdown " + name}/> : null}{name}</span>
+        return <div className={"dropdown-nav " + activeClass} onClick={()=>this.openDropdown(id)}>
+            <span className='dropdown-link-center'>{img ? <img src={img}  alt={"Dropdown " + name}/> : null}{name}  <i className="icon fas fa-angle-down dropdown-nav-icon"/></span>
             {this.state.dropdown[id] ? dropdown : null}
         </div>
     }
@@ -85,6 +103,8 @@ class Nav extends Component {
                     ], 'Dashboard')}
                     {this.renderDropdown('inventory', [
                         {name: 'All Inventory', url: '/inventory/all-inventory'},
+                        {name: 'My Inventory', url: '/inventory/my-inventory'},
+                        {name: 'Add Inventory', url: '/inventory/add-inventory'},
                     ], 'Inventory')}
                     {this.renderDropdown('orders', [
                         {name: 'Orders', url: '/orders'},
@@ -118,7 +138,6 @@ class Nav extends Component {
             </div>
             :
             <div className="nav-inside guest">
-
             </div>;
 
         return (
