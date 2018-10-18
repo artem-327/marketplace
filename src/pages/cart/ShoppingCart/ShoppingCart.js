@@ -28,14 +28,15 @@ class ShoppingCart extends Component {
     addPopup(<KeepShoppingPopup removePopup={removePopup} handleContinue={this.handleContinueShopping}/>)
   }
 
-  renderSummary(){
+  renderSummary() {
+    const {totalPrice} = this.props.cart;
     return (
       <table>
         <tbody>
           <tr><td>Subtotal</td><td>$111</td></tr>
           <tr><td>Estimated Shipping</td><td>$111</td></tr>
           <tr><td>Estimated Tax</td><td>$111</td></tr>
-          <tr><td><b>Total</b></td><td>$111</td></tr>
+          <tr><td><b>Total</b></td><td>${totalPrice}</td></tr>
         </tbody>
       </table>
     )
@@ -46,12 +47,12 @@ class ShoppingCart extends Component {
     if (cartIsFetching) return <Spinner />
     const itemContent = cart.orders.map(cartItem => {
     return (
-      <ItemCartBody 
-        addPopup={addPopup} 
-        history={history} 
-        key={cartItem.productOffer.id} 
-        cartItem={cartItem} 
-        removeProductFromCart={removeProductFromCart} 
+      <ItemCartBody
+        addPopup={addPopup}
+        history={history}
+        key={cartItem.productOffer.id}
+        cartItem={cartItem}
+        removeProductFromCart={removeProductFromCart}
         />)
   });
     const itemsNumber = cart.orders.length;

@@ -41,7 +41,7 @@ class AddCart extends Component {
   render() {
     const {offer, removePopup, isFetching} = this.props;
     if (isFetching) return <Spinner />
-    const location = offer.warehouse.address.province.name;
+    const location =`${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`;
     const unit = getUnit(offer.packaging.unit.name)
     const packageSize = `${offer.packaging.capacity} ${unit}${offer.packaging.capacity > 1 && 's'}`
     const {tiers} = offer.pricing
