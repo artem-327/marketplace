@@ -41,3 +41,14 @@ export const getUnit = function(unitName) {
             return "#";
     }
 }
+
+export const getSelectedDataTable = (dataTable) => {
+    if(!dataTable) return 0;
+    let selected = 0;
+    for(let i = 0; i < dataTable.rowsOpns.length; i++){
+        for(let j = 0; j < dataTable.rowsOpns[i].rows.length; j++){
+            if(dataTable.rowsOpns[i].rows[j].selected) selected++
+        }
+    }
+    return selected;
+}

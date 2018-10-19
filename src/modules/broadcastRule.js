@@ -18,6 +18,6 @@ export default function reducer(state = initialState, action) {
 export function sendRules(data) {
     return {
         type: CHANGE_RULES,
-        payload: axios.post("/api/v1/broadcast-rules/",data)
+        payload: axios.post("/api/vz2734/broadcast-rules/",data)
     }
 }

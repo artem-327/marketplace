@@ -122,7 +122,7 @@ export default function reducer(state = initialState, action) {
 export function getIdentity() {
     return {
         type: GET_IDENTITY,
-        payload: axios.get("/api/v1/users/me/")
+        payload: axios.get("/api/scc25z/users/me/")
             .then(response => response.data.data.user)
             .catch(e => {
                 deleteAuthToken();
@@ -134,7 +134,7 @@ export function getIdentity() {
 export function login(email, password) {
     return {
         type: LOGIN,
-        payload: axios.post("/api/v1/auth/login/", {email, password}).then(response => setAuthToken(response.data.data.token))
+        payload: axios.post("/api/fkxc0c/login/", {email, password}).then(response => setAuthToken(response.data.data.token))
     }
 }
 
@@ -156,7 +156,7 @@ export function registration(email, password, firstName, middleName, lastName) {
         type: REGISTRATION,
         payload: axios({
             method: 'post',
-            url: "/api/v1/users/",
+            url: "/api/31a2xl/users/",
             data: {
                 email: email,
                 password: password,
@@ -167,4 +167,3 @@ export function registration(email, password, firstName, middleName, lastName) {
         })
     }
 }
-

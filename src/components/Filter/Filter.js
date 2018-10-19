@@ -42,6 +42,7 @@ class Filter extends Component {
     componentDidMount() {
     this.props.fetchProductConditions();
     this.props.fetchProductForms();
+    this.props.fetchPackagingTypes();
     }
 
     componentWillReceiveProps(nextProps){
@@ -117,11 +118,11 @@ class Filter extends Component {
                                  isOpen={this.props.filterGroupStatus.packaging}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('packaging', value)}}
                                  checkboxModel='pckgs'
-                                 inputs={this.props.packageTypes.map(packageType => ({
-                                        label: packageType.name,
+                                 inputs={this.props.packagingTypes.map(packagingType => ({
+                                        label: packagingType.name,
                                         type: 'checkbox',
-                                        id: packageType.id,
-                                        model: `.pckgs[${packageType.id}]`
+                                        id: packagingType.id,
+                                        model: `.pckgs[${packagingType.id}]`
                                  }))}/>
                     <FilterGroup className="filterGroup"
                                  header='Condition'

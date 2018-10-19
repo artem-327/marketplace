@@ -24,13 +24,14 @@ import broadcastRules from "./modules/broadcastRule";
 import merchants, {initialState as merchantsInit} from "./modules/merchants";
 import products, {initialState as productsInit} from './modules/products';
 import errors from "./modules/errors";
-
 import companiesSaga from "./saga/companies";
 import officesSaga from "./saga/offices";
+import dataTables from "./modules/dataTables";
+
 import usersSaga from "./pages/administration/users/saga/users";
 import operatorsSaga from "./pages/administration/operators/saga/operators";
 import cartSaga from "./pages/cart/saga/cart";
-import merchantsSaga from "./saga/merchants";
+
 
 const reducer = combineReducers({
     identity,
@@ -47,6 +48,7 @@ const reducer = combineReducers({
     merchants,
     filter,
     errors,
+    dataTables,
     forms: combineForms({
         filter: filterInit.data,
         addProductOffer: addProductsInit.addProductOffer,
@@ -88,4 +90,4 @@ sagaMiddleware.run(officesSaga);
 sagaMiddleware.run(usersSaga);
 sagaMiddleware.run(operatorsSaga);
 sagaMiddleware.run(cartSaga);
-sagaMiddleware.run(merchantsSaga);
+

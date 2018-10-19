@@ -50,7 +50,7 @@ export default function reducer(state = initialState, action) {
 export function fetchLocations(filter = {}){
     return {
         type: FETCH_LOCATIONS,
-        payload: axios.get('/api/v1/locations/', {params: {...filter}}).then(result => {
+        payload: axios.get('/api/t7r1bn/locations/', {params: {...filter}}).then(result => {
             return result.data.data.locations.map((loc)=> {
                 return {
                     id: loc.id,
