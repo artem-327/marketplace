@@ -3,21 +3,18 @@ import './checkbox.css';
 import PropTypes from "prop-types";
 
 class Checkbox extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            checked: false,
-        }
+    state = {
+        checked: false,
     }
 
-    componentWillReceiveProps(nextProps){
+    UNSAFE_componentWillReceiveProps(nextProps){
         if(nextProps.defaultValue){
             this.setState({checked: nextProps.defaultValue})
         }
     }
 
-    handleChange () {
-        this.setState({checked: !this.state.checked}, ()=>{
+    handleChange = () => {
+        this.setState({checked: !this.state.checked},() => {
             this.props.onChange(this.state.checked);
         });
     }
@@ -26,16 +23,21 @@ class Checkbox extends Component {
         return (
             <label className={"input-checkbox " + (this.props.inputClass || '')}><p>{this.props.label}</p>
                 <input type="checkbox" name={this.props.name}
-                       onChange={(e) => {this.handleChange(e)}}
-                       checked={this.state.checked}/>
+                       onChange={this.handleChange}
+                       checked={this.props.disabled ? this.props.defaultValue : this.state.checked}
+                       disabled={this.props.disabled}/>
                 <span className={"checkmark " + (this.props.className || '')}>  </span>
             </label>
         )
     }
 }
 
+export default Checkbox;
+
+
 Checkbox.propTypes = {
     label: PropTypes.string,
+    disabled: PropTypes.bool,
     name: PropTypes.string,
     className: PropTypes.string,
     inputClass: PropTypes.string,
@@ -43,8 +45,8 @@ Checkbox.propTypes = {
     defaultValue: PropTypes.bool
 };
 
-export default Checkbox;
-
-
+Checkbox.defaultProps = {
+    disabled: false
+  }
 
 

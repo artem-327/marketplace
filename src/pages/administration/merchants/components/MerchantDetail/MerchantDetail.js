@@ -5,7 +5,6 @@ import Button from '../../../../../components/Button/Button'
 import Spinner from '../../../../../components/Spinner/Spinner'
 import PopupComponent from '../../../../../components/PopUp/PopupComponent'
 import InputControlled from '../../../../../components/InputControlled/InputControlled'
-import './MerchantDetail.css'
 
 class MerchantDetail extends Component {
   state = {
@@ -43,6 +42,7 @@ class MerchantDetail extends Component {
 
   render() {
     const {isFetching, id, removePopup, editMerchant, removeMerchant} = this.props;
+    if (isFetching) return <Spinner />
     const editBody = {
       id: id,
       email: this.state.email,
@@ -51,27 +51,36 @@ class MerchantDetail extends Component {
       middlename: this.state.middlename,
       approved: this.state.approved
     }
-    if (isFetching) return <Spinner />
+    const footerComponent = (
+      <React.Fragment>
+        <Button color="red" onClick={() => removeMerchant(id)}>
+          Delete
+        </Button>
+        <Button color="blue" onClick={() => editMerchant(editBody)}>
+          Edit
+        </Button>
+      </React.Fragment>
+    )
     return (
-      <PopupComponent removePopup={removePopup} headerTitle="Merchant Detail">
+      <PopupComponent removePopup={removePopup} headerTitle="Merchant Detail" footerComponent={footerComponent}>
         <div className="add-cart-body">
           <div className="add-cart-body-section">
-            <div>MERCHANT DETAIL:</div>
+            <div>MERCHANT INFO:</div>
             <div>
-              <InputControlled value={this.state.firstname} handleChange={this.handleChange} name="firstname" />
+              First Name: <InputControlled value={this.state.firstname} handleChange={this.handleChange} name="firstname" />
             </div>
             <div>
-              <InputControlled value={this.state.middlename} handleChange={this.handleChange} name="middlename" />
+              Middle Name: <InputControlled value={this.state.middlename} handleChange={this.handleChange} name="middlename" />
             </div>
             <div>
-              <InputControlled value={this.state.lastname} handleChange={this.handleChange} name="lastname" />
+              Last Name: <InputControlled value={this.state.lastname} handleChange={this.handleChange} name="lastname" />
             </div>
             <div>
-              <InputControlled value={this.state.email} handleChange={this.handleChange} name="email" />
+              Email: <InputControlled value={this.state.email} handleChange={this.handleChange} name="email" />
             </div>
             <div>OFFICE:</div>
             <div>
-              <InputControlled
+              Country: <InputControlled
                 value={this.state.officeResponse.location.country}
                 handleChange={this.handleChange}
                 name="country"
@@ -79,7 +88,7 @@ class MerchantDetail extends Component {
               />
             </div>
             <div>
-              <InputControlled
+              State: <InputControlled
                 value={this.state.officeResponse.location.state}
                 handleChange={this.handleChange}
                 name="state"
@@ -96,14 +105,6 @@ class MerchantDetail extends Component {
                 }}
               />
             </div>
-            <footer className="add-cart-footer">
-              <Button color="grey" onClick={() => removeMerchant(id)}>
-                Delete
-              </Button>
-              <Button color="blue" onClick={() => editMerchant(editBody)}>
-                Edit
-              </Button>
-            </footer>
           </div>
         </div>
       </PopupComponent>

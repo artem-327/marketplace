@@ -18,14 +18,18 @@ button {
     &.light-blue {
         border: 1px solid $blue-color;
         color: $blue-color;
-        background-color: lighten( $blue-color, 30% ) 
+        background-color: lighten( $blue-color, 30% )
     }
     &.blue {
         background-color: $blue-color;
     }
-    &.grey{
+    &.grey {
         background-color: $beige-color;
         color: $brown-color;
-      }
+    }
+    &.red {
+        background-color: $red-color;
+        color: $white-color;
+    }
   }
 
