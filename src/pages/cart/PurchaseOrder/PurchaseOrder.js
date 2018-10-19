@@ -3,11 +3,9 @@ import PropTypes from "prop-types"
 import { actions } from 'react-redux-form';
 import { NavLink } from 'react-router-dom';
 import SummaryTable from "../components/SummaryTable/SummaryTable"
-import CartWrapper from "../components/CartWrapper/CartWrapper"
 import Shipping from "./components/Shipping"
 import ShippingEdit from "./components/ShippingEdit"
 import Payment from "./components/Payment"
-import CartItem from "../components/CartItem/CartItem"
 import CartItemSummary from './components/CartItemSummary'
 import Button from '../../../components/Button/Button'
 import Spinner from '../../../components/Spinner/Spinner'
@@ -102,7 +100,10 @@ class PurchaseOrder extends Component {
             </div>
           </NavLink>
         </div>
-        <CartWrapper mainTitle="Purchase Order">
+        <div className="shopping-cart">
+          <h1 className='header inv-header'>Purchase Order</h1>
+          <div className="shopping-cart-body">
+
           <div>
             {this.state.isShippingEdit ? <ShippingEdit
                 toggleShippingEdit={this.toggleShippingEdit}
@@ -126,7 +127,8 @@ class PurchaseOrder extends Component {
               getPayment={this.getPayment}
               />
 
-            <CartItem headerTitle="3. Terms and Agreement">
+            <div className="shopping-cart-items">
+              <header><h1>3. Terms and Agreement</h1></header>
               <div className="purchase-order-section">
                 <div>Legal Language</div>
                 <div>Terms and Agreement</div>
@@ -134,7 +136,7 @@ class PurchaseOrder extends Component {
                   <Button color="blue">Place order</Button>
                 </footer>
                 </div>
-            </CartItem>
+            </div>
 
           </div>
           <div>
@@ -145,7 +147,9 @@ class PurchaseOrder extends Component {
               {itemContent}
             </SummaryTable>
           </div>
-        </CartWrapper></div>
+          </div>
+        </div>
+      </div>
     )
   }
 }

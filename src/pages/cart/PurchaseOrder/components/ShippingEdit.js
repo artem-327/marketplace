@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import "./ShippingEdit.css"
-import CartItem from '../../components/CartItem/CartItem'
 import Button from '../../../../components/Button/Button'
 import FormInput from '../../../../components/Form/FormInput'
 import Radio from "../../../../components/Radio/Radio";
@@ -10,7 +9,8 @@ import { Form } from 'react-redux-form';
 const ShippingEdit = ({ toggleShippingEdit, isNewAddress, handleIsEdit, selectedAddress, createDeliveryAddress }) => {
   const radioOptions = [{value:"isEdit", label:'Saved Address'}, {value:"isNew", label:'Add New Address'}]
   return (
-    <CartItem headerTitle="1. Shipping">
+    <div className="shopping-cart-items">
+      <header><h1>1. Shipping</h1></header>
       <div className="purchase-order-section">
       <Radio onChange={value => handleIsEdit(value)}
           name='isNewAddress'
@@ -37,7 +37,7 @@ const ShippingEdit = ({ toggleShippingEdit, isNewAddress, handleIsEdit, selected
           </footer>
         </Form>
       </div>
-    </CartItem>
+    </div>
   )
 }
 

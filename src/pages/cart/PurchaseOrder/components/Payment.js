@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import CartItem from '../../components/CartItem/CartItem'
 import DropdownRedux from '../../../../components/Dropdown/DropdownRedux'
 import {required} from '../../../../utils/validation'
 
@@ -11,7 +10,8 @@ const Payment = ({dispatch, payments, selectedAddress, selectedPayment, getPayme
     return i;
   })
   return (
-    <CartItem headerTitle="2. Payment">
+    <div className="shopping-cart-items">
+      <header><h1>2. Payment</h1></header>
       <div className="purchase-order-section">
         <div className="group-item-wr">
           <DropdownRedux
@@ -39,7 +39,7 @@ const Payment = ({dispatch, payments, selectedAddress, selectedPayment, getPayme
         </div>
         </React.Fragment>}
       </div>
-    </CartItem>
+    </div>
   )
 }
 

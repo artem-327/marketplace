@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from "prop-types";
 import "./ShoppingCart.css"
 import SummaryTable from "../components/SummaryTable/SummaryTable"
-import CartWrapper from "../components/CartWrapper/CartWrapper"
-import CartItem from "../components/CartItem/CartItem"
 import ItemCartBody from "../components/ItemCartBody/ItemCartBody"
 import KeepShoppingPopup from "../components/KeepShoppingPopup/KeepShoppingPopup"
 import Spinner from '../../../components/Spinner/Spinner'
@@ -65,17 +63,21 @@ class ShoppingCart extends Component {
           <b> Back to Product/Purchase info</b>
         </div>
       </div>
-      <CartWrapper mainTitle="PRODUCT OFFERINGS">
-        <CartItem headerTitle={headerTitle}>
-          {itemContent}
-        </CartItem>
-        <div>
-          <SummaryTable title="Summary" hasButton={true} handleContinue={this.handleContinue}>
-            {this.renderSummary()}
-          </SummaryTable>
-          <Button size="large" color="light-blue"onClick={this.keepShopping}>Keep Shopping</Button>
+      <div className="shopping-cart">
+          <h1 className='header inv-header'>PRODUCT OFFERINGS</h1>
+          <div className="shopping-cart-body">
+          <div className="shopping-cart-items">
+          <header><h1>{headerTitle}</h1></header>
+            {itemContent}
+          </div>
+          <div>
+            <SummaryTable title="Summary" hasButton={true} handleContinue={this.handleContinue}>
+              {this.renderSummary()}
+            </SummaryTable>
+            <Button size="large" color="light-blue"onClick={this.keepShopping}>Keep Shopping</Button>
+          </div>
+          </div>
         </div>
-      </CartWrapper>
     </div>
     )
   }

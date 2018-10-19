@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import CartItem from '../../components/CartItem/CartItem'
 import DropdownRedux from '../../../../components/Dropdown/DropdownRedux'
 import {required} from '../../../../utils/validation'
 
@@ -11,7 +10,8 @@ const Shipping = ({deliveryAddresses, dispatch, getAddress, selectedAddress, tog
     return i;
   })
   return (
-    <CartItem headerTitle="1. Shipping" edit="edit" toggleShippingEdit={toggleShippingEdit}>
+    <div className="shopping-cart-items">
+      <header><h1>1. Shipping<span className="headerAddtext" onClick={toggleShippingEdit}>edit</span></h1></header>
       <div className="purchase-order-section">
         <div className="group-item-wr">
           <DropdownRedux
@@ -32,7 +32,7 @@ const Shipping = ({deliveryAddresses, dispatch, getAddress, selectedAddress, tog
           <div>{selectedAddress.email}</div>
         </div>}
       </div>
-    </CartItem>
+      </div>
   )
 }
 
