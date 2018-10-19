@@ -11,7 +11,7 @@ function mapStateToProps(store) {
     return {
         isOpen: store.filter.isOpen,
         packagingTypes: store.products.packagingTypes,
-        warehouseDistances: store.products.location,
+        warehouseDistances: store.location.warehouseDistances,
         filterGroupStatus: store.filter.filterGroup,
         filterData: store.forms.filter,
         productConditions: store.products.productConditions,

@@ -7,6 +7,7 @@ class FilterTag extends Component {
     packageName = [];
     conditionName = [];
     formName = [];
+    locationName = [];
 
     checkName(name){
         switch(name){
@@ -89,6 +90,10 @@ class FilterTag extends Component {
             case 'form':{
                 this.pickFormName();
                 return this.formName.join(',');
+            }
+            case 'loc':{
+                this.pickLocationName();
+                return this.locationName.join(',');
             }
             default: {
                 return this.props.value;

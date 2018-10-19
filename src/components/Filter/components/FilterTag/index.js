@@ -12,6 +12,8 @@ function mapStateToProps(store) {
         productConditions: store.products.productConditions,
         productForms: store.products.productForms,
         packagingTypes: store.products.packagingTypes,
+        zipCode: store.forms.filter.zipCode,
+        warehouseDistances: store.location.warehouseDistances,
     }
 }
 

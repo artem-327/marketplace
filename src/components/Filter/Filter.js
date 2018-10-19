@@ -191,12 +191,12 @@ class Filter extends Component {
                                  inputs={[
                                     {
                                         label: 'Enter your zip code',
-                                        model: '.zipcode',
+                                        model: '.zipCode',
                                         type: 'number'
                                     }, 
                                     {
                                          label: 'Max. miles away',
-                                         model: '.distance',
+                                         model: '.warehouseDistance',
                                          type: 'dropdown',
                                          data: this.props.warehouseDistances,
                                      }
