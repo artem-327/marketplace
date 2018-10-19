@@ -5,7 +5,6 @@ import {
     MERCHANTS_FETCH_REQUESTED, MERCHANTS_FETCH_SUCCEEDED,
 } from "../constants/merchants";
 
-const GET_MERCHANT = 'GET_MERCHANT';
 const ACCEPT_MERCHANT = 'ACCEPT_MERCHANT';
 const REJECT_MERCHANT = 'REJECT_MERCHANT';
 const UPDATE_APPROVE = 'UPDATE_APPROVE';
@@ -14,6 +13,7 @@ export const initialState = {
     data:[],
     approvedMerchants:{},
     isFetching: false,
+    detailIsFetching: false,
     merchantDetail: {}
 };
 
@@ -30,18 +30,20 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 data: action.payload,
+                isFetching: false,
             }
         }
         case MERCHANT_FETCH_REQUESTED: {
             return {
                 ...state,
-                isFetching: true,
+                detailIsFetching: true,
             }
         }
         case MERCHANT_FETCH_SUCCEEDED: {
             return {
                 ...state,
                 merchantDetail: action.payload,
+                detailIsFetching: false,
             }
         }
 
