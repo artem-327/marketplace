@@ -12,6 +12,9 @@
     .purchase-order-section .text-section div b {
       color: #4E5157; }
 
+.cart-item-summary {
+  min-width: 280px; }
+
 .cart-item-summary:not(:last-child) {
   border-bottom: 2px solid #E7E7E7;
   margin-bottom: 15px;

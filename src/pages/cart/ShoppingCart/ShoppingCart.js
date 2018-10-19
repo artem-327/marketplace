@@ -33,7 +33,7 @@ class ShoppingCart extends Component {
     return (
       <table>
         <tbody>
-          <tr><td>Subtotal</td><td>$111</td></tr>
+          <tr><td>Subtotal</td><td>${totalPrice}</td></tr>
           <tr><td>Estimated Shipping</td><td>$111</td></tr>
           <tr><td>Estimated Tax</td><td>$111</td></tr>
           <tr><td><b>Total</b></td><td>${totalPrice}</td></tr>

@@ -19,7 +19,7 @@ const ItemCartBody = ({cartItem, addPopup, removeProductFromCart, history}) => {
             Location: {location}
         </div>
           <div>
-            Price Per Lb: {productOffer.pricing.price}
+            Price Per Lb: ${productOffer.pricing.price}
         </div>
           <div>
             Total Weight: quantity * neco (?)

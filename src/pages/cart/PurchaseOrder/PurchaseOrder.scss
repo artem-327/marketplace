@@ -19,6 +19,9 @@
     }
   }
 }
+.cart-item-summary {
+  min-width: 280px;
+}
 
 .cart-item-summary:not(:last-child) {
     border-bottom: 2px solid $beige-color;

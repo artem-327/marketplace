@@ -4,7 +4,6 @@ import Dropdown from '../../../../components/Dropdown/Dropdown'
 import Spinner from '../../../../components/Spinner/Spinner'
 import PopupComponent from '../../../../components/PopUp/PopupComponent'
 import {getUnit} from '../../../../utils/functions'
-
 import './AddCart.css';
 
 class AddCart extends Component {
@@ -42,8 +41,11 @@ class AddCart extends Component {
     const {offer, removePopup, isFetching} = this.props;
     if (isFetching) return <Spinner />
     const location =`${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`;
-    const unit = getUnit(offer.packaging.unit.name)
-    const packageSize = `${offer.packaging.capacity} ${unit}${offer.packaging.capacity > 1 && 's'}`
+    const {unit, capacity, amount, splits} = offer.packaging;
+    const unitName = `${getUnit(unit.name)}${capacity > 1 && 's'}`;
+    const packageSize = `${capacity} ${unitName}`;
+    const availableProducts = `${amount} pck / ${(amount * capacity).formatNumber()}${unitName}`;
+    const totalPrice = this.state.quantity ? offer.pricing.price * this.state.quantity * capacity : "";
     const {tiers} = offer.pricing
     const priceLevelOptions = tiers.map(i => {
       const object = {
@@ -52,7 +54,7 @@ class AddCart extends Component {
       };
       return object;
     })
-    const quantityOptions = this.getQualityOptions( offer.packaging.splits)
+    const quantityOptions = this.getQualityOptions( splits)
     const quantityOptionsWithName = quantityOptions.map(i => {
       const object = {name: `${i.toString()} pck`, id: i}
       return object;
@@ -72,7 +74,7 @@ class AddCart extends Component {
             </div>
             <div>
               <b>Available Products: </b>
-              {offer.packaging.amount.formatNumber()}
+              {availableProducts}
             </div>
             <div>
               <b>Packaging: </b>
@@ -119,17 +121,20 @@ class AddCart extends Component {
                   this.setState({quantity: value})
                 }}/>
             </div>
-            <div>
-              <b>Total Quantity: {this.state.quantity} pck</b>
+            <div className="purchase-info">
+              <b>Total Quantity:</b> <span>{this.state.quantity && `${this.state.quantity} pck`}</span>
             </div>
-            <div>
-              <b>Price/LB: ${offer.pricing.price}</b>
+            <div className="purchase-info">
+              <b>Price/LB:</b> 
+              <span>${offer.pricing.price}</span> 
             </div>
-            <div>
-              <b>Delivered Price/LB: $</b>
+            <div className="purchase-info">
+              <b>Delivered Price/LB:</b> 
+              <span>$</span> 
             </div>
-            <div>
-              <b>Total: $</b>
+            <div className="purchase-info">
+              <b>Total:</b> 
+              <span>${totalPrice}</span> 
             </div>
           </div>
           </div>
