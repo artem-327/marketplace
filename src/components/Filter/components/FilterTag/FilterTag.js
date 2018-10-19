@@ -34,7 +34,6 @@ class FilterTag extends Component {
     }
 
     pickPackageName(){
-        console.log(this.props.value, this.props.packagingTypes);
         this.packageName = [];
         let array = this.props.value.split(',');
 

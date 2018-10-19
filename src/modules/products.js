@@ -307,6 +307,7 @@ export function fetchAlternativeNames(id){
 }
 
 export function fetchPackagingTypes(filter = {}){
+    console.log(filter);
     return {
         type: FETCH_PACKAGING_TYPES,
         payload: axios.get('/api/e49sy3/containers/', {params: {...filter}}).then(result => result.data.data.containers)

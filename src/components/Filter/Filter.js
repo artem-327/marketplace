@@ -16,13 +16,11 @@ class Filter extends Component {
     }
 
     handleSubmit(inputs){
-        console.log(inputs);
         let filter = Object.assign({}, inputs,
             {pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key).join(',')},
             {condition: Object.entries(inputs.condition || {}).filter(([key, value]) => value).map(([key]) => key).join(',')},
             {form: Object.entries(inputs.form || {}).filter(([key, value]) => value).map(([key]) => key).join(',')}
             );
-        console.log(filter);
         let params = filterNonEmptyAttributes(filter);
         this.props.filterFunc(params);
         let filterTags = [];
