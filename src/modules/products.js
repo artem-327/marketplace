@@ -30,7 +30,6 @@ const FETCH_MANUFACTURER_PENDING = 'FETCH_MANUFACTURER_PENDING';
 const FETCH_MANUFACTURER_FULFILLED = 'FETCH_MANUFACTURER_FULFILLED';
 const FETCH_PACKAGING_TYPES = 'FETCH_PACKAGING_TYPES';
 const FETCH_PACKAGING_TYPES_FULFILLED = 'FETCH_PACKAGING_TYPES_FULFILLED';
-const FETCH_WAREHOUSE_DISTANCES = 'FETCH_WAREHOUSE_DISTANCES';
 
 export const initialState = {
     productsMapping: {},
@@ -166,12 +165,6 @@ export default function reducer(state = initialState, action) {
             return{
                 ...state,
                 packagingTypes: action.payload
-            }
-        }
-        case FETCH_WAREHOUSE_DISTANCES:{
-            return{
-                ...state,
-                location: action.payload
             }
         }
         default: {
@@ -310,17 +303,5 @@ export function fetchPackagingTypes(filter = {}){
     return {
         type: FETCH_PACKAGING_TYPES,
         payload: axios.get('/api/e49sy3/containers/', {params: {...filter}}).then(result => result.data.data.containers)
-    }
-}
-
-export function fetchWarehouseDistances(){
-    return {
-        type: FETCH_WAREHOUSE_DISTANCES,
-        payload: [
-            {id: 0, name:'10'},
-            {id: 1, name:'100'},
-            {id: 2, name:'1000'},
-            {id: 3, name:'10000'},
-        ]
     }
 }

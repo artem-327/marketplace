@@ -2,7 +2,8 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Filter from './Filter';
 import {toggleFilterGroup, addFilterTag, toggleFilter} from '../../modules/filter';
-import {fetchProductAge, fetchProductConditions, fetchProductForms, fetchPackagingTypes, fetchWarehouseDistances} from '../../modules/products';
+import {fetchProductAge, fetchProductConditions, fetchProductForms, fetchPackagingTypes} from '../../modules/products';
+import {fetchWarehouseDistances} from '../../modules/location';
 import {resetForm} from '../../utils/functions';
 
 
