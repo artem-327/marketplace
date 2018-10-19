@@ -82,7 +82,7 @@ function* cartSaga() {
     yield takeEvery(PAYMENTS_FETCH_REQUESTED, fetchPayments);
     yield takeEvery(PRODUCTFROMCART_REMOVE_REQUESTED, removeProductFromCart);
     yield takeEvery(CARTITEM_CREATE_REQUESTED, createCartItem);
-    yield takeEvery(DELIVERYADDRESS_CREATE_REQUESTED, createCartItem);
+    yield takeEvery(DELIVERYADDRESS_CREATE_REQUESTED, createDeliveryAddress);
 }
 
 export default cartSaga;

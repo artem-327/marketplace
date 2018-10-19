@@ -8,8 +8,10 @@
       display: block; } }
   .shipping-edit footer {
     margin-top: 20px; }
-  .shipping-edit .input-group > .group-item-wr, .shipping-edit input {
+  .shipping-edit .group-item-wr, .shipping-edit input {
     width: 100%; }
+  .shipping-edit label {
+    margin: 0; }
   .shipping-edit .input-group:nth-of-type(3) {
     grid-column: 1 / 3;
     grid-row: 2 / 3; }

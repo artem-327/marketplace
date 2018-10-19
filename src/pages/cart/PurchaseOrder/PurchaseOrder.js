@@ -14,7 +14,7 @@ import Spinner from '../../../components/Spinner/Spinner'
 import "./PurchaseOrder.css"
 
 class PurchaseOrder extends Component {
-  //TODO: maybe move internal state to redux? decide it later 
+  //TODO: maybe move internal state to redux? decide it later
   state = {
     selectedAddress: {},
     selectedPayment: {},
@@ -81,29 +81,13 @@ class PurchaseOrder extends Component {
     )
   }
 
-  renderCartSummary() {
-    return (
-      <table>
-        <tbody>
-          <tr><td>Name</td><td>remove</td></tr>
-          <tr><td>Merchant</td><td></td></tr>
-          <tr><td>Location</td><td></td></tr>
-          <tr><td>Quantity</td><td>packs</td></tr>
-          <tr><td>Weight</td><td>lbs</td></tr>
-          <tr><td>Price per Lb</td><td>$</td></tr>
-          <tr><td><b>Product Total</b></td><td><b>$</b></td></tr>
-        </tbody>
-      </table>
-    )
-  }
-
   render() {
     const {cart, deliveryAddresses, payments, dispatch, removeProductFromCart, cartIsFetching, createDeliveryAddress} = this.props;
     if (cartIsFetching) return <Spinner />
     const itemContent = cart.orders.map(cartItem => {
       return (
-      <CartItemSummary 
-        removeProductFromCart={removeProductFromCart} 
+      <CartItemSummary
+        removeProductFromCart={removeProductFromCart}
         cartItem={cartItem}
         key={cartItem.productOffer.id}
       />)

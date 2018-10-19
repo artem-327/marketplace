@@ -8,6 +8,11 @@ import {getUnit} from '../../../../utils/functions'
 import './AddCart.css';
 
 class AddCart extends Component {
+  state = {
+    pricing: false,
+    quantity: false,
+  }
+
   componentDidMount() {
     this.props.getProductOffer(this.props.id)
   }
@@ -24,17 +29,35 @@ class AddCart extends Component {
     removePopup()
   }
 
+   getQualityOptions = (split) => {
+    const {quantityFrom, quantityTo} = this.state.pricing
+    const options = []
+    for (let i = quantityFrom; i <= quantityTo; i = i + split) {
+      options.push(i);
+    }
+    return options;
+   }
+
   render() {
     const {offer, removePopup, isFetching} = this.props;
     if (isFetching) return <Spinner />
-    const location = offer.warehouse.address.province.name;
+    const location =`${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`;
     const unit = getUnit(offer.packaging.unit.name)
     const packageSize = `${offer.packaging.capacity} ${unit}${offer.packaging.capacity > 1 && 's'}`
     const {tiers} = offer.pricing
     const priceLevelOptions = tiers.map(i => {
-      i.name = `${i.quantityFrom} - ${i.quantityTo} / $${i.price}`;
-      return i;
+      const object = {
+        name: `${i.quantityFrom} - ${i.quantityTo} pck / $${i.price}`,
+        id: {quantityFrom: i.quantityFrom, quantityTo: i.quantityTo, price: i.price}
+      };
+      return object;
     })
+    const quantityOptions = this.getQualityOptions( offer.packaging.splits)
+    const quantityOptionsWithName = quantityOptions.map(i => {
+      const object = {name: `${i.toString()} pck`, id: i}
+      return object;
+    })
+
     return (
         <PopupComponent handleContinue={this.handleContinue} removePopup={removePopup} headerTitle="Purchase">
         <div className="add-cart-body">
@@ -65,7 +88,7 @@ class AddCart extends Component {
             </div>
             <div>
               <b>Location: </b>
-              {location}{' '}
+              {location}
             </div>
             <div>
               <b>Attachments: </b>
@@ -78,23 +101,35 @@ class AddCart extends Component {
             <h3>Purchase Info</h3>
             <div>
               <b>Select Price Level</b>
-              <Dropdown opns={priceLevelOptions} placeholder="Select Price Level" />
+              <Dropdown
+                opns={priceLevelOptions}
+                placeholder="Select Price Level"
+                onChange={value => {
+                  this.setState({pricing: value})
+                }}
+              />
             </div>
             <div>
               <b>Select Quantity</b>
-              <Dropdown opns={[]} placeholder="Select Quantity" />
+              <Dropdown
+                opns={quantityOptionsWithName}
+                placeholder="Select Quantity"
+                disabled={!this.state.pricing && true}
+                onChange={value => {
+                  this.setState({quantity: value})
+                }}/>
             </div>
             <div>
-              <b>Total Quantity: </b>
+              <b>Total Quantity: {this.state.quantity} pck</b>
             </div>
             <div>
-              <b>Price/LB: </b>
+              <b>Price/LB: ${offer.pricing.price}</b>
             </div>
             <div>
-              <b>Delivered Price/LB: </b>
+              <b>Delivered Price/LB: $</b>
             </div>
             <div>
-              <b>Total: </b>
+              <b>Total: $</b>
             </div>
           </div>
           </div>
