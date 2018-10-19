@@ -1,0 +1,25 @@
+@import "../../../../../styles/main.scss";
+
+.popup-component{
+    max-width: 1000px;
+    margin: 0 auto;
+    .popup-component-body{
+        border: 1px solid $beige-color;
+        border-radius: $border-rounding;
+    }
+}
+.add-broadcast {
+    display: grid;
+    grid-template-columns: 40% auto;
+    grid-template-rows: 50px auto;
+    .add-broadcast-main{
+        .broadcast-field{
+            height: 60px;
+            border: 1px solid $beige-color;
+            padding: 1em;
+            &.region {
+                background-color: $light-blue-color;
+            }
+        }
+    }
+}

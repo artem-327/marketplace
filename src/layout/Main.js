@@ -24,6 +24,8 @@ import Operators from "../pages/administration/operators";
 import NoMatch from "../components/404";
 
 import {withEdit} from '../pages/inventory/addInventory/EditInventoryHOC';
+//TODO: temporary route for development
+import AddBroadcast from "../pages/inventory/myInventory/components/broadcast/AddBroadcast";
 
 class Main extends Component {
     render() {
@@ -49,7 +51,9 @@ class Main extends Component {
                     <Route exact path="/administration/operators" component={withAuth(Operators)}/>
                     <Route exact path="/test-page" component={TestPage}/>
                     <Route exact path="/shopping-cart" component={withAuth(ShoppingCart)}/>
+                    <Route exact path="/broadcast" component={AddBroadcast}/>
                     <Route component={withAuth(NoMatch)}/>
+
                 </Switch>
             </div>
         );

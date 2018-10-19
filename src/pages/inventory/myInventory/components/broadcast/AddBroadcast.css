@@ -1,0 +1,17 @@
+.popup-component {
+  max-width: 1000px;
+  margin: 0 auto; }
+  .popup-component .popup-component-body {
+    border: 1px solid #E7E7E7;
+    border-radius: 4px; }
+
+.add-broadcast {
+  display: grid;
+  grid-template-columns: 40% auto;
+  grid-template-rows: 50px auto; }
+  .add-broadcast .add-broadcast-main .broadcast-field {
+    height: 60px;
+    border: 1px solid #E7E7E7;
+    padding: 1em; }
+    .add-broadcast .add-broadcast-main .broadcast-field.region {
+      background-color: #EFF7FC; }
