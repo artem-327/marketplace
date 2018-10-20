@@ -42,7 +42,7 @@ class MerchantDetail extends Component {
   }
 
   render() {
-    const {merchantDetail, isFetching, id, removePopup, editMerchant, removeMerchant} = this.props;
+    const {isFetching, id, removePopup, editMerchant, removeMerchant} = this.props;
     const editBody = {
       id: id,
       email: this.state.email,
@@ -97,10 +97,10 @@ class MerchantDetail extends Component {
               />
             </div>
             <footer className="add-cart-footer">
-              <Button color="grey" onClick={() => this.props.removeMerchant(id)}>
+              <Button color="grey" onClick={() => removeMerchant(id)}>
                 Delete
               </Button>
-              <Button color="blue" onClick={() => this.props.editMerchant(editBody)}>
+              <Button color="blue" onClick={() => editMerchant(editBody)}>
                 Edit
               </Button>
             </footer>
@@ -112,3 +112,11 @@ class MerchantDetail extends Component {
 }
 
 export default MerchantDetail
+
+MerchantDetail.propTypes = {
+  isFetching:PropTypes.bool,
+  id:PropTypes.number,
+  removePopup:PropTypes.func,
+  editMerchant:PropTypes.func,
+  removeMerchant:PropTypes.func
+};

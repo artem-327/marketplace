@@ -7,22 +7,16 @@ class MerchantsTable extends Component {
     this.props.fetchMerchants();
   }
 
-  fetchMerchantDetail = (id) => {
-    this.props.fetchMerchant(id)
-  }
 
   render() {
-    const {merchants, addPopup, merchantDetail, editMerchant, detailIsFetching} = this.props
+    const {merchants, addPopup, editMerchant} = this.props
     const merchantsData = merchants.data.map(i => {
-      return <MerchantTableRow 
-        addPopup={addPopup} 
-        merchantDetail={merchantDetail} 
-        fetchMerchantDetail={this.fetchMerchantDetail} 
-        detailIsFetching={detailIsFetching}
-        merchantData={i} 
-        key={i.id} 
-        id={i.id} 
-        editMerchant={editMerchant} 
+      return <MerchantTableRow
+        addPopup={addPopup}
+        merchantData={i}
+        key={i.id}
+        id={i.id}
+        editMerchant={editMerchant}
       />
     });
 
