@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './operators.css';
 import Operator from "./components/Operator";
+import Spinner from '../../../components/Spinner/Spinner'
 
 class Operators extends Component {
 
@@ -8,19 +9,17 @@ class Operators extends Component {
         this.props.fetchOperators();
     }
 
-    renderOperators(){
-        return this.props.operators.map((operator, index) => {
+    render(){
+        if (this.props.isFetching || !this.props.operators) return <Spinner />;
+        const operators = this.props.operators.map((operator, index) => {
             return (
-              <Operator 
-                removeOperator={this.props.removeOperator} 
+              <Operator
+                removeOperator={this.props.removeOperator}
                 editOperator={this.props.editOperator}
-                {...operator} 
+                {...operator}
                 key={index}
               />)
         })
-    }
-
-    render(){
         return (
             <div className="admin-operators-wr">
                 <h1 className="header">Operators</h1>
@@ -36,7 +35,7 @@ class Operators extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                        {this.renderOperators()}
+                        {operators}
                     </tbody>
                 </table>
             </div>
