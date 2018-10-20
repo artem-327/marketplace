@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from "prop-types"
 
-const InputControlled = ({name, value, handleChange}) => {
+const InputControlled = ({name, value, handleChange, ...props}) => {
     return (
-        <td><input name={name} value={value} onChange={(e => handleChange(e))} /></td>
+        <td><input name={name} value={value} onChange={(e => handleChange(e))} {...props}/></td>
     );
 };
 

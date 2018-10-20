@@ -3,17 +3,11 @@ import './MerchantTableRow.css';
 import Switcher from '../../../../components/Switcher/Switcher';
 import Button from '../../../../components/Button/Button';
 
-import MerchantDetail from './MerchantDetail'
-;
+import MerchantDetail from './MerchantDetail';
+
 class MerchantTableRow extends Component {
     openDetail = () => {
-      const merchantDetail = this.props.fetchMerchantDetail(this.props.id)
-      debugger
-      this.props.addPopup(
-        <MerchantDetail 
-            merchantDetail={merchantDetail}
-            detailIsFetching={this.props.detailIsFetching}
-        />)
+      this.props.addPopup(<MerchantDetail id={this.props.id}/>)
    }
 
     render(){

@@ -71,7 +71,7 @@ const logger = createLogger({
 //         const expirationTime = moment(jwtDecode(token).exp);
 //         const nowTime = moment(Date.now() / 1000)
 //       if (expirationTime < nowTime) {
-//         next(action);  
+//         next(action);
 //         store.dispatch(logout());
 //       }
 //     }

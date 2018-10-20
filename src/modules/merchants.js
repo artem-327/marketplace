@@ -3,6 +3,7 @@ import {
     MERCHANT_FETCH_REQUESTED, MERCHANT_FETCH_SUCCEEDED,
     MERCHANT_EDIT_REQUESTED,
     MERCHANTS_FETCH_REQUESTED, MERCHANTS_FETCH_SUCCEEDED,
+    MERCHANT_REMOVE_REQUESTED,
 } from "../constants/merchants";
 
 const ACCEPT_MERCHANT = 'ACCEPT_MERCHANT';
@@ -13,13 +14,12 @@ export const initialState = {
     data:[],
     approvedMerchants:{},
     isFetching: false,
-    detailIsFetching: false,
     merchantDetail: {}
 };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        
+
         case MERCHANTS_FETCH_REQUESTED: {
             return {
                 ...state,
@@ -36,14 +36,14 @@ export default function reducer(state = initialState, action) {
         case MERCHANT_FETCH_REQUESTED: {
             return {
                 ...state,
-                detailIsFetching: true,
+                isFetching: true,
             }
         }
         case MERCHANT_FETCH_SUCCEEDED: {
             return {
                 ...state,
                 merchantDetail: action.payload,
-                detailIsFetching: false,
+                isFetching: false,
             }
         }
 
@@ -58,7 +58,7 @@ export function approveMerchant(id){
         type: UPDATE_APPROVE,
         payload: axios({
           method: 'post',
-          url: "api/v1/merchant/"+id+"/approved/"  
+          url: "api/v1/merchant/"+id+"/approved/"
         })
     }
 }
@@ -87,9 +87,11 @@ export function fetchMerchants() {
     return {type: MERCHANTS_FETCH_REQUESTED}
 }
 
-export function fetchMerchant(id){
+export function fetchMerchant(id, resolve){
     return {
-        type: MERCHANT_FETCH_REQUESTED, payload: {id}
+        type: MERCHANT_FETCH_REQUESTED,
+        payload: {id},
+        resolve: resolve
     }
 }
 
@@ -97,4 +99,8 @@ export function editMerchant(merchant){
     return {
         type: MERCHANT_EDIT_REQUESTED, payload: {merchant}
     }
+}
+
+export function removeMerchant(id) {
+    return {type: MERCHANT_REMOVE_REQUESTED, payload: {id}}
 }
