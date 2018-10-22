@@ -5,13 +5,33 @@ import classnames from 'classnames';
 
 class TooltipFilter extends Component {
 
+    formatName(name){
+        switch(name) {
+            case 'chemicalName' : return 'Chemical name';
+            case 'quantityFrom' : return 'Quantity From';
+            case 'quantityTo' : return 'Quantity To';
+            case 'priceFrom' : return 'Price from';
+            case 'priceTo' : return 'Price to';
+            case 'distanceLimit' : return 'Distance limit';
+            case 'container' : return 'Container';
+            case 'grade' : return 'Grade';
+            case 'form' : return 'Form';
+            case 'condition' : return 'Condition';
+            case 'origin' : return 'Origin';
+            case 'manufacturer' : return 'Manufacturer';
+            case 'zip' : return 'ZIP';
+            default : return name;
+        }
+    }
+
     renderContent(content){
-        let inside = content.map((item, index) => (
-            <tr key={index}>
-                <td>{item.name}</td>
-                <td className="tooltip-data">{item.value}</td>
+        let inside = content.map((item, index) => {
+            const value = typeof item.value === 'object' ? item.value.name : item.value;
+            return <tr key={index}>
+                <td>{this.formatName(item.name)}</td>
+                <td className="tooltip-data">{value}</td>
             </tr>
-        ));
+        });
         return <table className="tooltip-content">
             <tbody>
                 <tr>

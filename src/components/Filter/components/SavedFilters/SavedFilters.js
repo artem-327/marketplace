@@ -1,16 +1,26 @@
 import React,{Component} from 'react';
 import './SavedFilters.css';
-import TooltipFilter from "./TooltipFilter";
+import SaveFilterItem from "./SaveFilterItem";
 
 class SavedFilters extends Component {
 
+renderSaveItems(saved){
+    return saved.map((item) => {
+        const {filterName, id} = item;
+        delete item.filterName;
+        delete item.id;
+        let final = []
+        for(let key in item){
+            final.push({name:key, value: item[key]})
+        }
+        return <SaveFilterItem filterName={filterName} key={id} toolTipContent={final}/>
+    })
+}
+
 render () {
-    let content = [{name: 'Chemical Name', value: 'Isopropyl Alcohol'}, {name: 'Chemical Name', value: 'Isopropyl Alcohol'}, {name: 'Chemical Name', value: 'Isopropyl Alcohol'}]
         return (
             <ul className="saved-filters">
-                <li><div className="filter-name"><TooltipFilter name="SAVED FILTER 1" content={content}/></div><div className="filter-delete">DELETE<span className="close-external"><i className="close" /></span></div></li>
-                <li><div className="filter-name"><TooltipFilter name="SAVED FILTER 1" content={content}/></div><div className="filter-delete">DELETE<span className="close-external"><i className="close" /></span></div></li>
-                <li><div className="filter-name"><TooltipFilter name="SAVED FILTER 1" content={content}/></div><div className="filter-delete">DELETE<span className="close-external"><i className="close" /></span></div></li>
+                {this.renderSaveItems(this.props.saveFilters)}
             </ul>
         )
     }

@@ -23,8 +23,8 @@
       position: relative; }
       .saved-filters li .filter-delete .close {
         position: absolute;
-        right: 15px;
-        top: 3px;
+        right: 0;
+        top: 12px;
         width: 32px;
         height: 32px;
         opacity: 0.3; }
@@ -32,12 +32,14 @@
         position: absolute;
         right: 15px;
         content: ' ';
-        height: 17px;
+        height: 13px;
         width: 2px;
         background-color: #333; }
       .saved-filters li .filter-delete .close:before {
         transform: rotate(45deg); }
       .saved-filters li .filter-delete .close:after {
         transform: rotate(-45deg); }
+      .saved-filters li .filter-delete:hover .close {
+        opacity: .8; }
     .saved-filters li:hover .filter-delete {
       display: inline-block; }

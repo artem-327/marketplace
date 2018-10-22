@@ -1,10 +1,6 @@
 .tooltipFilter-component {
   position: relative;
   display: inline-block;
-  &.notes{
-    position: absolute;
-    margin-left: 110px;
-  }
     label {
       position: absolute;
       //bottom: 35px;
@@ -45,32 +41,34 @@
       }
       &.show{
         display: block;
-    }
-  }
-  .tooltip-content{
-    color: #96989c;
-    .tooltip-header{
-      color: black;
-      border-top: none;
-    }
-    td{
-      padding: 7px 0;
-      vertical-align: top;
-    }
-    tr{
-      border-top: none;
-    }
-    tr:nth-child(1) {
-      border-bottom: none;
-      border-top: none;
-    }
-    tr:last-child{
-      border-bottom: none;
-    }
-    .tooltip-data{
-      font-weight: lighter;
-      padding-left: 10px;
-      width: 210px;
+        padding: 10px;
     }
   }
   }
+.tooltip-content{
+  color: #96989c;
+  width: 100%;
+  .tooltip-header{
+    color: black;
+    border-top: none;
+  }
+  td{
+    padding: 7px 0;
+    vertical-align: top;
+  }
+  tr{
+    border-top: none;
+  }
+  tr:nth-child(1) {
+    border-bottom: none;
+    border-top: none;
+  }
+  tr:last-child{
+    border-bottom: none;
+  }
+  .tooltip-data{
+    font-weight: lighter;
+    padding-left: 10px;
+    width: 210px;
+  }
+}

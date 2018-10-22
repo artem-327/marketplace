@@ -9,7 +9,7 @@ class SaveFilterItem extends Component {
     render() {
         return (
             <li onMouseEnter={() => this.setState({showTooltip: true})} onMouseLeave={() => this.setState({showTooltip: false})}>
-                <div className="filter-name"><TooltipFilter name="SAVED FILTER 1" isVisible={this.state.showTooltip} content={this.props.toolTipContent}/></div>
+                <div className="filter-name"><TooltipFilter name={this.props.filterName} isVisible={this.state.showTooltip} content={this.props.toolTipContent}/></div>
                 <div className="filter-delete">DELETE<span className="close-external"><i className="close"/></span>
                 </div>
             </li>
@@ -17,4 +17,4 @@ class SaveFilterItem extends Component {
     }
 }
 
-export default SavedFilters
+export default SaveFilterItem

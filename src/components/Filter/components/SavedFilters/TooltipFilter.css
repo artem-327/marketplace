@@ -1,9 +1,6 @@
 .tooltipFilter-component {
   position: relative;
   display: inline-block; }
-  .tooltipFilter-component.notes {
-    position: absolute;
-    margin-left: 110px; }
   .tooltipFilter-component label {
     position: absolute;
     top: 30px;
@@ -38,23 +35,26 @@
       border-width: 10px;
       margin-left: -10px; }
     .tooltipFilter-component label.show {
-      display: block; }
-  .tooltipFilter-component .tooltip-content {
-    color: #96989c; }
-    .tooltipFilter-component .tooltip-content .tooltip-header {
-      color: black;
-      border-top: none; }
-    .tooltipFilter-component .tooltip-content td {
-      padding: 7px 0;
-      vertical-align: top; }
-    .tooltipFilter-component .tooltip-content tr {
-      border-top: none; }
-    .tooltipFilter-component .tooltip-content tr:nth-child(1) {
-      border-bottom: none;
-      border-top: none; }
-    .tooltipFilter-component .tooltip-content tr:last-child {
-      border-bottom: none; }
-    .tooltipFilter-component .tooltip-content .tooltip-data {
-      font-weight: lighter;
-      padding-left: 10px;
-      width: 210px; }
+      display: block;
+      padding: 10px; }
+
+.tooltip-content {
+  color: #96989c;
+  width: 100%; }
+  .tooltip-content .tooltip-header {
+    color: black;
+    border-top: none; }
+  .tooltip-content td {
+    padding: 7px 0;
+    vertical-align: top; }
+  .tooltip-content tr {
+    border-top: none; }
+  .tooltip-content tr:nth-child(1) {
+    border-bottom: none;
+    border-top: none; }
+  .tooltip-content tr:last-child {
+    border-bottom: none; }
+  .tooltip-content .tooltip-data {
+    font-weight: lighter;
+    padding-left: 10px;
+    width: 210px; }
