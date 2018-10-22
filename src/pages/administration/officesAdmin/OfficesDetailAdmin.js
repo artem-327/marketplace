@@ -27,7 +27,8 @@ class CompaniesDetailAdmin extends Component {
                 <div className="list-companies">
                     <h4>Office Name</h4>
                     <InputEdit value={this.props.office.name} onSave={(text) => {
-                        this.props.editOffice({name: text, location: this.props.office.location.id, company: this.props.office.company.id})
+                        debugger
+                        this.props.editOffice({"id": this.props.office.id, "name": text, "baseLocation": this.props.office.baseLocation.id, "company": this.props.office.companyResponse.id})
                     }}/>
                 </div>
             </div>

@@ -1,3 +1,35 @@
+@import "../../../styles/main.scss";
+$borderColor: #e3e2df;
+
+
+.company-table {
+  max-width: 1400px;
+  margin: auto;
+  width: 100%;
+  table-layout: fixed;
+  th {
+    border: 2px solid $borderColor;
+    background-color: #fbfaf7;
+    padding: 10px;
+    font-weight: bold;
+  }
+  .company-row {
+    box-shadow: 0 1px 1px 0 rgba(60,64,67,.08), 0 1px 3px 1px rgba(60,64,67,.16);
+    padding: 5px 10px;
+    td{
+      text-align: left;
+      padding: 10px;
+      border: none;
+      &:last-child {
+          float: right;
+      }
+      button {
+        margin-left: 15px;
+      }
+    }
+  }
+
+}
 .admin-companies{
   .list-companies{
     max-width: 800px;
@@ -6,79 +38,22 @@
       font-size: 1.4rem;
       margin-top: 40px;
     }
-    .companies{
-      padding: 10px;
-      margin: 10px 0;
-      background-color: #f5f5f5;
-      border-radius: 4px;
-      button{
-        float: right;
-        margin-top: -5px;
-        margin-left: 10px;
+    .add-new-company {
+      margin-top: 15px;
+      display: flex;
+      input {
+        flex: auto;
       }
     }
   }
-}
-
-.admin-add{
-  p{
-    padding: 10px;
-    margin: 10px 0;
-    background-color: #289ada;
-    border-radius: 4px;
-    color: white;
-    text-align: center;
-    &:hover{
-      cursor: pointer;
-      background-color: lighten(#289ada,5%);
+  .company-detail {
+    display: flex;
+    justify-content: flex-end;
+    input {
+      flex: auto
     }
-  }
-}
-
-.admin-add-input{
-  margin: 10px 0;
-  background-color: #289ada;
-  border-radius: 4px;
-  padding: 2px;
-  input{
-    width: 60%;
-  }
-  button{
-    float: right;
-    margin-top: 2px;
-    margin-right: 10px;
-    border-radius: 3px;
-    padding: 6px 15px;
-    color: white;
-    font-size: 1em;
-    background-color: #4cd136;
-    width: 110px;
-    height: 35px;
-    border: none;
-    &:hover{
-      cursor: pointer;
-      background-color: lighten(#4cd136,5%);
-    }
-  }
-  &.office{
-    .comboBox .combo-icon{
-      top: 11px;
-    }
-    .combo-results {
-      width: calc(100% - 2px);
-      margin-top: -1px;
-      left: 2px;
-    }
-    input{
-      vertical-align: top;
-      width: 50%;
-    }
-    .location-admin-add{
-      input{
-        vertical-align: top;
-        width: 190px;
-        margin-left: 2px;
-      }
+    button {
+    margin-left: 15px;
     }
   }
 }

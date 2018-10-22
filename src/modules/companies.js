@@ -65,8 +65,8 @@ export function fetchAll() {
     return {type: COMPANIES_FETCH_REQUESTED,}
 }
 
-export function fetchDetail(id) {
-    return {type: COMPANY_FETCH_REQUESTED, payload: {id}}
+export function fetchDetail(id, resolve) {
+    return {type: COMPANY_FETCH_REQUESTED, payload: {id}, resolve: resolve}
 }
 
 export function createCompany(name, onSuccess) {

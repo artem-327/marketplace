@@ -12,6 +12,7 @@ function* fetchOffice(action) {
     try {
         const office = yield call(Api.fetchOffice, action.payload.id);
         yield put({type: OFFICE_FETCH_SUCCEEDED, payload: office});
+        yield call(action.payload.onSuccess);
     } catch (e) {
         yield put({type: OFFICE_FETCH_FAILED, message: e.message});
     }

@@ -1,25 +1,8 @@
 @import "../../../styles/main.scss";
 $borderColor: #e3e2df;
-// .merchant-table{
-//    // border: 1px solid #ccc;
-//     border-collapse: collapse;
-//     margin: 0;
-//     padding: 0;
-//     width: 100%;
-//     table-layout: fixed;
-
-//     .merch-header-item{
-//         //border: 1px solid #CCC;
-//         height: 30px;
-//         background: #F3F3F3;
-//         font-weight: bold;
-//         text-align: center;
-//     }
-// }
-
 .popup {
     input {
-        width: 80%;
+        width: 70%;
         float: right;
         @include mq('m', max) {
             width: 100%;

@@ -30,7 +30,7 @@ class MerchantDetail extends Component {
   componentDidMount() {
     const {merchantDetail, fetchMerchant, id} = this.props
     if (merchantDetail.id !== id) {
-      new Promise((resolve, reject) => {
+      new Promise((resolve) => {
         fetchMerchant(id, resolve)
       }).then(() => {
         this.setState({...this.props.merchantDetail})
