@@ -31,3 +31,24 @@ Number.prototype.formatNumber = function(){
     return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
+export const getUnit = function(unitName) {
+    switch (unitName) {
+        case "pound":
+            return "lb";
+        case "gallon":
+            return "gal";
+        default:
+            return "#";
+    }
+}
+
+export const getSelectedDataTable = (dataTable) => {
+    if(!dataTable) return 0;
+    let selected = 0;
+    for(let i = 0; i < dataTable.rowsOpns.length; i++){
+        for(let j = 0; j < dataTable.rowsOpns[i].rows.length; j++){
+            if(dataTable.rowsOpns[i].rows[j].selected) selected++
+        }
+    }
+    return selected;
+}

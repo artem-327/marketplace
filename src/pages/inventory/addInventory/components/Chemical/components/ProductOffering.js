@@ -83,7 +83,7 @@ export default class ProductOffering extends Component {
                                           id=".lotNumber"/>
                         </div>
                         <div className='group-item-wr'>
-                            <label htmlFor=".creationDate">Created Date</label>
+                            <label htmlFor=".creationDate">MFG Date</label>
                             <DatepickerRedux placeholder={'test'}
                                              dispatch={this.props.dispatch}
                                              onChange={(value) => console.log(value)}
@@ -112,8 +112,10 @@ export default class ProductOffering extends Component {
                         <div className='group-item-wr'>
                             <RemoteComboBoxRedux items={this.props.manufacturer}
                                                  api={(text) => this.props.fetchManufacturer(text)}
+                                                 currentValue={this.props.edit ? this.props.productOffer.manufacturer.name : null}
                                                  className="manufacturer" limit={5} label="Manufacturer"
                                                  isFetching={this.props.isFetchingManufacturer}
+                                                 saveObj={obj=>obj.id}
                                                  validators={{required}} dispatch={this.props.dispatch}
                                                  model="forms.productOffering.manufacturer"/>
                         </div>
@@ -130,7 +132,9 @@ export default class ProductOffering extends Component {
                             <RemoteComboBoxRedux items={this.props.originData}
                                                  api={(text) => this.props.fetchOrigin(text)}
                                                  className="origin" limit={5} label="Origin"
+                                                 currentValue={this.props.edit ? this.props.productOffer.origin.name : null}
                                                  isFetching={this.props.isFetchingOrigin}
+                                                 saveObj={obj=>obj.id}
                                                  validators={{required}} dispatch={this.props.dispatch}
                                                  model="forms.productOffering.origin"/>
                         </div>
@@ -240,20 +244,20 @@ export default class ProductOffering extends Component {
                         </div>
                     </div>
                     <div>
-                        <Tooltip className="notes" content="add inventory 2"/>
+                        <Tooltip className="notes" content="External notes are visible to other merchants."/>
                         <div className="group-item-wr notes-textarea">
                             <label htmlFor=".externalNotes">External notes</label>
                             <Control.textarea model=".externalNotes" id=".externalNotes" className="textarea"
                                               placeholder="Enter notes here"/>
                         </div>
-                        <Tooltip className="notes" content="add inventory 3"/>
+                        <Tooltip className="notes" content="Internal notes are visible to you or other users of your company only."/>
                         <div className="group-item-wr notes-textarea">
                             <label htmlFor=".internalNotes">Internal Notes</label>
                             <Control.textarea model=".internalNotes" id=".internalNotes" className="textarea"
                                               placeholder="Enter notes here"/>
 
                         </div>
-                        {button}
+                        {!this.props.edit ? button : null}
                     </div>
                 </Form>
             </div>

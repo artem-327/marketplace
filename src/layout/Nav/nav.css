@@ -60,7 +60,9 @@
       width: 100%;
       top: 90px;
       left: 0;
-      text-align: center; }
+      text-align: center;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+      border-radius: 0 0 4px 4px; }
       .App-nav .nav-inside .dropdown-nav .dropdown-nav-inside .dropdown-nav-item {
         width: 100%;
         padding: 8px 0;
@@ -73,7 +75,8 @@
           color: #2599d5; }
         .App-nav .nav-inside .dropdown-nav .dropdown-nav-inside .dropdown-nav-item:hover {
           cursor: pointer;
-          background-color: #3f434c; }
+          background-color: #3f434c;
+          text-decoration: none; }
     .App-nav .nav-inside .dropdown-nav.active {
       color: #2599d5; }
     .App-nav .nav-inside .dropdown-nav .link-center {

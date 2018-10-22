@@ -1,12 +1,12 @@
 import { call, put, takeEvery } from 'redux-saga/effects'
-import Api from '../../../../api/offices';
+import Api from '../api/offices';
 import {
     OFFICE_CREATE_FAILED, OFFICE_CREATE_REQUESTED,
     OFFICE_CREATE_SUCCEEDED, OFFICE_EDIT_FAILED, OFFICE_EDIT_REQUESTED, OFFICE_EDIT_SUCCEEDED,
     OFFICE_FETCH_FAILED, OFFICE_FETCH_REQUESTED, OFFICE_FETCH_SUCCEEDED, OFFICE_REMOVE_FAILED, OFFICE_REMOVE_REQUESTED,
     OFFICE_REMOVE_SUCCEEDED
-} from "../../../../constants/offices";
-import {COMPANY_FETCH_REQUESTED} from "../../../../constants/companies";
+} from "../constants/offices";
+import {COMPANY_FETCH_REQUESTED} from "../constants/companies";
 
 function* fetchOffice(action) {
     try {

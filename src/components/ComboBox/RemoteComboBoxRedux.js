@@ -1,15 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
-import { Control, actions } from 'react-redux-form';
+import { Control } from 'react-redux-form';
 import RemoteComboBox from "./RemoteComboBox";
 
 class RemoteComboBoxRedux extends Component {
-
-    handleChange(value){
-        const { model, dispatch } = this.props;
-        dispatch(actions.change(model, value));
-        if(this.props.onChange) this.props.onChange(value);
-    }
 
     render() {
         return <Control
@@ -21,7 +15,6 @@ class RemoteComboBoxRedux extends Component {
             component={RemoteComboBox}
             disabled={this.props.disabled}
             validators={this.props.validators}
-            onChange={value => this.handleChange(value)}
             {...this.props}
         />
 

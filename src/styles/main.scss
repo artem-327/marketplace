@@ -1,0 +1,9 @@
+@import 'colors.scss';
+@import 'breakpoints.scss';
+
+%section-shared {
+    padding: 20px 30px;
+    margin-bottom: 10px;
+}
+
+$border-rounding: 4px;

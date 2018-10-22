@@ -1,0 +1,42 @@
+@import "../../../styles/main.scss";
+
+  .add-cart-body {
+    display: flex;
+    justify-content: space-between;
+    @include mq('m', max) {
+      flex-wrap: wrap;
+    }
+
+     .divider {
+      width: 2px;
+      margin: 0 30px;
+      background: $beige-color;
+      @include mq('m', max) {
+        display: none;
+      }
+    }
+
+    .add-cart-body-section {
+      flex: 1;
+      padding: 10px 20px;
+      min-width: 250px;
+      @include mq('m', max) {
+        &:first-child{
+          border-bottom: 2px solid $beige-color;
+        }
+      }
+
+      h3 {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      > div {
+        padding: 10px 0;
+      }
+    }
+  }
+
+  .dropdown-wr {
+    width: 80%;
+  }

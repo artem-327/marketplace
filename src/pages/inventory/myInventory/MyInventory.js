@@ -4,6 +4,7 @@ import Filter from '../../../components/Filter';
 import './myInventory.css';
 import Spinner from "../../../components/Spinner/Spinner";
 import FilterTag from "../../../components/Filter/components/FilterTag";
+import {getSelectedDataTable} from "../../../utils/functions";
 
 const GROUP_BY_ALL_COMPANIES = 1;
 const GROUP_BY_REGIONS = 2;
@@ -17,13 +18,13 @@ class MyInventory extends Component {
             currentSelected: 'All companies',
             selections: [
                 {name: 'All companies', id: GROUP_BY_ALL_COMPANIES},
-                {name: 'Region', id: GROUP_BY_REGIONS}
+                // {name: 'Region', id: GROUP_BY_REGIONS}
             ]
         };
     }
 
     componentDidMount() {
-        this.props.getProductOffers();
+        this.props.fetchMyProductOffers();
         this.props.getCompanies();
     }
 
@@ -33,6 +34,7 @@ class MyInventory extends Component {
 
     componentWillUnmount(){
         this.props.resetFilterTags();
+        this.props.deleteProductOffersList();
         this.props.resetForm('forms.filter');
     }
 
@@ -85,19 +87,20 @@ class MyInventory extends Component {
                 submitRules={this.props.sendRules}
                 addPopup={this.props.addPopup}
                 removePopup={this.props.removePopup}
-                getProductOffers={this.props.getProductOffers}
+                getProductOffers={this.props.fetchMyProductOffers}
                 targetGroups={this.state.targetGroups}
-                selections={this.state.selections}
                 setFilter={(type) => this.setFilter(type)}
+                history={this.props.history}
+                selections={this.state.selections}
                 currentSelected={this.state.currentSelected}
                 setActiveBroadcastButton={active => this.setActiveBroadcastButton(active)}
                 broadcastActive={this.state.brActive}/>;
         return (
             <div className='my-inventory'>
                 <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
-                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.getProductOffers({...filter}, true)}}/>
-                <h3 className='header small'>0 product offerings selected</h3>
-                <Filter chemicalName productAgeFilter date assay quantity price condition form filterFunc={(filter) => {this.props.getProductOffers({...filter}, true)}} />
+                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}}/>
+                <h3 className='header small'>{getSelectedDataTable(this.props.productOffersTable)} product offerings selected</h3>
+                <Filter chemicalName productAgeFilter date assay quantity price condition form filterFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}} />
                 {content}
             </div>
         )

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Control, Errors} from 'react-redux-form';
-import {isNumber, min, messages, maxPercent, bigger, required} from "../../../utils/validation";
+import {isNumber, min, messages, maxPercent, bigger} from "../../../utils/validation";
 import dropdown from '../../../images/inv-filter/dropdown.png'
 import dropdownClose from '../../../images/inv-filter/dropdown-close.png'
 import classnames from "classnames";
@@ -109,7 +109,7 @@ class FilterGroup extends Component {
                                     min: messages.min
                                 }}
                             />
-                            <Control.text type={input.type} model={input.model} id={input.model} placeholder={input.placeholder} validators={{min: (val) => min(val, 0), isNumber}}/>
+                            <Control.text type={input.type} model={input.model} id={input.model} placeholder={input.placeholder} validators={{min: (val) => min(val, 0) || !val}}/>
                         </div>
                     )
                 }

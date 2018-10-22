@@ -28,6 +28,7 @@ const FETCH_ALTERNATIVE_NAMES_FULFILLED = 'FETCH_ALTERNATIVE_NAMES_FULFILLED';
 const FETCH_MANUFACTURER = 'FETCH_MANUFACTURER';
 const FETCH_MANUFACTURER_PENDING = 'FETCH_MANUFACTURER_PENDING';
 const FETCH_MANUFACTURER_FULFILLED = 'FETCH_MANUFACTURER_FULFILLED';
+const FETCH_PACKAGING_TYPES = 'FETCH_PACKAGING_TYPES';
 
 export const initialState = {
     productsMapping: {},
@@ -42,6 +43,7 @@ export const initialState = {
     recentProducts: [],
     origin: [],
     manufacturer:[],
+    packagingTypes:[],
     isFetchingManufacturer: false,
     isFetching: false,
     isMapFetching: false,
@@ -158,6 +160,12 @@ export default function reducer(state = initialState, action) {
                 alternativeNames: action.payload
             }
         }
+        case FETCH_PACKAGING_TYPES:{
+            return{
+                ...state,
+                packagingTypes: action.payload
+            }
+        }
         default: {
             return state
         }
@@ -167,14 +175,14 @@ export default function reducer(state = initialState, action) {
 export function searchProducts(search) {
     return {
         type: SEARCH_PRODUCT,
-        payload: axios.get('/api/v1/products/', {params:{search}}).then(response => response.data.data.products)
+        payload: axios.get('/api/726euu/products/', {params:{search}}).then(response => response.data.data.products)
     }
 }
 
 export function mapProducts(map) {
     return {
         type: MAP_PRODUCT,
-        payload: axios.get('/api/v1/product-templates/', {params:{map}}).then(response => response.data.data.productTemplates)
+        payload: axios.get('/api/7e2kk2/product-templates/', {params:{map}}).then(response => response.data.data.productTemplates)
     }
 }
 
@@ -188,28 +196,28 @@ export function fetchManufacturer(filter = "") {
 export function fetchProductForms(filter = {}) {
     return {
         type: FETCH_PRODUCT_FORMS,
-        payload: axios.get('/api/v1/product-forms/', {params: {...filter}}).then(result => result.data.data.productForms)
+        payload: axios.get('/api/424dvx/product-forms/', {params: {...filter}}).then(result => result.data.data.productForms)
     }
 }
 
 export function fetchProductConditions(filter = {}) {
     return {
         type: FETCH_PRODUCT_CONDITIONS,
-        payload: axios.get('/api/v1/product-conditions/', {params: {...filter}}).then(result => result.data.data.productConditions)
+        payload: axios.get('/api/1tgusy/product-conditions/', {params: {...filter}}).then(result => result.data.data.productConditions)
     }
 }
 
 export function fetchProductGrade(filter = {}) {
     return {
         type: FETCH_PRODUCT_GRADE,
-        payload: axios.get('/api/v1/product-grades/', {params: {...filter}}).then(result => result.data.data.productGrades)
+        payload: axios.get('/api/f33eq0/product-grades/', {params: {...filter}}).then(result => result.data.data.productGrades)
     }
 }
 
 export function fetchOrigin(filter = "") {
     return {
         type: FETCH_ORIGIN,
-        payload: axios.get('/api/v1/origins/', {params: {search: filter}}).then(result => result.data.data.origins)
+        payload: axios.get('/api/la9pxl/origins/', {params: {search: filter}}).then(result => result.data.data.origins)
     }
 }
 
@@ -248,7 +256,7 @@ export function fetchProductAge() {
 export function fetchRecentAddedProducts(limit = 3) {
     return {
         type: FETCH_RECEANT_ADDED_PRODUCTS,
-        payload: axios.get('/api/v1/products/', {params:{
+        payload: axios.get('/api/726euu/products/', {params:{
             srtb: 'updatedAt', lmt: limit
         }}).then(result => result.data.data.products)
     }
@@ -257,7 +265,7 @@ export function fetchRecentAddedProducts(limit = 3) {
 export function saveMapping(values) {
     return {
         type: SAVE_MAPPING,
-        payload: axios.post("/api/v1/product-templates/", values)
+        payload: axios.post("/api/h5g8qn/product-templates/", values)
     }
 }
 
@@ -287,5 +295,17 @@ export function fetchAlternativeNames(id){
             },
             "status": "success"
         }).then(result => result.data.alternativeNames)
+    }
+}
+
+export function fetchPackagingTypes(){
+    return {
+        type: FETCH_PACKAGING_TYPES,
+        payload: [
+            {id: 0, name:'Super Sack'},
+            {id: 1, name:'Pails'},
+            {id: 2, name:'Bulk'},
+            {id: 3, name:'Totes'},
+        ]
     }
 }

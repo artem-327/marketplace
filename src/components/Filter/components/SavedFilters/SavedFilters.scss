@@ -1,96 +1,57 @@
 .saved-filters{
-  margin-top: 10px;
-  padding-left: 0px;
-  tr {
-    border-bottom: 1px solid #f4f4f4;
-    padding: 15px 0 15px 7px;
-    &:hover, &:focus {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  li{
+    border-bottom: 1px solid #e4e7e9;
+    padding: 0 6px;
+    &:first-child{
+      border-top: 1px solid #a6b0b7;
+    }
+    &:hover{
       background-color: #e0eef6;
-      font-weight: bold;
-      border-top: 1px solid #c1c8cd;
-      border-bottom: 1px solid #c1c8cd;
+      cursor: pointer;
     }
-    tr:nth-child(1) {
-      border-top: 1px solid #c1c8cd;
-    }
-    #filter{
-      &:hover +#filter2{
-        color: black;
-        .close {
-          position: absolute;
-          right: 15px;
-          top: 3px;
-          width: 32px;
-          height: 32px;
-          opacity: 0.3;
-        }
-        .close:hover {
-          opacity: 1;
-        }
-        .close:before, .close:after {
-          position: absolute;
-          left: 15px;
-          content: ' ';
-          height: 17px;
-          width: 2px;
-          background-color: #333;
-        }
-        .close:before {
-          transform: rotate(45deg);
-        }
-        .close:after {
-          transform: rotate(-45deg);
-        }
-      }
-      }
-    }
-    .close-external{
-      position: relative;
-      float: right;
+    .filter-name, .filter-delete{
+      padding: 8px 6px;
     }
     .filter-name{
-      width: 360px;
-      float: left;
-      padding: 10px 0 10px 0;
-      &:hover, &:focus{
-        border-right: 1px solid #c1c8cd;
-      }
+      width: calc(100% - 100px);
+      display: inline-block;
+      text-transform: uppercase;
     }
     .filter-delete{
+      width: 100px;
+      display: none;
+      border-left: 1px solid #d0dde5;
       position: relative;
-      width: 120px;
-      padding: 10px 0 10px 15px;
-      margin-bottom: 0;
-      color: transparent;
-      font-weight: initial;
-      &:hover, &:focus{
-        color: black;
-        border-left: 1px solid #c1c8cd;
-        .close {
-          position: absolute;
-          right: 15px;
-          top: 3px;
-          width: 32px;
-          height: 32px;
-          opacity: 0.3;
-        }
-        .close:hover {
-          opacity: 1;
-        }
-        .close:before, .close:after {
-          position: absolute;
-          left: 15px;
-          content: ' ';
-          height: 17px;
-          width: 2px;
-          background-color: #333;
-        }
-        .close:before {
-          transform: rotate(45deg);
-        }
-        .close:after {
-          transform: rotate(-45deg);
-        }
+      .close {
+        position: absolute;
+        right: 15px;
+        top: 3px;
+        width: 32px;
+        height: 32px;
+        opacity: 0.3;
+      }
+      .close:before, .close:after {
+        position: absolute;
+        right: 15px;
+        content: ' ';
+        height: 17px;
+        width: 2px;
+        background-color: #333;
+      }
+      .close:before {
+        transform: rotate(45deg);
+      }
+      .close:after {
+        transform: rotate(-45deg);
       }
     }
+    &:hover{
+      .filter-delete{
+        display: inline-block;
+      }
+    }
+  }
 }
