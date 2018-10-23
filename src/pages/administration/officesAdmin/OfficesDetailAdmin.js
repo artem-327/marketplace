@@ -8,27 +8,28 @@ import {editOffice, fetchOffice} from "../../../modules/companies";
 
 class CompaniesDetailAdmin extends Component {
 
-    constructor(props){
-        super(props);
-        this.state = {
-            addMode: false
-        }
-    }
-
     componentDidMount() {
         this.props.fetchOffice(this.props.match.params.id);
     }
 
     render() {
+        const {office, editOffice, isFetching} = this.props;
+        if (isFetching || !office.baseLocation) return <Spinner/>
+        const {merchantResponse} = office
+        const merchants = merchantResponse.map(i => <div>{i.email}</div>)
         return (
-            this.props.isFetching ? <Spinner/> :
             <div className="admin-companies">
-                <h1 className='header'>Office administration - {this.props.office.name}</h1>
+                <h1 className='header'>Office administration - {office.name}</h1>
                 <div className="list-companies">
-                    <h4>Office Name</h4>
-                    <InputEdit value={this.props.office.name} onSave={(text) => {
-                        debugger
-                        this.props.editOffice({"id": this.props.office.id, "name": text, "baseLocation": this.props.office.baseLocation.id, "company": this.props.office.companyResponse.id})
+                
+                    <div>Office Name: {office.name}</div>
+                    <div>Country: {office.baseLocation.country.name}</div>
+                    <div>State: {office.baseLocation.state.name}</div>
+                    <div>Company: {office.companyResponse.name}</div>
+                    <div>Merchants: {merchants}</div>
+
+                    <InputEdit value={office.name} onSave={(text) => {
+                        editOffice({"id": office.id, "name": text, "baseLocation": office.baseLocation.id, "company": office.companyResponse.id})
                     }}/>
                 </div>
             </div>
