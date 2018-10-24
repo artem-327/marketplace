@@ -2,10 +2,6 @@ import React, {Component} from 'react';
 import './Switcher.css';
 
 class Switcher extends Component {
-    constructor(props) {
-        super (props);
-        this.handleChange = this.handleChange.bind(this);
-    }
 
     componentWillMount(){
         let checked = this.props.value;
@@ -17,26 +13,21 @@ class Switcher extends Component {
         this.setState({checked:checked});
     }
 
-    handleChange(){
+    handleChange = () => {
         this.setState({checked:!this.state.checked})
         if(this.props.onChange)
                 this.props.onChange(this.state.checked);
     }
 
-    renderSwitcher(){
-        
-       return <div className="switch-container"> 
-                <label className="switch">
-                    <input type="checkbox" onChange={this.handleChange} checked={this.state.checked}/>
-                    <span className="slider"></span>
-                </label>
-            </div>
-    }
-
     render(){
         return (
             <div className="switch-container">
-                {this.renderSwitcher()}
+                <div className="switch-container"> 
+                <label className="switch">
+                    <input type="checkbox" onChange={this.handleChange} checked={this.state.checked}/>
+                    <span className="slider round"></span>
+                </label>
+            </div>
             </div>
         )
     }
