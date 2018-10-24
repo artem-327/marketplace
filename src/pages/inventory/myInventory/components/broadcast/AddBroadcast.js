@@ -9,6 +9,9 @@ import PopupComponent from '../../../../../components/PopUp/PopupComponent'
 import CheckboxRedux from '../../../../../components/Checkbox/CheckboxRedux';
 import Switcher from '../../../../../components/Switcher/Switcher';
 import { removePopup } from "../../../../../modules/popup";
+import { fetchRegions } from "../../../../../modules/location";
+import {required} from "../../../../../utils/validation";
+import RemoteComboBoxRedux from "../../../../../components/ComboBox/RemoteComboBoxRedux";
 import './AddBroadcast.css';
 
 class AddBroadcast extends Component {
@@ -16,6 +19,9 @@ class AddBroadcast extends Component {
   handleContinue = () => {
     console.log("aplikuje se broadcast")
     removePopup()
+  }
+  componentDidMount(){
+    this.props.fetchRegions()
   }
 
   render() {
@@ -38,16 +44,17 @@ class AddBroadcast extends Component {
               <label>Category Filter</label>
               <Dropdown opns={categoryFilterOptions} placeholder="Select Category Filter" />
             </div>
-            {/* <RemoteComboBoxRedux 
-              items={this.props.originData}
-              api={() => {}}
+            <RemoteComboBoxRedux 
+              items={this.props.regions}
+              api={(text) => this.props.fetchRegions(text)}
               limit={20} 
               label="Search In the Regions"
-              isFetching={}
+              isFetching={this.props.regionsAreFetching}
               saveObj={obj => obj.id}
               validators={{ required }} 
               dispatch={this.props.dispatch}
-              model="forms.broadcast.search" /> */}
+              model="forms.broadcast.search" 
+            /> 
             <div>
               <label>Templates</label>
               <Dropdown opns={[]} placeholder="Select Template" />
@@ -82,11 +89,13 @@ AddBroadcast.propTypes = {
 function mapStateToProps(store) {
   return {
     isFetching: false, //TODO
+    regionsAreFetching: store.location.regionsAreFetching,
+    regions: store.location.regions
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ removePopup }, dispatch)
+  return bindActionCreators({ removePopup, fetchRegions }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddBroadcast);

@@ -1,4 +1,7 @@
 import axios from "axios";
+import {
+    REGIONS_FETCH_SUCCEEDED, REGIONS_FETCH_REQUESTED
+} from "../constants/locations";
 
 const FETCH_WAREHOUSE = 'FETCH_WAREHOUSE';
 const FETCH_WAREHOUSE_FULFILLED = 'FETCH_WAREHOUSE_FULFILLED';
@@ -16,6 +19,8 @@ export const initialState = {
     hasError: false,
     warehouse: [],
     locations: [],
+    regions: [],
+    regionsAreFetching: false,
     locationFetching: false,
     data:{}
 };
@@ -39,6 +44,19 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 locationFetching: false,
                 locations: action.payload
+            }
+        }
+        case REGIONS_FETCH_REQUESTED: {
+            return {
+                ...state,
+                regionsAreFetching: true,
+            }
+        }
+        case REGIONS_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                regions: action.payload,
+                regionsAreFetching: false
             }
         }
         default: {
@@ -82,5 +100,8 @@ export function updateWarehouse(id, name, address, city, location, contactName, 
     }
 }
 
+export function fetchRegions(){
+    return {type: REGIONS_FETCH_REQUESTED}
+}
 
 

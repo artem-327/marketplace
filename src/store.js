@@ -31,7 +31,7 @@ import dataTables from "./modules/dataTables";
 import usersSaga from "./pages/administration/users/saga/users";
 import operatorsSaga from "./pages/administration/operators/saga/operators";
 import cartSaga from "./pages/cart/saga/cart";
-
+import locationsSaga from "./saga/locations";
 
 const reducer = combineReducers({
     identity,
@@ -90,4 +90,4 @@ sagaMiddleware.run(officesSaga);
 sagaMiddleware.run(usersSaga);
 sagaMiddleware.run(operatorsSaga);
 sagaMiddleware.run(cartSaga);
-
+sagaMiddleware.run(locationsSaga);
