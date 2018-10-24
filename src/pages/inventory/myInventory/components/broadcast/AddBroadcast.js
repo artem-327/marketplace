@@ -97,7 +97,7 @@ const BroadcastField = ({name, type}) => {
     <div className={broadcastClass}>
       <div className="field-name"><i className="fas fa-angle-right"></i> {name}</div>
       <div className="field-rules">
-        <Switcher onChange={() => {}} value={true} id={2}/> 
+        <Switcher onChange={() => {}} value={true} isRounded={true}/> 
         <CheckboxRedux></CheckboxRedux></div>
     </div>
   );
