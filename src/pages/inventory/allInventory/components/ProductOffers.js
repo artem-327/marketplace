@@ -44,7 +44,7 @@ class ProductOffers extends Component {
                         offer.productCondition.name,
                         offer.productForm.name,
                         offer.warehouse.name + " (" + offer.warehouse.address.province.name + ")",
-                        <button className='info-button' onClick={()=>{this.addCart(offer.id)}}>BUY</button>]
+                        <button className='info-button' onClick={()=>{this.addCart(offer.id)}}>INFO</button>]
                 }})
             };
         });
