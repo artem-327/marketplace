@@ -35,7 +35,7 @@ class ProductOffers extends Component {
                         offer.packaging.amount.formatNumber(),
                         `${packageSize} ${unit} ${packageUnit}`,
                         (parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber() + unit,
-                        "$ " + offer.pricing.price.formatMoney(2),
+                        "$ " + offer.pricing.price.formatMoney(3),
                         offer.name,
                         offer.manufacturer.name,
                         offer.origin.name,
