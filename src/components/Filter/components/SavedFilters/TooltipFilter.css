@@ -6,7 +6,6 @@
     top: 30px;
     left: 15px;
     display: none;
-    width: 360px;
     z-index: 2;
     background-color: white;
     border-radius: 4px;
@@ -43,10 +42,14 @@
   width: 100%; }
   .tooltip-content .tooltip-header {
     color: black;
+    white-space: nowrap;
     border-top: none; }
   .tooltip-content td {
     padding: 7px 0;
-    vertical-align: top; }
+    vertical-align: top;
+    white-space: nowrap; }
+    .tooltip-content td:first-child {
+      padding-right: 10px; }
   .tooltip-content tr {
     border-top: none; }
   .tooltip-content tr:nth-child(1) {

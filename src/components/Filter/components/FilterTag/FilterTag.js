@@ -79,16 +79,22 @@ class FilterTag extends Component {
     chooseFilter(name){
         switch(name){
             case 'pckgs':{
-                this.pickPackageName();
-                return this.packageName.join(',');
+                return 'pckgs'
+                // this.pickPackageName();
+                // return this.packageName.join(',');
             }
             case 'condition':{
-                this.pickConditionName();
-                return this.conditionName.join(',');
+                return 'condition'
+                // this.pickConditionName();
+                // return this.conditionName.join(',');
             }
             case 'form':{
-                this.pickFormName();
-                return this.formName.join(',');
+                return 'form'
+                // this.pickFormName();
+                // return this.formName.join(',');
+            }
+            case 'grade':{
+                return 'grade'
             }
             default: {
                 return this.props.value;

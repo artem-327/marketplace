@@ -5,15 +5,15 @@ import SaveFilterItem from "./SaveFilterItem";
 class SavedFilters extends Component {
 
 renderSaveItems(saved){
-    return saved.map((item) => {
-        const {filterName, id} = item;
-        delete item.filterName;
-        delete item.id;
-        let final = []
+    console.log(saved);
+    return saved.map((item, index) => {
+        const {filterName} = item;
+        let final = [];
         for(let key in item){
+            if(item[key] === 'filterName') continue;
             final.push({name:key, value: item[key]})
         }
-        return <SaveFilterItem filterName={filterName} key={id} toolTipContent={final}/>
+        return <SaveFilterItem fillFilter={this.props.fillFilter} filterFunc={this.props.filterFunc} filterName={filterName} key={index} toolTipContent={final}/>
     })
 }
 

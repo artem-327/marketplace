@@ -7,7 +7,6 @@
       top: 30px;
       left: 15px;
       display: none;
-      width: 360px;
       z-index: 2;
       background-color: white;
       border-radius: 4px;
@@ -50,11 +49,16 @@
   width: 100%;
   .tooltip-header{
     color: black;
+    white-space: nowrap;
     border-top: none;
   }
   td{
     padding: 7px 0;
     vertical-align: top;
+    white-space: nowrap;
+    &:first-child{
+      padding-right: 10px;
+    }
   }
   tr{
     border-top: none;

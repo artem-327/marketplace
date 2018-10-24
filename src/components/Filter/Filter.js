@@ -15,7 +15,7 @@ class Filter extends Component {
         this.state = {
             isOpen: false,
             saveFilter: false,
-            filterSwitch: false
+            filterSwitch: true
         }
     }
 
@@ -25,15 +25,14 @@ class Filter extends Component {
             {condition: Object.entries(inputs.condition || {}).filter(([key, value]) => value).map(([key]) => key).join(',')},
             {form: Object.entries(inputs.form || {}).filter(([key, value]) => value).map(([key]) => key).join(',')}
             );
-        console.log(filter);
         let params = filterNonEmptyAttributes(filter);
+        console.log(params);
         this.props.filterFunc(params);
         let filterTags = [];
-        for(let tag in params){
-            filterTags.push({name: tag, value: params[tag]})
-        }
+        for(let tag in params) filterTags.push({name: tag, value: params[tag]})
         this.props.addFilterTag(filterTags);
         this.props.toggleFilter();
+        this.switchFilter(true)
     }
 
     handleReset(e){
@@ -56,14 +55,18 @@ class Filter extends Component {
         })
     }
 
+    switchFilter(value){
+        this.setState({filterSwitch: value})
+    }
+
     render()
     {
         let saveFilter = this.state.saveFilter ? <span className="savedButton">Saved</span> : <span className="saveButton" onClick={()=>this.setState({saveFilter:true})}>Save</span>;
         return this.state.isOpen ?
             <div className="filter">
                 <div className="filter-switch">
-                    <span className={"set-filters" + classnames({' active' : !this.state.filterSwitch})} onClick={()=>{this.setState({filterSwitch: true})}}>SET FILTERS</span>
-                    <span className={"saved-filters" + classnames({' active' : this.state.filterSwitch})} onClick={()=>{this.setState({filterSwitch: false})}}>SAVED FILTERS</span>
+                    <span className={"set-filters" + classnames({' active' : !this.state.filterSwitch})} onClick={()=>this.switchFilter(true)}>SET FILTERS</span>
+                    <span className={"saved-filters" + classnames({' active' : this.state.filterSwitch})} onClick={()=>this.switchFilter(false)}>SAVED FILTERS</span>
                 </div>
                 {this.state.filterSwitch ?
                     <Form model="forms.filter" onSubmit={(val) => this.handleSubmit(val)}>
@@ -264,7 +267,7 @@ class Filter extends Component {
                             <button className='button disabled filter-button' onClick={(e)=>{this.handleReset(e)}}>Clear filter</button>
                         </div>
                     </Form>
-                    : <SavedFilters saveFilters={this.props.saveFilters}/>
+                    : <SavedFilters fillFilter={(inputs) => this.props.fillFilter(inputs)} filterFunc={(inputs) => this.handleSubmit(inputs)} saveFilters={this.props.saveFilters}/>
                 }
             </div>
             : null;

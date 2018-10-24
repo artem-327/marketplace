@@ -26,7 +26,8 @@ class TooltipFilter extends Component {
 
     renderContent(content){
         let inside = content.map((item, index) => {
-            const value = typeof item.value === 'object' ? item.value.name : item.value;
+            const value = Array.isArray(item.value) ? item.value.reduce((then, now, index) => (index === 0 ? now.name : then + ', ' + now.name), '') :
+                typeof item.value === 'object' ? item.value.name : item.value;
             return <tr key={index}>
                 <td>{this.formatName(item.name)}</td>
                 <td className="tooltip-data">{value}</td>
@@ -35,7 +36,7 @@ class TooltipFilter extends Component {
         return <table className="tooltip-content">
             <tbody>
                 <tr>
-                    <th className="tooltip-header">FILTERS APPLIED</th>
+                    <th colSpan="2" className="tooltip-header">FILTERS APPLIED</th>
                 </tr>
                 {inside}
             </tbody>
@@ -54,7 +55,7 @@ class TooltipFilter extends Component {
 }
 
 TooltipFilter.propTypes = {
-    content: PropTypes.string,
+    content: PropTypes.array,
     className: PropTypes.string,
     name: PropTypes.string
 };
