@@ -6,19 +6,91 @@
     .popup-component-body{
         border: 1px solid $beige-color;
         border-radius: $border-rounding;
+        padding: 0; 
+    }
+    .add-cart-footer{
+        display: none;
     }
 }
 .add-broadcast {
     display: grid;
     grid-template-columns: 40% auto;
     grid-template-rows: 50px auto;
-    .add-broadcast-main{
+
+    .broadcast-filter-nav{
+      border-left: 1px solid $beige-color;
+      display: grid;
+      grid-template-columns: auto 40%;
+      align-items: center;
+      .field-name {
+        padding-left: 1em;
+      }
+      .field-rules {
+        display: grid;
+        justify-items: center;
+        grid-template-columns: 1fr 1fr;
+        
+      }
+    }
+
+    .broadcast-main{
+        grid-column: 2;
+        grid-row: 2;
         .broadcast-field{
+            display: grid;
+            grid-template-columns: auto 40%;
+            align-items: center;
             height: 60px;
             border: 1px solid $beige-color;
-            padding: 1em;
+            border-collapse: collapse;
+            .field-rules {
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              justify-items: center;
+            }
             &.region {
-                background-color: $light-blue-color;
+              background-color: $light-blue-color;
+              .field-name {
+                font-weight: bold;
+                padding-left: 1em;
+              }
+            }
+            &.state {
+              background-color: $light-60-grey-color;
+              .field-name {
+                padding-left: 2em;
+              }
+            }
+            &.company > .field-name {
+                padding-left: 3em;
+            }
+        }
+    }
+
+    .broadcast-filter{
+        grid-column: 1;
+        grid-row: 2;
+        padding: 1em;
+        label {
+            margin: 0;
+        }
+        .dropdown-wr {
+            margin-bottom: 1em;
+        }
+    }
+
+    .broadcast-nav{
+        padding: 0 1em;
+        border-bottom: 1px solid $beige-color;
+        display: flex;
+        align-items: flex-end;
+        div { 
+            font-size: 20px;   
+            height: 100%;
+            padding: 0.4em 1em;
+            cursor: pointer;
+            &:hover {
+                border-bottom: 2px solid $blue-color;
             }
         }
     }

@@ -3,15 +3,68 @@
   margin: 0 auto; }
   .popup-component .popup-component-body {
     border: 1px solid #E7E7E7;
-    border-radius: 4px; }
+    border-radius: 4px;
+    padding: 0; }
+  .popup-component .add-cart-footer {
+    display: none; }
 
 .add-broadcast {
   display: grid;
   grid-template-columns: 40% auto;
   grid-template-rows: 50px auto; }
-  .add-broadcast .add-broadcast-main .broadcast-field {
-    height: 60px;
-    border: 1px solid #E7E7E7;
+  .add-broadcast .broadcast-filter-nav {
+    border-left: 1px solid #E7E7E7;
+    display: grid;
+    grid-template-columns: auto 40%;
+    align-items: center; }
+    .add-broadcast .broadcast-filter-nav .field-name {
+      padding-left: 1em; }
+    .add-broadcast .broadcast-filter-nav .field-rules {
+      display: grid;
+      justify-items: center;
+      grid-template-columns: 1fr 1fr; }
+  .add-broadcast .broadcast-main {
+    grid-column: 2;
+    grid-row: 2; }
+    .add-broadcast .broadcast-main .broadcast-field {
+      display: grid;
+      grid-template-columns: auto 40%;
+      align-items: center;
+      height: 60px;
+      border: 1px solid #E7E7E7;
+      border-collapse: collapse; }
+      .add-broadcast .broadcast-main .broadcast-field .field-rules {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        justify-items: center; }
+      .add-broadcast .broadcast-main .broadcast-field.region {
+        background-color: #EFF7FC; }
+        .add-broadcast .broadcast-main .broadcast-field.region .field-name {
+          font-weight: bold;
+          padding-left: 1em; }
+      .add-broadcast .broadcast-main .broadcast-field.state {
+        background-color: #f3f3f4; }
+        .add-broadcast .broadcast-main .broadcast-field.state .field-name {
+          padding-left: 2em; }
+      .add-broadcast .broadcast-main .broadcast-field.company > .field-name {
+        padding-left: 3em; }
+  .add-broadcast .broadcast-filter {
+    grid-column: 1;
+    grid-row: 2;
     padding: 1em; }
-    .add-broadcast .add-broadcast-main .broadcast-field.region {
-      background-color: #EFF7FC; }
+    .add-broadcast .broadcast-filter label {
+      margin: 0; }
+    .add-broadcast .broadcast-filter .dropdown-wr {
+      margin-bottom: 1em; }
+  .add-broadcast .broadcast-nav {
+    padding: 0 1em;
+    border-bottom: 1px solid #E7E7E7;
+    display: flex;
+    align-items: flex-end; }
+    .add-broadcast .broadcast-nav div {
+      font-size: 20px;
+      height: 100%;
+      padding: 0.4em 1em;
+      cursor: pointer; }
+      .add-broadcast .broadcast-nav div:hover {
+        border-bottom: 2px solid #329ED6; }
