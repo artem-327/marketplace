@@ -48,7 +48,8 @@ function mapDispatchToProps(dispatch) {
         deleteSaveFilter,
         saveSaveFilter,
         dispatch
-    }, dispatch)
+    }, dispatch);
+}
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(Filter);
