@@ -38,7 +38,7 @@ class ProductOffers extends Component {
             });
         return (<div className="App">
                 <DataTable id="myInventoryTable"
-                           selectable
+                           selectableRows
                            sortFunc={(nameColumn) => console.log(nameColumn)}
                            headerInit={[{name: 'Product Name'}, {name: 'Available'}, {name: 'Packaging'}, {name: 'Pkg. size'}, {name: 'Quantity'}, {name: 'Cost'}, {name: 'FOB Price'}, {name: 'Trade Name'}, {name: 'MFR.'}, {name: 'Condition'}, {name: 'MFG Date'}]}
                            contextMenu={
