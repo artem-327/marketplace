@@ -37,9 +37,17 @@
         grid-template-columns: 1fr 1fr;
         justify-items: center; }
       .add-broadcast .broadcast-main .broadcast-field .price-rules {
-        display: grid;
-        grid-template-columns: 4fr 1fr 1fr;
-        justify-items: center; }
+        display: flex; }
+        .add-broadcast .broadcast-main .broadcast-field .price-rules .price-rule {
+          width: 90%; }
+      .add-broadcast .broadcast-main .broadcast-field .price-units {
+        padding-left: 5px; }
+        .add-broadcast .broadcast-main .broadcast-field .price-units label {
+          float: left;
+          margin: 0;
+          padding-left: 30px; }
+        .add-broadcast .broadcast-main .broadcast-field .price-units p {
+          margin: 0; }
       .add-broadcast .broadcast-main .broadcast-field.region {
         background-color: #EFF7FC; }
         .add-broadcast .broadcast-main .broadcast-field.region .field-name {

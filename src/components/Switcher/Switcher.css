@@ -20,7 +20,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #4CD136;
+  background-color: #ccc;
   transition: .4s; }
 
 .slider:before {
@@ -34,10 +34,10 @@
   transition: .4s; }
 
 input:checked + .slider {
-  background-color: #ccc; }
+  background-color: #4CD136; }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #ccc; }
+  box-shadow: 0 0 1px #4CD136; }
 
 input:checked + .slider:before {
   transform: translateX(20px); }

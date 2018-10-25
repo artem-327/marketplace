@@ -1,10 +1,10 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { Control } from "react-redux-form";
 import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
 import Switcher from "../../../../../components/Switcher/Switcher";
 import { isNumber } from "../../../../../utils/validation";
-
+import RadioRedux from "../../../../../components/Radio/RadioRedux";
 
 const BroadcastField = ({ name, type, dispatch, isList }) => {
     return (
@@ -16,7 +16,7 @@ const BroadcastField = ({ name, type, dispatch, isList }) => {
           <div className="list-rules">
             <Switcher
               onChange={value => console.log(value)}
-              value={true}
+              value={false} //TODO
               isRounded={true}
             />
             <CheckboxRedux
@@ -29,14 +29,16 @@ const BroadcastField = ({ name, type, dispatch, isList }) => {
         ) : (
           <div className="price-rules">
             <Control.text
-              model="forms.broadcast.priceRule"
+              model={`forms.broadcast.${name}.priceRule`}
               className="price-rule"
               validators={{ isNumber }}
               id=".mark"
               defaultValue=""
             />
-            <div className="price-rules-units"><div>$</div><div>%</div></div>
-            <div></div>
+
+            <div className="price-units">                            
+                <RadioRedux dispatch={dispatch} model={`forms.broadcast.${name}.priceunit`} opns={[{label:'%', value:`${name}%`}, {label:'$', value:`${name}$`}]} />
+            </div>
           </div>
         )}
       </div>

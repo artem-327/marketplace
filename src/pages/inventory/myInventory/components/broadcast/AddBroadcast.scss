@@ -47,9 +47,22 @@
               justify-items: center;
             }
             .price-rules {
-                display: grid;
-                grid-template-columns: 4fr 1fr 1fr;
-                justify-items: center;
+                display: flex;
+
+                .price-rule {
+                    width: 90%;
+                }
+            }
+            .price-units {
+                padding-left: 5px;
+                label {
+                    float: left;
+                    margin: 0;
+                    padding-left: 30px;
+                }
+                p {
+                    margin: 0;
+                }
             }
             &.region {
               background-color: $light-blue-color;

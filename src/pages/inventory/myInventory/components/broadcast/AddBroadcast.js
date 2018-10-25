@@ -49,7 +49,6 @@ class AddBroadcast extends Component {
         saveObj={obj => obj.id}
         validators={{ required }}
         dispatch={dispatch}
-        disabled={!categoryFilter ? true : false}
         model="forms.broadcast.search"
       />;
         case 'states': return <RemoteComboBoxRedux
@@ -62,7 +61,6 @@ class AddBroadcast extends Component {
         saveObj={obj => obj.id}
         validators={{ required }}
         dispatch={dispatch}
-        disabled={!categoryFilter ? true : false}
         model="forms.broadcast.search"
       />;
         case 'companies': return <RemoteComboBoxRedux
@@ -75,7 +73,6 @@ class AddBroadcast extends Component {
         saveObj={obj => obj.id}
         validators={{ required }}
         dispatch={dispatch}
-        disabled={!categoryFilter ? true : false}
         model="forms.broadcast.search"
       />;
         default: return <RemoteComboBoxRedux
@@ -88,7 +85,7 @@ class AddBroadcast extends Component {
         saveObj={obj => obj.id}
         validators={{ required }}
         dispatch={dispatch}
-        disabled={!categoryFilter ? true : false}
+        disabled
         model="forms.broadcast.search"
       />;
     }
@@ -102,7 +99,7 @@ class AddBroadcast extends Component {
       { name: "States", id: "states" },
       { name: "Companies", id: "companies" }
     ];
-
+    const templatesOptions = [] //TODO
     if (isFetching) return <Spinner />;
     return (
       <PopupComponent
@@ -143,8 +140,8 @@ class AddBroadcast extends Component {
             </div>
             <hr />
             <div className="group-item-wr">
-              <label>Templates</label>
-              <Dropdown opns={[]} placeholder="Select Template" />
+              <label>Templates ({templatesOptions.length})</label>
+              <Dropdown opns={[]} placeholder="Select Template" disabled={templatesOptions.length === 0 ? true : false}/>
             </div>
           </div>
 
