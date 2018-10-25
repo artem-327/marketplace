@@ -15,7 +15,8 @@ class Filter extends Component {
         this.state = {
             isOpen: false,
             saveFilter: false,
-            filterSwitch: true
+            filterSwitch: true,
+            filterName: "",
         }
     }
 
@@ -46,7 +47,11 @@ class Filter extends Component {
     this.props.fetchProductConditions();
     this.props.fetchProductForms();
     this.props.fetchPackagingTypes();
-    this.props.fetchSavedFilters()
+    this.props.fetchSavedFilters();
+    }
+
+    deleteSaveFilter(id){
+        this.props.deleteSaveFilter(id).then(()=>this.props.fetchSavedFilters())
     }
 
     componentWillReceiveProps(nextProps){
@@ -55,13 +60,32 @@ class Filter extends Component {
         })
     }
 
+    changeFilterName(e){
+        this.setState({filterName: e.target.value})
+    }
+
     switchFilter(value){
         this.setState({filterSwitch: value})
     }
 
+    saveFilters(){
+        let inputs = this.props.filterData;
+        let filter = Object.assign({},inputs,
+            {containers: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => ({container: key}))},
+            {conditions: Object.entries(inputs.condition || {}).filter(([key, value]) => value).map(([key]) => ({condition: key}))},
+            {forms: Object.entries(inputs.form || {}).filter(([key, value]) => value).map(([key]) => ({form: key}))},
+            {filterName: this.state.filterName},
+            {quantityFrom: (inputs.qntylb || "")},
+            {quantityTo: (inputs.qntyub || "")},
+            {priceFrom: (inputs.prclb || "")},
+            {priceTo: (inputs.prcub || "")},
+        );
+        this.props.saveSaveFilter(filter).then(()=>this.setState({saveFilter:true}));
+    }
+
     render()
     {
-        let saveFilter = this.state.saveFilter ? <span className="savedButton">Saved</span> : <span className="saveButton" onClick={()=>this.setState({saveFilter:true})}>Save</span>;
+        let saveFilter = this.state.saveFilter ? <span className="savedButton" onClick={()=>this.saveFilters()}>Saved</span> : <span className="saveButton" onClick={()=>this.saveFilters()}>Save</span>;
         return this.state.isOpen ?
             <div className="filter">
                 <div className="filter-switch">
@@ -256,7 +280,7 @@ class Filter extends Component {
                             <div className='filter-input-text'>
                                 <label className="input-label">Enter Filter Name</label>
                                 <React.Fragment>
-                                    <input type="text" placeholder="Set filter name" className="input"/>
+                                    <input type="text" onChange={(e)=>this.changeFilterName(e)} placeholder="Set filter name" className="input" value={this.state.filterName}/>
                                     {saveFilter}
                                 </React.Fragment>
                             </div>
@@ -267,7 +291,7 @@ class Filter extends Component {
                             <button className='button disabled filter-button' onClick={(e)=>{this.handleReset(e)}}>Clear filter</button>
                         </div>
                     </Form>
-                    : <SavedFilters fillFilter={(inputs) => this.props.fillFilter(inputs)} filterFunc={(inputs) => this.handleSubmit(inputs)} saveFilters={this.props.saveFilters}/>
+                    : <SavedFilters deleteSaveFilter={(id) => this.deleteSaveFilter(id)} fillFilter={(inputs) => this.props.fillFilter(inputs)} filterFunc={(inputs) => this.handleSubmit(inputs)} saveFilters={this.props.saveFilters}/>
                 }
             </div>
             : null;

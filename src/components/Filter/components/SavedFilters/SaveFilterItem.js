@@ -38,7 +38,7 @@ class SaveFilterItem extends Component {
         return (
             <li onMouseEnter={() => this.setState({showTooltip: true})} onMouseLeave={() => this.setState({showTooltip: false})}>
                 <div onClick={() => this.fillFilter()} className="filter-name"><TooltipFilter name={this.props.filterName} isVisible={this.state.showTooltip} content={this.props.toolTipContent}/></div>
-                <div className="filter-delete">DELETE<span className="close-external"><i className="close"/></span>
+                <div onClick={() => this.props.deleteSaveFilter(this.props.id)} className="filter-delete">DELETE<span className="close-external"><i className="close"/></span>
                 </div>
             </li>
         )

@@ -1,7 +1,14 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Filter from './Filter';
-import {toggleFilterGroup, addFilterTag, toggleFilter, fetchSavedFilters} from '../../modules/filter';
+import {
+    toggleFilterGroup,
+    addFilterTag,
+    toggleFilter,
+    fetchSavedFilters,
+    deleteSaveFilter,
+    saveSaveFilter
+} from '../../modules/filter';
 import {fetchProductAge, fetchProductConditions, fetchProductForms, fetchPackagingTypes} from '../../modules/products';
 import {resetForm} from '../../utils/functions';
 import {actions} from "react-redux-form";
@@ -35,6 +42,8 @@ function mapDispatchToProps(dispatch) {
         fetchPackagingTypes,
         fetchSavedFilters,
         fillFilter: (values) => actions.merge('forms.filter', values),
+        deleteSaveFilter,
+        saveSaveFilter,
         dispatch
     }, dispatch)
 }

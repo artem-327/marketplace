@@ -9,6 +9,7 @@ const CLOSE_FILTER_TAG_FULFILLED = 'CLOSE_FILTER_TAG_FULFILLED';
 const GET_SAVE_FILTERS = 'GET_SAVE_FILTERS';
 const GET_SAVE_FILTERS_FULFILLED = 'GET_SAVE_FILTERS_FULFILLED';
 const DELETE_SAVE_FILTER = 'DELETE_SAVE_FILTER';
+const SAVE_SAVE_FILTER = 'SAVE_SAVE_FILTER';
 
 export const initialState = {
     isOpen: false,
@@ -114,5 +115,18 @@ export function fetchSavedFilters(){
     }
 }
 
+export function deleteSaveFilter(id){
+    return{
+        type: DELETE_SAVE_FILTER,
+        payload: axios.delete(`/api/n7kwed/filters/${id}/`)
+    }
+}
+
+export function saveSaveFilter(inputs){
+    return{
+        type: SAVE_SAVE_FILTER,
+        payload: axios.post("/api/5o07zb/filters/", inputs)
+    }
+}
 
 
