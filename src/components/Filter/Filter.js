@@ -21,7 +21,6 @@ class Filter extends Component {
             {condition: Object.entries(inputs.condition || {}).filter(([key, value]) => value).map(([key]) => key).join(',')},
             {form: Object.entries(inputs.form || {}).filter(([key, value]) => value).map(([key]) => key).join(',')}
             );
-        console.log(filter);
         let params = filterNonEmptyAttributes(filter);
         this.props.filterFunc(params);
         let filterTags = [];
@@ -43,6 +42,7 @@ class Filter extends Component {
     this.props.fetchProductConditions();
     this.props.fetchProductForms();
     this.props.fetchPackagingTypes();
+    this.props.fetchWarehouseDistances();
     }
 
     componentWillReceiveProps(nextProps){
@@ -182,16 +182,23 @@ class Filter extends Component {
                                  ]}/>
                     <FilterGroup className="filterGroup"
                                  header='Location'
+                                 split
                                  isVisible={!!this.props.loc}
                                  data={this.props.filterData}
                                  isOpen={this.props.filterGroupStatus.loc}
                                  onOpen={(value)=>{this.props.toggleFilterGroup('loc', value)}}
                                  dispatch={this.props.dispatch}
                                  inputs={[
-                                     {
+                                    {
+                                        label: 'Enter your zip code',
+                                        model: '.zipCode',
+                                        type: 'number'
+                                    }, 
+                                    {
                                          label: 'Max. miles away',
-                                         model: 'forms.filter.data.loc',
+                                         model: '.warehouseDistance',
                                          type: 'dropdown',
+                                         data: this.props.warehouseDistances,
                                      }
                                  ]}/>
                     <FilterGroup className="filterGroup"

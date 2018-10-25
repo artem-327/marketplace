@@ -76,7 +76,10 @@ $font-family: 'Cabin', sans-serif;
       margin: 0 25px 35px 10px;
     }
     .filter-input-dropdown{
-      height: 240px;
+      display: inline-block;
+      float: left;
+      width: calc(50% - 70px);
+      margin: 0 25px 35px 10px;
     }
     .filter-input-date{
       display: inline-block;

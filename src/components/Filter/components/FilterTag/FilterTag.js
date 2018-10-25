@@ -7,6 +7,7 @@ class FilterTag extends Component {
     packageName = [];
     conditionName = [];
     formName = [];
+    locationName = [];
 
     checkName(name){
         switch(name){
@@ -38,7 +39,7 @@ class FilterTag extends Component {
         let array = this.props.value.split(',');
 
         for (let i = 0; i < array.length; i++) {
-            this.props.packageTypes.map((info)=>{
+            this.props.packagingTypes.map((info)=>{
                 if((info.id).toString() === array[i]){
                     this.packageName.push(info.name);
                 }
@@ -89,6 +90,10 @@ class FilterTag extends Component {
             case 'form':{
                 this.pickFormName();
                 return this.formName.join(',');
+            }
+            case 'loc':{
+                this.pickLocationName();
+                return this.locationName.join(',');
             }
             default: {
                 return this.props.value;
