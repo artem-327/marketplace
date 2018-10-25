@@ -14,7 +14,8 @@ import "./AddBroadcast.css";
 
 class AddBroadcast extends Component {
   state = {
-    isList: true
+    isList: true,
+    categoryFilter: false
   };
 
   handleContinue = () => {
@@ -34,14 +35,74 @@ class AddBroadcast extends Component {
     this.props.fetchRegions();
   }
 
+  renderSearchField = () => {
+    const {regions, fetchRegions, regionsAreFetching, dispatch } = this.props
+    const {categoryFilter} = this.state
+    switch(categoryFilter){
+        case 'regions': return <RemoteComboBoxRedux
+        items={regions}
+        api={text => fetchRegions(text)}
+        limit={20}
+        label="Search In the Regions"
+        placeholder="Search For a Region"
+        isFetching={regionsAreFetching}
+        saveObj={obj => obj.id}
+        validators={{ required }}
+        dispatch={dispatch}
+        disabled={!categoryFilter ? true : false}
+        model="forms.broadcast.search"
+      />;
+        case 'states': return <RemoteComboBoxRedux
+        items={regions}
+        api={text => fetchRegions(text)}
+        limit={20}
+        label="Search In the States"
+        placeholder="Search For a State"
+        isFetching={regionsAreFetching}
+        saveObj={obj => obj.id}
+        validators={{ required }}
+        dispatch={dispatch}
+        disabled={!categoryFilter ? true : false}
+        model="forms.broadcast.search"
+      />;
+        case 'companies': return <RemoteComboBoxRedux
+        items={regions}
+        api={text => fetchRegions(text)}
+        limit={20}
+        label="Search In the Companies"
+        placeholder="Search For a Company"
+        isFetching={regionsAreFetching}
+        saveObj={obj => obj.id}
+        validators={{ required }}
+        dispatch={dispatch}
+        disabled={!categoryFilter ? true : false}
+        model="forms.broadcast.search"
+      />;
+        default: return <RemoteComboBoxRedux
+        items={regions}
+        api={text => fetchRegions(text)}
+        limit={20}
+        label="Please Select The Category Filter First"
+        placeholder="Search"
+        isFetching={regionsAreFetching}
+        saveObj={obj => obj.id}
+        validators={{ required }}
+        dispatch={dispatch}
+        disabled={!categoryFilter ? true : false}
+        model="forms.broadcast.search"
+      />;
+    }
+  }
+
   render() {
     const { removePopup, isFetching, dispatch } = this.props;
     const { isList } = this.state;
     const categoryFilterOptions = [
-      { name: "Regions" },
-      { name: "States" },
-      { name: "Companies" }
+      { name: "Regions", id: "regions" },
+      { name: "States", id: "states" },
+      { name: "Companies", id: "companies" }
     ];
+
     if (isFetching) return <Spinner />;
     return (
       <PopupComponent
@@ -74,20 +135,11 @@ class AddBroadcast extends Component {
               <Dropdown
                 opns={categoryFilterOptions}
                 placeholder="Select Category Filter"
+                onChange={value => this.setState({categoryFilter: value})}
               />
             </div>
             <div className="group-item-wr">
-              <RemoteComboBoxRedux
-                items={this.props.regions}
-                api={text => this.props.fetchRegions(text)}
-                limit={20}
-                label="Search In the Regions"
-                isFetching={this.props.regionsAreFetching}
-                saveObj={obj => obj.id}
-                validators={{ required }}
-                dispatch={dispatch}
-                model="forms.broadcast.search"
-              />
+              {this.renderSearchField()}
             </div>
             <hr />
             <div className="group-item-wr">

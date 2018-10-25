@@ -69,6 +69,8 @@
       margin-top: 1em; }
     .add-broadcast .broadcast-filter .combo-results {
       z-index: 2; }
+    .add-broadcast .broadcast-filter .comboBox {
+      width: 100%; }
     .add-broadcast .broadcast-filter .fas.fa-search.combo-icon {
       padding: 5px 0; }
   .add-broadcast .broadcast-nav {
