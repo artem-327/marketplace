@@ -1,0 +1,45 @@
+.saved-filters {
+  list-style-type: none;
+  margin: 0;
+  padding: 0; }
+  .saved-filters li {
+    border-bottom: 1px solid #e4e7e9;
+    padding: 0 6px; }
+    .saved-filters li:first-child {
+      border-top: 1px solid #a6b0b7; }
+    .saved-filters li:hover {
+      background-color: #e0eef6;
+      cursor: pointer; }
+    .saved-filters li .filter-name, .saved-filters li .filter-delete {
+      padding: 8px 6px; }
+    .saved-filters li .filter-name {
+      width: calc(100% - 100px);
+      display: inline-block;
+      text-transform: uppercase; }
+    .saved-filters li .filter-delete {
+      width: 100px;
+      display: none;
+      border-left: 1px solid #d0dde5;
+      position: relative; }
+      .saved-filters li .filter-delete .close {
+        position: absolute;
+        right: 0;
+        top: 12px;
+        width: 32px;
+        height: 32px;
+        opacity: 0.3; }
+      .saved-filters li .filter-delete .close:before, .saved-filters li .filter-delete .close:after {
+        position: absolute;
+        right: 15px;
+        content: ' ';
+        height: 13px;
+        width: 2px;
+        background-color: #333; }
+      .saved-filters li .filter-delete .close:before {
+        transform: rotate(45deg); }
+      .saved-filters li .filter-delete .close:after {
+        transform: rotate(-45deg); }
+      .saved-filters li .filter-delete:hover .close {
+        opacity: .8; }
+    .saved-filters li:hover .filter-delete {
+      display: inline-block; }
