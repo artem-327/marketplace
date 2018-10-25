@@ -6,14 +6,23 @@ class FilterTags extends Component {
 
     renderTags() {
         return this.props.filterTags.map((tag, index)=>{
-            return <FilterTag packageTypes={this.props.packageTypes} productConditions={this.props.productConditions} productForms={this.props.productForms} resetForm={this.props.resetForm}  key={index} name={tag.name} dispatch={this.props.dispatch} value={tag.value} close={()=>this.props.closeFilterTag(index).then(()=>{
-                let filter = {};
-                this.props.filterTags.map((input)=>{
-                    filter[input.name] = input.value;
-                    return true;
-                });
-                this.props.closeFunc(filter)
-            })}/>
+            return <FilterTag packagingTypes={this.props.packagingTypes}
+                                productConditions={this.props.productConditions} 
+                                productForms={this.props.productForms} 
+                                //zipCode={this.props.zipCode} 
+                                //warehouseDistances={this.props.warehouseDistances} 
+                                resetForm={this.props.resetForm}  
+                                key={index} name={tag.name} 
+                                dispatch={this.props.dispatch} 
+                                value={tag.value} 
+                                close={()=>this.props.closeFilterTag(index).then(()=>{
+                                    let filter = {};
+                                    this.props.filterTags.map((input)=>{
+                                        filter[input.name] = input.value;
+                                        return true;
+                                    });
+                                    this.props.closeFunc(filter)
+                                })}/>
         })
     }
 

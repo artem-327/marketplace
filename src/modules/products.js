@@ -29,6 +29,7 @@ const FETCH_MANUFACTURER = 'FETCH_MANUFACTURER';
 const FETCH_MANUFACTURER_PENDING = 'FETCH_MANUFACTURER_PENDING';
 const FETCH_MANUFACTURER_FULFILLED = 'FETCH_MANUFACTURER_FULFILLED';
 const FETCH_PACKAGING_TYPES = 'FETCH_PACKAGING_TYPES';
+const FETCH_PACKAGING_TYPES_FULFILLED = 'FETCH_PACKAGING_TYPES_FULFILLED';
 
 export const initialState = {
     productsMapping: {},
@@ -160,7 +161,7 @@ export default function reducer(state = initialState, action) {
                 alternativeNames: action.payload
             }
         }
-        case FETCH_PACKAGING_TYPES:{
+        case FETCH_PACKAGING_TYPES_FULFILLED:{
             return{
                 ...state,
                 packagingTypes: action.payload
@@ -298,14 +299,9 @@ export function fetchAlternativeNames(id){
     }
 }
 
-export function fetchPackagingTypes(){
+export function fetchPackagingTypes(filter = {}){
     return {
         type: FETCH_PACKAGING_TYPES,
-        payload: [
-            {id: 0, name:'Super Sack'},
-            {id: 1, name:'Pails'},
-            {id: 2, name:'Bulk'},
-            {id: 3, name:'Totes'},
-        ]
+        payload: axios.get('/api/e49sy3/containers/', {params: {...filter}}).then(result => result.data.data.containers)
     }
 }

@@ -27,7 +27,6 @@ class Filter extends Component {
             {form: Object.entries(inputs.form || {}).filter(([key, value]) => value).map(([key]) => key).join(',')}
             );
         let params = filterNonEmptyAttributes(filter);
-        console.log(params);
         this.props.filterFunc(params);
         let filterTags = [];
         for(let tag in params) filterTags.push({name: tag, value: params[tag]})
@@ -48,10 +47,12 @@ class Filter extends Component {
     this.props.fetchProductForms();
     this.props.fetchPackagingTypes();
     this.props.fetchSavedFilters();
+    this.props.fetchWarehouseDistances();
     }
 
     deleteSaveFilter(id){
         this.props.deleteSaveFilter(id).then(()=>this.props.fetchSavedFilters())
+
     }
 
     componentWillReceiveProps(nextProps){
@@ -191,6 +192,7 @@ class Filter extends Component {
                                          id: form.id,
                                          model: `.form[${form.id}]`
                                      }))}/>
+
 
                         <FilterGroup className="filterGroup"
                                      header='Chemical Search'
