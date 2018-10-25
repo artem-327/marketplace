@@ -3,7 +3,7 @@
 .switch-container {
   display: block;
   width: 46px;
-  height: 24px;
+  height: 25px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -22,7 +22,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
+    background-color: $green-color;
     transition: .4s;
   }
 
@@ -38,11 +38,11 @@
   }
 
   input:checked + .slider {
-    background-color: $green-color;
+    background-color: #ccc;
   }
   
   input:focus + .slider {
-    box-shadow: 0 0 1px $green-color;
+    box-shadow: 0 0 1px #ccc;
   }
   
   input:checked + .slider:before {

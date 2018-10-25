@@ -13,7 +13,7 @@ import createSagaMiddleware from 'redux-saga'
 import identity, {initialState as identityFormInit} from './modules/identity';
 import users from './modules/users';
 
-import location from './modules/location';
+
 import companies from './modules/companies';
 import productOffers, {initialState as addProductsInit} from './modules/productOffers';
 import popup from './modules/popup';
@@ -23,6 +23,7 @@ import cart from "./modules/cart";
 import broadcastRules from "./modules/broadcastRule";
 import merchants, {initialState as merchantsInit} from "./modules/merchants";
 import products, {initialState as productsInit} from './modules/products';
+import location, {initialState as locationInit} from './modules/location';
 import errors from "./modules/errors";
 import companiesSaga from "./saga/companies";
 import officesSaga from "./saga/offices";
@@ -51,6 +52,7 @@ const reducer = combineReducers({
     dataTables,
     forms: combineForms({
         filter: filterInit.data,
+        broadcast: locationInit.broadcast,
         addProductOffer: addProductsInit.addProductOffer,
         productMapping: productsInit.productsMapping,
         productOffering: productsInit.productOffering,

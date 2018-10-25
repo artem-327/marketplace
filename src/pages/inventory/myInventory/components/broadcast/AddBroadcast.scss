@@ -18,18 +18,16 @@
     grid-template-rows: 50px auto;
 
     .broadcast-filter-nav{
-      border-left: 1px solid $beige-color;
       display: grid;
-      grid-template-columns: auto 40%;
+      grid-template-columns: auto 35%;
       align-items: center;
       .field-name {
         padding-left: 1em;
       }
-      .field-rules {
+      .list-rules {
         display: grid;
         justify-items: center;
         grid-template-columns: 1fr 1fr;
-        
       }
     }
 
@@ -38,15 +36,20 @@
         grid-row: 2;
         .broadcast-field{
             display: grid;
-            grid-template-columns: auto 40%;
+            grid-template-columns: auto 35%;
             align-items: center;
             height: 60px;
-            border: 1px solid $beige-color;
+            border-top: 1px solid $beige-color;
             border-collapse: collapse;
-            .field-rules {
+            .list-rules {
               display: grid;
               grid-template-columns: 1fr 1fr;
               justify-items: center;
+            }
+            .price-rules {
+                display: grid;
+                grid-template-columns: 4fr 1fr 1fr;
+                justify-items: center;
             }
             &.region {
               background-color: $light-blue-color;
@@ -71,18 +74,31 @@
         grid-column: 1;
         grid-row: 2;
         padding: 1em;
-        label {
-            margin: 0;
+        border-right: 1px solid $beige-color;
+        .broadcasting-info {
+            background-color: $light-60-grey-color;
+            display: flex;
+            color: $light-30-grey-color;
+            border: 1px solid $blue-color;
+            border-radius: $border-rounding;
+            padding: 0.4em;
         }
-        .dropdown-wr {
-            margin-bottom: 1em;
+        label {
+            margin-bottom: 3px;
+        }
+        .group-item-wr {
+            margin-top: 1em;
         }
         .combo-results{
             z-index: 2;
         }
+        .fas.fa-search.combo-icon {
+            padding: 5px 0;
+        }
     }
 
     .broadcast-nav{
+        border-right: 1px solid $beige-color;
         padding: 0 1em;
         border-bottom: 1px solid $beige-color;
         display: flex;
@@ -91,10 +107,21 @@
             font-size: 20px;   
             height: 100%;
             padding: 0.4em 1em;
+            margin-right: 0.2em;
             cursor: pointer;
             &:hover {
                 border-bottom: 2px solid $blue-color;
             }
+            &.active {
+                border-bottom: 2px solid $blue-color;
+            }
         }
     }
+}
+
+//SHAME
+.fa-info-circle{
+    color: $blue-color;
+    padding-right: 10px;
+    font-size: 1.5em;
 }

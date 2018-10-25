@@ -13,13 +13,12 @@
   grid-template-columns: 40% auto;
   grid-template-rows: 50px auto; }
   .add-broadcast .broadcast-filter-nav {
-    border-left: 1px solid #E7E7E7;
     display: grid;
-    grid-template-columns: auto 40%;
+    grid-template-columns: auto 35%;
     align-items: center; }
     .add-broadcast .broadcast-filter-nav .field-name {
       padding-left: 1em; }
-    .add-broadcast .broadcast-filter-nav .field-rules {
+    .add-broadcast .broadcast-filter-nav .list-rules {
       display: grid;
       justify-items: center;
       grid-template-columns: 1fr 1fr; }
@@ -28,14 +27,18 @@
     grid-row: 2; }
     .add-broadcast .broadcast-main .broadcast-field {
       display: grid;
-      grid-template-columns: auto 40%;
+      grid-template-columns: auto 35%;
       align-items: center;
       height: 60px;
-      border: 1px solid #E7E7E7;
+      border-top: 1px solid #E7E7E7;
       border-collapse: collapse; }
-      .add-broadcast .broadcast-main .broadcast-field .field-rules {
+      .add-broadcast .broadcast-main .broadcast-field .list-rules {
         display: grid;
         grid-template-columns: 1fr 1fr;
+        justify-items: center; }
+      .add-broadcast .broadcast-main .broadcast-field .price-rules {
+        display: grid;
+        grid-template-columns: 4fr 1fr 1fr;
         justify-items: center; }
       .add-broadcast .broadcast-main .broadcast-field.region {
         background-color: #EFF7FC; }
@@ -51,14 +54,25 @@
   .add-broadcast .broadcast-filter {
     grid-column: 1;
     grid-row: 2;
-    padding: 1em; }
+    padding: 1em;
+    border-right: 1px solid #E7E7E7; }
+    .add-broadcast .broadcast-filter .broadcasting-info {
+      background-color: #f3f3f4;
+      display: flex;
+      color: #9a9da4;
+      border: 1px solid #329ED6;
+      border-radius: 4px;
+      padding: 0.4em; }
     .add-broadcast .broadcast-filter label {
-      margin: 0; }
-    .add-broadcast .broadcast-filter .dropdown-wr {
-      margin-bottom: 1em; }
+      margin-bottom: 3px; }
+    .add-broadcast .broadcast-filter .group-item-wr {
+      margin-top: 1em; }
     .add-broadcast .broadcast-filter .combo-results {
       z-index: 2; }
+    .add-broadcast .broadcast-filter .fas.fa-search.combo-icon {
+      padding: 5px 0; }
   .add-broadcast .broadcast-nav {
+    border-right: 1px solid #E7E7E7;
     padding: 0 1em;
     border-bottom: 1px solid #E7E7E7;
     display: flex;
@@ -67,6 +81,14 @@
       font-size: 20px;
       height: 100%;
       padding: 0.4em 1em;
+      margin-right: 0.2em;
       cursor: pointer; }
       .add-broadcast .broadcast-nav div:hover {
         border-bottom: 2px solid #329ED6; }
+      .add-broadcast .broadcast-nav div.active {
+        border-bottom: 2px solid #329ED6; }
+
+.fa-info-circle {
+  color: #329ED6;
+  padding-right: 10px;
+  font-size: 1.5em; }
