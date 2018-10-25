@@ -2,15 +2,13 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { Control } from "react-redux-form";
+import BroadcastField from "./BroadcastField";
 import Dropdown from "../../../../../components/Dropdown/Dropdown";
 import Spinner from "../../../../../components/Spinner/Spinner";
 import PopupComponent from "../../../../../components/PopUp/PopupComponent";
-import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
-import Switcher from "../../../../../components/Switcher/Switcher";
 import { removePopup } from "../../../../../modules/popup";
 import { fetchRegions } from "../../../../../modules/location";
-import { required, isNumber } from "../../../../../utils/validation";
+import { required } from "../../../../../utils/validation";
 import RemoteComboBoxRedux from "../../../../../components/ComboBox/RemoteComboBoxRedux";
 import "./AddBroadcast.css";
 
@@ -181,39 +179,4 @@ export default connect(
   mapDispatchToProps
 )(AddBroadcast);
 
-const BroadcastField = ({ name, type, dispatch, isList }) => {
-  return (
-    <div className={`broadcast-field ${type}`}>
-      <div className="field-name">
-        <i className="fas fa-angle-right" /> {name}
-      </div>
-      {isList ? (
-        <div className="list-rules">
-          <Switcher
-            onChange={value => console.log(value)}
-            value={true}
-            isRounded={true}
-          />
-          <CheckboxRedux
-            defaultValue={false}
-            dispatch={dispatch}
-            model={"forms.broadcast.broadcastField"}
-            onChange={value => console.log(value)}
-          />
-        </div>
-      ) : (
-        <div className="price-rules">
-          <Control.text
-            model="forms.broadcast.priceRule"
-            className="price-rule"
-            validators={{ isNumber }}
-            id=".mark"
-            defaultValue=""
-          />
-          <div className="price-rules-units"><div>$</div><div>%</div></div>
-          <div></div>
-        </div>
-      )}
-    </div>
-  );
-};
+
