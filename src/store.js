@@ -20,7 +20,7 @@ import popup from './modules/popup';
 import filter, {initialState as filterInit} from './modules/filter';
 import packageTypes from './modules/packageTypes';
 import cart from "./modules/cart";
-import broadcastRules from "./modules/broadcastRule";
+import broadcastRules, {initialState as broadcastRulesInit} from "./modules/broadcastRule";
 import merchants, {initialState as merchantsInit} from "./modules/merchants";
 import products, {initialState as productsInit} from './modules/products';
 import location, {initialState as locationInit} from './modules/location';
@@ -52,7 +52,7 @@ const reducer = combineReducers({
     dataTables,
     forms: combineForms({
         filter: filterInit.data,
-        broadcast: locationInit.broadcast,
+        broadcastRules: broadcastRulesInit.broadcastRules,
         addProductOffer: addProductsInit.addProductOffer,
         productMapping: productsInit.productsMapping,
         productOffering: productsInit.productOffering,

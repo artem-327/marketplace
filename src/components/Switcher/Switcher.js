@@ -6,20 +6,16 @@ class Switcher extends Component {
     checked: false
   }
 
-  componentWillMount() {
-    const checked = this.props.value;
-    this.setState({ checked: checked });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const checked = nextProps.value;
-    this.setState({ checked: checked });
+  componentWillReceiveProps(nextProps){
+      if(nextProps.defaultValue){
+          this.setState({checked: nextProps.defaultValue})
+      }
   }
 
   handleChange = () => {
-    this.setState({ checked: !this.state.checked })
-    if (this.props.onChange)
-      this.props.onChange(this.state.checked);
+      this.setState({checked: !this.state.checked}, ()=>{
+          this.props.onChange(this.state.checked);
+      });
   }
 
   render() {
@@ -28,7 +24,7 @@ class Switcher extends Component {
       <div className="switch-container">
         <div className="switch-container">
           <label className="switch">
-            <input type="checkbox" onChange={this.handleChange} checked={this.state.checked} />
+            <input type="checkbox" onChange={(e) => {this.handleChange(e)}} checked={this.state.checked} />
             <span className={sliderType}></span>
           </label>
         </div>

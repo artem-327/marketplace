@@ -1,25 +1,22 @@
-import React, {Component} from 'react';
-//import { actions } from 'react-redux-form';
-import { Control } from 'react-redux-form';
+import React, { Component } from 'react';
+import { actions } from 'react-redux-form';
 import Switcher from './Switcher';
 
 class SwitcherRedux extends Component {
+  handleChange(value) {
+    const { model, dispatch } = this.props;
+    dispatch(actions.change(model, value));
+    if (this.props.onChange) this.props.onChange(value);
+  }
 
-    handleChange(value){
-        const { model, dispatch } = this.props;
-        dispatch(actions.change(model, value));
-        if(this.props.onChange) this.props.onChange(value);
-    }
-
-    render() {
-        return <Control
-            model={this.props.model}
-            component={Switcher}
-            redux
-            onChange={value => this.handleChange(value)}
-            {...this.props}
-        />
-    }
+  render() {
+    const { isRounded, defaultValue } = this.props;
+    return <Switcher
+      isRounded={isRounded}
+      defaultValue={defaultValue}
+      onChange={value => this.handleChange(value)}
+    />
+  }
 }
 
 export default SwitcherRedux;

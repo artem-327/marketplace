@@ -49,7 +49,7 @@ class AddBroadcast extends Component {
         saveObj={obj => obj.id}
         validators={{ required }}
         dispatch={dispatch}
-        model="forms.broadcast.search"
+        model="forms.broadcastRules.search"
       />;
         case 'states': return <RemoteComboBoxRedux
         items={regions}
@@ -61,7 +61,7 @@ class AddBroadcast extends Component {
         saveObj={obj => obj.id}
         validators={{ required }}
         dispatch={dispatch}
-        model="forms.broadcast.search"
+        model="forms.broadcastRules.search"
       />;
         case 'companies': return <RemoteComboBoxRedux
         items={regions}
@@ -73,20 +73,20 @@ class AddBroadcast extends Component {
         saveObj={obj => obj.id}
         validators={{ required }}
         dispatch={dispatch}
-        model="forms.broadcast.search"
+        model="forms.broadcastRules.search"
       />;
         default: return <RemoteComboBoxRedux
         items={regions}
         api={text => fetchRegions(text)}
         limit={20}
-        label="Please Select The Category Filter First"
+        label="Please Select the Category Filter First"
         placeholder="Search"
         isFetching={regionsAreFetching}
         saveObj={obj => obj.id}
         validators={{ required }}
         dispatch={dispatch}
         disabled
-        model="forms.broadcast.search"
+        model="forms.broadcastRules.search"
       />;
     }
   }
@@ -163,42 +163,49 @@ class AddBroadcast extends Component {
               type="region"
               dispatch={dispatch}
               isList={isList}
+              id={1}
             />
             <BroadcastField
               name="Europe"
               type="region"
               dispatch={dispatch}
               isList={isList}
+              id={2}
             />
             <BroadcastField
               name="State A"
               type="state"
               dispatch={dispatch}
               isList={isList}
+              id={1}
             />
             <BroadcastField
               name="Company A"
               type="company"
               dispatch={dispatch}
               isList={isList}
+              id={1}
             />
             <BroadcastField
               name="Company B"
               type="company"
               dispatch={dispatch}
               isList={isList}
+              id={2}
             />
             <BroadcastField
               name="Company C"
               type="company"
               dispatch={dispatch}
               isList={isList}
+              id={3}
             />
             <BroadcastField
               name="Company D"
               type="company"
               dispatch={dispatch}
               isList={isList}
+              id={4}
             />
           </div>
         </div>
