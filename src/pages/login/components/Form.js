@@ -39,7 +39,7 @@ export default class LoginForm extends React.Component {
                 <div className="form-middle">
                     <button className={classnames({"loading": isFetching}, {"disabled": (!email || !password)})}>{butLogin}</button>
                 </div>
-                <div className="form-place version">{this.props.version}</div>
+                <div className="form-place version">v{this.props.version}</div>
             </Form>
         );
     }
