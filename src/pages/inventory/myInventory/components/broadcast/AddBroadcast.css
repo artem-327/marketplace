@@ -11,7 +11,7 @@
 .add-broadcast {
   display: grid;
   grid-template-columns: 40% auto;
-  grid-template-rows: 50px auto; }
+  grid-template-rows: auto auto; }
   .add-broadcast .broadcast-filter-nav {
     display: grid;
     grid-template-columns: auto 35%;
@@ -86,12 +86,14 @@
     padding: 0 1em;
     border-bottom: 1px solid #E7E7E7;
     display: flex;
-    align-items: flex-end; }
+    align-items: flex-end;
+    flex-wrap: wrap; }
     .add-broadcast .broadcast-nav div {
       font-size: 20px;
       height: 100%;
       padding: 0.4em 1em;
       margin-right: 0.2em;
+      white-space: nowrap;
       cursor: pointer; }
       .add-broadcast .broadcast-nav div:hover {
         border-bottom: 2px solid #329ED6; }

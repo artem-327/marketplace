@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { Form, Control } from "react-redux-form";
 import { bindActionCreators } from "redux";
 import BroadcastField from "./BroadcastField";
 import Dropdown from "../../../../../components/Dropdown/Dropdown";
@@ -33,6 +34,13 @@ class AddBroadcast extends Component {
 
   componentDidMount() {
     this.props.fetchRegions();
+  }
+
+  getName = (id) => {
+    const {regions} = this.props
+    const selectedRegion = regions.find(i => i.id===id)
+    debugger
+    return selectedRegion.name
   }
 
   renderSearchField = () => {
@@ -158,7 +166,16 @@ class AddBroadcast extends Component {
           </div>
 
           <div className="broadcast-main">
-            <BroadcastField
+          <Form model="forms" onSubmit={v => console.log(v)}>
+          {JSON.stringify(this.props.storedCompanies)}
+          {this.props.selectedRegion && <BroadcastField
+              name={this.getName(this.props.selectedRegion)}
+              type="region"
+              dispatch={dispatch}
+              isList={isList}
+              id={this.props.selectedRegion}
+            />}
+           { !this.props.selectedRegion && <div><BroadcastField
               name="Asia"
               type="region"
               dispatch={dispatch}
@@ -206,7 +223,8 @@ class AddBroadcast extends Component {
               dispatch={dispatch}
               isList={isList}
               id={4}
-            />
+            /></div>}
+            </Form>
           </div>
         </div>
       </PopupComponent>
@@ -223,7 +241,9 @@ const mapStateToProps = store => {
   return {
     isFetching: false, //TODO
     regionsAreFetching: store.location.regionsAreFetching,
-    regions: store.location.regions
+    regions: store.location.regions,
+    selectedRegion: store.forms.broadcastRules.search,
+    storedCompanies: store.forms.broadcastRules.company
   };
 };
 

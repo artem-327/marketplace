@@ -23,7 +23,7 @@ import cart from "./modules/cart";
 import broadcastRules, {initialState as broadcastRulesInit} from "./modules/broadcastRule";
 import merchants, {initialState as merchantsInit} from "./modules/merchants";
 import products, {initialState as productsInit} from './modules/products';
-import location, {initialState as locationInit} from './modules/location';
+import location from './modules/location';
 import errors from "./modules/errors";
 import companiesSaga from "./saga/companies";
 import officesSaga from "./saga/offices";
@@ -52,7 +52,7 @@ const reducer = combineReducers({
     dataTables,
     forms: combineForms({
         filter: filterInit.data,
-        broadcastRules: broadcastRulesInit.broadcastRules,
+        broadcastRules: broadcastRulesInit,
         addProductOffer: addProductsInit.addProductOffer,
         productMapping: productsInit.productsMapping,
         productOffering: productsInit.productOffering,
@@ -84,8 +84,8 @@ const logger = createLogger({
 const sagaMiddleware = createSagaMiddleware();
 
 const middleware = applyMiddleware(thunk, promise(), sagaMiddleware, logger);
-
-export default createStore(reducer, middleware)
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+export default createStore(reducer, composeEnhancers, middleware)
 
 sagaMiddleware.run(companiesSaga);
 sagaMiddleware.run(officesSaga);

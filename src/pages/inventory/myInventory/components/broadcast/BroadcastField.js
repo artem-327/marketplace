@@ -1,10 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Control } from "react-redux-form";
-import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
+import CheckboxBroadcastRedux from "../../../../../components/Checkbox/CheckboxBroadcastRedux";
+import RadioRedux from "../../../../../components/Radio/RadioRedux";
 import SwitcherRedux from "../../../../../components/Switcher/SwitcherRedux";
 import { isNumber } from "../../../../../utils/validation";
-import RadioRedux from "../../../../../components/Radio/RadioRedux";
+
 
 const BroadcastField = ({ name, id, type, dispatch, isList }) => {
     return (
@@ -15,29 +16,25 @@ const BroadcastField = ({ name, id, type, dispatch, isList }) => {
         {isList ? (
           <div className="list-rules">
             <SwitcherRedux
-              defaultValue={false}
-              dispatch={dispatch}
-              model={`forms.broadcastRules.${type}.${id}.include`}
-              onChange={value => console.log(value)}
+              model={`.broadcastRules.${type}.${id}.include`}
               isRounded={true}
             />
-            <CheckboxRedux
+            <CheckboxBroadcastRedux
               defaultValue={false}
               dispatch={dispatch}
-              model={`forms.broadcastRules.${type}.${id}.anonymous`}
+              model={`.broadcastRules.${type}.${id}.anonymous`}
               onChange={value => console.log(value)}
             />
           </div>
         ) : (
           <div className="price-rules">
             <Control.text
-              model={`forms.broadcastRules.${type}.${id}.priceRule`}
+              model={`.broadcastRules.${type}.${id}.priceRule`}
               className="price-rule"
               validators={{ isNumber }}
-              defaultValue=""
             />
             <div className="price-units">                            
-                <RadioRedux dispatch={dispatch} model={`forms.broadcastRules.${type}.${id}.priceUnit`} opns={[{label:'%', value:`%`}, {label:'$', value:`$`}]} />
+                <RadioRedux dispatch={dispatch} model={`.broadcastRules.${type}.${id}.priceUnit`} opns={[{label:'%', value:`%`}, {label:'$', value:`$`}]} />
             </div>
           </div>
         )}
