@@ -3,7 +3,7 @@ export const isNumber = (val) => val === '' || (!isNaN(parseFloat(val)) && isFin
 export const min = (val, min) => val === '' || (val > min);
 export const maxPercent = (val) => val === '' || val < 101;
 export const bigger = (val, min) => {
-    return val >= min;
+    return (parseInt(val) >= parseInt(min));
 };
 
 export const messages = {
