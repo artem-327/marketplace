@@ -329,13 +329,13 @@ export default class Location extends Component {
                 })
             } else {
                 this.setState({
-                    street: this.props.warehouse[this.state.warehouseIndex].address,
-                    city: this.props.warehouse[this.state.warehouseIndex].city,
-                    state: this.props.warehouse[this.state.warehouseIndex].location.id,
-                    contact: this.props.warehouse[this.state.warehouseIndex].contactName,
-                    phone: this.props.warehouse[this.state.warehouseIndex].contactNumber,
-                    email: this.props.warehouse[this.state.warehouseIndex].contactEmail,
-                    zip: this.props.warehouse[this.state.warehouseIndex].zip,
+                    street: this.props.warehouse[this.state.warehouseIndex].address.streetAddress,
+                    city: this.props.warehouse[this.state.warehouseIndex].address.city,
+                    state: this.props.warehouse[this.state.warehouseIndex].address.province.name,
+                    contact: this.props.warehouse[this.state.warehouseIndex].contact.name,
+                    phone: this.props.warehouse[this.state.warehouseIndex].contact.number,
+                    email: this.props.warehouse[this.state.warehouseIndex].contact.email,
+                    zip: this.props.warehouse[this.state.warehouseIndex].address.zip.zip,
                     location: 'saved'
                 })
             }
