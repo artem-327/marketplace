@@ -13,7 +13,7 @@ const CheckboxBroadcastRedux = (props) => {
       controlProps={{
         label: label
       }}
-      {...this.props}
+      {...props}
     />
   );
 };

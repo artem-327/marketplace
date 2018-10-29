@@ -38,7 +38,7 @@
         justify-items: center; }
       .add-broadcast .broadcast-main .broadcast-field .price-rules {
         display: flex; }
-        .add-broadcast .broadcast-main .broadcast-field .price-rules .price-rule {
+        .add-broadcast .broadcast-main .broadcast-field .price-rules .price-value {
           width: 90%; }
       .add-broadcast .broadcast-main .broadcast-field .price-units {
         padding-left: 5px; }

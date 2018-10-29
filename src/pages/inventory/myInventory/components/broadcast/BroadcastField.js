@@ -2,39 +2,39 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Control } from "react-redux-form";
 import CheckboxBroadcastRedux from "../../../../../components/Checkbox/CheckboxBroadcastRedux";
-import RadioRedux from "../../../../../components/Radio/RadioRedux";
+import RadioBroadcastRedux from "../../../../../components/Radio/RadioBroadcastRedux";
 import SwitcherRedux from "../../../../../components/Switcher/SwitcherRedux";
 import { isNumber } from "../../../../../utils/validation";
 
 
-const BroadcastField = ({ name, id, type, dispatch, isList }) => {
+const BroadcastField = ({ name, id, type, dispatch, isList, showSubordinateItems }) => {
     return (
       <div className={`broadcast-field ${type}`}>
-        <div className="field-name">
+        <div className="field-name" onClick={showSubordinateItems}>
           <i className="fas fa-angle-right" /> {name}
         </div>
-        {isList ? (
+        {isList 
+        ? (
           <div className="list-rules">
             <SwitcherRedux
-              model={`.broadcastRules.${type}.${id}.include`}
-              isRounded={true}
+              model={`.${type}.${id}.include`}
+              isrounded="yes"
             />
             <CheckboxBroadcastRedux
-              defaultValue={false}
-              dispatch={dispatch}
-              model={`.broadcastRules.${type}.${id}.anonymous`}
-              onChange={value => console.log(value)}
+              model={`.${type}.${id}.anonymous`}
             />
           </div>
-        ) : (
+        ) 
+        : (
           <div className="price-rules">
             <Control.text
-              model={`.broadcastRules.${type}.${id}.priceRule`}
-              className="price-rule"
+              model={`.${type}.${id}.priceValue`}
+              className="price-value"
               validators={{ isNumber }}
             />
-            <div className="price-units">                            
-                <RadioRedux dispatch={dispatch} model={`.broadcastRules.${type}.${id}.priceUnit`} opns={[{label:'%', value:`%`}, {label:'$', value:`$`}]} />
+            <div className="price-units">     
+                <RadioBroadcastRedux model={`.${type}.${id}.priceUnit`} label="$" value="$"/>       
+                <RadioBroadcastRedux model={`.${type}.${id}.priceUnit`} label="%" value="%"/>                      
             </div>
           </div>
         )}

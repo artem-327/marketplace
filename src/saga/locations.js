@@ -1,9 +1,9 @@
 import { call, put, takeEvery } from 'redux-saga/effects'
 import Api from '../api/locations';
 import {
-    REGIONS_FETCH_REQUESTED,
-    REGIONS_FETCH_FAILED,
-    REGIONS_FETCH_SUCCEEDED
+    REGIONS_FETCH_REQUESTED, REGIONS_FETCH_FAILED, REGIONS_FETCH_SUCCEEDED,
+    STATES_FETCH_REQUESTED, STATES_FETCH_FAILED, STATES_FETCH_SUCCEEDED,
+    STATEDETAIL_FETCH_REQUESTED, STATEDETAIL_FETCH_FAILED, STATEDETAIL_FETCH_SUCCEEDED,
 } from "../constants/locations";
 
 
@@ -16,8 +16,28 @@ function* fetchRegions() {
     }
 }
 
+function* fetchStates() {
+    try {
+        const states = yield call(Api.fetchStates);
+        yield put({type: STATES_FETCH_SUCCEEDED, payload: states});
+    } catch (e) {
+        yield put({type: STATES_FETCH_FAILED, message: e.message});
+    }
+}
+
+function* fetchStateDetail(action) {
+    try {
+        const stateDetail = yield call(Api.fetchStateDetail, action.payload.id);
+        yield put({type: STATEDETAIL_FETCH_SUCCEEDED, payload: stateDetail});
+    } catch (e) {
+        yield put({type: STATEDETAIL_FETCH_FAILED, message: e.message});
+    }
+}
+
 function* locationsSaga() {
     yield takeEvery(REGIONS_FETCH_REQUESTED, fetchRegions);
+    yield takeEvery(STATES_FETCH_REQUESTED, fetchStates);
+    yield takeEvery(STATEDETAIL_FETCH_REQUESTED, fetchStateDetail);
 }
 
 export default locationsSaga;

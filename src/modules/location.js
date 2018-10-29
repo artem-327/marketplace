@@ -1,6 +1,8 @@
 import axios from "axios";
 import {
-    REGIONS_FETCH_SUCCEEDED, REGIONS_FETCH_REQUESTED
+    REGIONS_FETCH_SUCCEEDED, REGIONS_FETCH_REQUESTED,
+    STATES_FETCH_REQUESTED, STATES_FETCH_SUCCEEDED,
+    STATEDETAIL_FETCH_REQUESTED, STATEDETAIL_FETCH_SUCCEEDED,
 } from "../constants/locations";
 
 const FETCH_WAREHOUSE = 'FETCH_WAREHOUSE';
@@ -20,25 +22,28 @@ export const initialState = {
     warehouse: [],
     locations: [],
     regions: [],
-    regionsAreFetching: false,
+    states: [],
+    stateDetail: {},
+    isFetching: false,
     locationFetching: false,
     data:{}
 };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case FETCH_WAREHOUSE_FULFILLED: {
-            return {
-                ...state,
-                warehouse: action.payload
-            }
-        }
         case FETCH_LOCATIONS_PENDING: {
             return {
                 ...state,
                 locationFetching: true
             }
         }
+        case FETCH_WAREHOUSE_FULFILLED: {
+            return {
+                ...state,
+                warehouse: action.payload
+            }
+        }
+
         case FETCH_LOCATIONS_FULFILLED: {
             return {
                 ...state,
@@ -46,17 +51,36 @@ export default function reducer(state = initialState, action) {
                 locations: action.payload
             }
         }
+
+
+        case STATEDETAIL_FETCH_REQUESTED: 
+        case STATES_FETCH_REQUESTED: 
         case REGIONS_FETCH_REQUESTED: {
             return {
                 ...state,
-                regionsAreFetching: true,
+                isFetching: true,
             }
         }
         case REGIONS_FETCH_SUCCEEDED: {
             return {
                 ...state,
                 regions: action.payload,
-                regionsAreFetching: false
+                isFetching: false
+            }
+        }
+        case STATES_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                states: action.payload,
+                isFetching: false
+            }
+        }
+
+        case STATEDETAIL_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                stateDetail: action.payload,
+                isFetching: false
             }
         }
         default: {
@@ -104,4 +128,10 @@ export function fetchRegions(){
     return {type: REGIONS_FETCH_REQUESTED}
 }
 
+export function fetchStates(){
+    return {type: STATES_FETCH_REQUESTED}
+}
 
+export function fetchStateDetail(id) {
+    return {type: STATEDETAIL_FETCH_REQUESTED, payload: {id}}
+}
