@@ -110,7 +110,8 @@ export default class ProductMapping extends Component {
                         <Control.text model=".productName"
                                       validators={{required}}
                                       id=".productName"
-                                      defaultValue=""/>
+                                      defaultValue=""
+                                      />
                     </div>
                     <Errors
                         className="form-error"
@@ -125,7 +126,8 @@ export default class ProductMapping extends Component {
                         <Control.text model=".productNumber"
                                       validators={{required}}
                                       id=".productNumber"
-                                      defaultValue=""/>
+                                      defaultValue=""
+                                      />
                     </div>
                     </React.Fragment>
                     : null }
@@ -145,7 +147,8 @@ export default class ProductMapping extends Component {
                         <Control.text model=".packaging.capacity"
                                       validators={{min: (val) => min(val, 0), isNumber, required}}
                                       id=".measurements"
-                                      defaultValue=""/>
+                                      defaultValue=""
+                                      />
                     </div>
                     <Errors
                         className="form-error"
@@ -160,7 +163,9 @@ export default class ProductMapping extends Component {
                         <DropdownRedux opns={this.props.unitOfMeasurement} placeholder='Select'
                                        model="forms.productMapping.packaging.unit"
                                        validators={{required}}
-                                       dispatch={this.props.dispatch}/>
+                                       dispatch={this.props.dispatch}
+                                       defaultValue=""
+                                       />
                     </div>
                     <Errors
                         className="form-error"
@@ -175,7 +180,9 @@ export default class ProductMapping extends Component {
                         <DropdownRedux opns={this.props.unitOfPackaging} placeholder='Select'
                                        model="forms.productMapping.packaging.container"
                                        dispatch={this.props.dispatch}
-                                       validators={{required}}/>
+                                       validators={{required}}
+                                       defaultValue=""
+                                       />
                     </div>
                     {!this.props.edit ?
                     <React.Fragment>
