@@ -14,7 +14,7 @@ const StateBroadcastField = ({dispatch, showSubordinateItems, name, id, stateDet
         id={id || stateDetail.id}
         isExpanded={stateIsExpanded}
       />
-      {stateIsExpanded && stateDetail.companies.map(i => {
+      {stateIsExpanded && stateDetail.companies && stateDetail.companies.map(i => {
         return <BroadcastField
         name={i.name}
         type="company"

@@ -29,7 +29,8 @@ function* fetchStates() {
 function* fetchStateDetail(action) {
     try {
         const stateDetail = yield call(Api.fetchStateDetail, action.payload.id);
-        yield put({type: STATEDETAIL_FETCH_SUCCEEDED, payload: stateDetail});
+        const stateDetailWithId = {...stateDetail, id: action.payload.id};
+        yield put({type: STATEDETAIL_FETCH_SUCCEEDED, payload: stateDetailWithId});
     } catch (e) {
         yield put({type: STATEDETAIL_FETCH_FAILED, message: e.message});
     }
@@ -38,7 +39,8 @@ function* fetchStateDetail(action) {
 function* fetchRegionDetail(action) {
     try {
         const regionDetail = yield call(Api.fetchRegionDetail, action.payload.id);
-        yield put({type: REGIONDETAIL_FETCH_SUCCEEDED, payload: regionDetail});
+        const regionDetailWithId = {...regionDetail, id: action.payload.id};
+        yield put({type: REGIONDETAIL_FETCH_SUCCEEDED, payload: regionDetailWithId});
     } catch (e) {
         yield put({type: REGIONDETAIL_FETCH_FAILED, message: e.message});
     }

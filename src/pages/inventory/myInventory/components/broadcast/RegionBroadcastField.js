@@ -2,19 +2,20 @@ import React from 'react';
 import BroadcastField from "./BroadcastField";
 import StateBroadcastField from "./StateBroadcastField";
 
-const RegionBroadcastField = ({dispatch, showSubordinateItems, regionDetail, stateDetail, regionIsExpanded, stateIsExpanded, isList}) => {
+const RegionBroadcastField = ({name, id, dispatch, showSubordinateItems, regionDetail, stateDetail, regionIsExpanded, stateIsExpanded, isList}) => {
+  
   return (
     <React.Fragment>
       <BroadcastField
-        name={regionDetail.name}
+        name={name}
         type="region"
         showSubordinateItems={showSubordinateItems}
         dispatch={dispatch}
         isList={isList}
-        id={regionDetail.id}
+        id={id}
         isExpanded={regionIsExpanded}
       />
-      {regionIsExpanded && regionDetail.states.map(i => {
+      {regionIsExpanded && regionDetail.countries && regionDetail.countries.map(i => {
         return <StateBroadcastField
         name={i.name}
         type="state"

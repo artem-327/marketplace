@@ -29,7 +29,7 @@ class AddBroadcast extends Component {
     this.props.fetchRegions()
     this.props.fetchCompanies()
     this.props.fetchStates()
-    this.props.fetchRegionDetail(1)
+
   }
 
   componentDidUpdate(prevProps) {
