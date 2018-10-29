@@ -4,6 +4,7 @@ import {
     REGIONS_FETCH_REQUESTED, REGIONS_FETCH_FAILED, REGIONS_FETCH_SUCCEEDED,
     STATES_FETCH_REQUESTED, STATES_FETCH_FAILED, STATES_FETCH_SUCCEEDED,
     STATEDETAIL_FETCH_REQUESTED, STATEDETAIL_FETCH_FAILED, STATEDETAIL_FETCH_SUCCEEDED,
+    REGIONDETAIL_FETCH_REQUESTED, REGIONDETAIL_FETCH_FAILED, REGIONDETAIL_FETCH_SUCCEEDED,
 } from "../constants/locations";
 
 
@@ -34,10 +35,20 @@ function* fetchStateDetail(action) {
     }
 }
 
+function* fetchRegionDetail(action) {
+    try {
+        const regionDetail = yield call(Api.fetchRegionDetail, action.payload.id);
+        yield put({type: REGIONDETAIL_FETCH_SUCCEEDED, payload: regionDetail});
+    } catch (e) {
+        yield put({type: REGIONDETAIL_FETCH_FAILED, message: e.message});
+    }
+}
+
 function* locationsSaga() {
     yield takeEvery(REGIONS_FETCH_REQUESTED, fetchRegions);
     yield takeEvery(STATES_FETCH_REQUESTED, fetchStates);
     yield takeEvery(STATEDETAIL_FETCH_REQUESTED, fetchStateDetail);
+    yield takeEvery(REGIONDETAIL_FETCH_REQUESTED, fetchRegionDetail);
 }
 
 export default locationsSaga;
