@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Form } from "react-redux-form";
 import { bindActionCreators } from "redux";
-// import BroadcastField from "./BroadcastField";
-// import StateBroadcastField from "./StateBroadcastField";
+import BroadcastField from "./BroadcastField";
+import StateBroadcastField from "./StateBroadcastField";
 import RegionBroadcastField from "./RegionBroadcastField";
 import Dropdown from "../../../../../components/Dropdown/Dropdown";
 import Spinner from "../../../../../components/Spinner/Spinner";
@@ -79,10 +79,10 @@ class AddBroadcast extends Component {
 
 
     if (searchedItem && Object.keys(searchedItem).length !== 0) {
-      if (!prevProps.searchedItem || searchedItem.id !== prevProps.searchedItem.id) {
+      if (!prevProps.searchedItem || searchedItem.id !== prevProps.searchedItem.id || searchedItem.type !== prevProps.searchedItem.type) {
           this.setState({stateIsExpanded: false}, () => fetchStateDetail(searchedItem.id)); //fetch new state detail after the new search entry
           this.setState({regionIsExpanded: false}, () => fetchRegionDetail(searchedItem.id)); //fetch new state detail after the new search entry
-      }
+        }
     } 
   }
 
@@ -125,7 +125,7 @@ class AddBroadcast extends Component {
     const {regions, states, companies, fetchRegions, isFetching, dispatch } = this.props
     const {categoryFilter} = this.state;
     switch(categoryFilter){
-        case 'regions': return <RemoteComboBoxRedux
+        case 'region': return <RemoteComboBoxRedux
         items={regions}
         api={text => fetchRegions(text)}
         limit={20}
@@ -137,7 +137,7 @@ class AddBroadcast extends Component {
         dispatch={dispatch}
         model="forms.broadcastRules.search"
       />;
-        case 'states': return <RemoteComboBoxRedux
+        case 'state': return <RemoteComboBoxRedux
         items={states}
         api={text => fetchStates(text)}
         limit={20}
@@ -149,7 +149,7 @@ class AddBroadcast extends Component {
         dispatch={dispatch}
         model="forms.broadcastRules.search"
       />;
-        case 'companies': return <RemoteComboBoxRedux
+        case 'company': return <RemoteComboBoxRedux
         items={companies}
         api={text => fetchCompanies(text)}
         limit={20}
@@ -174,12 +174,13 @@ class AddBroadcast extends Component {
 
   render() {
     const { removePopup, dispatch } = this.props;
+    const {categoryFilter} = this.state;
     console.log(this.props, this.state)
     const { isList } = this.state;
     const categoryFilterOptions = [
-      { name: "Regions", id: "regions" },
-      { name: "States", id: "states" },
-      { name: "Companies", id: "companies" }
+      { name: "Regions", id: "region" },
+      { name: "States", id: "state" },
+      { name: "Companies", id: "company" }
     ];
     const templatesOptions = [] //TODO
     if (false) return <Spinner />; //TODO
@@ -241,23 +242,7 @@ class AddBroadcast extends Component {
 
           <div className="broadcast-main">
           <Form model="forms.broadcastRules" onSubmit={v => console.log(v)}>
-          {/* {<StateBroadcastField 
-            showSubordinateItems={this.showSubordinateItems}
-            stateDetail={this.props.stateDetail}
-            stateIsExpanded={this.state.stateIsExpanded}
-            isList={isList}
-            dispatch={dispatch}
-          />} */}
-          {/* {this.props.searchedItem && <BroadcastField
-              name={this.props.searchedItem.name}
-              type={this.props.searchedItem.type}
-              showSubordinateItems={this.showSubordinateItems}
-              dispatch={dispatch}
-              isList={isList}
-              id={this.props.searchedItem.id}
-              isExpanded={this.state.categoryFilter==="states" ? this.state.stateIsExpanded : this.state.regionIsExpanded}
-            />} */}
-          {this.props.searchedItem && <RegionBroadcastField
+            {this.props.searchedItem && this.props.searchedItem.type === "region" && categoryFilter==="region" && <RegionBroadcastField
               regionDetail={this.props.regionDetail}
               stateDetail={this.props.stateDetail}
               showSubordinateItems={this.showSubordinateItems}
@@ -265,31 +250,28 @@ class AddBroadcast extends Component {
               isList={isList}
               regionIsExpanded={this.state.regionIsExpanded}
               stateIsExpanded={this.state.stateIsExpanded}
+              name={this.props.searchedItem.name}
+              id={this.props.searchedItem.id}
             />}
 
-             {/* {this.props.regionDetail && this.state.regionIsExpanded && this.props.regionDetail.states && this.props.regionDetail.states.map(i => {
-            return <StateBroadcastField 
-            showSubordinateItems={this.showSubordinateItems}
-            stateDetail={this.props.stateDetail}
-            stateIsExpanded={this.state.stateIsExpanded}
-            isList={isList}
-            dispatch={dispatch}
-            key={i.id}
-          />
-          })}
+            {this.props.searchedItem && this.props.searchedItem.type === "state" && categoryFilter==="state" && <StateBroadcastField
+              stateDetail={this.props.stateDetail}
+              showSubordinateItems={this.showSubordinateItems}
+              dispatch={dispatch}
+              isList={isList}
+              stateIsExpanded={this.state.stateIsExpanded}
+              name={this.props.searchedItem.name}
+              id={this.props.searchedItem.id}
+            />}
 
-          {this.props.stateDetail && this.state.stateIsExpanded && this.props.stateDetail.companies && this.props.stateDetail.companies.map(i => {
-            return <BroadcastField
-            name={i.name}
-            type="company"
-            showSubordinateItems={this.showSubordinateItems}
-            dispatch={dispatch}
-            isList={isList}
-            id={i.id}
-            key={i.id}
-          />
-          })} */}
-
+            {this.props.searchedItem && this.props.searchedItem.type === "company" && categoryFilter==="company" && <BroadcastField
+              name={this.props.searchedItem.name}
+              type="company"
+              showSubordinateItems={this.showSubordinateItems}
+              dispatch={dispatch}
+              isList={isList}
+              id={this.props.searchedItem.id}
+            />}
           </Form>
           </div>
         </div>
