@@ -29,131 +29,86 @@ class AddBroadcast extends Component {
     this.props.fetchRegions()
     this.props.fetchCompanies()
     this.props.fetchStates()
+  }
 
+  //transform storedStates/storedCompanies/storedRegions from object of objects to array of objects (the former object key is now id property)
+  convertObjectToArray = (storedObject) => {
+    if (!storedObject) return;
+    const storedValues = Object.values(storedObject) 
+    const storedKeys = Object.keys(storedObject)
+    const newArray = storedValues.map((item, index) => ({...item, id: parseInt(storedKeys[index], 10)}))
+    return newArray;
+  }
+
+  checkUpToDownBroadcasts = (storedParent, parentDetail, children, child, dispatch) => {
+    const parent = this.convertObjectToArray(storedParent)
+    const currentParrent = storedParent && parent.find(i => i.id === parentDetail.id)
+    // manipulate with companies broadcast rules based on state broadcast rule
+      if(currentParrent) {
+        if(currentParrent.include) parentDetail[children].forEach(i => dispatch(actions.change(`forms.broadcastRules.${child}.${i.id}.include`, true)))
+        if(currentParrent.anonymous) parentDetail[children].forEach(i => dispatch(actions.change(`forms.broadcastRules.${child}.${i.id}.anonymous`, true)))
+        if(currentParrent.priceUnit === "%") parentDetail[children].forEach(i => dispatch(actions.change(`forms.broadcastRules.${child}.${i.id}.priceUnit`, "%")))
+        if(currentParrent.priceUnit === "$") parentDetail[children].forEach(i => dispatch(actions.change(`forms.broadcastRules.${child}.${i.id}.priceUnit`, "$")))
+        if(currentParrent.priceValue) parentDetail[children].forEach(i => dispatch(actions.change(`forms.broadcastRules.${child}.${i.id}.priceValue`, currentParrent.priceValue)))
+      }
+  }
+  checkDownToUpBroadcasts = (storedChildren, parentDetail, dispatch, parentsChildren, parent) => {
+    const children = this.convertObjectToArray(storedChildren) 
+    const childrenFiltered = storedChildren && children.filter(obj => parentDetail[parentsChildren].find(obj2 => obj.id === obj2.id)) //from storedChildren filter only those companies that are also in the selected State
+    const areAllBroadcasted = storedChildren && childrenFiltered.length === parentDetail[parentsChildren].length; //check that all companies from selected state has a broadcast rule
+
+    const allChildrenInclude = areAllBroadcasted && childrenFiltered.every(i => i.include === true) //also check if every company broadcast-include rule is set to true
+    const allChildrenChecked = areAllBroadcasted && childrenFiltered.every(i => i.anonymous === true) //also check if every company broadcast-anonymous rule is set to true
+    const allChildrenUnitSame = (priceUnit) => areAllBroadcasted && childrenFiltered.every(i => i.priceUnit === priceUnit) 
+    const allValuesEqual = arr => arr.every(i => i.priceValue === arr[0].priceValue )
+    const allChildrenValueSame = areAllBroadcasted && allValuesEqual(childrenFiltered) 
+
+    if (allChildrenInclude) dispatch(actions.change(`forms.broadcastRules.${parent}.${parentDetail.id}.include`, true));
+    if (!allChildrenInclude) dispatch(actions.change(`forms.broadcastRules.${parent}.${parentDetail.id}.include`, false));
+    if (allChildrenChecked) dispatch(actions.change(`forms.broadcastRules.${parent}.${parentDetail.id}.anonymous`, true));
+    if (!allChildrenChecked) dispatch(actions.change(`forms.broadcastRules.${parent}.${parentDetail.id}.anonymous`, false));
+    if (allChildrenUnitSame("%")) dispatch(actions.change(`forms.broadcastRules.${parent}.${parentDetail.id}.priceUnit`, "%"));
+    if (allChildrenUnitSame("$")) dispatch(actions.change(`forms.broadcastRules.${parent}.${parentDetail.id}.priceUnit`, "$"));
+    if (!allChildrenUnitSame("$") && !allChildrenUnitSame("%")) dispatch(actions.change(`forms.broadcastRules.${parent}.${parentDetail.id}.priceUnit`, ""));
+    if (allChildrenValueSame) dispatch(actions.change(`forms.broadcastRules.${parent}.${parentDetail.id}.priceValue`, (childrenFiltered[0].priceValue)));
+    if (!allChildrenValueSame) dispatch(actions.change(`forms.broadcastRules.${parent}.${parentDetail.id}.priceValue`, ""));
   }
 
   componentDidUpdate(prevProps, prevState) {
     const {dispatch, storedCompanies, storedStates, stateDetail, regionDetail, storedRegions, searchedItem } = this.props
-      // storedCompanies are all companies (from different states, but with unique id) in broadcastRules store
-      // stateDetail.companies are all companies of selected State
-
+      // manipulate companies broadcast rules based on state broadcast rule
       if (this.state.stateIsExpanded !== prevState.stateIsExpanded) {
-        const statesValues = storedStates && Object.values(storedStates) 
-        const statesKeys = storedStates && Object.keys(storedStates)
-        const states = storedStates && statesValues.map((item, index) => ({...item, id: parseInt(statesKeys[index], 10)})) 
-        const currentState = storedStates && states.find(i => i.id === stateDetail.id)
-
-        // manipulate with companies broadcast rules based on state broadcast rule
-        if(currentState) {
-          if(currentState.include) stateDetail.companies.forEach(i => dispatch(actions.change(`forms.broadcastRules.company.${i.id}.include`, true)))
-          if(currentState.anonymous) stateDetail.companies.forEach(i => dispatch(actions.change(`forms.broadcastRules.company.${i.id}.anonymous`, true)))
-          if(currentState.priceUnit === "%") stateDetail.companies.forEach(i => dispatch(actions.change(`forms.broadcastRules.company.${i.id}.priceUnit`, "%")))
-          if(currentState.priceUnit === "$") stateDetail.companies.forEach(i => dispatch(actions.change(`forms.broadcastRules.company.${i.id}.priceUnit`, "$")))
-          if(currentState.priceValue) stateDetail.companies.forEach(i => dispatch(actions.change(`forms.broadcastRules.company.${i.id}.priceValue`, currentState.priceValue)))
-        }
+        this.checkUpToDownBroadcasts(storedStates, stateDetail, "companies", "company", dispatch)
       }
 
+      // manipulate states broadcast rules based on region broadcast rule
       if (this.state.regionIsExpanded !== prevState.regionIsExpanded) {
-        const regionsValues = storedRegions && Object.values(storedRegions) 
-        const regionsKeys = storedRegions && Object.keys(storedRegions)
-        const regions = storedRegions && regionsValues.map((item, index) => ({...item, id: parseInt(regionsKeys[index], 10)})) 
-        const currentRegion = storedRegions && regions.find(i => i.id === regionDetail.id)
-
-        // manipulate with companies broadcast rules based on state broadcast rule
-        if(currentRegion) {
-          if(currentRegion.include) regionDetail.countries.forEach(i => dispatch(actions.change(`forms.broadcastRules.state.${i.id}.include`, true)))
-          if(currentRegion.anonymous) regionDetail.countries.forEach(i => dispatch(actions.change(`forms.broadcastRules.state.${i.id}.anonymous`, true)))
-          if(currentRegion.priceUnit === "%") regionDetail.countries.forEach(i => dispatch(actions.change(`forms.broadcastRules.state.${i.id}.priceUnit`, "%")))
-          if(currentRegion.priceUnit === "$") regionDetail.countries.forEach(i => dispatch(actions.change(`forms.broadcastRules.state.${i.id}.priceUnit`, "$")))
-          if(currentRegion.priceValue) regionDetail.countries.forEach(i => dispatch(actions.change(`forms.broadcastRules.state.${i.id}.priceValue`, currentRegion.priceValue)))
-        }
+        this.checkUpToDownBroadcasts(storedRegions, regionDetail, "countries", "state", dispatch)
       }
 
       if ((storedCompanies && stateDetail.companies) || storedStates !== prevProps.storedStates) { 
-
-        //transform storedCompanies from object of objects to array of objects (the former object key is now id property)
-        const companiesValues = storedCompanies && Object.values(storedCompanies) 
-        const companiesKeys = storedCompanies && Object.keys(storedCompanies)
-        const companies = storedCompanies && companiesValues.map((item, index) => ({...item, id: parseInt(companiesKeys[index], 10)})) 
-        
-        const companiesFiltered = storedCompanies && companies.filter(obj => stateDetail.companies.find(obj2 => obj.id === obj2.id)) //from storedCompanies filter only those companies that are also in the selected State
-        const areAllBroadcasted = storedCompanies && companiesFiltered.length === stateDetail.companies.length; //check that all companies from selected state has a broadcast rule
-
-        const allCompaniesInclude = areAllBroadcasted && companiesFiltered.every(i => i.include === true) //also check if every company broadcast-include rule is set to true
-        const allCompaniesChecked = areAllBroadcasted && companiesFiltered.every(i => i.anonymous === true) //also check if every company broadcast-anonymous rule is set to true
-        const allCompaniesUnitSame = (priceUnit) => areAllBroadcasted && companiesFiltered.every(i => i.priceUnit === priceUnit) 
-        const allValuesEqual = arr => arr.every(i => i.priceValue === arr[0].priceValue )
-        const allCompaniesValueSame = areAllBroadcasted && allValuesEqual(companiesFiltered) 
-
-        const statesValues = storedStates && Object.values(storedStates) 
-        const statesKeys = storedStates && Object.keys(storedStates)
-        const states = storedStates && statesValues.map((item, index) => ({...item, id: parseInt(statesKeys[index], 10)})) 
-        const currentState = storedStates && states.find(i => i.id === stateDetail.id)
-
-        // manipulate with companies broadcast rules based on state broadcast rule
-        if(this.state.stateIsExpanded && currentState && (storedStates !== prevProps.storedStates || !prevProps.storedStates)) {
-          if(currentState.include) stateDetail.companies.forEach(i => dispatch(actions.change(`forms.broadcastRules.company.${i.id}.include`, true)))
-          if(currentState.anonymous) stateDetail.companies.forEach(i => dispatch(actions.change(`forms.broadcastRules.company.${i.id}.anonymous`, true)))
-          if(currentState.priceUnit === "%") stateDetail.companies.forEach(i => dispatch(actions.change(`forms.broadcastRules.company.${i.id}.priceUnit`, "%")))
-          if(currentState.priceUnit === "$") stateDetail.companies.forEach(i => dispatch(actions.change(`forms.broadcastRules.company.${i.id}.priceUnit`, "$")))
-          if(currentState.priceValue) stateDetail.companies.forEach(i => dispatch(actions.change(`forms.broadcastRules.company.${i.id}.priceValue`, currentState.priceValue)))
+        // manipulate companies broadcast rules based on state broadcast rule
+        if(this.state.stateIsExpanded && (storedStates !== prevProps.storedStates || !prevProps.storedStates)) {
+          this.checkUpToDownBroadcasts(storedStates, stateDetail, "companies", "company", dispatch)
         }
-        // manipulate with state broadcast rules on the base of companies broadcast rules
-        if (storedCompanies !== prevProps.storedCompanies) { 
-          if (allCompaniesInclude)  dispatch(actions.change(`forms.broadcastRules.state.${stateDetail.id}.include`, true));
-          if (!allCompaniesInclude)  dispatch(actions.change(`forms.broadcastRules.state.${stateDetail.id}.include`, false));
-          if (allCompaniesChecked) dispatch(actions.change(`forms.broadcastRules.state.${stateDetail.id}.anonymous`, true));
-          if (!allCompaniesChecked) dispatch(actions.change(`forms.broadcastRules.state.${stateDetail.id}.anonymous`, false));
-          if (allCompaniesUnitSame("%")) dispatch(actions.change(`forms.broadcastRules.state.${stateDetail.id}.priceUnit`, "%"));
-          if (allCompaniesUnitSame("$")) dispatch(actions.change(`forms.broadcastRules.state.${stateDetail.id}.priceUnit`, "$"));
-          if (!allCompaniesUnitSame("$") && !allCompaniesUnitSame("%")) dispatch(actions.change(`forms.broadcastRules.state.${stateDetail.id}.priceUnit`, ""));
-          if (allCompaniesValueSame) dispatch(actions.change(`forms.broadcastRules.state.${stateDetail.id}.priceValue`, (companiesFiltered[0].priceValue)));
-          if (!allCompaniesValueSame) dispatch(actions.change(`forms.broadcastRules.state.${stateDetail.id}.priceValue`, ""));
+        // manipulate state broadcast rules on the base of companies broadcast rules
+        if (storedCompanies !== prevProps.storedCompanies) {
+          this.checkDownToUpBroadcasts(storedCompanies, stateDetail, dispatch, "companies", "state")
         }
       }
 
       if(regionDetail.countries && (storedRegions !== prevProps.storedRegions || storedStates !== prevProps.storedStates)) {
-        //transform storedStates from object of objects to array of objects (the former object key is now id property)
-        const statesValues = storedStates && Object.values(storedStates) 
-        const statesKeys = storedStates && Object.keys(storedStates)
-        const states = storedStates && statesValues.map((item, index) => ({...item, id: parseInt(statesKeys[index], 10)})) 
-        
-        const statesFiltered = storedStates && states.filter(obj => regionDetail.countries.find(obj2 => obj.id === obj2.id)) //from storedStates filter only those states that are also in the selected State
-        const areAllBroadcasted = storedStates && statesFiltered.length === regionDetail.countries.length; //check that all states from selected state has a broadcast rule
-
-        const allStatesInclude = areAllBroadcasted && statesFiltered.every(i => i.include === true) //also check if every company broadcast-include rule is set to true
-        const allStatesChecked = areAllBroadcasted && statesFiltered.every(i => i.anonymous === true) //also check if every company broadcast-anonymous rule is set to true
-        const allStatesUnitSame = (priceUnit) => areAllBroadcasted && statesFiltered.every(i => i.priceUnit === priceUnit) 
-        const allValuesEqual = arr => arr.every(i => i.priceValue === arr[0].priceValue )
-        const allStatesValueSame = areAllBroadcasted && allValuesEqual(statesFiltered) 
-
         // manipulate with region broadcast rules on the base of states broadcast rules
         if (storedStates !== prevProps.storedStates) { 
-          if (allStatesInclude)  dispatch(actions.change(`forms.broadcastRules.region.${regionDetail.id}.include`, true));
-          if (!allStatesInclude)  dispatch(actions.change(`forms.broadcastRules.region.${regionDetail.id}.include`, false));
-          if (allStatesChecked) dispatch(actions.change(`forms.broadcastRules.region.${regionDetail.id}.anonymous`, true));
-          if (!allStatesChecked) dispatch(actions.change(`forms.broadcastRules.region.${regionDetail.id}.anonymous`, false));
-          if (allStatesUnitSame("%")) dispatch(actions.change(`forms.broadcastRules.region.${regionDetail.id}.priceUnit`, "%"));
-          if (allStatesUnitSame("$")) dispatch(actions.change(`forms.broadcastRules.region.${regionDetail.id}.priceUnit`, "$"));
-          if (!allStatesUnitSame("$") && !allStatesUnitSame("%")) dispatch(actions.change(`forms.broadcastRules.region.${regionDetail.id}.priceUnit`, ""));
-          if (allStatesValueSame) dispatch(actions.change(`forms.broadcastRules.region.${regionDetail.id}.priceValue`, (statesFiltered[0].priceValue)));
-          if (!allStatesValueSame) dispatch(actions.change(`forms.broadcastRules.region.${regionDetail.id}.priceValue`, ""));
+          this.checkDownToUpBroadcasts(storedStates, regionDetail, dispatch, "countries", "region")
         }
-
-        const regionsValues = storedRegions && Object.values(storedRegions) 
-        const regionsKeys = storedRegions && Object.keys(storedRegions)
-        const regions = storedRegions && regionsValues.map((item, index) => ({...item, id: parseInt(regionsKeys[index], 10)})) 
-        const currentRegion = storedRegions && regions.find(i => i.id === regionDetail.id)
-
-        if(this.state.regionIsExpanded && currentRegion && (storedRegions !== prevProps.storedRegions || !prevProps.storedRegions)) {
-          if(currentRegion.include) regionDetail.countries.forEach(i => dispatch(actions.change(`forms.broadcastRules.state.${i.id}.include`, true)))
-          if(currentRegion.anonymous) regionDetail.countries.forEach(i => dispatch(actions.change(`forms.broadcastRules.state.${i.id}.anonymous`, true)))
-          if(currentRegion.priceUnit === "%") regionDetail.countries.forEach(i => dispatch(actions.change(`forms.broadcastRules.state.${i.id}.priceUnit`, "%")))
-          if(currentRegion.priceUnit === "$") regionDetail.countries.forEach(i => dispatch(actions.change(`forms.broadcastRules.state.${i.id}.priceUnit`, "$")))
-          if(currentRegion.priceValue) regionDetail.countries.forEach(i => dispatch(actions.change(`forms.broadcastRules.state.${i.id}.priceValue`, currentRegion.priceValue)))
+        // manipulate states broadcast rules based on region broadcast rule
+        if(this.state.regionIsExpanded && (storedRegions !== prevProps.storedRegions || !prevProps.storedRegions)) {
+          this.checkUpToDownBroadcasts(storedRegions, regionDetail, "countries", "state", dispatch)
         }
       }
 
+      // fetch new detail after the click on broadcast-rule
       if (searchedItem && Object.keys(searchedItem).length !== 0) {
         if (!prevProps.searchedItem || searchedItem.id !== prevProps.searchedItem.id || searchedItem.type !== prevProps.searchedItem.type) {
             this.setState({stateIsExpanded: false}, () => fetchStateDetail(searchedItem.id)); //fetch new state detail after the new search entry
@@ -382,5 +337,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(AddBroadcast);
-
-
