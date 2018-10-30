@@ -52,6 +52,7 @@ class AddBroadcast extends Component {
         if(currentParrent.priceValue) parentDetail[children].forEach(i => dispatch(actions.change(`forms.broadcastRules.${child}.${i.id}.priceValue`, currentParrent.priceValue)))
       }
   }
+
   checkDownToUpBroadcasts = (storedChildren, parentDetail, dispatch, parentsChildren, parent) => {
     const children = this.convertObjectToArray(storedChildren) 
     const childrenFiltered = storedChildren && children.filter(obj => parentDetail[parentsChildren].find(obj2 => obj.id === obj2.id)) //from storedChildren filter only those companies that are also in the selected State
@@ -76,19 +77,20 @@ class AddBroadcast extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     const {dispatch, storedCompanies, storedStates, stateDetail, regionDetail, storedRegions, searchedItem } = this.props
+    const {stateIsExpanded, regionIsExpanded} = this.state;
       // manipulate companies broadcast rules based on state broadcast rule
-      if (this.state.stateIsExpanded !== prevState.stateIsExpanded) {
+      if (this.props.stateIsFetching !== prevProps.stateIsFetching || stateIsExpanded !== prevState.stateIsExpanded) {
         this.checkUpToDownBroadcasts(storedStates, stateDetail, "companies", "company", dispatch)
       }
 
       // manipulate states broadcast rules based on region broadcast rule
-      if (this.state.regionIsExpanded !== prevState.regionIsExpanded) {
-        this.checkUpToDownBroadcasts(storedRegions, regionDetail, "countries", "state", dispatch)
+      if (this.props.regionIsFetching !== prevProps.regionIsFetching || regionIsExpanded !== prevState.regionIsExpanded) {
+          this.checkUpToDownBroadcasts(storedRegions, regionDetail, "countries", "state", dispatch)
       }
 
       if ((storedCompanies && stateDetail.companies) || storedStates !== prevProps.storedStates) { 
         // manipulate companies broadcast rules based on state broadcast rule
-        if(this.state.stateIsExpanded && (storedStates !== prevProps.storedStates || !prevProps.storedStates)) {
+        if(stateIsExpanded && (storedStates !== prevProps.storedStates || !prevProps.storedStates)) {
           this.checkUpToDownBroadcasts(storedStates, stateDetail, "companies", "company", dispatch)
         }
         // manipulate state broadcast rules on the base of companies broadcast rules
@@ -103,7 +105,7 @@ class AddBroadcast extends Component {
           this.checkDownToUpBroadcasts(storedStates, regionDetail, dispatch, "countries", "region")
         }
         // manipulate states broadcast rules based on region broadcast rule
-        if(this.state.regionIsExpanded && (storedRegions !== prevProps.storedRegions || !prevProps.storedRegions)) {
+        if(regionIsExpanded && (storedRegions !== prevProps.storedRegions || !prevProps.storedRegions)) {
           this.checkUpToDownBroadcasts(storedRegions, regionDetail, "countries", "state", dispatch)
         }
       }
@@ -134,7 +136,7 @@ class AddBroadcast extends Component {
     const typeOfClickedItem = e.target.getAttribute('name');
     const idOfClickedItem = parseInt(e.target.id, 10);
     const {
-      fetchRegionDetail, fetchStateDetail
+      fetchRegionDetail, fetchStateDetail,
     } = this.props;
 
     if (typeOfClickedItem === "company") return
@@ -146,6 +148,7 @@ class AddBroadcast extends Component {
     if (typeOfClickedItem === "region") { 
       fetchRegionDetail(idOfClickedItem);
       this.setState({regionIsExpanded: idOfClickedItem})
+
     }
   }
 
@@ -201,10 +204,10 @@ class AddBroadcast extends Component {
   }
 
   render() {
-    const { removePopup, dispatch } = this.props;
-    const {categoryFilter} = this.state;
+    const { removePopup, dispatch, stateDetail, searchedItem, regionDetail, regionIsFetching } = this.props;
+    const {isList, categoryFilter, regionIsExpanded, stateIsExpanded} = this.state;
     console.log(this.props, this.state)
-    const { isList } = this.state;
+
     const categoryFilterOptions = [
       { name: "Regions", id: "region" },
       { name: "States", id: "state" },
@@ -257,7 +260,7 @@ class AddBroadcast extends Component {
           </div>
 
           <div className="broadcast-filter-nav">
-            <div className="field-name">Name {this.state.categoryFilter && `(${this.state.categoryFilter})`}</div>
+            <div className="field-name">Name {categoryFilter && `(${categoryFilter})`}</div>
             {isList ? (
               <div className="list-rules">
                 <div>Include</div>
@@ -270,35 +273,36 @@ class AddBroadcast extends Component {
 
           <div className="broadcast-main">
           <Form model="forms.broadcastRules" onSubmit={v => console.log(v)}>
-            {this.props.searchedItem && this.props.searchedItem.type === "region" && categoryFilter==="region" && <RegionBroadcastField
-              regionDetail={this.props.regionDetail}
-              stateDetail={this.props.stateDetail}
+            {searchedItem && searchedItem.type === "region" && categoryFilter === "region" && <RegionBroadcastField
+              regionDetail={regionDetail}
+              regionIsFetching={regionIsFetching}
+              stateDetail={stateDetail}
               showSubordinateItems={this.showSubordinateItems}
               dispatch={dispatch}
               isList={isList}
-              regionIsExpanded={this.state.regionIsExpanded}
-              stateIsExpanded={this.state.stateIsExpanded}
-              name={this.props.searchedItem.name}
-              id={this.props.searchedItem.id}
+              regionIsExpanded={regionIsExpanded}
+              stateIsExpanded={stateIsExpanded}
+              name={searchedItem.name}
+              id={searchedItem.id}
             />}
 
-            {this.props.searchedItem && this.props.searchedItem.type === "state" && categoryFilter==="state" && <StateBroadcastField
-              stateDetail={this.props.stateDetail}
+            {searchedItem && searchedItem.type === "state" && categoryFilter === "state" && <StateBroadcastField
+              stateDetail={stateDetail}
               showSubordinateItems={this.showSubordinateItems}
               dispatch={dispatch}
               isList={isList}
-              stateIsExpanded={this.state.stateIsExpanded}
-              name={this.props.searchedItem.name}
-              id={this.props.searchedItem.id}
+              stateIsExpanded={stateIsExpanded}
+              name={searchedItem.name}
+              id={searchedItem.id}
             />}
 
-            {this.props.searchedItem && this.props.searchedItem.type === "company" && categoryFilter==="company" && <BroadcastField
-              name={this.props.searchedItem.name}
+            {searchedItem && searchedItem.type === "company" && categoryFilter === "company" && <BroadcastField
+              name={searchedItem.name}
               type="company"
               showSubordinateItems={this.showSubordinateItems}
               dispatch={dispatch}
               isList={isList}
-              id={this.props.searchedItem.id}
+              id={searchedItem.id}
             />}
           </Form>
           </div>
@@ -316,6 +320,8 @@ AddBroadcast.propTypes = {
 const mapStateToProps = store => {
   return {
     isFetching: store.location.isFetching,
+    stateIsFetching: store.location.stateIsFetching,
+    regionIsFetching: store.location.regionIsFetching,
 
     stateDetail: store.location.stateDetail,
     regionDetail: store.location.regionDetail,

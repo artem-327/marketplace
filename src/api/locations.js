@@ -2,9 +2,10 @@ import axios from 'axios';
 
 const api = {
     fetchRegions: () => axios.get('/api/r1prnp/regions/').then(response => response.data.data.regions),
-    fetchRegionDetail: (id) => axios.get(`/api/eq0kii/countries/?search=${id}=`).then(response => response.data.data),
+    fetchRegionDetail: (id) => axios.get(`/api/eq0kii/countries/?entityId=${id}`).then(response => response.data.data),
     fetchStates: () => axios.get(`/api/eq0kii/countries/`).then(response => response.data.data.countries),
-    fetchStateDetail: (id) => axios.get(`/api/9o9w90/companies/?search=&${id}=&country=&allInfo=`).then(response => response.data.data),
+    fetchStateDetail: (id) => axios.get(`/api/9o9w90/companies/?entityId=${id}&entityType=country`).then(response => response.data.data),
+    
     //fetchRegionDetail: (id) => fakeRegion[id-1],
     //fetchStates: () => fakeStates,
     //fetchStateDetail: (id) => fakeState[id-1],

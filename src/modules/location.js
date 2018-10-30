@@ -26,8 +26,10 @@ export const initialState = {
     states: [],
     stateDetail: {},
     regionDetail: {},
+    stateIsFetching: false,
+    regionIsFetching: true,
     isFetching: false,
-    locationFetching: false,
+    locationFetching: true,
     data:{}
 };
 
@@ -54,8 +56,6 @@ export default function reducer(state = initialState, action) {
             }
         }
 
-        case REGIONDETAIL_FETCH_REQUESTED: 
-        case STATEDETAIL_FETCH_REQUESTED: 
         case STATES_FETCH_REQUESTED: 
         case REGIONS_FETCH_REQUESTED: {
             return {
@@ -63,6 +63,21 @@ export default function reducer(state = initialState, action) {
                 isFetching: true,
             }
         }
+
+        case STATEDETAIL_FETCH_REQUESTED: {
+            return {
+                ...state,
+                stateIsFetching: true,
+            }
+        }
+
+        case REGIONDETAIL_FETCH_REQUESTED: {
+            return {
+                ...state,
+                regionIsFetching: true,
+            }
+        }
+
         case REGIONS_FETCH_SUCCEEDED: {
             return {
                 ...state,
@@ -74,7 +89,7 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 states: action.payload,
-                isFetching: false
+                statesIsFetching: false
             }
         }
 
@@ -82,7 +97,7 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 stateDetail: action.payload,
-                isFetching: false
+                stateIsFetching: false
             }
         }
 
@@ -90,7 +105,7 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 regionDetail: action.payload,
-                isFetching: false
+                regionIsFetching: false
             }
         }
 

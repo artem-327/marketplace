@@ -7,11 +7,13 @@ import SwitcherRedux from "../../../../../components/Switcher/SwitcherRedux";
 import { isNumber } from "../../../../../utils/validation";
 
 
-const BroadcastField = ({ name, id, type, isList, showSubordinateItems }) => {
+const BroadcastField = ({ name, id, type, isList, showSubordinateItems, isExpanded }) => {
     return (
       <div className={`broadcast-field ${type}`}>
         <div className="field-name" name={type} id={id} onClick={(e) => showSubordinateItems(e)}>
-          <i className="fas fa-angle-right" /> {name}
+          {isExpanded !== false & type !== "company" && <i className="fas fa-angle-right" />}
+          {isExpanded && type !== "company" && <i className="fas fa-angle-down" />} 
+          {name}
         </div>
         {isList 
         ? (
