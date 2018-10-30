@@ -2,7 +2,6 @@ import React from 'react';
 import BroadcastField from "./BroadcastField";
 
 const StateBroadcastField = ({dispatch, showSubordinateItems, name, id, stateDetail, stateIsExpanded, isList}) => {
-  console.log(stateDetail)
   return (
     <React.Fragment>
       <BroadcastField
