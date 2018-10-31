@@ -24,14 +24,14 @@ import broadcastRules from "./modules/broadcastRule";
 import merchants, {initialState as merchantsInit} from "./modules/merchants";
 import products, {initialState as productsInit} from './modules/products';
 import errors from "./modules/errors";
-import companiesSaga from "./saga/companies";
-import officesSaga from "./saga/offices";
 import dataTables from "./modules/dataTables";
 
+import companiesSaga from "./saga/companies";
+import officesSaga from "./saga/offices";
+import merchantsSaga from "./saga/merchants";
 import usersSaga from "./pages/administration/users/saga/users";
 import operatorsSaga from "./pages/administration/operators/saga/operators";
 import cartSaga from "./pages/cart/saga/cart";
-
 
 const reducer = combineReducers({
     identity,
@@ -91,5 +91,6 @@ sagaMiddleware.run(companiesSaga);
 sagaMiddleware.run(officesSaga);
 sagaMiddleware.run(usersSaga);
 sagaMiddleware.run(operatorsSaga);
+sagaMiddleware.run(merchantsSaga);
 sagaMiddleware.run(cartSaga);
 

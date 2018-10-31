@@ -62,14 +62,14 @@ export function fetchLocations(filter = {}){
             return result.data.data.locations.map((loc)=> {
                 return {
                     id: loc.id,
-                    name: loc.state
+                    name: loc.province.name
                 }
             })
         })
     }
 }
 
-export function fetchWarehouse(){
+export function fetchWarehouses(){
     return {
         type: FETCH_WAREHOUSE,
         payload: axios.get('/api/smg5uw/warehouses/').then(result => {return result.data.data.warehouses})

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from "prop-types"
 import './popupComponent.css'
 
-const PopupComponent = ({removePopup, footerContinueText, headerTitle, children, handleContinue}) => {
+const PopupComponent = ({removePopup, headerTitle, children, footerComponent}) => {
     return (
         <div className="popup-component">
         <header className="add-cart-header">
@@ -14,12 +14,7 @@ const PopupComponent = ({removePopup, footerContinueText, headerTitle, children,
         </div>
 
         <footer className="add-cart-footer">
-          <button className="button" onClick={removePopup}>
-            Cancel
-          </button>
-          <button className="button green" onClick={handleContinue}>
-            {footerContinueText}
-          </button>
+          {footerComponent}
         </footer>
       </div>
     );
@@ -37,5 +32,5 @@ PopupComponent.propTypes = {
   }
 
   PopupComponent.defaultProps = {
-    footerContinueText: 'Continue'
+    headerTitle: ''
   }

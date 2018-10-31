@@ -1,11 +1,26 @@
+.popup input {
+  width: 70%;
+  float: right; }
+  @media only screen and (max-width: 767px) {
+    .popup input {
+      width: 100%; } }
+
 .merchant-table {
-  border-collapse: collapse;
-  margin: 0;
-  padding: 0;
-  width: 100%;
+  max-width: 1400px;
+  margin: auto;
+  width: calc(100% - 40px);
   table-layout: fixed; }
-  .merchant-table .merch-header-item {
-    height: 30px;
-    background: #F3F3F3;
-    font-weight: bold;
-    text-align: center; }
+  .merchant-table th {
+    border: 2px solid #e3e2df;
+    background-color: #fbfaf7;
+    padding: 10px;
+    font-weight: bold; }
+  .merchant-table .merch-row {
+    box-shadow: 0 1px 1px 0 rgba(60, 64, 67, 0.08), 0 1px 3px 1px rgba(60, 64, 67, 0.16);
+    padding: 5px 10px; }
+    .merchant-table .merch-row td {
+      text-align: left;
+      padding: 10px;
+      border: none; }
+      .merchant-table .merch-row td:last-child {
+        float: right; }

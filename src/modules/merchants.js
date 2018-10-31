@@ -1,52 +1,55 @@
 import axios from 'axios';
+import {
+    MERCHANT_FETCH_REQUESTED, MERCHANT_FETCH_SUCCEEDED,
+    MERCHANT_EDIT_REQUESTED,
+    MERCHANTS_FETCH_REQUESTED, MERCHANTS_FETCH_SUCCEEDED,
+    MERCHANT_REMOVE_REQUESTED,
+} from "../constants/merchants";
 
-const GET_MERCHANT = 'GET_MERCHANT';
 const ACCEPT_MERCHANT = 'ACCEPT_MERCHANT';
 const REJECT_MERCHANT = 'REJECT_MERCHANT';
 const UPDATE_APPROVE = 'UPDATE_APPROVE';
-
 
 export const initialState = {
     data:[],
     approvedMerchants:{},
     isFetching: false,
+    merchantDetail: {}
 };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        
-        case GET_MERCHANT: {
+
+        case MERCHANTS_FETCH_REQUESTED: {
+            return {
+                ...state,
+                isFetching: true,
+            }
+        }
+        case MERCHANTS_FETCH_SUCCEEDED: {
             return {
                 ...state,
                 data: action.payload,
-                isFetching: false
+                isFetching: false,
             }
         }
+        case MERCHANT_FETCH_REQUESTED: {
+            return {
+                ...state,
+                isFetching: true,
+            }
+        }
+        case MERCHANT_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                merchantDetail: action.payload,
+                isFetching: false,
+            }
+        }
+
         default: {
             return state
         }
-    }
-}
-
-export function getData() {
-    return {
-        type: GET_MERCHANT,
-        payload:[
-            {
-                id:1,
-                name:"Mic",
-                surname:"Hal",
-                email:"gg@nore.com",
-                approve:true
-            },
-            {
-                id:2,
-                name:"Hor",
-                surname:"Nak",
-                email:"rip@inpc.com",
-                approve:false
-            }
-        ]
     }
 }
 
@@ -55,7 +58,7 @@ export function approveMerchant(id){
         type: UPDATE_APPROVE,
         payload: axios({
           method: 'post',
-          url: "api/v1/merchant/"+id+"/approved/"  
+          url: "api/v1/merchant/"+id+"/approved/"
         })
     }
 }
@@ -80,3 +83,24 @@ export function rejectMerchant(id) {
     }
 }
 
+export function fetchMerchants() {
+    return {type: MERCHANTS_FETCH_REQUESTED}
+}
+
+export function fetchMerchant(id, resolve){
+    return {
+        type: MERCHANT_FETCH_REQUESTED,
+        payload: {id},
+        resolve: resolve
+    }
+}
+
+export function editMerchant(merchant){
+    return {
+        type: MERCHANT_EDIT_REQUESTED, payload: {merchant}
+    }
+}
+
+export function removeMerchant(id) {
+    return {type: MERCHANT_REMOVE_REQUESTED, payload: {id}}
+}

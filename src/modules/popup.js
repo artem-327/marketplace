@@ -1,6 +1,6 @@
-const ADD_POPUP = "ADD_POPUP";
-const REMOVE_POPUP = "REMOVE_POPUP";
-const REMOVE_ALL = "REMOVE_ALL";
+import {
+    ADD_POPUP, REMOVE_POPUP, REMOVE_ALL,
+} from "../constants/popup";
 
 export const initialState = {
     components: []
