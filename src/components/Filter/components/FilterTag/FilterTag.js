@@ -19,13 +19,13 @@ class FilterTag extends Component {
             case 'dtfr': return 'Expiration From';
             case 'dtto': return 'Expiration To';
             case 'pckgs': return 'Package type';
-            case 'assmin': return 'Assay Min';
-            case 'assmax': return 'Assay Max';
+            case 'assaylb': return 'Assay Min';
+            case 'assayub': return 'Assay Max';
             case 'chemSearch': return 'Chemical search';
             case 'productAge': return 'Product Age';
-            case 'form': return 'Form';
+            case 'frm': return 'Form';
             case 'loc': return 'Location';
-            case 'condition': return 'Condition';
+            case 'cndt': return 'Condition';
             default: return 'unknown';
         }
     }
@@ -36,7 +36,7 @@ class FilterTag extends Component {
 
     pickPackageName(){
         this.packageName = [];
-        let array = this.props.value.split(',');
+        let array = this.props.value;
 
         for (let i = 0; i < array.length; i++) {
             this.props.packagingTypes.map((info)=>{
@@ -50,7 +50,7 @@ class FilterTag extends Component {
     }
     pickConditionName(){
         this.conditionName = [];
-        let array = this.props.value.split(',');
+        let array = this.props.value;
 
         for (let i = 0; i < array.length; i++) {
             this.props.productConditions.map((info)=>{
@@ -64,7 +64,7 @@ class FilterTag extends Component {
     }
     pickFormName(){
         this.formName = [];
-        let array = this.props.value.split(',');
+        let array = this.props.value;
 
         for (let i = 0; i < array.length; i++) {
             this.props.productForms.map((info)=>{
@@ -80,26 +80,24 @@ class FilterTag extends Component {
     chooseFilter(name){
         switch(name){
             case 'pckgs':{
-                return 'pckgs'
-                // this.pickPackageName();
-                // return this.packageName.join(',');
+                this.pickPackageName();
+                return this.packageName.join(',');
             }
-            case 'condition':{
-                return 'condition'
-                // this.pickConditionName();
-                // return this.conditionName.join(',');
+            case 'cndt':{
+                this.pickConditionName();
+                return this.conditionName.join(',');
             }
-            case 'form':{
-                return 'form'
-                // this.pickFormName();
-                // return this.formName.join(',');
+            case 'frm':{
+                this.pickFormName();
+                return this.formName.join(',');
             }
             case 'grade':{
                 return 'grade'
             }
             case 'loc':{
-                this.pickLocationName();
-                return this.locationName.join(',');
+                return 'Location'
+                // this.pickLocationName();
+                // return this.locationName.join(',');
             }
             default: {
                 return this.props.value;
@@ -107,6 +105,7 @@ class FilterTag extends Component {
         }
     }
     render () {
+        if(Array.isArray(this.props.value) && this.props.value.length === 0) return null;
         return (
             <div className="filterTag"><span>{this.checkName(this.props.name)}: {this.chooseFilter(this.props.name)}</span>
                 <i onClick={()=>{this.props.resetForm('forms.filter.' + this.props.name);this.props.close()}} className="fas fa-times"> </i>
@@ -116,7 +115,7 @@ class FilterTag extends Component {
 
 FilterTag.propTypes = {
     name: PropTypes.string,
-    value: PropTypes.string,
+    value: PropTypes.any,
     close: PropTypes.func
 };
 

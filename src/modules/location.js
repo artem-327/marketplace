@@ -167,12 +167,12 @@ export function updateWarehouse(id, name, address, city, location, contactName, 
     }
 }
 
-export function fetchRegions(){
-    return {type: REGIONS_FETCH_REQUESTED}
+export function fetchRegions(search = null){
+    return {type: REGIONS_FETCH_REQUESTED, payload:{search}}
 }
 
-export function fetchStates(){
-    return {type: STATES_FETCH_REQUESTED}
+export function fetchStates(search = null){
+    return {type: STATES_FETCH_REQUESTED, payload:{search}}
 }
 
 export function fetchStateDetail(id) {

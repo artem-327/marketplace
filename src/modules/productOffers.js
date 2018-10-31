@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {transformRequestOptions} from "../utils/functions";
 
 const GET_PRODUCT_OFFERS_MY = 'GET_PRODUCT_OFFERS_MY';
 const GET_PRODUCT_OFFERS_MY_FULFILLED = 'GET_PRODUCT_OFFERS_MY_FULFILLED';
@@ -125,15 +126,16 @@ export function fetchMyProductOffers(filter = {}) {
     let mrchnt = true;
     return {
         type: GET_PRODUCT_OFFERS_MY,
-        payload: axios.get("/api/3f36ea/product-offers/", {params: {...filter, mrchnt}}).then(response => response.data.data.productOffers)
+        payload: axios.get("/api/3f36ea/product-offers/", {params: {...filter, mrchnt}, 'paramsSerializer': params => transformRequestOptions(params)}).then(response => response.data.data.productOffers)
     }
 }
 
 export function fetchAllProductOffers(filter = {}) {
     let mrchnt = false;
+    console.log(filter);
     return {
         type: GET_PRODUCT_OFFERS_ALL,
-        payload: axios.get("/api/3f36ea/product-offers/", {params: {...filter, mrchnt}}).then(response => response.data.data.productOffers)
+        payload: axios.get("/api/3f36ea/product-offers/", {params: {...filter, mrchnt}, 'paramsSerializer': params => transformRequestOptions(params)}).then(response => response.data.data.productOffers)
     }
 }
 

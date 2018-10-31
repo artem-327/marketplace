@@ -11,9 +11,9 @@ import {
 } from "../constants/companies";
 
 
-function* fetchCompanies() {
+function* fetchCompanies(action) {
     try {
-        const companies = yield call(Api.fetchCompanies);
+        const companies = yield call(Api.fetchCompanies, action.payload.search);
         yield put({type: COMPANIES_FETCH_SUCCEEDED, payload: companies});
     } catch (e) {
         yield put({type: COMPANIES_FETCH_FAILED, message: e.message});
