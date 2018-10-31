@@ -84,8 +84,8 @@ const logger = createLogger({
 const sagaMiddleware = createSagaMiddleware();
 
 const middleware = applyMiddleware(thunk, promise(), sagaMiddleware, logger);
-
-export default createStore(reducer, middleware)
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+export default createStore(reducer, composeEnhancers, middleware)
 
 sagaMiddleware.run(companiesSaga);
 sagaMiddleware.run(officesSaga);
