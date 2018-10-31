@@ -37,11 +37,12 @@ class AddBroadcast extends Component {
     const parent = this.convertObjectToArray(storedParent)
     const currentParrent = storedParent && parent.find(i => i.id === parentDetail.id)
     // manipulate with companies broadcast rules based on state broadcast rule
+
       if(currentParrent) {
         if(currentParrent.include) parentDetail[children].forEach(i => dispatch(actions.change(`forms.broadcastRules.${child}.${i.id}.include`, true)))
-        if(!currentParrent.include) parentDetail[children].forEach(i => dispatch(actions.change(`forms.broadcastRules.${child}.${i.id}.include`, false)))
+        // if(!currentParrent.include) parentDetail[children].forEach(i => dispatch(actions.change(`forms.broadcastRules.${child}.${i.id}.include`, false)))
         if(currentParrent.anonymous) parentDetail[children].forEach(i => dispatch(actions.change(`forms.broadcastRules.${child}.${i.id}.anonymous`, true)))
-        if(!currentParrent.anonymous) parentDetail[children].forEach(i => dispatch(actions.change(`forms.broadcastRules.${child}.${i.id}.anonymous`, false)))
+        // if(!currentParrent.anonymous) parentDetail[children].forEach(i => dispatch(actions.change(`forms.broadcastRules.${child}.${i.id}.anonymous`, false)))
         if(currentParrent.priceUnit === "%") parentDetail[children].forEach(i => dispatch(actions.change(`forms.broadcastRules.${child}.${i.id}.priceUnit`, "%")))
         if(currentParrent.priceUnit === "$") parentDetail[children].forEach(i => dispatch(actions.change(`forms.broadcastRules.${child}.${i.id}.priceUnit`, "$")))
         if(currentParrent.priceValue) parentDetail[children].forEach(i => dispatch(actions.change(`forms.broadcastRules.${child}.${i.id}.priceValue`, currentParrent.priceValue)))
@@ -269,6 +270,7 @@ class AddBroadcast extends Component {
               stateIsExpanded={stateIsExpanded}
               name={i.name}
               id={i.id}
+              key={i.id}
             />)}
 
             {searchedItem && searchedItem.type === "region" && categoryFilter === "region" && <RegionBroadcastField

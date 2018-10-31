@@ -17,7 +17,7 @@ const Button = ({ size, color, children, rounded, ...props }) => {
 export default Button;
 
 Button.propTypes = {
-    size: PropTypes.oneOf(['medium', 'large']),
+    size: PropTypes.oneOf(['medium', 'large', "large-2x"]),
     rounded: PropTypes.oneOf(['down', 'up', 'no']),
 };
 
