@@ -1,6 +1,6 @@
 import React from 'react';
 import BroadcastField from "./BroadcastField";
-
+import Spinner from '../../../../../components/Spinner/Spinner'
 const StateBroadcastField = ({dispatch, showSubordinateItems, name, id, stateDetail, stateDetailIsFetching, stateIsExpanded, isList}) => {
   return (
     <React.Fragment>
@@ -13,6 +13,7 @@ const StateBroadcastField = ({dispatch, showSubordinateItems, name, id, stateDet
         id={id || stateDetail.id}
         isExpanded={stateIsExpanded}
       />
+      {stateDetailIsFetching && stateIsExpanded && <Spinner />}
       {!stateDetailIsFetching && stateIsExpanded && stateDetail.companies && stateDetail.companies.map(i => {
         return <BroadcastField
         name={i.name}

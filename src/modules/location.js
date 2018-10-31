@@ -27,12 +27,11 @@ export const initialState = {
     states: [],
     stateDetail: {},
     regionDetail: {},
-    stateDetailIsFetching: true,
-    regionDetailIsFetching: true,
-    statesAreFetching: true,
-    regionsAreFetching: true,
+    stateDetailIsFetching: false,
+    regionDetailIsFetching: false,
+    statesAreFetching: false,
+    regionsAreFetching: false,
     isFetching: false,
-    locationFetching: true,
     warehouseDistances: [], //filter location
     locationFetching: false,
     data:{}

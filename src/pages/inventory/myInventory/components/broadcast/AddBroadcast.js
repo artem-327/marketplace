@@ -1,15 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Form } from "react-redux-form";
+import { Form, actions } from "react-redux-form";
 import BroadcastField from "./BroadcastField";
 import StateBroadcastField from "./StateBroadcastField";
 import RegionBroadcastField from "./RegionBroadcastField";
 import {RegionsSearchBox, StatesSearchBox, CompaniesSearchBox, DefaultSearchBox} from "./BroadcastSearchBoxes";
 import Dropdown from "../../../../../components/Dropdown/Dropdown";
 import PopupComponent from "../../../../../components/PopUp/PopupComponent";
-
 import "./AddBroadcast.css";
-import { actions } from 'react-redux-form';
+
 
 class AddBroadcast extends Component {
   state = {
@@ -171,7 +170,7 @@ class AddBroadcast extends Component {
   }
 
   render() {
-    const { removePopup, dispatch, stateDetail, searchedItem, regionDetail, regionDetailIsFetching, stateDetailIsFetching } = this.props;
+    const { removePopup, regions, dispatch, stateDetail, searchedItem, regionDetail, regionDetailIsFetching, stateDetailIsFetching } = this.props;
     const { isList, categoryFilter, regionIsExpanded, stateIsExpanded } = this.state;
     console.log(this.props, this.state)
 
@@ -240,6 +239,20 @@ class AddBroadcast extends Component {
 
           <div className="broadcast-main">
           <Form model="forms.broadcastRules" onSubmit={v => console.log(v)}>
+          {!searchedItem && regions.map(i => <RegionBroadcastField
+              regionDetail={regionDetail}
+              regionDetailIsFetching={regionDetailIsFetching}
+              stateDetailIsFetching={stateDetailIsFetching}
+              stateDetail={stateDetail}
+              showSubordinateItems={this.showSubordinateItems}
+              dispatch={dispatch}
+              isList={isList}
+              regionIsExpanded={regionIsExpanded}
+              stateIsExpanded={stateIsExpanded}
+              name={i.name}
+              id={i.id}
+            />)}
+
             {searchedItem && searchedItem.type === "region" && categoryFilter === "region" && <RegionBroadcastField
               regionDetail={regionDetail}
               regionDetailIsFetching={regionDetailIsFetching}
