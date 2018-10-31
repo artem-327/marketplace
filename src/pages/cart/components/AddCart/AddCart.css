@@ -14,15 +14,15 @@
   .add-cart-body .add-cart-body-section {
     flex: 1;
     padding: 10px 20px;
-    min-width: 250px; }
+    min-width: 340px; }
     @media only screen and (max-width: 767px) {
       .add-cart-body .add-cart-body-section:first-child {
         border-bottom: 2px solid #E7E7E7; } }
+    .add-cart-body .add-cart-body-section .purchase-info {
+      display: grid;
+      grid-template-columns: 2fr 1fr; }
     .add-cart-body .add-cart-body-section h3 {
       font-size: 1.5rem;
       font-weight: bold; }
     .add-cart-body .add-cart-body-section > div {
       padding: 10px 0; }
-
-.dropdown-wr {
-  width: 80%; }

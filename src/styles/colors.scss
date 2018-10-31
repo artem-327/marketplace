@@ -1,4 +1,7 @@
 $blue-color: #329ED6;
 $beige-color: #E7E7E7;
-$brown-color:#4E5157;
+$light-beige-color: lighten( $beige-color, 8% );
+$grey-color:#4E5157;
+$light-30-grey-color: lighten( $grey-color, 30% );
+$light-50-grey-color: lighten( $grey-color, 50% );
 $white-color: #FFFFFF;

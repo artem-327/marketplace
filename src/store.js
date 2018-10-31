@@ -19,7 +19,7 @@ import productOffers, {initialState as addProductsInit} from './modules/productO
 import popup from './modules/popup';
 import filter, {initialState as filterInit} from './modules/filter';
 import packageTypes from './modules/packageTypes';
-import cart from "./modules/cart";
+import cart, {initialState as cartInit} from "./modules/cart";
 import broadcastRules from "./modules/broadcastRule";
 import merchants, {initialState as merchantsInit} from "./modules/merchants";
 import products, {initialState as productsInit} from './modules/products';
@@ -57,6 +57,8 @@ const reducer = combineReducers({
         loginForm: identityFormInit.loginForm.data,
         registrationForm: identityFormInit.registrationForm.data,
         merchants: merchantsInit,
+        cart: cartInit,
+        shippingEdit: {},
     }, 'forms'),
 });
 
@@ -71,7 +73,7 @@ const logger = createLogger({
 //         const expirationTime = moment(jwtDecode(token).exp);
 //         const nowTime = moment(Date.now() / 1000)
 //       if (expirationTime < nowTime) {
-//         next(action);  
+//         next(action);
 //         store.dispatch(logout());
 //       }
 //     }

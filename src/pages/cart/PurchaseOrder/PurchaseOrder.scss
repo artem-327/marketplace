@@ -1,0 +1,38 @@
+@import "../../../styles/main.scss";
+
+.purchase-order-section {
+  footer {
+    display: flex;
+    justify-content: flex-end;
+    button {
+        margin-left: 15px;
+    }
+  }
+  .text-section { 
+    margin-top: 15px;
+    div {
+      margin: 3px 0;
+      color: $light-30-grey-color;
+      b {
+        color: $grey-color;
+      }
+    }
+  }
+}
+.cart-item-summary {
+  min-width: 280px;
+}
+
+.cart-item-summary:not(:last-child) {
+    border-bottom: 2px solid $beige-color;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+}
+
+.headerAddtext {
+    color: $blue-color;
+    cursor: pointer;
+    display: block;
+    float: right;
+    text-transform: lowercase;
+}

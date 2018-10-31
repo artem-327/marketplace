@@ -1,5 +1,4 @@
 @import "../../styles/main.scss";
-$border-rounding: 4px;
 
 button {
     border-radius: $border-rounding;
@@ -25,7 +24,7 @@ button {
     }
     &.grey{
         background-color: $beige-color;
-        color: $brown-color;
+        color: $grey-color;
       }
   }
 
