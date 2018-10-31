@@ -59,7 +59,7 @@ export function fetchLocations(filter = {}){
     return {
         type: FETCH_LOCATIONS,
         payload: axios.get('/api/t7r1bn/locations/', {params: {...filter}}).then(result => {
-            return result.data.data.locations.map((loc)=> {
+            return result.data.data.baseLocation.map((loc)=> {
                 return {
                     id: loc.id,
                     province: loc.province,
