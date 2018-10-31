@@ -22,10 +22,9 @@ class Filter extends Component {
 
     handleSubmit(inputs){
         let filter = Object.assign({}, inputs,
-            {pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key).join(',')},
-            {condition: Object.entries(inputs.condition || {}).filter(([key, value]) => value).map(([key]) => key).join(',')},
-            {form: Object.entries(inputs.form || {}).filter(([key, value]) => value).map(([key]) => key).join(',')}
-            );
+            {pckgs : Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key)},
+            {cndt: Object.entries(inputs.cndt || {}).filter(([key, value]) => value).map(([key]) => key)},
+            {frm: Object.entries(inputs.frm || {}).filter(([key, value]) => value).map(([key]) => key)});
         let params = filterNonEmptyAttributes(filter);
         this.props.filterFunc(params);
         let filterTags = [];
@@ -72,14 +71,15 @@ class Filter extends Component {
     saveFilters(){
         let inputs = this.props.filterData;
         let filter = Object.assign({},inputs,
-            {containers: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => ({container: key}))},
-            {conditions: Object.entries(inputs.condition || {}).filter(([key, value]) => value).map(([key]) => ({condition: key}))},
-            {forms: Object.entries(inputs.form || {}).filter(([key, value]) => value).map(([key]) => ({form: key}))},
+            {containers: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key)},
+            {conditions: Object.entries(inputs.cndt || {}).filter(([key, value]) => value).map(([key]) => key)},
+            {forms: Object.entries(inputs.frm || {}).filter(([key, value]) => value).map(([key]) => key)},
             {filterName: this.state.filterName},
             {quantityFrom: (inputs.qntylb || "")},
             {quantityTo: (inputs.qntyub || "")},
             {priceFrom: (inputs.prclb || "")},
             {priceTo: (inputs.prcub || "")},
+            {chemicalName: (inputs.search || "")}
         );
         this.props.saveSaveFilter(filter).then(()=>this.setState({saveFilter:true}));
     }
@@ -171,12 +171,12 @@ class Filter extends Component {
                                      data={this.props.productConditions}
                                      isOpen={this.props.filterGroupStatus.condition}
                                      onOpen={(value)=>{this.props.toggleFilterGroup('condition', value)}}
-                                     checkboxModel='condition'
+                                     checkboxModel='cndt'
                                      inputs={this.props.productConditions.map(condition => ({
                                          label: condition.name,
                                          type: 'checkbox',
                                          id: condition.id,
-                                         model: `.condition[${condition.id}]`
+                                         model: `.cndt[${condition.id}]`
                                      }))}/>
                         <FilterGroup className="filterGroup"
                                      header='Form'
@@ -185,12 +185,12 @@ class Filter extends Component {
                                      data={this.props.productForms}
                                      isOpen={this.props.filterGroupStatus.form}
                                      onOpen={(value)=>{this.props.toggleFilterGroup('form', value)}}
-                                     checkboxModel='form'
+                                     checkboxModel='frm'
                                      inputs={this.props.productForms.map(form => ({
                                          label: form.name,
                                          type: 'checkbox',
                                          id: form.id,
-                                         model: `.form[${form.id}]`
+                                         model: `.frm[${form.id}]`
                                      }))}/>
 
 
@@ -246,12 +246,12 @@ class Filter extends Component {
                                      inputs={[
                                          {
                                              label: 'From',
-                                             model: '.dtfr',
+                                             model: '.agelb',
                                              type: 'date',
                                          },
                                          {
                                              label: 'To',
-                                             model: '.dtto',
+                                             model: '.ageub',
                                              type: 'date',
                                          }
                                      ]}/>
@@ -265,13 +265,13 @@ class Filter extends Component {
                                      inputs={[
                                          {
                                              label: 'Minimum (%)',
-                                             model: '.assmin',
+                                             model: '.assaylb',
                                              type: 'assay',
                                              placeholder: '0'
                                          },
                                          {
                                              label: 'Maximum (%)',
-                                             model: '.assmax',
+                                             model: '.assayub',
                                              type: 'assay',
                                              placeholder: '0',
                                              bigger:true

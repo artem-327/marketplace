@@ -12,7 +12,8 @@ class DataTable extends Component {
     }
 
     initDataTable(){
-        if(!this.props.dataTable){
+        //TODO::don't rewrite store if exists, but beware of filter (reload data)
+        // if(!this.props.dataTable){
             let header = this.props.headerInit.map((item, index) => ({
                 index: index,
                 name: item.name,
@@ -27,14 +28,14 @@ class DataTable extends Component {
                 }
             ));
             this.props.initDataTable(this.props.id, header, rowsOpns);
-        }
+        // }
     }
 
 
     render() {
         if(!this.props.dataTable || !this.props.rows) return null;
         if(this.props.isFetching) return <Spinner/>;
-        if(this.props.rows.length !== this.props.dataTable.rowsOpns.length) {console.error("DataTable error, rowsOpns don't belong to rows");return <h4>DataTable Error</h4>}
+        if(this.props.rows.length !== this.props.dataTable.rowsOpns.length) {console.error("DataTable error, rowsOpns don't belong to rows, TODO::15");return <h4>DataTable Error</h4>}
         return <div className="data-table-wr"><table className="data-table">
             <Header data={this.props.dataTable}
                     sortFunc={this.props.sortFunc}
@@ -42,6 +43,7 @@ class DataTable extends Component {
                     contextMenu={this.props.contextMenu && this.props.contextMenu.length !== 0}
                     toggleColumn={(headerId, value) => this.props.toggleVisibleColumn(this.props.id, headerId, value)}
                     selectable={this.props.selectableHeader}
+                    selectableRows={this.props.selectableRows}
                     />
             <Rows rows={this.props.rows}
                   rowsOpns={this.props.dataTable.rowsOpns}

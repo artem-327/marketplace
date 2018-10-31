@@ -62,7 +62,8 @@ class Header extends Component {
             <thead className='data-table-header'>
                 <tr>
                     {this.props.selectable ? <th className="data-table-select"><CheckboxControlled value={this.isSelected()} onChange={(value)=>this.selectTable(value)}/></th> : null}
-                    {this.props.contextMenu ? <React.Fragment><th/><th/></React.Fragment> : null}
+                    {!this.props.selectable && this.props.selectableRows ? <th /> : null}
+                    {this.props.contextMenu ? <><th/><th/></> : null}
                     {this.props.data.header.map((item, index) => (
                         item.visible ?
                         <th  ref={this.node} onClick={() => this.leftClickSort(item.name)}
