@@ -27,6 +27,9 @@ export default class ProductMapping extends Component {
         });
         this.setState({save: true}, ()=>{
             this.props.saveMapping(values);
+                setTimeout(function(){
+                    this.setState({save: false});
+                }.bind(this),1000);
         });
     }
 

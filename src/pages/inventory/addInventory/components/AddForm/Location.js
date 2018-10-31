@@ -174,12 +174,14 @@ export default class Location extends Component {
                             </div>
                             <div className='group-item-wr'>
                                 <label>State</label>
-                                <Dropdown opns={this.props.locations}
-                                          disabled={!this.state.edit}
-                                          currentValue={this.getCurrentItemById(this.state.state)}
-                                          onChange={(value) => {
-                                              this.handleInputs(value, 'state')
-                                          }}/>
+                                <Dropdown opns={this.props.locations.map((item)=>{
+                                            return ({id: item.province.id, name: item.province.name})
+                                        })}
+                                        disabled={!this.state.edit}
+                                        currentValue={this.getCurrentItemById(this.state.state)}
+                                        onChange={(value) => {
+                                            this.handleInputs(value, 'state')
+                                        }}/>
                             </div>
                             <div className='group-item-wr'>
                                 <label htmlFor="zip">Zip Code</label>
