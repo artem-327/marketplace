@@ -27,8 +27,8 @@ class ProductOffers extends Component {
                             offer.packaging.container.name,
                             offer.packaging.capacity,
                             (parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber(),
-                            "$ " + offer.pricing.cost.formatMoney(2),
-                            "$ " + offer.pricing.price.formatMoney(2),
+                            "$ " + offer.pricing.cost.formatMoney(3),
+                            "$ " + offer.pricing.price.formatMoney(3),
                             offer.name,
                             offer.manufacturer.name,
                             offer.productCondition.name,
@@ -38,7 +38,7 @@ class ProductOffers extends Component {
             });
         return (<div className="App">
                 <DataTable id="myInventoryTable"
-                           selectable
+                           selectableRows
                            sortFunc={(nameColumn) => console.log(nameColumn)}
                            headerInit={[{name: 'Product Name'}, {name: 'Available'}, {name: 'Packaging'}, {name: 'Pkg. size'}, {name: 'Quantity'}, {name: 'Cost'}, {name: 'FOB Price'}, {name: 'Trade Name'}, {name: 'MFR.'}, {name: 'Condition'}, {name: 'MFG Date'}]}
                            contextMenu={

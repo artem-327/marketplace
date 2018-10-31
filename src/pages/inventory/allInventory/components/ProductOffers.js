@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './ProductOffers.css';
 import moment from "moment";
-import AddCart from '../../../cart/AddCart'
+import AddCart from '../../../cart/components/AddCart'
 import {DATE_FORMAT} from "../../../../utils/constants";
 import {getUnit} from "../../../../utils/functions";
 import DataTable from "../../../../components/DataTable";
@@ -17,7 +17,7 @@ class ProductOffers extends Component {
 
    //TODO:: Add to cart
    addCart(id){
-        this.props.addPopup(<AddCart id={id}/>)
+        this.props.addPopup(<AddCart id={id} history={this.props.history}/>)
    }
 
     render() {
@@ -35,7 +35,7 @@ class ProductOffers extends Component {
                         offer.packaging.amount.formatNumber(),
                         `${packageSize} ${unit} ${packageUnit}`,
                         (parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber() + unit,
-                        "$ " + offer.pricing.price.formatMoney(2),
+                        "$ " + offer.pricing.price.formatMoney(3),
                         offer.name,
                         offer.manufacturer.name,
                         offer.origin.name,
@@ -44,7 +44,7 @@ class ProductOffers extends Component {
                         offer.productCondition.name,
                         offer.productForm.name,
                         offer.warehouse.name + " (" + offer.warehouse.address.province.name + ")",
-                        <button className='info-button' onClick={()=>{this.addCart(offer.id)}}>BUY</button>]
+                        <button className='info-button' onClick={()=>{this.addCart(offer.id)}}>INFO</button>]
                 }})
             };
         });

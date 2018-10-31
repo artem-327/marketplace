@@ -16,7 +16,7 @@ $app-font-family: 'AvenirLTPro-Roman', sans-serif;
 }
 
 .header {
-  color: $brown-color;
+  color: $grey-color;
   padding: 5px 15px;
   margin: 15px 0 0 5px;
   font-size: 1.6em;
@@ -82,7 +82,7 @@ position: absolute;
   }
   &.grey{
     background-color: $beige-color;
-    color: $brown-color;
+    color: $grey-color;
   }
   &:hover, &:focus{
     cursor: pointer;

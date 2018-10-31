@@ -13,10 +13,12 @@ import AllInventory from "../pages/inventory/allInventory";
 import MyInventory from "../pages/inventory/myInventory";
 import TestPage from "../pages/test";
 import ShoppingCart from "../pages/cart/ShoppingCart";
+import PurchaseOrder from "../pages/cart/PurchaseOrder";
 import { withAuth } from '../utils/auth';
 import Merchants from '../pages/administration/merchants';
 import NamesSynonyms from "../pages/administration/namesSynonyms/";
 import Companies from "../pages/administration/companiesAdmin/";
+import Offices from "../pages/administration/officesAdmin/Offices";
 import CompaniesDetail from "../pages/administration/companiesAdmin/CompaniesDetailAdmin";
 import OfficesDetail from "../pages/administration/officesAdmin/OfficesDetailAdmin";
 import UsersNew from "../pages/administration/users";
@@ -43,15 +45,18 @@ class Main extends Component {
                     <Route exact path="/settings" component={withAuth(Settings)}/>
                     <Route exact path="/support" component={withAuth(Support)}/>
                     <Route exact path="/administration/merchants" component={withAuth(Merchants)}/>
+                    <Route exact path="/administration/merchants/:id" component={withAuth(Merchants)}/>
                     <Route exact path="/administration/names-synonyms" component={withAuth(NamesSynonyms)}/>
                     <Route exact path="/administration/companies/" component={withAuth(Companies)}/>
                     <Route exact path="/administration/companies/:id" component={withAuth(CompaniesDetail)}/>
+                    <Route exact path="/administration/offices/" component={withAuth(Offices)}/>
                     <Route exact path="/administration/offices/:id" component={withAuth(OfficesDetail)}/>
                     <Route exact path="/administration/users" component={withAuth(UsersNew)}/>
                     <Route exact path="/administration/operators" component={withAuth(Operators)}/>
                     <Route exact path="/test-page" component={TestPage}/>
-                    <Route exact path="/shopping-cart" component={withAuth(ShoppingCart)}/>
                     <Route exact path="/broadcast" component={AddBroadcast}/>
+                    <Route exact path="/cart/purchase-order" component={withAuth(PurchaseOrder)}/>
+                    <Route exact path="/cart/shopping-cart" component={withAuth(ShoppingCart)}/>
                     <Route component={withAuth(NoMatch)}/>
 
                 </Switch>

@@ -15,6 +15,7 @@ const FETCH_LOCATIONS_FULFILLED = 'FETCH_LOCATIONS_FULFILLED';
 
 const SAVE_WAREHOUSE = 'SAVE_WAREHOUSE';
 const UPDATE_WAREHOUSE = 'UPDATE_WAREHOUSE';
+const FETCH_WAREHOUSE_DISTANCES = 'FETCH_WAREHOUSE_DISTANCES';
 
 export const initialState = {
     isPending: false,
@@ -32,6 +33,8 @@ export const initialState = {
     regionsAreFetching: true,
     isFetching: false,
     locationFetching: true,
+    warehouseDistances: [], //filter location
+    locationFetching: false,
     data:{}
 };
 
@@ -117,6 +120,12 @@ export default function reducer(state = initialState, action) {
             }
         }
 
+        case FETCH_WAREHOUSE_DISTANCES: {
+            return {
+                ...state,
+                warehouseDistances: action.payload
+            }
+        }
         default: {
             return state
         }
@@ -130,14 +139,14 @@ export function fetchLocations(filter = {}){
             return result.data.data.locations.map((loc)=> {
                 return {
                     id: loc.id,
-                    name: loc.state
+                    name: loc.province.name
                 }
             })
         })
     }
 }
 
-export function fetchWarehouse(){
+export function fetchWarehouses(){
     return {
         type: FETCH_WAREHOUSE,
         payload: axios.get('/api/smg5uw/warehouses/').then(result => {return result.data.data.warehouses})
@@ -168,6 +177,18 @@ export function fetchStates(){
 
 export function fetchStateDetail(id) {
     return {type: STATEDETAIL_FETCH_REQUESTED, payload: {id}}
+}
+
+export function fetchWarehouseDistances(){
+    return {
+        type: FETCH_WAREHOUSE_DISTANCES,
+        payload: [
+            {id: 1, name:'10'},
+            {id: 2, name:'100'},
+            {id: 3, name:'1000'},
+            {id: 4, name:'10000'},
+        ]
+    }
 }
 
 export function fetchRegionDetail(id) {
