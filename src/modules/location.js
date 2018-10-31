@@ -70,7 +70,7 @@ export function fetchLocations(filter = {}){
     }
 }
 
-export function fetchWarehouse(){
+export function fetchWarehouses(){
     return {
         type: FETCH_WAREHOUSE,
         payload: axios.get('/api/smg5uw/warehouses/').then(result => {return result.data.data.warehouses})

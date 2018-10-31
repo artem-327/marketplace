@@ -1,17 +1,37 @@
-.merchant-table{
-   // border: 1px solid #ccc;
-    border-collapse: collapse;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    table-layout: fixed;
-
-    .merch-header-item{
-        //border: 1px solid #CCC;
-        height: 30px; 
-        background: #F3F3F3;
-        font-weight: bold;
-        text-align: center;
+@import "../../../styles/main.scss";
+$borderColor: #e3e2df;
+.popup {
+    input {
+        width: 70%;
+        float: right;
+        @include mq('m', max) {
+            width: 100%;
+          }
     }
 }
 
+.merchant-table {
+    max-width: 1400px;
+    margin: auto;
+    width: calc(100% - 40px);
+    table-layout: fixed;
+    th {
+      border: 2px solid $borderColor;
+      background-color: #fbfaf7;
+      padding: 10px;
+      font-weight: bold;
+    }
+    .merch-row {
+      box-shadow: 0 1px 1px 0 rgba(60,64,67,.08), 0 1px 3px 1px rgba(60,64,67,.16);
+      padding: 5px 10px;
+      td{
+        text-align: left;
+        padding: 10px;
+        border: none;
+        &:last-child {
+            float: right;
+        }
+      }
+
+    }
+  }
