@@ -6,7 +6,7 @@ export const RegionsSearchBox = ({ regions, fetchRegions,isFetching, dispatch })
     <RemoteComboBoxRedux
         items={regions}
         api={text => fetchRegions(text)}
-        limit={20}
+        limit={6}
         label="Search In the Regions"
         placeholder="Search For a Region"
         isFetching={isFetching}
@@ -21,7 +21,7 @@ export const StatesSearchBox = ({ states, fetchStates, isFetching, dispatch }) =
     <RemoteComboBoxRedux
         items={states}
         api={text => fetchStates(text)}
-        limit={20}
+        limit={6}
         label="Search In the States"
         placeholder="Search For a State"
         isFetching={isFetching}
@@ -36,7 +36,7 @@ export const CompaniesSearchBox = ({ companies, fetchCompanies, isFetching, disp
     <RemoteComboBoxRedux
         items={companies}
         api={text => fetchCompanies(text)}
-        limit={20}
+        limit={6}
         label="Search In the Companies"
         placeholder="Search For a Company"
         isFetching={isFetching}

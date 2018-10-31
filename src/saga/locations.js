@@ -8,18 +8,18 @@ import {
 } from "../constants/locations";
 
 
-function* fetchRegions() {
+function* fetchRegions(action) {
     try {
-        const regions = yield call(Api.fetchRegions);
+        const regions = yield call(Api.fetchRegions, action.payload.search);
         yield put({type: REGIONS_FETCH_SUCCEEDED, payload: regions});
     } catch (e) {
         yield put({type: REGIONS_FETCH_FAILED, message: e.message});
     }
 }
 
-function* fetchStates() {
+function* fetchStates(action) {
     try {
-        const states = yield call(Api.fetchStates);
+        const states = yield call(Api.fetchStates, action.payload.search);
         yield put({type: STATES_FETCH_SUCCEEDED, payload: states});
     } catch (e) {
         yield put({type: STATES_FETCH_FAILED, message: e.message});

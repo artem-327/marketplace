@@ -26,8 +26,10 @@
   .add-broadcast .broadcast-main {
     grid-column: 2;
     grid-row: 2;
-    max-height: 50vh;
+    height: 50vh;
     overflow-y: auto; }
+    .add-broadcast .broadcast-main .spinner {
+      margin: 20px auto 15px auto; }
     .add-broadcast .broadcast-main .broadcast-field {
       display: grid;
       grid-template-columns: auto 35%;
@@ -71,6 +73,8 @@
     grid-row: 2;
     padding: 1em;
     border-right: 1px solid #E7E7E7; }
+    .add-broadcast .broadcast-filter .combo-results {
+      top: 72px; }
     .add-broadcast .broadcast-filter .broadcasting-info {
       background-color: #f3f3f4;
       display: flex;

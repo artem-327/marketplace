@@ -191,9 +191,9 @@ class AddBroadcast extends Component {
         <Button color="grey-white" onClick={() => removePopup()}>
           Cancel
         </Button>
-        <Button color="green-white" size="large-2x" onClick={() => removePopup()}>
-          Save As Template
-        </Button>
+        {/*<Button color="green-white" size="large-2x" onClick={() => removePopup()}>*/}
+          {/*Save As Template*/}
+        {/*</Button>*/}
         <Button color="blue" onClick={() => removePopup()}>
           Apply
         </Button>

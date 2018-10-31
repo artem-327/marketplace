@@ -61,8 +61,8 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-export function fetchAll() {
-    return {type: COMPANIES_FETCH_REQUESTED,}
+export function fetchAll(search = null) {
+    return {type: COMPANIES_FETCH_REQUESTED, payload:{search}}
 }
 
 export function fetchDetail(id, resolve) {

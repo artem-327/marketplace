@@ -26,8 +26,7 @@ class TooltipFilter extends Component {
 
     renderContent(content){
         let inside = content.map((item, index) => {
-            const value = Array.isArray(item.value) ? item.value.reduce((then, now, index) => (index === 0 ? now.name : then + ', ' + now.name), '') :
-                typeof item.value === 'object' ? item.value.name : item.value;
+            const value = item.value;
             return <tr key={index}>
                 <td>{this.formatName(item.name)}</td>
                 <td className="tooltip-data">{value}</td>

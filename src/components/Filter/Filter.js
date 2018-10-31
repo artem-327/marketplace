@@ -45,7 +45,6 @@ class Filter extends Component {
     this.props.fetchProductConditions();
     this.props.fetchProductForms();
     this.props.fetchPackagingTypes();
-    this.props.fetchSavedFilters();
     this.props.fetchWarehouseDistances();
     }
 
@@ -293,7 +292,7 @@ class Filter extends Component {
                             <button className='button disabled filter-button' onClick={(e)=>{this.handleReset(e)}}>Clear filter</button>
                         </div>
                     </Form>
-                    : <SavedFilters deleteSaveFilter={(id) => this.deleteSaveFilter(id)} fillFilter={(inputs) => this.props.fillFilter(inputs)} filterFunc={(inputs) => this.handleSubmit(inputs)} saveFilters={this.props.saveFilters}/>
+                    : <SavedFilters fetchSavedFilters={this.props.fetchSavedFilters} deleteSaveFilter={(id) => this.deleteSaveFilter(id)} fillFilter={(inputs) => this.props.fillFilter(inputs)} filterFunc={(inputs) => this.handleSubmit(inputs)} saveFilters={this.props.saveFilters}/>
                 }
             </div>
             : null;
