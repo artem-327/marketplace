@@ -1,5 +1,4 @@
 @import "../../styles/main.scss";
-$border-rounding: 4px;
 
 button {
     border-radius: $border-rounding;
@@ -15,17 +14,40 @@ button {
     &.size-large {
         width: 100%;
     }
+    &.size-large-2x {
+        width: 236px;
+    }
     &.light-blue {
         border: 1px solid $blue-color;
         color: $blue-color;
-        background-color: lighten( $blue-color, 30% ) 
+        background-color: lighten( $blue-color, 30% )
     }
     &.blue {
         background-color: $blue-color;
     }
-    &.grey{
+    &.grey {
         background-color: $beige-color;
         color: $brown-color;
-      }
+    }
+    &.grey-white {
+        background-color: $white-color;
+        color: $grey-color;
+        border: 1px solid $grey-color;
+        &:hover, &:focus{
+            border: 1px solid darken( $grey-color, 5% );
+        }
+    }
+    &.red {
+        background-color: $red-color;
+        color: $white-color;
+    }
+    &.green-white {
+        background-color: $white-color;
+        color: $green-color;
+        border: 1px solid $green-color;
+        &:hover, &:focus{
+            border: 1px solid darken( $green-color, 5% );
+        }
+    }
   }
 

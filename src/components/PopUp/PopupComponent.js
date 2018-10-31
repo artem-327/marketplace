@@ -1,17 +1,21 @@
 import React from 'react';
 import PropTypes from "prop-types"
-import PopupFooter from './PopupFooter'
-import PopupHeader from './PopupHeader'
 import './popupComponent.css'
 
-const PopupComponent = ({removePopup, footerContinueText, headerTitle, children}) => {
+const PopupComponent = ({removePopup, headerTitle, children, footerComponent}) => {
     return (
         <div className="popup-component">
-        <PopupHeader title={headerTitle} removePopup={removePopup} />
+        <header className="add-cart-header">
+          <h1>{headerTitle}</h1>
+          <i className="fas fa-times close-mark" onClick={removePopup} />
+        </header>
         <div className="popup-component-body">
           {children}
         </div>
-        <PopupFooter continueText={footerContinueText} removePopup={removePopup} />
+
+        <footer className="add-cart-footer">
+          {footerComponent}
+        </footer>
       </div>
     );
 };
@@ -20,12 +24,13 @@ export default PopupComponent;
 
 
 PopupComponent.propTypes = {
-    continueText: PropTypes.string,
+    footerContinueText: PropTypes.string,
     headerTitle: PropTypes.string,
     children: PropTypes.node,
-    removePopup: PropTypes.func
+    removePopup: PropTypes.func,
+    handleContinue: PropTypes.func,
   }
 
   PopupComponent.defaultProps = {
-    continueText: 'Continue'
+    headerTitle: ''
   }

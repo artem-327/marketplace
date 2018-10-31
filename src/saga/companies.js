@@ -24,6 +24,7 @@ function* fetchCompany(action) {
     try {
         const company = yield call(Api.fetchCompany, action.payload.id);
         yield put({type: COMPANY_FETCH_SUCCEEDED, payload: company});
+        action.resolve();
     } catch (e) {
         yield put({type: COMPANY_FETCH_FAILED, message: e.message});
     }
@@ -44,7 +45,7 @@ function* editCompany(action) {
     try {
         yield call(Api.editCompany, action.payload.company);
         yield put({type: COMPANY_EDIT_SUCCEEDED});
-        yield put({type: COMPANY_FETCH_REQUESTED, payload: action.payload.company.id});
+        yield put({type: COMPANY_FETCH_REQUESTED, payload: action.payload.company});
     } catch (e) {
         yield put({type: COMPANY_EDIT_FAILED, message: e.message});
     }

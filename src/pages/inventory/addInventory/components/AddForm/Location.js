@@ -31,7 +31,7 @@ export default class Location extends Component {
                 
                 street: nextProps.warehouse[this.state.warehouseIndex].address.streetAddress,
                 city: nextProps.warehouse[this.state.warehouseIndex].address.city,
-                state: nextProps.warehouse[this.state.warehouseIndex].address.province.name,
+                state: nextProps.warehouse[this.state.warehouseIndex].address.province.id,
                 contact: nextProps.warehouse[this.state.warehouseIndex].contact.name,
                 phone: nextProps.warehouse[this.state.warehouseIndex].contact.number,
                 email: nextProps.warehouse[this.state.warehouseIndex].contact.email,
@@ -44,7 +44,7 @@ export default class Location extends Component {
         this.setState({[name]: value})
     }
 
-    setLocation(id) {
+    setLocation = id => {
         let index = 0;
         for (let i = 0; i < this.props.warehouse.length; i++) {
             if (this.props.warehouse[i].id === id) {
@@ -56,7 +56,7 @@ export default class Location extends Component {
             warehouseIndex: index,
             street: this.props.warehouse[index].address.streetAddress,
             city: this.props.warehouse[index].address.city,
-            state: this.props.warehouse[index].address.province.name,
+            state: this.props.warehouse[index].address.province.id,
             contact: this.props.warehouse[index].contact.name,
             phone: this.props.warehouse[index].contact.number,
             email: this.props.warehouse[index].contact.email,
@@ -94,7 +94,7 @@ export default class Location extends Component {
         let {warehouseName, street, city, state, zip, contact, phone, email} = this.state;
         if (!this.validateForms()) return;
         this.props.saveWarehouse(warehouseName, street, city, state, contact, phone, email, zip).then(() => {
-            this.props.fetchWarehouse().then(() => {
+            this.props.fetchWarehouses().then(() => {
                 this.setState({edit: edit}, () => this.changeLocation('saved'))
             })
         });
@@ -105,17 +105,17 @@ export default class Location extends Component {
         let {street, city, state, zip, contact, phone, email} = this.state;
         if (!this.validateForms()) return;
         this.props.updateWarehouse(this.props.warehouse[this.state.warehouseIndex].id, this.props.warehouse[this.state.warehouseIndex].name, street, city, state, contact, phone, email, zip).then(() => {
-            this.props.fetchWarehouse().then(() => {
+            this.props.fetchWarehouses().then(() => {
                 this.setState({edit: false})
             })
         });
     }
 
-    getCurrentValueById(id, opns) {
+    getCurrentItemById(id){
         if (id === '') return 'Select';
-        for (let i = 0; i < opns.length; i++) {
-            if (id === opns[i].id) {
-                return opns[i].name
+        for (let i = 0; i < this.props.locations.length; i++) {
+            if (id === this.props.locations[i].province.id) {
+                return this.props.locations[i].province.name
             }
         }
         return 'error'
@@ -174,12 +174,15 @@ export default class Location extends Component {
                             </div>
                             <div className='group-item-wr'>
                                 <label>State</label>
-                                <Dropdown opns={this.props.locations}
-                                          disabled={!this.state.edit}
-                                          currentValue={this.getCurrentValueById(this.state.state, this.props.locations)}
-                                          onChange={(value) => {
-                                              this.handleInputs(value, 'state')
-                                          }}/>
+                                <Dropdown opns={this.props.locations.map((item)=>{
+                                            if(item.province) return ({id: item.province.id, name: item.province.name})
+                                            if(item.country) return ({id: item.country.id, name: item.country.name})
+                                        })}
+                                        disabled={!this.state.edit}
+                                        currentValue={this.getCurrentItemById(this.state.state)}
+                                        onChange={(value) => {
+                                            this.handleInputs(value, 'state')
+                                        }}/>
                             </div>
                             <div className='group-item-wr'>
                                 <label htmlFor="zip">Zip Code</label>
@@ -263,12 +266,14 @@ export default class Location extends Component {
                     </div>
                     <div className='group-item-wr'>
                         <label>State</label>
-                        <Dropdown opns={this.props.locations}
-                                  currentValue={this.getCurrentValueById(this.state.state, this.props.locations)}
+                        <Dropdown opns={this.props.locations.map((item)=>{
+                           return ({id: item.province.id, name: item.province.name})
+                            })}
+                                  currentValue={this.getCurrentItemById(this.state.state)}
                                   onChange={(value) => {
                                       this.handleInputs(value, 'state')
                                   }}/>
-                        {(this.state.isSubmitted && this.getCurrentValueById(this.state.state, this.props.locations) === 'Select') ?
+                        {(this.state.isSubmitted && this.getCurrentItemById(this.state.state) === 'Select') ?
                             <div className='warehouse-val'><span>Required</span></div> : null}
                     </div>
                     <div className='group-item-wr'>
@@ -329,13 +334,13 @@ export default class Location extends Component {
                 })
             } else {
                 this.setState({
-                    street: this.props.warehouse[this.state.warehouseIndex].address,
-                    city: this.props.warehouse[this.state.warehouseIndex].city,
-                    state: this.props.warehouse[this.state.warehouseIndex].location.id,
-                    contact: this.props.warehouse[this.state.warehouseIndex].contactName,
-                    phone: this.props.warehouse[this.state.warehouseIndex].contactNumber,
-                    email: this.props.warehouse[this.state.warehouseIndex].contactEmail,
-                    zip: this.props.warehouse[this.state.warehouseIndex].zip,
+                    street: this.props.warehouse[this.state.warehouseIndex].address.streetAddress,
+                    city: this.props.warehouse[this.state.warehouseIndex].address.city,
+                    state: this.props.warehouse[this.state.warehouseIndex].address.province.id,
+                    contact: this.props.warehouse[this.state.warehouseIndex].contact.name,
+                    phone: this.props.warehouse[this.state.warehouseIndex].contact.number,
+                    email: this.props.warehouse[this.state.warehouseIndex].contact.email,
+                    zip: this.props.warehouse[this.state.warehouseIndex].address.zip.zip,
                     location: 'saved'
                 })
             }

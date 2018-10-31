@@ -1,74 +1,122 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './companiesAdmin.css';
-import {connect} from "react-redux";
-import {createOffice, editCompany, fetchDetail, removeCompany, removeOffice} from "../../../modules/companies";
-import {bindActionCreators} from "redux";
-import InputEdit from "../../../components/InputEdit/InputEdit";
+import { connect } from "react-redux";
+import { createOffice, editCompany, editOffice, fetchDetail, removeCompany, createCompany, removeOffice, fetchOffices } from "../../../modules/companies";
+import { bindActionCreators } from "redux";
 import Office from "./components/Office";
-import AddOffice from "./components/AddOffice";
-import {fetchLocations} from "../../../modules/location";
+import { fetchLocations } from "../../../modules/location";
 import Spinner from "../../../components/Spinner/Spinner";
+import InputControlled from '../../../components/InputControlled/InputControlled'
+import Button from '../../../components/Button/Button'
+import Dropdown from '../../../components/Dropdown/Dropdown'
 
 class CompaniesDetailAdmin extends Component {
+  state = {
+    name: "",
+    officeId: ""
+  }
 
-    constructor(props){
-        super(props);
-        this.state = {
-            addMode: false
-        }
-    }
+  handleChange = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+  }
 
-    componentWillMount() {
-        this.props.fetchDetail(this.props.match.params.id);
-    }
+  componentDidMount() {
+    new Promise((resolve) => {
+      this.props.fetchDetail(this.props.match.params.id, resolve)
+    }).then(() => {
+      this.setState({ name: this.props.company.name })
+    })
+    this.props.fetchOffices(this.props.match.params.id)
+  }
 
-    renderOffices() {
-        if(!this.props.isFetching && !this.props.company.offices) return;
-        return this.props.isFetching ?
-            <Spinner/>
-        : this.props.company.offices.map((office) => (
-            <Office removeOffice={(id)=>this.props.removeOffice(id, this.props.company)} key={office.id} id={office.id} name={office.name} history={this.props.history}/>
-        ));
-    }
+  renderOffices() {
+    //TODO: map only office of certain company
+    return this.props.isFetching || !Object.keys(this.props.offices).length
+      ? <Spinner />
+      : this.props.offices.map(office => (
+        <Office
+          removeOffice={(id) => this.props.removeOffice(id, this.props.company)}
+          key={office.id}
+          id={office.id}
+          office={office}
+          history={this.props.history}
+        />
+      ));
+  }
 
-    render() {
-        return (
-            <div className="admin-companies">
-                <h1 className='header'>Companies administration - {this.props.company.name}</h1>
-                <div className="list-companies">
-                    <br />
-                    <button className="button small" onClick={()=>this.props.removeCompany(this.props.company.id, ()=>this.props.history.push('/administration/companies/'))}>Delete</button>
-                    <h4>Company Name</h4>
-                    <InputEdit value={this.props.company.name} onSave={(text) => {
-                        this.props.editCompany(Object.assign({}, this.props.company, {name: text}))}}
-                    />
-                    <h4>Company Offices</h4>
-                    <AddOffice
-                        changeMode={(state)=>this.setState({addMode: state})}
-                        addMode={this.state.addMode}
-                        text="Add new office and connect to company"
-                        locations={this.props.locations}
-                        isFetchingLocation={this.props.isFetchingLocation}
-                        addItem={(payload)=>this.props.createOffice(Object.assign({}, payload, {company: this.props.company}), ()=>this.setState({addMode: false}))}
-                        fetchLocation={(text)=>this.props.fetchLocations({search: text})}/>
-                    {this.renderOffices()}
-                </div>
-            </div>
-        )
-    }
+  getOfficePayload = (officeId) => {
+    const { offices } = this.props;
+    const selectedOffice = offices.find(i => i.id === officeId)
+    return ({
+      id: parseInt(officeId),
+      name: selectedOffice.name,
+      company: this.props.match.params.id
+    })
+  }
+
+  render() {
+    return (
+      <div className="admin-companies">
+        <h1 className='header'>Companies administration - {this.props.company.name}</h1>
+        <div className="list-companies">
+          <h4>Company Detail</h4>
+          <div className="company-detail">
+            <InputControlled
+              value={this.state.name}
+              handleChange={this.handleChange}
+              name="name"
+            />
+            <Button color="red" onClick={() => this.props.removeCompany(this.props.company.id, () => this.props.history.push('/administration/companies/'))}>
+              Delete
+            </Button>
+            <Button color="blue" onClick={() => this.props.editCompany(Object.assign({}, this.props.company, { name: this.state.name }))}>
+              Edit
+            </Button>
+          </div>
+          <h4>Company Offices</h4>
+          <table className="company-table">
+            <thead>
+              <tr><th>Name</th><th></th></tr>
+            </thead>
+            <tbody>
+              {this.renderOffices()}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="add-new-company">
+          <Dropdown
+            opns={this.props.offices} //TODO: only offices without company
+            placeholder="Add new office to company"
+            onChange={value => {
+              this.setState({ officeId: value })
+            }}
+          />
+
+          <Button
+            color="green"
+            onClick={() => this.props.editOffice(this.getOfficePayload(this.state.officeId), () => { })}
+          >Add New</Button>
+        </div>
+      </div>
+    )
+  }
 }
 
 function mapStateToProps(store) {
-    return {
-        isFetching: store.companies.isFetching,
-        company: store.companies.detail,
-        isFetchingLocation: store.location.locationFetching,
-        locations: store.location.locations,
-    }
+  return {
+    isFetching: store.companies.isFetching,
+    company: store.companies.detail,
+    isFetchingLocation: store.location.locationFetching,
+    locations: store.location.locations,
+    offices: store.companies.offices,
+  }
 }
 
-function mapDispatchToProps(dispatch){
-    return bindActionCreators({fetchDetail, editCompany, fetchLocations, createOffice, removeOffice, removeCompany}, dispatch)
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ fetchDetail, fetchOffices, editOffice, editCompany, createCompany, fetchLocations, createOffice, removeOffice, removeCompany }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CompaniesDetailAdmin);

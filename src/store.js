@@ -13,25 +13,27 @@ import createSagaMiddleware from 'redux-saga'
 import identity, {initialState as identityFormInit} from './modules/identity';
 import users from './modules/users';
 
-import location from './modules/location';
+
 import companies from './modules/companies';
 import productOffers, {initialState as addProductsInit} from './modules/productOffers';
 import popup from './modules/popup';
 import filter, {initialState as filterInit} from './modules/filter';
 import packageTypes from './modules/packageTypes';
-import cart from "./modules/cart";
-import broadcastRules from "./modules/broadcastRule";
+import broadcastRules, {initialState as broadcastRulesInit} from "./modules/broadcastRule";
+import cart, {initialState as cartInit} from "./modules/cart";
 import merchants, {initialState as merchantsInit} from "./modules/merchants";
 import products, {initialState as productsInit} from './modules/products';
+import location from './modules/location';
 import errors from "./modules/errors";
-import companiesSaga from "./saga/companies";
-import officesSaga from "./saga/offices";
 import dataTables from "./modules/dataTables";
 
+import companiesSaga from "./saga/companies";
+import officesSaga from "./saga/offices";
+import merchantsSaga from "./saga/merchants";
 import usersSaga from "./pages/administration/users/saga/users";
 import operatorsSaga from "./pages/administration/operators/saga/operators";
 import cartSaga from "./pages/cart/saga/cart";
-
+import locationsSaga from "./saga/locations";
 
 const reducer = combineReducers({
     identity,
@@ -51,12 +53,15 @@ const reducer = combineReducers({
     dataTables,
     forms: combineForms({
         filter: filterInit.data,
+        broadcastRules: broadcastRulesInit,
         addProductOffer: addProductsInit.addProductOffer,
         productMapping: productsInit.productsMapping,
         productOffering: productsInit.productOffering,
         loginForm: identityFormInit.loginForm.data,
         registrationForm: identityFormInit.registrationForm.data,
         merchants: merchantsInit,
+        cart: cartInit,
+        shippingEdit: {},
     }, 'forms'),
 });
 
@@ -71,7 +76,7 @@ const logger = createLogger({
 //         const expirationTime = moment(jwtDecode(token).exp);
 //         const nowTime = moment(Date.now() / 1000)
 //       if (expirationTime < nowTime) {
-//         next(action);  
+//         next(action);
 //         store.dispatch(logout());
 //       }
 //     }
@@ -82,12 +87,13 @@ const logger = createLogger({
 const sagaMiddleware = createSagaMiddleware();
 
 const middleware = applyMiddleware(thunk, promise(), sagaMiddleware, logger);
-
-export default createStore(reducer, middleware)
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
+export default createStore(reducer, composeEnhancers, middleware)
 
 sagaMiddleware.run(companiesSaga);
 sagaMiddleware.run(officesSaga);
 sagaMiddleware.run(usersSaga);
 sagaMiddleware.run(operatorsSaga);
+sagaMiddleware.run(merchantsSaga);
 sagaMiddleware.run(cartSaga);
-
+sagaMiddleware.run(locationsSaga);

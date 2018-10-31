@@ -1,15 +1,18 @@
 import React from 'react';
+import Button from '../../../../components/Button/Button'
 
-const Office = props => (
-    <div className="companies">
-        <b>{props.name}</b>
-        <button className="button small" onClick={()=>props.removeOffice(props.id)}>
-            Remove
-        </button>
-        <button className="button small" onClick={()=>props.history.push('/administration/offices/' + props.id)}>
-            Edit
-        </button>
-    </div>
+const Office = ({office, id, removeOffice, history}) => (
+    <tr className="company-row">
+        <td><b>{office.name}</b></td>
+        <td>
+            <Button color="red" onClick={()=>removeOffice(id)}>
+                Remove
+            </Button>
+            <Button onClick={()=>history.push('/administration/offices/' + id)}>
+                Edit
+            </Button>
+        </td>
+    </tr>
 );
 
 export default Office;

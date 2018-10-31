@@ -9,6 +9,8 @@ button {
     border-radius: 4px 4px 0 0; }
   button.size-large {
     width: 100%; }
+  button.size-large-2x {
+    width: 236px; }
   button.light-blue {
     border: 1px solid #329ED6;
     color: #329ED6;
@@ -18,3 +20,18 @@ button {
   button.grey {
     background-color: #E7E7E7;
     color: #4E5157; }
+  button.grey-white {
+    background-color: #FFFFFF;
+    color: #4E5157;
+    border: 1px solid #4E5157; }
+    button.grey-white:hover, button.grey-white:focus {
+      border: 1px solid #42444a; }
+  button.red {
+    background-color: #C0523F;
+    color: #FFFFFF; }
+  button.green-white {
+    background-color: #FFFFFF;
+    color: #4CD136;
+    border: 1px solid #4CD136; }
+    button.green-white:hover, button.green-white:focus {
+      border: 1px solid #41c12c; }

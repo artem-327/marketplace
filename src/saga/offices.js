@@ -12,6 +12,7 @@ function* fetchOffice(action) {
     try {
         const office = yield call(Api.fetchOffice, action.payload.id);
         yield put({type: OFFICE_FETCH_SUCCEEDED, payload: office});
+        yield call(action.payload.onSuccess);
     } catch (e) {
         yield put({type: OFFICE_FETCH_FAILED, message: e.message});
     }
@@ -22,7 +23,7 @@ function* createOffice(action) {
         yield call(Api.createOffice, action.payload.office);
         yield put({type: OFFICE_CREATE_SUCCEEDED});
         yield call(action.payload.onSuccess);
-        yield put({type: COMPANY_FETCH_REQUESTED, payload: action.payload.office.company});
+        //yield put({type: COMPANY_FETCH_REQUESTED, payload: action.payload.office.company});
     } catch (e) {
         yield put({type: OFFICE_CREATE_FAILED, message: e.message});
     }

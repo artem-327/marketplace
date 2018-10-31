@@ -26,34 +26,38 @@ class OperatorEditation extends Component {
         const { toogleEditation } = this.props
         return (
             <tr className="admin-operators-new-item">
-                <InputControlled
+                <td><InputControlled
                     value={this.state.firstname}
                     handleChange={this.handleChange}
                     name="firstname"
-                />
+                /></td>
+                <td>
                 <InputControlled
                     value={this.state.middlename}
                     handleChange={this.handleChange}
                     name="middlename"
-                />
+                /></td>
+                <td>
                 <InputControlled
                     value={this.state.lastname}
                     handleChange={this.handleChange}
                     name="lastname"
-                />
+                /></td>
+                <td>
                 <InputControlled
                     value={this.state.email}
                     handleChange={this.handleChange}
                     name="email"
-                />
+                /></td>
+                <td>
                 <InputControlled
                     value={this.state.login}
                     handleChange={this.handleChange}
                     name="login"
-                />
+                /></td>
                 <td>
                     <button className="button small green" onClick={this.saveEditation}>Save</button>
-                    <button className="button small" onClick={toogleEditation}>Cancel</button> 
+                    <button className="button small" onClick={toogleEditation}>Cancel</button>
                 </td>
             </tr>
         )

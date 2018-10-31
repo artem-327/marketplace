@@ -18,8 +18,14 @@ class AddCart extends Component {
     const location = cart.warehouse.address.province.name;
     const unit = getUnit(cart.packaging.unit.name)
     const packageSize = `${cart.packaging.capacity} ${unit}${cart.packaging.capacity > 1 && 's'}`
+
+    const footerComponent = <React.Fragment>
+      <button className="button" onClick={removePopup}>Cancel</button>
+      <button className="button green">Continue</button>
+    </React.Fragment>
+
     return (
-        <PopupComponent removePopup={removePopup} headerTitle="Purchase">
+        <PopupComponent removePopup={removePopup} headerTitle="Purchase" footerComponent={footerComponent}>
         <div className="add-cart-body">
           <div className="add-cart-body-section">
             <h3>Product Info</h3>

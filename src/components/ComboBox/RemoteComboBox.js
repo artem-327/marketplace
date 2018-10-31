@@ -76,7 +76,7 @@ class RemoteComboBox extends Component {
         let {fulltext} = this.state;
         let results = this.renderResults();
         return (
-            <div className={'comboBox ' + this.props.className} ref={this.comboRef}>
+            <div className={'comboBox ' + (this.props.className ? this.props.className : "")} ref={this.comboRef}>
                 <label>{this.props.label}</label>
                 <i className="fas fa-search combo-icon"/>
                 <input value={fulltext} onChange={(e) => this.handleChange(e)} disabled={this.props.disabled || false}
