@@ -1,4 +1,4 @@
-@import "../../../styles/main.scss";
+@import "../../../../styles/main.scss";
 $side-padding: 30px;
 
 
@@ -31,8 +31,9 @@ $side-padding: 30px;
     }
   }
 
-  main {
+  main.summary-main {
     padding: 20px $side-padding;
+    background-color: $light-beige-color;
 
     table {
       width: 100%;

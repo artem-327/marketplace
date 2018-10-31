@@ -41,10 +41,11 @@ class DataTable extends Component {
                     selectTable={(rows)=>this.props.selectDataTable(this.props.id, rows)}
                     contextMenu={this.props.contextMenu && this.props.contextMenu.length !== 0}
                     toggleColumn={(headerId, value) => this.props.toggleVisibleColumn(this.props.id, headerId, value)}
-                    selectable={this.props.selectable}/>
+                    selectable={this.props.selectableHeader}
+                    />
             <Rows rows={this.props.rows}
                   rowsOpns={this.props.dataTable.rowsOpns}
-                  selectable={this.props.selectable}
+                  selectable={this.props.selectableRows}
                   contextMenu={this.props.contextMenu}
                   rowComponent={this.props.rowComponent}
                   headers={this.props.dataTable.header}

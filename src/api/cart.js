@@ -1,8 +1,13 @@
 import axios from 'axios';
 
 const api = {
-    getCurrentAdded: (id) =>  axios.get(`/api/ux92h9/product-offers/${id}/`).then(response => response.data.data.productOffer),
-    fetchCartItems: () => axios.get('/api/25tjry/cart/').then(response => response.data.data.cart),
+    createCartItem: (product) => axios.post('api/vC56u7/cart/', product),
+    createDeliveryAddress: (address) => axios.post('api/rh587b/delivery-addresses/', address),
+    fetchCart: () => axios.get('/api/mnU0lp/cart/').then(response => response.data.data.cart),
+    fetchDeliveryAddresses: () => axios.get('/api/1t8e2h/delivery-addresses/').then(response => response.data.data["delivery addresses"]),
+    fetchPayments: () => axios.get('/api/jklpuz/payments').then(response => response.data.data.payments),
+    getProductOffer: (id) =>  axios.get(`/api/ux92h9/product-offers/${id}/`).then(response => response.data.data.productOffer),
+    removeProductFromCart: (id) => axios.delete(`api/4eijtx/cart/${id}/`),
 };
 
 export default api;

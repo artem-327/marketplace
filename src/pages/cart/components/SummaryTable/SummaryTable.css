@@ -20,11 +20,12 @@
     .summary-table header i {
       font-size: 1.5rem;
       color: #329ED6; }
-  .summary-table main {
-    padding: 20px 30px; }
-    .summary-table main table {
+  .summary-table main.summary-main {
+    padding: 20px 30px;
+    background-color: #fbfbfb; }
+    .summary-table main.summary-main table {
       width: 100%; }
-    .summary-table main td {
+    .summary-table main.summary-main td {
       padding: 5px 0; }
-    .summary-table main td:first-child {
+    .summary-table main.summary-main td:first-child {
       width: 80%; }

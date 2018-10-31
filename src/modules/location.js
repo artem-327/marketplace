@@ -9,6 +9,7 @@ const FETCH_LOCATIONS_FULFILLED = 'FETCH_LOCATIONS_FULFILLED';
 
 const SAVE_WAREHOUSE = 'SAVE_WAREHOUSE';
 const UPDATE_WAREHOUSE = 'UPDATE_WAREHOUSE';
+const FETCH_WAREHOUSE_DISTANCES = 'FETCH_WAREHOUSE_DISTANCES';
 
 export const initialState = {
     isPending: false,
@@ -16,6 +17,7 @@ export const initialState = {
     hasError: false,
     warehouse: [],
     locations: [],
+    warehouseDistances: [], //filter location
     locationFetching: false,
     data:{}
 };
@@ -39,6 +41,12 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 locationFetching: false,
                 locations: action.payload
+            }
+        }
+        case FETCH_WAREHOUSE_DISTANCES: {
+            return {
+                ...state,
+                warehouseDistances: action.payload
             }
         }
         default: {
@@ -82,5 +90,15 @@ export function updateWarehouse(id, name, address, city, location, contactName, 
     }
 }
 
-
+export function fetchWarehouseDistances(){
+    return {
+        type: FETCH_WAREHOUSE_DISTANCES,
+        payload: [
+            {id: 1, name:'10'},
+            {id: 2, name:'100'},
+            {id: 3, name:'1000'},
+            {id: 4, name:'10000'},
+        ]
+    }
+}
 

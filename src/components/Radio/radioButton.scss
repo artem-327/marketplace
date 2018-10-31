@@ -1,6 +1,9 @@
+@import "../../styles/main.scss";
+
 .radioButton {
   position: relative;
   padding-left: 35px;
+  margin-right: 12px;
   margin-bottom: 12px;
   cursor: pointer;
   font-size: 16px;
@@ -29,11 +32,11 @@
         width: 6px;
         height: 6px;
         border-radius: 50%;
-        background: #289ada;
+        background: $blue-color;
       }
     }
-    &:hover {
-      border-color: #289ada;
+     &:hover {
+      border-color: $blue-color;
     }
     &:after {
       content: "";
@@ -44,13 +47,25 @@
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: #289ada;
+      background:$blue-color;
+    }
+    &.disabled {
+      background: $light-50-grey-color;
+    }
+    &.disabled:hover {
+      border-color: #B0B0B0;
     }
   }
 }
 /* When the radio button is checked, add a blue background */
 .radioButton input:checked ~ .radiomark {
   background-color: #ffffff;
+  &.disabled {
+    background: $light-50-grey-color;
+  }
+  &.disabled:after {
+    background: $grey-color;
+  }
 }
 
 /* Show the indicator (dot/circle) when checked */

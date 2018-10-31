@@ -27,7 +27,8 @@ PopupComponent.propTypes = {
     footerContinueText: PropTypes.string,
     headerTitle: PropTypes.string,
     children: PropTypes.node,
-    removePopup: PropTypes.func
+    removePopup: PropTypes.func,
+    handleContinue: PropTypes.func,
   }
 
   PopupComponent.defaultProps = {

@@ -1,0 +1,5 @@
+.input-error {
+  color: red;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end; }

@@ -42,7 +42,7 @@ export default class Pricing extends Component {
         }
     }
 
-    handleChange(model,value){
+    handlePriceChange(model,value){
         this.props.dispatch(actions.change(model, value));
     }
 
@@ -60,7 +60,7 @@ export default class Pricing extends Component {
     calculatePricing(e){
 
         let price = parseInt(this.props.form.pricing.price,10);
-        let cost = parseInt(this.props.form.pricing.cost,10);;
+        let cost = parseInt(this.props.form.pricing.cost,10);
         let margin = parseInt(this.state.margin,10);
         let active = e.target.name;
         let activeVal = parseInt(e.target.value,10);
@@ -71,23 +71,23 @@ export default class Pricing extends Component {
             switch(active){
                 case 'price':{
                     margin = ((activeVal - this.props.form.pricing.cost) / activeVal) * 100;
-                    margin = Number(margin.toFixed(4));
+                    margin = Number(margin.toFixed(3));
                     this.setState({margin});
                     break;
                 }
                 case 'cost':{
                     let tmp = 100 - (margin);
                     price = (activeVal) / tmp * 100;
-                    price = Number(price.toFixed(4));
-                    this.handleChange('forms.addProductOffer.pricing.price', price);
+                    price = Number(price.toFixed(3));
+                    this.handlePriceChange('forms.addProductOffer.pricing.price', price);
                     break;
                 }
                 case 'margin':{
                     let tmp = 100 - (activeVal);
                     price = (cost) / tmp * 100;
-                    price = Number(price.toFixed(4));
+                    price = Number(price.toFixed(3));
                     this.setState({margin: activeVal});
-                    this.handleChange('forms.addProductOffer.pricing.price', price);
+                    this.handlePriceChange('forms.addProductOffer.pricing.price', price);
                     break;
                 }
                 default:{
@@ -101,12 +101,12 @@ export default class Pricing extends Component {
                 case 'price':{
                     if(this.state.marginFlag){
                         cost = (activeVal - margin) / 100 * activeVal;
-                        cost = Number(cost.toFixed(4));
-                        this.handleChange('forms.addProductOffer.pricing.cost', cost);
+                        cost = Number(cost.toFixed(3));
+                        this.handlePriceChange('forms.addProductOffer.pricing.cost', cost);
                     }
                     else if (this.state.costFlag){
                         margin = (activeVal - cost) / activeVal * 100;
-                        margin = Number(margin.toFixed(4));
+                        margin = Number(margin.toFixed(3));
                         this.setState({margin});
                     }
                     break;
@@ -115,13 +115,13 @@ export default class Pricing extends Component {
                     if(this.state.marginFlag){
                         let tmp = 100 - margin;
                         price = activeVal / tmp * 100;
-                        price = Number(price.toFixed(4));
-                        this.handleChange('forms.addProductOffer.pricing.price', price);
+                        price = Number(price.toFixed(3));
+                        this.handlePriceChange('forms.addProductOffer.pricing.price', price);
                     }
                     else if(this.state.priceFlag){
 
                         margin = (price - activeVal) / price * 100;
-                        margin = Number(margin.toFixed(4));
+                        margin = Number(margin.toFixed(3));
                         this.setState({margin});
                     }
                     break;
@@ -130,13 +130,13 @@ export default class Pricing extends Component {
                     if(this.state.costFlag){
                         let tmp = 100 - activeVal;
                         price = cost / tmp * 100;
-                        price = Number(price.toFixed(4));
-                        this.handleChange('forms.addProductOffer.pricing.price', price);
+                        price = Number(price.toFixed(3));
+                        this.handlePriceChange('forms.addProductOffer.pricing.price', price);
                     }
                     else if(this.state.priceFlag){
                         cost = (price - activeVal) * price / 100;
-                        cost = Number(cost.toFixed(4));
-                        this.handleChange('forms.addProductOffer.pricing.cost', cost);
+                        cost = Number(cost.toFixed(3));
+                        this.handlePriceChange('forms.addProductOffer.pricing.cost', cost);
                     }
                     this.setState({margin: activeVal});
                     break;
@@ -338,7 +338,7 @@ export default class Pricing extends Component {
                         </div>
                         <div className='group-item-wr'>
                             <h6>Total Sales Price</h6>
-                            <h6>$ {(measurement * totalPackages * price).formatMoney(2)}</h6>
+                            <h6>$ {(measurement * totalPackages * price).formatMoney(3)}</h6>
                         </div>
                     </div>
 
