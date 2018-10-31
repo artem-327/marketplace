@@ -7,6 +7,8 @@ import RegionBroadcastField from "./RegionBroadcastField";
 import {RegionsSearchBox, StatesSearchBox, CompaniesSearchBox, DefaultSearchBox} from "./BroadcastSearchBoxes";
 import Dropdown from "../../../../../components/Dropdown/Dropdown";
 import PopupComponent from "../../../../../components/PopUp/PopupComponent";
+import Button from "../../../../../components/Button/Button";
+
 import "./AddBroadcast.css";
 
 
@@ -171,10 +173,10 @@ class AddBroadcast extends Component {
     }
   }
 
+
   render() {
     const { removePopup, regions, dispatch, stateDetail, searchedItem, regionDetail, regionDetailIsFetching, stateDetailIsFetching } = this.props;
     const { isList, categoryFilter, regionIsExpanded, stateIsExpanded } = this.state;
-    console.log(this.props, this.state)
 
     const categoryFilterOptions = [
       { name: "Regions", id: "region" },
@@ -183,9 +185,23 @@ class AddBroadcast extends Component {
     ];
     const templatesOptions = [] //TODO
 
+    const footerComponent = (
+      <>
+        <Button color="grey-white" onClick={() => removePopup()}>
+          Cancel
+        </Button>
+        <Button color="green-white" size="large-2x" onClick={() => removePopup()}>
+          Save As Template
+        </Button>
+        <Button color="blue" onClick={() => removePopup()}>
+          Apply
+        </Button>
+      </>
+    )
     return (
       <PopupComponent
         handleContinue={this.handleContinue}
+        footerComponent={footerComponent}
         removePopup={removePopup}
         headerTitle="Broadcast control"
       >

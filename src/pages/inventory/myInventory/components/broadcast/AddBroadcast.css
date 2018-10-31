@@ -1,3 +1,6 @@
+.popup {
+  min-width: 1000px; }
+
 .popup-component {
   max-width: 1000px;
   margin: 0 auto; }
@@ -5,8 +8,6 @@
     border: 1px solid #E7E7E7;
     border-radius: 4px;
     padding: 0; }
-  .popup-component .add-cart-footer {
-    display: none; }
 
 .add-broadcast {
   display: grid;
@@ -81,6 +82,8 @@
       z-index: 2; }
     .add-broadcast .broadcast-filter .comboBox {
       width: 100%; }
+      .add-broadcast .broadcast-filter .comboBox input {
+        width: 100%; }
     .add-broadcast .broadcast-filter .fas.fa-search.combo-icon {
       padding: 5px 0; }
   .add-broadcast .broadcast-nav {

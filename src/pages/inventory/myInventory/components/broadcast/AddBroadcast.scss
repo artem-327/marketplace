@@ -1,5 +1,7 @@
 @import "../../../../../styles/main.scss";
-
+.popup {
+    min-width: 1000px;
+}
 .popup-component{
     max-width: 1000px;
     margin: 0 auto;
@@ -8,9 +10,9 @@
         border-radius: $border-rounding;
         padding: 0; 
     }
-    .add-cart-footer{
-        display: none;
-    }
+    // .add-cart-footer{
+    //     display: none;
+    // }
 }
 .add-broadcast {
     display: grid;
@@ -110,6 +112,9 @@
         }
         .comboBox {
             width: 100%;
+            input {
+                width: 100%;
+            }
         }
         .fas.fa-search.combo-icon {
             padding: 5px 0;
