@@ -25,7 +25,7 @@ import NoMatch from "../components/404";
 
 import {withEdit} from '../pages/inventory/addInventory/EditInventoryHOC';
 //TODO: temporary route for development
-import AddBroadcast from "../pages/inventory/myInventory/components/broadcast/AddBroadcast";
+import AddBroadcast from "../pages/inventory/myInventory/components/broadcast";
 
 class Main extends Component {
     render() {

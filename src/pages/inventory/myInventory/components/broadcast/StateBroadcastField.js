@@ -1,7 +1,7 @@
 import React from 'react';
 import BroadcastField from "./BroadcastField";
 
-const StateBroadcastField = ({dispatch, showSubordinateItems, name, id, stateDetail, stateIsExpanded, isList}) => {
+const StateBroadcastField = ({dispatch, showSubordinateItems, name, id, stateDetail, stateDetailIsFetching, stateIsExpanded, isList}) => {
   return (
     <React.Fragment>
       <BroadcastField
@@ -13,7 +13,7 @@ const StateBroadcastField = ({dispatch, showSubordinateItems, name, id, stateDet
         id={id || stateDetail.id}
         isExpanded={stateIsExpanded}
       />
-      {stateIsExpanded && stateDetail.companies && stateDetail.companies.map(i => {
+      {!stateDetailIsFetching && stateIsExpanded && stateDetail.companies && stateDetail.companies.map(i => {
         return <BroadcastField
         name={i.name}
         type="company"

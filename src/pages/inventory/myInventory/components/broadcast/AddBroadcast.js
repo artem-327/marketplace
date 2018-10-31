@@ -1,19 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import { Form } from "react-redux-form";
-import { bindActionCreators } from "redux";
 import BroadcastField from "./BroadcastField";
 import StateBroadcastField from "./StateBroadcastField";
 import RegionBroadcastField from "./RegionBroadcastField";
+import {RegionsSearchBox, StatesSearchBox, CompaniesSearchBox, DefaultSearchBox} from "./BroadcastSearchBoxes";
 import Dropdown from "../../../../../components/Dropdown/Dropdown";
-import Spinner from "../../../../../components/Spinner/Spinner";
 import PopupComponent from "../../../../../components/PopUp/PopupComponent";
-import { removePopup } from "../../../../../modules/popup";
-import { fetchRegions, fetchRegionDetail, fetchStates, fetchStateDetail } from "../../../../../modules/location";
-import { fetchAll as fetchCompanies } from "../../../../../modules/companies"; //TODO
-import { required } from "../../../../../utils/validation";
-import RemoteComboBoxRedux from "../../../../../components/ComboBox/RemoteComboBoxRedux";
+
 import "./AddBroadcast.css";
 import { actions } from 'react-redux-form';
 
@@ -25,10 +19,8 @@ class AddBroadcast extends Component {
     stateIsExpanded: false,
   };
 
-  componentDidMount() { //TODO fetch after selection!
+  componentDidMount() {
     this.props.fetchRegions()
-    this.props.fetchCompanies()
-    this.props.fetchStates()
   }
 
   //transform storedStates/storedCompanies/storedRegions from object of objects to array of objects (the former object key is now id property)
@@ -76,15 +68,14 @@ class AddBroadcast extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const {dispatch, storedCompanies, storedStates, stateDetail, regionDetail, storedRegions, searchedItem } = this.props
+    const {fetchStateDetail, fetchRegionDetail, dispatch, storedCompanies, storedStates, stateDetail, regionDetail, storedRegions, searchedItem } = this.props
     const {stateIsExpanded, regionIsExpanded} = this.state;
       // manipulate companies broadcast rules based on state broadcast rule
-      if (this.props.stateIsFetching !== prevProps.stateIsFetching || stateIsExpanded !== prevState.stateIsExpanded) {
+      if (this.props.stateDetailIsFetching !== prevProps.stateDetailIsFetching || stateIsExpanded !== prevState.stateIsExpanded) {
         this.checkUpToDownBroadcasts(storedStates, stateDetail, "companies", "company", dispatch)
       }
-
       // manipulate states broadcast rules based on region broadcast rule
-      if (this.props.regionIsFetching !== prevProps.regionIsFetching || regionIsExpanded !== prevState.regionIsExpanded) {
+      if (this.props.regionDetailIsFetching !== prevProps.regionDetailIsFetching || regionIsExpanded !== prevState.regionIsExpanded) {
           this.checkUpToDownBroadcasts(storedRegions, regionDetail, "countries", "state", dispatch)
       }
 
@@ -120,8 +111,8 @@ class AddBroadcast extends Component {
   }
 
   handleContinue = () => {
-    console.log("aplikuje se broadcast"); //TODO
-    removePopup();
+    console.log("broadcast was applied"); //TODO
+    this.props.removePopup();
   };
 
   switchToList = () => {
@@ -145,67 +136,43 @@ class AddBroadcast extends Component {
       fetchStateDetail(idOfClickedItem);
       this.setState({stateIsExpanded: idOfClickedItem})
     }
+
     if (typeOfClickedItem === "region") { 
       fetchRegionDetail(idOfClickedItem);
       this.setState({regionIsExpanded: idOfClickedItem})
-
     }
   }
 
   renderSearchField = () => {
-    const {regions, states, companies, fetchRegions, isFetching, dispatch } = this.props
+    const {regions, states, companies, fetchStates, fetchCompanies, fetchRegions, dispatch, companiesAreFetching, statesAreFetching, regionsAreFetching } = this.props
     const {categoryFilter} = this.state;
     switch(categoryFilter){
-        case 'region': return <RemoteComboBoxRedux
-        items={regions}
-        api={text => fetchRegions(text)}
-        limit={20}
-        label="Search In the Regions"
-        placeholder="Search For a Region"
-        isFetching={isFetching}
-        saveObj={obj => {return {type: "region", ...obj}}}
-        validators={{ required }}
-        dispatch={dispatch}
-        model="forms.broadcastRules.search"
+        case 'region': return <RegionsSearchBox 
+          regions={regions} 
+          fetchRegions={fetchRegions} 
+          isFetching={regionsAreFetching} 
+          dispatch={dispatch}
       />;
-        case 'state': return <RemoteComboBoxRedux
-        items={states}
-        api={text => fetchStates(text)}
-        limit={20}
-        label="Search In the States"
-        placeholder="Search For a State"
-        isFetching={isFetching}
-        saveObj={obj => {return {type: "state", ...obj}}}
-        validators={{ required }}
-        dispatch={dispatch}
-        model="forms.broadcastRules.search"
+        case 'state': return <StatesSearchBox
+          states={states} 
+          fetchStates={fetchStates} 
+          isFetching={statesAreFetching} 
+          dispatch={dispatch}
       />;
-        case 'company': return <RemoteComboBoxRedux
-        items={companies}
-        api={text => fetchCompanies(text)}
-        limit={20}
-        label="Search In the Companies"
-        placeholder="Search For a Company"
-        isFetching={isFetching}
-        saveObj={obj => {return {type: "company", ...obj}}}
-        validators={{ required }}
-        dispatch={dispatch}
-        model="forms.broadcastRules.search"
+        case 'company': return <CompaniesSearchBox
+          companies={companies} 
+          fetchCompanies={fetchCompanies} 
+          isFetching={companiesAreFetching} 
+          dispatch={dispatch}
       />;
-        default: return <RemoteComboBoxRedux
-        disabled
-        items={[]}
-        limit={20}
-        label="Please Select the Category Filter First"
-        placeholder="Search"
-        model="forms.broadcastRules.search"
+        default: return <DefaultSearchBox
       />;
     }
   }
 
   render() {
-    const { removePopup, dispatch, stateDetail, searchedItem, regionDetail, regionIsFetching } = this.props;
-    const {isList, categoryFilter, regionIsExpanded, stateIsExpanded} = this.state;
+    const { removePopup, dispatch, stateDetail, searchedItem, regionDetail, regionDetailIsFetching, stateDetailIsFetching } = this.props;
+    const { isList, categoryFilter, regionIsExpanded, stateIsExpanded } = this.state;
     console.log(this.props, this.state)
 
     const categoryFilterOptions = [
@@ -214,7 +181,7 @@ class AddBroadcast extends Component {
       { name: "Companies", id: "company" }
     ];
     const templatesOptions = [] //TODO
-    if (false) return <Spinner />; //TODO
+
     return (
       <PopupComponent
         handleContinue={this.handleContinue}
@@ -275,7 +242,8 @@ class AddBroadcast extends Component {
           <Form model="forms.broadcastRules" onSubmit={v => console.log(v)}>
             {searchedItem && searchedItem.type === "region" && categoryFilter === "region" && <RegionBroadcastField
               regionDetail={regionDetail}
-              regionIsFetching={regionIsFetching}
+              regionDetailIsFetching={regionDetailIsFetching}
+              stateDetailIsFetching={stateDetailIsFetching}
               stateDetail={stateDetail}
               showSubordinateItems={this.showSubordinateItems}
               dispatch={dispatch}
@@ -288,6 +256,7 @@ class AddBroadcast extends Component {
 
             {searchedItem && searchedItem.type === "state" && categoryFilter === "state" && <StateBroadcastField
               stateDetail={stateDetail}
+              stateDetailIsFetching={stateDetailIsFetching}
               showSubordinateItems={this.showSubordinateItems}
               dispatch={dispatch}
               isList={isList}
@@ -317,29 +286,4 @@ AddBroadcast.propTypes = {
   removePopup: PropTypes.func
 };
 
-const mapStateToProps = store => {
-  return {
-    isFetching: store.location.isFetching,
-    stateIsFetching: store.location.stateIsFetching,
-    regionIsFetching: store.location.regionIsFetching,
-
-    stateDetail: store.location.stateDetail,
-    regionDetail: store.location.regionDetail,
-    regions: store.location.regions,
-    states: store.location.states,
-    companies: store.companies.data,
-
-    searchedItem: store.forms.broadcastRules.search,
-    storedCompanies: store.forms.broadcastRules.company,
-    storedStates: store.forms.broadcastRules.state,
-    storedRegions: store.forms.broadcastRules.region, 
-  };
-};
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ removePopup, fetchRegions, fetchRegionDetail, fetchStates, fetchCompanies, fetchStateDetail, dispatch }, dispatch);
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AddBroadcast);
+export default AddBroadcast;

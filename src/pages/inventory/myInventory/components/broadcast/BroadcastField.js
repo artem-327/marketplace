@@ -10,8 +10,8 @@ import { isNumber } from "../../../../../utils/validation";
 const BroadcastField = ({ name, id, type, isList, showSubordinateItems, isExpanded }) => {
     return (
       <div className={`broadcast-field ${type}`}>
-        <div className="field-name" name={type} id={id} onClick={(e) => showSubordinateItems(e)}>
-          {isExpanded !== false & type !== "company" && <i className="fas fa-angle-right" />}
+        <div className="field-name" name={type} id={id} onClick={e => showSubordinateItems(e)}>
+          {!isExpanded && type !== "company" && <i className="fas fa-angle-right" />}
           {isExpanded && type !== "company" && <i className="fas fa-angle-down" />} 
           {name}
         </div>
