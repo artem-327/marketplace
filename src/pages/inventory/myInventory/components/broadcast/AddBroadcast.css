@@ -25,7 +25,9 @@
       grid-template-columns: 1fr 1fr; }
   .add-broadcast .broadcast-main {
     grid-column: 2;
-    grid-row: 2; }
+    grid-row: 2;
+    max-height: 50vh;
+    overflow-y: auto; }
     .add-broadcast .broadcast-main .broadcast-field {
       display: grid;
       grid-template-columns: auto 35%;
@@ -52,11 +54,13 @@
       .add-broadcast .broadcast-main .broadcast-field.region {
         background-color: #EFF7FC; }
         .add-broadcast .broadcast-main .broadcast-field.region .field-name {
+          cursor: pointer;
           font-weight: bold;
           padding-left: 1em; }
       .add-broadcast .broadcast-main .broadcast-field.state {
         background-color: #f3f3f4; }
         .add-broadcast .broadcast-main .broadcast-field.state .field-name {
+          cursor: pointer;
           padding-left: 2em; }
       .add-broadcast .broadcast-main .broadcast-field.company > .field-name {
         padding-left: 3em; }

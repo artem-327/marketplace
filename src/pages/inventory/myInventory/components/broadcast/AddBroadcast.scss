@@ -36,6 +36,8 @@
     .broadcast-main{
         grid-column: 2;
         grid-row: 2;
+        max-height: 50vh;
+        overflow-y: auto;
         .broadcast-field{
             display: grid;
             grid-template-columns: auto 35%;
@@ -69,6 +71,7 @@
             &.region {
               background-color: $light-blue-color;
               .field-name {
+                cursor: pointer;  
                 font-weight: bold;
                 padding-left: 1em;
               }
@@ -76,6 +79,7 @@
             &.state {
               background-color: $light-60-grey-color;
               .field-name {
+                cursor: pointer;  
                 padding-left: 2em;
               }
             }

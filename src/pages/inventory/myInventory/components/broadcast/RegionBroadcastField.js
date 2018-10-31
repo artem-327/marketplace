@@ -14,7 +14,7 @@ const RegionBroadcastField = ({name, id, dispatch, showSubordinateItems, regionD
         id={id}
         isExpanded={regionIsExpanded}
       />
-      {regionDetailIsFetching && <Spinner />}
+      {regionDetailIsFetching && regionIsExpanded && <Spinner />}
       {!regionDetailIsFetching && regionIsExpanded && regionDetail.countries && regionDetail.countries.map(i => {
         return <StateBroadcastField
         name={i.name}

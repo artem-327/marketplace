@@ -266,7 +266,7 @@ class AddBroadcast extends Component {
               showSubordinateItems={this.showSubordinateItems}
               dispatch={dispatch}
               isList={isList}
-              regionIsExpanded={regionIsExpanded}
+              regionIsExpanded={regionIsExpanded === i.id}
               stateIsExpanded={stateIsExpanded}
               name={i.name}
               id={i.id}
