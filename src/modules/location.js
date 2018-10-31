@@ -62,7 +62,8 @@ export function fetchLocations(filter = {}){
             return result.data.data.locations.map((loc)=> {
                 return {
                     id: loc.id,
-                    name: loc.province.name
+                    province: loc.province,
+                    country: loc.country,
                 }
             })
         })
