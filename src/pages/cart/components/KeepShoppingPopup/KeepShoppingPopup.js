@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import PopupComponent from '../../components/PopUp/PopupComponent'
+import PopupComponent from '../../../../components/PopUp/PopupComponent'
 
 const KeepShopping = ({removePopup, handleContinue}) => {
   const footerComponent = (
