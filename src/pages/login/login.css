@@ -35,6 +35,8 @@
     right: 15px;
     bottom: 10px;
     color: #b0b0b0; }
+  .login .form-place form .form-place.version {
+    font-size: 0.6rem; }
   .login .form-place form .error-holder {
     height: 18px;
     margin: 5px;

@@ -1,9 +1,15 @@
+import axios from "axios";
+
 const RESET_TAGS = "RESET_TAGS";
 const TOGGLE_FILTER = "TOGGLE_FILTER";
 const TOGGLE_FILTER_GROUP = 'TOGGLE_FILTER_GROUP';
 const ADD_FILTER_TAG = 'ADD_FILTER_TAG';
 const CLOSE_FILTER_TAG = 'CLOSE_FILTER_TAG';
 const CLOSE_FILTER_TAG_FULFILLED = 'CLOSE_FILTER_TAG_FULFILLED';
+const GET_SAVE_FILTERS = 'GET_SAVE_FILTERS';
+const GET_SAVE_FILTERS_FULFILLED = 'GET_SAVE_FILTERS_FULFILLED';
+const DELETE_SAVE_FILTER = 'DELETE_SAVE_FILTER';
+const SAVE_SAVE_FILTER = 'SAVE_SAVE_FILTER';
 
 export const initialState = {
     isOpen: false,
@@ -20,7 +26,8 @@ export const initialState = {
         condition: false,
         form: false
     },
-    filterTags: []
+    filterTags: [],
+    saveFilters: []
 };
 
 export default function reducer(state = initialState, action) {
@@ -56,6 +63,12 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 filterTags: []
+            }
+        }
+        case GET_SAVE_FILTERS_FULFILLED: {
+            return {
+                ...state,
+                saveFilters: action.payload
             }
         }
         default: {
@@ -95,5 +108,25 @@ export function resetFilterTags(){
     }
 }
 
+export function fetchSavedFilters(){
+    return{
+        type: GET_SAVE_FILTERS,
+        payload: axios.get("/api/dxu9lu/filters/").then(response => response.data.data.filters)
+    }
+}
+
+export function deleteSaveFilter(id){
+    return{
+        type: DELETE_SAVE_FILTER,
+        payload: axios.delete(`/api/n7kwed/filters/${id}/`)
+    }
+}
+
+export function saveSaveFilter(inputs){
+    return{
+        type: SAVE_SAVE_FILTER,
+        payload: axios.post("/api/5o07zb/filters/", inputs)
+    }
+}
 
 
