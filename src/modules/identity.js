@@ -134,7 +134,7 @@ export function getIdentity() {
 export function login(email, password) {
     return {
         type: LOGIN,
-        payload: axios.post("/api/fkxc0c/login/", {email, password}).then(response => setAuthToken(response.data.data.token))
+        payload: axios.post("/api/fkxc0c/auth/login/", {email, password}).then(response => setAuthToken(response.data.data.token))
     }
 }
 

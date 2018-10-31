@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import Switcher from '../../../../components/Switcher/Switcher';
 import Button from '../../../../components/Button/Button';
 import Checkbox from '../../../../components/Checkbox/Checkbox';
 import MerchantDetail from './MerchantDetail';
@@ -10,7 +9,7 @@ class MerchantTableRow extends Component {
    }
 
     render(){
-        const {merchantData, editMerchant, id} = this.props;
+        const {merchantData} = this.props;
         // const approveToggleMerchant = {...this.props.merchantData, approved: !merchantData.approve}
         return (
             <tr className="merch-row">

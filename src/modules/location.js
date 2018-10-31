@@ -1,4 +1,10 @@
 import axios from "axios";
+import {
+    REGIONS_FETCH_SUCCEEDED, REGIONS_FETCH_REQUESTED,
+    STATES_FETCH_REQUESTED, STATES_FETCH_SUCCEEDED,
+    STATEDETAIL_FETCH_REQUESTED, STATEDETAIL_FETCH_SUCCEEDED,
+    REGIONDETAIL_FETCH_REQUESTED, REGIONDETAIL_FETCH_SUCCEEDED,
+} from "../constants/locations";
 
 const FETCH_WAREHOUSE = 'FETCH_WAREHOUSE';
 const FETCH_WAREHOUSE_FULFILLED = 'FETCH_WAREHOUSE_FULFILLED';
@@ -17,6 +23,15 @@ export const initialState = {
     hasError: false,
     warehouse: [],
     locations: [],
+    regions: [],
+    states: [],
+    stateDetail: {},
+    regionDetail: {},
+    stateDetailIsFetching: false,
+    regionDetailIsFetching: false,
+    statesAreFetching: false,
+    regionsAreFetching: false,
+    isFetching: false,
     warehouseDistances: [], //filter location
     locationFetching: false,
     data:{}
@@ -24,18 +39,19 @@ export const initialState = {
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
-        case FETCH_WAREHOUSE_FULFILLED: {
-            return {
-                ...state,
-                warehouse: action.payload
-            }
-        }
         case FETCH_LOCATIONS_PENDING: {
             return {
                 ...state,
                 locationFetching: true
             }
         }
+        case FETCH_WAREHOUSE_FULFILLED: {
+            return {
+                ...state,
+                warehouse: action.payload
+            }
+        }
+
         case FETCH_LOCATIONS_FULFILLED: {
             return {
                 ...state,
@@ -43,6 +59,66 @@ export default function reducer(state = initialState, action) {
                 locations: action.payload
             }
         }
+
+        case STATES_FETCH_REQUESTED: {
+            return {
+                ...state,
+                statesAreFetching: true,
+            }
+        }
+
+        case REGIONS_FETCH_REQUESTED: {
+            return {
+                ...state,
+                regionsAreFetching: true,
+            }
+        }
+
+        case STATEDETAIL_FETCH_REQUESTED: {
+            return {
+                ...state,
+                stateDetailIsFetching: true,
+            }
+        }
+
+        case REGIONDETAIL_FETCH_REQUESTED: {
+            return {
+                ...state,
+                regionDetailIsFetching: true,
+            }
+        }
+
+        case REGIONS_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                regions: action.payload,
+                regionsAreFetching: false
+            }
+        }
+        case STATES_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                states: action.payload,
+                statesAreFetching: false
+            }
+        }
+
+        case STATEDETAIL_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                stateDetail: action.payload,
+                stateDetailIsFetching: false
+            }
+        }
+
+        case REGIONDETAIL_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                regionDetail: action.payload,
+                regionDetailIsFetching: false
+            }
+        }
+
         case FETCH_WAREHOUSE_DISTANCES: {
             return {
                 ...state,
@@ -91,6 +167,18 @@ export function updateWarehouse(id, name, address, city, location, contactName, 
     }
 }
 
+export function fetchRegions(){
+    return {type: REGIONS_FETCH_REQUESTED}
+}
+
+export function fetchStates(){
+    return {type: STATES_FETCH_REQUESTED}
+}
+
+export function fetchStateDetail(id) {
+    return {type: STATEDETAIL_FETCH_REQUESTED, payload: {id}}
+}
+
 export function fetchWarehouseDistances(){
     return {
         type: FETCH_WAREHOUSE_DISTANCES,
@@ -103,3 +191,6 @@ export function fetchWarehouseDistances(){
     }
 }
 
+export function fetchRegionDetail(id) {
+    return {type: REGIONDETAIL_FETCH_REQUESTED, payload: {id}}
+}

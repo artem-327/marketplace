@@ -55,6 +55,7 @@ class Main extends Component {
                     <Route exact path="/cart/purchase-order" component={withAuth(PurchaseOrder)}/>
                     <Route exact path="/cart/shopping-cart" component={withAuth(ShoppingCart)}/>
                     <Route component={withAuth(NoMatch)}/>
+
                 </Switch>
             </div>
         );

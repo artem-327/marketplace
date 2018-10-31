@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './ProductOffers.css';
 import DataTable from "../../../../components/DataTable";
 import BroadcastRule from "./BroadcastRule";
+import AddBroadcast from "../../../../pages/inventory/myInventory/components/broadcast";
 
 class ProductOffers extends Component {
 
@@ -12,6 +13,10 @@ class ProductOffers extends Component {
             (carry[offer.product.id] = carry[offer.product.id] || {...offer.product, visible: true, productOffers: []}).productOffers.push(offer);
             return carry;
         }, {});
+    }
+
+    openBroadcast = () => {
+        this.props.addPopup(<AddBroadcast />)
     }
 
     render() {
@@ -44,7 +49,7 @@ class ProductOffers extends Component {
                            contextMenu={
                                [
                                    {action: (id)=>this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'Edit Listing',},
-                                   {action: (id, callback, e)=>callback(e), label: 'Custom Broadcast'},
+                                   {action: () => this.openBroadcast(), label: 'Custom Broadcast'},
                                    // {action: (id)=>console.log('delete'), label: 'Delete Listing'}
                                ]
                            }
