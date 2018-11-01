@@ -67,3 +67,17 @@ export const transformRequestOptions = params => {
     }
     return options ? options.slice(0, -1) : options;
 };
+
+export const filterByUniqueProperty = (arr, property) => {
+    let uniqueArr = [];
+    arr.filter(item => {
+        const i = uniqueArr.findIndex(x => x[property] == item[property]);
+        if(i <= -1){
+            uniqueArr.push(item);
+        }
+        return null;
+      });
+      return uniqueArr;
+};
+
+
