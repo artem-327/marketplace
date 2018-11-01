@@ -22,7 +22,7 @@ const ItemCartBody = ({cartItem, addPopup, removeProductFromCart, history}) => {
             Price Per Lb: ${productOffer.pricing.price}
         </div>
           <div>
-            Total Weight: quantity * neco (?)
+            Total Weight: ${productOffer.quantity * productOffer.packaging.capacity}
         </div>
         </div>
         <div className="item-cart-body-section">

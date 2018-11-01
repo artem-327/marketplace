@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = {
-    createCartItem: (product) => axios.post('api/vC56u7/cart/', product),
+    createNewOrder: (product) => axios.post('api/exEe66/orders/', product),
     createDeliveryAddress: (address) => axios.post('api/rh587b/delivery-addresses/', address),
     fetchCart: () => axios.get('/api/mnU0lp/cart/').then(response => response.data.data.cart),
     fetchDeliveryAddresses: () => axios.get('/api/1t8e2h/delivery-addresses/').then(response => response.data.data["delivery addresses"]),

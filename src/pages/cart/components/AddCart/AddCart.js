@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import Dropdown from '../../../../components/Dropdown/Dropdown'
 import Spinner from '../../../../components/Spinner/Spinner'
+import Button from '../../../../components/Button/Button'
 import PopupComponent from '../../../../components/PopUp/PopupComponent'
 import {getUnit} from '../../../../utils/functions'
 import './AddCart.css';
@@ -18,12 +19,13 @@ class AddCart extends Component {
 
   //TODO Fix cart to send edited data
   handleContinue = () => {
-    const {removePopup, createCartItem, offer} = this.props;
+    const {removePopup, createNewOrder, offer} = this.props;
     const offerpayload= {
         "productOffer": offer.id,
-        "quantity": 62607202
+        "quantity": this.state.pricing.price,
+        "selectedOfferPrice": this.state.quantity
     }
-    createCartItem(offerpayload)
+    createNewOrder(offerpayload)
     this.props.history.push("/cart/shopping-cart")
     removePopup()
   }
@@ -39,6 +41,7 @@ class AddCart extends Component {
 
   render() {
     const {offer, removePopup, isFetching} = this.props;
+    console.log(this.state)
     if (isFetching) return <Spinner />
     const location =`${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`;
     const {unit, capacity, amount, splits} = offer.packaging;
@@ -60,8 +63,19 @@ class AddCart extends Component {
       return object;
     })
 
+    const footerComponent = (
+      <>
+        <Button color="blue" onClick={removePopup}>
+          Cancel
+        </Button>
+        <Button color="green" onClick={this.handleContinue}>
+          Continue
+        </Button>
+      </>
+    )
+
     return (
-        <PopupComponent handleContinue={this.handleContinue} removePopup={removePopup} headerTitle="Purchase">
+        <PopupComponent footerComponent={footerComponent} handleContinue={this.handleContinue} removePopup={removePopup} headerTitle="Purchase">
         <div className="add-cart-body">
           <div className="add-cart-body-section">
             <h3>Product Info</h3>
@@ -147,7 +161,7 @@ export default AddCart
 
 AddCart.propTypes = {
   offer: PropTypes.object,
-  createCartItem: PropTypes.func,
+  createNewOrder: PropTypes.func,
   id: PropTypes.number,
   isFetching: PropTypes.bool,
   removePopup: PropTypes.func,

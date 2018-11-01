@@ -104,7 +104,7 @@ export function removeProductFromCart(id) {
     return {type: PRODUCTFROMCART_REMOVE_REQUESTED, payload: {id}}
 }
 
-export function createCartItem(product) {
+export function createNewOrder(product) {
     return {type: CARTITEM_CREATE_REQUESTED, payload: {product}}
 }
 

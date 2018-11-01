@@ -57,9 +57,9 @@ function* removeProductFromCart(action) {
     }
 }
 
-function* createCartItem(action) {
+function* createNewOrder(action) {
     try {
-        yield call(Api.createCartItem, action.payload);
+        yield call(Api.createNewOrder, action.payload);
         yield put({type: CARTITEM_CREATE_SUCCEEDED});
     } catch (e) {
         yield put({type: CARTITEM_CREATE_FAILED, message: e.message});
@@ -81,7 +81,7 @@ function* cartSaga() {
     yield takeEvery(DELIVERYADDRESSES_FETCH_REQUESTED, fetchDeliveryAddresses);
     yield takeEvery(PAYMENTS_FETCH_REQUESTED, fetchPayments);
     yield takeEvery(PRODUCTFROMCART_REMOVE_REQUESTED, removeProductFromCart);
-    yield takeEvery(CARTITEM_CREATE_REQUESTED, createCartItem);
+    yield takeEvery(CARTITEM_CREATE_REQUESTED, createNewOrder);
     yield takeEvery(DELIVERYADDRESS_CREATE_REQUESTED, createDeliveryAddress);
 }
 
