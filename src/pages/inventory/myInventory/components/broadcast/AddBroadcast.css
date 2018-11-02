@@ -53,6 +53,12 @@
           padding-left: 30px; }
         .add-broadcast .broadcast-main .broadcast-field .price-units p {
           margin: 0; }
+      .add-broadcast .broadcast-main .broadcast-field.root {
+        background-color: #b2daf0; }
+        .add-broadcast .broadcast-main .broadcast-field.root .field-name {
+          cursor: pointer;
+          font-weight: bold;
+          padding-left: 0.5em; }
       .add-broadcast .broadcast-main .broadcast-field.region {
         background-color: #EFF7FC; }
         .add-broadcast .broadcast-main .broadcast-field.region .field-name {

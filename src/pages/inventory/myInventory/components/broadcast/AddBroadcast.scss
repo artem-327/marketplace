@@ -70,6 +70,14 @@
                     margin: 0;
                 }
             }
+            &.root {
+                background-color: lighten($blue-color, 30%);
+                .field-name {
+                  cursor: pointer;  
+                  font-weight: bold;
+                  padding-left: 0.5em;
+                }
+              }
             &.region {
               background-color: $light-blue-color;
               .field-name {
