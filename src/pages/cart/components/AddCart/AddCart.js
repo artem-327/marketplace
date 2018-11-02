@@ -14,18 +14,31 @@ class AddCart extends Component {
   }
 
   componentDidMount() {
-    this.props.getProductOffer(this.props.id)
+   if (this.props.isEdit) this.props.getOrderDetail(this.props.id)
+   this.props.getProductOffer(this.props.id)
   }
 
   //TODO Fix cart to send edited data
-  handleContinue = () => {
+  createOrder = () => {
     const {removePopup, createNewOrder, offer} = this.props;
     const offerpayload= {
-        "productOffer": offer.id,
-        "quantity": this.state.pricing.price,
-        "selectedOfferPrice": this.state.quantity
+        productOffer: offer.id,
+        quantity: this.state.quantity,
+        selectedOfferPrice: this.state.pricing.price
     }
     createNewOrder(offerpayload)
+    this.props.history.push("/cart/shopping-cart")
+    removePopup()
+  }
+
+  editOrder = () => {
+    const {removePopup, editOrder, order, offer} = this.props;
+    const orderpayload = {
+        id: order.productOffer.id,
+        quantity: this.state.quantity || order.quantity,
+        selectedOfferPrice: this.state.pricing.price || order.selectedOfferPrice
+    }
+    editOrder(orderpayload)
     this.props.history.push("/cart/shopping-cart")
     removePopup()
   }
@@ -40,9 +53,9 @@ class AddCart extends Component {
    }
 
   render() {
-    const {offer, removePopup, isFetching} = this.props;
-    console.log(this.state)
-    if (isFetching) return <Spinner />
+    const {offer, order, isEdit, removePopup, offerDetailIsFetching, orderDetailIsFetching} = this.props;
+    if (isEdit && orderDetailIsFetching) return <Spinner />
+    if (offerDetailIsFetching) return <Spinner />
     const location =`${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`;
     const {unit, capacity, amount, splits} = offer.packaging;
     const unitName = `${getUnit(unit.name)}${capacity > 1 && 's'}`;
@@ -57,6 +70,14 @@ class AddCart extends Component {
       };
       return object;
     })
+    const currentPriceLevel = isEdit 
+      ? tiers.find(i => i.id === order.productOffer.pricing.tiers[0].id)
+      : null
+    const currentPriceLevelName = currentPriceLevel 
+    ? {
+      name: `${currentPriceLevel.quantityFrom} - ${currentPriceLevel.quantityTo} pck / $${currentPriceLevel.price}`,
+      id: {quantityFrom: currentPriceLevel.quantityFrom, quantityTo: currentPriceLevel.quantityTo, price: currentPriceLevel.price}
+    } : null
     const quantityOptions = this.getQualityOptions( splits)
     const quantityOptionsWithName = quantityOptions.map(i => {
       const object = {name: `${i.toString()} pck`, id: i}
@@ -68,9 +89,13 @@ class AddCart extends Component {
         <Button color="blue" onClick={removePopup}>
           Cancel
         </Button>
-        <Button color="green" onClick={this.handleContinue}>
+        {!isEdit 
+        ? <Button color="green" onClick={this.createOrder}>
           Continue
         </Button>
+        :<Button color="green" onClick={this.editOrder}>
+          Edit
+        </Button>}
       </>
     )
 
@@ -123,6 +148,7 @@ class AddCart extends Component {
                 onChange={value => {
                   this.setState({pricing: value})
                 }}
+                currentValue={currentPriceLevelName && currentPriceLevelName.name}
               />
             </div>
             <div>
@@ -131,12 +157,13 @@ class AddCart extends Component {
                 opns={quantityOptionsWithName}
                 placeholder="Select Quantity"
                 disabled={!this.state.pricing && true}
+                currentValue={isEdit && `${order.quantity} pck`}
                 onChange={value => {
                   this.setState({quantity: value})
                 }}/>
             </div>
             <div className="purchase-info">
-              <b>Total Quantity:</b> <span>{this.state.quantity && `${this.state.quantity} pck`}</span>
+              <b>Total Quantity:</b> <span>{this.state.quantity && `${this.state.quantity} pck` || isEdit && `${order.quantity} pck`}</span>
             </div>
             <div className="purchase-info">
               <b>Price/LB:</b> 
@@ -148,7 +175,7 @@ class AddCart extends Component {
             </div>
             <div className="purchase-info">
               <b>Total:</b> 
-              <span>${totalPrice}</span> 
+              <span>${totalPrice || order.selectedOfferPrice}</span> 
             </div>
           </div>
           </div>

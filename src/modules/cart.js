@@ -2,27 +2,44 @@ import {
     OFFER_FETCH_SUCCEEDED, OFFER_FETCH_REQUESTED,
     CART_FETCH_SUCCEEDED, CART_FETCH_REQUESTED,
     PAYMENTS_FETCH_REQUESTED, PAYMENTS_FETCH_SUCCEEDED,
-    DELIVERYADDRESSES_FETCH_SUCCEEDED,
-    DELIVERYADDRESSES_FETCH_REQUESTED,
+    DELIVERYADDRESSES_FETCH_SUCCEEDED, DELIVERYADDRESSES_FETCH_REQUESTED,
     PRODUCTFROMCART_REMOVE_REQUESTED,
     CARTITEM_CREATE_REQUESTED,
-    DELIVERYADDRESS_CREATE_REQUESTED
+    DELIVERYADDRESS_CREATE_REQUESTED,
+    ORDERDETAIL_FETCH_REQUESTED, ORDERDETAIL_FETCH_SUCCEEDED,
+    ORDER_EDIT_REQUESTED,
+    DELIVERYADDRESS_EDIT_REQUESTED
 } from "../constants/cart";
 
 export const initialState = {
-    offers: {},
+    offerDetail: {},
+    orderDetail: {},
     cart: {},
     deliveryAddresses: [],
     payments: [],
     isFetching: true,
     cartIsFetching: true,
-    offersAreFetching: true,
+    orderDetailIsFetching: true,
+    offerDetailIsFetching: true,
     selectedAddressId: null,
     selectedCardId: null,
 };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
+        case ORDERDETAIL_FETCH_REQUESTED: {
+            return {
+                ...state,
+                orderDetailIsFetching: true,
+            }
+        }
+        case ORDERDETAIL_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                orderDetail: action.payload,
+                orderDetailIsFetching: false
+            }
+        }
         case DELIVERYADDRESSES_FETCH_REQUESTED: {
             return {
                 ...state,
@@ -52,14 +69,14 @@ export default function reducer(state = initialState, action) {
         case OFFER_FETCH_REQUESTED: {
             return {
                 ...state,
-                offersAreFetching: true,
+                offerDetailIsFetching: true,
             }
         }
         case OFFER_FETCH_SUCCEEDED: {
             return {
                 ...state,
-                offers: action.payload,
-                offersAreFetching: false
+                offerDetail: action.payload,
+                offerDetailIsFetching: false
             }
         }
         case CART_FETCH_REQUESTED: {
@@ -110,4 +127,16 @@ export function createNewOrder(product) {
 
 export function createDeliveryAddress(address) {
     return {type: DELIVERYADDRESS_CREATE_REQUESTED, payload: {address}}
+}
+
+export function getOrderDetail(id) {
+    return {type: ORDERDETAIL_FETCH_REQUESTED, payload: {id}}
+}
+
+export function editOrder(order) {
+    return {type: ORDER_EDIT_REQUESTED, payload: {order}}
+}
+
+export function editDeliveryAddress(address) {
+    return {type: DELIVERYADDRESS_EDIT_REQUESTED, payload: {address}}
 }

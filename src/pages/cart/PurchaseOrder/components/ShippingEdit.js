@@ -6,7 +6,7 @@ import FormInput from '../../../../components/Form/FormInput'
 import Radio from "../../../../components/Radio/Radio";
 import { Form } from 'react-redux-form';
 
-const ShippingEdit = ({ toggleShippingEdit, isNewAddress, handleIsEdit, selectedAddress, createDeliveryAddress }) => {
+const ShippingEdit = ({ toggleShippingEdit, isNewAddress, handleIsEdit, selectedAddress, createDeliveryAddress, editDeliveryAddress }) => {
   const radioOptions = [{value:"isEdit", label:'Saved Address'}, {value:"isNew", label:'Add New Address'}]
   return (
     <div className="shopping-cart-items">
@@ -20,9 +20,8 @@ const ShippingEdit = ({ toggleShippingEdit, isNewAddress, handleIsEdit, selected
           disabled={!Object.keys(selectedAddress).length ? true : false}
       />
         {/* TODO: send id instead of string to province - waiting for backend endpoint */}
-        {/* TODO: now just create new address, add PUT in future - waiting for backend endpoint */}
         {/* TODO: which fields are required? */}
-        <Form model="forms.shippingEdit" onSubmit={(values) => createDeliveryAddress(values)} className="shipping-edit">
+        <Form model="forms.shippingEdit" onSubmit={values => isNewAddress === "isNew" ? createDeliveryAddress(values) : editDeliveryAddress({id: selectedAddress.id, ...values})} className="shipping-edit">
           <FormInput name=".firstName" label="First Name" />
           <FormInput name=".lastName" label="Last Name" />
           <FormInput name=".address.streetAddress" label="Address" />
@@ -33,7 +32,8 @@ const ShippingEdit = ({ toggleShippingEdit, isNewAddress, handleIsEdit, selected
           <FormInput name=".phoneNumber" label="Phone Number" />
           <footer className="add-cart-footer">
             <Button color="grey" onClick={toggleShippingEdit}>Cancel</Button>
-            <Button color="blue">Save</Button>
+            {isNewAddress === "isNew" && <Button color="blue">Save</Button>}
+            {isNewAddress !== "isNew" && <Button color="blue">Edit</Button>}
           </footer>
         </Form>
       </div>
