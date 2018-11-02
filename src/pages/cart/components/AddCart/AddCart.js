@@ -32,7 +32,7 @@ class AddCart extends Component {
   }
 
   editOrder = () => {
-    const {removePopup, editOrder, order, offer} = this.props;
+    const {removePopup, editOrder, order} = this.props;
     const orderpayload = {
         id: order.productOffer.id,
         quantity: this.state.quantity || order.quantity,
@@ -100,7 +100,12 @@ class AddCart extends Component {
     )
 
     return (
-        <PopupComponent footerComponent={footerComponent} handleContinue={this.handleContinue} removePopup={removePopup} headerTitle="Purchase">
+        <PopupComponent 
+          footerComponent={footerComponent} 
+          handleContinue={this.handleContinue} 
+          removePopup={removePopup} 
+          headerTitle="Purchase"
+        >
         <div className="add-cart-body">
           <div className="add-cart-body-section">
             <h3>Product Info</h3>
@@ -163,7 +168,10 @@ class AddCart extends Component {
                 }}/>
             </div>
             <div className="purchase-info">
-              <b>Total Quantity:</b> <span>{this.state.quantity && `${this.state.quantity} pck` || isEdit && `${order.quantity} pck`}</span>
+              <b>Total Quantity:</b> 
+              <span>
+                {(this.state.quantity && `${this.state.quantity} pck`) || (isEdit && `${order.quantity} pck`)}
+              </span>
             </div>
             <div className="purchase-info">
               <b>Price/LB:</b> 
