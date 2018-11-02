@@ -80,6 +80,7 @@ class PurchaseOrder extends Component {
   }
 
   render() {
+    const {cart, deliveryAddresses, payments, dispatch, removeProductFromCart, cartIsFetching, createDeliveryAddress, editDeliveryAddress} = this.props;
     if (cartIsFetching) return <Spinner />
     const itemContent = cart.orders.map(cartItem => {
       return (
