@@ -10,6 +10,7 @@ function* fetchBroadcast(action) {
     try {
         const broadcastData = yield call(Api.fetchBroadcast);
         yield put({type: BROADCAST_FETCH_SUCCEEDED, payload: broadcastData});
+        action.resolve()
     } catch (e) {
         yield put({type: BROADCAST_FETCH_FAILED, message: e.message});
     }

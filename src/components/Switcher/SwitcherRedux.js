@@ -4,13 +4,14 @@ import { Control } from 'react-redux-form';
 import Switcher from './Switcher';
 
 const SwitcherRedux = (props) => {
-  const { isrounded, model } = props;
+  const { isrounded, model, onClick } = props;
   return (
     <Control.checkbox
       model={model}
       component={Switcher}
+      onClick={e => onClick(e)}
       mapProps={{
-        value: (props) => props.viewValue,
+        show: (props) => props.modelValue === false ? 0 : 1,
       }}
       controlProps={{
         isrounded: { isrounded }

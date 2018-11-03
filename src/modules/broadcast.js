@@ -23,11 +23,12 @@ export default function reducer(state = initialState, action) {
               isFetching: false
           }
       }
+
       default: {
           return state
       }
   }
 }
-export function fetchBroadcast(){
-  return {type: BROADCAST_FETCH_REQUESTED}
+export function fetchBroadcast(resolve){
+  return {type: BROADCAST_FETCH_REQUESTED, resolve: resolve}
 }

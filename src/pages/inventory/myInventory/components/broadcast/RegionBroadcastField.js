@@ -1,32 +1,31 @@
 import React from 'react';
 import BroadcastField from "./BroadcastField";
 import StateBroadcastField from "./StateBroadcastField";
-import Spinner from '../../../../../components/Spinner/Spinner'
-const RegionBroadcastField = ({name, id, dispatch, showSubordinateItems, regionDetail, regionDetailIsFetching, stateDetailIsFetching, stateDetail, regionIsExpanded, stateIsExpanded, isList}) => {
+
+const RegionBroadcastField = ({ regionsExpanded, handleExpanded, handleRuleClick, dispatch, regionsData, isList}) => {
+  const isExpanded = regionsExpanded.includes(regionsData.id)
   return (
     <React.Fragment>
       <BroadcastField
-        name={name}
+        name={regionsData.name}
         type="region"
-        showSubordinateItems={showSubordinateItems}
         dispatch={dispatch}
         isList={isList}
-        id={id}
-        isExpanded={regionIsExpanded}
+        id={regionsData.id}
+        isExpanded={true}
+        handleExpanded={handleExpanded}
+        hasChildren={regionsData.states.length > 0}
+        handleRuleClick={handleRuleClick}
       />
-      {regionDetailIsFetching && regionIsExpanded && <Spinner />}
-      {!regionDetailIsFetching && regionIsExpanded && regionDetail.countries && regionDetail.countries.map(i => {
+      {isExpanded && regionsData.states.map(i => {
         return <StateBroadcastField
-        name={i.name}
         type="state"
-        stateDetail={stateDetail}
-        stateDetailIsFetching={stateDetailIsFetching}
-        stateIsExpanded={stateIsExpanded === i.id}
-        showSubordinateItems={showSubordinateItems}
+        stateIsExpanded={true}
+        stateData={i}
         dispatch={dispatch}
         isList={isList}
-        id={i.id}
         key={i.id}
+        handleRuleClick={handleRuleClick}
       />
       })}
     </React.Fragment>

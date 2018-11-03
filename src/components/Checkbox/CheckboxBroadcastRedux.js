@@ -2,11 +2,12 @@ import React from 'react';
 import { Control } from 'react-redux-form';
 
 const CheckboxBroadcastRedux = (props) => {
-  const { model, label } = props;
+  const { model, label, onClick } = props;
   return (
     <Control.checkbox
       model={model}
       component={CheckboxBroadcast}
+      onClick={e => onClick(e)}
       mapProps={{
         value: (props) => props.viewValue,
       }}

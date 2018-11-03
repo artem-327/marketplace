@@ -72,6 +72,8 @@
           padding-left: 2em; }
       .add-broadcast .broadcast-main .broadcast-field.company > .field-name {
         padding-left: 3em; }
+      .add-broadcast .broadcast-main .broadcast-field.office > .field-name {
+        padding-left: 4em; }
     .add-broadcast .broadcast-main i.fas {
       margin-right: 5px; }
   .add-broadcast .broadcast-filter {

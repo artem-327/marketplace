@@ -9,9 +9,10 @@ export default api;
 
 const fakeBroadcast = {
   root: {
-    type: "root", 
-    broadcast: false, 
-    anonymous: true, 
+    type: "root",
+    id: 1,
+    broadcast: 0, 
+    anonymous: 2, 
     priceAddition: null, 
     priceMultiplier: null,
     regions: [
@@ -19,8 +20,8 @@ const fakeBroadcast = {
         type: "region", 
         id: 1, 
         name: "Europe", 
-        broadcast: false, 
-        anonymous: true, 
+        broadcast: 0, 
+        anonymous: 2, 
         priceAddition: 150, 
         priceMultiplier: null, 
         states: [
@@ -28,8 +29,8 @@ const fakeBroadcast = {
             type: "country", 
             id: 1, 
             name: "Czech Republic", 
-            broadcast: false, 
-            anonymous: true, 
+            broadcast: 0, 
+            anonymous: 2, 
             priceAddition: 150, 
             priceMultiplier: null,
             companies: [
@@ -37,8 +38,8 @@ const fakeBroadcast = {
                 type: "company", 
                 id: 1, 
                 name: "Company A", 
-                broadcast: false, 
-                anonymous: true, 
+                broadcast: 0, 
+                anonymous: 2, 
                 priceAddition: 150, 
                 priceMultiplier: null,
                 offices: [
@@ -46,8 +47,8 @@ const fakeBroadcast = {
                     type: "office", 
                     id: 1, 
                     name: "Office AA", 
-                    broadcast: false, 
-                    anonymous: true, 
+                    broadcast: 0, 
+                    anonymous: 2, 
                     priceAddition: 150, 
                     priceMultiplier: null,
                   }
@@ -57,8 +58,8 @@ const fakeBroadcast = {
                 type: "company", 
                 id: 2, 
                 name: "Company B", 
-                broadcast: true, 
-                anonymous: true, 
+                broadcast: 2, 
+                anonymous: 2, 
                 priceAddition: 150, 
                 priceMultiplier: null,
                 offices: [
@@ -66,8 +67,8 @@ const fakeBroadcast = {
                     type: "office", 
                     id: 2, 
                     name: "Office BA", 
-                    broadcast: true, 
-                    anonymous: true, 
+                    broadcast: 2, 
+                    anonymous: 2, 
                     priceAddition: 150, 
                     priceMultiplier: null,
                   }
@@ -81,11 +82,39 @@ const fakeBroadcast = {
         type: "region", 
         id: 2, 
         name: "North America", 
-        broadcast: true, 
-        anonymous: true, 
+        broadcast: 2, 
+        anonymous: 2, 
         priceAddition: 200, 
         priceMultiplier: null, 
-        states: []
+        states: [{
+          type: "country", 
+          id: 2, 
+          name: "Utah", 
+          broadcast: 2, 
+          anonymous: 2, 
+          priceAddition: 200, 
+          priceMultiplier: null,
+          companies: [{
+            type: "company", 
+            id: 3, 
+            name: "Company C", 
+            broadcast: 2, 
+            anonymous: 2, 
+            priceAddition: 150, 
+            priceMultiplier: null,
+            offices: [
+              {
+                type: "office", 
+                id: 3, 
+                name: "Office CA", 
+                broadcast: 2, 
+                anonymous: 2, 
+                priceAddition: 150, 
+                priceMultiplier: null,
+              }
+            ]
+          }]
+        }]
       }
     ]
   }

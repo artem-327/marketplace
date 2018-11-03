@@ -7,36 +7,40 @@ import SwitcherRedux from "../../../../../components/Switcher/SwitcherRedux";
 import { isNumber } from "../../../../../utils/validation";
 
 
-const BroadcastField = ({ name, id, type, isList, showSubordinateItems, isExpanded }) => {
+const BroadcastField = ({ name, id, type, isList, handleExpanded, handleRuleClick, isExpanded, hasChildren }) => {
     return (
       <div className={`broadcast-field ${type}`}>
-        <div className="field-name" name={type} id={id} onClick={e => showSubordinateItems(e)}>
-          {!isExpanded && type !== "company" && <i className="fas fa-angle-right" />}
-          {isExpanded && type !== "company" && <i className="fas fa-angle-down" />} 
+        <div className="field-name" name={type} id={id} onClick={e => handleExpanded(e)}>
+          {hasChildren && !isExpanded && <i className="fas fa-angle-right" />}
+          {hasChildren && isExpanded && <i className="fas fa-angle-down" />} 
           {name}
         </div>
         {isList 
         ? (
           <div className="list-rules">
             <SwitcherRedux
-              model={`.${type}.${id}.include`}
+              model={`.${type}[${id}].broadcast`}
+              id={id}
               isrounded="yes"
+              onClick={handleRuleClick}
             />
             <CheckboxBroadcastRedux
-              model={`.${type}.${id}.anonymous`}
+              id={id}
+              model={`.${type}[${id}].anonymous`}
+              onClick={handleRuleClick}
             />
           </div>
         ) 
         : (
           <div className="price-rules">
             <Control.text
-              model={`.${type}.${id}.priceValue`}
+              model={`.${type}[${id}].priceValue`}
               className="price-value"
               validators={{ isNumber }}
             />
             <div className="price-units">     
-                <RadioBroadcastRedux model={`.${type}.${id}.priceUnit`} label="$" value="$"/>       
-                <RadioBroadcastRedux model={`.${type}.${id}.priceUnit`} label="%" value="%"/>                      
+                <RadioBroadcastRedux model={`.${type}[${id}].priceUnit`} label="$" value="$"/>       
+                <RadioBroadcastRedux model={`.${type}[${id}].priceUnit`} label="%" value="%"/>                      
             </div>
           </div>
         )}

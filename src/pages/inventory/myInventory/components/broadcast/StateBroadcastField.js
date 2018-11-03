@@ -1,28 +1,32 @@
 import React from 'react';
 import BroadcastField from "./BroadcastField";
-import Spinner from '../../../../../components/Spinner/Spinner'
-const StateBroadcastField = ({dispatch, showSubordinateItems, name, id, stateDetail, stateDetailIsFetching, stateIsExpanded, isList}) => {
+
+const StateBroadcastField = ({dispatch, stateData, handleRuleClick, isList}) => {
+  const offices = stateData.companies.map(i => i.offices)
+  const flattenOffices = offices.flat()
+
   return (
     <React.Fragment>
       <BroadcastField
-        name={name || stateDetail.name}
+        name={stateData.name}
         type="state"
-        showSubordinateItems={showSubordinateItems}
         dispatch={dispatch}
         isList={isList}
-        id={id || stateDetail.id}
-        isExpanded={stateIsExpanded}
+        id={stateData.id}
+        isExpanded={true}
+        hasChildren={flattenOffices.length > 0}
+        handleRuleClick={handleRuleClick}
       />
-      {stateDetailIsFetching && stateIsExpanded && <Spinner />}
-      {!stateDetailIsFetching && stateIsExpanded && stateDetail.companies && stateDetail.companies.map(i => {
+
+      {true && flattenOffices.map(i => {
         return <BroadcastField
         name={i.name}
-        type="company"
-        showSubordinateItems={showSubordinateItems}
+        type="office"
         dispatch={dispatch}
         isList={isList}
         id={i.id}
         key={i.id}
+        handleRuleClick={handleRuleClick}
       />
       })}
     </React.Fragment>

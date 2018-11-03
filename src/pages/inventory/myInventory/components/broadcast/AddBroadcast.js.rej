@@ -1,0 +1,9 @@
+diff a/src/pages/inventory/myInventory/components/broadcast/AddBroadcast.js b/src/pages/inventory/myInventory/components/broadcast/AddBroadcast.js	(rejected hunks)
+@@ -136,6 +136,7 @@
+ 
+   handleRuleClick = (e) => {
+     this.setState({clickedModel: e.target.getAttribute('name')})
++  }
+ 
+   showSubordinateItems = (e) => {
+     const typeOfClickedItem = e.target.getAttribute('name');

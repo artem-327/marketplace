@@ -7,8 +7,8 @@ import {removePopup} from "../../../../../modules/popup";
 import AddBroadcast from "./AddBroadcast";
 
 const mapStateToProps = store => ({
-    broadcastIsFetching: store.broadcast.isFetching,
-    broadcastData: store.broadcast.broadcastData,
+    broadcastIsFetching: store.broadcastRules.isFetching,
+    broadcastData: store.broadcastRules.broadcastData,
 
     companiesAreFetching: store.companies.isFetching,
     isFetching: store.location.isFetching,
@@ -24,9 +24,12 @@ const mapStateToProps = store => ({
     companies: store.companies.data,
 
     searchedItem: store.forms.broadcastRules.search,
+    
+    storedOffices: store.forms.broadcastRules.office,
     storedCompanies: store.forms.broadcastRules.company,
     storedStates: store.forms.broadcastRules.state,
     storedRegions: store.forms.broadcastRules.region, 
+    storedRoot: store.forms.broadcastRules.root, 
 });
 
 const mapDispatchToProps = dispatch => (bindActionCreators({ 
