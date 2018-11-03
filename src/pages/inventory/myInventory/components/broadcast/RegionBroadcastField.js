@@ -2,7 +2,7 @@ import React from 'react';
 import BroadcastField from "./BroadcastField";
 import StateBroadcastField from "./StateBroadcastField";
 
-const RegionBroadcastField = ({ regionsExpanded, handleExpanded, handleRuleClick, dispatch, regionsData, isList}) => {
+const RegionBroadcastField = ({ regionsExpanded, statesExpanded, handleExpanded, handleRuleClick, dispatch, regionsData, isList}) => {
   const isExpanded = regionsExpanded.includes(regionsData.id)
   return (
     <React.Fragment>
@@ -12,7 +12,7 @@ const RegionBroadcastField = ({ regionsExpanded, handleExpanded, handleRuleClick
         dispatch={dispatch}
         isList={isList}
         id={regionsData.id}
-        isExpanded={true}
+        isExpanded={isExpanded}
         handleExpanded={handleExpanded}
         hasChildren={regionsData.states.length > 0}
         handleRuleClick={handleRuleClick}
@@ -20,7 +20,8 @@ const RegionBroadcastField = ({ regionsExpanded, handleExpanded, handleRuleClick
       {isExpanded && regionsData.states.map(i => {
         return <StateBroadcastField
         type="state"
-        stateIsExpanded={true}
+        statesExpanded={statesExpanded}
+        handleExpanded={handleExpanded}
         stateData={i}
         dispatch={dispatch}
         isList={isList}

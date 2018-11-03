@@ -2,7 +2,7 @@ import React from 'react';
 import BroadcastField from "./BroadcastField";
 import RegionBroadcastField from "./RegionBroadcastField";
 
-const RootBroadcastField = ({rootData, handleExpanded, handleRuleClick, regionsExpanded, dispatch, isList}) => {
+const RootBroadcastField = ({rootData, handleExpanded, handleRuleClick, statesExpanded, regionsExpanded, dispatch, isList}) => {
   return (
     <>
       <BroadcastField
@@ -24,6 +24,7 @@ const RootBroadcastField = ({rootData, handleExpanded, handleRuleClick, regionsE
         isList={isList}
         key={i.id}
         regionsExpanded={regionsExpanded}
+        statesExpanded={statesExpanded}
         regionsData={i}
         handleExpanded={handleExpanded}
         handleRuleClick={handleRuleClick}

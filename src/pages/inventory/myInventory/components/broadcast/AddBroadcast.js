@@ -18,7 +18,7 @@ class AddBroadcast extends Component {
     isList: true,
     categoryFilter: false,
     regionsExpanded: [],
-    stateIsExpanded: false,
+    statesExpanded: [],
     clickedModel: "",
     clickedModelId: false,
   };
@@ -57,7 +57,14 @@ class AddBroadcast extends Component {
         }
       })
 
-      const states = regions.map(i => i.states)
+      const states = regions.map(i => {
+        const statesWithId = i.states.map(j => {
+          j.regionId = i.id;
+          return j;
+        })
+        return statesWithId;
+      })
+      
       const flattenStates = states.flat()
       flattenStates.forEach(state => {
         if(state.anonymous === 1 || state.anonymous === 2) dispatch(actions.change(`forms.broadcastRules.state[${state.id}].anonymous`, true))
@@ -72,7 +79,15 @@ class AddBroadcast extends Component {
         }
      })
 
-     const companies = flattenStates.map(i => i.companies)
+     const companies = flattenStates.map(i => {
+        const companiesWithId = i.companies.map(j => {
+          j.stateId = i.id;
+          j.regionId = i.regionId;
+          return j;
+        })
+        return companiesWithId;
+      })
+    
      const flattenCompanies = companies.flat()
      flattenCompanies.forEach(company => {
        if(company.anonymous === 1 || company.anonymous === 2) dispatch(actions.change(`forms.broadcastRules.company[${company.id}].anonymous`, true))
@@ -87,7 +102,15 @@ class AddBroadcast extends Component {
        }
     })
 
-    const offices = flattenCompanies.map(i => i.offices)
+    const offices = flattenCompanies.map(i => {
+      const officesWithId = i.offices.map(j => {
+        j.companyId = i.id;
+        j.stateId = i.stateId;
+        j.regionId = i.regionId;
+        return j;
+      })
+      return officesWithId;
+    })
     const flattenOffices = offices.flat()
     flattenOffices.forEach(office => {
       if(office.anonymous === 1 || office.anonymous === 2) dispatch(actions.change(`forms.broadcastRules.office[${office.id}].anonymous`, true))
@@ -108,7 +131,7 @@ class AddBroadcast extends Component {
 
 
   handleExpanded = (e) => {
-    const { regionsExpanded } = this.state;
+    const { regionsExpanded, statesExpanded } = this.state;
     const typeOfClickedItem = e.target.getAttribute('name');
     const idOfClickedItem = parseInt(e.target.id, 10);
 
@@ -120,6 +143,14 @@ class AddBroadcast extends Component {
         const filtered = newRegionsExpanded.filter(i => i !== idOfClickedItem)
         this.setState({regionsExpanded: filtered})
       } else this.setState({regionsExpanded: [ ...regionsExpanded, idOfClickedItem ]})
+    }
+    if (typeOfClickedItem === "state") {
+      const isExpanded = statesExpanded.includes(idOfClickedItem)
+      if (isExpanded) {
+        const newRegionsExpanded = [ ...statesExpanded ]
+        const filtered = newRegionsExpanded.filter(i => i !== idOfClickedItem)
+        this.setState({statesExpanded: filtered})
+      } else this.setState({statesExpanded: [ ...statesExpanded, idOfClickedItem ]})
     }
   }
 
@@ -152,18 +183,25 @@ class AddBroadcast extends Component {
     const regions = broadcastData.root.regions
     const states = regions.map(i => i.states)
     const flattenStates = states.flat()
+    const offices = flattenStates.map(state => state.companies.map(company => company.offices))
+    const flattenOffices = offices.flat(2)
 
     if (clickedModel.includes("root")) {
-      const isChecked = broadcastRoot[0].broadcast === true ? true : false 
-      if(broadcastRoot[0].broadcast === isChecked) {
-        broadcastRegions.forEach(i => dispatch(actions.change(`forms.broadcastRules.region[${i.id}].broadcast`, isChecked)))
-        broadcastStates.forEach(i => dispatch(actions.change(`forms.broadcastRules.state[${i.id}].broadcast`, isChecked)))
-        broadcastCompanies.forEach(i => dispatch(actions.change(`forms.broadcastRules.company[${i.id}].broadcast`, isChecked)))
-        broadcastOffices.forEach(i => dispatch(actions.change(`forms.broadcastRules.office[${i.id}].broadcast`, isChecked)))
+      const broadcastIsChecked = broadcastRoot[0].broadcast === true ? true : false 
+      if(broadcastRoot[0].broadcast === broadcastIsChecked) {
+        broadcastRegions.forEach(i => dispatch(actions.change(`forms.broadcastRules.region[${i.id}].broadcast`, broadcastIsChecked)))
+        broadcastStates.forEach(i => dispatch(actions.change(`forms.broadcastRules.state[${i.id}].broadcast`, broadcastIsChecked)))
+        broadcastCompanies.forEach(i => dispatch(actions.change(`forms.broadcastRules.company[${i.id}].broadcast`, broadcastIsChecked)))
+        broadcastOffices.forEach(i => dispatch(actions.change(`forms.broadcastRules.office[${i.id}].broadcast`, broadcastIsChecked)))
       };
 
-      if(broadcastRoot[0].anonymous === true) regions.forEach(i => dispatch(actions.change(`forms.broadcastRules.region[${i.id}].anonymous`, true)));
-      if(broadcastRoot[0].anonymous === false) regions.forEach(i => dispatch(actions.change(`forms.broadcastRules.region[${i.id}].anonymous`, false)));
+      const anonymousIsChecked = broadcastRoot[0].anonymous === true ? true : false 
+      if(broadcastRoot[0].anonymous === anonymousIsChecked) {
+        broadcastRegions.forEach(i => dispatch(actions.change(`forms.broadcastRules.region[${i.id}].anonymous`, anonymousIsChecked)))
+        broadcastStates.forEach(i => dispatch(actions.change(`forms.broadcastRules.state[${i.id}].anonymous`, anonymousIsChecked)))
+        broadcastCompanies.forEach(i => dispatch(actions.change(`forms.broadcastRules.company[${i.id}].anonymous`, anonymousIsChecked)))
+        broadcastOffices.forEach(i => dispatch(actions.change(`forms.broadcastRules.office[${i.id}].anonymous`, anonymousIsChecked)))
+      };
     }
 
     if (clickedModel.includes("region")) {
@@ -171,27 +209,37 @@ class AddBroadcast extends Component {
       const clickedBroadcastRegion = broadcastRegions.find(region => region.id === clickedModelId)
       const isChecked = clickedBroadcastRegion.broadcast === true ? true : false 
 
-        if (clickedBroadcastRegion.broadcast === isChecked && clickedRegion.states) {
-          clickedRegion.states.forEach(state => {
-            dispatch(actions.change(`forms.broadcastRules.state[${state.id}].broadcast`, isChecked))
-            if (state.companies) state.companies.forEach(company => {
-              dispatch(actions.change(`forms.broadcastRules.company[${company.id}].broadcast`, isChecked))
-              if (company.offices) company.offices.forEach(office => {
-                dispatch(actions.change(`forms.broadcastRules.office[${office.id}].broadcast`, isChecked))
-              })
+      if (clickedBroadcastRegion.broadcast === isChecked) {
+        if (broadcastRegions.every(region => region.broadcast === isChecked)) dispatch(actions.change(`forms.broadcastRules.root[1].broadcast`, isChecked))
+      }
+
+      if (clickedBroadcastRegion.broadcast === isChecked && clickedRegion.states) {
+        clickedRegion.states.forEach(state => {
+          dispatch(actions.change(`forms.broadcastRules.state[${state.id}].broadcast`, isChecked))
+          if (state.companies) state.companies.forEach(company => {
+            dispatch(actions.change(`forms.broadcastRules.company[${company.id}].broadcast`, isChecked))
+            if (company.offices) company.offices.forEach(office => {
+              dispatch(actions.change(`forms.broadcastRules.office[${office.id}].broadcast`, isChecked))
             })
           })
-        };
+        })
+      };
     }
 
     if (clickedModel.includes("state")) {
       const clickedState = flattenStates.find(state => state.id === clickedModelId)
       const clickedBroadcastState = broadcastStates.find(state => state.id === clickedModelId)
       const isChecked = clickedBroadcastState.broadcast === true ? true : false 
+
+      const parentRegion = regions.find(region => region.id === clickedState.regionId)
+      const statesFiltered = broadcastStates.filter(obj => parentRegion["states"].find(obj2 => obj.id === obj2.id)) 
       
+      if (clickedBroadcastState.broadcast === isChecked) {
+        if (statesFiltered.every(state => state.broadcast === isChecked)) dispatch(actions.change(`forms.broadcastRules.region[${clickedState.regionId}].broadcast`, isChecked))
+      }
+
         if (clickedBroadcastState.broadcast === isChecked && clickedState.companies) {
           clickedState.companies.forEach(company => {
-            dispatch(actions.change(`forms.broadcastRules.company[${company.id}].broadcast`, isChecked))
             if (company.offices) company.offices.forEach(office => {
               dispatch(actions.change(`forms.broadcastRules.office[${office.id}].broadcast`, isChecked))
             })
@@ -199,6 +247,18 @@ class AddBroadcast extends Component {
         };
     }
 
+    if (clickedModel.includes("office")) {
+      // const clickedState = flattenStates.find(state => state.id === clickedModelId)
+      // const clickedBroadcastState = broadcastStates.find(state => state.id === clickedModelId)
+      // const isChecked = clickedBroadcastState.broadcast === true ? true : false 
+
+      // const parentState = flattenStates.find(state => state.id === clickedState.regionId)
+      // const statesFiltered = broadcastStates.filter(obj => parentState["states"].find(obj2 => obj.id === obj2.id)) 
+      
+      // if (clickedBroadcastState.broadcast === isChecked) {
+      //   if (statesFiltered.every(state => state.broadcast === isChecked)) dispatch(actions.change(`forms.broadcastRules.region[${clickedState.regionId}].broadcast`, isChecked))
+      // }
+    }
   }
 
 
@@ -327,7 +387,7 @@ class AddBroadcast extends Component {
 
   render() {
     const { removePopup, dispatch, broadcastData, broadcastIsFetching } = this.props;
-    const { isList, categoryFilter, regionsExpanded } = this.state;
+    const { isList, categoryFilter, regionsExpanded, statesExpanded } = this.state;
     if (broadcastIsFetching) return <Spinner />
     console.log(this.props, this.state)
     const categoryFilterOptions = [
@@ -417,6 +477,7 @@ class AddBroadcast extends Component {
               isList={isList}
               handleExpanded={this.handleExpanded}
               regionsExpanded={regionsExpanded}
+              statesExpanded={statesExpanded}
               handleRuleClick={this.handleRuleClick}
             />
           {/* {!searchedItem && regions.map(i => <RegionBroadcastField
