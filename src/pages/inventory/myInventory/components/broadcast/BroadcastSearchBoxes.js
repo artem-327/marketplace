@@ -13,7 +13,7 @@ export const RegionsSearchBox = ({ regions, fetchRegions,isFetching, dispatch })
         saveObj={obj => {return {type: "region", ...obj}}}
         validators={{ required }}
         dispatch={dispatch}
-        model="forms.broadcastRules.search"
+        model="forms.brcRules.search"
     />
 );
 
@@ -28,7 +28,7 @@ export const StatesSearchBox = ({ states, fetchStates, isFetching, dispatch }) =
         saveObj={obj => {return {type: "state", ...obj}}}
         validators={{ required }}
         dispatch={dispatch}
-        model="forms.broadcastRules.search"
+        model="forms.brcRules.search"
     />
 );
 
@@ -43,7 +43,7 @@ export const CompaniesSearchBox = ({ companies, fetchCompanies, isFetching, disp
         saveObj={obj => {return {type: "company", ...obj}}}
         validators={{ required }}
         dispatch={dispatch}
-        model="forms.broadcastRules.search"
+        model="forms.brcRules.search"
     />
 );
 
@@ -54,7 +54,7 @@ export const DefaultSearchBox = () => (
         limit={20}
         label="Please Select the Category Filter First"
         placeholder="Search"
-        model="forms.broadcastRules.search"
+        model="forms.brcRules.search"
     />
 );
 

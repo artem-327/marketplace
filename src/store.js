@@ -19,7 +19,7 @@ import productOffers, {initialState as addProductsInit} from './modules/productO
 import popup from './modules/popup';
 import filter, {initialState as filterInit} from './modules/filter';
 import packageTypes from './modules/packageTypes';
-import broadcastRules, {initialState as broadcastInit} from "./modules/broadcast";
+import brcRules, {initialState as broadcastInit} from "./modules/broadcast";
 import cart, {initialState as cartInit} from "./modules/cart";
 import merchants, {initialState as merchantsInit} from "./modules/merchants";
 import products, {initialState as productsInit} from './modules/products';
@@ -38,7 +38,7 @@ import broadcastSaga from "./saga/broadcast";
 
 const reducer = combineReducers({
     identity,
-    broadcastRules,
+    brcRules,
     companies,
     locale,
     users,
@@ -54,7 +54,7 @@ const reducer = combineReducers({
     dataTables,
     forms: combineForms({
         filter: filterInit.data,
-        broadcastRules: broadcastInit.broadcastData,
+        brcRules: broadcastInit.broadcastData,
         addProductOffer: addProductsInit.addProductOffer,
         productMapping: productsInit.productsMapping,
         productOffering: productsInit.productOffering,
