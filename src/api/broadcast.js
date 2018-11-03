@@ -75,6 +75,34 @@ const fakeBroadcast = {
                 ]
               }
             ]
+          }, {
+            type: "country", 
+            id: 3, 
+            name: "Slovakia", 
+            broadcast: 0, 
+            anonymous: 2, 
+            priceAddition: 150, 
+            priceMultiplier: null,
+            companies: [{
+              type: "company", 
+              id: 2, 
+              name: "Company B", 
+              broadcast: 2, 
+              anonymous: 2, 
+              priceAddition: 150, 
+              priceMultiplier: null,
+              offices: [
+                {
+                  type: "office", 
+                  id: 8, 
+                  name: "Office BA", 
+                  broadcast: 2, 
+                  anonymous: 2, 
+                  priceAddition: 150, 
+                  priceMultiplier: null,
+                }
+              ]
+            }]
           }
         ]
       },
