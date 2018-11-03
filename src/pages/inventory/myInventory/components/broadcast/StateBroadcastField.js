@@ -1,10 +1,11 @@
 import React from 'react';
 import BroadcastField from "./BroadcastField";
 
-const StateBroadcastField = ({dispatch, stateData, statesExpanded, handleExpanded, handleRuleClick, isList}) => {
+const StateBroadcastField = ({dispatch, storedState, stateData, statesExpanded, handleExpanded, handleRuleClick, isList}) => {
   const offices = stateData.companies.map(i => i.offices)
   const flattenOffices = offices.flat()
   const isExpanded = statesExpanded.includes(stateData.id)
+  const partly = storedState && storedState.broadcastPartly
   return (
     <React.Fragment>
       <BroadcastField
@@ -13,6 +14,7 @@ const StateBroadcastField = ({dispatch, stateData, statesExpanded, handleExpande
         dispatch={dispatch}
         isList={isList}
         id={stateData.id}
+        partly={partly}
         isExpanded={isExpanded}
         handleExpanded={handleExpanded}
         hasChildren={flattenOffices.length > 0}

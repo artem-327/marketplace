@@ -2,8 +2,9 @@ import React from 'react';
 import BroadcastField from "./BroadcastField";
 import StateBroadcastField from "./StateBroadcastField";
 
-const RegionBroadcastField = ({ regionsExpanded, statesExpanded, handleExpanded, handleRuleClick, dispatch, regionsData, isList}) => {
+const RegionBroadcastField = ({ regionsExpanded, storedStates, statesExpanded, storedRegion, handleExpanded, handleRuleClick, dispatch, regionsData, isList}) => {
   const isExpanded = regionsExpanded.includes(regionsData.id)
+  const partly = storedRegion && storedRegion.broadcastPartly
   return (
     <React.Fragment>
       <BroadcastField
@@ -13,6 +14,7 @@ const RegionBroadcastField = ({ regionsExpanded, statesExpanded, handleExpanded,
         isList={isList}
         id={regionsData.id}
         isExpanded={isExpanded}
+        partly={partly}
         handleExpanded={handleExpanded}
         hasChildren={regionsData.states.length > 0}
         handleRuleClick={handleRuleClick}
@@ -21,6 +23,7 @@ const RegionBroadcastField = ({ regionsExpanded, statesExpanded, handleExpanded,
         return <StateBroadcastField
         type="state"
         statesExpanded={statesExpanded}
+        storedState={storedStates && storedStates.find(j => j.id === i.id)}
         handleExpanded={handleExpanded}
         stateData={i}
         dispatch={dispatch}

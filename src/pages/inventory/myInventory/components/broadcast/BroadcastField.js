@@ -7,7 +7,7 @@ import SwitcherRedux from "../../../../../components/Switcher/SwitcherRedux";
 import { isNumber } from "../../../../../utils/validation";
 
 
-const BroadcastField = ({ name, id, type, isList, handleExpanded, handleRuleClick, isExpanded, hasChildren }) => {
+const BroadcastField = ({ partly, name, id, type, isList, handleExpanded, handleRuleClick, isExpanded, hasChildren }) => {
     return (
       <div className={`broadcast-field ${type}`}>
         <div className="field-name" name={type} id={id} onClick={e => handleExpanded(e)}>
@@ -21,7 +21,8 @@ const BroadcastField = ({ name, id, type, isList, handleExpanded, handleRuleClic
             <SwitcherRedux
               model={`.${type}[${id}].broadcast`}
               id={id}
-              isrounded="yes"
+              isrounded
+              partly={partly}
               onClick={handleRuleClick}
             />
             <CheckboxBroadcastRedux
