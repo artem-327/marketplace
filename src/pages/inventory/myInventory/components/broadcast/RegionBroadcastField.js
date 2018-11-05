@@ -18,10 +18,10 @@ const RegionBroadcastField = ({ regionsExpanded, storedStates, filterInput, stat
         isClientList={isClientList}
         id={regionData.id}
         isExpanded={isExpanded}
-        partlyBrc={partlyBrc}
         handleExpanded={handleExpanded}
         hasChildren={regionData.states.length > 0}
         handleRuleClick={handleRuleClick}
+        partlyBrc={partlyBrc}
         partlyAnonym={partlyAnonym}
       />
       {isExpanded && showedStates.map(i => {

@@ -16,6 +16,7 @@ const RootBroadcastField = ({
   isClientList, 
   storedRoot,
   storedStates,
+  storedCompanies,
   filterInput,
   categoryFilter
 }) => {
@@ -61,7 +62,7 @@ const RootBroadcastField = ({
         handleRuleClick={handleRuleClick}
       />
       })}
-      {categoryFilter==="allcompanies" && flattenCompanies.map(i => {
+      {categoryFilter==="allcompanies" && filteredCompanies.map(i => {
         return <CompanyBroadcastField
         type="comapny"
         dispatch={dispatch}
@@ -73,6 +74,7 @@ const RootBroadcastField = ({
         handleExpanded={handleExpanded}
         handleRuleClick={handleRuleClick}
         flattenOffices={flattenOffices}
+        storedCompany={storedCompanies && storedCompanies.find(j => j.id === i.id)}
       />
       })}
     </>

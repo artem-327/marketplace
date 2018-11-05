@@ -35,8 +35,10 @@ class AddBroadcast extends Component {
     }).then(() => {
       const root = this.props.broadcastData.root
       if(root.anonymous === 1 || root.anonymous === 2) dispatch(actions.change(`forms.brcRules.root[${root.id}].anonymous`, true))
-      if(root.broadcast === 2) dispatch(actions.change(`forms.brcRules.root[${root.id}].broadcastPartly`, true))
+      if(root.anonymous === 2) dispatch(actions.change(`forms.brcRules.root[${root.id}].anonymousPartly`, true))
       if(root.broadcast === 1 || root.broadcast === 2) dispatch(actions.change(`forms.brcRules.root[${root.id}].broadcast`, true))
+      if(root.broadcast === 2) dispatch(actions.change(`forms.brcRules.root[${root.id}].broadcastPartly`, true))
+
       if(root.priceAddition) {
         dispatch(actions.change(`forms.brcRules.root[${root.id}].priceValue`, root.priceAddition))
         dispatch(actions.change(`forms.brcRules.root[${root.id}].priceUnit`, "$"))
@@ -49,7 +51,9 @@ class AddBroadcast extends Component {
       const regions = root.regions
       regions.forEach(region => {
         if(region.anonymous === 1 || region.anonymous === 2) dispatch(actions.change(`forms.brcRules.region[${region.id}].anonymous`, true))
+        if(root.anonymous === 2) dispatch(actions.change(`forms.brcRules.region[${region.id}].anonymousPartly`, true))
         if(region.broadcast === 1 || region.broadcast === 2) dispatch(actions.change(`forms.brcRules.region[${region.id}].broadcast`, true))
+        if(root.broadcast === 2) dispatch(actions.change(`forms.brcRules.region[${region.id}].broadcastPartly`, true))
         if(region.priceAddition) {
           dispatch(actions.change(`forms.brcRules.region[${region.id}].priceValue`, region.priceAddition))
           dispatch(actions.change(`forms.brcRules.region[${region.id}].priceUnit`, "$"))
@@ -71,7 +75,9 @@ class AddBroadcast extends Component {
       const flattenStates = states.flat()
       flattenStates.forEach(state => {
         if(state.anonymous === 1 || state.anonymous === 2) dispatch(actions.change(`forms.brcRules.state[${state.id}].anonymous`, true))
+        if(root.anonymous === 2) dispatch(actions.change(`forms.brcRules.state[${state.id}].anonymousPartly`, true))
         if(state.broadcast === 1 || state.broadcast === 2) dispatch(actions.change(`forms.brcRules.state[${state.id}].broadcast`, true))
+        if(root.broadcast === 2) dispatch(actions.change(`forms.brcRules.state[${state.id}].broadcastPartly`, true))
         if(state.priceAddition) {
           dispatch(actions.change(`forms.brcRules.state[${state.id}].priceValue`, state.priceAddition))
           dispatch(actions.change(`forms.brcRules.state[${state.id}].priceUnit`, "$"))
@@ -94,7 +100,9 @@ class AddBroadcast extends Component {
      const flattenCompanies = companies.flat()
      flattenCompanies.forEach(company => {
        if(company.anonymous === 1 || company.anonymous === 2) dispatch(actions.change(`forms.brcRules.company[${company.id}].anonymous`, true))
+       if(root.anonymous === 2) dispatch(actions.change(`forms.brcRules.company[${company.id}].anonymousPartly`, true))
        if(company.broadcast === 1 || company.broadcast === 2) dispatch(actions.change(`forms.brcRules.company[${company.id}].broadcast`, true))
+       if(root.broadcast === 2) dispatch(actions.change(`forms.brcRules.company[${company.id}].broadcastPartly`, true))
        if(company.priceAddition) {
          dispatch(actions.change(`forms.brcRules.company[${company.id}].priceValue`, company.priceAddition))
          dispatch(actions.change(`forms.brcRules.company[${company.id}].priceUnit`, "$"))
@@ -117,7 +125,9 @@ class AddBroadcast extends Component {
       const flattenOffices = offices.flat()
       flattenOffices.forEach(office => {
         if(office.anonymous === 1 || office.anonymous === 2) dispatch(actions.change(`forms.brcRules.office[${office.id}].anonymous`, true))
+        if(root.anonymous === 2) dispatch(actions.change(`forms.brcRules.office[${office.id}].anonymousPartly`, true))
         if(office.broadcast === 1 || office.broadcast === 2) dispatch(actions.change(`forms.brcRules.office[${office.id}].broadcast`, true))
+        if(root.broadcast === 2) dispatch(actions.change(`forms.brcRules.office[${office.id}].broadcastPartly`, true))
         if(office.priceAddition) {
           dispatch(actions.change(`forms.brcRules.office[${office.id}].priceValue`, office.priceAddition))
           dispatch(actions.change(`forms.brcRules.office[${office.id}].priceUnit`, "$"))
@@ -195,6 +205,8 @@ class AddBroadcast extends Component {
     const regions = broadcastData.root.regions
     const states = regions.map(i => i.states)
     const flattenStates = states.flat()
+    const companies = flattenStates.map(state => state.companies)
+    const flattenCompanies = companies.flat()
     const offices = flattenStates.map(state => state.companies.map(company => company.offices))
     const flattenOffices = offices.flat(2)
     const rules = ["anonymous", "broadcast"]
@@ -245,16 +257,17 @@ class AddBroadcast extends Component {
     if (clickedModel.includes("region")) {
       const clickedRegion = regions.find(region => region.id === clickedModelId)
       const clickedBroadcastRegion = broadcastRegions.find(region => region.id === clickedModelId)
-
+      const clickedCompanies = flattenCompanies.filter(company => company.regionId === clickedModelId)
+console.log(clickedCompanies)
       rules.forEach(rule => {
         if (clickedModel.includes(rule)) {
           const isChecked = clickedBroadcastRegion[rule] === true ? true : false 
+          dispatch(actions.change(`forms.brcRules.region[${clickedModelId}].${rule}Partly`, !isChecked))
           if (broadcastRegions.some(region => region[rule] === true)) dispatch(actions.change(`forms.brcRules.root[1].${rule}`, true))
           if (broadcastRegions.every(region => region[rule] === false)) dispatch(actions.change(`forms.brcRules.root[1].${rule}`, false))
-
-          dispatch(actions.change(`forms.brcRules.region[${clickedModelId}].${rule}Partly`, !isChecked))
+          
           if (broadcastRegions.some(region => region[rule] !== true))  dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, true))
-          if (broadcastRegions.every(region => region[rule] === true))  dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, false))
+          if (broadcastRegions.every(region => region[`${rule}Partly`] === false)) dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, false))
           
           if (clickedBroadcastRegion[rule] === isChecked && clickedRegion.states) {
             clickedRegion.states.forEach(state => {
@@ -264,8 +277,12 @@ class AddBroadcast extends Component {
                 dispatch(actions.change(`forms.brcRules.company[${company.id}].${rule}`, isChecked))
                 dispatch(actions.change(`forms.brcRules.company[${company.id}].${rule}Partly`, !isChecked))
                 if (company.offices) company.offices.forEach(office => {
-                  dispatch(actions.change(`forms.brcRules.office[${office.id}].${rule}`, isChecked))
-                  dispatch(actions.change(`forms.brcRules.office[${office.id}].${rule}Partly`, !isChecked))
+                  const allOffices = clickedCompanies.map(i => i.offices).flat()
+                  allOffices.forEach(office => {
+                    dispatch(actions.change(`forms.brcRules.office[${office.id}].${rule}`, isChecked))
+                    dispatch(actions.change(`forms.brcRules.office[${office.id}].${rule}Partly`, !isChecked))
+                  })
+
                 })
               })
             })
@@ -308,9 +325,7 @@ class AddBroadcast extends Component {
       const clickedState = flattenStates.find(state => state.id === clickedModelId)
       const clickedBroadcastState = broadcastStates.find(state => state.id === clickedModelId)
       const parentRegion = regions.find(region => region.id === clickedState.regionId)
-      const statesFiltered = broadcastStates.filter(obj => parentRegion["states"].find(obj2 => obj.id === obj2.id)) //from broadcastStates filter only those that are also in the parentRegion
-
-
+      const statesFiltered = broadcastStates.filter(obj => parentRegion["states"].find(obj2 => obj.id === obj2.id)) //from broadcastStates filter only those states that are also in the parentRegion
 
       rules.forEach(rule => {
         if (clickedModel.includes(rule)) {
@@ -334,6 +349,7 @@ class AddBroadcast extends Component {
 
           if (clickedBroadcastState[rule] === isChecked && clickedState.companies) {
             clickedState.companies.forEach(company => {
+              dispatch(actions.change(`forms.brcRules.company[${company.id}].${rule}`, isChecked)) 
               if (company.offices) company.offices.forEach(office => {
                 dispatch(actions.change(`forms.brcRules.office[${office.id}].${rule}`, isChecked))
               })
@@ -370,11 +386,113 @@ class AddBroadcast extends Component {
 
         if (someStatesValuesNotEqual || someRegionsValuesNotEqual ) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, ""));
         if (someStatesValuesNotEqual) dispatch(actions.change(`forms.brcRules.region[${clickedState.regionId}].priceValue`, ""));
-        clickedState.companies.forEach(comapny => {
-          dispatch(actions.change(`forms.brcRules.comapny[${comapny.id}].priceValue`, (clickedBroadcastState.priceValue)))
-          if (comapny.offices) comapny.offices.forEach(office => {
+        clickedState.companies.forEach(company => {
+          dispatch(actions.change(`forms.brcRules.company[${company.id}].priceValue`, (clickedBroadcastState.priceValue)))
+          if (company.offices) company.offices.forEach(office => {
             dispatch(actions.change(`forms.brcRules.office[${office.id}].priceValue`, (clickedBroadcastState.priceValue)))
           })
+        })
+      }
+    }
+    if (clickedModel.includes("company")) {
+      const clickedCompany = flattenCompanies.find(company => company.id === clickedModelId)
+      const clickedCompanies = flattenCompanies.filter(company => company.id === clickedModelId) //filter all companies with id === clickedModelId (there can be more than one!)
+      const clickedBroadcastCompany = broadcastCompanies.find(company => company.id === clickedModelId)
+      const parentRegion = regions.find(region => region.id === clickedCompany.regionId)
+      const statesFiltered = broadcastCompanies.filter(obj => parentRegion["states"].find(obj2 => obj.id === obj2.id)) //from broadcastCompanies filter only those that are also in the parentRegion
+      const parentState = flattenStates.find(state => state.id === clickedCompany.stateId)
+
+      const officesInThisCompany = flattenOffices.filter(office => office.companyId === clickedModelId)
+      const parentStatesIds = officesInThisCompany.map(office => office.stateId)
+      const parentStates = flattenStates.filter(state => parentStatesIds.includes(state.id))
+      const parentRegionsIds = officesInThisCompany.map(i => i.regionId)
+      const parentRegions = regions.filter(region => parentRegionsIds.includes(region.id))
+      const companiesFiltered = broadcastCompanies.filter(obj => parentState["companies"].find(obj2 => obj.id === obj2.id)) //from broadcastCompanies filter only those that are also in the parentState
+debugger
+
+      rules.forEach(rule => {
+        if (clickedModel.includes(rule)) {
+          const isChecked = clickedBroadcastCompany[rule] === true ? true : false 
+          dispatch(actions.change(`forms.brcRules.company[${clickedModelId}].${rule}Partly`, !isChecked))
+
+          if (companiesFiltered.some(company => company[rule] === true)) {
+            parentStates.forEach(state => dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}`, true)))
+            parentRegions.forEach(region => dispatch(actions.change(`forms.brcRules.region[${region.id}].${rule}`, true)))
+            dispatch(actions.change(`forms.brcRules.root[1].${rule}`, true))
+          }
+
+          if (companiesFiltered.every(company => company[rule] === false)) {
+            parentStates.forEach(state => dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}`, false)))
+          }
+          if (companiesFiltered.every(company => company[rule] === false) && statesFiltered.every(i => i[rule] === false)) {
+            parentRegions.forEach(region => dispatch(actions.change(`forms.brcRules.region[${region.id}].${rule}`, false)))
+            debugger
+          }
+          if (companiesFiltered.every(company => company[rule] === false) && statesFiltered.every(i => i[rule] === false) && broadcastRegions.every(i => i[`${rule}`] === false)) dispatch(actions.change(`forms.brcRules.root[1].${rule}`, false))
+
+          if (companiesFiltered.some(company => company[rule] === false)) {
+            parentStates.forEach(state => dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}Partly`, true)))
+            dispatch(actions.change(`forms.brcRules.region[${clickedCompany.regionId}].${rule}Partly`, true))
+            dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, true))
+          }
+
+          if (companiesFiltered.every(company => company[rule] === true)) {
+            parentStates.forEach(state => dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}Partly`, false)))
+          }
+          if (companiesFiltered.every(company => company[rule] === true) && statesFiltered.every(state => state[`${rule}Partly`] === false)) {
+            parentRegions.forEach(region => dispatch(actions.change(`forms.brcRules.region[${region.id}].${rule}Partly`, false)))
+          }
+          if (companiesFiltered.every(company => company[rule] === true) && statesFiltered.every(state => state[`${rule}Partly`] === false) && broadcastRegions.every(region => region[`${rule}Partly`] === false)) dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, false))
+
+          if (clickedBroadcastCompany[rule] === isChecked && clickedCompany.offices) {
+            const allOffices = clickedCompanies.map(i => i.offices).flat()
+            allOffices.forEach(office => {
+                dispatch(actions.change(`forms.brcRules.office[${office.id}].${rule}`, isChecked))
+            })
+          };
+        }
+      })
+
+      if (clickedModel.includes("priceUnit")) {
+        units.forEach(unit => {
+          if (companiesFiltered.every(i => i.priceUnit === unit) && statesFiltered.every(i => i.priceUnit === unit) && broadcastRegions.every(i => i.priceUnit === unit)) dispatch(actions.change(`forms.brcRules.root[1].priceUnit`, unit))
+          if (companiesFiltered.every(i => i.priceUnit === unit) && statesFiltered.every(i => i.priceUnit === unit)) dispatch(actions.change(`forms.brcRules.region[${clickedCompany.regionId}].priceUnit`, unit))
+          if (companiesFiltered.every(i => i.priceUnit === unit)) dispatch(actions.change(`forms.brcRules.state[${clickedCompany.stateId}].priceUnit`, unit))
+          if (clickedBroadcastCompany && clickedBroadcastCompany.priceUnit === unit) {
+            const allOffices = clickedCompanies.map(i => i.offices).flat()
+            allOffices.forEach(office => {
+                dispatch(actions.change(`forms.brcRules.office[${office.id}].priceUnit`, unit))
+            })
+          };
+        })
+        if (!companiesFiltered.every(i => i.priceUnit === "$") && !companiesFiltered.every(i => i.priceUnit === "%")) dispatch(actions.change(`forms.brcRules.state[${clickedCompany.stateId}].priceUnit`, ""))
+        if ((!companiesFiltered.every(i => i.priceUnit === "$") && !companiesFiltered.every(i => i.priceUnit === "%")) 
+          || (!statesFiltered.every(i => i.priceUnit === "$") && !statesFiltered.every(i => i.priceUnit === "%"))
+        ) dispatch(actions.change(`forms.brcRules.region[${clickedCompany.regionId}].priceUnit`, ""))
+        if ((!companiesFiltered.every(i => i.priceUnit === "$") && !companiesFiltered.every(i => i.priceUnit === "%"))
+          || (!statesFiltered.every(i => i.priceUnit === "$") && !statesFiltered.every(i => i.priceUnit === "%")) 
+          || (!broadcastRegions.every(i => i.priceUnit === "$") && !broadcastRegions.every(i => i.priceUnit === "%"))
+          ) dispatch(actions.change(`forms.brcRules.root[1].priceUnit`, ""))
+      }
+
+      const someCompaniesValuesNotEqual = companiesFiltered.some(i => i.priceValue.toString() !== companiesFiltered[0].priceValue)
+      const someStatesValuesNotEqual = statesFiltered.some(i => i.priceValue.toString() !== statesFiltered[0].priceValue)
+      const someRegionsValuesNotEqual = broadcastRegions.some(i => i.priceValue.toString() !== broadcastRegions[0].priceValue)
+      const everyCompaniesValuesEqual = companiesFiltered.every(i => i.priceValue.toString() === companiesFiltered[0].priceValue)
+      const everyStatesValuesEqual = statesFiltered.every(i => i.priceValue.toString() === statesFiltered[0].priceValue)
+      const everyRegionsValuesEqual = broadcastRegions.every(i => i.priceValue.toString() === broadcastRegions[0].priceValue)
+
+      if (clickedModel.includes("priceValue")) {
+        if (everyCompaniesValuesEqual && everyStatesValuesEqual && everyRegionsValuesEqual) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, (clickedBroadcastCompany.priceValue)));
+        if (everyCompaniesValuesEqual && everyStatesValuesEqual) dispatch(actions.change(`forms.brcRules.region[${clickedCompany.regionId}].priceValue`, (clickedBroadcastCompany.priceValue)));
+        if (everyCompaniesValuesEqual) dispatch(actions.change(`forms.brcRules.state[${clickedCompany.stateId}].priceValue`, (clickedBroadcastCompany.priceValue)));
+
+        if (someCompaniesValuesNotEqual || someStatesValuesNotEqual || someRegionsValuesNotEqual ) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, ""));
+        if (someCompaniesValuesNotEqual || someStatesValuesNotEqual) dispatch(actions.change(`forms.brcRules.region[${clickedCompany.regionId}].priceValue`, ""));
+        if (someCompaniesValuesNotEqual) dispatch(actions.change(`forms.brcRules.state[${clickedCompany.stateId}].priceValue`, ""));
+        const allOffices = clickedCompanies.map(i => i.offices).flat()
+        allOffices.forEach(office => {
+            dispatch(actions.change(`forms.brcRules.office[${office.id}].priceValue`, (clickedBroadcastCompany.priceValue)))
         })
       }
     }
@@ -382,12 +500,19 @@ class AddBroadcast extends Component {
     if (clickedModel.includes("office")) {
       const clickedOffice = flattenOffices.find(office => office.id === clickedModelId)
       const clickedBroadcastOffice = broadcastOffices.find(office => office.id === clickedModelId)
+
+      const parentCompany = flattenCompanies.filter(company => company.id === clickedOffice.companyId) 
+      //use filter, not find! Because there can be more than one parent company! (because offices from different states can be from same company)
+      const parentCompanyOffices = (parentCompany.map(i => i.offices)).flat()
+      const officesCompanyFiltered = broadcastOffices.filter(obj => parentCompanyOffices.flat().find(obj2 => obj.id === obj2.id)) 
+
       const parentState = flattenStates.find(state => state.id === clickedOffice.stateId)
       const parentStatesOffices = parentState.companies.map(i => i.offices)
       const officesFiltered = broadcastOffices.filter(obj => parentStatesOffices.flat().find(obj2 => obj.id === obj2.id)) 
 
       const parentRegion = regions.find(region => region.id === clickedOffice.regionId)
       const statesFiltered = broadcastStates.filter(obj => parentRegion["states"].find(obj2 => obj.id === obj2.id))
+
       rules.forEach(rule => {
         if (clickedModel.includes(rule)) {
           if (officesFiltered.some(office => office[rule] === true)) {
@@ -395,7 +520,9 @@ class AddBroadcast extends Component {
             dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].${rule}`, true))
             dispatch(actions.change(`forms.brcRules.root[1].${rule}`, true))
           }
-          
+          if (officesCompanyFiltered.some(office => office[rule] === true)) dispatch(actions.change(`forms.brcRules.company[${clickedOffice.companyId}].${rule}`, true))
+
+          if (officesCompanyFiltered.every(office => office[rule] === false)) dispatch(actions.change(`forms.brcRules.company[${clickedOffice.companyId}].${rule}`, false))
           if (officesFiltered.every(office => office[rule] === false)) dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].${rule}`, false))
           if (officesFiltered.every(office => office[rule] === false) && statesFiltered.every(state => state[rule] === false)) dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].${rule}`, false))
           if (officesFiltered.every(office => office[rule] === false) && statesFiltered.every(state => state[rule] === false) && broadcastRegions.every(region => region[`${rule}`] === false)) {
@@ -407,7 +534,9 @@ class AddBroadcast extends Component {
             dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].${rule}Partly`, true))
             dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, true))
           }
-          
+          if (officesCompanyFiltered.some(office => office[rule] === false)) dispatch(actions.change(`forms.brcRules.company[${clickedOffice.companyId}].${rule}Partly`, true))
+
+          if (officesCompanyFiltered.every(office => office[rule] === true)) dispatch(actions.change(`forms.brcRules.company[${clickedOffice.companyId}].${rule}Partly`, false))
           if (officesFiltered.every(office => office[rule] === true)) dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].${rule}Partly`, false))
           if (officesFiltered.every(office => office[rule] === true) && statesFiltered.every(state => state[`${rule}Partly`] === false)) dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].${rule}Partly`, false))
           if (officesFiltered.every(office => office[rule] === true) && statesFiltered.every(state => state[`${rule}Partly`] === false) && broadcastRegions.every(region => region[`${rule}Partly`] === false)) {
@@ -418,6 +547,7 @@ class AddBroadcast extends Component {
 
       if (clickedModel.includes("priceUnit")) {
         units.forEach(unit => {
+          const officesCompanyUnitsEqual = officesCompanyFiltered.every(i => i.priceUnit === unit)
           const officesUnitsEqual = officesFiltered.every(i => i.priceUnit === unit)
           const statesUnitsEqual = statesFiltered.every(i => i.priceUnit === unit)
           const regionsUnitsEqual = broadcastRegions.every(i => i.priceUnit === unit)
@@ -425,19 +555,22 @@ class AddBroadcast extends Component {
           if (officesUnitsEqual && statesUnitsEqual && regionsUnitsEqual) dispatch(actions.change(`forms.brcRules.root[1].priceUnit`, unit))
           if (officesUnitsEqual && statesUnitsEqual) dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].priceUnit`, unit))
           if (officesUnitsEqual) dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].priceUnit`, unit))
+          if (officesCompanyUnitsEqual) dispatch(actions.change(`forms.brcRules.company[${clickedOffice.companyId}].priceUnit`, unit))
         })
-        if ((!officesFiltered.every(i => i.priceUnit === "$") && !officesFiltered.every(i => i.priceUnit === "%")) 
-              || (!statesFiltered.every(i => i.priceUnit === "$") && !statesFiltered.every(i => i.priceUnit === "%"))
-              || (!broadcastRegions.every(i => i.priceUnit === "$") && !broadcastRegions.every(i => i.priceUnit === "%"))) {
-                dispatch(actions.change(`forms.brcRules.root[1].priceUnit`, ""))
-        }
         if ((!officesFiltered.every(i => i.priceUnit === "$") && !officesFiltered.every(i => i.priceUnit === "%")) 
               || !statesFiltered.every(i => i.priceUnit === "$") && !statesFiltered.every(i => i.priceUnit === "%")) {
                 dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].priceUnit`, ""))
         }
-        if (!officesFiltered.every(i => i.priceUnit === "$") && !officesFiltered.every(i => i.priceUnit === "%"))
-        {
+        if ((!officesFiltered.every(i => i.priceUnit === "$") && !officesFiltered.every(i => i.priceUnit === "%")) 
+          || (!statesFiltered.every(i => i.priceUnit === "$") && !statesFiltered.every(i => i.priceUnit === "%"))
+          || (!broadcastRegions.every(i => i.priceUnit === "$") && !broadcastRegions.every(i => i.priceUnit === "%"))) {
+            dispatch(actions.change(`forms.brcRules.root[1].priceUnit`, ""))
+        }
+        if (!officesFiltered.every(i => i.priceUnit === "$") && !officesFiltered.every(i => i.priceUnit === "%")) {
           dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].priceUnit`, ""))
+        }
+        if (!officesCompanyFiltered.every(i => i.priceUnit === "$") && !officesCompanyFiltered.every(i => i.priceUnit === "%")) {
+          dispatch(actions.change(`forms.brcRules.company[${clickedOffice.companyId}].priceUnit`, ""))
         }
       }
 
@@ -452,11 +585,12 @@ class AddBroadcast extends Component {
           dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].priceValue`, (clickedBroadcastOffice.priceValue)));
         }
         if (officesFiltered.every(i => i.priceValue.toString() === officesFiltered[0].priceValue)) dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].priceValue`, (clickedBroadcastOffice.priceValue)));
+        if (officesFiltered.every(i => i.priceValue.toString() === officesFiltered[0].priceValue)) dispatch(actions.change(`forms.brcRules.company[${clickedOffice.companyId}].priceValue`, (clickedBroadcastOffice.priceValue)));
 
         if (officesValuesEqual || statesValuesEqual || regionsValuesEqual) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, ""));
         if (officesValuesEqual || statesValuesEqual) dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].priceValue`, ""));
         if (officesValuesEqual) dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].priceValue`, ""));
-
+        if (officesValuesEqual) dispatch(actions.change(`forms.brcRules.company[${clickedOffice.companyId}].priceValue`, ""));
       }
     }
   }
@@ -505,7 +639,7 @@ class AddBroadcast extends Component {
   render() {
     const { 
       removePopup, dispatch, broadcastData, broadcastIsFetching,
-      storedRoot, storedRegions, storedStates, storedOffices
+      storedRoot, storedRegions, storedStates, storedOffices, storedCompanies
     } = this.props;
     const { isClientList, categoryFilter, regionsExpanded, companiesExpanded, statesExpanded, filterInput } = this.state;
     if (broadcastIsFetching || !storedOffices) return <Spinner />
@@ -619,6 +753,7 @@ class AddBroadcast extends Component {
               storedRoot={storedRoot}
               storedRegions={this.convertObjectToArray(storedRegions)}
               storedStates={this.convertObjectToArray(storedStates)}
+              storedCompanies={this.convertObjectToArray(storedCompanies)}
               filterInput={filterInput}
             />
           {/* {!searchedItem && regions.map(i => <RegionBroadcastField

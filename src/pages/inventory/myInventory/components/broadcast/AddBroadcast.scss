@@ -87,6 +87,11 @@
                     margin: 0;
                 }
             }
+            .field-name {
+              height: 60px;
+              display: flex;
+              align-items: center;
+            }
             &.root {
                 background-color: lighten($blue-color, 30%);
                 .field-name {
@@ -110,11 +115,15 @@
                 padding-left: 2em;
               }
             }
-            &.company > .field-name {
-                padding-left: 3em;
+            &.company {
+              background-color: $light-60-grey-color;
+              .field-name {
+                cursor: pointer;
+                padding-left: 2em;
+              }
             }
             &.office > .field-name {
-                padding-left: 4em;
+                padding-left: 3em;
             }
         }
         i.fas {

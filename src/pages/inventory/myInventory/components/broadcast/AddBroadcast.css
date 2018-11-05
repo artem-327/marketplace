@@ -66,6 +66,10 @@
           padding-left: 30px; }
         .add-broadcast .broadcast-main .broadcast-field .price-units p {
           margin: 0; }
+      .add-broadcast .broadcast-main .broadcast-field .field-name {
+        height: 60px;
+        display: flex;
+        align-items: center; }
       .add-broadcast .broadcast-main .broadcast-field.root {
         background-color: #b2daf0; }
         .add-broadcast .broadcast-main .broadcast-field.root .field-name {
@@ -83,10 +87,13 @@
         .add-broadcast .broadcast-main .broadcast-field.state .field-name {
           cursor: pointer;
           padding-left: 2em; }
-      .add-broadcast .broadcast-main .broadcast-field.company > .field-name {
-        padding-left: 3em; }
+      .add-broadcast .broadcast-main .broadcast-field.company {
+        background-color: #f3f3f4; }
+        .add-broadcast .broadcast-main .broadcast-field.company .field-name {
+          cursor: pointer;
+          padding-left: 2em; }
       .add-broadcast .broadcast-main .broadcast-field.office > .field-name {
-        padding-left: 4em; }
+        padding-left: 3em; }
     .add-broadcast .broadcast-main i.fas {
       margin-right: 5px; }
   .add-broadcast .broadcast-filter {
