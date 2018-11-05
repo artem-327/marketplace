@@ -2,6 +2,7 @@ import React from 'react';
 import BroadcastField from "./BroadcastField";
 import RegionBroadcastField from "./RegionBroadcastField";
 import CompanyBroadcastField from "./CompanyBroadcastField";
+import {filterByUniqueProperty} from "../../../../../utils/functions";
 
 const RootBroadcastField = ({
   rootData, 
@@ -10,6 +11,7 @@ const RootBroadcastField = ({
   handleRuleClick, 
   statesExpanded, 
   regionsExpanded, 
+  companiesExpanded,
   dispatch, 
   isClientList, 
   storedRoot,
@@ -23,6 +25,9 @@ const RootBroadcastField = ({
   const statessData =  rootData.regions.map(i => i.states)
   const companiesData =  statessData.flat().map(i => i.companies)
   const flattenCompanies = companiesData.flat()
+  const officesData =  flattenCompanies.map(i => i.offices)
+  const flattenOffices = officesData.flat()
+  const filteredCompanies = filterByUniqueProperty(flattenCompanies, "id")
 
   return (
     <>
@@ -61,11 +66,13 @@ const RootBroadcastField = ({
         type="comapny"
         dispatch={dispatch}
         isClientList={isClientList}
-        key={i.id}
+        key={i.id + "S" + i.stateId}
         companyData={i}
         filterInput={filterInput}
+        companiesExpanded={companiesExpanded}
         handleExpanded={handleExpanded}
         handleRuleClick={handleRuleClick}
+        flattenOffices={flattenOffices}
       />
       })}
     </>

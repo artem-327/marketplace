@@ -1,29 +1,28 @@
 import React from 'react';
 import BroadcastField from "./BroadcastField";
 
-const CompanyBroadcastField = ({dispatch, storedCompany, companyData, companiesExpanded = [], handleExpanded, handleRuleClick, isClientList}) => {
-  const offices = companyData.offices.map(i => i.offices)
-  const flattenOffices = offices.flat()
+const CompanyBroadcastField = ({dispatch, storedCompany, companyData, flattenOffices, companiesExpanded, handleExpanded, handleRuleClick, isClientList}) => {
+
   const isExpanded = companiesExpanded.includes(companyData.id)
   const partlyBrc = storedCompany && storedCompany.broadcastPartly
   const partlyAnonym = storedCompany && storedCompany.anonymousPartly
+  const officesInThisCompany = flattenOffices.filter(i => i.companyId === companyData.id)
   return (
     <>
       <BroadcastField
         name={companyData.name}
-        type="state"
+        type="company"
         dispatch={dispatch}
         isClientList={isClientList}
         id={companyData.id}
         partlyBrc={partlyBrc}
         isExpanded={isExpanded}
         handleExpanded={handleExpanded}
-        hasChildren={flattenOffices.length > 0}
+        hasChildren={companyData.offices.length > 0}
         handleRuleClick={handleRuleClick}
         partlyAnonym={partlyAnonym}
       />
-
-      {/* {isExpanded && flattenOffices.map(i => {
+      {isExpanded && officesInThisCompany.map(i => {
         return <BroadcastField
         name={i.name}
         type="office"
@@ -34,7 +33,7 @@ const CompanyBroadcastField = ({dispatch, storedCompany, companyData, companiesE
         handleRuleClick={handleRuleClick}
         handleExpanded={handleExpanded}
       />
-      })} */}
+      })}
     </>
   );
 };

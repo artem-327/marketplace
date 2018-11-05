@@ -95,7 +95,7 @@ const fakeBroadcast = {
                 {
                   type: "office", 
                   id: 8, 
-                  name: "Office BA", 
+                  name: "Office BB", 
                   broadcast: 2, 
                   anonymous: 2, 
                   priceAddition: 150, 

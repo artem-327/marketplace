@@ -19,6 +19,7 @@ class AddBroadcast extends Component {
     categoryFilter: false,
     regionsExpanded: [],
     statesExpanded: [],
+    companiesExpanded: [],
     clickedModel: "",
     clickedModelId: false,
     filterInput: ""
@@ -134,7 +135,7 @@ class AddBroadcast extends Component {
   }
 
   handleExpanded = (e) => {
-    const { regionsExpanded, statesExpanded } = this.state;
+    const { regionsExpanded, statesExpanded, companiesExpanded } = this.state;
     const typeOfClickedItem = e.target.getAttribute('name');
     const idOfClickedItem = parseInt(e.target.id, 10);
 
@@ -155,8 +156,16 @@ class AddBroadcast extends Component {
         this.setState({statesExpanded: filtered})
       } else this.setState({statesExpanded: [ ...statesExpanded, idOfClickedItem ]})
     }
+    if (typeOfClickedItem === "company") {
+      const isExpanded = companiesExpanded.includes(idOfClickedItem)
+      if (isExpanded) {
+        const newRegionsExpanded = [ ...companiesExpanded ]
+        const filtered = newRegionsExpanded.filter(i => i !== idOfClickedItem)
+        this.setState({companiesExpanded: filtered})
+      } else this.setState({companiesExpanded: [ ...companiesExpanded, idOfClickedItem ]})
+    }
   }
-
+  
   handleRuleClick = (e) => {
     this.setState({clickedModel: e.target.getAttribute('name')})
     this.setState({clickedModelId: parseInt(e.target.id, 10)})
@@ -498,7 +507,7 @@ class AddBroadcast extends Component {
       removePopup, dispatch, broadcastData, broadcastIsFetching,
       storedRoot, storedRegions, storedStates, storedOffices
     } = this.props;
-    const { isClientList, categoryFilter, regionsExpanded, statesExpanded, filterInput } = this.state;
+    const { isClientList, categoryFilter, regionsExpanded, companiesExpanded, statesExpanded, filterInput } = this.state;
     if (broadcastIsFetching || !storedOffices) return <Spinner />
     console.log(this.props, this.state)
     const categoryFilterOptions = [
@@ -605,6 +614,7 @@ class AddBroadcast extends Component {
               handleExpanded={this.handleExpanded}
               regionsExpanded={regionsExpanded}
               statesExpanded={statesExpanded}
+              companiesExpanded={companiesExpanded}
               handleRuleClick={this.handleRuleClick}
               storedRoot={storedRoot}
               storedRegions={this.convertObjectToArray(storedRegions)}
