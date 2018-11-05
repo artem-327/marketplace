@@ -1,3 +1,5 @@
+@import "../../styles/main.scss";
+
 .input-checkbox {
   position: relative;
   padding-left: 35px;
@@ -52,7 +54,7 @@
       }
     }
     &:hover, &:focus {
-      border-color: #289ada;
+      border-color: $blue-color;
       box-shadow: none;
       outline: none;
     }
@@ -64,9 +66,15 @@
       top: 3px;
       width: 5px;
       height: 10px;
-      border: solid #289ada;
+      border: solid $blue-color;
       border-width: 0 2px 2px 0;
       transform: rotate(45deg);
+    }
+    &.partlyAnonym {
+      &:after {
+        border: solid $red-color;
+        border-width: 0 2px 2px 0;
+      }
     }
   }
   input {

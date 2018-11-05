@@ -7,7 +7,6 @@ export const RegionsSearchBox = ({ regions, fetchRegions,isFetching, dispatch })
         items={regions}
         api={text => fetchRegions(text)}
         limit={6}
-        label="Search In the Regions"
         placeholder="Search For a Region"
         isFetching={isFetching}
         saveObj={obj => {return {type: "region", ...obj}}}
@@ -22,7 +21,6 @@ export const StatesSearchBox = ({ states, fetchStates, isFetching, dispatch }) =
         items={states}
         api={text => fetchStates(text)}
         limit={6}
-        label="Search In the States"
         placeholder="Search For a State"
         isFetching={isFetching}
         saveObj={obj => {return {type: "state", ...obj}}}
@@ -37,7 +35,6 @@ export const CompaniesSearchBox = ({ companies, fetchCompanies, isFetching, disp
         items={companies}
         api={text => fetchCompanies(text)}
         limit={6}
-        label="Search In the Companies"
         placeholder="Search For a Company"
         isFetching={isFetching}
         saveObj={obj => {return {type: "company", ...obj}}}
@@ -52,8 +49,7 @@ export const DefaultSearchBox = () => (
         disabled
         items={[]}
         limit={20}
-        label="Please Select the Category Filter First"
-        placeholder="Search"
+        placeholder="Search Company or Region"
         model="forms.brcRules.search"
     />
 );

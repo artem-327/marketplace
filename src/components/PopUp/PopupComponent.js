@@ -5,7 +5,7 @@ import './popupComponent.css'
 const PopupComponent = ({removePopup, headerTitle, children, footerComponent}) => {
     return (
         <div className="popup-component">
-        <header className="add-cart-header">
+        <header>
           <h1>{headerTitle}</h1>
           <i className="fas fa-times close-mark" onClick={removePopup} />
         </header>
@@ -13,7 +13,7 @@ const PopupComponent = ({removePopup, headerTitle, children, footerComponent}) =
           {children}
         </div>
 
-        <footer className="add-cart-footer">
+        <footer className="popup-footer">
           {footerComponent}
         </footer>
       </div>

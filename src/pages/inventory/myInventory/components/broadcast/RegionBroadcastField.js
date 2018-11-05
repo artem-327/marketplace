@@ -2,24 +2,29 @@ import React from 'react';
 import BroadcastField from "./BroadcastField";
 import StateBroadcastField from "./StateBroadcastField";
 
-const RegionBroadcastField = ({ regionsExpanded, storedStates, statesExpanded, storedRegion, handleExpanded, handleRuleClick, dispatch, regionsData, isList}) => {
-  const isExpanded = regionsExpanded.includes(regionsData.id)
-  const partly = storedRegion && storedRegion.broadcastPartly
+const RegionBroadcastField = ({ regionsExpanded, storedStates, filterInput, statesExpanded, storedRegion, handleExpanded, handleRuleClick, dispatch, regionData, isClientList}) => {
+  const isExpanded = regionsExpanded.includes(regionData.id)
+  const partlyBrc = storedRegion && storedRegion.broadcastPartly
+  const partlyAnonym = storedRegion && storedRegion.anonymousPartly
+  const isFiltering = filterInput !== "";
+  const filteredStates = regionData.states.filter(i => filterInput === i.name)
+  const showedStates = isFiltering ? filteredStates : regionData.states
   return (
     <React.Fragment>
       <BroadcastField
-        name={regionsData.name}
+        name={regionData.name}
         type="region"
         dispatch={dispatch}
-        isList={isList}
-        id={regionsData.id}
+        isClientList={isClientList}
+        id={regionData.id}
         isExpanded={isExpanded}
-        partly={partly}
+        partlyBrc={partlyBrc}
         handleExpanded={handleExpanded}
-        hasChildren={regionsData.states.length > 0}
+        hasChildren={regionData.states.length > 0}
         handleRuleClick={handleRuleClick}
+        partlyAnonym={partlyAnonym}
       />
-      {isExpanded && regionsData.states.map(i => {
+      {isExpanded && showedStates.map(i => {
         return <StateBroadcastField
         type="state"
         statesExpanded={statesExpanded}
@@ -27,7 +32,7 @@ const RegionBroadcastField = ({ regionsExpanded, storedStates, statesExpanded, s
         handleExpanded={handleExpanded}
         stateData={i}
         dispatch={dispatch}
-        isList={isList}
+        isClientList={isClientList}
         key={i.id}
         handleRuleClick={handleRuleClick}
       />

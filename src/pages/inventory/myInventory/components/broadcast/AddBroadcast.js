@@ -10,17 +10,18 @@ import Dropdown from "../../../../../components/Dropdown/Dropdown";
 import PopupComponent from "../../../../../components/PopUp/PopupComponent";
 import Button from "../../../../../components/Button/Button";
 import Spinner from '../../../../../components/Spinner/Spinner'
-
+import InputControlled from '../../../../../components/InputControlled/InputControlled'
 import "./AddBroadcast.css";
 
 class AddBroadcast extends Component {
   state = {
-    isList: true,
+    isClientList: true,
     categoryFilter: false,
     regionsExpanded: [],
     statesExpanded: [],
     clickedModel: "",
     clickedModelId: false,
+    filterInput: ""
   };
 
   componentDidMount() {
@@ -128,6 +129,10 @@ class AddBroadcast extends Component {
     })
   }
 
+  onChangeHandler = (e) =>{
+   this.setState({filterInput: e.target.value});
+  }
+
   handleExpanded = (e) => {
     const { regionsExpanded, statesExpanded } = this.state;
     const typeOfClickedItem = e.target.getAttribute('name');
@@ -184,18 +189,19 @@ class AddBroadcast extends Component {
     const offices = flattenStates.map(state => state.companies.map(company => company.offices))
     const flattenOffices = offices.flat(2)
     const rules = ["anonymous", "broadcast"]
+    const units = ["$", "%"]
+    const root = broadcastRoot && broadcastRoot[0]
+
 
     if (clickedModel.includes("root")) {
       rules.forEach(rule => {
         if (clickedModel.includes(rule)) {
-          const root = broadcastRoot[0]
           const isChecked = root[rule] === true ? true : false 
           if(root[rule] === isChecked) {
             broadcastRegions.forEach(i => dispatch(actions.change(`forms.brcRules.region[${i.id}].${rule}`, isChecked)))
             broadcastStates.forEach(i => dispatch(actions.change(`forms.brcRules.state[${i.id}].${rule}`, isChecked)))
             broadcastCompanies.forEach(i => dispatch(actions.change(`forms.brcRules.company[${i.id}].${rule}`, isChecked)))
             broadcastOffices.forEach(i => dispatch(actions.change(`forms.brcRules.office[${i.id}].${rule}`, isChecked)))
-
             dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, !isChecked))
             broadcastRegions.forEach(i => dispatch(actions.change(`forms.brcRules.region[${i.id}].${rule}Partly`, !isChecked)))
             broadcastStates.forEach(i => dispatch(actions.change(`forms.brcRules.state[${i.id}].${rule}Partly`, !isChecked)))
@@ -204,6 +210,27 @@ class AddBroadcast extends Component {
           };
         }
       })
+      units.forEach(unit => {
+        if (clickedModel.includes("priceUnit")) {
+          if(root.priceUnit === unit) broadcastRegions.forEach(i => dispatch(actions.change(`forms.brcRules.region.${i.id}.priceUnit`, unit)))
+          if(root.priceUnit === unit) broadcastStates.forEach(i => dispatch(actions.change(`forms.brcRules.state.${i.id}.priceUnit`, unit)))
+          if(root.priceUnit === unit) broadcastCompanies.forEach(i => dispatch(actions.change(`forms.brcRules.company.${i.id}.priceUnit`, unit)))
+          if(root.priceUnit === unit) broadcastOffices.forEach(i => dispatch(actions.change(`forms.brcRules.office.${i.id}.priceUnit`, unit)))
+        }
+      })
+      if (clickedModel.includes("priceValue")) {
+        if(root.priceValue) broadcastRegions.forEach(i => dispatch(actions.change(`forms.brcRules.region.${i.id}.priceValue`, root.priceValue)))
+        if(!root.priceValue) broadcastRegions.forEach(i => dispatch(actions.change(`forms.brcRules.region.${i.id}.priceValue`, "")))
+        if(root.priceValue) broadcastStates.forEach(i => dispatch(actions.change(`forms.brcRules.state.${i.id}.priceValue`, root.priceValue)))
+        if(!root.priceValue) broadcastStates.forEach(i => dispatch(actions.change(`forms.brcRules.state.${i.id}.priceValue`, "")))
+        if(root.priceValue) broadcastCompanies.forEach(i => dispatch(actions.change(`forms.brcRules.company.${i.id}.priceValue`, root.priceValue)))
+        if(!root.priceValue) broadcastCompanies.forEach(i => dispatch(actions.change(`forms.brcRules.company.${i.id}.priceValue`, "")))
+        if(root.priceValue) broadcastOffices.forEach(i => dispatch(actions.change(`forms.brcRules.office.${i.id}.priceValue`, root.priceValue)))
+        if(!root.priceValue) broadcastOffices.forEach(i => dispatch(actions.change(`forms.brcRules.office.${i.id}.priceValue`, "")))
+
+        if(!root.priceValue) broadcastOffices.forEach(i => dispatch(actions.change(`forms.brcRules.root[1].priceUnit`, ""))) //TODO: for ALL
+
+      }
     }
 
     if (clickedModel.includes("region")) {
@@ -236,27 +263,62 @@ class AddBroadcast extends Component {
           };
         }
       })
+      if (clickedModel.includes("priceUnit")) {
+        units.forEach(unit => {
+          if (broadcastRegions.every(i => i.priceUnit === unit)) dispatch(actions.change(`forms.brcRules.root[1].priceUnit`, unit))
+          if (!broadcastRegions.every(i => i.priceUnit === "$") && !broadcastRegions.every(i => i.priceUnit === "%")) dispatch(actions.change(`forms.brcRules.root[1].priceUnit`, ""));
+          if (clickedBroadcastRegion && clickedBroadcastRegion.priceUnit === unit) {
+            clickedRegion.states.forEach(state => {
+              dispatch(actions.change(`forms.brcRules.state[${state.id}].priceUnit`, unit))
+              if (state.companies) state.companies.forEach(company => {
+                dispatch(actions.change(`forms.brcRules.company[${company.id}].priceUnit`, unit))
+                if (company.offices) company.offices.forEach(office => {
+                  dispatch(actions.change(`forms.brcRules.office[${office.id}].priceUnit`, unit))
+                })
+              })
+            })
+          };
+        })
+      }
+      if (clickedModel.includes("priceValue")) {
+        if (broadcastRegions.every(i => i.priceValue.toString() === broadcastRegions[0].priceValue)) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, (clickedBroadcastRegion.priceValue)));
+        if (broadcastRegions.some(i => i.priceValue.toString() !== broadcastRegions[0].priceValue)) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, ""));
+        clickedRegion.states.forEach(state => {
+          dispatch(actions.change(`forms.brcRules.state[${state.id}].priceValue`, (clickedBroadcastRegion.priceValue)))
+          if (state.companies) state.companies.forEach(company => {
+            dispatch(actions.change(`forms.brcRules.company[${company.id}].priceValue`, (clickedBroadcastRegion.priceValue)))
+            if (company.offices) company.offices.forEach(office => {
+              dispatch(actions.change(`forms.brcRules.office[${office.id}].priceValue`, (clickedBroadcastRegion.priceValue)))
+            })
+          })
+        })
+      }
     }
 
     if (clickedModel.includes("state")) {
       const clickedState = flattenStates.find(state => state.id === clickedModelId)
       const clickedBroadcastState = broadcastStates.find(state => state.id === clickedModelId)
+      const parentRegion = regions.find(region => region.id === clickedState.regionId)
+      const statesFiltered = broadcastStates.filter(obj => parentRegion["states"].find(obj2 => obj.id === obj2.id)) //from broadcastStates filter only those that are also in the parentRegion
+
+
 
       rules.forEach(rule => {
         if (clickedModel.includes(rule)) {
           const isChecked = clickedBroadcastState[rule] === true ? true : false 
-          const parentRegion = regions.find(region => region.id === clickedState.regionId)
-          const statesFiltered = broadcastStates.filter(obj => parentRegion["states"].find(obj2 => obj.id === obj2.id)) //from broadcastStates filter only those that are also in the parentRegion
-
-          if (statesFiltered.some(state => state[rule] === true)) dispatch(actions.change(`forms.brcRules.region[${clickedState.regionId}].${rule}`, true))
-          if (statesFiltered.some(state => state[rule] === true)) dispatch(actions.change(`forms.brcRules.root[1].${rule}`, true))
+          if (statesFiltered.some(state => state[rule] === true)) {
+            dispatch(actions.change(`forms.brcRules.region[${clickedState.regionId}].${rule}`, true))
+            dispatch(actions.change(`forms.brcRules.root[1].${rule}`, true))
+          }
 
           if (statesFiltered.every(state => state[rule] === false)) dispatch(actions.change(`forms.brcRules.region[${clickedState.regionId}].${rule}`, false))
           if (statesFiltered.every(state => state[rule] === false) && broadcastRegions.every(region => region[`${rule}`] === false)) dispatch(actions.change(`forms.brcRules.root[1].${rule}`, false))
 
           dispatch(actions.change(`forms.brcRules.state[${clickedModelId}].${rule}Partly`, !isChecked))
-          if (statesFiltered.some(state => state[rule] === false)) dispatch(actions.change(`forms.brcRules.region[${clickedState.regionId}].${rule}Partly`, true))
-          if (statesFiltered.some(state => state[rule] === false)) dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, true))
+          if (statesFiltered.some(state => state[rule] === false)) {
+            dispatch(actions.change(`forms.brcRules.region[${clickedState.regionId}].${rule}Partly`, true))
+            dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, true))
+          }
 
           if (statesFiltered.every(state => state[rule] === true)) dispatch(actions.change(`forms.brcRules.region[${clickedState.regionId}].${rule}Partly`, false))
           if (statesFiltered.every(state => state[rule] === true) && broadcastRegions.every(region => region[`${rule}Partly`] === false)) dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, false))
@@ -270,22 +332,60 @@ class AddBroadcast extends Component {
           };
         }
       })
+
+      if (clickedModel.includes("priceUnit")) {
+        units.forEach(unit => {
+          if (statesFiltered.every(i => i.priceUnit === unit) && broadcastRegions.every(i => i.priceUnit === unit)) dispatch(actions.change(`forms.brcRules.root[1].priceUnit`, unit))
+          if (statesFiltered.every(i => i.priceUnit === unit)) dispatch(actions.change(`forms.brcRules.region[${clickedState.regionId}].priceUnit`, unit))
+          if (clickedBroadcastState && clickedBroadcastState.priceUnit === unit) {
+            clickedState.companies.forEach(company => {
+              dispatch(actions.change(`forms.brcRules.company[${company.id}].priceUnit`, unit))
+              if (company.offices) company.offices.forEach(office => {
+                dispatch(actions.change(`forms.brcRules.office[${office.id}].priceUnit`, unit))
+              })
+            })
+          };
+        })
+        if (!statesFiltered.every(i => i.priceUnit === "$") && !statesFiltered.every(i => i.priceUnit === "%")) dispatch(actions.change(`forms.brcRules.region[${clickedState.regionId}].priceUnit`, ""))
+        if ((!statesFiltered.every(i => i.priceUnit === "$") && !statesFiltered.every(i => i.priceUnit === "%")) || (!broadcastRegions.every(i => i.priceUnit === "$") && !broadcastRegions.every(i => i.priceUnit === "%"))) dispatch(actions.change(`forms.brcRules.root[1].priceUnit`, ""))
+      }
+
+      const someStatesValuesNotEqual = statesFiltered.some(i => i.priceValue.toString() !== statesFiltered[0].priceValue)
+      const someRegionsValuesNotEqual = broadcastRegions.some(i => i.priceValue.toString() !== broadcastRegions[0].priceValue)
+      const everyStatesValuesEqual = statesFiltered.every(i => i.priceValue.toString() === statesFiltered[0].priceValue)
+      const everyRegionsValuesEqual = broadcastRegions.every(i => i.priceValue.toString() === broadcastRegions[0].priceValue)
+
+      if (clickedModel.includes("priceValue")) {
+        if (everyStatesValuesEqual && everyRegionsValuesEqual) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, (clickedBroadcastState.priceValue)));
+        if (everyStatesValuesEqual) dispatch(actions.change(`forms.brcRules.region[${clickedState.regionId}].priceValue`, (clickedBroadcastState.priceValue)));
+
+        if (someStatesValuesNotEqual || someRegionsValuesNotEqual ) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, ""));
+        if (someStatesValuesNotEqual) dispatch(actions.change(`forms.brcRules.region[${clickedState.regionId}].priceValue`, ""));
+        clickedState.companies.forEach(comapny => {
+          dispatch(actions.change(`forms.brcRules.comapny[${comapny.id}].priceValue`, (clickedBroadcastState.priceValue)))
+          if (comapny.offices) comapny.offices.forEach(office => {
+            dispatch(actions.change(`forms.brcRules.office[${office.id}].priceValue`, (clickedBroadcastState.priceValue)))
+          })
+        })
+      }
     }
 
     if (clickedModel.includes("office")) {
       const clickedOffice = flattenOffices.find(office => office.id === clickedModelId)
+      const clickedBroadcastOffice = broadcastOffices.find(office => office.id === clickedModelId)
+      const parentState = flattenStates.find(state => state.id === clickedOffice.stateId)
+      const parentStatesOffices = parentState.companies.map(i => i.offices)
+      const officesFiltered = broadcastOffices.filter(obj => parentStatesOffices.flat().find(obj2 => obj.id === obj2.id)) 
+
+      const parentRegion = regions.find(region => region.id === clickedOffice.regionId)
+      const statesFiltered = broadcastStates.filter(obj => parentRegion["states"].find(obj2 => obj.id === obj2.id))
       rules.forEach(rule => {
         if (clickedModel.includes(rule)) {
-          const parentState = flattenStates.find(state => state.id === clickedOffice.stateId)
-          const parentStatesOffices = parentState.companies.map(i => i.offices)
-          const officesFiltered = broadcastOffices.filter(obj => parentStatesOffices.flat().find(obj2 => obj.id === obj2.id)) 
-
-          const parentRegion = regions.find(region => region.id === clickedOffice.regionId)
-          const statesFiltered = broadcastStates.filter(obj => parentRegion["states"].find(obj2 => obj.id === obj2.id))
-
-          if (officesFiltered.some(office => office[rule] === true)) dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].${rule}`, true))
-          if (officesFiltered.some(office => office[rule] === true)) dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].${rule}`, true))
-          if (officesFiltered.some(office => office[rule] === true)) dispatch(actions.change(`forms.brcRules.root[1].${rule}`, true))
+          if (officesFiltered.some(office => office[rule] === true)) {
+            dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].${rule}`, true))
+            dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].${rule}`, true))
+            dispatch(actions.change(`forms.brcRules.root[1].${rule}`, true))
+          }
           
           if (officesFiltered.every(office => office[rule] === false)) dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].${rule}`, false))
           if (officesFiltered.every(office => office[rule] === false) && statesFiltered.every(state => state[rule] === false)) dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].${rule}`, false))
@@ -293,9 +393,11 @@ class AddBroadcast extends Component {
             dispatch(actions.change(`forms.brcRules.root[1].${rule}`, false))
           }
 
-          if (officesFiltered.some(office => office[rule] === false)) dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].${rule}Partly`, true))
-          if (officesFiltered.some(office => office[rule] === false)) dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].${rule}Partly`, true))
-          if (officesFiltered.some(office => office[rule] === false)) dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, true))
+          if (officesFiltered.some(office => office[rule] === false)) {
+            dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].${rule}Partly`, true))
+            dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].${rule}Partly`, true))
+            dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, true))
+          }
           
           if (officesFiltered.every(office => office[rule] === true)) dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].${rule}Partly`, false))
           if (officesFiltered.every(office => office[rule] === true) && statesFiltered.every(state => state[`${rule}Partly`] === false)) dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].${rule}Partly`, false))
@@ -304,6 +406,49 @@ class AddBroadcast extends Component {
           }
         }
       })
+
+      if (clickedModel.includes("priceUnit")) {
+        units.forEach(unit => {
+          const officesUnitsEqual = officesFiltered.every(i => i.priceUnit === unit)
+          const statesUnitsEqual = statesFiltered.every(i => i.priceUnit === unit)
+          const regionsUnitsEqual = broadcastRegions.every(i => i.priceUnit === unit)
+
+          if (officesUnitsEqual && statesUnitsEqual && regionsUnitsEqual) dispatch(actions.change(`forms.brcRules.root[1].priceUnit`, unit))
+          if (officesUnitsEqual && statesUnitsEqual) dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].priceUnit`, unit))
+          if (officesUnitsEqual) dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].priceUnit`, unit))
+        })
+        if ((!officesFiltered.every(i => i.priceUnit === "$") && !officesFiltered.every(i => i.priceUnit === "%")) 
+              || (!statesFiltered.every(i => i.priceUnit === "$") && !statesFiltered.every(i => i.priceUnit === "%"))
+              || (!broadcastRegions.every(i => i.priceUnit === "$") && !broadcastRegions.every(i => i.priceUnit === "%"))) {
+                dispatch(actions.change(`forms.brcRules.root[1].priceUnit`, ""))
+        }
+        if ((!officesFiltered.every(i => i.priceUnit === "$") && !officesFiltered.every(i => i.priceUnit === "%")) 
+              || !statesFiltered.every(i => i.priceUnit === "$") && !statesFiltered.every(i => i.priceUnit === "%")) {
+                dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].priceUnit`, ""))
+        }
+        if (!officesFiltered.every(i => i.priceUnit === "$") && !officesFiltered.every(i => i.priceUnit === "%"))
+        {
+          dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].priceUnit`, ""))
+        }
+      }
+
+      if (clickedModel.includes("priceValue")) {
+        const officesValuesEqual = officesFiltered.some(i => i.priceValue.toString() !== officesFiltered[0].priceValue)
+        const statesValuesEqual = statesFiltered.some(i => i.priceValue.toString() !== statesFiltered[0].priceValue)
+        const regionsValuesEqual = broadcastRegions.some(i => i.priceValue.toString() !== broadcastRegions[0].priceValue)
+        if (officesFiltered.every(i => i.priceValue.toString() === officesFiltered[0].priceValue) && statesFiltered.every(i => i.priceValue.toString() === statesFiltered[0].priceValue) && broadcastRegions.every(i => i.priceValue.toString() === statesFiltered[0].priceValue)) {
+          dispatch(actions.change(`forms.brcRules.root[1].priceValue`, (clickedBroadcastOffice.priceValue)));
+        }
+        if (officesFiltered.every(i => i.priceValue.toString() === officesFiltered[0].priceValue) && statesFiltered.every(i => i.priceValue.toString() === statesFiltered[0].priceValue)) {
+          dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].priceValue`, (clickedBroadcastOffice.priceValue)));
+        }
+        if (officesFiltered.every(i => i.priceValue.toString() === officesFiltered[0].priceValue)) dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].priceValue`, (clickedBroadcastOffice.priceValue)));
+
+        if (officesValuesEqual || statesValuesEqual || regionsValuesEqual) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, ""));
+        if (officesValuesEqual || statesValuesEqual) dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].priceValue`, ""));
+        if (officesValuesEqual) dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].priceValue`, ""));
+
+      }
     }
   }
 
@@ -313,11 +458,11 @@ class AddBroadcast extends Component {
   };
 
   switchToList = () => {
-    this.setState({ isList: true });
+    this.setState({ isClientList: true });
   };
 
   switchToPrice = () => {
-    this.setState({ isList: false });
+    this.setState({ isClientList: false });
   };
 
   renderSearchField = () => {
@@ -351,15 +496,14 @@ class AddBroadcast extends Component {
   render() {
     const { 
       removePopup, dispatch, broadcastData, broadcastIsFetching,
-      storedRoot, storedRegions, storedStates
+      storedRoot, storedRegions, storedStates, storedOffices
     } = this.props;
-    const { isList, categoryFilter, regionsExpanded, statesExpanded } = this.state;
-    if (broadcastIsFetching) return <Spinner />
+    const { isClientList, categoryFilter, regionsExpanded, statesExpanded, filterInput } = this.state;
+    if (broadcastIsFetching || !storedOffices) return <Spinner />
     console.log(this.props, this.state)
     const categoryFilterOptions = [
-      { name: "Regions", id: "region" },
-      { name: "States", id: "state" },
-      { name: "Companies", id: "company" }
+      { name: "All Regions", id: "allregions" },
+      { name: "All Companies", id: "allcompanies" },
     ];
     const templatesOptions = [] //TODO
 
@@ -376,6 +520,9 @@ class AddBroadcast extends Component {
         </Button>
       </>
     )
+    const brcOffices = this.convertObjectToArray(storedOffices)
+    const broadcastingTo = brcOffices.filter(i => i.broadcast === true).length
+
     return (
       <PopupComponent
         handleContinue={this.handleContinue}
@@ -385,14 +532,14 @@ class AddBroadcast extends Component {
       >
         <div className="add-broadcast">
           <div className="broadcast-nav">
-            <div className={isList ? "active" : ""} onClick={this.switchToList}>
+            <div className={isClientList ? "active" : ""} onClick={this.switchToList}>
               Client List
             </div>
             <div
-              className={!isList ? "active" : ""}
+              className={!isClientList ? "active" : ""}
               onClick={this.switchToPrice}
             >
-              Client Price
+              Price List 
             </div>
           </div>
 
@@ -400,10 +547,10 @@ class AddBroadcast extends Component {
             <div className="broadcasting-info">
               <i className="fas fa-info-circle" />
               <span>
-                Broadcasting to: <b>85/260</b>
+                Broadcasting to: <b>{broadcastingTo}/{brcOffices.length}</b>
               </span>
             </div>
-            <div className="group-item-wr">
+            <div className="group-item-wr smaller">
               <label>Category Filter</label>
               <Dropdown
                 opns={categoryFilterOptions}
@@ -411,27 +558,40 @@ class AddBroadcast extends Component {
                 onChange={value => this.setState({categoryFilter: value})}
               />
             </div>
+
+
+            <div className="group-item-wr">
+              <InputControlled
+                value={this.state.filterInput}
+                handleChange={e => this.onChangeHandler(e)}
+                name="filterInput"
+              />
+            </div>
+
+
             <div className="group-item-wr">
               {this.renderSearchField()}
             </div>
             <hr />
-            <div className="group-item-wr">
+            <div className="group-item-wr smaller">
               <label>Templates ({templatesOptions.length})</label>
               <Dropdown opns={[]} placeholder="Select Template" disabled={templatesOptions.length === 0 ? true : false}/>
             </div>
           </div>
 
-          <div className="broadcast-filter-nav">
-            <div className="field-name">Name {categoryFilter && `(${categoryFilter})`}</div>
-            {isList ? (
-              <div className="list-rules">
-                <div>Include</div>
-                <div>Anonymous</div>
+          {isClientList 
+            ? <div className="broadcast-filter-nav client-list">
+                  <div className="field-name">Name</div>
+                  <div className="list-rules">
+                    <div>Include</div>
+                    <div>Anonymous</div>
+                  </div>
               </div>
-            ) : (
-              <div>Mark-up/down</div>
-            )}
-          </div>
+            : <div className="broadcast-filter-nav price-list">
+                <div className="field-name">Name</div>
+                <div>Mark-up/down</div>
+              </div>
+          }
 
           <div className="broadcast-main">
           <Form model="forms.brcRules" onSubmit={v => console.log(v)}>
@@ -439,8 +599,9 @@ class AddBroadcast extends Component {
               name="Root"
               type="root"
               rootData={broadcastData.root}
+              categoryFilter={categoryFilter}
               dispatch={dispatch}
-              isList={isList}
+              isClientList={isClientList}
               handleExpanded={this.handleExpanded}
               regionsExpanded={regionsExpanded}
               statesExpanded={statesExpanded}
@@ -448,6 +609,7 @@ class AddBroadcast extends Component {
               storedRoot={storedRoot}
               storedRegions={this.convertObjectToArray(storedRegions)}
               storedStates={this.convertObjectToArray(storedStates)}
+              filterInput={filterInput}
             />
           {/* {!searchedItem && regions.map(i => <RegionBroadcastField
               regionDetail={regionDetail}
@@ -455,7 +617,7 @@ class AddBroadcast extends Component {
               stateDetailIsFetching={stateDetailIsFetching}
               stateDetail={stateDetail}
               dispatch={dispatch}
-              isList={isList}
+              isClientList={isClientList}
               regionIsExpanded={regionIsExpanded === i.id}
               stateIsExpanded={stateIsExpanded}
               name={i.name}

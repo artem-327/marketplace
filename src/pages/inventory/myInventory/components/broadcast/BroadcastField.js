@@ -7,28 +7,29 @@ import SwitcherRedux from "../../../../../components/Switcher/SwitcherRedux";
 import { isNumber } from "../../../../../utils/validation";
 
 
-const BroadcastField = ({ partly, name, id, type, isList, handleExpanded, handleRuleClick, isExpanded, hasChildren }) => {
+const BroadcastField = ({ partlyBrc, partlyAnonym, name, id, type, isClientList, handleExpanded, handleRuleClick, isExpanded, hasChildren }) => {
     return (
-      <div className={`broadcast-field ${type}`}>
+      <div className={`broadcast-field ${type} ${isClientList ? "client-list" : "price-list"}`}>
         <div className="field-name" name={type} id={id} onClick={e => handleExpanded(e)}>
           {hasChildren && !isExpanded && <i className="fas fa-angle-right" />}
           {hasChildren && isExpanded && <i className="fas fa-angle-down" />} 
           {name}
         </div>
-        {isList 
+        {isClientList 
         ? (
           <div className="list-rules">
             <SwitcherRedux
               model={`.${type}[${id}].broadcast`}
               id={id}
               isrounded
-              partly={partly}
+              partlyBrc={partlyBrc}
               onClick={handleRuleClick}
             />
             <CheckboxBroadcastRedux
               id={id}
               model={`.${type}[${id}].anonymous`}
               onClick={handleRuleClick}
+              partlyAnonym={partlyAnonym}
             />
           </div>
         ) 
@@ -38,10 +39,12 @@ const BroadcastField = ({ partly, name, id, type, isList, handleExpanded, handle
               model={`.${type}[${id}].priceValue`}
               className="price-value"
               validators={{ isNumber }}
+              onChange={e => handleRuleClick(e)}
+              id={id}
             />
             <div className="price-units">     
-                <RadioBroadcastRedux model={`.${type}[${id}].priceUnit`} label="$" value="$"/>       
-                <RadioBroadcastRedux model={`.${type}[${id}].priceUnit`} label="%" value="%"/>                      
+                <RadioBroadcastRedux model={`.${type}[${id}].priceUnit`} label="$" value="$" onClick={handleRuleClick} id={id}/>       
+                <RadioBroadcastRedux model={`.${type}[${id}].priceUnit`} label="%" value="%" onClick={handleRuleClick} id={id}/>                      
             </div>
           </div>
         )}
@@ -55,6 +58,6 @@ const BroadcastField = ({ partly, name, id, type, isList, handleExpanded, handle
     name: PropTypes.string,
     type: PropTypes.string,
     dispatch: PropTypes.func,
-    isList: PropTypes.bool,
+    isClientList: PropTypes.bool,
   }
   

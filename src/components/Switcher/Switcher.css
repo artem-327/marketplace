@@ -50,5 +50,5 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%; }
 
-input:checked + .slider.partly-colored {
+input:checked + .slider.partlyBrc-colored {
   background-color: #C0523F; }

@@ -1,20 +1,20 @@
 import React from 'react';
 import BroadcastField from "./BroadcastField";
 
-const StateBroadcastField = ({dispatch, storedState, stateData, statesExpanded, handleExpanded, handleRuleClick, isClientList}) => {
-  const offices = stateData.companies.map(i => i.offices)
+const CompanyBroadcastField = ({dispatch, storedCompany, companyData, companiesExpanded = [], handleExpanded, handleRuleClick, isClientList}) => {
+  const offices = companyData.offices.map(i => i.offices)
   const flattenOffices = offices.flat()
-  const isExpanded = statesExpanded.includes(stateData.id)
-  const partlyBrc = storedState && storedState.broadcastPartly
-  const partlyAnonym = storedState && storedState.anonymousPartly
+  const isExpanded = companiesExpanded.includes(companyData.id)
+  const partlyBrc = storedCompany && storedCompany.broadcastPartly
+  const partlyAnonym = storedCompany && storedCompany.anonymousPartly
   return (
-    <React.Fragment>
+    <>
       <BroadcastField
-        name={stateData.name}
+        name={companyData.name}
         type="state"
         dispatch={dispatch}
         isClientList={isClientList}
-        id={stateData.id}
+        id={companyData.id}
         partlyBrc={partlyBrc}
         isExpanded={isExpanded}
         handleExpanded={handleExpanded}
@@ -23,7 +23,7 @@ const StateBroadcastField = ({dispatch, storedState, stateData, statesExpanded, 
         partlyAnonym={partlyAnonym}
       />
 
-      {isExpanded && flattenOffices.map(i => {
+      {/* {isExpanded && flattenOffices.map(i => {
         return <BroadcastField
         name={i.name}
         type="office"
@@ -34,9 +34,9 @@ const StateBroadcastField = ({dispatch, storedState, stateData, statesExpanded, 
         handleRuleClick={handleRuleClick}
         handleExpanded={handleExpanded}
       />
-      })}
-    </React.Fragment>
+      })} */}
+    </>
   );
 };
 
-export default StateBroadcastField;
+export default CompanyBroadcastField;

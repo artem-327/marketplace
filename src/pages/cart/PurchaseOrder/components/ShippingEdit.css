@@ -24,6 +24,6 @@
     grid-row: 4; }
   .shipping-edit .input-group:nth-of-type(8) {
     grid-row: 4; }
-  .shipping-edit .add-cart-footer {
+  .shipping-edit .popup-footer {
     grid-row: 5;
     grid-column: 1 / 5; }

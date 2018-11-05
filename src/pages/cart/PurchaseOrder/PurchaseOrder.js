@@ -132,7 +132,7 @@ class PurchaseOrder extends Component {
               <div className="purchase-order-section">
                 <div>Legal Language</div>
                 <div>Terms and Agreement</div>
-                <footer className="add-cart-footer">
+                <footer className="popup-footer">
                   <Button color="blue">Place order</Button>
                 </footer>
                 </div>
