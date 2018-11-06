@@ -479,15 +479,22 @@ class AddBroadcast extends Component {
             dispatch(actions.change(`forms.brcRules.root[1].${rule}`, false))
           }
 
-          if (companiesFiltered.some(company => company[rule] === false)) parentStates.forEach(state => dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}Partly`, true)))
+          parentStates.forEach(state => {
+            const companiesOfThisState = broadcastCompanies.filter(obj => state["companies"].find(obj2 => obj.id === obj2.id))
+            if (companiesOfThisState.some(company => company[rule] === false)) dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}Partly`, true))
+            if (companiesOfThisState.every(company => company[rule] === true)) dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}Partly`, false))
+          })
+
           if (companiesFiltered.some(company => company[rule] === false) || allStatesFilteredBrc.some(state => state[rule] === false)) parentRegions.forEach(region => dispatch(actions.change(`forms.brcRules.region[${region.id}].${rule}Partly`, true)))
           if (companiesFiltered.some(company => company[rule] === false) || allStatesFilteredBrc.some(state => state[rule] === false) || allRegionsFilteredBrc.some(state => state[rule] === false) ) {            
             dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, true))
           }
-
-          if (companiesFiltered.every(company => company[rule] === true)) {
-            parentStates.forEach(state => dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}Partly`, false)))
-          }
+          
+          // if (companiesFiltered.every(company => company[rule] === true)) { //toto je blobst, jde mi o vsechny kompany nadrazenyho statu - iterovat pres vsechny staty a porovnavat?
+          //   parentStates.forEach(state => {
+          //     dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}Partly`, false))
+          //   })
+          // }
           if (companiesFiltered.every(company => company[rule] === true) && statesFiltered.every(state => state[rule] === true)) {
             parentRegions.forEach(region => dispatch(actions.change(`forms.brcRules.region[${region.id}].${rule}Partly`, false)))
           }
