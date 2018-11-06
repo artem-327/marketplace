@@ -21,7 +21,7 @@ class AllInventory extends Component {
             <ProductOffers productOffers={this.props.productOffers} addPopup={this.props.addPopup} history={this.props.history}/>;
         return (
             <div>
-                <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
+                <h1 className='header inv-header'>MARKETPLACE</h1>
                 <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchAllProductOffers({...filter})}}/>
                 <Filter chemicalName quantity date price assay condition form package filterFunc={(inputs) => this.props.fetchAllProductOffers(inputs)} />
                 {content}

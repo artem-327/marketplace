@@ -39,9 +39,9 @@ class NavDropdown extends Component {
                                     this.dropdownMenu = element;
                                 }}
                             >
-                                <Link to='#'> Inventory </Link>
-                                <Link to='#'> My inventory </Link>
-                                <Link to='#'> Add inventory </Link>
+                                <Link to='#'>Inventory</Link>
+                                <Link to='#'>My inventory</Link>
+                                <Link to='#'>Add inventory</Link>
                             </div>
                         )
                         : (

@@ -6,18 +6,19 @@
     display: inline-block; }
   .App-nav .nav-inside .logo {
     padding-left: 30px;
-    padding-right: 60px;
+    padding-right: 0px;
     vertical-align: top;
-    margin-top: 16px; }
+    margin-top: 10px; }
     .App-nav .nav-inside .logo img {
-      width: 75px; }
+      width: 50%;
+      height: 50%; }
   .App-nav .nav-inside .logout {
     position: absolute;
     right: 20px; }
   .App-nav .nav-inside .nav-link {
     padding: 5px 5px;
     transition: all .2s ease;
-    color: #ffffff;
+    color: #b0b2b4;
     font-weight: lighter;
     font-size: .8em;
     height: 90px;
@@ -43,42 +44,54 @@
     .App-nav .nav-inside .nav-link:hover {
       background-color: #3f434c; }
   .App-nav .nav-inside .dropdown-nav {
-    padding: 5px 5px;
     transition: all .2s ease;
-    color: #ffffff;
+    color: #b0b2b4;
     font-weight: lighter;
-    font-size: .8em;
-    height: 90px;
-    width: 90px;
+    font-size: .9em;
+    height: 50px;
     vertical-align: top;
     text-align: center;
     position: relative;
     z-index: 2; }
+    .App-nav .nav-inside .dropdown-nav .dropdown-link-center {
+      padding: 14px 15px 10px 15px;
+      display: inline-block; }
+      .App-nav .nav-inside .dropdown-nav .dropdown-link-center .dropdown-nav-icon {
+        display: inline-block;
+        font-size: .8rem;
+        margin-left: 15px; }
     .App-nav .nav-inside .dropdown-nav .dropdown-nav-inside {
       position: absolute;
       vertical-align: bottom;
-      width: 100%;
-      top: 90px;
+      width: 160%;
+      top: 50px;
       left: 0;
       text-align: center;
+      background-color: #2b2e33;
       box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-      border-radius: 0 0 4px 4px; }
+      border-radius: 0 0 4px 4px;
+      padding-top: 10px; }
       .App-nav .nav-inside .dropdown-nav .dropdown-nav-inside .dropdown-nav-item {
         width: 100%;
-        padding: 8px 0;
+        padding: 10px 15px;
+        text-align: left;
         display: block;
-        color: white;
-        background-color: #33373e; }
+        color: #b0b2b4;
+        background-color: #2b2e33; }
         .App-nav .nav-inside .dropdown-nav .dropdown-nav-inside .dropdown-nav-item:last-child {
           border-radius: 0 0 4px 4px; }
         .App-nav .nav-inside .dropdown-nav .dropdown-nav-inside .dropdown-nav-item.active {
-          color: #2599d5; }
+          color: #f3f4f4;
+          font-weight: normal; }
         .App-nav .nav-inside .dropdown-nav .dropdown-nav-inside .dropdown-nav-item:hover {
           cursor: pointer;
-          background-color: #3f434c;
-          text-decoration: none; }
+          text-decoration: none;
+          font-weight: normal;
+          color: #f3f4f4;
+          background-color: #276c92; }
     .App-nav .nav-inside .dropdown-nav.active {
-      color: #2599d5; }
+      background-color: #2b2e33;
+      color: #f3f4f4; }
     .App-nav .nav-inside .dropdown-nav .link-center {
       position: absolute;
       top: 50%;
