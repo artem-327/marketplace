@@ -7,7 +7,7 @@ const RegionBroadcastField = ({ regionsExpanded, storedStates, filterInput, stat
   const partlyBrc = storedRegion && storedRegion.broadcastPartly
   const partlyAnonym = storedRegion && storedRegion.anonymousPartly
   const isFiltering = filterInput !== "";
-  const filteredStates = regionData.states.filter(i => filterInput === i.name)
+  const filteredStates = regionData.states.filter(i => i.name.toLowerCase().startsWith(filterInput.toLowerCase()))
   const showedStates = isFiltering ? filteredStates : regionData.states
   return (
     <React.Fragment>
@@ -35,6 +35,7 @@ const RegionBroadcastField = ({ regionsExpanded, storedStates, filterInput, stat
         isClientList={isClientList}
         key={i.id}
         handleRuleClick={handleRuleClick}
+        filterInput={filterInput}
       />
       })}
     </React.Fragment>

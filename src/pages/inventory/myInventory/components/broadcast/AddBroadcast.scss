@@ -154,6 +154,7 @@
             margin-top: 1em;
             &.smaller {
                 width: 70%;
+                margin-bottom: 25px;
             }
         }
         .combo-results{
@@ -200,4 +201,22 @@
     color: $blue-color;
     padding-right: 10px;
     font-size: 1.5em;
+}
+.group-item-wr.search{
+    position: relative;
+    top: 30px;
+   i {
+       position: absolute;
+       left: 10px;
+       top: 10px;
+       color: $light-30-grey-color;
+   }
+   input {
+       padding-left: 35px;
+       width: 100%;
+   }
+}
+
+.group-item-wr.smaller:last-of-type {
+    margin-top: 80px;
 }

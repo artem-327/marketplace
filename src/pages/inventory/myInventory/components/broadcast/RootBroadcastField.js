@@ -28,7 +28,11 @@ const RootBroadcastField = ({
   const flattenCompanies = companiesData.flat()
   const officesData =  flattenCompanies.map(i => i.offices)
   const flattenOffices = officesData.flat()
-  const filteredCompanies = filterByUniqueProperty(flattenCompanies, "id")
+  const uniqueCompanies = filterByUniqueProperty(flattenCompanies, "id")
+
+  const isFiltering = filterInput !== "";
+  const filteredCompanies = flattenCompanies.filter(i => i.name.toLowerCase().startsWith(filterInput.toLowerCase()))
+  const showedCompanies = isFiltering ? filterByUniqueProperty(filteredCompanies, "id") : uniqueCompanies
 
   return (
     <>
@@ -62,7 +66,7 @@ const RootBroadcastField = ({
         handleRuleClick={handleRuleClick}
       />
       })}
-      {categoryFilter==="allcompanies" && filteredCompanies.map(i => {
+      {categoryFilter==="allcompanies" && showedCompanies.map(i => {
         return <CompanyBroadcastField
         type="comapny"
         dispatch={dispatch}

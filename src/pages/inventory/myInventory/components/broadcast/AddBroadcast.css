@@ -115,7 +115,8 @@
     .add-broadcast .broadcast-filter .group-item-wr {
       margin-top: 1em; }
       .add-broadcast .broadcast-filter .group-item-wr.smaller {
-        width: 70%; }
+        width: 70%;
+        margin-bottom: 25px; }
     .add-broadcast .broadcast-filter .combo-results {
       z-index: 2; }
     .add-broadcast .broadcast-filter .comboBox {
@@ -147,3 +148,18 @@
   color: #329ED6;
   padding-right: 10px;
   font-size: 1.5em; }
+
+.group-item-wr.search {
+  position: relative;
+  top: 30px; }
+  .group-item-wr.search i {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    color: #9a9da4; }
+  .group-item-wr.search input {
+    padding-left: 35px;
+    width: 100%; }
+
+.group-item-wr.smaller:last-of-type {
+  margin-top: 80px; }
