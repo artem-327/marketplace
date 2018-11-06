@@ -44,7 +44,7 @@ const fakeBroadcast = {
                   {
                     type: "office",
                     id: 1,
-                    name: "Office AA",
+                    name: "Office AA Czech",
                     broadcast: 0,
                     anonymous: 1,
                     priceAddition: 150
@@ -62,7 +62,7 @@ const fakeBroadcast = {
                   {
                     type: "office",
                     id: 2,
-                    name: "Office BA",
+                    name: "Office BA Czech",
                     broadcast: 0,
                     anonymous: 1,
                     priceAddition: 150
@@ -92,7 +92,7 @@ const fakeBroadcast = {
                   {
                     type: "office",
                     id: 8,
-                    name: "Office BB",
+                    name: "Office BB Slovakia",
                     broadcast: 0,
                     anonymous: 1,
                     priceAddition: 150
@@ -150,7 +150,7 @@ const fakeBroadcast = {
               }, {
                 type: "company",
                 id: 93,
-                name: "This sucks a.s.",
+                name: "XZ s.r.o.",
                 broadcast: 0,
                 anonymous: 1,
                 priceAddition: 150,
@@ -173,7 +173,7 @@ const fakeBroadcast = {
       {
         type: "region",
         id: 31,
-        name: "Middle Earth",
+        name: "Oceania",
         broadcast: 0,
         anonymous: 1,
         priceAddition: 150,
@@ -182,7 +182,7 @@ const fakeBroadcast = {
           {
             type: "country",
             id: 32,
-            name: "Mordor",
+            name: "New Guinea",
             broadcast: 0,
             anonymous: 1,
             priceAddition: 150,
@@ -200,7 +200,7 @@ const fakeBroadcast = {
                   {
                     type: "office",
                     id: 36,
-                    name: "Barad-dûr",
+                    name: "New Guinea office",
                     broadcast: 0,
                     anonymous: 1,
                     priceAddition: 150
