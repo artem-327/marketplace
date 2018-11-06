@@ -208,16 +208,6 @@ const fakeBroadcast = {
                 ]
               }
             ]
-          },
-          {
-            type: "country",
-            id: 39,
-            name: "Eriador",
-            broadcast: 0,
-            anonymous: 1,
-            priceAddition: 150,
-            priceMultiplier: null,
-            companies: []
           }
         ]
       }
