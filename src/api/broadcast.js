@@ -109,7 +109,7 @@ const fakeBroadcast = {
         name: "North America",
         broadcast: 0,
         anonymous: 1,
-        priceAddition: 200,
+        priceAddition: 150,
         priceMultiplier: null,
         states: [
           {
@@ -118,7 +118,7 @@ const fakeBroadcast = {
             name: "Utah",
             broadcast: 0,
             anonymous: 1,
-            priceAddition: 200,
+            priceAddition: 150,
             priceMultiplier: null,
             companies: [
               {
@@ -176,7 +176,7 @@ const fakeBroadcast = {
         name: "Middle Earth",
         broadcast: 0,
         anonymous: 1,
-        priceAddition: 200,
+        priceAddition: 150,
         priceMultiplier: null,
         states: [
           {
@@ -185,7 +185,7 @@ const fakeBroadcast = {
             name: "Mordor",
             broadcast: 0,
             anonymous: 1,
-            priceAddition: 200,
+            priceAddition: 150,
             priceMultiplier: null,
             companies: [
               {
@@ -215,7 +215,7 @@ const fakeBroadcast = {
             name: "Eriador",
             broadcast: 0,
             anonymous: 1,
-            priceAddition: 200,
+            priceAddition: 150,
             priceMultiplier: null,
             companies: []
           }

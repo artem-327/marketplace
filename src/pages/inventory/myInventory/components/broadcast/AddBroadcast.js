@@ -48,11 +48,11 @@ class AddBroadcast extends Component {
 
 
       if(root.priceAddition) {
-        dispatch(actions.change(`forms.brcRules.root[${root.id}].priceValue`, root.priceAddition))
+        dispatch(actions.change(`forms.brcRules.root[${root.id}].priceValue`, root.priceAddition.toString()))
         dispatch(actions.change(`forms.brcRules.root[${root.id}].priceUnit`, "$"))
       }
       if(root.priceMultiplier) {
-        dispatch(actions.change(`forms.brcRules.root[${root.id}].priceValue`, root.priceMultiplier))
+        dispatch(actions.change(`forms.brcRules.root[${root.id}].priceValue`, root.priceMultiplier.toString()))
         dispatch(actions.change(`forms.brcRules.root[${root.id}].priceUnit`, "$"))
       }
 
@@ -71,11 +71,11 @@ class AddBroadcast extends Component {
         } else dispatch(actions.change(`forms.brcRules.region[${region.id}].broadcastPartly`, false))
 
         if(region.priceAddition) {
-          dispatch(actions.change(`forms.brcRules.region[${region.id}].priceValue`, region.priceAddition))
+          dispatch(actions.change(`forms.brcRules.region[${region.id}].priceValue`, region.priceAddition.toString()))
           dispatch(actions.change(`forms.brcRules.region[${region.id}].priceUnit`, "$"))
         }
         if(region.priceMultiplier) {
-          dispatch(actions.change(`forms.brcRules.region[${region.id}].priceValue`, region.priceMultiplier))
+          dispatch(actions.change(`forms.brcRules.region[${region.id}].priceValue`, region.priceMultiplier.toString()))
           dispatch(actions.change(`forms.brcRules.region[${region.id}].priceUnit`, "$"))
         }
       })
@@ -103,11 +103,11 @@ class AddBroadcast extends Component {
         } else dispatch(actions.change(`forms.brcRules.state[${state.id}].broadcastPartly`, false))
 
         if(state.priceAddition) {
-          dispatch(actions.change(`forms.brcRules.state[${state.id}].priceValue`, state.priceAddition))
+          dispatch(actions.change(`forms.brcRules.state[${state.id}].priceValue`, state.priceAddition.toString()))
           dispatch(actions.change(`forms.brcRules.state[${state.id}].priceUnit`, "$"))
         }
         if(state.priceMultiplier) {
-          dispatch(actions.change(`forms.brcRules.state[${state.id}].priceValue`, state.priceMultiplier))
+          dispatch(actions.change(`forms.brcRules.state[${state.id}].priceValue`, state.priceMultiplier.toString()))
           dispatch(actions.change(`forms.brcRules.state[${state.id}].priceUnit`, "$"))
         }
      })
@@ -136,11 +136,11 @@ class AddBroadcast extends Component {
        } else {dispatch(actions.change(`forms.brcRules.company[${company.id}].broadcastPartly`, false))}
 
        if(company.priceAddition) {
-         dispatch(actions.change(`forms.brcRules.company[${company.id}].priceValue`, company.priceAddition))
+         dispatch(actions.change(`forms.brcRules.company[${company.id}].priceValue`, company.priceAddition.toString()))
          dispatch(actions.change(`forms.brcRules.company[${company.id}].priceUnit`, "$"))
        }
        if(company.priceMultiplier) {
-         dispatch(actions.change(`forms.brcRules.company[${company.id}].priceValue`, company.priceMultiplier))
+         dispatch(actions.change(`forms.brcRules.company[${company.id}].priceValue`, company.priceMultiplier.toString()))
          dispatch(actions.change(`forms.brcRules.company[${company.id}].priceUnit`, "$"))
        }
       })
@@ -167,11 +167,11 @@ class AddBroadcast extends Component {
           dispatch(actions.change(`forms.brcRules.office[${office.id}].broadcastPartly`, true))
         } else dispatch(actions.change(`forms.brcRules.office[${office.id}].broadcastPartly`, false))
         if(office.priceAddition) {
-          dispatch(actions.change(`forms.brcRules.office[${office.id}].priceValue`, office.priceAddition))
+          dispatch(actions.change(`forms.brcRules.office[${office.id}].priceValue`, office.priceAddition.toString()))
           dispatch(actions.change(`forms.brcRules.office[${office.id}].priceUnit`, "$"))
         }
         if(office.priceMultiplier) {
-          dispatch(actions.change(`forms.brcRules.office[${office.id}].priceValue`, office.priceMultiplier))
+          dispatch(actions.change(`forms.brcRules.office[${office.id}].priceValue`, office.priceMultiplier.toString()))
           dispatch(actions.change(`forms.brcRules.office[${office.id}].priceUnit`, "$"))
         }
     })
@@ -345,8 +345,8 @@ class AddBroadcast extends Component {
         })
       }
       if (clickedModel.includes("priceValue")) {
-        if (broadcastRegions.every(i => i.priceValue.toString() === broadcastRegions[0].priceValue)) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, (clickedBroadcastRegion.priceValue)));
-        if (broadcastRegions.some(i => i.priceValue.toString() !== broadcastRegions[0].priceValue)) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, ""));
+        if (broadcastRegions.every(i => i.priceValue === broadcastRegions[0].priceValue)) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, (clickedBroadcastRegion.priceValue)));
+        if (broadcastRegions.some(i => i.priceValue !== broadcastRegions[0].priceValue)) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, ""));
         clickedRegion.states.forEach(state => {
           dispatch(actions.change(`forms.brcRules.state[${state.id}].priceValue`, (clickedBroadcastRegion.priceValue)))
           if (state.companies) state.companies.forEach(company => {
@@ -422,10 +422,10 @@ class AddBroadcast extends Component {
         if ((!statesFiltered.every(i => i.priceUnit === "$") && !statesFiltered.every(i => i.priceUnit === "%")) || (!broadcastRegions.every(i => i.priceUnit === "$") && !broadcastRegions.every(i => i.priceUnit === "%"))) dispatch(actions.change(`forms.brcRules.root[1].priceUnit`, ""))
       }
 
-      const someStatesValuesNotEqual = statesFiltered.some(i => i.priceValue.toString() !== statesFiltered[0].priceValue)
-      const someRegionsValuesNotEqual = broadcastRegions.some(i => i.priceValue.toString() !== broadcastRegions[0].priceValue)
-      const everyStatesValuesEqual = statesFiltered.every(i => i.priceValue.toString() === statesFiltered[0].priceValue)
-      const everyRegionsValuesEqual = broadcastRegions.every(i => i.priceValue.toString() === broadcastRegions[0].priceValue)
+      const someStatesValuesNotEqual = statesFiltered.some(i => i.priceValue !== statesFiltered[0].priceValue)
+      const someRegionsValuesNotEqual = broadcastRegions.some(i => i.priceValue !== broadcastRegions[0].priceValue)
+      const everyStatesValuesEqual = statesFiltered.every(i => i.priceValue === statesFiltered[0].priceValue)
+      const everyRegionsValuesEqual = broadcastRegions.every(i => i.priceValue === broadcastRegions[0].priceValue)
 
       if (clickedModel.includes("priceValue")) {
         if (everyStatesValuesEqual && everyRegionsValuesEqual) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, (clickedBroadcastState.priceValue)));
@@ -526,12 +526,12 @@ class AddBroadcast extends Component {
           ) dispatch(actions.change(`forms.brcRules.root[1].priceUnit`, ""))
       }
 
-      const someCompaniesValuesNotEqual = companiesFiltered.some(i => i.priceValue.toString() !== companiesFiltered[0].priceValue)
-      const someStatesValuesNotEqual = statesFiltered.some(i => i.priceValue.toString() !== statesFiltered[0].priceValue)
-      const someRegionsValuesNotEqual = broadcastRegions.some(i => i.priceValue.toString() !== broadcastRegions[0].priceValue)
-      const everyCompaniesValuesEqual = companiesFiltered.every(i => i.priceValue.toString() === companiesFiltered[0].priceValue)
-      const everyStatesValuesEqual = statesFiltered.every(i => i.priceValue.toString() === statesFiltered[0].priceValue)
-      const everyRegionsValuesEqual = broadcastRegions.every(i => i.priceValue.toString() === broadcastRegions[0].priceValue)
+      const someCompaniesValuesNotEqual = companiesFiltered.some(i => i.priceValue !== companiesFiltered[0].priceValue)
+      const someStatesValuesNotEqual = statesFiltered.some(i => i.priceValue !== statesFiltered[0].priceValue)
+      const someRegionsValuesNotEqual = broadcastRegions.some(i => i.priceValue !== broadcastRegions[0].priceValue)
+      const everyCompaniesValuesEqual = companiesFiltered.every(i => i.priceValue === companiesFiltered[0].priceValue)
+      const everyStatesValuesEqual = statesFiltered.every(i => i.priceValue === statesFiltered[0].priceValue)
+      const everyRegionsValuesEqual = broadcastRegions.every(i => i.priceValue === broadcastRegions[0].priceValue)
 
       if (clickedModel.includes("priceValue")) {
         if (everyCompaniesValuesEqual && everyStatesValuesEqual && everyRegionsValuesEqual) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, (clickedBroadcastCompany.priceValue)));
@@ -626,22 +626,28 @@ class AddBroadcast extends Component {
       }
 
       if (clickedModel.includes("priceValue")) {
-        const officesValuesEqual = officesFiltered.some(i => i.priceValue.toString() !== officesFiltered[0].priceValue)
-        const statesValuesEqual = statesFiltered.some(i => i.priceValue.toString() !== statesFiltered[0].priceValue)
-        const regionsValuesEqual = broadcastRegions.some(i => i.priceValue.toString() !== broadcastRegions[0].priceValue)
-        if (officesFiltered.every(i => i.priceValue.toString() === officesFiltered[0].priceValue) && statesFiltered.every(i => i.priceValue.toString() === statesFiltered[0].priceValue) && broadcastRegions.every(i => i.priceValue.toString() === statesFiltered[0].priceValue)) {
-          dispatch(actions.change(`forms.brcRules.root[1].priceValue`, (clickedBroadcastOffice.priceValue)));
-        }
-        if (officesFiltered.every(i => i.priceValue.toString() === officesFiltered[0].priceValue) && statesFiltered.every(i => i.priceValue.toString() === statesFiltered[0].priceValue)) {
-          dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].priceValue`, (clickedBroadcastOffice.priceValue)));
-        }
-        if (officesFiltered.every(i => i.priceValue.toString() === officesFiltered[0].priceValue)) dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].priceValue`, (clickedBroadcastOffice.priceValue)));
-        if (officesFiltered.every(i => i.priceValue.toString() === officesFiltered[0].priceValue)) dispatch(actions.change(`forms.brcRules.company[${clickedOffice.companyId}].priceValue`, (clickedBroadcastOffice.priceValue)));
+        const officesValuesNotEqual = officesFiltered && officesFiltered.some(i => i.priceValue !== officesFiltered[0].priceValue)
+        const statesValuesNotEqual = statesFiltered && statesFiltered.some(i => i.priceValue !== statesFiltered[0].priceValue)
+        const regionsValuesNotEqual = broadcastRegions && broadcastRegions.some(i => i.priceValue !== broadcastRegions[0].priceValue)
 
-        if (officesValuesEqual || statesValuesEqual || regionsValuesEqual) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, ""));
-        if (officesValuesEqual || statesValuesEqual) dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].priceValue`, ""));
-        if (officesValuesEqual) dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].priceValue`, ""));
-        if (officesValuesEqual) dispatch(actions.change(`forms.brcRules.company[${clickedOffice.companyId}].priceValue`, ""));
+        const officesValuesEqual = officesFiltered && officesFiltered.every(i => i.priceValue === officesFiltered[0].priceValue)
+        const statesValuesEqual = statesFiltered && statesFiltered.every(i => i.priceValue === statesFiltered[0].priceValue) 
+        const regionsValuesEqual = broadcastRegions && broadcastRegions.every(i => i.priceValue === broadcastRegions[0].priceValue)
+
+        if (officesValuesEqual && statesValuesEqual && regionsValuesEqual) {
+          dispatch(actions.change(`forms.brcRules.root[1].priceValue`, clickedBroadcastOffice.priceValue));
+        }
+        
+        if (officesValuesEqual && statesValuesEqual) {
+          dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].priceValue`, clickedBroadcastOffice.priceValue));
+        }
+        if (officesValuesEqual) dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].priceValue`, clickedBroadcastOffice.priceValue));
+        if (officesValuesEqual) dispatch(actions.change(`forms.brcRules.company[${clickedOffice.companyId}].priceValue`, clickedBroadcastOffice.priceValue));
+
+        if (officesValuesNotEqual || statesValuesNotEqual || regionsValuesNotEqual) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, ""));
+        if (officesValuesNotEqual || statesValuesNotEqual) dispatch(actions.change(`forms.brcRules.region[${clickedOffice.regionId}].priceValue`, ""));
+        if (officesValuesNotEqual) dispatch(actions.change(`forms.brcRules.state[${clickedOffice.stateId}].priceValue`, ""));
+        if (officesValuesNotEqual) dispatch(actions.change(`forms.brcRules.company[${clickedOffice.companyId}].priceValue`, ""));
       }
     }
   }
