@@ -1,14 +1,19 @@
 import React from 'react';
 import BroadcastField from "./BroadcastField";
 import StateBroadcastField from "./StateBroadcastField";
+import {filterByUniqueProperty} from "../../../../../utils/functions";
 
-const RegionBroadcastField = ({ regionsExpanded, storedStates, filterInput, statesExpanded, storedRegion, handleExpanded, handleRuleClick, dispatch, regionData, isClientList}) => {
+const RegionBroadcastField = ({ regionsExpanded, filteredOffices, filteredStates, flattenStates, storedStates, filterInput, statesExpanded, storedRegion, handleExpanded, handleRuleClick, dispatch, regionData, isClientList}) => {
   const partlyBrc = storedRegion && storedRegion.broadcastPartly
   const partlyAnonym = storedRegion && storedRegion.anonymousPartly
+
+  const statesOfFilteredOfficesIds = filteredOffices.map(i => i.stateId)
+  const statesOfFilteredOffices = flattenStates.filter(i => statesOfFilteredOfficesIds.includes(i.id))
+  const finalFilteredStates = [...filteredStates, ...statesOfFilteredOffices]
+
   const isFiltering = filterInput !== "";
   const isExpanded = regionsExpanded.includes(regionData.id) || isFiltering
-  const filteredStates = regionData.states.filter(i => i.name.toLowerCase().startsWith(filterInput.toLowerCase()))
-  const showedStates = isFiltering ? filteredStates : regionData.states
+  const showedStates = isFiltering ? filterByUniqueProperty(finalFilteredStates, "id").filter(i => i.regionId === regionData.id) : regionData.states
   return (
     <React.Fragment>
       <BroadcastField

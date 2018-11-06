@@ -487,8 +487,9 @@ class AddBroadcast extends Component {
             parentStates.forEach(state => dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}`, true)))
             parentRegions.forEach(region => dispatch(actions.change(`forms.brcRules.region[${region.id}].${rule}`, true)))
             dispatch(actions.change(`forms.brcRules.root[1].${rule}`, true))
-          }
+          } //tohle by melo byt OK
 
+///tohle je blbe, je potreba pracovat s kazdym statem zvlast...
           if (companiesFiltered.every(company => company[rule] === false)) {
             parentStates.forEach(state => dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}`, false)))
           }
@@ -503,6 +504,7 @@ class AddBroadcast extends Component {
             const companiesOfThisState = broadcastCompanies.filter(obj => state["companies"].find(obj2 => obj.id === obj2.id))
             if (companiesOfThisState.some(company => company[rule] === false)) dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}Partly`, true))
             if (companiesOfThisState.every(company => company[rule] === true)) dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}Partly`, false))
+            //if (companiesOfThisState.every(company => company[rule] === false)) dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}`, false))
           }) //TODO: takhle je to dobre! predelat i pro regiony!!!! a pro pricevalues a units
 
           if (companiesFiltered.some(company => company[rule] === false) || allStatesFilteredBrc.some(state => state[rule] === false)) parentRegions.forEach(region => dispatch(actions.change(`forms.brcRules.region[${region.id}].${rule}Partly`, true)))

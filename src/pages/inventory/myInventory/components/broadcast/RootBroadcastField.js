@@ -25,7 +25,8 @@ const RootBroadcastField = ({
   const partlyAnonym = storedRoot && storedRoot["1"].anonymousPartly
 
   const statessData =  rootData.regions.map(i => i.states)
-  const companiesData =  statessData.flat().map(i => i.companies)
+  const flattenStates = statessData.flat()
+  const companiesData =  flattenStates.map(i => i.companies)
   const flattenCompanies = companiesData.flat()
   const officesData =  flattenCompanies.map(i => i.offices)
   const flattenOffices = officesData.flat()
@@ -40,7 +41,11 @@ const RootBroadcastField = ({
 
   const regionsOfFilteredStatesIds = filteredStates.map(i => i.regionId)
   const regionsOfFilteredStatess = rootData.regions.filter(i => regionsOfFilteredStatesIds.includes(i.id))
-  const finalFilteredRegions = [...filteredRegions, ...regionsOfFilteredStatess]
+
+  const regionsOfFilteredOfficesIds = filteredOffices.map(i => i.regionId)
+  const regionsOfFilteredOffices = rootData.regions.filter(i => regionsOfFilteredOfficesIds.includes(i.id))
+
+  const finalFilteredRegions = [...filteredRegions, ...regionsOfFilteredStatess, ...regionsOfFilteredOffices]
   const showedRegions = isFiltering? filterByUniqueProperty(finalFilteredRegions, "id") : rootData.regions
 
   return (
@@ -73,6 +78,9 @@ const RootBroadcastField = ({
         filterInput={filterInput}
         handleExpanded={handleExpanded}
         handleRuleClick={handleRuleClick}
+        filteredOffices={filteredOffices}
+        filteredStates={filteredStates}
+        flattenStates={flattenStates}
       />
       })}
       {categoryFilter==="allcompanies" && showedCompanies.map(i => {

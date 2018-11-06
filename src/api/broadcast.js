@@ -124,7 +124,7 @@ const fakeBroadcast = {
               {
                 type: "company",
                 id: 3,
-                name: "Morgoth's company a.s.",
+                name: "ABC a.s.",
                 broadcast: 0,
                 anonymous: 1,
                 priceAddition: 150,
@@ -191,7 +191,7 @@ const fakeBroadcast = {
               {
                 type: "company",
                 id: 3,
-                name: "Morgoth's company a.s.",
+                name: "ABC a.s.",
                 broadcast: 0,
                 anonymous: 1,
                 priceAddition: 150,
