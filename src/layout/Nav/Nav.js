@@ -2,14 +2,14 @@ import React, {Component} from 'react';
 import {NavLink} from 'react-router-dom'
 import './nav.css'
 
-import logo from '../../images/nav/Logo.png';
-// import dashboard from '../../images/nav/dashboard.png';
-// import orders from '../../images/nav/orders.png';
-// import settings from '../../images/nav/settings.png';
-// import clients from '../../images/nav/clients.png';
-// import inventory from '../../images/nav/inventory.png';
-// import reports from '../../images/nav/reports.png';
-// import myAccount from '../../images/nav/myAccount.svg';
+//import logo from '../../images/nav/Logo.png';
+import dashboard from '../../images/nav/dashboard.png';
+import orders from '../../images/nav/orders.png';
+import settings from '../../images/nav/settings.png';
+import clients from '../../images/nav/clients.png';
+import inventory from '../../images/nav/inventory.png';
+import reports from '../../images/nav/reports.png';
+import myAccount from '../../images/nav/myAccount.svg';
 
 class Nav extends Component {
     constructor(props) {
@@ -55,7 +55,7 @@ class Nav extends Component {
         this.handleResize();
     }
 
-    componentDidMount(){
+    componentDidMount() {
         window.addEventListener('resize', this.handleResize.bind(this));
     }
 
@@ -63,7 +63,7 @@ class Nav extends Component {
         window.removeEventListener('resize', this.handleResize.bind(this));
     }
 
-    toggleMenu(e){
+    toggleMenu(e) {
         e.stopPropagation();
         let { menuOpen } = this.state;
         this.setState({
@@ -89,21 +89,41 @@ class Nav extends Component {
 
     render() {
         const { isScreenBig } = this.state;
+
+        let currentLogo;
+        const path = this.props.location.pathname;
+
+        if (path.includes('/inventory')) {
+            currentLogo = inventory
+        } else if (path.includes('/settings')) {
+            currentLogo = settings
+        } else if (path.includes('/orders')) {
+            currentLogo = orders
+        } else if (path.includes('/clients')) {
+            currentLogo = clients
+        } else if (path.includes('/reports')) {
+            currentLogo = reports
+        } else if (path.includes('/settings')) {
+            currentLogo = settings
+        } else if (path.includes('/administration')) {
+            currentLogo = myAccount
+        } else {
+            currentLogo = dashboard
+        }
+
         // const mobileState = menuOpen ? 'open' : '';
         let guestNav = isScreenBig ?
             <div className="nav-inside guest">
-                {/*<div className="logo">*/}
-                    {/*<NavLink to="/" >*/}
-                        {/*<img src={logo} alt='ECHO' />*/}
-                    {/*</NavLink>*/}
-                {/*</div>*/}
+                <div className="logo">
+                        <img src={currentLogo} alt='LOGO'/>
+                </div>
                 <div className='links'>
                     {this.renderDropdown('dashboard', [
                         {name: 'Dashboard', url: '/'},
                     ], 'Dashboard')}
                     {this.renderDropdown('inventory', [
-                        {name: 'All Inventory', url: '/inventory/all-inventory'},
                         {name: 'My Inventory', url: '/inventory/my-inventory'},
+                        {name: 'Marketplace', url: '/inventory/all-inventory'},
                         {name: 'Add Inventory', url: '/inventory/add-inventory'},
                     ], 'Inventory')}
                     {this.renderDropdown('orders', [
@@ -123,7 +143,7 @@ class Nav extends Component {
                         {name: 'Companies', url: '/administration/companies/'},
                         {name: 'Names', url: '/administration/names-synonyms'},
                         {name: 'Merchants', url: '/administration/merchants'},
-                        {name: 'New users', url: '/administration/users'},
+                        {name: 'New Users', url: '/administration/users'},
                         {name: 'Operators', url: '/administration/operators'},
                         ], 'Administration')}
                     {/*<span className="logout" onClick={() => this.props.logout()}>*/}

@@ -12,11 +12,12 @@ $nav-links-color: #b0b2b4;
     }
     .logo{
       padding-left: 30px;
-      padding-right: 60px;
+      padding-right: 0px;
       vertical-align: top;
-      margin-top: 16px;
+      margin-top: 10px;
       img{
-        width: 75px;
+        width: 50%;
+        height: 50%;
       }
     }
     .logout {

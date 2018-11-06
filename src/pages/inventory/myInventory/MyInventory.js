@@ -97,7 +97,7 @@ class MyInventory extends Component {
                 broadcastActive={this.state.brActive}/>;
         return (
             <div className='my-inventory'>
-                <h1 className='header inv-header'>INVENTORY OVERVIEW</h1>
+                <h1 className='header inv-header'>MY INVENTORY</h1>
                 <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}}/>
                 <h3 className='header small'>{getSelectedDataTable(this.props.productOffersTable)} product offerings selected</h3>
                 <Filter chemicalName productAgeFilter date assay quantity price condition form filterFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}} />
