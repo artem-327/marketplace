@@ -18,7 +18,8 @@ const RootBroadcastField = ({
   storedStates,
   storedCompanies,
   filterInput,
-  categoryFilter
+  categoryFilter,
+  filteredRegions, filteredStates, filteredCompanies, filteredOffices
 }) => {
   const partlyBrc = storedRoot && storedRoot["1"].broadcastPartly
   const partlyAnonym = storedRoot && storedRoot["1"].anonymousPartly
@@ -31,8 +32,16 @@ const RootBroadcastField = ({
   const uniqueCompanies = filterByUniqueProperty(flattenCompanies, "id")
 
   const isFiltering = filterInput !== "";
-  const filteredCompanies = flattenCompanies.filter(i => i.name.toLowerCase().startsWith(filterInput.toLowerCase()))
-  const showedCompanies = isFiltering ? filterByUniqueProperty(filteredCompanies, "id") : uniqueCompanies
+
+  const companiesOfFilteredOfficesIds = filteredOffices.map(i => i.companyId)
+  const companiesOfFilteredOffices = flattenCompanies.filter(i => companiesOfFilteredOfficesIds.includes(i.id))
+  const finalFilteredCompanies = [...filteredCompanies, ...companiesOfFilteredOffices]
+  const showedCompanies = isFiltering ? filterByUniqueProperty(finalFilteredCompanies, "id") : uniqueCompanies
+
+  const regionsOfFilteredStatesIds = filteredStates.map(i => i.regionId)
+  const regionsOfFilteredStatess = rootData.regions.filter(i => regionsOfFilteredStatesIds.includes(i.id))
+  const finalFilteredRegions = [...filteredRegions, ...regionsOfFilteredStatess]
+  const showedRegions = isFiltering? filterByUniqueProperty(finalFilteredRegions, "id") : rootData.regions
 
   return (
     <>
@@ -50,7 +59,7 @@ const RootBroadcastField = ({
         handleRuleClick={handleRuleClick}
       />
 
-      {categoryFilter==="allregions" && rootData.regions.map(i => {
+      {categoryFilter==="allregions" && showedRegions.map(i => {
         return <RegionBroadcastField
         type="region"
         dispatch={dispatch}
@@ -79,6 +88,7 @@ const RootBroadcastField = ({
         handleRuleClick={handleRuleClick}
         flattenOffices={flattenOffices}
         storedCompany={storedCompanies && storedCompanies.find(j => j.id === i.id)}
+        filteredOffices={filteredOffices}
       />
       })}
     </>

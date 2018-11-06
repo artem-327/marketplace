@@ -133,7 +133,7 @@ const fakeBroadcast = {
                   {
                     type: "office",
                     id: 3,
-                    name: "Office CA",
+                    name: "Office Utah B",
                     broadcast: 0,
                     anonymous: 1,
                     priceAddition: 150
@@ -141,7 +141,7 @@ const fakeBroadcast = {
                   {
                     type: "office",
                     id: 6,
-                    name: "Office CX",
+                    name: "Office Utah A",
                     broadcast: 0,
                     anonymous: 1,
                     priceAddition: 150
@@ -159,7 +159,7 @@ const fakeBroadcast = {
                   {
                     type: "office",
                     id: 943,
-                    name: "This sucks Utah",
+                    name: "Kancl v Utahu",
                     broadcast: 0,
                     anonymous: 1,
                     priceAddition: 150
@@ -200,7 +200,7 @@ const fakeBroadcast = {
                   {
                     type: "office",
                     id: 36,
-                    name: "Office Barad-dûr",
+                    name: "Barad-dûr",
                     broadcast: 0,
                     anonymous: 1,
                     priceAddition: 150

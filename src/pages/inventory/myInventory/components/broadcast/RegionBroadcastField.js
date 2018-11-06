@@ -3,10 +3,10 @@ import BroadcastField from "./BroadcastField";
 import StateBroadcastField from "./StateBroadcastField";
 
 const RegionBroadcastField = ({ regionsExpanded, storedStates, filterInput, statesExpanded, storedRegion, handleExpanded, handleRuleClick, dispatch, regionData, isClientList}) => {
-  const isExpanded = regionsExpanded.includes(regionData.id)
   const partlyBrc = storedRegion && storedRegion.broadcastPartly
   const partlyAnonym = storedRegion && storedRegion.anonymousPartly
   const isFiltering = filterInput !== "";
+  const isExpanded = regionsExpanded.includes(regionData.id) || isFiltering
   const filteredStates = regionData.states.filter(i => i.name.toLowerCase().startsWith(filterInput.toLowerCase()))
   const showedStates = isFiltering ? filteredStates : regionData.states
   return (

@@ -22,7 +22,11 @@ class AddBroadcast extends Component {
     companiesExpanded: [],
     clickedModel: "",
     clickedModelId: false,
-    filterInput: ""
+    filterInput: "",
+    filteredRegions: [],
+    filteredStates: [], 
+    filteredCompanies: [], 
+    filteredOffices: []
   };
 
   componentDidMount() {
@@ -179,7 +183,23 @@ class AddBroadcast extends Component {
   }
 
   onChangeHandler = (e) =>{
-   this.setState({filterInput: e.target.value});
+   this.setState({filterInput: e.target.value}, () => {
+      const {filterInput} = this.state;
+      const regions = this.props.broadcastData.root.regions
+      const states = regions.map(i => i.states)
+      const flattenStates = states.flat()
+      const companies = flattenStates.map(state => state.companies)
+      const flattenCompanies = companies.flat()
+      const offices = flattenStates.map(state => state.companies.map(company => company.offices))
+      const flattenOffices = offices.flat(2)
+      const filteredRegions = regions.filter(i => i.name.toLowerCase().startsWith(filterInput.toLowerCase()))
+      const filteredStates = flattenStates.filter(i => i.name.toLowerCase().startsWith(filterInput.toLowerCase()))
+      const filteredCompanies = flattenCompanies.filter(i => i.name.toLowerCase().startsWith(filterInput.toLowerCase()))
+      const filteredOffices = flattenOffices.filter(i => i.name.toLowerCase().startsWith(filterInput.toLowerCase()))
+      this.setState({
+        filteredRegions,filteredStates, filteredCompanies, filteredOffices
+      })
+   });
   }
 
   handleExpanded = (e) => {
@@ -483,18 +503,14 @@ class AddBroadcast extends Component {
             const companiesOfThisState = broadcastCompanies.filter(obj => state["companies"].find(obj2 => obj.id === obj2.id))
             if (companiesOfThisState.some(company => company[rule] === false)) dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}Partly`, true))
             if (companiesOfThisState.every(company => company[rule] === true)) dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}Partly`, false))
-          })
+          }) //TODO: takhle je to dobre! predelat i pro regiony!!!! a pro pricevalues a units
 
           if (companiesFiltered.some(company => company[rule] === false) || allStatesFilteredBrc.some(state => state[rule] === false)) parentRegions.forEach(region => dispatch(actions.change(`forms.brcRules.region[${region.id}].${rule}Partly`, true)))
           if (companiesFiltered.some(company => company[rule] === false) || allStatesFilteredBrc.some(state => state[rule] === false) || allRegionsFilteredBrc.some(state => state[rule] === false) ) {            
             dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, true))
           }
           
-          // if (companiesFiltered.every(company => company[rule] === true)) { //toto je blobst, jde mi o vsechny kompany nadrazenyho statu - iterovat pres vsechny staty a porovnavat?
-          //   parentStates.forEach(state => {
-          //     dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}Partly`, false))
-          //   })
-          // }
+
           if (companiesFiltered.every(company => company[rule] === true) && statesFiltered.every(state => state[rule] === true)) {
             parentRegions.forEach(region => dispatch(actions.change(`forms.brcRules.region[${region.id}].${rule}Partly`, false)))
           }
@@ -677,7 +693,7 @@ class AddBroadcast extends Component {
       removePopup, dispatch, broadcastData, broadcastIsFetching,
       storedRoot, storedRegions, storedStates, storedOffices, storedCompanies
     } = this.props;
-    const { isClientList, categoryFilter, regionsExpanded, companiesExpanded, statesExpanded, filterInput } = this.state;
+    const { isClientList, categoryFilter, regionsExpanded, companiesExpanded, statesExpanded, filterInput, filteredRegions, filteredStates, filteredCompanies, filteredOffices } = this.state;
     if (broadcastIsFetching || !storedOffices) return <Spinner />
     console.log(this.props, this.state)
     const categoryFilterOptions = [
@@ -735,7 +751,6 @@ class AddBroadcast extends Component {
                 opns={categoryFilterOptions}
                 placeholder="Select Category Filter"
                 onChange={value => this.setState({categoryFilter: value})}
-                currentValue="All Companies"
               />
             </div>
 
@@ -790,6 +805,10 @@ class AddBroadcast extends Component {
               storedStates={this.convertObjectToArray(storedStates)}
               storedCompanies={this.convertObjectToArray(storedCompanies)}
               filterInput={filterInput}
+              filteredRegions={filteredRegions}
+              filteredStates={filteredStates}
+              filteredCompanies={filteredCompanies} 
+              filteredOffices={filteredOffices}
             />
           {/* {!searchedItem && regions.map(i => <RegionBroadcastField
               regionDetail={regionDetail}

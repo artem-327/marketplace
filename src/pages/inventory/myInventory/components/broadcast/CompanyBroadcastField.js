@@ -1,12 +1,14 @@
 import React from 'react';
 import BroadcastField from "./BroadcastField";
 
-const CompanyBroadcastField = ({dispatch, storedCompany, companyData, flattenOffices, companiesExpanded, handleExpanded, handleRuleClick, isClientList}) => {
+const CompanyBroadcastField = ({filteredOffices, dispatch, storedCompany, companyData, filterInput, flattenOffices, companiesExpanded, handleExpanded, handleRuleClick, isClientList}) => {
 
-  const isExpanded = companiesExpanded.includes(companyData.id)
   const partlyBrc = storedCompany && storedCompany.broadcastPartly
   const partlyAnonym = storedCompany && storedCompany.anonymousPartly
   const officesInThisCompany = flattenOffices.filter(i => i.companyId === companyData.id)
+  const isFiltering = filterInput !== "";
+  const isExpanded = companiesExpanded.includes(companyData.id) || isFiltering
+  const showedOffices = isFiltering ? filteredOffices.filter(i => i.companyId === companyData.id) : officesInThisCompany
   return (
     <>
       <BroadcastField
@@ -22,7 +24,7 @@ const CompanyBroadcastField = ({dispatch, storedCompany, companyData, flattenOff
         handleRuleClick={handleRuleClick}
         partlyAnonym={partlyAnonym}
       />
-      {isExpanded && officesInThisCompany.map(i => {
+      {isExpanded && showedOffices.map(i => {
         return <BroadcastField
         name={i.name}
         type="office"
