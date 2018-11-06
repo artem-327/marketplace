@@ -498,18 +498,28 @@ class AddBroadcast extends Component {
             dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, false))
           }
           
-          if (companiesFiltered.some(company => company[rule] === true)) {
-            parentStates.forEach(state => dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}`, true)))
-            parentRegions.forEach(region => dispatch(actions.change(`forms.brcRules.region[${region.id}].${rule}`, true)))
-          } //tohle by melo byt OK
 
-///tohle je blbe, je potreba pracovat s kazdym statem zvlast...
-          if (companiesFiltered.every(company => company[rule] === false)) {
-            parentStates.forEach(state => dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}`, false)))
-          }
-          if (companiesFiltered.every(company => company[rule] === false) && statesFiltered.every(i => i[rule] === false)) {
-            parentRegions.forEach(region => dispatch(actions.change(`forms.brcRules.region[${region.id}].${rule}`, false)))
-          }
+
+///this is probably wrong - needs more tests
+          // if (companiesFiltered.some(company => company[rule] === true)) {
+          //   parentStates.forEach(state => dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}`, true)))
+          //   parentRegions.forEach(region => dispatch(actions.change(`forms.brcRules.region[${region.id}].${rule}`, true)))
+          // } 
+          // if (companiesFiltered.every(company => company[rule] === false)) {
+          //   parentStates.forEach(state => dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}`, false)))
+          // }
+          // if (companiesFiltered.every(company => company[rule] === false) && statesFiltered.every(i => i[rule] === false)) {
+          //   parentRegions.forEach(region => dispatch(actions.change(`forms.brcRules.region[${region.id}].broadcast`, false)))
+          // }
+///
+
+          //do this same for the regions
+          parentStates.forEach(state => {
+            const companiesOfThisState = broadcastCompanies.filter(obj => state["companies"].find(obj2 => obj.id === obj2.id))
+            if (companiesOfThisState.every(company => company[rule] === false)) {
+              dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}`, false))
+            } else {dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}`, true))}
+          }) 
 
           parentStates.forEach(state => {
             const companiesOfThisState = broadcastCompanies.filter(obj => state["companies"].find(obj2 => obj.id === obj2.id))
@@ -527,12 +537,6 @@ class AddBroadcast extends Component {
               dispatch(actions.change(`forms.brcRules.region[${region.id}].${rule}Partly`, true))
             }
           })
-
-          // if (companiesFiltered.some(company => company[rule] === false) || allStatesFilteredBrc.some(state => state[rule] === false)) parentRegions.forEach(region => dispatch(actions.change(`forms.brcRules.region[${region.id}].${rule}Partly`, true)))
-       
-          // if (companiesFiltered.every(company => company[rule] === true) && statesFiltered.every(state => state[rule] === true)) {
-          //   parentRegions.forEach(region => dispatch(actions.change(`forms.brcRules.region[${region.id}].${rule}Partly`, false)))
-          // }
 
           if (clickedBroadcastCompany[rule] === isChecked && clickedCompany.offices) {
             const allOffices = clickedCompanies.map(i => i.offices).flat()
