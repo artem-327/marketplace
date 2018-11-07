@@ -8,12 +8,15 @@ import {
     PRODUCTFROMCART_REMOVE_REQUESTED, PRODUCTFROMCART_REMOVE_FAILED, PRODUCTFROMCART_REMOVE_SUCCEEDED,
     CARTITEM_CREATE_REQUESTED, CARTITEM_CREATE_FAILED, CARTITEM_CREATE_SUCCEEDED,
     DELIVERYADDRESS_CREATE_REQUESTED, DELIVERYADDRESS_CREATE_FAILED, DELIVERYADDRESS_CREATE_SUCCEEDED,
+    ORDERDETAIL_FETCH_REQUESTED, ORDERDETAIL_FETCH_FAILED, ORDERDETAIL_FETCH_SUCCEEDED,
+    ORDER_EDIT_SUCCEEDED, ORDER_EDIT_FAILED, ORDER_EDIT_REQUESTED,
+    DELIVERYADDRESS_EDIT_SUCCEEDED, DELIVERYADDRESS_EDIT_FAILED, DELIVERYADDRESS_EDIT_REQUESTED,
 } from "../../../constants/cart";
 
 function* getProductOffer(action) {
     try {
-        const offers = yield call(Api.getProductOffer, action.payload.id);
-        yield put({type: OFFER_FETCH_SUCCEEDED, payload: offers});
+        const offerDetail = yield call(Api.getProductOffer, action.payload.id);
+        yield put({type: OFFER_FETCH_SUCCEEDED, payload: offerDetail});
     } catch (e) {
         yield put({type: OFFER_FETCH_FAILED, message: e.message});
     }
@@ -57,9 +60,9 @@ function* removeProductFromCart(action) {
     }
 }
 
-function* createCartItem(action) {
+function* createNewOrder(action) {
     try {
-        yield call(Api.createCartItem, action.payload);
+        yield call(Api.createNewOrder, action.payload);
         yield put({type: CARTITEM_CREATE_SUCCEEDED});
     } catch (e) {
         yield put({type: CARTITEM_CREATE_FAILED, message: e.message});
@@ -75,14 +78,44 @@ function* createDeliveryAddress(action) {
     }
 }
 
+function* getOrderDetail(action) {
+    try {
+        const order = yield call(Api.getOrderDetail, action.payload.id);
+        yield put({type: ORDERDETAIL_FETCH_SUCCEEDED, payload: order});
+    } catch (e) {
+        yield put({type: ORDERDETAIL_FETCH_FAILED, message: e.message});
+    }
+}
+
+function* editOrder(action) {
+    try {
+        yield call(Api.editOrder, action.payload.order);
+        yield put({type: ORDER_EDIT_SUCCEEDED});
+    } catch (e) {
+        yield put({type: ORDER_EDIT_FAILED, message: e.message});
+    }
+}
+
+function* editDeliveryAddress(action) {
+    try {
+        yield call(Api.editDeliveryAddress, action.payload.address);
+        yield put({type: DELIVERYADDRESS_EDIT_SUCCEEDED});
+    } catch (e) {
+        yield put({type: DELIVERYADDRESS_EDIT_FAILED, message: e.message});
+    }
+}
+
 function* cartSaga() {
     yield takeEvery(OFFER_FETCH_REQUESTED, getProductOffer);
     yield takeEvery(CART_FETCH_REQUESTED, fetchCart);
     yield takeEvery(DELIVERYADDRESSES_FETCH_REQUESTED, fetchDeliveryAddresses);
     yield takeEvery(PAYMENTS_FETCH_REQUESTED, fetchPayments);
     yield takeEvery(PRODUCTFROMCART_REMOVE_REQUESTED, removeProductFromCart);
-    yield takeEvery(CARTITEM_CREATE_REQUESTED, createCartItem);
+    yield takeEvery(CARTITEM_CREATE_REQUESTED, createNewOrder);
     yield takeEvery(DELIVERYADDRESS_CREATE_REQUESTED, createDeliveryAddress);
+    yield takeEvery(ORDERDETAIL_FETCH_REQUESTED, getOrderDetail);
+    yield takeEvery(ORDER_EDIT_REQUESTED, editOrder);
+    yield takeEvery(DELIVERYADDRESS_EDIT_REQUESTED, editDeliveryAddress);
 }
 
 export default cartSaga;

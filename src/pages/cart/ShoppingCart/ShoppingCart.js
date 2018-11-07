@@ -32,8 +32,8 @@ class ShoppingCart extends Component {
       <table>
         <tbody>
           <tr><td>Subtotal</td><td>${totalPrice}</td></tr>
-          <tr><td>Estimated Shipping</td><td>$111</td></tr>
-          <tr><td>Estimated Tax</td><td>$111</td></tr>
+          <tr><td>Estimated Shipping</td><td>$111</td></tr>{/* TODO: change the fake price */}
+          <tr><td>Estimated Tax</td><td>$111</td></tr>{/* TODO: change the fake price */}
           <tr><td><b>Total</b></td><td>${totalPrice}</td></tr>
         </tbody>
       </table>
@@ -60,7 +60,7 @@ class ShoppingCart extends Component {
       <div className="submenu">
         <div className="submenu-link">
           <i className="fas fa-angle-left"></i>
-          <b> Back to Product/Purchase info</b>
+          <b>Back to Product/Purchase info</b>
         </div>
       </div>
       <div className="shopping-cart">

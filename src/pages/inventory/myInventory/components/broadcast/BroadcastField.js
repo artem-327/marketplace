@@ -20,7 +20,7 @@ const BroadcastField = ({ name, id, type, isList, showSubordinateItems, isExpand
           <div className="list-rules">
             <SwitcherRedux
               model={`.${type}.${id}.include`}
-              isrounded="yes"
+              isrounded
             />
             <CheckboxBroadcastRedux
               model={`.${type}.${id}.anonymous`}

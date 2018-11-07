@@ -4,6 +4,7 @@ import {
     STATES_FETCH_REQUESTED, STATES_FETCH_SUCCEEDED,
     STATEDETAIL_FETCH_REQUESTED, STATEDETAIL_FETCH_SUCCEEDED,
     REGIONDETAIL_FETCH_REQUESTED, REGIONDETAIL_FETCH_SUCCEEDED,
+    PROVINCES_FETCH_REQUESTED, PROVINCES_FETCH_SUCCEEDED,
 } from "../constants/locations";
 
 const FETCH_WAREHOUSE = 'FETCH_WAREHOUSE';
@@ -25,6 +26,7 @@ export const initialState = {
     locations: [],
     regions: [],
     states: [],
+    provinces: [],
     stateDetail: {},
     regionDetail: {},
     stateDetailIsFetching: false,
@@ -125,6 +127,20 @@ export default function reducer(state = initialState, action) {
                 warehouseDistances: action.payload
             }
         }
+
+        case PROVINCES_FETCH_REQUESTED: {
+            return {
+                ...state,
+                provincesAreFetching: true,
+            }
+        }
+        case PROVINCES_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                provinces: action.payload,
+                provincesAreFetching: false
+            }
+        }
         default: {
             return state
         }
@@ -193,4 +209,8 @@ export function fetchWarehouseDistances(){
 
 export function fetchRegionDetail(id) {
     return {type: REGIONDETAIL_FETCH_REQUESTED, payload: {id}}
+}
+
+export function fetchProvinces(search = null) {
+    return {type: PROVINCES_FETCH_REQUESTED, payload: {search}}
 }

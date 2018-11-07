@@ -87,6 +87,13 @@ class Nav extends Component {
         </div>
     }
 
+    renderMenuItem(id, link, name){
+        const activeClass = this.props.location.pathname.split('/')[1] === id ? 'active' : null;
+        return <div className={"dropdown-nav " + activeClass}>
+            <span className='dropdown-link-center'><NavLink to={id === 'dashboard' ? '/' : '/' + id} activeClassName='active'>{name}</NavLink></span>
+        </div>
+    }
+
     render() {
         const { isScreenBig } = this.state;
 
@@ -118,34 +125,35 @@ class Nav extends Component {
                         <img src={currentLogo} alt='LOGO'/>
                 </div>
                 <div className='links'>
-                    {this.renderDropdown('dashboard', [
+                    {this.renderMenuItem('dashboard', [
                         {name: 'Dashboard', url: '/'},
                     ], 'Dashboard')}
                     {this.renderDropdown('inventory', [
                         {name: 'My Inventory', url: '/inventory/my-inventory'},
                         {name: 'Marketplace', url: '/inventory/all-inventory'},
                         {name: 'Add Inventory', url: '/inventory/add-inventory'},
+                        {name: 'Shopping Cart', url: '/cart/shopping-cart'}
                     ], 'Inventory')}
-                    {this.renderDropdown('orders', [
+                    {this.renderMenuItem('orders', [
                         {name: 'Orders', url: '/orders'},
                     ], 'Orders')}
-                    {this.renderDropdown('clients', [
+                    {this.renderMenuItem('clients', [
                         {name: 'Clients', url: '/clients'},
                     ], 'Clients')}
-                    {this.renderDropdown('reports', [
+                    {this.renderMenuItem('reports', [
                         {name: 'Reports', url: '/reports'},
                     ], 'Reports')}
-                    {this.renderDropdown('settings', [
+                    {this.renderMenuItem('settings', [
                         {name: 'Settings', url: '/settings'},
                     ], 'Settings')}
                     {/* Temporary hide */}
-                    {this.renderDropdown('administration', [
+                    {/*this.renderDropdown('administration', [
                         {name: 'Companies', url: '/administration/companies/'},
                         {name: 'Names', url: '/administration/names-synonyms'},
                         {name: 'Merchants', url: '/administration/merchants'},
                         {name: 'New Users', url: '/administration/users'},
                         {name: 'Operators', url: '/administration/operators'},
-                        ], 'Administration')}
+                        ], 'Administration')*/}
                     {/*<span className="logout" onClick={() => this.props.logout()}>*/}
                         {/*<NavLink to="/login" className='nav-link' activeClassName='active'>*/}
                             {/*<span className='link-center'>*/}

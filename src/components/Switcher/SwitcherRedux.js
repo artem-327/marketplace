@@ -13,7 +13,7 @@ const SwitcherRedux = (props) => {
         value: (props) => props.viewValue,
       }}
       controlProps={{
-        isrounded: { isrounded }
+        isrounded
       }}
       {...props}
     />

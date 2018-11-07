@@ -72,6 +72,10 @@ $nav-links-color: #b0b2b4;
       .dropdown-link-center{
         padding: 14px 15px 10px 15px;
         display: inline-block;
+        a {
+          color: #b0b2b4;
+          text-decoration: none;
+        }
         .dropdown-nav-icon{
           display: inline-block;
           font-size: .8rem;

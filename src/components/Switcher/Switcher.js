@@ -2,7 +2,7 @@ import React from 'react';
 import './Switcher.css';
 
 const Switcher = (props) => {
-  const sliderType = props.isrounded === "yes" ? "slider round" : "slider"
+  const sliderType = props.isrounded ? "slider round" : "slider"
   return (
     <div className="switch-container">
     <div className="switch-container">
