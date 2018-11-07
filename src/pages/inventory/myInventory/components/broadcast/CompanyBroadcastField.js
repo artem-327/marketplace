@@ -3,8 +3,8 @@ import BroadcastField from "./BroadcastField";
 
 const CompanyBroadcastField = ({filteredOffices, dispatch, storedCompany, companyData, filterInput, flattenOffices, companiesExpanded, handleExpanded, handleRuleClick, isClientList}) => {
 
-  const partlyBrc = storedCompany && storedCompany.broadcastPartly
-  const partlyAnonym = storedCompany && storedCompany.anonymousPartly
+  const partlybrc = storedCompany && storedCompany.broadcastPartly
+  const partlyanonym = storedCompany && storedCompany.anonymousPartly
   const officesInThisCompany = flattenOffices.filter(i => i.companyId === companyData.id)
   const isFiltering = filterInput !== "";
   const isExpanded = companiesExpanded.includes(companyData.id) || isFiltering
@@ -17,12 +17,13 @@ const CompanyBroadcastField = ({filteredOffices, dispatch, storedCompany, compan
         dispatch={dispatch}
         isClientList={isClientList}
         id={companyData.id}
-        partlyBrc={partlyBrc}
+        partlybrc={partlybrc}
         isExpanded={isExpanded}
         handleExpanded={handleExpanded}
         hasChildren={companyData.offices.length > 0}
         handleRuleClick={handleRuleClick}
-        partlyAnonym={partlyAnonym}
+        partlyanonym={partlyanonym}
+        isFiltering={isFiltering}
       />
       {isExpanded && showedOffices.map(i => {
         return <BroadcastField

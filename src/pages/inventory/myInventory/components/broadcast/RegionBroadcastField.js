@@ -4,8 +4,8 @@ import StateBroadcastField from "./StateBroadcastField";
 import {filterByUniqueProperty} from "../../../../../utils/functions";
 
 const RegionBroadcastField = ({ regionsExpanded, filteredOffices, filteredStates, flattenStates, storedStates, filterInput, statesExpanded, storedRegion, handleExpanded, handleRuleClick, dispatch, regionData, isClientList}) => {
-  const partlyBrc = storedRegion && storedRegion.broadcastPartly
-  const partlyAnonym = storedRegion && storedRegion.anonymousPartly
+  const partlybrc = storedRegion && storedRegion.broadcastPartly
+  const partlyanonym = storedRegion && storedRegion.anonymousPartly
 
   const statesOfFilteredOfficesIds = filteredOffices.map(i => i.stateId)
   const statesOfFilteredOffices = flattenStates.filter(i => statesOfFilteredOfficesIds.includes(i.id))
@@ -26,8 +26,9 @@ const RegionBroadcastField = ({ regionsExpanded, filteredOffices, filteredStates
         handleExpanded={handleExpanded}
         hasChildren={regionData.states.length > 0}
         handleRuleClick={handleRuleClick}
-        partlyBrc={partlyBrc}
-        partlyAnonym={partlyAnonym}
+        partlybrc={partlybrc}
+        partlyanonym={partlyanonym}
+        isFiltering={isFiltering}
       />
       {isExpanded && showedStates.map(i => {
         return <StateBroadcastField

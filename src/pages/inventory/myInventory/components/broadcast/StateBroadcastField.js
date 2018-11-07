@@ -4,8 +4,8 @@ import BroadcastField from "./BroadcastField";
 const StateBroadcastField = ({dispatch, storedState, stateData, filterInput, statesExpanded, handleExpanded, handleRuleClick, isClientList}) => {
   const offices = stateData.companies.map(i => i.offices)
   const flattenOffices = offices.flat()
-  const partlyBrc = storedState && storedState.broadcastPartly
-  const partlyAnonym = storedState && storedState.anonymousPartly
+  const partlybrc = storedState && storedState.broadcastPartly
+  const partlyanonym = storedState && storedState.anonymousPartly
 
   const isFiltering = filterInput !== "";
   const filteredOffices = flattenOffices.filter(i => i.name.toLowerCase().startsWith(filterInput.toLowerCase()))
@@ -19,12 +19,13 @@ const StateBroadcastField = ({dispatch, storedState, stateData, filterInput, sta
         dispatch={dispatch}
         isClientList={isClientList}
         id={stateData.id}
-        partlyBrc={partlyBrc}
         isExpanded={isExpanded}
         handleExpanded={handleExpanded}
         hasChildren={flattenOffices.length > 0}
         handleRuleClick={handleRuleClick}
-        partlyAnonym={partlyAnonym}
+        partlyanonym={partlyanonym}
+        partlybrc={partlybrc}
+        isFiltering={isFiltering}
       />
 
       {isExpanded && showedOffices.map(i => {

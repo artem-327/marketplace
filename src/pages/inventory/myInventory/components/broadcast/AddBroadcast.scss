@@ -95,15 +95,19 @@
             &.root {
                 background-color: lighten($blue-color, 30%);
                 .field-name {
-                  cursor: pointer;  
                   font-weight: bold;
                   padding-left: 0.5em;
+                  &.pointer {
+                    cursor: pointer; 
+                  }
                 }
               }
             &.region {
               background-color: $light-blue-color;
               .field-name {
-                cursor: pointer;  
+                &.pointer {
+                  cursor: pointer; 
+                }
                 font-weight: bold;
                 padding-left: 1em;
               }
@@ -111,14 +115,18 @@
             &.state {
               background-color: $light-60-grey-color;
               .field-name {
-                cursor: pointer;  
+                &.pointer {
+                  cursor: pointer; 
+                } 
                 padding-left: 2em;
               }
             }
             &.company {
               background-color: $light-60-grey-color;
               .field-name {
-                cursor: pointer;
+                &.pointer {
+                  cursor: pointer; 
+                }
                 padding-left: 2em;
               }
             }

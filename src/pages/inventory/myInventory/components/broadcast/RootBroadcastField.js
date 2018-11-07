@@ -19,11 +19,14 @@ const RootBroadcastField = ({
   storedCompanies,
   filterInput,
   categoryFilter,
-  filteredRegions, filteredStates, filteredCompanies, filteredOffices
+  filteredRegions, 
+  filteredStates, 
+  filteredCompanies, 
+  filteredOffices
 }) => {
-  const partlyBrc = storedRoot && storedRoot["1"].broadcastPartly
-  const partlyAnonym = storedRoot && storedRoot["1"].anonymousPartly
-
+  if (!rootData.regions) return <div>...loading</div>
+  const partlybrc = storedRoot && storedRoot["1"].broadcastPartly
+  const partlyanonym = storedRoot && storedRoot["1"].anonymousPartly
   const statessData =  rootData.regions.map(i => i.states)
   const flattenStates = statessData.flat()
   const companiesData =  flattenStates.map(i => i.companies)
@@ -55,13 +58,14 @@ const RootBroadcastField = ({
         type="root"
         dispatch={dispatch}
         isClientList={isClientList}
-        id={rootData.id}
+        id={1}
         isExpanded={true}
         hasChildren={rootData.regions.length > 0}
-        partlyBrc={partlyBrc}
-        partlyAnonym={partlyAnonym}
+        partlybrc={partlybrc}
+        partlyanonym={partlyanonym}
         handleExpanded={handleExpanded}
         handleRuleClick={handleRuleClick}
+        isFiltering={isFiltering}
       />
 
       {categoryFilter==="allregions" && showedRegions.map(i => {
@@ -81,6 +85,7 @@ const RootBroadcastField = ({
         filteredOffices={filteredOffices}
         filteredStates={filteredStates}
         flattenStates={flattenStates}
+        isFiltering={isFiltering}
       />
       })}
       {categoryFilter==="allcompanies" && showedCompanies.map(i => {
@@ -97,6 +102,7 @@ const RootBroadcastField = ({
         flattenOffices={flattenOffices}
         storedCompany={storedCompanies && storedCompanies.find(j => j.id === i.id)}
         filteredOffices={filteredOffices}
+        isFiltering={isFiltering}
       />
       })}
     </>

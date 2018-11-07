@@ -57,7 +57,7 @@
       border: solid #329ED6;
       border-width: 0 2px 2px 0;
       transform: rotate(45deg); }
-    .input-checkbox .checkmark.partlyAnonym:after {
+    .input-checkbox .checkmark.partlyanonym:after {
       border: solid #C0523F;
       border-width: 0 2px 2px 0; }
   .input-checkbox input {

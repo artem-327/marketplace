@@ -7,12 +7,24 @@ import SwitcherRedux from "../../../../../components/Switcher/SwitcherRedux";
 import { isNumber } from "../../../../../utils/validation";
 
 
-const BroadcastField = ({ partlyBrc, partlyAnonym, name, id, type, isClientList, handleExpanded, handleRuleClick, isExpanded, hasChildren }) => {
+const BroadcastField = ({ 
+  partlybrc, 
+  partlyanonym, 
+  name, 
+  id, 
+  type, 
+  isFiltering, 
+  isClientList, 
+  handleExpanded, 
+  handleRuleClick, 
+  isExpanded, 
+  hasChildren 
+}) => {
     return (
       <div className={`broadcast-field ${type} ${isClientList ? "client-list" : "price-list"}`}>
-        <div className="field-name" name={type} id={id} onClick={e => handleExpanded(e)}>
-          {hasChildren && !isExpanded && <i className="fas fa-angle-right" />}
-          {hasChildren && isExpanded && <i className="fas fa-angle-down" />} 
+        <div className={`field-name ${isFiltering || !hasChildren ? "" : "pointer"}`} name={type} id={id} onClick={e => handleExpanded(e)}>
+          {hasChildren && !isFiltering && !isExpanded && <i className="fas fa-angle-right" />}
+          {hasChildren && !isFiltering && isExpanded && <i className="fas fa-angle-down" />} 
           {name}
         </div>
         {isClientList 
@@ -21,15 +33,15 @@ const BroadcastField = ({ partlyBrc, partlyAnonym, name, id, type, isClientList,
             <SwitcherRedux
               model={`.${type}[${id}].broadcast`}
               id={id}
-              isrounded
-              partlyBrc={partlyBrc}
+              isrounded={1}
+              partlybrc={partlybrc ? 1 : 0} //to prevent reactDom warnings
               onClick={handleRuleClick}
             />
             <CheckboxBroadcastRedux
               id={id}
               model={`.${type}[${id}].anonymous`}
               onClick={handleRuleClick}
-              partlyAnonym={partlyAnonym}
+              partlyanonym={partlyanonym ? 1 : 0}
             />
           </div>
         ) 

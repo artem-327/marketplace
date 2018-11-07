@@ -73,25 +73,29 @@
       .add-broadcast .broadcast-main .broadcast-field.root {
         background-color: #b2daf0; }
         .add-broadcast .broadcast-main .broadcast-field.root .field-name {
-          cursor: pointer;
           font-weight: bold;
           padding-left: 0.5em; }
+          .add-broadcast .broadcast-main .broadcast-field.root .field-name.pointer {
+            cursor: pointer; }
       .add-broadcast .broadcast-main .broadcast-field.region {
         background-color: #EFF7FC; }
         .add-broadcast .broadcast-main .broadcast-field.region .field-name {
-          cursor: pointer;
           font-weight: bold;
           padding-left: 1em; }
+          .add-broadcast .broadcast-main .broadcast-field.region .field-name.pointer {
+            cursor: pointer; }
       .add-broadcast .broadcast-main .broadcast-field.state {
         background-color: #f3f3f4; }
         .add-broadcast .broadcast-main .broadcast-field.state .field-name {
-          cursor: pointer;
           padding-left: 2em; }
+          .add-broadcast .broadcast-main .broadcast-field.state .field-name.pointer {
+            cursor: pointer; }
       .add-broadcast .broadcast-main .broadcast-field.company {
         background-color: #f3f3f4; }
         .add-broadcast .broadcast-main .broadcast-field.company .field-name {
-          cursor: pointer;
           padding-left: 2em; }
+          .add-broadcast .broadcast-main .broadcast-field.company .field-name.pointer {
+            cursor: pointer; }
       .add-broadcast .broadcast-main .broadcast-field.office > .field-name {
         padding-left: 3em; }
     .add-broadcast .broadcast-main i.fas {

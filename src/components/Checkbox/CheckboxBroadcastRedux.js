@@ -2,7 +2,7 @@ import React from 'react';
 import { Control } from 'react-redux-form';
 
 const CheckboxBroadcastRedux = (props) => {
-  const { model, label, onClick, partlyAnonym } = props;
+  const { model, label, onClick, partlyanonym } = props;
   return (
     <Control.checkbox
       model={model}
@@ -13,7 +13,7 @@ const CheckboxBroadcastRedux = (props) => {
       }}
       controlProps={{
         label: label,
-        partlyAnonym: partlyAnonym
+        partlyanonym: partlyanonym
       }}
       {...props}
     />
@@ -27,7 +27,7 @@ const CheckboxBroadcast = (props) => {
     <label className={"input-checkbox"}><p>{props.label}</p>
       <input type="checkbox"
         {...props} />
-      <span className={`checkmark ${props.partlyAnonym ? "partlyAnonym" : ""}`}></span>
+      <span className={`checkmark ${props.partlyanonym ? "partlyanonym" : ""}`}></span>
     </label>
   );
 };
