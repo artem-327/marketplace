@@ -60,7 +60,7 @@ class ShoppingCart extends Component {
       <div className="submenu">
         <div className="submenu-link">
           <i className="fas fa-angle-left"></i>
-          <b> Back to Product/Purchase info</b>
+          <b>Back to Product/Purchase info</b>
         </div>
       </div>
       <div className="shopping-cart">

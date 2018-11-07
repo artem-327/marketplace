@@ -86,7 +86,7 @@ class AddCart extends Component {
     })
 
   const attachments = offer.attachments.map(att => {
-    return <div><img src={file} className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
+    return <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
   });
 
     const footerComponent = (
@@ -151,6 +151,7 @@ class AddCart extends Component {
 
           <div className="add-cart-body-section">
             <h3>Purchase Info</h3>
+
             <div>
               <b>Select Price Level</b>
               <Dropdown
@@ -162,13 +163,14 @@ class AddCart extends Component {
                 currentValue={currentPriceLevelName && currentPriceLevelName.name}
               />
             </div>
+
             <div>
               <b>Select Quantity</b>
               <Dropdown
                 opns={quantityOptionsWithName}
                 placeholder="Select Quantity"
                 disabled={!this.state.pricing && true}
-                currentValue={isEdit && `${order.quantity} pck`}
+                currentValue={isEdit && `${order.quantity} pck`} //{isEdit && `${order.quantity} pck`}
                 onChange={value => {
                   this.setState({quantity: value})
                 }}/>
