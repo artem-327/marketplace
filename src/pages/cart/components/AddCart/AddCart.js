@@ -63,10 +63,10 @@ class AddCart extends Component {
     const packageSize = `${capacity} ${unitName}`;
     const availableProducts = `${amount} pck / ${(amount * capacity).formatNumber()}${unitName}`;
     const totalPrice = this.state.quantity ? offer.pricing.price * this.state.quantity * capacity : "";
-    const {tiers} = offer.pricing
+    const {tiers} = offer.pricing;
     const priceLevelOptions = tiers.map(i => {
       const object = {
-        name: `${i.quantityFrom} - ${i.quantityTo} pck / $${i.price}`,
+        name: `${i.quantityFrom} - ${i.quantityTo} pck / $${i.price}`, //name: `${i.quantityFrom} - ${i.quantityTo} pck / $${i.price}`,
         id: {quantityFrom: i.quantityFrom, quantityTo: i.quantityTo, price: i.price}
       };
       return object;
@@ -169,7 +169,7 @@ class AddCart extends Component {
               <Dropdown
                 opns={quantityOptionsWithName}
                 placeholder="Select Quantity"
-                disabled={!this.state.pricing && true}
+                disabled={false} //{!this.state.pricing && true}
                 currentValue={isEdit && `${order.quantity} pck`} //{isEdit && `${order.quantity} pck`}
                 onChange={value => {
                   this.setState({quantity: value})

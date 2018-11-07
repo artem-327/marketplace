@@ -71,7 +71,7 @@ export const transformRequestOptions = params => {
 export const filterByUniqueProperty = (arr, property) => {
     let uniqueArr = [];
     arr.filter(item => {
-        const i = uniqueArr.findIndex(x => x[property] == item[property]);
+        const i = uniqueArr.findIndex(x => x[property] === item[property]);
         if(i <= -1){
             uniqueArr.push(item);
         }
