@@ -80,7 +80,7 @@ class PurchaseOrder extends Component {
   }
 
   render() {
-    const {cart, deliveryAddresses, payments, dispatch, removeProductFromCart, cartIsFetching, createDeliveryAddress} = this.props;
+    const {cart, deliveryAddresses, payments, dispatch, removeProductFromCart, cartIsFetching, createDeliveryAddress, editDeliveryAddress} = this.props;
     if (cartIsFetching) return <Spinner />
     const itemContent = cart.orders.map(cartItem => {
       return (
@@ -111,6 +111,7 @@ class PurchaseOrder extends Component {
                 isNewAddress={this.state.isNewAddress}
                 handleIsEdit={this.handleIsEdit}
                 createDeliveryAddress={createDeliveryAddress}
+                editDeliveryAddress={editDeliveryAddress}
               />
               : <Shipping
               deliveryAddresses={deliveryAddresses}

@@ -1,15 +1,14 @@
-
 .submenu {
-  border-bottom: 2px solid lightgrey;
-  padding: 0 15px;
-  height: 53px;
+  //border-bottom: 2px solid lightgrey;
+  //padding: 0 15px;
+  //height: 53px;
   .submenu-filter{
     display: inline-block;
     float: right;
-    margin: 0 6px;
+    margin: 6px 6px;
     padding: 0 22px;
-    height: 51px;
-    background-color: #f4f4fb;
+    height: 50px;
+    //background-color: #f4f4fb;
     transition: all .2s ease;
     &:hover{
       cursor: pointer;
@@ -89,7 +88,7 @@
       background-color: transparent;
       transition: all .1s ease;
     }
-    &.active{
+    /*&.active{
       &::after{
         content: '';
         position: absolute;
@@ -101,7 +100,8 @@
         height: 3px;
         background-color: #2599d5;
       }
-    }
+    }*/
+
     &:hover{
       text-decoration: none;
       &::after{
