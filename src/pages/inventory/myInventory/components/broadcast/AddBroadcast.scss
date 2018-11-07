@@ -8,11 +8,18 @@
     .popup-component-body{
         border: 1px solid $beige-color;
         border-radius: $border-rounding;
-        padding: 0; 
+        margin: 0 20px;
+        padding: 0;
     }
-    // .add-cart-footer{
-    //     display: none;
-    // }
+    header {
+        i {
+            display: none;
+        }
+    }
+    .popup-footer{
+        margin: 0 20px;
+        padding: 0;
+    }
 }
 .add-broadcast {
     display: grid;
@@ -20,8 +27,13 @@
     grid-template-rows: auto auto;
     .broadcast-filter-nav{
       display: grid;
-      grid-template-columns: auto 35%;
       align-items: center;
+      &.client-list {
+        grid-template-columns: auto 40%;
+      }
+      &.price-list {
+        grid-template-columns: auto 30%;
+      }
       .field-name {
         padding-left: 1em;
       }
@@ -42,11 +54,16 @@
         }
         .broadcast-field{
             display: grid;
-            grid-template-columns: auto 35%;
             align-items: center;
             height: 60px;
             border-top: 1px solid $beige-color;
             border-collapse: collapse;
+            &.client-list {
+              grid-template-columns: auto 40%;
+            }
+            &.price-list {
+              grid-template-columns: auto 30%;
+            }
             .list-rules {
               display: grid;
               grid-template-columns: 1fr 1fr;
@@ -54,9 +71,9 @@
             }
             .price-rules {
                 display: flex;
-
                 .price-value {
-                    width: 90%;
+                    width: 70%;
+                    margin: 3px 5px 3px 0;
                 }
             }
             .price-units {
@@ -70,10 +87,27 @@
                     margin: 0;
                 }
             }
+            .field-name {
+              height: 60px;
+              display: flex;
+              align-items: center;
+            }
+            &.root {
+                background-color: lighten($blue-color, 30%);
+                .field-name {
+                  font-weight: bold;
+                  padding-left: 0.5em;
+                  &.pointer {
+                    cursor: pointer; 
+                  }
+                }
+              }
             &.region {
               background-color: $light-blue-color;
               .field-name {
-                cursor: pointer;  
+                &.pointer {
+                  cursor: pointer; 
+                }
                 font-weight: bold;
                 padding-left: 1em;
               }
@@ -81,11 +115,22 @@
             &.state {
               background-color: $light-60-grey-color;
               .field-name {
-                cursor: pointer;  
+                &.pointer {
+                  cursor: pointer; 
+                } 
                 padding-left: 2em;
               }
             }
-            &.company > .field-name {
+            &.company {
+              background-color: $light-60-grey-color;
+              .field-name {
+                &.pointer {
+                  cursor: pointer; 
+                }
+                padding-left: 2em;
+              }
+            }
+            &.office > .field-name {
                 padding-left: 3em;
             }
         }
@@ -115,6 +160,10 @@
         }
         .group-item-wr {
             margin-top: 1em;
+            &.smaller {
+                width: 70%;
+                margin-bottom: 25px;
+            }
         }
         .combo-results{
             z-index: 2;
@@ -125,8 +174,9 @@
                 width: 100%;
             }
         }
+        //shame
         .fas.fa-search.combo-icon {
-            padding: 5px 0;
+            top: 10px;
         }
     }
 
@@ -159,4 +209,22 @@
     color: $blue-color;
     padding-right: 10px;
     font-size: 1.5em;
+}
+.group-item-wr.search{
+    position: relative;
+    top: 30px;
+   i {
+       position: absolute;
+       left: 10px;
+       top: 10px;
+       color: $light-30-grey-color;
+   }
+   input {
+       padding-left: 35px;
+       width: 100%;
+   }
+}
+
+.group-item-wr.smaller:last-of-type {
+    margin-top: 80px;
 }

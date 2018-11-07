@@ -31,7 +31,7 @@ const ShippingEdit = ({ toggleShippingEdit, isNewAddress, handleIsEdit, selected
           <FormInput name=".zipCode" label="Postal Code" />
           <FormInput name=".email" label="E-mail Address" />
           <FormInput name=".phoneNumber" label="Phone Number" />
-          <footer className="add-cart-footer">
+          <footer className="popup-footer">
             <Button color="grey" onClick={toggleShippingEdit}>Cancel</Button>
             {isNewAddress === "isNew" && <Button color="blue">Save</Button>}
             {isNewAddress !== "isNew" && <Button color="blue">Edit</Button>}

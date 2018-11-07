@@ -7,36 +7,56 @@ import SwitcherRedux from "../../../../../components/Switcher/SwitcherRedux";
 import { isNumber } from "../../../../../utils/validation";
 
 
-const BroadcastField = ({ name, id, type, isList, showSubordinateItems, isExpanded }) => {
+const BroadcastField = ({ 
+  partlybrc, 
+  partlyanonym, 
+  name, 
+  id, 
+  type, 
+  isFiltering, 
+  isClientList, 
+  handleExpanded, 
+  handleRuleClick, 
+  isExpanded, 
+  hasChildren 
+}) => {
     return (
-      <div className={`broadcast-field ${type}`}>
-        <div className="field-name" name={type} id={id} onClick={e => showSubordinateItems(e)}>
-          {!isExpanded && type !== "company" && <i className="fas fa-angle-right" />}
-          {isExpanded && type !== "company" && <i className="fas fa-angle-down" />} 
+      <div className={`broadcast-field ${type} ${isClientList ? "client-list" : "price-list"}`}>
+        <div className={`field-name ${isFiltering || !hasChildren ? "" : "pointer"}`} name={type} id={id} onClick={e => handleExpanded(e)}>
+          {hasChildren && !isFiltering && !isExpanded && <i className="fas fa-angle-right" />}
+          {hasChildren && !isFiltering && isExpanded && <i className="fas fa-angle-down" />} 
           {name}
         </div>
-        {isList 
+        {isClientList 
         ? (
           <div className="list-rules">
             <SwitcherRedux
-              model={`.${type}.${id}.include`}
-              isrounded
+              model={`.${type}[${id}].broadcast`}
+              id={id}
+              isrounded={1}
+              partlybrc={partlybrc ? 1 : 0} //to prevent reactDom warnings
+              onClick={handleRuleClick}
             />
             <CheckboxBroadcastRedux
-              model={`.${type}.${id}.anonymous`}
+              id={id}
+              model={`.${type}[${id}].anonymous`}
+              onClick={handleRuleClick}
+              partlyanonym={partlyanonym ? 1 : 0}
             />
           </div>
         ) 
         : (
           <div className="price-rules">
             <Control.text
-              model={`.${type}.${id}.priceValue`}
+              model={`.${type}[${id}].priceValue`}
               className="price-value"
               validators={{ isNumber }}
+              onChange={e => handleRuleClick(e)}
+              id={id}
             />
             <div className="price-units">     
-                <RadioBroadcastRedux model={`.${type}.${id}.priceUnit`} label="$" value="$"/>       
-                <RadioBroadcastRedux model={`.${type}.${id}.priceUnit`} label="%" value="%"/>                      
+                <RadioBroadcastRedux model={`.${type}[${id}].priceUnit`} label="$" value="$" onClick={handleRuleClick} id={id}/>       
+                <RadioBroadcastRedux model={`.${type}[${id}].priceUnit`} label="%" value="%" onClick={handleRuleClick} id={id}/>                      
             </div>
           </div>
         )}
@@ -50,6 +70,6 @@ const BroadcastField = ({ name, id, type, isList, showSubordinateItems, isExpand
     name: PropTypes.string,
     type: PropTypes.string,
     dispatch: PropTypes.func,
-    isList: PropTypes.bool,
+    isClientList: PropTypes.bool,
   }
   

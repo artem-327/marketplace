@@ -7,6 +7,12 @@
   .popup-component .popup-component-body {
     border: 1px solid #E7E7E7;
     border-radius: 4px;
+    margin: 0 20px;
+    padding: 0; }
+  .popup-component header i {
+    display: none; }
+  .popup-component .popup-footer {
+    margin: 0 20px;
     padding: 0; }
 
 .add-broadcast {
@@ -15,8 +21,11 @@
   grid-template-rows: auto auto; }
   .add-broadcast .broadcast-filter-nav {
     display: grid;
-    grid-template-columns: auto 35%;
     align-items: center; }
+    .add-broadcast .broadcast-filter-nav.client-list {
+      grid-template-columns: auto 40%; }
+    .add-broadcast .broadcast-filter-nav.price-list {
+      grid-template-columns: auto 30%; }
     .add-broadcast .broadcast-filter-nav .field-name {
       padding-left: 1em; }
     .add-broadcast .broadcast-filter-nav .list-rules {
@@ -32,11 +41,14 @@
       margin: 20px auto 15px auto; }
     .add-broadcast .broadcast-main .broadcast-field {
       display: grid;
-      grid-template-columns: auto 35%;
       align-items: center;
       height: 60px;
       border-top: 1px solid #E7E7E7;
       border-collapse: collapse; }
+      .add-broadcast .broadcast-main .broadcast-field.client-list {
+        grid-template-columns: auto 40%; }
+      .add-broadcast .broadcast-main .broadcast-field.price-list {
+        grid-template-columns: auto 30%; }
       .add-broadcast .broadcast-main .broadcast-field .list-rules {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -44,7 +56,8 @@
       .add-broadcast .broadcast-main .broadcast-field .price-rules {
         display: flex; }
         .add-broadcast .broadcast-main .broadcast-field .price-rules .price-value {
-          width: 90%; }
+          width: 70%;
+          margin: 3px 5px 3px 0; }
       .add-broadcast .broadcast-main .broadcast-field .price-units {
         padding-left: 5px; }
         .add-broadcast .broadcast-main .broadcast-field .price-units label {
@@ -53,18 +66,37 @@
           padding-left: 30px; }
         .add-broadcast .broadcast-main .broadcast-field .price-units p {
           margin: 0; }
+      .add-broadcast .broadcast-main .broadcast-field .field-name {
+        height: 60px;
+        display: flex;
+        align-items: center; }
+      .add-broadcast .broadcast-main .broadcast-field.root {
+        background-color: #b2daf0; }
+        .add-broadcast .broadcast-main .broadcast-field.root .field-name {
+          font-weight: bold;
+          padding-left: 0.5em; }
+          .add-broadcast .broadcast-main .broadcast-field.root .field-name.pointer {
+            cursor: pointer; }
       .add-broadcast .broadcast-main .broadcast-field.region {
         background-color: #EFF7FC; }
         .add-broadcast .broadcast-main .broadcast-field.region .field-name {
-          cursor: pointer;
           font-weight: bold;
           padding-left: 1em; }
+          .add-broadcast .broadcast-main .broadcast-field.region .field-name.pointer {
+            cursor: pointer; }
       .add-broadcast .broadcast-main .broadcast-field.state {
         background-color: #f3f3f4; }
         .add-broadcast .broadcast-main .broadcast-field.state .field-name {
-          cursor: pointer;
           padding-left: 2em; }
-      .add-broadcast .broadcast-main .broadcast-field.company > .field-name {
+          .add-broadcast .broadcast-main .broadcast-field.state .field-name.pointer {
+            cursor: pointer; }
+      .add-broadcast .broadcast-main .broadcast-field.company {
+        background-color: #f3f3f4; }
+        .add-broadcast .broadcast-main .broadcast-field.company .field-name {
+          padding-left: 2em; }
+          .add-broadcast .broadcast-main .broadcast-field.company .field-name.pointer {
+            cursor: pointer; }
+      .add-broadcast .broadcast-main .broadcast-field.office > .field-name {
         padding-left: 3em; }
     .add-broadcast .broadcast-main i.fas {
       margin-right: 5px; }
@@ -86,6 +118,9 @@
       margin-bottom: 3px; }
     .add-broadcast .broadcast-filter .group-item-wr {
       margin-top: 1em; }
+      .add-broadcast .broadcast-filter .group-item-wr.smaller {
+        width: 70%;
+        margin-bottom: 25px; }
     .add-broadcast .broadcast-filter .combo-results {
       z-index: 2; }
     .add-broadcast .broadcast-filter .comboBox {
@@ -93,7 +128,7 @@
       .add-broadcast .broadcast-filter .comboBox input {
         width: 100%; }
     .add-broadcast .broadcast-filter .fas.fa-search.combo-icon {
-      padding: 5px 0; }
+      top: 10px; }
   .add-broadcast .broadcast-nav {
     border-right: 1px solid #E7E7E7;
     padding: 0 1em;
@@ -117,3 +152,18 @@
   color: #329ED6;
   padding-right: 10px;
   font-size: 1.5em; }
+
+.group-item-wr.search {
+  position: relative;
+  top: 30px; }
+  .group-item-wr.search i {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    color: #9a9da4; }
+  .group-item-wr.search input {
+    padding-left: 35px;
+    width: 100%; }
+
+.group-item-wr.smaller:last-of-type {
+  margin-top: 80px; }

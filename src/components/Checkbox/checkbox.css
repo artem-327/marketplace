@@ -43,7 +43,7 @@
         border-width: 0 2px 2px 0;
         transform: rotate(45deg); }
     .input-checkbox .checkmark:hover, .input-checkbox .checkmark:focus {
-      border-color: #289ada;
+      border-color: #329ED6;
       box-shadow: none;
       outline: none; }
     .input-checkbox .checkmark:after {
@@ -54,9 +54,12 @@
       top: 3px;
       width: 5px;
       height: 10px;
-      border: solid #289ada;
+      border: solid #329ED6;
       border-width: 0 2px 2px 0;
       transform: rotate(45deg); }
+    .input-checkbox .checkmark.partlyanonym:after {
+      border: solid #C0523F;
+      border-width: 0 2px 2px 0; }
   .input-checkbox input {
     position: absolute;
     width: 0;

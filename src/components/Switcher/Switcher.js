@@ -3,17 +3,16 @@ import './Switcher.css';
 
 const Switcher = (props) => {
   const sliderType = props.isrounded ? "slider round" : "slider"
+  const partlybrcColored = props.partlybrc ? "partlybrc-colored" : ""
   return (
-    <div className="switch-container">
     <div className="switch-container">
       <label className="switch">
         <input type="checkbox"
           {...props}
         />
-        <span className={sliderType}></span>
+        <span className={`${sliderType} ${partlybrcColored}`}></span>
       </label>
     </div>
-  </div>
   );
 };
 

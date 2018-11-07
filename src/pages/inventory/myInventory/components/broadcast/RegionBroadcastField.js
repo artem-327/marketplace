@@ -1,32 +1,47 @@
 import React from 'react';
 import BroadcastField from "./BroadcastField";
 import StateBroadcastField from "./StateBroadcastField";
-import Spinner from '../../../../../components/Spinner/Spinner'
-const RegionBroadcastField = ({name, id, dispatch, showSubordinateItems, regionDetail, regionDetailIsFetching, stateDetailIsFetching, stateDetail, regionIsExpanded, stateIsExpanded, isList}) => {
+import {filterByUniqueProperty} from "../../../../../utils/functions";
+
+const RegionBroadcastField = ({ regionsExpanded, filteredOffices, filteredStates, flattenStates, storedStates, filterInput, statesExpanded, storedRegion, handleExpanded, handleRuleClick, dispatch, regionData, isClientList}) => {
+  const partlybrc = storedRegion && storedRegion.broadcastPartly
+  const partlyanonym = storedRegion && storedRegion.anonymousPartly
+
+  const statesOfFilteredOfficesIds = filteredOffices.map(i => i.stateId)
+  const statesOfFilteredOffices = flattenStates.filter(i => statesOfFilteredOfficesIds.includes(i.id))
+  const finalFilteredStates = [...filteredStates, ...statesOfFilteredOffices]
+
+  const isFiltering = filterInput !== "";
+  const isExpanded = regionsExpanded.includes(regionData.id) || isFiltering
+  const showedStates = isFiltering ? filterByUniqueProperty(finalFilteredStates, "id").filter(i => i.regionId === regionData.id) : regionData.states
   return (
     <React.Fragment>
       <BroadcastField
-        name={name}
+        name={regionData.name}
         type="region"
-        showSubordinateItems={showSubordinateItems}
         dispatch={dispatch}
-        isList={isList}
-        id={id}
-        isExpanded={regionIsExpanded}
+        isClientList={isClientList}
+        id={regionData.id}
+        isExpanded={isExpanded}
+        handleExpanded={handleExpanded}
+        hasChildren={regionData.states.length > 0}
+        handleRuleClick={handleRuleClick}
+        partlybrc={partlybrc}
+        partlyanonym={partlyanonym}
+        isFiltering={isFiltering}
       />
-      {regionDetailIsFetching && regionIsExpanded && <Spinner />}
-      {!regionDetailIsFetching && regionIsExpanded && regionDetail.countries && regionDetail.countries.map(i => {
+      {isExpanded && showedStates.map(i => {
         return <StateBroadcastField
-        name={i.name}
         type="state"
-        stateDetail={stateDetail}
-        stateDetailIsFetching={stateDetailIsFetching}
-        stateIsExpanded={stateIsExpanded === i.id}
-        showSubordinateItems={showSubordinateItems}
+        statesExpanded={statesExpanded}
+        storedState={storedStates && storedStates.find(j => j.id === i.id)}
+        handleExpanded={handleExpanded}
+        stateData={i}
         dispatch={dispatch}
-        isList={isList}
-        id={i.id}
+        isClientList={isClientList}
         key={i.id}
+        handleRuleClick={handleRuleClick}
+        filterInput={filterInput}
       />
       })}
     </React.Fragment>

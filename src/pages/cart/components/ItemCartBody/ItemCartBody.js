@@ -44,7 +44,7 @@ const ItemCartBody = ({cartItem, addPopup, removeProductFromCart, history}) => {
         </div>
         </div>
       </div>
-      <footer className="add-cart-footer">
+      <footer className="popup-footer">
         <Button color="grey" onClick={() => removeProductFromCart(productOffer.id)}>Remove</Button>
         <Button 
           color="blue" 

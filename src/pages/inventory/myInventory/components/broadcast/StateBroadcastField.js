@@ -1,28 +1,43 @@
 import React from 'react';
 import BroadcastField from "./BroadcastField";
-import Spinner from '../../../../../components/Spinner/Spinner'
-const StateBroadcastField = ({dispatch, showSubordinateItems, name, id, stateDetail, stateDetailIsFetching, stateIsExpanded, isList}) => {
+
+const StateBroadcastField = ({dispatch, storedState, stateData, filterInput, statesExpanded, handleExpanded, handleRuleClick, isClientList}) => {
+  const offices = stateData.companies.map(i => i.offices)
+  const flattenOffices = offices.flat()
+  const partlybrc = storedState && storedState.broadcastPartly
+  const partlyanonym = storedState && storedState.anonymousPartly
+
+  const isFiltering = filterInput !== "";
+  const filteredOffices = flattenOffices.filter(i => i.name.toLowerCase().startsWith(filterInput.toLowerCase()))
+  const showedOffices = isFiltering ? filteredOffices : flattenOffices
+  const isExpanded = statesExpanded.includes(stateData.id) || isFiltering
   return (
     <React.Fragment>
       <BroadcastField
-        name={name || stateDetail.name}
+        name={stateData.name}
         type="state"
-        showSubordinateItems={showSubordinateItems}
         dispatch={dispatch}
-        isList={isList}
-        id={id || stateDetail.id}
-        isExpanded={stateIsExpanded}
+        isClientList={isClientList}
+        id={stateData.id}
+        isExpanded={isExpanded}
+        handleExpanded={handleExpanded}
+        hasChildren={flattenOffices.length > 0}
+        handleRuleClick={handleRuleClick}
+        partlyanonym={partlyanonym}
+        partlybrc={partlybrc}
+        isFiltering={isFiltering}
       />
-      {stateDetailIsFetching && stateIsExpanded && <Spinner />}
-      {!stateDetailIsFetching && stateIsExpanded && stateDetail.companies && stateDetail.companies.map(i => {
+
+      {isExpanded && showedOffices.map(i => {
         return <BroadcastField
         name={i.name}
-        type="company"
-        showSubordinateItems={showSubordinateItems}
+        type="office"
         dispatch={dispatch}
-        isList={isList}
+        isClientList={isClientList}
         id={i.id}
         key={i.id}
+        handleRuleClick={handleRuleClick}
+        handleExpanded={handleExpanded}
       />
       })}
     </React.Fragment>

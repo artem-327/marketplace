@@ -19,7 +19,7 @@ import productOffers, {initialState as addProductsInit} from './modules/productO
 import popup from './modules/popup';
 import filter, {initialState as filterInit} from './modules/filter';
 import packageTypes from './modules/packageTypes';
-import broadcastRules, {initialState as broadcastRulesInit} from "./modules/broadcastRule";
+import brcRules, {initialState as broadcastInit} from "./modules/broadcast";
 import cart, {initialState as cartInit} from "./modules/cart";
 import merchants, {initialState as merchantsInit} from "./modules/merchants";
 import products, {initialState as productsInit} from './modules/products';
@@ -34,9 +34,11 @@ import usersSaga from "./pages/administration/users/saga/users";
 import operatorsSaga from "./pages/administration/operators/saga/operators";
 import cartSaga from "./pages/cart/saga/cart";
 import locationsSaga from "./saga/locations";
+import broadcastSaga from "./saga/broadcast";
 
 const reducer = combineReducers({
     identity,
+    brcRules,
     companies,
     locale,
     users,
@@ -46,14 +48,13 @@ const reducer = combineReducers({
     packageTypes,
     cart,
     popup,
-    broadcastRules,
     merchants,
     filter,
     errors,
     dataTables,
     forms: combineForms({
         filter: filterInit.data,
-        broadcastRules: broadcastRulesInit,
+        brcRules: broadcastInit.broadcastData,
         addProductOffer: addProductsInit.addProductOffer,
         productMapping: productsInit.productsMapping,
         productOffering: productsInit.productOffering,
@@ -97,3 +98,4 @@ sagaMiddleware.run(operatorsSaga);
 sagaMiddleware.run(merchantsSaga);
 sagaMiddleware.run(cartSaga);
 sagaMiddleware.run(locationsSaga);
+sagaMiddleware.run(broadcastSaga);
