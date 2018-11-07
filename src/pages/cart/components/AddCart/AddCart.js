@@ -6,6 +6,7 @@ import Button from '../../../../components/Button/Button'
 import PopupComponent from '../../../../components/PopUp/PopupComponent'
 import {getUnit} from '../../../../utils/functions'
 import './AddCart.css';
+import file from '../../../../images/file.svg';
 
 class AddCart extends Component {
   state = {
@@ -84,6 +85,10 @@ class AddCart extends Component {
       return object;
     })
 
+  const attachments = offer.attachments.map(att => {
+    return <div><img src={file} className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
+  });
+
     const footerComponent = (
       <>
         <Button color="blue" onClick={removePopup}>
@@ -138,6 +143,7 @@ class AddCart extends Component {
             </div>
             <div>
               <b>Attachments: </b>
+              {attachments}
             </div>
           </div>
 

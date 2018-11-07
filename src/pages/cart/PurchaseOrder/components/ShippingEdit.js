@@ -8,6 +8,7 @@ import { Form } from 'react-redux-form';
 
 const ShippingEdit = ({ toggleShippingEdit, isNewAddress, handleIsEdit, selectedAddress, createDeliveryAddress, editDeliveryAddress }) => {
   const radioOptions = [{value:"isEdit", label:'Saved Address'}, {value:"isNew", label:'Add New Address'}]
+  
   return (
     <div className="shopping-cart-items">
       <header><h1>1. Shipping</h1></header>
@@ -26,7 +27,7 @@ const ShippingEdit = ({ toggleShippingEdit, isNewAddress, handleIsEdit, selected
           <FormInput name=".lastName" label="Last Name" />
           <FormInput name=".address.streetAddress" label="Address" />
           <FormInput name=".address.city" label="City" />
-          <FormInput name=".address.province" label="State" />
+          <FormInput name=".address.province" label="State"/>
           <FormInput name=".zipCode" label="Postal Code" />
           <FormInput name=".email" label="E-mail Address" />
           <FormInput name=".phoneNumber" label="Phone Number" />
