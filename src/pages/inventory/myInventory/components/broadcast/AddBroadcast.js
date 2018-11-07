@@ -27,6 +27,7 @@ class AddBroadcast extends Component {
   };
 
   initTable = (root, dispatch) => {
+    if (this.props.storedRegions) return
     if(root.anonymous === 1 || root.anonymous === 2) dispatch(actions.change(`forms.brcRules.root[1].anonymous`, true))
     if(root.anonymous === 0) dispatch(actions.change(`forms.brcRules.root[1].anonymous`, false))
     if(root.anonymous === 2) {
@@ -178,19 +179,11 @@ class AddBroadcast extends Component {
 
   componentDidMount() {
     const {dispatch} = this.props
-    this.props.fetchRegions()
-
+    if (this.props.storedRegions) return
     new Promise((resolve) => {
       this.props.fetchBroadcast(resolve)
     }).then(() => {
-      const root = this.props.broadcastData
-      if (localStorage.getItem('brcRules')) {
-        const brcRules = localStorage.getItem('brcRules');
-        console.log('brcRules: ', JSON.parse(brcRules));
-      } 
-
-
-      this.initTable(root, dispatch, () => localStorage.setItem('brcRules', JSON.stringify(this.props.forms.brcRules)))
+      this.initTable(this.props.broadcastData, dispatch)
     })
   }
 
