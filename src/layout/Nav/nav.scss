@@ -1,5 +1,5 @@
 $nav-background-color: #33373e;
-$nav-links-color: #ffffff;
+$nav-links-color: #b0b2b4;
 
 .App-nav {
   background-color: $nav-background-color;
@@ -12,11 +12,12 @@ $nav-links-color: #ffffff;
     }
     .logo{
       padding-left: 30px;
-      padding-right: 60px;
+      padding-right: 0px;
       vertical-align: top;
-      margin-top: 16px;
+      margin-top: 10px;
       img{
-        width: 75px;
+        width: 50%;
+        height: 50%;
       }
     }
     .logout {
@@ -59,47 +60,61 @@ $nav-links-color: #ffffff;
       }
     }
     .dropdown-nav{
-      padding: 5px 5px;
       transition: all .2s ease;
       color: $nav-links-color;
       font-weight: lighter;
-      font-size: .8em;
-      height: 90px;
-      width: 90px;
+      font-size: .9em;
+      height: 50px;
       vertical-align: top;
       text-align: center;
       position: relative;
       z-index: 2;
+      .dropdown-link-center{
+        padding: 14px 15px 10px 15px;
+        display: inline-block;
+        .dropdown-nav-icon{
+          display: inline-block;
+          font-size: .8rem;
+          margin-left: 15px;
+        }
+      }
       .dropdown-nav-inside{
         position: absolute;
         vertical-align: bottom;
-        width: 100%;
-        top: 90px;
+        width: 160%;
+        top: 50px;
         left: 0;
         text-align: center;
+        background-color: #2b2e33;
         box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
         border-radius: 0 0 4px 4px;
+        padding-top: 10px;
         .dropdown-nav-item{
           width: 100%;
-          padding: 8px 0;
+          padding: 10px 15px;
+          text-align: left;
           display: block;
-          color: white;
-          background-color: #33373e;
+          color: $nav-links-color;
+          background-color: #2b2e33;
           &:last-child{
             border-radius: 0 0 4px 4px;
           }
           &.active{
-            color: #2599d5
+            color: #f3f4f4;
+            font-weight: normal;
           }
           &:hover{
             cursor: pointer;
-            background-color: #3f434c;
             text-decoration: none;
+            font-weight: normal;
+            color: #f3f4f4;
+            background-color: #276c92
           }
         }
       }
       &.active{
-        color: #2599d5;
+        background-color: #2b2e33;
+        color: #f3f4f4;
       }
       .link-center{
         position: absolute;

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {transformRequestOptions} from "../utils/functions";
+import {transformRequestOptions, filterByUniqueProperty} from "../utils/functions";
 
 const GET_PRODUCT_OFFERS_MY = 'GET_PRODUCT_OFFERS_MY';
 const GET_PRODUCT_OFFERS_MY_FULFILLED = 'GET_PRODUCT_OFFERS_MY_FULFILLED';
@@ -126,7 +126,10 @@ export function fetchMyProductOffers(filter = {}) {
     let mrchnt = true;
     return {
         type: GET_PRODUCT_OFFERS_MY,
-        payload: axios.get("/api/3f36ea/product-offers/", {params: {...filter, mrchnt}, 'paramsSerializer': params => transformRequestOptions(params)}).then(response => response.data.data.productOffers)
+        payload: axios.get("/api/3f36ea/product-offers/", {params: {...filter, mrchnt}, 'paramsSerializer': params => transformRequestOptions(params)}).then(response => {
+            const productOffers = response.data.data.productOffers;
+            return filterByUniqueProperty(productOffers, "id") //dont show product offers with same id (synonyms)
+        })
     }
 }
 
@@ -135,7 +138,10 @@ export function fetchAllProductOffers(filter = {}) {
     console.log(filter);
     return {
         type: GET_PRODUCT_OFFERS_ALL,
-        payload: axios.get("/api/3f36ea/product-offers/", {params: {...filter, mrchnt}, 'paramsSerializer': params => transformRequestOptions(params)}).then(response => response.data.data.productOffers)
+        payload: axios.get("/api/3f36ea/product-offers/", {params: {...filter, mrchnt}, 'paramsSerializer': params => transformRequestOptions(params)}).then(response => {
+            const productOffers = response.data.data.productOffers;
+            return filterByUniqueProperty(productOffers, "id")
+        })
     }
 }
 

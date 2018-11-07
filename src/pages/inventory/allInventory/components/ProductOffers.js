@@ -24,14 +24,14 @@ class ProductOffers extends Component {
         if(this.props.productOffers.length === 0) return null;
         let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
             return {
-                group:  <React.Fragment><span className="product-casnumber">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></React.Fragment>,
+                group: <React.Fragment><span className="product-casnumber">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></React.Fragment>,
                 rows: product.productOffers.map((offer)=>{
                 const unit = getUnit(offer.packaging.unit.name);
                 const packageSize = offer.packaging.capacity;
                 const packageUnit = offer.packaging.container.name;
                 return{
                     id: offer.id,
-                    data: [offer.merchantVisibility ? offer.merchant.email : "Anonymous",
+                    data: [offer.merchant && offer.merchantVisibility ? offer.merchant.email : "Anonymous",
                         offer.packaging.amount.formatNumber(),
                         `${packageSize} ${unit} ${packageUnit}`,
                         (parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber() + unit,
