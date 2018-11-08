@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = {
-  fetchBroadcast: () => axios.get('api/broadcast-rules/1').then(response => response.data),
+  fetchBroadcast: () => axios.get('/api/broadcast-rules/1').then(response => response.data),
 };
 
 export default api;
