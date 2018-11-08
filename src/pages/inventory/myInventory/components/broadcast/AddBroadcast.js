@@ -315,7 +315,7 @@ class AddBroadcast extends Component {
       })
       units.forEach(unit => {
         if (clickedModel.includes("priceUnit")) {
-          if(root.priceUnit === unit) {
+          if(root[1].priceUnit === unit) {
             broadcastRegions.forEach(i => dispatch(actions.change(`forms.brcRules.region.${i.id}.priceUnit`, unit)))
             broadcastStates.forEach(i => dispatch(actions.change(`forms.brcRules.state.${i.id}.priceUnit`, unit)))
             broadcastCompanies.forEach(i => dispatch(actions.change(`forms.brcRules.company.${i.id}.priceUnit`, unit)))
@@ -324,13 +324,13 @@ class AddBroadcast extends Component {
         }
       })
       if (clickedModel.includes("priceValue")) {
-        if(root.priceValue) {
+        if(root[1].priceValue) {
           broadcastRegions.forEach(i => dispatch(actions.change(`forms.brcRules.region.${i.id}.priceValue`, root.priceValue)))
           broadcastStates.forEach(i => dispatch(actions.change(`forms.brcRules.state.${i.id}.priceValue`, root.priceValue)))
           broadcastCompanies.forEach(i => dispatch(actions.change(`forms.brcRules.company.${i.id}.priceValue`, root.priceValue)))
           broadcastOffices.forEach(i => dispatch(actions.change(`forms.brcRules.office.${i.id}.priceValue`, root.priceValue)))
         }
-        if(!root.priceValue) {
+        if(!root[1].priceValue) {
           broadcastRegions.forEach(i => dispatch(actions.change(`forms.brcRules.region.${i.id}.priceValue`, "")))
           broadcastStates.forEach(i => dispatch(actions.change(`forms.brcRules.state.${i.id}.priceValue`, "")))
           broadcastCompanies.forEach(i => dispatch(actions.change(`forms.brcRules.company.${i.id}.priceValue`, "")))
@@ -564,14 +564,16 @@ class AddBroadcast extends Component {
 
           parentStates.forEach(state => {
             const companiesOfThisState = broadcastCompanies.filter(obj => state["companies"].find(obj2 => obj.id === obj2.id))
-            if (companiesOfThisState.every(i => i.priceUnit === unit)) dispatch(actions.change(`forms.brcRules.state[${state.id}].priceUnit`, unit))
-            if (!companiesOfThisState.every(i => i.priceUnit === unit)) dispatch(actions.change(`forms.brcRules.state[${state.id}].priceUnit`, ""))
+            if (companiesOfThisState.every(i => i.priceUnit === unit)) {
+              dispatch(actions.change(`forms.brcRules.state[${state.id}].priceUnit`, unit))
+            } else dispatch(actions.change(`forms.brcRules.state[${state.id}].priceUnit`, ""))
           })
 
           parentRegions.forEach(region => {
             const statesOfThisRegion = broadcastStates.filter(obj => region["states"].find(obj2 => obj.id === obj2.id))
-            if (statesOfThisRegion.every(i => i.priceUnit === unit)) dispatch(actions.change(`forms.brcRules.region[${region.id}].priceUnit`, unit))
-            if (!statesOfThisRegion.every(i => i.priceUnit === unit)) dispatch(actions.change(`forms.brcRules.region[${region.id}].priceUnit`, ""))
+            if (statesOfThisRegion.every(i => i.priceUnit === unit)) {
+              dispatch(actions.change(`forms.brcRules.region[${region.id}].priceUnit`, unit))
+            } else {dispatch(actions.change(`forms.brcRules.region[${region.id}].priceUnit`, ""))}
           })
         })
 
@@ -596,7 +598,7 @@ class AddBroadcast extends Component {
         })
 
         parentRegions.forEach(region => {
-          const statesOfThisRegion = broadcastCompanies.filter(obj => region["states"].find(obj2 => obj.id === obj2.id))
+          const statesOfThisRegion = broadcastStates.filter(obj => region["states"].find(obj2 => obj.id === obj2.id))
           if (statesOfThisRegion.every(i => i.priceValue === statesOfThisRegion[0].priceValue)) {
             dispatch(actions.change(`forms.brcRules.region.${region.id}.priceValue`, statesOfThisRegion[0].priceValue))
           } else dispatch(actions.change(`forms.brcRules.region.${region.id}.priceValue`, ""))
