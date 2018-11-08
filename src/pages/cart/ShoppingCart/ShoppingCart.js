@@ -6,6 +6,7 @@ import ItemCartBody from "../components/ItemCartBody/ItemCartBody"
 import KeepShoppingPopup from "../components/KeepShoppingPopup/KeepShoppingPopup"
 import Spinner from '../../../components/Spinner/Spinner'
 import Button from '../../../components/Button/Button'
+import {NavLink} from 'react-router-dom'
 
 class ShoppingCart extends Component {
   componentDidMount(){
@@ -59,8 +60,10 @@ class ShoppingCart extends Component {
       <div className="app-inner-main">
       <div className="submenu">
         <div className="submenu-link">
+          <NavLink to={'/inventory/all-inventory'}>
           <i className="fas fa-angle-left"></i>
           <b>Back to Product/Purchase info</b>
+          </NavLink>
         </div>
       </div>
       <div className="shopping-cart">

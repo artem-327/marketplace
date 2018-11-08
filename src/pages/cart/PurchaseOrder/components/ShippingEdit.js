@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import "./ShippingEdit.css"
 import Button from '../../../../components/Button/Button'
-import FormInput from '../../../../components/Form/FormInput'
+import {FormInput /*, FormSelect*/} from '../../../../components/Form/FormInput'
 import Radio from "../../../../components/Radio/Radio";
 import { Form } from 'react-redux-form';
 
