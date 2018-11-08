@@ -27,3 +27,5 @@
   .shipping-edit .popup-footer {
     grid-row: 5;
     grid-column: 1 / 5; }
+  .shipping-edit .state {
+    display: inline-block; }

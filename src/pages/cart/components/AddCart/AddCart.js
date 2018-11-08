@@ -22,7 +22,7 @@ class AddCart extends Component {
   //TODO Fix cart to send edited data
   createOrder = () => {
     const {removePopup, createNewOrder, offer} = this.props;
-    const offerpayload= {
+    const offerpayload = {
         productOffer: offer.id,
         quantity: this.state.quantity,
         selectedOfferPrice: this.state.pricing.price

@@ -21,7 +21,7 @@ $nav-links-color: #b0b2b4;
       }
     }
     .logout {
-    position: absolute;
+      position: absolute;
       right: 20px;
     }
     .nav-link{
@@ -34,7 +34,7 @@ $nav-links-color: #b0b2b4;
       width: 90px;
       vertical-align: top;
       text-align: center;
-      //float: right;
+      //sfloat: right;
       position: relative;
       &.active{
         color: #2599d5;

@@ -94,6 +94,14 @@ class Nav extends Component {
         </div>
     }
 
+    renderLogout() {
+        return <div className={"dropdown-nav"}>
+            <span className='dropdown-link-center' onClick={()=> this.props.logout()}>
+                <NavLink to="/login">Logout</NavLink>
+            </span>
+        </div>
+    }
+
     render() {
         const { isScreenBig } = this.state;
 
@@ -146,6 +154,8 @@ class Nav extends Component {
                     {this.renderMenuItem('settings', [
                         {name: 'Settings', url: '/settings'},
                     ], 'Settings')}
+                    {this.renderLogout()}
+                    
                     {/* Temporary hide */}
                     {/*this.renderDropdown('administration', [
                         {name: 'Companies', url: '/administration/companies/'},
