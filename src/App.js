@@ -15,7 +15,7 @@ class App extends Component {
   onIdle = (e) => {
     this.props.history.push('/login/')
     localStorage.clear()
-    alert("You were logout due to inactivity")
+    alert("You've been logged out due to inactivity")
   }
 
   //router paths - Main
