@@ -31,7 +31,7 @@ class ProductOffers extends Component {
                 const packageUnit = offer.packaging.container.name;
                 return{
                     id: offer.id,
-                    data: [offer.merchant && offer.merchantVisibility ? offer.merchant.email : "Anonymous",
+                    data: [!offer.anonymous ? offer.merchant.email : "Anonymous",
                         offer.packaging.amount.formatNumber(),
                         `${packageSize} ${unit} ${packageUnit}`,
                         (parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber() + unit,
