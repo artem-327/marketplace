@@ -3,6 +3,7 @@ $nav-links-color: #b0b2b4;
 
 .App-nav {
   background-color: $nav-background-color;
+  
   .nav-inside {
     .links{
       display: inline-block;
@@ -10,8 +11,19 @@ $nav-links-color: #b0b2b4;
     .logo, .nav-link, .dropdown-nav{
       display: inline-block;
     }
+
+    .dropdown-nav-right{
+      display: inline-block;
+    }
+
+    #logout{
+      width: 20px;
+      height: 20px;
+      margin: 14px;
+    }
+
     .logo{
-      padding-left: 30px;
+      padding-left: 40px;
       padding-right: 0px;
       vertical-align: top;
       margin-top: 10px;
@@ -20,10 +32,12 @@ $nav-links-color: #b0b2b4;
         height: 50%;
       }
     }
+
     .logout {
       position: absolute;
       right: 20px;
     }
+    
     .nav-link{
       padding: 5px 5px;
       transition: all .2s ease;
@@ -34,7 +48,7 @@ $nav-links-color: #b0b2b4;
       width: 90px;
       vertical-align: top;
       text-align: center;
-      //sfloat: right;
+      //float: right;
       position: relative;
       &.active{
         color: #2599d5;

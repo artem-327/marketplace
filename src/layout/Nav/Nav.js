@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {NavLink} from 'react-router-dom'
-import './nav.css'
+import './Nav.css'
 
 //import logo from '../../images/nav/Logo.png';
 import dashboard from '../../images/nav/dashboard.png';
@@ -44,7 +44,7 @@ class Nav extends Component {
     }
 
     handleResize() {
-        if(window.innerWidth < 1025) {
+        if(window.innerWidth < 800) {
             this.setState({isScreenBig: false})
         } else {
             this.setState({isScreenBig: true});
@@ -82,7 +82,7 @@ class Nav extends Component {
             {links.map((link, index) => (<NavLink key={index} to={link.url} className='dropdown-nav-item' activeClassName='active'>{link.name}</NavLink>
             ))}</div>;
         return <div className={"dropdown-nav " + activeClass} onClick={()=>this.openDropdown(id)}>
-            <span className='dropdown-link-center'>{img ? <img src={img}  alt={"Dropdown " + name}/> : null}{name}  <i className="icon fas fa-angle-down dropdown-nav-icon"/></span>
+            <span className='dropdown-link-center'>{name} <i className="icon fas fa-angle-down dropdown-nav-icon"/></span>
             {this.state.dropdown[id] ? dropdown : null}
         </div>
     }
@@ -94,11 +94,27 @@ class Nav extends Component {
         </div>
     }
 
+    /*
     renderLogout() {
-        return <div className={"dropdown-nav"}>
-            <span className='dropdown-link-center' onClick={()=> this.props.logout()}>
-                <NavLink to="/login">Logout</NavLink>
+        return <div className="dropdown-nav">
+            <span onClick={()=> this.props.logout()}>
+                <NavLink to="/login"><img id='logout' src={myAccount} alt='Logout'></img></NavLink>
             </span>
+        </div>
+    }
+    */
+
+    renderMyAccount(id, links){
+        //const activeClass = this.props.location.pathname.split('/')[1] === id || this.state.dropdown[id] ? 'active' : null;
+        const dropdown = <div className="dropdown-nav-inside">
+            {links.map((link, index) => 
+            
+            (<div key={index} to={link.url} className='dropdown-nav-item' onClick={this.props.logout} activeClassName='active'>{link.name}</div>))}
+            
+            </div>;
+        return <div className={"dropdown-nav"} onClick={()=>this.openDropdown(id)}>
+            <span><img id='logout' src={myAccount} alt='Logout'></img></span>
+            {this.state.dropdown[id] ? dropdown : null}
         </div>
     }
 
@@ -154,7 +170,11 @@ class Nav extends Component {
                     {this.renderMenuItem('settings', [
                         {name: 'Settings', url: '/settings'},
                     ], 'Settings')}
-                    {this.renderLogout()}
+                    {this.renderMyAccount('myaccount', [
+                        {name: 'Logout', url: '/inventory/my-inventory'},
+                    ], 'My Account')}
+                    
+                    {/*this.renderLogout()*[]}
                     
                     {/* Temporary hide */}
                     {/*this.renderDropdown('administration', [
@@ -164,14 +184,6 @@ class Nav extends Component {
                         {name: 'New Users', url: '/administration/users'},
                         {name: 'Operators', url: '/administration/operators'},
                         ], 'Administration')*/}
-                    {/*<span className="logout" onClick={() => this.props.logout()}>*/}
-                        {/*<NavLink to="/login" className='nav-link' activeClassName='active'>*/}
-                            {/*<span className='link-center'>*/}
-                                {/*<img src={myAccount} alt='My account'/>*/}
-                                {/*LOGOUT*/}
-                            {/*</span>*/}
-                        {/*</NavLink>*/}
-                    {/*</span>*/}
                 </div>
             </div>
             :
