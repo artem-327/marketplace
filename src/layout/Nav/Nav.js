@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {NavLink} from 'react-router-dom'
-import './nav.css'
+import './Nav.css'
 
 //import logo from '../../images/nav/Logo.png';
 import dashboard from '../../images/nav/dashboard.png';
@@ -44,7 +44,7 @@ class Nav extends Component {
     }
 
     handleResize() {
-        if(window.innerWidth < 1025) {
+        if(window.innerWidth < 800) {
             this.setState({isScreenBig: false})
         } else {
             this.setState({isScreenBig: true});

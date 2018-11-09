@@ -12,12 +12,12 @@ class Datepicker extends React.Component {
         this.handleChange = this.handleChange.bind(this)
     }
 
-    handleChange (date) {
+    handleChange(date) {
         this.props.onChange(moment(date).format('MM-DD-YYYY'))
     }
 
     render () {
-        const { value, placeholder,} = this.props;
+        let { value, placeholder} = this.props;
         return (
             <div className='datepicker'>
                 <i className="far fa-calendar-alt datepicker-icon"></i>
