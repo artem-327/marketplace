@@ -17,8 +17,8 @@ class AllInventory extends Component {
     }
 
     render() {
-        let content = this.props.isFetching ? <div><Spinner/></div> :
-            <ProductOffers productOffers={this.props.productOffers} addPopup={this.props.addPopup} history={this.props.history}/>;
+        const content = this.props.isFetching ? <div><Spinner/></div> :
+            <ProductOffers fetchOffice={this.props.fetchOffice} fetchMerchant={this.props.fetchMerchant} merchantDetail={this.props.merchantDetail} identity={this.props.identity} productOffers={this.props.productOffers} addPopup={this.props.addPopup} history={this.props.history}/>;
         return (
             <div>
                 <h1 className='header inv-header'>MARKETPLACE</h1>
