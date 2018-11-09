@@ -62,7 +62,7 @@ function* removeProductFromCart(action) {
 
 function* createNewOrder(action) {
     try {
-        yield call(Api.createNewOrder, action.payload);
+        yield call(Api.createNewOrder, action.payload.product);
         yield put({type: CARTITEM_CREATE_SUCCEEDED});
     } catch (e) {
         yield put({type: CARTITEM_CREATE_FAILED, message: e.message});
