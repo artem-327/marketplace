@@ -27,7 +27,7 @@ class AddBroadcast extends Component {
   };
 
   initTable = (root, dispatch) => {
-    if (this.props.storedRegions) return
+    if (this.props.storedRoot && this.props.storedRoot.identificator === this.props.id) return;
     if (root.anonymous === 1 || root.anonymous === 2) dispatch(actions.change(`forms.brcRules.root[1].anonymous`, true))
 
     if (root.anonymous !== 2) {
@@ -50,6 +50,7 @@ class AddBroadcast extends Component {
       dispatch(actions.change(`forms.brcRules.root[1].priceUnit`, "$"))
     }
     dispatch(actions.change(`forms.brcRules.root[1].id`, 1))
+    dispatch(actions.change(`forms.brcRules.root[1].identificator`, this.props.id)) //shame: it should be ID
 
     const regions = this.props.broadcastData.regions
     regions.forEach(region => {
@@ -170,10 +171,9 @@ class AddBroadcast extends Component {
 
 
   async componentDidMount() {
-    const { dispatch } = this.props
-    if (this.props.storedRegions) return
+    const { dispatch, id } = this.props
     new Promise((resolve) => {
-      this.props.fetchBroadcast(resolve)
+      this.props.fetchBroadcast(id, resolve)
     }).then(() => {
       this.initTable(this.props.broadcastData, dispatch)
     })
