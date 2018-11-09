@@ -7,7 +7,15 @@ import {getUnit} from "../../../../utils/functions";
 import DataTable from "../../../../components/DataTable";
 
 class ProductOffers extends Component {
-
+  componentDidMount(){
+      new Promise(resolve => {
+          this.props.fetchMerchant(this.props.identity.data.id, resolve)
+      }).then(() => {})
+  }
+  componentDidUpdate(){
+    this.props.merchantDetail && this.props.fetchOffice(this.props.merchantDetail.office.id)
+  }
+//
     groupProductOffers(productOffers) {
         return productOffers.reduce((carry, offer) => {
             (carry[offer.product.id] = carry[offer.product.id] || {...offer.product, visible: true, productOffers: []}).productOffers.push(offer);
@@ -29,6 +37,7 @@ class ProductOffers extends Component {
                 const unit = getUnit(offer.packaging.unit.name);
                 const packageSize = offer.packaging.capacity;
                 const packageUnit = offer.packaging.container.name;
+                const itsOwnProduct = this.props.identity.data.email === offer.merchant.email
                 return{
                     id: offer.id,
                     data: [offer.merchant && offer.merchantVisibility ? offer.merchant.email : "Anonymous",
@@ -43,7 +52,9 @@ class ProductOffers extends Component {
                         'Unknown',
                         offer.productCondition.name,
                         offer.productForm.name,
-                        offer.warehouse.name + " (" + offer.warehouse.address.province.name + ")",
+                        itsOwnProduct 
+                        ? `${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`
+                        : offer.warehouse.address.province.name,
                         <button className='info-button' onClick={()=>{this.addCart(offer.id)}}>INFO</button>]
                 }})
             };
