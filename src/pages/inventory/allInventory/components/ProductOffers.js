@@ -10,12 +10,9 @@ class ProductOffers extends Component {
   componentDidMount(){
       new Promise(resolve => {
           this.props.fetchMerchant(this.props.identity.data.id, resolve)
-      }).then(() => {})
+      }).then(() => this.props.merchantDetail.officeResponse && this.props.fetchOffice(this.props.merchantDetail.officeResponse.id))
   }
-  componentDidUpdate(){
-    this.props.merchantDetail && this.props.fetchOffice(this.props.merchantDetail.office.id)
-  }
-//
+
     groupProductOffers(productOffers) {
         return productOffers.reduce((carry, offer) => {
             (carry[offer.product.id] = carry[offer.product.id] || {...offer.product, visible: true, productOffers: []}).productOffers.push(offer);
