@@ -15,8 +15,8 @@ class ProductOffers extends Component {
         }, {});
     }
 
-    openBroadcast = () => {
-        this.props.addPopup(<AddBroadcast />)
+    openBroadcast = (id) => {
+        this.props.addPopup(<AddBroadcast id={id}/>)
     }
 
     render() {
@@ -49,7 +49,7 @@ class ProductOffers extends Component {
                            contextMenu={
                                [
                                    {action: (id)=>this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'Edit Listing',},
-                                   {action: () => this.openBroadcast(), label: 'Custom Broadcast'},
+                                   {action: (id) => this.openBroadcast(id), label: 'Custom Broadcast'},
                                    // {action: (id)=>console.log('delete'), label: 'Delete Listing'}
                                ]
                            }
