@@ -4,6 +4,12 @@
     display: inline-block; }
   .App-nav .nav-inside .logo, .App-nav .nav-inside .nav-link, .App-nav .nav-inside .dropdown-nav {
     display: inline-block; }
+  .App-nav .nav-inside .dropdown-nav-right {
+    display: inline-block; }
+  .App-nav .nav-inside #logout {
+    width: 20px;
+    height: 20px;
+    margin: 14px; }
   .App-nav .nav-inside .logo {
     padding-left: 40px;
     padding-right: 0px;

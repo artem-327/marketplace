@@ -87,6 +87,7 @@ export default class AddForm extends Component {
         this.props.editProductOffer(this.props.productOffer.id, params).then(()=>{
             this.props.history.push("/inventory/my-inventory");
         });
+        console.log(this.props.productOffer.expirationDate)
     }
 
     render() {

@@ -11,6 +11,17 @@ $nav-links-color: #b0b2b4;
     .logo, .nav-link, .dropdown-nav{
       display: inline-block;
     }
+
+    .dropdown-nav-right{
+      display: inline-block;
+    }
+
+    #logout{
+      width: 20px;
+      height: 20px;
+      margin: 14px;
+    }
+
     .logo{
       padding-left: 40px;
       padding-right: 0px;
@@ -21,10 +32,12 @@ $nav-links-color: #b0b2b4;
         height: 50%;
       }
     }
+
     .logout {
       position: absolute;
       right: 20px;
     }
+    
     .nav-link{
       padding: 5px 5px;
       transition: all .2s ease;

@@ -13,18 +13,18 @@ class Datepicker extends React.Component {
     }
 
     handleChange(date) {
-        this.props.onChange(moment(date).format('MM-DD-YYYY'))
+        this.props.onChange(moment(date).format('YYYY-MM-DD'))
     }
 
     render () {
-        let { value, placeholder} = this.props;
+        let {value, placeholder} = this.props;
         return (
             <div className='datepicker'>
                 <i className="far fa-calendar-alt datepicker-icon"></i>
                 <DatePicker
                     placeholder={placeholder}
-                    dateFormat="MM/DD/YYYY"
-                    selected={value && value!=="" ? moment(value, 'MM/DD/YYYY') : null}
+                    dateFormat="YYYY-MM-DD"
+                    selected={value && value!=="" ? moment(value, 'YYYY-MM-DD') : null}
                     onChange={this.handleChange}
                 />
             </div>
