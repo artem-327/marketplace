@@ -37,7 +37,7 @@ class ProductOffers extends Component {
                 // const itsOwnCompanyProduct = this.props.officeDetail.company.id === offer.manufacturer.id  - TODO: waiting for definition
                 return{
                     id: offer.id,
-                    data: [!offer.anonymous ? offer.merchant.email : "Anonymous",
+                    data: [offer.merchant ? offer.merchant.email : "Anonymous",
                         offer.packaging.amount.formatNumber(),
                         `${packageSize} ${unit} ${packageUnit}`,
                         `${(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()} ${unit}`,
