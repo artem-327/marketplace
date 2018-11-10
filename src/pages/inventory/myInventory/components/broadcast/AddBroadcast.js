@@ -782,7 +782,7 @@ class AddBroadcast extends Component {
               <label>Category Filter</label>
               <Dropdown
                 opns={categoryFilterOptions}
-                placeholder="Select Category Filter"
+                placeholder="All Regions"
                 onChange={value => this.setState({ categoryFilter: value })}
               />
             </div>

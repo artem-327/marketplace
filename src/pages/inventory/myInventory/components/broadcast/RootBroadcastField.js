@@ -54,7 +54,7 @@ const RootBroadcastField = ({
   return (
     <>
       <BroadcastField
-        name="Root"
+        name={categoryFilter==="allregions" ? "All Regions" : "All Companies" }
         type="root"
         dispatch={dispatch}
         isClientList={isClientList}
