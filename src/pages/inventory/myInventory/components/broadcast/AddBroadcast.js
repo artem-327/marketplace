@@ -347,7 +347,6 @@ class AddBroadcast extends Component {
             if (broadcastRegions.some(region => region[rule] !== true)) dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, true))
             if (clickedBroadcastRegion[rule] === isChecked && clickedRegion.states) {
               clickedRegion.states.forEach(state => {
-                debugger
                 state[rule] !== isChecked && dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}`, isChecked))
                 state[`${rule}Partly`] === isChecked && dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}Partly`, !isChecked))
                 state.companies.forEach(company => {

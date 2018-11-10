@@ -33,8 +33,8 @@ class ShoppingCart extends Component {
       <table>
         <tbody>
           <tr><td>Subtotal</td><td>${totalPrice}</td></tr>
-          <tr><td>Estimated Shipping</td><td>$111</td></tr>{/* TODO: change the fake price */}
-          <tr><td>Estimated Tax</td><td>$111</td></tr>{/* TODO: change the fake price */}
+          <tr><td>Estimated Shipping</td><td></td></tr>{/* TODO: change the fake price */}
+          <tr><td>Estimated Tax</td><td></td></tr>{/* TODO: change the fake price */}
           <tr><td><b>Total</b></td><td>${totalPrice}</td></tr>
         </tbody>
       </table>
@@ -44,7 +44,7 @@ class ShoppingCart extends Component {
   render() {
     const {cart, removeProductFromCart, history, addPopup, cartIsFetching} = this.props;
     if (cartIsFetching) return <Spinner />
-    const itemContent = cart.orders.map(cartItem => {
+    const itemContent = cart.orders && cart.orders.map(cartItem => {
     return (
       <ItemCartBody
         addPopup={addPopup}
@@ -54,12 +54,12 @@ class ShoppingCart extends Component {
         removeProductFromCart={removeProductFromCart}
         />)
   });
-    const itemsNumber = cart.orders.length;
+    const itemsNumber = cart.orders ? cart.orders.length : 0;
     const headerTitle = `Items (${itemsNumber})`
     return (
       <div className="app-inner-main">
       <div className="submenu">
-        <div className="submenu-link">
+        <div className="link">
           <NavLink to={'/inventory/all-inventory'}>
           <i className="fas fa-angle-left"></i>
           <b>Back to Product/Purchase info</b>
@@ -74,7 +74,7 @@ class ShoppingCart extends Component {
             {itemContent}
           </div>
           <div>
-            <SummaryTable title="Summary" hasButton={true} handleContinue={this.handleContinue}>
+            <SummaryTable title="Summary" hasButton={itemsNumber ? true : false} handleContinue={this.handleContinue}>
               {this.renderSummary()}
             </SummaryTable>
             <Button size="large" color="light-blue"onClick={this.keepShopping}>Keep Shopping</Button>
