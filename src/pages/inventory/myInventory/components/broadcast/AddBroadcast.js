@@ -30,8 +30,8 @@ class AddBroadcast extends Component {
     if (this.props.storedRoot && this.props.storedRoot.identificator === this.props.id) return;
     if (root.anonymous === 1 || root.anonymous === 2) dispatch(actions.change(`forms.brcRules.root[1].anonymous`, true))
 
-    if (root.anonymous !== 2) {
-      dispatch(actions.change(`forms.brcRules.root[1].anonymousPartly`, false))
+    if (root.anonymous === 2) {
+      dispatch(actions.change(`forms.brcRules.root[1].anonymousPartly`, true))
     }
 
     if (root.broadcast === 1 || root.broadcast === 2) dispatch(actions.change(`forms.brcRules.root[1].broadcast`, true))
@@ -55,13 +55,13 @@ class AddBroadcast extends Component {
     const regions = this.props.broadcastData.regions
     regions.forEach(region => {
       if (region.anonymous === 1 || region.anonymous === 2) dispatch(actions.change(`forms.brcRules.region[${region.id}].anonymous`, true))
-      if (root.anonymous !== 2) {
-        dispatch(actions.change(`forms.brcRules.region[${region.id}].anonymousPartly`, false))
+      if (root.anonymous === 2) {
+        dispatch(actions.change(`forms.brcRules.region[${region.id}].anonymousPartly`, true))
       }
 
       if (region.broadcast === 1 || region.broadcast === 2) dispatch(actions.change(`forms.brcRules.region[${region.id}].broadcast`, true))
-      if (root.broadcast !== 2) {
-        dispatch(actions.change(`forms.brcRules.region[${region.id}].broadcastPartly`, false))
+      if (root.broadcast === 2) {
+        dispatch(actions.change(`forms.brcRules.region[${region.id}].broadcastPartly`, true))
       }
 
       if (region.priceAddition) {
@@ -86,13 +86,13 @@ class AddBroadcast extends Component {
     const flattenStates = states.flat()
     flattenStates.forEach(state => {
       if (state.anonymous === 1 || state.anonymous === 2) dispatch(actions.change(`forms.brcRules.state[${state.id}].anonymous`, true))
-      if (root.anonymous !== 2) {
-        dispatch(actions.change(`forms.brcRules.state[${state.id}].anonymousPartly`, false))
+      if (root.anonymous === 2) {
+        dispatch(actions.change(`forms.brcRules.state[${state.id}].anonymousPartly`, true))
       }
 
       if (state.broadcast === 1 || state.broadcast === 2) dispatch(actions.change(`forms.brcRules.state[${state.id}].broadcast`, true))
-      if (root.broadcast !== 2) {
-        dispatch(actions.change(`forms.brcRules.state[${state.id}].broadcastPartly`, false))
+      if (root.broadcast === 2) {
+        dispatch(actions.change(`forms.brcRules.state[${state.id}].broadcastPartly`, true))
       }
 
       if (state.priceAddition) {
