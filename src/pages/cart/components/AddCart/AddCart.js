@@ -24,8 +24,7 @@ class AddCart extends Component {
     const {removePopup, createNewOrder, offer} = this.props;
     const offerpayload = {
         productOffer: offer.id,
-        quantity: this.state.quantity,
-        selectedOfferPrice: this.state.pricing.price
+        quantity: this.state.quantity
     }
     createNewOrder(offerpayload)
     this.props.history.push("/cart/shopping-cart")
@@ -45,10 +44,18 @@ class AddCart extends Component {
   }
 
    getQualityOptions = (split) => {
-    const {quantityFrom, quantityTo} = this.state.pricing
-    const options = []
-    for (let i = quantityFrom; i <= quantityTo; i = i + split) {
-      options.push(i);
+    const options = [] 
+    if (this.state.pricing) {
+      const {quantityFrom, quantityTo} = this.state.pricing
+      for (let i = quantityFrom; i <= quantityTo; i = i + split) {
+        options.push(i);
+      }
+      return options;
+    } else {
+      const {minimum, amount} = this.props.offer.packaging;
+      for (let i = minimum; i <= amount; i = i + split) {
+        options.push(i);
+      }
     }
     return options;
    }
@@ -61,7 +68,7 @@ class AddCart extends Component {
     const {unit, capacity, amount, splits} = offer.packaging;
     const unitName = `${getUnit(unit.name)}${capacity > 1 && 's'}`;
     const packageSize = `${capacity} ${unitName}`;
-    const availableProducts = `${amount} pck / ${(amount * capacity).formatNumber()}${unitName}`;
+    const availableProducts = `${amount} pck / ${(amount * capacity).formatNumber()} ${unitName}`;
     const totalPrice = this.state.quantity ? offer.pricing.price * this.state.quantity * capacity : "";
     const {tiers} = offer.pricing;
     const priceLevelOptions = tiers.map(i => {
@@ -79,7 +86,7 @@ class AddCart extends Component {
       name: `${currentPriceLevel.quantityFrom} - ${currentPriceLevel.quantityTo} pck / $${currentPriceLevel.price}`,
       id: {quantityFrom: currentPriceLevel.quantityFrom, quantityTo: currentPriceLevel.quantityTo, price: currentPriceLevel.price}
     } : null
-    const quantityOptions = this.getQualityOptions( splits)
+    const quantityOptions = this.getQualityOptions(splits)
     const quantityOptionsWithName = quantityOptions.map(i => {
       const object = {name: `${i.toString()} pck`, id: i}
       return object;
@@ -152,6 +159,7 @@ class AddCart extends Component {
           <div className="add-cart-body-section">
             <h3>Purchase Info</h3>
 
+            {priceLevelOptions.length > 0 &&
             <div>
               <b>Select Price Level</b>
               <Dropdown
@@ -162,15 +170,15 @@ class AddCart extends Component {
                 }}
                 currentValue={currentPriceLevelName && currentPriceLevelName.name}
               />
-            </div>
+            </div>}
 
             <div>
               <b>Select Quantity</b>
               <Dropdown
                 opns={quantityOptionsWithName}
                 placeholder="Select Quantity"
-                disabled={false} //{!this.state.pricing && true}
-                currentValue={isEdit && `${order.quantity} pck`} //{isEdit && `${order.quantity} pck`}
+                disabled={priceLevelOptions.length && !this.state.pricing && true}
+                currentValue={isEdit && `${order.quantity} pck`}
                 onChange={value => {
                   this.setState({quantity: value})
                 }}/>
@@ -185,12 +193,12 @@ class AddCart extends Component {
               <b>Price/LB:</b> 
               <span>${offer.pricing.price}</span> 
             </div>
-            <div className="purchase-info">
+            {/* <div className="purchase-info">
               <b>Delivered Price/LB:</b> 
               <span>$</span> 
-            </div>
+            </div> */}
             <div className="purchase-info">
-              <b>Total:</b> 
+              <b>Subtotal:</b> 
               <span>${totalPrice || order.selectedOfferPrice}</span> 
             </div>
           </div>
