@@ -35,7 +35,6 @@ class ProductOffers extends Component {
                 const packageUnit = offer.packaging.container.name;
                 // const itsOwnProduct = this.props.identity.data.email === offer.merchant.email  - TODO: waiting for definition
                 // const itsOwnCompanyProduct = this.props.officeDetail.company.id === offer.manufacturer.id  - TODO: waiting for definition
-                const shortManufacturerName = offer.manufacturer.name.slice(0,13);
                 return{
                     id: offer.id,
                     data: [!offer.anonymous ? offer.merchant.email : "Anonymous",
@@ -44,7 +43,7 @@ class ProductOffers extends Component {
                         `${(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()} ${unit}`,
                         "$" + offer.pricing.price.formatMoney(3),
                         offer.name,
-                        `${shortManufacturerName}${shortManufacturerName.length < offer.manufacturer.name.length ? "..." : ""}`,
+                        offer.manufacturer.name,
                         offer.origin.name,
                         offer.expirationDate ? moment(offer.expirationDate).format(DATE_FORMAT) : 'none',
                         'Unknown',
