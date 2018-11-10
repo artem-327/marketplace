@@ -42,8 +42,17 @@ class Row extends Component {
                         <td className="data-table-context-holder"><ThreeDotsMenu callback={()=>this.setState({openRowComponent: !this.state.openRowComponent})} id={this.props.rowOpns.id} links={this.props.contextMenu} isOpen={this.state.openContext}/></td>
                     </React.Fragment> : null}
                     {this.props.data.map((cell, index) => {
+                        const cellShortName = typeof(cell) === "string" 
+                            ? cell.slice(0,14) 
+                            : cell;
+
+                        const cellName = typeof(cell) === "string" 
+                            ? `${cellShortName}${cellShortName.length < cell.length ? "..." : ""}` 
+                            : cell;
+
                         if (!this.props.headers[index].visible) return null;
-                        return <td key={index}>{cell}</td>
+
+                        return <td key={index} title={cellName.length > 14 ? cell : ""}>{cellName}</td>
                     })}
                 </tr>
                 {this.props.rowComponent && this.state.openRowComponent ?

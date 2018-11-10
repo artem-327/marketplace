@@ -25,20 +25,23 @@ class ProductOffers extends Component {
                 return {
                     group:  <React.Fragment><span className="product-casnumber ">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></React.Fragment>,
                     countLabel: 'Product Offerings: ',
-                    rows: product.productOffers.map((offer)=>({
+                    rows: product.productOffers.map((offer)=>{
+                        const shortManufacturerName = offer.manufacturer.name.slice(0,13);
+                        return ({
                         id: offer.id,
                         data: [offer.product.casIndexName,
                             offer.packaging.amount.formatNumber(),
                             offer.packaging.container.name,
                             offer.packaging.capacity,
                             (parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber(),
-                            "$ " + offer.pricing.cost.formatMoney(3),
-                            "$ " + offer.pricing.price.formatMoney(3),
+                            "$" + offer.pricing.cost.formatMoney(3),
+                            "$" + offer.pricing.price.formatMoney(3),
                             offer.name,
-                            offer.manufacturer.name,
+                            `${shortManufacturerName}${shortManufacturerName.length < offer.manufacturer.name.length ? "..." : ""}`,
                             offer.productCondition.name,
                             'Unknown']
-                    }))
+                        })
+                    })
                 };
             });
         return (<div className="App">
