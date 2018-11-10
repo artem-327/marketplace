@@ -12,9 +12,11 @@ const KeepShopping = ({removePopup, handleContinue}) => {
     </React.Fragment>
   )
   return (
-    <PopupComponent removePopup={removePopup} footerComponent={footerComponent} headerTitle="KEEP SHOPPING?">
-      <p>You can only add items from the same merchant and same location to a single purchase order.</p>
-      <p>Would you like to continue?</p>
+    <PopupComponent removePopup={removePopup} footerComponent={footerComponent} headerTitle="KEEP SHOPPING?" >
+      <div style={{padding: 20}}>
+        <div>You can only add items from the same merchant and same location to a single purchase order.</div>
+        <div>Would you like to continue?</div>
+      </div>
     </PopupComponent>
   )
 }

@@ -93,12 +93,12 @@ class PurchaseOrder extends Component {
     return (
       <div className="app-inner-main">
         <div className="submenu">
+          <div className="link">
           <NavLink to="/inventory/all-inventory">
-            <div className="submenu-link">
-              <i className="fas fa-angle-left"></i>
-              <b> Back to Product Offerings</b>
-            </div>
-          </NavLink>
+            <i className="fas fa-angle-left"></i>
+            <b> Back to Product Offerings</b>
+            </NavLink>
+          </div>
         </div>
         <div className="shopping-cart">
           <h1 className='header inv-header'>Purchase Order</h1>
