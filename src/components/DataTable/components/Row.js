@@ -52,7 +52,7 @@ class Row extends Component {
 
                         if (!this.props.headers[index].visible) return null;
 
-                        return <td key={index} title={cellName.length > 14 ? cell : ""}>{cellName}</td>
+                        return <td key={index} title={cellName && cellName.length > 14 ? cell : ""}>{cellName}</td>
                     })}
                 </tr>
                 {this.props.rowComponent && this.state.openRowComponent ?
