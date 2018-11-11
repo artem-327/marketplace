@@ -75,14 +75,15 @@ $nav-links-color: #b0b2b4;
       text-align: center;
       position: relative;
       z-index: 2;
+
+      a {
+        color: #b0b2b4;
+        text-decoration: none;
+      }
+
       .dropdown-link-center{
         padding: 14px 15px 10px 15px;
         display: inline-block;
-
-        a {
-          color: #b0b2b4;
-          text-decoration: none;
-        }
 
         img {
           height: 65%;

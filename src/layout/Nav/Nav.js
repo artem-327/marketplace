@@ -90,7 +90,7 @@ class Nav extends Component {
     renderMenuItem(id, link, name){
         const activeClass = this.props.location.pathname.split('/')[1] === id ? 'active' : null;
         return <div className={"dropdown-nav " + activeClass}>
-            <span className='dropdown-link-center'><NavLink to={id === 'dashboard' ? '/' : '/' + id} activeClassName='active'>{name}</NavLink></span>
+            <NavLink to={id === 'dashboard' ? '/' : '/' + id} activeClassName='active'><span className='dropdown-link-center'>{name}</span></NavLink>
         </div>
     }
 
