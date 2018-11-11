@@ -3,10 +3,11 @@ import './ProductOffers.css';
 import DataTable from "../../../../components/DataTable";
 import BroadcastRule from "./BroadcastRule";
 import AddBroadcast from "../../../../pages/inventory/myInventory/components/broadcast";
+import ToggleBroadcast from "./ToggleBroadcast";
 
 class ProductOffers extends Component {
 
-    state={isOpen: false, brActive: false};
+    state={isOpen: false};
 
     groupProductOffers(productOffers) {
         return productOffers.reduce((carry, offer) => {
@@ -27,8 +28,9 @@ class ProductOffers extends Component {
                     countLabel: 'Product Offerings: ',
                     rows: product.productOffers.map((offer)=>{
                         const shortManufacturerName = offer.manufacturer.name.slice(0,13);
+                        const offerId = offer.id
                         return ({
-                        id: offer.id,
+                        id: offerId,
                         data: [offer.product.casIndexName,
                             offer.packaging.amount.formatNumber(),
                             offer.packaging.container.name,
@@ -39,7 +41,12 @@ class ProductOffers extends Component {
                             offer.name,
                             `${shortManufacturerName}${shortManufacturerName.length < offer.manufacturer.name.length ? "..." : ""}`,
                             offer.productCondition.name,
-                            'Unknown']
+                            'Unknown',
+                            <ToggleBroadcast 
+                                offerId={offerId}
+                                broadcasted={offer.broadcasted}
+                            /> 
+                        ]
                         })
                     })
                 };
@@ -48,7 +55,20 @@ class ProductOffers extends Component {
                 <DataTable id="myInventoryTable"
                            selectableRows
                            sortFunc={(nameColumn) => console.log(nameColumn)}
-                           headerInit={[{name: 'Product Name'}, {name: 'Available'}, {name: 'Packaging'}, {name: 'Pkg. size'}, {name: 'Quantity'}, {name: 'Cost'}, {name: 'FOB Price'}, {name: 'Trade Name'}, {name: 'MFR.'}, {name: 'Condition'}, {name: 'MFG Date'}]}
+                           headerInit={[
+                               {name: 'Product Name'}, 
+                               {name: 'Available'}, 
+                               {name: 'Packaging'}, 
+                               {name: 'Pkg. size'}, 
+                               {name: 'Quantity'}, 
+                               {name: 'Cost'}, 
+                               {name: 'FOB Price'}, 
+                               {name: 'Trade Name'}, 
+                               {name: 'MFR.'}, 
+                               {name: 'Condition'}, 
+                               {name: 'MFG Date'},
+                               {name: 'Broadcasted'}
+                            ]}
                            contextMenu={
                                [
                                    {action: (id)=>this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'Edit Listing',},
