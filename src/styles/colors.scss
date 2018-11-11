@@ -3,6 +3,7 @@ $beige-color: #E7E7E7;
 $blue-color: #329ED6;
 $brown-color:#4E5157;
 $green-color: #4CD136;
+$light-green-color: lighten( $green-color, 25% );
 $grey-color:#4E5157;
 $light-30-grey-color: lighten( $grey-color, 30% );
 $light-50-grey-color: lighten( $grey-color, 50% );
