@@ -3,7 +3,10 @@ import Api from '../api/broadcast';
 import {
   BROADCAST_FETCH_REQUESTED, 
   BROADCAST_FETCH_SUCCEEDED,
-  BROADCAST_FETCH_FAILED
+  BROADCAST_FETCH_FAILED,
+  BROADCAST_POST_REQUESTED, 
+  BROADCAST_POST_SUCCEEDED,
+  BROADCAST_POST_FAILED
 } from "../constants/broadcast";
 
 function* fetchBroadcast(action) {
@@ -16,8 +19,18 @@ function* fetchBroadcast(action) {
     }
 }
 
+function* postBroadcast(action) {
+    try {
+        yield call(Api.postBroadcast, action.payload.id, action.payload.brcRules);
+        yield put({type: BROADCAST_POST_SUCCEEDED});
+    } catch (e) {
+        yield put({type: BROADCAST_POST_FAILED, message: e.message});
+    }
+}
+
 function* broadcastSaga() {
     yield takeEvery(BROADCAST_FETCH_REQUESTED, fetchBroadcast);
+    yield takeEvery(BROADCAST_POST_REQUESTED, postBroadcast);
 }
 
 export default broadcastSaga;

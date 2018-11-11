@@ -27,18 +27,15 @@ class AddBroadcast extends Component {
   };
 
   initTable = (root, dispatch) => {
-    if (this.props.storedRoot && this.props.storedRoot.identificator === this.props.id) return;
     if (root.anonymous === 1 || root.anonymous === 2) dispatch(actions.change(`forms.brcRules.root[1].anonymous`, true))
-
     if (root.anonymous === 2) {
       dispatch(actions.change(`forms.brcRules.root[1].anonymousPartly`, true))
-    }
+    } else dispatch(actions.change(`forms.brcRules.root[1].anonymousPartly`, false))
 
     if (root.broadcast === 1 || root.broadcast === 2) dispatch(actions.change(`forms.brcRules.root[1].broadcast`, true))
-
     if (root.broadcast === 2) {
       dispatch(actions.change(`forms.brcRules.root[1].broadcastPartly`, true))
-    }
+    } else dispatch(actions.change(`forms.brcRules.root[1].broadcastPartly`, false))
 
 
     if (root.priceAddition) {
@@ -55,12 +52,12 @@ class AddBroadcast extends Component {
     const regions = this.props.broadcastData.regions
     regions.forEach(region => {
       if (region.anonymous === 1 || region.anonymous === 2) dispatch(actions.change(`forms.brcRules.region[${region.id}].anonymous`, true))
-      if (root.anonymous === 2) {
+      if (region.anonymous === 2) {
         dispatch(actions.change(`forms.brcRules.region[${region.id}].anonymousPartly`, true))
       }
 
       if (region.broadcast === 1 || region.broadcast === 2) dispatch(actions.change(`forms.brcRules.region[${region.id}].broadcast`, true))
-      if (root.broadcast === 2) {
+      if (region.broadcast === 2) {
         dispatch(actions.change(`forms.brcRules.region[${region.id}].broadcastPartly`, true))
       }
 
@@ -86,12 +83,12 @@ class AddBroadcast extends Component {
     const flattenStates = states.flat()
     flattenStates.forEach(state => {
       if (state.anonymous === 1 || state.anonymous === 2) dispatch(actions.change(`forms.brcRules.state[${state.id}].anonymous`, true))
-      if (root.anonymous === 2) {
+      if (state.anonymous === 2) {
         dispatch(actions.change(`forms.brcRules.state[${state.id}].anonymousPartly`, true))
       }
 
       if (state.broadcast === 1 || state.broadcast === 2) dispatch(actions.change(`forms.brcRules.state[${state.id}].broadcast`, true))
-      if (root.broadcast === 2) {
+      if (state.broadcast === 2) {
         dispatch(actions.change(`forms.brcRules.state[${state.id}].broadcastPartly`, true))
       }
 
@@ -118,12 +115,12 @@ class AddBroadcast extends Component {
     const flattenCompanies = companies.flat()
     flattenCompanies.forEach(company => {
       if (company.anonymous === 1 || company.anonymous === 2) dispatch(actions.change(`forms.brcRules.company[${company.id}].anonymous`, true))
-      if (root.anonymous === 2) {
+      if (company.anonymous === 2) {
         dispatch(actions.change(`forms.brcRules.company[${company.id}].anonymousPartly`, true))
       }
 
       if (company.broadcast === 1 || company.broadcast === 2) dispatch(actions.change(`forms.brcRules.company[${company.id}].broadcast`, true))
-      if (root.broadcast === 2) {
+      if (company.broadcast === 2) {
         dispatch(actions.change(`forms.brcRules.company[${company.id}].broadcastPartly`, true))
       }
 
@@ -150,11 +147,11 @@ class AddBroadcast extends Component {
     const flattenOffices = offices.flat()
     flattenOffices.forEach(office => {
       if (office.anonymous === 1 || office.anonymous === 2) dispatch(actions.change(`forms.brcRules.office[${office.id}].anonymous`, true))
-      if (root.anonymous === 2) {
+      if (office.anonymous === 2) {
         dispatch(actions.change(`forms.brcRules.office[${office.id}].anonymousPartly`, true))
       }
       if (office.broadcast === 1 || office.broadcast === 2) dispatch(actions.change(`forms.brcRules.office[${office.id}].broadcast`, true))
-      if (root.broadcast === 2) {
+      if (office.broadcast === 2) {
         dispatch(actions.change(`forms.brcRules.office[${office.id}].broadcastPartly`, true))
       }
       if (office.priceAddition) {
@@ -170,32 +167,89 @@ class AddBroadcast extends Component {
   }
 
 
-  async componentDidMount() {
+  componentDidMount() {
     const { dispatch, id } = this.props
-    new Promise((resolve) => {
+      new Promise((resolve) => {
+      dispatch(actions.change("forms.brcRules", {}))
       this.props.fetchBroadcast(id, resolve)
     }).then(() => {
       this.initTable(this.props.broadcastData, dispatch)
     })
   }
 
-  convertDataForPost = () => {
-    const data = this.props.broadcastData;
-    const { storedOffices, storedCompanies, storedStates, storedRegions, storedRoot } = this.props
-    const root = {
-      anonymous: storedRoot.anonymous !== true ? 0 : !storedRoot.anonymousePartly ? 1 : 2,
-      broadcast: storedRoot.broadcast !== true ? 0 : !storedRoot.broadcastPartly ? 1 : 2,
-    }
-    if (storedRoot.priceUnit === "$") root.priceAddition = storedRoot.priceValue
-    if (storedRoot.priceUnit === "%") root.priceMultiplier = storedRoot.priceValue
+  convertDataForPost = async() => {
+    const regions = this.props.broadcastData.regions
+    const states = regions.map(i => i.states)
+    const flattenStates = states.flat()
 
-    const convertedData = {
-      root: {
-        ...storedRoot,
-        regions: []
-      }
+    const { storedOffices, storedCompanies, storedStates, storedRegions, storedRoot } = this.props
+
+    const root = {
+      anonymous: storedRoot[1].anonymous !== true ? 0 : !storedRoot[1].anonymousePartly ? 1 : 2,
+      broadcast: storedRoot[1].broadcast !== true ? 0 : !storedRoot[1].broadcastPartly ? 1 : 2,
     }
-    console.log(convertedData, data)
+    if (storedRoot[1].priceUnit === "$") root.priceAddition = storedRoot[1].priceValue
+    if (storedRoot[1].priceUnit === "%") root.priceMultiplier = storedRoot[1].priceValue
+    const regionsPost = await Object.values(storedRegions).map(i => {
+      const region = {
+      anonymous: i.anonymous !== true ? 0 : i.anonymousePartly ? 2 : 1,
+      broadcast: i.broadcast !== true ? 0 : i.broadcastPartly ? 2 : 1,
+      id: i.id
+      }
+      if (i.priceUnit === "$") region.priceAddition = i.priceValue
+      if (i.priceUnit === "%") region.priceMultiplier = i.priceValue
+
+      //STATES
+      const parentRegion = regions.find(region => region.id === i.id)
+      const statesOfThisRegion = Object.values(storedStates).filter(obj => parentRegion["states"].find(obj2 => obj.id === obj2.id))
+      region.states =  statesOfThisRegion.map(i => {
+        const state = {
+        anonymous: i.anonymous !== true ? 0 : i.anonymousePartly ? 2 : 1,
+        broadcast: i.broadcast !== true ? 0 : i.broadcastPartly ? 2 : 1,
+        id: i.id
+        }
+        if (i.priceUnit === "$") state.priceAddition = i.priceValue
+        if (i.priceUnit === "%") state.priceMultiplier = i.priceValue
+
+        const parentState = flattenStates.find(state => state.id === i.id)
+        const companiesOfThisState =  Object.values(storedCompanies).filter(obj => parentState["companies"].find(obj2 => obj.id === obj2.id))
+        //COMPANIES
+        state.companies = companiesOfThisState.map(i => {
+          const company = {
+          anonymous: i.anonymous !== true ? 0 : i.anonymousePartly ? 2 : 1,
+          broadcast: i.broadcast !== true ? 0 : i.broadcastPartly ? 2 : 1,
+          id: i.id
+          }
+          if (i.priceUnit === "$") company.priceAddition = i.priceValue
+          if (i.priceUnit === "%") company.priceMultiplier = i.priceValue
+
+          const parentStatesOffices = parentState.companies.map(i => i.offices)
+          const officesOfThisState = Object.values(storedOffices).filter(obj => parentStatesOffices.flat().find(obj2 => obj.id === obj2.id))
+          debugger
+          //OFFICES
+          company.offices = officesOfThisState.map(i => {
+            const office = {
+            anonymous: i.anonymous !== true ? 0 : i.anonymousePartly ? 2 : 1,
+            broadcast: i.broadcast !== true ? 0 : i.broadcastPartly ? 2 : 1,
+            id: i.id
+            }
+            if (i.priceUnit === "$") office.priceAddition = i.priceValue
+            if (i.priceUnit === "%") office.priceMultiplier = i.priceValue
+            
+            return office
+            })
+            return company
+          })
+        return state     
+      })
+      return region;
+    })
+    const convertedData = await {
+      ...root,
+      regions: regionsPost
+
+    }
+    this.props.postBroadcast(this.props.id, convertedData)
   }
 
   onChangeHandler = (e) => {
@@ -714,7 +768,7 @@ class AddBroadcast extends Component {
   }
 
   handleContinue = () => {
-    console.log("broadcast was applied"); //TODO
+    this.convertDataForPost()
     this.props.removePopup();
   };
 
@@ -732,7 +786,7 @@ class AddBroadcast extends Component {
       storedRoot, storedRegions, storedStates, storedOffices, storedCompanies
     } = this.props;
     const { isClientList, categoryFilter, regionsExpanded, companiesExpanded, statesExpanded, filterInput, filteredRegions, filteredStates, filteredCompanies, filteredOffices } = this.state;
-    if (!broadcastData || !storedOffices) return <Spinner /> //shame
+    if (broadcastIsFetching) return <Spinner /> //shame
     const categoryFilterOptions = [
       { name: "All Regions", id: "allregions" },
       { name: "All Companies", id: "allcompanies" },
@@ -747,7 +801,7 @@ class AddBroadcast extends Component {
         {/*<Button color="green-white" size="large-2x" onClick={() => removePopup()}>*/}
         {/*Save As Template*/}
         {/*</Button>*/}
-        <Button color="blue" onClick={this.convertDataForPost}>
+        <Button color="blue" onClick={this.handleContinue}>
           Apply
         </Button>
       </>

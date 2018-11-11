@@ -3,6 +3,7 @@ import BroadcastField from "./BroadcastField";
 import RegionBroadcastField from "./RegionBroadcastField";
 import CompanyBroadcastField from "./CompanyBroadcastField";
 import {filterByUniqueProperty} from "../../../../../utils/functions";
+import Spinner from '../../../../../components/Spinner/Spinner'
 
 const RootBroadcastField = ({
   rootData, 
@@ -24,7 +25,7 @@ const RootBroadcastField = ({
   filteredCompanies, 
   filteredOffices
 }) => {
-  if (!rootData.regions) return <div>...loading</div>
+  if (!rootData.regions) return <Spinner />
   const partlybrc = storedRoot && storedRoot["1"].broadcastPartly
   const partlyanonym = storedRoot && storedRoot["1"].anonymousPartly
   const statessData =  rootData.regions.map(i => i.states)
