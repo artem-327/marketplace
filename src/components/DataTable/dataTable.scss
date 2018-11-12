@@ -1,3 +1,5 @@
+@import "../../styles/main.scss";
+
 .data-table-wr{
   width: calc(100% - 58px);
   min-height: 180px;
@@ -13,6 +15,12 @@
   //text-align: center;
   .three-dots-menu{
     z-index: 2;
+  }
+  tr {
+    &.isAllInventory:hover {
+      cursor: pointer;
+      background-color: lighten( #A8D1DF, 15% );
+    }
   }
   td{
     border-bottom: 1px solid #eeeeee;
