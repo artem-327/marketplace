@@ -45,21 +45,70 @@
 }
 
 
-//shame
+
 .brc-radio-wrapper {
   display: flex;
   justify-content: center;
-  .brc-radio {
-    width:20px;
+  width: 80px;
+  
+  .switch-container {
+    display: block;
+    width: 40px;
     height: 20px;
-    border-radius: 100%;
-    background-color: $light-30-grey-color;
-    border: 5px solid $light-50-grey-color;
-    cursor:pointer;
-    
-    &.active{
-      border-color: $light-green-color;
-      background-color: $green-color;
-    }
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .switch {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  .switch input {
+    display: none;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: '';
+    height: 15px;
+    width: 15px;
+    left: 1.5px;
+    bottom: 2px;
+    background-color: white;
+    transition: 0.4s;
+  }
+
+  .slider.active {
+    background-color: $green-color;
+  }
+
+  .slider.active {
+    box-shadow: 0 0 1px $green-color;
+  }
+
+  .slider.active:before {
+    transform: translateX(20px);
+  }
+
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 20px;
+    border: 1px solid $grey-color;
+  }
+
+  .slider.round:before {
+    border-radius: 50%;
   }
 }

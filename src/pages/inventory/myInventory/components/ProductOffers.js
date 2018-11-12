@@ -67,7 +67,7 @@ class ProductOffers extends Component {
                                {name: 'MFR.'}, 
                                {name: 'Condition'}, 
                                {name: 'MFG Date'},
-                               {name: 'Broadcasted'}
+                               {name: 'Broadcast'}
                             ]}
                            contextMenu={
                                [
