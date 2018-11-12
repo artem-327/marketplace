@@ -1,4 +1,6 @@
 
+@import "../../../../styles/main.scss";
+
 .product-casnumber {
   color: rgb(78, 146, 223)!important;
   margin-right: 10px;
@@ -38,6 +40,26 @@
     background-color: #66d66a;
     &::after{
       background-color: #00a005;
+    }
+  }
+}
+
+
+//shame
+.brc-radio-wrapper {
+  display: flex;
+  justify-content: center;
+  .brc-radio {
+    width:20px;
+    height: 20px;
+    border-radius: 100%;
+    background-color: $light-30-grey-color;
+    border: 5px solid $light-50-grey-color;
+    cursor:pointer;
+    
+    &.active{
+      border-color: $light-green-color;
+      background-color: $green-color;
     }
   }
 }

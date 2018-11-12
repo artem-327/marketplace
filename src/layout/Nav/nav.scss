@@ -6,20 +6,17 @@ $nav-links-color: #b0b2b4;
   
   .nav-inside {
     .links{
-      display: inline-block;
+      //display: inline-block;
+      float: left;
+    }
+    .logout{
+      //display: inline-block;
+      float: right;
+      margin-right: 12px;
     }
     .logo, .nav-link, .dropdown-nav{
-      display: inline-block;
-    }
-
-    .dropdown-nav-right{
-      display: inline-block;
-    }
-
-    #logout{
-      width: 20px;
-      height: 20px;
-      margin: 14px;
+      //display: inline-block;
+      float: left;
     }
 
     .logo{
@@ -31,11 +28,6 @@ $nav-links-color: #b0b2b4;
         width: 50%;
         height: 50%;
       }
-    }
-
-    .logout {
-      position: absolute;
-      right: 20px;
     }
     
     .nav-link{
@@ -83,19 +75,63 @@ $nav-links-color: #b0b2b4;
       text-align: center;
       position: relative;
       z-index: 2;
+
+      a {
+        color: #b0b2b4;
+        text-decoration: none;
+      }
+
       .dropdown-link-center{
         padding: 14px 15px 10px 15px;
         display: inline-block;
-        a {
-          color: #b0b2b4;
-          text-decoration: none;
+
+        img {
+          height: 65%;
+          width: 65%;
         }
+
         .dropdown-nav-icon{
           display: inline-block;
           font-size: .8rem;
           margin-left: 15px;
         }
       }
+
+      .dropdown-nav-inside-myaccount{
+        position: absolute;
+        vertical-align: bottom;
+        width: 160%;
+        top: 50px;
+        right: 0;
+        text-align: center;
+        background-color: #2b2e33;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+        border-radius: 0 0 4px 4px;
+        padding-top: 10px;
+        .dropdown-nav-item{
+          width: 100%;
+          padding: 10px 15px;
+          text-align: left;
+          display: block;
+          color: $nav-links-color;
+          background-color: #2b2e33;
+          &:last-child{
+            border-radius: 0 0 4px 4px;
+          }
+          &.active{
+            color: #f3f4f4;
+            font-weight: normal;
+          }
+          &:hover{
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: normal;
+            color: #f3f4f4;
+            background-color: #276c92
+          }
+        }
+      }
+
       .dropdown-nav-inside{
         position: absolute;
         vertical-align: bottom;
