@@ -1,4 +1,4 @@
-@import "../../styles/main.scss";
+@import '../../styles/main.scss';
 
 .input-checkbox {
   position: relative;
@@ -12,7 +12,7 @@
     display: inline-block;
     background-color: white;
     margin: 1px 15px 0 0;
-    border: 1px solid #B0B0B0;
+    border: 1px solid #b0b0b0;
     border-radius: 4px;
     position: absolute;
     left: 0;
@@ -53,13 +53,14 @@
         transform: rotate(45deg);
       }
     }
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       border-color: $blue-color;
       box-shadow: none;
       outline: none;
     }
     &:after {
-      content: "";
+      content: '';
       position: absolute;
       display: none;
       left: 7px;
@@ -72,7 +73,7 @@
     }
     &.partlyanonym {
       &:after {
-        border: solid $red-color;
+        border: solid $orange-color;
         border-width: 0 2px 2px 0;
       }
     }

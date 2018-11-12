@@ -20,10 +20,6 @@ class ProductOffers extends Component {
         }, {});
     }
 
-   addCart(id){
-        this.props.addPopup(<AddCart id={id} history={this.props.history}/>)
-   }
-
     render() {
         if(this.props.productOffers.length === 0 || !this.props.officeDetail.company) return null;
         let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
@@ -52,7 +48,7 @@ class ProductOffers extends Component {
                         true  //itsOwnProduct || itsOwnCompanyProduct - TODO: waiting for definition
                             ? `${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`
                             : offer.warehouse.address.province.name,
-                        <button className='info-button' onClick={()=>{this.addCart(offer.id)}}>INFO</button>]
+                        ]
                 }})
             };
         });
