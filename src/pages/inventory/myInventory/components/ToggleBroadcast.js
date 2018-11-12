@@ -18,7 +18,7 @@ class ToggleBroadcast extends Component {
     const { offerId } = this.props;
     return (
       <div className="brc-radio-wrapper">
-      <span>{this.state.active ? "On" : "Off"}</span>
+        <div className="label">{this.state.active ? "On" : "Off"}</div>
         <div className="switch-container">
           <label className="switch">
           <span
