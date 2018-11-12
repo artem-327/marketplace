@@ -56,7 +56,7 @@ class ProductOffers extends Component {
             <div className="App ">
                 <DataTable id="allInventoryTable"
                            sortFunc={(nameColumn) => console.log(nameColumn)}
-                           headerInit={[{name: 'Merchant'}, {name: 'Available'}, {name: 'Packaging'}, {name: 'Quantity'}, {name: 'FOB Price'}, {name: 'Trade Name'}, {name: 'MFR.'}, {name: 'Origin'}, {name: 'Expiration'}, {name: 'Assay'}, {name: 'Condition'}, {name: 'Form'}, {name: 'Location'}, {name: null}]}
+                           headerInit={[{name: 'Merchant'}, {name: 'Available'}, {name: 'Packaging'}, {name: 'Quantity'}, {name: 'FOB Price'}, {name: 'Trade Name'}, {name: 'MFR.'}, {name: 'Origin'}, {name: 'Expiration'}, {name: 'Assay'}, {name: 'Condition'}, {name: 'Form'}, {name: 'Location'}]}
                            rows={rows}
                 />
             </div>
