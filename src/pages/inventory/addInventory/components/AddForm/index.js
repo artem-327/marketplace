@@ -13,6 +13,7 @@ function mapStateToProps(store) {
         locations: store.location.locations,
         location: store.location,
         form: store.forms.addProductOffer,
+        productOfferingForm: store.forms.productOffering,
         merchantDetail: store.merchants.merchantDetail
     }
 }
