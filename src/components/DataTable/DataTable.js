@@ -60,6 +60,7 @@ class DataTable extends Component {
           <Rows
             tableType={this.props.id}
             addPopup={this.props.addPopup}
+            history={this.props.history}
             rows={this.props.rows}
             rowsOpns={this.props.dataTable.rowsOpns}
             selectable={this.props.selectableRows}

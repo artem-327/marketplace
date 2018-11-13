@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './ProductOffers.css';
 import moment from "moment";
-import AddCart from '../../../cart/components/AddCart'
+import AddCart from '../../../cart/components/AddCart';
 import {DATE_FORMAT} from "../../../../utils/constants";
 import {getUnit} from "../../../../utils/functions";
 import DataTable from "../../../../components/DataTable";
@@ -54,6 +54,7 @@ class ProductOffers extends Component {
                            sortFunc={(nameColumn) => console.log(nameColumn)}
                            headerInit={[{name: 'Merchant'}, {name: 'Available'}, {name: 'Packaging'}, {name: 'Quantity'}, {name: 'FOB Price'}, {name: 'Trade Name'}, {name: 'MFR.'}, {name: 'Origin'}, {name: 'Expiration'}, {name: 'Assay'}, {name: 'Condition'}, {name: 'Form'}, {name: 'Location'}]}
                            rows={rows}
+                           history={this.props.history}
                 />
             </div>
         );
