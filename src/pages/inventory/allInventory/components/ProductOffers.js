@@ -21,7 +21,7 @@ class ProductOffers extends Component {
     }
 
     render() {
-        if(this.props.productOffers.length === 0 || !this.props.officeDetail.company) return null;
+        if(this.props.productOffers.length === 0 || !this.props.officeDetail.company) return <div>zadnej product offer</div>;
         let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
             return {
                 group: <><span className="product-casnumber">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></>,
