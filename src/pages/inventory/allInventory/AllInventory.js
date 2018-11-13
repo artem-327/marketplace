@@ -17,9 +17,9 @@ class AllInventory extends Component {
     }
 
     render() {
-
-        const content = this.props.isFetching ? <div><Spinner/></div> :
-            <ProductOffers {...this.props}/>;
+        const content = this.props.productOffersIsFetching 
+            ? <div><Spinner/></div> 
+            : <ProductOffers {...this.props}/>;
         return (
             <div>
                 <h1 className='header inv-header'>MARKETPLACE</h1>

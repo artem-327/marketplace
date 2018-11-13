@@ -30,6 +30,7 @@ export const initialState = {
     unitOfPackaging: [],
     productOffer: {},
     productOfferFetching: true,
+    productOffersIsFetching: true
 };
 
 export default function reducer(state = initialState, action) {
@@ -60,14 +61,14 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 allProductOffers: [],
-                isFetching: true,
+                productOffersIsFetching: true,
             }
         }
         case GET_PRODUCT_OFFERS_ALL_FULFILLED: {
             return {
                 ...state,
                 allProductOffers: action.payload,
-                isFetching: false
+                productOffersIsFetching: false
             }
         }
         case GET_PRODUCT_OFFER_PENDING: {
@@ -135,7 +136,7 @@ export function fetchMyProductOffers(filter = {}) {
 
 export function fetchAllProductOffers(filter = {}) {
     let mrchnt = false;
-    console.log(filter);
+
     return {
         type: GET_PRODUCT_OFFERS_ALL,
         payload: axios.get("/api/3f36ea/product-offers/", {params: {...filter, mrchnt}, 'paramsSerializer': params => transformRequestOptions(params)}).then(response => {
