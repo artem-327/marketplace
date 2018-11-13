@@ -21,8 +21,8 @@ export default class AddInventory extends Component {
             this.props.dispatch(actions.merge('forms.productOffering', {
                 assayMax: this.props.productOffer.assayMax,
                 assayMin: this.props.productOffer.assayMin,
-                // creationDate: "10-02-2018"
-                // expirationDate: "10-03-2018"
+                creationDate: this.props.productOffer.creationDate,
+                expirationDate: this.props.productOffer.expirationDate,
                 externalNotes: this.props.productOffer.internalNotes,
                 internalNotes: this.props.productOffer.externalNotes,
                 lotNumber: this.props.productOffer.lotNumber,
