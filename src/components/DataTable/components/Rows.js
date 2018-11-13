@@ -10,6 +10,7 @@ class Rows extends Component {
           <GroupRow
             key={index}
             rows={this.props.rows[item.index]}
+            history={this.props.history}
             rowsOpns={this.props.rowsOpns[item.index]}
             rowComponent={this.props.rowComponent}
             contextMenu={this.props.contextMenu}

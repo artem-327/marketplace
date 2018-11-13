@@ -22,8 +22,8 @@ class AddCart extends Component {
   }
 
   //TODO Fix cart to send edited data
-  createOrder = async () => {
-    const {removePopup, createNewOrder, offer} = this.props;
+  createOrder = () => {
+    const {removePopup, createNewOrder, offer, history} = this.props;
     const offerpayload = {
         productOffer: offer.id,
         quantity: this.state.quantity
@@ -32,9 +32,10 @@ class AddCart extends Component {
       this.setState({warning: "quantity is required"})
       return
     } else {
-      await createNewOrder(offerpayload)
-      await removePopup()
-      this.props.history.push("/cart/shopping-cart")
+      history.push("/cart/shopping-cart")
+      createNewOrder(offerpayload)
+      removePopup()
+      
     }
   }
 
