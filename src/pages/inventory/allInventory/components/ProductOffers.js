@@ -5,12 +5,12 @@ import AddCart from '../../../cart/components/AddCart'
 import {DATE_FORMAT} from "../../../../utils/constants";
 import {getUnit} from "../../../../utils/functions";
 import DataTable from "../../../../components/DataTable";
-
+import Spinner from '../../../../components/Spinner/Spinner';
 class ProductOffers extends Component {
   componentDidMount(){
       new Promise(resolve => {
           this.props.fetchMerchant(this.props.identity.data.id, resolve)
-      }).then(() => this.props.merchantDetail.office && this.props.fetchOffice(this.props.merchantDetail.office.id))
+      }).then(() => console.log("data fetched"))
   }
 
     groupProductOffers(productOffers) {
@@ -21,7 +21,7 @@ class ProductOffers extends Component {
     }
 
     render() {
-        if(this.props.productOffers.length === 0 || !this.props.officeDetail.company) return <div>zadnej product offer</div>;
+        if(this.props.productOffers.length === 0) return <Spinner />;
         let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
             return {
                 group: <><span className="product-casnumber">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></>,
@@ -29,8 +29,6 @@ class ProductOffers extends Component {
                 const unit = getUnit(offer.packaging.unit.name);
                 const packageSize = offer.packaging.capacity;
                 const packageUnit = offer.packaging.container.name;
-                // const itsOwnProduct = this.props.identity.data.email === offer.merchant.email  - TODO: waiting for definition
-                // const itsOwnCompanyProduct = this.props.officeDetail.company.id === offer.manufacturer.id  - TODO: waiting for definition
                 return{
                     id: offer.id,
                     data: [offer.merchant ? offer.merchant.companyName : "Anonymous",
@@ -45,9 +43,7 @@ class ProductOffers extends Component {
                         'Unknown',
                         offer.productCondition.name,
                         offer.productForm.name,
-                        true  //itsOwnProduct || itsOwnCompanyProduct - TODO: waiting for definition
-                            ? `${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`
-                            : offer.warehouse.address.province.name,
+                        `${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`
                         ]
                 }})
             };
