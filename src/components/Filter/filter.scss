@@ -8,7 +8,7 @@ $font-family: 'Cabin', sans-serif;
   position: absolute;
   width: 500px;
   right: 0;
-  top: 53px;
+  top: 55px;
   box-shadow: -2px 0px 5px 0px rgba(140, 140, 140, 1);
   padding: 10px;
   z-index: 2;
@@ -60,9 +60,6 @@ $font-family: 'Cabin', sans-serif;
     border-bottom: 1px solid #f0f0f0;
     &:nth-child(1) {
       border-top: 1px solid #f0f0f0;
-    }
-    &:nth-child(7) {
-      border-bottom: 0px;
     }
     margin-top: 10px;
     .filter-input-text {
@@ -239,6 +236,9 @@ $font-family: 'Cabin', sans-serif;
         padding: 10px;
       }
     }
+  }
+  .filter-group + .save-filter {
+    border-top: 0;
   }
 }
 
