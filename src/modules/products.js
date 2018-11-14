@@ -62,14 +62,16 @@ export default function reducer(state = initialState, action) {
         case FETCH_MANUFACTURER_PENDING:{
             return {
                 ...state,
-                isFetchingManufacturer: true
+                isFetchingManufacturer: true,
+                manufacturerFetched: false
             }
         }
         case FETCH_MANUFACTURER_FULFILLED:{
             return {
                 ...state,
                 isFetchingManufacturer: false,
-                manufacturer: action.payload
+                manufacturer: action.payload.data.manufacturers,
+                manufacturerFetched: action.payload.status
             }
         }
         case FETCH_PRODUCT_CONDITIONS_FULFILLED: {
@@ -88,13 +90,15 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 isFetchingOrigin: true,
+                originFetched: false
             }
         }
         case FETCH_ORIGIN_FULFILLED: {
             return {
                 ...state,
                 isFetchingOrigin: false,
-                origin: action.payload
+                origin: action.payload.data.origins,
+                originFetched: action.payload.status,
             }
         }
         case FETCH_PRODUCT_AGE_FULFILLED: {
@@ -119,13 +123,15 @@ export default function reducer(state = initialState, action) {
             return{
                 ...state,
                 isFetching: false,
+                productsFetched: false
             }
         }
         case SEARCH_PRODUCT_FULFILLED: {
             return{
                 ...state,
                 isFetching: false,
-                data: action.payload
+                data: action.payload.data.products,
+                productsFetched: action.payload.status
             }
         }
         case SAVE_MAPPING_FULFILLED: {
@@ -140,6 +146,7 @@ export default function reducer(state = initialState, action) {
             return{
                 ...state,
                 isMapFetching: true,
+                mappedDataFetched: "no"
             }
         }
         case MAP_PRODUCT_REJECTED: {
@@ -152,7 +159,8 @@ export default function reducer(state = initialState, action) {
             return{
                 ...state,
                 isMapFetching: false,
-                mappedData: action.payload
+                mappedData: action.payload.data.productTemplates,
+                mappedDataFetched: action.payload.status
             }
         }
         case FETCH_ALTERNATIVE_NAMES_FULFILLED:{
@@ -176,21 +184,21 @@ export default function reducer(state = initialState, action) {
 export function searchProducts(search) {
     return {
         type: SEARCH_PRODUCT,
-        payload: axios.get('/api/726euu/products/', {params:{search}}).then(response => response.data.data.products)
+        payload: axios.get('/api/726euu/products/', {params:{search}}).then(response => response.data)
     }
 }
 
 export function mapProducts(map) {
     return {
         type: MAP_PRODUCT,
-        payload: axios.get('/api/7e2kk2/product-templates/', {params:{map}}).then(response => response.data.data.productTemplates)
+        payload: axios.get('/api/7e2kk2/product-templates/', {params:{map}}).then(response => response.data)
     }
 }
 
 export function fetchManufacturer(filter = "") {
     return {
         type: FETCH_MANUFACTURER,
-        payload: axios.get('/api/pu3wz7/manufacturers/', {params: {search: filter}}).then(result => result.data.data.manufacturers)
+        payload: axios.get('/api/pu3wz7/manufacturers/', {params: {search: filter}}).then(result => result.data)
     }
 }
 
@@ -218,7 +226,7 @@ export function fetchProductGrade(filter = {}) {
 export function fetchOrigin(filter = "") {
     return {
         type: FETCH_ORIGIN,
-        payload: axios.get('/api/la9pxl/origins/', {params: {search: filter}}).then(result => result.data.data.origins)
+        payload: axios.get('/api/la9pxl/origins/', {params: {search: filter}}).then(result => result.data)
     }
 }
 
