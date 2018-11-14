@@ -4,6 +4,8 @@ import DataTable from "../../../../components/DataTable";
 import BroadcastRule from "./BroadcastRule";
 import AddBroadcast from "../../../../pages/inventory/myInventory/components/broadcast";
 import ToggleBroadcast from "./ToggleBroadcast";
+import {DATE_FORMAT} from "../../../../utils/constants";
+import moment from "moment";
 
 class ProductOffers extends Component {
 
@@ -41,7 +43,7 @@ class ProductOffers extends Component {
                             offer.name,
                             `${shortManufacturerName}${shortManufacturerName.length < offer.manufacturer.name.length ? "..." : ""}`,
                             offer.productCondition.name,
-                            'Unknown',
+                            offer.expirationDate ? moment(offer.expirationDate).format(DATE_FORMAT) : 'none',
                             <ToggleBroadcast 
                                 offerId={offerId}
                                 broadcasted={offer.broadcasted}
