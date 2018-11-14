@@ -1,10 +1,12 @@
-FROM node:9.11 as build
-
+# build environment
+FROM node:11 as builder
 WORKDIR /app
-COPY . .
-RUN yarn install --prod
-RUN yarn build
+ENV PATH /app/node_modules/.bin:$PATH
+COPY . ./
+RUN npm install --silent
+RUN npm run build
 
+# production environemnt
 FROM nginx:1.13-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=builder /app/build /usr/share/nginx/html
