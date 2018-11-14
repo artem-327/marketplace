@@ -7,6 +7,9 @@
     border: 1px solid #B0B0B0;
     padding: 7px;
     color: #a8a8a8;
+    &.selected {
+      color: #33373e;
+    }
     img {
       position: relative;
       float: right;
