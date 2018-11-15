@@ -8,10 +8,9 @@ class ToggleBroadcast extends Component {
   };
 
   toggleBroadcasted = offerId => {
-    //axios.post(`api/broadcast-rules/enable-broadcast/${offerId}`);
     this.setState(prevState => ({
       active: !prevState.active
-    }));
+    }), () => axios.post(`productOffer/${offerId}/broadcasted?broadcasted=${this.state.active}`));
   };
 
   render() {
