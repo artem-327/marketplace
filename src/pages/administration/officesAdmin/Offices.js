@@ -56,6 +56,7 @@ class Offices extends Component {
                <RemoteComboBox
                   items={this.props.locations}
                   api={(name) => this.props.fetchLocations(name)}
+                  dataFetched={this.props.locationsFetched}
                   limit={5}
                   placeholder="Location"
                   className="location-admin-add"
@@ -78,6 +79,7 @@ function mapStateToProps(store) {
       isFetching: store.companies.isFetching,
       offices: store.companies.offices,
       locations: store.location.locations,
+      locationsFetched: store.location.locationsFetched,
    }
 }
 
