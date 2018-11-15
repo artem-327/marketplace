@@ -1,11 +1,11 @@
 @import "../../styles/main.scss";
 
 .data-table-wr{
-  width: calc(100% - 58px);
+  width: 100%;
   min-height: 180px;
   overflow-x: auto;
   overflow-y: visible;
-  margin: 0 29px;
+  padding: 0 29px;
 }
 .data-table {
   border-collapse:separate;
