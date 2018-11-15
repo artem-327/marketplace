@@ -1,13 +1,14 @@
-
-$beige-color: #E7E7E7;
-$blue-color: #329ED6;
-$brown-color:#4E5157;
-$green-color: #4CD136;
-$grey-color:#4E5157;
-$light-30-grey-color: lighten( $grey-color, 30% );
-$light-50-grey-color: lighten( $grey-color, 50% );
-$light-60-grey-color: lighten( $grey-color, 63% );
-$light-beige-color: lighten( $beige-color, 8% );
-$light-blue-color: #EFF7FC;
-$red-color: #C0523F;
-$white-color: #FFFFFF;
+$beige-color: #e7e7e7;
+$blue-color: #329ed6;
+$brown-color: #4e5157;
+$green-color: #4cd136;
+$orange-color: #d86800;
+$light-green-color: lighten($green-color, 25%);
+$grey-color: #4e5157;
+$light-30-grey-color: lighten($grey-color, 30%);
+$light-50-grey-color: lighten($grey-color, 50%);
+$light-60-grey-color: lighten($grey-color, 63%);
+$light-beige-color: lighten($beige-color, 8%);
+$light-blue-color: #eff7fc;
+$red-color: #c0523f;
+$white-color: #ffffff;

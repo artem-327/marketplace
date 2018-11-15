@@ -44,7 +44,7 @@ class Nav extends Component {
     }
 
     handleResize() {
-        if(window.innerWidth < 1025) {
+        if(window.innerWidth < 800) {
             this.setState({isScreenBig: false})
         } else {
             this.setState({isScreenBig: true});
@@ -82,7 +82,7 @@ class Nav extends Component {
             {links.map((link, index) => (<NavLink key={index} to={link.url} className='dropdown-nav-item' activeClassName='active'>{link.name}</NavLink>
             ))}</div>;
         return <div className={"dropdown-nav " + activeClass} onClick={()=>this.openDropdown(id)}>
-            <span className='dropdown-link-center'>{img ? <img src={img}  alt={"Dropdown " + name}/> : null}{name}  <i className="icon fas fa-angle-down dropdown-nav-icon"/></span>
+            <span className='dropdown-link-center'>{name} <i className="icon fas fa-angle-down dropdown-nav-icon"/></span>
             {this.state.dropdown[id] ? dropdown : null}
         </div>
     }
@@ -90,7 +90,39 @@ class Nav extends Component {
     renderMenuItem(id, link, name){
         const activeClass = this.props.location.pathname.split('/')[1] === id ? 'active' : null;
         return <div className={"dropdown-nav " + activeClass}>
-            <span className='dropdown-link-center'><NavLink to={id === 'dashboard' ? '/' : '/' + id} activeClassName='active'>{name}</NavLink></span>
+            <NavLink to={id === 'dashboard' ? '/' : '/' + id} activeClassName='active'><span className='dropdown-link-center'>{name}</span></NavLink>
+        </div>
+    }
+
+    /*
+    renderLogout() {
+        return <div className="dropdown-nav">
+            <span onClick={()=> this.props.logout()}>
+                <NavLink to="/login"><img id='logout' src={myAccount} alt='Logout'></img></NavLink>
+            </span>
+        </div>
+    }
+    */
+
+    renderMyAccount(id, links){
+        const activeClass = this.props.location.pathname.split('/')[1] === id || this.state.dropdown[id] ? 'active' : null;
+        const dropdown = <div className="dropdown-nav-inside-myaccount">
+            {links.map((link, index) =>
+            
+            link.name === 'Logout' ? 
+
+            (<div key={index} to={link.url} className='dropdown-nav-item' onClick={this.props.logout} activeClassName='active'>{link.name}</div>)
+            
+            : 
+
+            (<NavLink key={index} to={link.url} className='dropdown-nav-item' activeClassName='active'>{link.name}</NavLink>)
+            
+            )}
+            
+            </div>;
+        return <div className={"dropdown-nav " + activeClass} onClick={()=>this.openDropdown(id)}>
+            <span className='dropdown-link-center'><img src={myAccount} alt='Logout'></img></span>
+            {this.state.dropdown[id] ? dropdown : null}
         </div>
     }
 
@@ -146,22 +178,11 @@ class Nav extends Component {
                     {this.renderMenuItem('settings', [
                         {name: 'Settings', url: '/settings'},
                     ], 'Settings')}
-                    {/* Temporary hide */}
-                    {/*this.renderDropdown('administration', [
-                        {name: 'Companies', url: '/administration/companies/'},
-                        {name: 'Names', url: '/administration/names-synonyms'},
-                        {name: 'Merchants', url: '/administration/merchants'},
-                        {name: 'New Users', url: '/administration/users'},
-                        {name: 'Operators', url: '/administration/operators'},
-                        ], 'Administration')*/}
-                    {/*<span className="logout" onClick={() => this.props.logout()}>*/}
-                        {/*<NavLink to="/login" className='nav-link' activeClassName='active'>*/}
-                            {/*<span className='link-center'>*/}
-                                {/*<img src={myAccount} alt='My account'/>*/}
-                                {/*LOGOUT*/}
-                            {/*</span>*/}
-                        {/*</NavLink>*/}
-                    {/*</span>*/}
+                </div>
+                <div className='logout'>
+                    {this.renderMyAccount('myaccount', [
+                        {name: 'Logout'},
+                    ], 'My Account')}
                 </div>
             </div>
             :

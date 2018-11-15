@@ -1,21 +1,31 @@
+@import "../../styles/main.scss";
+
 .data-table-wr{
   width: 100%;
   min-height: 180px;
   overflow-x: auto;
   overflow-y: visible;
+  padding: 0 29px;
 }
 .data-table {
   border-collapse:separate;
-  border-spacing: 0 1px;
+  border-spacing: 0;
   width: 100%;
   min-width: 1100px;
   //text-align: center;
   .three-dots-menu{
     z-index: 2;
   }
+  tr {
+    &.isAllInventory:hover {
+      cursor: pointer;
+      background-color: lighten( #A8D1DF, 15% );
+    }
+  }
   td{
     border-bottom: 1px solid #eeeeee;
     padding: 3px 10px;
+    font-size: 15.5px;
   }
   .data-table-select, .data-table-context-td, .data-table-arrow{width: 30px}
   .data-table-arrow{text-align: center}
@@ -30,7 +40,17 @@
     font-weight: bold;
     height: 40px;
     padding: 10px;
-    box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.15);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+    >td{
+      border-top: 1px solid #e0e0e0;
+      border-bottom: 1px solid #e0e0e0;
+      &:first-child{
+        border-left: 1px solid #e0e0e0;
+      }
+      &:last-child{
+        border-right: 1px solid #e0e0e0;
+      }
+    }
     .fas{
       margin: 6px 20px 0 20px;
     }
@@ -40,6 +60,26 @@
     .data-table-group-count{
       float: right;
       font-weight: normal;
+      .icon[class*="angle-"] {
+        transform: rotate(-45deg);
+        display: inline-block;
+        width: 13px;
+        height: 13px;
+        margin: 0 10px 0 15px;
+        border-style: solid;
+        border-color: #329ED6;
+        vertical-align: middle;
+        cursor: pointer;
+      }
+      .icon.angle-down {
+        margin-top: -7px;
+        border-width: 0 0 2px 2px;
+      }
+      .icon.angle-up {
+        margin-top: 7px;
+        border-width: 2px 2px 0 0;
+
+      }
     }
     .group-header{
       text-align: left;

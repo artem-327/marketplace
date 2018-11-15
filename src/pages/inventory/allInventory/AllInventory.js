@@ -3,6 +3,7 @@ import ProductOffers from "./components/ProductOffers";
 import Filter from '../../../components/Filter';
 import Spinner from '../../../components/Spinner/Spinner';
 import FilterTag from "../../../components/Filter/components/FilterTag";
+import SubMenu from '../../../components/SubMenu';
 
 class AllInventory extends Component {
 
@@ -17,12 +18,16 @@ class AllInventory extends Component {
     }
 
     render() {
-        let content = this.props.isFetching ? <div><Spinner/></div> :
-            <ProductOffers productOffers={this.props.productOffers} addPopup={this.props.addPopup} history={this.props.history}/>;
+        const content = this.props.productOffersIsFetching 
+            ? <div><Spinner/></div> 
+            : <ProductOffers {...this.props}/>;
         return (
             <div>
-                <h1 className='header inv-header'>MARKETPLACE</h1>
-                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchAllProductOffers({...filter})}}/>
+                <div className='header-top'>
+                    <h1 className='header inv-header'>MARKETPLACE</h1>
+                    <SubMenu/>
+                    <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchAllProductOffers({...filter})}}/>
+                </div>
                 <Filter chemicalName quantity date price assay condition form package filterFunc={(inputs) => this.props.fetchAllProductOffers(inputs)} />
                 {content}
             </div>

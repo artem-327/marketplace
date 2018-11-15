@@ -3,10 +3,14 @@ import './ProductOffers.css';
 import DataTable from "../../../../components/DataTable";
 import BroadcastRule from "./BroadcastRule";
 import AddBroadcast from "../../../../pages/inventory/myInventory/components/broadcast";
+import ToggleBroadcast from "./ToggleBroadcast";
+import {DATE_FORMAT} from "../../../../utils/constants";
+import moment from "moment";
+import {getUnit} from "../../../../utils/functions";
 
 class ProductOffers extends Component {
 
-    state={isOpen: false, brActive: false};
+    state={isOpen: false};
 
     groupProductOffers(productOffers) {
         return productOffers.reduce((carry, offer) => {
@@ -15,8 +19,8 @@ class ProductOffers extends Component {
         }, {});
     }
 
-    openBroadcast = () => {
-        this.props.addPopup(<AddBroadcast />)
+    openBroadcast = (id) => {
+        this.props.addPopup(<AddBroadcast id={id}/>)
     }
 
     render() {
@@ -25,31 +29,56 @@ class ProductOffers extends Component {
                 return {
                     group:  <React.Fragment><span className="product-casnumber ">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></React.Fragment>,
                     countLabel: 'Product Offerings: ',
-                    rows: product.productOffers.map((offer)=>({
-                        id: offer.id,
+                    rows: product.productOffers.map((offer)=>{
+                        const shortManufacturerName = offer.manufacturer.name.slice(0,13);
+                        const offerId = offer.id
+                        const unit = getUnit(offer.packaging.unit.name);
+                        const packageUnit = offer.packaging.container.name;
+                        const packageSize = offer.packaging.capacity;
+                        return ({
+                        id: offerId,
                         data: [offer.product.casIndexName,
                             offer.packaging.amount.formatNumber(),
-                            offer.packaging.container.name,
-                            offer.packaging.capacity,
-                            (parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber(),
-                            "$ " + offer.pricing.cost.formatMoney(3),
-                            "$ " + offer.pricing.price.formatMoney(3),
+                            packageUnit,
+                            `${packageSize} ${unit}`,
+                            `${(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()} ${unit}`,
+                            "$" + offer.pricing.cost.formatMoney(3),
+                            "$" + offer.pricing.price.formatMoney(3),
                             offer.name,
-                            offer.manufacturer.name,
+                            `${shortManufacturerName}${shortManufacturerName.length < offer.manufacturer.name.length ? "..." : ""}`,
                             offer.productCondition.name,
-                            'Unknown']
-                    }))
+                            offer.expirationDate ? moment(offer.expirationDate).format(DATE_FORMAT) : 'none',
+                            <ToggleBroadcast 
+                                offerId={offerId}
+                                broadcasted={offer.broadcasted}
+                            /> 
+                        ]
+                        })
+                    })
                 };
             });
         return (<div className="App">
                 <DataTable id="myInventoryTable"
                            selectableRows
                            sortFunc={(nameColumn) => console.log(nameColumn)}
-                           headerInit={[{name: 'Product Name'}, {name: 'Available'}, {name: 'Packaging'}, {name: 'Pkg. size'}, {name: 'Quantity'}, {name: 'Cost'}, {name: 'FOB Price'}, {name: 'Trade Name'}, {name: 'MFR.'}, {name: 'Condition'}, {name: 'MFG Date'}]}
+                           headerInit={[
+                               {name: 'Product Name'}, 
+                               {name: 'Available'}, 
+                               {name: 'Packaging'}, 
+                               {name: 'Pkg. size'}, 
+                               {name: 'Quantity'}, 
+                               {name: 'Cost'}, 
+                               {name: 'FOB Price'}, 
+                               {name: 'Trade Name'}, 
+                               {name: 'MFR.'}, 
+                               {name: 'Condition'}, 
+                               {name: 'MFG Date'},
+                               {name: 'Broadcast'}
+                            ]}
                            contextMenu={
                                [
                                    {action: (id)=>this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'Edit Listing',},
-                                   {action: () => this.openBroadcast(), label: 'Custom Broadcast'},
+                                   {action: (id) => this.openBroadcast(id), label: 'Custom Broadcast'},
                                    // {action: (id)=>console.log('delete'), label: 'Delete Listing'}
                                ]
                            }

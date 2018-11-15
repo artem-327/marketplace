@@ -8,7 +8,7 @@ import {
 
 function* fetchBroadcast(action) {
     try {
-        const broadcastData = yield call(Api.fetchBroadcast);
+        const broadcastData = yield call(Api.fetchBroadcast, action.payload.id);
         yield put({type: BROADCAST_FETCH_SUCCEEDED, payload: broadcastData});
         action.resolve()
     } catch (e) {

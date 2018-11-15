@@ -5,14 +5,20 @@ import {deleteProductOffersList, fetchAllProductOffers} from '../../../modules/p
 import {addPopup} from '../../../modules/popup';
 import {resetFilterTags} from "../../../modules/filter";
 import {resetForm} from '../../../utils/functions';
+import {fetchMerchant} from '../../../modules/merchants';
+import {fetchOffice} from '../../../modules/companies';
 
 const mapStateToProps = store => ({
     productOffers: store.productOffers.allProductOffers,
-    isFetching: store.productOffers.isFetching
+    isFetching: store.productOffers.isFetching,
+    identity: store.identity.identity,
+    merchantDetail: store.merchants.merchantDetail,
+    officeDetail: store.companies.office,
+    productOffersIsFetching: store.productOffers.productOffersIsFetching
 });
 
 const mapDispatchToProps = dispatch => (
-    bindActionCreators({fetchAllProductOffers, addPopup, resetFilterTags, resetForm, deleteProductOffersList}, dispatch)
+    bindActionCreators({fetchAllProductOffers, fetchOffice, fetchMerchant, addPopup, resetFilterTags, resetForm, deleteProductOffersList}, dispatch)
 );
 
 export default connect(mapStateToProps, mapDispatchToProps)(AllInventory);
