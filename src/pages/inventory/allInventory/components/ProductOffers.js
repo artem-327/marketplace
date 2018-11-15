@@ -1,16 +1,16 @@
 import React, {Component} from 'react';
 import './ProductOffers.css';
 import moment from "moment";
-import AddCart from '../../../cart/components/AddCart'
+import AddCart from '../../../cart/components/AddCart';
 import {DATE_FORMAT} from "../../../../utils/constants";
 import {getUnit} from "../../../../utils/functions";
 import DataTable from "../../../../components/DataTable";
-
+import Spinner from '../../../../components/Spinner/Spinner';
 class ProductOffers extends Component {
   componentDidMount(){
       new Promise(resolve => {
           this.props.fetchMerchant(this.props.identity.data.id, resolve)
-      }).then(() => this.props.merchantDetail.office && this.props.fetchOffice(this.props.merchantDetail.office.id))
+      }).then(() => console.log("data fetched"))
   }
 
     groupProductOffers(productOffers) {
@@ -20,12 +20,8 @@ class ProductOffers extends Component {
         }, {});
     }
 
-   addCart(id){
-        this.props.addPopup(<AddCart id={id} history={this.props.history}/>)
-   }
-
     render() {
-        if(this.props.productOffers.length === 0 || !this.props.officeDetail.company) return null;
+        if(this.props.productOffers.length === 0) return <Spinner />;
         let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
             return {
                 group: <><span className="product-casnumber">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></>,
@@ -33,8 +29,6 @@ class ProductOffers extends Component {
                 const unit = getUnit(offer.packaging.unit.name);
                 const packageSize = offer.packaging.capacity;
                 const packageUnit = offer.packaging.container.name;
-                // const itsOwnProduct = this.props.identity.data.email === offer.merchant.email  - TODO: waiting for definition
-                // const itsOwnCompanyProduct = this.props.officeDetail.company.id === offer.manufacturer.id  - TODO: waiting for definition
                 return{
                     id: offer.id,
                     data: [offer.merchant ? offer.merchant.companyName : "Anonymous",
@@ -49,10 +43,8 @@ class ProductOffers extends Component {
                         'Unknown',
                         offer.productCondition.name,
                         offer.productForm.name,
-                        true  //itsOwnProduct || itsOwnCompanyProduct - TODO: waiting for definition
-                            ? `${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`
-                            : offer.warehouse.address.province.name,
-                        <button className='info-button' onClick={()=>{this.addCart(offer.id)}}>INFO</button>]
+                        `${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`
+                        ]
                 }})
             };
         });
@@ -60,8 +52,9 @@ class ProductOffers extends Component {
             <div className="App ">
                 <DataTable id="allInventoryTable"
                            sortFunc={(nameColumn) => console.log(nameColumn)}
-                           headerInit={[{name: 'Merchant'}, {name: 'Available'}, {name: 'Packaging'}, {name: 'Quantity'}, {name: 'FOB Price'}, {name: 'Trade Name'}, {name: 'MFR.'}, {name: 'Origin'}, {name: 'Expiration'}, {name: 'Assay'}, {name: 'Condition'}, {name: 'Form'}, {name: 'Location'}, {name: null}]}
+                           headerInit={[{name: 'Merchant'}, {name: 'Available'}, {name: 'Packaging'}, {name: 'Quantity'}, {name: 'FOB Price'}, {name: 'Trade Name'}, {name: 'MFR.'}, {name: 'Origin'}, {name: 'Expiration'}, {name: 'Assay'}, {name: 'Condition'}, {name: 'Form'}, {name: 'Location'}]}
                            rows={rows}
+                           history={this.props.history}
                 />
             </div>
         );

@@ -1,5 +1,6 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {addPopup} from '../../modules/popup';
 import DataTable from './DataTable';
 import {
     initDataTable,
@@ -16,7 +17,7 @@ function mapStateToProps(store, ownProps) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({initDataTable, selectRow, selectGroup, toggleVisibleColumn, selectDataTable}, dispatch)
+    return bindActionCreators({initDataTable, addPopup, selectRow, selectGroup, toggleVisibleColumn, selectDataTable}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DataTable);

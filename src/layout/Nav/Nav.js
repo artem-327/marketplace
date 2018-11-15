@@ -90,7 +90,7 @@ class Nav extends Component {
     renderMenuItem(id, link, name){
         const activeClass = this.props.location.pathname.split('/')[1] === id ? 'active' : null;
         return <div className={"dropdown-nav " + activeClass}>
-            <span className='dropdown-link-center'><NavLink to={id === 'dashboard' ? '/' : '/' + id} activeClassName='active'>{name}</NavLink></span>
+            <NavLink to={id === 'dashboard' ? '/' : '/' + id} activeClassName='active'><span className='dropdown-link-center'>{name}</span></NavLink>
         </div>
     }
 
@@ -105,15 +105,23 @@ class Nav extends Component {
     */
 
     renderMyAccount(id, links){
-        //const activeClass = this.props.location.pathname.split('/')[1] === id || this.state.dropdown[id] ? 'active' : null;
-        const dropdown = <div className="dropdown-nav-inside">
-            {links.map((link, index) => 
+        const activeClass = this.props.location.pathname.split('/')[1] === id || this.state.dropdown[id] ? 'active' : null;
+        const dropdown = <div className="dropdown-nav-inside-myaccount">
+            {links.map((link, index) =>
             
-            (<div key={index} to={link.url} className='dropdown-nav-item' onClick={this.props.logout} activeClassName='active'>{link.name}</div>))}
+            link.name === 'Logout' ? 
+
+            (<div key={index} to={link.url} className='dropdown-nav-item' onClick={this.props.logout} activeClassName='active'>{link.name}</div>)
+            
+            : 
+
+            (<NavLink key={index} to={link.url} className='dropdown-nav-item' activeClassName='active'>{link.name}</NavLink>)
+            
+            )}
             
             </div>;
-        return <div className={"dropdown-nav"} onClick={()=>this.openDropdown(id)}>
-            <span><img id='logout' src={myAccount} alt='Logout'></img></span>
+        return <div className={"dropdown-nav " + activeClass} onClick={()=>this.openDropdown(id)}>
+            <span className='dropdown-link-center'><img src={myAccount} alt='Logout'></img></span>
             {this.state.dropdown[id] ? dropdown : null}
         </div>
     }
@@ -170,20 +178,11 @@ class Nav extends Component {
                     {this.renderMenuItem('settings', [
                         {name: 'Settings', url: '/settings'},
                     ], 'Settings')}
+                </div>
+                <div className='logout'>
                     {this.renderMyAccount('myaccount', [
-                        {name: 'Logout', url: '/inventory/my-inventory'},
+                        {name: 'Logout'},
                     ], 'My Account')}
-                    
-                    {/*this.renderLogout()*[]}
-                    
-                    {/* Temporary hide */}
-                    {/*this.renderDropdown('administration', [
-                        {name: 'Companies', url: '/administration/companies/'},
-                        {name: 'Names', url: '/administration/names-synonyms'},
-                        {name: 'Merchants', url: '/administration/merchants'},
-                        {name: 'New Users', url: '/administration/users'},
-                        {name: 'Operators', url: '/administration/operators'},
-                        ], 'Administration')*/}
                 </div>
             </div>
             :
