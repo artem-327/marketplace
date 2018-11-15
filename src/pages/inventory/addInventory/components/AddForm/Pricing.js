@@ -13,12 +13,12 @@ export default class Pricing extends Component {
         super(props);
         this.state = {
             showIncrementalPricing: false,
-             margin: '',
+            margin: '',
             priceFlag:false,
             costFlag:false,
             marginFlag:false,
-            splits: '',
-            minimum: '',
+            splits: this.props.edit ? this.props.productOffer.packaging.minimum : '',
+            minimum: this.props.edit ? this.props.productOffer.packaging.splits : '',
             disabled: true,
             incrementalPricing: [{
               quantityFrom: '',
@@ -30,6 +30,8 @@ export default class Pricing extends Component {
 
     componentDidMount(){
         if(this.props.edit){
+            this.validateMinimum('splits')
+            this.validateMinimum('minimum')
             if(this.props.productOffer.pricing.tiers.length !== 0){
                 this.props.dispatch(actions.change('forms.addProductOffer.incrementalSelected', true));
                 this.setState({
@@ -150,11 +152,11 @@ export default class Pricing extends Component {
     }
 
     validateInputs = () => {
-      let newIncremental = this.state.incrementalPricing.slice(0);
-      let splits = parseInt(this.state.splits, 10);
+      const newIncremental = this.state.incrementalPricing.slice(0);
+      const splits = parseInt(this.state.splits, 10);
       newIncremental.map((item, index) => {
-          let difference = item.quantityTo % splits;
-          let differenceFrom = item.quantityFrom % splits;
+          const difference = item.quantityTo % splits;
+          const differenceFrom = item.quantityFrom % splits;
           if(item.quantityFrom <= this.state.minimum){
               item.quantityFrom = this.state.minimum;
           }
@@ -166,19 +168,23 @@ export default class Pricing extends Component {
                   item.quantityFrom = item.quantityFrom - differenceFrom;
 
           }
-          if(difference > splits / 2)
-              item.quantityTo += splits-difference
-          else
-              item.quantityTo -= difference
 
-          if(item.quantityTo !== '' && item.quantityTo <= item.quantityFrom)
-              item.quantityTo = item.quantityFrom + splits
+          if(index !== newIncremental.length-1) {
+            if(difference > splits / 2)
+            item.quantityTo += splits-difference
+            else
+                item.quantityTo -= difference
 
+            if(item.quantityTo !== '' && item.quantityTo <= item.quantityFrom)
+                item.quantityTo = item.quantityFrom + splits
+          } else {
+            item.quantityTo = this.props.productOffer.packaging.amount
+          }
           if(newIncremental[index+1] !== undefined){
 
               if(newIncremental[index+1].quantityFrom <= item.quantityTo)
                   newIncremental[index+1].quantityFrom =  item.quantityTo + splits;
-          }
+          } 
           return true;
       });
       this.props.getIncPricing(newIncremental);
