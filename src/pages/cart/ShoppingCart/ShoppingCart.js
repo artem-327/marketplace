@@ -58,16 +58,18 @@ class ShoppingCart extends Component {
     const headerTitle = `Items (${itemsNumber})`
     return (
       <div className="app-inner-main">
-      <div className="submenu">
-        <div className="link">
-          <NavLink to={'/inventory/all-inventory'}>
-          <i className="fas fa-angle-left"></i>
-          <b>Back to Product/Purchase info</b>
-          </NavLink>
-        </div>
+      <div className='header-top'>
+          <h1 className='header inv-header'>PRODUCT OFFERINGS</h1>
+          <div className="submenu">
+              <div className="link">
+                  <NavLink to={'/inventory/all-inventory'}>
+                      <i className="fas fa-angle-left"></i>
+                      <b>Back to Product/Purchase info</b>
+                  </NavLink>
+              </div>
+          </div>
       </div>
       <div className="shopping-cart">
-          <h1 className='header inv-header'>PRODUCT OFFERINGS</h1>
           <div className="shopping-cart-body">
           <div className="shopping-cart-items">
           <header><h1>{headerTitle}</h1></header>

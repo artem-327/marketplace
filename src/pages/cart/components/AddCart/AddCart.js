@@ -152,7 +152,7 @@ class AddCart extends Component {
             </div>
             <div>
               <b>Merchant: </b>
-              {offer.merchant.email}
+              {offer.manufacturer.name}
             </div>
             <div>
               <b>Available Products: </b>
