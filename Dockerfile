@@ -9,4 +9,5 @@ RUN npm run build
 # production environemnt
 FROM nginx:1.13-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx_http.conf /etc/nginx/nginx.conf
 COPY --from=builder /app/build /usr/share/nginx/html
