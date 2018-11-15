@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 const api = {
-    //     getProductOffer: (id) =>  axios.get(`/api/ux92h9/product-offers/${id}/`).then(response => response.data.data.productOffer),
     getProductOffer: (id) =>  axios.get(`/api/product-offers/${id}/applyrules/`).then(response => response.data),
     createNewOrder: (order) => axios.post('/api/eXe66/orders/', order),
     editOrder: (order) => axios.post(`/api/jul096/orders/${order.id}/`, {...order}),
