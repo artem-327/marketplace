@@ -87,6 +87,7 @@ class MyInventory extends Component {
                 submitRules={this.props.sendRules}
                 addPopup={this.props.addPopup}
                 removePopup={this.props.removePopup}
+                removeProductOffer={this.props.removeProductOffer}
                 getProductOffers={this.props.fetchMyProductOffers}
                 targetGroups={this.state.targetGroups}
                 setFilter={(type) => this.setFilter(type)}
