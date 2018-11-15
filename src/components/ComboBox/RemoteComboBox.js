@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { DEBOUNCE_TIME } from "../../utils/constants";
 import Spinner from "../Spinner/Spinner";
 
+//TODO: maybe try http://react-autosuggest.js.org/
 class RemoteComboBox extends Component {
   constructor(props) {
     super(props);
@@ -16,7 +17,8 @@ class RemoteComboBox extends Component {
       isOpen: false,
       results_count: this.props.limit,
       hasSearched: false,
-      dataFetched: this.props.dataFetched
+      dataFetched: this.props.dataFetched,
+      items: this.props.items
     };
   }
 
@@ -24,9 +26,15 @@ class RemoteComboBox extends Component {
     document.addEventListener("mousedown", this.handleClickOutside, false);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if(this.props.dataFetched !== prevProps.dataFetched) this.setState({dataFetched: this.props.dataFetched})
+    if(this.props.items !== prevProps.items) this.setState({items: this.props.items})
+    if((this.state.fulltext.length === 0 && prevState.fulltext.length > 0) || (this.state.fulltext.length === 1 && prevState.fulltext.length !== 1)) this.setState({items: [], dataFetched: false})
+  }
+
   componentDidMount() {
     if (this.props.currentValue) {
-      this.setState({ fulltext: this.props.currentValue }, () => {
+      this.setState({ fulltext: this.props.currentValue}, () => {
         if (this.props.onChange) this.props.onChange(this.state.fulltext);
       });
     }
@@ -49,8 +57,8 @@ class RemoteComboBox extends Component {
           <Spinner />
         </div>
       );
-      if (this.props.items.length > 0) {
-        let res = this.props.items.map((combo, index) => (
+      if (this.state.items.length > 0) {
+        let res = this.state.items.map((combo, index) => (
             <div
               key={index + combo.id}
               className="combo-item"
@@ -60,7 +68,7 @@ class RemoteComboBox extends Component {
                     fulltext: this.props.displayName
                       ? this.props.displayName(combo)
                       : combo[this.props.displayAttr] || combo.name,
-                    hasSearched: false
+                    hasSearched: false, items: [], dataFetched: false
                   },
                   () => {
                     if (this.props.onChange)
@@ -90,7 +98,7 @@ class RemoteComboBox extends Component {
             </div>
           );
       } 
-      if(this.state.dataFetched === "SUCCESS" && this.props.items.length === 0) {
+      if(this.state.dataFetched === "SUCCESS" && this.state.items.length === 0) {
         return (
             <div
               className={"combo-results"}
@@ -103,6 +111,7 @@ class RemoteComboBox extends Component {
   }
 
   handleChange(e) {
+    //if(e.target.value === "") this.setState({items: [], dataFetched: false})
     this.setState(
       { fulltext: e.target.value, hasSearched: true, isOpen: true },
       () => {
@@ -140,11 +149,7 @@ class RemoteComboBox extends Component {
 }
 
 RemoteComboBox.propTypes = {
-  items: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string
-    })
-  ).isRequired,
+  items: PropTypes.string.isRequired,
   getObject: PropTypes.func,
   api: PropTypes.func,
   className: PropTypes.string,

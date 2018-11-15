@@ -90,6 +90,7 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 isFetchingOrigin: true,
+                origin: "",
                 originFetched: false
             }
         }
