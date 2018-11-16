@@ -85,8 +85,8 @@ export default class AddForm extends Component {
             pricing: newPricing,
             creationDate: creationDate,
             expirationDate: expirationDate,
-            manufacturer: this.props.productOffer.manufacturer.id,
-            origin: this.props.productOffer.origin.id,
+            manufacturer: this.props.productOfferingForm.manufacturer.id || this.props.productOffer.manufacturer.id,
+            origin: this.props.productOfferingForm.origin.id || this.props.productOffer.origin.id,
             product: this.props.productOffer.product.id,
             packaging: {...this.props.mappingForm.packaging, amount: this.props.productOfferingForm.totalPackages}
         });

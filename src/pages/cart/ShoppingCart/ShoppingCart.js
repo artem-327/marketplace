@@ -49,7 +49,7 @@ class ShoppingCart extends Component {
       <ItemCartBody
         addPopup={addPopup}
         history={history}
-        key={cartItem.productOffer.id}
+        key={cartItem.id}
         cartItem={cartItem}
         removeProductFromCart={removeProductFromCart}
         />)
