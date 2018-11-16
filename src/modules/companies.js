@@ -12,7 +12,7 @@ export const initialState = {
     data: [],
     detail: {},
     office: {},
-    offices: {},
+    offices: [],
     isFetching: true,
 };
 

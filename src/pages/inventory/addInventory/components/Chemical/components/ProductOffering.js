@@ -112,10 +112,11 @@ export default class ProductOffering extends Component {
                         <div className='group-item-wr'>
                             <RemoteComboBoxRedux items={this.props.manufacturer}
                                                  api={(text) => this.props.fetchManufacturer(text)}
+                                                 dataFetched={this.props.manufacturerFetched}
                                                  currentValue={this.props.edit ? this.props.productOffer.manufacturer.name : null}
                                                  className="manufacturer" limit={5} label="Manufacturer"
                                                  isFetching={this.props.isFetchingManufacturer}
-                                                 saveObj={obj=>obj.id}
+                                                 saveObj={obj=>obj}
                                                  validators={{required}} dispatch={this.props.dispatch}
                                                  model="forms.productOffering.manufacturer"/>
                         </div>
@@ -130,12 +131,14 @@ export default class ProductOffering extends Component {
                                 }}
                             />
                             <RemoteComboBoxRedux items={this.props.originData}
+                                                 dataFetched={this.props.originFetched}
                                                  api={(text) => this.props.fetchOrigin(text)}
                                                  className="origin" limit={5} label="Origin"
                                                  currentValue={this.props.edit ? this.props.productOffer.origin.name : null}
                                                  isFetching={this.props.isFetchingOrigin}
-                                                 saveObj={obj=>obj.id}
-                                                 validators={{required}} dispatch={this.props.dispatch}
+                                                 saveObj={obj=>obj}
+                                                 validators={{required}} 
+                                                 dispatch={this.props.dispatch}
                                                  model="forms.productOffering.origin"/>
                         </div>
                         <Errors

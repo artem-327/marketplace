@@ -10,8 +10,9 @@ class Operators extends Component {
     }
 
     render(){
-        if (this.props.isFetching || !this.props.operators) return <Spinner />;
-        const operators = this.props.operators.map((operator, index) => {
+        const {operators} = this.props
+        if (this.props.isFetching) return <Spinner />;
+        const operatorsData = operators.map((operator, index) => {
             return (
               <Operator
                 removeOperator={this.props.removeOperator}
@@ -35,7 +36,7 @@ class Operators extends Component {
                     </tr>
                     </thead>
                     <tbody>
-                        {operators}
+                        {operatorsData}
                     </tbody>
                 </table>
             </div>

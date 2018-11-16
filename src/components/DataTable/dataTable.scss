@@ -1,11 +1,90 @@
 @import "../../styles/main.scss";
 
 .data-table-wr{
+  position: absolute;
+  top: 125px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   width: 100%;
   min-height: 180px;
   overflow-x: auto;
   overflow-y: visible;
-  padding: 0 29px;
+  padding: 0;
+
+  .scrollbar-container {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+
+    > .ps__rail-x,
+    > .ps__rail-y {
+      position: absolute;
+      z-index: 3;
+      transition: opacity 250ms linear;
+      display: none;
+
+      > div {
+        opacity: 0.15;
+      }
+    }
+
+    > .ps__rail-x {
+      top: auto !important;
+      left: 0 !important;
+      bottom: 0 !important;
+      height: 15px;
+
+      >.ps__thumb-x {
+        position: absolute;
+        height: 11px;
+        margin: 2px 0;
+        border-width: 0 2px;
+        border-style: solid;
+        border-color: transparent;
+        background-color: rgba(0,0,0,0.5);
+        background-clip: content-box;
+        cursor: pointer;
+      }
+    }
+
+    > .ps__rail-y {
+      top: 0 !important;
+      left: auto !important;
+      right: 0 !important;
+      width: 15px;
+
+      >.ps__thumb-y {
+        position: absolute;
+        width: 11px;
+        margin: 0 2px;
+        border-width: 2px 0;
+        border-style: solid;
+        border-color: transparent;
+        background-color: rgba(0,0,0,0.5);
+        background-clip: content-box;
+        cursor: pointer;
+      }
+    }
+
+    &.ps--active-x > .ps__rail-x,
+    &.ps--active-y > .ps__rail-y {
+      display: block;
+    }
+
+    &.ps--active-x:hover > .ps__rail-x > div,
+    &.ps--active-y:hover > .ps__rail-y > div {
+      opacity: 1;
+    }
+
+    .data-table {
+      margin: 0;
+      border: 29px solid transparent;
+      border-top: 0 none;
+    }
+  }
 }
 .data-table {
   border-collapse:separate;
@@ -132,13 +211,55 @@
   .data-table-header {
     th {
       position: relative;
-      font-weight: bold;
-      color: #474a50;
-      padding: 3px 10px;
+      height: 42px;
+      font-size: 0.875em;
+      font-weight: 500;
+      color: #ffffff;
+      padding: 13px 10px 12px;
+      line-height: 17px;
+
+      &.data-table-select {
+        padding: 12px 10px;
+        line-height: 18px;
+
+        > label.input-checkbox {
+          opacity: 0;
+        }
+
+        > .fix-header {
+          padding: 12px 10px;
+        }
+
+        .checkmark {
+          margin-top: 0;
+        }
+      }
+
+      .fix-header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 3;
+        height: 42px;
+        padding: 13px 10px 12px;
+        background: rgba(255,255,255,0.9);
+        color: #33373e;
+        line-height: 17px;
+      }
+
+      &:first-child .fix-header {
+        box-shadow: -5px 0 0 0 rgba(255,255,255,0.9);
+      }
+
+      &:last-child .fix-header {
+        box-shadow: 5px 0 0 0 rgba(255,255,255,0.9);
+      }
     }
     .data-table-context-th {
       position: absolute;
-      top: 30px;
+      top: 42px;
       z-index: 2;
       left: 0;
       padding: 0;
@@ -146,6 +267,7 @@
       font-size: 0.9rem;
       box-shadow: 2px 2px 4px 0px #ddddde;
       list-style-type: none;
+      color: #33373e;
       li {
         background-color: #fafafa;
         width: 150px;
