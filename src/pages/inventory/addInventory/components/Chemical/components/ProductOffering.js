@@ -116,7 +116,7 @@ export default class ProductOffering extends Component {
                                                  currentValue={this.props.edit ? this.props.productOffer.manufacturer.name : null}
                                                  className="manufacturer" limit={5} label="Manufacturer"
                                                  isFetching={this.props.isFetchingManufacturer}
-                                                 saveObj={obj=>obj.id}
+                                                 saveObj={obj=>obj}
                                                  validators={{required}} dispatch={this.props.dispatch}
                                                  model="forms.productOffering.manufacturer"/>
                         </div>
@@ -136,7 +136,7 @@ export default class ProductOffering extends Component {
                                                  className="origin" limit={5} label="Origin"
                                                  currentValue={this.props.edit ? this.props.productOffer.origin.name : null}
                                                  isFetching={this.props.isFetchingOrigin}
-                                                 saveObj={obj=>obj.id}
+                                                 saveObj={obj=>obj}
                                                  validators={{required}} 
                                                  dispatch={this.props.dispatch}
                                                  model="forms.productOffering.origin"/>
