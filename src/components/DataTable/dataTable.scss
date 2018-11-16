@@ -22,69 +22,113 @@
       background-color: lighten( #A8D1DF, 15% );
     }
   }
-  td{
+  td {
     border-bottom: 1px solid #eeeeee;
     padding: 3px 10px;
     font-size: 15.5px;
   }
+  tbody {
+    tr {
+      td {
+        height: 36px;
+        font-size: 0.875em;
+        line-height: 17px;
+      }
+
+      &.data-table-group-header {
+        background-color: #efeff1;
+        border: 1px solid #e0e0e0;
+        color: black;
+        font-weight: bold;
+        height: 42px;
+        padding: 0;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+
+        > td {
+          height: 42px;
+          border-top: 1px solid #e0e0e0;
+          border-bottom: 1px solid #e0e0e0;
+          padding-top: 11px;
+          padding-bottom: 11px;
+          line-height: 18px;
+
+          &:first-child{
+            border-left: 1px solid #e0e0e0;
+          }
+          &:last-child{
+            border-right: 1px solid #e0e0e0;
+          }
+
+          &.data-table-select {
+            padding: 12px 10px;
+            vertical-align: top;
+            line-height: 16px;
+
+            .input-checkbox { /* solving issue in Chrome - enlarging table cell */
+              margin-bottom: -16px;
+              vertical-align: top;
+            }
+          }
+
+          &.group-header{
+            height: 42px;
+            padding: 11px 10px;
+            vertical-align: middle;
+            text-align: left;
+            letter-spacing: 0.2px;
+            color: #33373e;
+            line-height: 16px;
+          }
+        }
+        .fas{
+          margin: 6px 20px 0 20px;
+        }
+        .fa-angle-down:before{
+          color: #2599d5;
+        }
+        .data-table-group-count{
+          float: right;
+          font-weight: normal;
+          .icon[class*="angle-"] {
+            transform: rotate(-45deg);
+            display: inline-block;
+            width: 13px;
+            height: 13px;
+            margin: 0 10px 0 15px;
+            border-style: solid;
+            border-color: #2599d5;
+            vertical-align: middle;
+            cursor: pointer;
+          }
+          .icon.angle-down {
+            margin-top: -7px;
+            border-width: 0 0 2px 2px;
+          }
+          .icon.angle-up {
+            margin-top: 7px;
+            border-width: 2px 2px 0 0;
+
+          }
+        }
+      }
+    }
+  }
   .data-table-select, .data-table-context-td, .data-table-arrow{width: 30px}
   .data-table-arrow{text-align: center}
   .checkmark{margin-top: 4px; margin-right: 0}
-  .input-checkbox{padding-left: 20px}
-  .data-table-context-td{position: relative}
-  .data-table-context-holder{width: 1px; padding: 0;}
-  .data-table-group-header {
-    background-color: #efeff1;
-    border: 1px solid #e0e0e0;
-    color: black;
-    font-weight: bold;
-    height: 40px;
-    padding: 10px;
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.08);
-    >td{
-      border-top: 1px solid #e0e0e0;
-      border-bottom: 1px solid #e0e0e0;
-      &:first-child{
-        border-left: 1px solid #e0e0e0;
-      }
-      &:last-child{
-        border-right: 1px solid #e0e0e0;
-      }
-    }
-    .fas{
-      margin: 6px 20px 0 20px;
-    }
-    .fa-angle-down:before{
-      color: #2599d5;
-    }
-    .data-table-group-count{
-      float: right;
-      font-weight: normal;
-      .icon[class*="angle-"] {
-        transform: rotate(-45deg);
-        display: inline-block;
-        width: 13px;
-        height: 13px;
-        margin: 0 10px 0 15px;
-        border-style: solid;
-        border-color: #329ED6;
-        vertical-align: middle;
-        cursor: pointer;
-      }
-      .icon.angle-down {
-        margin-top: -7px;
-        border-width: 0 0 2px 2px;
-      }
-      .icon.angle-up {
-        margin-top: 7px;
-        border-width: 2px 2px 0 0;
+  .input-checkbox {
+    width: 16px;
+    height: 16px;
+    padding-left: 16px;
 
-      }
-    }
-    .group-header{
-      text-align: left;
+    .checkmark {
+      max-width: 100%;
+      max-height: 100%;
+      margin: 0;
     }
   }
+  .data-table-context-td{position: relative}
+  .data-table-context-holder{width: 1px; padding: 0;}
   .data-table-header {
     th {
       position: relative;
