@@ -1,0 +1,29 @@
+.admin-users-new {
+  max-width: 1400px;
+  margin: auto;
+  width: calc(100% - 40px); }
+  .admin-users-new th {
+    border: 2px solid #e3e2df;
+    background-color: #fbfaf7;
+    padding: 10px;
+    font-weight: bold; }
+  .admin-users-new .admin-users-new-item {
+    text-align: right;
+    margin: 10px 20px;
+    box-shadow: 0 1px 1px 0 rgba(60, 64, 67, 0.08), 0 1px 3px 1px rgba(60, 64, 67, 0.16);
+    padding: 5px 0;
+    border-radius: 6px; }
+    .admin-users-new .admin-users-new-item td {
+      text-align: left;
+      padding: 10px; }
+    .admin-users-new .admin-users-new-item td:last-child {
+      float: right; }
+    .admin-users-new .admin-users-new-item .dropdown-wr {
+      width: 200px;
+      display: inline-block;
+      text-align: center;
+      margin-right: 10px; }
+    .admin-users-new .admin-users-new-item .button {
+      margin-right: 10px; }
+    .admin-users-new .admin-users-new-item input {
+      margin-right: 10px; }

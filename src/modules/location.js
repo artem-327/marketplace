@@ -44,7 +44,8 @@ export default function reducer(state = initialState, action) {
         case FETCH_LOCATIONS_PENDING: {
             return {
                 ...state,
-                locationFetching: true
+                locationFetching: true,
+                locationsFetched: false
             }
         }
         case FETCH_WAREHOUSE_FULFILLED: {
@@ -55,10 +56,18 @@ export default function reducer(state = initialState, action) {
         }
 
         case FETCH_LOCATIONS_FULFILLED: {
+            const locatons = action.payload.data.baseLocation.map((loc)=> {
+                return {
+                    id: loc.id,
+                    province: loc.province,
+                    country: loc.country,
+                }
+            })
             return {
                 ...state,
                 locationFetching: false,
-                locations: action.payload
+                locations: locatons,
+                locationsFetched: action.payload.status,
             }
         }
 
@@ -151,13 +160,7 @@ export function fetchLocations(filter = {}){
     return {
         type: FETCH_LOCATIONS,
         payload: axios.get('/api/t7r1bn/locations/', {params: {...filter}}).then(result => {
-            return result.data.data.baseLocation.map((loc)=> {
-                return {
-                    id: loc.id,
-                    province: loc.province,
-                    country: loc.country,
-                }
-            })
+            return result.data
         })
     }
 }

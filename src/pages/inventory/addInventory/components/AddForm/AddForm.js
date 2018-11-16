@@ -48,10 +48,14 @@ export default class AddForm extends Component {
         if(inputs['incrementalSelected']){
             newPricing = {...inputs['pricing'], tiersRequests: this.validateIncPricing()};
         }
+        const creationDate = this.props.productOfferingForm.creationDate.includes("T") ? this.props.productOfferingForm.creationDate : `${this.props.productOfferingForm.creationDate}T00:00:00Z`
+        const expirationDate = this.props.productOfferingForm.expirationDate.includes("T") ? this.props.productOfferingForm.expirationDate : `${this.props.productOfferingForm.expirationDate}T00:00:00Z`
         let params = Object.assign({}, inputs, {
                 merchantVisibility: !inputs.merchantVisibility,
                 pricing: newPricing,
-                ...lots[index]
+                ...lots[index],
+                creationDate: creationDate,
+                expirationDate: expirationDate,
         });
         this.props.addProductOffer(params).then(() => {
             this.addLot(lots, inputs, ++index);

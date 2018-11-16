@@ -23,6 +23,7 @@ import CompaniesDetail from "../pages/administration/companiesAdmin/CompaniesDet
 import OfficesDetail from "../pages/administration/officesAdmin/OfficesDetailAdmin";
 import UsersNew from "../pages/administration/users";
 import Operators from "../pages/administration/operators";
+import Administration from "../pages/administration/";
 import NoMatch from "../components/404";
 
 import {withEdit} from '../pages/inventory/addInventory/EditInventoryHOC';
@@ -43,6 +44,7 @@ class Main extends Component {
                     <Route exact path="/reports" component={withAuth(Reports)}/>
                     <Route exact path="/settings" component={withAuth(Settings)}/>
                     <Route exact path="/support" component={withAuth(Support)}/>
+                    <Route exact path="/administration" component={withAuth(Administration)}/>
                     <Route exact path="/administration/merchants" component={withAuth(Merchants)}/>
                     <Route exact path="/administration/merchants/:id" component={withAuth(Merchants)}/>
                     <Route exact path="/administration/names-synonyms" component={withAuth(NamesSynonyms)}/>

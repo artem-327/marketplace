@@ -29,6 +29,12 @@ class ProductOffers extends Component {
                 const unit = getUnit(offer.packaging.unit.name);
                 const packageSize = offer.packaging.capacity;
                 const packageUnit = offer.packaging.container.name;
+                const countryException = ["USA", "Canada"]
+                const countryName = offer.warehouse.address.province.country.name
+                const location = countryException.includes(countryName)
+                    ? `${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`
+                    : `${offer.warehouse.address.city}, ${countryName}`
+
                 return{
                     id: offer.id,
                     data: [offer.merchant ? offer.merchant.companyName : "Anonymous",
@@ -43,7 +49,7 @@ class ProductOffers extends Component {
                         'Unknown',
                         offer.productCondition.name,
                         offer.productForm.name,
-                        `${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`
+                        location
                         ]
                 }})
             };

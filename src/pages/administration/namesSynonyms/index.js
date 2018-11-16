@@ -8,6 +8,7 @@ function mapStateToProps(store) {
     return {
         isSearching: store.products.isFetching,
         searchedProducts: store.products.data,
+        productsFetched: store.products.productsFetched,
         alternativeNames: store.products.alternativeNames
     }
 }
