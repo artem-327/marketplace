@@ -1,0 +1,13 @@
+.administration-wrapper{
+  display: flex;
+
+  .administration-content {
+    flex: 4;
+  }
+  .administration-menu {
+    flex: 1;
+    .adm-menu-item {
+      cursor: pointer;
+    }
+  }
+}

@@ -32,6 +32,13 @@ $borderColor: #e3e2df;
             float: right;
         }
       }
-
+      .approve {
+        .input-checkbox {
+          text-align: right;
+          .checkmark {
+            position: relative
+          }
+        }
+      }
     }
   }

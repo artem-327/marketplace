@@ -21,13 +21,14 @@ class Offices extends Component {
    }
 
    render() {
-      if (this.props.isFetching) return <Spinner />;
+    const {offices, isFetching} = this.props
+      if (isFetching) return <Spinner />;
       //TODO: where should I take company ID?!
       const newOfficePayload = {
          name: this.state.name,
          baselocation: this.state.location.id,
       }
-      const offices = this.props.offices.map(office => (
+      const officesData = offices.map(office => (
          <Office
             removeOffice={(id) => this.props.removeOffice(id, this.props.company)}
             key={office.id}
@@ -43,7 +44,7 @@ class Offices extends Component {
                <tr><th>Name</th><th></th></tr>
             </thead>
             <tbody>
-               {offices}
+               {officesData}
             </tbody>
          </table>
 
