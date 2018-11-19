@@ -116,6 +116,42 @@ $side-padding: 24px;
         }
     }
 }
+
+@media (max-width: 1024px) {
+    .shopping-cart {
+        grid-template-columns: auto 720px auto;
+
+        .shopping-cart-body {
+            grid-template-columns: calc(100% - 315px) 300px;
+
+            .shopping-cart-items .item-cart .item-cart-body {
+                flex-flow: column;
+
+                .item-cart-body-section {
+                    padding-bottom: 1px;
+
+                    + .item-cart-body-section {
+                        padding-top: 1px;
+                        padding-bottom: 10px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .shopping-cart {
+        grid-template-columns: auto 300px auto;
+
+        .shopping-cart-body {
+            display: block;
+            width: 300px;
+            margin: 0 auto 50px;
+        }
+    }
+}
+
 //shame
 .submenu {
     .link {
