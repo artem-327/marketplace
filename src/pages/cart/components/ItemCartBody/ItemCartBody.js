@@ -13,8 +13,8 @@ const ItemCartBody = ({cartItem, addPopup, removeProductFromCart, history}) => {
     <div className="item-cart">
       <div className="item-cart-body">
         <div className="item-cart-body-section">
-          <div>
-            <b>{productOffer.product.casIndexName}</b>
+          <div className="item-cart-body-section-name">
+            {productOffer.product.casIndexName}
           </div>
           <div>
             Merchant: {productOffer.merchant.email}

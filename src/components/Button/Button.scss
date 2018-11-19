@@ -20,7 +20,7 @@ button {
     &.light-blue {
         border: 1px solid $blue-color;
         color: $blue-color;
-        background-color: lighten( $blue-color, 30% )
+        background-color: rgba($blue-color, 0.2);
     }
     &.blue {
         background-color: $blue-color;

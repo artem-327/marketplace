@@ -86,32 +86,55 @@
     }
   }
 }
+
 .data-table {
   border-collapse:separate;
   border-spacing: 0;
   width: 100%;
   min-width: 1100px;
-  //text-align: center;
+
   .three-dots-menu{
     z-index: 2;
   }
+
   tr {
     &.isAllInventory:hover {
       cursor: pointer;
       background-color: lighten( #A8D1DF, 15% );
     }
   }
+
   td {
     border-bottom: 1px solid #eeeeee;
     padding: 3px 10px;
     font-size: 15.5px;
   }
+
   tbody {
     tr {
       td {
         height: 36px;
+        padding: 9px 10px;
         font-size: 0.875em;
         line-height: 17px;
+
+        &.data-table-select {
+          line-height: 17px;
+
+          .input-checkbox { /* solving issue in Chrome - enlarging table cell */
+            margin-bottom: -16px;
+            vertical-align: top;
+          }
+        }
+
+        .brc-radio-wrapper {
+          margin: -1px 0 -2px;
+
+          > .label {
+            margin-top: 1px;
+            line-height: 17px;
+          }
+        }
       }
 
       &.data-table-group-header {
@@ -133,9 +156,12 @@
 
           &:first-child{
             border-left: 1px solid #e0e0e0;
+            padding-left: 9px !important;
           }
+
           &:last-child{
             border-right: 1px solid #e0e0e0;
+            padding-right: 9px !important;
           }
 
           &.data-table-select {
@@ -151,12 +177,12 @@
 
           &.group-header{
             height: 42px;
-            padding: 11px 10px;
+            padding: 12px 10px 10px;
             vertical-align: middle;
             text-align: left;
             letter-spacing: 0.2px;
             color: #33373e;
-            line-height: 16px;
+            line-height: 18px;
           }
         }
         .fas{
