@@ -29,11 +29,45 @@ $side-padding: 17px;
     i {
       font-size: 1.4rem;
       color: $blue-color;
+
+      &.fa-info-circle {
+        position: relative;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        padding: 0;
+        background-color: #fff;
+        box-shadow: 0 0 0 2px $blue-color;
+        text-align: center;
+        font-size: 1rem;
+        color: $blue-color;
+        line-height: 18px;
+
+        &:before {
+          content: "" !important;
+          position: absolute;
+          top: 3px;
+          left: 8px;
+          width: 2px;
+          height: 2px;
+          background-color: $blue-color;
+        }
+
+        &:after {
+          content: "" !important;
+          position: absolute;
+          top: 7px;
+          left: 8px;
+          width: 2px;
+          height: 8px;
+          background-color: $blue-color;
+        }
+      }
     }
   }
 
   main.summary-main {
-    padding: 10px $side-padding 20px;
+    padding: 10px $side-padding 16px;
     background-color: $light-beige-color;
 
     table {

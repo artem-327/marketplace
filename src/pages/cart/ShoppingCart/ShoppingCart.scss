@@ -24,7 +24,7 @@ $side-padding: 24px;
         }
         .shopping-cart-items {
             grid-column: 1 / 2;
-            border: 2px solid $beige-color;
+            border: 1px solid darken($beige-color, 10%);
             border-radius: $border-rounding;
             margin-bottom: 1rem;
             @include mq('l') {
@@ -35,10 +35,6 @@ $side-padding: 24px;
             }
             .dropdown-wr{
               max-width: 450px;
-            }
-
-            .purchase-order-section {
-              padding: 20px;
             }
 
             header {

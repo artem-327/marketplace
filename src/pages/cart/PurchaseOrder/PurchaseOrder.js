@@ -82,26 +82,30 @@ class PurchaseOrder extends Component {
   render() {
     const {cart, deliveryAddresses, payments, dispatch, removeProductFromCart, cartIsFetching, createDeliveryAddress, editDeliveryAddress} = this.props;
     if (cartIsFetching) return <Spinner />
+    let index = 0;
     const itemContent = cart.orders.map(cartItem => {
       return (
       <CartItemSummary
         removeProductFromCart={removeProductFromCart}
         cartItem={cartItem}
         key={cartItem.productOffer.id}
+        itemIndex={++index}
       />)
     });
     return (
       <div className="app-inner-main">
-        <div className="submenu">
-          <div className="link">
-          <NavLink to="/inventory/all-inventory">
-            <i className="fas fa-angle-left"></i>
-            <b> Back to Product Offerings</b>
-            </NavLink>
+        <div className="header-top">
+          <h1 className='header inv-header'>PURCHASE ORDER</h1>
+          <div className="submenu">
+            <div className="link">
+              <NavLink to="/inventory/all-inventory">
+                <i className="arrow-left"></i>
+                <b> Back to Product Offerings</b>
+              </NavLink>
+            </div>
           </div>
         </div>
         <div className="shopping-cart">
-          <h1 className='header inv-header'>Purchase Order</h1>
           <div className="shopping-cart-body">
 
           <div>
@@ -129,23 +133,23 @@ class PurchaseOrder extends Component {
               />
 
             <div className="shopping-cart-items">
-              <header><h1>3. Terms and Agreement</h1></header>
+              <header><h2>3. Terms and Agreement</h2></header>
               <div className="purchase-order-section">
                 <div>Legal Language</div>
                 <div>Terms and Agreement</div>
-                <footer className="popup-footer">
-                  <Button color="blue">Place order</Button>
-                </footer>
                 </div>
             </div>
 
           </div>
-          <div>
+          <div className="summary-tables">
+            <SummaryTable title="Your Order">
+              {itemContent}
+            </SummaryTable>
             <SummaryTable title="Summary">
               {this.renderSummary()}
-            </SummaryTable>
-            <SummaryTable title="Your Cart">
-              {itemContent}
+              <footer className="summary-footer">
+                  <Button color="blue">Place order</Button>
+              </footer>
             </SummaryTable>
           </div>
           </div>

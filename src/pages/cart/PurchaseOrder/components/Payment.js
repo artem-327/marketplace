@@ -11,7 +11,7 @@ const Payment = ({dispatch, payments, selectedAddress, selectedPayment, getPayme
   })
   return (
     <div className="shopping-cart-items">
-      <header><h1>2. Payment</h1></header>
+      <header><h2>2. Payment</h2></header>
       <div className="purchase-order-section">
         <div className="group-item-wr">
           <DropdownRedux
@@ -23,21 +23,28 @@ const Payment = ({dispatch, payments, selectedAddress, selectedPayment, getPayme
             placeholder="Select Credit Card"
           />
         </div>
-        {!!Object.keys(selectedPayment).length && 
-        <div  className="text-section">
-            <div><b>Payment Method</b></div>
-            <div>{selectedPayment.cardNumber} {selectedPayment.cardType} Exp: {selectedPayment.expirationDate}</div>
-            
+        {(!!Object.keys(selectedPayment).length || !!Object.keys(selectedAddress).length) &&
+        <div className="text-sections">
+          {!!Object.keys(selectedPayment).length &&
+          <div className="text-section">
+              <div className="subtitle">Payment Method</div>
+              <div>xxxx-xxxx-xxxx-{selectedPayment.cardNumber.slice(-4)}</div>
+              <div>{selectedPayment.cardType}</div>
+              <div>Exp: {new Intl.DateTimeFormat('en-GB', {
+                  year: '2-digit',
+                  month: '2-digit'
+              }).format(new Date(selectedPayment.expirationDate))}</div>
+          </div>}
+          {!!Object.keys(selectedAddress).length &&
+          <React.Fragment>
+          <div className="text-section">
+            <div className="subtitle">Billing Info</div>
+            <div>{selectedAddress["first name"]} {selectedAddress["last name"]}</div>
+            <div>{selectedAddress.address.streetAddress}</div>
+            <div>{selectedAddress.address.city}, {selectedAddress.address.province.name}, {selectedAddress.address.zip.zip}</div>
+          </div>
+          </React.Fragment>}
         </div>}
-        {!!Object.keys(selectedAddress).length && 
-        <React.Fragment>
-        <div className="text-section">
-          <div><b>Billing Info</b></div>
-          <div>{selectedAddress["first name"]} {selectedAddress["last name"]}</div>
-          <div>{selectedAddress.address.streetAddress}</div>
-          <div>{selectedAddress.address.city}, {selectedAddress.address.province.name}, {selectedAddress.address.zip.zip}</div>
-        </div>
-        </React.Fragment>}
       </div>
     </div>
   )
