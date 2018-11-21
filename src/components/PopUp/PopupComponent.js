@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from "prop-types"
 import './popupComponent.css'
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
-const PopupComponent = ({removePopup, headerTitle, children, footerComponent}) => {
+let PopupComponent = ({removePopup, headerTitle, children, footerComponent}) => {
     return (
         <div className="popup-component">
         <header>
@@ -10,7 +11,9 @@ const PopupComponent = ({removePopup, headerTitle, children, footerComponent}) =
           <i className="fas fa-times close-mark" onClick={removePopup} />
         </header>
         <div className="popup-component-body">
-          {children}
+          <PerfectScrollbar>
+            {children}
+          </PerfectScrollbar>
         </div>
 
         <footer className="popup-footer">

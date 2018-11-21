@@ -33,7 +33,7 @@ class Row extends Component {
   }
 
   addCart(id){
-    this.props.addPopup(<AddCart id={id} history={this.props.history}/>)
+    this.props.addPopup(<AddCart id={id} history={this.props.history} className='add-cart-popup'/>)
   }
 
   render() {
