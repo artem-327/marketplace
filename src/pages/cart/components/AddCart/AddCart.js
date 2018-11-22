@@ -8,6 +8,7 @@ import {getUnit} from '../../../../utils/functions'
 import './AddCart.css';
 import file from '../../../../images/file.svg';
 import InputControlled from '../../../../components/InputControlled/InputControlled'
+import Row from "../../../../components/DataTable/components/Row";
 
 class AddCart extends Component {
   state = {
@@ -17,8 +18,13 @@ class AddCart extends Component {
   }
 
   componentDidMount() {
-   if (this.props.isEdit) this.props.getOrderDetail(this.props.id)
-   this.props.getProductOffer(this.props.id)
+    if (this.props.isEdit) this.props.getOrderDetail(this.props.id)
+    this.props.getProductOffer(this.props.id)
+  }
+
+  onClick = () => {
+    Row.openedPopup.id = false;
+    this.props.removePopup();
   }
 
   //TODO Fix cart to send edited data
@@ -81,6 +87,10 @@ class AddCart extends Component {
   };
 
   render() {
+    // load data if creating popup with different offer id
+    if (this.props.offer.id && this.props.id !== this.props.offer.id) {
+        this.props.getProductOffer(this.props.id);
+    }
     const {offer, order, isEdit, removePopup, offerDetailIsFetching, orderDetailIsFetching} = this.props;
     if (isEdit && orderDetailIsFetching) return <Spinner />
     if (offerDetailIsFetching) return <Spinner />
@@ -123,7 +133,7 @@ class AddCart extends Component {
 
     const footerComponent = (
       <>
-        <Button color="grey-white" onClick={removePopup}>
+        <Button color="grey-white" onClick={this.onClick}>
           Cancel
         </Button>
         {!isEdit 
