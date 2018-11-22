@@ -165,8 +165,16 @@ class AddCart extends Component {
                 {offer.manufacturer.name}
               </div>
               <div>
-                <span>Available Products: </span>
+                  <span>Location: </span>
+                  {location}
+              </div>
+              <div>
+                <span>Available Product: </span>
                 {availableProducts}
+              </div>
+              <div>
+                  <span>Form: </span>
+                  {offer.productForm.name}
               </div>
               <div>
                 <span>Packaging: </span>
@@ -175,14 +183,6 @@ class AddCart extends Component {
               <div>
                 <span>Package Size: </span>
                 {packageSize}
-              </div>
-              <div>
-                <span>Form: </span>
-                {offer.productForm.name}
-              </div>
-              <div>
-                <span>Location: </span>
-                {location}
               </div>
               <div>
                 <span>Attachments: </span>

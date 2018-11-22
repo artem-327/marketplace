@@ -19,6 +19,7 @@ $helvetica-bd: 'HelveticaNeueLTPro-Bd', sans-serif;
 
 .add-cart-body {
   display: block;
+  font-family: $helvetica-roman;
 
   .divider {
     display: block;
@@ -55,16 +56,26 @@ $helvetica-bd: 'HelveticaNeueLTPro-Bd', sans-serif;
     }
 
     .add-cart-prod-info {
+      padding: 4px 0 3px;
 
       > div {
-        padding: 9px 0;
+        padding: 5px 0 6px 50%;
         font-family: $helvetica-md;
         font-size: 1rem;
         font-weight: 500;
+        line-height: 1.125;
+
+        &:after {
+          content: "";
+          clear: both;
+          display: block;
+        }
 
         > span {
+          float: left;
           display: inline-block;
-          width: 50%;
+          width: calc(100% - 10px);
+          margin-left: -100%;
           font-family: $helvetica-roman;
           font-weight: 400;
         }
