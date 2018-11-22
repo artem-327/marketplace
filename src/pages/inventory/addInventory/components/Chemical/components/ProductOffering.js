@@ -184,6 +184,7 @@ export default class ProductOffering extends Component {
                                 <label htmlFor=".assayMin">Assay Min %</label>
                                 <Control.text model=".assayMin"
                                               validators={{min: (val) => min(val, 0), isNumber, required, maxPercent}}
+                                              type="number"
                                               id=".assayMin"
                                 />
                             </div>
@@ -210,6 +211,7 @@ export default class ProductOffering extends Component {
                                                   maxPercent
                                               }}
                                               id=".assayMax"
+                                              type="number"
                                 />
                             </div>
                             <Errors

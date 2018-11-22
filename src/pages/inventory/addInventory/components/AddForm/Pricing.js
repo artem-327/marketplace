@@ -14,9 +14,9 @@ export default class Pricing extends Component {
         this.state = {
             showIncrementalPricing: false,
              margin: '',
-            priceFlag:false,
-            costFlag:false,
-            marginFlag:false,
+            priceFlag: false,
+            costFlag: false,
+            marginFlag: false,
             splits: '',
             minimum: '',
             disabled: true,
@@ -69,33 +69,36 @@ export default class Pricing extends Component {
 
         if (this.state.priceFlag && this.state.costFlag && this.state.marginFlag){
             switch(active){
-                case 'price':{
-                    margin = ((activeVal - this.props.form.pricing.cost) / activeVal) * 100;
+                case 'price': {
+                    margin = ((activeVal - cost) / cost) * 100;
                     margin = Number(margin.toFixed(3));
                     this.setState({margin});
                     break;
                 }
-                case 'cost':{
-                    let tmp = 100 - (margin);
-                    price = (activeVal) / tmp * 100;
-                    price = Number(price.toFixed(3));
-                    this.handlePriceChange('forms.addProductOffer.pricing.price', price);
+
+                case 'cost': {
+                    margin = ((price - activeVal) / activeVal) * 100;
+                    margin = Number(margin.toFixed(3));
+                    this.setState({margin});
                     break;
                 }
-                case 'margin':{
+
+                /*case 'margin':{
                     let tmp = 100 - (activeVal);
                     price = (cost) / tmp * 100;
                     price = Number(price.toFixed(3));
                     this.setState({margin: activeVal});
                     this.handlePriceChange('forms.addProductOffer.pricing.price', price);
                     break;
-                }
+                }*/
+
                 default:{
                     console.log('pricing.js bad target name');
                     break;
                 }
             }
         }
+
         else {
             switch(active){
                 case 'price':{
@@ -148,6 +151,7 @@ export default class Pricing extends Component {
             }
         }
     }
+
 
     validateInputs = () => {
       let newIncremental = this.state.incrementalPricing.slice(0);
