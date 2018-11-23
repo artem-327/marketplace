@@ -79,7 +79,7 @@ class ProductOffers extends Component {
                                [
                                    {action: (id)=>this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'Edit Listing',},
                                    {action: (id) => this.openBroadcast(id), label: 'Custom Broadcast'},
-                                   // {action: (id)=>console.log('delete'), label: 'Delete Listing'}
+                                   {action: (id) => this.props.removeProductOffer(id, () => this.props.fetchMyProductOffers({})), label: 'Delete Listing'}
                                ]
                            }
                            rows={rows}
