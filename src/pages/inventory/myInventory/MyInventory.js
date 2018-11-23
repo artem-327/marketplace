@@ -85,6 +85,7 @@ class MyInventory extends Component {
         let content = this.props.isFetching ? <Spinner/> :
             <ProductOffers
                 productOffers={this.props.productOffers}
+                fetchMyProductOffers={this.props.fetchMyProductOffers}
                 submitRules={this.props.sendRules}
                 addPopup={this.props.addPopup}
                 removePopup={this.props.removePopup}
