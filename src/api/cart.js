@@ -9,7 +9,7 @@ const api = {
     removeProductFromCart: (id) => axios.delete(`/api/4eijtx/cart/${id}/`),
     createDeliveryAddress: (address) => axios.post('/api/rh587b/delivery-addresses/', address),
     editDeliveryAddress: (address) => axios.put(`/api/97hub0/delivery-addresses/${address.id}/`, address),
-    fetchDeliveryAddresses: () => axios.get('/api/1t8e2h/delivery-addresses/').then(response => response.data.data["delivery addresses"]),
+    fetchDeliveryAddresses: () => axios.get('/api/1t8e2h/delivery-addresses/').then(response => response.data.data.deliveryAddresses),
     fetchPayments: () => axios.get('/api/jklpuz/payments/').then(response => response.data.data.payments),
 };
 

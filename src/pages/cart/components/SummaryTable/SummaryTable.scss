@@ -1,46 +1,89 @@
 @import "../../../../styles/main.scss";
-$side-padding: 30px;
-
+$side-padding: 17px;
 
 .summary-table {
   min-width: 300px;
   max-width: 400px;
   border: 1px solid $beige-color;
   border-radius: $border-rounding;
-  margin-bottom: 10px;
+  margin-bottom: 13px;
 
   header {
     display: flex;
+    min-height: 42px;
     align-items: center;
     justify-content: space-between;
     background-color: $beige-color;
-    padding: 15px $side-padding;
+    padding: 10px $side-padding;
     border-radius: $border-rounding $border-rounding 0 0;
 
-    h1 {
-      font-size: 1.5rem;
-      font-weight: bold;
+    h2 {
+      font-size: 1.125rem;
+      font-weight: 500;
       text-transform: uppercase;
       background-color: $beige-color;
       margin: 0;
+      line-height: 1.2222;
     }
 
     i {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       color: $blue-color;
+
+      &.fa-info-circle {
+        position: relative;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        padding: 0;
+        background-color: #fff;
+        box-shadow: 0 0 0 2px $blue-color;
+        text-align: center;
+        font-size: 1rem;
+        color: $blue-color;
+        line-height: 18px;
+
+        &:before {
+          content: "" !important;
+          position: absolute;
+          top: 3px;
+          left: 8px;
+          width: 2px;
+          height: 2px;
+          background-color: $blue-color;
+        }
+
+        &:after {
+          content: "" !important;
+          position: absolute;
+          top: 7px;
+          left: 8px;
+          width: 2px;
+          height: 8px;
+          background-color: $blue-color;
+        }
+      }
     }
   }
 
   main.summary-main {
-    padding: 20px $side-padding;
+    padding: 10px $side-padding 16px;
     background-color: $light-beige-color;
 
     table {
       width: 100%;
+
+      tr.total td {
+        font-size: 1.25rem;
+        font-weight: 500;
+        line-height: 1.2;
+      }
     }
 
     td {
-      padding: 5px 0;
+      padding: 4px 0;
+      font-size: 1.125rem;
+      line-height: 1.1666;
     }
 
     td:first-child{

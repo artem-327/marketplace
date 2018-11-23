@@ -35,7 +35,7 @@ class ShoppingCart extends Component {
           <tr><td>Subtotal</td><td>${totalPrice}</td></tr>
           <tr><td>Estimated Shipping</td><td></td></tr>{/* TODO: change the fake price */}
           <tr><td>Estimated Tax</td><td></td></tr>{/* TODO: change the fake price */}
-          <tr><td><b>Total</b></td><td>${totalPrice}</td></tr>
+          <tr className="total"><td>Total</td><td>${totalPrice}</td></tr>
         </tbody>
       </table>
     )
@@ -49,7 +49,7 @@ class ShoppingCart extends Component {
       <ItemCartBody
         addPopup={addPopup}
         history={history}
-        key={cartItem.productOffer.id}
+        key={cartItem.id}
         cartItem={cartItem}
         removeProductFromCart={removeProductFromCart}
         />)
@@ -58,27 +58,29 @@ class ShoppingCart extends Component {
     const headerTitle = `Items (${itemsNumber})`
     return (
       <div className="app-inner-main">
-      <div className="submenu">
-        <div className="link">
-          <NavLink to={'/inventory/all-inventory'}>
-          <i className="fas fa-angle-left"></i>
-          <b>Back to Product/Purchase info</b>
-          </NavLink>
-        </div>
+      <div className='header-top'>
+          <h1 className='header inv-header'>PRODUCT OFFERINGS</h1>
+          <div className="submenu">
+              <div className="link">
+                  <NavLink to={'/inventory/all-inventory'}>
+                      <i className="arrow-left"></i>
+                      <b>Back to Product/Purchase info</b>
+                  </NavLink>
+              </div>
+          </div>
       </div>
       <div className="shopping-cart">
-          <h1 className='header inv-header'>PRODUCT OFFERINGS</h1>
           <div className="shopping-cart-body">
-          <div className="shopping-cart-items">
-          <header><h1>{headerTitle}</h1></header>
-            {itemContent}
-          </div>
-          <div>
-            <SummaryTable title="Summary" hasButton={itemsNumber ? true : false} handleContinue={this.handleContinue}>
-              {this.renderSummary()}
-            </SummaryTable>
-            <Button size="large" color="light-blue"onClick={this.keepShopping}>Keep Shopping</Button>
-          </div>
+              <div className="shopping-cart-items">
+              <header><h2>{headerTitle}</h2></header>
+                {itemContent}
+              </div>
+              <div className="shopping-cart-summary">
+                <SummaryTable title="Summary" hasButton={itemsNumber ? true : false} handleContinue={this.handleContinue}>
+                  {this.renderSummary()}
+                </SummaryTable>
+                <Button size="large" color="light-blue"onClick={this.keepShopping}>Keep Shopping</Button>
+              </div>
           </div>
         </div>
     </div>

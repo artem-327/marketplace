@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Rows from './components/Rows';
 import './dataTable.css';
 import Spinner from '../Spinner/Spinner';
+import PerfectScrollbar from 'react-perfect-scrollbar';
 
 class DataTable extends Component {
   componentDidMount() {
@@ -32,6 +33,26 @@ class DataTable extends Component {
     // }
   }
 
+  handleScrollY() {
+    let topPosition = document.querySelector('#datatable-wrapper > .scrollbar-container').scrollTop;
+    let fixHeader = document.querySelectorAll('#datatable-wrapper th > .fix-header');
+    for (let i = 0; i < fixHeader.length; i++) {
+      fixHeader[i].style.top = topPosition + 'px';
+    }
+    let xScrollbar = document.querySelector('#datatable-wrapper > .scrollbar-container > .ps__rail-x');
+    let yScrollbar = document.querySelector('#datatable-wrapper > .scrollbar-container > .ps__rail-y');
+    xScrollbar.style.marginBottom = -topPosition + 'px';
+    yScrollbar.style.marginTop = topPosition + 'px';
+  }
+
+  handleScrollX() {
+    let leftPosition = document.querySelector('#datatable-wrapper > .scrollbar-container').scrollLeft;
+    let xScrollbar = document.querySelector('#datatable-wrapper > .scrollbar-container > .ps__rail-x');
+    let yScrollbar = document.querySelector('#datatable-wrapper > .scrollbar-container > .ps__rail-y');
+    xScrollbar.style.marginLeft = leftPosition + 'px';
+    yScrollbar.style.marginRight = -leftPosition + 'px';
+  }
+
   render() {
     if (!this.props.dataTable || !this.props.rows) return null;
     if (this.props.isFetching) return <Spinner />;
@@ -40,41 +61,44 @@ class DataTable extends Component {
       return <h4>DataTable Error</h4>;
     }
     return (
-      <div className="data-table-wr">
-        <table className="data-table">
-          <Header
-            data={this.props.dataTable}
-            sortFunc={this.props.sortFunc}
-            selectTable={rows =>
-              this.props.selectDataTable(this.props.id, rows)
-            }
-            contextMenu={
-              this.props.contextMenu && this.props.contextMenu.length !== 0
-            }
-            toggleColumn={(headerId, value) =>
-              this.props.toggleVisibleColumn(this.props.id, headerId, value)
-            }
-            selectable={this.props.selectableHeader}
-            selectableRows={this.props.selectableRows}
-          />
-          <Rows
-            tableType={this.props.id}
-            addPopup={this.props.addPopup}
-            history={this.props.history}
-            rows={this.props.rows}
-            rowsOpns={this.props.dataTable.rowsOpns}
-            selectable={this.props.selectableRows}
-            contextMenu={this.props.contextMenu}
-            rowComponent={this.props.rowComponent}
-            headers={this.props.dataTable.header}
-            selectGroupFunc={(groupId, rows) =>
-              this.props.selectGroup(this.props.id, groupId, rows)
-            }
-            selectFunc={(groupId, rowId, value) =>
-              this.props.selectRow(this.props.id, groupId, rowId, value)
-            }
-          />
-        </table>
+      <div id="datatable-wrapper" className="data-table-wr">
+        <PerfectScrollbar onScrollY={this.handleScrollY} onScrollX={this.handleScrollX}>
+          <table className="data-table">
+            <Header
+              data={this.props.dataTable}
+              sortFunc={this.props.sortFunc}
+              selectTable={rows =>
+                this.props.selectDataTable(this.props.id, rows)
+              }
+              contextMenu={
+                this.props.contextMenu && this.props.contextMenu.length !== 0
+              }
+              toggleColumn={(headerId, value) =>
+                this.props.toggleVisibleColumn(this.props.id, headerId, value)
+              }
+              selectable={this.props.selectableHeader}
+              selectableRows={this.props.selectableRows}
+            />
+            <Rows
+              tableType={this.props.id}
+              addPopup={this.props.addPopup}
+              removePopup={this.props.removePopup}
+              history={this.props.history}
+              rows={this.props.rows}
+              rowsOpns={this.props.dataTable.rowsOpns}
+              selectable={this.props.selectableRows}
+              contextMenu={this.props.contextMenu}
+              rowComponent={this.props.rowComponent}
+              headers={this.props.dataTable.header}
+              selectGroupFunc={(groupId, rows) =>
+                this.props.selectGroup(this.props.id, groupId, rows)
+              }
+              selectFunc={(groupId, rowId, value) =>
+                this.props.selectRow(this.props.id, groupId, rowId, value)
+              }
+            />
+          </table>
+        </PerfectScrollbar>
       </div>
     );
   }
