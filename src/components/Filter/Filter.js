@@ -166,6 +166,20 @@ class Filter extends Component {
                                              model: `.pckgs[${packagingType.id}]`
                                          }))}/>
                             <FilterGroup className="filterGroup"
+                                        header='Grade'
+                                        isVisible={!!this.props.productGrade}
+                                        split
+                                        data={this.props.productGrade}
+                                        isOpen={this.props.filterGroupStatus.productGrade}
+                                        onOpen={(value)=>{this.props.toggleFilterGroup('productGrade', value)}}
+                                        checkboxModel='pgrs'
+                                        inputs={this.props.productGradeTypes.map(productGradeType => ({
+                                            label: productGradeType.name,
+                                            type: 'checkbox',
+                                            id: productGradeType.id,
+                                            model: `.pgrs[${productGradeType.id}]`
+                                        }))}/>             
+                            <FilterGroup className="filterGroup"
                                          header='Condition'
                                          isVisible={!!this.props.condition}
                                          split
