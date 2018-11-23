@@ -82,6 +82,7 @@ class DataTable extends Component {
             <Rows
               tableType={this.props.id}
               addPopup={this.props.addPopup}
+              removePopup={this.props.removePopup}
               history={this.props.history}
               rows={this.props.rows}
               rowsOpns={this.props.dataTable.rowsOpns}

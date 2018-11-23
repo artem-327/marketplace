@@ -1,13 +1,134 @@
+@import "../../styles/main.scss";
+
 .popup-wr{
   position: fixed;
   width: 100%;
   height: 100%;
   z-index: 10;
   background-color: rgba(0,0,0,0.65);
+
   .popup{
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  &.add-cart-popup {
+    position: absolute;
+    top: 105px;
+    left: auto;
+    right: 0;
+    bottom: 0;
+    width: 364px;
+    height: auto;
+    background: transparent none;
+
+    .popup {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      transform: none;
+      max-width: 100%;
+      min-width: 100%;
+      height: 100%;
+
+      .popup-component {
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-flow: column;
+        max-width: 100%;
+        min-width: 100%;
+        height: 100%;
+        background: $white-color;
+        box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
+
+        header {
+          display: none;
+        }
+
+        footer.popup-footer {
+          flex-grow: 0;
+          flex-shrink: 0;
+          width: 100%;
+          padding: 15px 0 15px 16px;
+          background: darken($white-color, 5%);
+          text-align: right;
+
+          button.button {
+            height: 42px;
+            margin: 0 16px 0 0;
+            font-size: 1em;
+            font-weight: 500;
+          }
+        }
+
+        .popup-component-body {
+          position: relative;
+          overflow: hidden;
+          flex-grow: 1;
+          flex-shrink: 1;
+          width: 100%;
+          margin: 0;
+          border: 0 none;
+          border-radius: 0;
+
+          .scrollbar-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+
+            > .ps__rail-y {
+              position: absolute;
+              z-index: 3;
+              transition: opacity 250ms linear;
+              display: none;
+
+              > div {
+                opacity: 0.15;
+              }
+            }
+
+            > .ps__rail-y {
+              left: auto !important;
+              right: 0 !important;
+              width: 15px;
+
+              >.ps__thumb-y {
+                position: absolute;
+                width: 11px;
+                margin: 0 2px;
+                border-width: 2px 0;
+                border-style: solid;
+                border-color: transparent;
+                background-color: rgba(0,0,0,0.5);
+                background-clip: content-box;
+                cursor: pointer;
+              }
+            }
+
+            &.ps--active-y > .ps__rail-y {
+              display: block;
+            }
+
+            &.ps--active-y:hover > .ps__rail-y > div {
+              opacity: 1;
+            }
+
+            .data-table {
+              margin: 0;
+              border: 29px solid transparent;
+              border-top: 0 none;
+            }
+          }
+        }
+      }
+    }
   }
 }

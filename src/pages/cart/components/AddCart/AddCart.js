@@ -8,6 +8,7 @@ import {getUnit} from '../../../../utils/functions'
 import './AddCart.css';
 import file from '../../../../images/file.svg';
 import InputControlled from '../../../../components/InputControlled/InputControlled'
+import Row from "../../../../components/DataTable/components/Row";
 
 class AddCart extends Component {
   state = {
@@ -17,8 +18,13 @@ class AddCart extends Component {
   }
 
   componentDidMount() {
-   if (this.props.isEdit) this.props.getOrderDetail(this.props.id)
-   this.props.getProductOffer(this.props.id)
+    if (this.props.isEdit) this.props.getOrderDetail(this.props.id)
+    this.props.getProductOffer(this.props.id)
+  }
+
+  onClick = () => {
+    Row.openedPopup.id = false;
+    this.props.removePopup();
   }
 
   //TODO Fix cart to send edited data
@@ -50,7 +56,7 @@ class AddCart extends Component {
     removePopup()
   }
 
-   getQualityOptions = (split) => {
+  getQualityOptions = (split) => {
     const options = [] 
     if (this.state.pricing) {
       const {quantityFrom, quantityTo} = this.state.pricing
@@ -65,7 +71,7 @@ class AddCart extends Component {
       }
     }
     return options;
-   }
+  }
 
   handleQuantity = e => {
     const {minimum, amount, splits} = this.props.offer.packaging;
@@ -81,6 +87,10 @@ class AddCart extends Component {
   };
 
   render() {
+    // load data if creating popup with different offer id
+    if (this.props.offer.id && this.props.id !== this.props.offer.id) {
+        this.props.getProductOffer(this.props.id);
+    }
     const {offer, order, isEdit, removePopup, offerDetailIsFetching, orderDetailIsFetching} = this.props;
     if (isEdit && orderDetailIsFetching) return <Spinner />
     if (offerDetailIsFetching) return <Spinner />
@@ -117,20 +127,20 @@ class AddCart extends Component {
       return object;
     })
 
-  const attachments = offer.attachments.map(att => {
-    return <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
-  });
+    const attachments = offer.attachments.map(att => {
+      return <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
+    });
 
     const footerComponent = (
       <>
-        <Button color="blue" onClick={removePopup}>
+        <Button color="grey-white" onClick={this.onClick}>
           Cancel
         </Button>
         {!isEdit 
-        ? <Button color="green" onClick={this.createOrder}>
+        ? <Button color="blue" onClick={this.createOrder}>
           Continue
         </Button>
-        :<Button color="green" onClick={this.editOrder}>
+        :<Button color="blue" onClick={this.editOrder}>
           Edit
         </Button>}
       </>
@@ -145,47 +155,47 @@ class AddCart extends Component {
         >
         <div className="add-cart-body">
           <div className="add-cart-body-section">
-            <h3>Product Info</h3>
-            <div>
-              <b>{offer.product.casIndexName}</b>
+            <h3>1. Product Information</h3>
+            <div className="add-cart-product-name">
+              {offer.product.casIndexName}
             </div>
-            <div>
-              <b>Merchant: </b>
-              {offer.manufacturer.name}
-            </div>
-            <div>
-              <b>Available Products: </b>
-              {availableProducts}
-            </div>
-            <div>
-              <b>Packaging: </b>
-              {offer.packaging.container.name}
-            </div>
-            <div>
-              <b>Package Size: </b>
-              {packageSize}
-            </div>
-            <div>
-              <b>Form: </b>
-              {offer.productForm.name}
-            </div>
-            <div>
-              <b>Location: </b>
-              {location}
-            </div>
-            <div>
-              <b>Attachments: </b>
-              {attachments}
+            <div className="add-cart-prod-info">
+              <div>
+                <span>Merchant: </span>
+                {offer.manufacturer.name}
+              </div>
+              <div>
+                  <span>Location: </span>
+                  {location}
+              </div>
+              <div>
+                <span>Available Product: </span>
+                {availableProducts}
+              </div>
+              <div>
+                  <span>Form: </span>
+                  {offer.productForm.name}
+              </div>
+              <div>
+                <span>Packaging: </span>
+                {offer.packaging.container.name}
+              </div>
+              <div>
+                <span>Package Size: </span>
+                {packageSize}
+              </div>
+              <div>
+                <span>Attachments: </span>
+                {attachments}
+              </div>
             </div>
           </div>
 
-          <div className="divider" />
-
           <div className="add-cart-body-section">
-            <h3>Purchase Info</h3>
+            <h3>2. Purchase Info</h3>
 
-            <div>
-              <b>Select Price Level</b>
+            <div className="add-cart-form-input">
+              <label>Select Price Level</label>
               <Dropdown
                 opns={tiers.length ? priceLevelOptions : noPriceTiersOption}
                 placeholder="Select Price Level"
@@ -198,8 +208,8 @@ class AddCart extends Component {
             </div>
 
            
-            <div>
-              <b>Select Quantity</b>
+            <div className="add-cart-form-input">
+              <label>Select Quantity</label>
               {quantityOptionsWithName.length <= 10 
               ?  <Dropdown
                 opns={quantityOptionsWithName}
@@ -225,23 +235,29 @@ class AddCart extends Component {
                 </div>
               }
             </div>
-           
-            <div className="purchase-info">
-              <b>Total Quantity:</b> 
+          </div>
+
+          <div className="add-cart-body-section">
+            <h3>3. Summary</h3>
+            <div className="purchase-summary-info">
+              <label>Total Quantity:</label>
               <span>
                 {(this.state.quantity && !this.state.warning && `${this.state.quantity} pck`) || (isEdit && `${order.quantity} pck`)}
               </span>
             </div>
-            <div className="purchase-info">
-              <b>Price/LB:</b> 
+            <div className="purchase-summary-info">
+              <label>Price/LB:</label>
               <span>${offer.pricing.price}</span> 
             </div>
-            {/* <div className="purchase-info">
+            {/* <div className="purchase-summary-info">
               <b>Delivered Price/LB:</b> 
               <span>$</span> 
             </div> */}
-            <div className="purchase-info">
-              <b>Subtotal:</b> 
+
+            <div className="divider" />
+
+            <div className="purchase-summary-info purchase-summary-subtotal">
+              <label>Subtotal:</label>
               {!this.state.warning && (totalPrice || order.selectedOfferPrice) && <span>${totalPrice || order.selectedOfferPrice}</span>}
             </div>
           </div>
