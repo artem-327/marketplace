@@ -7,6 +7,9 @@
     border: 1px solid #B0B0B0;
     padding: 7px;
     color: #a8a8a8;
+    &.selected {
+      color: #33373e;
+    }
     img {
       position: relative;
       float: right;
@@ -57,6 +60,7 @@
       width: 100%;
       margin: 0;
       padding: 7px;
+      color: #33373e;
       &:hover, &:focus {
         background-color: #289ada;
         color: white;

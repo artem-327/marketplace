@@ -225,7 +225,7 @@ class AddBroadcast extends Component {
 
           const parentStatesOffices = parentState.companies.map(i => i.offices)
           const officesOfThisState = Object.values(storedOffices).filter(obj => parentStatesOffices.flat().find(obj2 => obj.id === obj2.id))
-          debugger
+          
           //OFFICES
           company.offices = officesOfThisState.map(i => {
             const office = {

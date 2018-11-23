@@ -31,7 +31,7 @@ class GroupRow extends Component {
                     <td  className="group-header" colSpan={(this.props.headers.length+(this.props.contextMenu ? 2 : 0))} >{this.props.rows.group}
                     <span className="data-table-group-count">{this.props.rows.countLabel ? this.props.rows.countLabel + this.props.rows.rows.length : null} {this.state.open ? <i className="icon angle-down"/> : <i className="icon angle-up"/>}</span></td></tr>
                 {this.state.open ? this.props.rowsOpns.rows.map((opns, index) => (
-                    <Row selectable={this.props.selectable} id={opns.id} rowOpns={opns} rowComponent={this.props.rowComponent} contextMenu={this.props.contextMenu} headers={this.props.headers} data={this.props.rows.rows[opns.index].data} selectFunc={this.props.selectFunc} groupId={this.props.rowsOpns.index} key={index}/>
+                    <Row selectable={this.props.selectable} history={this.props.history} tableType={this.props.tableType} addPopup={this.props.addPopup} id={opns.id} rowOpns={opns} rowComponent={this.props.rowComponent} contextMenu={this.props.contextMenu} headers={this.props.headers} data={this.props.rows.rows[opns.index].data} selectFunc={this.props.selectFunc} groupId={this.props.rowsOpns.index} key={index}/>
                 )) : null}
             </React.Fragment>
         )

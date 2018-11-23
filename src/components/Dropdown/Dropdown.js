@@ -66,13 +66,20 @@ class Dropdown extends Component {
 
     render() {
         let {currentValue, isOpen} = this.state;
+        let isSelected = false;
+        for (let i = 0; i < this.props.opns.length; i++) {
+            if (this.props.opns[i].id === this.props.value) {
+                isSelected = true;
+                break;
+            }
+        }
         let options = this.state.isOpen ?
             <ul className='dropdown-options' style={{maxHeight: 39*this.state.results_count}}>
                 {this.renderDropdown(this.props.opns)}
             </ul> : null;
         return (
             <div className='dropdown-wr' ref={this.dropdownRef} >
-                <div className={'dropdown-trigger ' + classnames({'disabled' : this.props.disabled, 'open' : isOpen})} onClick={()=>this.toggleDropdown()}>
+                <div className={'dropdown-trigger ' + classnames({'disabled' : this.props.disabled, 'open' : isOpen, 'selected' : isSelected})} onClick={()=>this.toggleDropdown()}>
                     <div>{currentValue || this.props.placeholder || 'Select'}<img alt="up" src={ArrowUp} /></div>
                 </div>
                 {options}
