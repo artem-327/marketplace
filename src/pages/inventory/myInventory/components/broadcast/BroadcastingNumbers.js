@@ -1,7 +1,8 @@
 import React from 'react';
+import Spinner from '../../../../../components/Spinner/Spinner'
 
 const BroadcastingNumbers = ({storedOffices, convertObjectToArray}) => {
-  if(!storedOffices) return <div>...loading</div>;
+  if(!storedOffices) return  <Spinner />
   const brcOffices = convertObjectToArray(storedOffices)
   const broadcastingTo = brcOffices.filter(i => i.broadcast === true).length
   return (

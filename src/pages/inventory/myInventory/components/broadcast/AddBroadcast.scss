@@ -135,7 +135,13 @@
             }
         }
         i.fas {
-            margin-right: 5px; 
+            margin-right: 5px;
+            &.fa-chevron-down {
+                color: #339FD7;
+            }
+            &.fa-chevron-right{
+                color: #D6DCDE
+            }
         }
     }
 
