@@ -106,7 +106,7 @@ class MyInventory extends Component {
                     <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}}/>
                     <h3 className='header small'>{getSelectedDataTable(this.props.productOffersTable)} product offerings selected</h3>
                 </div>
-                <Filter chemicalName productAgeFilter date assay quantity price condition form filterFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}} />
+                <Filter chemicalName productAgeFilter date assay quantity price package condition form filterFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}} />
                 {content}
             </div>
         )
