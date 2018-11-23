@@ -289,7 +289,7 @@ export default class Pricing extends Component {
                         </div>
                         <div className='group-item-wr'>
                             <h6>Total Sales Price</h6>
-                            <h6>${(measurement * totalPackages * price).formatMoney(3)}</h6>
+                            <h6>${(/* measurement * */totalPackages * price).formatMoney(3)}</h6>
                         </div>
                     </div>
 
