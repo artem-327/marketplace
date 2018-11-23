@@ -48,10 +48,37 @@ export default class AddForm extends Component {
         if(inputs['incrementalSelected']){
             newPricing = {...inputs['pricing'], tiersRequests: this.validateIncPricing()};
         }
+        const creationDate = this.props.productOfferingForm.creationDate.includes("T") ? this.props.productOfferingForm.creationDate : `${this.props.productOfferingForm.creationDate}T00:00:00Z`
+        const expirationDate = this.props.productOfferingForm.expirationDate.includes("T") ? this.props.productOfferingForm.expirationDate : `${this.props.productOfferingForm.expirationDate}T00:00:00Z`
+        const assayMin = parseInt(this.props.productOfferingForm.assayMin)
+        const assayMax = parseInt(this.props.productOfferingForm.assayMax)
+        const manufacturer = this.props.productOfferingForm.manufacturer.id
+
+        /*const amount = parseInt(this.props.mappingForm.packaging.amount)
+        const price = parseInt(this.props.mappingForm.pricing.price)
+        const cost = parseInt(this.props.mappingForm.pricing.cost)*/
+
         let params = Object.assign({}, inputs, {
+                ...this.props.mappingForm,
+                ...this.props.productOfferingForm,
                 merchantVisibility: !inputs.merchantVisibility,
                 pricing: newPricing,
-                ...lots[index]
+                ...lots[index],
+                creationDate: creationDate,
+                expirationDate: expirationDate,
+                manufacturer: manufacturer,
+                assayMin: assayMin,
+                assayMax: assayMax,
+
+                /*
+                packaging: {
+                    amount: amount
+                },
+                pricing: {
+                    price: price,
+                    cost: cost
+                }*/
+
         });
         this.props.addProductOffer(params).then(() => {
             this.addLot(lots, inputs, ++index);
@@ -81,8 +108,8 @@ export default class AddForm extends Component {
             pricing: newPricing,
             creationDate: creationDate,
             expirationDate: expirationDate,
-            manufacturer: this.props.productOffer.manufacturer.id,
-            origin: this.props.productOffer.origin.id,
+            manufacturer: this.props.productOfferingForm.manufacturer.id || this.props.productOffer.manufacturer.id,
+            origin: this.props.productOfferingForm.origin.id || this.props.productOffer.origin.id,
             product: this.props.productOffer.product.id,
             packaging: {...this.props.mappingForm.packaging, amount: this.props.productOfferingForm.totalPackages}
         });

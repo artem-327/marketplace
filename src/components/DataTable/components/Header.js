@@ -61,19 +61,23 @@ class Header extends Component {
         return (
             <thead className='data-table-header'>
                 <tr>
-                    {this.props.selectable ? <th className="data-table-select"><CheckboxControlled value={this.isSelected()} onChange={(value)=>this.selectTable(value)}/></th> : null}
-                    {!this.props.selectable && this.props.selectableRows ? <th /> : null}
-                    {this.props.contextMenu ? <><th/><th/></> : null}
+                    {this.props.selectable ? <th className="data-table-select"><CheckboxControlled value={this.isSelected()} onChange={(value)=>this.selectTable(value)}/><div className={'fix-header'}><CheckboxControlled value={this.isSelected()} onChange={(value)=>this.selectTable(value)}/></div></th> : null}
+                    {!this.props.selectable && this.props.selectableRows ? <th><div className={'fix-header'}></div></th> : null}
+                    {this.props.contextMenu ? <><th><div className={'fix-header'}></div></th><th><div className={'fix-header'}></div></th></> : null}
                     {this.props.data.header.map((item, index) => (
                         item.visible ?
-                        <th  ref={this.node} onClick={() => this.leftClickSort(item.name)}
-                            onContextMenu={(e) => this.handleClick(e, item.name)} key={index}>
+                        <th ref={this.node} onClick={() => this.leftClickSort(item.name)}
+                            onContextMenu={(e) => this.handleClick(e, item.name)} key={index}
+                            className={(item.name ? item.name.toLowerCase().replace(' ', '_').replace(/[^a-z_]/g, '') : item.name)}>
                             {item.name}
-                            {this.state.open[item.name] ?
-                                <ul className="data-table-context-th">
-                                    {/*<li onClick={() => this.props.sortFunc(item.name)}>Sort</li>*/}
-                                    <li onClick={() => this.props.toggleColumn(item.index, false)}>Hide</li>
-                                </ul> : null}
+                            <div className={'fix-header'}>
+                                {item.name}
+                                {this.state.open[item.name] ?
+                                    <ul className="data-table-context-th">
+                                        {/*<li onClick={() => this.props.sortFunc(item.name)}>Sort</li>*/}
+                                        <li onClick={() => this.props.toggleColumn(item.index, false)}>Hide</li>
+                                    </ul> : null}
+                            </div>
                         </th> : null
                     ))}
                 </tr>

@@ -163,7 +163,7 @@ export function editProductOffer(id, inputs) {
 export function addProductOffer(inputs) {
     return {
         type: ADD_PRODUCT_OFFER,
-        payload: axios.post('/api/65f6b4/product-offers/', inputs)
+        payload: axios.post('/api/ea54g6/product-offers/', inputs)
     }
 }
 

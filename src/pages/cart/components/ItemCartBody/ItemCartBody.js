@@ -13,8 +13,8 @@ const ItemCartBody = ({cartItem, addPopup, removeProductFromCart, history}) => {
     <div className="item-cart">
       <div className="item-cart-body">
         <div className="item-cart-body-section">
-          <div>
-            <b>{productOffer.product.casIndexName}</b>
+          <div className="item-cart-body-section-name">
+            {productOffer.product.casIndexName}
           </div>
           <div>
             Merchant: {productOffer.merchant.email}
@@ -45,7 +45,7 @@ const ItemCartBody = ({cartItem, addPopup, removeProductFromCart, history}) => {
         </div>
       </div>
       <footer className="popup-footer">
-        <Button color="grey" onClick={() => removeProductFromCart(productOffer.id)}>Remove</Button>
+        <Button color="grey" onClick={() => removeProductFromCart(cartItem.id)}>Remove</Button>
         <Button 
           color="blue" 
           onClick={() => addPopup(<AddCart id={productOffer.id} isEdit

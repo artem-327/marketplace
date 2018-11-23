@@ -20,6 +20,7 @@ class AddCompany extends Component {
                         <input placeholder="Office name" onChange={(e)=>this.setState({text: e.target.value})} value={this.state.text}/>
                         <RemoteComboBox items={this.props.locations}
                              api={(text) => this.props.fetchLocation(text)}
+                             dataFetched={this.props.locationsFetched}
                              limit={5} placeholder="Location"
                              className="location-admin-add"
                              isFetching={this.props.isFetchingLocation}
