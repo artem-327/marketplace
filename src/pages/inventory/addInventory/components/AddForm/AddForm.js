@@ -53,10 +53,7 @@ export default class AddForm extends Component {
         const assayMin = parseInt(this.props.productOfferingForm.assayMin)
         const assayMax = parseInt(this.props.productOfferingForm.assayMax)
         const manufacturer = this.props.productOfferingForm.manufacturer.id
-
-        /*const amount = parseInt(this.props.mappingForm.packaging.amount)
-        const price = parseInt(this.props.mappingForm.pricing.price)
-        const cost = parseInt(this.props.mappingForm.pricing.cost)*/
+        const origin = this.props.productOfferingForm.origin.id
 
         let params = Object.assign({}, inputs, {
                 ...this.props.mappingForm,
@@ -67,18 +64,9 @@ export default class AddForm extends Component {
                 creationDate: creationDate,
                 expirationDate: expirationDate,
                 manufacturer: manufacturer,
+                origin: origin,
                 assayMin: assayMin,
                 assayMax: assayMax,
-
-                /*
-                packaging: {
-                    amount: amount
-                },
-                pricing: {
-                    price: price,
-                    cost: cost
-                }*/
-
         });
         this.props.addProductOffer(params).then(() => {
             this.addLot(lots, inputs, ++index);
@@ -116,7 +104,6 @@ export default class AddForm extends Component {
         this.props.editProductOffer(this.props.productOffer.id, params).then(()=>{
             this.props.history.push("/inventory/my-inventory");
         });
-        console.log(this.props.productOffer.expirationDate)
     }
 
     render() {
