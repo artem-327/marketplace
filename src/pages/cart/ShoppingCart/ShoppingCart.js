@@ -35,7 +35,7 @@ class ShoppingCart extends Component {
           <tr><td>Subtotal</td><td>${totalPrice}</td></tr>
           <tr><td>Estimated Shipping</td><td></td></tr>{/* TODO: change the fake price */}
           <tr><td>Estimated Tax</td><td></td></tr>{/* TODO: change the fake price */}
-          <tr><td><b>Total</b></td><td>${totalPrice}</td></tr>
+          <tr className="total"><td>Total</td><td>${totalPrice}</td></tr>
         </tbody>
       </table>
     )
@@ -63,7 +63,7 @@ class ShoppingCart extends Component {
           <div className="submenu">
               <div className="link">
                   <NavLink to={'/inventory/all-inventory'}>
-                      <i className="fas fa-angle-left"></i>
+                      <i className="arrow-left"></i>
                       <b>Back to Product/Purchase info</b>
                   </NavLink>
               </div>
@@ -71,16 +71,16 @@ class ShoppingCart extends Component {
       </div>
       <div className="shopping-cart">
           <div className="shopping-cart-body">
-          <div className="shopping-cart-items">
-          <header><h1>{headerTitle}</h1></header>
-            {itemContent}
-          </div>
-          <div>
-            <SummaryTable title="Summary" hasButton={itemsNumber ? true : false} handleContinue={this.handleContinue}>
-              {this.renderSummary()}
-            </SummaryTable>
-            <Button size="large" color="light-blue"onClick={this.keepShopping}>Keep Shopping</Button>
-          </div>
+              <div className="shopping-cart-items">
+              <header><h2>{headerTitle}</h2></header>
+                {itemContent}
+              </div>
+              <div className="shopping-cart-summary">
+                <SummaryTable title="Summary" hasButton={itemsNumber ? true : false} handleContinue={this.handleContinue}>
+                  {this.renderSummary()}
+                </SummaryTable>
+                <Button size="large" color="light-blue"onClick={this.keepShopping}>Keep Shopping</Button>
+              </div>
           </div>
         </div>
     </div>

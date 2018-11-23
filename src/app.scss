@@ -44,6 +44,12 @@ $app-font-family: 'AvenirLTPro-Roman', sans-serif;
   background-color: #f1f1f1;
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.075);
 
+  &:after {
+    content: "";
+    clear: both;
+    display: block;
+  }
+
   h1.inv-header {
     float: none;
     display: inline-block;
@@ -196,9 +202,10 @@ position: absolute;
   background-color: #289ada;
   border: none;
   width: 130px;
-  height: 40px;
+  height: 42px;
   border-radius: 4px;
-  font-size: 1.2em;
+  font-size: 1.25em;
+  font-weight: 500;
   &.green{
     background-color: #4cd136;
   }
@@ -377,6 +384,19 @@ input {
       display: inline-block;
       color: white;
     }
+  }
+}
+
+i {
+  &.arrow-left {
+    transform: rotate(-45deg);
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    margin-right: 5px;
+    border-width: 2px 0 0 2px;
+    border-style: solid;
+    border-color: #000;
   }
 }
 
