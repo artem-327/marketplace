@@ -35,6 +35,7 @@ import operatorsSaga from "./pages/administration/operators/saga/operators";
 import cartSaga from "./pages/cart/saga/cart";
 import locationsSaga from "./saga/locations";
 import broadcastSaga from "./saga/broadcast";
+import productOffersSaga from "./saga/productOffers";
 
 const reducer = combineReducers({
     identity,
@@ -99,3 +100,4 @@ sagaMiddleware.run(merchantsSaga);
 sagaMiddleware.run(cartSaga);
 sagaMiddleware.run(locationsSaga);
 sagaMiddleware.run(broadcastSaga);
+sagaMiddleware.run(productOffersSaga);

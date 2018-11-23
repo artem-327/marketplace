@@ -268,7 +268,10 @@ export default class Location extends Component {
                     <div className='group-item-wr'>
                         <label>State</label>
                         <Dropdown opns={this.props.locations.map((item)=>{
-                           return ({id: item.province.id, name: item.province.name})
+                           const options = item.province 
+                            ? {id: item.province.id, name: item.province.name}
+                            : {id: item.country.id, name: item.country.name}
+                           return (options)
                             })}
                                   currentValue={this.getCurrentItemById(this.state.state)}
                                   onChange={(value) => {

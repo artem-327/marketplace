@@ -5,6 +5,7 @@ import './myInventory.css';
 import Spinner from "../../../components/Spinner/Spinner";
 import FilterTag from "../../../components/Filter/components/FilterTag";
 import {getSelectedDataTable} from "../../../utils/functions";
+import SubMenu from '../../../components/SubMenu';
 
 const GROUP_BY_ALL_COMPANIES = 1;
 const GROUP_BY_REGIONS = 2;
@@ -84,9 +85,11 @@ class MyInventory extends Component {
         let content = this.props.isFetching ? <Spinner/> :
             <ProductOffers
                 productOffers={this.props.productOffers}
+                fetchMyProductOffers={this.props.fetchMyProductOffers}
                 submitRules={this.props.sendRules}
                 addPopup={this.props.addPopup}
                 removePopup={this.props.removePopup}
+                removeProductOffer={this.props.removeProductOffer}
                 getProductOffers={this.props.fetchMyProductOffers}
                 targetGroups={this.state.targetGroups}
                 setFilter={(type) => this.setFilter(type)}
@@ -97,9 +100,12 @@ class MyInventory extends Component {
                 broadcastActive={this.state.brActive}/>;
         return (
             <div className='my-inventory'>
-                <h1 className='header inv-header'>MY INVENTORY</h1>
-                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}}/>
-                <h3 className='header small'>{getSelectedDataTable(this.props.productOffersTable)} product offerings selected</h3>
+                <div className='header-top'>
+                    <h1 className='header inv-header'>MY INVENTORY</h1>
+                    <SubMenu/>
+                    <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}}/>
+                    <h3 className='header small'>{getSelectedDataTable(this.props.productOffersTable)} product offerings selected</h3>
+                </div>
                 <Filter chemicalName productAgeFilter date assay quantity price condition form filterFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}} />
                 {content}
             </div>

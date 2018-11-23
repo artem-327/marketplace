@@ -11,7 +11,7 @@ const Shipping = ({deliveryAddresses, dispatch, getAddress, selectedAddress, tog
   })
   return (
     <div className="shopping-cart-items">
-      <header><h1>1. Shipping<span className="headerAddtext" onClick={toggleShippingEdit}>edit</span></h1></header>
+      <header><h2>1. Shipping<span className="headerAddtext" onClick={toggleShippingEdit}>Edit</span></h2></header>
       <div className="purchase-order-section">
         <div className="group-item-wr">
           <DropdownRedux
@@ -24,7 +24,7 @@ const Shipping = ({deliveryAddresses, dispatch, getAddress, selectedAddress, tog
           />
         </div>
         {!!Object.keys(selectedAddress).length && <div className="text-section">
-          <div><b>Shipping address</b></div>
+          <div className="subtitle">Shipping address</div>
           <div>{selectedAddress["first name"]} {selectedAddress["last name"]}</div>
           <div>{selectedAddress.address.streetAddress}</div>
           <div>{selectedAddress.address.city}, {selectedAddress.address.province.name}, {selectedAddress.address.zip.zip}</div>

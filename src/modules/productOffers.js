@@ -1,5 +1,10 @@
 import axios from 'axios';
 import {transformRequestOptions, filterByUniqueProperty} from "../utils/functions";
+import {
+    PRODUCTOFFER_REMOVE_REQUESTED,
+    PRODUCTOFFER_REMOVE_FAILED,
+    PRODUCTOFFER_REMOVE_SUCCEEDED,
+} from "../constants/productOffers";
 
 const GET_PRODUCT_OFFERS_MY = 'GET_PRODUCT_OFFERS_MY';
 const GET_PRODUCT_OFFERS_MY_FULFILLED = 'GET_PRODUCT_OFFERS_MY_FULFILLED';
@@ -163,7 +168,7 @@ export function editProductOffer(id, inputs) {
 export function addProductOffer(inputs) {
     return {
         type: ADD_PRODUCT_OFFER,
-        payload: axios.post('/api/65f6b4/product-offers/', inputs)
+        payload: axios.post('/api/ea54g6/product-offers/', inputs)
     }
 }
 
@@ -194,4 +199,6 @@ export function saveIncrementalPricing(from, to, price, quantityDiscount = 1){
     }
 }
 
-
+export function removeProductOffer(id, onSuccess) {
+    return {type: PRODUCTOFFER_REMOVE_REQUESTED, payload: {id, onSuccess}} //TODO: refactor all product offers to saga, then remove onSuccess
+}
