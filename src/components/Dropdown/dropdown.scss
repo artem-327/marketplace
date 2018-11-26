@@ -2,10 +2,11 @@
   position: relative;
   .dropdown-trigger {
     width: 100%;
-    font-size: 1rem;
     border-radius: 4px;
     border: 1px solid #B0B0B0;
-    padding: 7px;
+    padding: 12px 13px;
+    font-size: 0.875rem;
+    line-height: 1.1429;
     color: #a8a8a8;
     &.selected {
       color: #33373e;
@@ -14,7 +15,7 @@
       position: relative;
       float: right;
       transform: rotate(180deg);
-      margin: 8px 4px 0 0;
+      margin: 3px 4px 0 0;
 
       width: 13px;
     }
@@ -59,7 +60,9 @@
     li {
       width: 100%;
       margin: 0;
-      padding: 7px;
+      padding: 7px 21px 6px;
+      font-size: 0.875rem;
+      line-height: 1.1429;
       color: #33373e;
       &:hover, &:focus {
         background-color: #289ada;
