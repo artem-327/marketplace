@@ -103,3 +103,4 @@ yarn-error.log*
 /src/styles/breakpoints.css
 /src/styles/colors.css
 /src/styles/main.css
+/src/styles/fonts.css

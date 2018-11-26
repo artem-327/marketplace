@@ -842,7 +842,7 @@ class AddBroadcast extends Component {
             </div>
 
             <div className="group-item-wr search">
-              <i className="fa fa-search" />
+              <i className="search" />
               <InputControlled
                 value={this.state.filterInput}
                 handleChange={e => this.onChangeHandler(e)}
