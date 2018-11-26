@@ -29,7 +29,11 @@ export default class Pricing extends Component {
     }
 
     componentDidMount(){
+        
         if(this.props.edit){
+
+            this.setState({margin: (this.props.productOffer.pricing.price - this.props.productOffer.pricing.cost) / this.props.productOffer.pricing.cost * 100})
+            
             if(this.props.productOffer.pricing.tiers.length !== 0){
                 this.props.dispatch(actions.change('forms.addProductOffer.incrementalSelected', true));
                 this.setState({
@@ -55,6 +59,10 @@ export default class Pricing extends Component {
         if(this.props.form.pricing.cost !== ''){ this.setState({costFlag:true}); }
         if(this.props.form.pricing.price !== ''){ this.setState({priceFlag:true}); }
         if(this.state.margin !== ''){ this.setState({marginFlag:true}); }
+    }
+
+    calculateMargin() {
+        this.setState({margin: 20})
     }
 
     calculatePricing(e){
@@ -84,7 +92,18 @@ export default class Pricing extends Component {
                         this.setState({margin: ''})
                     } else {
                         this.setState({margin: newmargin})
-                    }
+                    } 
+                    break;
+                }
+
+                case 'margin': {
+
+                    const newmargin = e.target.value;
+                    this.setState({margin: newmargin});
+
+                    const newprice = Number((cost + (cost * newmargin / 100)).toFixed(3))
+                    this.handlePriceChange('forms.addProductOffer.pricing.price', newprice);
+
                     break;
                 }
 
@@ -203,6 +222,7 @@ export default class Pricing extends Component {
       })
     }
     render() {
+
       const {
         mappingForm: {packaging},
         productOfferingForm: {totalPackages = 50},
@@ -213,7 +233,7 @@ export default class Pricing extends Component {
       const measurement = packaging ? packaging.capacity : null
       const price = pricing ? pricing.price : null
 
-      console.log(this.props.margin)
+      
         return (
             <div>
 
@@ -271,27 +291,30 @@ export default class Pricing extends Component {
                                       onBlur={()=>this.checkFilledInputs()}
                                       placeholder="$"/>
                     </div>
+                    
+
                     <div className='group-item-wr'>
-                        <div className='gross-margin'>
-                            <h6>Gross Margin %</h6>
-                            <div>
-                                <h6>
-                                    <input
-                                        className= {classNames({inRed: this.state.margin < 0},  'pricing-gross-margin')}
-                                        name='margin' type='text'
-                                        //onChange={(e)=>this.calculatePricing(e)}
-                                        //onBlur={()=>this.checkFilledInputs()}
-                                        value={this.state.margin}
-                                        placeholder='%'
-                                    />
-                                </h6>
-                            </div>
-                        </div>
-                        <div className='group-item-wr'>
-                            <h6>Total Sales Price</h6>
-                            <h6>${(/* measurement * */totalPackages * price).formatMoney(3)}</h6>
-                        </div>
+                    <label htmlFor=".costPr">Gross Margin %</label>
+                    <Control.text model=".pricing.margin"
+                                      id=".marginPr"
+                                      className= {classNames({inRed: this.state.margin < 0},  'pricing-gross-margin')}
+                                      validators={{
+                                          min: (val) => min(val, 0),
+                                          isNumber,
+                                      }}
+                                      value={this.state.margin}
+                                      type='number'
+                                      name='margin'
+                                      onChange={(e)=>this.calculatePricing(e)}
+                                      onBlur={()=>this.checkFilledInputs()}
+                                      placeholder="%"/>
                     </div>
+                        
+                        <div className='group-item-wr'>
+                            <h6 className="total">Total Sales Price</h6>
+                            <h6 className="total">${(/* measurement * */totalPackages * price).formatMoney(3)}</h6>
+                        </div>
+                    
 
                     <div>
                       <div className='group-item-wr'>
