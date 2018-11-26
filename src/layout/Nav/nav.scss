@@ -20,13 +20,13 @@ $nav-links-color: #b0b2b4;
     }
 
     .logo{
-      padding-left: 40px;
+      padding-left: 29px;
       padding-right: 0px;
       vertical-align: top;
-      margin-top: 10px;
+      margin-top: 13px;
       img{
-        width: 50%;
-        height: 50%;
+        width: 64.3%;
+        height: auto;
       }
     }
     
@@ -59,7 +59,7 @@ $nav-links-color: #b0b2b4;
       i {
         display: block;
         font-size: 33px;
-        margin: 0 auto 10px auto;
+        margin: 1px auto 3px auto;
       }
       &:hover{
         background-color: lighten($nav-background-color, 5%);
@@ -67,9 +67,10 @@ $nav-links-color: #b0b2b4;
     }
     .dropdown-nav{
       transition: all .2s ease;
+      margin-right: 10px;
       color: $nav-links-color;
       font-weight: lighter;
-      font-size: .9em;
+      font-size: .875em;
       height: 50px;
       vertical-align: top;
       text-align: center;
@@ -82,8 +83,9 @@ $nav-links-color: #b0b2b4;
       }
 
       .dropdown-link-center{
-        padding: 14px 15px 10px 15px;
         display: inline-block;
+        padding: 17px 16px 17px 16px;
+        line-height: 1.1428;
 
         img {
           height: 65%;
@@ -93,7 +95,15 @@ $nav-links-color: #b0b2b4;
         .dropdown-nav-icon{
           display: inline-block;
           font-size: .8rem;
-          margin-left: 15px;
+          margin-left: 8px;
+        }
+      }
+
+      &.parent {
+        margin-right: 16px;
+
+        .dropdown-link-center {
+          padding-right: 10px;
         }
       }
 
@@ -169,6 +179,10 @@ $nav-links-color: #b0b2b4;
       &.active{
         background-color: #2b2e33;
         color: #f3f4f4;
+
+        i.down:before {
+          border-color: #f3f4f4;
+        }
       }
       .link-center{
         position: absolute;
@@ -184,7 +198,23 @@ $nav-links-color: #b0b2b4;
       i {
         display: block;
         font-size: 33px;
-        margin: 0 auto 10px auto;
+        margin: 0 auto 4px auto;
+
+        &.down {
+          width: 5px;
+          height: 5px;
+
+          &:before {
+            content: "";
+            transform: rotate(45deg);
+            display: block;
+            width: 5px;
+            height: 5px;
+            border-width: 0 1px 1px 0;
+            border-style: solid;
+            border-color: $nav-links-color;
+          }
+        }
       }
       &:hover{
         cursor: pointer;

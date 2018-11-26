@@ -81,8 +81,8 @@ class Nav extends Component {
         const dropdown = <div className="dropdown-nav-inside">
             {links.map((link, index) => (<NavLink key={index} to={link.url} className='dropdown-nav-item' activeClassName='active'>{link.name}</NavLink>
             ))}</div>;
-        return <div className={"dropdown-nav " + activeClass} onClick={()=>this.openDropdown(id)}>
-            <span className='dropdown-link-center'>{name} <i className="icon fas fa-angle-down dropdown-nav-icon"/></span>
+        return <div className={"dropdown-nav parent " + activeClass} onClick={()=>this.openDropdown(id)}>
+            <span className='dropdown-link-center'>{name} <i className="icon down dropdown-nav-icon"/></span>
             {this.state.dropdown[id] ? dropdown : null}
         </div>
     }
