@@ -185,49 +185,49 @@ export default function reducer(state = initialState, action) {
 export function searchProducts(search) {
     return {
         type: SEARCH_PRODUCT,
-        payload: axios.get('/api/726euu/products/', {params:{search}}).then(response => response.data)
+        payload: axios.get('/prodex/api/products', {params:{search}}).then(response => response.data)
     }
 }
 
 export function mapProducts(map) {
     return {
         type: MAP_PRODUCT,
-        payload: axios.get('/api/7e2kk2/product-templates/', {params:{map}}).then(response => response.data)
+        payload: axios.get('/prodex/api/product-templates', {params:{map}}).then(response => response.data)
     }
 }
 
 export function fetchManufacturer(filter = "") {
     return {
         type: FETCH_MANUFACTURER,
-        payload: axios.get('/api/pu3wz7/manufacturers/', {params: {search: filter}}).then(result => result.data)
+        payload: axios.get('/prodex/api/manufacturers', {params: {search: filter}}).then(result => result.data)
     }
 }
 
 export function fetchProductForms(filter = {}) {
     return {
         type: FETCH_PRODUCT_FORMS,
-        payload: axios.get('/api/424dvx/product-forms/', {params: {...filter}}).then(result => result.data.data.productForms)
+        payload: axios.get('/prodex/api/product-forms', {params: {...filter}}).then(result => result.data.productForms)
     }
 }
 
 export function fetchProductConditions(filter = {}) {
     return {
         type: FETCH_PRODUCT_CONDITIONS,
-        payload: axios.get('/api/1tgusy/product-conditions/', {params: {...filter}}).then(result => result.data.data.productConditions)
+        payload: axios.get('/prodex/api/product-conditions', {params: {...filter}}).then(result => result.data.productConditions)
     }
 }
 
 export function fetchProductGrade(filter = {}) {
     return {
         type: FETCH_PRODUCT_GRADE,
-        payload: axios.get('/api/f33eq0/product-grades/', {params: {...filter}}).then(result => result.data.data.productGrades)
+        payload: axios.get('/prodex/api/product-grades', {params: {...filter}}).then(result => result.data.productGrades)
     }
 }
 
 export function fetchOrigin(filter = "") {
     return {
         type: FETCH_ORIGIN,
-        payload: axios.get('/api/la9pxl/origins/', {params: {search: filter}}).then(result => result.data)
+        payload: axios.get('/prodex/api/origins', {params: {search: filter}}).then(result => result.data)
     }
 }
 
@@ -266,16 +266,16 @@ export function fetchProductAge() {
 export function fetchRecentAddedProducts(limit = 3) {
     return {
         type: FETCH_RECEANT_ADDED_PRODUCTS,
-        payload: axios.get('/api/726euu/products/', {params:{
+        payload: axios.get('/prodex/api/products', {params:{
             srtb: 'updatedAt', lmt: limit
-        }}).then(result => result.data.data.products)
+        }}).then(result => result.data.products)
     }
 }
 
 export function saveMapping(values) {
     return {
         type: SAVE_MAPPING,
-        payload: axios.post("/api/h5g8qn/product-templates/", values)
+        payload: axios.post("/prodex/api/product-templates", values)
     }
 }
 
@@ -311,6 +311,6 @@ export function fetchAlternativeNames(id){
 export function fetchPackagingTypes(filter = {}){
     return {
         type: FETCH_PACKAGING_TYPES,
-        payload: axios.get('/api/e49sy3/containers/', {params: {...filter}}).then(result => result.data.data.containers)
+        payload: axios.get('/prodex/api/containers', {params: {...filter}}).then(result => result.data.containers)
     }
 }

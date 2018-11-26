@@ -43,13 +43,13 @@ export default function reducer(state = initialState, action) {
 export function validatePackageType(name, measureType, capacity, unit) {
     return {
         type: VALIDATE_PACKAGE_TYPE,
-        payload: axios.post('/api/v1/package-types/', {name, measureType, capacity, unit}).then(response => response.data.data.packageType.id)
+        payload: axios.post('/prodex/api/package-types/', {name, measureType, capacity, unit}).then(response => response.data.packageType.id)
     }
 }
 
 export function fetchAll() {
     return {
         type: GET_PACKAGE_TYPES,
-        payload: axios.get('/api/v1/package-types/').then(response => response.data.data.packageTypes)
+        payload: axios.get('/prodex/api/package-types/').then(response => response.data.packageTypes)
     }
 }
