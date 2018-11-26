@@ -13,6 +13,10 @@ $nav-links-color: #b0b2b4;
       //display: inline-block;
       float: right;
       margin-right: 12px;
+
+      .dropdown-nav .dropdown-link-center {
+        padding: 8px 9px;
+      }
     }
     .logo, .nav-link, .dropdown-nav{
       //display: inline-block;
@@ -54,7 +58,7 @@ $nav-links-color: #b0b2b4;
       img{
         display: block;
         height: 33px;
-        margin: 0 auto 10px auto;
+        margin: 5px auto;
       }
       i {
         display: block;
@@ -88,8 +92,8 @@ $nav-links-color: #b0b2b4;
         line-height: 1.1428;
 
         img {
-          height: 65%;
-          width: 65%;
+          width: 80%;
+          height: auto;
         }
 
         .dropdown-nav-icon{
@@ -193,7 +197,7 @@ $nav-links-color: #b0b2b4;
       img{
         display: block;
         height: 33px;
-        margin: 0 auto 10px auto;
+        margin: 5px auto;
       }
       i {
         display: block;
