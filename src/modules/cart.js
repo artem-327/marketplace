@@ -105,7 +105,7 @@ export function getProductOffer(id) {
     }
 }
 
-export function fetchCart(){
+export function getCart(){
     return {type: CART_FETCH_REQUESTED}
 }
 
@@ -117,7 +117,7 @@ export function fetchPayments(){
     return {type: PAYMENTS_FETCH_REQUESTED}
 }
 
-export function removeProductFromCart(id) {
+export function deleteCart(id) {
     return {type: PRODUCTFROMCART_REMOVE_REQUESTED, payload: {id}}
 }
 

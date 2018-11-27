@@ -22,9 +22,9 @@ function* getProductOffer(action) {
     }
 }
 
-function* fetchCart() {
+function* getCart() {
     try {
-        const cart = yield call(Api.fetchCart);
+        const cart = yield call(Api.getCart);
         yield put({type: CART_FETCH_SUCCEEDED, payload: cart});
     } catch (e) {
         yield put({type: CART_FETCH_FAILED, message: e.message});
@@ -49,11 +49,11 @@ function* fetchPayments() {
     }
 }
 
-function* removeProductFromCart(action) {
+function* deleteCart(action) {
     try {
-        yield call(Api.removeProductFromCart, action.payload.id);
+        yield call(Api.deleteCart, action.payload.id);
         yield put({type: PRODUCTFROMCART_REMOVE_SUCCEEDED});
-        const cart = yield call(Api.fetchCart);
+        const cart = yield call(Api.getCart);
         yield put({type: CART_FETCH_SUCCEEDED, payload: cart});
     } catch (e) {
         yield put({type: PRODUCTFROMCART_REMOVE_FAILED, message: e.message});
@@ -107,10 +107,10 @@ function* editDeliveryAddress(action) {
 
 function* cartSaga() {
     yield takeEvery(OFFER_FETCH_REQUESTED, getProductOffer);
-    yield takeEvery(CART_FETCH_REQUESTED, fetchCart);
+    yield takeEvery(CART_FETCH_REQUESTED, getCart);
     yield takeEvery(DELIVERYADDRESSES_FETCH_REQUESTED, fetchDeliveryAddresses);
     yield takeEvery(PAYMENTS_FETCH_REQUESTED, fetchPayments);
-    yield takeEvery(PRODUCTFROMCART_REMOVE_REQUESTED, removeProductFromCart);
+    yield takeEvery(PRODUCTFROMCART_REMOVE_REQUESTED, deleteCart);
     yield takeEvery(CARTITEM_CREATE_REQUESTED, createNewOrder);
     yield takeEvery(DELIVERYADDRESS_CREATE_REQUESTED, createDeliveryAddress);
     yield takeEvery(ORDERDETAIL_FETCH_REQUESTED, getOrderDetail);
