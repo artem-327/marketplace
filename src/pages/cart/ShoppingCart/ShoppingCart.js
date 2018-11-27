@@ -10,7 +10,7 @@ import {NavLink} from 'react-router-dom'
 
 class ShoppingCart extends Component {
   componentDidMount(){
-    this.props.fetchCart()
+    this.props.getCart()
   }
 
   handleContinueShopping = () => {
@@ -42,7 +42,7 @@ class ShoppingCart extends Component {
   }
 
   render() {
-    const {cart, removeProductFromCart, history, addPopup, cartIsFetching} = this.props;
+    const {cart, deleteCart, history, addPopup, cartIsFetching} = this.props;
     if (cartIsFetching) return <Spinner />
     const itemContent = cart.orders && cart.orders.map(cartItem => {
     return (
@@ -51,7 +51,7 @@ class ShoppingCart extends Component {
         history={history}
         key={cartItem.id}
         cartItem={cartItem}
-        removeProductFromCart={removeProductFromCart}
+        deleteCart={deleteCart}
         />)
   });
     const itemsNumber = cart.orders ? cart.orders.length : 0;
@@ -95,5 +95,5 @@ ShoppingCart.propTypes = {
   cartItem: PropTypes.array,
   history: PropTypes.object,
   removePopup: PropTypes.func,
-  removeProductFromCart: PropTypes.func,
+  deleteCart: PropTypes.func,
 }

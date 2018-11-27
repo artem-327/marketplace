@@ -21,7 +21,7 @@ class PurchaseOrder extends Component {
   }
 
   componentDidMount(){
-    this.props.fetchCart()
+    this.props.getCart()
     this.props.fetchDeliveryAddresses()
     this.props.fetchPayments()
   }
@@ -80,13 +80,13 @@ class PurchaseOrder extends Component {
   }
 
   render() {
-    const {cart, deliveryAddresses, payments, dispatch, removeProductFromCart, cartIsFetching, createDeliveryAddress, editDeliveryAddress} = this.props;
+    const {cart, deliveryAddresses, payments, dispatch, deleteCart, cartIsFetching, createDeliveryAddress, editDeliveryAddress} = this.props;
     if (cartIsFetching) return <Spinner />
     let index = 0;
     const itemContent = cart.orders.map(cartItem => {
       return (
       <CartItemSummary
-        removeProductFromCart={removeProductFromCart}
+        deleteCart={deleteCart}
         cartItem={cartItem}
         key={cartItem.productOffer.id}
         itemIndex={++index}
@@ -165,8 +165,8 @@ PurchaseOrder.propTypes = {
   cartItem: PropTypes.object,
   deliveryAddresses: PropTypes.array,
   dispatch: PropTypes.func,
-  fetchCart: PropTypes.func,
+  getCart: PropTypes.func,
   fetchDeliveryAddresses: PropTypes.func,
-  removeProductFromCart: PropTypes.func,
+  deleteCart: PropTypes.func,
   selectedAddressId: PropTypes.number,
 }
