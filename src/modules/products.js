@@ -189,10 +189,10 @@ export function searchProducts(search) {
     }
 }
 
-export function mapProducts(map) {
+export function mapProducts(search) {
     return {
         type: MAP_PRODUCT,
-        payload: axios.get('/prodex/api/product-templates', {params:{map}}).then(response => response.data)
+        payload: axios.get('/prodex/api/product-templates', {params:{search}}).then(response => response.data)
     }
 }
 
@@ -206,21 +206,21 @@ export function fetchManufacturer(filter = "") {
 export function fetchProductForms(filter = {}) {
     return {
         type: FETCH_PRODUCT_FORMS,
-        payload: axios.get('/prodex/api/product-forms', {params: {...filter}}).then(result => result.data.productForms)
+        payload: axios.get('/prodex/api/product-forms', {params: {...filter}}).then(result => result.data)
     }
 }
 
 export function fetchProductConditions(filter = {}) {
     return {
         type: FETCH_PRODUCT_CONDITIONS,
-        payload: axios.get('/prodex/api/product-conditions', {params: {...filter}}).then(result => result.data.productConditions)
+        payload: axios.get('/prodex/api/product-conditions', {params: {...filter}}).then(result => result.data)
     }
 }
 
 export function fetchProductGrade(filter = {}) {
     return {
         type: FETCH_PRODUCT_GRADE,
-        payload: axios.get('/prodex/api/product-grades', {params: {...filter}}).then(result => result.data.productGrades)
+        payload: axios.get('/prodex/api/product-grades', {params: {...filter}}).then(result => result.data)
     }
 }
 
@@ -311,6 +311,6 @@ export function fetchAlternativeNames(id){
 export function fetchPackagingTypes(filter = {}){
     return {
         type: FETCH_PACKAGING_TYPES,
-        payload: axios.get('/prodex/api/containers', {params: {...filter}}).then(result => result.data.containers)
+        payload: axios.get('/prodex/api/containers', {params: {...filter}}).then(result => result.data)
     }
 }

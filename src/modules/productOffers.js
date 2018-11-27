@@ -175,7 +175,7 @@ export function addProductOffer(inputs) {
 export function getUnitOfMeasurement() {
     return {
         type: GET_UNIT_OF_MEASUREMENT,
-        payload: axios.get("/prodex/api/units").then(result => result.data.units)
+        payload: axios.get("/prodex/api/units").then(result => result.data)
     }
 }
 

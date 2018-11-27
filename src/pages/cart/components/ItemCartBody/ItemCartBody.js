@@ -9,6 +9,7 @@ const ItemCartBody = ({cartItem, addPopup, deleteCart, history}) => {
   const {unit, capacity} = productOffer.packaging;
   const unitName = `${getUnit(unit.name)}${capacity > 1 && 's'}`;
   const location =`${productOffer.warehouse.address.city}, ${productOffer.warehouse.address.province.name}`;
+  debugger
   return (
     <div className="item-cart">
       <div className="item-cart-body">
@@ -48,7 +49,7 @@ const ItemCartBody = ({cartItem, addPopup, deleteCart, history}) => {
         <Button color="grey" onClick={() => deleteCart(cartItem.id)}>Remove</Button>
         <Button 
           color="blue" 
-          onClick={() => addPopup(<AddCart id={productOffer.id} isEdit
+          onClick={() => addPopup(<AddCart id={productOffer.id} orderId={cartItem.id} isEdit
           history={history}/>)} 
         >Edit</Button>
       </footer>
