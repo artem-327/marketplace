@@ -8,7 +8,6 @@ import DataTable from "../../../../components/DataTable";
 import Spinner from '../../../../components/Spinner/Spinner';
 class ProductOffers extends Component {
   componentDidMount(){
-    debugger
       new Promise(resolve => {
           this.props.fetchMerchant(this.props.identity.data.id, resolve)
       }).then(() => console.log("data fetched"))
