@@ -4,6 +4,7 @@ import ProductMapping from "./components/ProductMapping";
 import AddedLots from "./components/AddedLots/AddedLots";
 import SearchProducts from './components/SearchProducts';
 import AdditionalDocuments from "./components/AdditionalDocuments";
+import WarningLabel from "./components/WarningLabel";
 
 class Chemical extends Component {
     constructor(props) {
@@ -82,13 +83,15 @@ class Chemical extends Component {
         return (
             <div>
                 {!this.props.edit ?
+                    <React.Fragment>
+                    <WarningLabel isVisible={this.state.lots.length !== 0}/>
                 <SearchProducts selectedMapping={this.state.selectedProductMapping}
                                 selectedProduct={this.state.selectedProduct}
                                 isVisible={this.state.lots.length === 0}
                                 onSelectProductMapping={mapping => this.setProductMapping(mapping)}
                                 onSelect={product => this.setSelectedProduct(product)}
                                 {...this.props}
-                /> : null}
+                /></React.Fragment> : null }
                 <ProductMapping productID={this.state.productID} {...this.props} />
                 <ProductOffering addLot={(lots) => this.addLot(lots)} {...this.props} />
                 {!this.props.edit ?

@@ -12,7 +12,7 @@ export const initialState = {
     data: [],
     detail: {},
     office: {},
-    offices: {},
+    offices: [],
     isFetching: true,
 };
 
@@ -35,6 +35,7 @@ export default function reducer(state = initialState, action) {
             }
         }
         case COMPANIES_FETCH_SUCCEEDED: {
+            debugger
             return {
                 ...state,
                 data: action.payload,

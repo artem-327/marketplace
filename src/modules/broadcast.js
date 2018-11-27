@@ -1,6 +1,7 @@
 import {
   BROADCAST_FETCH_REQUESTED, 
-  BROADCAST_FETCH_SUCCEEDED
+  BROADCAST_FETCH_SUCCEEDED,
+  BROADCAST_POST_REQUESTED
 } from "../constants/broadcast";
 
 export const initialState = {
@@ -32,3 +33,8 @@ export default function reducer(state = initialState, action) {
 export function fetchBroadcast(id, resolve){
   return {type: BROADCAST_FETCH_REQUESTED, payload: {id}, resolve: resolve}
 }
+
+export function postBroadcast(id, brcRules){
+    return {type: BROADCAST_POST_REQUESTED, payload: {id, brcRules}}
+}
+  

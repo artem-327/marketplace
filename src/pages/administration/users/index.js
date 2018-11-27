@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux'
-import UsersNew from './UsersNew';
+import Users from './Users';
 import {fetchUsersNew, promoteToMerchant, promoteToOperator} from "../../../modules/users";
 import {fetchOffices} from "../../../modules/companies";
 
@@ -17,4 +17,4 @@ function mapDispatchToProps(dispatch){
     return bindActionCreators({fetchUsersNew, fetchOffices, promoteToMerchant, promoteToOperator}, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UsersNew);
+export default connect(mapStateToProps, mapDispatchToProps)(Users);

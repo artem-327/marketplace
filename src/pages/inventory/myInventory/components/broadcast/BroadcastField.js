@@ -22,9 +22,9 @@ const BroadcastField = ({
 }) => {
     return (
       <div className={`broadcast-field ${type} ${isClientList ? "client-list" : "price-list"}`}>
-        <div className={`field-name ${isFiltering || !hasChildren ? "" : "pointer"}`} name={type} id={id} onClick={e => handleExpanded(e)}>
-          {hasChildren && !isFiltering && !isExpanded && <i className="fas fa-angle-right" />}
-          {hasChildren && !isFiltering && isExpanded && <i className="fas fa-angle-down" />} 
+        <div className={`field-name ${isFiltering || !hasChildren || type ==="root" ? "" : "pointer"}`} name={type} id={id} onClick={e => handleExpanded(e)}>
+          {hasChildren && type !=="root" && !isFiltering && !isExpanded && <i className="fas fa-chevron-right" name={type} id={id} onClick={e => handleExpanded(e)}/>}
+          {hasChildren && type !=="root" && !isFiltering && isExpanded && <i className="fas fa-chevron-down" name={type} id={id} onClick={e => handleExpanded(e)}/>} 
           {name}
         </div>
         {isClientList 

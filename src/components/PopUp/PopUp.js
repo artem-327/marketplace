@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import './popup.css';
+import classNames from 'classnames';
 
 class PopUp extends Component {
     constructor(props) {
@@ -35,8 +36,9 @@ class PopUp extends Component {
 
     render() {
         let {isOpen, component} = this.state;
+        let specialClass = typeof component !== 'undefined' && typeof component.props.className !== 'undefined' ? component.props.className : null;
         return isOpen ?
-            <div className='popup-wr' onClick={(e) => {
+            <div className={classNames("popup-wr", specialClass)} onClick={(e) => {
                 this.closePopup(e)
             }}>
                 <div className='popup'>{component}</div>

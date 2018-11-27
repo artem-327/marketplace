@@ -20,6 +20,7 @@ class Rows extends Component {
             selectGroup={this.props.selectGroupFunc}
             tableType={this.props.tableType}
             addPopup={this.props.addPopup}
+            removePopup={this.props.removePopup}
           />
         );
       return this.props.data[item.index].rows.map((row, index2) => {

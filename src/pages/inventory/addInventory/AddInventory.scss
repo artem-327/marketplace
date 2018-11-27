@@ -187,9 +187,22 @@
       font-size: 1rem;
     }
   }
+
   h6{
-    margin: 25px 0 25px 10px;
+    margin-left: 10px;
+    margin-right: 0px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    &.total {
+      margin: 10px;
+    }
   }
+
+  .margin-fix {
+    margin-bottom: 0px;
+  }
+
 }
 .inventory-product{
   color: #B0B0B0;

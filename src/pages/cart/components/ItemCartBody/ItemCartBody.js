@@ -4,17 +4,18 @@ import Button from '../../../../components/Button/Button'
 import AddCart from "../AddCart"
 import {getUnit} from '../../../../utils/functions'
 
-const ItemCartBody = ({cartItem, addPopup, removeProductFromCart, history}) => {
+const ItemCartBody = ({cartItem, addPopup, deleteCart, history}) => {
   const {productOffer} = cartItem;
   const {unit, capacity} = productOffer.packaging;
   const unitName = `${getUnit(unit.name)}${capacity > 1 && 's'}`;
   const location =`${productOffer.warehouse.address.city}, ${productOffer.warehouse.address.province.name}`;
+  debugger
   return (
     <div className="item-cart">
       <div className="item-cart-body">
         <div className="item-cart-body-section">
-          <div>
-            <b>{productOffer.product.casIndexName}</b>
+          <div className="item-cart-body-section-name">
+            {productOffer.product.casIndexName}
           </div>
           <div>
             Merchant: {productOffer.merchant.email}
@@ -45,10 +46,10 @@ const ItemCartBody = ({cartItem, addPopup, removeProductFromCart, history}) => {
         </div>
       </div>
       <footer className="popup-footer">
-        <Button color="grey" onClick={() => removeProductFromCart(productOffer.id)}>Remove</Button>
+        <Button color="grey" onClick={() => deleteCart(cartItem.id)}>Remove</Button>
         <Button 
           color="blue" 
-          onClick={() => addPopup(<AddCart id={productOffer.id} isEdit
+          onClick={() => addPopup(<AddCart id={productOffer.id} orderId={cartItem.id} isEdit
           history={history}/>)} 
         >Edit</Button>
       </footer>
@@ -61,5 +62,5 @@ export default ItemCartBody;
 ItemCartBody.propTypes = {
   addPopup: PropTypes.func,
   cartItem: PropTypes.object,
-  removeProductFromCart: PropTypes.func
+  deleteCart: PropTypes.func
 }
