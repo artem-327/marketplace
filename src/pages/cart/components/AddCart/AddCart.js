@@ -18,7 +18,7 @@ class AddCart extends Component {
   }
 
   componentDidMount() {
-    if (this.props.isEdit) this.props.getOrderDetail(this.props.id)
+    if (this.props.isEdit) this.props.getOrderDetail(this.props.orderId)
     this.props.getProductOffer(this.props.id)
   }
 
@@ -27,7 +27,6 @@ class AddCart extends Component {
     this.props.removePopup();
   }
 
-  //TODO Fix cart to send edited data
   createOrder = async () => {
     const {removePopup, createNewOrder, offer, history} = this.props;
     const offerpayload = {

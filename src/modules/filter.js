@@ -111,21 +111,21 @@ export function resetFilterTags(){
 export function fetchSavedFilters(){
     return{
         type: GET_SAVE_FILTERS,
-        payload: axios.get("/api/dxu9lu/filters/").then(response => response.data.data.filters)
+        payload: axios.get("/api/filters").then(response => response.data.filters)
     }
 }
 
 export function deleteSaveFilter(id){
     return{
         type: DELETE_SAVE_FILTER,
-        payload: axios.delete(`/api/n7kwed/filters/${id}/`)
+        payload: axios.delete(`/prodex/api/filters/${id}`)
     }
 }
 
 export function saveSaveFilter(inputs){
     return{
         type: SAVE_SAVE_FILTER,
-        payload: axios.post("/api/5o07zb/filters/", inputs)
+        payload: axios.post("/api/filters", inputs)
     }
 }
 
