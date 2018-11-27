@@ -135,7 +135,7 @@ class RemoteComboBox extends Component {
         ref={this.comboRef}
       >
         <label>{this.props.label}</label>
-        <i className="fas fa-search combo-icon" />
+        <i className="search combo-icon" />
         <input
           value={fulltext}
           onChange={e => this.handleChange(e)}

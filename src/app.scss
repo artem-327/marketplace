@@ -226,9 +226,11 @@ position: absolute;
     height: 35px;
   }
   &.big {
-    font-size: 1.4em;
-    width: 160px;
-    height: 45px;
+    width: auto;
+    min-width: 160px;
+    height: 52px;
+    padding: 0 27px;
+    font-size: 1.25em;
   }
   &.disabled{
     background-color: #cfe6f3;
@@ -242,6 +244,7 @@ position: absolute;
   border-radius: 4px;
   border: 1px solid #B0B0B0;
   padding: 7px;
+  font-size: 0.875rem !important;
   &:hover, &:focus{
     border-color: #289ada;
     box-shadow: none;
@@ -290,7 +293,7 @@ input {
     font-size: 1rem;
     border-radius: 4px;
     border: 1px solid #B0B0B0;
-    padding: 7px;
+    padding: 12px 9px;
 
     &:hover, &:focus{
       border-color: #289ada;
@@ -441,6 +444,25 @@ i {
       width: 2px;
       height: 10px;
       background-color: #c6c6c6;
+    }
+
+    &.combo-icon {
+      width: 15px;
+      height: 15px;
+
+      &:before {
+        width: 12px;
+        height: 12px;
+        border-width: 1px;
+      }
+
+      &:after {
+        right: 2px;
+        transform-origin: 50% 50%;
+        transform: rotate(-45deg);
+        width: 1px;
+        height: 6px;
+      }
     }
   }
 

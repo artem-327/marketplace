@@ -65,7 +65,7 @@ const IncrementalPricing = (props) => {
                   />
                 </td>
                 <td>
-                  <div className={classnames({inRed:grossMargin < 0})}>{grossMargin}%</div>
+                    <div className={classnames({inRed:grossMargin < 0})}><input type="text" disabled={disabled} value={grossMargin}/></div>
                 </td>
                 <td>{minusButton}</td>
                 <td>{plusButton}</td>
@@ -75,7 +75,7 @@ const IncrementalPricing = (props) => {
 
     return (
       <div>
-        <h4>Tiered Pricing</h4>
+        <h4>TIERED PRICING</h4>
         <table className='incremental-pricing-table'>
           <thead>
             <tr>
@@ -83,7 +83,8 @@ const IncrementalPricing = (props) => {
               <th>Quantity To</th>
               <th>Price per lb</th>
               <th>Gross Margin %</th>
-              <th> </th>
+              <th className="btn-col"> </th>
+              <th className="btn-col"> </th>
             </tr>
           </thead>
           <tbody>

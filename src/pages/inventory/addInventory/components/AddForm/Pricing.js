@@ -217,19 +217,19 @@ export default class Pricing extends Component {
         return (
             <div>
 
-                <h6>SET PRICE & RULES</h6>
+                <h4>SET PRICE & RULES</h4>
                 <div>
-                    <Errors
-                        className="form-error"
-                        model=".pricing.price"
-                        show="touched"
-                        messages={{
-                            required: messages.required,
-                            isNumber: messages.isNumber,
-                            min: messages.min
-                        }}
-                    />
                     <div className='group-item-wr'>
+                        <Errors
+                            className="form-error"
+                            model=".pricing.price"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                                isNumber: messages.isNumber,
+                                min: messages.min
+                            }}
+                        />
                         <label htmlFor=".pricePr">Price pr (lb)</label>
                         <Control.text model=".pricing.price"
                                       id=".pricePr"
@@ -246,17 +246,17 @@ export default class Pricing extends Component {
                                       defaultValue={this.props.edit ? this.props.productOffer.pricing.price : null}
                         />
                     </div>
-                    <Errors
-                        className="form-error"
-                        model=".pricing.cost"
-                        show="touched"
-                        messages={{
-                            required: messages.required,
-                            isNumber: messages.isNumber,
-                            min: messages.min
-                        }}
-                    />
                     <div className='group-item-wr'>
+                        <Errors
+                            className="form-error"
+                            model=".pricing.cost"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                                isNumber: messages.isNumber,
+                                min: messages.min
+                            }}
+                        />
                         <label htmlFor=".costPr">Cost pr (lb)</label>
                         <Control.text model=".pricing.cost"
                                       id=".costPr"
@@ -273,23 +273,23 @@ export default class Pricing extends Component {
                     </div>
                     <div className='group-item-wr'>
                         <div className='gross-margin'>
-                            <h6>Gross Margin %</h6>
+                            <label>Gross Margin %</label>
                             <div>
-                                <h6>
-                                    <input
-                                        className= {classNames({inRed: this.state.margin < 0},  'pricing-gross-margin')}
-                                        name='margin' type='text'
-                                        //onChange={(e)=>this.calculatePricing(e)}
-                                        //onBlur={()=>this.checkFilledInputs()}
-                                        value={this.state.margin}
-                                        placeholder='%'
-                                    />
-                                </h6>
+                                <input
+                                    className= {classNames({inRed: this.state.margin < 0},  'pricing-gross-margin')}
+                                    name='margin' type='text'
+                                    //onChange={(e)=>this.calculatePricing(e)}
+                                    //onBlur={()=>this.checkFilledInputs()}
+                                    value={this.state.margin}
+                                    placeholder='%'
+                                />
                             </div>
                         </div>
-                        <div className='group-item-wr'>
-                            <h6>Total Sales Price</h6>
-                            <h6>${(/* measurement * */totalPackages * price).formatMoney(3)}</h6>
+                    </div>
+                    <div className='group-item-wr'>
+                        <div className='total'>
+                            <h5>Total Sales Price</h5>
+                            <output>${(/* measurement * */totalPackages * price).formatMoney(3)}</output>
                         </div>
                     </div>
 
@@ -317,7 +317,7 @@ export default class Pricing extends Component {
                                         type='number'
                                         min={'0'}/>
                       </div>
-                      <div className='group-item-wr'>
+                      <div className='group-item-wr inputs-align'>
                             <Control.checkbox 
                                 name='merchantVisibility'
                                 model='forms.addProductOffer.merchantVisibility'

@@ -19,7 +19,7 @@ class AddedLots extends Component {
         return (
         <div className='lots-container'>
                 <div className='lots-header'>
-                    ADDED LOTS
+                    <h3>ADDED LOTS</h3>
                 </div>
                 {this.renderLots()}
         </div>
