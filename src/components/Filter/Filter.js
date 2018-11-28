@@ -47,6 +47,7 @@ class Filter extends Component {
         this.props.fetchProductForms();
         this.props.fetchPackagingTypes();
         this.props.fetchWarehouseDistances();
+        this.props.fetchProductGrade();
     }
 
     deleteSaveFilter(id){
@@ -169,7 +170,7 @@ class Filter extends Component {
                                         header='Grade'
                                         isVisible={!!this.props.productGrade}
                                         split
-                                        data={this.props.productGrade}
+                                        data={this.props.filterData}
                                         isOpen={this.props.filterGroupStatus.productGrade}
                                         onOpen={(value)=>{this.props.toggleFilterGroup('productGrade', value)}}
                                         checkboxModel='pgrs'
