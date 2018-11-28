@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = {
-    fetchNewUsers: () => axios.get('/prodex/api/users').then(response => response.data.users),
+    //fetchNewUsers: () => axios.get('/prodex/api/users').then(response => response.data.users),
+    getUsers: () => axios.get('/prodex/api/users').then(response => response.data),
     promoteToMerchant: (payload) => axios.put('/prodex/api/users/' + payload.id, {...payload.user}),
     promoteToOperator: (payload) => axios.put('/prodex/api/users/' + payload.id, {...payload.user}),
     fetchOperators: () => axios.get('/prodex/api/operators').then(response => response.data.operators),

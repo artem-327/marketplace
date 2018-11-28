@@ -5,7 +5,7 @@ import DataTable from "../../../components/DataTable";
 
 class Users extends Component {
   componentDidMount() {
-    this.props.fetchUsersNew();
+    this.props.getUsers();
   }
 
   renderUsers() {

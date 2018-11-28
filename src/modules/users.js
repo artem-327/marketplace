@@ -1,13 +1,14 @@
 import {
     OPERATORS_FETCH_REQUESTED, OPERATORS_FETCH_SUCCEEDED,
     PROMOTE_TO_MERCHANT_REQUESTED, PROMOTE_TO_OPERATOR_REQUESTED, USERS_FETCH_NEW_REQUESTED,
-    USERS_FETCH_NEW_SUCCEEDED, OPERATOR_REMOVE_REQUESTED, OPERATOR_EDIT_REQUESTED
+    USERS_FETCH_NEW_SUCCEEDED, USERS_FETCH_SUCCEEDED, USERS_FETCH_REQUESTED, OPERATOR_REMOVE_REQUESTED, OPERATOR_EDIT_REQUESTED
 } from "../constants/users";
 
 export const initialState = {
     usersNew: [],
     operators: [],
     isFetching: true,
+    users: []
 };
 
 export default function reducer(state = initialState, action) {
@@ -18,12 +19,22 @@ export default function reducer(state = initialState, action) {
                 isFetching: true,
             }
         }
-        case USERS_FETCH_NEW_SUCCEEDED: {
+
+        case USERS_FETCH_REQUESTED: {
             return {
                 ...state,
-                usersNew: action.payload,
+                isFetching: true,
             }
         }
+
+        case USERS_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                users: action.payload,
+                isFetching: false
+            }
+        }
+
         case OPERATORS_FETCH_SUCCEEDED: {
             return {
                 ...state,
@@ -37,8 +48,8 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-export function fetchUsersNew(){
-    return {type: USERS_FETCH_NEW_REQUESTED}
+export function getUsers(){
+    return {type: USERS_FETCH_REQUESTED}
 }
 
 export function promoteToMerchant(id, user){
