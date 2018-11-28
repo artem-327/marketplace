@@ -6,16 +6,16 @@ import {
     PROMOTE_TO_MERCHANT_SUCCEEDED, PROMOTE_TO_OPERATOR_FAILED, PROMOTE_TO_OPERATOR_REQUESTED,
     PROMOTE_TO_OPERATOR_SUCCEEDED,
     USERS_FETCH_NEW_FAILED, USERS_FETCH_NEW_REQUESTED,
-    USERS_FETCH_NEW_SUCCEEDED
+    USERS_FETCH_REQUESTED, USERS_FETCH_SUCCEEDED, USERS_FETCH_FAILED
 } from "../../../../constants/users";
 import {OFFICES_FETCH_FAILED, OFFICES_FETCH_REQUESTED, OFFICES_FETCH_SUCCEEDED} from "../../../../constants/offices";
 
-function* fetchNewUsers() {
+function* getUsers() {
     try {
-        const users = yield call(Api.fetchNewUsers);
-        yield put({type: USERS_FETCH_NEW_SUCCEEDED, payload: users});
+        const users = yield call(Api.getUsers); //const users = yield call(Api.fetchNewUsers);
+        yield put({type: USERS_FETCH_SUCCEEDED, payload: users});
     } catch (e) {
-        yield put({type: USERS_FETCH_NEW_FAILED, message: e.message});
+        yield put({type: USERS_FETCH_FAILED, message: e.message});
     }
 }
 
@@ -49,7 +49,7 @@ function* promoteToOperator(action) {
 }
 
 function* usersSaga() {
-    yield takeEvery(USERS_FETCH_NEW_REQUESTED, fetchNewUsers);
+    yield takeEvery(USERS_FETCH_REQUESTED, getUsers);
     yield takeEvery(OFFICES_FETCH_REQUESTED, fetchOffices);
     yield takeEvery(PROMOTE_TO_OPERATOR_REQUESTED, promoteToOperator);
     yield takeEvery(PROMOTE_TO_MERCHANT_REQUESTED, promoteToMerchant);
