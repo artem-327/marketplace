@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from "prop-types";
 
-const CartItemSummary = ({cartItem,  removeProductFromCart, itemIndex}) => {
+const CartItemSummary = ({cartItem,  deleteCart, itemIndex}) => {
     const {productOffer} = cartItem;
     const location =`${productOffer.warehouse.address.city}, ${productOffer.warehouse.address.province.name}`;
     return (
       <div className="cart-item-summary">
         <table>
           <tbody>
-            <tr><td className="title">Item {itemIndex}</td><td className="action"><span className="headerAddtext" onClick={() => removeProductFromCart(productOffer.id)}>remove</span></td></tr>
+            <tr><td className="title">Item {itemIndex}</td><td className="action"><span className="headerAddtext" onClick={() => deleteCart(productOffer.id)}>remove</span></td></tr>
             <tr><td className="subtitle" colspan="2">{productOffer.product.casIndexName}</td></tr>
             <tr><td>Merchant</td><td>{productOffer.merchant.email}</td></tr>
             <tr><td>Location</td><td>{location}</td></tr>
@@ -26,5 +26,5 @@ export default CartItemSummary;
 
 CartItemSummary.propTypes = {
   cartItem: PropTypes.object,
-  removeProductFromCart: PropTypes.func
+  deleteCart: PropTypes.func
 }

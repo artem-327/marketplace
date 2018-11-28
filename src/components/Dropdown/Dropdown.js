@@ -26,7 +26,8 @@ class Dropdown extends Component {
     componentWillReceiveProps(nextProps){
         if(nextProps.redux){
             let cv = '';
-            for(let i = 0; i < nextProps.opns.length; i++){
+            const opnsLength = nextProps.opns ? nextProps.opns.length : 0;
+            for(let i = 0; i < opnsLength; i++){
                 if(nextProps.opns[i].id === nextProps.value){
                     cv = nextProps.opns[i].name;
                     break;
@@ -67,7 +68,8 @@ class Dropdown extends Component {
     render() {
         let {currentValue, isOpen} = this.state;
         let isSelected = false;
-        for (let i = 0; i < this.props.opns.length; i++) {
+        const opnsLength = this.props.opns ? this.props.opns.length : 0;
+        for (let i = 0; i < opnsLength; i++) {
             if (this.props.opns[i].id === this.props.value) {
                 isSelected = true;
                 break;

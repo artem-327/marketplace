@@ -3,7 +3,7 @@ import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerRedux";
 import './ProductOffering.css'
-import {required, messages, min, isNumber, maxPercent, bigger} from "../../../../../../utils/validation";
+import {required, messages, min, isNumber, maxPercent, smaller, bigger} from "../../../../../../utils/validation";
 import RemoteComboBoxRedux from "../../../../../../components/ComboBox/RemoteComboBoxRedux";
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";
 
@@ -177,13 +177,20 @@ export default class ProductOffering extends Component {
                                     required: messages.required,
                                     min: messages.min,
                                     isNumber: messages.isNumber,
-                                    maxPercent: messages.maxPercent
+                                    maxPercent: messages.maxPercent,
+                                    smaller: messages.smaller
                                 }}
                             />
                             <div className='group-item-wr'>
                                 <label htmlFor=".assayMin">Assay Min %</label>
                                 <Control.text model=".assayMin"
-                                              validators={{min: (val) => min(val, 0), isNumber, required, maxPercent}}
+                                              validators={{
+                                                  min: (val) => min(val, 0), 
+                                                  smaller: (val) => smaller(val, this.props.productOffering.assayMax),
+                                                  isNumber, 
+                                                  required, 
+                                                  maxPercent
+                                              }}
                                               type="number"
                                               id=".assayMin"
                                 />

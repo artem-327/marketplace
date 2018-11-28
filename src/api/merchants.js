@@ -1,10 +1,10 @@
 import axios from 'axios';
 
 const api = {
-    fetchMerchant: (id) => axios.get(`api/5u79ey/merchants/${id}/`).then(response => response.data.data.merchant),
-    fetchMerchants: () => axios.get(`api/9jgzas/merchants/`).then(response => response.data.data.merchants),
-    editMerchant: (merchant) => axios.put(`api/6ijfz8/merchants/${merchant.id}/`, {...merchant}),
-    removeMerchant: (id) => axios.delete(`api/hl2za5/merchants/${id}/`),
+    fetchMerchant: (id) => axios.get(`/prodex/api/merchants/${id}`).then(response => response.data.merchant),
+    fetchMerchants: () => axios.get(`/prodex/api/merchants`).then(response => response.data.merchants),
+    editMerchant: (merchant) => axios.put(`/prodex/api/merchants/${merchant.id}`, {...merchant}),
+    removeMerchant: (id) => axios.delete(`/prodex/api/merchants/${id}`),
 };
 
 export default api;
