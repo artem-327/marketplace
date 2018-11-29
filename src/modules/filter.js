@@ -19,6 +19,7 @@ export const initialState = {
         quantity: true,
         price: true,
         packaging: false,
+        productGrade: false,
         chemSearch: false,
         productAge: false,
         location: false,
@@ -111,7 +112,7 @@ export function resetFilterTags(){
 export function fetchSavedFilters(){
     return{
         type: GET_SAVE_FILTERS,
-        payload: axios.get("/api/filters").then(response => response.data.filters)
+        payload: axios.get("/prodex/api/filters").then(response => response.data)
     }
 }
 
@@ -125,7 +126,7 @@ export function deleteSaveFilter(id){
 export function saveSaveFilter(inputs){
     return{
         type: SAVE_SAVE_FILTER,
-        payload: axios.post("/api/filters", inputs)
+        payload: axios.post("/prodex/api/filters", inputs)
     }
 }
 
