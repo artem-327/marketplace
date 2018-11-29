@@ -98,7 +98,7 @@ class RemoteComboBox extends Component {
             </div>
           );
       } 
-      if(this.state.dataFetched === "SUCCESS" && this.state.items.length === 0) {
+      if(this.state.dataFetched === 200 && this.state.items.length === 0) {
         return (
             <div
               className={"combo-results"}
