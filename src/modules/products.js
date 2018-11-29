@@ -70,7 +70,7 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 isFetchingManufacturer: false,
-                manufacturer: action.payload.data.manufacturers,
+                manufacturer: action.payload,
                 manufacturerFetched: action.payload.status
             }
         }
@@ -98,7 +98,7 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 isFetchingOrigin: false,
-                origin: action.payload.data.origins,
+                origin: action.payload,
                 originFetched: action.payload.status,
             }
         }
@@ -131,7 +131,7 @@ export default function reducer(state = initialState, action) {
             return{
                 ...state,
                 isFetching: false,
-                data: action.payload.data.products,
+                data: action.payload,
                 productsFetched: action.payload.status
             }
         }
@@ -160,7 +160,7 @@ export default function reducer(state = initialState, action) {
             return{
                 ...state,
                 isMapFetching: false,
-                mappedData: action.payload.data.productTemplates,
+                mappedData: action.payload,
                 mappedDataFetched: action.payload.status
             }
         }
