@@ -1,11 +1,15 @@
 .administration-wrapper{
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 4fr;
 
   .administration-content {
-    flex: 4;
+    .data-table-wr {
+      position: relative;
+      top: 0;
+    }
   }
   .administration-menu {
-    flex: 1;
+    min-width: 200px;
     .adm-menu-item {
       cursor: pointer;
     }
