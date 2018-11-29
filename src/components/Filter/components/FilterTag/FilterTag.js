@@ -27,7 +27,7 @@ class FilterTag extends Component {
             case 'frm': return 'Form';
             case 'loc': return 'Location';
             case 'cndt': return 'Condition';
-            case 'pgrs': return 'Grade';
+            case 'grade': return 'Grade';
             default: return 'unknown';
         }
     }
@@ -105,7 +105,7 @@ class FilterTag extends Component {
                 this.pickFormName();
                 return this.formName.join(',');
             }
-            case 'pgrs':{
+            case 'grade':{
                 this.pickGradeName();
                 return this.gradeName.join(',');
             }
