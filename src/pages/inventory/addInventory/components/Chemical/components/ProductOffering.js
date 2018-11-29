@@ -191,6 +191,7 @@ export default class ProductOffering extends Component {
                                                   required, 
                                                   maxPercent
                                               }}
+                                              validateOn="change"
                                               type="number"
                                               id=".assayMin"
                                 />
@@ -217,10 +218,12 @@ export default class ProductOffering extends Component {
                                                   required,
                                                   maxPercent
                                               }}
+                                              validateOn="change"
                                               id=".assayMax"
                                               type="number"
                                 />
                             </div>
+
                             <Errors
                                 className="form-error"
                                 model="forms.productOffering.productGrade"
