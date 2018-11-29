@@ -59,6 +59,12 @@ class Users extends Component {
           { name: "First Name" },
           { name: "Roles" }
         ]}
+        contextMenu={
+          [
+              {action: (id) => console.log("edit user with id: " + id), label: 'Edit User'},
+              {action: (id) => console.log("remove user with id: " + id), label: 'Remove User'},
+          ]
+        }
         rows={rows}
       />
     );
