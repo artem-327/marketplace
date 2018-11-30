@@ -28,7 +28,7 @@ class AllInventory extends Component {
                     <SubMenu/>
                     <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchAllProductOffers({...filter})}}/>
                 </div>
-                <Filter chemicalName quantity date price assay condition form package filterFunc={(inputs) => this.props.fetchAllProductOffers(inputs)} />
+                <Filter chemicalName quantity date price assay condition form package productGrade filterFunc={(inputs) => this.props.fetchAllProductOffers(inputs)} />
                 {content}
             </div>
         )

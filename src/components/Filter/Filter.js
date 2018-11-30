@@ -25,7 +25,9 @@ class Filter extends Component {
         let filter = Object.assign({}, inputs,
             {pckgs : Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key)},
             {cndt: Object.entries(inputs.cndt || {}).filter(([key, value]) => value).map(([key]) => key)},
+            {grade: Object.entries(inputs.grade || {}).filter(([key, value]) => value).map(([key]) => key)},
             {frm: Object.entries(inputs.frm || {}).filter(([key, value]) => value).map(([key]) => key)});
+
         let params = filterNonEmptyAttributes(filter);
         this.props.filterFunc(params);
         let filterTags = [];
@@ -47,6 +49,7 @@ class Filter extends Component {
         this.props.fetchProductForms();
         this.props.fetchPackagingTypes();
         this.props.fetchWarehouseDistances();
+        this.props.fetchProductGrade();
     }
 
     deleteSaveFilter(id){
@@ -165,6 +168,20 @@ class Filter extends Component {
                                              id: packagingType.id,
                                              model: `.pckgs[${packagingType.id}]`
                                          }))}/>
+                            <FilterGroup className="filterGroup"
+                                        header='Grade'
+                                        isVisible={!!this.props.productGrade}
+                                        split
+                                        data={this.props.filterData}
+                                        isOpen={this.props.filterGroupStatus.productGrade}
+                                        onOpen={(value)=>{this.props.toggleFilterGroup('productGrade', value)}}
+                                        checkboxModel='grade'
+                                        inputs={this.props.productGradeTypes.map(productGradeType => ({
+                                            label: productGradeType.name,
+                                            type: 'checkbox',
+                                            id: productGradeType.id,
+                                            model: `.grade[${productGradeType.id}]`
+                                        }))}/>             
                             <FilterGroup className="filterGroup"
                                          header='Condition'
                                          isVisible={!!this.props.condition}

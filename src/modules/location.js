@@ -168,7 +168,7 @@ export function fetchLocations(filter = {}){
 export function fetchWarehouses(){
     return {
         type: FETCH_WAREHOUSE,
-        payload: axios.get('/prodex/api/warehouses').then(result => {return result.data.warehouses})
+        payload: axios.get('/prodex/api/warehouses').then(result => {return result.data})
     }
 }
 
