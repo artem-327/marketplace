@@ -46,7 +46,7 @@ class ProductOffers extends Component {
                             offer.name,
                             offer.manufacturer.name,
                             offer.productCondition.name,
-                            offer.expirationDate ? moment(offer.expirationDate).format(DATE_FORMAT) : 'none',
+                            offer.creationDate ? moment(offer.creationDate).format(DATE_FORMAT) : 'none',
                             <ToggleBroadcast 
                                 offerId={offerId}
                                 broadcasted={offer.broadcasted}
