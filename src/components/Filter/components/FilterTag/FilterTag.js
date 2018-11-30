@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 class FilterTag extends Component {
 
     packageName = [];
+    gradeName= [];
     conditionName = [];
     formName = [];
     locationName = [];
@@ -26,6 +27,7 @@ class FilterTag extends Component {
             case 'frm': return 'Form';
             case 'loc': return 'Location';
             case 'cndt': return 'Condition';
+            case 'grade': return 'Grade';
             default: return 'unknown';
         }
     }
@@ -37,7 +39,6 @@ class FilterTag extends Component {
     pickPackageName(){
         this.packageName = [];
         let array = this.props.value;
-
         for (let i = 0; i < array.length; i++) {
             this.props.packagingTypes.map((info)=>{
                 if((info.id).toString() === array[i]){
@@ -46,8 +47,22 @@ class FilterTag extends Component {
                 return null;
             })
         }
-        
     }
+
+    pickGradeName(){
+        this.gradeName = [];
+        let array = this.props.value;
+
+        for (let i = 0; i < array.length; i++) {
+            this.props.productGradeTypes.map((info)=>{
+                if((info.id).toString() === array[i]){
+                    this.gradeName.push(info.name);
+                }
+                return null;
+            })
+        }
+    }
+
     pickConditionName(){
         this.conditionName = [];
         let array = this.props.value;
@@ -60,12 +75,11 @@ class FilterTag extends Component {
                 return null;
             })
         }
-
     }
+
     pickFormName(){
         this.formName = [];
         let array = this.props.value;
-
         for (let i = 0; i < array.length; i++) {
             this.props.productForms.map((info)=>{
                 if((info.id).toString() === array[i]){
@@ -92,7 +106,8 @@ class FilterTag extends Component {
                 return this.formName.join(',');
             }
             case 'grade':{
-                return 'grade'
+                this.pickGradeName();
+                return this.gradeName.join(',');
             }
             case 'loc':{
                 return 'Location'

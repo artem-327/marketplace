@@ -262,6 +262,7 @@ export default class Pricing extends Component {
                                       name='price'
                                       onChange={(e)=>this.calculatePricing(e)}
                                       onBlur={()=>this.checkFilledInputs()}
+                                      disabled={this.state.showIncrementalPricing ? true : false}
                                       placeholder="$"
                                       defaultValue={this.props.edit ? this.props.productOffer.pricing.price : null}
                         />

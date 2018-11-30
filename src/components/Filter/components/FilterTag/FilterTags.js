@@ -9,6 +9,7 @@ class FilterTags extends Component {
             return <FilterTag packagingTypes={this.props.packagingTypes}
                                 productConditions={this.props.productConditions} 
                                 productForms={this.props.productForms} 
+                                productGradeTypes={this.props.productGradeTypes}
                                 //zipCode={this.props.zipCode} 
                                 //warehouseDistances={this.props.warehouseDistances} 
                                 resetForm={this.props.resetForm}  

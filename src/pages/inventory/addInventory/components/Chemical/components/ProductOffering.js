@@ -13,6 +13,8 @@ export default class ProductOffering extends Component {
         this.state = {
             save: false,
             firstValue: true,
+            assayMinEdit: '',
+            assayMaxEdit: ''
         }
     }
 
@@ -39,6 +41,14 @@ export default class ProductOffering extends Component {
         }
         this.setState({save: true, firstValue: false});
         this.props.addLot(values);
+    }
+
+    handleAssayMin() {
+        this.setState({assayMinEdit: true})
+    }
+
+    handleAssayMax() {
+        this.setState({assayMaxEdit: true})
     }
 
     render() {
@@ -191,6 +201,9 @@ export default class ProductOffering extends Component {
                                                   required, 
                                                   maxPercent
                                               }}
+                                              //value={this.state.assayMixEdit}
+                                              //onChange={this.handleAssayMax}
+                                              validateOn="change"
                                               type="number"
                                               id=".assayMin"
                                 />
@@ -217,6 +230,9 @@ export default class ProductOffering extends Component {
                                                   required,
                                                   maxPercent
                                               }}
+                                              //value={this.state.assayMaxEdit}
+                                              //onChange={this.handleAssayMax}
+                                              validateOn="change"
                                               id=".assayMax"
                                               type="number"
                                 />

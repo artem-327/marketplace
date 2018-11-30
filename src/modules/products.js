@@ -70,7 +70,7 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 isFetchingManufacturer: false,
-                manufacturer: action.payload.data.manufacturers,
+                manufacturer: action.payload.data,
                 manufacturerFetched: action.payload.status
             }
         }
@@ -98,7 +98,7 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 isFetchingOrigin: false,
-                origin: action.payload.data.origins,
+                origin: action.payload.data,
                 originFetched: action.payload.status,
             }
         }
@@ -131,7 +131,7 @@ export default function reducer(state = initialState, action) {
             return{
                 ...state,
                 isFetching: false,
-                data: action.payload.data.products,
+                data: action.payload.data,
                 productsFetched: action.payload.status
             }
         }
@@ -160,7 +160,7 @@ export default function reducer(state = initialState, action) {
             return{
                 ...state,
                 isMapFetching: false,
-                mappedData: action.payload.data.productTemplates,
+                mappedData: action.payload.data,
                 mappedDataFetched: action.payload.status
             }
         }
@@ -185,21 +185,21 @@ export default function reducer(state = initialState, action) {
 export function searchProducts(search) {
     return {
         type: SEARCH_PRODUCT,
-        payload: axios.get('/prodex/api/products', {params:{search}}).then(response => response.data)
+        payload: axios.get('/prodex/api/products', {params:{search}}).then(response => response)
     }
 }
 
 export function mapProducts(search) {
     return {
         type: MAP_PRODUCT,
-        payload: axios.get('/prodex/api/product-templates', {params:{search}}).then(response => response.data)
+        payload: axios.get('/prodex/api/product-templates', {params:{search}}).then(response => response)
     }
 }
 
 export function fetchManufacturer(filter = "") {
     return {
         type: FETCH_MANUFACTURER,
-        payload: axios.get('/prodex/api/manufacturers', {params: {search: filter}}).then(result => result.data)
+        payload: axios.get('/prodex/api/manufacturers', {params: {search: filter}}).then(result => result)
     }
 }
 
@@ -227,7 +227,7 @@ export function fetchProductGrade(filter = {}) {
 export function fetchOrigin(filter = "") {
     return {
         type: FETCH_ORIGIN,
-        payload: axios.get('/prodex/api/origins', {params: {search: filter}}).then(result => result.data)
+        payload: axios.get('/prodex/api/origins', {params: {search: filter}}).then(result => result)
     }
 }
 

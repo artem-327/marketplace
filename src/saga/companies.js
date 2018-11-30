@@ -55,7 +55,7 @@ function* removeCompany(action) {
     try {
         yield call(Api.removeCompany, action.payload.id);
         yield put({type: COMPANY_REMOVE_SUCCEEDED});
-        yield call(action.payload.onSuccess);
+        yield put({type: COMPANIES_FETCH_REQUESTED});
     } catch (e) {
         yield put({type: COMPANY_EDIT_FAILED, message: e.message});
     }

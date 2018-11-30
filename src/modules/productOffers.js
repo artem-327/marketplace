@@ -154,7 +154,7 @@ export function fetchAllProductOffers(filter = {}) {
 export function fetchProductOffer(id) {
     return {
         type: GET_PRODUCT_OFFER,
-        payload: axios.get(`/prodex/api/product-offers/${id}`).then(response => response.data.productOffer)
+        payload: axios.get(`/prodex/api/product-offers/${id}`).then(response => response.data)
     }
 }
 

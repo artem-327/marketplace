@@ -9,7 +9,7 @@ import {
     deleteSaveFilter,
     saveSaveFilter
 } from '../../modules/filter';
-import {fetchProductAge, fetchProductConditions, fetchProductForms, fetchPackagingTypes} from '../../modules/products';
+import {fetchProductAge, fetchProductConditions, fetchProductForms, fetchPackagingTypes, fetchProductGrade} from '../../modules/products';
 import {fetchWarehouseDistances} from '../../modules/location';
 import {resetForm} from '../../utils/functions';
 import {actions} from "react-redux-form";
@@ -26,6 +26,7 @@ function mapStateToProps(store) {
         productForms: store.products.productForms,
         productAge: store.products.productAge,
         productAgeModel: store.forms.filter.productAge,
+        productGradeTypes: store.products.productGrade,
         productAgeCustomModel: store.forms.filter.productAgeCustom,
         location: store.products.location,
         saveFilters: store.filter.saveFilters,
@@ -40,6 +41,7 @@ function mapDispatchToProps(dispatch) {
         fetchProductAge,
         resetForm,
         fetchProductConditions,
+        fetchProductGrade,
         fetchProductForms,
         fetchPackagingTypes,
         fetchWarehouseDistances,
