@@ -13,7 +13,6 @@ class OfficesDetailAdmin extends Component {
     }
 
     render() {
-        debugger
         const {office, editOffice, isFetching} = this.props;
         if (isFetching || !office || !office.baseLocation) return <Spinner/>
         const merchants = office.merchants.map(i => <div>{i.email}</div>)
