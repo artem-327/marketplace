@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./Users.css";
 import User from "./components/User";
 import DataTable from "../../../components/DataTable";
+import Spinner from "../../../components/Spinner/Spinner";
 
 class Users extends Component {
   componentDidMount() {
@@ -25,6 +26,27 @@ class Users extends Component {
   }
 
   render() {
+    const { users } = this.props;
+    if (this.props.users.length === 0) return <Spinner />;
+    const rows = users.map(user => {
+      const roles = user.roles.map(i => i).join();
+      return {
+        group: "user", //hack - i dont know how to initialize datatable without group - it doesnt work well... maybe it would be necessary to fix datatable component
+        rows: [
+          {
+            id: user.id,
+            data: [
+              user.company.name,
+              user.office.name,
+              user.email,
+              user.lastname,
+              user.firstname,
+              roles
+            ]
+          }
+        ]
+      };
+    });
     return (
       <DataTable
         id="users"
@@ -35,27 +57,16 @@ class Users extends Component {
           { name: "Username" },
           { name: "Last Name" },
           { name: "First Name" },
-          { name: "Roles" },
+          { name: "Roles" }
         ]}
-        rows={[]}
+        contextMenu={
+          [
+              {action: (id) => console.log("edit user with id: " + id), label: 'Edit User'},
+              {action: (id) => console.log("remove user with id: " + id), label: 'Remove User'},
+          ]
+        }
+        rows={rows}
       />
-      // <div >
-      //     <h1 className="header">New users administration</h1>
-      //     <table className="admin-users-new">
-      //     <thead>
-      //         <tr>
-      //             <th>First Name</th>
-      //             <th>Middle Name</th>
-      //             <th>Last Name</th>
-      //             <th>Email</th>
-      //             <th className="settings"></th>
-      //         </tr>
-      //         </thead>
-      //         <tbody>
-      //         {this.renderUsers()}
-      //         </tbody>
-      //     </table>
-      // </div>
     );
   }
 }
