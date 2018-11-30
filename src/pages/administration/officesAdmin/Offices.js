@@ -29,7 +29,6 @@ class Offices extends Component {
     const { offices, isFetching } = this.props;
     if (isFetching) return <Spinner />;
     const rows = offices.map(office => {
-      debugger
       const merchants = office.merchants.map(i => i.email).join();
       return {
         group: "office", //hack - i dont know how to initialize datatable without group - it doesnt work well... maybe it would be necessary to fix datatable component
