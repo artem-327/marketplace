@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = {
-    fetchOffice: (id) => axios.get(`/prodex/api/offices/${id}`).then(response => response.data.office),
+    fetchOffice: (id) => axios.get(`/prodex/api/offices/${id}`).then(response => response.data),
     createOffice: (office) => axios.post('/prodex/api/offices', {...office}),
     removeOffice: (id) => axios.delete('/prodex/api/offices/' + id),
     editOffice: (office) => axios.put('/prodex/api/offices/' + office.id, {...office}),

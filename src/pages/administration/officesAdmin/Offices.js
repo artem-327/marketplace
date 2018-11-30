@@ -1,15 +1,16 @@
 import React, { Component } from "react";
-import Office from "../companiesAdmin/components/Office";
-import Spinner from "../../../components/Spinner/Spinner";
-import DataTable from "../../../components/DataTable";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import OfficesDetailAdmin from "./OfficesDetailAdmin";
+import Spinner from "../../../components/Spinner/Spinner";
+import DataTable from "../../../components/DataTable";
 import {
   removeOffice,
   fetchOffices,
   createOffice
 } from "../../../modules/companies";
 import { fetchLocations } from "../../../modules/location";
+import {addPopup, removePopup} from "../../../modules/popup";
 import { required } from "../../../utils/validation";
 import RemoteComboBox from "../../../components/ComboBox/RemoteComboBox";
 import Button from "../../../components/Button/Button";
@@ -55,11 +56,11 @@ class Offices extends Component {
         ]}
         contextMenu={[
           {
-            action: id => console.log("edit Office with id: " + id),
+            action: id =>  this.props.addPopup(<OfficesDetailAdmin id={id}/>),
             label: "Edit Office"
           },
           {
-            action: id => console.log("remove Office with id: " + id),
+            action: id => this.props.removeOffice(id),
             label: "Remove Office"
           }
         ]}
@@ -128,7 +129,7 @@ function mapStateToProps(store) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { fetchOffices, removeOffice, createOffice, fetchLocations },
+    { fetchOffices, removeOffice, createOffice, fetchLocations, addPopup },
     dispatch
   );
 }

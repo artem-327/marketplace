@@ -9,8 +9,8 @@ const AdministrationMenu = ({contentHandler}) => {
           <div className="adm-menu-item" name="companies" onClick={e => contentHandler(e)}>Companies</div>
           <div className="adm-menu-item" name="offices" onClick={e => contentHandler(e)}>Offices</div>
           <div className="adm-menu-item"name="users" onClick={e => contentHandler(e)}>Users</div>
-          <div className="adm-menu-item"name="merchants" onClick={e => contentHandler(e)}>Merchants</div>
-          <div className="adm-menu-item" name="operators" onClick={e => contentHandler(e)}>Operators</div>
+          {/* <div className="adm-menu-item"name="merchants" onClick={e => contentHandler(e)}>Merchants</div>
+          <div className="adm-menu-item" name="operators" onClick={e => contentHandler(e)}>Operators</div> */}
         </div>
       </div>
     </div>
