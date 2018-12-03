@@ -83,7 +83,7 @@ const IncrementalPricing = (props) => {
                     className='tieredPricing'
                     step={splits}
                     value={lastPriceLevel ? "" : item.quantityTo}
-                    title={lastPriceLevel ? "Last tiered pricing rule has no top limitation." : ""}
+                    title={lastPriceLevel ? "The is no upper limit for the last field." : ""}
                     onBlur={validateInputs}
                     onChange={e => handleChange(e, index, 'quantityTo')}
                     disabled={lastPriceLevel ? true : false}
