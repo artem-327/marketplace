@@ -29,9 +29,9 @@ const IncrementalPricing = (props) => {
         } = props
         
         return incrementalPricing.map((item, index) => {
- 
-          const grossMargin = calculateGrossMargin(index)
-            const plusButton = (item.quantityTo !== '' && item.price !== '' && index === incrementalPricing.length-1) && grossMargin !== ' ' 
+            const grossMargin = calculateGrossMargin(index)
+            const lastPriceLevel = index === incrementalPricing.length-1
+            const plusButton = (item.quantityTo !== '' && item.price !== '' && lastPriceLevel) && grossMargin !== ' ' 
               ? <button onClick={e => addNewIncrementalPricing(e, index)} className='incremental-button add'>+</button> 
               : null
             const minusButton = (index !== 0) 
@@ -79,7 +79,15 @@ const IncrementalPricing = (props) => {
                   {quantityFrom}
                 </td>
                 <td>
-                  {quantityTo}
+                  <input type='number'
+                    className='tieredPricing'
+                    step={splits}
+                    value={lastPriceLevel ? "" : item.quantityTo}
+                    title={lastPriceLevel ? "Last tiered pricing rule has no top limitation." : ""}
+                    onBlur={validateInputs}
+                    onChange={e => handleChange(e, index, 'quantityTo')}
+                    disabled={lastPriceLevel ? true : false}
+                    />
                 </td>
                 <td>
                   {price}
