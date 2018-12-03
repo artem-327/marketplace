@@ -5,8 +5,6 @@ import PropTypes from 'prop-types';
 
 const IncrementalPricing = (props) => {
 
-    let lastItem = 1; 
-
     const calculateGrossMargin = index => {
         const {cost, incrementalPricing} = props
         const margin = ((incrementalPricing[index].price - parseInt(cost,10)) / parseInt(cost,10) * 100);
@@ -50,16 +48,16 @@ const IncrementalPricing = (props) => {
                      onBlur={validateInputs}
                      disabled={disabled}/>
 
-            const quantityTo = (index !== lastItem) 
+            const quantityTo =
                
-              ? <input type='number'
-                       className='tieredPricing'
-                       step={splits}
-                       value={item.quantityTo}
-                       onBlur={validateInputs}
-                       onChange={e => handleChange(e, index, 'quantityTo')}
-                       disabled={disabled}/>
-              : null
+              <input type='number'
+                     className='tieredPricing'
+                     step={splits}
+                     value={lastPriceLevel ? "" : item.quantityTo}
+                     title={lastPriceLevel ? "There is not upper limit." : ""}
+                     onBlur={validateInputs}
+                     onChange={e => handleChange(e, index, 'quantityTo')}
+                     disabled={lastPriceLevel ? true : false}/>
 
               const price = 
 
@@ -70,7 +68,6 @@ const IncrementalPricing = (props) => {
                       onChange={e => handleChange(e, index, 'price')}
                       disabled={disabled}/>
 
-            lastItem = lastItem + 1
 
             return <tr key={index}>
 
@@ -79,15 +76,7 @@ const IncrementalPricing = (props) => {
                   {quantityFrom}
                 </td>
                 <td>
-                  <input type='number'
-                    className='tieredPricing'
-                    step={splits}
-                    value={lastPriceLevel ? "" : item.quantityTo}
-                    title={lastPriceLevel ? "The is no upper limit for the last field." : ""}
-                    onBlur={validateInputs}
-                    onChange={e => handleChange(e, index, 'quantityTo')}
-                    disabled={lastPriceLevel ? true : false}
-                    />
+                  {quantityTo}
                 </td>
                 <td>
                   {price}
