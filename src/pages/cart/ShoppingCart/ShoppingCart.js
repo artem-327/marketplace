@@ -42,18 +42,19 @@ class ShoppingCart extends Component {
   }
 
   render() {
-    const {cart, deleteCart, history, addPopup, cartIsFetching} = this.props;
+    const {cart, deleteCart, history, addPopup, removePopup, cartIsFetching} = this.props;
     if (cartIsFetching) return <Spinner />
     const itemContent = cart.orders && cart.orders.map(cartItem => {
-    return (
-      <ItemCartBody
-        addPopup={addPopup}
-        history={history}
-        key={cartItem.id}
-        cartItem={cartItem}
-        deleteCart={deleteCart}
-        />)
-  });
+      return (
+        <ItemCartBody
+          addPopup={addPopup}
+          removePopup={removePopup}
+          history={history}
+          key={cartItem.id}
+          cartItem={cartItem}
+          deleteCart={deleteCart}
+          />)
+    });
     const itemsNumber = cart.orders ? cart.orders.length : 0;
     const headerTitle = `Items (${itemsNumber})`
     return (

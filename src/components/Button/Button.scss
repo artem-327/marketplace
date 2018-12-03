@@ -26,14 +26,14 @@ button {
         color: $blue-color;
         background-color: rgba($blue-color, 0.2);
 
-        &:hover {
+        &:hover:not([disabled]) {
             background-color: #fff;
         }
     }
     &.blue {
         background-color: $blue-color;
 
-        &:hover {
+        &:hover:not([disabled]) {
             background-color: #0d82bf;
         }
     }

@@ -209,7 +209,7 @@ position: absolute;
   &.green {
     background-color: #5cbb5a;
 
-    &:hover {
+    &:hover:not([disabled]) {
       background-color: #489546;
     }
   }
@@ -217,7 +217,7 @@ position: absolute;
     background-color: $beige-color;
     color: $grey-color;
 
-    &:hover {
+    &:hover:not([disabled]) {
       background-color: darken($beige-color, 19.25%);
     }
   }
