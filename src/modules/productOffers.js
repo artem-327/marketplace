@@ -132,8 +132,8 @@ export function fetchMyProductOffers(filter = {}) {
     let mrchnt = true;
     return {
         type: GET_PRODUCT_OFFERS_MY,
-        payload: axios.get("/api/3f36ea/product-offers/", {params: {...filter, mrchnt}, 'paramsSerializer': params => transformRequestOptions(params)}).then(response => {
-            const productOffers = response.data.data.productOffers;
+        payload: axios.get("/prodex/api/product-offers", {params: {...filter, mrchnt}, 'paramsSerializer': params => transformRequestOptions(params)}).then(response => {
+            const productOffers = response.data;
             return filterByUniqueProperty(productOffers, "id") //dont show product offers with same id (synonyms)
         })
     }
@@ -144,8 +144,8 @@ export function fetchAllProductOffers(filter = {}) {
 
     return {
         type: GET_PRODUCT_OFFERS_ALL,
-        payload: axios.get("/api/3f36ea/product-offers/", {params: {...filter, mrchnt}, 'paramsSerializer': params => transformRequestOptions(params)}).then(response => {
-            const productOffers = response.data.data.productOffers;
+        payload: axios.get("/prodex/api/product-offers", {params: {...filter, mrchnt}, 'paramsSerializer': params => transformRequestOptions(params)}).then(response => {
+            const productOffers = response.data;
             return filterByUniqueProperty(productOffers, "id")
         })
     }
@@ -154,50 +154,50 @@ export function fetchAllProductOffers(filter = {}) {
 export function fetchProductOffer(id) {
     return {
         type: GET_PRODUCT_OFFER,
-        payload: axios.get(`/api/ux92h9/product-offers/${id}/`).then(response => response.data.data.productOffer)
+        payload: axios.get(`/prodex/api/product-offers/${id}`).then(response => response.data)
     }
 }
 
 export function editProductOffer(id, inputs) {
     return {
         type: EDIT_PRODUCT_OFFER,
-        payload: axios.put(`/api/96knjR/product-offers/${id}/`, inputs)
+        payload: axios.put(`/prodex/api/product-offers/${id}`, inputs)
     }
 }
 
 export function addProductOffer(inputs) {
     return {
         type: ADD_PRODUCT_OFFER,
-        payload: axios.post('/api/ea54g6/product-offers/', inputs)
+        payload: axios.post('/prodex/api/product-offers', inputs)
     }
 }
 
 export function getUnitOfMeasurement() {
     return {
         type: GET_UNIT_OF_MEASUREMENT,
-        payload: axios.get("/api/8xsgcx/units/").then(result => result.data.data.units)
+        payload: axios.get("/prodex/api/units").then(result => result.data)
     }
 }
 
 export function getUnitOfPackaging(pack) {
         return {
             type: GET_UNIT_OF_PACKAGING,
-            payload: axios.get('/api/e49sy3/containers/', {params: {...pack}}).then(response => response.data.data.containers)
+            payload: axios.get('/prodex/api/containers', {params: {...pack}}).then(response => response.data)
         }
     }
-
-export function saveIncrementalPricing(from, to, price, quantityDiscount = 1){
-    const data = {
-        quantityFrom:from,
-        quantityTo:to,
-        price:price,
-        quantityDiscount,
-    }
-    return {
-        type: SAVE_INCREMENTAL_PRICING,
-        payload: axios.post('/api/v1/discount-level/', data)
-    }
-}
+// unused
+// export function saveIncrementalPricing(from, to, price, quantityDiscount = 1){
+//     const data = {
+//         quantityFrom:from,
+//         quantityTo:to,
+//         price:price,
+//         quantityDiscount,
+//     }
+//     return {
+//         type: SAVE_INCREMENTAL_PRICING,
+//         payload: axios.post('/prodex/api/v1/discount-level/', data)
+//     }
+// }
 
 export function removeProductOffer(id, onSuccess) {
     return {type: PRODUCTOFFER_REMOVE_REQUESTED, payload: {id, onSuccess}} //TODO: refactor all product offers to saga, then remove onSuccess

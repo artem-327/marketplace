@@ -1,5 +1,12 @@
 $borderColor: #e3e2df;
 
+//hack - not show groups
+.administration-content{
+  .data-table-group-header {
+    display: none;
+  }
+}
+
 .admin-users-new{
   max-width: 1400px;
   margin: auto;

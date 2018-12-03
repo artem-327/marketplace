@@ -1,6 +1,24 @@
 @import "../../../styles/main.scss";
 $borderColor: #e3e2df;
 
+.administration-content {
+  .add-new-company{
+    margin-top: 20px;
+    i {
+      color: $light-30-grey-color;
+      margin-left: 15px;
+      padding: 3px;
+      border: 2px solid $light-30-grey-color;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+  }
+  
+  .three-dots-menu {
+    z-index: 50;
+  }
+}
+
 
 .company-table {
   max-width: 1400px;

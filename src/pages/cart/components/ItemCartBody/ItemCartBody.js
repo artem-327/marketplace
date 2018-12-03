@@ -4,7 +4,7 @@ import Button from '../../../../components/Button/Button'
 import AddCart from "../AddCart"
 import {getUnit} from '../../../../utils/functions'
 
-const ItemCartBody = ({cartItem, addPopup, removeProductFromCart, history}) => {
+const ItemCartBody = ({cartItem, addPopup, deleteCart, history}) => {
   const {productOffer} = cartItem;
   const {unit, capacity} = productOffer.packaging;
   const unitName = `${getUnit(unit.name)}${capacity > 1 && 's'}`;
@@ -45,10 +45,10 @@ const ItemCartBody = ({cartItem, addPopup, removeProductFromCart, history}) => {
         </div>
       </div>
       <footer className="popup-footer">
-        <Button color="grey" onClick={() => removeProductFromCart(cartItem.id)}>Remove</Button>
+        <Button color="grey" onClick={() => deleteCart(cartItem.id)}>Remove</Button>
         <Button 
           color="blue" 
-          onClick={() => addPopup(<AddCart id={productOffer.id} isEdit
+          onClick={() => addPopup(<AddCart id={productOffer.id} orderId={cartItem.id} isEdit
           history={history}/>)} 
         >Edit</Button>
       </footer>
@@ -61,5 +61,5 @@ export default ItemCartBody;
 ItemCartBody.propTypes = {
   addPopup: PropTypes.func,
   cartItem: PropTypes.object,
-  removeProductFromCart: PropTypes.func
+  deleteCart: PropTypes.func
 }

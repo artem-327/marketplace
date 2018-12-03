@@ -58,7 +58,7 @@ export function approveMerchant(id){
         type: UPDATE_APPROVE,
         payload: axios({
           method: 'post',
-          url: "api/v1/merchant/"+id+"/approved/"
+          url: "api/v1/merchant/"+id+"/approved"
         })
     }
 }
@@ -68,7 +68,7 @@ export function acceptMerchant(id) {
         type: ACCEPT_MERCHANT,
         payload: axios({
             method: 'get',
-            url: "/api/v1/operator/approve-merchant/" + id,
+            url: "/prodex/api/operator/approve-merchant/" + id,
         })
     }
 }
@@ -78,7 +78,7 @@ export function rejectMerchant(id) {
         type: REJECT_MERCHANT,
         payload: axios({
             method: 'get',
-            url: "/api/v1/operator/reject-merchant/" + id,
+            url: "/prodex/api/operator/reject-merchant/" + id,
         })
     }
 }

@@ -30,7 +30,6 @@ class ProductOffers extends Component {
                     group:  <React.Fragment><span className="product-casnumber ">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></React.Fragment>,
                     countLabel: 'Product Offerings: ',
                     rows: product.productOffers.map((offer)=>{
-                        const shortManufacturerName = offer.manufacturer.name.slice(0,13);
                         const offerId = offer.id
                         const unit = getUnit(offer.packaging.unit.name);
                         const packageUnit = offer.packaging.container.name;
@@ -45,9 +44,9 @@ class ProductOffers extends Component {
                             "$" + offer.pricing.cost.formatMoney(3),
                             "$" + offer.pricing.price.formatMoney(3),
                             offer.name,
-                            `${shortManufacturerName}${shortManufacturerName.length < offer.manufacturer.name.length ? "..." : ""}`,
+                            offer.manufacturer.name,
                             offer.productCondition.name,
-                            offer.expirationDate ? moment(offer.expirationDate).format(DATE_FORMAT) : 'none',
+                            offer.creationDate ? moment(offer.creationDate).format(DATE_FORMAT) : 'none',
                             <ToggleBroadcast 
                                 offerId={offerId}
                                 broadcasted={offer.broadcasted}

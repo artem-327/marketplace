@@ -7,8 +7,8 @@ import AdministrationContent from "./AdministrationContent";
 import Users from "./users";
 import CompaniesAdmin from "./companiesAdmin"
 import Offices from "./officesAdmin/Offices"
-import MerchantsTable from "./merchants"
-import Operators from "./operators"
+// import MerchantsTable from "./merchants"
+// import Operators from "./operators"
 
 
 export default class Administration extends Component {
@@ -23,11 +23,11 @@ export default class Administration extends Component {
       case "users":
         return <Users />;
       case "offices":
-        return <Offices />;
-      case "operators":
-        return <Operators />;
-      case "merchants":
-        return <MerchantsTable />;
+        return <Offices />;  
+      // case "operators":
+      //   return <Operators />;
+      // case "merchants":
+      //   return <MerchantsTable />;
       default:
         return <CompaniesAdmin />;
     }
