@@ -205,12 +205,21 @@ position: absolute;
   border-radius: 4px;
   font-size: 1.25em;
   font-weight: 500;
-  &.green{
-    background-color: #4cd136;
+
+  &.green {
+    background-color: #5cbb5a;
+
+    &:hover {
+      background-color: #489546;
+    }
   }
   &.grey{
     background-color: $beige-color;
     color: $grey-color;
+
+    &:hover {
+      background-color: darken($beige-color, 19.25%);
+    }
   }
   &:hover, &:focus{
     cursor: pointer;

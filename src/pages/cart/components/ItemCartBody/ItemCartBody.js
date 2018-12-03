@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from "prop-types";
 import Button from '../../../../components/Button/Button'
 import AddCart from "../AddCart"
-import {getUnit} from '../../../../utils/functions'
+import {getUnit} from '../../../../utils/functions';
+import confirm from '../../../../components/Confirmable/confirm';
 
 const ItemCartBody = ({cartItem, addPopup, deleteCart, history}) => {
   const {productOffer} = cartItem;
@@ -45,7 +46,15 @@ const ItemCartBody = ({cartItem, addPopup, deleteCart, history}) => {
         </div>
       </div>
       <footer className="popup-footer">
-        <Button color="grey" onClick={() => deleteCart(cartItem.id)}>Remove</Button>
+        <Button color="grey" onClick={() => confirm('Remove item', 'Are you sure you want to remove item from Shopping Cart?').then(
+            (result) => {
+                // `proceed`
+                deleteCart(cartItem.id)
+            },
+            (result) => {
+                // `cancel`
+            }
+        )}>Remove</Button>
         <Button 
           color="blue" 
           onClick={() => addPopup(<AddCart id={productOffer.id} orderId={cartItem.id} isEdit
