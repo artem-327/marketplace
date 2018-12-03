@@ -4,9 +4,12 @@ import classnames from 'classnames';
 import PropTypes from 'prop-types';
 
 const IncrementalPricing = (props) => {
+
+    let lastItem = 1; 
+
     const calculateGrossMargin = index => {
         const {cost, incrementalPricing} = props
-        const margin = ((incrementalPricing[index].price - parseInt(cost,10)) / incrementalPricing[index].price * 100);
+        const margin = ((incrementalPricing[index].price - parseInt(cost,10)) / parseInt(cost,10) * 100);
         if(isNaN(margin) || incrementalPricing[index].price === ''){   
             return '';
         }
@@ -24,6 +27,7 @@ const IncrementalPricing = (props) => {
           splits, 
           validateInputs
         } = props
+        
         return incrementalPricing.map((item, index) => {
             const grossMargin = calculateGrossMargin(index)
             const lastPriceLevel = index === incrementalPricing.length-1
@@ -33,18 +37,46 @@ const IncrementalPricing = (props) => {
             const minusButton = (index !== 0) 
               ? <button onClick={e => removeIncrementalPricing(e, index)} className='incremental-button remove'>-</button> 
               : null
+
+
+            const quantityFrom = 
+
+              <input className='tieredPricing'
+                     type='number'
+                     step={splits}
+                     value={item.quantityFrom}
+                     min={minimum}
+                     onChange={e => handleChange(e, index, 'quantityFrom')}
+                     onBlur={validateInputs}
+                     disabled={disabled}/>
+
+            const quantityTo = (index !== lastItem) 
+               
+              ? <input type='number'
+                       className='tieredPricing'
+                       step={splits}
+                       value={item.quantityTo}
+                       onBlur={validateInputs}
+                       onChange={e => handleChange(e, index, 'quantityTo')}
+                       disabled={disabled}/>
+              : null
+
+              const price = 
+
+                <input type='number'
+                      className='tieredPricing'
+                      value={item.price}
+                      onBlur={validateInputs}
+                      onChange={e => handleChange(e, index, 'price')}
+                      disabled={disabled}/>
+
+            lastItem = lastItem + 1
+
             return <tr key={index}>
+
                 {/*<td><span className='incremental-index'><span>{index + 1}</span></span></td>*/}
                 <td>
-                  <input  className='tieredPricing'
-                    type='number'
-                    step={splits}
-                    value={item.quantityFrom}
-                    min={minimum}
-                    onChange={e => handleChange(e, index, 'quantityFrom')}
-                    onBlur={validateInputs}
-                    disabled={disabled}
-                  />
+                  {quantityFrom}
                 </td>
                 <td>
                   <input type='number'
@@ -58,13 +90,7 @@ const IncrementalPricing = (props) => {
                     />
                 </td>
                 <td>
-                  <input type='number'
-                    className='tieredPricing'
-                    value={item.price}
-                    onBlur={validateInputs}
-                    onChange={e => handleChange(e, index, 'price')}
-                    disabled={disabled}
-                  />
+                  {price}
                 </td>
                 <td>
                   <div className={classnames({inRed:grossMargin < 0})}>{grossMargin}%</div>
