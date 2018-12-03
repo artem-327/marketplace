@@ -46,7 +46,7 @@ export default class AddForm extends Component {
         }
         let newPricing = inputs['pricing'];
         if(inputs['incrementalSelected']){
-            newPricing = {...inputs['pricing'], tiersRequests: this.validateIncPricing()};
+            newPricing = {...inputs['pricing'], pricingTiers: this.validateIncPricing()};
         }
         const creationDate = this.props.productOfferingForm.creationDate.includes("T") ? this.props.productOfferingForm.creationDate : `${this.props.productOfferingForm.creationDate}T00:00:00Z`
         const expirationDate = this.props.productOfferingForm.expirationDate.includes("T") ? this.props.productOfferingForm.expirationDate : `${this.props.productOfferingForm.expirationDate}T00:00:00Z`
@@ -74,7 +74,7 @@ export default class AddForm extends Component {
     }
 
     validateIncPricing(){
-        let tmp = this.state.incrementalPricing.filter(data => data.quantityFrom !=='' && data.quantityTo !== '' && data.price !== '');
+        let tmp = this.state.incrementalPricing.filter(data => data.quantityFrom !=='' && data.price !== '');
         return tmp;
     }
 
@@ -85,7 +85,7 @@ export default class AddForm extends Component {
     editProductOffer(inputs){
         let newPricing = inputs['pricing'];
         if(inputs['incrementalSelected']){
-            newPricing = {...inputs['pricing'], tiersRequests: this.validateIncPricing()};
+            newPricing = {...inputs['pricing'], pricingTiers: this.validateIncPricing()};
         }
         const creationDate = this.props.productOfferingForm.creationDate.includes("T") ? this.props.productOfferingForm.creationDate : `${this.props.productOfferingForm.creationDate}T00:00:00Z`
         const expirationDate = this.props.productOfferingForm.expirationDate.includes("T") ? this.props.productOfferingForm.expirationDate : `${this.props.productOfferingForm.expirationDate}T00:00:00Z`
