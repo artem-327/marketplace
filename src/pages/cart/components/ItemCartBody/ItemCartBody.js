@@ -7,21 +7,17 @@ import confirm from '../../../../components/Confirmable/confirm';
 
 class ItemCartBody extends Component {
 
-  static openedPopup = {
-      id: false
-  }
-
   editCart(offerId, cartId) {
       // check that new popup has different id than previous
-      if (ItemCartBody.openedPopup.id !== offerId) {
+      if (AddCart.openedPopup.id !== offerId) {
           // previous popup has different id - remove it
-          if (ItemCartBody.openedPopup.id) {
-              ItemCartBody.openedPopup.id = false;
+          if (AddCart.openedPopup.id) {
+              AddCart.openedPopup.id = false;
               this.props.removePopup();
           }
 
           // create new popup
-          ItemCartBody.openedPopup.id = offerId;
+          AddCart.openedPopup.id = offerId;
           this.props.addPopup(<AddCart id={offerId} orderId={cartId} isEdit
                                        history={this.props.history} className='add-cart-popup'/>);
       }
@@ -74,7 +70,8 @@ class ItemCartBody extends Component {
                               (result) => {
                                   // `proceed`
                                   // remove Edit Cart popup if opened currently deleted offer
-                                  if (ItemCartBody.openedPopup.id === productOffer.id) {
+                                  if (AddCart.openedPopup.id === productOffer.id) {
+                                      AddCart.openedPopup.id = false;
                                       this.props.removePopup();
                                   }
                                   deleteCart(cartItem.id)

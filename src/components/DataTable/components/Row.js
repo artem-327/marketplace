@@ -7,10 +7,6 @@ import AddCart from '../../../pages/cart/components/AddCart';
 
 class Row extends Component {
 
-  static openedPopup = {
-    id: false
-  }
-
   constructor(props) {
     super(props);
     this.handleClickOutside = this.handleClickOutside.bind(this);
@@ -39,15 +35,15 @@ class Row extends Component {
 
   addCart(id){
     // check that new popup has different id than previous
-    if (Row.openedPopup.id !== id) {
+    if (AddCart.openedPopup.id !== id) {
       // previous popup has different id - remove it
-      if (Row.openedPopup.id) {
-        Row.openedPopup.id = false;
+      if (AddCart.openedPopup.id) {
+        AddCart.openedPopup.id = false;
         this.props.removePopup();
       }
 
       // create new popup
-      Row.openedPopup.id = id;
+      AddCart.openedPopup.id = id;
       this.props.addPopup(<AddCart id={id} history={this.props.history} className='add-cart-popup'/>);
     }
   }

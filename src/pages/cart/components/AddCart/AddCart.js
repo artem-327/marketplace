@@ -8,9 +8,13 @@ import {getUnit} from '../../../../utils/functions'
 import './AddCart.css';
 import file from '../../../../images/file.svg';
 import InputControlled from '../../../../components/InputControlled/InputControlled'
-import Row from "../../../../components/DataTable/components/Row";
 
 class AddCart extends Component {
+
+  static openedPopup = {
+    id: false
+  }
+
   state = {
     pricing: false,
     quantity: null,
@@ -23,7 +27,7 @@ class AddCart extends Component {
   }
 
   onClick = () => {
-    Row.openedPopup.id = false;
+    AddCart.openedPopup.id = false;
     this.props.removePopup();
   }
 
@@ -38,6 +42,7 @@ class AddCart extends Component {
       return
     } else {
       await createNewOrder(offerpayload)
+      AddCart.openedPopup.id = false
       removePopup()
       history.push("/cart/shopping-cart")
     }
@@ -52,6 +57,7 @@ class AddCart extends Component {
     }
     editOrder(orderpayload)
     this.props.history.push("/cart/shopping-cart")
+    AddCart.openedPopup.id = false
     removePopup()
   }
 
