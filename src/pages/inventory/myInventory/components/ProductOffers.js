@@ -24,6 +24,7 @@ class ProductOffers extends Component {
     }
 
     render() {
+        console.log(this.props)
         if(this.props.productOffers.length === 0) return null;
         let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
                 return {

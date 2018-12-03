@@ -32,6 +32,9 @@ export default class Pricing extends Component {
         
         if(this.props.edit){
 
+            this.validateMinimum('splits')
+            this.validateMinimum('minimum')
+
             this.setState({margin: (this.props.productOffer.pricing.price - this.props.productOffer.pricing.cost) / this.props.productOffer.pricing.cost * 100})
             
             if(this.props.productOffer.pricing.tiers.length !== 0){
