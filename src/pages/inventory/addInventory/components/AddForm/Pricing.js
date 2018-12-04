@@ -221,6 +221,17 @@ export default class Pricing extends Component {
       let value = e.target.value ? parseInt(e.target.value, 10) : '';
       let newIncremental = this.state.incrementalPricing.slice(0);
       newIncremental[index][type] = value;
+
+        if (type = 'price') {
+            newIncremental[index].price = value;
+            newIncremental[index].margin = ((parseInt(value) - parseInt(this.props.form.pricing.cost)) / (parseInt(this.props.form.pricing.cost) * 100))
+        }
+
+        if (type = 'margin') {
+            newIncremental[index].margin = value;
+            newIncremental[index].price = parseInt(this.props.form.pricing.cost) + (parseInt(this.props.form.pricing.cost) * newIncremental[index].price / 100)
+        }
+
       this.setState({
           incrementalPricing: newIncremental
       })

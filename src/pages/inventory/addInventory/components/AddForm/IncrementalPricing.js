@@ -71,8 +71,8 @@ const IncrementalPricing = (props) => {
               const margin = 
 
                 <input type='number'
-                       className={classnames({inRed:grossMargin < 0})}
-                       value={grossMargin}
+                       className={classnames({inRed:item.margin < 0})}
+                       value={item.margin}
                        onBlur={validateInputs}
                        onChange={e => handleChange(e, index, 'margin')}
                        disabled={disabled}/>
@@ -93,7 +93,7 @@ const IncrementalPricing = (props) => {
                 <td>
                   {margin}
                 </td>
-                
+
                 <td>{minusButton}</td>
                 <td>{plusButton}</td>
             </tr>
