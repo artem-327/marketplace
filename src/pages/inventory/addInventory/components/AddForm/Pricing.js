@@ -226,6 +226,8 @@ export default class Pricing extends Component {
     }
     render() {
 
+
+    console.log(this.props)
       const {
         mappingForm: {packaging},
         productOfferingForm: {totalPackages = 50},
