@@ -7,6 +7,7 @@ import ToggleBroadcast from "./ToggleBroadcast";
 import {DATE_FORMAT} from "../../../../utils/constants";
 import moment from "moment";
 import {getUnit} from "../../../../utils/functions";
+import confirm from '../../../../components/Confirmable/confirm';
 
 class ProductOffers extends Component {
 
@@ -78,7 +79,15 @@ class ProductOffers extends Component {
                                [
                                    {action: (id)=>this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'Edit Listing',},
                                    {action: (id) => this.openBroadcast(id), label: 'Custom Broadcast'},
-                                   {action: (id) => this.props.removeProductOffer(id, () => this.props.fetchMyProductOffers({})), label: 'Delete Listing'}
+                                   {action: (id) => confirm('Remove listings', 'Are you sure you want to remove listings from Your Inventory?').then(
+                                       (result) => {
+                                           // `proceed`
+                                           this.props.removeProductOffer(id, () => this.props.fetchMyProductOffers({}))
+                                       },
+                                           (result) => {
+                                           // `cancel`
+                                       }
+                                   ), label: 'Delete Listing'}
                                ]
                            }
                            rows={rows}
