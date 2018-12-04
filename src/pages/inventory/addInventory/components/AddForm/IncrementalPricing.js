@@ -18,7 +18,9 @@ const IncrementalPricing = (props) => {
         const {
           addNewIncrementalPricing, 
           disabled, 
-          handleChange, 
+          handleChange,
+          handlePrice,
+          handleMargin, 
           incrementalPricing, 
           minimum, 
           removeIncrementalPricing,  
@@ -65,7 +67,7 @@ const IncrementalPricing = (props) => {
                       className='tieredPricing'
                       value={item.price}
                       onBlur={validateInputs}
-                      onChange={e => handleChange(e, index, 'price')}
+                      onChange={e => handlePrice(e, index)}
                       disabled={disabled}/>
 
               const margin = 
@@ -74,7 +76,7 @@ const IncrementalPricing = (props) => {
                        className={classnames({inRed:item.margin < 0})}
                        value={item.margin}
                        onBlur={validateInputs}
-                       onChange={e => handleChange(e, index, 'margin')}
+                       onChange={e => handleMargin(e, index)}
                        disabled={disabled}/>
 
 
@@ -131,6 +133,8 @@ IncrementalPricing.propTypes = {
   ]),
   disabled: PropTypes.bool,
   handleChange: PropTypes.func,
+  handlePrice: PropTypes.func,
+  handleMargin: PropTypes.func,
   incrementalPricing: PropTypes.arrayOf(PropTypes.object),
   minimum: PropTypes.oneOfType([
     PropTypes.string, //initial state is string, but input value is a number
