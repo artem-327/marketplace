@@ -24,6 +24,7 @@ export default class Pricing extends Component {
               quantityFrom: '',
               quantityTo: '',
               price: '',
+              margin: ''
           }]
         }
     }
@@ -224,8 +225,8 @@ export default class Pricing extends Component {
           incrementalPricing: newIncremental
       })
     }
-    render() {
 
+    render() {
 
     console.log(this.props)
       const {

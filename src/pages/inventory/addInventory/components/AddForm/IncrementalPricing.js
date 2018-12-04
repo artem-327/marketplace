@@ -68,6 +68,15 @@ const IncrementalPricing = (props) => {
                       onChange={e => handleChange(e, index, 'price')}
                       disabled={disabled}/>
 
+              const margin = 
+
+                <input type='number'
+                       className={classnames({inRed:grossMargin < 0})}
+                       value={grossMargin}
+                       onBlur={validateInputs}
+                       onChange={e => handleChange(e, index, 'margin')}
+                       disabled={disabled}/>
+
 
             return <tr key={index}>
 
@@ -82,8 +91,9 @@ const IncrementalPricing = (props) => {
                   {price}
                 </td>
                 <td>
-                  <div className={classnames({inRed:grossMargin < 0})}>{grossMargin}%</div>
+                  {margin}
                 </td>
+                
                 <td>{minusButton}</td>
                 <td>{plusButton}</td>
             </tr>
@@ -100,7 +110,6 @@ const IncrementalPricing = (props) => {
               <th>Quantity To</th>
               <th>Price per lb</th>
               <th>Gross Margin %</th>
-              <th> </th>
             </tr>
           </thead>
           <tbody>
