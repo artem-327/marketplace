@@ -88,14 +88,12 @@ export default class Location extends Component {
         return true;
     }
 
-    saveLocation(e, edit = !this.state.edit) {
+    saveLocation(e) {
         e.preventDefault();
-        this.setState({isSubmitted: true});
         let {warehouseName, street, city, state, zip, contact, phone, email} = this.state;
-        if (!this.validateForms()) return;
         this.props.saveWarehouse(warehouseName, street, city, state, contact, phone, email, zip).then(() => {
             this.props.fetchWarehouses().then(() => {
-                this.setState({edit: edit}, () => this.changeLocation('saved'))
+                this.setState({edit: false}, () => this.changeLocation('saved'))
             })
         });
     }
@@ -103,7 +101,6 @@ export default class Location extends Component {
     updateLocation(e) {
         e.preventDefault();
         let {street, city, state, zip, contact, phone, email} = this.state;
-        if (!this.validateForms()) return;
         this.props.updateWarehouse(this.props.warehouse[this.state.warehouseIndex].id, this.props.warehouse[this.state.warehouseIndex].name, street, city, state, contact, phone, email, zip).then(() => {
             this.props.fetchWarehouses().then(() => {
                 this.setState({edit: false})
@@ -265,7 +262,7 @@ export default class Location extends Component {
                         {(this.state.isSubmitted && this.state.city === '') ?
                             <div className='warehouse-val'><span>Required</span></div> : null}
                     </div>
-                    <div className='group-item-wr'>
+                    {/*<div className='group-item-wr'>
                         <label>State</label>
                         <Dropdown opns={this.props.locations.map((item)=>{
                            const options = item.province 
@@ -279,7 +276,7 @@ export default class Location extends Component {
                                   }}/>
                         {(this.state.isSubmitted && this.getCurrentItemById(this.state.state) === 'Select') ?
                             <div className='warehouse-val'><span>Required</span></div> : null}
-                    </div>
+                                </div>*/}
                     <div className='group-item-wr'>
                         <label htmlFor="zip">Zip Code</label>
                         <input id="zip"
