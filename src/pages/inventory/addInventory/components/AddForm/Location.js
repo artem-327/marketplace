@@ -5,6 +5,7 @@ import Dropdown from "../../../../../components/Dropdown/Dropdown";
 import {messages, required} from "../../../../../utils/validation";
 import classnames from "classnames";
 import WarningLabel from "./components/WarningLabel";
+import "./Location.css"
 
 export default class Location extends Component {
 
@@ -73,7 +74,7 @@ export default class Location extends Component {
 
     validateEmail() {
         if (this.state.email === "") return true;
-        let re = /^\S+@\S+$/;
+        let re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
         let test = re.test(String(this.state.email).toLowerCase());
         return test;
     }
@@ -83,7 +84,6 @@ export default class Location extends Component {
             return false;
         }
         else if (!this.validateEmail()) {
-            this.props.addMessage("Bad email address format.");
             return false;
         }
         return true;
@@ -233,6 +233,12 @@ export default class Location extends Component {
                                        }}/>
                                 {!this.props.edit && button}
                             </div>
+                            <div>
+                                <div className='group-item-wr'>
+                                    <WarningLabel isVisible={!this.validateForms() && this.state.edit} warningText={"Please fill all fields before saving."}/>
+                                </div>
+                            </div>
+
                         </div>
                     </React.Fragment>
             </div>
@@ -260,8 +266,6 @@ export default class Location extends Component {
                                onChange={(e) => {
                                    this.handleInputs(e.target.value, 'street')
                                }}/>
-                        {(this.state.isSubmitted && this.state.street === '') ?
-                            <div className='warehouse-val'><span>Required</span></div> : null}
                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor="city">City</label>
@@ -270,8 +274,6 @@ export default class Location extends Component {
                                onChange={(e) => {
                                    this.handleInputs(e.target.value, 'city')
                                }}/>
-                        {(this.state.isSubmitted && this.state.city === '') ?
-                            <div className='warehouse-val'><span>Required</span></div> : null}
                     </div>
                     <div className='group-item-wr'>
                                 <label>State</label>
@@ -292,8 +294,6 @@ export default class Location extends Component {
                                    this.handleInputs(e.target.value, 'zip')
                                }}
                                type="number"/>
-                        {(this.state.isSubmitted && this.state.zip === '') ?
-                            <div className='warehouse-val'><span>Required</span></div> : null}
                     </div>
                 </div>
                 <div>
@@ -321,6 +321,11 @@ export default class Location extends Component {
                                    this.handleInputs(e.target.value, 'email')
                                }}/>
                         {button}
+                    </div>
+                    <div>
+                        <div className='group-item-wr'>
+                            <WarningLabel isVisible={!this.validateForms()} warningText={"Please fill all fields before saving."}/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -380,7 +385,8 @@ export default class Location extends Component {
                 }
                 {location}
 
-                <WarningLabel isVisible={!this.validateForms()} warningText={"You need to fill the whole form."}/>
+
+                
             </div>
         );
     }

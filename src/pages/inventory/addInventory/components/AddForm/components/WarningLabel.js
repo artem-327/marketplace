@@ -5,8 +5,8 @@ export default class WarningLabel extends Component {
     render() {
         return (
             (this.props.isVisible) ?
-                <div className='warningLabel'>
-                    <span className='warningBody'>
+                <div className='warningLabel marginLeft'>
+                    <span className='warningBody2'>
                     <span className="warning-icon">!</span>
                 <label>{this.props.warningText}</label>
                 <div className='clearfix'></div>
