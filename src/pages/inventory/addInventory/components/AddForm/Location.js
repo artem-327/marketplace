@@ -4,6 +4,7 @@ import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
 import Dropdown from "../../../../../components/Dropdown/Dropdown";
 import {messages, required} from "../../../../../utils/validation";
 import classnames from "classnames";
+import WarningLabel from "./components/WarningLabel";
 
 export default class Location extends Component {
 
@@ -78,7 +79,7 @@ export default class Location extends Component {
     }
 
     validateForms() {
-        if (this.state.street === '' || this.state.city === '' || this.state.state === '' || this.state.zip === '') {
+        if (this.state.street === '' || this.state.city === '' || this.state.state === '' || this.state.zip === '' || this.state.contact === '' || this.state.phone == '' || this.state.email === '') {
             return false;
         }
         else if (!this.validateEmail()) {
@@ -91,6 +92,11 @@ export default class Location extends Component {
     saveLocation(e) {
         e.preventDefault();
         let {warehouseName, street, city, state, zip, contact, phone, email} = this.state;
+
+        this.setState({isSubmitted: true})
+
+        if (!this.validateForms()) return;
+
         this.props.saveWarehouse(warehouseName, street, city, state, contact, phone, email, zip).then(() => {
             this.props.fetchWarehouses().then(() => {
                 this.setState({edit: false}, () => this.changeLocation('saved'))
@@ -101,6 +107,11 @@ export default class Location extends Component {
     updateLocation(e) {
         e.preventDefault();
         let {street, city, state, zip, contact, phone, email} = this.state;
+
+        this.setState({isSubmitted: true})
+
+        if (!this.validateForms()) return;
+
         this.props.updateWarehouse(this.props.warehouse[this.state.warehouseIndex].id, this.props.warehouse[this.state.warehouseIndex].name, street, city, state, contact, phone, email, zip).then(() => {
             this.props.fetchWarehouses().then(() => {
                 this.setState({edit: false})
@@ -262,21 +273,17 @@ export default class Location extends Component {
                         {(this.state.isSubmitted && this.state.city === '') ?
                             <div className='warehouse-val'><span>Required</span></div> : null}
                     </div>
-                    {/*<div className='group-item-wr'>
-                        <label>State</label>
-                        <Dropdown opns={this.props.locations.map((item)=>{
-                           const options = item.province 
-                            ? {id: item.province.id, name: item.province.name}
-                            : {id: item.country.id, name: item.country.name}
-                           return (options)
-                            })}
-                                  currentValue={this.getCurrentItemById(this.state.state)}
-                                  onChange={(value) => {
-                                      this.handleInputs(value, 'state')
-                                  }}/>
-                        {(this.state.isSubmitted && this.getCurrentItemById(this.state.state) === 'Select') ?
-                            <div className='warehouse-val'><span>Required</span></div> : null}
-                                </div>*/}
+                    <div className='group-item-wr'>
+                                <label>State</label>
+                                <Dropdown opns={this.props.locations.map((item)=>{
+                                            if(item.province) return ({id: item.province.id, name: item.province.name});
+                                            if(item.country) return ({id: item.country.id, name: item.country.name});
+                                            return {id: 0, name: 'no province or country'}
+                                        })}
+                                        onChange={(value) => {
+                                            this.handleInputs(value, 'state')
+                                        }}/>
+                     </div>
                     <div className='group-item-wr'>
                         <label htmlFor="zip">Zip Code</label>
                         <input id="zip"
@@ -372,6 +379,8 @@ export default class Location extends Component {
                     </div> : null
                 }
                 {location}
+
+                <WarningLabel isVisible={!this.validateForms()} warningText={"You need to fill the whole form."}/>
             </div>
         );
     }

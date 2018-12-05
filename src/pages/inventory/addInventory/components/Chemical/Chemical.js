@@ -84,7 +84,7 @@ class Chemical extends Component {
             <div>
                 {!this.props.edit ?
                     <React.Fragment>
-                    <WarningLabel isVisible={this.state.lots.length !== 0}/>
+                    <WarningLabel isVisible={this.state.lots.length !== 0} warningText={"You have to remove all added lots first."}/>
                 <SearchProducts selectedMapping={this.state.selectedProductMapping}
                                 selectedProduct={this.state.selectedProduct}
                                 isVisible={this.state.lots.length === 0}

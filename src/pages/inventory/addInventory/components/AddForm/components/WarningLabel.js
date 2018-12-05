@@ -20,5 +20,3 @@ WarningLabel.propTypes = {
     warningText: PropTypes.string,
     isVisible: PropTypes.bool,
 };
-
-
