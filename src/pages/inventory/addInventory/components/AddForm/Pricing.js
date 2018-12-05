@@ -221,12 +221,15 @@ export default class Pricing extends Component {
         let value = e.target.value ? parseInt(e.target.value, 10) : '';
         let newIncremental = this.state.incrementalPricing.slice(0);
   
-            newIncremental[index].price = value;
-            newIncremental[index].margin = (parseInt(value) - parseInt(this.props.form.pricing.cost)) / parseInt(this.props.form.pricing.cost) * 100
-  
+        newIncremental[index].price = value;
+        newIncremental[index].margin = (parseInt(value) - parseInt(this.props.form.pricing.cost)) / parseInt(this.props.form.pricing.cost) * 100
+
+        if (isNaN(newIncremental[index].margin)) {newIncremental[index].margin = ''}
+
         this.setState({
             incrementalPricing: newIncremental
         })
+        
     }
 
     handleMargin = (e, index) => {
@@ -235,9 +238,11 @@ export default class Pricing extends Component {
   
             newIncremental[index].margin = value;
             newIncremental[index].price = parseInt(this.props.form.pricing.cost) + (parseInt(this.props.form.pricing.cost) * value / 100)
-  
-        this.setState({
-            incrementalPricing: newIncremental
+
+            if (isNaN(newIncremental[index].price)) {newIncremental[index].price = ''}
+       
+            this.setState({
+                incrementalPricing: newIncremental
         })
     }
 
