@@ -18,7 +18,9 @@ const IncrementalPricing = (props) => {
         const {
           addNewIncrementalPricing, 
           disabled, 
-          handleChange, 
+          handleChange,
+          handlePrice,
+          handleMargin, 
           incrementalPricing, 
           minimum, 
           removeIncrementalPricing,  
@@ -54,7 +56,7 @@ const IncrementalPricing = (props) => {
                      className='tieredPricing'
                      step={splits}
                      value={lastPriceLevel ? "" : item.quantityTo}
-                     title={lastPriceLevel ? "There is not upper limit." : ""}
+                     title={lastPriceLevel ? "There is no upper limit." : ""}
                      onBlur={validateInputs}
                      onChange={e => handleChange(e, index, 'quantityTo')}
                      disabled={lastPriceLevel ? true : false}/>
@@ -65,8 +67,17 @@ const IncrementalPricing = (props) => {
                       className='tieredPricing'
                       value={item.price}
                       onBlur={validateInputs}
-                      onChange={e => handleChange(e, index, 'price')}
+                      onChange={e => handlePrice(e, index)}
                       disabled={disabled}/>
+
+              const margin = 
+
+                <input type='number'
+                       className={classnames({inRed:item.margin < 0})}
+                       value={item.margin}
+                       onBlur={validateInputs}
+                       onChange={e => handleMargin(e, index)}
+                       disabled={disabled}/>
 
 
             return <tr key={index}>
@@ -82,8 +93,9 @@ const IncrementalPricing = (props) => {
                   {price}
                 </td>
                 <td>
-                  <div className={classnames({inRed:grossMargin < 0})}>{grossMargin}%</div>
+                  {margin}
                 </td>
+
                 <td>{minusButton}</td>
                 <td>{plusButton}</td>
             </tr>
@@ -100,7 +112,6 @@ const IncrementalPricing = (props) => {
               <th>Quantity To</th>
               <th>Price per lb</th>
               <th>Gross Margin %</th>
-              <th> </th>
             </tr>
           </thead>
           <tbody>
@@ -122,6 +133,8 @@ IncrementalPricing.propTypes = {
   ]),
   disabled: PropTypes.bool,
   handleChange: PropTypes.func,
+  handlePrice: PropTypes.func,
+  handleMargin: PropTypes.func,
   incrementalPricing: PropTypes.arrayOf(PropTypes.object),
   minimum: PropTypes.oneOfType([
     PropTypes.string, //initial state is string, but input value is a number

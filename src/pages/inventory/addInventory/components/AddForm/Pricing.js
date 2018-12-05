@@ -24,6 +24,7 @@ export default class Pricing extends Component {
               quantityFrom: '',
               quantityTo: '',
               price: '',
+              margin: ''
           }]
         }
     }
@@ -216,16 +217,48 @@ export default class Pricing extends Component {
       }, ()=>this.validateInputs())
     }
 
+    handlePrice = (e, index) => {
+        let value = e.target.value ? parseInt(e.target.value, 10) : '';
+        let newIncremental = this.state.incrementalPricing.slice(0);
+  
+        newIncremental[index].price = value;
+        newIncremental[index].margin = (parseInt(value) - parseInt(this.props.form.pricing.cost)) / parseInt(this.props.form.pricing.cost) * 100
+
+        if (isNaN(newIncremental[index].margin)) {newIncremental[index].margin = ''}
+
+        this.setState({
+            incrementalPricing: newIncremental
+        })
+        
+    }
+
+    handleMargin = (e, index) => {
+        let value = e.target.value ? parseInt(e.target.value, 10) : '';
+        let newIncremental = this.state.incrementalPricing.slice(0);
+  
+            newIncremental[index].margin = value;
+            newIncremental[index].price = parseInt(this.props.form.pricing.cost) + (parseInt(this.props.form.pricing.cost) * value / 100)
+
+            if (isNaN(newIncremental[index].price)) {newIncremental[index].price = ''}
+       
+            this.setState({
+                incrementalPricing: newIncremental
+        })
+    }
+
     handleChange = (e, index, type) => {
       let value = e.target.value ? parseInt(e.target.value, 10) : '';
       let newIncremental = this.state.incrementalPricing.slice(0);
       newIncremental[index][type] = value;
+
       this.setState({
           incrementalPricing: newIncremental
       })
     }
+
     render() {
 
+    console.log(this.props)
       const {
         mappingForm: {packaging},
         productOfferingForm: {totalPackages = 50},
@@ -374,6 +407,8 @@ export default class Pricing extends Component {
                         addNewIncrementalPricing={this.addNewIncrementalPricing}
                         removeIncrementalPricing={this.removeIncrementalPricing}
                         handleChange={this.handleChange}
+                        handlePrice={this.handlePrice}
+                        handleMargin={this.handleMargin}
                         validateInputs={this.validateInputs}
                       />
                     </div>}
