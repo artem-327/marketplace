@@ -101,6 +101,11 @@
                   background: rgba(255,255,255,1);
                 }
               }
+
+              label.input-checkbox {
+                margin: 3px 0;
+                padding-left: 18px;
+              }
             }
             .price-rules {
                 display: flex;
