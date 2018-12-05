@@ -38,7 +38,7 @@ class ProductOffers extends Component {
                         return ({
                         id: offerId,
                         data: [offer.product.casIndexName,
-                            offer.packaging.amount.formatNumber(),
+                            offer.amount.formatNumber(),
                             packageUnit,
                             `${packageSize} ${unit}`,
                             `${(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()} ${unit}`,

@@ -38,7 +38,7 @@ class ProductOffers extends Component {
                 return{
                     id: offer.id,
                     data: [offer.merchant ? offer.merchant.companyName : "Anonymous",
-                        offer.packaging.amount.formatNumber(),
+                        offer.amount.formatNumber(),
                         `${packageSize} ${unit} ${packageUnit}`,
                         `${(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()} ${unit}`,
                         "$" + offer.pricing.price.formatMoney(3),
