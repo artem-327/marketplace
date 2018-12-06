@@ -11,7 +11,7 @@ class App extends Component {
     super(props)
     this.idleTimer = null
 
-    this.timeout = 1
+    this.timeout = 30
   }
 
   onIdle = () => {
@@ -29,7 +29,7 @@ class App extends Component {
         element={document}
         onActive={this.onActive}
         onIdle={this.onIdle}
-        timeout={1000 * 10 * this.timeout} //logout after 30minutes {1000 * 60 * 30}
+        timeout={1000 * 60 * this.timeout} //logout after 30minutes {1000 * 60 * 30}
       >
         <div className="App" >
           <PopUp />
