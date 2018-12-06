@@ -24,24 +24,23 @@ class ProductOffers extends Component {
     }
 
     render() {
-        console.log(this.props)
         if(this.props.productOffers.length === 0) return null;
         let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
                 return {
                     group:  <React.Fragment><span className="product-casnumber ">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></React.Fragment>,
                     countLabel: 'Product Offerings: ',
                     rows: product.productOffers.map((offer)=>{
-                        const offerId = offer.id
+                        const offerId = offer.id;
                         const unit = getUnit(offer.packaging.unit.name);
-                        const packageUnit = offer.packaging.container.name;
-                        const packageSize = offer.packaging.capacity;
+                        const packageUnit = offer.packaging.packagingType.name;
+                        const packageSize = offer.packaging.size;
                         return ({
                         id: offerId,
                         data: [offer.product.casIndexName,
-                            offer.packaging.amount.formatNumber(),
+                            offer.pkgAmount.formatNumber(),
                             packageUnit,
                             `${packageSize} ${unit}`,
-                            `${(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()} ${unit}`,
+                            `${(parseInt(offer.pkgAmount, 10) * parseInt(offer.packaging.size, 10)).formatNumber()} ${unit}`,
                             offer.pricing.tiers.length > 1 ? offer.pricing.tiers[0].price.formatMoney(3) + '-' + offer.pricing.tiers[offer.pricing.tiers.length - 1].price.formatMoney(3) : "$" + offer.pricing.cost.formatMoney(3),
                             "$" + offer.pricing.price.formatMoney(3),
                             offer.name,

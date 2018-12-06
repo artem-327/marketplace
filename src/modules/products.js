@@ -311,6 +311,6 @@ export function fetchAlternativeNames(id){
 export function fetchPackagingTypes(filter = {}){
     return {
         type: FETCH_PACKAGING_TYPES,
-        payload: axios.get('/prodex/api/containers', {params: {...filter}}).then(result => result.data)
+        payload: axios.get('/prodex/api/packaging-types', {params: {...filter}}).then(result => result.data)
     }
 }
