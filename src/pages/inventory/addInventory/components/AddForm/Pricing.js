@@ -32,6 +32,7 @@ export default class Pricing extends Component {
     componentDidMount(){
         
         if(this.props.edit){
+            this.setState({margin: (this.props.productOffer.pricing.price - this.props.productOffer.pricing.cost) / this.props.productOffer.pricing.cost * 100})
             this.validateMinimum('splits')
             this.validateMinimum('minimum')
             if(this.props.productOffer.pricing.tiers.length !== 0){
@@ -222,7 +223,7 @@ export default class Pricing extends Component {
         let newIncremental = this.state.incrementalPricing.slice(0);
   
         newIncremental[index].price = value;
-        newIncremental[index].margin = (parseInt(value) - parseInt(this.props.form.pricing.cost)) / parseInt(this.props.form.pricing.cost) * 100
+        newIncremental[index].margin = ((parseInt(value) - parseInt(this.props.form.pricing.cost)) / parseInt(this.props.form.pricing.cost) * 100).toFixed(3)
 
         if (isNaN(newIncremental[index].margin)) {newIncremental[index].margin = ''}
 
@@ -237,7 +238,7 @@ export default class Pricing extends Component {
         let newIncremental = this.state.incrementalPricing.slice(0);
   
             newIncremental[index].margin = value;
-            newIncremental[index].price = parseInt(this.props.form.pricing.cost) + (parseInt(this.props.form.pricing.cost) * value / 100)
+            newIncremental[index].price = (parseInt(this.props.form.pricing.cost) + (parseInt(this.props.form.pricing.cost) * value / 100)).toFixed(0)
 
             if (isNaN(newIncremental[index].price)) {newIncremental[index].price = ''}
        

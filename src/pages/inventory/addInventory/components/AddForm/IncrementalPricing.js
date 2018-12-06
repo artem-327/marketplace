@@ -11,7 +11,8 @@ const IncrementalPricing = (props) => {
         if(isNaN(margin) || incrementalPricing[index].price === ''){   
             return '';
         }
-        return margin.toFixed(2);
+        
+        return margin.toFixed(3);
       }
 
       const renderIncrementalPricing = () => {
