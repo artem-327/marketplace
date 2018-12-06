@@ -333,6 +333,18 @@ input {
     height: 40px;
     width: 300px;
   }
+  .warningBody2{
+    position: absolute;
+    left: 0px;
+    top: -25px;
+    padding: 10px 0;
+    border: 1px solid #dc3545;
+    color: #a7a9ab;
+    border-radius: 4px;
+    height: 40px;
+    width: 300px;
+  }
+
   label{
     display: inline-block;
     width: calc(100% - 40px);
