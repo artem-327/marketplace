@@ -10,12 +10,15 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.idleTimer = null
+
+    this.timeout = 1
   }
 
-  onIdle = (e) => {
-    this.props.history.push('/login/')
+  onIdle = () => {
+    this.props.history.push('/')
     localStorage.clear()
-    alert("You've been logged out due to inactivity")
+    alert("You've been logged out due to being inactive for " + this.timeout.toString() + (this.timeout === 1 ? " minute." : " minutes."))
+    window.location.reload();
   }
 
   //router paths - Main
@@ -26,7 +29,7 @@ class App extends Component {
         element={document}
         onActive={this.onActive}
         onIdle={this.onIdle}
-        timeout={1000 * 60 * 30} //logout after 30minutes
+        timeout={1000 * 10 * this.timeout} //logout after 30minutes {1000 * 60 * 30}
       >
         <div className="App" >
           <PopUp />
