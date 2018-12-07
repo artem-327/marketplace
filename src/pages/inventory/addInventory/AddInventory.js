@@ -14,7 +14,7 @@ export default class AddInventory extends Component {
                 indexName: this.props.productOffer.product.casIndexName,
                 packaging: {
                     capacity: this.props.productOffer.packaging.capacity,
-                    container: this.props.productOffer.packaging.container.id,
+                    container: this.props.productOffer.packaging.packagingType.id,
                     unit: this.props.productOffer.packaging.unit.id
                 },
             }));

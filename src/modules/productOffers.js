@@ -182,7 +182,7 @@ export function getUnitOfMeasurement() {
 export function getUnitOfPackaging(pack) {
         return {
             type: GET_UNIT_OF_PACKAGING,
-            payload: axios.get('/prodex/api/containers', {params: {...pack}}).then(response => response.data)
+            payload: axios.get('/prodex/api/packaging-types', {params: {...pack}}).then(response => response.data)
         }
     }
 // unused

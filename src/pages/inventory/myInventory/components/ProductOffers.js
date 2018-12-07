@@ -33,12 +33,12 @@ class ProductOffers extends Component {
                     rows: product.productOffers.map((offer)=>{
                         const offerId = offer.id
                         const unit = getUnit(offer.packaging.unit.name);
-                        const packageUnit = offer.packaging.container.name;
+                        const packageUnit = offer.packaging.packagingType.name;
                         const packageSize = offer.packaging.capacity;
                         return ({
                         id: offerId,
                         data: [offer.product.casIndexName,
-                            offer.amount.formatNumber(),
+                            offer.pkgAmount.formatNumber(),
                             packageUnit,
                             `${packageSize} ${unit}`,
                             `${(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()} ${unit}`,

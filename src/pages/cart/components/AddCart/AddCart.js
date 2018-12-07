@@ -183,7 +183,7 @@ class AddCart extends Component {
               </div>
               <div>
                 <span>Packaging: </span>
-                {offer.packaging.container.name}
+                {offer.packaging.packagingType.name}
               </div>
               <div>
                 <span>Package Size: </span>
