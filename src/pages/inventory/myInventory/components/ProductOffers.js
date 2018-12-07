@@ -34,14 +34,14 @@ class ProductOffers extends Component {
                         const offerId = offer.id
                         const unit = getUnit(offer.packaging.unit.name);
                         const packageUnit = offer.packaging.packagingType.name;
-                        const packageSize = offer.packaging.capacity;
+                        const packageSize = offer.packaging.size;
                         return ({
                         id: offerId,
                         data: [offer.product.casIndexName,
                             offer.pkgAmount.formatNumber(),
                             packageUnit,
                             `${packageSize} ${unit}`,
-                            `${(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()} ${unit}`,
+                            `${(parseInt(offer.pkgAmount, 10) * parseInt(offer.packaging.size, 10)).formatNumber()} ${unit}`,
                             "$" + offer.pricing.cost.formatMoney(3),
                             "$" + offer.pricing.price.formatMoney(3),
                             offer.name,

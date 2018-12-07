@@ -27,7 +27,7 @@ class ProductOffers extends Component {
                 group: <><span className="product-casnumber">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></>,
                 rows: product.productOffers.map((offer)=>{
                 const unit = getUnit(offer.packaging.unit.name);
-                const packageSize = offer.packaging.capacity;
+                const packageSize = offer.packaging.size;
                 const packageUnit = offer.packaging.packagingType.name;
                 const countryException = ["USA", "Canada"]
                 const countryName = offer.warehouse.address.province.country ? offer.warehouse.address.province.country.name : null
@@ -40,7 +40,7 @@ class ProductOffers extends Component {
                     data: [offer.merchant ? offer.merchant.companyName : "Anonymous",
                         offer.pkgAmount.formatNumber(),
                         `${packageSize} ${unit} ${packageUnit}`,
-                        `${(parseInt(offer.packaging.amount, 10) * parseInt(offer.packaging.capacity, 10)).formatNumber()} ${unit}`,
+                        `${(parseInt(offer.pkgAmount, 10) * parseInt(offer.packaging.size, 10)).formatNumber()} ${unit}`,
                         "$" + offer.pricing.price.formatMoney(3),
                         offer.name,
                         offer.manufacturer.name,
