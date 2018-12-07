@@ -26,8 +26,8 @@ class ItemCartBody extends Component {
   render() {
       const {cartItem, deleteCart} = this.props;
       const {productOffer} = cartItem;
-      const {unit, capacity} = productOffer.packaging;
-      const unitName = `${getUnit(unit.name)}${capacity > 1 && 's'}`;
+      const {unit, size} = productOffer.packaging;
+      const unitName = `${getUnit(unit.name)}${size > 1 && 's'}`;
       const location = `${productOffer.warehouse.address.city}, ${productOffer.warehouse.address.province.name}`;
       return (
           <div className="item-cart">
@@ -46,7 +46,7 @@ class ItemCartBody extends Component {
                           Price Per Lb: ${productOffer.pricing.price}
                       </div>
                       <div>
-                          Total Weight: {cartItem.quantity * productOffer.packaging.capacity} {unitName}
+                          Total Weight: {cartItem.quantity * productOffer.packaging.size} {unitName}
                       </div>
                   </div>
                   <div className="item-cart-body-section">
