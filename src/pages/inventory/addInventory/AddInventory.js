@@ -13,8 +13,8 @@ export default class AddInventory extends Component {
                 chemicalName: this.props.productOffer.product.chemicalName,
                 indexName: this.props.productOffer.product.casIndexName,
                 packaging: {
-                    capacity: this.props.productOffer.packaging.capacity,
-                    container: this.props.productOffer.packaging.container.id,
+                    capacity: this.props.productOffer.packaging.size,
+                    container: this.props.productOffer.packaging.packagingType.id,
                     unit: this.props.productOffer.packaging.unit.id
                 },
             }));
@@ -25,7 +25,7 @@ export default class AddInventory extends Component {
                 expirationDate: this.props.productOffer.expirationDate,
                 externalNotes: this.props.productOffer.internalNotes,
                 internalNotes: this.props.productOffer.externalNotes,
-                lotNumber: this.props.productOffer.lotNumber,
+                lotNumber: 'to do ', //needs to grab the proper index in order to work
                 manufacturer: this.props.productOffer.manufacturer,
                 merchantVisibility: this.props.productOffer.merchantVisibility,
                 name: this.props.productOffer.name,
@@ -33,7 +33,7 @@ export default class AddInventory extends Component {
                 productCondition: this.props.productOffer.productCondition.id,
                 productForm: this.props.productOffer.productForm.id,
                 productGrade: this.props.productOffer.productGrade.id,
-                totalPackages: this.props.productOffer.packaging.amount,
+                totalPackages: this.props.productOffer.pkgAmount,
             }));
             this.props.dispatch(actions.merge('forms.addProductOffer', {
                 warehouse: this.props.productOffer.warehouse.id
@@ -42,6 +42,7 @@ export default class AddInventory extends Component {
     }
 
     render() {
+        console.log(this.props);
         return(
         <div>
             <h1 className='header'>{!this.props.edit ? 'ADD INVENTORY' : 'EDIT PRODUCT OFFER - ' + this.props.productOffer.name}</h1>
