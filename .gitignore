@@ -172,3 +172,4 @@ src/styles/colors.css.map
 src/styles/main.css.map
 src/styles/fonts.css.map
 /src/components/Confirmable/confirmDialog.css
+/src/pages/inventory/addInventory/components/AddForm/Location.css
