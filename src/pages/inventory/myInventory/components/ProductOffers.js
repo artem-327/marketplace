@@ -7,6 +7,7 @@ import ToggleBroadcast from "./ToggleBroadcast";
 import {DATE_FORMAT} from "../../../../utils/constants";
 import moment from "moment";
 import {getUnit} from "../../../../utils/functions";
+import Checkbox from "../../../../components/Checkbox/Checkbox"
 
 class ProductOffers extends Component {
 
@@ -29,9 +30,21 @@ class ProductOffers extends Component {
                 broadcast: true
             }
         };
+        this.checkboxToggle = this.checkboxToggle.bind(this)
     }
 
     state={isOpen: false};
+
+    checkboxToggle(type) {
+
+        let newVisibility = {...this.state.visibility};
+
+        newVisibility[type] = !newVisibility[type];
+
+        this.setState({
+            visibility: newVisibility
+        })
+    }
 
     groupProductOffers(productOffers) {
         return productOffers.reduce((carry, offer) => {
@@ -42,10 +55,6 @@ class ProductOffers extends Component {
 
     openBroadcast = (id) => {
         this.props.addPopup(<AddBroadcast id={id}/>)
-    }
-
-    setVisibility = () => {
-        this.setState({visibility: {broadcast: false}})
     }
 
     render() {
@@ -77,10 +86,6 @@ class ProductOffers extends Component {
                 headerInit.push({name: 'Broadcast'})
             }
 
-            if (this.state.visibility.productName) {
-                headerInit.push()
-            } else     
-
         if(this.props.productOffers.length === 0) return null;
         let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
                 return {
@@ -109,7 +114,7 @@ class ProductOffers extends Component {
 
                         /*
                         for (let i = 0; i < data.length; i++) {
-                            if (this.state.visibility.i) {
+                            if (this.state.visibility[i]) {
                                 data.push(i)
                             }
                         }*/
@@ -147,6 +152,7 @@ class ProductOffers extends Component {
                     })
                 };
             });
+
         return (<div className="App">
                 <DataTable id="myInventoryTable"
                            selectableRows
@@ -172,6 +178,10 @@ class ProductOffers extends Component {
                                productOffersSelection={this.state.productOffersSelection}
                                setActiveBroadcastButton={active => this.props.setActiveBroadcastButton(active)}/>}
                 />
+
+                <div>
+                    <Checkbox name='broadcacst' label='Broadcast' onChange={(broadcast) => this.checkboxToggle(broadcast)} defaultValue={this.state.visibility.broadcast}/> 
+                </div>
             </div>
         );
     }
