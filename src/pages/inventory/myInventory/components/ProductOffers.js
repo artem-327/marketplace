@@ -39,7 +39,7 @@ class ProductOffers extends Component {
 
         let newVisibility = {...this.state.visibility};
 
-        newVisibility[type] = !newVisibility[type];
+        newVisibility.broadcast = !newVisibility.broadcast;
 
         this.setState({
             visibility: newVisibility
@@ -178,10 +178,10 @@ class ProductOffers extends Component {
                                productOffersSelection={this.state.productOffersSelection}
                                setActiveBroadcastButton={active => this.props.setActiveBroadcastButton(active)}/>}
                 />
-
+                {/*
                 <div>
-                    <Checkbox name='broadcacst' label='Broadcast' onChange={(broadcast) => this.checkboxToggle(broadcast)} defaultValue={this.state.visibility.broadcast}/> 
-                </div>
+                    <Checkbox name='broadcacst' label='Broadcast' onChange={this.checkboxToggle} defaultValue={this.state.visibility.broadcast}/> 
+                </div>*/}
             </div>
         );
     }
