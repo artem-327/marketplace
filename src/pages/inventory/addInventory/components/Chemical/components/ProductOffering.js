@@ -42,18 +42,19 @@ export default class ProductOffering extends Component {
             this.props.addMessage("Please fill mapping forms before you add new lot.");
             return;
         }
+
         this.setState({save: true, firstValue: false});
         this.props.addLot(values);
     }
 
     minValidationHandler(e) {
-        let assayMin = parseInt(this.props.productOffering.assayMin);
+        let assayMin = parseInt(e.target.value);
         let assayMax = parseInt(this.props.productOffering.assayMax);
         let newMinWarning;
 
-        if(!assayMin) {
+        if(!assayMin && !(assayMin <= 0)) {
             newMinWarning = 'Required'
-        } else if (assayMin = 0) {
+        } else if (assayMin <= 0) {
             newMinWarning = 'Must be > 0'
         } else if (assayMin >= 100) {
             newMinWarning = 'Must be < 100'
@@ -62,20 +63,24 @@ export default class ProductOffering extends Component {
         }
 
         this.setState({minWarning: newMinWarning})
+
+        console.log(e.target.value)
     }
 
     maxValidationHandler(e) {
-        let assayMin = parseInt(e.target.value);
-        let assayMax = parseInt(this.props.productOffering.assayMax);
+        let assayMax = parseInt(e.target.value);
+        let assayMin = parseInt(this.props.productOffering.assayMin);
         let newMaxWarning;
 
-        if(!assayMax) {
+        console.log(e.target.value)
+
+        if(!assayMax && !(assayMax <= 0)) {
             newMaxWarning = 'Required'
-        } else if (assayMax = 0) {
+        } else if (assayMax <= 0) {
             newMaxWarning = 'Must be > 0'
         } else if (assayMax >= 100) {
             newMaxWarning = 'Must be < 100'
-        } else if (assayMax > assayMax) {
+        } else if (assayMin > assayMax) {
             newMaxWarning = 'Must be > or = Min'
         }
 
