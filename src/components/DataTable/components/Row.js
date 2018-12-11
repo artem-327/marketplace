@@ -110,7 +110,7 @@ class Row extends Component {
                   }`
                 : cell;
 
-            if (!this.props.headers[index].visible) return null;
+            //if (!this.props.headers[index].visible) return null;
 
             return (
               <td

@@ -82,6 +82,7 @@ class MyInventory extends Component {
     }
 
     render() {
+        console.log(this.props);
         let content = this.props.isFetching ? <Spinner/> :
             <ProductOffers
                 productOffers={this.props.productOffers}

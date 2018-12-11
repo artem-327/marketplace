@@ -94,11 +94,14 @@ class AddCart extends Component {
     if (isEdit && orderDetailIsFetching) return <Spinner />
     if (offerDetailIsFetching) return <Spinner />
     const location =`${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`;
-    const {unit, capacity, minimum, amount, splits} = offer.packaging;
-    const unitName = `${getUnit(unit.name)}${capacity > 1 && 's'}`;
-    const packageSize = `${capacity} ${unitName}`;
-    const availableProducts = `${amount} pck / ${(amount * capacity).formatNumber()} ${unitName}`;
-    const totalPrice = this.state.quantity ? offer.pricing.price * this.state.quantity * capacity : "";
+    const {minimum, splits} = offer.packaging;
+    const unit = offer.packaging.packagingType;
+    const size = offer.packaging.size;
+    const amount = offer.pkgAmount;
+    const unitName = `${getUnit(unit.name)}${size > 1 && 's'}`;
+    const packageSize = `${size} ${unitName}`;
+    const availableProducts = `${amount} pck / ${(amount * size).formatNumber()} ${unitName}`;
+    const totalPrice = this.state.quantity ? offer.pricing.price * this.state.quantity * size : "";
     const {tiers} = offer.pricing;
     const priceLevelOptions = tiers.map(i => {
       const object = {
@@ -177,7 +180,7 @@ class AddCart extends Component {
               </div>
               <div>
                 <span>Packaging: </span>
-                {offer.packaging.container.name}
+                {offer.packaging.packagingType.name}
               </div>
               <div>
                 <span>Package Size: </span>

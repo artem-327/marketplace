@@ -3,7 +3,7 @@ import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerRedux";
 import './ProductOffering.css'
-import {required, messages, min, isNumber, maxPercent, smaller, bigger} from "../../../../../../utils/validation";
+import {required, messages, min, isNumber} from "../../../../../../utils/validation";
 import RemoteComboBoxRedux from "../../../../../../components/ComboBox/RemoteComboBoxRedux";
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";
 
@@ -13,9 +13,12 @@ export default class ProductOffering extends Component {
         this.state = {
             save: false,
             firstValue: true,
-            assayMinEdit: '',
-            assayMaxEdit: ''
+            minWarning: null,
+            maxWarning: null
         }
+
+        this.minValidationHandler = this.minValidationHandler.bind(this)
+        this.maxValidationHandler = this.maxValidationHandler.bind(this)
     }
 
     componentDidMount() {
@@ -35,23 +38,64 @@ export default class ProductOffering extends Component {
     }
 
     saveOffering(values) {
+
+        if (!parseInt(this.props.productOffering.assayMin) && !parseInt(this.props.productOffering.assayMax)) {
+            this.setState({minWarning: 'Required', maxWarning: 'Required'})
+        }
+
         if (this.validateMapping()) {
             this.props.addMessage("Please fill mapping forms before you add new lot.");
             return;
         }
-        this.setState({save: true, firstValue: false});
-        this.props.addLot(values);
+
+        if (!this.state.minWarning && !this.state.maxWarning) {
+            this.setState({save: true, firstValue: false});
+            this.props.addLot(values);
+        }
     }
 
-    handleAssayMin() {
-        this.setState({assayMinEdit: true})
+    minValidationHandler(e) {
+        let assayMin = parseInt(e.target.value);
+        let assayMax = parseInt(this.props.productOffering.assayMax);
+        let newMinWarning;
+
+        if(!assayMin && !(assayMin <= 0)) {
+            newMinWarning = 'Required'
+        } else if (assayMin <= 0) {
+            newMinWarning = 'Must be > 0'
+        } else if (assayMin > 100) {
+            newMinWarning = 'Must be <= 100'
+        } else if (assayMin > assayMax) {
+            newMinWarning = 'Must be < or = Max'
+        }
+
+        this.setState({minWarning: newMinWarning})
+
+        console.log(e.target.value)
     }
 
-    handleAssayMax() {
-        this.setState({assayMaxEdit: true})
+    maxValidationHandler(e) {
+        let assayMax = parseInt(e.target.value);
+        let assayMin = parseInt(this.props.productOffering.assayMin);
+        let newMaxWarning;
+
+        console.log(e.target.value)
+
+        if(!assayMax && !(assayMax <= 0)) {
+            newMaxWarning = 'Required'
+        } else if (assayMax <= 0) {
+            newMaxWarning = 'Must be > 0'
+        } else if (assayMax > 100) {
+            newMaxWarning = 'Must be <= 100'
+        } else if (assayMin > assayMax) {
+            newMaxWarning = 'Must be > or = Min'
+        }
+
+        this.setState({maxWarning: newMaxWarning})
     }
 
     render() {
+
         let button = this.state.save ? <button className='button big added-productOffering'>Added</button> :
             <button className='button big add-productOffering'>Add Lot</button>;
         return (
@@ -194,19 +238,11 @@ export default class ProductOffering extends Component {
                             <div className='group-item-wr'>
                                 <label htmlFor=".assayMin">Assay Min %</label>
                                 <Control.text model=".assayMin"
-                                              validators={{
-                                                  min: (val) => min(val, 0), 
-                                                  smaller: (val) => smaller(val, this.props.productOffering.assayMax),
-                                                  isNumber, 
-                                                  required, 
-                                                  maxPercent
-                                              }}
-                                              //value={this.state.assayMixEdit}
-                                              //onChange={this.handleAssayMax}
-                                              validateOn="change"
+                                              onChange={this.minValidationHandler}
                                               type="number"
                                               id=".assayMin"
                                 />
+                                <div class="warning">{this.state.minWarning}</div>
                             </div>
                             <Errors
                                 className="form-error"
@@ -223,19 +259,12 @@ export default class ProductOffering extends Component {
                             <div className='group-item-wr'>
                                 <label htmlFor=".assayMax">Assay Max %</label>
                                 <Control.text model=".assayMax"
-                                              validators={{
-                                                  min: (val) => min(val, 0),
-                                                  bigger: (val) => bigger(val, this.props.productOffering.assayMin),
-                                                  isNumber,
-                                                  required,
-                                                  maxPercent
-                                              }}
-                                              //value={this.state.assayMaxEdit}
-                                              //onChange={this.handleAssayMax}
+                                              onChange={this.maxValidationHandler}
                                               validateOn="change"
                                               id=".assayMax"
                                               type="number"
                                 />
+                                <div class="warning2">{this.state.maxWarning}</div>
                             </div>
 
                             <Errors
