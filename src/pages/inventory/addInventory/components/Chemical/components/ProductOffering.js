@@ -39,14 +39,19 @@ export default class ProductOffering extends Component {
 
     saveOffering(values) {
 
+        if (!parseInt(this.props.productOffering.assayMin) && !parseInt(this.props.productOffering.assayMax)) {
+            this.setState({minWarning: 'Required', maxWarning: 'Required'})
+        }
+
         if (this.validateMapping()) {
             this.props.addMessage("Please fill mapping forms before you add new lot.");
             return;
         }
-        
-        this.setState({save: true, firstValue: false});
 
-        this.props.addLot(values);
+        if (!this.state.minWarning && !this.state.maxWarning) {
+            this.setState({save: true, firstValue: false});
+            this.props.addLot(values);
+        }
     }
 
     minValidationHandler(e) {
