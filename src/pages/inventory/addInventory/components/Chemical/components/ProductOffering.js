@@ -3,7 +3,7 @@ import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerRedux";
 import './ProductOffering.css'
-import {required, messages, min, isNumber, maxPercent, smaller, bigger} from "../../../../../../utils/validation";
+import {required, messages, min, isNumber} from "../../../../../../utils/validation";
 import RemoteComboBoxRedux from "../../../../../../components/ComboBox/RemoteComboBoxRedux";
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";
 
@@ -38,12 +38,14 @@ export default class ProductOffering extends Component {
     }
 
     saveOffering(values) {
+
         if (this.validateMapping()) {
             this.props.addMessage("Please fill mapping forms before you add new lot.");
             return;
         }
-
+        
         this.setState({save: true, firstValue: false});
+
         this.props.addLot(values);
     }
 
@@ -56,8 +58,8 @@ export default class ProductOffering extends Component {
             newMinWarning = 'Required'
         } else if (assayMin <= 0) {
             newMinWarning = 'Must be > 0'
-        } else if (assayMin >= 100) {
-            newMinWarning = 'Must be < 100'
+        } else if (assayMin > 100) {
+            newMinWarning = 'Must be <= 100'
         } else if (assayMin > assayMax) {
             newMinWarning = 'Must be < or = Max'
         }
@@ -78,8 +80,8 @@ export default class ProductOffering extends Component {
             newMaxWarning = 'Required'
         } else if (assayMax <= 0) {
             newMaxWarning = 'Must be > 0'
-        } else if (assayMax >= 100) {
-            newMaxWarning = 'Must be < 100'
+        } else if (assayMax > 100) {
+            newMaxWarning = 'Must be <= 100'
         } else if (assayMin > assayMax) {
             newMaxWarning = 'Must be > or = Min'
         }
@@ -235,7 +237,7 @@ export default class ProductOffering extends Component {
                                               type="number"
                                               id=".assayMin"
                                 />
-                                <div>{this.state.minWarning}</div>
+                                <div class="warning">{this.state.minWarning}</div>
                             </div>
                             <Errors
                                 className="form-error"
@@ -257,7 +259,7 @@ export default class ProductOffering extends Component {
                                               id=".assayMax"
                                               type="number"
                                 />
-                                <div>{this.state.maxWarning}</div>
+                                <div class="warning2">{this.state.maxWarning}</div>
                             </div>
 
                             <Errors
