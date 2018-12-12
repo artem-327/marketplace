@@ -124,6 +124,10 @@
           .input-checkbox { /* solving issue in Chrome - enlarging table cell */
             margin-bottom: -16px;
             vertical-align: top;
+
+            .checkmark:after {
+              height: 9px;
+            }
           }
         }
 

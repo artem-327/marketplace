@@ -100,51 +100,51 @@ export default class ProductOffering extends Component {
             <button className='button big add-productOffering'>Add Lot</button>;
         return (
             <div>
-                <h6 className=''>PRODUCT OFFERING</h6>
+                <h4 className=''>PRODUCT OFFERING</h4>
                 <Form model="forms.productOffering" onSubmit={(values) => this.saveOffering(values)}>
                     <div>
-                        <Errors
-                            className="form-error"
-                            model=".totalPackages"
-                            show="touched"
-                            messages={{
-                                required: messages.required,
-                                min: messages.min,
-                                isNumber: messages.isNumber
-                            }}
-                        />
                         <div className='group-item-wr'>
+                            <Errors
+                                className="form-error"
+                                model=".totalPackages"
+                                show="touched"
+                                messages={{
+                                    required: messages.required,
+                                    min: messages.min,
+                                    isNumber: messages.isNumber
+                                }}
+                            />
                             <label htmlFor=".totalPackages">Total Packages</label>
                             <Control.text model=".totalPackages"
                                           validators={{min: (val) => min(val, 0), isNumber, required}}
                                           id=".totalPackages"
                             />
                         </div>
-                        <Errors
-                            className="form-error"
-                            model=".lotNumber"
-                            show="touched"
-                            messages={{
-                                required: messages.required,
-                                min: messages.min,
-                                isNumber: messages.isNumber
-                            }}
-                        />
                         <div className='group-item-wr'>
+                            <Errors
+                                className="form-error"
+                                model=".lotNumber"
+                                show="touched"
+                                messages={{
+                                    required: messages.required,
+                                    min: messages.min,
+                                    isNumber: messages.isNumber
+                                }}
+                            />
                             <label htmlFor=".lotNumber">Lot Number</label>
                             <Control.text model=".lotNumber"
                                           validators={{min: (val) => min(val, 0), isNumber, required}}
                                           id=".lotNumber"/>
                         </div>
                         <div className='group-item-wr'>
+                            <Errors model='forms.productOffering.creationDate'
+                                    show="touched"
+                                    messages={{required: 'Required'}}/>
                             <label htmlFor=".creationDate">MFG Date</label>
                             <DatepickerRedux placeholder={'test'}
                                              dispatch={this.props.dispatch}
                                              onChange={(value) => console.log(value)}
                                              model='forms.productOffering.creationDate'/>
-                            <Errors model='forms.productOffering.creationDate'
-                                    show="touched"
-                                    messages={{required: 'Required'}}/>
                         </div>
                         <div className='group-item-wr'>
                             <label htmlFor=".expirationDate">Expiration Date</label>
@@ -155,15 +155,15 @@ export default class ProductOffering extends Component {
                         </div>
                     </div>
                     <div>
-                        <Errors
-                            className="form-error"
-                            model=".manufacturer"
-                            show="touched"
-                            messages={{
-                                required: messages.required,
-                            }}
-                        />
                         <div className='group-item-wr'>
+                            <Errors
+                                className="form-error"
+                                model=".manufacturer"
+                                show="touched"
+                                messages={{
+                                    required: messages.required,
+                                }}
+                            />
                             <RemoteComboBoxRedux items={this.props.manufacturer}
                                                  api={(text) => this.props.fetchManufacturer(text)}
                                                  dataFetched={this.props.manufacturerFetched}
@@ -195,15 +195,15 @@ export default class ProductOffering extends Component {
                                                  dispatch={this.props.dispatch}
                                                  model="forms.productOffering.origin"/>
                         </div>
-                        <Errors
-                            className="form-error"
-                            model="forms.productOffering.productForm"
-                            show="touched"
-                            messages={{
-                                required: messages.required,
-                            }}
-                        />
                         <div className='group-item-wr'>
+                            <Errors
+                                className="form-error"
+                                model="forms.productOffering.productForm"
+                                show="touched"
+                                messages={{
+                                    required: messages.required,
+                                }}
+                            />
                             <label htmlFor=".form">Form</label>
                             <DropdownRedux opns={this.props.productForms} placeholder='Select'
                                            model="forms.productOffering.productForm"
@@ -211,31 +211,31 @@ export default class ProductOffering extends Component {
                                            dispatch={this.props.dispatch}
                             />
                         </div>
-                        <Errors
-                            className="form-error"
-                            model=".name"
-                            show="touched"
-                        />
                         <div className='group-item-wr'>
+                            <Errors
+                                className="form-error"
+                                model=".name"
+                                show="touched"
+                            />
                             <label htmlFor=".tradeName">Trade Name</label>
                             <Control.text model=".name"
                                           id=".tradeName"
                             />
                         </div>
                         <div>
-                            <Errors
-                                className="form-error"
-                                model=".assayMin"
-                                show="touched"
-                                messages={{
-                                    required: messages.required,
-                                    min: messages.min,
-                                    isNumber: messages.isNumber,
-                                    maxPercent: messages.maxPercent,
-                                    smaller: messages.smaller
-                                }}
-                            />
                             <div className='group-item-wr'>
+                                <Errors
+                                    className="form-error"
+                                    model=".assayMin"
+                                    show="touched"
+                                    messages={{
+                                        required: messages.required,
+                                        min: messages.min,
+                                        isNumber: messages.isNumber,
+                                        maxPercent: messages.maxPercent,
+                                        smaller: messages.smaller
+                                    }}
+                                />
                                 <label htmlFor=".assayMin">Assay Min %</label>
                                 <Control.text model=".assayMin"
                                               onChange={this.minValidationHandler}
@@ -244,19 +244,19 @@ export default class ProductOffering extends Component {
                                 />
                                 <div class="warning">{this.state.minWarning}</div>
                             </div>
-                            <Errors
-                                className="form-error"
-                                model=".assayMax"
-                                show="touched"
-                                messages={{
-                                    required: messages.required,
-                                    min: messages.min,
-                                    isNumber: messages.isNumber,
-                                    maxPercent: messages.maxPercent,
-                                    bigger: messages.bigger
-                                }}
-                            />
                             <div className='group-item-wr'>
+                                <Errors
+                                    className="form-error"
+                                    model=".assayMax"
+                                    show="touched"
+                                    messages={{
+                                        required: messages.required,
+                                        min: messages.min,
+                                        isNumber: messages.isNumber,
+                                        maxPercent: messages.maxPercent,
+                                        bigger: messages.bigger
+                                    }}
+                                />
                                 <label htmlFor=".assayMax">Assay Max %</label>
                                 <Control.text model=".assayMax"
                                               onChange={this.maxValidationHandler}
@@ -266,16 +266,15 @@ export default class ProductOffering extends Component {
                                 />
                                 <div class="warning2">{this.state.maxWarning}</div>
                             </div>
-
-                            <Errors
-                                className="form-error"
-                                model="forms.productOffering.productGrade"
-                                show="touched"
-                                messages={{
-                                    required: messages.required,
-                                }}
-                            />
                             <div className='group-item-wr'>
+                                <Errors
+                                    className="form-error"
+                                    model="forms.productOffering.productGrade"
+                                    show="touched"
+                                    messages={{
+                                        required: messages.required,
+                                    }}
+                                />
                                 <label htmlFor=".grade">Grade</label>
                                 <DropdownRedux opns={this.props.productGrade} placeholder='Select'
                                                model="forms.productOffering.productGrade"
@@ -283,15 +282,15 @@ export default class ProductOffering extends Component {
                                                dispatch={this.props.dispatch}
                                 />
                             </div>
-                            <Errors
-                                className="form-error"
-                                model="forms.productOffering.productCondition"
-                                show="touched"
-                                messages={{
-                                    required: messages.required,
-                                }}
-                            />
                             <div className='group-item-wr'>
+                                <Errors
+                                    className="form-error"
+                                    model="forms.productOffering.productCondition"
+                                    show="touched"
+                                    messages={{
+                                        required: messages.required,
+                                    }}
+                                />
                                 <label htmlFor=".condition">Condition</label>
                                 <DropdownRedux opns={this.props.productConditions} placeholder='Select'
                                                model="forms.productOffering.productCondition"
@@ -302,18 +301,22 @@ export default class ProductOffering extends Component {
                         </div>
                     </div>
                     <div>
-                        <Tooltip className="notes" content="External notes are visible to other merchants."/>
-                        <div className="group-item-wr notes-textarea">
-                            <label htmlFor=".externalNotes">External notes</label>
-                            <Control.textarea model=".externalNotes" id=".externalNotes" className="textarea"
-                                              placeholder="Enter notes here"/>
+                        <div className="group-item-wr long">
+                            <Tooltip className="notes" content="External notes are visible to other merchants."/>
+                            <div className="notes-textarea">
+                                <label htmlFor=".externalNotes">External notes</label>
+                                <Control.textarea model=".externalNotes" id=".externalNotes" className="textarea"
+                                                  placeholder="Enter notes here"/>
+                            </div>
                         </div>
-                        <Tooltip className="notes" content="Internal notes are visible to you or other users of your company only."/>
-                        <div className="group-item-wr notes-textarea">
-                            <label htmlFor=".internalNotes">Internal Notes</label>
-                            <Control.textarea model=".internalNotes" id=".internalNotes" className="textarea"
-                                              placeholder="Enter notes here"/>
+                        <div className="group-item-wr long">
+                            <Tooltip className="notes" content="Internal notes are visible to you or other users of your company only."/>
+                            <div className="notes-textarea">
+                                <label htmlFor=".internalNotes">Internal Notes</label>
+                                <Control.textarea model=".internalNotes" id=".internalNotes" className="textarea"
+                                                  placeholder="Enter notes here"/>
 
+                            </div>
                         </div>
                         {!this.props.edit ? button : null}
                     </div>

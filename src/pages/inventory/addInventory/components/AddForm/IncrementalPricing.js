@@ -105,7 +105,7 @@ const IncrementalPricing = (props) => {
 
     return (
       <div>
-        <h4>Tiered Pricing</h4>
+        <h4>TIERED PRICING</h4>
         <table className='incremental-pricing-table'>
           <thead>
             <tr>

@@ -1,7 +1,6 @@
 @import url(./fonts/MyFontsWebfontsKit.css);
+@import "./styles/fonts.scss";
 @import "./styles/main.scss";
-
-$app-font-family: 'AvenirLTPro-Roman', sans-serif;
 
 .App {
   font-family: $app-font-family;
@@ -206,12 +205,21 @@ position: absolute;
   border-radius: 4px;
   font-size: 1.25em;
   font-weight: 500;
-  &.green{
-    background-color: #4cd136;
+
+  &.green {
+    background-color: #5cbb5a;
+
+    &:hover:not([disabled]) {
+      background-color: #489546;
+    }
   }
   &.grey{
     background-color: $beige-color;
     color: $grey-color;
+
+    &:hover:not([disabled]) {
+      background-color: darken($beige-color, 19.25%);
+    }
   }
   &:hover, &:focus{
     cursor: pointer;
@@ -227,9 +235,11 @@ position: absolute;
     height: 35px;
   }
   &.big {
-    font-size: 1.4em;
-    width: 160px;
-    height: 45px;
+    width: auto;
+    min-width: 160px;
+    height: 52px;
+    padding: 0 27px;
+    font-size: 1.25em;
   }
   &.disabled{
     background-color: #cfe6f3;
@@ -243,6 +253,7 @@ position: absolute;
   border-radius: 4px;
   border: 1px solid #B0B0B0;
   padding: 7px;
+  font-size: 0.875rem !important;
   &:hover, &:focus{
     border-color: #289ada;
     box-shadow: none;
@@ -274,7 +285,9 @@ input {
   width: 192px;
   border-radius: 4px;
   border: 1px solid #B0B0B0;
-  padding: 7px 9px;
+  padding: 12px 9px;
+  font-size: 0.875rem !important;
+  line-height: 1.1429 !important;
 
   &:hover, &:focus{
     border-color: #289ada;
@@ -289,7 +302,7 @@ input {
     font-size: 1rem;
     border-radius: 4px;
     border: 1px solid #B0B0B0;
-    padding: 7px;
+    padding: 12px 9px;
 
     &:hover, &:focus{
       border-color: #289ada;
@@ -300,6 +313,20 @@ input {
       padding: 12px 7px;
       font-size: 1.2rem;
     }
+  }
+
+  &.smaller {
+    height: 34px;
+    padding: 10px 9px;
+    font-size: 0.75rem;
+    line-height: 1.1667;
+  }
+
+  &.smallest {
+    height: 28px;
+    padding: 7px 9px;
+    font-size: 0.75rem;
+    line-height: 1.1667;
   }
 }
 
@@ -409,6 +436,104 @@ i {
     border-width: 2px 0 0 2px;
     border-style: solid;
     border-color: #000;
+  }
+
+  &.search {
+    position: relative;
+    display: inline-block;
+    width: 18px;
+    height: 21px;
+
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: inline-block;
+      width: 16px;
+      height: 17px;
+      border: 2px solid #c6c6c6;
+      border-radius: 50%;
+    }
+
+    &:after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      transform: rotate(-42deg);
+      width: 2px;
+      height: 10px;
+      background-color: #c6c6c6;
+    }
+
+    &.combo-icon {
+      width: 15px;
+      height: 15px;
+
+      &:before {
+        width: 12px;
+        height: 12px;
+        border-width: 1px;
+      }
+
+      &:after {
+        right: 2px;
+        transform-origin: 50% 50%;
+        transform: rotate(-45deg);
+        width: 1px;
+        height: 6px;
+      }
+    }
+  }
+
+  &.info {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    padding: 0;
+    background-color: #fff;
+    box-shadow: 0 0 0 2px $blue-color;
+    text-align: center;
+    font-size: 1rem;
+    color: $blue-color;
+    line-height: 18px;
+
+    &:before {
+      content: "" !important;
+      position: absolute;
+      top: 3px;
+      left: 8px;
+      width: 2px;
+      height: 2px;
+      background-color: $blue-color;
+    }
+
+    &:after {
+      content: "" !important;
+      position: absolute;
+      top: 7px;
+      left: 8px;
+      width: 2px;
+      height: 8px;
+      background-color: $blue-color;
+    }
+
+    /* SMALL ----------------------------- */
+    &.small {
+      width: 16px;
+      height: 16px;
+
+      &:before {
+        margin-left: -1px;
+      }
+
+      &:after {
+        height: 6px;
+        margin-left: -1px;
+      }
+    }
   }
 }
 

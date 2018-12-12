@@ -1,19 +1,24 @@
 .uploadLot {
   label {
-    margin-left: 45px;
-    font-size: 1.1rem;
+    margin: 0 0 0 37px;
+    font-size: 0.875rem;
     color: #289ada;
     vertical-align: bottom;
+    line-height: 2;
   }
   &.add-doc{
     position: relative;
     display: inline-block;
-    width: 251px;
+    width: auto;
     vertical-align: bottom;
-    margin: 0 10px;
-    padding: 2px 10px 2px 10px;
+    margin: 0 11px;
+    padding: 2px 25px 2px 11px;
     border: 1px solid #289ada;
     border-radius: 4px;
+
+    &:first-child {
+      margin-left: 0;
+    }
   }
 }
 .file-space{
@@ -21,9 +26,10 @@
   display: inline-block;
 }
 .upload {
-  height: 32px;
   float: left;
-  margin-bottom: 7px;
+  height: 27px;
+  margin-top: 0;
+  margin-bottom: 5px;
 }
 .uploaded {
   height: 32px;
@@ -35,7 +41,7 @@
   display: inline-block;
   font-size: 1.1rem;
   color: black;
-  padding-top: 7px;
+  padding-top: 4px;
   transition: all .2s ease;
   &.active{
     color: #4cd136;

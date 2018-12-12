@@ -6,7 +6,7 @@ class AdditionalDocuments extends Component {
     render () {
         return (
             <div>
-                <h6 className="add-doc-title">ADDITIONAL DOCUMENTS</h6>
+                <h4 className="add-doc-title">ADDITIONAL DOCUMENTS</h4>
                 <div className="add-documents">
                 <UploadLot className="add-doc" content="Click to upload MSDS"/>
                 <UploadLot className="add-doc" content="Click to upload Spec Sheet"/>

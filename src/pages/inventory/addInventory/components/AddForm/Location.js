@@ -139,15 +139,15 @@ export default class Location extends Component {
         return (
             <div>
                 <div>
-                    <Errors
-                        className="form-error"
-                        model="forms.addProductOffer.warehouse"
-                        show="touched"
-                        messages={{
-                            required: messages.required,
-                        }}
-                    />
                     <div className='group-item-wr'>
+                        <Errors
+                            className="form-error"
+                            model="forms.addProductOffer.warehouse"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                            }}
+                        />
                         <label>Warehouse</label>
                             <DropdownRedux
                                 model="forms.addProductOffer.warehouse"
@@ -231,8 +231,10 @@ export default class Location extends Component {
                                        onChange={(e) => {
                                            this.handleInputs(e.target.value, 'email')
                                        }}/>
-                                {!this.props.edit && button}
                             </div>
+
+                            {!this.props.edit && button}
+
                             <div>
                                 <div className='group-item-wr'>
                                     <WarningLabel isVisible={!this.validateForms() && this.state.edit} warningText={"Please fill all fields before saving."}/>
@@ -260,6 +262,8 @@ export default class Location extends Component {
                         />
                     </div>
                     <div className='group-item-wr'>
+                        {(this.state.isSubmitted && this.state.street === '') ?
+                            <div className='warehouse-val'><span>Required</span></div> : null}
                         <label htmlFor="street">Street Address</label>
                         <input id="street"
                                value={this.state.street}
@@ -268,6 +272,8 @@ export default class Location extends Component {
                                }}/>
                     </div>
                     <div className='group-item-wr'>
+                        {(this.state.isSubmitted && this.state.city === '') ?
+                            <div className='warehouse-val'><span>Required</span></div> : null}
                         <label htmlFor="city">City</label>
                         <input id="city"
                                value={this.state.city}
@@ -276,8 +282,9 @@ export default class Location extends Component {
                                }}/>
                     </div>
                     <div className='group-item-wr'>
-                                <label>State</label>
-                                <Dropdown opns={this.props.locations.map((item)=>{
+
+                        <label>State</label>
+                        <Dropdown opns={this.props.locations.map((item)=>{
                                             if(item.province) return ({id: item.province.id, name: item.province.name});
                                             if(item.country) return ({id: item.country.id, name: item.country.name});
                                             return {id: 0, name: 'no province or country'}
@@ -285,8 +292,10 @@ export default class Location extends Component {
                                         onChange={(value) => {
                                             this.handleInputs(value, 'state')
                                         }}/>
-                     </div>
+                    </div>
                     <div className='group-item-wr'>
+                        {(this.state.isSubmitted && this.state.zip === '') ?
+                            <div className='warehouse-val'><span>Required</span></div> : null}
                         <label htmlFor="zip">Zip Code</label>
                         <input id="zip"
                                value={this.state.zip}
@@ -320,8 +329,10 @@ export default class Location extends Component {
                                onChange={(e) => {
                                    this.handleInputs(e.target.value, 'email')
                                }}/>
-                        {button}
                     </div>
+
+                    {button}
+
                     <div>
                         <div className='group-item-wr'>
                             <WarningLabel isVisible={!this.validateForms()} warningText={"Please fill all fields before saving."}/>

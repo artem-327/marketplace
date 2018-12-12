@@ -23,8 +23,8 @@ const BroadcastField = ({
     return (
       <div className={`broadcast-field ${type} ${isClientList ? "client-list" : "price-list"}`}>
         <div className={`field-name ${isFiltering || !hasChildren || type ==="root" ? "" : "pointer"}`} name={type} id={id} onClick={e => handleExpanded(e)}>
-          {hasChildren && type !=="root" && !isFiltering && !isExpanded && <i className="fas fa-chevron-right" name={type} id={id} onClick={e => handleExpanded(e)}/>}
-          {hasChildren && type !=="root" && !isFiltering && isExpanded && <i className="fas fa-chevron-down" name={type} id={id} onClick={e => handleExpanded(e)}/>} 
+          {hasChildren && type !=="root" && !isFiltering && !isExpanded && <i className="arrow" name={type} id={id} onClick={e => handleExpanded(e)}/>}
+          {hasChildren && type !=="root" && !isFiltering && isExpanded && <i className="arrow opened" name={type} id={id} onClick={e => handleExpanded(e)}/>}
           {name}
         </div>
         {isClientList 
@@ -49,14 +49,14 @@ const BroadcastField = ({
           <div className="price-rules">
             <Control.text
               model={`.${type}[${id}].priceValue`}
-              className="price-value"
+              className="price-value smallest"
               validators={{ isNumber }}
               onChange={e => handleRuleClick(e)}
               id={id}
             />
-            <div className="price-units">     
-                <RadioBroadcastRedux model={`.${type}[${id}].priceUnit`} label="$" value="$" onClick={handleRuleClick} id={id}/>       
-                <RadioBroadcastRedux model={`.${type}[${id}].priceUnit`} label="%" value="%" onClick={handleRuleClick} id={id}/>                      
+            <div className="price-units">
+                <RadioBroadcastRedux model={`.${type}[${id}].priceUnit`} label="%" value="%" onClick={handleRuleClick} id={id}/>
+                <RadioBroadcastRedux model={`.${type}[${id}].priceUnit`} label="$" value="$" onClick={handleRuleClick} id={id}/>
             </div>
           </div>
         )}
