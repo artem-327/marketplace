@@ -33,7 +33,7 @@ class ProductOffers extends Component {
                 const countryName = offer.warehouse.address.province.country ? offer.warehouse.address.province.country.name : null
                 const location = countryException.includes(countryName)
                     ? `${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`
-                    : `${offer.warehouse.address.city}, ${countryName}`
+                    : `${offer.warehouse.address.city}, ${countryName}`;
 
                 return{
                     id: offer.id,
