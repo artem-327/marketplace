@@ -27,6 +27,7 @@ class ProductOffers extends Component {
                 group: <><span className="product-casnumber">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></>,
                 rows: product.productOffers.map((offer)=>{
                 const unit = getUnit(offer.packaging.unit.name);
+                const price = offer.pricing.tiers.length > 1 ? "$" + offer.pricing.tiers[0].price.formatMoney(3) + '-' + offer.pricing.tiers[offer.pricing.tiers.length - 1].price.formatMoney(3) : "$" + offer.pricing.price.formatMoney(3);
                 const packageSize = offer.packaging.size;
                 const packageUnit = offer.packaging.packagingType.name;
                 const countryException = ["USA", "Canada"]
@@ -34,7 +35,8 @@ class ProductOffers extends Component {
                 const location = countryException.includes(countryName)
                     ? `${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`
                     : `${offer.warehouse.address.city}, ${countryName}`
-                const price = offer.pricing.tiers.length > 1 ? "$" + offer.pricing.tiers[0].price.formatMoney(3) + '-' + offer.pricing.tiers[offer.pricing.tiers.length - 1].price.formatMoney(3) : "$" + offer.pricing.price.formatMoney(3),
+
+                    
 
                 return{
                     id: offer.id,
