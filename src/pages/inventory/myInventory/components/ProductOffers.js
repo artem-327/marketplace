@@ -11,40 +11,7 @@ import Checkbox from "../../../../components/Checkbox/Checkbox"
 
 class ProductOffers extends Component {
 
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            visibility: {
-                productName: true,
-                available: true,
-                packaging: true,
-                pkgSize: true,
-                quantity: true,
-                cost: true,
-                fobPrice: true,
-                tradeName: true,
-                mfr: true,
-                condition: true,
-                mfgDate: true,
-                broadcast: true
-            }
-        };
-        this.checkboxToggle = this.checkboxToggle.bind(this)
-    }
-
     state={isOpen: false};
-
-    checkboxToggle(type) {
-
-        let newVisibility = {...this.state.visibility};
-
-        newVisibility.broadcast = !newVisibility.broadcast;
-
-        this.setState({
-            visibility: newVisibility
-        })
-    }
 
     groupProductOffers(productOffers) {
         return productOffers.reduce((carry, offer) => {
@@ -89,11 +56,10 @@ class ProductOffers extends Component {
         if(this.props.productOffers.length === 0) return null;
         let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
                 return {
-                    group: <React.Fragment><span className="product-casnumber ">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></React.Fragment>,
+                    group:  <React.Fragment><span className="product-casnumber ">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></React.Fragment>,
                     countLabel: 'Product Offerings: ',
                     rows: product.productOffers.map((offer)=>{
-
-                        const offerId = offer.id;
+                        const offerId = offer.id
                         const unit = getUnit(offer.packaging.unit.name);
                         const packageSize = offer.packaging.size;
                         
@@ -152,12 +118,24 @@ class ProductOffers extends Component {
                     })
                 };
             });
-
         return (<div className="App">
                 <DataTable id="myInventoryTable"
                            selectableRows
                            sortFunc={(nameColumn) => console.log(nameColumn)}
-                           headerInit={headerInit}
+                           headerInit={[
+                               {name: 'Product Name'}, 
+                               {name: 'Available'}, 
+                               {name: 'Packaging'}, 
+                               {name: 'Pkg. size'}, 
+                               {name: 'Quantity'}, 
+                               {name: 'Cost'}, 
+                               {name: 'FOB Price'}, 
+                               {name: 'Trade Name'}, 
+                               {name: 'MFR.'}, 
+                               {name: 'Condition'}, 
+                               {name: 'MFG Date'},
+                               {name: 'Broadcast'}
+                            ]}
                            contextMenu={
                                [
                                    {action: (id)=>this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'Edit Listing',},
@@ -178,10 +156,6 @@ class ProductOffers extends Component {
                                productOffersSelection={this.state.productOffersSelection}
                                setActiveBroadcastButton={active => this.props.setActiveBroadcastButton(active)}/>}
                 />
-                {/*
-                <div>
-                    <Checkbox name='broadcacst' label='Broadcast' onChange={this.checkboxToggle} defaultValue={this.state.visibility.broadcast}/> 
-                </div>*/}
             </div>
         );
     }
