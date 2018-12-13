@@ -121,7 +121,7 @@ export default class ProductOffering extends Component {
                                           id=".totalPackages"
                             />
                         </div>
-                        <div className='group-item-wr'>
+                     {/*<div className='group-item-wr'>
                             <Errors
                                 className="form-error"
                                 model=".lotNumber"
@@ -136,7 +136,8 @@ export default class ProductOffering extends Component {
                             <Control.text model=".lotNumber"
                                           validators={{min: (val) => min(val, 0), isNumber, required}}
                                           id=".lotNumber"/>
-                        </div>
+                            </div>*/}
+
                         <div className='group-item-wr'>
                             <Errors model='forms.productOffering.creationDate'
                                     show="touched"

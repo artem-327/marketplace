@@ -34,6 +34,9 @@ export default class ProductMapping extends Component {
     }
 
     render() {
+
+        console.log(this.props)
+
         let button = this.state.save ? <button className='saved-productMapping'>SAVED</button> :
             <button className='save-productMapping'>Save Mapping</button>;
 
@@ -137,7 +140,7 @@ export default class ProductMapping extends Component {
                     <div className='group-item-wr'>
                         <Errors
                             className="form-error"
-                            model=".packaging.capacity"
+                            model=".packaging.size"
                             show="touched"
                             messages={{
                                 required: messages.required,
@@ -147,7 +150,7 @@ export default class ProductMapping extends Component {
                             }}
                         />
                         <label htmlFor=".measurements">Measure</label>
-                        <Control.text model=".packaging.capacity"
+                        <Control.text model=".packaging.size"
                                       validators={{min: (val) => min(val, 0), isNumber, required}}
                                       id=".measurements"
                                       defaultValue=""
