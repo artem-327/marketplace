@@ -13,7 +13,7 @@ const CartItemSummary = ({cartItem,  deleteCart, itemIndex}) => {
             <tr><td>Merchant</td><td>{productOffer.merchant.email}</td></tr>
             <tr><td>Location</td><td>{location}</td></tr>
             <tr><td>Quantity</td><td>{cartItem.quantity} packs</td></tr>
-            <tr><td>Weight</td><td>{cartItem.quantity * productOffer.packaging.capacity} lbs</td></tr>
+            <tr><td>Weight</td><td>{cartItem.quantity * productOffer.packaging.size} lbs</td></tr>
             <tr><td>Price per Lb</td><td>{productOffer.pricing.price}$</td></tr>
             <tr className="total"><td>Product Total</td><td>{cartItem.selectedOfferPrice}$</td></tr>
           </tbody>

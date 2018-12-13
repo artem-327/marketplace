@@ -161,7 +161,7 @@ export function fetchProductOffer(id) {
 export function editProductOffer(id, inputs) {
     return {
         type: EDIT_PRODUCT_OFFER,
-        payload: axios.put(`/prodex/api/product-offers/${id}`, inputs)
+        payload: axios.patch(`/prodex/api/product-offers/${id}`, inputs)
     }
 }
 

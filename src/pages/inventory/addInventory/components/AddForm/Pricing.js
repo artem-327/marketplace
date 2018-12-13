@@ -32,7 +32,7 @@ export default class Pricing extends Component {
     componentDidMount(){
         
         if(this.props.edit){
-            this.setState({margin: (this.props.productOffer.pricing.price - this.props.productOffer.pricing.cost) / this.props.productOffer.pricing.cost * 100})
+            this.setState({margin: ((this.props.productOffer.pricing.price - this.props.productOffer.pricing.cost) / this.props.productOffer.pricing.cost * 100).toFixed(3)})
             this.validateMinimum('splits')
             this.validateMinimum('minimum')
             if(this.props.productOffer.pricing.tiers.length !== 0){
@@ -268,7 +268,6 @@ export default class Pricing extends Component {
 
       const measurement = packaging ? packaging.capacity : null
       const price = pricing ? pricing.price : null
-
       
         return (
             <div>
@@ -292,7 +291,7 @@ export default class Pricing extends Component {
                                       validators={{
                                           min: (val) => min(val, 0),
                                           isNumber,
-                                          required
+                                          //required
                                       }}
                                       type='number'
                                       name='price'
@@ -320,6 +319,7 @@ export default class Pricing extends Component {
                                       validators={{
                                           min: (val) => min(val, 0),
                                           isNumber,
+                                          //required
                                       }}
                                       defaultValue={this.props.edit ? this.props.productOffer.pricing.cost : null}
                                       type='number'
@@ -340,6 +340,7 @@ export default class Pricing extends Component {
                                       validators={{
                                           min: (val) => min(val, 0),
                                           isNumber,
+                                          //required
                                       }}
                                       value={this.state.margin}
                                       type='number'

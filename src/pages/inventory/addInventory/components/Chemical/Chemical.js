@@ -38,7 +38,7 @@ class Chemical extends Component {
                 packaging:{
                     unit: this.state.selectedProductMapping.packaging.unit.id,
                     container: this.state.selectedProductMapping.packaging.container.id,
-                    capacity: this.state.selectedProductMapping.packaging.capacity
+                    size: this.state.selectedProductMapping.packaging.size
                 }
             };
             this.props.setMapping(inputs);

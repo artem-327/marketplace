@@ -6,6 +6,7 @@ import {messages, required} from "../../../../../utils/validation";
 import classnames from "classnames";
 import WarningLabel from "./components/WarningLabel";
 import "./Location.css"
+import { timingSafeEqual } from 'crypto';
 
 export default class Location extends Component {
 
@@ -24,6 +25,7 @@ export default class Location extends Component {
             phone: '',
             email: '',
             isSubmitted: false,
+            //currentLocation: this.props.edit ? this.props.productOffer.warehouse.id + 1 : null
         }
     }
 
@@ -40,6 +42,26 @@ export default class Location extends Component {
                 zip: nextProps.warehouse[this.state.warehouseIndex].address.zip.zip,
             })
         }
+    }
+
+    setInitialValue() {
+
+        if (this.props.edit) {
+            this.setState({
+                warehouseIndex: this.props.productOffer.warehouse.id,
+                street: this.props.productOffer.warehouse.address.streetAddress,
+                city: this.props.productOffer.warehouse.address.city,
+                state: this.props.productOffer.warehouse.address.province.id,
+                contact: this.props.productOffer.warehouse.contact.name,
+                phone: this.props.productOffer.warehouse.contact.number,
+                email: this.props.productOffer.warehouse.contact.email,
+                zip: this.props.productOffer.warehouse.address.zip.zip,
+            })
+        }
+    }
+
+    componentDidMount() {
+        this.setInitialValue()
     }
 
     handleInputs(value, name) {
@@ -135,7 +157,7 @@ export default class Location extends Component {
             <button onClick={(e) => this.updateLocation(e)} className='edit-location'>Save</button> :
             <button className={'edit-location' + classnames({" disabled": (disabled)})}
                     onClick={(e) => this.changeMode(e)}>Edit</button>;
-        const currentLocation = this.state.warehouseIndex !== '' ? this.props.warehouse[this.state.warehouseIndex].name : null;
+        const currentLocation = this.props.edit ? this.props.productOffer.warehouse.id + 1 : null;
         return (
             <div>
                 <div>
@@ -153,7 +175,7 @@ export default class Location extends Component {
                                 model="forms.addProductOffer.warehouse"
                                 dispatch={this.props.dispatch}
                                 opns={this.props.warehouse}
-                                currentValue={currentLocation}
+                                value={this.state.warehouseIndex + 1}
                                 validators={{required}}
                                 onChange={(id) => this.setLocation(id)}
                                 placeholder='Select Location'
@@ -385,6 +407,7 @@ export default class Location extends Component {
     }
 
     render() {
+        console.log(this.props)
         const location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation();
         return (
             <div className='location-wr'>
@@ -395,9 +418,6 @@ export default class Location extends Component {
                     </div> : null
                 }
                 {location}
-
-
-                
             </div>
         );
     }

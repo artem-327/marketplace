@@ -16,6 +16,8 @@ export default class AddForm extends Component {
                 price:'',
             }]
         }
+
+        this.cancelEdit = this.cancelEdit.bind(this)
     }
 
     componentWillMount(){
@@ -106,7 +108,14 @@ export default class AddForm extends Component {
         });
     }
 
+    cancelEdit() {
+        this.props.history.push("/inventory/my-inventory")
+    }
+
     render() {
+
+        let cancelButton = this.props.edit ? <button onClick={this.cancelEdit} className={classnames('button add-inventory big')}>Cancel Edit</button> : null;
+
         return (
             <div className={classnames('add-inventory', {'disable' : this.props.disable})} >
                 <Form model="forms.addProductOffer" onSubmit={(inputs) => this.props.edit ? this.editProductOffer(inputs) : this.addProductOffer(inputs)}>
@@ -117,6 +126,9 @@ export default class AddForm extends Component {
                         {!this.props.edit ? 'Add Product Offer' : 'Edit Product Offer' }
                     </button>
                 </Form>
-            </div> )
+                {cancelButton}
+            </div> 
+            )
+            
     }
 }
