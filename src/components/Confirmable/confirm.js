@@ -1,4 +1,4 @@
-import React from 'react';
+//import React from 'react';
 import { createConfirmation } from 'react-confirm';
 import ConfirmDialog from './ConfirmDialog';
 

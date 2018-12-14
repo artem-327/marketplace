@@ -6,7 +6,7 @@ import {messages, required} from "../../../../../utils/validation";
 import classnames from "classnames";
 import WarningLabel from "./components/WarningLabel";
 import "./Location.css"
-import { timingSafeEqual } from 'crypto';
+//import { timingSafeEqual } from 'crypto';
 
 export default class Location extends Component {
 
@@ -48,7 +48,7 @@ export default class Location extends Component {
 
         if (this.props.edit) {
             this.setState({
-                warehouseIndex: this.props.productOffer.warehouse.id,
+                warehouseIndex: this.props.productOffer.warehouse.id - 1,
                 street: this.props.productOffer.warehouse.address.streetAddress,
                 city: this.props.productOffer.warehouse.address.city,
                 state: this.props.productOffer.warehouse.address.province.id,
@@ -102,7 +102,7 @@ export default class Location extends Component {
     }
 
     validateForms() {
-        if (this.state.street === '' || this.state.city === '' || this.state.state === '' || this.state.zip === '' || this.state.contact === '' || this.state.phone == '' || this.state.email === '') {
+        if (this.state.street === '' || this.state.city === '' || this.state.state === '' || this.state.zip === '' || this.state.contact === '' || this.state.phone === '' || this.state.email === '') {
             return false;
         }
         else if (!this.validateEmail()) {
@@ -157,7 +157,7 @@ export default class Location extends Component {
             <button onClick={(e) => this.updateLocation(e)} className='edit-location'>Save</button> :
             <button className={'edit-location' + classnames({" disabled": (disabled)})}
                     onClick={(e) => this.changeMode(e)}>Edit</button>;
-        const currentLocation = this.props.edit ? this.props.productOffer.warehouse.id + 1 : null;
+
         return (
             <div>
                 <div>
@@ -380,13 +380,13 @@ export default class Location extends Component {
                 })
             } else {
                 this.setState({
-                    street: this.props.warehouse[this.state.warehouseIndex + 1].address.streetAddress,
-                    city: this.props.warehouse[this.state.warehouseIndex + 1].address.city,
-                    state: this.props.warehouse[this.state.warehouseIndex + 1].address.province.id,
-                    contact: this.props.warehouse[this.state.warehouseIndex + 1].contact.name,
-                    phone: this.props.warehouse[this.state.warehouseIndex + 1].contact.number,
-                    email: this.props.warehouse[this.state.warehouseIndex + 1].contact.email,
-                    zip: this.props.warehouse[this.state.warehouseIndex + 1].address.zip.zip,
+                    street: this.props.warehouse[this.state.warehouseIndex].address.streetAddress,
+                    city: this.props.warehouse[this.state.warehouseIndex].address.city,
+                    state: this.props.warehouse[this.state.warehouseIndex].address.province.id,
+                    contact: this.props.warehouse[this.state.warehouseIndex].contact.name,
+                    phone: this.props.warehouse[this.state.warehouseIndex].contact.number,
+                    email: this.props.warehouse[this.state.warehouseIndex].contact.email,
+                    zip: this.props.warehouse[this.state.warehouseIndex].address.zip.zip,
                     location: 'saved'
                 })
             }

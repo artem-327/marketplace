@@ -6,6 +6,7 @@ import './ProductOffering.css'
 import {required, messages, min, isNumber, maxPercent} from "../../../../../../utils/validation";
 import RemoteComboBoxRedux from "../../../../../../components/ComboBox/RemoteComboBoxRedux";
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";
+import moment from 'moment'
 
 export default class ProductOffering extends Component {
     constructor(props) {

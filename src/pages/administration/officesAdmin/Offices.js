@@ -10,10 +10,10 @@ import {
   createOffice
 } from "../../../modules/companies";
 import { fetchLocations } from "../../../modules/location";
-import {addPopup, removePopup} from "../../../modules/popup";
-import { required } from "../../../utils/validation";
-import RemoteComboBox from "../../../components/ComboBox/RemoteComboBox";
-import Button from "../../../components/Button/Button";
+import {addPopup, /*removePopup*/} from "../../../modules/popup";
+//import { required } from "../../../utils/validation";
+//import RemoteComboBox from "../../../components/ComboBox/RemoteComboBox";
+//import Button from "../../../components/Button/Button";
 
 class Offices extends Component {
   state = {
