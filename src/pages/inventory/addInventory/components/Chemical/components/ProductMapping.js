@@ -41,6 +41,7 @@ export default class ProductMapping extends Component {
             <button className='save-productMapping'>Save Mapping</button>;
 
         return (
+
             <div>
                 <h4 className=''>PRODUCT MAPPING</h4>
                 <Form model="forms.productMapping" onSubmit={(values)=>this.saveMapping(values)} >
@@ -153,7 +154,7 @@ export default class ProductMapping extends Component {
                         <Control.text model=".packaging.size"
                                       validators={{min: (val) => min(val, 0), isNumber, required}}
                                       id=".measurements"
-                                      defaultValue=""
+                                      //defaultValue=""
                                       />
                     </div>
                     <div className='group-item-wr'>
@@ -170,13 +171,13 @@ export default class ProductMapping extends Component {
                                        model="forms.productMapping.packaging.unit"
                                        validators={{required}}
                                        dispatch={this.props.dispatch}
-                                       defaultValue=""
+                                       //defaultValue=""
                                        />
                     </div>
                     <div className='group-item-wr'>
                         <Errors
                             className="form-error"
-                            model="forms.productMapping.packaging.container"
+                            model="forms.productMapping.packaging.packagingType"
                             show="touched"
                             messages={{
                                 required: messages.required,
@@ -184,10 +185,10 @@ export default class ProductMapping extends Component {
                         />
                         <label htmlFor=".productCondition">U/P</label>
                         <DropdownRedux opns={this.props.unitOfPackaging} placeholder='Select'
-                                       model="forms.productMapping.packaging.container"
+                                       model="forms.productMapping.packaging.packagingType"
                                        dispatch={this.props.dispatch}
                                        validators={{required}}
-                                       defaultValue=""
+                                       defaultValue={2} //temporary fix
                                        />
                     </div>
                     {!this.props.edit ?

@@ -267,7 +267,7 @@ export default class Pricing extends Component {
       const {showIncrementalPricing, splits, minimum, disabled, incrementalPricing} = this.state
 
       const measurement = packaging ? packaging.capacity : null
-      const price = pricing ? pricing.price : null
+      const price = this.props
       
         return (
             <div>
