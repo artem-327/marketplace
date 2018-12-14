@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Control, Errors, actions} from 'react-redux-form';
-import {required, isNumber, min, messages} from "../../../../../utils/validation";
+import {/*required,*/ isNumber, min, messages} from "../../../../../utils/validation";
 import IncrementalPricing from "./IncrementalPricing";
 import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
 import Checkbox from "../../../../../components/Checkbox/Checkbox";
@@ -70,7 +70,7 @@ export default class Pricing extends Component {
 
         let price = parseInt(this.props.form.pricing.price,10);
         let cost = parseInt(this.props.form.pricing.cost,10);
-        let margin = parseInt(this.state.margin,10);
+        //let margin = parseInt(this.state.margin,10);
         let active = e.target.name;
         let activeVal = parseInt(e.target.value,10);
 
@@ -260,13 +260,13 @@ export default class Pricing extends Component {
     render() {
 
       const {
-        mappingForm: {packaging},
+        //mappingForm: {packaging},
         productOfferingForm: {totalPackages = 50},
-        addProductOfferForm: {pricing}
+        //addProductOfferForm: {pricing}
       } = this.props
       const {showIncrementalPricing, splits, minimum, disabled, incrementalPricing} = this.state
 
-      const measurement = packaging ? packaging.capacity : null
+      //const measurement = packaging ? packaging.capacity : null
       const price = this.props
       
         return (

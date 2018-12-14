@@ -188,7 +188,6 @@ export default class ProductMapping extends Component {
                                        model="forms.productMapping.packaging.packagingType"
                                        dispatch={this.props.dispatch}
                                        validators={{required}}
-                                       defaultValue={2} //temporary fix
                                        />
                     </div>
                     {!this.props.edit ?

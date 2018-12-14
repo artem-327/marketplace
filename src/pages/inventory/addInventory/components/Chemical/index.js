@@ -20,7 +20,6 @@ const mapStateToProps = store => ({
     isSearching: store.products.isFetching,
     isMapping: store.products.isMapFetching,
     searchedProducts: store.products.data,
-    searchedProducts: store.products.data,
     productsFetched: store.products.productsFetched,
     mappedProducts: store.products.mappedData,
     mappedDataFetched: store.products.mappedDataFetched,

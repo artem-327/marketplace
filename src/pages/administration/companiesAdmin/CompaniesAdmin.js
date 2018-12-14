@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { createOffice, editCompany, editOffice, fetchDetail, removeCompany, createCompany, removeOffice, fetchOffices } from "../../../modules/companies";
 import { bindActionCreators } from "redux";
 import "./companiesAdmin.css";
-import Company from "./components/Company";
+//import Company from "./components/Company";
 import Spinner from "../../../components/Spinner/Spinner";
 import InputControlled from "../../../components/InputControlled/InputControlled";
 import DataTable from "../../../components/DataTable";
