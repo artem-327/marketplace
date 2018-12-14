@@ -380,13 +380,13 @@ export default class Location extends Component {
                 })
             } else {
                 this.setState({
-                    street: this.props.warehouse[this.state.warehouseIndex].address.streetAddress,
-                    city: this.props.warehouse[this.state.warehouseIndex].address.city,
-                    state: this.props.warehouse[this.state.warehouseIndex].address.province.id,
-                    contact: this.props.warehouse[this.state.warehouseIndex].contact.name,
-                    phone: this.props.warehouse[this.state.warehouseIndex].contact.number,
-                    email: this.props.warehouse[this.state.warehouseIndex].contact.email,
-                    zip: this.props.warehouse[this.state.warehouseIndex].address.zip.zip,
+                    street: this.props.warehouse[this.state.warehouseIndex + 1].address.streetAddress,
+                    city: this.props.warehouse[this.state.warehouseIndex + 1].address.city,
+                    state: this.props.warehouse[this.state.warehouseIndex + 1].address.province.id,
+                    contact: this.props.warehouse[this.state.warehouseIndex + 1].contact.name,
+                    phone: this.props.warehouse[this.state.warehouseIndex + 1].contact.number,
+                    email: this.props.warehouse[this.state.warehouseIndex + 1].contact.email,
+                    zip: this.props.warehouse[this.state.warehouseIndex + 1].address.zip.zip,
                     location: 'saved'
                 })
             }
@@ -407,7 +407,7 @@ export default class Location extends Component {
     }
 
     render() {
-        console.log(this.props)
+        //console.log(this.props)
         const location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation();
         return (
             <div className='location-wr'>
