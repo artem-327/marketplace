@@ -101,7 +101,8 @@ export default class AddForm extends Component {
             manufacturer: this.props.productOfferingForm.manufacturer.id || this.props.productOffer.manufacturer.id,
             origin: this.props.productOfferingForm.origin.id || this.props.productOffer.origin.id,
             product: this.props.productOffer.product.id,
-            packaging: {...this.props.mappingForm.packaging, amount: this.props.productOfferingForm.totalPackages}
+            totalPackages: this.props.productOfferingForm.totalPackages,
+            packaging: {...this.props.mappingForm.packaging, amount: parseInt(this.props.productOfferingForm.totalPackages)}
         });
         this.props.editProductOffer(this.props.productOffer.id, params).then(()=>{
             this.props.history.push("/inventory/my-inventory");

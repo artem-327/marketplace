@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import './dropdown.css';
 import classnames from 'classnames';
+import ArrowDown from '../../images/inv-filter/dropdown-close.png';
 import ArrowUp from '../../images/inv-filter/dropdown.png';
 
 class Dropdown extends Component {
@@ -66,6 +67,8 @@ class Dropdown extends Component {
     }
 
     render() {
+        const arrow = !this.state.isOpen ? <img alt="up" src={ArrowDown}/> : <img alt="up" src={ArrowUp}/>;
+
         let {currentValue, isOpen} = this.state;
         let isSelected = false;
         const opnsLength = this.props.opns ? this.props.opns.length : 0;
@@ -82,7 +85,7 @@ class Dropdown extends Component {
         return (
             <div className='dropdown-wr' ref={this.dropdownRef} >
                 <div className={'dropdown-trigger ' + classnames({'disabled' : this.props.disabled, 'open' : isOpen, 'selected' : isSelected})} onClick={()=>this.toggleDropdown()}>
-                    <div>{currentValue || this.props.placeholder || 'Select'}<img alt="up" src={ArrowUp} /></div>
+                    <div>{currentValue || this.props.placeholder || 'Select'}{arrow}</div>
                 </div>
                 {options}
             </div>

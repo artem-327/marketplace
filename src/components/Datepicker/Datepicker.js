@@ -20,13 +20,15 @@ class Datepicker extends React.Component {
         let {value, placeholder} = this.props;
         return (
             <div className='datepicker'>
-                <i className="far fa-calendar-alt datepicker-icon"></i>
-                <DatePicker
-                    placeholder={placeholder}
-                    dateFormat="YYYY-MM-DD"
-                    selected={value && value!=="" ? moment(value, 'YYYY-MM-DD') : null}
-                    onChange={this.handleChange}
-                />
+               <label>
+                    <i className="far fa-calendar-alt datepicker-icon"></i>
+                    <DatePicker
+                        placeholder={placeholder}
+                        dateFormat="YYYY-MM-DD"
+                        selected={value && value!=="" ? moment(value, 'YYYY-MM-DD') : null}
+                        onChange={this.handleChange}
+                    />
+               </label>
             </div>
         )
     }

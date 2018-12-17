@@ -62,7 +62,7 @@ export default class ProductOffering extends Component {
         let newMaxWarning;
 
         if (assayMin > assayMax) {
-            newMinWarning = 'Must be > or = Min'
+            newMinWarning = 'Must be < or = Max'
         }
 
         if (assayMax && (assayMin < assayMax)) {
@@ -95,8 +95,6 @@ export default class ProductOffering extends Component {
     }
 
     render() {
-
-        parseInt(this.props.productOffering.assayMin)
 
         let button = this.state.save ? <button className='button big added-productOffering'>Added</button> :
             <button className='button big add-productOffering'>Add Lot</button>;
