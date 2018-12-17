@@ -6,6 +6,8 @@ import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
 import Checkbox from "../../../../../components/Checkbox/Checkbox";
 import './Pricing.css';
 import classNames from 'classnames';
+import WarningLabel from "../../../../../components/WarningLabel/WarningLabel"
+
 
 
 export default class Pricing extends Component {
@@ -17,8 +19,8 @@ export default class Pricing extends Component {
             priceFlag:false,
             costFlag:false,
             marginFlag:false,
-            splits: this.props.edit ? this.props.productOffer.packaging.minimum : '',
-            minimum: this.props.edit ? this.props.productOffer.packaging.splits : '',
+            splits: this.props.edit ? this.props.productOffer.packaging.minimum : 1,
+            minimum: this.props.edit ? this.props.productOffer.packaging.splits : 1,
             disabled: true,
             incrementalPricing: [{
               quantityFrom: '',
@@ -259,6 +261,8 @@ export default class Pricing extends Component {
 
     render() {
 
+    //console.log(this.props)
+
       const {
         //mappingForm: {packaging},
         productOfferingForm: {totalPackages = 50},
@@ -363,19 +367,19 @@ export default class Pricing extends Component {
                           <label>Splits</label>
                           <Control.text model="forms.productMapping.packaging.splits"
                                         id="forms.productMapping.packaging.splits"
-                                        defaultValue={this.props.edit ? this.props.productOffer.packaging.splits : null}
+                                        defaultValue={this.props.edit ? this.props.productOffer.packaging.splits : this.state.splits}
                                         onChange={e => this.splitsMinimumChange(e)}
                                         onBlur={() => this.validateMinimum('splits')}
                                         className='splits'
                                         type='number'
                                         min={'1'}
-                                        placeholder="$"/>
+                                        />
                       </div>
                       <div className='group-item-wr'>
                           <label>Minimum</label>
                           <Control.text model="forms.productMapping.packaging.minimum"
                                         id="forms.productMapping.packaging.minimum"
-                                        defaultValue={this.props.edit ? this.props.productOffer.packaging.minimum : null}
+                                        defaultValue={this.props.edit ? this.props.productOffer.packaging.minimum : this.state.minimum}
                                         onChange={e => this.splitsMinimumChange(e)}
                                         onBlur={e => this.validateMinimum('minimum')}
                                         className='minimum'
@@ -402,6 +406,11 @@ export default class Pricing extends Component {
                                            onChange={value => this.setState({showIncrementalPricing: value})}/>
                         </div>
                     </div>
+
+                    <div>
+                        <WarningLabel class={'warningBody3'} isVisible={this.state.showIncrementalPricing && (this.state.splits === '' || this.state.minimum === '')} warningText={"Please enter allowed Split and Minimum values first."}/>
+                    </div>
+                    
                     {showIncrementalPricing && <div className='incremental-wr'>
                       <IncrementalPricing
                         cost={this.props.form.pricing.cost}
