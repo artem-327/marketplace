@@ -80,7 +80,6 @@ const IncrementalPricing = (props) => {
                        onChange={e => handleMargin(e, index)}
                        disabled={disabled}/>
 
-
             return <tr key={index}>
 
                 {/*<td><span className='incremental-index'><span>{index + 1}</span></span></td>*/}

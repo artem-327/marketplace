@@ -14,11 +14,12 @@ export default class Pricing extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            totalSalesPrice: 0,
             showIncrementalPricing: false,
             margin: '',
-            priceFlag:false,
-            costFlag:false,
-            marginFlag:false,
+            priceFlag: false,
+            costFlag: false,
+            marginFlag: false,
             splits: this.props.edit ? this.props.productOffer.packaging.minimum : 1,
             minimum: this.props.edit ? this.props.productOffer.packaging.splits : 1,
             disabled: true,
@@ -34,7 +35,10 @@ export default class Pricing extends Component {
     componentDidMount(){
         
         if(this.props.edit){
-            this.setState({margin: ((this.props.productOffer.pricing.price - this.props.productOffer.pricing.cost) / this.props.productOffer.pricing.cost * 100).toFixed(3)})
+            this.setState({
+                margin: ((this.props.productOffer.pricing.price - this.props.productOffer.pricing.cost) / this.props.productOffer.pricing.cost * 100).toFixed(3),
+                totalSalesPrice: this.props.productOffer.packaging.size * this.props.productOffer.pricing.price * this.props.productOffer.pkgAmount
+            })
             this.validateMinimum('splits')
             this.validateMinimum('minimum')
             if(this.props.productOffer.pricing.tiers.length !== 0){
@@ -260,18 +264,24 @@ export default class Pricing extends Component {
     }
 
     render() {
+        console.log(this.props)
 
-    //console.log(this.props)
+        //console.log(this.props.productOffer.packaging.size)
+        //console.log(this.props.productOffer.pricing.price)
+        //console.log(this.props.productOffer.pkgAmount)
 
-      const {
+      //const {
         //mappingForm: {packaging},
-        productOfferingForm: {totalPackages = 50},
+        //productOfferingForm: {totalPackages = 50},
         //addProductOfferForm: {pricing}
-      } = this.props
+      //} = this.props
       const {showIncrementalPricing, splits, minimum, disabled, incrementalPricing} = this.state
 
       //const measurement = packaging ? packaging.capacity : null
       const price = this.props
+
+      const pricePer = this.props.edit && this.props.productOffer.packaging.unit.name === 'pound' ? 'Price per (lb)' : 'Price per (gal)';
+      const costPer = this.props.edit && this.props.productOffer.packaging.unit.name === 'pound' ? 'Cost per (lb)' : 'Cost per (gal)';
       
         return (
             <div>
@@ -289,7 +299,7 @@ export default class Pricing extends Component {
                                 min: messages.min
                             }}
                         />
-                        <label htmlFor=".pricePr">Price pr (lb)</label>
+                        <label htmlFor=".pricePr">{pricePer}</label>
                         <Control.text model=".pricing.price"
                                       id=".pricePr"
                                       validators={{
@@ -317,7 +327,7 @@ export default class Pricing extends Component {
                                 min: messages.min
                             }}
                         />
-                        <label htmlFor=".costPr">Cost pr (lb)</label>
+                        <label htmlFor=".costPr">{costPer}</label>
                         <Control.text model=".pricing.cost"
                                       id=".costPr"
                                       validators={{
@@ -358,7 +368,7 @@ export default class Pricing extends Component {
                     <div className='group-item-wr'>
                         <div className='total'>
                             <h5>Total Sales Price</h5>
-                            <output>${(/* measurement * */totalPackages * price).formatMoney(3)}</output>
+                            <output>${(this.state.totalSalesPrice).formatMoney(3)}</output>
                         </div>
                     </div>
 
