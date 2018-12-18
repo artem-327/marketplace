@@ -407,7 +407,7 @@ export default class Location extends Component {
     }
 
     render() {
-        //console.log(this.props)
+        console.log(this.props)
         const location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation();
         return (
             <div className='location-wr'>

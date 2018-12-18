@@ -35,7 +35,7 @@ export default class ProductMapping extends Component {
 
     render() {
 
-        console.log(this.props)
+        //console.log(this.props)
 
         let button = this.state.save ? <button className='saved-productMapping'>SAVED</button> :
             <button className='save-productMapping'>Save Mapping</button>;

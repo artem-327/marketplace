@@ -43,7 +43,7 @@ class ProductOffers extends Component {
                             `${packageSize} ${unit}`,
                             `${(parseInt(offer.pkgAmount, 10) * parseInt(offer.packaging.size, 10)).formatNumber()} ${unit}`,
                             "$" + offer.pricing.cost.formatMoney(3),
-                            offer.pricing.tiers.length > 1 ? offer.pricing.tiers[0].price.formatMoney(3) + '-' + offer.pricing.tiers[offer.pricing.tiers.length - 1].price.formatMoney(3) : "$" + offer.pricing.price.formatMoney(3),
+                            offer.pricing.tiers.length > 1 ? "$" + offer.pricing.tiers[offer.pricing.tiers.length - 1].price.formatMoney(3) + ' - ' + "$" + offer.pricing.tiers[0].price.formatMoney(3): "$" + offer.pricing.price.formatMoney(3),
                             offer.name,
                             offer.manufacturer.name,
                             offer.productCondition.name,
