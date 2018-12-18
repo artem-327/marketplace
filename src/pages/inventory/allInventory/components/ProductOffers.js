@@ -21,6 +21,9 @@ class ProductOffers extends Component {
     }
 
     render() {
+
+        console.log(this.props)
+
         if(this.props.productOffers.length === 0) return <Spinner />;
         let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
             return {
@@ -40,7 +43,7 @@ class ProductOffers extends Component {
 
                 return{
                     id: offer.id,
-                    data: [offer.merchant ? offer.merchant.companyName : "Anonymous",
+                    data: ['test', //needs to be replaced
                         offer.pkgAmount.formatNumber(),
                         `${packageSize} ${unit} ${packageUnit}`,
                         `${(parseInt(offer.pkgAmount, 10) * parseInt(offer.packaging.size, 10)).formatNumber()} ${unit}`,

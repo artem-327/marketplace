@@ -94,6 +94,9 @@ class AddCart extends Component {
   };
 
   render() {
+
+    //console.log(this.props)
+
     // load data if creating popup with different offer id
     if (this.props.offer.id && this.props.id !== this.props.offer.id) {
         this.props.getProductOffer(this.props.id);
@@ -170,7 +173,7 @@ class AddCart extends Component {
             <div className="add-cart-prod-info">
               <div>
                 <span>Merchant: </span>
-                {offer.manufacturer.name}
+                {'test'} {/*needs to be replaced*/}
               </div>
               <div>
                   <span>Location: </span>

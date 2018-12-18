@@ -12,13 +12,19 @@ class AddedLot extends Component {
     }
 
     render(){
+
+        const productName = this.props.lot.productName !== '' ? this.props.lot.productName : 'No Product Name';
+        const casNumber = this.props.lot.casNumber !== '' ? this.props.lot.casNumber : 'No CAS Number';
+        const lotNumber = this.props.lot.lotNumber !== '' ? this.props.lot.lotNumber : 'NO Lot Number';
+
+        //console.log(this.props)
         return (
         <div className='lots-item-container'>
             <div className='lots-item-info'>
                 <span className='addLotNumber'>{this.props.position}</span>
-                {this.props.lot.productName + ' • ' +
-                this.props.lot.casNumber + ' • ' +
-                this.props.lot.lotNumber}
+                {productName + ' • ' +
+                casNumber + ' • ' +
+                lotNumber}
             </div>
             <div className="vm">
             <div className='lots-item-docs'>

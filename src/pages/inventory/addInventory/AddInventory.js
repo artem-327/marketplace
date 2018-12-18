@@ -25,7 +25,7 @@ export default class AddInventory extends Component {
                 expirationDate: this.props.productOffer.expirationDate,
                 externalNotes: this.props.productOffer.internalNotes,
                 internalNotes: this.props.productOffer.externalNotes,
-                //lotNumber: this.props.productOffer.lotNumber,
+                lotNumber: this.props.productOffer.lotNumber,
                 manufacturer: this.props.productOffer.manufacturer,
                 merchantVisibility: this.props.productOffer.merchantVisibility,
                 name: this.props.productOffer.name,

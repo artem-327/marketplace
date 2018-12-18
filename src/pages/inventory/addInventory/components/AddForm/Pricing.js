@@ -264,7 +264,7 @@ export default class Pricing extends Component {
     }
 
     render() {
-        console.log(this.props)
+        //console.log(this.props)
 
         //console.log(this.props.productOffer.packaging.size)
         //console.log(this.props.productOffer.pricing.price)
