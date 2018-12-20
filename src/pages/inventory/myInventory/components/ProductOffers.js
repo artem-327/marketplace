@@ -109,7 +109,7 @@ class ProductOffers extends Component {
                                             setFilter={(type) => this.props.setFilter(type)}
                                             currentSelected={this.props.currentSelected}
                                             setActiveBroadcastButton={active => this.props.setActiveBroadcastButton(active)}/>}
-                                        />
+                                />
 
         return (dataTable);
     }
