@@ -69,15 +69,15 @@ export function fetchDetail(id, resolve) {
     return {type: COMPANY_FETCH_REQUESTED, payload: {id}, resolve: resolve}
 }
 
-export function createCompany(name, onSuccess) {
+export function postNewCompany(name, onSuccess) {
     return {type: COMPANY_CREATE_REQUESTED, payload: {name, onSuccess}}
 }
 
-export function editCompany(company) {
+export function putCompanyEdit(company) {
     return {type: COMPANY_EDIT_REQUESTED, payload: {company}}
 }
 
-export function removeCompany(id, onSuccess) {
+export function deleteCompany(id, onSuccess) {
     return {type: COMPANY_REMOVE_REQUESTED, payload: {id, onSuccess}}
 }
 

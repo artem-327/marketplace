@@ -109,11 +109,11 @@ export function getCart(){
     return {type: CART_FETCH_REQUESTED}
 }
 
-export function fetchDeliveryAddresses(){
+export function getDeliveryAddresses(){
     return {type: DELIVERYADDRESSES_FETCH_REQUESTED}
 }
 
-export function fetchPayments(){
+export function getPayments(){
     return {type: PAYMENTS_FETCH_REQUESTED}
 }
 
@@ -121,11 +121,11 @@ export function deleteCart(id) {
     return {type: PRODUCTFROMCART_REMOVE_REQUESTED, payload: {id}}
 }
 
-export function createNewOrder(product) {
+export function postNewOrder(product) {
     return {type: CARTITEM_CREATE_REQUESTED, payload: {product}}
 }
 
-export function createDeliveryAddress(address) {
+export function postNewDeliveryAddress(address) {
     return {type: DELIVERYADDRESS_CREATE_REQUESTED, payload: {address}}
 }
 
@@ -137,6 +137,6 @@ export function editOrder(order) {
     return {type: ORDER_EDIT_REQUESTED, payload: {order}}
 }
 
-export function editDeliveryAddress(address) {
+export function putDeliveryAddressEdit(address) {
     return {type: DELIVERYADDRESS_EDIT_REQUESTED, payload: {address}}
 }

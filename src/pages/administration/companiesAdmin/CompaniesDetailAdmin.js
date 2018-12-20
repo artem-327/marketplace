@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './companiesAdmin.css';
 import { connect } from "react-redux";
-import { createOffice, editCompany, editOffice, fetchDetail, removeCompany, createCompany, removeOffice, fetchOffices } from "../../../modules/companies";
+import { createOffice, putCompanyEdit, editOffice, fetchDetail, deleteCompany, postNewCompany, removeOffice, fetchOffices } from "../../../modules/companies";
 import { bindActionCreators } from "redux";
 import Office from "./components/Office";
 import { fetchLocations } from "../../../modules/location";
@@ -68,10 +68,10 @@ class CompaniesDetailAdmin extends Component {
               handleChange={this.handleChange}
               name="name"
             />
-            <Button color="red" onClick={() => this.props.removeCompany(this.props.company.id, () => this.props.history.push('/administration/companies/'))}>
+            <Button color="red" onClick={() => this.props.deleteCompany(this.props.company.id, () => this.props.history.push('/administration/companies/'))}>
               Delete
             </Button>
-            <Button color="blue" onClick={() => this.props.editCompany(Object.assign({}, this.props.company, { name: this.state.name }))}>
+            <Button color="blue" onClick={() => this.props.putCompanyEdit(Object.assign({}, this.props.company, { name: this.state.name }))}>
               Edit
             </Button>
           </div>
@@ -116,7 +116,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchDetail, fetchOffices, editOffice, editCompany, createCompany, fetchLocations, createOffice, removeOffice, removeCompany }, dispatch)
+  return bindActionCreators({ fetchDetail, fetchOffices, editOffice, putCompanyEdit, postNewCompany, fetchLocations, createOffice, removeOffice, deleteCompany }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CompaniesDetailAdmin);

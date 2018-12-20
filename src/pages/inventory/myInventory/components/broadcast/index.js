@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux'
-import { fetchBroadcast, postBroadcast } from "../../../../../modules/broadcast";
+import { getBroadcast, postBroadcast } from "../../../../../modules/broadcast";
 import {removePopup} from "../../../../../modules/popup";
 import AddBroadcast from "./AddBroadcast";
 
@@ -16,7 +16,7 @@ const mapStateToProps = store => ({
 });
 
 const mapDispatchToProps = dispatch => (bindActionCreators({ 
-    removePopup, dispatch, fetchBroadcast, postBroadcast
+    removePopup, dispatch, getBroadcast, postBroadcast
 }, dispatch));
 
 

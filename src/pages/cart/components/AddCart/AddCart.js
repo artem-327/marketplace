@@ -32,7 +32,7 @@ class AddCart extends Component {
   }
 
   createOrder = async () => {
-    const {removePopup, createNewOrder, offer, history} = this.props;
+    const {removePopup, postNewOrder, offer, history} = this.props;
     const offerpayload = {
         productOffer: offer.id,
         quantity: this.state.quantity
@@ -41,7 +41,7 @@ class AddCart extends Component {
       this.setState({warning: "quantity is required"})
       return
     } else {
-      await createNewOrder(offerpayload)
+      await postNewOrder(offerpayload)
       AddCart.openedPopup.id = false
       removePopup()
       history.push("/cart/shopping-cart")
@@ -282,7 +282,7 @@ export default AddCart
 
 AddCart.propTypes = {
   offer: PropTypes.object,
-  createNewOrder: PropTypes.func,
+  postNewOrder: PropTypes.func,
   id: PropTypes.number,
   isFetching: PropTypes.bool,
   removePopup: PropTypes.func,
