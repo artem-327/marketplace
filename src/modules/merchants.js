@@ -83,11 +83,11 @@ export function rejectMerchant(id) {
     }
 }
 
-export function fetchMerchants() {
+export function getMerchants() {
     return {type: MERCHANTS_FETCH_REQUESTED}
 }
 
-export function fetchMerchant(id, resolve){
+export function getMerchant(id, resolve){
     return {
         type: MERCHANT_FETCH_REQUESTED,
         payload: {id},
@@ -95,12 +95,12 @@ export function fetchMerchant(id, resolve){
     }
 }
 
-export function editMerchant(merchant){
+export function putMerchantEdit(merchant){
     return {
         type: MERCHANT_EDIT_REQUESTED, payload: {merchant}
     }
 }
 
-export function removeMerchant(id) {
+export function deleteMerchant(id) {
     return {type: MERCHANT_REMOVE_REQUESTED, payload: {id}}
 }

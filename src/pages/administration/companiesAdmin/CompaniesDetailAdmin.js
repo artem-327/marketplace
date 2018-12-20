@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './companiesAdmin.css';
 import { connect } from "react-redux";
-import { createOffice, putCompanyEdit, editOffice, fetchDetail, deleteCompany, postNewCompany, removeOffice, fetchOffices } from "../../../modules/companies";
+import { postNewOffice, putCompanyEdit, putOfficeEdit, fetchDetail, deleteCompany, postNewCompany, deleteOffice, getOffices } from "../../../modules/companies";
 import { bindActionCreators } from "redux";
 import Office from "./components/Office";
 import { fetchLocations } from "../../../modules/location";
@@ -28,7 +28,7 @@ class CompaniesDetailAdmin extends Component {
     }).then(() => {
       this.setState({ name: this.props.company.name })
     })
-    this.props.fetchOffices(this.props.match.params.id)
+    this.props.getOffices(this.props.match.params.id)
   }
 
   renderOffices() {
@@ -37,7 +37,7 @@ class CompaniesDetailAdmin extends Component {
       ? <Spinner />
       : this.props.offices.map(office => (
         <Office
-          removeOffice={(id) => this.props.removeOffice(id, this.props.company)}
+          deleteOffice={(id) => this.props.deleteOffice(id, this.props.company)}
           key={office.id}
           id={office.id}
           office={office}
@@ -97,7 +97,7 @@ class CompaniesDetailAdmin extends Component {
 
           <Button
             color="green"
-            onClick={() => this.props.editOffice(this.getOfficePayload(this.state.officeId), () => { })}
+            onClick={() => this.props.putOfficeEdit(this.getOfficePayload(this.state.officeId), () => { })}
           >Add New</Button>
         </div>
       </div>
@@ -116,7 +116,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchDetail, fetchOffices, editOffice, putCompanyEdit, postNewCompany, fetchLocations, createOffice, removeOffice, deleteCompany }, dispatch)
+  return bindActionCreators({ fetchDetail, getOffices, putOfficeEdit, putCompanyEdit, postNewCompany, fetchLocations, postNewOffice, deleteOffice, deleteCompany }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CompaniesDetailAdmin);

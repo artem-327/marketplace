@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { createOffice, putCompanyEdit, editOffice, fetchDetail, deleteCompany, postNewCompany, removeOffice, fetchOffices } from "../../../modules/companies";
+import { postNewOffice, putCompanyEdit, putOfficeEdit, fetchDetail, deleteCompany, postNewCompany, deleteOffice, getOffices } from "../../../modules/companies";
 import { bindActionCreators } from "redux";
 import "./companiesAdmin.css";
 //import Company from "./components/Company";
@@ -85,7 +85,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchDetail, fetchOffices, editOffice, putCompanyEdit, postNewCompany, createOffice, removeOffice, deleteCompany }, dispatch)
+  return bindActionCreators({ fetchDetail, getOffices, putOfficeEdit, putCompanyEdit, postNewCompany, postNewOffice, deleteOffice, deleteCompany }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CompaniesAdmin);

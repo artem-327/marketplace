@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux'
 import Operators from './Operators';
-import {fetchOperators, removeOperator, editOperator} from "../../../modules/users";
+import {getOperators, deleteOperator, putOperatorEdit} from "../../../modules/users";
 
 function mapStateToProps(store) {
     return {
@@ -11,7 +11,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({fetchOperators, removeOperator, editOperator}, dispatch)
+    return bindActionCreators({getOperators, deleteOperator, putOperatorEdit}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Operators);

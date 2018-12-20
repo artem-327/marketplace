@@ -5,9 +5,9 @@ import OfficesDetailAdmin from "./OfficesDetailAdmin";
 import Spinner from "../../../components/Spinner/Spinner";
 import DataTable from "../../../components/DataTable";
 import {
-  removeOffice,
-  fetchOffices,
-  createOffice
+  deleteOffice,
+  getOffices,
+  postNewOffice
 } from "../../../modules/companies";
 import { fetchLocations } from "../../../modules/location";
 import {addPopup, /*removePopup*/} from "../../../modules/popup";
@@ -22,7 +22,7 @@ class Offices extends Component {
   };
 
   componentDidMount() {
-    this.props.fetchOffices();
+    this.props.getOffices();
     this.props.fetchLocations();
   }
 
@@ -60,7 +60,7 @@ class Offices extends Component {
             label: "Edit Office"
           },
           {
-            action: id => this.props.removeOffice(id),
+            action: id => this.props.deleteOffice(id),
             label: "Remove Office"
           }
         ]}
@@ -73,7 +73,7 @@ class Offices extends Component {
     // }
     // const officesData = offices.map(office => (
     //    <Office
-    //       removeOffice={(id) => this.props.removeOffice(id, this.props.company)}
+    //       deleteOffice={(id) => this.props.deleteOffice(id, this.props.company)}
     //       key={office.id}
     //       id={office.id}
     //       office={office}
@@ -109,7 +109,7 @@ class Offices extends Component {
     //             validators={{ required }}
     //          />
     //          <Button
-    //             onClick={() => this.props.createOffice(newOfficePayload, () => this.setState({name: "", location: {}}))}
+    //             onClick={() => this.props.postNewOffice(newOfficePayload, () => this.setState({name: "", location: {}}))}
     //          >Add</Button>
     //       </div>
     //    </div>
@@ -129,7 +129,7 @@ function mapStateToProps(store) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { fetchOffices, removeOffice, createOffice, fetchLocations, addPopup },
+    { getOffices, deleteOffice, postNewOffice, fetchLocations, addPopup },
     dispatch
   );
 }

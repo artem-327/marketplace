@@ -9,7 +9,7 @@ import Spinner from '../../../../components/Spinner/Spinner';
 class ProductOffers extends Component {
   componentDidMount(){
       new Promise(resolve => {
-          this.props.fetchMerchant(this.props.identity.data.id, resolve)
+          this.props.getMerchant(this.props.identity.data.id, resolve)
       }).then(() => console.log("data fetched"))
   }
 

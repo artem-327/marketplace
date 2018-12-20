@@ -4,16 +4,16 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import InputEdit from "../../../components/InputEdit/InputEdit";
 import Spinner from "../../../components/Spinner/Spinner";
-import {editOffice, fetchOffice} from "../../../modules/companies";
+import {putOfficeEdit, getOffice} from "../../../modules/companies";
 
 class OfficesDetailAdmin extends Component {
 
     componentDidMount() {
-        this.props.fetchOffice(this.props.id);
+        this.props.getOffice(this.props.id);
     }
 
     render() {
-        const {office, editOffice, isFetching} = this.props;
+        const {office, putOfficeEdit, isFetching} = this.props;
         if (isFetching || !office || !office.baseLocation) return <Spinner/>
         const merchants = office.merchants.map(i => <div>{i.email}</div>)
         return (
@@ -28,7 +28,7 @@ class OfficesDetailAdmin extends Component {
                     <div>Merchants: {merchants}</div>
 
                     <InputEdit value={office.name} onSave={(text) => {
-                        editOffice({"id": office.id, "name": text, "baseLocation": office.baseLocation.id, "company": office.companyResponse.id})
+                        putOfficeEdit({"id": office.id, "name": text, "baseLocation": office.baseLocation.id, "company": office.companyResponse.id})
                     }}/>
                 </div>
             </div>
@@ -44,7 +44,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({fetchOffice, editOffice}, dispatch)
+    return bindActionCreators({getOffice, putOfficeEdit}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(OfficesDetailAdmin);

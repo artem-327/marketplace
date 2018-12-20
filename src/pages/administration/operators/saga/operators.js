@@ -9,18 +9,18 @@ import {
     OPERATOR_EDIT_SUCCEEDED
 } from "../../../../constants/users";
 
-function* fetchOperators() {
+function* getOperators() {
     try {
-        const operators = yield call(Api.fetchOperators);
+        const operators = yield call(Api.getOperators);
         yield put({type: OPERATORS_FETCH_SUCCEEDED, payload: operators});
     } catch (e) {
         yield put({type: OPERATORS_FETCH_FAILED, message: e.message});
     }
 }
 
-function* removeOperator(action) {
+function* deleteOperator(action) {
     try {
-        yield call(Api.removeOperator, action.payload.id);
+        yield call(Api.deleteOperator, action.payload.id);
         yield put({type: OPERATOR_REMOVE_SUCCEEDED});
         yield put({type: OPERATORS_FETCH_REQUESTED});
     } catch (e) {
@@ -28,9 +28,9 @@ function* removeOperator(action) {
     }
 }
 
-function* editOperator(action) {
+function* putOperatorEdit(action) {
     try {
-        yield call(Api.editOperator, action.payload.operator);
+        yield call(Api.putOperatorEdit, action.payload.operator);
         yield put({type: OPERATOR_EDIT_SUCCEEDED});
         yield put({type: OPERATORS_FETCH_REQUESTED});
     } catch (e) {
@@ -39,9 +39,9 @@ function* editOperator(action) {
 }
 
 function* operatorsSaga() {
-    yield takeEvery(OPERATORS_FETCH_REQUESTED, fetchOperators);
-    yield takeEvery(OPERATOR_REMOVE_REQUESTED, removeOperator);
-    yield takeEvery(OPERATOR_EDIT_REQUESTED, editOperator);
+    yield takeEvery(OPERATORS_FETCH_REQUESTED, getOperators);
+    yield takeEvery(OPERATOR_REMOVE_REQUESTED, deleteOperator);
+    yield takeEvery(OPERATOR_EDIT_REQUESTED, putOperatorEdit);
 }
 
 export default operatorsSaga;

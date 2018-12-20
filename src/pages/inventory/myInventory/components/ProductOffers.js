@@ -93,7 +93,7 @@ class ProductOffers extends Component {
                                             {action: (id) => this.openBroadcast(id), label: 'Custom Broadcast'},
                                             {action: (id) => confirm('Remove listings', 'Are you sure you want to remove listings from Your Inventory?').then(
                                                     () => {
-                                                        this.props.removeProductOffer(id, () => this.props.fetchMyProductOffers({}))
+                                                        this.props.deleteProductOffer(id, () => this.props.fetchMyProductOffers({}))
                                                     },
                                                         () => {}
                                                 ), label: 'Delete Listing'}
