@@ -58,7 +58,7 @@ class Chemical extends Component {
 
     addLot(lots){
         let productMapping = Object.assign({}, this.props.productMapping, {
-            packaging: {...this.props.productMapping.packaging, amount: lots.totalPackages},
+            packaging: {...this.props.productMapping.packaging, amount: lots.pkgAmount},
         });
         if(!localStorage.getItem('productLots')){
             let values = [{...lots, ...productMapping, product: this.state.productID}];

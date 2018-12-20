@@ -36,7 +36,7 @@ export default class Pricing extends Component {
         
         if(this.props.edit){
             this.setState({
-                margin: ((this.props.productOffer.pricing.price - this.props.productOffer.pricing.cost) / this.props.productOffer.pricing.cost * 100).toFixed(3),
+                margin: ((this.props.productOffer.pricing.price - this.props.productOffer.pricing.cost) / this.props.productOffer.pricing.cost * 100).toFixed(0),
                 totalSalesPrice: this.props.productOffer.packaging.size * this.props.productOffer.pricing.price * this.props.productOffer.pkgAmount
             })
             this.validateMinimum('splits')
@@ -272,7 +272,6 @@ export default class Pricing extends Component {
 
       //const {
         //mappingForm: {packaging},
-        //productOfferingForm: {totalPackages = 50},
         //addProductOfferForm: {pricing}
       //} = this.props
       const {showIncrementalPricing, splits, minimum, disabled, incrementalPricing} = this.state
@@ -401,6 +400,7 @@ export default class Pricing extends Component {
                                 name='merchantVisibility'
                                 model='forms.addProductOffer.merchantVisibility'
                                 component={Checkbox}
+                                value={true}
                                 label="List Anonymously"
                             />
                         </div>

@@ -156,7 +156,7 @@
         "email" : "EMAIL",
         "add" : "ADD",
         "details" : "Details",
-        "totalPackages" : "TOTAL PACKAGES",
+        "pgkAmount" : "TOTAL PACKAGES",
         "packaging" : "PACKAGING",
         "packageSize" : "PACKAGE SIZE",
         "price" : "PRICE",

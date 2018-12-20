@@ -60,7 +60,7 @@ export default class AddForm extends Component {
         let params = Object.assign({}, inputs, {
                 ...this.props.mappingForm,
                 ...this.props.productOfferingForm,
-                merchantVisibility: !inputs.merchantVisibility,
+                //merchantVisibility: !inputs.merchantVisibility,
                 pricing: newPricing,
                 ...lots[index],
                 creationDate: creationDate,
@@ -94,15 +94,15 @@ export default class AddForm extends Component {
         let params = Object.assign({}, inputs, {
             ...this.props.mappingForm,
             ...this.props.productOfferingForm,
-            merchantVisibility: !inputs.merchantVisibility,
+            //merchantVisibility: !inputs.merchantVisibility,
             pricing: newPricing,
             creationDate: creationDate,
             expirationDate: expirationDate,
             manufacturer: this.props.productOfferingForm.manufacturer.id || this.props.productOffer.manufacturer.id,
             origin: this.props.productOfferingForm.origin.id || this.props.productOffer.origin.id,
             product: this.props.productOffer.product.id,
-            totalPackages: this.props.productOfferingForm.totalPackages,
-            packaging: {...this.props.mappingForm.packaging, amount: parseInt(this.props.productOfferingForm.totalPackages)}
+            pkgAmount: parseInt(this.props.productOfferingForm.pkgAmount),
+            packaging: {...this.props.mappingForm.packaging, /*amount: parseInt(this.props.productOfferingForm.pkgAmount)*/}
         });
         this.props.editProductOffer(this.props.productOffer.id, params).then(()=>{
             this.props.history.push("/inventory/my-inventory");

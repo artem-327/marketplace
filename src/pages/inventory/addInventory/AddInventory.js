@@ -33,7 +33,7 @@ export default class AddInventory extends Component {
                 productCondition: this.props.productOffer.productCondition.id,
                 productForm: this.props.productOffer.productForm.id,
                 productGrade: this.props.productOffer.productGrade.id,
-                totalPackages: this.props.productOffer.pkgAmount,
+                pkgAmount: this.props.productOffer.pkgAmount,
             }));
             this.props.dispatch(actions.merge('forms.addProductOffer', {
                 warehouse: this.props.productOffer.warehouse.id

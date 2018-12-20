@@ -7,8 +7,8 @@ const IncrementalPricing = (props) => {
 
     const calculateGrossMargin = index => {
         const {cost, incrementalPricing} = props
-        const margin = ((incrementalPricing[index].price - parseInt(cost,10)) / parseInt(cost,10) * 100);
-        if(isNaN(margin) || incrementalPricing[index].price === ''){   
+        const margin = ((incrementalPricing[index].price - parseInt(cost, 10)) / parseInt(cost, 10) * 100);
+        if (isNaN(margin) || incrementalPricing[index].price === '') {   
             return '';
         }
         

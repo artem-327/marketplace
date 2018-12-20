@@ -98,6 +98,28 @@ export default class ProductOffering extends Component {
 
     render() {
 
+
+        //console.log(this.props)
+
+        let lotNumber = !this.props.edit 
+            ? <div className='group-item-wr'>
+                <Errors
+                    className="form-error"
+                    model=".lotNumber"
+                    show="touched"
+                    messages={{
+                        required: messages.required,
+                        min: messages.min,
+                        isNumber: messages.isNumber
+                    }}
+                />
+                <label htmlFor=".lotNumber">Lot Number</label>
+                <Control.text model=".lotNumber"
+                            validators={{min: (val) => min(val, 0), isNumber, required}}
+                            id=".lotNumber"/>
+                </div>
+            : null;
+
         /*let button = this.state.save ? <button className='button big added-productOffering'>Added</button> :
             <button className='button big add-productOffering'>Add Lot</button>;*/
 
@@ -286,7 +308,7 @@ export default class ProductOffering extends Component {
                         <div className='group-item-wr'>
                             <Errors
                                 className="form-error"
-                                model=".totalPackages"
+                                model=".pkgAmount"
                                 show="touched"
                                 messages={{
                                     required: messages.required,
@@ -294,28 +316,13 @@ export default class ProductOffering extends Component {
                                     isNumber: messages.isNumber
                                 }}
                             />
-                            <label htmlFor=".totalPackages">Total Packages</label>
-                            <Control.text model=".totalPackages"
+                            <label htmlFor=".pkgAmount">Total Packages</label>
+                            <Control.text model=".pkgAmount"
                                           validators={{min: (val) => min(val, 0), isNumber, required}}
-                                          id=".totalPackages"
+                                          id=".pkgAmount"
                             />
                         </div>
-                        <div className='group-item-wr'>
-                            <Errors
-                                className="form-error"
-                                model=".lotNumber"
-                                show="touched"
-                                messages={{
-                                    required: messages.required,
-                                    min: messages.min,
-                                    isNumber: messages.isNumber
-                                }}
-                            />
-                            <label htmlFor=".lotNumber">Lot Number</label>
-                            <Control.text model=".lotNumber"
-                                          validators={{min: (val) => min(val, 0), isNumber, required}}
-                                          id=".lotNumber"/>
-                            </div>
+                        {lotNumber} {/*temporarily disabled until the data is available*/}
 
                         <div className='group-item-wr'>
                             <Errors model='forms.productOffering.creationDate'
