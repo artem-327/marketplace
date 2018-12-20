@@ -87,9 +87,9 @@ function* getOrderDetail(action) {
     }
 }
 
-function* editOrder(action) {
+function* postOrderEdit(action) {
     try {
-        yield call(Api.editOrder, action.payload.order);
+        yield call(Api.postOrderEdit, action.payload.order);
         yield put({type: ORDER_EDIT_SUCCEEDED});
     } catch (e) {
         yield put({type: ORDER_EDIT_FAILED, message: e.message});
@@ -114,7 +114,7 @@ function* cartSaga() {
     yield takeEvery(CARTITEM_CREATE_REQUESTED, postNewOrder);
     yield takeEvery(DELIVERYADDRESS_CREATE_REQUESTED, postNewDeliveryAddress);
     yield takeEvery(ORDERDETAIL_FETCH_REQUESTED, getOrderDetail);
-    yield takeEvery(ORDER_EDIT_REQUESTED, editOrder);
+    yield takeEvery(ORDER_EDIT_REQUESTED, postOrderEdit);
     yield takeEvery(DELIVERYADDRESS_EDIT_REQUESTED, putDeliveryAddressEdit);
 }
 

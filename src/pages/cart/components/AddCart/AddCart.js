@@ -49,13 +49,13 @@ class AddCart extends Component {
   }
 
   editOrder = () => {
-    const {removePopup, editOrder, order} = this.props;
+    const {removePopup, postOrderEdit, order} = this.props;
     const orderpayload = {
         id: order.productOffer.id,
         quantity: this.state.quantity || order.quantity,
         selectedOfferPrice: this.state.pricing.price || order.selectedOfferPrice
     }
-    editOrder(orderpayload)
+    postOrderEdit(orderpayload)
     this.props.history.push("/cart/shopping-cart")
     AddCart.openedPopup.id = false
     removePopup()

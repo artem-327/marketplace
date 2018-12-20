@@ -4,7 +4,7 @@ const api = {
     getCart: () => axios.get('/prodex/api/cart').then(response => response.data),
     deleteCart: (orderId) => axios.delete(`/prodex/api/cart/${orderId}`),
     postNewOrder: (order) => axios.post('/prodex/api/orders', order),
-    editOrder: (order) => axios.post(`/prodex/api/orders/${order.id}`, {...order}),
+    postOrderEdit: (order) => axios.post(`/prodex/api/orders/${order.id}`, {...order}),
     getProductOffer: (id) => axios.get(`/prodex/api/product-offers/${id}/applyrules`).then(response => response.data),
     getOrderDetail: (id) => axios.get(`/prodex/api/orders/${id}`).then(response => response.data),
     postNewDeliveryAddress: (address) => axios.post('/prodex/api/delivery-addresses', address),

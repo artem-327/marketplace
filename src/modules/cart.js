@@ -133,7 +133,7 @@ export function getOrderDetail(id) {
     return {type: ORDERDETAIL_FETCH_REQUESTED, payload: {id}}
 }
 
-export function editOrder(order) {
+export function postOrderEdit(order) {
     return {type: ORDER_EDIT_REQUESTED, payload: {order}}
 }
 
