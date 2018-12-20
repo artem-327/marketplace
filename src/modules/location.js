@@ -186,15 +186,15 @@ export function updateWarehouse(id, name, address, city, location, contactName, 
     }
 }
 
-export function fetchRegions(search = null){
+export function getRegions(search = null){
     return {type: REGIONS_FETCH_REQUESTED, payload:{search}}
 }
 
-export function fetchStates(search = null){
+export function getStates(search = null){
     return {type: STATES_FETCH_REQUESTED, payload:{search}}
 }
 
-export function fetchStateDetail(id) {
+export function getStateDetail(id) {
     return {type: STATEDETAIL_FETCH_REQUESTED, payload: {id}}
 }
 
@@ -210,7 +210,7 @@ export function fetchWarehouseDistances(){
     }
 }
 
-export function fetchRegionDetail(id) {
+export function getRegionDetail(id) {
     return {type: REGIONDETAIL_FETCH_REQUESTED, payload: {id}}
 }
 

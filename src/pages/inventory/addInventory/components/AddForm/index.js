@@ -5,7 +5,7 @@ import {saveWarehouse, updateWarehouse, fetchWarehouses, fetchLocations} from ".
 import {addProductOffer, editProductOffer} from '../../../../../modules/productOffers';
 import {validatePackageType} from "../../../../../modules/packageTypes";
 import {addMessage} from "../../../../../modules/errors";
-import {fetchMerchant} from "../../../../../modules/merchants";
+import {getMerchant} from "../../../../../modules/merchants";
 
 function mapStateToProps(store) {
     return {
@@ -28,7 +28,7 @@ function mapDispatchToProps(dispatch) {
         fetchWarehouses,
         addMessage,
         editProductOffer,
-        fetchMerchant
+        getMerchant
     }, dispatch)
 }
 

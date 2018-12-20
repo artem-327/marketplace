@@ -9,7 +9,7 @@ import Spinner from '../../../../components/Spinner/Spinner';
 class ProductOffers extends Component {
   componentDidMount(){
       new Promise(resolve => {
-          this.props.fetchMerchant(this.props.identity.data.id, resolve)
+          this.props.getMerchant(this.props.identity.data.id, resolve)
       }).then(() => console.log("data fetched"))
   }
 
@@ -21,26 +21,26 @@ class ProductOffers extends Component {
     }
 
     render() {
+
+        console.log(this.props)
+
         if(this.props.productOffers.length === 0) return <Spinner />;
         let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
             return {
                 group: <><span className="product-casnumber">{product.casNumber}</span><span className="product-name capitalize">{product.casIndexName}</span></>,
                 rows: product.productOffers.map((offer)=>{
                 const unit = getUnit(offer.packaging.unit.name);
-                const price = offer.pricing.tiers.length > 1 ? "$" + offer.pricing.tiers[0].price.formatMoney(3) + '-' + offer.pricing.tiers[offer.pricing.tiers.length - 1].price.formatMoney(3) : "$" + offer.pricing.price.formatMoney(3);
+                const price = offer.pricing.tiers.length > 1 ? "$" + offer.pricing.tiers[offer.pricing.tiers.length - 1].price.formatMoney(3) + ' - ' + "$" + offer.pricing.tiers[0].price.formatMoney(3): "$" + offer.pricing.price.formatMoney(3);
                 const packageSize = offer.packaging.size;
                 const packageUnit = offer.packaging.packagingType.name;
-                const countryException = ["USA", "Canada"]
-                const countryName = offer.warehouse.address.province.country ? offer.warehouse.address.province.country.name : null
-                const location = countryException.includes(countryName)
-                    ? `${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`
-                    : `${offer.warehouse.address.city}, ${countryName}`
-
+                //const countryException = ["USA", "Canada"]
+                //const countryName = offer.warehouse.address.province.country ? offer.warehouse.address.province.country.name : null
+                const location = !offer.warehouse.address.province.country ? `${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}` : `${offer.warehouse.address.city}, ${offer.warehouse.address.province.country}`
                     
-
                 return{
                     id: offer.id,
-                    data: [offer.merchant ? offer.merchant.companyName : "Anonymous",
+                    data: [
+                        'test',
                         offer.pkgAmount.formatNumber(),
                         `${packageSize} ${unit} ${packageUnit}`,
                         `${(parseInt(offer.pkgAmount, 10) * parseInt(offer.packaging.size, 10)).formatNumber()} ${unit}`,

@@ -4,19 +4,19 @@ import './MerchantsTable.css';
 
 class MerchantsTable extends Component {
   componentDidMount() {
-    this.props.fetchMerchants();
+    this.props.getMerchants();
   }
 
 
   render() {
-    const {merchants, addPopup, editMerchant} = this.props
+    const {merchants, addPopup, putMerchantEdit} = this.props
     const merchantsData = merchants.data.map(i => {
       return <MerchantTableRow
         addPopup={addPopup}
         merchantData={i}
         key={i.id}
         id={i.id}
-        editMerchant={editMerchant}
+        putMerchantEdit={putMerchantEdit}
       />
     });
 

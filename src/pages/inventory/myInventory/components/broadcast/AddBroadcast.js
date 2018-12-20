@@ -171,7 +171,7 @@ class AddBroadcast extends Component {
     const { dispatch, id } = this.props
       new Promise((resolve) => {
       dispatch(actions.change("forms.brcRules", {}))
-      this.props.fetchBroadcast(id, resolve)
+      this.props.getBroadcast(id, resolve)
     }).then(() => {
       this.initTable(this.props.broadcastData, dispatch)
     })

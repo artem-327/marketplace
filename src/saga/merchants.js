@@ -10,18 +10,18 @@ import {
    REMOVE_POPUP
 } from "../constants/popup";
 
-function* fetchMerchants() {
+function* getMerchants() {
     try {
-        const merchants = yield call(Api.fetchMerchants);
+        const merchants = yield call(Api.getMerchants);
         yield put({type: MERCHANTS_FETCH_SUCCEEDED, payload: merchants});
     } catch (e) {
         yield put({type: MERCHANTS_FETCH_FAILED, message: e.message});
     }
 }
 
-function* fetchMerchant(action) {
+function* getMerchant(action) {
     try {
-        const merchant = yield call(Api.fetchMerchant, action.payload.id);
+        const merchant = yield call(Api.getMerchant, action.payload.id);
         yield put({type: MERCHANT_FETCH_SUCCEEDED, payload: merchant});
         action.resolve();
     } catch (e) {
@@ -29,18 +29,18 @@ function* fetchMerchant(action) {
     }
 }
 
-function* editMerchant(action) {
+function* putMerchantEdit(action) {
     try {
-        yield call(Api.editMerchant, action.payload.merchant);
+        yield call(Api.putMerchantEdit, action.payload.merchant);
         yield put({type: MERCHANT_EDIT_SUCCEEDED});
     } catch (e) {
         yield put({type: MERCHANT_EDIT_FAILED, message: e.message});
     }
 }
 
-function* removeMerchant(action) {
+function* deleteMerchant(action) {
     try {
-        yield call(Api.removeMerchant, action.payload.id);
+        yield call(Api.deleteMerchant, action.payload.id);
         yield put({type: MERCHANT_REMOVE_SUCCEEDED});
         yield put({type: REMOVE_POPUP});
         yield put({type: MERCHANTS_FETCH_REQUESTED, payload: action.payload.merchants});
@@ -50,10 +50,10 @@ function* removeMerchant(action) {
 }
 
 function* merchantsSaga() {
-    yield takeEvery(MERCHANTS_FETCH_REQUESTED, fetchMerchants);
-    yield takeEvery(MERCHANT_FETCH_REQUESTED, fetchMerchant);
-    yield takeEvery(MERCHANT_EDIT_REQUESTED, editMerchant);
-    yield takeEvery(MERCHANT_REMOVE_REQUESTED, removeMerchant)
+    yield takeEvery(MERCHANTS_FETCH_REQUESTED, getMerchants);
+    yield takeEvery(MERCHANT_FETCH_REQUESTED, getMerchant);
+    yield takeEvery(MERCHANT_EDIT_REQUESTED, putMerchantEdit);
+    yield takeEvery(MERCHANT_REMOVE_REQUESTED, deleteMerchant)
 }
 
 export default merchantsSaga;

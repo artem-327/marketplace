@@ -197,6 +197,6 @@ export function getUnitOfPackaging(pack) {
 //     }
 // }
 
-export function removeProductOffer(id, onSuccess) {
+export function deleteProductOffer(id, onSuccess) {
     return {type: PRODUCTOFFER_REMOVE_REQUESTED, payload: {id, onSuccess}} //TODO: refactor all product offers to saga, then remove onSuccess
 }

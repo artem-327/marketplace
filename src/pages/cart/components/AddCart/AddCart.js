@@ -32,7 +32,7 @@ class AddCart extends Component {
   }
 
   createOrder = async () => {
-    const {removePopup, createNewOrder, offer, history} = this.props;
+    const {removePopup, postNewOrder, offer, history} = this.props;
     const offerpayload = {
         productOffer: offer.id,
         quantity: this.state.quantity
@@ -41,7 +41,7 @@ class AddCart extends Component {
       this.setState({warning: "quantity is required"})
       return
     } else {
-      await createNewOrder(offerpayload)
+      await postNewOrder(offerpayload)
       AddCart.openedPopup.id = false
       removePopup()
       history.push("/cart/shopping-cart")
@@ -49,13 +49,13 @@ class AddCart extends Component {
   }
 
   editOrder = () => {
-    const {removePopup, editOrder, order} = this.props;
+    const {removePopup, postOrderEdit, order} = this.props;
     const orderpayload = {
         id: order.productOffer.id,
         quantity: this.state.quantity || order.quantity,
         selectedOfferPrice: this.state.pricing.price || order.selectedOfferPrice
     }
-    editOrder(orderpayload)
+    postOrderEdit(orderpayload)
     this.props.history.push("/cart/shopping-cart")
     AddCart.openedPopup.id = false
     removePopup()
@@ -94,6 +94,9 @@ class AddCart extends Component {
   };
 
   render() {
+
+    //console.log(this.props)
+
     // load data if creating popup with different offer id
     if (this.props.offer.id && this.props.id !== this.props.offer.id) {
         this.props.getProductOffer(this.props.id);
@@ -170,7 +173,7 @@ class AddCart extends Component {
             <div className="add-cart-prod-info">
               <div>
                 <span>Merchant: </span>
-                {offer.manufacturer.name}
+                  {offer.merchant.office.company.name}
               </div>
               <div>
                   <span>Location: </span>
@@ -279,7 +282,7 @@ export default AddCart
 
 AddCart.propTypes = {
   offer: PropTypes.object,
-  createNewOrder: PropTypes.func,
+  postNewOrder: PropTypes.func,
   id: PropTypes.number,
   isFetching: PropTypes.bool,
   removePopup: PropTypes.func,

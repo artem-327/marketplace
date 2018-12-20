@@ -143,9 +143,9 @@ export default class Location extends Component {
 
     getCurrentItemById(id){
         if (id === '') return 'Select';
-        for (let i = 0; i < this.props.locations.length; i++) {
-            if (id === this.props.locations[i].province.id) {
-                return this.props.locations[i].province.name
+        for (let i = 0; i < this.props.location.locations.length; i++) {
+            if (id === this.props.location.locations[i].province.id) {
+                return this.props.location.locations[i].province.name
             }
         }
         return 'error'
@@ -185,6 +185,8 @@ export default class Location extends Component {
                     <React.Fragment>
                         <div>
                             <div className='group-item-wr'>
+                                {(this.state.isSubmitted && this.state.street === '') ?
+                                    <div className='warehouse-val'><span>Required</span></div> : null}
                                 <label htmlFor="street">Street Address</label>
                                 <input id="street"
                                        disabled={!this.state.edit}
@@ -194,6 +196,8 @@ export default class Location extends Component {
                                        }}/>
                             </div>
                             <div className='group-item-wr'>
+                                {(this.state.isSubmitted && this.state.city === '') ?
+                                    <div className='warehouse-val'><span>Required</span></div> : null}
                                 <label htmlFor="city">City</label>
                                 <input id="city"
                                        disabled={!this.state.edit}
@@ -203,6 +207,8 @@ export default class Location extends Component {
                                        }}/>
                             </div>
                             <div className='group-item-wr'>
+                                {/*{(this.state.isSubmitted && this.state.state === '') ?
+                                    <div className='warehouse-val'><span>Required</span></div> : null}*/}
                                 <label>State</label>
                                 <Dropdown opns={this.props.locations.map((item)=>{
                                             if(item.province) return ({id: item.province.id, name: item.province.name});
@@ -210,12 +216,15 @@ export default class Location extends Component {
                                             return {id: 0, name: 'no province or country'}
                                         })}
                                         disabled={!this.state.edit}
-                                        currentValue={this.getCurrentItemById(this.state.state)}
+                                        currentValue={'Alaska'} //need correct date
+                                        //currentValue={this.getCurrentItemById(this.state.state)}
                                         onChange={(value) => {
                                             this.handleInputs(value, 'state')
                                         }}/>
                             </div>
                             <div className='group-item-wr'>
+                                {(this.state.isSubmitted && this.state.zip === '') ?
+                                    <div className='warehouse-val'><span>Required</span></div> : null}
                                 <label htmlFor="zip">Zip Code</label>
                                 <input id="zip"
                                        disabled={!this.state.edit}
@@ -228,6 +237,8 @@ export default class Location extends Component {
                         </div>
                         <div>
                             <div className='group-item-wr'>
+                                {(this.state.isSubmitted && this.state.contact === '') ?
+                                    <div className='warehouse-val'><span>Required</span></div> : null}
                                 <label htmlFor="contact">Contact Name</label>
                                 <input id="contact"
                                        disabled={!this.state.edit}
@@ -237,6 +248,8 @@ export default class Location extends Component {
                                        }}/>
                             </div>
                             <div className='group-item-wr'>
+                                {(this.state.isSubmitted && this.state.phone === '') ?
+                                    <div className='warehouse-val'><span>Required</span></div> : null}
                                 <label htmlFor="number">Phone Number</label>
                                 <input id="number"
                                        disabled={!this.state.edit}
@@ -246,6 +259,10 @@ export default class Location extends Component {
                                        }}/>
                             </div>
                             <div className='group-item-wr'>
+                                {(this.state.isSubmitted && this.state.email === '') ?
+                                    <div className='warehouse-val'><span>Required</span></div> : null}
+                                {(this.state.isSubmitted && !this.validateEmail()) ?
+                                    <div className='warehouse-val'><span>Invalid E-mail</span></div> : null}
                                 <label htmlFor="email">E-Mail</label>
                                 <input id="email"
                                        disabled={!this.state.edit}
@@ -257,11 +274,11 @@ export default class Location extends Component {
 
                             {!this.props.edit && button}
 
-                            <div>
+                            {/*<div>
                                 <div className='group-item-wr'>
                                     <WarningLabel isVisible={!this.validateForms() && this.state.edit} warningText={"Please fill all fields before saving."}/>
                                 </div>
-                            </div>
+                            </div>*/}
 
                         </div>
                     </React.Fragment>
@@ -275,6 +292,8 @@ export default class Location extends Component {
             <div>
                 <div>
                     <div className='group-item-wr'>
+                        {(this.state.isSubmitted && this.state.warehouseName === '') ?
+                            <div className='warehouse-val'><span>Required</span></div> : null}
                         <label htmlFor="street">Warehouse Name</label>
                         <input id="name"
                                value={this.state.warehouseName}
@@ -304,7 +323,8 @@ export default class Location extends Component {
                                }}/>
                     </div>
                     <div className='group-item-wr'>
-
+                        {(this.state.isSubmitted && this.state.state === '') ?
+                            <div className='warehouse-val'><span>Required</span></div> : null}
                         <label>State</label>
                         <Dropdown opns={this.props.locations.map((item)=>{
                                             if(item.province) return ({id: item.province.id, name: item.province.name});
@@ -329,6 +349,8 @@ export default class Location extends Component {
                 </div>
                 <div>
                     <div className='group-item-wr'>
+                    {(this.state.isSubmitted && this.state.contact === '') ?
+                            <div className='warehouse-val'><span>Required</span></div> : null}
                         <label htmlFor="contact">Contact Name</label>
                         <input id="contact"
                                value={this.state.contact}
@@ -337,6 +359,8 @@ export default class Location extends Component {
                                }}/>
                     </div>
                     <div className='group-item-wr'>
+                    {(this.state.isSubmitted && this.state.phone === '') ?
+                            <div className='warehouse-val'><span>Required</span></div> : null}
                         <label htmlFor="number">Phone Number</label>
                         <input id="number"
                                value={this.state.phone}
@@ -345,6 +369,10 @@ export default class Location extends Component {
                                }}/>
                     </div>
                     <div className='group-item-wr'>
+                        {(this.state.isSubmitted && this.state.email === '') ?
+                            <div className='warehouse-val'><span>Required</span></div> : null}
+                        {(this.state.isSubmitted && !this.validateEmail()) ?
+                            <div className='warehouse-val'><span>Invalid E-mail</span></div> : null}
                         <label htmlFor="email">E-Mail</label>
                         <input id="email"
                                value={this.state.email}
@@ -355,11 +383,11 @@ export default class Location extends Component {
 
                     {button}
 
-                    <div>
+                    {/*<div>
                         <div className='group-item-wr'>
                             <WarningLabel isVisible={!this.validateForms()} warningText={"Please fill all fields before saving."}/>
-                        </div>
-                    </div>
+                            </div>
+                    </div>*/}
                 </div>
             </div>
         )
@@ -407,7 +435,7 @@ export default class Location extends Component {
     }
 
     render() {
-        //console.log(this.props)
+        console.log(this.props)
         const location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation();
         return (
             <div className='location-wr'>

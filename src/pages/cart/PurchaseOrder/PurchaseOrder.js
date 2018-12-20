@@ -22,8 +22,8 @@ class PurchaseOrder extends Component {
 
   componentDidMount(){
     this.props.getCart()
-    this.props.fetchDeliveryAddresses()
-    this.props.fetchPayments()
+    this.props.getDeliveryAddresses()
+    this.props.getPayments()
   }
 
   handleIsEdit = (value) => {
@@ -80,7 +80,7 @@ class PurchaseOrder extends Component {
   }
 
   render() {
-    const {cart, deliveryAddresses, payments, dispatch, deleteCart, cartIsFetching, createDeliveryAddress, editDeliveryAddress} = this.props;
+    const {cart, deliveryAddresses, payments, dispatch, deleteCart, cartIsFetching, postNewDeliveryAddress, putDeliveryAddressEdit} = this.props;
     if (cartIsFetching) return <Spinner />
     let index = 0;
     const itemContent = cart.orders.map(cartItem => {
@@ -114,8 +114,8 @@ class PurchaseOrder extends Component {
                 selectedAddress={this.state.selectedAddress}
                 isNewAddress={this.state.isNewAddress}
                 handleIsEdit={this.handleIsEdit}
-                createDeliveryAddress={createDeliveryAddress}
-                editDeliveryAddress={editDeliveryAddress}
+                postNewDeliveryAddress={postNewDeliveryAddress}
+                putDeliveryAddressEdit={putDeliveryAddressEdit}
               />
               : <Shipping
               deliveryAddresses={deliveryAddresses}
@@ -166,7 +166,7 @@ PurchaseOrder.propTypes = {
   deliveryAddresses: PropTypes.array,
   dispatch: PropTypes.func,
   getCart: PropTypes.func,
-  fetchDeliveryAddresses: PropTypes.func,
+  getDeliveryAddresses: PropTypes.func,
   deleteCart: PropTypes.func,
   selectedAddressId: PropTypes.number,
 }

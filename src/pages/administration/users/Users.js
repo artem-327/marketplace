@@ -15,9 +15,9 @@ class Users extends Component {
         <User
           key={user.id}
           {...user}
-          fetchOffices={this.props.fetchOffices}
-          promoteToOperator={this.props.promoteToOperator}
-          promoteToMerchant={this.props.promoteToMerchant}
+          getOffices={this.props.getOffices}
+          putPromoteToOperator={this.props.putPromoteToOperator}
+          putPromoteToMerchant={this.props.putPromoteToMerchant}
           offices={this.props.offices}
           isFetching={this.props.isFetchingOffices}
         />

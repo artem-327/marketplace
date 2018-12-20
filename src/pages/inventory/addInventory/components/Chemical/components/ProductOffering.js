@@ -44,10 +44,12 @@ export default class ProductOffering extends Component {
             this.setState({minWarning: 'Required', maxWarning: 'Required'})
         }
 
+        /*
         if (this.validateMapping()) {
             this.props.addMessage("Please fill mapping forms before you add new lot.");
             return;
         }
+        */
 
         if (!this.state.minWarning && !this.state.maxWarning) {
             this.setState({save: true, firstValue: false});
@@ -96,65 +98,16 @@ export default class ProductOffering extends Component {
 
     render() {
 
-        let button = this.state.save ? <button className='button big added-productOffering'>Added</button> :
-            <button className='button big add-productOffering'>Add Lot</button>;
+        /*let button = this.state.save ? <button className='button big added-productOffering'>Added</button> :
+            <button className='button big add-productOffering'>Add Lot</button>;*/
+
+        let button = <button className='button big add-productOffering'>Add Lot</button>;
+
         return (
             <div>
                 <h4 className=''>PRODUCT OFFERING</h4>
                 <Form model="forms.productOffering" onSubmit={(values) => this.saveOffering(values)}>
-                    <div>
-                        <div className='group-item-wr'>
-                            <Errors
-                                className="form-error"
-                                model=".totalPackages"
-                                show="touched"
-                                messages={{
-                                    required: messages.required,
-                                    min: messages.min,
-                                    isNumber: messages.isNumber
-                                }}
-                            />
-                            <label htmlFor=".totalPackages">Total Packages</label>
-                            <Control.text model=".totalPackages"
-                                          validators={{min: (val) => min(val, 0), isNumber, required}}
-                                          id=".totalPackages"
-                            />
-                        </div>
-                     {/*<div className='group-item-wr'>
-                            <Errors
-                                className="form-error"
-                                model=".lotNumber"
-                                show="touched"
-                                messages={{
-                                    required: messages.required,
-                                    min: messages.min,
-                                    isNumber: messages.isNumber
-                                }}
-                            />
-                            <label htmlFor=".lotNumber">Lot Number</label>
-                            <Control.text model=".lotNumber"
-                                          validators={{min: (val) => min(val, 0), isNumber, required}}
-                                          id=".lotNumber"/>
-                            </div>*/}
-
-                        <div className='group-item-wr'>
-                            <Errors model='forms.productOffering.creationDate'
-                                    show="touched"
-                                    messages={{required: 'Required'}}/>
-                            <label htmlFor=".creationDate">MFG Date</label>
-                            <DatepickerRedux placeholder={'test'}
-                                             dispatch={this.props.dispatch}
-                                             onChange={(value) => console.log(value)}
-                                             model='forms.productOffering.creationDate'/>
-                        </div>
-                        <div className='group-item-wr'>
-                            <label htmlFor=".expirationDate">Expiration Date</label>
-                            <DatepickerRedux placeholder={'test'}
-                                             dispatch={this.props.dispatch}
-                                             onChange={(value) => console.log(value)}
-                                             model='forms.productOffering.expirationDate'/>
-                        </div>
-                    </div>
+                   
                     <div>
                         <div className='group-item-wr'>
                             <Errors
@@ -329,7 +282,64 @@ export default class ProductOffering extends Component {
 
                             </div>
                         </div>
-                        {!this.props.edit ? button : null}
+                        <div>
+                        <div className='group-item-wr'>
+                            <Errors
+                                className="form-error"
+                                model=".totalPackages"
+                                show="touched"
+                                messages={{
+                                    required: messages.required,
+                                    min: messages.min,
+                                    isNumber: messages.isNumber
+                                }}
+                            />
+                            <label htmlFor=".totalPackages">Total Packages</label>
+                            <Control.text model=".totalPackages"
+                                          validators={{min: (val) => min(val, 0), isNumber, required}}
+                                          id=".totalPackages"
+                            />
+                        </div>
+                        <div className='group-item-wr'>
+                            <Errors
+                                className="form-error"
+                                model=".lotNumber"
+                                show="touched"
+                                messages={{
+                                    required: messages.required,
+                                    min: messages.min,
+                                    isNumber: messages.isNumber
+                                }}
+                            />
+                            <label htmlFor=".lotNumber">Lot Number</label>
+                            <Control.text model=".lotNumber"
+                                          validators={{min: (val) => min(val, 0), isNumber, required}}
+                                          id=".lotNumber"/>
+                            </div>
+
+                        <div className='group-item-wr'>
+                            <Errors model='forms.productOffering.creationDate'
+                                    show="touched"
+                                    messages={{required: 'Required'}}/>
+                            <label htmlFor=".creationDate">MFG Date</label>
+                            <DatepickerRedux placeholder={'test'}
+                                             dispatch={this.props.dispatch}
+                                             onChange={(value) => console.log(value)}
+                                             model='forms.productOffering.creationDate'/>
+                        </div>
+                        <div className='group-item-wr'>
+                            <label htmlFor=".expirationDate">Expiration Date</label>
+                            <DatepickerRedux placeholder={'test'}
+                                             dispatch={this.props.dispatch}
+                                             onChange={(value) => console.log(value)}
+                                             model='forms.productOffering.expirationDate'/>
+                        </div>
+                        <div className='group-item-wr'>
+                            {!this.props.edit ? button : null}
+                        </div>
+                        
+                    </div>
+                        
                     </div>
                 </Form>
             </div>
