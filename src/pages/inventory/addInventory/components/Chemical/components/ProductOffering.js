@@ -6,7 +6,7 @@ import './ProductOffering.css'
 import {required, messages, min, isNumber, maxPercent} from "../../../../../../utils/validation";
 import RemoteComboBoxRedux from "../../../../../../components/ComboBox/RemoteComboBoxRedux";
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";
-import moment from 'moment'
+import moment from 'moment';
 
 export default class ProductOffering extends Component {
     constructor(props) {
@@ -97,9 +97,6 @@ export default class ProductOffering extends Component {
     }
 
     render() {
-
-
-        //console.log(this.props)
 
         let lotNumber = !this.props.edit 
             ? <div className='group-item-wr'>
@@ -330,6 +327,7 @@ export default class ProductOffering extends Component {
                                     messages={{required: 'Required'}}/>
                             <label htmlFor=".creationDate">MFG Date</label>
                             <DatepickerRedux placeholder={'test'}
+                                             maxDate={moment().subtract(1, "days")}
                                              dispatch={this.props.dispatch}
                                              onChange={(value) => console.log(value)}
                                              model='forms.productOffering.creationDate'/>
@@ -337,6 +335,7 @@ export default class ProductOffering extends Component {
                         <div className='group-item-wr'>
                             <label htmlFor=".expirationDate">Expiration Date</label>
                             <DatepickerRedux placeholder={'test'}
+                                             minDate={moment().add(1, "days")}
                                              dispatch={this.props.dispatch}
                                              onChange={(value) => console.log(value)}
                                              model='forms.productOffering.expirationDate'/>

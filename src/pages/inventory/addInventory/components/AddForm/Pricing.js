@@ -68,15 +68,10 @@ export default class Pricing extends Component {
         if(this.state.margin !== ''){ this.setState({marginFlag:true}); }
     }
 
-    calculateMargin() {
-        this.setState({margin: 20})
-    }
-
     calculatePricing(e){
 
         let price = parseInt(this.props.form.pricing.price,10);
         let cost = parseInt(this.props.form.pricing.cost,10);
-        //let margin = parseInt(this.state.margin,10);
         let active = e.target.name;
         let activeVal = parseInt(e.target.value,10);
 
@@ -95,10 +90,17 @@ export default class Pricing extends Component {
                 case 'cost': {
                     let newmargin = (price - activeVal) / activeVal * 100;
                     newmargin = Number(newmargin.toFixed(3));
+                    
+                    let newIncrementalPricing = this.state.incrementalPricing.slice(0)
+
+                    for (let i = 0; i < newIncrementalPricing.length; i++) {
+                        newIncrementalPricing[i].margin = ((newIncrementalPricing[i].price - activeVal) / activeVal * 100).toFixed(3)
+                    }
+
                     if (isNaN(newmargin)) {
                         this.setState({margin: ''})
                     } else {
-                        this.setState({margin: newmargin})
+                        this.setState({margin: newmargin, incrementalPricing: newIncrementalPricing})
                     } 
                     break;
                 }
@@ -244,7 +246,7 @@ export default class Pricing extends Component {
         let newIncremental = this.state.incrementalPricing.slice(0);
   
             newIncremental[index].margin = value;
-            newIncremental[index].price = (parseInt(this.props.form.pricing.cost) + (parseInt(this.props.form.pricing.cost) * value / 100)).toFixed(0)
+            newIncremental[index].price = (parseInt(this.props.form.pricing.cost) + (parseInt(this.props.form.pricing.cost) * value / 100)).toFixed(3)
 
             if (isNaN(newIncremental[index].price)) {newIncremental[index].price = ''}
        
@@ -254,7 +256,7 @@ export default class Pricing extends Component {
     }
 
     handleChange = (e, index, type) => {
-      let value = e.target.value ? parseInt(e.target.value, 10) : '';
+      let value = e.target.value ? parseInt(e.target.value) : '';
       let newIncremental = this.state.incrementalPricing.slice(0);
       newIncremental[index][type] = value;
 

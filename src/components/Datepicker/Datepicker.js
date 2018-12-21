@@ -23,6 +23,8 @@ class Datepicker extends React.Component {
                <label>
                     <i className="far fa-calendar-alt datepicker-icon"></i>
                     <DatePicker
+                        minDate={this.props.minDate}
+                        maxDate={this.props.maxDate}
                         placeholder={placeholder}
                         dateFormat="YYYY-MM-DD"
                         selected={value && value!=="" ? moment(value, 'YYYY-MM-DD') : null}
