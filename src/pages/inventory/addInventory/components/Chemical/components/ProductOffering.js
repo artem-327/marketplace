@@ -3,7 +3,7 @@ import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerRedux";
 import './ProductOffering.css'
-import {required, messages, min, isNumber, maxPercent} from "../../../../../../utils/validation";
+import {required, messages, min, isNumber, maxPercent, smaller, bigger} from "../../../../../../utils/validation";
 import RemoteComboBoxRedux from "../../../../../../components/ComboBox/RemoteComboBoxRedux";
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";
 import moment from 'moment';
@@ -26,6 +26,7 @@ export default class ProductOffering extends Component {
         this.props.fetchProductForms();
         this.props.fetchProductGrade();
         this.props.fetchProductConditions();
+        this.props.fetchOrigin();
     }
 
     componentWillUnmount() {
@@ -97,6 +98,8 @@ export default class ProductOffering extends Component {
     }
 
     render() {
+
+        console.log(this.props)
 
         let lotNumber = !this.props.edit 
             ? <div className='group-item-wr'>
@@ -218,7 +221,8 @@ export default class ProductOffering extends Component {
                                                   required,
                                                   isNumber,
                                                   min: (val) => min(val, 0),
-                                                  maxPercent
+                                                  maxPercent,
+                                                  smaller: (val) => smaller(val, this.props.productOffering.assayMax)
                                                 }}
                                 />
                                 <div class="warning">{this.state.minWarning}</div>
@@ -317,6 +321,7 @@ export default class ProductOffering extends Component {
                             <Control.text model=".pkgAmount"
                                           validators={{min: (val) => min(val, 0), isNumber, required}}
                                           id=".pkgAmount"
+                                          onChange={this.props.totalPackagesHandler}
                             />
                         </div>
                         {lotNumber} {/*temporarily disabled until the data is available*/}

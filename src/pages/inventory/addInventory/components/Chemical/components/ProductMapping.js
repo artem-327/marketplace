@@ -154,7 +154,7 @@ export default class ProductMapping extends Component {
                         <Control.text model=".packaging.size"
                                       validators={{min: (val) => min(val, 0), isNumber, required}}
                                       id=".measurements"
-                                      
+                                      onChange={this.props.measureHandler}
                                       //defaultValue=""
                                       />
                     </div>

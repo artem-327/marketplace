@@ -48,7 +48,9 @@ export default class AddForm extends Component {
         }
         let newPricing = inputs['pricing'];
         if(inputs['incrementalSelected']){
-            newPricing = {...inputs['pricing'], pricingTiers: this.validateIncPricing()};
+            newPricing = {...inputs['pricing'], tiers: this.validateIncPricing()};
+        } else {
+            newPricing = {...inputs['pricing'], tiers: []}
         }
         const creationDate = this.props.productOfferingForm.creationDate.includes("T") ? this.props.productOfferingForm.creationDate : `${this.props.productOfferingForm.creationDate}T00:00:00Z`
         const expirationDate = this.props.productOfferingForm.expirationDate.includes("T") ? this.props.productOfferingForm.expirationDate : `${this.props.productOfferingForm.expirationDate}T00:00:00Z`
@@ -60,7 +62,7 @@ export default class AddForm extends Component {
         let params = Object.assign({}, inputs, {
                 ...this.props.mappingForm,
                 ...this.props.productOfferingForm,
-                //merchantVisibility: !inputs.merchantVisibility,
+                anonymous: !inputs.anonymous,
                 pricing: newPricing,
                 ...lots[index],
                 creationDate: creationDate,
@@ -87,14 +89,16 @@ export default class AddForm extends Component {
     editProductOffer(inputs){
         let newPricing = inputs['pricing'];
         if(inputs['incrementalSelected']){
-            newPricing = {...inputs['pricing'], pricingTiers: this.validateIncPricing()};
+            newPricing = {...inputs['pricing'], tiers: this.validateIncPricing()};
+        } else {
+            newPricing = {...inputs['pricing'], tiers: []}
         }
         const creationDate = this.props.productOfferingForm.creationDate.includes("T") ? this.props.productOfferingForm.creationDate : `${this.props.productOfferingForm.creationDate}T00:00:00Z`
         const expirationDate = this.props.productOfferingForm.expirationDate.includes("T") ? this.props.productOfferingForm.expirationDate : `${this.props.productOfferingForm.expirationDate}T00:00:00Z`
         let params = Object.assign({}, inputs, {
             ...this.props.mappingForm,
             ...this.props.productOfferingForm,
-            //merchantVisibility: !inputs.merchantVisibility,
+            anonymous: !inputs.anonymous,
             pricing: newPricing,
             creationDate: creationDate,
             expirationDate: expirationDate,
@@ -116,17 +120,25 @@ export default class AddForm extends Component {
     render() {
 
         let cancelButton = this.props.edit ? <button onClick={this.cancelEdit} className={classnames('button add-inventory big')}>Cancel Edit</button> : null;
+        let submitButton = 
+        
+        <button disabled={this.props.disable} className={classnames('button add-inventory big', {'disabled' : this.props.disable})}>
+                         {!this.props.edit ? 'Add Product Offer' : 'Edit Product Offer' }</button>;
+
+        let activeButton = parseInt(this.props.productOfferingForm.assayMin) < parseInt(this.props.productOfferingForm.assayMax)
+                           ? submitButton : null;
+
+        let inactiveButton = parseInt(this.props.productOfferingForm.assayMin) > parseInt(this.props.productOfferingForm.assayMax)
+                             ? submitButton : null;
 
         return (
             <div className={classnames('add-inventory', {'disable' : this.props.disable})} >
                 <Form model="forms.addProductOffer" onSubmit={(inputs) => this.props.edit ? this.editProductOffer(inputs) : this.addProductOffer(inputs)}>
                     <AddGroup header='PRICING' disable={this.props.disable} component = {<Pricing {...this.props} getIncPricing={(data)=>this.getIncPricing(data)}/>} />
                     <AddGroup header='WAREHOUSE' disable={this.props.disable} component = {<Location {...this.props}/>} />
-                    <button disabled={this.props.disable}
-                            className={classnames('button add-inventory big', {'disabled' : this.props.disable})}>
-                        {!this.props.edit ? 'Add Product Offer' : 'Edit Product Offer' }
-                    </button>
+                    {activeButton}
                 </Form>
+                {inactiveButton}
                 {cancelButton}
             </div> 
             )

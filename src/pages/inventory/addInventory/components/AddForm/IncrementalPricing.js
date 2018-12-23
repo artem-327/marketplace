@@ -56,7 +56,7 @@ const IncrementalPricing = (props) => {
               <input type='number'
                      className='tieredPricing'
                      step={splits}
-                     value={lastPriceLevel ? "" : item.quantityTo}
+                     value={lastPriceLevel ? '' : item.quantityTo}
                      title={lastPriceLevel ? "There is no upper limit." : ""}
                      onBlur={validateInputs}
                      onChange={e => handleChange(e, index, 'quantityTo')}
