@@ -172,17 +172,21 @@ export function fetchWarehouses(){
     }
 }
 
-export function saveWarehouse(name, address, city, location, contactName, contactNumber, contactEmail, zip) {
+export function saveWarehouse(warehouseName, streetAddress, city, location, name, number, email, zip) {
+    let address = {streetAddress, city, zip, location};
+    let contact = {name, number, email};
     return {
         type: SAVE_WAREHOUSE,
-        payload: axios.post('/prodex/api/warehouses', {name, address, city, location, contactName, contactNumber, contactEmail, zip})
+        payload: axios.post('/prodex/api/warehouses', {warehouseName, address, contact})
     }
 }
 
-export function updateWarehouse(id, name, address, city, location, contactName, contactNumber, contactEmail, zip){
+export function updateWarehouse(id, warehouseName, streetAddress, city, location, name, number, email, zip){
+    let address = {streetAddress, city, zip, location};
+    let contact = {name, number, email};
     return {
         type: UPDATE_WAREHOUSE,
-        payload: axios.put(`/prodex/api/warehouses/${id}`, {name, address, city, location, contactName, contactNumber, contactEmail, zip})
+        payload: axios.put(`/prodex/api/warehouses/${id}`, {warehouseName, address, contact})
     }
 }
 
