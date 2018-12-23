@@ -173,7 +173,6 @@ export function fetchWarehouses(){
 }
 
 export function saveWarehouse(warehouseName, streetAddress, city, location, name, number, email, zip) {
-    zip = parseInt(zip)
     let address = {streetAddress, city, zip, location};
     let contact = {name, number, email};
     return {
@@ -183,7 +182,6 @@ export function saveWarehouse(warehouseName, streetAddress, city, location, name
 }
 
 export function updateWarehouse(id, warehouseName, streetAddress, city, location, name, number, email, zip){
-    zip = parseInt(zip)
     let address = {streetAddress, city, zip, location};
     let contact = {name, number, email};
     return {
