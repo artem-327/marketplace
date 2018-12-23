@@ -143,9 +143,9 @@ export default class Location extends Component {
 
     getCurrentItemById(id){
         if (id === '') return 'Select';
-        for (let i = 0; i < this.props.location.locations.length; i++) {
-            if (id === this.props.location.locations[i].province.id) {
-                return this.props.location.locations[i].province.name
+        for (let i = 0; i < this.props.locations.length; i++) {
+            if (this.props.locations[i].province && id === this.props.locations[i].province.id) {
+                return this.props.locations[i].province.name
             }
         }
         return 'error'
@@ -216,8 +216,7 @@ export default class Location extends Component {
                                             return {id: 0, name: 'no province or country'}
                                         })}
                                         disabled={!this.state.edit}
-                                        currentValue={'Alaska'} //need correct date
-                                        //currentValue={this.getCurrentItemById(this.state.state)}
+                                        currentValue={this.getCurrentItemById(this.state.state)}
                                         onChange={(value) => {
                                             this.handleInputs(value, 'state')
                                         }}/>
@@ -435,7 +434,7 @@ export default class Location extends Component {
     }
 
     render() {
-        console.log(this.props)
+        //console.log(this.props)
         const location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation();
         return (
             <div className='location-wr'>

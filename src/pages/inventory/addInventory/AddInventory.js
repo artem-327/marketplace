@@ -27,13 +27,13 @@ export default class AddInventory extends Component {
                 internalNotes: this.props.productOffer.externalNotes,
                 lotNumber: this.props.productOffer.lotNumber,
                 manufacturer: this.props.productOffer.manufacturer,
-                merchantVisibility: this.props.productOffer.merchantVisibility,
+                anonymous: this.props.productOffer.anonymous,
                 name: this.props.productOffer.name,
                 origin: this.props.productOffer.origin,
                 productCondition: this.props.productOffer.productCondition.id,
                 productForm: this.props.productOffer.productForm.id,
                 productGrade: this.props.productOffer.productGrade.id,
-                totalPackages: this.props.productOffer.pkgAmount,
+                pkgAmount: this.props.productOffer.pkgAmount,
             }));
             this.props.dispatch(actions.merge('forms.addProductOffer', {
                 warehouse: this.props.productOffer.warehouse.id
@@ -43,7 +43,7 @@ export default class AddInventory extends Component {
 
     render() {
 
-        //console.log(this.props)
+        console.log(this.props)
         return(
         <div>
             <h1 className='header'>{!this.props.edit ? 'ADD INVENTORY' : 'EDIT PRODUCT OFFER - ' + this.props.productOffer.name}</h1>

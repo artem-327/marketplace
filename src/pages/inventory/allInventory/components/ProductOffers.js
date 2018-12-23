@@ -22,7 +22,7 @@ class ProductOffers extends Component {
 
     render() {
 
-        console.log(this.props)
+        //console.log(this.props)
 
         if(this.props.productOffers.length === 0) return <Spinner />;
         let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {

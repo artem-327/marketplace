@@ -17,6 +17,7 @@ export default class Pricing extends Component {
             totalSalesPrice: 0,
             showIncrementalPricing: false,
             margin: '',
+            price: this.props.edit ? this.props.productOffer.pricing.price : null,
             priceFlag: false,
             costFlag: false,
             marginFlag: false,
@@ -36,12 +37,12 @@ export default class Pricing extends Component {
         
         if(this.props.edit){
             this.setState({
-                margin: ((this.props.productOffer.pricing.price - this.props.productOffer.pricing.cost) / this.props.productOffer.pricing.cost * 100).toFixed(3),
-                totalSalesPrice: this.props.productOffer.packaging.size * this.props.productOffer.pricing.price * this.props.productOffer.pkgAmount
+                margin: parseInt((this.props.productOffer.pricing.price - this.props.productOffer.pricing.cost) / this.props.productOffer.pricing.cost * 100),
+                totalSalesPrice: parseInt(this.props.productOffer.packaging.size * this.props.productOffer.pricing.price * this.props.productOffer.pkgAmount)
             })
             this.validateMinimum('splits')
             this.validateMinimum('minimum')
-            if(this.props.productOffer.pricing.tiers.length !== 0){
+            if(this.props.productOffer.pricing.tiers.length > 1){
                 this.props.dispatch(actions.change('forms.addProductOffer.incrementalSelected', true));
                 this.setState({
                     showIncrementalPricing: true,
@@ -68,26 +69,26 @@ export default class Pricing extends Component {
         if(this.state.margin !== ''){ this.setState({marginFlag:true}); }
     }
 
-    calculateMargin() {
-        this.setState({margin: 20})
-    }
-
     calculatePricing(e){
 
         let price = parseInt(this.props.form.pricing.price,10);
         let cost = parseInt(this.props.form.pricing.cost,10);
-        //let margin = parseInt(this.state.margin,10);
         let active = e.target.name;
         let activeVal = parseInt(e.target.value,10);
 
             switch(active){
                 case 'price': {
+                    let newprice = activeVal;
                     let newmargin = (activeVal - cost) / cost * 100;
                     newmargin = Number(newmargin.toFixed(3));
                     if (isNaN(newmargin)) {
                         this.setState({margin: ''})
                     } else {
-                        this.setState({margin: newmargin})
+                        this.setState({
+                            margin: newmargin,
+                            price: newprice,
+                            totalSalesPrice: Number((this.props.productOffer.packaging.size * Number(activeVal) * this.props.productOffer.pkgAmount).toFixed(3))
+                        })
                     }
                     break;
                 }
@@ -95,10 +96,17 @@ export default class Pricing extends Component {
                 case 'cost': {
                     let newmargin = (price - activeVal) / activeVal * 100;
                     newmargin = Number(newmargin.toFixed(3));
+                    
+                    let newIncrementalPricing = this.state.incrementalPricing.slice(0)
+
+                    for (let i = 0; i < newIncrementalPricing.length; i++) {
+                        newIncrementalPricing[i].margin = Number(((newIncrementalPricing[i].price - activeVal) / activeVal * 100).toFixed(3))
+                    }
+
                     if (isNaN(newmargin)) {
                         this.setState({margin: ''})
                     } else {
-                        this.setState({margin: newmargin})
+                        this.setState({margin: newmargin, incrementalPricing: newIncrementalPricing})
                     } 
                     break;
                 }
@@ -149,7 +157,7 @@ export default class Pricing extends Component {
             if(item.quantityTo !== '' && item.quantityTo <= item.quantityFrom)
                 item.quantityTo = item.quantityFrom + splits
           } else {
-            item.quantityTo = null
+            item.quantityTo = item.quantityFrom + splits
           }
           if(newIncremental[index+1] !== undefined){
 
@@ -225,13 +233,14 @@ export default class Pricing extends Component {
     }
 
     handlePrice = (e, index) => {
-        let value = e.target.value ? parseInt(e.target.value, 10) : '';
+        let value = e.target.value;
         let newIncremental = this.state.incrementalPricing.slice(0);
   
         newIncremental[index].price = value;
-        newIncremental[index].margin = ((parseInt(value) - parseInt(this.props.form.pricing.cost)) / parseInt(this.props.form.pricing.cost) * 100).toFixed(3)
-
+        newIncremental[index].margin = Number(((Number(value) - Number(this.props.form.pricing.cost)) / Number(this.props.form.pricing.cost) * 100).toFixed(3))
+        
         if (isNaN(newIncremental[index].margin)) {newIncremental[index].margin = ''}
+        if (newIncremental[index].price !== '') {newIncremental[index].price = Number(newIncremental[index].price)}
 
         this.setState({
             incrementalPricing: newIncremental
@@ -240,13 +249,14 @@ export default class Pricing extends Component {
     }
 
     handleMargin = (e, index) => {
-        let value = e.target.value ? parseInt(e.target.value, 10) : '';
+        let value = e.target.value;
         let newIncremental = this.state.incrementalPricing.slice(0);
-  
+
             newIncremental[index].margin = value;
-            newIncremental[index].price = (parseInt(this.props.form.pricing.cost) + (parseInt(this.props.form.pricing.cost) * value / 100)).toFixed(0)
+            newIncremental[index].price = Number((Number(this.props.form.pricing.cost) + (Number(this.props.form.pricing.cost) * value / 100)).toFixed(3))
 
             if (isNaN(newIncremental[index].price)) {newIncremental[index].price = ''}
+            if (newIncremental[index].margin !== '') {newIncremental[index].margin = Number(newIncremental[index].margin)}
        
             this.setState({
                 incrementalPricing: newIncremental
@@ -254,7 +264,7 @@ export default class Pricing extends Component {
     }
 
     handleChange = (e, index, type) => {
-      let value = e.target.value ? parseInt(e.target.value, 10) : '';
+      let value = e.target.value ? parseInt(e.target.value) : '';
       let newIncremental = this.state.incrementalPricing.slice(0);
       newIncremental[index][type] = value;
 
@@ -264,7 +274,7 @@ export default class Pricing extends Component {
     }
 
     render() {
-        //console.log(this.props)
+        //console.log(this.state.price)
 
         //console.log(this.props.productOffer.packaging.size)
         //console.log(this.props.productOffer.pricing.price)
@@ -272,17 +282,36 @@ export default class Pricing extends Component {
 
       //const {
         //mappingForm: {packaging},
-        //productOfferingForm: {totalPackages = 50},
         //addProductOfferForm: {pricing}
       //} = this.props
       const {showIncrementalPricing, splits, minimum, disabled, incrementalPricing} = this.state
 
       //const measurement = packaging ? packaging.capacity : null
-      const price = this.props
+      //const price = this.props
 
-      const pricePer = this.props.edit && this.props.productOffer.packaging.unit.name === 'pound' ? 'Price per (lb)' : 'Price per (gal)';
-      const costPer = this.props.edit && this.props.productOffer.packaging.unit.name === 'pound' ? 'Cost per (lb)' : 'Cost per (gal)';
-      
+
+    let pricePer;
+    let costPer;
+
+    if(this.props.mappingForm.packaging) {
+        if(this.props.mappingForm.packaging.unit === 1 || this.props.mappingForm.packaging.unit === 3 || this.props.mappingForm.packaging.unit === 5) {
+            pricePer = 'Price per (lb)';
+            costPer = 'Cost per (lb)'
+        } else if(this.props.mappingForm.packaging.unit === 2 || this.props.mappingForm.packaging.unit === 4 || this.props.mappingForm.packaging.unit === 6) {
+            pricePer = 'Price per (gl)';
+            costPer = 'Cost per (gl)';
+        } else if(!this.props.mappingForm.packaging.unit) {
+            pricePer = 'Price per unit';
+            costPer = 'Cost per unit';
+        }
+    }
+
+    let totalSalesPrice;
+
+    totalSalesPrice = this.props.mappingForm.packaging
+                      ? Number(this.props.mappingForm.packaging.size) * Number(this.props.productOfferingForm.pkgAmount * Number(this.state.price))
+                      : '';
+
         return (
             <div>
 
@@ -368,7 +397,7 @@ export default class Pricing extends Component {
                     <div className='group-item-wr'>
                         <div className='total'>
                             <h5>Total Sales Price</h5>
-                            <output>${(this.state.totalSalesPrice).formatMoney(3)}</output>
+                            <output>${totalSalesPrice}</output>
                         </div>
                     </div>
 
@@ -396,14 +425,15 @@ export default class Pricing extends Component {
                                         type='number'
                                         min={'0'}/>
                       </div>
-                      <div className='group-item-wr inputs-align'>
+                      {/*<div className='group-item-wr inputs-align'>
                             <Control.checkbox 
-                                name='merchantVisibility'
-                                model='forms.addProductOffer.merchantVisibility'
+                                name='anonymous'
+                                model='forms.addProductOffer.anonymous'
                                 component={Checkbox}
+                                value={true}
                                 label="List Anonymously"
                             />
-                        </div>
+                      </div>*/}
                   </div>
 
                     <div>

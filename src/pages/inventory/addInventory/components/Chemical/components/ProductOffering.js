@@ -3,10 +3,10 @@ import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerRedux";
 import './ProductOffering.css'
-import {required, messages, min, isNumber, maxPercent} from "../../../../../../utils/validation";
+import {required, messages, min, isNumber, maxPercent, smaller, bigger} from "../../../../../../utils/validation";
 import RemoteComboBoxRedux from "../../../../../../components/ComboBox/RemoteComboBoxRedux";
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";
-import moment from 'moment'
+import moment from 'moment';
 
 export default class ProductOffering extends Component {
     constructor(props) {
@@ -26,6 +26,7 @@ export default class ProductOffering extends Component {
         this.props.fetchProductForms();
         this.props.fetchProductGrade();
         this.props.fetchProductConditions();
+        this.props.fetchOrigin();
     }
 
     componentWillUnmount() {
@@ -97,6 +98,27 @@ export default class ProductOffering extends Component {
     }
 
     render() {
+
+        console.log(this.props)
+
+        let lotNumber = !this.props.edit 
+            ? <div className='group-item-wr'>
+                <Errors
+                    className="form-error"
+                    model=".lotNumber"
+                    show="touched"
+                    messages={{
+                        required: messages.required,
+                        min: messages.min,
+                        isNumber: messages.isNumber
+                    }}
+                />
+                <label htmlFor=".lotNumber">Lot Number</label>
+                <Control.text model=".lotNumber"
+                            validators={{min: (val) => min(val, 0), isNumber, required}}
+                            id=".lotNumber"/>
+                </div>
+            : null;
 
         /*let button = this.state.save ? <button className='button big added-productOffering'>Added</button> :
             <button className='button big add-productOffering'>Add Lot</button>;*/
@@ -199,7 +221,8 @@ export default class ProductOffering extends Component {
                                                   required,
                                                   isNumber,
                                                   min: (val) => min(val, 0),
-                                                  maxPercent
+                                                  maxPercent,
+                                                  smaller: (val) => smaller(val, this.props.productOffering.assayMax)
                                                 }}
                                 />
                                 <div class="warning">{this.state.minWarning}</div>
@@ -286,7 +309,7 @@ export default class ProductOffering extends Component {
                         <div className='group-item-wr'>
                             <Errors
                                 className="form-error"
-                                model=".totalPackages"
+                                model=".pkgAmount"
                                 show="touched"
                                 messages={{
                                     required: messages.required,
@@ -294,28 +317,14 @@ export default class ProductOffering extends Component {
                                     isNumber: messages.isNumber
                                 }}
                             />
-                            <label htmlFor=".totalPackages">Total Packages</label>
-                            <Control.text model=".totalPackages"
+                            <label htmlFor=".pkgAmount">Total Packages</label>
+                            <Control.text model=".pkgAmount"
                                           validators={{min: (val) => min(val, 0), isNumber, required}}
-                                          id=".totalPackages"
+                                          id=".pkgAmount"
+                                          onChange={this.props.totalPackagesHandler}
                             />
                         </div>
-                        <div className='group-item-wr'>
-                            <Errors
-                                className="form-error"
-                                model=".lotNumber"
-                                show="touched"
-                                messages={{
-                                    required: messages.required,
-                                    min: messages.min,
-                                    isNumber: messages.isNumber
-                                }}
-                            />
-                            <label htmlFor=".lotNumber">Lot Number</label>
-                            <Control.text model=".lotNumber"
-                                          validators={{min: (val) => min(val, 0), isNumber, required}}
-                                          id=".lotNumber"/>
-                            </div>
+                        {lotNumber} {/*temporarily disabled until the data is available*/}
 
                         <div className='group-item-wr'>
                             <Errors model='forms.productOffering.creationDate'
@@ -323,6 +332,7 @@ export default class ProductOffering extends Component {
                                     messages={{required: 'Required'}}/>
                             <label htmlFor=".creationDate">MFG Date</label>
                             <DatepickerRedux placeholder={'test'}
+                                             maxDate={moment().subtract(1, "days")}
                                              dispatch={this.props.dispatch}
                                              onChange={(value) => console.log(value)}
                                              model='forms.productOffering.creationDate'/>
@@ -330,6 +340,7 @@ export default class ProductOffering extends Component {
                         <div className='group-item-wr'>
                             <label htmlFor=".expirationDate">Expiration Date</label>
                             <DatepickerRedux placeholder={'test'}
+                                             minDate={moment().add(1, "days")}
                                              dispatch={this.props.dispatch}
                                              onChange={(value) => console.log(value)}
                                              model='forms.productOffering.expirationDate'/>
