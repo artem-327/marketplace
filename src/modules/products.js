@@ -226,6 +226,12 @@ export function fetchProductGrade(filter = {}) {
 
 export function fetchOrigin(filter = "") {
     return {
+//         type: FETCH_ORIGIN,
+//         payload: axios.get('/prodex/api/locations', {params: {...filter}}).then(result => {
+//             return result.data
+//         })
+//     }
+// }
         type: FETCH_ORIGIN,
         payload: axios.get('/prodex/api/countries' /*, {params: {search: filter}}*/).then(result => result)
     }
