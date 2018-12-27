@@ -3,7 +3,6 @@ import {Control, Errors, actions} from 'react-redux-form';
 import {/*required,*/ isNumber, min, messages} from "../../../../../utils/validation";
 import IncrementalPricing from "./IncrementalPricing";
 import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
-import Checkbox from "../../../../../components/Checkbox/Checkbox";
 import './Pricing.css';
 import classNames from 'classnames';
 import WarningLabel from "../../../../../components/WarningLabel/WarningLabel"
@@ -21,8 +20,8 @@ export default class Pricing extends Component {
             priceFlag: false,
             costFlag: false,
             marginFlag: false,
-            splits: this.props.edit ? this.props.productOffer.packaging.minimum : 1,
-            minimum: this.props.edit ? this.props.productOffer.packaging.splits : 1,
+            splits: '',
+            minimum: '',
             disabled: true,
             incrementalPricing: [{
               quantityFrom: '',
@@ -39,15 +38,13 @@ export default class Pricing extends Component {
             this.setState({
                 margin: parseInt((this.props.productOffer.pricing.price - this.props.productOffer.pricing.cost) / this.props.productOffer.pricing.cost * 100),
                 totalSalesPrice: parseInt(this.props.productOffer.packaging.size * this.props.productOffer.pricing.price * this.props.productOffer.pkgAmount)
-            })
-            this.validateMinimum('splits')
-            this.validateMinimum('minimum')
+            });
+            this.validateMinimum('splits');
+            this.validateMinimum('minimum');
             if(this.props.productOffer.pricing.tiers.length > 1){
                 this.props.dispatch(actions.change('forms.addProductOffer.incrementalSelected', true));
                 this.setState({
                     showIncrementalPricing: true,
-                    splits: this.props.productOffer.packaging.splits,
-                    minimum: this.props.productOffer.packaging.minimum,
                     incrementalPricing: this.props.productOffer.pricing.tiers,
                 }, ()=>this.validateInputs())
             }
@@ -97,7 +94,7 @@ export default class Pricing extends Component {
                     let newmargin = (price - activeVal) / activeVal * 100;
                     newmargin = Number(newmargin.toFixed(3));
                     
-                    let newIncrementalPricing = this.state.incrementalPricing.slice(0)
+                    let newIncrementalPricing = this.state.incrementalPricing.slice(0);
 
                     for (let i = 0; i < newIncrementalPricing.length; i++) {
                         newIncrementalPricing[i].margin = Number(((newIncrementalPricing[i].price - activeVal) / activeVal * 100).toFixed(3))
@@ -116,7 +113,7 @@ export default class Pricing extends Component {
                     const newmargin = e.target.value;
                     this.setState({margin: newmargin});
 
-                    const newprice = Number((cost + (cost * newmargin / 100)).toFixed(3))
+                    const newprice = Number((cost + (cost * newmargin / 100)).toFixed(3));
                     this.handlePriceChange('forms.addProductOffer.pricing.price', newprice);
 
                     break;
@@ -150,9 +147,9 @@ export default class Pricing extends Component {
 
           if(index !== newIncremental.length-1) {
             if(difference > splits / 2)
-            item.quantityTo += splits-difference
+            item.quantityTo += splits-difference;
             else
-                item.quantityTo -= difference
+                item.quantityTo -= difference;
 
             if(item.quantityTo !== '' && item.quantityTo <= item.quantityFrom)
                 item.quantityTo = item.quantityFrom + splits
@@ -168,7 +165,7 @@ export default class Pricing extends Component {
       });
       this.props.getIncPricing(newIncremental);
       this.setState({incrementalPricing: newIncremental})
-    }
+    };
 
     validateMinimum = (form) => {
       if(form === 'minimum'){
@@ -196,13 +193,13 @@ export default class Pricing extends Component {
       else
           tmpMin = this.state.splits < 2 * difference ? this.state.minimum + this.state.splits - difference : this.state.minimum - difference;
       this.setState({minimum:tmpMin},() => {this.disableInput(); this.validateInputs()});
-    }
+    };
 
     splitsMinimumChange = e => {
       let newstate = {};
       newstate[e.target.className] = e.target.value ? parseInt(e.target.value, 10) : '';
       this.setState(newstate);
-    }
+    };
 
     disableInput = () => {
       if(this.state.splits === '' || this.state.minimum === ''){
@@ -210,7 +207,7 @@ export default class Pricing extends Component {
       }
       else
           this.setState({disabled:false});
-    }
+    };
 
     addNewIncrementalPricing = (e,index) => {
       e.preventDefault();
@@ -223,21 +220,21 @@ export default class Pricing extends Component {
       this.setState({
           incrementalPricing: newIncremental
       })
-    }
+    };
 
     removeIncrementalPricing = (e,index) => {
       e.preventDefault();
       this.setState({
           incrementalPricing: [...this.state.incrementalPricing.slice(0,index), ...this.state.incrementalPricing.slice(index+1)]
       }, ()=>this.validateInputs())
-    }
+    };
 
     handlePrice = (e, index) => {
         let value = e.target.value;
         let newIncremental = this.state.incrementalPricing.slice(0);
   
         newIncremental[index].price = value;
-        newIncremental[index].margin = Number(((Number(value) - Number(this.props.form.pricing.cost)) / Number(this.props.form.pricing.cost) * 100).toFixed(3))
+        newIncremental[index].margin = Number(((Number(value) - Number(this.props.form.pricing.cost)) / Number(this.props.form.pricing.cost) * 100).toFixed(3));
         
         if (isNaN(newIncremental[index].margin)) {newIncremental[index].margin = ''}
         if (newIncremental[index].price !== '') {newIncremental[index].price = Number(newIncremental[index].price)}
@@ -246,14 +243,14 @@ export default class Pricing extends Component {
             incrementalPricing: newIncremental
         })
         
-    }
+    };
 
     handleMargin = (e, index) => {
         let value = e.target.value;
         let newIncremental = this.state.incrementalPricing.slice(0);
 
             newIncremental[index].margin = value;
-            newIncremental[index].price = Number((Number(this.props.form.pricing.cost) + (Number(this.props.form.pricing.cost) * value / 100)).toFixed(3))
+            newIncremental[index].price = Number((Number(this.props.form.pricing.cost) + (Number(this.props.form.pricing.cost) * value / 100)).toFixed(3));
 
             if (isNaN(newIncremental[index].price)) {newIncremental[index].price = ''}
             if (newIncremental[index].margin !== '') {newIncremental[index].margin = Number(newIncremental[index].margin)}
@@ -261,7 +258,7 @@ export default class Pricing extends Component {
             this.setState({
                 incrementalPricing: newIncremental
         })
-    }
+    };
 
     handleChange = (e, index, type) => {
       let value = e.target.value ? parseInt(e.target.value) : '';
@@ -271,11 +268,11 @@ export default class Pricing extends Component {
       this.setState({
           incrementalPricing: newIncremental
       })
-    }
+    };
 
     render() {
-        //console.log(this.state.price)
-
+        console.log(JSON.parse(localStorage.getItem('productLots')));
+        
         //console.log(this.props.productOffer.packaging.size)
         //console.log(this.props.productOffer.pricing.price)
         //console.log(this.props.productOffer.pkgAmount)
@@ -284,7 +281,7 @@ export default class Pricing extends Component {
         //mappingForm: {packaging},
         //addProductOfferForm: {pricing}
       //} = this.props
-      const {showIncrementalPricing, splits, minimum, disabled, incrementalPricing} = this.state
+      const {showIncrementalPricing, splits, minimum, disabled, incrementalPricing} = this.state;
 
       //const measurement = packaging ? packaging.capacity : null
       //const price = this.props
@@ -307,14 +304,29 @@ export default class Pricing extends Component {
     }
 
     let totalSalesPrice;
+    let productLots = JSON.parse(localStorage.getItem('productLots'));
+    let productLotsPkgAmount = 0;
+    if(productLots){
+    for(let i = 0; i < productLots.length; i++) {
+       productLotsPkgAmount += Number(productLots[i].pkgAmount);
+    }}
 
-    totalSalesPrice = this.props.mappingForm.packaging
-                      ? Number(this.props.mappingForm.packaging.size) * Number(this.props.productOfferingForm.pkgAmount * Number(this.state.price))
-                      : '';
+    if(this.props.edit) {
+        totalSalesPrice = this.props.mappingForm.packaging && this.state.price
+        ? Number(this.props.mappingForm.packaging.size) * Number(this.props.productOfferingForm.pkgAmount) * Number(this.state.price)
+        : 0;
+    } else if (!this.props.edit) {
+        totalSalesPrice = this.props.form.pricing && this.props.mappingForm.packaging.size
+        ? productLotsPkgAmount * Number(this.props.form.pricing.price * Number(this.props.mappingForm.packaging.size))
+        : 0;
+    }
 
-        return (
+    let defaultSplits =this.props.edit ? this.props.productOffer.packaging.splits : 1;
+    let defaultMinimum = this.props.edit ? this.props.productOffer.packaging.minimum : 1;
+    console.log(this.props);
+    let pricing =
+
             <div>
-
                 <h4>SET PRICE & RULES</h4>
                 <div>
                     <div className='group-item-wr'>
@@ -340,7 +352,7 @@ export default class Pricing extends Component {
                                       name='price'
                                       onChange={(e)=>this.calculatePricing(e)}
                                       onBlur={()=>this.checkFilledInputs()}
-                                      disabled={this.state.showIncrementalPricing ? true : false}
+                                      disabled={!!this.state.showIncrementalPricing}
                                       placeholder="$"
                                       defaultValue={this.props.edit ? this.props.productOffer.pricing.price : null}
                         />
@@ -406,7 +418,7 @@ export default class Pricing extends Component {
                           <label>Splits</label>
                           <Control.text model="forms.productMapping.packaging.splits"
                                         id="forms.productMapping.packaging.splits"
-                                        defaultValue={this.props.edit ? this.props.productOffer.packaging.splits : this.state.splits}
+                                        defaultValue={defaultSplits}
                                         onChange={e => this.splitsMinimumChange(e)}
                                         onBlur={() => this.validateMinimum('splits')}
                                         className='splits'
@@ -418,7 +430,7 @@ export default class Pricing extends Component {
                           <label>Minimum</label>
                           <Control.text model="forms.productMapping.packaging.minimum"
                                         id="forms.productMapping.packaging.minimum"
-                                        defaultValue={this.props.edit ? this.props.productOffer.packaging.minimum : this.state.minimum}
+                                        defaultValue={defaultMinimum}
                                         onChange={e => this.splitsMinimumChange(e)}
                                         onBlur={e => this.validateMinimum('minimum')}
                                         className='minimum'
@@ -467,7 +479,8 @@ export default class Pricing extends Component {
                       />
                     </div>}
                 </div>
-            </div>
-        );
+            </div>;
+
+        return (pricing);
     }
 }
