@@ -186,7 +186,7 @@ export function updateWarehouse(id, warehouseName, streetAddress, city, province
     let contact = {name, number, email};
     return {
         type: UPDATE_WAREHOUSE,
-        payload: axios.put(`/prodex/api/warehouses/${id}`, {id, name: warehouseName, address, contact})
+        payload: axios.put(`/prodex/api/warehouses/${id}`, {name: warehouseName, address, contact})
     }
 }
 

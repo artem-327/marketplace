@@ -17,6 +17,7 @@ export default class Location extends Component {
             edit: false,
             warehouseIndex: '',
             warehouseName: '',
+            requestIndex: '',
             street: '',
             city: '',
             state: '',
@@ -68,16 +69,22 @@ export default class Location extends Component {
         this.setState({[name]: value})
     }
 
-    setLocation = id => {
-        let index = 0;
-        for (let i = 0; i < this.props.warehouse.length; i++) {
-            if (this.props.warehouse[i].id === id) {
+    setLocation = (value) => {
+        let index;
+
+        for(let i = 0; i < this.props.warehouse.length; i++) {
+            if(this.props.warehouse[i].id === value) {
                 index = i;
-                break;
             }
         }
+
+        //console.log(value)
+        
+
         this.setState({
-            warehouseIndex: index,
+            requestIndex: index,
+            warehouseIndex: value,
+            warehouseName: this.props.warehouse[index].name,
             street: this.props.warehouse[index].address.streetAddress,
             city: this.props.warehouse[index].address.city,
             state: this.props.warehouse[index].address.province.id,
@@ -128,13 +135,13 @@ export default class Location extends Component {
 
     updateLocation(e) {
         e.preventDefault();
-        let {street, city, state, zip, contact, phone, email} = this.state;
+        let {warehouseIndex, warehouseName, street, city, state, zip, contact, phone, email} = this.state;
 
         this.setState({isSubmitted: true})
 
         if (!this.validateForms()) return;
 
-        this.props.updateWarehouse(this.props.warehouse[this.state.warehouseIndex].id, this.props.warehouse[this.state.warehouseIndex].name, street, city, state, contact, phone, email, zip).then(() => {
+        this.props.updateWarehouse(warehouseIndex, warehouseName, street, city, state, contact, phone, email, zip).then(() => {
             this.props.fetchWarehouses().then(() => {
                 this.setState({edit: false})
             })
@@ -175,9 +182,9 @@ export default class Location extends Component {
                                 model="forms.addProductOffer.warehouse"
                                 dispatch={this.props.dispatch}
                                 opns={this.props.warehouse}
-                                value={this.state.warehouseIndex + 1}
+                                value={this.state.warehouseIndex}
                                 validators={{required}}
-                                onChange={(id) => this.setLocation(id)}
+                                onChange={(value) => this.setLocation(value)}
                                 placeholder='Select Location'
                             />
                     </div>
@@ -434,7 +441,9 @@ export default class Location extends Component {
     }
 
     render() {
+
         console.log(this.props.warehouse)
+
         const location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation();
         return (
             <div className='location-wr'>
