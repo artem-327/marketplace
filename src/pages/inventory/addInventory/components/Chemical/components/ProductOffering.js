@@ -99,7 +99,7 @@ export default class ProductOffering extends Component {
 
     render() {
 
-        console.log(this.props)
+        //console.log(this.props)
 
         let lotNumber = !this.props.edit 
             ? <div className='group-item-wr'>

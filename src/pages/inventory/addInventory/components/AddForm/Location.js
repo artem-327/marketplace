@@ -343,7 +343,7 @@ export default class Location extends Component {
                                onChange={(e) => {
                                    this.handleInputs(e.target.value, 'zip')
                                }}
-                               type="number"/>
+                               />
                     </div>
                 </div>
                 <div>

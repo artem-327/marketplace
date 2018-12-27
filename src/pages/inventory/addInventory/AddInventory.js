@@ -43,7 +43,7 @@ export default class AddInventory extends Component {
 
     render() {
 
-        console.log(this.props)
+        //console.log(this.props)
         return(
         <div>
             <h1 className='header'>{!this.props.edit ? 'ADD INVENTORY' : 'EDIT PRODUCT OFFER - ' + this.props.productOffer.name}</h1>

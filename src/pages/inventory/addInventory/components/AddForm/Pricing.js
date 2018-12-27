@@ -274,8 +274,9 @@ export default class Pricing extends Component {
     }
 
     render() {
-        //console.log(this.state.price)
-
+        console.log(this.props)
+        console.log(JSON.parse(localStorage.getItem('productLots')))
+        
         //console.log(this.props.productOffer.packaging.size)
         //console.log(this.props.productOffer.pricing.price)
         //console.log(this.props.productOffer.pkgAmount)
@@ -307,14 +308,26 @@ export default class Pricing extends Component {
     }
 
     let totalSalesPrice;
+    let productLots = JSON.parse(localStorage.getItem('productLots'));
+    let productLotsPkgAmount = 0;
+    
+    for(let i = 0; i < productLots.length; i++) {
+       productLotsPkgAmount += Number(productLots[i].pkgAmount);
+    }
 
-    totalSalesPrice = this.props.mappingForm.packaging
-                      ? Number(this.props.mappingForm.packaging.size) * Number(this.props.productOfferingForm.pkgAmount * Number(this.state.price))
-                      : '';
+    if(this.props.edit) {
+        totalSalesPrice = this.props.mappingForm.packaging && this.state.price
+        ? Number(this.props.mappingForm.packaging.size) * Number(this.props.productOfferingForm.pkgAmount) * Number(this.state.price)
+        : 0;
+    } else if (!this.props.edit) {
+        totalSalesPrice = this.props.form.pricing && this.props.mappingForm.packaging.size
+        ? productLotsPkgAmount * Number(this.props.form.pricing.price * Number(this.props.mappingForm.packaging.size))
+        : 0;
+    }
 
-        return (
+    let pricing = 
+
             <div>
-
                 <h4>SET PRICE & RULES</h4>
                 <div>
                     <div className='group-item-wr'>
@@ -468,6 +481,7 @@ export default class Pricing extends Component {
                     </div>}
                 </div>
             </div>
-        );
+
+        return (pricing);
     }
 }
