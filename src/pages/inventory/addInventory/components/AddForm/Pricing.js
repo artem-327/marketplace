@@ -46,8 +46,8 @@ export default class Pricing extends Component {
                 this.props.dispatch(actions.change('forms.addProductOffer.incrementalSelected', true));
                 this.setState({
                     showIncrementalPricing: true,
-                    splits: this.props.productOffer.packaging.splits,
-                    minimum: this.props.productOffer.packaging.minimum,
+                    splits: this.props.edit ? this.props.productOffer.packaging.minimum : 1,
+                    minimum: this.props.edit ? this.props.productOffer.packaging.minimum : 1,
                     incrementalPricing: this.props.productOffer.pricing.tiers,
                 }, ()=>this.validateInputs())
             }
@@ -311,7 +311,7 @@ export default class Pricing extends Component {
     let productLots = JSON.parse(localStorage.getItem('productLots'));
     let productLotsPkgAmount = 0;
     
-    for(let i = 0; i < productLots.length; i++) {
+    if(productLots) for(let i = 0; i < productLots.length; i++) {
        productLotsPkgAmount += Number(productLots[i].pkgAmount);
     }
 
