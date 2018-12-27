@@ -119,13 +119,15 @@ export default class AddForm extends Component {
 
     render() {
 
+        console.log(this.props)
+
         let cancelButton = this.props.edit ? <button onClick={this.cancelEdit} className={classnames('button add-inventory big')}>Cancel Edit</button> : null;
         let submitButton = 
         
         <button disabled={this.props.disable} className={classnames('button add-inventory big', {'disabled' : this.props.disable})}>
                          {!this.props.edit ? 'Add Product Offer' : 'Edit Product Offer' }</button>;
 
-        let activeButton = parseInt(this.props.productOfferingForm.assayMin) < parseInt(this.props.productOfferingForm.assayMax)
+        let activeButton = parseInt(this.props.productOfferingForm.assayMin) <= parseInt(this.props.productOfferingForm.assayMax)
                            ? submitButton : null;
 
         let inactiveButton = parseInt(this.props.productOfferingForm.assayMin) > parseInt(this.props.productOfferingForm.assayMax)

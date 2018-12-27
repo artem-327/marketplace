@@ -45,8 +45,6 @@ export default class Pricing extends Component {
                 this.props.dispatch(actions.change('forms.addProductOffer.incrementalSelected', true));
                 this.setState({
                     showIncrementalPricing: true,
-                    splits: this.props.productOffer.packaging.splits,
-                    minimum: this.props.productOffer.packaging.minimum,
                     incrementalPricing: this.props.productOffer.pricing.tiers,
                 }, ()=>this.validateInputs())
             }
@@ -273,7 +271,6 @@ export default class Pricing extends Component {
     };
 
     render() {
-        console.log(this.props);
         console.log(JSON.parse(localStorage.getItem('productLots')));
         
         //console.log(this.props.productOffer.packaging.size)
@@ -324,10 +321,10 @@ export default class Pricing extends Component {
         : 0;
     }
 
-    let defaultSplits =this.props.edit ? this.props.productOffer.packaging.minimum : 1;
-    let defaultMinimum = this.props.edit ? this.props.productOffer.packaging.splits : 1;
-
-    let pricing = 
+    let defaultSplits =this.props.edit ? this.props.productOffer.packaging.splits : 1;
+    let defaultMinimum = this.props.edit ? this.props.productOffer.packaging.minimum : 1;
+    console.log(this.props);
+    let pricing =
 
             <div>
                 <h4>SET PRICE & RULES</h4>
