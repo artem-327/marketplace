@@ -83,8 +83,7 @@ export default class Pricing extends Component {
                     } else {
                         this.setState({
                             margin: newmargin,
-                            price: newprice,
-                            totalSalesPrice: Number((this.props.productOffer.packaging.size * Number(activeVal) * this.props.productOffer.pkgAmount).toFixed(3))
+                            price: newprice
                         })
                     }
                     break;
@@ -323,7 +322,6 @@ export default class Pricing extends Component {
 
     let defaultSplits =this.props.edit ? this.props.productOffer.packaging.splits : 1;
     let defaultMinimum = this.props.edit ? this.props.productOffer.packaging.minimum : 1;
-    console.log(this.props);
     let pricing =
 
             <div>

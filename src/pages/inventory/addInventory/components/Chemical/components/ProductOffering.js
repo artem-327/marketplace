@@ -74,7 +74,7 @@ export default class ProductOffering extends Component {
 
         this.setState({minWarning: newMinWarning, maxWarning: newMaxWarning})
 
-        console.log(e.target.value)
+        //console.log(e.target.value)
     }
 
     maxValidationHandler(e) {
@@ -83,7 +83,7 @@ export default class ProductOffering extends Component {
         let newMinWarning;
         let newMaxWarning;
 
-        console.log(e.target.value)
+        //console.log(e.target.value)
 
        
         if (assayMin > assayMax) {
