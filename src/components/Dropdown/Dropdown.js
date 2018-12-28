@@ -30,7 +30,7 @@ class Dropdown extends Component {
             const opnsLength = nextProps.opns ? nextProps.opns.length : 0;
             for(let i = 0; i < opnsLength; i++){
                 if(nextProps.opns[i].id === nextProps.value){
-                    cv = nextProps.opns[i].name;
+                    cv = nextProps.opns[i].name || nextProps.opns[i].warehouseName;
                     break;
                 }
             }
@@ -57,7 +57,7 @@ class Dropdown extends Component {
     renderDropdown(opt){
         if(this.props.disabled) return;
         return opt.map((option, index)=>{
-            return <li key={index + 'dropdown'} onClick={()=>{this.setCurrentValue(option.id, option.name)}}>{option.name}</li>
+            return <li key={index + 'dropdown'} onClick={()=>{this.setCurrentValue(option.id, option.name || option.warehouseName)}}>{option.name || option.warehouseName}</li>
         });
     }
 

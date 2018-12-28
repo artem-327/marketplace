@@ -130,7 +130,7 @@ export default class AddForm extends Component {
         let activeButton = parseInt(this.props.productOfferingForm.assayMin) <= parseInt(this.props.productOfferingForm.assayMax)
                            ? submitButton : null;
 
-        let inactiveButton = parseInt(this.props.productOfferingForm.assayMin) > parseInt(this.props.productOfferingForm.assayMax)
+        let inactiveButton = (parseInt(this.props.productOfferingForm.assayMin) > parseInt(this.props.productOfferingForm.assayMax)) || (isNaN(parseInt(this.props.productOfferingForm.assayMin)) || isNaN(parseInt(this.props.productOfferingForm.assayMax))) 
                              ? submitButton : null;
 
         return (
