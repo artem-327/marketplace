@@ -119,7 +119,7 @@ export default class AddForm extends Component {
 
     render() {
 
-        console.log(this.props)
+        //console.log(this.props)
 
         let cancelButton = this.props.edit ? <button onClick={this.cancelEdit} className={classnames('button add-inventory big')}>Cancel Edit</button> : null;
         let submitButton = 

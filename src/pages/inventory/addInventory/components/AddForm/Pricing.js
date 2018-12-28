@@ -20,9 +20,9 @@ export default class Pricing extends Component {
             priceFlag: false,
             costFlag: false,
             marginFlag: false,
-            splits: '',
-            minimum: '',
-            disabled: true,
+            splits: !this.props.edit ? 1 : this.props.productOffer.packaging.splits,
+            minimum: !this.props.edit ? 1 : this.props.productOffer.packaging.minimum,
+            disabled: !this.props.edit ? false : true,
             incrementalPricing: [{
               quantityFrom: '',
               quantityTo: '',
@@ -83,8 +83,7 @@ export default class Pricing extends Component {
                     } else {
                         this.setState({
                             margin: newmargin,
-                            price: newprice,
-                            totalSalesPrice: Number((this.props.productOffer.packaging.size * Number(activeVal) * this.props.productOffer.pkgAmount).toFixed(3))
+                            price: newprice
                         })
                     }
                     break;
@@ -271,7 +270,9 @@ export default class Pricing extends Component {
     };
 
     render() {
-        console.log(JSON.parse(localStorage.getItem('productLots')));
+        console.log(this.props)
+        
+        //console.log(JSON.parse(localStorage.getItem('productLots')));
         
         //console.log(this.props.productOffer.packaging.size)
         //console.log(this.props.productOffer.pricing.price)
@@ -321,9 +322,6 @@ export default class Pricing extends Component {
         : 0;
     }
 
-    let defaultSplits =this.props.edit ? this.props.productOffer.packaging.splits : 1;
-    let defaultMinimum = this.props.edit ? this.props.productOffer.packaging.minimum : 1;
-    console.log(this.props);
     let pricing =
 
             <div>
@@ -418,7 +416,7 @@ export default class Pricing extends Component {
                           <label>Splits</label>
                           <Control.text model="forms.productMapping.packaging.splits"
                                         id="forms.productMapping.packaging.splits"
-                                        defaultValue={defaultSplits}
+                                        defaultValue={this.state.splits}
                                         onChange={e => this.splitsMinimumChange(e)}
                                         onBlur={() => this.validateMinimum('splits')}
                                         className='splits'
@@ -430,7 +428,7 @@ export default class Pricing extends Component {
                           <label>Minimum</label>
                           <Control.text model="forms.productMapping.packaging.minimum"
                                         id="forms.productMapping.packaging.minimum"
-                                        defaultValue={defaultMinimum}
+                                        defaultValue={this.state.minimum}
                                         onChange={e => this.splitsMinimumChange(e)}
                                         onBlur={e => this.validateMinimum('minimum')}
                                         className='minimum'

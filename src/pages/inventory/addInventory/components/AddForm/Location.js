@@ -82,7 +82,7 @@ export default class Location extends Component {
 
         this.setState({
             warehouseIndex: value,
-            warehouseName: this.props.warehouse[index].name,
+            warehouseName: this.props.warehouse[index].warehouseName,
             street: this.props.warehouse[index].address.streetAddress,
             city: this.props.warehouse[index].address.city,
             state: this.props.warehouse[index].address.province.id,
@@ -440,7 +440,7 @@ export default class Location extends Component {
 
     render() {
 
-        console.log(this.props.warehouse)
+        //console.log(this.props.warehouse)
 
         const location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation();
         return (

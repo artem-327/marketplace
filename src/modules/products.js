@@ -185,7 +185,7 @@ export default function reducer(state = initialState, action) {
 export function searchProducts(search) {
     return {
         type: SEARCH_PRODUCT,
-        payload: axios.get('/prodex/api/products' /*, {params:{search}}*/).then(response => response)
+        payload: axios.get('/prodex/api/products', {params:{search}}).then(response => response)
     }
 }
 
@@ -226,14 +226,8 @@ export function fetchProductGrade(filter = {}) {
 
 export function fetchOrigin(filter = "") {
     return {
-//         type: FETCH_ORIGIN,
-//         payload: axios.get('/prodex/api/locations', {params: {...filter}}).then(result => {
-//             return result.data
-//         })
-//     }
-// }
         type: FETCH_ORIGIN,
-        payload: axios.get('/prodex/api/countries' /*, {params: {search: filter}}*/).then(result => result)
+        payload: axios.get('/prodex/api/countries', /*{params: {search: filter}}*/).then(result => result)
     }
 }
 
