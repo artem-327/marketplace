@@ -352,7 +352,7 @@ export default class Pricing extends Component {
                                       onBlur={()=>this.checkFilledInputs()}
                                       disabled={!!this.state.showIncrementalPricing}
                                       placeholder="$"
-                                      defaultValue={this.props.edit ? this.props.productOffer.pricing.price : null}
+                                      defaultValue={this.props.edit ? this.props.productOffer.pricing.price : ''}
                         />
                     </div>
                     <div className='group-item-wr'>
@@ -374,7 +374,7 @@ export default class Pricing extends Component {
                                           isNumber,
                                           //required
                                       }}
-                                      defaultValue={this.props.edit ? this.props.productOffer.pricing.cost : null}
+                                      defaultValue={this.props.edit ? this.props.productOffer.pricing.cost : ''}
                                       type='number'
                                       name='cost'
                                       onChange={(e)=>this.calculatePricing(e)}
