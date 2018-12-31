@@ -1,20 +1,14 @@
-.no-match{
-  min-height: 80vh;
-  position: relative;
-  p{
-    position: absolute;
+.wrapper {
+  height: 90vh;
+  color: #c3c3c3;
+  line-height: 3rem;
+  .hash {
+    font-size: 8rem;
     font-weight: bold;
-    font-size: 10rem;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #c3c3c3;
-    margin: 0;
-    text-align: center;
-    width: 100%;
-  }
-  span{
-    font-size: 1.4rem;
-    font-weight: 300;
+    .lost {
+      font-size: 1.4rem;
+      font-weight: 300;
+      white-space: nowrap;
+    }
   }
 }
