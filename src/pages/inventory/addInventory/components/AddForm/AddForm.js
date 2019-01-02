@@ -41,15 +41,31 @@ export default class AddForm extends Component {
         let params = Object.assign({}, inputs, {
             ...this.props.mappingForm,
             ...this.props.productOfferingForm,
-            anonymous: true,
-            pricing: newPricing,
+            //...this.props.addProductOfferForm,
+            //anonymous: true,
+            //pricing: newPricing,
+            assayMin: parseInt(this.props.productOfferingForm.assayMin),
+            assayMax: parseInt(this.props.productOfferingForm.assayMax),
             creationDate: creationDate,
             expirationDate: expirationDate,
+            pricing: newPricing,//{...this.props.addProductOfferForm.pricing, price: parseInt(this.props.addProductOfferForm.pricing.price), cost: parseInt(this.props.addProductOfferForm.pricing.cost), tiers: this.props.addProductOfferForm.pricing.tiers || []},
             manufacturer: this.props.productOfferingForm.manufacturer.id || this.props.productOffer.manufacturer.id,
             origin: this.props.productOfferingForm.origin.id || this.props.productOffer.origin.id,
-            product: this.props.productOffer.product.id,
-            packaging: {...this.props.mappingForm.packaging, originalPkgAmount: parseInt(this.props.productOfferingForm.pkgAmount)}
+            product: parseInt(this.props.mappingForm.casNumber.replace(/-/g,"")),
+            packaging: {...this.props.mappingForm.packaging, size: parseInt(this.props.mappingForm.packaging.size), originalPkgAmount: parseInt(this.props.productOfferingForm.pkgAmount)}
         });
+
+        delete params.packaging.splits;
+        delete params.packaging.minimum;
+
+        delete params.casNumber;
+        delete params.chemicalName;
+        delete params.indexName;
+        delete params.lotNumber;
+        delete params.pkgAmount;
+        delete params.productName;
+        delete params.productNumber;
+        
         this.props.addProductOffer(params).then(()=>{
             this.props.history.push("/inventory/my-inventory");
         });
@@ -83,7 +99,7 @@ export default class AddForm extends Component {
             manufacturer: this.props.productOfferingForm.manufacturer.id || this.props.productOffer.manufacturer.id,
             origin: this.props.productOfferingForm.origin.id || this.props.productOffer.origin.id,
             product: this.props.productOffer.product.id,
-            packaging: {...this.props.mappingForm.packaging, originalPkgAmount: parseInt(this.props.productOfferingForm.pkgAmount)}
+            packaging: {...this.props.mappingForm.packaging}
         });
         this.props.editProductOffer(this.props.productOffer.id, params).then(()=>{
             this.props.history.push("/inventory/my-inventory");
@@ -115,10 +131,11 @@ export default class AddForm extends Component {
                 <Form model="forms.addProductOffer" onSubmit={(inputs) => this.props.edit ? this.editProductOffer(inputs) : this.addProductOffer(inputs)}>
                     <AddGroup header='PRICING' disable={this.props.disable} component = {<Pricing {...this.props} getIncPricing={(data)=>this.getIncPricing(data)}/>} />
                     <AddGroup header='WAREHOUSE' disable={this.props.disable} component = {<Location {...this.props}/>} />
-                    {activeButton}
+                    {submitButton}
+                    {/* {activeButton} */}
                 </Form>
-                {inactiveButton}
-                {cancelButton}
+                {/* {inactiveButton}
+                {cancelButton} */}
             </div> 
             )
             

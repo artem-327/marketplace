@@ -55,16 +55,16 @@ export default class Pricing extends Component {
         this.props.dispatch(actions.change(model, value));
     }
 
-    checkFilledInputs(){
+    // checkFilledInputs(){
 
-        this.setState({priceFlag:false});
-        this.setState({costFlag:false});
-        this.setState({marginFlag:false});
+    //     this.setState({priceFlag:false});
+    //     this.setState({costFlag:false});
+    //     this.setState({marginFlag:false});
 
-        if(this.props.form.pricing.cost !== ''){ this.setState({costFlag:true}); }
-        if(this.props.form.pricing.price !== ''){ this.setState({priceFlag:true}); }
-        if(this.state.margin !== ''){ this.setState({marginFlag:true}); }
-    }
+    //     if(this.props.form.pricing.cost !== ''){ this.setState({costFlag:true}); }
+    //     if(this.props.form.pricing.price !== ''){ this.setState({priceFlag:true}); }
+    //     if(this.state.margin !== ''){ this.setState({marginFlag:true}); }
+    // }
 
     calculatePricing(e){
 
@@ -270,7 +270,7 @@ export default class Pricing extends Component {
     };
 
     render() {
-        console.log(this.props)
+        //console.log(this.props)
         
         //console.log(JSON.parse(localStorage.getItem('productLots')));
         
@@ -349,7 +349,7 @@ export default class Pricing extends Component {
                                       type='number'
                                       name='price'
                                       onChange={(e)=>this.calculatePricing(e)}
-                                      onBlur={()=>this.checkFilledInputs()}
+                                      //onBlur={()=>this.checkFilledInputs()}
                                       disabled={!!this.state.showIncrementalPricing}
                                       placeholder="$"
                                       defaultValue={this.props.edit ? this.props.productOffer.pricing.price : ''}
@@ -378,7 +378,7 @@ export default class Pricing extends Component {
                                       type='number'
                                       name='cost'
                                       onChange={(e)=>this.calculatePricing(e)}
-                                      onBlur={()=>this.checkFilledInputs()}
+                                      //onBlur={()=>this.checkFilledInputs()}
                                       placeholder="$"/>
                     </div>
                     
@@ -390,16 +390,16 @@ export default class Pricing extends Component {
                                 <Control.text model=".pricing.margin"
                                       id=".marginPr"
                                       className= {classNames({inRed: this.state.margin < 0},  'pricing-gross-margin')}
-                                      validators={{
-                                          min: (val) => min(val, 0),
-                                          isNumber,
-                                          //required
-                                      }}
+                                    //   validators={{
+                                    //       min: (val) => min(val, 0),
+                                    //       isNumber,
+                                    //       //required
+                                    //   }}
                                       value={this.state.margin}
                                       type='number'
                                       name='margin'
                                       onChange={(e)=>this.calculatePricing(e)}
-                                      onBlur={()=>this.checkFilledInputs()}
+                                      //onBlur={()=>this.checkFilledInputs()}
                                       placeholder="%"/>
                             </div>
                         </div>
