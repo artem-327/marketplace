@@ -41,15 +41,14 @@ export default class AddForm extends Component {
         let params = Object.assign({}, inputs, {
             ...this.props.mappingForm,
             ...this.props.productOfferingForm,
-            anonymous: !inputs.anonymous,
+            anonymous: true,
             pricing: newPricing,
             creationDate: creationDate,
             expirationDate: expirationDate,
             manufacturer: this.props.productOfferingForm.manufacturer.id || this.props.productOffer.manufacturer.id,
             origin: this.props.productOfferingForm.origin.id || this.props.productOffer.origin.id,
             product: this.props.productOffer.product.id,
-            pkgAmount: parseInt(this.props.productOfferingForm.pkgAmount),
-            packaging: {...this.props.mappingForm.packaging, /*amount: parseInt(this.props.productOfferingForm.pkgAmount)*/}
+            packaging: {...this.props.mappingForm.packaging, originalPkgAmount: parseInt(this.props.productOfferingForm.pkgAmount)}
         });
         this.props.addProductOffer(params).then(()=>{
             this.props.history.push("/inventory/my-inventory");
@@ -84,8 +83,7 @@ export default class AddForm extends Component {
             manufacturer: this.props.productOfferingForm.manufacturer.id || this.props.productOffer.manufacturer.id,
             origin: this.props.productOfferingForm.origin.id || this.props.productOffer.origin.id,
             product: this.props.productOffer.product.id,
-            pkgAmount: parseInt(this.props.productOfferingForm.pkgAmount),
-            packaging: {...this.props.mappingForm.packaging, /*amount: parseInt(this.props.productOfferingForm.pkgAmount)*/}
+            packaging: {...this.props.mappingForm.packaging, originalPkgAmount: parseInt(this.props.productOfferingForm.pkgAmount)}
         });
         this.props.editProductOffer(this.props.productOffer.id, params).then(()=>{
             this.props.history.push("/inventory/my-inventory");
