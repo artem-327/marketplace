@@ -81,7 +81,7 @@ export default class Location extends Component {
         
 
         this.setState({
-            warehouseIndex: value,
+            warehouseIndex: index,
             warehouseName: this.props.warehouse[index].warehouseName,
             street: this.props.warehouse[index].address.streetAddress,
             city: this.props.warehouse[index].address.city,
