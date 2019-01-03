@@ -4,9 +4,7 @@ import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
 import Dropdown from "../../../../../components/Dropdown/Dropdown";
 import {messages, required} from "../../../../../utils/validation";
 import classnames from "classnames";
-import WarningLabel from "./components/WarningLabel";
 import "./Location.css"
-//import { timingSafeEqual } from 'crypto';
 
 export default class Location extends Component {
 
@@ -25,27 +23,14 @@ export default class Location extends Component {
             phone: '',
             email: '',
             isSubmitted: false,
-            //currentLocation: this.props.edit ? this.props.productOffer.warehouse.id + 1 : null
         }
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.warehouse !== this.props.warehouse && this.state.warehouseIndex !== '') {
-            this.setState({
-                
-                street: nextProps.warehouse[this.state.warehouseIndex].address.streetAddress,
-                city: nextProps.warehouse[this.state.warehouseIndex].address.city,
-                state: nextProps.warehouse[this.state.warehouseIndex].address.province.id,
-                contact: nextProps.warehouse[this.state.warehouseIndex].contact.name,
-                phone: nextProps.warehouse[this.state.warehouseIndex].contact.number,
-                email: nextProps.warehouse[this.state.warehouseIndex].contact.email,
-                zip: nextProps.warehouse[this.state.warehouseIndex].address.zip.zip,
-            })
-        }
+    componentDidMount() {
+        this.setInitialValue()
     }
 
     setInitialValue() {
-
         if (this.props.edit) {
             this.setState({
                 warehouseIndex: this.props.productOffer.warehouse.id,
@@ -58,10 +43,6 @@ export default class Location extends Component {
                 zip: this.props.productOffer.warehouse.address.zip.zip,
             })
         }
-    }
-
-    componentDidMount() {
-        this.setInitialValue()
     }
 
     handleInputs(value, name) {
@@ -77,11 +58,9 @@ export default class Location extends Component {
             }
         }
 
-        //console.log(value)
-        
-
         this.setState({
-            warehouseIndex: index,
+            edit: false,
+            warehouseIndex: value,
             warehouseName: this.props.warehouse[index].warehouseName,
             street: this.props.warehouse[index].address.streetAddress,
             city: this.props.warehouse[index].address.city,
@@ -180,7 +159,7 @@ export default class Location extends Component {
                                 model="forms.addProductOffer.warehouse"
                                 dispatch={this.props.dispatch}
                                 opns={this.props.warehouse}
-                                value={this.state.warehouseIndex}
+                                defaultValue={this.state.warehouseIndex}
                                 validators={{required}}
                                 onChange={(value) => this.setLocation(value)}
                                 placeholder='Select Location'
@@ -212,8 +191,8 @@ export default class Location extends Component {
                                        }}/>
                             </div>
                             <div className='group-item-wr'>
-                                {/*{(this.state.isSubmitted && this.state.state === '') ?
-                                    <div className='warehouse-val'><span>Required</span></div> : null}*/}
+                                {(this.state.isSubmitted && this.state.state === '') ?
+                                    <div className='warehouse-val'><span>Required</span></div> : null}
                                 <label>State</label>
                                 <Dropdown opns={this.props.locations.map((item)=>{
                                             if(item.province) return ({id: item.province.id, name: item.province.name});
@@ -236,7 +215,7 @@ export default class Location extends Component {
                                        onChange={(e) => {
                                            this.handleInputs(e.target.value, 'zip')
                                        }}
-                                       type="text"/>
+                                       type="number"/>
                             </div>
                         </div>
                         <div>
@@ -277,12 +256,6 @@ export default class Location extends Component {
                             </div>
 
                             {!this.props.edit && button}
-
-                            {/*<div>
-                                <div className='group-item-wr'>
-                                    <WarningLabel isVisible={!this.validateForms() && this.state.edit} warningText={"Please fill all fields before saving."}/>
-                                </div>
-                            </div>*/}
 
                         </div>
                     </React.Fragment>
@@ -344,6 +317,7 @@ export default class Location extends Component {
                             <div className='warehouse-val'><span>Required</span></div> : null}
                         <label htmlFor="zip">Zip Code</label>
                         <input id="zip"
+                               type="number"
                                value={this.state.zip}
                                onChange={(e) => {
                                    this.handleInputs(e.target.value, 'zip')
@@ -384,14 +358,7 @@ export default class Location extends Component {
                                    this.handleInputs(e.target.value, 'email')
                                }}/>
                     </div>
-
                     {button}
-
-                    {/*<div>
-                        <div className='group-item-wr'>
-                            <WarningLabel isVisible={!this.validateForms()} warningText={"Please fill all fields before saving."}/>
-                            </div>
-                    </div>*/}
                 </div>
             </div>
         )
@@ -410,20 +377,33 @@ export default class Location extends Component {
                     email: '',
                     location: 'saved'
                 })
-            } else {
+             } 
+             
+            else {
+                let index;
+
+                for(let i = 0; i < this.props.warehouse.length; i++) {
+                    if(this.props.warehouse[i].id === this.state.warehouseIndex) {
+                        index = i;
+                    }
+                }
+
                 this.setState({
-                    street: this.props.warehouse[this.state.warehouseIndex].address.streetAddress,
-                    city: this.props.warehouse[this.state.warehouseIndex].address.city,
-                    state: this.props.warehouse[this.state.warehouseIndex].address.province.id,
-                    contact: this.props.warehouse[this.state.warehouseIndex].contact.name,
-                    phone: this.props.warehouse[this.state.warehouseIndex].contact.number,
-                    email: this.props.warehouse[this.state.warehouseIndex].contact.email,
-                    zip: this.props.warehouse[this.state.warehouseIndex].address.zip.zip,
+                    street: this.props.warehouse[index].address.streetAddress,
+                    city: this.props.warehouse[index].address.city,
+                    state: this.props.warehouse[index].address.province.id ,
+                    contact: this.props.warehouse[index].contact.name,
+                    phone: this.props.warehouse[index].contact.number,
+                    email: this.props.warehouse[index].contact.email,
+                    zip: this.props.warehouse[index].address.zip.zip,
                     location: 'saved'
                 })
             }
+
         } else {
             this.setState({
+                isSubmitted: false,
+                warehouseName: '',
                 street: '',
                 city: '',
                 state: '',
@@ -431,7 +411,6 @@ export default class Location extends Component {
                 contact: '',
                 phone: '',
                 email: '',
-                warehouseName: '',
                 location: 'new'
             })
         }
@@ -439,9 +418,6 @@ export default class Location extends Component {
     }
 
     render() {
-
-        //console.log(this.props.warehouse)
-
         const location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation();
         return (
             <div className='location-wr'>
