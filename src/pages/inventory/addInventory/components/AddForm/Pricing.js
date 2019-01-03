@@ -7,8 +7,6 @@ import './Pricing.css';
 import classNames from 'classnames';
 import WarningLabel from "../../../../../components/WarningLabel/WarningLabel"
 
-
-
 export default class Pricing extends Component {
     constructor(props) {
         super(props);

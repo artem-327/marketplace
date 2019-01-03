@@ -48,7 +48,7 @@ export default class AddForm extends Component {
             assayMax: parseInt(this.props.productOfferingForm.assayMax),
             creationDate: creationDate,
             expirationDate: expirationDate,
-            pricing: newPricing,//{...this.props.addProductOfferForm.pricing, price: parseInt(this.props.addProductOfferForm.pricing.price), cost: parseInt(this.props.addProductOfferForm.pricing.cost), tiers: this.props.addProductOfferForm.pricing.tiers || []},
+            pricing: {...this.props.addProductOfferForm.pricing, price: parseInt(this.props.addProductOfferForm.pricing.price), cost: parseInt(this.props.addProductOfferForm.pricing.cost), tiers: newPricing.tiers || []},
             manufacturer: this.props.productOfferingForm.manufacturer.id || this.props.productOffer.manufacturer.id,
             origin: this.props.productOfferingForm.origin.id || this.props.productOffer.origin.id,
             product: parseInt(this.props.mappingForm.casNumber.replace(/-/g,"")),
@@ -104,6 +104,11 @@ export default class AddForm extends Component {
         this.props.editProductOffer(this.props.productOffer.id, params).then(()=>{
             this.props.history.push("/inventory/my-inventory");
         });
+
+        delete params.casNumber;
+        delete params.chemicalName;
+        delete params.indexName;
+        delete params.pkgAmount;
     }
 
     cancelEdit() {
