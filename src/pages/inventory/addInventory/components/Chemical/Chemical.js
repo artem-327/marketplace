@@ -37,7 +37,7 @@ class Chemical extends Component {
                 chemicalName: this.state.selectedProductMapping.product.chemicalName,
                 packaging:{
                     unit: this.state.selectedProductMapping.packaging.unit.id,
-                    container: this.state.selectedProductMapping.packaging.container.id,
+                    packagingType: this.state.selectedProductMapping.packaging.packagingType.id,
                     size: this.state.selectedProductMapping.packaging.size
                 }
             };
@@ -83,15 +83,15 @@ class Chemical extends Component {
         return (
             <div>
                 {!this.props.edit ?
-                    <React.Fragment>
-                    {/*<WarningLabel isVisible={this.state.lots.length !== 0} warningText={"You have to remove all added lots first."}/>*/}
-                <SearchProducts selectedMapping={this.state.selectedProductMapping}
-                                selectedProduct={this.state.selectedProduct}
-                                isVisible={true}
-                                onSelectProductMapping={mapping => this.setProductMapping(mapping)}
-                                onSelect={product => this.setSelectedProduct(product)}
-                                {...this.props}
-                /></React.Fragment> : null }
+                <React.Fragment>
+                    <SearchProducts selectedMapping={this.state.selectedProductMapping}
+                                    selectedProduct={this.state.selectedProduct}
+                                    isVisible={true}
+                                    onSelectProductMapping={mapping => this.setProductMapping(mapping)}
+                                    onSelect={product => this.setSelectedProduct(product)}
+                                    {...this.props}
+                    />
+                </React.Fragment> : null }
                 <ProductMapping productID={this.state.productID} {...this.props} />
                 <ProductOffering addLot={(lots) => this.addLot(lots)} {...this.props} />
                 {!this.props.edit ?
