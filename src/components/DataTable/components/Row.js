@@ -23,6 +23,51 @@ class Row extends Component {
     document.removeEventListener('click', this.handleClickOutside, false);
   }
 
+  handleSelect(event) {
+    let prevRow = event.target.closest('tr');
+    let nextRow = event.target.closest('tr');
+    let anotherGroup = false;
+    let checkedCurrentGroup = event.target.checked;
+
+    // check current group rows in previous way
+    while ((prevRow = prevRow.previousSibling) !== null) {
+      prevRow.children[0].children[0].children[1].disabled = false;
+
+      // check if group-header so there is not modified varialble checkedCurrentGroup - header can be modified later by current checkbox
+      if (prevRow.classList.contains('data-table-group-header')) {
+          break;
+      }
+
+      checkedCurrentGroup = prevRow.children[0].children[0].children[1].checked ? true : checkedCurrentGroup;
+    }
+
+    // check current group rows in next way and enable/disable following rows
+    while ((nextRow = nextRow.nextSibling) !== null) {
+      if (nextRow.classList.contains('data-table-group-header')) {
+        anotherGroup = true;
+      }
+
+      if (anotherGroup) {
+        nextRow.children[0].children[0].children[1].disabled = checkedCurrentGroup;
+      } else {
+        checkedCurrentGroup = nextRow.children[0].children[0].children[1].checked ? true : checkedCurrentGroup;
+        nextRow.children[0].children[0].children[1].disabled = false;
+      }
+    }
+
+    anotherGroup = true;
+
+    // enable/disable previous rows
+    while ((prevRow = prevRow.previousSibling) !== null) {
+      prevRow.children[0].children[0].children[1].disabled = checkedCurrentGroup;
+    }
+
+    if (checkedCurrentGroup)
+      document.getElementById('shippingQuotes').classList.remove('hidden');
+    else
+      document.getElementById('shippingQuotes').classList.add('hidden');
+  }
+
   handleClick(e) {
     e.preventDefault();
     if (!this.state.openContext) {
@@ -33,7 +78,13 @@ class Row extends Component {
     this.setState({ openContext: !this.state.openContext });
   }
 
-  addCart(id){
+  addCart(event, id){
+    if (event.target.classList.contains('checkmark') || event.target.getAttribute('type') === 'checkbox') {
+      // function addCart() blocked - clicked on checkmark
+      this.props.removePopup();
+      return false;
+    }
+
     // check that new popup has different id than previous
     if (AddCart.openedPopup.id !== id) {
       // previous popup has different id - remove it
@@ -53,18 +104,18 @@ class Row extends Component {
     const isAllInventory = tableType ==="allInventoryTable"
     return (
       <React.Fragment>
-        <tr className={isAllInventory ? "isAllInventory" : ""} onClick={isAllInventory ? () => this.addCart(this.props.id) : () => {}}>
+        <tr className={isAllInventory ? "isAllInventory" : ""} onClick={isAllInventory ? e => this.addCart(e, this.props.id) : () => {}}>
           {this.props.selectable ? (
             <td className="data-table-select">
               <CheckboxControlled
                 value={this.props.rowOpns.selected}
-                onChange={value =>
-                  this.props.selectFunc(
+                onChange={value => this.props.selectFunc(
                     this.props.groupId,
                     this.props.rowOpns.index,
                     value
                   )
                 }
+                onClick={isAllInventory ? event => this.handleSelect(event) : () => {}}
               />
             </td>
           ) : null}

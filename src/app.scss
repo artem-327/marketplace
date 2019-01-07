@@ -244,6 +244,9 @@ position: absolute;
   &.disabled{
     background-color: #cfe6f3;
   }
+  &.hidden{
+    display: none;
+  }
 }
 
 .textarea {

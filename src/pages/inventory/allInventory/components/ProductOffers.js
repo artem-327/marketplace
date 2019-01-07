@@ -21,9 +21,6 @@ class ProductOffers extends Component {
     }
 
     render() {
-
-        //console.log(this.props)
-
         if(this.props.productOffers.length === 0) return <Spinner />;
         let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
             return {
@@ -60,6 +57,7 @@ class ProductOffers extends Component {
         return (
             <div className="App ">
                 <DataTable id="allInventoryTable"
+                           selectableRows
                            sortFunc={(nameColumn) => console.log(nameColumn)}
                            headerInit={[{name: 'Merchant'}, {name: 'Available'}, {name: 'Packaging'}, {name: 'Quantity'}, {name: 'FOB Price'}, {name: 'Trade Name'}, {name: 'MFR.'}, {name: 'Origin'}, {name: 'Expiration'}, {name: 'Assay'}, {name: 'Condition'}, {name: 'Form'}, {name: 'Location'}]}
                            rows={rows}

@@ -11,6 +11,34 @@ class GroupRow extends Component {
         this.props.selectGroup(this.props.rowsOpns.index, rows)
     }
 
+    handleSelect(event){
+        let prevRow = event.target.closest('tr');
+        let nextRow = event.target.closest('tr');
+        let anotherGroup = false;
+        let checkedBox = event.target.checked;
+
+        // enable/disable previous rows
+        while ((prevRow = prevRow.previousSibling) !== null) {
+            prevRow.children[0].children[0].children[1].disabled = checkedBox;
+        }
+
+        // enable/disable next rows
+        while ((nextRow = nextRow.nextSibling) !== null) {
+            if (nextRow.classList.contains('data-table-group-header')) {
+                anotherGroup = true;
+            }
+
+            if (anotherGroup) {
+                nextRow.children[0].children[0].children[1].disabled = checkedBox;
+            }
+        }
+
+        if (checkedBox)
+            document.getElementById('shippingQuotes').classList.remove('hidden');
+        else
+            document.getElementById('shippingQuotes').classList.add('hidden');
+    }
+
     isSelected(){
         for(let i = 0; i < this.props.rowsOpns.rows.length; i++){
             if(!this.props.rowsOpns.rows[i].selected) return false
@@ -24,10 +52,12 @@ class GroupRow extends Component {
     }
 
     render() {
+        const {tableType} = this.props
+        const isAllInventory = tableType ==="allInventoryTable"
         return (
             <React.Fragment>
                 <tr className="data-table-group-header" onClick={(e) => this.toggleGroup(e)}>
-                    {this.props.selectable ? <td className="data-table-select" ref={this.checkbox}><CheckboxControlled value={this.isSelected()} onChange={(value) => this.selectGroup(value)}/></td> : null}
+                    {this.props.selectable ? <td className="data-table-select" ref={this.checkbox}><CheckboxControlled value={this.isSelected()} onClick={isAllInventory ? event => this.handleSelect(event) : () => {}} onChange={(value) => this.selectGroup(value)}/></td> : null}
                     <td  className="group-header" colSpan={(this.props.headers.length+(this.props.contextMenu ? 2 : 0))} >{this.props.rows.group}
                     <span className="data-table-group-count">{this.props.rows.countLabel ? this.props.rows.countLabel + this.props.rows.rows.length : null} {this.state.open ? <i className="icon angle-down"/> : <i className="icon angle-up"/>}</span></td></tr>
                 {this.state.open ? this.props.rowsOpns.rows.map((opns, index) => (
