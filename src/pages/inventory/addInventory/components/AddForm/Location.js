@@ -36,9 +36,9 @@ export default class Location extends Component {
                 warehouseIndex: this.props.productOffer.warehouse.id,
                 street: this.props.productOffer.warehouse.address.streetAddress,
                 city: this.props.productOffer.warehouse.address.city,
-                state: this.props.productOffer.warehouse.address.province.id,
+                state: this.props.productOffer.warehouse.address.province.baseLocation.id,
                 contact: this.props.productOffer.warehouse.contact.name,
-                phone: this.props.productOffer.warehouse.contact.number,
+                phone: this.props.productOffer.warehouse.contact.phone,
                 email: this.props.productOffer.warehouse.contact.email,
                 zip: this.props.productOffer.warehouse.address.zip.zip,
             })
@@ -64,9 +64,9 @@ export default class Location extends Component {
             warehouseName: this.props.warehouse[index].name,
             street: this.props.warehouse[index].address.streetAddress,
             city: this.props.warehouse[index].address.city,
-            state: this.props.warehouse[index].address.province.id,
+            state: this.props.warehouse[index].address.province.baseLocation.id,
             contact: this.props.warehouse[index].contact.name,
-            phone: this.props.warehouse[index].contact.number,
+            phone: this.props.warehouse[index].contact.phone,
             email: this.props.warehouse[index].contact.email,
             zip: this.props.warehouse[index].address.zip.zip,
         })
@@ -391,9 +391,9 @@ export default class Location extends Component {
                 this.setState({
                     street: this.props.warehouse[index].address.streetAddress,
                     city: this.props.warehouse[index].address.city,
-                    state: this.props.warehouse[index].address.province.id ,
+                    state: this.props.warehouse[index].address.province.baseLocation.id,
                     contact: this.props.warehouse[index].contact.name,
-                    phone: this.props.warehouse[index].contact.number,
+                    phone: this.props.warehouse[index].contact.phone,
                     email: this.props.warehouse[index].contact.email,
                     zip: this.props.warehouse[index].address.zip.zip,
                     location: 'saved'
