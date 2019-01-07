@@ -11,6 +11,7 @@ import {
     ORDERDETAIL_FETCH_REQUESTED, ORDERDETAIL_FETCH_FAILED, ORDERDETAIL_FETCH_SUCCEEDED,
     ORDER_EDIT_SUCCEEDED, ORDER_EDIT_FAILED, ORDER_EDIT_REQUESTED,
     DELIVERYADDRESS_EDIT_SUCCEEDED, DELIVERYADDRESS_EDIT_FAILED, DELIVERYADDRESS_EDIT_REQUESTED,
+    SHIPPING_QUOTES_FETCH_REQUESTED, SHIPPING_QUOTES_FETCH_SUCCEEDED, SHIPPING_QUOTES_FETCH_FAILED
 } from "../../../constants/cart";
 
 function* getProductOffer(action) {
@@ -105,6 +106,14 @@ function* putDeliveryAddressEdit(action) {
     }
 }
 
+function* getShippingQuotes(action) {
+    try {
+        const shippingQuotes = yield call(Api.getShippingQuotes, action.payload.country, action.payload.zip);
+    } catch (e) {
+        yield put({type: SHIPPING_QUOTES_FETCH_FAILED, message: e.message})
+    }
+}
+
 function* cartSaga() {
     yield takeEvery(OFFER_FETCH_REQUESTED, getProductOffer);
     yield takeEvery(CART_FETCH_REQUESTED, getCart);
@@ -116,6 +125,7 @@ function* cartSaga() {
     yield takeEvery(ORDERDETAIL_FETCH_REQUESTED, getOrderDetail);
     yield takeEvery(ORDER_EDIT_REQUESTED, postOrderEdit);
     yield takeEvery(DELIVERYADDRESS_EDIT_REQUESTED, putDeliveryAddressEdit);
+    yield takeEvery(SHIPPING_QUOTES_FETCH_REQUESTED, getShippingQuotes);
 }
 
 export default cartSaga;

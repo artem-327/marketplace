@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom';
 import SummaryTable from "../components/SummaryTable/SummaryTable"
 import Shipping from "./components/Shipping"
 import ShippingEdit from "./components/ShippingEdit"
+import ShippingQuote from "./components/ShippingQuote"
 import Payment from "./components/Payment"
 import CartItemSummary from './components/CartItemSummary'
 import Button from '../../../components/Button/Button'
@@ -50,12 +51,17 @@ class PurchaseOrder extends Component {
     const {deliveryAddresses} = this.props;
     const selectedAddress = deliveryAddresses.find(i => i.id === selectedAddressId);
     this.setState({selectedAddress});
+    this.getShippingQuotes(selectedAddress);
   }
 
   getPayment = (selectedPaymentId) => {
     const {payments} = this.props;
     const selectedPayment = payments.find(i => i.id === selectedPaymentId);
     this.setState({selectedPayment});
+  }
+
+  getShippingQuotes = (selectedAddress) => {
+    this.props.getShippingQuotes('USA', selectedAddress.address.zip.zip);
   }
 
   toggleShippingEdit = () => {
@@ -80,7 +86,7 @@ class PurchaseOrder extends Component {
   }
 
   render() {
-    const {cart, deliveryAddresses, payments, dispatch, deleteCart, cartIsFetching, postNewDeliveryAddress, putDeliveryAddressEdit} = this.props;
+    const {cart, deliveryAddresses, payments, dispatch, deleteCart, cartIsFetching, postNewDeliveryAddress, putDeliveryAddressEdit, shippingQuotes} = this.props;
     if (cartIsFetching) return <Spinner />
     let index = 0;
     const itemContent = cart.orders.map(cartItem => {
@@ -124,6 +130,9 @@ class PurchaseOrder extends Component {
               getAddress={this.getAddress}
               selectedAddress={this.state.selectedAddress}
               />}
+            <ShippingQuote
+              shippingQuotes={shippingQuotes}
+              />
             <Payment
               dispatch={dispatch}
               selectedAddress={this.state.selectedAddress}
@@ -133,7 +142,7 @@ class PurchaseOrder extends Component {
               />
 
             <div className="shopping-cart-items">
-              <header><h2>3. Terms and Agreement</h2></header>
+              <header><h2>4. Terms and Agreement</h2></header>
               <div className="purchase-order-section">
                 <div>Legal Language</div>
                 <div>Terms and Agreement</div>
