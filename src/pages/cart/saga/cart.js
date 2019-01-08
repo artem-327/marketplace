@@ -109,6 +109,7 @@ function* putDeliveryAddressEdit(action) {
 function* getShippingQuotes(action) {
     try {
         const shippingQuotes = yield call(Api.getShippingQuotes, action.payload.country, action.payload.zip);
+        yield put({type: SHIPPING_QUOTES_FETCH_SUCCEEDED, payload: shippingQuotes});
     } catch (e) {
         yield put({type: SHIPPING_QUOTES_FETCH_FAILED, message: e.message})
     }

@@ -11,7 +11,9 @@ const api = {
     putDeliveryAddressEdit: (address) => axios.put(`/prodex/api/delivery-addresses/${address.id}`, address),
     getDeliveryAddresses: () => axios.get('/prodex/api/delivery-addresses').then(response => response.data),
     getPayments: () => axios.get('/prodex/api/payments').then(response => response.data),
-    getShippingQuotes: (country, zip) => axios.get(`/prodex/api/shipment/cart?destinationCountry=${country}&destinationZIP=${zip}`).then(response => response.data)
+    getShippingQuotes: (country, zip) => axios.get('/prodex/api/shipment/cart', {params:{
+            destinationCountry: country, destinationZIP: zip
+        }}).then(response => response.data)
 };
 
 export default api;

@@ -98,6 +98,7 @@ export default function reducer(state = initialState, action) {
         case SHIPPING_QUOTES_FETCH_REQUESTED: {
             return {
                 ...state,
+                country: action.country,
                 zip: action.zip,
                 shippingQuotesAreFetching: true
             }
@@ -105,6 +106,7 @@ export default function reducer(state = initialState, action) {
         case SHIPPING_QUOTES_FETCH_SUCCEEDED: {
             return {
                 ...state,
+                shippingQuotes: action.payload,
                 shippingQuotesAreFetching: false
             }
         }
