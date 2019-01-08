@@ -74,8 +74,8 @@ export default class AddForm extends Component {
         delete params.indexName;
         delete params.lotNumber;
         delete params.pkgAmount;
-        delete params.productName;
-        delete params.productNumber;
+        //delete params.productName;
+        //delete params.productNumber;
         
         this.props.addProductOffer(params).then(()=>{
             this.props.history.push("/inventory/my-inventory");

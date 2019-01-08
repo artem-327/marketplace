@@ -173,7 +173,7 @@ class AddCart extends Component {
             <div className="add-cart-prod-info">
               <div>
                 <span>Merchant: </span>
-                  {offer.merchant.office.company.name}
+                  {offer.merchant.branch.company.name}
               </div>
               <div>
                   <span>Location: </span>
