@@ -64,7 +64,7 @@ export default class Location extends Component {
             warehouseName: this.props.warehouse[index].name,
             street: this.props.warehouse[index].address.streetAddress,
             city: this.props.warehouse[index].address.city,
-            state: 1,//this.props.warehouse[index].address.province.baseLocation.id,
+            state: (typeof this.props.warehouse[index].address.province !== 'undefined' ? this.props.warehouse[index].address.province.id : 1 /* TODO: modify it if there will be added something else (country/region id) */),
             contact: this.props.warehouse[index].contact.name,
             phone: this.props.warehouse[index].contact.phone,
             email: this.props.warehouse[index].contact.email,
