@@ -32,11 +32,12 @@ export default class Location extends Component {
 
     setInitialValue() {
         if (this.props.edit) {
+            console.log(this.props.productOffer.warehouse);
             this.setState({
                 warehouseIndex: this.props.productOffer.warehouse.id,
                 street: this.props.productOffer.warehouse.address.streetAddress,
                 city: this.props.productOffer.warehouse.address.city,
-                state: this.props.productOffer.warehouse.address.province.baseLocation.id,
+                state: this.props.productOffer.warehouse.address.province.id,
                 contact: this.props.productOffer.warehouse.contact.name,
                 phone: this.props.productOffer.warehouse.contact.phone,
                 email: this.props.productOffer.warehouse.contact.email,
