@@ -92,6 +92,7 @@ export default class AddForm extends Component {
     }
 
     editProductOffer(inputs){
+
         let newPricing = inputs['pricing'];
         if(inputs['incrementalSelected']){
             newPricing = {...inputs['pricing'], tiers: this.validateIncPricing()};
@@ -123,8 +124,11 @@ export default class AddForm extends Component {
             manufacturer: this.props.productOfferingForm.manufacturer.id || this.props.productOffer.manufacturer.id,
             origin: this.props.productOfferingForm.origin.id || this.props.productOffer.origin.id,
             product: this.props.productOffer.product.id,
+            productName: this.props.productOffer.product.casIndexName,
+            productNumber: this.props.productOffer.product.id,
             packaging: {...this.props.mappingForm.packaging}
         });
+
         this.props.editProductOffer(this.props.productOffer.id, params).then(()=>{
             this.props.history.push("/inventory/my-inventory");
         });
