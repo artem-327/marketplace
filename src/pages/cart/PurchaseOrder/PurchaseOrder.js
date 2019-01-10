@@ -18,7 +18,8 @@ class PurchaseOrder extends Component {
     selectedAddress: {},
     selectedPayment: {},
     isShippingEdit: false,
-    isNewAddress: "isNew"
+    isNewAddress: "isNew",
+    shippingQuotes: []
   }
 
   componentDidMount(){
@@ -61,7 +62,10 @@ class PurchaseOrder extends Component {
   }
 
   getShippingQuotes = (selectedAddress) => {
+    // TODO:: 'USA' to ID and variable
     this.props.getShippingQuotes('USA', selectedAddress.address.zip.zip);
+    const {shippingQuotes} = this.props;
+    this.setState({shippingQuotes});
   }
 
   toggleShippingEdit = () => {
@@ -111,7 +115,7 @@ class PurchaseOrder extends Component {
             </div>
           </div>
         </div>
-        <div className="shopping-cart">
+        <div className="shopping-cart checkout">
           <div className="shopping-cart-body">
 
           <div>
@@ -132,6 +136,7 @@ class PurchaseOrder extends Component {
               />}
             <ShippingQuote
               shippingQuotes={shippingQuotes}
+              shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
               />
             <Payment
               dispatch={dispatch}
@@ -140,14 +145,6 @@ class PurchaseOrder extends Component {
               payments={payments}
               getPayment={this.getPayment}
               />
-
-            <div className="shopping-cart-items">
-              <header><h2>4. Terms and Agreement</h2></header>
-              <div className="purchase-order-section">
-                <div>Legal Language</div>
-                <div>Terms and Agreement</div>
-                </div>
-            </div>
 
           </div>
           <div className="summary-tables">
@@ -178,4 +175,5 @@ PurchaseOrder.propTypes = {
   getDeliveryAddresses: PropTypes.func,
   deleteCart: PropTypes.func,
   selectedAddressId: PropTypes.number,
+  shippingQuotes: PropTypes.array
 }

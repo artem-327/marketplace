@@ -25,7 +25,7 @@ export const initialState = {
     offerDetailIsFetching: true,
     selectedAddressId: null,
     selectedCardId: null,
-    shippingQuotes: {}
+    shippingQuotes: []
 };
 
 export default function reducer(state = initialState, action) {

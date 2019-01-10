@@ -12,6 +12,8 @@ function mapStateToProps(store) {
         selectedAddressId: store.forms.cart.selectedAddressId,
         selectedCardId: store.forms.cart.selectedCardId,
         payments: store.cart.payments,
+        shippingQuotes: store.cart.shippingQuotes,
+        shippingQuotesAreFetching: store.cart.shippingQuotesAreFetching
     }
 }
 
