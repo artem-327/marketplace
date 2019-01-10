@@ -3,15 +3,29 @@ import PropTypes from 'prop-types'
 import './shippingquote.css';
 import Button from '../../components/Button/Button'
 import PopupComponent from '../../components/PopUp/PopupComponent'
+import Spinner from '../../components/Spinner/Spinner'
 
 class ShippingQuote extends Component {
 
+    componentDidMount(){
+        this.getShippingQuotes();
+    }
+
+    getShippingQuotes(){
+        let params = {};
+        params.productOfferId = 1;
+        params.destinationZIP = '91744';
+        params.destinationCountry = 'USA';
+        params.quantity = 1;
+
+        this.props.getShippingQuotes(params);
+    }
+
     render() {
-        const {removePopup} = this.props;
 
         const footerComponent = (
             <>
-                <Button color="grey-white" onClick={this.onClick}>
+                <Button color="grey-white" onClick={this.props.removePopup}>
                     Close
                 </Button>
                 <Button color="blue" onClick={this.createOrder}>
@@ -20,13 +34,16 @@ class ShippingQuote extends Component {
             </>
         )
 
+        console.log(this.props.shippingQuotesAreFetching);
+
         return (
             <PopupComponent
                 footerComponent={footerComponent}
                 handleContinue={this.handleContinue}
-                removePopup={removePopup}
+                removePopup={this.props.removePopup}
                 headerTitle="Shipping Quote"
             >
+                {this.props.shippingQuotesAreFetching ? <Spinner /> : ''}
                 <table className="shipping-quote">
                     <thead>
                         <tr>
@@ -61,5 +78,6 @@ class ShippingQuote extends Component {
 export default ShippingQuote;
 
 ShippingQuote.propTypes = {
-    removePopup: PropTypes.func,
+    shippingQuotesAreFetching: PropTypes.bool,
+    removePopup: PropTypes.func
 }

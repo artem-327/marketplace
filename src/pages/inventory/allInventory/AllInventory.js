@@ -19,13 +19,14 @@ class AllInventory extends Component {
     }
 
     openShippingQuote(){
-        this.props.addPopup(<ShippingQuote className='shipping-quotes-popup'/>);
+        this.props.addPopup(<ShippingQuote className='shipping-quotes-popup' shippingQuotes={this.props.shippingQuotes} getShippingQuotes={this.props.getShippingQuotes} shippingQuotesAreFetching={this.props.shippingQuotesAreFetching} removePopup={this.props.removePopup}/>);
     }
 
     render() {
         const content = this.props.productOffersIsFetching 
             ? <div><Spinner/></div> 
             : <ProductOffers {...this.props}/>;
+
         return (
             <div>
                 <div className='header-top'>
