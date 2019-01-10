@@ -38,14 +38,15 @@ class ShippingQuote extends Component {
                             <th className="a-right">Cost</th>
                             <th>Estimated Delivery</th>
                             <th>ETD</th>
+                            <th>Service Type</th>
                         </tr>
                     </thead>
                     <tbody>
                         {this.props.shippingQuotes.map((sQuote, i) => {
                             let now = moment();
-                            let deliveryDate = sQuote.shipmentRate.estimatedDeliveryDate;
+                            let deliveryDate = sQuote.estimatedDeliveryDate;
                             let etd = now.diff(deliveryDate, 'days') * -1 + 1;
-                            const label = sQuote.shipmentRate.carrierName;
+                            const label = sQuote.carrierName;
                             const radioOptions = [{value: i.toString(), label: label}];
 
                             return (
@@ -56,17 +57,18 @@ class ShippingQuote extends Component {
                                             opns={radioOptions}
                                             checked={this.state.selectedItem} />
                                     </td>
-                                    <td>{sQuote.shipmentRate.carrierName}</td>
+                                    <td>{sQuote.carrierName}</td>
                                     <td className="a-right"><NumberFormat
-                                            value={sQuote.shipmentRate.estimatedPrice}
+                                            value={sQuote.estimatedPrice}
                                             displayType={'text'}
                                             prefix={'$'}
                                             thousandSeparator={','}
                                             decimalSeparator={'.'}
                                             decimalScale={2}
                                             fixedDecimalScale={true} /></td>
-                                    <td>{moment(sQuote.shipmentRate.estimatedDeliveryDate).format('MMM D, YYYY')}</td>
+                                    <td>{moment(sQuote.estimatedDeliveryDate).format('MMM D, YYYY')}</td>
                                     <td>{etd + (etd == 1 ? ' Day' : ' Days')}</td>
+                                    <td>{sQuote.serviceType}</td>
                                 </tr>
                             );
                         })}

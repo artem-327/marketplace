@@ -63,9 +63,7 @@ class PurchaseOrder extends Component {
 
   getShippingQuotes = (selectedAddress) => {
     // TODO:: 'USA' to ID and variable
-    this.props.getShippingQuotes('USA', selectedAddress.address.zip.zip);
-    const {shippingQuotes} = this.props;
-    this.setState({shippingQuotes});
+    this.props.getShippingQuotes(1, selectedAddress.address.zip.zip);
   }
 
   toggleShippingEdit = () => {
