@@ -50,7 +50,7 @@ class RemoteComboBox extends Component {
   }
 
   renderResults() {
-    if (!this.state.hasSearched || !this.state.isOpen || this.state.fulltext.length < 2) return;
+    if (!this.state.hasSearched || !this.state.isOpen || this.state.fulltext.length < 3) return;
     if (this.props.isFetching)
       return (
         <div className="combo-results">
