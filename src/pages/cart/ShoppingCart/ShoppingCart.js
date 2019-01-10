@@ -83,8 +83,8 @@ class ShoppingCart extends Component {
                 <Button size="large" color="light-blue"onClick={this.keepShopping}>Keep Shopping</Button>
               </div>
           </div>
-        </div>
-    </div>
+      </div>
+      </div>
     )
   }
 }

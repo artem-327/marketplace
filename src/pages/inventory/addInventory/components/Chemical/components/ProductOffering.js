@@ -192,7 +192,7 @@ export default class ProductOffering extends Component {
                                 show="touched"
                             />
                             <label htmlFor=".tradeName">Trade Name</label>
-                            <Control.text model=".name"
+                            <Control.text model=".tradeName"
                                           id=".tradeName"
                             />
                         </div>

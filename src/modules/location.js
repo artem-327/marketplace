@@ -168,7 +168,7 @@ export function fetchLocations(filter = {}){
 export function fetchWarehouses(){
     return {
         type: FETCH_WAREHOUSE,
-        payload: axios.get('/prodex/api/warehouses').then(result => {return result.data})
+        payload: axios.get('/prodex/api/branches/warehouses').then(result => {return result.data})
     }
 }
 
@@ -177,7 +177,7 @@ export function saveWarehouse(warehouseName, streetAddress, city, province, name
     let contact = {name, number, email};
     return {
         type: SAVE_WAREHOUSE,
-        payload: axios.post('/prodex/api/warehouses', {warehouseName, address, contact})
+        payload: axios.post('/prodex/api/branches', {warehouseName, address, contact})
     }
 }
 
@@ -186,7 +186,7 @@ export function updateWarehouse(id, warehouseName, streetAddress, city, province
     let contact = {name, number, email};
     return {
         type: UPDATE_WAREHOUSE,
-        payload: axios.put(`/prodex/api/warehouses/${id}`, {warehouseName, address, contact})
+        payload: axios.put(`prodex/api/branches/${id}`, {warehouseName, address, contact})
     }
 }
 
