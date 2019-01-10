@@ -12,7 +12,6 @@ class ShippingQuote extends Component {
         super(props);
 
         this.state = {
-            items: this.props.shippingQuotes,
             selectedItem: null,
             shippingQuotesAreFetching: this.props.shippingQuotesAreFetching
         };
@@ -23,7 +22,7 @@ class ShippingQuote extends Component {
     }
 
     renderShippingQuotes() {
-        if (typeof this.props.shippingQuotes.length === 'undefined' || this.props.shippingQuotes.length < 1) {
+        if (typeof this.props.shippingQuotes.length === 'undefined' || this.props.shippingQuotes.length < 1 || typeof this.props.selectedAddress.id == 'undefined') {
             return (
                 <div>Nothing to show</div>
             );
@@ -95,5 +94,7 @@ class ShippingQuote extends Component {
 export default ShippingQuote
 
 ShippingQuote.propTypes = {
-    shippingQuotes: PropTypes.array
+    selectedAddress: PropTypes.object,
+    shippingQuotes: PropTypes.array,
+    shippingQuotesAreFetching: PropTypes.bool
 }

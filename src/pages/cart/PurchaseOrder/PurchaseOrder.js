@@ -135,6 +135,7 @@ class PurchaseOrder extends Component {
               selectedAddress={this.state.selectedAddress}
               />}
             <ShippingQuote
+              selectedAddress={this.state.selectedAddress}
               shippingQuotes={shippingQuotes}
               shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
               />
