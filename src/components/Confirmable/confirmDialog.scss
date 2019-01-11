@@ -1,10 +1,10 @@
 @import "../../styles/fonts.scss";
 
-[class*="MuiBackdrop-root"] {
+.mui-fixed[role="dialog"] > div:first-child {
   opacity: 0.45;
   background-color: #33373e;
 }
-[class*="MuiDialog-container"] > div {
+.mui-fixed[role="dialog"] > div:last-child > div {
   padding: 0 46px 35px 26px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.21);
 
