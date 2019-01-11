@@ -120,14 +120,12 @@ export default function reducer(state = initialState, action) {
             }
         }
         case SHIPPINGQUOTES_FETCH_REQUESTED: {
-            console.log('YYYYYYYYYYYYYYYYYYYYYYY');
             return {
                 ...state,
                 shippingQuotesAreFetching: true
             }
         }
         case SHIPPINGQUOTES_FETCH_SUCCEEDED: {
-            console.log('ZZZZZZZZZZZZZZZZZZZZZZ');
             return {
                 ...state,
                 shippingQuotes: action.payload,
