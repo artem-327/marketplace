@@ -22,8 +22,6 @@ class ProductOffers extends Component {
 
     render() {
 
-        //console.log(this.props)
-
         if(this.props.productOffers.length === 0) return <Spinner />;
         let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
             return {
@@ -35,12 +33,14 @@ class ProductOffers extends Component {
                 const packageUnit = offer.packaging.packagingType.name;
                 //const countryException = ["USA", "Canada"]
                 //const countryName = offer.warehouse.address.province.country ? offer.warehouse.address.province.country.name : null
-                const location = !offer.warehouse.address.province.country ? `${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}` : `${offer.warehouse.address.city}, ${offer.warehouse.address.province.country}`
-                    
+
+                const location = (this.props.identity.data.id === offer.merchant.id || this.props.identity.data.branch.id === offer.merchant.id)
+                        ? `${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}` : `${offer.warehouse.address.province.name}, ${offer.warehouse.address.country.name}`
+
                 return{
                     id: offer.id,
                     data: [
-                        'test',
+                        offer.warehouse.warehouseName,
                         offer.pkgAmount.formatNumber(),
                         `${packageSize} ${unit} ${packageUnit}`,
                         `${(parseInt(offer.pkgAmount, 10) * parseInt(offer.packaging.size, 10)).formatNumber()} ${unit}`,

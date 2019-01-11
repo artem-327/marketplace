@@ -8,7 +8,9 @@ import {
     DELIVERYADDRESS_CREATE_REQUESTED,
     ORDERDETAIL_FETCH_REQUESTED, ORDERDETAIL_FETCH_SUCCEEDED,
     ORDER_EDIT_REQUESTED,
-    DELIVERYADDRESS_EDIT_REQUESTED
+    DELIVERYADDRESS_EDIT_REQUESTED,
+    SHIPPING_QUOTES_FETCH_SUCCEEDED,
+    SHIPPING_QUOTES_FETCH_REQUESTED
 } from "../constants/cart";
 
 export const initialState = {
@@ -23,6 +25,7 @@ export const initialState = {
     offerDetailIsFetching: true,
     selectedAddressId: null,
     selectedCardId: null,
+    shippingQuotes: []
 };
 
 export default function reducer(state = initialState, action) {
@@ -92,6 +95,21 @@ export default function reducer(state = initialState, action) {
                 cartIsFetching: false
             }
         }
+        case SHIPPING_QUOTES_FETCH_REQUESTED: {
+            return {
+                ...state,
+                country: action.country,
+                zip: action.zip,
+                shippingQuotesAreFetching: true
+            }
+        }
+        case SHIPPING_QUOTES_FETCH_SUCCEEDED: {
+            return {
+                ...state,
+                shippingQuotes: action.payload,
+                shippingQuotesAreFetching: false
+            }
+        }
 
         default: {
             return state
@@ -139,4 +157,8 @@ export function postOrderEdit(order) {
 
 export function putDeliveryAddressEdit(address) {
     return {type: DELIVERYADDRESS_EDIT_REQUESTED, payload: {address}}
+}
+
+export function getShippingQuotes(countryId, zip) {
+    return {type: SHIPPING_QUOTES_FETCH_REQUESTED, payload: {countryId, zip}}
 }

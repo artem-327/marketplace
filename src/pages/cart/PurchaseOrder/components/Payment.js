@@ -11,7 +11,7 @@ const Payment = ({dispatch, payments, selectedAddress, selectedPayment, getPayme
   })
   return (
     <div className="shopping-cart-items">
-      <header><h2>2. Payment</h2></header>
+      <header><h2>3. Payment</h2></header>
       <div className="purchase-order-section">
         <div className="group-item-wr">
           <DropdownRedux

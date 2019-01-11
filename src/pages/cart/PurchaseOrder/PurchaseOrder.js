@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom';
 import SummaryTable from "../components/SummaryTable/SummaryTable"
 import Shipping from "./components/Shipping"
 import ShippingEdit from "./components/ShippingEdit"
+import ShippingQuote from "./components/ShippingQuote"
 import Payment from "./components/Payment"
 import CartItemSummary from './components/CartItemSummary'
 import Button from '../../../components/Button/Button'
@@ -17,7 +18,8 @@ class PurchaseOrder extends Component {
     selectedAddress: {},
     selectedPayment: {},
     isShippingEdit: false,
-    isNewAddress: "isNew"
+    isNewAddress: "isNew",
+    shippingQuotes: []
   }
 
   componentDidMount(){
@@ -50,12 +52,18 @@ class PurchaseOrder extends Component {
     const {deliveryAddresses} = this.props;
     const selectedAddress = deliveryAddresses.find(i => i.id === selectedAddressId);
     this.setState({selectedAddress});
+    this.getShippingQuotes(selectedAddress);
   }
 
   getPayment = (selectedPaymentId) => {
     const {payments} = this.props;
     const selectedPayment = payments.find(i => i.id === selectedPaymentId);
     this.setState({selectedPayment});
+  }
+
+  getShippingQuotes = (selectedAddress) => {
+    // TODO:: 'USA' to ID and variable
+    this.props.getShippingQuotes(1, selectedAddress.address.zip.zip);
   }
 
   toggleShippingEdit = () => {
@@ -80,7 +88,7 @@ class PurchaseOrder extends Component {
   }
 
   render() {
-    const {cart, deliveryAddresses, payments, dispatch, deleteCart, cartIsFetching, postNewDeliveryAddress, putDeliveryAddressEdit} = this.props;
+    const {cart, deliveryAddresses, payments, dispatch, deleteCart, cartIsFetching, postNewDeliveryAddress, putDeliveryAddressEdit, shippingQuotes} = this.props;
     if (cartIsFetching) return <Spinner />
     let index = 0;
     const itemContent = cart.orders.map(cartItem => {
@@ -105,7 +113,7 @@ class PurchaseOrder extends Component {
             </div>
           </div>
         </div>
-        <div className="shopping-cart">
+        <div className="shopping-cart checkout">
           <div className="shopping-cart-body">
 
           <div>
@@ -124,6 +132,11 @@ class PurchaseOrder extends Component {
               getAddress={this.getAddress}
               selectedAddress={this.state.selectedAddress}
               />}
+            <ShippingQuote
+              selectedAddress={this.state.selectedAddress}
+              shippingQuotes={shippingQuotes}
+              shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
+              />
             <Payment
               dispatch={dispatch}
               selectedAddress={this.state.selectedAddress}
@@ -131,14 +144,6 @@ class PurchaseOrder extends Component {
               payments={payments}
               getPayment={this.getPayment}
               />
-
-            <div className="shopping-cart-items">
-              <header><h2>3. Terms and Agreement</h2></header>
-              <div className="purchase-order-section">
-                <div>Legal Language</div>
-                <div>Terms and Agreement</div>
-                </div>
-            </div>
 
           </div>
           <div className="summary-tables">
@@ -169,4 +174,5 @@ PurchaseOrder.propTypes = {
   getDeliveryAddresses: PropTypes.func,
   deleteCart: PropTypes.func,
   selectedAddressId: PropTypes.number,
+  shippingQuotes: PropTypes.array
 }

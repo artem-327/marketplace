@@ -1,4 +1,5 @@
 @import "../../../styles/main.scss";
+@import "../../../styles/fonts.scss";
 
 .purchase-order-section {
   padding: 16px 20px 20px;
@@ -67,6 +68,7 @@
 
           td {
             padding: 6px 0;
+            vertical-align: top;
 
             &:nth-child(2) {
               text-align: right;
@@ -122,4 +124,148 @@
     float: right;
     text-transform: none;
     font-weight: 500;
+}
+
+$fsTableHeaderHeight: 26px;
+
+.freight-selection {
+  width: 100%;
+  font-family: $helvetica-roman;
+  font-size: 14px;
+  font-weight: 400;
+  color: #4e5157;
+
+  &-wrapper {
+    position: relative;
+    overflow: hidden;
+    width: calc(100% + 20px);
+    max-height: 231px;
+    margin-right: -20px;
+    padding-right: 25px;
+
+    > .ps__rail-x,
+    > .ps__rail-y {
+      position: absolute;
+      z-index: 3;
+      transition: opacity 250ms linear;
+      display: none;
+
+      > div {
+        opacity: 0.15;
+      }
+    }
+
+    > .ps__rail-x {
+      top: auto !important;
+      bottom: 0 !important;
+      height: 15px;
+
+      >.ps__thumb-x {
+        position: absolute;
+        height: 11px;
+        margin: 2px 0;
+        border-width: 0 2px;
+        border-style: solid;
+        border-color: transparent;
+        background-color: rgba(0,0,0,0.5);
+        background-clip: content-box;
+        cursor: pointer;
+      }
+    }
+
+    > .ps__rail-y {
+      top: $fsTableHeaderHeight !important;
+      left: auto !important;
+      right: 0 !important;
+      width: 15px;
+      height: calc(100% - #{$fsTableHeaderHeight}) !important;
+
+      >.ps__thumb-y {
+        position: absolute;
+        width: 12px;
+        margin: 0 2px 0 1px;
+        border-width: 0;
+        border-style: solid;
+        border-color: transparent;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+        background-color: rgba(0,0,0,0.5);
+        background-clip: content-box;
+        cursor: pointer;
+      }
+    }
+
+    &.ps--active-x > .ps__rail-x,
+    &.ps--active-y > .ps__rail-y {
+      display: block;
+    }
+
+    &.ps--active-x:hover > .ps__rail-x > div,
+    &.ps--active-y:hover > .ps__rail-y > div {
+      opacity: 1;
+    }
+  }
+
+  tr {
+
+    th {
+      position: relative;
+      height: $fsTableHeaderHeight;
+      padding: 0 19px;
+      font-family: $helvetica-md;
+
+      &:first-child {
+        width: 22px;
+        padding-left: 0;
+      }
+
+      &.a-right {
+        text-align: right;
+      }
+
+      .fix-header {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 3;
+        height: 26px;
+        padding: 0 19px;
+        background: rgba(255,255,255,0.9);
+        color: #4e5157;
+        line-height: 26px;
+      }
+    }
+
+    td {
+      height: 40px;
+      min-height: 40px;
+      border-bottom: 1px solid #cecece;
+      padding: 0 19px;
+      vertical-align: middle;
+
+      &:first-child {
+        padding-left: 0;
+        padding-right: 0;
+      }
+
+      &.a-right {
+        text-align: right;
+      }
+
+      .radioButton {
+        display: block;
+        height: 22px;
+        margin: 0;
+        padding: 0 0 0 22px;
+        vertical-align: middle;
+
+        p {
+          display: none;
+        }
+      }
+    }
+  }
 }
