@@ -159,6 +159,6 @@ export function putDeliveryAddressEdit(address) {
     return {type: DELIVERYADDRESS_EDIT_REQUESTED, payload: {address}}
 }
 
-export function getShippingQuotes(country, zip) {
-    return {type: SHIPPING_QUOTES_FETCH_REQUESTED, payload: {country, zip}}
+export function getShippingQuotes(countryId, zip) {
+    return {type: SHIPPING_QUOTES_FETCH_REQUESTED, payload: {countryId, zip}}
 }
