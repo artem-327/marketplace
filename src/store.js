@@ -16,6 +16,7 @@ import users from './modules/users';
 
 import companies from './modules/companies';
 import productOffers, {initialState as addProductsInit} from './modules/productOffers';
+import shippingQuotes, {initialState as shippingQuotesInit} from './modules/shippingQuotes';
 import popup from './modules/popup';
 import filter, {initialState as filterInit} from './modules/filter';
 import packageTypes from './modules/packageTypes';
@@ -36,6 +37,7 @@ import cartSaga from "./pages/cart/saga/cart";
 import locationsSaga from "./saga/locations";
 import broadcastSaga from "./saga/broadcast";
 import productOffersSaga from "./saga/productOffers";
+import shippingQuotesSaga from "./saga/shippingQuotes";
 
 const reducer = combineReducers({
     identity,
@@ -45,6 +47,7 @@ const reducer = combineReducers({
     users,
     location,
     productOffers,
+    shippingQuotes,
     products,
     packageTypes,
     cart,
@@ -57,6 +60,7 @@ const reducer = combineReducers({
         filter: filterInit.data,
         brcRules: broadcastInit.broadcastData,
         addProductOffer: addProductsInit.addProductOffer,
+        shippingQuotes: shippingQuotesInit.shippingQuotes,
         productMapping: productsInit.productsMapping,
         productOffering: productsInit.productOffering,
         loginForm: identityFormInit.loginForm.data,
@@ -101,3 +105,4 @@ sagaMiddleware.run(cartSaga);
 sagaMiddleware.run(locationsSaga);
 sagaMiddleware.run(broadcastSaga);
 sagaMiddleware.run(productOffersSaga);
+sagaMiddleware.run(shippingQuotesSaga);

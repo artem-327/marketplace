@@ -1,9 +1,7 @@
 import axios from 'axios';
 import {transformRequestOptions, filterByUniqueProperty} from "../utils/functions";
 import {
-    PRODUCTOFFER_REMOVE_REQUESTED,
-    SHIPPINGQUOTES_FETCH_REQUESTED,
-    SHIPPINGQUOTES_FETCH_SUCCEEDED
+    PRODUCTOFFER_REMOVE_REQUESTED
 } from "../constants/productOffers";
 
 const GET_PRODUCT_OFFERS_MY = 'GET_PRODUCT_OFFERS_MY';
@@ -35,9 +33,7 @@ export const initialState = {
     unitOfPackaging: [],
     productOffer: {},
     productOfferFetching: true,
-    productOffersIsFetching: true,
-    shippingQuotes: [],
-    shippingQuotesAreFetching: false
+    productOffersIsFetching: true
 };
 
 export default function reducer(state = initialState, action) {
@@ -117,19 +113,6 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 addProductOffer: {}
-            }
-        }
-        case SHIPPINGQUOTES_FETCH_REQUESTED: {
-            return {
-                ...state,
-                shippingQuotesAreFetching: true
-            }
-        }
-        case SHIPPINGQUOTES_FETCH_SUCCEEDED: {
-            return {
-                ...state,
-                shippingQuotes: action.payload,
-                shippingQuotesAreFetching: false
             }
         }
 
@@ -216,8 +199,4 @@ export function getUnitOfPackaging(pack) {
 
 export function deleteProductOffer(id, onSuccess) {
     return {type: PRODUCTOFFER_REMOVE_REQUESTED, payload: {id, onSuccess}} //TODO: refactor all product offers to saga, then remove onSuccess
-}
-
-export function getShippingQuotes(pack) {
-    return {type: SHIPPINGQUOTES_FETCH_REQUESTED, payload: {pack}}
 }

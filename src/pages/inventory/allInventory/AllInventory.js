@@ -4,7 +4,7 @@ import Filter from '../../../components/Filter';
 import Spinner from '../../../components/Spinner/Spinner';
 import FilterTag from "../../../components/Filter/components/FilterTag";
 import SubMenu from '../../../components/SubMenu';
-import ShippingQuote from '../../../components/ShippingQuote';
+import ShippingQuotes from './components/ShippingQuotes';
 
 class AllInventory extends Component {
 
@@ -19,7 +19,9 @@ class AllInventory extends Component {
     }
 
     openShippingQuote(){
-        this.props.addPopup(<ShippingQuote className='shipping-quotes-popup' shippingQuotes={this.props.shippingQuotes} getShippingQuotes={this.props.getShippingQuotes} shippingQuotesAreFetching={this.props.shippingQuotesAreFetching} removePopup={this.props.removePopup}/>);
+        this.props.addPopup(<ShippingQuotes
+                                className='shipping-quotes-popup'
+                                removePopup={this.props.removePopup}/>);
     }
 
     render() {

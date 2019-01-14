@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux'
 import AllInventory from './AllInventory';
-import {deleteProductOffersList, fetchAllProductOffers, getShippingQuotes} from '../../../modules/productOffers';
+import {deleteProductOffersList, fetchAllProductOffers} from '../../../modules/productOffers';
 import {addPopup, removePopup} from '../../../modules/popup';
 import {resetFilterTags} from "../../../modules/filter";
 import {resetForm} from '../../../utils/functions';
@@ -14,13 +14,11 @@ const mapStateToProps = store => ({
     identity: store.identity.identity,
     merchantDetail: store.merchants.merchantDetail,
     officeDetail: store.companies.office,
-    productOffersIsFetching: store.productOffers.productOffersIsFetching,
-    shippingQuotes: store.productOffers.shippingQuotes,
-    shippingQuotesAreFetching: store.productOffers.shippingQuotesAreFetching
+    productOffersIsFetching: store.productOffers.productOffersIsFetching
 });
 
 const mapDispatchToProps = dispatch => (
-    bindActionCreators({fetchAllProductOffers, getOffice, getMerchant, addPopup, removePopup, resetFilterTags, resetForm, deleteProductOffersList, getShippingQuotes}, dispatch)
+    bindActionCreators({fetchAllProductOffers, getOffice, getMerchant, addPopup, removePopup, resetFilterTags, resetForm, deleteProductOffersList}, dispatch)
 );
 
 export default connect(mapStateToProps, mapDispatchToProps)(AllInventory);
