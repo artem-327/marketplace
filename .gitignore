@@ -174,3 +174,4 @@ src/styles/fonts.css.map
 /src/components/Confirmable/confirmDialog.css
 /src/pages/inventory/addInventory/components/AddForm/Location.css
 /src/components/ShippingQuote/shippingquote.css
+/src/pages/inventory/allInventory/components/ShippingQuotes/shippingquotes.css
