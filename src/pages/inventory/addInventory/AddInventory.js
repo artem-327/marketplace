@@ -49,7 +49,6 @@ export default class AddInventory extends Component {
         return(
         <div>
             <h1 className='header'>{!this.props.edit ? 'ADD INVENTORY' : 'EDIT PRODUCT OFFER - ' + (this.props.productOffer.productName || this.props.productOffer.tradeName)}</h1>
-            <AddGroup header='CHEMICAL' component={<Chemical edit={this.props.edit} resetForm={this.props.resetForm}/>}/>
             <AddForm {...this.props}/>
         </div>)
     }

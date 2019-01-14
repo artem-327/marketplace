@@ -4,6 +4,7 @@ import {Form} from 'react-redux-form';
 import Pricing from './Pricing';
 import Location from './Location';
 import classnames from 'classnames';
+import Chemical from "../Chemical";
 
 export default class AddForm extends Component {
     constructor(props) {
@@ -30,6 +31,9 @@ export default class AddForm extends Component {
     }
 
     addProductOffer(inputs){
+
+        console.log(inputs);
+
         let newPricing = inputs['pricing'];
         if(inputs['incrementalSelected']){
             newPricing = {...inputs['pricing'], tiers: this.validateIncPricing()};
@@ -151,6 +155,7 @@ export default class AddForm extends Component {
         return (
             <div className={classnames('add-inventory', {'disable' : this.props.disable})} >
                 <Form model="forms.addProductOffer" onSubmit={(inputs) => this.props.edit ? this.editProductOffer(inputs) : this.addProductOffer(inputs)}>
+                    <AddGroup header='CHEMICAL' component={<Chemical {...this.props} edit={this.props.edit} resetForm={this.props.resetForm}/>}/>
                     <AddGroup header='PRICING' disable={this.props.disable} component = {<Pricing {...this.props} getIncPricing={(data)=>this.getIncPricing(data)}/>} />
                     <AddGroup header='WAREHOUSE' disable={this.props.disable} component = {<Location {...this.props}/>} />
                     {submitButton}
