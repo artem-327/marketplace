@@ -132,10 +132,17 @@ export function fetchMyProductOffers(filter = {}) {
     let mrchnt = true;
     return {
         type: GET_PRODUCT_OFFERS_MY,
-        payload: axios.get("/prodex/api/product-offers", {params: {...filter, mrchnt}, 'paramsSerializer': params => transformRequestOptions(params)}).then(response => {
-            const productOffers = response.data;
-            return filterByUniqueProperty(productOffers, "id") //dont show product offers with same id (synonyms)
-        })
+        payload: axios.get(
+            "/prodex/api/product-offers",
+            {
+                params: {
+                    ...filter,
+                    mrchnt
+                },
+                'paramsSerializer': params => transformRequestOptions(params)}).then(response => {
+                    const productOffers = response.data;
+                    return filterByUniqueProperty(productOffers, "id") //dont show product offers with same id (synonyms)
+                })
     }
 }
 

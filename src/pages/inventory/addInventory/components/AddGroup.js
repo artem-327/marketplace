@@ -5,11 +5,17 @@ import dropdownClose from '../../../../images/inv-filter/dropdown-close.png'
 export default class AddGroup extends Component {
     constructor(props) {
         super(props);
-        this.state = {open: !this.props.disable, disable: this.props.disable}
+        this.state = {
+            open: !this.props.disable,
+            disable: this.props.disable
+        }
     }
 
     componentWillReceiveProps(nextProps){
-        this.setState({open: !nextProps.disable, disable: nextProps.disable})
+        this.setState({
+            open: !nextProps.disable,
+            disable: nextProps.disable
+        })
     }
 
     handleOpen(){

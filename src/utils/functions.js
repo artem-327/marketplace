@@ -51,7 +51,7 @@ export const getSelectedDataTable = (dataTable) => {
         }
     }
     return selected;
-}
+};
 
 export const transformRequestOptions = params => {
     let options = '';

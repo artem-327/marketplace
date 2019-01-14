@@ -7,7 +7,7 @@ import {actions} from "react-redux-form";
 
 export default class AddInventory extends Component {
     componentDidMount(){
-        if(this.props.edit && this.props.productOffer){
+        if(this.props.edit && this.props.productOffer) {
             this.props.dispatch(actions.merge('forms.productMapping', {
                 casNumber: this.props.productOffer.product.casNumber,
                 chemicalName: this.props.productOffer.product.chemicalName,

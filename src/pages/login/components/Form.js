@@ -11,9 +11,10 @@ export default class LoginForm extends React.Component {
         let {email, password} = this.props.loginInputs;
         if(!email || !password) return;
         this.props.login(input.email, input.password).then(() => {
-            this.props.getIdentity().then(()=>{
-                this.props.history.push("/inventory/my-inventory");
-            });
+            this.props.getIdentity()
+                .then(() => {
+                    this.props.history.push("/inventory/my-inventory");
+                });
         })
     }
 
