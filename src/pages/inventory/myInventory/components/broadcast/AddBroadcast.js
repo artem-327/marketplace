@@ -223,11 +223,11 @@ class AddBroadcast extends Component {
           if (i.priceUnit === "$") company.priceAddition = i.priceValue
           if (i.priceUnit === "%") company.priceMultiplier = i.priceValue
 
-          const parentStatesOffices = parentState.companies.map(i => i.offices)
+          const parentStatesOffices = parentState.companies.map(i => i.branches)
           const officesOfThisState = Object.values(storedOffices).filter(obj => parentStatesOffices.flat().find(obj2 => obj.id === obj2.id))
           
           //OFFICES
-          company.offices = officesOfThisState.map(i => {
+          company.branches = officesOfThisState.map(i => {
             const office = {
             anonymous: i.anonymous !== true ? 0 : i.anonymousePartly ? 2 : 1,
             broadcast: i.broadcast !== true ? 0 : i.broadcastPartly ? 2 : 1,
@@ -260,7 +260,7 @@ class AddBroadcast extends Component {
       const flattenStates = states.flat()
       const companies = flattenStates.map(state => state.companies)
       const flattenCompanies = companies.flat()
-      const offices = flattenStates.map(state => state.companies.map(company => company.offices))
+      const offices = flattenStates.map(state => state.companies.map(company => company.branches))
       const flattenOffices = offices.flat(2)
       const filteredRegions = regions.filter(i => i.name.toLowerCase().startsWith(filterInput.toLowerCase()))
       const filteredStates = flattenStates.filter(i => i.name.toLowerCase().startsWith(filterInput.toLowerCase()))
@@ -336,7 +336,7 @@ class AddBroadcast extends Component {
     const flattenStates = states.flat()
     const companies = flattenStates.map(state => state.companies)
     const flattenCompanies = companies.flat()
-    const offices = flattenStates.map(state => state.companies.map(company => company.offices))
+    const offices = flattenStates.map(state => state.companies.map(company => company.branches))
     const flattenOffices = offices.flat(2)
     const rules = ["anonymous", "broadcast"]
     const units = ["$", "%"]
@@ -411,7 +411,7 @@ class AddBroadcast extends Component {
                   if (allOfficesBrc.some(obj => obj[rule] === true)) company[rule] !== true && dispatch(actions.change(`forms.brcRules.company[${company.id}].${rule}`, true))
                   if (allOfficesBrc.every(obj => obj[rule] === true)) company[`${rule}Partly`] !== false && dispatch(actions.change(`forms.brcRules.company[${company.id}].${rule}Partly`, false))
                   if (allOfficesBrc.some(obj => obj[rule] !== true)) company[`${rule}Partly`] !== true && dispatch(actions.change(`forms.brcRules.company[${company.id}].${rule}Partly`, true))
-                  if (company.offices) company.offices.forEach(office => {
+                  if (company.branches) company.branches.forEach(office => {
                     office[rule] !== isChecked && dispatch(actions.change(`forms.brcRules.office[${office.id}].${rule}`, isChecked))
                   })
                 })
@@ -427,11 +427,11 @@ class AddBroadcast extends Component {
               clickedRegion.states.forEach(state => {
                 dispatch(actions.change(`forms.brcRules.state[${state.id}].priceUnit`, unit))
                 state.companies.forEach(company => {
-                  if (company.offices) company.offices.forEach(office => {
+                  if (company.branches) company.branches.forEach(office => {
                     dispatch(actions.change(`forms.brcRules.office[${office.id}].priceUnit`, unit))
                   })
                   const allCompanies = flattenCompanies.filter(i => i.id === company.id)
-                  const allOffices = allCompanies.map(i => i.offices).flat()
+                  const allOffices = allCompanies.map(i => i.branches).flat()
                   const allOfficesBrc = broadcastOffices.filter(obj => allOffices.find(obj2 => obj.id === obj2.id))
                   if (allOfficesBrc.every(i => i.priceUnit === unit)) dispatch(actions.change(`forms.brcRules.company[${company.id}].priceUnit`, unit))
                   if (!allOfficesBrc.every(i => i.priceUnit === unit)) dispatch(actions.change(`forms.brcRules.company[${company.id}].priceUnit`, ""))
@@ -446,11 +446,11 @@ class AddBroadcast extends Component {
           clickedRegion.states.forEach(state => {
             dispatch(actions.change(`forms.brcRules.state[${state.id}].priceValue`, (clickedBroadcastRegion.priceValue)))
             state.companies.forEach(company => {
-              if (company.offices) company.offices.forEach(office => {
+              if (company.branches) company.branches.forEach(office => {
                 dispatch(actions.change(`forms.brcRules.office[${office.id}].priceValue`, (clickedBroadcastRegion.priceValue)))
               })
               const allCompanies = flattenCompanies.filter(i => i.id === company.id)
-              const allOffices = allCompanies.map(i => i.offices).flat()
+              const allOffices = allCompanies.map(i => i.branches).flat()
               const allOfficesBrc = broadcastOffices.filter(obj => allOffices.find(obj2 => obj.id === obj2.id))
               if (allOfficesBrc.every(i => i.priceValue === allOfficesBrc[0].priceValue)) dispatch(actions.change(`forms.brcRules.company[${company.id}].priceValue`, clickedBroadcastRegion.priceValue))
               if (!allOfficesBrc.every(i => i.priceValue === allOfficesBrc[0].priceValue)) dispatch(actions.change(`forms.brcRules.company[${company.id}].priceValue`, ""))
@@ -483,11 +483,11 @@ class AddBroadcast extends Component {
             if (statesFiltered.every(state => state[rule] === true) && broadcastRegions.every(region => region[rule] === true) && broadcastRegions.every(region => region[`${rule}Partly`] !== true)) dispatch(actions.change(`forms.brcRules.root[1].${rule}Partly`, false))
             if (clickedBroadcastState[rule] === isChecked && clickedState.companies) {
               clickedState.companies.forEach(company => {
-                if (company.offices) company.offices.forEach(office => {
+                if (company.branches) company.branches.forEach(office => {
                   dispatch(actions.change(`forms.brcRules.office[${office.id}].${rule}`, isChecked))
                 })
                 const allCompanies = flattenCompanies.filter(i => i.id === company.id)
-                const allOffices = allCompanies.map(i => i.offices).flat()
+                const allOffices = allCompanies.map(i => i.branches).flat()
                 const allOfficesBrc = broadcastOffices.filter(obj => allOffices.find(obj2 => obj.id === obj2.id))
                 if (allOfficesBrc.every(obj => obj[rule] !== true)) dispatch(actions.change(`forms.brcRules.company[${company.id}].${rule}`, false))
                 if (allOfficesBrc.some(obj => obj[rule] === true)) dispatch(actions.change(`forms.brcRules.company[${company.id}].${rule}`, true))
@@ -504,11 +504,11 @@ class AddBroadcast extends Component {
             if (statesFiltered.every(i => i.priceUnit === unit)) dispatch(actions.change(`forms.brcRules.region[${clickedState.regionId}].priceUnit`, unit))
             if (clickedBroadcastState && clickedBroadcastState.priceUnit === unit) {
               clickedState.companies.forEach(company => {
-                if (company.offices) company.offices.forEach(office => {
+                if (company.branches) company.branches.forEach(office => {
                   dispatch(actions.change(`forms.brcRules.office[${office.id}].priceUnit`, unit))
                 })
                 const allCompanies = flattenCompanies.filter(i => i.id === company.id)
-                const allOffices = allCompanies.map(i => i.offices).flat()
+                const allOffices = allCompanies.map(i => i.branches).flat()
                 const allOfficesBrc = broadcastOffices.filter(obj => allOffices.find(obj2 => obj.id === obj2.id))
                 if (allOfficesBrc.every(i => i.priceUnit === unit)) dispatch(actions.change(`forms.brcRules.company[${company.id}].priceUnit`, unit))
                 if (!allOfficesBrc.every(i => i.priceUnit === unit)) dispatch(actions.change(`forms.brcRules.company[${company.id}].priceUnit`, ""))
@@ -529,11 +529,11 @@ class AddBroadcast extends Component {
           if (someStatesValuesNotEqual || someRegionsValuesNotEqual) dispatch(actions.change(`forms.brcRules.root[1].priceValue`, ""));
           if (someStatesValuesNotEqual) dispatch(actions.change(`forms.brcRules.region[${clickedState.regionId}].priceValue`, ""));
           clickedState.companies.forEach(company => {
-            if (company.offices) company.offices.forEach(office => {
+            if (company.branches) company.branches.forEach(office => {
               dispatch(actions.change(`forms.brcRules.office[${office.id}].priceValue`, (clickedBroadcastState.priceValue)))
             })
             const allCompanies = flattenCompanies.filter(i => i.id === company.id)
-            const allOffices = allCompanies.map(i => i.offices).flat()
+            const allOffices = allCompanies.map(i => i.branches).flat()
             const allOfficesBrc = broadcastOffices.filter(obj => allOffices.find(obj2 => obj.id === obj2.id))
             if (allOfficesBrc.every(i => i.priceValue === allOfficesBrc[0].priceValue)) dispatch(actions.change(`forms.brcRules.company[${company.id}].priceValue`, clickedBroadcastState.priceValue))
             if (!allOfficesBrc.every(i => i.priceValue === allOfficesBrc[0].priceValue)) dispatch(actions.change(`forms.brcRules.company[${company.id}].priceValue`, ""))
@@ -590,8 +590,8 @@ class AddBroadcast extends Component {
               } else { dispatch(actions.change(`forms.brcRules.region[${region.id}].${rule}`, true)) }
             })
 
-            if (clickedBroadcastCompany[rule] === isChecked && clickedCompany.offices) {
-              const allOffices = clickedCompanies.map(i => i.offices).flat()
+            if (clickedBroadcastCompany[rule] === isChecked && clickedCompany.branches) {
+              const allOffices = clickedCompanies.map(i => i.branches).flat()
               allOffices.forEach(office => {
                 dispatch(actions.change(`forms.brcRules.office[${office.id}].${rule}`, isChecked))
               })
@@ -602,7 +602,7 @@ class AddBroadcast extends Component {
         if (clickedModel.includes("priceUnit")) {
           units.forEach(unit => {
             if (clickedBroadcastCompany && clickedBroadcastCompany.priceUnit === unit) {
-              const allOffices = clickedCompanies.map(i => i.offices).flat()
+              const allOffices = clickedCompanies.map(i => i.branches).flat()
               allOffices.forEach(office => {
                 dispatch(actions.change(`forms.brcRules.office[${office.id}].priceUnit`, unit))
               })
@@ -650,7 +650,7 @@ class AddBroadcast extends Component {
             } else dispatch(actions.change(`forms.brcRules.region.${region.id}.priceValue`, ""))
           })
 
-          const allOffices = clickedCompanies.map(i => i.offices).flat()
+          const allOffices = clickedCompanies.map(i => i.branches).flat()
           allOffices.forEach(office => {
             dispatch(actions.change(`forms.brcRules.office[${office.id}].priceValue`, (clickedBroadcastCompany.priceValue)))
           })
@@ -662,10 +662,10 @@ class AddBroadcast extends Component {
         const clickedBroadcastOffice = broadcastOffices.find(office => office.id === clickedModelId)
         const parentCompany = flattenCompanies.filter(company => company.id === clickedOffice.companyId)
         //use filter, not find! Because there can be more than one parent company! (because offices from different states can be from same company)
-        const parentCompanyOffices = (parentCompany.map(i => i.offices)).flat()
+        const parentCompanyOffices = (parentCompany.map(i => i.branches)).flat()
         const officesCompanyFiltered = broadcastOffices.filter(obj => parentCompanyOffices.flat().find(obj2 => obj.id === obj2.id))
         const parentState = flattenStates.find(state => state.id === clickedOffice.stateId)
-        const parentStatesOffices = parentState.companies.map(i => i.offices)
+        const parentStatesOffices = parentState.companies.map(i => i.branches)
         const officesFiltered = broadcastOffices.filter(obj => parentStatesOffices.flat().find(obj2 => obj.id === obj2.id))
         const parentRegion = regions.find(region => region.id === clickedOffice.regionId)
         const statesFiltered = broadcastStates.filter(obj => parentRegion["states"].find(obj2 => obj.id === obj2.id))
