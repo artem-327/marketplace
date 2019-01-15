@@ -145,9 +145,7 @@ export default class AddForm extends Component {
 
     render() {
         let cancelButton = this.props.edit ? <button onClick={this.cancelEdit} className={classnames('button add-inventory big')}>Cancel Edit</button> : null;
-        let submitButton = <button disabled={this.props.disable} className={classnames('button add-inventory big', {'disabled' : this.props.disable})}>
-                           {!this.props.edit ? 'Add Product Offer' : 'Edit Product Offer' }</button>;
-
+        let submitButton = <button disabled={this.props.disable} className={classnames('button add-inventory big', {'disabled' : this.props.disable})}>Save</button>;
         return (
             <div className={classnames('add-inventory', {'disable' : this.props.disable})} >
                 <Form model="forms.addProductOffer" onSubmit={(inputs) => this.props.edit ? this.editProductOffer(inputs) : this.addProductOffer(inputs)}>
