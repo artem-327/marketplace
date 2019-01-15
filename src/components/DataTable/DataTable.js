@@ -12,6 +12,7 @@ class DataTable extends Component {
   }
 
   initDataTable() {
+    console.log(this.props.rows);
     //TODO::don't rewrite store if exists, but beware of filter (reload data)
     // if(!this.props.dataTable){
     let header = this.props.headerInit.map((item, index) => ({
@@ -20,15 +21,17 @@ class DataTable extends Component {
       sort: item.sort !== undefined ? item.sort : true,
       visible: item.visible !== undefined ? item.visible : true
     }));
-    let rowsOpns = this.props.rows.map((item, index) => ({
-      ...item,
-      index: index,
-      rows: item.rows.map((row, index2) => ({
-        selected: false,
-        index: index2,
-        id: row.id
-      }))
-    }));
+    let rowsOpns = this.props.rows.map((item, index) => {
+        return ({
+            ...item,
+            index: index,
+            rows: item.rows.map((row, index2) => ({
+                selected: false,
+                index: index2,
+                id: row.id
+            }))
+        });
+    });
     this.props.initDataTable(this.props.id, header, rowsOpns);
     // }
   }

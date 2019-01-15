@@ -8,18 +8,18 @@ import IdleTimer from 'react-idle-timer'
 
 class App extends Component {
   constructor(props) {
-    super(props)
-    this.idleTimer = null
+    super(props);
+    this.idleTimer = null;
 
     this.timeout = 30
   }
 
   onIdle = () => {
-    this.props.history.push('/')
-    localStorage.clear()
-    alert("You've been logged out due to being inactive for " + this.timeout.toString() + (this.timeout === 1 ? " minute." : " minutes."))
+    this.props.history.push('/');
+    localStorage.clear();
+    alert("You've been logged out due to being inactive for " + this.timeout.toString() + (this.timeout === 1 ? " minute." : " minutes."));
     window.location.reload();
-  }
+  };
 
   //router paths - Main
   render() {
