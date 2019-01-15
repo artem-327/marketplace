@@ -235,6 +235,10 @@
       max-height: 100%;
       margin: 0;
     }
+
+    input[disabled] + .checkmark {
+      opacity: 0.33;
+    }
   }
   .data-table-context-td{position: relative}
   .data-table-context-holder{width: 1px; padding: 0;}

@@ -5,8 +5,9 @@ import {
 
 
 export const initialState = {
-    destinationZIP: false,
+    destinationZIP: '',
     quantity: 0,
+	maxTransit: 0,
     shippingQuotes: [],
     shippingQuotesIsFetching: false
 };

@@ -10,13 +10,14 @@ import {Control, Errors, actions} from 'react-redux-form';
 import {required, isNumber, min, messages} from "../../../../../utils/validation";
 import {Form} from 'react-redux-form';
 import Checkbox from '../../../../../components/Checkbox/Checkbox';
+import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 class ShippingQuotes extends Component {
 
-    getShippingQuotes(inputs){
+    getShippingQuotes(inputs) {
         let params = {};
-        params.productOfferId = 1;
+        params.productOfferId = this.props.selectedRows[0];
         params.destinationZIP = inputs.destination.zip;
         params.destinationCountry = 'USA';
         params.quantity = inputs.destination.quantity;
@@ -28,20 +29,44 @@ class ShippingQuotes extends Component {
         this.setState({selectedItem: value});
     }
 
+    handleScrollY() {
+        // get table header height
+        const tableHeaderHeight = document.querySelector('.scrollbar-container.freight-selection-wrapper thead tr th:first-child').clientHeight;
+
+        // get position of scrollbar (0 - 1)
+        let freightWrapper = document.querySelector('.scrollbar-container.freight-selection-wrapper');
+        let scrollPosition = freightWrapper.scrollTop / (freightWrapper.scrollHeight - freightWrapper.clientHeight);
+
+        // get real scroll height (minus table header height)
+        let scrollHeight = (freightWrapper.scrollHeight - freightWrapper.clientHeight - tableHeaderHeight);
+
+        // floated header (move header together with scrolling)
+        let topPosition = document.querySelector('.scrollbar-container.freight-selection-wrapper').scrollTop;
+        let fixHeader = document.querySelectorAll('.freight-selection-wrapper th > .fix-header');
+        for (let i = 0; i < fixHeader.length; i++) {
+            fixHeader[i].style.top = topPosition + 'px';
+        }
+
+        // calculate scrollbar position
+        let yScrollbar = document.querySelector('.scrollbar-container.freight-selection-wrapper > .ps__rail-y');
+        yScrollbar.style.marginTop = scrollPosition * scrollHeight + 'px';
+    }
+
     renderForm() {
         const sQuotes = this.renderShippingQuotes();
 
         let shippingQty = 'Shipping Quantity';
         let zipCode = 'Zip Code';
+        let maxTransit = 'Max Transit Time';
         let sendButton = 'Calculate';
 
         return (
             <Form id="shipping-quotes" model="forms.shippingQuotes" onSubmit={(inputs) => this.getShippingQuotes(inputs)}>
                 <div className='filterbar'>
-                    <div className='group-item-wr'>
+                    <div className='group-item-wr col-md-2'>
                         <Errors
                             className="form-error"
-                            model=".shipping.quote"
+                            model=".destination.quantity"
                             show="touched"
                             messages={{
                                 required: messages.required,
@@ -49,7 +74,7 @@ class ShippingQuotes extends Component {
                                 min: messages.min
                             }}
                         />
-                        <label htmlFor=".quantityPr">{shippingQty}</label>
+                        <label htmlFor=".quantityPr" className="shipping-qty">{shippingQty}</label>
                         <Control.text model=".destination.quantity"
                                       id=".quantityPr"
                                       validators={{
@@ -59,14 +84,13 @@ class ShippingQuotes extends Component {
                                       }}
                                       type='number'
                                       name='quantity'
-                                      placeholder="/lbs"
                                       defaultValue=''
                         />
                     </div>
-                    <div className='group-item-wr'>
+                    <div className='group-item-wr col-md-3'>
                         <Errors
                             className="form-error"
-                            model=".shipping.quote"
+                            model=".destination.zip"
                             show="touched"
                             messages={{
                                 required: messages.required,
@@ -86,6 +110,26 @@ class ShippingQuotes extends Component {
                                       defaultValue=''
                         />
                     </div>
+                    <div className='group-item-wr col-md-3'>
+                        <Errors
+                            className="form-error"
+                            model=".destination.maxTransit"
+                            show="touched"
+                        />
+                        <label htmlFor=".zipPr">{maxTransit}</label>
+                        <DropdownRedux opns={[
+                                                {id: 0, name: 'No limit'},
+                                                {id: 2, name: '2 days'},
+                                                {id: 3, name: '3 days'},
+                                                {id: 5, name: '5 days'},
+                                                {id: 7, name: '7 days'},
+                                                {id: 14, name: '14 days'}
+                                            ]}
+                                       model=".destination.maxTransit"
+                                       defaultValue={0}
+                                       dispatch={this.props.dispatch}
+                        />
+                    </div>
                     <button type="submit" className='button'>{sendButton}</button>
                 </div>
                 {this.props.shippingQuotesIsFetching ? <Spinner /> : sQuotes}
@@ -96,24 +140,47 @@ class ShippingQuotes extends Component {
     renderShippingQuotes() {
         if (typeof this.props.shippingQuotes.length === 'undefined' || this.props.shippingQuotes.length < 1) {
             return (
-                <div>Input some data above</div>
+                <div>Input some data above.</div>
             );
         }
 
         return (
             <div className='shipping-quotes'>
-                <PerfectScrollbar>
+                <PerfectScrollbar className="freight-selection-wrapper" onScrollY={this.handleScrollY} option={{wheelSpeed: 0.4}}>
                     <table className="shipping-quotes">
                         <thead>
                             <tr>
-                                <th></th>
-                                <th>Vendor</th>
-                                <th>ETD</th>
-                                <th>Service Type</th>
-                                <th className="a-right">FOB Price/lb</th>
-                                <th className="a-right">Freight/lb</th>
-                                <th className="a-right">Total Price/lb</th>
-                                <th className="a-right">Total Freight</th>
+                                <th>
+                                    <div className={'fix-header'}></div>
+                                </th>
+                                <th>
+                                    Vendor
+                                    <div className={'fix-header'}>Vendor</div>
+                                </th>
+                                <th>
+                                    ETD
+                                    <div className={'fix-header'}>ETD</div>
+                                </th>
+                                <th>
+                                    Service Type
+                                    <div className={'fix-header'}>Service Type</div>
+                                </th>
+                                <th className="a-right">
+                                    FOB Price/lb
+                                    <div className={'fix-header'}>FOB Price/lb</div>
+                                </th>
+                                <th className="a-right">
+                                    Freight/lb
+                                    <div className={'fix-header'}>Freight/lb</div>
+                                </th>
+                                <th className="a-right">
+                                    Total Price/lb
+                                    <div className={'fix-header'}>Total Price/lb</div>
+                                </th>
+                                <th className="a-right">
+                                    Total Freight
+                                    <div className={'fix-header'}>Total Freight</div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>

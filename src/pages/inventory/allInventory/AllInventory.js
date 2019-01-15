@@ -5,6 +5,8 @@ import Spinner from '../../../components/Spinner/Spinner';
 import FilterTag from "../../../components/Filter/components/FilterTag";
 import SubMenu from '../../../components/SubMenu';
 import ShippingQuotes from './components/ShippingQuotes';
+import {getSelectedRowsDataTable} from "../../../utils/functions";
+import './allinventory.css';
 
 class AllInventory extends Component {
 
@@ -19,7 +21,9 @@ class AllInventory extends Component {
     }
 
     openShippingQuote(){
+        const selectedRows = getSelectedRowsDataTable(this.props.productOffersTable);
         this.props.addPopup(<ShippingQuotes
+                                selectedRows={selectedRows}
                                 className='shipping-quotes-popup'
                                 removePopup={this.props.removePopup}/>);
     }

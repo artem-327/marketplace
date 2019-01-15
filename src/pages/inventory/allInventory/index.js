@@ -14,7 +14,8 @@ const mapStateToProps = store => ({
     identity: store.identity.identity,
     merchantDetail: store.merchants.merchantDetail,
     officeDetail: store.companies.office,
-    productOffersIsFetching: store.productOffers.productOffersIsFetching
+    productOffersIsFetching: store.productOffers.productOffersIsFetching,
+    productOffersTable: store.dataTables.allInventoryTable
 });
 
 const mapDispatchToProps = dispatch => (

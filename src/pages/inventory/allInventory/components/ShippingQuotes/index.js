@@ -6,7 +6,8 @@ import {getShippingQuotes} from '../../../../../modules/shippingQuotes';
 function mapStateToProps(store) {
     return {
         quantity: 0,
-        destinationZIP: '12344',
+        destinationZIP: '',
+        maxTransit: 0,
         shippingQuotes: store.shippingQuotes.shippingQuotes,
         shippingQuotesIsFetching: store.shippingQuotes.shippingQuotesIsFetching,
         shippingQuotesForm: store.forms.shippingQuotes
@@ -14,7 +15,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({getShippingQuotes}, dispatch)
+    return bindActionCreators({getShippingQuotes, dispatch}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShippingQuotes);
