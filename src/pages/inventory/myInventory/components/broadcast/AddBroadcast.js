@@ -136,7 +136,7 @@ class AddBroadcast extends Component {
     })
 
     const offices = flattenCompanies.map(i => {
-      const officesWithId = i.offices.map(j => {
+      const officesWithId = i.branches.map(j => {
         j.companyId = i.id;
         j.stateId = i.stateId;
         j.regionId = i.regionId;
@@ -405,7 +405,7 @@ class AddBroadcast extends Component {
                 state[`${rule}Partly`] === isChecked && dispatch(actions.change(`forms.brcRules.state[${state.id}].${rule}Partly`, !isChecked))
                 state.companies.forEach(company => {
                   const allCompanies = flattenCompanies.filter(i => i.id === company.id)
-                  const allOffices = allCompanies.map(i => i.offices).flat()
+                  const allOffices = allCompanies.map(i => i.branches).flat()
                   const allOfficesBrc = broadcastOffices.filter(obj => allOffices.find(obj2 => obj.id === obj2.id))
                   if (allOfficesBrc.every(obj => obj[rule] !== true)) company[rule] !== false && dispatch(actions.change(`forms.brcRules.company[${company.id}].${rule}`, false))
                   if (allOfficesBrc.some(obj => obj[rule] === true)) company[rule] !== true && dispatch(actions.change(`forms.brcRules.company[${company.id}].${rule}`, true))

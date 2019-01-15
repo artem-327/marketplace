@@ -32,7 +32,7 @@ const RootBroadcastField = ({
   const flattenStates = statessData.flat()
   const companiesData =  flattenStates.map(i => i.companies)
   const flattenCompanies = companiesData.flat()
-  const officesData =  flattenCompanies.map(i => i.offices)
+  const officesData =  flattenCompanies.map(i => i.branches)
   const flattenOffices = officesData.flat()
   const uniqueCompanies = filterByUniqueProperty(flattenCompanies, "id")
 
