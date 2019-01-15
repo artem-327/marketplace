@@ -22,7 +22,6 @@ class DataTable extends Component {
       visible: item.visible !== undefined ? item.visible : true
     }));
     let rowsOpns = this.props.rows.map((item, index) => {
-        console.log(item);
         return ({
             ...item,
             index: index,
