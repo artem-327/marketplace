@@ -13,8 +13,8 @@ export default class AddInventory extends Component {
                 chemicalName: this.props.productOffer.product.chemicalName,
                 indexName: this.props.productOffer.product.casIndexName,
                 packaging: {
-                    capacity: this.props.productOffer.packaging.size,
-                    container: this.props.productOffer.packaging.packagingType.id,
+                    size: this.props.productOffer.packaging.size,
+                    packagingType: this.props.productOffer.packaging.packagingType.id,
                     unit: this.props.productOffer.packaging.unit.id
                 },
             }));
@@ -25,27 +25,30 @@ export default class AddInventory extends Component {
                 expirationDate: this.props.productOffer.expirationDate,
                 externalNotes: this.props.productOffer.internalNotes,
                 internalNotes: this.props.productOffer.externalNotes,
-                lotNumber: 'to do ', //needs to grab the proper index in order to work
+                lotNumber: this.props.productOffer.lotNumber,
                 manufacturer: this.props.productOffer.manufacturer,
-                merchantVisibility: this.props.productOffer.merchantVisibility,
+                anonymous: this.props.productOffer.anonymous,
                 name: this.props.productOffer.name,
                 origin: this.props.productOffer.origin,
                 productCondition: this.props.productOffer.productCondition.id,
                 productForm: this.props.productOffer.productForm.id,
                 productGrade: this.props.productOffer.productGrade.id,
-                totalPackages: this.props.productOffer.pkgAmount,
+                pkgAmount: this.props.productOffer.pkgAmount,
             }));
             this.props.dispatch(actions.merge('forms.addProductOffer', {
                 warehouse: this.props.productOffer.warehouse.id
             }))
-        }
+        } 
     }
+    
 
     render() {
+
         console.log(this.props);
+
         return(
         <div>
-            <h1 className='header'>{!this.props.edit ? 'ADD INVENTORY' : 'EDIT PRODUCT OFFER - ' + this.props.productOffer.name}</h1>
+            <h1 className='header'>{!this.props.edit ? 'ADD INVENTORY' : 'EDIT PRODUCT OFFER - ' + this.props.productOffer.productName}</h1>
             <AddGroup header='CHEMICAL' component={<Chemical edit={this.props.edit} resetForm={this.props.resetForm}/>}/>
             <AddForm {...this.props}/>
         </div>)

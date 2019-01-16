@@ -168,33 +168,37 @@ export function fetchLocations(filter = {}){
 export function fetchWarehouses(){
     return {
         type: FETCH_WAREHOUSE,
-        payload: axios.get('/prodex/api/warehouses').then(result => {return result.data})
+        payload: axios.get('/prodex/api/branches/warehouses').then(result => {return result.data})
     }
 }
 
-export function saveWarehouse(name, address, city, location, contactName, contactNumber, contactEmail, zip) {
+export function saveWarehouse(warehouseName, streetAddress, city, province, name, number, email, zip) {
+    let address = {streetAddress, city, zip, province};
+    let contact = {name, number, email};
     return {
         type: SAVE_WAREHOUSE,
-        payload: axios.post('/prodex/api/warehouses', {name, address, city, location, contactName, contactNumber, contactEmail, zip})
+        payload: axios.post('/prodex/api/branches', {warehouseName, address, contact})
     }
 }
 
-export function updateWarehouse(id, name, address, city, location, contactName, contactNumber, contactEmail, zip){
+export function updateWarehouse(id, warehouseName, streetAddress, city, province, name, number, email, zip){
+    let address = {streetAddress, city, zip, province};
+    let contact = {name, number, email};
     return {
         type: UPDATE_WAREHOUSE,
-        payload: axios.put(`/prodex/api/warehouses/${id}`, {name, address, city, location, contactName, contactNumber, contactEmail, zip})
+        payload: axios.put(`prodex/api/branches/${id}`, {warehouseName, address, contact})
     }
 }
 
-export function fetchRegions(search = null){
+export function getRegions(search = null){
     return {type: REGIONS_FETCH_REQUESTED, payload:{search}}
 }
 
-export function fetchStates(search = null){
+export function getStates(search = null){
     return {type: STATES_FETCH_REQUESTED, payload:{search}}
 }
 
-export function fetchStateDetail(id) {
+export function getStateDetail(id) {
     return {type: STATEDETAIL_FETCH_REQUESTED, payload: {id}}
 }
 
@@ -210,7 +214,7 @@ export function fetchWarehouseDistances(){
     }
 }
 
-export function fetchRegionDetail(id) {
+export function getRegionDetail(id) {
     return {type: REGIONDETAIL_FETCH_REQUESTED, payload: {id}}
 }
 

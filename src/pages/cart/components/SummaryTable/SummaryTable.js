@@ -8,7 +8,7 @@ const SummaryTable = ({hasButton, children, title, handleContinue}) => {
     <div className="summary-table">
       <header>
         <h2>{title}</h2>
-        <i className="fas fa-info-circle"></i>
+        <i className="info"></i>
       </header>
       <main className="summary-main">
         {children}

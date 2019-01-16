@@ -69,34 +69,34 @@ export function fetchDetail(id, resolve) {
     return {type: COMPANY_FETCH_REQUESTED, payload: {id}, resolve: resolve}
 }
 
-export function createCompany(name, onSuccess) {
+export function postNewCompany(name, onSuccess) {
     return {type: COMPANY_CREATE_REQUESTED, payload: {name, onSuccess}}
 }
 
-export function editCompany(company) {
+export function putCompanyEdit(company) {
     return {type: COMPANY_EDIT_REQUESTED, payload: {company}}
 }
 
-export function removeCompany(id, onSuccess) {
+export function deleteCompany(id, onSuccess) {
     return {type: COMPANY_REMOVE_REQUESTED, payload: {id, onSuccess}}
 }
 
-export function createOffice(office, onSuccess) {
+export function postNewOffice(office, onSuccess) {
     return {type: OFFICE_CREATE_REQUESTED, payload: {office, onSuccess}}
 }
 
-export function removeOffice(id, company) {
+export function deleteOffice(id, company) {
     return {type: OFFICE_REMOVE_REQUESTED, payload: {id, company}}
 }
 
-export function fetchOffice(id) {
+export function getOffice(id) {
     return {type: OFFICE_FETCH_REQUESTED, payload: {id}}
 }
 
-export function editOffice(office) {
+export function putOfficeEdit(office) {
     return {type: OFFICE_EDIT_REQUESTED, payload: {office}}
 }
 
-export function fetchOffices() {
+export function getOffices() {
     return {type: OFFICES_FETCH_REQUESTED}
 }

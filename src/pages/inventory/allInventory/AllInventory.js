@@ -4,6 +4,9 @@ import Filter from '../../../components/Filter';
 import Spinner from '../../../components/Spinner/Spinner';
 import FilterTag from "../../../components/Filter/components/FilterTag";
 import SubMenu from '../../../components/SubMenu';
+import ShippingQuotes from './components/ShippingQuotes';
+import {getSelectedRowsDataTable} from "../../../utils/functions";
+import './allinventory.css';
 
 class AllInventory extends Component {
 
@@ -17,15 +20,25 @@ class AllInventory extends Component {
         this.props.resetForm('forms.filter');
     }
 
+    openShippingQuote(){
+        const selectedRows = getSelectedRowsDataTable(this.props.productOffersTable);
+        this.props.addPopup(<ShippingQuotes
+                                selectedRows={selectedRows}
+                                className='shipping-quotes-popup'
+                                removePopup={this.props.removePopup}/>);
+    }
+
     render() {
         const content = this.props.productOffersIsFetching 
             ? <div><Spinner/></div> 
             : <ProductOffers {...this.props}/>;
+
         return (
             <div>
                 <div className='header-top'>
                     <h1 className='header inv-header'>MARKETPLACE</h1>
                     <SubMenu/>
+                    <button id='shippingQuotes' className='button hidden' onClick={() => this.openShippingQuote()}>Shipping Quote</button>
                     <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchAllProductOffers({...filter})}}/>
                 </div>
                 <Filter chemicalName quantity date price assay condition form package productGrade filterFunc={(inputs) => this.props.fetchAllProductOffers(inputs)} />

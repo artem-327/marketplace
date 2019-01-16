@@ -7,8 +7,8 @@ const IncrementalPricing = (props) => {
 
     const calculateGrossMargin = index => {
         const {cost, incrementalPricing} = props
-        const margin = ((incrementalPricing[index].price - parseInt(cost,10)) / parseInt(cost,10) * 100);
-        if(isNaN(margin) || incrementalPricing[index].price === ''){   
+        const margin = ((incrementalPricing[index].price - parseInt(cost, 10)) / parseInt(cost, 10) * 100);
+        if (isNaN(margin) || incrementalPricing[index].price === '') {   
             return '';
         }
         
@@ -56,7 +56,7 @@ const IncrementalPricing = (props) => {
               <input type='number'
                      className='tieredPricing'
                      step={splits}
-                     value={lastPriceLevel ? "" : item.quantityTo}
+                     value={lastPriceLevel ? '' : item.quantityTo}
                      title={lastPriceLevel ? "There is no upper limit." : ""}
                      onBlur={validateInputs}
                      onChange={e => handleChange(e, index, 'quantityTo')}
@@ -74,12 +74,12 @@ const IncrementalPricing = (props) => {
               const margin = 
 
                 <input type='number'
-                       className={classnames({inRed:item.margin < 0})}
+                       className={classnames({inRed:grossMargin < 0})}
+                       defaultValue={grossMargin}
                        value={item.margin}
-                       onBlur={validateInputs}
                        onChange={e => handleMargin(e, index)}
-                       disabled={disabled}/>
-
+                       disabled={disabled}
+                       />
 
             return <tr key={index}>
 
@@ -105,7 +105,7 @@ const IncrementalPricing = (props) => {
 
     return (
       <div>
-        <h4>Tiered Pricing</h4>
+        <h4>TIERED PRICING</h4>
         <table className='incremental-pricing-table'>
           <thead>
             <tr>

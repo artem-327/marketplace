@@ -16,6 +16,8 @@ class DatepickerRedux extends React.Component {
 
     render () {
         return <Control model={this.props.model}
+                        minDate={this.props.minDate}
+                        maxDate={this.props.maxDate}
                         component={DatePicker}
                         validators={this.props.validators}
                         placeholder={this.props.placeholder}

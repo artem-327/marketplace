@@ -1,7 +1,7 @@
 import {
     OPERATORS_FETCH_REQUESTED, OPERATORS_FETCH_SUCCEEDED,
-    PROMOTE_TO_MERCHANT_REQUESTED, PROMOTE_TO_OPERATOR_REQUESTED, USERS_FETCH_NEW_REQUESTED,
-    USERS_FETCH_NEW_SUCCEEDED, USERS_FETCH_SUCCEEDED, USERS_FETCH_REQUESTED, OPERATOR_REMOVE_REQUESTED, OPERATOR_EDIT_REQUESTED
+    PROMOTE_TO_MERCHANT_REQUESTED, PROMOTE_TO_OPERATOR_REQUESTED,
+    USERS_FETCH_SUCCEEDED, USERS_FETCH_REQUESTED, OPERATOR_REMOVE_REQUESTED, OPERATOR_EDIT_REQUESTED
 } from "../constants/users";
 
 export const initialState = {
@@ -52,22 +52,22 @@ export function getUsers(){
     return {type: USERS_FETCH_REQUESTED}
 }
 
-export function promoteToMerchant(id, user){
+export function putPromoteToMerchant(id, user){
     return {type: PROMOTE_TO_MERCHANT_REQUESTED, payload: {id, user}}
 }
 
-export function promoteToOperator(id, user){
+export function putPromoteToOperator(id, user){
     return {type: PROMOTE_TO_OPERATOR_REQUESTED, payload: {id, user}}
 }
 
-export function fetchOperators(){
+export function getOperators(){
     return {type: OPERATORS_FETCH_REQUESTED}
 }
 
-export function removeOperator(id){
+export function deleteOperator(id){
     return {type: OPERATOR_REMOVE_REQUESTED, payload: {id}}
 }
 
-export function editOperator(operator){
+export function putOperatorEdit(operator){
     return {type: OPERATOR_EDIT_REQUESTED, payload: {operator}}
 }

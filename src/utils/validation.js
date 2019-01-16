@@ -13,7 +13,7 @@ export const bigger = (val, min) => {
 export const messages = {
     required: "Required",
     isNumber: "Must be number",
-    min: "Must be grater then 0",
+    min: "Must be grater than 0",
     maxPercent: "Maximum is 100%",
     smaller: "Must be < or = to Max",
     bigger: "Must be > or = to Min"

@@ -6,7 +6,7 @@ import Spinner from '../../../components/Spinner/Spinner'
 class Operators extends Component {
 
     componentDidMount(){
-        this.props.fetchOperators();
+        this.props.getOperators();
     }
 
     render(){
@@ -15,8 +15,8 @@ class Operators extends Component {
         const operatorsData = operators.map((operator, index) => {
             return (
               <Operator
-                removeOperator={this.props.removeOperator}
-                editOperator={this.props.editOperator}
+                deleteOperator={this.props.deleteOperator}
+                putOperatorEdit={this.props.putOperatorEdit}
                 {...operator}
                 key={index}
               />)

@@ -29,7 +29,7 @@ export default class AddGroup extends Component {
                 <div className={'header-group' + styleOpen} onClick={() => this.handleOpen()}>
 
                     {this.state.open ? <img src={dropdown} alt='drop'/> : <img src={dropdownClose} alt='drop-close' />}
-                    <h1>{this.props.header}</h1>
+                    <h2>{this.props.header}</h2>
                 </div>
                     <div className={'add-body' + styleOpen} > {this.props.component} </div>
             </div>

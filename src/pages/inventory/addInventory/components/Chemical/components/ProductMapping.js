@@ -34,23 +34,27 @@ export default class ProductMapping extends Component {
     }
 
     render() {
+
+        //console.log(this.props)
+
         let button = this.state.save ? <button className='saved-productMapping'>SAVED</button> :
             <button className='save-productMapping'>Save Mapping</button>;
 
         return (
+
             <div>
-                <h6 className=''>PRODUCT MAPPING</h6>
+                <h4 className=''>PRODUCT MAPPING</h4>
                 <Form model="forms.productMapping" onSubmit={(values)=>this.saveMapping(values)} >
                 <div>
-                    <Errors
-                        className="form-error"
-                        model=".indexName"
-                        show="touched"
-                        messages={{
-                            required: messages.required,
-                        }}
-                    />
                     <div className='group-item-wr'>
+                        <Errors
+                            className="form-error"
+                            model=".indexName"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                            }}
+                        />
                         <label htmlFor=".indexName">CAS Index Name</label>
                         <Control.text model=".indexName"
                                       validators={{
@@ -61,16 +65,16 @@ export default class ProductMapping extends Component {
                                       defaultValue={""}
                         />
                     </div>
-                    <Errors
-                        className="form-error"
-                        model=".casNumber"
-                        show="touched"
-                        messages={{
-                            required: messages.required,
-                            isCasNumber: messages.isCasNumber
-                        }}
-                    />
                     <div className='group-item-wr'>
+                        <Errors
+                            className="form-error"
+                            model=".casNumber"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                                isCasNumber: messages.isCasNumber
+                            }}
+                        />
                         <label htmlFor=".casNumber">CAS Number</label>
                         <Control.text model=".casNumber"
                                       validators={{required}}
@@ -79,15 +83,15 @@ export default class ProductMapping extends Component {
                                       defaultValue={""}
                         />
                     </div>
-                    <Errors
-                        className="form-error"
-                        model=".chemicalName"
-                        show="touched"
-                        messages={{
-                            required: messages.required,
-                        }}
-                    />
                     <div className='group-item-wr'>
+                        <Errors
+                            className="form-error"
+                            model=".chemicalName"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                            }}
+                        />
                         <label htmlFor=".chemicalName">Chemical Name</label>
                         <Control.text model=".chemicalName"
                                       validators={{required}}
@@ -100,15 +104,15 @@ export default class ProductMapping extends Component {
                 <div>
                 {!this.props.edit ?
                     <React.Fragment>
-                    <Errors
-                        className="form-error"
-                        model=".productName"
-                        show="touched"
-                        messages={{
-                            required: messages.required,
-                        }}
-                    />
                     <div className='group-item-wr'>
+                        <Errors
+                            className="form-error"
+                            model=".productName"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                            }}
+                        />
                         <label htmlFor=".productName">Product Name</label>
                         <Control.text model=".productName"
                                       validators={{required}}
@@ -116,15 +120,15 @@ export default class ProductMapping extends Component {
                                       defaultValue=""
                                       />
                     </div>
-                    <Errors
-                        className="form-error"
-                        model=".productNumber"
-                        show="touched"
-                        messages={{
-                            required: messages.required,
-                        }}
-                    />
                     <div className='group-item-wr'>
+                        <Errors
+                            className="form-error"
+                            model=".productNumber"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                            }}
+                        />
                         <label htmlFor=".productNumber">Product Number</label>
                         <Control.text model=".productNumber"
                                       validators={{required}}
@@ -134,57 +138,57 @@ export default class ProductMapping extends Component {
                     </div>
                     </React.Fragment>
                     : null }
-                    <Errors
-                        className="form-error"
-                        model=".packaging.capacity"
-                        show="touched"
-                        messages={{
-                            required: messages.required,
-                            min: messages.min,
-                            isNumber: messages.isNumber
-
-                        }}
-                    />
                     <div className='group-item-wr'>
+                        <Errors
+                            className="form-error"
+                            model=".packaging.size"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                                min: messages.min,
+                                isNumber: messages.isNumber
+
+                            }}
+                        />
                         <label htmlFor=".measurements">Measure</label>
-                        <Control.text model=".packaging.capacity"
+                        <Control.text model=".packaging.size"
                                       validators={{min: (val) => min(val, 0), isNumber, required}}
                                       id=".measurements"
-                                      defaultValue=""
+                                      onChange={this.props.measureHandler}
+                                      //defaultValue=""
                                       />
                     </div>
-                    <Errors
-                        className="form-error"
-                        model="forms.productMapping.packaging.unit"
-                        show="touched"
-                        messages={{
-                            required: messages.required,
-                        }}
-                    />
                     <div className='group-item-wr'>
+                        <Errors
+                            className="form-error"
+                            model="forms.productMapping.packaging.unit"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                            }}
+                        />
                         <label htmlFor=".productGrade">U/M</label>
                         <DropdownRedux opns={this.props.unitOfMeasurement} placeholder='Select'
                                        model="forms.productMapping.packaging.unit"
                                        validators={{required}}
                                        dispatch={this.props.dispatch}
-                                       defaultValue=""
+                                       //defaultValue=""
                                        />
                     </div>
-                    <Errors
-                        className="form-error"
-                        model="forms.productMapping.packaging.container"
-                        show="touched"
-                        messages={{
-                            required: messages.required,
-                        }}
-                    />
                     <div className='group-item-wr'>
+                        <Errors
+                            className="form-error"
+                            model="forms.productMapping.packaging.packagingType"
+                            show="touched"
+                            messages={{
+                                required: messages.required,
+                            }}
+                        />
                         <label htmlFor=".productCondition">U/P</label>
                         <DropdownRedux opns={this.props.unitOfPackaging} placeholder='Select'
-                                       model="forms.productMapping.packaging.container"
+                                       model="forms.productMapping.packaging.packagingType"
                                        dispatch={this.props.dispatch}
                                        validators={{required}}
-                                       defaultValue=""
                                        />
                     </div>
                     {!this.props.edit ?

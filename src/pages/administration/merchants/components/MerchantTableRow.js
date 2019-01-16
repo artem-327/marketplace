@@ -18,7 +18,7 @@ class MerchantTableRow extends Component {
                 <td className="merch-row-item">{merchantData.lastname}</td>
                 <td className="merch-row-item">{merchantData.email}</td>
                 <td className="merch-row-item approve">
-                {/* <Switcher onChange={() => editMerchant(approveToggleMerchant)} value={merchantData.approved} id={id}/> */}
+                {/* <Switcher onChange={() => putMerchantEdit(approveToggleMerchant)} value={merchantData.approved} id={id}/> */}
                 <Checkbox
                   name="approved"
                   defaultValue={merchantData.approved}

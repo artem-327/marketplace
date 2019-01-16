@@ -1,0 +1,234 @@
+@import "../../../../../styles/fonts.scss";
+
+@-webkit-keyframes search-autofill {
+  to {
+    color: #33373e;
+    background-color: transparent;
+    background-image: url("../../../../../images/search.png");
+  }
+}
+
+#shipping-quotes {
+  overflow: hidden;
+  height: 326px;
+  margin: 0 26px;
+  border: 1px solid #dedede;
+  border-radius: 3px;
+  padding: 24px 26px 15px;
+
+  .filterbar {
+    display: flex;
+    flex-flow: row nowrap;
+    width: calc(100% + 52px);
+    margin: 0 -26px 10px;
+    border-bottom: 2px solid #dedede;
+    padding: 0 11px 25px;
+
+    .group-item-wr {
+
+      label {
+        display: block;
+        margin: 0 0 5px;
+        font-size: 0.875rem;
+        line-height: 1.1429;
+
+        &.shipping-qty {
+          position: relative;
+
+          &:after {
+            content: "/lbs";
+            position: absolute;
+            top: 100%;
+            right: 2px;
+            margin-top: 16px;
+            border-width: 1px 10px 1px 0;
+            border-style: solid;
+            border-color: #fff;
+            background: #fff;
+            font-family: $helvetica-roman;
+            font-size: 0.875rem;
+            line-height: 1.25;
+          }
+        }
+      }
+
+      input {
+        float: none;
+        width: 100%;
+
+        &[name="destinationZIP"] {
+          padding-left: 43px;
+          background: #fff url("../../../../../images/search.png") 15px 50% no-repeat !important;
+
+          &:-webkit-autofill {
+            -webkit-animation-name: search-autofill;
+            -webkit-animation-fill-mode: both;
+          }
+        }
+      }
+    }
+
+    .button {
+      margin: 21px 0 0 15px;
+    }
+  }
+}
+
+$fsTableHeaderHeight: 26px;
+
+div.shipping-quotes {
+  display: block;
+  width: calc(100% + 26px);
+  height: 185px;
+  margin-right: -26px;
+  padding-right: 20px;
+
+  .freight-selection-wrapper {
+    position: relative;
+    overflow: hidden;
+    width: calc(100% + 20px);
+    max-height: 185px;
+    margin-right: -20px;
+    padding-right: 25px;
+
+    > .ps__rail-x,
+    > .ps__rail-y {
+      position: absolute;
+      z-index: 3;
+      transition: opacity 250ms linear;
+      display: none;
+
+      > div {
+        opacity: 0.15;
+      }
+    }
+
+    > .ps__rail-x {
+      top: auto !important;
+      bottom: 0 !important;
+      height: 15px;
+
+      >.ps__thumb-x {
+        position: absolute;
+        height: 11px;
+        margin: 2px 0;
+        border-width: 0 2px;
+        border-style: solid;
+        border-color: transparent;
+        background-color: rgba(0,0,0,0.5);
+        background-clip: content-box;
+        cursor: pointer;
+      }
+    }
+
+    > .ps__rail-y {
+      top: $fsTableHeaderHeight !important;
+      left: auto !important;
+      right: 0 !important;
+      width: 15px;
+      height: calc(100% - #{$fsTableHeaderHeight}) !important;
+
+      >.ps__thumb-y {
+        position: absolute;
+        width: 12px;
+        margin: 0 2px 0 1px;
+        border: 0 none;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+        background-color: rgba(0,0,0,0.5);
+        background-clip: content-box;
+        cursor: pointer;
+      }
+    }
+
+    &.ps--active-x > .ps__rail-x,
+    &.ps--active-y > .ps__rail-y {
+      display: block;
+    }
+
+    &.ps--active-x:hover > .ps__rail-x > div,
+    &.ps--active-y:hover > .ps__rail-y > div {
+      opacity: 1;
+    }
+  }
+
+  table.shipping-quotes {
+    width: 100%;
+    margin: 0;
+    font-family: $helvetica-roman;
+    font-size: 14px;
+    font-weight: 400;
+    color: #4e5157;
+
+    tr {
+
+      th {
+        position: relative;
+        height: $fsTableHeaderHeight;
+        padding: 0 13px 0 0;
+        font-family: $helvetica-md;
+        color: transparent;
+
+        &:first-child {
+          width: 41px;
+          padding-left: 0;
+        }
+
+        &.a-right {
+          text-align: right;
+        }
+
+        .fix-header {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 3;
+          height: 26px;
+          padding: 0 13px 0 0;
+          background: rgba(255,255,255,1);
+          color: #4e5157;
+          line-height: 26px;
+        }
+      }
+
+      td {
+        height: 40px;
+        min-height: 40px;
+        border-top: 1px solid #cecece;
+        padding: 0 13px 0 0;
+        vertical-align: middle;
+
+        &:first-child {
+          width: 1%;
+          padding-left: 0;
+        }
+
+        &.a-right {
+          text-align: right;
+        }
+
+        label.input-checkbox {
+          margin: 0;
+          padding: 0;
+
+          p {
+            display: none;
+          }
+
+          span.checkmark {
+            position: relative;
+            margin: 5px 0 0 2px;
+          }
+        }
+      }
+    }
+
+    tbody tr:first-child td {
+      height: 39px;
+      border-top: 0 none;
+    }
+  }
+}
