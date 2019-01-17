@@ -30,9 +30,23 @@ export default class AddForm extends Component {
         this.props.resetForm('forms.addProductOffer');
     }
 
-    addProductOffer(inputs){
+    addProductOfferTimeout = async (inputs) => {
+        document.getElementById("mapping-btn").click();
+        document.getElementById("offering-btn").click();
 
-        console.log(inputs);
+        setTimeout(function(){
+            this.addProductOffer(inputs);
+        }.bind(this), 3000);
+    }
+
+    addProductOffer(inputs){
+        console.log(this.props.productMappingValidation)
+        console.log(this.props.productOfferingValidation);
+
+        if (!this.props.productMappingValidation || !this.props.productOfferingValidation) return;
+
+        console.log(this.props.productMappingValidation)
+        console.log(this.props.productOfferingValidation);
 
         let newPricing = inputs['pricing'];
         if(inputs['incrementalSelected']){
@@ -154,7 +168,7 @@ export default class AddForm extends Component {
 
         return (
             <div className={classnames('add-inventory', {'disable' : this.props.disable})} >
-                <Form model="forms.addProductOffer" onSubmit={(inputs) => this.props.edit ? this.editProductOffer(inputs) : this.addProductOffer(inputs)}>
+                <Form model="forms.addProductOffer" onSubmit={(inputs) => this.props.edit ? this.editProductOffer(inputs) : this.addProductOfferTimeout(inputs)}>
                     <AddGroup header='CHEMICAL' component={<Chemical {...this.props} edit={this.props.edit} resetForm={this.props.resetForm}/>}/>
                     <AddGroup header='PRICING' disable={this.props.disable} component = {<Pricing {...this.props} getIncPricing={(data)=>this.getIncPricing(data)}/>} />
                     <AddGroup header='WAREHOUSE' disable={this.props.disable} component = {<Location {...this.props}/>} />

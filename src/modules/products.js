@@ -23,6 +23,7 @@ const SEARCH_PRODUCT_FULFILLED = 'SEARCH_PRODUCT_FULFILLED';
 const SEARCH_PRODUCT_REJECTED = 'SEARCH_PRODUCT_REJECTED';
 const SAVE_MAPPING = 'SAVE_MAPPING';
 const SAVE_MAPPING_FULFILLED = 'SAVE_MAPPING_FULFILLED';
+const SAVE_OFFERING_FULFILLED = 'SAVE_OFFERING_FULFILLED';
 const FETCH_ALTERNATIVE_NAMES = 'FETCH_ALTERNATIVE_NAMES';
 const FETCH_ALTERNATIVE_NAMES_FULFILLED = 'FETCH_ALTERNATIVE_NAMES_FULFILLED';
 const FETCH_MANUFACTURER = 'FETCH_MANUFACTURER';
@@ -49,10 +50,42 @@ export const initialState = {
     isFetching: false,
     isMapFetching: false,
     alternativeNames: [],
+    productMappingValidation: false,
+    productOfferingValidation: false
 };
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
+        case "rrf/setSubmitFailed": {
+            if(action.model == "forms.productMapping" && action.submitFailed == true) {
+                return {
+                    ...state,
+                    productMappingValidation: false
+                }
+            }
+            else if(action.model == "forms.productOffering" && action.submitFailed == true) {
+                return {
+                    ...state,
+                    productOfferingValidation: false
+                }
+            }
+            return state
+        }
+        case SAVE_MAPPING_FULFILLED: {
+            return{
+                ...state,
+                productMappingValidation: true,
+                products: {
+                    isFetching: false,
+                }
+            }
+        }
+        case SAVE_OFFERING_FULFILLED: {
+            return{
+                ...state,
+                productOfferingValidation: true
+            }
+        }
         case FETCH_PRODUCT_FORMS_FULFILLED: {
             return {
                 ...state,
@@ -135,14 +168,6 @@ export default function reducer(state = initialState, action) {
                 productsFetched: action.payload.status
             }
         }
-        case SAVE_MAPPING_FULFILLED: {
-            return{
-                ...state,
-                products: {
-                    isFetching: false,
-                }
-            }
-        }
         case MAP_PRODUCT_PENDING: {
             return{
                 ...state,
@@ -180,6 +205,10 @@ export default function reducer(state = initialState, action) {
             return state
         }
     }
+}
+
+export function addLotSaveOffering(){
+    return {type: SAVE_OFFERING_FULFILLED}
 }
 
 export function searchProducts(search) {

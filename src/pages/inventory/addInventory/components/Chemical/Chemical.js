@@ -4,6 +4,7 @@ import ProductMapping from "./components/ProductMapping";
 import AddedLots from "./components/AddedLots/AddedLots";
 import SearchProducts from './components/SearchProducts';
 import AdditionalDocuments from "./components/AdditionalDocuments";
+/*
 import WarningLabel from "./components/WarningLabel";
 import {Control, Errors, Form} from "react-redux-form";
 import {isNumber, maxPercent, messages, min, required} from "../../../../../utils/validation";
@@ -12,6 +13,7 @@ import Tooltip from "../../../../../components/Tooltip/Tooltip";
 import RemoteComboBoxRedux from "../../../../../components/ComboBox/RemoteComboBoxRedux";
 import DatepickerRedux from "../../../../../components/Datepicker/DatepickerRedux";
 import moment from "moment";
+*/
 
 class Chemical extends Component {
     constructor(props) {
@@ -21,15 +23,17 @@ class Chemical extends Component {
             selectedProduct: null,
             selectedProductMapping: null,
             productID: null,
-            lots: [],
+            lots: []
+            /*
             save: false, // #PRODUCTMAPPING
             firstValue: true,
             minWarning: null,
             maxWarning: null
+            */
         }
 
-        this.minValidationHandler = this.minValidationHandler.bind(this)
-        this.maxValidationHandler = this.maxValidationHandler.bind(this)
+        // this.minValidationHandler = this.minValidationHandler.bind(this)
+        // this.maxValidationHandler = this.maxValidationHandler.bind(this)
     }
 
     componentDidMount(){
@@ -41,19 +45,21 @@ class Chemical extends Component {
         }
 
         // #PRODUCTMAPPING
+        /*
         this.props.getUnitOfMeasurement();
         this.props.getUnitOfPackaging();
         this.props.fetchProductForms();
         this.props.fetchProductGrade();
         this.props.fetchProductConditions();
         this.props.fetchOrigin();
-
-        console.log(this.props);
+        */
     }
 
+    /*
     componentWillUnmount() {
         this.props.resetForm('forms.productOffering');
     }
+    */
 
     setProductMapping(mapping) {
         this.setState({selectedProductMapping: mapping, productID: mapping.product.id}, () => {
@@ -91,12 +97,15 @@ class Chemical extends Component {
         if(!localStorage.getItem('productLots')){
             let values = [{...lots, ...productMapping, product: this.state.productID}];
             localStorage.setItem('productLots', JSON.stringify(values));
-            this.setState({lots: values})
+            this.setState({lots: values});
+            this.props.addLotSaveOffering();
+
         }else{
             let newLots = JSON.parse(localStorage.getItem('productLots'));
             newLots.push({...lots, ...productMapping, product: this.state.productID});
             localStorage.setItem('productLots', JSON.stringify(newLots));
-            this.setState({lots: newLots})
+            this.setState({lots: newLots});
+            this.props.addLotSaveOffering();
         }
     }
 
@@ -107,6 +116,7 @@ class Chemical extends Component {
         this.setState({lots: newLots})
     }
 
+    /*
     saveMapping(values){
         values = Object.assign({}, values, {
             product: this.state.productID
@@ -360,9 +370,6 @@ class Chemical extends Component {
             </div>
             : null;
 
-        /*let button = this.state.save ? <button className='button big added-productOffering'>Added</button> :
-            <button className='button big add-productOffering'>Add Lot</button>;*/
-
         let button = <button className='button big add-productOffering'>Add Lot</button>;
 
         // <Form model="forms.productOffering" onSubmit={(values) => this.saveOffering(values)}>
@@ -568,7 +575,7 @@ class Chemical extends Component {
                                               onChange={this.props.totalPackagesHandler}
                                 />
                             </div>
-                            {lotNumber} {/*temporarily disabled until the data is available*/}
+                            {lotNumber}
 
                             <div className='group-item-wr'>
                                 <Errors model='forms.productOffering.creationDate'
@@ -600,9 +607,12 @@ class Chemical extends Component {
             </div>
         );
     }
-
+    */
 
     render() {
+
+        // {this.renderProductMapping()}
+        // {this.renderProductOffering()}
 
         // <ProductMapping productID={this.state.productID} {...this.props} />
         // <ProductOffering addLot={(lots) => this.addLot(lots)} {...this.props} />
@@ -619,8 +629,8 @@ class Chemical extends Component {
                                     {...this.props}
                     />
                 </React.Fragment> : null }
-                {this.renderProductMapping()}
-                {this.renderProductOffering()}
+                <ProductMapping productID={this.state.productID} {...this.props} />
+                <ProductOffering addLot={(lots) => this.addLot(lots)} {...this.props} />
                 {!this.props.edit ?
                 <AddedLots lots={this.state.lots} removeLot={(index) => this.removeLots(index)}/> : null }
                 <AdditionalDocuments/>

@@ -14,7 +14,9 @@ function mapStateToProps(store) {
         location: store.location,
         form: store.forms.addProductOffer,
         productOfferingForm: store.forms.productOffering,
-        merchantDetail: store.merchants.merchantDetail
+        merchantDetail: store.merchants.merchantDetail,
+        productMappingValidation: store.products.productMappingValidation,
+        productOfferingValidation: store.products.productOfferingValidation
     }
 }
 
