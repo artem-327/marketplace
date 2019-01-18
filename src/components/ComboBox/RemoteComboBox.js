@@ -115,7 +115,8 @@ class RemoteComboBox extends Component {
     this.setState(
       { fulltext: e.target.value, hasSearched: true, isOpen: true },
       () => {
-        if (this.state.fulltext.length > 2) this.filterData();
+        if (!!this.state.fulltext.length) setTimeout(() => {
+        if (this.state.fulltext.length > 2)  this.filterData() }, 700);
       }
     );
   }
