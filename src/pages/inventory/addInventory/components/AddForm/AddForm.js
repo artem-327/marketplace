@@ -40,13 +40,7 @@ export default class AddForm extends Component {
     }
 
     addProductOffer(inputs){
-        console.log(this.props.productMappingValidation)
-        console.log(this.props.productOfferingValidation);
-
         if (!this.props.productMappingValidation || !this.props.productOfferingValidation) return;
-
-        console.log(this.props.productMappingValidation)
-        console.log(this.props.productOfferingValidation);
 
         let newPricing = inputs['pricing'];
         if(inputs['incrementalSelected']){
@@ -83,6 +77,8 @@ export default class AddForm extends Component {
             product: parseInt(this.props.mappingForm.casNumber.replace(/-/g,"")),
             packaging: {...this.props.mappingForm.packaging, size: parseInt(this.props.mappingForm.packaging.size), originalPkgAmount: parseInt(this.props.productOfferingForm.pkgAmount)}
         });
+
+        console.log(params);
 
         delete params.packaging.splits;
         delete params.packaging.minimum;

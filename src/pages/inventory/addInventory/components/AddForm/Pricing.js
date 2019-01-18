@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Control, Errors, actions} from 'react-redux-form';
-import {/*required,*/ isNumber, min, messages} from "../../../../../utils/validation";
+import {required, isNumber, min, messages} from "../../../../../utils/validation";
 import IncrementalPricing from "./IncrementalPricing";
 import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
 import './Pricing.css';
@@ -342,7 +342,7 @@ export default class Pricing extends Component {
                                       validators={{
                                           min: (val) => min(val, 0),
                                           isNumber,
-                                          //required
+                                          required
                                       }}
                                       type='number'
                                       name='price'
@@ -370,7 +370,7 @@ export default class Pricing extends Component {
                                       validators={{
                                           min: (val) => min(val, 0),
                                           isNumber,
-                                          //required
+                                          required
                                       }}
                                       defaultValue={this.props.edit ? this.props.productOffer.pricing.cost : ''}
                                       type='number'
@@ -411,9 +411,22 @@ export default class Pricing extends Component {
 
                     <div>
                       <div className='group-item-wr'>
+                          <Errors
+                              className="form-error"
+                              model="forms.productMapping.packaging.splits"
+                              show="touched"
+                              messages={{
+                                  required: messages.required,
+                                  isNumber: messages.isNumber
+                              }}
+                          />
                           <label>Splits</label>
                           <Control.text model="forms.productMapping.packaging.splits"
                                         id="forms.productMapping.packaging.splits"
+                                        validators={{
+                                            required,
+                                            isNumber
+                                        }}
                                         defaultValue={this.state.splits}
                                         onChange={e => this.splitsMinimumChange(e)}
                                         onBlur={() => this.validateMinimum('splits')}
@@ -423,9 +436,22 @@ export default class Pricing extends Component {
                                         />
                       </div>
                       <div className='group-item-wr'>
+                          <Errors
+                              className="form-error"
+                              model="forms.productMapping.packaging.minimum"
+                              show="touched"
+                              messages={{
+                                  required: messages.required,
+                                  isNumber: messages.isNumber
+                              }}
+                          />
                           <label>Minimum</label>
                           <Control.text model="forms.productMapping.packaging.minimum"
                                         id="forms.productMapping.packaging.minimum"
+                                        validators={{
+                                            required,
+                                            isNumber
+                                        }}
                                         defaultValue={this.state.minimum}
                                         onChange={e => this.splitsMinimumChange(e)}
                                         onBlur={e => this.validateMinimum('minimum')}

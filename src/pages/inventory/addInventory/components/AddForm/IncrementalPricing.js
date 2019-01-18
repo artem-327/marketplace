@@ -75,7 +75,7 @@ const IncrementalPricing = (props) => {
 
                 <input type='number'
                        className={classnames({inRed:grossMargin < 0})}
-                       defaultValue={grossMargin}
+                       // defaultValue={grossMargin}
                        value={item.margin}
                        onChange={e => handleMargin(e, index)}
                        disabled={disabled}
