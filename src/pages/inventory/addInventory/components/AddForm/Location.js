@@ -162,7 +162,7 @@ export default class Location extends Component {
                                 opns={this.props.warehouse}
                                 // defaultValue={this.state.warehouseIndex}
                                 validators={{required}}
-                                // onChange={(value) => this.setLocation(value)}
+                                onChange={(value) => this.setLocation(value)}
                                 placeholder='Select Location'
                             />
                     </div>
