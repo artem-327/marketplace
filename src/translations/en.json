@@ -1,17 +1,36 @@
 {
-  "login":{
-    "loginToPRODEX" : "Login",
-    "email" : "Email",
-    "password" : "Password",
-    "login" : "LOG IN",
-    "logging" : "Logging...",
+    "login.username": "Username",
+    "login.password" : "Password",
+    "login.login" : "LOG IN",
+    "login.logging" : "Logging...",
+    "login.incorrect" : "Incorrect username or password",
+    "registration.header": "Header",
+    "registration.email": "Email",
+    "registration.password": "Password",
+    "registration.firstName": "Your First Name",
+    "registration.middleName": "Your Middle Name",
+    "registration.lastName": "Your Last Name",
+    "nav.Dashboard": "Dashboard",
+    "nav.Orders": "Orders",
+    "nav.Clients": "Clients",
+    "nav.Reports": "Reports",
+    "nav.Settings": "Settings",
+    "nav.Inventory": "Inventory",
+    "nav.dropdown.MyInventory": "My Inventory",
+    "nav.dropdown.Marketplace" : "Marketplace",
+    "nav.dropdown.AddInventory": "All Inventory",
+    "nav.dropdown.ShoppingCart": "Shopping Cart",
+    "myInventory.myInventory": "MY INVENTORY",
+    "myInventory.smallHeader": "{number} products offerings selected",
+    "filter.saved": "Saved",
+    "filter.save": "Save",
+    "filter.setFilters": "SET FILTERS",
+    "filter.savedFilters" : "SAVED FILTERS",
     "failure" : "Login failed, please check your credentials and try again.",
     "forgottenPassword" : "Forgotten password",
-    "registration": "Register new account"
-  },
-  "filter":{
-    "newFilter": "New Filter"
-  },
+    "filter":{
+      "newFilter": "New Filter"
+    },
   "registration":{
     "header" : "Registration",
     "email" : "Email",

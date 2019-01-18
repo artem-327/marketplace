@@ -10,6 +10,7 @@ import clients from '../../images/nav/clients.png';
 import inventory from '../../images/nav/inventory.png';
 import reports from '../../images/nav/reports.png';
 import myAccount from '../../images/nav/myAccount.svg';
+import {FormattedMessage} from 'react-intl';
 
 class Nav extends Component {
     constructor(props) {
@@ -76,22 +77,58 @@ class Nav extends Component {
         this.setState({dropdown: {[id]: !this.state.dropdown[id]}})
     }
 
-    renderDropdown(id, links, name, img = null){
+    renderDropdown(id, links, name){
         const activeClass = this.props.location.pathname.split('/')[1] === id || this.state.dropdown[id] ? 'active' : null;
-        const dropdown = <div className="dropdown-nav-inside">
-            {links.map((link, index) => (<NavLink key={index} to={link.url} className='dropdown-nav-item' activeClassName='active'>{link.name}</NavLink>
-            ))}</div>;
-        return <div className={"dropdown-nav parent " + activeClass} onClick={()=>this.openDropdown(id)}>
-            <span className='dropdown-link-center'>{name} <i className="icon down dropdown-nav-icon"/></span>
+        const dropdown =
+            <div
+                className="dropdown-nav-inside">
+            {links.map((link, index) => (
+                    <NavLink
+                        key={index}
+                        to={link.url}
+                        className='dropdown-nav-item'
+                        activeClassName='active'>
+                        <FormattedMessage
+                            id={'nav.dropdown.' + link.name.split(' ').join('')}
+                            defaultMessage={link.name}
+                        />
+                    </NavLink>
+            ))}
+            </div>;
+        return (
+            <div
+                className={"dropdown-nav parent " + activeClass}
+                onClick={()=>this.openDropdown(id)}>
+                <span
+                    className='dropdown-link-center'>
+                    <FormattedMessage
+                        id={'nav.' + name}
+                        defaultMessage={name}
+                    />
+                    <i className="icon down dropdown-nav-icon"/>
+                </span>
             {this.state.dropdown[id] ? dropdown : null}
-        </div>
+            </div>
+        );
     }
 
     renderMenuItem(id, link, name){
         const activeClass = this.props.location.pathname.split('/')[1] === id ? 'active' : null;
-        return <div className={"dropdown-nav " + activeClass}>
-            <NavLink to={id === 'dashboard' ? '/' : '/' + id} activeClassName='active'><span className='dropdown-link-center'>{name}</span></NavLink>
+        return (
+            <div
+                className={"dropdown-nav " + activeClass}>
+                <NavLink
+                    to={id === 'dashboard' ? '/' : '/' + id}
+                    activeClassName='active'>
+                        <span className='dropdown-link-center'>
+                            <FormattedMessage
+                                id={'nav.' + name}
+                                defaultMessage={name}
+                            />
+                        </span>
+                </NavLink>
         </div>
+        );
     }
 
     /*

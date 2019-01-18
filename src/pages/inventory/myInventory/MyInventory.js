@@ -6,6 +6,7 @@ import Spinner from "../../../components/Spinner/Spinner";
 import FilterTag from "../../../components/Filter/components/FilterTag";
 import {getSelectedDataTable} from "../../../utils/functions";
 import SubMenu from '../../../components/SubMenu';
+import {FormattedMessage} from 'react-intl';
 
 const GROUP_BY_ALL_COMPANIES = 1;
 const GROUP_BY_REGIONS = 2;
@@ -98,15 +99,42 @@ class MyInventory extends Component {
                 currentSelected={this.state.currentSelected}
                 setActiveBroadcastButton={active => this.setActiveBroadcastButton(active)}
                 broadcastActive={this.state.brActive}/>;
+        const number = getSelectedDataTable(this.props.productOffersTable);
         return (
             <div className='my-inventory'>
                 <div className='header-top'>
-                    <h1 className='header inv-header'>MY INVENTORY</h1>
+                    <h1 className='header inv-header'>
+                        <FormattedMessage
+                            id='myInventory.myInventory'
+                            defaultMessage='MY INVENTORY'
+                        />
+                    </h1>
                     <SubMenu/>
-                    <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}}/>
-                    <h3 className='header small'>{getSelectedDataTable(this.props.productOffersTable)} product offerings selected</h3>
+                    <FilterTag
+                        dispatch={this.props.dispatch}
+                        closeFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}}
+                    />
+                    <h3 className='header small'>
+                        <FormattedMessage
+                            id='myInventory.smallHeader'
+                            defaultMessage={number + ' products offerings selected'}
+                            values={{number: number}}
+                        />
+                    </h3>
                 </div>
-                <Filter chemicalName productAgeFilter date assay quantity price package condition productGrade form filterFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}} />
+                <Filter
+                    chemicalName
+                    productAgeFilter
+                    date
+                    assay
+                    quantity
+                    price
+                    package
+                    condition
+                    productGrade
+                    form
+                    filterFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}}
+                />
                 {content}
             </div>
         )

@@ -9,6 +9,7 @@ import DropdownRedux from "../../Dropdown/DropdownRedux";
 import RadioRedux from "../../Radio/RadioRedux";
 import DatepickerRedux from "../../Datepicker/DatepickerRedux";
 import ComboBoxRedux from "../../ComboBox/ComboBoxRedux";
+import {FormattedMessage} from 'react-intl';
 
 class FilterGroup extends Component {
 
@@ -47,7 +48,10 @@ class FilterGroup extends Component {
                     return (
                         <div key={index} className="input-checkbox">
                             <label key={index} htmlFor={input.model}>
-                                {input.label}
+                                <FormattedMessage
+                                    id={input.label.split(' ').join('')}
+                                    defaultMessage={input.label + '1'}
+                                />
                                 <Control.checkbox model={input.model} id={input.model}/>
                                 <span className="checkmark">  </span>
                             </label>
@@ -58,7 +62,20 @@ class FilterGroup extends Component {
                     return (
                         <div key={index} className='filter-input-radio'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>
-                            <RadioRedux dispatch={this.props.dispatch} model={input.model} opns={[{label:'0-3 months', value:'100'}, {label:'3-6 months', value:'500'}, {label:'6-9 months', value:'1000'}, {label:'Custom Product Age', value:'10000'}]} productAgeModel = {this.props.productAgeModel} productAgeCustomModel={this.props.productAgeCustomModel}/>
+                            <RadioRedux
+                                dispatch={this.props.dispatch}
+                                model={input.model}
+                                opns={
+                                    [
+                                        {label:'0-3 months', value:'100'},
+                                        {label:'3-6 months', value:'500'},
+                                        {label:'6-9 months', value:'1000'},
+                                        {label:'Custom Product Age', value:'10000'}
+                                    ]
+                                }
+                                productAgeModel={this.props.productAgeModel}
+                                productAgeCustomModel={this.props.productAgeCustomModel}
+                            />
                         </div>
                     )
                 }
@@ -66,8 +83,10 @@ class FilterGroup extends Component {
                     return (
                         <div key={index} className='filter-input-dropdown'>
                             <label className="input-label" htmlFor={input.model}>{input.label}</label>
-                            <DropdownRedux dispatch={this.props.dispatch} model={input.model}
-                                           opns={input.data}
+                            <DropdownRedux
+                                dispatch={this.props.dispatch}
+                                model={input.model}
+                                opns={input.data}
                             />
                         </div>
                     )
@@ -75,23 +94,53 @@ class FilterGroup extends Component {
                 case 'comboBox' : {
                     return (
                         <div key={index} className='filter-input-dropdown'>
-                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
-                            <ComboBoxRedux dispatch={this.props.dispatch} model={input.model} limit={input.limit} placeholder="Select Condition" items={input.data}  />
+                            <label
+                                className="input-label"
+                                htmlFor={input.model}>
+                                <FormattedMessage
+                                    id={input.label.split(' ').join('')}
+                                    defaultMessage={input.label + '1'}
+                                />
+                            </label>
+                            <ComboBoxRedux
+                                dispatch={this.props.dispatch}
+                                model={input.model}
+                                limit={input.limit}
+                                placeholder="Select Condition"
+                                items={input.data}
+                            />
                         </div>
                     )
                 }
                 case 'date' : {
                     return (
                         <div key={index} className='filter-input-date'>
-                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
-                            <DatepickerRedux dispatch={this.props.dispatch} model={input.model}/>
+                            <label
+                                className="input-label"
+                                htmlFor={input.model}>
+                                <FormattedMessage
+                                    id={input.label.split(' ').join('')}
+                                    defaultMessage={input.label + '1'}
+                                />
+                            </label>
+                            <DatepickerRedux
+                                dispatch={this.props.dispatch}
+                                model={input.model}
+                            />
                         </div>
                     )
                 }
                 case 'text':{
                     return (
                         <div key={index} className='filter-input-text'>
-                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
+                            <label
+                                className="input-label"
+                                htmlFor={input.model}>
+                                <FormattedMessage
+                                    id={input.label.split(' ').join('')}
+                                    defaultMessage={input.label + '1'}
+                                />
+                            </label>
                             <Control.text type={input.type} model={input.model} id={input.model} placeholder={input.placeholder}/>
                         </div>
                     )
