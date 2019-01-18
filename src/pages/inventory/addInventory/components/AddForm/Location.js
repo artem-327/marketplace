@@ -160,7 +160,7 @@ export default class Location extends Component {
                                 model="forms.addProductOffer.warehouse"
                                 dispatch={this.props.dispatch}
                                 opns={this.props.warehouse}
-                                defaultValue={this.state.warehouseIndex}
+                                // defaultValue={this.state.warehouseIndex}
                                 validators={{required}}
                                 onChange={(value) => this.setLocation(value)}
                                 placeholder='Select Location'

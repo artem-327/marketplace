@@ -4,6 +4,7 @@ import {Form} from 'react-redux-form';
 import Pricing from './Pricing';
 import Location from './Location';
 import classnames from 'classnames';
+import Chemical from "../Chemical";
 
 export default class AddForm extends Component {
     constructor(props) {
@@ -29,7 +30,18 @@ export default class AddForm extends Component {
         this.props.resetForm('forms.addProductOffer');
     }
 
+    addProductOfferTimeout = async (inputs) => {
+        document.getElementById("mapping-btn").click();
+        document.getElementById("offering-btn").click();
+
+        setTimeout(function(){
+            this.addProductOffer(inputs);
+        }.bind(this), 3000);
+    }
+
     addProductOffer(inputs){
+        if (!this.props.productMappingValidation || !this.props.productOfferingValidation) return;
+
         let newPricing = inputs['pricing'];
         if(inputs['incrementalSelected']){
             newPricing = {...inputs['pricing'], tiers: this.validateIncPricing()};
@@ -65,6 +77,8 @@ export default class AddForm extends Component {
             product: parseInt(this.props.mappingForm.casNumber.replace(/-/g,"")),
             packaging: {...this.props.mappingForm.packaging, size: parseInt(this.props.mappingForm.packaging.size), originalPkgAmount: parseInt(this.props.productOfferingForm.pkgAmount)}
         });
+
+        console.log(params);
 
         delete params.packaging.splits;
         delete params.packaging.minimum;
@@ -148,7 +162,8 @@ export default class AddForm extends Component {
         let submitButton = <button disabled={this.props.disable} className={classnames('button add-inventory big', {'disabled' : this.props.disable})}>Save</button>;
         return (
             <div className={classnames('add-inventory', {'disable' : this.props.disable})} >
-                <Form model="forms.addProductOffer" onSubmit={(inputs) => this.props.edit ? this.editProductOffer(inputs) : this.addProductOffer(inputs)}>
+                <Form model="forms.addProductOffer" onSubmit={(inputs) => this.props.edit ? this.editProductOffer(inputs) : this.addProductOfferTimeout(inputs)}>
+                    <AddGroup header='CHEMICAL' component={<Chemical {...this.props} edit={this.props.edit} resetForm={this.props.resetForm}/>}/>
                     <AddGroup header='PRICING' disable={this.props.disable} component = {<Pricing {...this.props} getIncPricing={(data)=>this.getIncPricing(data)}/>} />
                     <AddGroup header='WAREHOUSE' disable={this.props.disable} component = {<Location {...this.props}/>} />
                     {submitButton}

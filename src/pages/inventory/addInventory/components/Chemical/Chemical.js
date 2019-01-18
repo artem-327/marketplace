@@ -4,7 +4,6 @@ import ProductMapping from "./components/ProductMapping";
 import AddedLots from "./components/AddedLots/AddedLots";
 import SearchProducts from './components/SearchProducts';
 import AdditionalDocuments from "./components/AdditionalDocuments";
-import WarningLabel from "./components/WarningLabel";
 
 class Chemical extends Component {
     constructor(props) {
@@ -14,15 +13,15 @@ class Chemical extends Component {
             selectedProduct: null,
             selectedProductMapping: null,
             productID: null,
-            lots: [],
+            lots: []
         }
     }
 
-    componentDidMount(){
-        if(localStorage.getItem('productLots')){
+    componentDidMount() {
+        if (localStorage.getItem('productLots')) {
             this.setState({lots: JSON.parse(localStorage.getItem('productLots'))})
         }
-        if(this.props.edit){
+        if (this.props.edit) {
             this.setState({productID: this.props.productOffer.product.id})
         }
     }
@@ -63,12 +62,15 @@ class Chemical extends Component {
         if(!localStorage.getItem('productLots')){
             let values = [{...lots, ...productMapping, product: this.state.productID}];
             localStorage.setItem('productLots', JSON.stringify(values));
-            this.setState({lots: values})
+            this.setState({lots: values});
+            this.props.addLotSaveOffering();
+
         }else{
             let newLots = JSON.parse(localStorage.getItem('productLots'));
             newLots.push({...lots, ...productMapping, product: this.state.productID});
             localStorage.setItem('productLots', JSON.stringify(newLots));
-            this.setState({lots: newLots})
+            this.setState({lots: newLots});
+            this.props.addLotSaveOffering();
         }
     }
 
