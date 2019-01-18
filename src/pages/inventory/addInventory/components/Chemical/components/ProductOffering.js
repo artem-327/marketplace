@@ -41,6 +41,9 @@ export default class ProductOffering extends Component {
 
     saveOffering(values) {
 
+
+        console.log("saveoffering");
+
         if (!parseInt(this.props.productOffering.assayMin) && !parseInt(this.props.productOffering.assayMax)) {
             this.setState({minWarning: 'Required', maxWarning: 'Required'})
         }
@@ -121,7 +124,7 @@ export default class ProductOffering extends Component {
         /*let button = this.state.save ? <button className='button big added-productOffering'>Added</button> :
             <button className='button big add-productOffering'>Add Lot</button>;*/
 
-        let button = <button className='button big add-productOffering'>Add Lot</button>;
+        let button = <button id="offering-btn" className='button big add-productOffering'>Add Lot</button>;
 
         return (
             <div>

@@ -50,7 +50,7 @@ class RemoteComboBox extends Component {
   }
 
   renderResults() {
-    if (!this.state.hasSearched || !this.state.isOpen || this.state.fulltext.length < 2) return;
+    if (!this.state.hasSearched || !this.state.isOpen || this.state.fulltext.length < 3) return;
     if (this.props.isFetching)
       return (
         <div className="combo-results">
@@ -115,7 +115,7 @@ class RemoteComboBox extends Component {
     this.setState(
       { fulltext: e.target.value, hasSearched: true, isOpen: true },
       () => {
-        if (this.state.fulltext.length > 1) this.filterData();
+        if (this.state.fulltext.length > 2) this.filterData();
       }
     );
   }
@@ -127,6 +127,7 @@ class RemoteComboBox extends Component {
   render() {
     let { fulltext } = this.state;
     let results = this.renderResults();
+    let validate = this.state.fulltext.length < 3 && this.state.fulltext.length > 0 ? <span className="combo-validate">Please enter at least 3 characters.</span> : null;
     return (
       <div
         className={
@@ -142,6 +143,7 @@ class RemoteComboBox extends Component {
           disabled={this.props.disabled || false}
           placeholder={this.props.placeholder || "Search"}
         />
+          {validate}
         {results}
       </div>
     );

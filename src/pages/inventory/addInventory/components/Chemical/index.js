@@ -12,7 +12,7 @@ import {
     fetchProductForms,
     fetchProductGrade,
     fetchProductConditions,
-    fetchOrigin, fetchManufacturer,
+    fetchOrigin, fetchManufacturer, addLotSaveOffering,
 } from "../../../../../modules/products";
 import { getUnitOfMeasurement, getUnitOfPackaging} from "../../../../../modules/productOffers";
 
@@ -56,6 +56,7 @@ const mapDispatchToProps = dispatch => (
         fetchProductConditions,
         fetchOrigin,
         addMessage,
+        addLotSaveOffering,
         dispatch
     }, dispatch)
 );
