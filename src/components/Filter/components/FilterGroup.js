@@ -9,7 +9,7 @@ import DropdownRedux from "../../Dropdown/DropdownRedux";
 import RadioRedux from "../../Radio/RadioRedux";
 import DatepickerRedux from "../../Datepicker/DatepickerRedux";
 import ComboBoxRedux from "../../ComboBox/ComboBoxRedux";
-import {FormattedMessage} from 'react-intl';
+import {FormattedMessage, injectIntl } from 'react-intl';
 
 class FilterGroup extends Component {
 
@@ -42,158 +42,180 @@ class FilterGroup extends Component {
 
     renderInputs () {
         if (!this.props.inputs) return;
-        return this.state.isOpen ? this.props.inputs.map((input, index) => {
-            switch(input.type){
-                case 'checkbox':{
-                    return (
-                        <div key={index} className="input-checkbox">
-                            <label key={index} htmlFor={input.model}>
-                                <FormattedMessage
-                                    id={input.label.split(' ').join('')}
-                                    defaultMessage={input.label + '1'}
-                                />
-                                <Control.checkbox model={input.model} id={input.model}/>
-                                <span className="checkmark">  </span>
-                            </label>
-                        </div>
-                    )
-                }
-                case 'radio' : {
-                    return (
-                        <div key={index} className='filter-input-radio'>
-                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
-                            <RadioRedux
-                                dispatch={this.props.dispatch}
-                                model={input.model}
-                                opns={
-                                    [
-                                        {label:'0-3 months', value:'100'},
-                                        {label:'3-6 months', value:'500'},
-                                        {label:'6-9 months', value:'1000'},
-                                        {label:'Custom Product Age', value:'10000'}
-                                    ]
-                                }
-                                productAgeModel={this.props.productAgeModel}
-                                productAgeCustomModel={this.props.productAgeCustomModel}
-                            />
-                        </div>
-                    )
-                }
-                case 'dropdown' : {
-                    return (
-                        <div key={index} className='filter-input-dropdown'>
-                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
-                            <DropdownRedux
-                                dispatch={this.props.dispatch}
-                                model={input.model}
-                                opns={input.data}
-                            />
-                        </div>
-                    )
-                }
-                case 'comboBox' : {
-                    return (
-                        <div key={index} className='filter-input-dropdown'>
-                            <label
-                                className="input-label"
-                                htmlFor={input.model}>
-                                <FormattedMessage
-                                    id={input.label.split(' ').join('')}
-                                    defaultMessage={input.label + '1'}
-                                />
-                            </label>
-                            <ComboBoxRedux
-                                dispatch={this.props.dispatch}
-                                model={input.model}
-                                limit={input.limit}
-                                placeholder="Select Condition"
-                                items={input.data}
-                            />
-                        </div>
-                    )
-                }
-                case 'date' : {
-                    return (
-                        <div key={index} className='filter-input-date'>
-                            <label
-                                className="input-label"
-                                htmlFor={input.model}>
-                                <FormattedMessage
-                                    id={input.label.split(' ').join('')}
-                                    defaultMessage={input.label + '1'}
-                                />
-                            </label>
-                            <DatepickerRedux
-                                dispatch={this.props.dispatch}
-                                model={input.model}
-                            />
-                        </div>
-                    )
-                }
-                case 'text':{
-                    return (
-                        <div key={index} className='filter-input-text'>
-                            <label
-                                className="input-label"
-                                htmlFor={input.model}>
-                                <FormattedMessage
-                                    id={input.label.split(' ').join('')}
-                                    defaultMessage={input.label + '1'}
-                                />
-                            </label>
-                            <Control.text type={input.type} model={input.model} id={input.model} placeholder={input.placeholder}/>
-                        </div>
-                    )
+        return (
+            this.state.isOpen ?
+                this.props.inputs.map((input, index) => {
+                    switch(input.type){
+                        case 'checkbox':{
+                            return (
+                                <div key={index} className="input-checkbox">
+                                    <label key={index} htmlFor={input.model}>
+                                        <FormattedMessage
+                                            id={'filter.' + input.label.split(' ').join('')}
+                                            defaultMessage={input.label + '1'}
+                                        />
+                                        <Control.checkbox model={input.model} id={input.model}/>
+                                        <span className="checkmark">  </span>
+                                    </label>
+                                </div>
+                            )
+                        }
+                        case 'radio' : {
+                            return (
+                                <div key={index} className='filter-input-radio'>
+                                    <label className="input-label" htmlFor={input.model}>{input.label}</label>
+                                    <RadioRedux
+                                        dispatch={this.props.dispatch}
+                                        model={input.model}
+                                        opns={
+                                            [
+                                                {label:'0-3 months', value:'100'},
+                                                {label:'3-6 months', value:'500'},
+                                                {label:'6-9 months', value:'1000'},
+                                                {label:'Custom Product Age', value:'10000'}
+                                            ]
+                                        }
+                                        productAgeModel={this.props.productAgeModel}
+                                        productAgeCustomModel={this.props.productAgeCustomModel}
+                                    />
+                                </div>
+                            )
+                        }
+                        case 'dropdown' : {
+                            return (
+                                <div key={index} className='filter-input-dropdown'>
+                                    <label className="input-label" htmlFor={input.model}>{input.label}</label>
+                                    <DropdownRedux
+                                        dispatch={this.props.dispatch}
+                                        model={input.model}
+                                        opns={input.data}
+                                    />
+                                </div>
+                            )
+                        }
+                        case 'comboBox' : {
+                            return (
+                                <div key={index} className='filter-input-dropdown'>
+                                    <label
+                                        className="input-label"
+                                        htmlFor={input.model}>
+                                        <FormattedMessage
+                                            id={input.label.split(' ').join('')}
+                                            defaultMessage={input.label + '1'}
+                                        />
+                                    </label>
+                                    <ComboBoxRedux
+                                        dispatch={this.props.dispatch}
+                                        model={input.model}
+                                        limit={input.limit}
+                                        placeholder="Select Condition"
+                                        items={input.data}
+                                    />
+                                </div>
+                            )
+                        }
+                        case 'date' : {
+                            return (
+                                <div key={index} className='filter-input-date'>
+                                    <label
+                                        className="input-label"
+                                        htmlFor={input.model}>
+                                        <FormattedMessage
+                                            id={'filter.' + input.label.split(' ').join('')}
+                                            defaultMessage={input.label + '1'}
+                                        />
+                                    </label>
+                                    <DatepickerRedux
+                                        dispatch={this.props.dispatch}
+                                        model={input.model}
+                                    />
+                                </div>
+                            )
+                        }
+                        case 'text':{
+                            return (
+                                <div key={index} className='filter-input-text'>
+                                    <label
+                                        className="input-label"
+                                        htmlFor={input.model}>
+                                        <FormattedMessage
+                                            id={'filter.' + input.label.split(' ').join('')}
+                                            defaultMessage={input.label + '1'}
+                                        />
+                                    </label>
+                                    <Control.text type={input.type} model={input.model} id={input.model} placeholder={input.placeholder}/>
+                                </div>
+                            )
+                        }
+                         case 'number': {
+                            return (
+                                <div key={index} className='filter-input-text'>
+                                    <label className="input-label" htmlFor={input.model}>
+                                        <FormattedMessage
+                                            id={'filter.' + input.label}
+                                            defaultMessage={input.label + '1'}
+                                        />
+                                    </label>
+                                    <Errors
+                                        className="form-error"
+                                        model={input.model}
+                                        show="touched"
+                                        messages={{
+                                            isNumber: messages.isNumber,
+                                            min: messages.min
+                                        }}
+                                    />
+                                    <Control.text
+                                        type={input.type}
+                                        model={input.model}
+                                        id={input.model}
+                                        placeholder={this.props.intl.formatMessage({ id: 'filter.' + input.label })}
+                                        validators={{min: (val) => min(val, 0) || !val}}
+                                    />
+                                </div>
+                            )
+                        }
+                        case 'assay': {
+                            let validator = input.bigger ?
+                                {bigger: (val) => bigger(val, this.props.data.assmin), min: (val) => min(val, 0), maxPercent, isNumber} :
+                                {min: (val) => min(val, 0), maxPercent, isNumber};
+                            return (
+                                <div key={index} className='filter-input-text'>
+                                    <label
+                                        className="input-label"
+                                        htmlFor={input.model}>
+                                            <FormattedMessage
+                                                id={'filter.' + input.label}
+                                                defaultMessage={input.label}
+                                            />
+                                    </label>
+                                    <Errors
+                                        className="form-error"
+                                        model={input.model}
+                                        show="touched"
+                                        messages={{
+                                            bigger: input.bigger ? messages.bigger : null,
+                                            maxPercent: messages.maxPercent,
+                                            isNumber: messages.isNumber,
+                                            min: messages.min,
+                                        }}
+                                    />
+                                    <Control.text type={input.type}
+                                                  model={input.model}
+                                                  id={input.model}
+                                                  placeholder={input.placeholder}
+                                                  validators={validator}
+                                    />
+                                </div>
+                            )
+                        }
+                        default:{
+                            return null
+                        }
             }
-                 case 'number': {
-                    return (
-                        <div key={index} className='filter-input-text'>
-                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
-                            <Errors
-                                className="form-error"
-                                model={input.model}
-                                show="touched"
-                                messages={{
-                                    isNumber: messages.isNumber,
-                                    min: messages.min
-                                }}
-                            />
-                            <Control.text type={input.type} model={input.model} id={input.model} placeholder={input.placeholder} validators={{min: (val) => min(val, 0) || !val}}/>
-                        </div>
-                    )
-                }
-                case 'assay': {
-                    let validator = input.bigger ?
-                        {bigger: (val) => bigger(val, this.props.data.assmin), min: (val) => min(val, 0), maxPercent, isNumber} :
-                        {min: (val) => min(val, 0), maxPercent, isNumber};
-                    return (
-                        <div key={index} className='filter-input-text'>
-                            <label className="input-label" htmlFor={input.model}>{input.label}</label>
-                            <Errors
-                                className="form-error"
-                                model={input.model}
-                                show="touched"
-                                messages={{
-                                    bigger: input.bigger ? messages.bigger : null,
-                                    maxPercent: messages.maxPercent,
-                                    isNumber: messages.isNumber,
-                                    min: messages.min,
-                                }}
-                            />
-                            <Control.text type={input.type}
-                                          model={input.model}
-                                          id={input.model}
-                                          placeholder={input.placeholder}
-                                          validators={validator}
-                            />
-                        </div>
-                    )
-                }
-                default:{
-                    return null
-                }
-            }
-        }) : null;
+                })
+                : null
+        );
     }
 
     //TODO::refactor render
@@ -201,13 +223,21 @@ class FilterGroup extends Component {
         if(!this.props.isVisible) return null;
         return (
             <div className={classnames("filter-group", {"split" : (this.props.split)})}>
-                <div className="header" onClick={() => {
-                   this.props.onOpen(!this.state.isOpen)
-                }}>
+                <div
+                    className="header"
+                    onClick={() => this.props.onOpen(!this.state.isOpen)}>
                     <div className="dropdown-icon">
-                        {this.state.isOpen ? <img src={dropdown} alt='drop'/> : <img src={dropdownClose} alt='drop-close' />}
+                        {
+                            this.state.isOpen ?
+                                <img src={dropdown} alt='drop'/>
+                                :
+                                <img src={dropdownClose} alt='drop-close' />
+                        }
                     </div>
-                    {this.props.header}
+                    <FormattedMessage
+                        id={'filter.' + this.props.header.split(' ').join('')}
+                        defaultMessage={this.props.header + '1'}
+                    />
                 </div>
                 {this.renderInputs()}
                 <div className='clearfix' />
@@ -231,4 +261,4 @@ FilterGroup.propTypes = {
 };
 
 
-export default FilterGroup;
+export default injectIntl(FilterGroup);
