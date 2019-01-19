@@ -14,10 +14,11 @@ import axios from "axios";
 import { setAuthToken } from './utils/auth';
 import {getIdentity}from './modules/identity';
 import { IntlProvider } from 'react-intl';
-import messages from './translations/en.json';
+import messages_en from './translations/en.json';
 
-//TODO::move include for translation
-const enJson = require('./translations/en.json');
+const messages = {
+    en: messages_en
+};
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 axios.defaults.headers.common = {
@@ -31,7 +32,7 @@ if(localStorage.jwtoken){
 }
 
 ReactDOM.render(
-    <IntlProvider locale='en' messages={enJson}>
+    <IntlProvider locale='en' messages={messages['en']}>
         <BrowserRouter>
             <Provider store={store}>
                <Switch>
