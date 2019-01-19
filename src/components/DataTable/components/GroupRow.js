@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Row from "./Row";
 import CheckboxControlled from "../../Checkbox/CheckboxControlled";
+import {FormattedMessage} from 'react-intl';
 
 class GroupRow extends Component {
     state = { open: true };
@@ -52,9 +53,8 @@ class GroupRow extends Component {
     }
 
     render() {
-        console.log(this.props);
-        const {tableType} = this.props
-        const isAllInventory = tableType ==="allInventoryTable"
+        const {tableType} = this.props;
+        const isAllInventory = tableType ==="allInventoryTable";
         return (
             <React.Fragment>
                 <tr className="data-table-group-header" onClick={(e) => this.toggleGroup(e)}>
@@ -76,7 +76,13 @@ class GroupRow extends Component {
                          colSpan={(this.props.headers.length+(this.props.contextMenu ? 2 : 0))} >{this.props.rows.group}
                         <span
                             className="data-table-group-count">
-                            {this.props.rows.countLabel ? this.props.rows.countLabel + this.props.rows.rows.length : null}
+                            {this.props.rows.countLabel ?
+                                <FormattedMessage
+                                    id='dataTable.groupRow.ProductOfferings'
+                                    defaultMessage={this.props.rows.countLabel + this.props.rows.rows.length}
+                                    values={{ number: this.props.rows.rows.length }}
+                                />
+                                : null}
                             {this.state.open ? <i className="icon angle-down"/> : <i className="icon angle-up"/>}
                         </span>
                     </td>

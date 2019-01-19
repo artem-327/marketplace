@@ -162,9 +162,9 @@ class Row extends Component {
             return (
               <td
                 key={index}
-                title={cellName && cellName.length > 14 ? cell : ''}
-              >
-                {cellName}
+                title={cellName && cellName.length > 14 ? cell : ''}>
+                  {/*Decide if it will be formatted also through react-intl*/}
+                  {cellName}
               </td>
             );
           })}

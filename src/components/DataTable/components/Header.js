@@ -102,8 +102,8 @@ class Header extends Component {
                             {item.name}
                             <div className={'fix-header'}>
                                 <FormattedMessage
-                                    id={'myInventory.dataTable.' + item.name}
-                                    defaultMessage={item.name + 1}
+                                    id={'dataTable.' + item.name}
+                                    defaultMessage={item.name}
                                 />
                                 {this.state.open[item.name] ?
                                     <ul className="data-table-context-th">

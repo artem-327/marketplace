@@ -12,7 +12,6 @@ class DataTable extends Component {
   }
 
   initDataTable() {
-    console.log(this.props.rows);
     //TODO::don't rewrite store if exists, but beware of filter (reload data)
     // if(!this.props.dataTable){
     let header = this.props.headerInit.map((item, index) => ({
