@@ -39,7 +39,7 @@ class AllInventory extends Component {
                 <div className='header-top'>
                     <h1 className='header inv-header'>
                         <FormattedMessage
-                            id='allInventory.Marketplace'
+                            id='allInventory.marketplace'
                             defaultMessage='MARKETPLACE'
                         />
                     </h1>

@@ -100,9 +100,9 @@ class ProductOffers extends Component {
                                 sortFunc={(nameColumn) => console.log(nameColumn)}
                                 headerInit={headerInit}
                                 contextMenu={[
-                                         {action: (id) => this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'EditListing',},
-                                         {action: (id) => this.openBroadcast(id), label: 'CustomBroadcast'},
-                                         {action: (id) => confirm('RemoveListings', 'Are you sure you want to remove listings from Your Inventory?').then(
+                                         {action: (id) => this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'editListing',},
+                                         {action: (id) => this.openBroadcast(id), label: 'customBroadcast'},
+                                         {action: (id) => confirm('removeListings', 'Are you sure you want to remove listings from Your Inventory?').then(
                                                  () => {
                                                      this.props.deleteProductOffer(id, () => this.props.fetchMyProductOffers({}))
                                                  },

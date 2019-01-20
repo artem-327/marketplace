@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import dropdown from '../../../../images/inv-filter/dropdown.png'
 import dropdownClose from '../../../../images/inv-filter/dropdown-close.png'
+import {FormattedMessage} from 'react-intl';
 
 export default class AddGroup extends Component {
     constructor(props) {
@@ -23,15 +24,25 @@ export default class AddGroup extends Component {
     }
 
     render() {
+        const { header } = this.props;
         let styleOpen = this.state.open ? ' open' : '';
         return (
             <div className="add-group">
                 <div className={'header-group' + styleOpen} onClick={() => this.handleOpen()}>
-
-                    {this.state.open ? <img src={dropdown} alt='drop'/> : <img src={dropdownClose} alt='drop-close' />}
-                    <h2>{this.props.header}</h2>
+                    {this.state.open ?
+                        <img src={dropdown} alt='drop'/>
+                        : <img src={dropdownClose} alt='drop-close'/>
+                    }
+                    <h2>
+                        <FormattedMessage
+                            id={'addInventory.' + header}
+                            defaultMessage={header}
+                        />
+                    </h2>
                 </div>
-                    <div className={'add-body' + styleOpen} > {this.props.component} </div>
+                    <div className={'add-body' + styleOpen}>
+                        {this.props.component}
+                    </div>
             </div>
         );
     }

@@ -4,6 +4,7 @@ import AddForm from "./components/AddForm";
 import AddGroup from './components/AddGroup';
 import Chemical from "./components/Chemical";
 import {actions} from "react-redux-form";
+import {FormattedMessage} from 'react-intl';
 
 export default class AddInventory extends Component {
     componentDidMount(){
@@ -43,10 +44,27 @@ export default class AddInventory extends Component {
     
 
     render() {
+        const { productOffer } = this.props;
         return(
-        <div>
-            <h1 className='header'>{!this.props.edit ? 'ADD INVENTORY' : 'EDIT PRODUCT OFFER - ' + (this.props.productOffer.productName || this.props.productOffer.tradeName)}</h1>
-            <AddForm {...this.props}/>
-        </div>)
+            <div>
+                <h1
+                    className='header'>
+                    {
+                        !this.props.edit ?
+                            <FormattedMessage
+                                id='addInventory.addInventory'
+                                defaultMessage='ADD INVENTORY'
+                            />
+                            :
+                            <FormattedMessage
+                                id='addInventory.editProductOffer'
+                                defaultMessage={'EDIT PRODUCT OFFER - ' + productOffer.productName || productOffer.tradeName}
+                                values={{productName: productOffer.productName || productOffer.tradeName}}
+                            />
+                    }
+                </h1>
+                <AddForm {...this.props}/>
+            </div>
+        )
     }
 }

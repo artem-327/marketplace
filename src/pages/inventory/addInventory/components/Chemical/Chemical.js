@@ -86,18 +86,32 @@ class Chemical extends Component {
             <div>
                 {!this.props.edit ?
                 <React.Fragment>
-                    <SearchProducts selectedMapping={this.state.selectedProductMapping}
-                                    selectedProduct={this.state.selectedProduct}
-                                    isVisible={true}
-                                    onSelectProductMapping={mapping => this.setProductMapping(mapping)}
-                                    onSelect={product => this.setSelectedProduct(product)}
-                                    {...this.props}
+                    <SearchProducts
+                        selectedMapping={this.state.selectedProductMapping}
+                        selectedProduct={this.state.selectedProduct}
+                        isVisible={true}
+                        onSelectProductMapping={mapping => this.setProductMapping(mapping)}
+                        onSelect={product => this.setSelectedProduct(product)}
+                        {...this.props}
                     />
-                </React.Fragment> : null }
-                <ProductMapping productID={this.state.productID} {...this.props} />
-                <ProductOffering addLot={(lots) => this.addLot(lots)} {...this.props} />
+                </React.Fragment>
+                : null
+                }
+                <ProductMapping
+                    productID={this.state.productID}
+                    {...this.props}
+                />
+                <ProductOffering
+                    addLot={(lots) => this.addLot(lots)}
+                    {...this.props}
+                />
                 {!this.props.edit ?
-                <AddedLots lots={this.state.lots} removeLot={(index) => this.removeLots(index)}/> : null }
+                <AddedLots
+                    lots={this.state.lots}
+                    removeLot={(index) => this.removeLots(index)}
+                />
+                : null
+                }
                 <AdditionalDocuments/>
             </div>
         );
