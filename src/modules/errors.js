@@ -1,3 +1,5 @@
+import axios from "axios";
+
 const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
 const ADD_MESSAGE = 'ADD_MESSAGE';
 //register const for all axios endpoints

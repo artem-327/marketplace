@@ -7,9 +7,6 @@ import Tooltip from "../../../../../../components/Tooltip/Tooltip";
 export default class ProductMapping extends Component {
     constructor(props){
         super(props);
-        this.state = {
-            save: false,
-        }
     }
 
     componentDidMount(){
@@ -25,17 +22,16 @@ export default class ProductMapping extends Component {
         values = Object.assign({}, values, {
             product: this.props.productID
         });
-        this.setState({save: true}, ()=>{
-            this.props.saveMapping(values);
-                setTimeout(function(){
-                    this.setState({save: false});
-                }.bind(this),1000);
-        });
+
+        this.props.saveMapping(values);
+        setTimeout(function(){
+            this.props.setSavedMappingToFalse();
+        }.bind(this),1000);
     }
 
     render() {
 
-        let button = this.state.save ? <button className='saved-productMapping'>SAVED</button> :
+        let button = this.props.savedMapping ? <button className='saved-productMapping'>SAVED</button> :
             <button id="mapping-btn" className='save-productMapping'>Save Mapping</button>;
 
         return (

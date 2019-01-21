@@ -40,10 +40,6 @@ export default class ProductOffering extends Component {
     }
 
     saveOffering(values) {
-
-
-        console.log("saveoffering");
-
         if (!parseInt(this.props.productOffering.assayMin) && !parseInt(this.props.productOffering.assayMax)) {
             this.setState({minWarning: 'Required', maxWarning: 'Required'})
         }
