@@ -86,11 +86,19 @@ export default class Location extends Component {
         return test;
     }
 
+    validateZip() {
+        if (this.state.zip === "") return true;
+        let reUSA = /^(\d{5}([\-]\d{4})?)$/i;
+        let reCanada = /^([A-Z][0-9][A-Z] [0-9][A-Z][0-9])$/;
+        let test = reUSA.test(String(this.state.zip)) || reCanada.test(String(this.state.zip));
+        return test;
+    }
+
     validateForms() {
         if (this.state.street === '' || this.state.city === '' || this.state.state === '' || this.state.zip === '' || this.state.contact === '' || this.state.phone === '' || this.state.email === '') {
             return false;
         }
-        else if (!this.validateEmail()) {
+        else if (!this.validateEmail() && !this.validateZip()) {
             return false;
         }
         return true;
@@ -316,9 +324,10 @@ export default class Location extends Component {
                     <div className='group-item-wr'>
                         {(this.state.isSubmitted && this.state.zip === '') ?
                             <div className='warehouse-val'><span>Required</span></div> : null}
+                        {(this.state.isSubmitted && !this.validateZip()) ?
+                            <div className='warehouse-val'><span>Invalid Zip code</span></div> : null}
                         <label htmlFor="zip">Zip Code</label>
                         <input id="zip"
-                               type="number"
                                value={this.state.zip}
                                onChange={(e) => {
                                    this.handleInputs(e.target.value, 'zip')
