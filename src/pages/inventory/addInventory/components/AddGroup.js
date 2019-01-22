@@ -36,7 +36,7 @@ export default class AddGroup extends Component {
                     <h2>
                         <FormattedMessage
                             id={'addInventory.' + header}
-                            defaultMessage={header}
+                            defaultMessage={header + 1}
                         />
                     </h2>
                 </div>

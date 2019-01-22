@@ -102,7 +102,7 @@ class Filter extends Component {
             className="saveButton"
             onClick={()=>this.saveFilters()}>
             <FormattedMessage
-                id='filter.save'
+                id='global.save'
                 defaultMessage='Save'
             />
         </span>;
@@ -132,7 +132,7 @@ class Filter extends Component {
                     onSubmit={(val) => this.handleSubmit(val)}>
                         <PerfectScrollbar>
                             <FilterGroup className="filterGroup"
-                                         header='ChemicalType'
+                                         header='chemicalType'
                                          isVisible={!!this.props.chemicalName}
                                          data={this.props.filterData}
                                          isOpen={this.props.filterGroupStatus.chemName}
@@ -148,7 +148,7 @@ class Filter extends Component {
                                          isVisible={!!this.props.quantity}
                                          isOpen={this.props.filterGroupStatus.quantity}
                                          onOpen={(value)=>{this.props.toggleFilterGroup('quantity', value)}}
-                                         header='Quantity'
+                                         header='quantity'
                                          data={this.props.filterData}
                                          split
                                          inputs={[
@@ -166,7 +166,7 @@ class Filter extends Component {
                                              }
                                          ]}/>
                             <FilterGroup className="filterGroup"
-                                         header='Price'
+                                         header='price'
                                          split
                                          isVisible={!!this.props.price}
                                          data={this.props.filterData}
@@ -187,7 +187,7 @@ class Filter extends Component {
                                              }
                                          ]}/>
                             <FilterGroup className="filterGroup"
-                                         header='Packaging'
+                                         header='packaging'
                                          isVisible={!!this.props.package}
                                          split
                                          data={this.props.filterData}
@@ -201,7 +201,7 @@ class Filter extends Component {
                                              model: `.pckgs[${packagingType.id}]`
                                          }))}/>
                             <FilterGroup className="filterGroup"
-                                        header='Grade'
+                                        header='grade'
                                         isVisible={!!this.props.productGrade}
                                         split
                                         data={this.props.filterData}
@@ -215,7 +215,7 @@ class Filter extends Component {
                                             model: `.grade[${productGradeType.id}]`
                                         }))}/>
                             <FilterGroup className="filterGroup"
-                                         header='Condition'
+                                         header='condition'
                                          isVisible={!!this.props.condition}
                                          split
                                          data={this.props.productConditions}
@@ -229,7 +229,7 @@ class Filter extends Component {
                                              model: `.cndt[${condition.id}]`
                                          }))}/>
                             <FilterGroup className="filterGroup"
-                                         header='Form'
+                                         header='form'
                                          isVisible={!!this.props.form}
                                          split
                                          data={this.props.productForms}
@@ -248,7 +248,7 @@ class Filter extends Component {
 
 
                             <FilterGroup className="filterGroup"
-                                         header='ChemicalSearch'
+                                         header='chemicalSearch'
                                          isVisible={!!this.props.chemicalSearch}
                                          data={this.props.filterData}
                                          isOpen={this.props.filterGroupStatus.chemSearch}
@@ -262,7 +262,7 @@ class Filter extends Component {
                                          ]}/>
                             {/*Product Age and Location do not show on page*/}
                             <FilterGroup className="filterGroup"
-                                         header='ProductAge'
+                                         header='productAge'
                                          isVisible={!!this.props.productsAge}
                                          split
                                          data={this.props.filterData}
@@ -276,7 +276,7 @@ class Filter extends Component {
                                              }
                                          ]}/>
                             <FilterGroup className="filterGroup"
-                                         header='Location'
+                                         header='location'
                                          isVisible={!!this.props.loc}
                                          data={this.props.filterData}
                                          isOpen={this.props.filterGroupStatus.loc}
@@ -290,7 +290,7 @@ class Filter extends Component {
                                              }
                                          ]}/>
                             <FilterGroup className="filterGroup"
-                                         header='Expiration'
+                                         header='expiration'
                                          split
                                          isVisible={!!this.props.date}
                                          data={this.props.filterData}
@@ -349,7 +349,10 @@ class Filter extends Component {
                                         <input
                                             type="text"
                                             onChange={(e)=>this.changeFilterName(e)}
-                                            placeholder={this.props.intl.formatMessage({id: 'filter.setFilterName'})}
+                                            placeholder={this.props.intl.formatMessage({
+                                                id: 'filter.setFilterName',
+                                                defaultMessage: 'Set Filter Name'
+                                            })}
                                             className="input"
                                             value={this.state.filterName}/>
                                         {saveFilter}
@@ -361,7 +364,7 @@ class Filter extends Component {
                         <div className="filterBottom">
                             <button className='button filter-button'>
                                 <FormattedMessage
-                                    id='filter.apply'
+                                    id='global.apply'
                                     defaultMessage='Apply'
                                 />
                             </button>

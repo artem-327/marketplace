@@ -162,8 +162,14 @@ class ProductOffering extends Component {
                                 currentValue={this.props.edit ? this.props.productOffer.manufacturer.name : null}
                                 className="manufacturer"
                                 limit={5}
-                                label={formatMessage({id: 'addInventory.manufacturer'})}
-                                placeholder={formatMessage({id: 'addInventory.search'})}
+                                label={formatMessage({
+                                    id: 'addInventory.manufacturer',
+                                    defaultMessage: 'Manufacturer'
+                                })}
+                                placeholder={formatMessage({
+                                    id: 'addInventory.search',
+                                    defaultMessage: 'Search'
+                                })}
                                 isFetching={this.props.isFetchingManufacturer}
                                 saveObj={obj=>obj}
                                 validators={{required}}
@@ -187,8 +193,14 @@ class ProductOffering extends Component {
                                 api={(text) => this.props.fetchOrigin(text)}
                                 className="origin"
                                 limit={5}
-                                label={formatMessage({id: 'addInventory.origin'})}
-                                placeholder={formatMessage({id: 'addInventory.search'})}
+                                label={formatMessage({
+                                    id: 'addInventory.origin',
+                                    defaultMessage: 'Origin'
+                                })}
+                                placeholder={formatMessage({
+                                    id: 'addInventory.search',
+                                    defaultMessage: 'Search'
+                                })}
                                 currentValue={this.props.edit ? this.props.productOffer.origin.name : null}
                                 isFetching={this.props.isFetchingOrigin}
                                 saveObj={obj=>obj}
@@ -214,7 +226,10 @@ class ProductOffering extends Component {
                             </label>
                             <DropdownRedux
                                 opns={this.props.productForms}
-                                placeholder={formatMessage({id: 'addInventory.select'})}
+                                placeholder={formatMessage({
+                                    id: 'addInventory.select',
+                                    defaultMessage: 'Select'
+                                })}
                                 model="forms.productOffering.productForm"
                                 validators={{required}}
                                 dispatch={this.props.dispatch}
@@ -320,7 +335,10 @@ class ProductOffering extends Component {
                                 </label>
                                 <DropdownRedux
                                     opns={this.props.productGrade}
-                                    placeholder={formatMessage({id: 'addInventory.select'})}
+                                    placeholder={formatMessage({
+                                        id: 'addInventory.select',
+                                        defaultMessage: 'Select'
+                                    })}
                                     model="forms.productOffering.productGrade"
                                     validators={{required}}
                                     dispatch={this.props.dispatch}
@@ -343,7 +361,10 @@ class ProductOffering extends Component {
                                 </label>
                                 <DropdownRedux
                                     opns={this.props.productConditions}
-                                    placeholder={formatMessage({id: 'addInventory.select'})}
+                                    placeholder={formatMessage({
+                                        id: 'addInventory.select',
+                                        defaultMessage: 'Select'
+                                    })}
                                     model="forms.productOffering.productCondition"
                                     validators={{required}}
                                     dispatch={this.props.dispatch}
@@ -355,7 +376,10 @@ class ProductOffering extends Component {
                         <div className="group-item-wr long">
                             <Tooltip
                                 className="notes"
-                                content={formatMessage({id: 'addInventory.externalNotesTip'})}/>
+                                content={formatMessage({
+                                    id: 'addInventory.externalNotesTip',
+                                    defaultMessage: 'External notes are visible to other merchants.'
+                                })}/>
                             <div className="notes-textarea">
                                 <label htmlFor=".externalNotes">
                                     <FormattedMessage
@@ -367,13 +391,19 @@ class ProductOffering extends Component {
                                     model=".externalNotes"
                                     id=".externalNotes"
                                     className="textarea"
-                                    placeholder={formatMessage({id: 'addInventory.notesPlaceholder'})}/>
+                                    placeholder={formatMessage({
+                                        id: 'addInventory.notesPlaceholder',
+                                        defaultMessage: 'Enter notes here'
+                                    })}/>
                             </div>
                         </div>
                         <div className="group-item-wr long">
                             <Tooltip
                                 className="notes"
-                                content={formatMessage({id: 'addInventory.internalNotesTip'})}
+                                content={formatMessage({
+                                    id: 'addInventory.internalNotesTip',
+                                    defaultMessage: 'Internal notes are visible to you or other users of your company only.'
+                                })}
                             />
                             <div className="notes-textarea">
                                 <label htmlFor=".internalNotes">
@@ -386,7 +416,10 @@ class ProductOffering extends Component {
                                     model=".internalNotes"
                                     id=".internalNotes"
                                     className="textarea"
-                                    placeholder={formatMessage({id: 'addInventory.notesPlaceholder'})}
+                                    placeholder={formatMessage({
+                                        id: 'addInventory.notesPlaceholder',
+                                        defaultMessage: 'Enter notes here'
+                                    })}
                                 />
 
                             </div>

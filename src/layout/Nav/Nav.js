@@ -146,9 +146,19 @@ class Nav extends Component {
         const dropdown = <div className="dropdown-nav-inside-myaccount">
             {links.map((link, index) =>
             
-            link.name === 'Logout' ? 
+            link.name === 'Logout' ?
 
-            (<div key={index} to={link.url} className='dropdown-nav-item' onClick={this.props.logout} activeClassName='active'>{link.name}</div>)
+            (<div
+                key={index}
+                to={link.url}
+                className='dropdown-nav-item'
+                onClick={this.props.logout}
+                activeClassName='active'>
+                    <FormattedMessage
+                        id={'nav.' + link.name}
+                        defaultMessage={link.name}
+                    />
+            </div>)
             
             : 
 

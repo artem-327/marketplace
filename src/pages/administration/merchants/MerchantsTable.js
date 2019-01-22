@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import MerchantTableRow from './components/MerchantTableRow';
 import './MerchantsTable.css';
+import {FormattedMessage} from 'react-intl';
 
 class MerchantsTable extends Component {
   componentDidMount() {
@@ -22,15 +23,45 @@ class MerchantsTable extends Component {
 
     return (
       <div>
-        <h1 className="header">MerchantsTable</h1>
+        <h1 className="header">
+            <FormattedMessage
+                id='merchants.table'
+                defaultMessage='MerchantsTable'
+            />
+        </h1>
         <table className="merchant-table">
           <thead className="merch-table">
             <tr>
-              <th className="merch-header-item">Name</th>
-              <th className="merch-header-item">MiddleName</th>
-              <th className="merch-header-item">Surname</th>
-              <th className="merch-header-item">E-mail</th>
-              <th className="merch-header-item">Approve</th>
+              <th className="merch-header-item">
+                  <FormattedMessage
+                      id='merchants.name'
+                      defaultMessage='Name'
+                  />
+              </th>
+              <th className="merch-header-item">
+                  <FormattedMessage
+                      id='global.middleName'
+                      defaultMessage='Middle Name'
+                  />
+              </th>
+              <th className="merch-header-item">
+                  <FormattedMessage
+                      id='global.surname'
+                      defaultMessage='Surname'
+                  />
+              </th>
+              <th className="merch-header-item">
+                  <FormattedMessage
+                      id='global.email'
+                      defaultMessage='E-mail'
+                  />
+              </th>
+              <th className="merch-header-item">
+                  <FormattedMessage
+                      id='merchants.approve'
+                      defaultMessage='Approve'
+                  />
+              </th>
               <th className="merch-header-item"></th>
             </tr>
           </thead>

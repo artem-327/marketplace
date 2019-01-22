@@ -24,8 +24,14 @@ class SearchProducts extends Component {
                     dataFetched={this.props.productsFetched}
                     className="cas-search"
                     limit={5}
-                    placeholder={formatMessage({id: 'addInventory.search'})}
-                    label={formatMessage({id: 'addInventory.casNumberProductSearch'})}
+                    placeholder={formatMessage({
+                        id: 'addInventory.search',
+                        defaultMessage: 'Search'
+                    })}
+                    label={formatMessage({
+                        id: 'addInventory.casNumberProductSearch',
+                        defaultMessage: 'CAS Number / Product Search'
+                    })}
                     isFetching={this.props.isSearching}
                     displayName={(product) => (
                         (product.chemicalName !== "(unknown)" ?
@@ -41,8 +47,14 @@ class SearchProducts extends Component {
                     isFetching={this.props.isMapping}
                     className="map-search"
                     limit={5}
-                    placeholder={formatMessage({id: 'addInventory.search'})}
-                    label={formatMessage({id: 'addInventory.mappedProductsSearch'})}
+                    placeholder={formatMessage({
+                        id: 'addInventory.search',
+                        defaultMessage: 'Search'
+                    })}
+                    label={formatMessage({
+                        id: 'addInventory.mappedProductsSearch',
+                        defaultMessage: 'Mapped Products Search'
+                    })}
                     getObject={(productTemplate) => this.props.onSelectProductMapping(productTemplate)}
                     displayAttr="productName"/>
 

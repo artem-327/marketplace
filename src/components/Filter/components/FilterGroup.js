@@ -235,8 +235,8 @@ class FilterGroup extends Component {
                         }
                     </div>
                     <FormattedMessage
-                        id={'filter.' + this.props.header.split(' ').join('')}
-                        defaultMessage={this.props.header + '1'}
+                        id={'filter.' + this.props.header}
+                        defaultMessage={this.props.header}
                     />
                 </div>
                 {this.renderInputs()}

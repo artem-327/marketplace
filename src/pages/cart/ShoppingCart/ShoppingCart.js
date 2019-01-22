@@ -7,6 +7,7 @@ import KeepShoppingPopup from "../components/KeepShoppingPopup/KeepShoppingPopup
 import Spinner from '../../../components/Spinner/Spinner'
 import Button from '../../../components/Button/Button'
 import {NavLink} from 'react-router-dom'
+import {FormattedMessage} from 'react-intl';
 
 class ShoppingCart extends Component {
   componentDidMount(){
@@ -23,19 +24,49 @@ class ShoppingCart extends Component {
   }
 
   keepShopping = () => {
-    const {addPopup, removePopup} = this.props
+    const {addPopup, removePopup} = this.props;
     addPopup(<KeepShoppingPopup removePopup={removePopup} handleContinue={this.handleContinueShopping}/>)
-  }
+  };
 
   renderSummary() {
     const {totalPrice} = this.props.cart;
     return (
       <table>
         <tbody>
-          <tr><td>Subtotal</td><td>${totalPrice}</td></tr>
-          <tr><td>Estimated Shipping</td><td></td></tr>{/* TODO: change the fake price */}
-          <tr><td>Estimated Tax</td><td></td></tr>{/* TODO: change the fake price */}
-          <tr className="total"><td>Total</td><td>${totalPrice}</td></tr>
+          <tr>
+              <td>
+                  <FormattedMessage
+                    id='cart.subtotal'
+                    defaultMessage='Subtotal'
+                  />
+              </td>
+              <td>${totalPrice}</td>
+          </tr>
+          <tr>
+              <td>
+                  <FormattedMessage
+                    id='cart.estimatedShipping'
+                    defaultMessage='Estimated Shipping'
+                  />
+              </td>
+              <td></td>
+          </tr>{/* TODO: change the fake price */}
+          <tr>
+              <td>
+                  <FormattedMessage
+                    id='cart.estimatedTax'
+                    defaultMessage='Estimated Tax'
+                  />
+              </td><td></td></tr>{/* TODO: change the fake price */}
+          <tr className="total">
+              <td>
+                  <FormattedMessage
+                    id='cart.total'
+                    defaultMessage='Total'
+                  />
+              </td>
+              <td>${totalPrice}</td>
+          </tr>
         </tbody>
       </table>
     )
@@ -56,16 +87,32 @@ class ShoppingCart extends Component {
           />)
     });
     const itemsNumber = cart.orders ? cart.orders.length : 0;
-    const headerTitle = `Items (${itemsNumber})`
+    const headerTitle =
+        <FormattedMessage
+            id='cart.shoppingCartHeader'
+            defaultMessage={`Items (${itemsNumber})`}
+            values={{number: itemsNumber}}
+        />;
+
     return (
       <div className="app-inner-main">
       <div className='header-top'>
-          <h1 className='header inv-header'>PRODUCT OFFERINGS</h1>
+          <h1 className='header inv-header'>
+              <FormattedMessage
+                id='cart.productOfferings'
+                defaultMessage='PRODUCT OFFERINGS'
+              />
+          </h1>
           <div className="submenu">
               <div className="link">
                   <NavLink to={'/inventory/all-inventory'}>
                       <i className="arrow-left"></i>
-                      <b>Back to Product/Purchase info</b>
+                      <b>
+                          <FormattedMessage
+                            id='cart.backToProductPurchaseInfo'
+                            defaultMessage='Back to Product/Purchase info'
+                          />
+                      </b>
                   </NavLink>
               </div>
           </div>
@@ -80,7 +127,12 @@ class ShoppingCart extends Component {
                 <SummaryTable title="Summary" hasButton={itemsNumber ? true : false} handleContinue={this.handleContinue}>
                   {this.renderSummary()}
                 </SummaryTable>
-                <Button size="large" color="light-blue"onClick={this.keepShopping}>Keep Shopping</Button>
+                <Button size="large" color="light-blue"onClick={this.keepShopping}>
+                    <FormattedMessage
+                        id='cart.keepShopping'
+                        defaultMessage='Keep Shopping'
+                    />
+                </Button>
               </div>
           </div>
       </div>

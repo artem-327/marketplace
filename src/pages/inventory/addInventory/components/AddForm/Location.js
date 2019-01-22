@@ -5,8 +5,9 @@ import Dropdown from "../../../../../components/Dropdown/Dropdown";
 import {messages, required} from "../../../../../utils/validation";
 import classnames from "classnames";
 import "./Location.css"
+import {FormattedMessage, injectIntl} from 'react-intl';
 
-export default class Location extends Component {
+class Location extends Component {
 
     constructor(props) {
         super(props);
@@ -65,7 +66,10 @@ export default class Location extends Component {
             warehouseName: this.props.warehouse[index].name,
             street: this.props.warehouse[index].address.streetAddress,
             city: this.props.warehouse[index].address.city,
-            state: (typeof this.props.warehouse[index].address.province !== 'undefined' ? this.props.warehouse[index].address.province.id : 1 /* TODO: modify it if there will be added something else (country/region id) */),
+            state: (typeof this.props.warehouse[index].address.province !== 'undefined' ?
+                this.props.warehouse[index].address.province.id
+                : 1),
+                /* TODO: modify it if there will be added something else (country/region id) */
             contact: this.props.warehouse[index].contact.name,
             phone: this.props.warehouse[index].contact.phone,
             email: this.props.warehouse[index].contact.email,
@@ -143,6 +147,8 @@ export default class Location extends Component {
             <button className={'edit-location' + classnames({" disabled": (disabled)})}
                     onClick={(e) => this.changeMode(e)}>Edit</button>;
 
+        const { formatMessage } = this.props.intl;
+
         return (
             <div>
                 <div>
@@ -155,7 +161,12 @@ export default class Location extends Component {
                                 required: messages.required,
                             }}
                         />
-                        <label>Warehouse</label>
+                        <label>
+                            <FormattedMessage
+                                id='addInventory.location.warehouse'
+                                defaultMessage='Warehouse'
+                            />
+                        </label>
                             <DropdownRedux
                                 model="forms.addProductOffer.warehouse"
                                 dispatch={this.props.dispatch}
@@ -163,7 +174,10 @@ export default class Location extends Component {
                                 // defaultValue={this.state.warehouseIndex}
                                 validators={{required}}
                                 onChange={(value) => this.setLocation(value)}
-                                placeholder='Select Location'
+                                placeholder={formatMessage({
+                                    id: 'global.selectLocation',
+                                    defaultMessage: 'Select Location'
+                                })}
                             />
                     </div>
                 </div>
@@ -171,8 +185,21 @@ export default class Location extends Component {
                         <div>
                             <div className='group-item-wr'>
                                 {(this.state.isSubmitted && this.state.street === '') ?
-                                    <div className='warehouse-val'><span>Required</span></div> : null}
-                                <label htmlFor="street">Street Address</label>
+                                    <div className='warehouse-val'>
+                                        <span>
+                                            <FormattedMessage
+                                                id='addInventory.required'
+                                                defaultMessage='Required'
+                                            />
+                                        </span>
+                                    </div>
+                                    : null}
+                                <label htmlFor="street">
+                                    <FormattedMessage
+                                        id='addInventory.streetAddress'
+                                        defaultMessage='Street Address'
+                                    />
+                                </label>
                                 <input id="street"
                                        disabled={!this.state.edit}
                                        value={this.state.street}
@@ -182,8 +209,21 @@ export default class Location extends Component {
                             </div>
                             <div className='group-item-wr'>
                                 {(this.state.isSubmitted && this.state.city === '') ?
-                                    <div className='warehouse-val'><span>Required</span></div> : null}
-                                <label htmlFor="city">City</label>
+                                    <div className='warehouse-val'>
+                                        <span>
+                                            <FormattedMessage
+                                                id='addInventory.required'
+                                                defaultMessage='Required'
+                                            />
+                                        </span>
+                                    </div>
+                                    : null}
+                                <label htmlFor="city">
+                                    <FormattedMessage
+                                        id='global.city'
+                                        defaultMessage='City'
+                                    />
+                                </label>
                                 <input id="city"
                                        disabled={!this.state.edit}
                                        value={this.state.city}
@@ -193,23 +233,50 @@ export default class Location extends Component {
                             </div>
                             <div className='group-item-wr'>
                                 {(this.state.isSubmitted && this.state.state === '') ?
-                                    <div className='warehouse-val'><span>Required</span></div> : null}
-                                <label>State</label>
-                                <Dropdown opns={this.props.locations.map((item)=>{
+                                    <div className='warehouse-val'>
+                                        <span>
+                                            <FormattedMessage
+                                                id='addInventory.required'
+                                                defaultMessage='Required'
+                                            />
+                                        </span>
+                                    </div>
+                                    : null}
+                                <label>
+                                    <FormattedMessage
+                                        id='global.state'
+                                        defaultMessage='State'
+                                    />
+                                </label>
+                                <Dropdown
+                                    opns={this.props.locations.map((item)=>{
                                             if(item.province) return ({id: item.province.id, name: item.province.name});
                                             if(item.country) return ({id: item.country.id, name: item.country.name});
                                             return {id: 0, name: 'no province or country'}
                                         })}
-                                        disabled={!this.state.edit}
-                                        currentValue={this.getCurrentItemById(this.state.state)}
-                                        onChange={(value) => {
+                                    disabled={!this.state.edit}
+                                    currentValue={this.getCurrentItemById(this.state.state)}
+                                    onChange={(value) => {
                                             this.handleInputs(value, 'state')
                                         }}/>
                             </div>
                             <div className='group-item-wr'>
                                 {(this.state.isSubmitted && this.state.zip === '') ?
-                                    <div className='warehouse-val'><span>Required</span></div> : null}
-                                <label htmlFor="zip">Zip Code</label>
+                                    <div className='warehouse-val'>
+                                        <span>
+                                            <FormattedMessage
+                                                id='addInventory.required'
+                                                defaultMessage='Required'
+                                            />
+                                        </span>
+                                    </div>
+                                    : null}
+                                <label htmlFor="zip">
+                                        <FormattedMessage
+                                            id='addInventory.zipCode'
+                                            defaultMessage='Zip Code'
+                                        />
+                                </label>
                                 <input id="zip"
                                        disabled={!this.state.edit}
                                        value={this.state.zip}
@@ -222,8 +289,21 @@ export default class Location extends Component {
                         <div>
                             <div className='group-item-wr'>
                                 {(this.state.isSubmitted && this.state.contact === '') ?
-                                    <div className='warehouse-val'><span>Required</span></div> : null}
-                                <label htmlFor="contact">Contact Name</label>
+                                    <div className='warehouse-val'>
+                                        <span>
+                                            <FormattedMessage
+                                                id='addInventory.required'
+                                                defaultMessage='Required'
+                                            />
+                                        </span>
+                                    </div>
+                                    : null}
+                                <label htmlFor="contact">
+                                    <FormattedMessage
+                                        id='addInventory.contactName'
+                                        defaultMessage='Contact Name'
+                                    />
+                                </label>
                                 <input id="contact"
                                        disabled={!this.state.edit}
                                        value={this.state.contact}
@@ -233,8 +313,21 @@ export default class Location extends Component {
                             </div>
                             <div className='group-item-wr'>
                                 {(this.state.isSubmitted && this.state.phone === '') ?
-                                    <div className='warehouse-val'><span>Required</span></div> : null}
-                                <label htmlFor="number">Phone Number</label>
+                                    <div className='warehouse-val'>
+                                        <span>
+                                            <FormattedMessage
+                                                id='addInventory.required'
+                                                defaultMessage='Required'
+                                            />
+                                        </span>
+                                    </div>
+                                    : null}
+                                <label htmlFor="number">
+                                    <FormattedMessage
+                                        id='global.phoneNumber'
+                                        defaultMessage='Phone Number'
+                                    />
+                                </label>
                                 <input id="number"
                                        disabled={!this.state.edit}
                                        value={this.state.phone}
@@ -244,10 +337,30 @@ export default class Location extends Component {
                             </div>
                             <div className='group-item-wr'>
                                 {(this.state.isSubmitted && this.state.email === '') ?
-                                    <div className='warehouse-val'><span>Required</span></div> : null}
+                                    <div className='warehouse-val'>
+                                        <span>
+                                            <FormattedMessage
+                                                id='addInventory.required'
+                                                defaultMessage='Required'
+                                            />
+                                        </span>
+                                    </div>
+                                    : null}
                                 {(this.state.isSubmitted && !this.validateEmail()) ?
-                                    <div className='warehouse-val'><span>Invalid E-mail</span></div> : null}
-                                <label htmlFor="email">E-Mail</label>
+                                    <div className='warehouse-val'>
+                                        <span>
+                                            <FormattedMessage
+                                                id='addInventory.invalidEmail'
+                                                defaultMessage='Invalid E-mail'
+                                            />
+                                        </span>
+                                    </div> : null}
+                                <label htmlFor="email">
+                                    <FormattedMessage
+                                        id='global.email'
+                                        defaultMessage='E-mail'
+                                    />
+                                </label>
                                 <input id="email"
                                        disabled={!this.state.edit}
                                        value={this.state.email}
@@ -265,14 +378,33 @@ export default class Location extends Component {
     }
 
     renderNewLocation() {
-        let button = <button onClick={(e) => this.saveLocation(e, false)} className='edit-location'>Save</button>
+        let button =
+            <button onClick={(e) => this.saveLocation(e, false)} className='edit-location'>
+                <FormattedMessage
+                    id='addInventory.save'
+                    defaultMessage='Save'
+                />
+            </button>
         return (
             <div>
                 <div>
                     <div className='group-item-wr'>
                         {(this.state.isSubmitted && this.state.warehouseName === '') ?
-                            <div className='warehouse-val'><span>Required</span></div> : null}
-                        <label htmlFor="street">Warehouse Name</label>
+                            <div className='warehouse-val'>
+                                <span>
+                                    <FormattedMessage
+                                        id='addInventory.required'
+                                        defaultMessage='Required'
+                                    />
+                                </span>
+                            </div>
+                            : null}
+                        <label htmlFor="street">
+                            <FormattedMessage
+                                id='addInventory.warehouseName'
+                                defaultMessage='Warehouse Name'
+                            />
+                        </label>
                         <input id="name"
                                value={this.state.warehouseName}
                                onChange={(e) => {
@@ -282,8 +414,21 @@ export default class Location extends Component {
                     </div>
                     <div className='group-item-wr'>
                         {(this.state.isSubmitted && this.state.street === '') ?
-                            <div className='warehouse-val'><span>Required</span></div> : null}
-                        <label htmlFor="street">Street Address</label>
+                            <div className='warehouse-val'>
+                                <span>
+                                    <FormattedMessage
+                                        id='addInventory.required'
+                                        defaultMessage='Required'
+                                    />
+                                </span>
+                            </div>
+                            : null}
+                        <label htmlFor="street">
+                            <FormattedMessage
+                                id='addInventory.streetAddress'
+                                defaultMessage='Street Address'
+                            />
+                        </label>
                         <input id="street"
                                value={this.state.street}
                                onChange={(e) => {
@@ -292,7 +437,15 @@ export default class Location extends Component {
                     </div>
                     <div className='group-item-wr'>
                         {(this.state.isSubmitted && this.state.city === '') ?
-                            <div className='warehouse-val'><span>Required</span></div> : null}
+                            <div className='warehouse-val'>
+                                <span>
+                                    <FormattedMessage
+                                        id='addInventory.required'
+                                        defaultMessage='Required'
+                                    />
+                                </span>
+                            </div>
+                            : null}
                         <label htmlFor="city">City</label>
                         <input id="city"
                                value={this.state.city}
@@ -302,21 +455,48 @@ export default class Location extends Component {
                     </div>
                     <div className='group-item-wr'>
                         {(this.state.isSubmitted && this.state.state === '') ?
-                            <div className='warehouse-val'><span>Required</span></div> : null}
-                        <label>State</label>
-                        <Dropdown opns={this.props.locations.map((item)=>{
-                                            if(item.province) return ({id: item.province.id, name: item.province.name});
-                                            if(item.country) return ({id: item.country.id, name: item.country.name});
-                                            return {id: 0, name: 'no province or country'}
-                                        })}
-                                        onChange={(value) => {
-                                            this.handleInputs(value, 'state')
-                                        }}/>
+                            <div className='warehouse-val'>
+                                <span>
+                                    <FormattedMessage
+                                        id='addInventory.required'
+                                        defaultMessage='Required'
+                                    />
+                                </span>
+                            </div>
+                            : null}
+                        <label>
+                            <FormattedMessage
+                                id='global.state'
+                                defaultMessage='State'
+                            />
+                        </label>
+                        <Dropdown
+                            opns={this.props.locations.map((item)=>{
+                                if(item.province) return ({id: item.province.id, name: item.province.name});
+                                if(item.country) return ({id: item.country.id, name: item.country.name});
+                                return {id: 0, name: 'no province or country'}
+                            })}
+                            onChange={(value) => {
+                                this.handleInputs(value, 'state')
+                            }}/>
                     </div>
                     <div className='group-item-wr'>
                         {(this.state.isSubmitted && this.state.zip === '') ?
-                            <div className='warehouse-val'><span>Required</span></div> : null}
-                        <label htmlFor="zip">Zip Code</label>
+                            <div className='warehouse-val'>
+                                <span>
+                                    <FormattedMessage
+                                        id='addInventory.required'
+                                        defaultMessage='Required'
+                                    />
+                                </span>
+                            </div>
+                            : null}
+                        <label htmlFor="zip">
+                            <FormattedMessage
+                                id='addInventory.zipCode'
+                                defaultMessage='Zip Code'
+                            />
+                        </label>
                         <input id="zip"
                                type="number"
                                value={this.state.zip}
@@ -329,8 +509,21 @@ export default class Location extends Component {
                 <div>
                     <div className='group-item-wr'>
                     {(this.state.isSubmitted && this.state.contact === '') ?
-                            <div className='warehouse-val'><span>Required</span></div> : null}
-                        <label htmlFor="contact">Contact Name</label>
+                            <div className='warehouse-val'>
+                                <span>
+                                    <FormattedMessage
+                                        id='addInventory.required'
+                                        defaultMessage='Required'
+                                    />
+                                </span>
+                            </div>
+                        : null}
+                        <label htmlFor="contact">
+                            <FormattedMessage
+                                id='addInventory.contactName'
+                                defaultMessage='Contact Name'
+                            />
+                        </label>
                         <input id="contact"
                                value={this.state.contact}
                                onChange={(e) => {
@@ -339,8 +532,21 @@ export default class Location extends Component {
                     </div>
                     <div className='group-item-wr'>
                     {(this.state.isSubmitted && this.state.phone === '') ?
-                            <div className='warehouse-val'><span>Required</span></div> : null}
-                        <label htmlFor="number">Phone Number</label>
+                            <div className='warehouse-val'>
+                                <span>
+                                    <FormattedMessage
+                                        id='addInventory.required'
+                                        defaultMessage='Required'
+                                    />
+                                </span>
+                            </div>
+                        : null}
+                        <label htmlFor="number">
+                            <FormattedMessage
+                                id='global.phoneNumber'
+                                defaultMessage='Phone Number'
+                            />
+                        </label>
                         <input id="number"
                                value={this.state.phone}
                                onChange={(e) => {
@@ -349,10 +555,31 @@ export default class Location extends Component {
                     </div>
                     <div className='group-item-wr'>
                         {(this.state.isSubmitted && this.state.email === '') ?
-                            <div className='warehouse-val'><span>Required</span></div> : null}
+                            <div className='warehouse-val'>
+                                <span>
+                                    <FormattedMessage
+                                        id='addInventory.required'
+                                        defaultMessage='Required'
+                                    />
+                                </span>
+                            </div>
+                            : null}
                         {(this.state.isSubmitted && !this.validateEmail()) ?
-                            <div className='warehouse-val'><span>Invalid E-mail</span></div> : null}
-                        <label htmlFor="email">E-Mail</label>
+                            <div className='warehouse-val'>
+                                <span>
+                                    <FormattedMessage
+                                        id='addInventory.invalidEmail'
+                                        defaultMessage='Invalid E-mail'
+                                    />
+                                </span>
+                            </div>
+                            : null}
+                        <label htmlFor="email">
+                            <FormattedMessage
+                                id='global.email'
+                                defaultMessage='E-mail'
+                            />
+                        </label>
                         <input id="email"
                                value={this.state.email}
                                onChange={(e) => {
@@ -426,8 +653,22 @@ export default class Location extends Component {
             <div className='location-wr'>
                 {!this.props.edit ?
                     <div className={'location-submenu ' + this.state.location}>
-                        <div className='saved' onClick={() => this.changeLocation('saved')}>SAVED WAREHOUSE</div>
-                        <div className='new' onClick={() => this.changeLocation('new')}>NEW WAREHOUSE</div>
+                        <div
+                            className='saved'
+                            onClick={() => this.changeLocation('saved')}>
+                            <FormattedMessage
+                                id='addInventory.savedWarehouse'
+                                defaultMessage='SAVED WAREHOUSE'
+                            />
+                        </div>
+                        <div
+                            className='new'
+                            onClick={() => this.changeLocation('new')}>
+                            <FormattedMessage
+                                id='addInventory.newWarehouse'
+                                defaultMessage='NEW WAREHOUSE'
+                            />
+                        </div>
                     </div> : null
                 }
                 {location}
@@ -435,3 +676,5 @@ export default class Location extends Component {
         );
     }
 }
+
+export default injectIntl(Location);

@@ -25,11 +25,26 @@ class RegistrationForm extends React.Component {
                 defaultMessage='Submit'
             />;
             const placeholders = {
-                email: formatMessage({ id: 'registration.email' }),
-                password: formatMessage({ id: 'registration.password' }),
-                firstName: formatMessage({ id: 'registration.firstName' }),
-                middleName: formatMessage({ id: 'registration.middleName' }),
-                lastName: formatMessage({ id: 'registration.lastName' }),
+                email: formatMessage({
+                    id: 'global.email',
+                    defaultMessage: 'E-mail'
+                }),
+                password: formatMessage({
+                    id: 'global.password',
+                    defaultMessage: 'Password'
+                }),
+                firstName: formatMessage({
+                    id: 'registration.firstName',
+                    defaultMessage: 'Your First Name'
+                }),
+                middleName: formatMessage({
+                    id: 'registration.middleName',
+                    defaultMessage: 'Your Middle Name'
+                }),
+                lastName: formatMessage({
+                    id: 'registration.lastName',
+                    defaultMessage: 'Your Last Name'
+                }),
             };
         return (
             <Form model="forms.registrationForm" onSubmit={(val) => this.handleSubmit(val)}>

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from "prop-types"
 import "./SummaryTable.css"
 import Button from '../../../../components/Button/Button'
+import {FormattedMessage} from 'react-intl';
 
 const SummaryTable = ({hasButton, children, title, handleContinue}) => {
   return (
@@ -14,7 +15,16 @@ const SummaryTable = ({hasButton, children, title, handleContinue}) => {
         {children}
       </main>
       {hasButton && <footer>
-        <Button size="large" color="blue" rounded="down" onClick={handleContinue}>Continue</Button>
+        <Button
+            size="large"
+            color="blue"
+            rounded="down"
+            onClick={handleContinue}>
+                <FormattedMessage
+                    id='global.continue'
+                    defaultMessage='Continue'
+                />
+        </Button>
       </footer>}
     </div>
   );

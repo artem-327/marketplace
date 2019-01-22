@@ -7,6 +7,7 @@ import Button from "../../../../../components/Button/Button";
 import Spinner from '../../../../../components/Spinner/Spinner'
 import InputControlled from '../../../../../components/InputControlled/InputControlled'
 import "./AddBroadcast.css";
+import {FormattedMessage} from 'react-intl';
 const RootBroadcastField = lazy(() => import('./RootBroadcastField'));
 const BroadcastingNumbers = lazy(() => import('./BroadcastingNumbers'));
 
@@ -796,13 +797,19 @@ class AddBroadcast extends Component {
     const footerComponent = (
       <>
         <Button color="grey-white" onClick={removePopup}>
-          Cancel
+          <FormattedMessage
+            id='global.cancel'
+            defaultMessage='Cancel'
+          />
         </Button>
         {/*<Button color="green-white" size="large-2x" onClick={() => removePopup()}>*/}
         {/*Save As Template*/}
         {/*</Button>*/}
         <Button color="blue" onClick={this.handleContinue}>
-          Apply
+            <FormattedMessage
+                id='global.apply'
+                defaultMessage='Apply'
+            />
         </Button>
       </>
     )

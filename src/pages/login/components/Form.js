@@ -48,8 +48,14 @@ class LoginForm extends React.Component {
             />
         </div> : null;
         const placeHolders = {
-            username: formatMessage({id: 'login.username' }),
-            password: formatMessage({ id: 'login.password' })
+            username: formatMessage({
+                id: 'login.username',
+                defaultMessage: 'Username'
+            }),
+            password: formatMessage({
+                id: 'login.password',
+                defaultMessage: 'Password'
+            })
         };
         return (
             <Form model="forms.loginForm" onSubmit={(val) => this.handleSubmit(val)}>

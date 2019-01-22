@@ -293,7 +293,7 @@ class Pricing extends Component {
         unit  = !packaging.unit ? 0 : packaging.unit;
         pricePer =
             <FormattedMessage
-                id='addInventory.pricePer'
+                id='global.pricePer'
                 defaultMessage={'Price per ' + arrayUnit[unit]}
                 values={{unit: arrayUnit[unit]}}
             />;
@@ -508,7 +508,10 @@ class Pricing extends Component {
                         <div className='group-item-wr'>
                             <CheckboxRedux
                                 name='incremental'
-                                label={formatMessage({id: 'addInventory.tierPricing'})}
+                                label={formatMessage({
+                                    id: 'addInventory.tierPricing',
+                                    defaultMessage: 'Tier Pricing'
+                                })}
                                 defaultValue={this.state.showIncrementalPricing}
                                 dispatch={this.props.dispatch}
                                 model={'forms.addProductOffer.incrementalSelected'}
@@ -520,7 +523,10 @@ class Pricing extends Component {
                         <WarningLabel 
                             class={'warningBody3'} 
                             isVisible={this.state.showIncrementalPricing && (this.state.splits === '' || this.state.minimum === '')} 
-                            warningText={formatMessage({id: 'addInventory.warning'})}
+                            warningText={formatMessage({
+                                id: 'addInventory.warning',
+                                defaultMessage: 'Please enter allowed Split and Minimum values first.'
+                            })}
                         />
                     </div>
                     
