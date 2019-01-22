@@ -17,10 +17,11 @@ class ShippingQuotes extends Component {
 
     getShippingQuotes(inputs) {
         let params = {};
-        params.productOfferId = this.props.selectedRows[0];
+        params.productOfferIds = this.props.selectedRows;
         params.destinationZIP = inputs.destination.zip;
-        params.destinationCountry = 'USA';
-        params.quantity = inputs.destination.quantity;
+        params.destinationCountry = 1;
+        params.quantity = parseInt(inputs.destination.quantity);
+        params.maxTransitDays = inputs.destination.maxTransit;
 
         this.props.getShippingQuotes(params);
     }
@@ -186,9 +187,9 @@ class ShippingQuotes extends Component {
                         <tbody>
                             {this.props.shippingQuotes.map((sQuote, i) => {
                                 let now = moment();
-                                let deliveryDate = sQuote.estimatedDeliveryDate;
+                                let deliveryDate = sQuote.shipmentRate.estimatedDeliveryDate;
                                 let etd = now.diff(deliveryDate, 'days') * -1 + 1;
-                                const label = sQuote.carrierName;
+                                const label = sQuote.shipmentRate.carrierName;
                                 const checkOptions = [{value: i.toString(), label: label}];
 
                                 return (
@@ -197,14 +198,35 @@ class ShippingQuotes extends Component {
                                                       name="freight"
                                                       opns={checkOptions}
                                                       checked={false} /></td>
-                                        <td>{sQuote.carrierName}</td>
+                                        <td>{sQuote.shipmentRate.carrierName}</td>
                                         <td>{etd + (etd == 1 ? ' Day' : ' Days')}</td>
-                                        <td>{sQuote.serviceType}</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{sQuote.shipmentRate.serviceType}</td>
                                         <td className="a-right"><NumberFormat
-                                            value={sQuote.estimatedPrice}
+                                            value={sQuote.shipmentRate.fobPricePerLb}
+                                            displayType={'text'}
+                                            prefix={'$'}
+                                            thousandSeparator={','}
+                                            decimalSeparator={'.'}
+                                            decimalScale={2}
+                                            fixedDecimalScale={true} /></td>
+                                        <td className="a-right"><NumberFormat
+                                            value={sQuote.shipmentRate.freightPricePerLb}
+                                            displayType={'text'}
+                                            prefix={'$'}
+                                            thousandSeparator={','}
+                                            decimalSeparator={'.'}
+                                            decimalScale={2}
+                                            fixedDecimalScale={true} /></td>
+                                        <td className="a-right"><NumberFormat
+                                            value={sQuote.shipmentRate.totalPricePerLb}
+                                            displayType={'text'}
+                                            prefix={'$'}
+                                            thousandSeparator={','}
+                                            decimalSeparator={'.'}
+                                            decimalScale={2}
+                                            fixedDecimalScale={true} /></td>
+                                        <td className="a-right"><NumberFormat
+                                            value={sQuote.shipmentRate.estimatedPrice}
                                             displayType={'text'}
                                             prefix={'$'}
                                             thousandSeparator={','}
