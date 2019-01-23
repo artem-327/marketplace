@@ -28,14 +28,14 @@ class Chemical extends Component {
         }
     }
 
-    componentWillMount() {
-        // set to element ?
-        document.addEventListener("keyup", this.handleArrow, false);
+    componentDidMount() {
+        document.getElementById("cas-search").addEventListener("keyup", this.handleArrow, false);
+        document.getElementById("map-search").addEventListener("keyup", this.handleArrow, false);
     }
 
     componentWillUnmount() {
-        // set to element ?
-        document.removeEventListener('keyup', this.handleArrow, false);
+        document.getElementById("cas-search").removeEventListener('keyup', this.handleArrow, false);
+        document.getElementById("map-search").addEventListener("keyup", this.handleArrow, false);
     }
 
     handleArrow(e) {
@@ -48,6 +48,15 @@ class Chemical extends Component {
             return;
         }
 
+        // this.props.isFetchingManufacturer || this.props.isFetchingOrigin
+        if (this.props.isSearching || this.props.isMapping) {
+            this.setState(prevState => ({
+                scroll: -1
+            }));
+            return;
+        }
+
+        if (!document.getElementsByClassName("combo-results")[0]) return;
         const cr = document.getElementsByClassName("combo-results")[0].childElementCount;
 
         let comboItemsHeight = 0;
@@ -55,74 +64,31 @@ class Chemical extends Component {
             comboItemsHeight += document.getElementsByClassName("combo-item")[i].offsetHeight;
         }
 
-        let coeff;
-
-        switch(true) {
-            case comboItemsHeight < 500:
-                coeff = 0.5;
-                break;
-            /*
-            case comboItemsHeight < 1000:
-                coeff = 0.6;
-                break;
-            case comboItemsHeight < 1500:
-                coeff = 0.65;
-                break;
-            */
-            case comboItemsHeight < 2000:
-                coeff = 0.6;
-                break;
-            case comboItemsHeight > 2000:
-                coeff = 0.7;
-                break;
-            default:
-                coeff = 0;
-        }
-
-        console.log(coeff);
-        console.log(comboItemsHeight);
-
-        if(cr > 5) {
-            // console.log("cr > 5");
-            document.getElementById("cas-search").blur();
-            document.getElementsByClassName("combo-results")[0].focus();
-        }
-
-        if (e.keyCode === 40 && this.state.scroll === cr) {
-            // console.log('end of scroll');
-            document.getElementById("root").blur();
+        if (e.keyCode === 40 && this.state.scroll === (cr - 1)) {
             document.getElementsByClassName("combo-results")[0].scrollTop = 0;
             this.setState(prevState => ({
-                scroll: 0
+                scroll: -1
             }));
-            document.getElementsByClassName("combo-results")[0].blur();
-            document.getElementById("cas-search").focus();
+            document.getElementsByClassName("combo-results")[0].scrollTop = 0;
         } else if (e.keyCode === 38 && this.state.scroll === 0) {
             this.setState(prevState => ({
-                scroll: 0
+                scroll: -1
             }));
-            document.getElementsByClassName("combo-results")[0].blur();
-            document.getElementById("cas-search").focus();
-        }
-        else if (e.keyCode === 40 && this.state.scroll < cr) {
+        } else if (e.keyCode === 40 && this.state.scroll < cr) {
             const prev = document.getElementsByClassName("combo-item")[this.state.scroll];
             if (prev) {
-                document.getElementsByClassName("combo-results")[0].scrollTop += coeff*prev.offsetHeight;
+                document.getElementsByClassName("combo-results")[0].scrollTop += prev.offsetHeight;
             }
-            console.log("scroll down " + this.state.scroll);
             this.setState(prevState => ({
                 scroll: prevState.scroll+1
             }));
         } else if (e.keyCode === 38 && this.state.scroll > 0){
-            // console.log("scroll up " + this.state.scroll);
-            document.getElementsByClassName("combo-results")[0].focus();
+            const prev = document.getElementsByClassName("combo-item")[this.state.scroll-1];
+            if (prev) {
+                document.getElementsByClassName("combo-results")[0].scrollTop -= prev.offsetHeight;
+            }
             this.setState(prevState => ({
                 scroll: prevState.scroll-1
-            }));
-        } else {
-            document.getElementById("cas-search").focus();
-            this.setState(prevState => ({
-                scroll: 0
             }));
         }
     }

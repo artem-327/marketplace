@@ -51,24 +51,28 @@ class RemoteComboBox extends Component {
 
 
   setActive(index) {
-    if(this.props.scroll) {
-        console.log(this.props.scroll);
+    if(this.props.scroll === undefined || this.props.scroll === -1) {
+        return "";
+    } else {
         if (index == this.props.scroll) {
             return " activeSearchResult";
         }
-    } else { console.log("props.scroll in undefined") };
-    return "";
+        return "";
+    };
   }
 
 
   renderResults() {
     if (!this.state.hasSearched || !this.state.isOpen || this.state.fulltext.length < 3) return;
+
     if (this.props.isFetching)
       return (
         <div className="combo-results">
           <Spinner />
         </div>
       );
+      // Math.random() * 100000) + 1
+      // index + combo.id
       if (this.state.items.length > 0) {
         let res = this.state.items.map((combo, index) => (
             <div
@@ -125,13 +129,17 @@ class RemoteComboBox extends Component {
 
   handleChange(e) {
     //if(e.target.value === "") this.setState({items: [], dataFetched: false})
-    this.setState(
+      this.setState(
       { fulltext: e.target.value, hasSearched: true, isOpen: true },
       () => {
         if (!!this.state.fulltext.length) setTimeout(() => {
         if (this.state.fulltext.length > 2)  this.filterData() }, 700);
       }
     );
+  }
+
+  handleTab(e) {
+    if(e.keyCode == 9) this.setState({ isOpen: false });
   }
 
   filterData() {
@@ -142,6 +150,7 @@ class RemoteComboBox extends Component {
     let { fulltext } = this.state;
     let results = this.renderResults();
     let validate = this.state.fulltext.length < 3 && this.state.fulltext.length > 0 ? <span className="combo-validate">Please enter at least 3 characters.</span> : null;
+
     return (
       <div
         className={
@@ -156,6 +165,7 @@ class RemoteComboBox extends Component {
           autoComplete="off"
           value={fulltext}
           onChange={e => this.handleChange(e)}
+          onKeyDown={e => this.handleTab(e)}
           disabled={this.props.disabled || false}
           placeholder={this.props.placeholder || "Search"}
         />
