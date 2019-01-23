@@ -9,11 +9,13 @@ class Chemical extends Component {
     constructor(props) {
         super(props);
         this.setProductMapping = this.setProductMapping.bind(this);
+        this.handleArrow = this.handleArrow.bind(this);
         this.state = {
             selectedProduct: null,
             selectedProductMapping: null,
             productID: null,
-            lots: []
+            lots: [],
+            scroll: -1
         }
     }
 
@@ -23,6 +25,105 @@ class Chemical extends Component {
         }
         if (this.props.edit) {
             this.setState({productID: this.props.productOffer.product.id})
+        }
+    }
+
+    componentWillMount() {
+        // set to element ?
+        document.addEventListener("keyup", this.handleArrow, false);
+    }
+
+    componentWillUnmount() {
+        // set to element ?
+        document.removeEventListener('keyup', this.handleArrow, false);
+    }
+
+    handleArrow(e) {
+        e.preventDefault();
+
+        if (e.keyCode !== 40 && e.keyCode !== 38) {
+            this.setState(prevState => ({
+                scroll: -1
+            }));
+            return;
+        }
+
+        const cr = document.getElementsByClassName("combo-results")[0].childElementCount;
+
+        let comboItemsHeight = 0;
+        for (let i = 0; i < cr; i++) {
+            comboItemsHeight += document.getElementsByClassName("combo-item")[i].offsetHeight;
+        }
+
+        let coeff;
+
+        switch(true) {
+            case comboItemsHeight < 500:
+                coeff = 0.5;
+                break;
+            /*
+            case comboItemsHeight < 1000:
+                coeff = 0.6;
+                break;
+            case comboItemsHeight < 1500:
+                coeff = 0.65;
+                break;
+            */
+            case comboItemsHeight < 2000:
+                coeff = 0.6;
+                break;
+            case comboItemsHeight > 2000:
+                coeff = 0.7;
+                break;
+            default:
+                coeff = 0;
+        }
+
+        console.log(coeff);
+        console.log(comboItemsHeight);
+
+        if(cr > 5) {
+            // console.log("cr > 5");
+            document.getElementById("cas-search").blur();
+            document.getElementsByClassName("combo-results")[0].focus();
+        }
+
+        if (e.keyCode === 40 && this.state.scroll === cr) {
+            // console.log('end of scroll');
+            document.getElementById("root").blur();
+            document.getElementsByClassName("combo-results")[0].scrollTop = 0;
+            this.setState(prevState => ({
+                scroll: 0
+            }));
+            document.getElementsByClassName("combo-results")[0].blur();
+            document.getElementById("cas-search").focus();
+        } else if (e.keyCode === 38 && this.state.scroll === 0) {
+            this.setState(prevState => ({
+                scroll: 0
+            }));
+            document.getElementsByClassName("combo-results")[0].blur();
+            document.getElementById("cas-search").focus();
+        }
+        else if (e.keyCode === 40 && this.state.scroll < cr) {
+            const prev = document.getElementsByClassName("combo-item")[this.state.scroll];
+            if (prev) {
+                document.getElementsByClassName("combo-results")[0].scrollTop += coeff*prev.offsetHeight;
+            }
+            console.log("scroll down " + this.state.scroll);
+            this.setState(prevState => ({
+                scroll: prevState.scroll+1
+            }));
+        } else if (e.keyCode === 38 && this.state.scroll > 0){
+            // console.log("scroll up " + this.state.scroll);
+            document.getElementsByClassName("combo-results")[0].focus();
+            this.setState(prevState => ({
+                scroll: prevState.scroll-1
+            }));
+        } else {
+            document.getElementById("cas-search").focus();
+            this.setState(prevState => ({
+                scroll: 0
+            }));
         }
     }
 
@@ -91,6 +192,7 @@ class Chemical extends Component {
                                     isVisible={true}
                                     onSelectProductMapping={mapping => this.setProductMapping(mapping)}
                                     onSelect={product => this.setSelectedProduct(product)}
+                                    scroll={this.state.scroll}
                                     {...this.props}
                     />
                 </React.Fragment> : null }

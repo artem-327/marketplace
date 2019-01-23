@@ -49,6 +49,18 @@ class RemoteComboBox extends Component {
     this.setState({ isOpen: false });
   }
 
+
+  setActive(index) {
+    if(this.props.scroll) {
+        console.log(this.props.scroll);
+        if (index == this.props.scroll) {
+            return " activeSearchResult";
+        }
+    } else { console.log("props.scroll in undefined") };
+    return "";
+  }
+
+
   renderResults() {
     if (!this.state.hasSearched || !this.state.isOpen || this.state.fulltext.length < 3) return;
     if (this.props.isFetching)
@@ -61,7 +73,7 @@ class RemoteComboBox extends Component {
         let res = this.state.items.map((combo, index) => (
             <div
               key={index + combo.id}
-              className="combo-item"
+              className={"combo-item" + this.setActive(index)}
               onClick={() => {
                 this.setState(
                   {
@@ -91,6 +103,7 @@ class RemoteComboBox extends Component {
           ));
           return (
             <div
+              tabIndex="-1"
               className={"combo-results"}
               style={{ maxHeight: 44 * this.state.results_count }}
             >
@@ -139,6 +152,8 @@ class RemoteComboBox extends Component {
         <label>{this.props.label}</label>
         <i className="search combo-icon" />
         <input
+          id = {this.props.id}
+          autoComplete="off"
           value={fulltext}
           onChange={e => this.handleChange(e)}
           disabled={this.props.disabled || false}

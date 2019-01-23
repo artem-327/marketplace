@@ -11,7 +11,7 @@ class SearchProducts extends Component {
             <div className="test">
                 <h4>CHEMICAL SEARCH</h4>
 
-                <RemoteComboBox items={this.props.searchedProducts} 
+                <RemoteComboBox id="cas-search" scroll={this.props.scroll} items={this.props.searchedProducts}
                     api={(text) => this.props.searchProducts(text)}
                     dataFetched={this.props.productsFetched}
                     className="cas-search" limit={5} placeholder="Search" label="CAS Number/Product Search"
@@ -19,7 +19,8 @@ class SearchProducts extends Component {
                     displayName={(product) => ((product.chemicalName !== "(unknown)" ? product.chemicalName : product.casIndexName) + " · " + product.casNumber)}
                     getObject={(product) => this.props.onSelect(product)} displayAttr="chemicalName"/>
 
-                <RemoteComboBox items={this.props.mappedProducts} api={(text) => this.props.mapProducts(text)}
+                <RemoteComboBox id="map-search" scroll={this.props.scroll} items={this.props.mappedProducts}
+                                api={(text) => this.props.mapProducts(text)}
                                 dataFetched={this.props.mappedDataFetched}
                                 isFetching={this.props.isMapping}
                                 className="map-search" limit={5} placeholder="Search" label="Mapped Products Search"
