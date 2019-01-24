@@ -173,6 +173,8 @@ export default class AddForm extends Component {
     }
 
     render() {
+
+        console.log(JSON.parse(localStorage.getItem('productLots')))
         let cancelButton = this.props.edit ?
             <button
                 onClick={this.cancelEdit}

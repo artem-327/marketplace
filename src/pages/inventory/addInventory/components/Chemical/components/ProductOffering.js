@@ -99,8 +99,8 @@ class ProductOffering extends Component {
 
     render() {
 
-        let lotNumber = !this.props.edit 
-            ? <div className='group-item-wr'>
+        let lotNumber =
+             <div className='group-item-wr'>
                 <Errors
                     className="form-error"
                     model=".lotNumber"
@@ -120,8 +120,7 @@ class ProductOffering extends Component {
                 <Control.text model=".lotNumber"
                             validators={{min: (val) => min(val, 0), isNumber, required}}
                             id=".lotNumber"/>
-                </div>
-            : null;
+                </div>;
 
         /*let button = this.state.save ? <button className='button big added-productOffering'>Added</button> :
             <button className='button big add-productOffering'>Add Lot</button>;*/
@@ -484,7 +483,7 @@ class ProductOffering extends Component {
                                 model='forms.productOffering.expirationDate'/>
                         </div>
                         <div className='group-item-wr'>
-                            {!this.props.edit ? button : null}
+                            {button}
                         </div>
                         
                     </div>
