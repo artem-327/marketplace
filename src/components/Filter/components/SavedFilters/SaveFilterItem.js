@@ -6,16 +6,38 @@ import BellTrans from '../../../../images/bell_transparent.png';
 import close from '../../../../images/remove.png';
 import {FormattedMessage} from 'react-intl';
 import {Control} from 'react-redux-form';
-import SwitcherRedux from '../../../Switcher/SwitcherRedux';
 import CheckboxControlled from '../../../Checkbox/CheckboxControlled';
+import {display} from './actions/SaveFilterItem.actions';
+import {connect} from 'react-redux';
 
+const mapStateToProps = state => {
+    return {
+        functionality: {
+            bell: state.saveFilterItem.bell,
+            notifications: state.saveFilterItem.notifications,
+            selected: state.saveFilterItem.selected,
+            active: state.saveFilterItem.active,
+            email: state.saveFilterItem.email,
+            mobile: state.saveFilterItem.mobile,
+            system: state.saveFilterItem.system,
+            toolTip: state.saveFilterItem.toolTip
+        }
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        show: (data) => dispatch(display(data))
+    };
+};
 
 
 class SaveFilterItem extends Component {
     constructor(props) {
         super(props);
+        this.toolTip = false;
         this.state = {
-            bell: BellTrans,
+            bell: false,
             notification: false,
             selected: false,
             active: false,
@@ -56,6 +78,7 @@ class SaveFilterItem extends Component {
     }
 
     renderInputs = () => {
+        //:TODO when BE is done finish save and saved button
         let saveFilter = this.state.saveFilter ?
             <span
                 className="savedButton"
@@ -74,38 +97,26 @@ class SaveFilterItem extends Component {
                     defaultMessage='Save'
                 />
             </span>;
-
         return (
             <div className='inputs'>
                 <CheckboxControlled
                     label='Email Notifications'
                     name='emailNotifications'
-                    onChange={() => this.setState({
-                        checkbox: {
-                            email: !this.state.checkbox.email
-                        }
-                    })}
+                    onChange={() => {}}
                     onClick={() => {}}
                 />
-                {this.state.checkbox.email ?
-                    <span className='email'>
-                        <Control.text
-                            type='text'
-                            model='emailNotifications'
-                            id='emailNotifications'
-                            placeholder='Your E-mail'/>
-                    </span>
-                    : null
-                }
+                <span className='email'>
+                    <Control.text
+                        type='text'
+                        model='emailNotifications'
+                        id='emailNotifications'
+                        placeholder='Your E-mail'/>
+                </span>
                 <div>
                     <CheckboxControlled
                         label='Mobile Notifications'
                         name='mobileNotifications'
-                        onChange={() => this.setState({
-                            checkbox: {
-                                mobile: !this.state.checkbox.mobile
-                            }
-                        })}
+                        onChange={() => {}}
                         onClick={() => {}}
                     />
                 </div>
@@ -113,11 +124,7 @@ class SaveFilterItem extends Component {
                     <CheckboxControlled
                         label='System Notifications'
                         name='systemNotifications'
-                        onChange={() => this.setState({
-                            checkbox: {
-                                system: !this.state.checkbox.system
-                            }
-                        })}
+                        onChange={() => {}}
                         onClick={() => {}}
                     />
                 </div>
@@ -127,52 +134,74 @@ class SaveFilterItem extends Component {
     };
 
     renderNotification = () => {
+        const {active} = this.props.functionality;
+        const { show } = this.props;
         return (
             <div>
                 <h6>Notifications</h6>
                 <span>Enable notifications</span>
                 <div className="brc-radio-wrapper">
-                    <div className="label">{this.state.active ? "On" : "Off"}</div>
+                    <div className="label">{active && this.active ? "On" : "Off"}</div>
                     <div className="switch-container">
                         <label className="switch">
                         <span
-                            onClick={() => this.setState({active: !this.state.active})}
-                            className={`slider round ${this.state.active ? "brc-radio active" : "brc-radio"} `}
+                            onClick={() => {
+                                show('active');
+                                this.active = !this.active;
+                            }}
+                            className={`slider round ${active && this.active ? "brc-radio active" : "brc-radio"} `}
                         />
                         </label>
                     </div>
                 </div>
-                {this.state.active ? this.renderInputs() : null}
+                {active && this.active ? this.renderInputs() : null}
             </div>
         );
     };
 
     render() {
+        console.log(this.props);
+        const { selected, toolTip, bell, notifications } = this.props.functionality;
+        const { show } = this.props;
         return (
             <li>
                 <div
                     onClick={() => this.fillFilter()}
-                    onMouseEnter={() => this.setState({showTooltip: true})}
-                    onMouseLeave={() => this.setState({showTooltip: false})}
+                    onMouseEnter={() => {
+                        show('toolTip');
+                        this.toolTip = !this.toolTip;
+                    }}
+                    onMouseLeave={() => {
+                        show('toolTip');
+                        this.toolTip = !this.toolTip;
+                    }}
                     className="filter-name">
                         <TooltipFilter
-                            selected={this.state.selected}
+                            selected={selected}
                             name={this.props.filterName}
-                            isVisible={this.state.showTooltip}
+                            isVisible={toolTip && this.toolTip}
                             content={this.props.toolTipContent}/>
                 </div>
                 <div
                     className='filter-delete'>
                     <span
                         className='bell'
-                        onMouseEnter={() => this.setState({bell: Bell})}
-                        onMouseLeave={() => this.setState({bell: BellTrans})}
-                        onClick={() => this.setState({
-                            selected: !this.state.selected,
-                            notification: !this.state.notification
-                        })}
+                        onMouseEnter={() => {
+                            show('bell');
+                            this.bell = !this.bell;
+                        }}
+                        onMouseLeave={() => {
+                            show('bell');
+                            this.bell = !this.bell;
+                        }}
+                        onClick={() => {
+                            show('selected');
+                            show('notifications');
+                            this.selected = !this.selected;
+                            this.notifications = !this.notifications;
+                        }}
                     >
-                        <img src={this.state.bell} alt='bell'/>
+                        <img src={bell && this.bell  ? Bell : BellTrans} alt='bell'/>
                     </span>
                     <span
                         className="close test"
@@ -180,10 +209,10 @@ class SaveFilterItem extends Component {
                         <img src={close}  alt='close'/>
                     </span>
                 </div>
-                {this.state.notification ? this.renderNotification() : null}
+                {notifications && this.notifications ? this.renderNotification() : null}
             </li>
         )
     }
 }
 
-export default SaveFilterItem
+export default connect(mapStateToProps, mapDispatchToProps)(SaveFilterItem);
