@@ -9,7 +9,6 @@ export const bigger = (val, min) => {
     return (parseInt(val) >= parseInt(min));
 };
 
-
 export const messages = {
     required: "Required",
     isNumber: "Must be number",

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './operators.css';
 import Operator from "./components/Operator";
 import Spinner from '../../../components/Spinner/Spinner'
+import {FormattedMessage} from 'react-intl';
 
 class Operators extends Component {
 
@@ -23,15 +24,45 @@ class Operators extends Component {
         })
         return (
             <div className="admin-operators-wr">
-                <h1 className="header">Operators</h1>
+                <h1 className="header">
+                    <FormattedMessage
+                        id='operators'
+                        defaultMessage='Operators'
+                    />
+                </h1>
                 <table className="admin-operators">
                 <thead>
                     <tr>
-                        <th>First Name</th>
-                        <th>Middle Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Login</th>
+                        <th>
+                            <FormattedMessage
+                                id='global.firstName'
+                                defaultMessage='First Name'
+                            />
+                        </th>
+                        <th>
+                            <FormattedMessage
+                                id='global.middleName'
+                                defaultMessage='Middle Name'
+                            />
+                        </th>
+                        <th>
+                            <FormattedMessage
+                                id='global.surname'
+                                defaultMessage='Surname'
+                            />
+                        </th>
+                        <th>
+                            <FormattedMessage
+                                id='global.email'
+                                defaultMessage='E-mail'
+                            />
+                        </th>
+                        <th>
+                            <FormattedMessage
+                                id='operators.login'
+                                defaultMessage='Login'
+                            />
+                        </th>
                         <th className="settings"></th>
                     </tr>
                     </thead>
