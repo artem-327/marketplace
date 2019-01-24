@@ -56,6 +56,14 @@ class Chemical extends Component {
             return;
         }
 
+
+        if(this.props.searchedProducts.length === 0) {
+            this.setState(prevState => ({
+                scroll: -1
+            }));
+            return;
+        }
+
         if (!document.getElementsByClassName("combo-results")[0]) return;
         const cr = document.getElementsByClassName("combo-results")[0].childElementCount;
 

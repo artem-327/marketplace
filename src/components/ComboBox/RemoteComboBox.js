@@ -71,12 +71,10 @@ class RemoteComboBox extends Component {
           <Spinner />
         </div>
       );
-      // Math.random() * 100000) + 1
-      // index + combo.id
       if (this.state.items.length > 0) {
         let res = this.state.items.map((combo, index) => (
             <div
-              key={index + combo.id}
+              key={index}
               className={"combo-item" + this.setActive(index)}
               onClick={() => {
                 this.setState(
