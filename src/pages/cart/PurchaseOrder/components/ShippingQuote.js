@@ -5,6 +5,7 @@ import moment from 'moment'
 import Spinner from '../../../../components/Spinner/Spinner'
 import Radio from '../../../../components/Radio/Radio'
 import PerfectScrollbar from 'react-perfect-scrollbar'
+import {FormattedMessage} from 'react-intl';
 
 class ShippingQuote extends Component {
     state = {}
@@ -48,7 +49,12 @@ class ShippingQuote extends Component {
     renderShippingQuotes() {
         if (typeof this.props.shippingQuotes.length === 'undefined' || this.props.shippingQuotes.length < 1 || typeof this.props.selectedAddress.id == 'undefined') {
             return (
-                <div>Nothing to show</div>
+                <div>
+                    <FormattedMessage
+                        id='cart.nothing'
+                        defaultMessage='Nothing to show'
+                    />
+                </div>
             );
         }
 
@@ -61,24 +67,64 @@ class ShippingQuote extends Component {
                                 <div className={'fix-header'}></div>
                             </th>
                             <th>
-                                Carrier
-                                <div className={'fix-header'}>Carrier</div>
+                                <FormattedMessage
+                                    id='cart.carrier'
+                                    defaultMessage='Carrier'
+                                />
+                                <div className={'fix-header'}>
+                                    <FormattedMessage
+                                        id='cart.carrier'
+                                        defaultMessage='Carrier'
+                                    />
+                                </div>
                             </th>
                             <th className="a-right">
-                                Cost
-                                <div className={'fix-header'}>Cost</div>
+                                <FormattedMessage
+                                    id='cart.cost'
+                                    defaultMessage='Cost'
+                                />
+                                <div className={'fix-header'}>
+                                    <FormattedMessage
+                                        id='cart.cost'
+                                        defaultMessage='Cost'
+                                    />
+                                </div>
                             </th>
                             <th>
-                                Estimated Delivery
-                                <div className={'fix-header'}>Estimated Delivery</div>
+                                <FormattedMessage
+                                    id='cart.estimatedDelivery'
+                                    defaultMessage='Estimated Delivery'
+                                />
+                                <div className={'fix-header'}>
+                                    <FormattedMessage
+                                        id='cart.estimatedDelivery'
+                                        defaultMessage='Estimated Delivery'
+                                    />
+                                </div>
                             </th>
                             <th>
-                                ETD
-                                <div className={'fix-header'}>ETD</div>
+                                <FormattedMessage
+                                    id='cart.etd'
+                                    defaultMessage='ETD'
+                                />
+                                <div className={'fix-header'}>
+                                    <FormattedMessage
+                                        id='cart.etd'
+                                        defaultMessage='ETD'
+                                    />
+                                </div>
                             </th>
                             <th>
-                                Service Type
-                                <div className={'fix-header'}>Service Type</div>
+                                <FormattedMessage
+                                    id='cart.serviceType'
+                                    defaultMessage='Service Type'
+                                />
+                                <div className={'fix-header'}>
+                                    <FormattedMessage
+                                        id='cart.serviceType'
+                                        defaultMessage='Service Type'
+                                    />
+                                </div>
                             </th>
                         </tr>
                     </thead>
@@ -123,7 +169,14 @@ class ShippingQuote extends Component {
         let sQuotes = this.renderShippingQuotes();
         return (
             <div className="shopping-cart-items">
-                <header><h2>2. Freight Selection</h2></header>
+                <header>
+                    <h2>
+                        <FormattedMessage
+                            id='cart.2freightSelection'
+                            defaultMessage='2. Freight Selection'
+                        />
+                    </h2>
+                </header>
                 <div className="purchase-order-section">
                     <div className="group-item-wr">
                         {this.props.shippingQuotesAreFetching ? <Spinner /> : sQuotes}

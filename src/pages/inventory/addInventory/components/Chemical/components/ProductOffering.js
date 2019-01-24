@@ -7,8 +7,9 @@ import {required, messages, min, isNumber, maxPercent} from "../../../../../../u
 import RemoteComboBoxRedux from "../../../../../../components/ComboBox/RemoteComboBoxRedux";
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";
 import moment from 'moment';
+import {FormattedMessage, injectIntl} from 'react-intl';
 
-export default class ProductOffering extends Component {
+class ProductOffering extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -33,21 +34,17 @@ export default class ProductOffering extends Component {
         this.props.resetForm('forms.productOffering');
     }
 
-    validateMapping() {
-        if (this.props.productMapping.indexName === '' || this.props.productMapping.casNumber === '' || this.props.productMapping.chemicalName === '' || this.props.productMapping.productName === '' || this.props.productMapping.productNumber === '' || this.props.productMapping.measurements === '' || this.props.productMapping.packaging.container === undefined || this.props.productMapping.packaging.unit === undefined) {
-            return true;
-        }
-    }
+    // validateMapping() {
+    //     if (this.props.productMapping.indexName === '' || this.props.productMapping.casNumber === '' || this.props.productMapping.chemicalName === '' || this.props.productMapping.productName === '' || this.props.productMapping.productNumber === '' || this.props.productMapping.measurements === '' || this.props.productMapping.packaging.container === undefined || this.props.productMapping.packaging.unit === undefined) {
+    //         return true;
+    //     }
+    // }
 
     saveOffering(values) {
-
-
-        console.log("saveoffering");
 
         if (!parseInt(this.props.productOffering.assayMin) && !parseInt(this.props.productOffering.assayMax)) {
             this.setState({minWarning: 'Required', maxWarning: 'Required'})
         }
-
         /*
         if (this.validateMapping()) {
             this.props.addMessage("Please fill mapping forms before you add new lot.");
@@ -114,7 +111,12 @@ export default class ProductOffering extends Component {
                         isNumber: messages.isNumber
                     }}
                 />
-                <label htmlFor=".lotNumber">Lot Number</label>
+                <label htmlFor=".lotNumber">
+                    <FormattedMessage
+                        id='addInventory.lotNumber'
+                        defaultMessage='Lot Number'
+                    />
+                </label>
                 <Control.text model=".lotNumber"
                             validators={{min: (val) => min(val, 0), isNumber, required}}
                             id=".lotNumber"/>
@@ -124,13 +126,25 @@ export default class ProductOffering extends Component {
         /*let button = this.state.save ? <button className='button big added-productOffering'>Added</button> :
             <button className='button big add-productOffering'>Add Lot</button>;*/
 
-        let button = <button id="offering-btn" className='button big add-productOffering'>Add Lot</button>;
+        let button =
+            <button id="offering-btn" className='button big add-productOffering'>
+                <FormattedMessage
+                    id='addIventory.addLot'
+                    defaultMessage='Add Lot'
+                />
+            </button>;
+
+        const { formatMessage } = this.props.intl;
 
         return (
             <div>
-                <h4 className=''>PRODUCT OFFERING</h4>
+                <h4>
+                    <FormattedMessage
+                        id='addInventory.productOffering'
+                        defaultMessage='PRODUCT OFFERING'
+                    />
+                </h4>
                 <Form model="forms.productOffering" onSubmit={(values) => this.saveOffering(values)}>
-                   
                     <div>
                         <div className='group-item-wr'>
                             <Errors
@@ -141,15 +155,27 @@ export default class ProductOffering extends Component {
                                     required: messages.required,
                                 }}
                             />
-                            <RemoteComboBoxRedux items={this.props.manufacturer}
-                                                 api={(text) => this.props.fetchManufacturer(text)}
-                                                 dataFetched={this.props.manufacturerFetched}
-                                                 currentValue={this.props.edit ? this.props.productOffer.manufacturer.name : null}
-                                                 className="manufacturer" limit={5} label="Manufacturer"
-                                                 isFetching={this.props.isFetchingManufacturer}
-                                                 saveObj={obj=>obj}
-                                                 validators={{required}} dispatch={this.props.dispatch}
-                                                 model="forms.productOffering.manufacturer"/>
+                            <RemoteComboBoxRedux
+                                items={this.props.manufacturer}
+                                api={(text) => this.props.fetchManufacturer(text)}
+                                dataFetched={this.props.manufacturerFetched}
+                                currentValue={this.props.edit ? this.props.productOffer.manufacturer.name : null}
+                                className="manufacturer"
+                                limit={5}
+                                label={formatMessage({
+                                    id: 'addInventory.manufacturer',
+                                    defaultMessage: 'Manufacturer'
+                                })}
+                                placeholder={formatMessage({
+                                    id: 'addInventory.search',
+                                    defaultMessage: 'Search'
+                                })}
+                                isFetching={this.props.isFetchingManufacturer}
+                                saveObj={obj=>obj}
+                                validators={{required}}
+                                dispatch={this.props.dispatch}
+                                model="forms.productOffering.manufacturer"
+                            />
                         </div>
 
                         <div className='group-item-wr'>
@@ -161,16 +187,27 @@ export default class ProductOffering extends Component {
                                     required: messages.required,
                                 }}
                             />
-                            <RemoteComboBoxRedux items={this.props.originData}
-                                                 dataFetched={this.props.originFetched}
-                                                 api={(text) => this.props.fetchOrigin(text)}
-                                                 className="origin" limit={5} label="Origin"
-                                                 currentValue={this.props.edit ? this.props.productOffer.origin.name : null}
-                                                 isFetching={this.props.isFetchingOrigin}
-                                                 saveObj={obj=>obj}
-                                                 validators={{required}} 
-                                                 dispatch={this.props.dispatch}
-                                                 model="forms.productOffering.origin"/>
+                            <RemoteComboBoxRedux
+                                items={this.props.originData}
+                                dataFetched={this.props.originFetched}
+                                api={(text) => this.props.fetchOrigin(text)}
+                                className="origin"
+                                limit={5}
+                                label={formatMessage({
+                                    id: 'addInventory.origin',
+                                    defaultMessage: 'Origin'
+                                })}
+                                placeholder={formatMessage({
+                                    id: 'addInventory.search',
+                                    defaultMessage: 'Search'
+                                })}
+                                currentValue={this.props.edit ? this.props.productOffer.origin.name : null}
+                                isFetching={this.props.isFetchingOrigin}
+                                saveObj={obj=>obj}
+                                validators={{required}}
+                                dispatch={this.props.dispatch}
+                                model="forms.productOffering.origin"
+                            />
                         </div>
                         <div className='group-item-wr'>
                             <Errors
@@ -181,11 +218,21 @@ export default class ProductOffering extends Component {
                                     required: messages.required,
                                 }}
                             />
-                            <label htmlFor=".form">Form</label>
-                            <DropdownRedux opns={this.props.productForms} placeholder='Select'
-                                           model="forms.productOffering.productForm"
-                                           validators={{required}}
-                                           dispatch={this.props.dispatch}
+                            <label htmlFor=".form">
+                                <FormattedMessage
+                                    id='dataTable.Form'
+                                    defaultMessage='Form'
+                                />
+                            </label>
+                            <DropdownRedux
+                                opns={this.props.productForms}
+                                placeholder={formatMessage({
+                                    id: 'addInventory.select',
+                                    defaultMessage: 'Select'
+                                })}
+                                model="forms.productOffering.productForm"
+                                validators={{required}}
+                                dispatch={this.props.dispatch}
                             />
                         </div>
                         <div className='group-item-wr'>
@@ -194,9 +241,15 @@ export default class ProductOffering extends Component {
                                 model=".name"
                                 show="touched"
                             />
-                            <label htmlFor=".tradeName">Trade Name</label>
-                            <Control.text model=".tradeName"
-                                          id=".tradeName"
+                            <label htmlFor=".tradeName">
+                                <FormattedMessage
+                                    id='dataTable.TradeName'
+                                    defaultMessage='Trade Name'
+                                />
+                            </label>
+                            <Control.text
+                                model=".tradeName"
+                                id=".tradeName"
                             />
                         </div>
                         <div>
@@ -213,17 +266,23 @@ export default class ProductOffering extends Component {
                                        
                                     }}
                                 />
-                                <label htmlFor=".assayMin">Assay Min %</label>
-                                <Control.text model=".assayMin"
-                                              onChange={this.minValidationHandler}
-                                              type="number"
-                                              id=".assayMin"
-                                              validators={{
-                                                  required,
-                                                  isNumber,
-                                                  min: (val) => min(val, 0),
-                                                  maxPercent
-                                                }}
+                                <label htmlFor=".assayMin">
+                                    <FormattedMessage
+                                        id='addInventory.assayMin'
+                                        defaultMessage='Assay Min %'
+                                    />
+                                </label>
+                                <Control.text
+                                    model=".assayMin"
+                                    onChange={this.minValidationHandler}
+                                    type="number"
+                                    id=".assayMin"
+                                    validators={{
+                                          required,
+                                          isNumber,
+                                          min: (val) => min(val, 0),
+                                          maxPercent
+                                    }}
                                 />
                                 <div class="warning">{this.state.minWarning}</div>
                             </div>
@@ -239,17 +298,23 @@ export default class ProductOffering extends Component {
                                         maxPercent: messages.maxPercent,
                                     }}
                                 />
-                                <label htmlFor=".assayMax">Assay Max %</label>
-                                <Control.text model=".assayMax"
-                                              onChange={this.maxValidationHandler}
-                                              type="number"
-                                              id=".assayMax"
-                                              validators={{
-                                                required,
-                                                isNumber,
-                                                min: (val) => min(val, 0),
-                                                maxPercent
-                                              }}
+                                <label htmlFor=".assayMax">
+                                    <FormattedMessage
+                                        id='addInventory.assayMax'
+                                        defaultMessage='Assay Max %'
+                                    />
+                                </label>
+                                <Control.text
+                                    model=".assayMax"
+                                    onChange={this.maxValidationHandler}
+                                    type="number"
+                                    id=".assayMax"
+                                    validators={{
+                                        required,
+                                        isNumber,
+                                        min: (val) => min(val, 0),
+                                        maxPercent
+                                      }}
                                 />
                                 <div class="warning">{this.state.maxWarning}</div>
                             </div>
@@ -262,11 +327,21 @@ export default class ProductOffering extends Component {
                                         required: messages.required,
                                     }}
                                 />
-                                <label htmlFor=".grade">Grade</label>
-                                <DropdownRedux opns={this.props.productGrade} placeholder='Select'
-                                               model="forms.productOffering.productGrade"
-                                               validators={{required}}
-                                               dispatch={this.props.dispatch}
+                                <label htmlFor=".grade">
+                                    <FormattedMessage
+                                        id='filter.grade'
+                                        defaultMessage='Grade'
+                                    />
+                                </label>
+                                <DropdownRedux
+                                    opns={this.props.productGrade}
+                                    placeholder={formatMessage({
+                                        id: 'addInventory.select',
+                                        defaultMessage: 'Select'
+                                    })}
+                                    model="forms.productOffering.productGrade"
+                                    validators={{required}}
+                                    dispatch={this.props.dispatch}
                                 />
                             </div>
                             <div className='group-item-wr'>
@@ -278,30 +353,74 @@ export default class ProductOffering extends Component {
                                         required: messages.required,
                                     }}
                                 />
-                                <label htmlFor=".condition">Condition</label>
-                                <DropdownRedux opns={this.props.productConditions} placeholder='Select'
-                                               model="forms.productOffering.productCondition"
-                                               validators={{required}}
-                                               dispatch={this.props.dispatch}
+                                <label htmlFor=".condition">
+                                    <FormattedMessage
+                                        id='dataTable.condition'
+                                        defaultMessage='Condition'
+                                    />
+                                </label>
+                                <DropdownRedux
+                                    opns={this.props.productConditions}
+                                    placeholder={formatMessage({
+                                        id: 'addInventory.select',
+                                        defaultMessage: 'Select'
+                                    })}
+                                    model="forms.productOffering.productCondition"
+                                    validators={{required}}
+                                    dispatch={this.props.dispatch}
                                 />
                             </div>
                         </div>
                     </div>
                     <div>
                         <div className="group-item-wr long">
-                            <Tooltip className="notes" content="External notes are visible to other merchants."/>
+                            <Tooltip
+                                className="notes"
+                                content={formatMessage({
+                                    id: 'addInventory.externalNotesTip',
+                                    defaultMessage: 'External notes are visible to other merchants.'
+                                })}/>
                             <div className="notes-textarea">
-                                <label htmlFor=".externalNotes">External notes</label>
-                                <Control.textarea model=".externalNotes" id=".externalNotes" className="textarea"
-                                                  placeholder="Enter notes here"/>
+                                <label htmlFor=".externalNotes">
+                                    <FormattedMessage
+                                        id='addInventory.externalNotes'
+                                        defaultMessage='External Notes'
+                                    />
+                                </label>
+                                <Control.textarea
+                                    model=".externalNotes"
+                                    id=".externalNotes"
+                                    className="textarea"
+                                    placeholder={formatMessage({
+                                        id: 'addInventory.notesPlaceholder',
+                                        defaultMessage: 'Enter notes here'
+                                    })}/>
                             </div>
                         </div>
                         <div className="group-item-wr long">
-                            <Tooltip className="notes" content="Internal notes are visible to you or other users of your company only."/>
+                            <Tooltip
+                                className="notes"
+                                content={formatMessage({
+                                    id: 'addInventory.internalNotesTip',
+                                    defaultMessage: 'Internal notes are visible to you or other users of your company only.'
+                                })}
+                            />
                             <div className="notes-textarea">
-                                <label htmlFor=".internalNotes">Internal Notes</label>
-                                <Control.textarea model=".internalNotes" id=".internalNotes" className="textarea"
-                                                  placeholder="Enter notes here"/>
+                                <label htmlFor=".internalNotes">
+                                    <FormattedMessage
+                                        id='addInventory.internalNotes'
+                                        defaultMessage='Internal Notes'
+                                    />
+                                </label>
+                                <Control.textarea
+                                    model=".internalNotes"
+                                    id=".internalNotes"
+                                    className="textarea"
+                                    placeholder={formatMessage({
+                                        id: 'addInventory.notesPlaceholder',
+                                        defaultMessage: 'Enter notes here'
+                                    })}
+                                />
 
                             </div>
                         </div>
@@ -317,33 +436,52 @@ export default class ProductOffering extends Component {
                                     isNumber: messages.isNumber
                                 }}
                             />
-                            <label htmlFor=".pkgAmount">Total Packages</label>
-                            <Control.text model=".pkgAmount"
-                                          validators={{min: (val) => min(val, 0), isNumber, required}}
-                                          id=".pkgAmount"
-                                          onChange={this.props.totalPackagesHandler}
+                            <label htmlFor=".pkgAmount">
+                                <FormattedMessage
+                                    id='addInventory.totalPackages'
+                                    defaultMessage='Total Packages'
+                                />
+                            </label>
+                            <Control.text
+                                model=".pkgAmount"
+                                validators={{min: (val) => min(val, 0), isNumber, required}}
+                                id=".pkgAmount"
+                                onChange={this.props.totalPackagesHandler}
                             />
                         </div>
                         {lotNumber} {/*temporarily disabled until the data is available*/}
 
                         <div className='group-item-wr'>
-                            <Errors model='forms.productOffering.creationDate'
-                                    show="touched"
-                                    messages={{required: 'Required'}}/>
-                            <label htmlFor=".creationDate">MFG Date</label>
-                            <DatepickerRedux placeholder={'test'}
-                                             maxDate={moment().subtract(1, "days")}
-                                             dispatch={this.props.dispatch}
-                                             onChange={(value) => console.log(value)}
-                                             model='forms.productOffering.creationDate'/>
+                            <Errors
+                                model='forms.productOffering.creationDate'
+                                show="touched"
+                                messages={{required: messages.required}}/>
+                            <label htmlFor=".creationDate">
+                                <FormattedMessage
+                                    id='dataTable.MFGDate'
+                                    defaultMessage='MFG Date'
+                                />
+                            </label>
+                            <DatepickerRedux
+                                placeholder={'test'}
+                                maxDate={moment().subtract(1, "days")}
+                                dispatch={this.props.dispatch}
+                                onChange={(value) => console.log(value)}
+                                model='forms.productOffering.creationDate'/>
                         </div>
                         <div className='group-item-wr'>
-                            <label htmlFor=".expirationDate">Expiration Date</label>
-                            <DatepickerRedux placeholder={'test'}
-                                             minDate={moment().add(1, "days")}
-                                             dispatch={this.props.dispatch}
-                                             onChange={(value) => console.log(value)}
-                                             model='forms.productOffering.expirationDate'/>
+                            <label htmlFor=".expirationDate">
+                                <FormattedMessage
+                                    id='addInventory.expirationDate'
+                                    defaultMessage='Expiration Date'
+                                />
+                            </label>
+                            <DatepickerRedux
+                                placeholder={'test'}
+                                minDate={moment().add(1, "days")}
+                                dispatch={this.props.dispatch}
+                                onChange={(value) => console.log(value)}
+                                model='forms.productOffering.expirationDate'/>
                         </div>
                         <div className='group-item-wr'>
                             {!this.props.edit ? button : null}
@@ -357,3 +495,5 @@ export default class ProductOffering extends Component {
         );
     }
 }
+
+export default injectIntl(ProductOffering);

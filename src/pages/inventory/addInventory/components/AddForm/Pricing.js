@@ -6,8 +6,9 @@ import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux";
 import './Pricing.css';
 import classNames from 'classnames';
 import WarningLabel from "../../../../../components/WarningLabel/WarningLabel"
+import {FormattedMessage, injectIntl} from 'react-intl';
 
-export default class Pricing extends Component {
+class Pricing extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -269,9 +270,9 @@ export default class Pricing extends Component {
 
     render() {
         //console.log(this.props)
-        
+
         //console.log(JSON.parse(localStorage.getItem('productLots')));
-        
+
         //console.log(this.props.productOffer.packaging.size)
         //console.log(this.props.productOffer.pricing.price)
         //console.log(this.props.productOffer.pkgAmount)
@@ -285,23 +286,24 @@ export default class Pricing extends Component {
       //const measurement = packaging ? packaging.capacity : null
       //const price = this.props
 
-
-    let pricePer;
-    let costPer;
-
-    if(this.props.mappingForm.packaging) {
-        if(this.props.mappingForm.packaging.unit === 1 || this.props.mappingForm.packaging.unit === 3 || this.props.mappingForm.packaging.unit === 5) {
-            pricePer = 'Price per (lb)';
-            costPer = 'Cost per (lb)'
-        } else if(this.props.mappingForm.packaging.unit === 2 || this.props.mappingForm.packaging.unit === 4 || this.props.mappingForm.packaging.unit === 6) {
-            pricePer = 'Price per (gl)';
-            costPer = 'Cost per (gl)';
-        } else if(!this.props.mappingForm.packaging.unit) {
-            pricePer = 'Price per unit';
-            costPer = 'Cost per unit';
-        }
+    const { packaging } = this.props.mappingForm;
+    let pricePer, costPer, unit;
+    const arrayUnit = ['unit', '(lb)', '(gl)'];
+    if(packaging) {
+        unit  = !packaging.unit ? 0 : packaging.unit;
+        pricePer =
+            <FormattedMessage
+                id='global.pricePer'
+                defaultMessage={'Price per ' + arrayUnit[unit]}
+                values={{unit: arrayUnit[unit]}}
+            />;
+        costPer =
+            <FormattedMessage
+                id='addInventory.costPer'
+                defaultMessage={'Cost per ' + arrayUnit[unit]}
+                values={{unit: arrayUnit[unit]}}
+            />;
     }
-
     let totalSalesPrice;
     let productLots = JSON.parse(localStorage.getItem('productLots'));
     let productLotsPkgAmount = 0;
@@ -319,11 +321,17 @@ export default class Pricing extends Component {
         ? productLotsPkgAmount * Number(this.props.form.pricing.price * Number(this.props.mappingForm.packaging.size))
         : 0;
     }
+    
+    const { formatMessage } = this.props.intl;
 
     let pricing =
-
             <div>
-                <h4>SET PRICE & RULES</h4>
+                <h4>
+                    <FormattedMessage
+                        id='addInventory.setPriceAndRules'
+                        defaultMessage='SET PRICE & RULES'
+                    />
+                </h4>
                 <div>
                     <div className='group-item-wr'>
                         <Errors
@@ -337,20 +345,21 @@ export default class Pricing extends Component {
                             }}
                         />
                         <label htmlFor=".pricePr">{pricePer}</label>
-                        <Control.text model=".pricing.price"
-                                      id=".pricePr"
-                                      validators={{
-                                          min: (val) => min(val, 0),
-                                          isNumber,
-                                          required
-                                      }}
-                                      type='number'
-                                      name='price'
-                                      onChange={(e)=>this.calculatePricing(e)}
-                                      //onBlur={()=>this.checkFilledInputs()}
-                                      disabled={!!this.state.showIncrementalPricing}
-                                      placeholder="$"
-                                      defaultValue={this.props.edit ? this.props.productOffer.pricing.price : ''}
+                        <Control.text
+                            model=".pricing.price"
+                            id=".pricePr"
+                            validators={{
+                                  min: (val) => min(val, 0),
+                                  isNumber,
+                                  required
+                            }}
+                            type='number'
+                            name='price'
+                            onChange={(e)=>this.calculatePricing(e)}
+                            //onBlur={()=>this.checkFilledInputs()}
+                            disabled={!!this.state.showIncrementalPricing}
+                            placeholder="$"
+                            defaultValue={this.props.edit ? this.props.productOffer.pricing.price : ''}
                         />
                     </div>
                     <div className='group-item-wr'>
@@ -365,46 +374,59 @@ export default class Pricing extends Component {
                             }}
                         />
                         <label htmlFor=".costPr">{costPer}</label>
-                        <Control.text model=".pricing.cost"
-                                      id=".costPr"
-                                      validators={{
-                                          min: (val) => min(val, 0),
-                                          isNumber,
-                                          required
-                                      }}
-                                      defaultValue={this.props.edit ? this.props.productOffer.pricing.cost : ''}
-                                      type='number'
-                                      name='cost'
-                                      onChange={(e)=>this.calculatePricing(e)}
-                                      //onBlur={()=>this.checkFilledInputs()}
-                                      placeholder="$"/>
+                        <Control.text
+                            model=".pricing.cost"
+                            id=".costPr"
+                            validators={{
+                                  min: (val) => min(val, 0),
+                                  isNumber,
+                                  required
+                              }}
+                            defaultValue={this.props.edit ? this.props.productOffer.pricing.cost : ''}
+                            type='number'
+                            name='cost'
+                            onChange={(e)=>this.calculatePricing(e)}
+                            //onBlur={()=>this.checkFilledInputs()}
+                            placeholder="$"/>
                     </div>
                     
 
                     <div className='group-item-wr'>
                         <div className='gross-margin'>
-                            <label htmlFor=".marginPr">Gross Margin %</label>
+                            <label htmlFor=".marginPr">
+                                <FormattedMessage
+                                    id='addInventory.grossMargin'
+                                    defaultMessage='Gross Margin %'
+                                />
+                            </label>
                             <div>
-                                <Control.text model=".pricing.margin"
-                                      id=".marginPr"
-                                      className= {classNames({inRed: this.state.margin < 0},  'pricing-gross-margin')}
+                                <Control.text
+                                    model=".pricing.margin"
+                                    id=".marginPr"
+                                    className= {classNames({inRed: this.state.margin < 0},  'pricing-gross-margin')}
                                     //   validators={{
                                     //       min: (val) => min(val, 0),
                                     //       isNumber,
                                     //       //required
                                     //   }}
-                                      value={this.state.margin}
-                                      type='number'
-                                      name='margin'
-                                      onChange={(e)=>this.calculatePricing(e)}
-                                      //onBlur={()=>this.checkFilledInputs()}
-                                      placeholder="%"/>
+                                    value={this.state.margin}
+                                    type='number'
+                                    name='margin'
+                                    onChange={(e)=>this.calculatePricing(e)}
+                                    //onBlur={()=>this.checkFilledInputs()}
+                                    placeholder="%"
+                                />
                             </div>
                         </div>
                     </div>
                     <div className='group-item-wr'>
                         <div className='total'>
-                            <h5>Total Sales Price</h5>
+                            <h5>
+                                <FormattedMessage
+                                    id='addInventory.totalSalesPrice'
+                                    defaultMessage='Total Sales Price'
+                                />
+                            </h5>
                             <output>${totalSalesPrice}</output>
                         </div>
                     </div>
@@ -420,20 +442,26 @@ export default class Pricing extends Component {
                                   isNumber: messages.isNumber
                               }}
                           />
-                          <label>Splits</label>
-                          <Control.text model="forms.productMapping.packaging.splits"
-                                        id="forms.productMapping.packaging.splits"
-                                        validators={{
-                                            required,
-                                            isNumber
-                                        }}
-                                        defaultValue={this.state.splits}
-                                        onChange={e => this.splitsMinimumChange(e)}
-                                        onBlur={() => this.validateMinimum('splits')}
-                                        className='splits'
-                                        type='number'
-                                        min={'1'}
-                                        />
+                          <label>
+                              <FormattedMessage
+                                id='addInventory.splits'
+                                defaultMessage='Splits'
+                              />
+                          </label>
+                          <Control.text
+                              model="forms.productMapping.packaging.splits"
+                              id="forms.productMapping.packaging.splits"
+                              validators={{
+                                    required,
+                                    isNumber
+                              }}
+                              defaultValue={this.state.splits}
+                              onChange={e => this.splitsMinimumChange(e)}
+                              onBlur={() => this.validateMinimum('splits')}
+                              className='splits'
+                              type='number'
+                              min={'1'}
+                          />
                       </div>
                       <div className='group-item-wr'>
                           <Errors
@@ -445,19 +473,25 @@ export default class Pricing extends Component {
                                   isNumber: messages.isNumber
                               }}
                           />
-                          <label>Minimum</label>
-                          <Control.text model="forms.productMapping.packaging.minimum"
-                                        id="forms.productMapping.packaging.minimum"
-                                        validators={{
-                                            required,
-                                            isNumber
-                                        }}
-                                        defaultValue={this.state.minimum}
-                                        onChange={e => this.splitsMinimumChange(e)}
-                                        onBlur={e => this.validateMinimum('minimum')}
-                                        className='minimum'
-                                        type='number'
-                                        min={'0'}/>
+                          <label>
+                              <FormattedMessage
+                                id='addInventory.minimum'
+                                defaultMessage='Minimum'
+                              />
+                          </label>
+                          <Control.text
+                              model="forms.productMapping.packaging.minimum"
+                              id="forms.productMapping.packaging.minimum"
+                              validators={{
+                                    required,
+                                    isNumber
+                              }}
+                              defaultValue={this.state.minimum}
+                              onChange={e => this.splitsMinimumChange(e)}
+                              onBlur={e => this.validateMinimum('minimum')}
+                              className='minimum'
+                              type='number'
+                              min={'0'}/>
                       </div>
                       {/*<div className='group-item-wr inputs-align'>
                             <Control.checkbox 
@@ -472,21 +506,33 @@ export default class Pricing extends Component {
 
                     <div>
                         <div className='group-item-wr'>
-                            <CheckboxRedux name='incremental'
-                                           label='Tiered Pricing'
-                                           defaultValue={this.state.showIncrementalPricing}
-                                           dispatch={this.props.dispatch}
-                                           model={'forms.addProductOffer.incrementalSelected'}
-                                           onChange={value => this.setState({showIncrementalPricing: value})}/>
+                            <CheckboxRedux
+                                name='incremental'
+                                label={formatMessage({
+                                    id: 'addInventory.tierPricing',
+                                    defaultMessage: 'Tier Pricing'
+                                })}
+                                defaultValue={this.state.showIncrementalPricing}
+                                dispatch={this.props.dispatch}
+                                model={'forms.addProductOffer.incrementalSelected'}
+                                onChange={value => this.setState({showIncrementalPricing: value})}/>
                         </div>
                     </div>
 
                     <div>
-                        <WarningLabel class={'warningBody3'} isVisible={this.state.showIncrementalPricing && (this.state.splits === '' || this.state.minimum === '')} warningText={"Please enter allowed Split and Minimum values first."}/>
+                        <WarningLabel 
+                            class={'warningBody3'} 
+                            isVisible={this.state.showIncrementalPricing && (this.state.splits === '' || this.state.minimum === '')} 
+                            warningText={formatMessage({
+                                id: 'addInventory.warning',
+                                defaultMessage: 'Please enter allowed Split and Minimum values first.'
+                            })}
+                        />
                     </div>
                     
                     {showIncrementalPricing && <div className='incremental-wr'>
                       <IncrementalPricing
+                        pricePer={pricePer}
                         cost={this.props.form.pricing.cost}
                         splits={splits}
                         minimum={minimum}
@@ -506,3 +552,5 @@ export default class Pricing extends Component {
         return (pricing);
     }
 }
+
+export default injectIntl(Pricing);

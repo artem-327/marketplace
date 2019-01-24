@@ -20,15 +20,17 @@ class DataTable extends Component {
       sort: item.sort !== undefined ? item.sort : true,
       visible: item.visible !== undefined ? item.visible : true
     }));
-    let rowsOpns = this.props.rows.map((item, index) => ({
-      ...item,
-      index: index,
-      rows: item.rows.map((row, index2) => ({
-        selected: false,
-        index: index2,
-        id: row.id
-      }))
-    }));
+    let rowsOpns = this.props.rows.map((item, index) => {
+        return ({
+            ...item,
+            index: index,
+            rows: item.rows.map((row, index2) => ({
+                selected: false,
+                index: index2,
+                id: row.id
+            }))
+        });
+    });
     this.props.initDataTable(this.props.id, header, rowsOpns);
     // }
   }

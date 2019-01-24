@@ -5,6 +5,7 @@ import Pricing from './Pricing';
 import Location from './Location';
 import classnames from 'classnames';
 import Chemical from "../Chemical";
+import {FormattedMessage} from 'react-intl';
 
 export default class AddForm extends Component {
     constructor(props) {
@@ -71,11 +72,20 @@ export default class AddForm extends Component {
             assayMax: parseInt(this.props.productOfferingForm.assayMax),
             creationDate: creationDate,
             expirationDate: expirationDate,
-            pricing: {...this.props.addProductOfferForm.pricing, price: parseInt(this.props.addProductOfferForm.pricing.price), cost: parseInt(this.props.addProductOfferForm.pricing.cost), tiers: newTiers},
+            pricing: {
+                ...this.props.addProductOfferForm.pricing,
+                price: parseInt(this.props.addProductOfferForm.pricing.price),
+                cost: parseInt(this.props.addProductOfferForm.pricing.cost),
+                tiers: newTiers
+            },
             manufacturer: this.props.productOfferingForm.manufacturer.id || this.props.productOffer.manufacturer.id,
             origin: this.props.productOfferingForm.origin.id || this.props.productOffer.origin.id,
             product: parseInt(this.props.mappingForm.casNumber.replace(/-/g,"")),
-            packaging: {...this.props.mappingForm.packaging, size: parseInt(this.props.mappingForm.packaging.size), originalPkgAmount: parseInt(this.props.productOfferingForm.pkgAmount)}
+            packaging: {
+                ...this.props.mappingForm.packaging,
+                size: parseInt(this.props.mappingForm.packaging.size),
+                originalPkgAmount: parseInt(this.props.productOfferingForm.pkgAmount)
+            }
         });
 
         console.log(params);
@@ -132,7 +142,12 @@ export default class AddForm extends Component {
             ...this.props.mappingForm,
             ...this.props.productOfferingForm,
             anonymous: false,
-            pricing: {...this.props.addProductOfferForm.pricing, price: parseInt(this.props.addProductOfferForm.pricing.price), cost: parseInt(this.props.addProductOfferForm.pricing.cost), tiers: newTiers},
+            pricing: {
+                ...this.props.addProductOfferForm.pricing,
+                price: parseInt(this.props.addProductOfferForm.pricing.price),
+                cost: parseInt(this.props.addProductOfferForm.pricing.cost),
+                tiers: newTiers
+            },
             creationDate: creationDate,
             expirationDate: expirationDate,
             manufacturer: this.props.productOfferingForm.manufacturer.id || this.props.productOffer.manufacturer.id,
@@ -158,14 +173,55 @@ export default class AddForm extends Component {
     }
 
     render() {
-        let cancelButton = this.props.edit ? <button onClick={this.cancelEdit} className={classnames('button add-inventory big')}>Cancel Edit</button> : null;
-        let submitButton = <button disabled={this.props.disable} className={classnames('button add-inventory big', {'disabled' : this.props.disable})}>Save</button>;
+        let cancelButton = this.props.edit ?
+            <button
+                onClick={this.cancelEdit}
+                className={classnames('button add-inventory big')}>
+                    <FormattedMessage
+                        id='addInventory.cancelEdit'
+                        defaultMessage='Cancel Edit'
+                    />
+            </button>
+            : null;
+        let submitButton =
+            <button
+                disabled={this.props.disable}
+                className={classnames('button add-inventory big', {'disabled' : this.props.disable})}>
+                    <FormattedMessage
+                        id='addInventory.save'
+                        defaultMessage='Save'
+                    />
+            </button>;
         return (
-            <div className={classnames('add-inventory', {'disable' : this.props.disable})} >
-                <Form model="forms.addProductOffer" onSubmit={(inputs) => this.props.edit ? this.editProductOffer(inputs) : this.addProductOfferTimeout(inputs)}>
-                    <AddGroup header='CHEMICAL' component={<Chemical {...this.props} edit={this.props.edit} resetForm={this.props.resetForm}/>}/>
-                    <AddGroup header='PRICING' disable={this.props.disable} component = {<Pricing {...this.props} getIncPricing={(data)=>this.getIncPricing(data)}/>} />
-                    <AddGroup header='WAREHOUSE' disable={this.props.disable} component = {<Location {...this.props}/>} />
+            <div className={classnames('add-inventory', {'disable' : this.props.disable})}>
+                <Form
+                    model="forms.addProductOffer"
+                    onSubmit={(inputs) =>
+                        this.props.edit ?
+                            this.editProductOffer(inputs)
+                            : this.addProductOfferTimeout(inputs)}
+                >
+                    <AddGroup
+                        header='chemical'
+                        component={<Chemical {...this.props}
+                        edit={this.props.edit}
+                        resetForm={this.props.resetForm}/>}
+                    />
+                    <AddGroup
+                        header='pricing'
+                        disable={this.props.disable}
+                        component = {
+                            <Pricing
+                                {...this.props}
+                                getIncPricing={(data) =>this.getIncPricing(data)}
+                            />
+                        }
+                    />
+                    <AddGroup
+                        header='warehouse'
+                        disable={this.props.disable}
+                        component={<Location {...this.props}/>}
+                    />
                     {submitButton}
                 </Form>
                 {cancelButton}

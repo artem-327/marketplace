@@ -7,6 +7,8 @@ import "./companiesAdmin.css";
 import Spinner from "../../../components/Spinner/Spinner";
 import InputControlled from "../../../components/InputControlled/InputControlled";
 import DataTable from "../../../components/DataTable";
+import { injectIntl } from 'react-intl';
+
 class CompaniesAdmin extends Component {
   state = {
     name: ""
@@ -36,20 +38,21 @@ class CompaniesAdmin extends Component {
         ]
       };
     });
+    const { formatMessage } = this.props.intl;
     return (
       <>
         <DataTable
           id="offices"
           sortFunc={nameColumn => console.log(nameColumn)}
-          headerInit={[{ name: "Company Name" }]}
+          headerInit={[{ name: "companyName" }]}
           contextMenu={[
             {
               action: id => console.log("edit Company with id: " + id),
-              label: "Edit Company"
+              label: "editCompany"
             },
             {
               action: id => this.props.deleteCompany(id),
-              label: "Remove Company"
+              label: "removeCompany"
             }
           ]}
           rows={rows}
@@ -59,7 +62,10 @@ class CompaniesAdmin extends Component {
             value={this.state.name}
             handleChange={this.handleChange}
             name="name"
-            placeholder="New company name"
+            placeholder={formatMessage({
+                id: 'administration.newCompanyName',
+                defaultMessage: 'New Company Name'
+            })}
           />
           <i
             className="fas fa-plus"
@@ -88,4 +94,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({ fetchDetail, getOffices, putOfficeEdit, putCompanyEdit, postNewCompany, postNewOffice, deleteOffice, deleteCompany }, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CompaniesAdmin);
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(CompaniesAdmin));

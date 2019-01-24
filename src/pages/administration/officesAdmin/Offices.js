@@ -50,18 +50,18 @@ class Offices extends Component {
         id="offices"
         sortFunc={nameColumn => console.log(nameColumn)}
         headerInit={[
-          { name: "Office Name" },
-          { name: "Company Name" },
-          { name: "Merchants" }
+          { name: "officeName" },
+          { name: "companyName" },
+          { name: "merchants" }
         ]}
         contextMenu={[
           {
             action: id =>  this.props.addPopup(<OfficesDetailAdmin id={id}/>),
-            label: "Edit Office"
+            label: "editOffice"
           },
           {
             action: id => this.props.deleteOffice(id),
-            label: "Remove Office"
+            label: "removeOffice"
           }
         ]}
         rows={rows}

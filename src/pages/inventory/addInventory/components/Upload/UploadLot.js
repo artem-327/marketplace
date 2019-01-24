@@ -5,6 +5,7 @@ import uploaded from '../../../../../images/upload/uploaded.png';
 import PropTypes from "prop-types";
 import File from "./components/File";
 import ReactDropzone from "react-dropzone";
+import {FormattedMessage} from 'react-intl';
 
 class UploadLot extends Component {
     constructor(props) {
@@ -40,7 +41,12 @@ class UploadLot extends Component {
                     <ReactDropzone className="dropzoneLot" activeClassName="active" onDrop={this.onPreviewDrop}>
                         <img className="upload" src={upload} alt='drop-close'/>
                         <div>
-                            <label>Click to upload C of A</label>
+                            <label>
+                                <FormattedMessage
+                                    id='addInventory.uploadDocument'
+                                    defaultMessage='Click To Upload C of A'
+                                />
+                            </label>
                         </div>
                     </ReactDropzone>
                 }

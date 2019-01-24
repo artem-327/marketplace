@@ -11,6 +11,7 @@ import CartItemSummary from './components/CartItemSummary'
 import Button from '../../../components/Button/Button'
 import Spinner from '../../../components/Spinner/Spinner'
 import "./PurchaseOrder.css"
+import {FormattedMessage} from 'react-intl';
 
 class PurchaseOrder extends Component {
   //TODO: maybe move internal state to redux? decide it later
@@ -78,10 +79,42 @@ class PurchaseOrder extends Component {
     return (
       <table>
         <tbody>
-          <tr><td>Subtotal</td><td>$111</td></tr>
-          <tr><td>Estimated Shipping</td><td>$111</td></tr>
-          <tr><td>Estimated Tax</td><td>$111</td></tr>
-          <tr><td><b>Total</b></td><td>${totalPrice}</td></tr>
+          <tr>
+              <td>
+                  <FormattedMessage
+                      id='cart.subtotal'
+                      defaultMessage='Subtotal'
+                  />
+              </td>
+              <td>$111</td>
+          </tr>
+          <tr>
+              <td>
+                  <FormattedMessage
+                    id='cart.estimatedShipping'
+                    defaultMessage='Estimated Shipping'
+                  />
+              </td>
+              <td>$111</td>
+          </tr>
+          <tr>
+              <td>
+                  <FormattedMessage
+                    id='cart.estimatedTax'
+                    defaultMessage='Estimated Tax'
+                  />
+              </td>
+              <td>$111</td>
+          </tr>
+          <tr>
+              <td>
+                  <FormattedMessage
+                    id='cart.total'
+                    defaultMessage='Total'
+                  />
+              </td>
+              <td>${totalPrice}</td>
+          </tr>
         </tbody>
       </table>
     )
@@ -103,12 +136,22 @@ class PurchaseOrder extends Component {
     return (
       <div className="app-inner-main">
         <div className="header-top">
-          <h1 className='header inv-header'>PURCHASE ORDER</h1>
+          <h1 className='header inv-header'>
+              <FormattedMessage
+                id='cart.purchaseOrder'
+                defaultMessage='PURCHASE ORDER'
+              />
+          </h1>
           <div className="submenu">
             <div className="link">
               <NavLink to="/inventory/all-inventory">
                 <i className="arrow-left"></i>
-                <b> Back to Product Offerings</b>
+                <b>
+                    <FormattedMessage
+                        id='cart.backToProductOfferings'
+                        defaultMessage='Back to Product Offerings'
+                    />
+                </b>
               </NavLink>
             </div>
           </div>
@@ -153,7 +196,12 @@ class PurchaseOrder extends Component {
             <SummaryTable title="Summary">
               {this.renderSummary()}
               <footer className="summary-footer">
-                  <Button color="blue">Place order</Button>
+                  <Button color="blue">
+                      <FormattedMessage
+                        id='cart.placeOrder'
+                        defaultMessage='Place Order'
+                      />
+                  </Button>
               </footer>
             </SummaryTable>
           </div>

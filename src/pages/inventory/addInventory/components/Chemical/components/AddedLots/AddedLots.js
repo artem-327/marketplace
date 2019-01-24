@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import './AddedLots.css';
 import AddedLot from './AddedLot';
+import {FormattedMessage} from 'react-intl';
 
 class AddedLots extends Component {
 
@@ -10,7 +11,13 @@ class AddedLots extends Component {
 
     renderLots(){
         return this.props.lots.map((value,index)=>{
-            return <AddedLot position={index + 1} lot={value} removeLots={()=>this.removeLots(index)} key={index}/>
+            return (
+            <AddedLot
+                position={index + 1}
+                lot={value}
+                removeLots={()=>this.removeLots(index)}
+                key={index}
+            />);
         });
     }
 
@@ -19,7 +26,12 @@ class AddedLots extends Component {
         return (
         <div className='lots-container'>
                 <div className='lots-header'>
-                    <h3>ADDED LOTS</h3>
+                    <h3>
+                        <FormattedMessage
+                            id='addInventory.addedLots'
+                            defaultMessage='ADDED LOTS'
+                        />
+                    </h3>
                 </div>
                 {this.renderLots()}
         </div>
