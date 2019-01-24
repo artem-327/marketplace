@@ -56,8 +56,14 @@ class Chemical extends Component {
             return;
         }
 
+        if(this.props.searchedProducts.length === 0 && e.target.id === "cas-search") {
+            this.setState(prevState => ({
+                scroll: -1
+            }));
+            return;
+        }
 
-        if(this.props.searchedProducts.length === 0) {
+        if(this.props.mappedProducts.length === 0 && e.target.id === "map-search") {
             this.setState(prevState => ({
                 scroll: -1
             }));
