@@ -21,6 +21,11 @@ class Chemical extends Component {
         // if (localStorage.getItem('productLots')) {
         //     this.setState({lots: JSON.parse(localStorage.getItem('productLots'))})
         // }
+
+        if(this.props.edit && this.props.productOffer.lots) {
+            this.setState({lots: this.props.productOffer.lots})
+        }
+
         localStorage.removeItem('productLots')
 
         if (this.props.edit) {
@@ -84,8 +89,8 @@ class Chemical extends Component {
     }
 
     render() {
-        console.log(JSON.parse(localStorage.getItem('productLots')))
-        //console.log(this.props)
+        //console.log(JSON.parse(localStorage.getItem('productLots')))
+        console.log(this.props)
         return (
             <div>
                 {!this.props.edit ?

@@ -75,8 +75,8 @@ export default class AddForm extends Component {
                 //originalPkgAmount: Number(localLots[i].pkgAmount),
                 quantity: Number(this.props.mappingForm.packaging.size) * Number(localLots[i].pkgAmount),
                 lotNumber: localLots[i].lotNumber,
-                expirationDate: `${localLots[i].expirationDate}T00:00:00Z`,
-                manufacturedDate: `${localLots[i].creationDate}T00:00:00Z`
+                expirationDate: localLots[i].expirationDate.includes("T") ? localLots[i].expirationDate : `${localLots[i].expirationDate}T00:00:00Z`,
+                manufacturedDate: localLots[i].creationDate.includes("T") ? localLots[i].creationDate : `${localLots[i].creationDate}T00:00:00Z`
             })
         }
 
@@ -105,7 +105,7 @@ export default class AddForm extends Component {
             }
         });
 
-        console.log(params);
+        //console.log(params);
 
         delete params.packaging.splits;
         delete params.packaging.minimum;
@@ -155,6 +155,21 @@ export default class AddForm extends Component {
                              ? this.props.productOfferingForm.expirationDate 
                              : `${this.props.productOfferingForm.expirationDate}T00:00:00Z`
 
+        const localLots = JSON.parse(localStorage.getItem('productLots'));
+        let lots = [];
+                     
+        for(let i = 0; i < localLots.length; i++) {
+            lots.push({
+                //id: i,
+                pkgAmount: Number(localLots[i].pkgAmount),
+                //originalPkgAmount: Number(localLots[i].pkgAmount),
+                quantity: Number(this.props.mappingForm.packaging.size) * Number(localLots[i].pkgAmount),
+                lotNumber: localLots[i].lotNumber,
+                expirationDate: localLots[i].expirationDate.includes("T") ? localLots[i].expirationDate : `${localLots[i].expirationDate}T00:00:00Z`,
+                manufacturedDate: localLots[i].creationDate.includes("T") ? localLots[i].creationDate : `${localLots[i].creationDate}T00:00:00Z`
+            })
+        }
+
         let params = Object.assign({}, inputs, {
             ...this.props.mappingForm,
             ...this.props.productOfferingForm,
@@ -165,6 +180,7 @@ export default class AddForm extends Component {
                 cost: parseInt(this.props.addProductOfferForm.pricing.cost),
                 tiers: newTiers
             },
+            lots: lots,
             creationDate: creationDate,
             expirationDate: expirationDate,
             manufacturer: this.props.productOfferingForm.manufacturer.id || this.props.productOffer.manufacturer.id,

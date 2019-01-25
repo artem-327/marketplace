@@ -18,13 +18,12 @@ class AddedLots extends Component {
                     lot={value}
                     removeLots={()=>this.removeLots(index)}
                     key={index}
-                    {...this.props}
                 />);
             });
     }
 
     render(){
-        //console.log(this.props)
+        //console.log(this.props.lots)
         return (
         <div className='lots-container'>
                 <div className='lots-header'>

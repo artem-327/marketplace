@@ -99,7 +99,7 @@ class ProductOffering extends Component {
 
     render() {
 
-        let lotNumber =
+        const lotNumber =
              <div className='group-item-wr'>
                 <Errors
                     className="form-error"
@@ -107,8 +107,6 @@ class ProductOffering extends Component {
                     show="touched"
                     messages={{
                         required: messages.required,
-                        min: messages.min,
-                        isNumber: messages.isNumber
                     }}
                 />
                 <label htmlFor=".lotNumber">
@@ -118,7 +116,7 @@ class ProductOffering extends Component {
                     />
                 </label>
                 <Control.text model=".lotNumber"
-                            validators={{min: (val) => min(val, 0), isNumber, required}}
+                            validators={required}
                             id=".lotNumber"/>
                 </div>;
 
