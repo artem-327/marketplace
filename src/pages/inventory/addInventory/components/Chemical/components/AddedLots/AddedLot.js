@@ -12,7 +12,7 @@ class AddedLot extends Component {
     }
 
     render(){
-        //console.log(this.props)
+        console.log(this.props)
         //console.log(this.props.productOfferingForm.tradeName)
 
         let productName;
@@ -24,8 +24,8 @@ class AddedLot extends Component {
             casNumber = this.props.lot.casNumber !== '' ? this.props.lot.casNumber : 'No CAS Number';
             lotNumber = this.props.lot.lotNumber !== '' ? this.props.lot.lotNumber : 'No Lot Number';
         } else if (this.props.edit) {
-            productName = this.props.lot.productName !== '' ? this.props.lot.productName : 'No Product Name';
-            casNumber = this.props.lot.casNumber !== '' ? this.props.lot.casNumber : 'No CAS Number';
+            productName = this.props.productOffer.productName !== '' ? this.props.productOffer.productName : 'No Product Name';
+            casNumber = this.props.productOffer.product.casNumber !== '' ? this.props.productOffer.product.casNumber : 'No CAS Number';
             lotNumber = this.props.lot.lotNumber !== '' ? this.props.lot.lotNumber : 'No Lot Number';
         }
         

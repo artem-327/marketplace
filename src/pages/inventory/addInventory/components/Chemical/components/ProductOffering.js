@@ -3,7 +3,7 @@ import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerRedux";
 import './ProductOffering.css'
-import {required, messages, min, isNumber, maxPercent} from "../../../../../../utils/validation";
+import {required, messages, min, isNumber, maxPercent, lotNumber} from "../../../../../../utils/validation";
 import RemoteComboBoxRedux from "../../../../../../components/ComboBox/RemoteComboBoxRedux";
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";
 import moment from 'moment';
@@ -98,31 +98,6 @@ class ProductOffering extends Component {
     }
 
     render() {
-
-        const lotNumber =
-             <div className='group-item-wr'>
-                <Errors
-                    className="form-error"
-                    model=".lotNumber"
-                    show="touched"
-                    messages={{
-                        required: messages.required,
-                    }}
-                />
-                <label htmlFor=".lotNumber">
-                    <FormattedMessage
-                        id='addInventory.lotNumber'
-                        defaultMessage='Lot Number'
-                    />
-                </label>
-                <Control.text model=".lotNumber"
-                            validators={required}
-                            id=".lotNumber"/>
-                </div>;
-
-        /*let button = this.state.save ? <button className='button big added-productOffering'>Added</button> :
-            <button className='button big add-productOffering'>Add Lot</button>;*/
-
         let button =
             <button id="offering-btn" className='button big add-productOffering'>
                 <FormattedMessage
@@ -446,7 +421,26 @@ class ProductOffering extends Component {
                                 onChange={this.props.totalPackagesHandler}
                             />
                         </div>
-                        {lotNumber} {/*temporarily disabled until the data is available*/}
+                        <div className='group-item-wr'>
+                            <Errors
+                                className="form-error"
+                                model=".lotNumber"
+                                show="touched"
+                                messages={{
+                                    required: messages.required,
+                                    lotNumber: messages.lotNumber
+                                }}
+                            />
+                            <label htmlFor=".lotNumber">
+                                <FormattedMessage
+                                    id='addInventory.lotNumber'
+                                    defaultMessage='Lot Number'
+                                />
+                            </label>
+                            <Control.text model=".lotNumber"
+                                        validators={{required, lotNumber}}
+                                        id=".lotNumber"/>
+                            </div>
 
                         <div className='group-item-wr'>
                             <Errors
