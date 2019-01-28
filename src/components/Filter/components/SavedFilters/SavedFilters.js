@@ -16,7 +16,6 @@ renderSaveItems(saved){
             if(key === 'filterName' || key === 'id' || !item[key]) continue;
             final.push({name:key, value: item[key]})
         }
-        console.log(final)
         return (
             <SaveFilterItem
                 id={item.id}
@@ -24,6 +23,7 @@ renderSaveItems(saved){
                 fillFilter={this.props.fillFilter}
                 filterFunc={this.props.filterFunc}
                 filterName={filterName}
+                index={index}
                 key={index}
                 toolTipContent={final}/>
         );

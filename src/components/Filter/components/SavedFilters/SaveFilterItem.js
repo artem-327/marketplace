@@ -11,23 +11,42 @@ import {display} from './actions/SaveFilterItem.actions';
 import {connect} from 'react-redux';
 
 const mapStateToProps = state => {
+    const {
+        bellKey,
+        [`bell${bellKey}`]: bell,
+        notificationsKey,
+        [`notifications${notificationsKey}`]: notifications,
+        selectedKey,
+        [`selected${selectedKey}`]: selected,
+        activeKey,
+        [`active${activeKey}`]: active,
+        emailKey,
+        [`email${emailKey}`]: email,
+        mobileKey,
+        [`mobile${mobileKey}`]: mobile,
+        systemKey,
+        [`system${systemKey}`]: system,
+        toolTipKey,
+        [`toolTip${toolTipKey}`]: toolTip,
+    } = state.saveFilterItem;
+
     return {
         functionality: {
-            bell: state.saveFilterItem.bell,
-            notifications: state.saveFilterItem.notifications,
-            selected: state.saveFilterItem.selected,
-            active: state.saveFilterItem.active,
-            email: state.saveFilterItem.email,
-            mobile: state.saveFilterItem.mobile,
-            system: state.saveFilterItem.system,
-            toolTip: state.saveFilterItem.toolTip
+            [`bell${bellKey}`]: bell,
+            [`notifications${notificationsKey}`]: notifications,
+            [`selected${selectedKey}`]: selected,
+            [`active${activeKey}`]: active,
+            [`email${emailKey}`]: email,
+            [`mobile${mobileKey}`]: mobile,
+            [`system${systemKey}`]: system,
+            [`toolTip${toolTipKey}`]: toolTip,
         }
     }
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        show: (data) => dispatch(display(data))
+        show: (data, key) => dispatch(display(data, key))
     };
 };
 
@@ -134,82 +153,83 @@ class SaveFilterItem extends Component {
     };
 
     renderNotification = () => {
-        const {active} = this.props.functionality;
-        const { show } = this.props;
+        const { show, index } = this.props;
+        const {
+            [`active${index}`]: active,
+        } = this.props.functionality;
         return (
             <div>
                 <h6>Notifications</h6>
                 <span>Enable notifications</span>
                 <div className="brc-radio-wrapper">
-                    <div className="label">{active && this.active ? "On" : "Off"}</div>
+                    <div className="label">{active ? "On" : "Off"}</div>
                     <div className="switch-container">
                         <label className="switch">
                         <span
                             onClick={() => {
-                                show('active');
-                                this.active = !this.active;
+                                show('active', index);
                             }}
-                            className={`slider round ${active && this.active ? "brc-radio active" : "brc-radio"} `}
+                            className={`slider round ${active ? "brc-radio active" : "brc-radio"} `}
                         />
                         </label>
                     </div>
                 </div>
-                {active && this.active ? this.renderInputs() : null}
+                {active ? this.renderInputs() : null}
             </div>
         );
     };
 
     render() {
-        console.log(this.props);
-        const { selected, toolTip, bell, notifications } = this.props.functionality;
-        const { show } = this.props;
+        const { show, index, toolTipContent, filterName, deleteSaveFilter } = this.props;
+        const {
+            [`selected${index}`]: selected,
+            [`toolTip${index}`]: toolTip,
+            [`bell${index}`]: bell,
+            [`notifications${index}`]: notifications,
+        } = this.props.functionality;
+
         return (
             <li>
                 <div
                     onClick={() => this.fillFilter()}
                     onMouseEnter={() => {
-                        show('toolTip');
-                        this.toolTip = !this.toolTip;
+                        show('toolTip', index);
                     }}
                     onMouseLeave={() => {
-                        show('toolTip');
-                        this.toolTip = !this.toolTip;
+                        show('toolTip', index);
                     }}
                     className="filter-name">
                         <TooltipFilter
                             selected={selected}
-                            name={this.props.filterName}
-                            isVisible={toolTip && this.toolTip}
-                            content={this.props.toolTipContent}/>
+                            index={index}
+                            name={filterName}
+                            isVisible={toolTip}
+                            content={toolTipContent}/>
                 </div>
                 <div
                     className='filter-delete'>
                     <span
                         className='bell'
                         onMouseEnter={() => {
-                            show('bell');
-                            this.bell = !this.bell;
+                            show('bell', index);
                         }}
                         onMouseLeave={() => {
-                            show('bell');
-                            this.bell = !this.bell;
+                            show('bell', index);
                         }}
                         onClick={() => {
-                            show('selected');
-                            show('notifications');
-                            this.selected = !this.selected;
-                            this.notifications = !this.notifications;
+                            show('selected', index);
+                            show('notifications', index);
                         }}
                     >
-                        <img src={bell && this.bell  ? Bell : BellTrans} alt='bell'/>
+                        <img src={bell ? Bell : BellTrans} alt='bell'/>
                     </span>
                     <span
                         className="close test"
-                        onClick={() => this.props.deleteSaveFilter(this.props.id)}>
+                        onClick={() => deleteSaveFilter(this.props.id)}>
                         <img src={close}  alt='close'/>
                     </span>
                 </div>
-                {notifications && this.notifications ? this.renderNotification() : null}
+                {notifications ? this.renderNotification() : null}
             </li>
         )
     }
