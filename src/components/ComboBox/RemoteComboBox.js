@@ -81,7 +81,7 @@ class RemoteComboBox extends Component {
                   {
                     fulltext: this.props.displayName
                       ? this.props.displayName(combo)
-                      : combo[this.props.displayAttr] || combo.name,
+                      : combo[this.props.displayAttr] /* || combo.country.name */ || combo.name,
                     hasSearched: false, items: [], dataFetched: false
                   },
                   () => {
@@ -94,6 +94,11 @@ class RemoteComboBox extends Component {
                     if (this.props.getObject) this.props.getObject(combo);
                   }
                 );
+
+                console.log(combo);
+                console.log(combo.country);
+                console.log(combo.country.name);
+
               }}
             >
               <span className="combo-cas">
@@ -109,7 +114,7 @@ class RemoteComboBox extends Component {
               className={"combo-results"}
               style={{ maxHeight: 44 * this.state.results_count }}
             >
-              {res}
+                {res}
             </div>
           );
       } 

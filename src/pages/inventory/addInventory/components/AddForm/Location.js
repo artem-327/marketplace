@@ -6,6 +6,8 @@ import {messages, required} from "../../../../../utils/validation";
 import classnames from "classnames";
 import "./Location.css"
 import {FormattedMessage, injectIntl} from 'react-intl';
+import RemoteComboBoxRedux from "../../../../../components/ComboBox/RemoteComboBoxRedux";
+import RemoteComboBox from "../../../../../components/ComboBox/RemoteComboBox";
 
 class Location extends Component {
 
@@ -386,6 +388,9 @@ class Location extends Component {
     }
 
     renderNewLocation() {
+
+        const { formatMessage } = this.props.intl;
+
         let button =
             <button onClick={(e) => this.saveLocation(e, false)} className='edit-location'>
                 <FormattedMessage
@@ -472,28 +477,38 @@ class Location extends Component {
                                 </span>
                             </div>
                             : null}
-                        <label>
-                            <FormattedMessage
-                                id='global.state'
-                                defaultMessage='State'
-                            />
-                        </label>
-                        <Dropdown
-                            opns={this.props.locations.map((item)=>{
-                                if(item.province) return ({id: item.province.id, name: item.province.name});
-                                if(item.country) return ({id: item.country.id, name: item.country.name});
-                                return {id: 0, name: 'no province or country'}
-                            })}
-                            onChange={(value) => {
-                                this.handleInputs(value, 'state')
-                            }}/>
+                        <RemoteComboBox id="state-search" scroll={0}
+                                        items={this.props.filterLocations}
+                                        api={(text) => this.props.fetchFilterLocations(text)}
+                                        dataFetched={this.props.locationsFetched}
+                                        isFetching={this.props.filterLocationsFetching}
+                                        className="cas-search"
+                                        limit={5}
+                                        placeholder={formatMessage({
+                                            id: 'global.state',
+                                            defaultMessage: 'State'
+                                        })}
+                                        label={formatMessage({
+                                            id: 'global.state',
+                                            defaultMessage: 'State'
+                                        })}
+                                        /*
+                                        displayName={(location) => (
+                                            location.country ?
+                                                location.country.name : location.province.name
+                                        )}
+                                        */
+                                        displayName={(location) => {
+                                            if (location.country) return location.country.name;
+                                            else if (location.province) return location.province.name;
+                                            else return "undefined";
+                                        }} />
                     </div>
                     <div className='group-item-wr'>
                         {(this.state.isSubmitted && this.state.zip === '') ?
                             <div className='warehouse-val'><span>Required</span></div> : null}
                         {(this.state.isSubmitted && !this.validateZip()) ?
                             <div className='warehouse-val'><span>Invalid Zip code</span></div> : null}
-                        <label htmlFor="zip">Zip Code</label>
                             <div className='warehouse-val'>
                                 <span>
                                     <FormattedMessage
@@ -502,14 +517,12 @@ class Location extends Component {
                                     />
                                 </span>
                             </div>
-                            : null}
                         <label htmlFor="zip">
                             <FormattedMessage
                                 id='addInventory.zipCode'
                                 defaultMessage='Zip Code'
                             />
                         </label>
->>>>>>> 0.6.0
                         <input id="zip"
                                value={this.state.zip}
                                onChange={(e) => {
