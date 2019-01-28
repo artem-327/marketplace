@@ -32,6 +32,8 @@ class Chemical extends Component {
         if (this.props.edit) {
             this.setState({productID: this.props.productOffer.product.id})
         }
+
+        console.log(JSON.parse(localStorage.getItem('productLots')))
     }
 
     setProductMapping(mapping) {
@@ -80,6 +82,8 @@ class Chemical extends Component {
             this.setState({lots: newLots});
             this.props.addLotSaveOffering();
         }
+
+        console.log(JSON.parse(localStorage.getItem('productLots')))
     }
 
     removeLots(index){
@@ -87,6 +91,7 @@ class Chemical extends Component {
         newLots.splice(index, 1);
         localStorage.setItem('productLots', JSON.stringify(newLots));
         this.setState({lots: newLots})
+        console.log(index)
     }
 
     render() {
