@@ -3,7 +3,7 @@ import {Switch, Route} from 'react-router-dom';
 
 import Dashboard from '../pages/dashboard'
 import Inventory from "../pages/inventory/InventoryHOC";
-import Orders from "../pages/orders/Orders";
+import Orders from "../pages/orders";
 import Clients from "../pages/clients/Clients";
 import Reports from "../pages/reports/Reports";
 import Settings from "../pages/settings/Settings";

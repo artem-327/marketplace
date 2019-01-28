@@ -1,4 +1,3 @@
-import {connect} from 'react-redux';
-import Orders from './Orders';
+import Orders from './components/OrdersContainer'
 
-export default connect()(Orders);
+export default Orders

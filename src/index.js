@@ -22,6 +22,7 @@ const languages = [{ name: 'English', code: 'en' }];
 store.dispatch(initialize(languages, { defaultLanguage: 'en' }));
 
 store.dispatch(addTranslationForLanguage(enJson, 'en'));
+
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 axios.defaults.headers.common = {
     "responseType": "json",
