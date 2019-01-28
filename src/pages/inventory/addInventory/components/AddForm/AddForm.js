@@ -68,7 +68,7 @@ export default class AddForm extends Component {
         const localLots = JSON.parse(localStorage.getItem('productLots'));
         let lots = [];
 
-        for(let i = 0; i < localLots.length - 1; i++) {
+        for(let i = 0; i < localLots.length; i++) {
             lots.push({
                 //id: i,
                 pkgAmount: Number(localLots[i].pkgAmount),
@@ -79,6 +79,8 @@ export default class AddForm extends Component {
                 manufacturedDate: localLots[i].creationDate.includes("T") ? localLots[i].creationDate : `${localLots[i].creationDate}T00:00:00Z`
             })
         }
+
+        lots.splice(-1, 1);
 
         let params = Object.assign({}, inputs, {
             ...this.props.mappingForm,
@@ -104,8 +106,6 @@ export default class AddForm extends Component {
                 originalPkgAmount: parseInt(this.props.productOfferingForm.pkgAmount)
             }
         });
-
-        //console.log(params);
 
         delete params.packaging.splits;
         delete params.packaging.minimum;
@@ -166,7 +166,10 @@ export default class AddForm extends Component {
                 quantity: Number(this.props.mappingForm.packaging.size) * Number(localLots[i].pkgAmount),
                 lotNumber: localLots[i].lotNumber,
                 expirationDate: localLots[i].expirationDate.includes("T") ? localLots[i].expirationDate : `${localLots[i].expirationDate}T00:00:00Z`,
-                manufacturedDate: localLots[i].creationDate.includes("T") ? localLots[i].creationDate : `${localLots[i].creationDate}T00:00:00Z`
+                manufacturedDate: localLots[i].creationDate || localLots[i].manufacturedDate &&
+                                  localLots[i].creationDate.includes("T") || localLots[i].manufacturedDate.includes("T") 
+                                  ? localLots[i].creationDate || localLots[i].manufacturedDate 
+                                  : `${localLots[i].creationDate}T00:00:00Z` || `${localLots[i].manufacturedDate}T00:00:00Z`
             })
         }
 
