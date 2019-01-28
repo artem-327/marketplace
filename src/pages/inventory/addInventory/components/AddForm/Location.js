@@ -404,7 +404,7 @@ class Location extends Component {
                     <div className='group-item-wr'>
                         {(this.state.isSubmitted && this.state.warehouseName === '') ?
                             <div className='warehouse-val'>
-                                <span>
+                                <span className="warehouse-val-fm">
                                     <FormattedMessage
                                         id='addInventory.required'
                                         defaultMessage='Required'
@@ -428,7 +428,7 @@ class Location extends Component {
                     <div className='group-item-wr'>
                         {(this.state.isSubmitted && this.state.street === '') ?
                             <div className='warehouse-val'>
-                                <span>
+                                <span className="warehouse-val-fm">
                                     <FormattedMessage
                                         id='addInventory.required'
                                         defaultMessage='Required'
@@ -451,7 +451,7 @@ class Location extends Component {
                     <div className='group-item-wr'>
                         {(this.state.isSubmitted && this.state.city === '') ?
                             <div className='warehouse-val'>
-                                <span>
+                                <span className="warehouse-val-fm">
                                     <FormattedMessage
                                         id='addInventory.required'
                                         defaultMessage='Required'
@@ -469,7 +469,7 @@ class Location extends Component {
                     <div className='group-item-wr'>
                         {(this.state.isSubmitted && this.state.state === '') ?
                             <div className='warehouse-val'>
-                                <span>
+                                <span className="warehouse-val-fm">
                                     <FormattedMessage
                                         id='addInventory.required'
                                         defaultMessage='Required'
@@ -506,17 +506,17 @@ class Location extends Component {
                     </div>
                     <div className='group-item-wr'>
                         {(this.state.isSubmitted && this.state.zip === '') ?
-                            <div className='warehouse-val'><span>Required</span></div> : null}
-                        {(this.state.isSubmitted && !this.validateZip()) ?
-                            <div className='warehouse-val'><span>Invalid Zip code</span></div> : null}
                             <div className='warehouse-val'>
-                                <span>
+                                <span className="warehouse-val-fm">
                                     <FormattedMessage
                                         id='addInventory.required'
                                         defaultMessage='Required'
                                     />
                                 </span>
                             </div>
+                            : null}
+                        {(this.state.isSubmitted && !this.validateZip()) ?
+                            <div className='warehouse-val'><span>Invalid Zip code</span></div> : null}
                         <label htmlFor="zip">
                             <FormattedMessage
                                 id='addInventory.zipCode'
@@ -535,7 +535,7 @@ class Location extends Component {
                     <div className='group-item-wr'>
                     {(this.state.isSubmitted && this.state.contact === '') ?
                             <div className='warehouse-val'>
-                                <span>
+                                <span className="warehouse-val-fm">
                                     <FormattedMessage
                                         id='addInventory.required'
                                         defaultMessage='Required'
@@ -558,7 +558,7 @@ class Location extends Component {
                     <div className='group-item-wr'>
                     {(this.state.isSubmitted && this.state.phone === '') ?
                             <div className='warehouse-val'>
-                                <span>
+                                <span className="warehouse-val-fm">
                                     <FormattedMessage
                                         id='addInventory.required'
                                         defaultMessage='Required'
@@ -581,7 +581,7 @@ class Location extends Component {
                     <div className='group-item-wr'>
                         {(this.state.isSubmitted && this.state.email === '') ?
                             <div className='warehouse-val'>
-                                <span>
+                                <span className="warehouse-val-fm">
                                     <FormattedMessage
                                         id='addInventory.required'
                                         defaultMessage='Required'
@@ -591,7 +591,7 @@ class Location extends Component {
                             : null}
                         {(this.state.isSubmitted && !this.validateEmail()) ?
                             <div className='warehouse-val'>
-                                <span>
+                                <span className="warehouse-val-fm">
                                     <FormattedMessage
                                         id='addInventory.invalidEmail'
                                         defaultMessage='Invalid E-mail'
