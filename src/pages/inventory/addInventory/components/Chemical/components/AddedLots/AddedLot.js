@@ -45,7 +45,7 @@ class AddedLot extends Component {
             <div className="vl"></div>
             <div className='lots-item-button-text'>
                 REMOVE
-                <button onClick={()=>{this.props.removeLots()}} className="lots-item-button"></button>
+                <span onClick={()=>{this.props.removeLots()}} className="lots-item-button"></span>
             </div>
         </div>
         )
