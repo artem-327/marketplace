@@ -18,6 +18,7 @@ class AddedLots extends Component {
                     lot={value}
                     removeLots={()=>this.removeLots(index)}
                     key={index}
+                    {...this.props}
                 />);
             });
     }

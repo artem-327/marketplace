@@ -12,7 +12,7 @@ class AddedLot extends Component {
     }
 
     render(){
-        console.log(this.props)
+        //console.log(this.props)
         //console.log(this.props.productOfferingForm.tradeName)
 
         let productName;
