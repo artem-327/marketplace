@@ -46,6 +46,7 @@
     "myInventory.myInventory": "MY INVENTORY",
     "myInventory.smallHeader": "{number} products offerings selected",
     "filter.saved": "Saved",
+    "filter.selectedFilter": "SELECTED FILTER - ",
     "filter.setFilters": "SET FILTERS",
     "filter.setFilterName": "Set Filter Name",
     "filter.clearFilter": "Clear Filter",
