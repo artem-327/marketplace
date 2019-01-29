@@ -18,12 +18,22 @@ class Chemical extends Component {
     }
 
     componentDidMount() {
-        if (localStorage.getItem('productLots')) {
-            this.setState({lots: JSON.parse(localStorage.getItem('productLots'))})
+        // if (localStorage.getItem('productLots')) {
+        //     this.setState({lots: JSON.parse(localStorage.getItem('productLots'))})
+        // }
+
+        localStorage.removeItem('productLots')
+
+        if(this.props.edit && this.props.productOffer.lots) {
+            this.setState({lots: this.props.productOffer.lots})
+            localStorage.setItem('productLots', JSON.stringify(this.props.productOffer.lots))
         }
+
         if (this.props.edit) {
             this.setState({productID: this.props.productOffer.product.id})
         }
+
+        console.log(JSON.parse(localStorage.getItem('productLots')))
     }
 
     setProductMapping(mapping) {
@@ -72,6 +82,8 @@ class Chemical extends Component {
             this.setState({lots: newLots});
             this.props.addLotSaveOffering();
         }
+
+        console.log(JSON.parse(localStorage.getItem('productLots')))
     }
 
     removeLots(index){
@@ -79,9 +91,12 @@ class Chemical extends Component {
         newLots.splice(index, 1);
         localStorage.setItem('productLots', JSON.stringify(newLots));
         this.setState({lots: newLots})
+        console.log(index)
     }
 
     render() {
+        //console.log(JSON.parse(localStorage.getItem('productLots')))
+        //console.log(this.props)
         return (
             <div>
                 {!this.props.edit ?
@@ -105,13 +120,14 @@ class Chemical extends Component {
                     addLot={(lots) => this.addLot(lots)}
                     {...this.props}
                 />
-                {!this.props.edit ?
+                {/* {!this.props.edit ? */}
                 <AddedLots
                     lots={this.state.lots}
                     removeLot={(index) => this.removeLots(index)}
+                    {...this.props}
                 />
-                : null
-                }
+                {/* : null
+                } */}
                 <AdditionalDocuments/>
             </div>
         );
