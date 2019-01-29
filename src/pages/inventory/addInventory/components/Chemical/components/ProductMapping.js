@@ -21,6 +21,7 @@ export default class ProductMapping extends Component {
 
     saveMapping(values){
         values = Object.assign({}, values, {
+            packaging: { ...values.packaging, size: Number(values.packaging.size) },
             product: this.props.productID
         });
 
@@ -184,7 +185,6 @@ export default class ProductMapping extends Component {
                                 required: messages.required,
                                 min: messages.min,
                                 isNumber: messages.isNumber
-
                             }}
                         />
                         <label htmlFor=".measurements">
