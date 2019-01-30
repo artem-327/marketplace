@@ -428,7 +428,7 @@ class ProductOffering extends Component {
                                 show="touched"
                                 messages={{
                                     required: messages.required,
-                                    lotNumber: messages.lotNumber
+                                    // lotNumber: messages.lotNumber
                                 }}
                             />
                             <label htmlFor=".lotNumber">
@@ -438,7 +438,7 @@ class ProductOffering extends Component {
                                 />
                             </label>
                             <Control.text model=".lotNumber"
-                                        validators={{required, lotNumber}}
+                                        // validators={{required, lotNumber}}
                                         id=".lotNumber"/>
                             </div>
 
