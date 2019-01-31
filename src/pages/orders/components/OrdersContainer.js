@@ -13,7 +13,7 @@ function transformToRows(data) {
 
 function mapStateToProps(state) {
     const {orders} = state
-    console.log(state)
+    
     return {
         ...orders,
         rows: transformToRows(orders.data)
