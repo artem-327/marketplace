@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux'
 import {resetForm} from "../../../utils/functions";
 
 function mapStateToProps(store) {
+    console.log(store);
     return {
         mappingForm: store.forms.productMapping,
         productOfferingForm: store.forms.productOffering,

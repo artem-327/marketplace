@@ -29,17 +29,21 @@ class Chemical extends Component {
     }
 
     componentDidMount() {
+        if(this.props.edit) return;
         document.getElementById("cas-search").addEventListener("keyup", this.handleArrow, false);
         document.getElementById("map-search").addEventListener("keyup", this.handleArrow, false);
     }
 
     componentWillUnmount() {
+        if(this.props.edit) return;
         document.getElementById("cas-search").removeEventListener('keyup', this.handleArrow, false);
         document.getElementById("map-search").addEventListener("keyup", this.handleArrow, false);
     }
 
     handleArrow(e) {
         e.preventDefault();
+
+        if(this.props.edit) return;
 
         if (e.keyCode !== 40 && e.keyCode !== 38) {
             this.setState(prevState => ({

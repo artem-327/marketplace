@@ -4,6 +4,7 @@ import ThreeDots from '../../ThreeDots/ThreeDots';
 import classnames from 'classnames';
 import ThreeDotsMenu from '../../ThreeDots/ThreeDotsMenu';
 import AddCart from '../../../pages/cart/components/AddCart';
+import {checkToken} from "../../../utils/auth";
 
 class Row extends Component {
 
@@ -79,6 +80,8 @@ class Row extends Component {
   }
 
   addCart(event, id){
+    if (checkToken(this.props)) return;
+
     if (event.target.classList.contains('checkmark') || event.target.getAttribute('type') === 'checkbox') {
       // function addCart() blocked - clicked on checkmark
       this.props.removePopup();

@@ -8,6 +8,7 @@ import "./Location.css"
 import {FormattedMessage, injectIntl} from 'react-intl';
 import RemoteComboBoxRedux from "../../../../../components/ComboBox/RemoteComboBoxRedux";
 import RemoteComboBox from "../../../../../components/ComboBox/RemoteComboBox";
+import {checkToken} from "../../../../../utils/auth";
 
 class Location extends Component {
 
@@ -112,6 +113,9 @@ class Location extends Component {
 
     saveLocation(e) {
         e.preventDefault();
+
+        if (checkToken(this.props)) return;
+
         let {warehouseName, street, city, state, zip, contact, phone, email} = this.state;
 
         this.setState({isSubmitted: true})
@@ -498,6 +502,8 @@ class Location extends Component {
                                                 location.country.name : location.province.name
                                         )}
                                         */
+                                        validators={{required}}
+                                        onChange={ (value) => this.setState({state : value})}
                                         displayName={(location) => {
                                             if (location.country) return location.country.name;
                                             else if (location.province) return location.province.name;

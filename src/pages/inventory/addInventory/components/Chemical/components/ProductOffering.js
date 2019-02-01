@@ -8,6 +8,7 @@ import RemoteComboBoxRedux from "../../../../../../components/ComboBox/RemoteCom
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";
 import moment from 'moment';
 import {FormattedMessage, injectIntl} from 'react-intl';
+import {checkToken} from "../../../../../../utils/auth";
 
 class ProductOffering extends Component {
     constructor(props) {
@@ -50,6 +51,8 @@ class ProductOffering extends Component {
             return;
         }
         */
+
+        if (checkToken(this.props)) return;
 
         if (!this.state.minWarning && !this.state.maxWarning) {
             this.setState({save: true, firstValue: false});

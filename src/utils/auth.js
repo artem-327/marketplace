@@ -9,6 +9,7 @@ export function withAuth(ComposedComponent) {
     class requireAuth extends React.Component {
 
         verify(props) {
+            console.log(props);
             if (!props.isAuthenticated && !props.isFetchingIdentity) {
                 if(props.location.pathname !== "/login")
                     props.history.push("/login");
@@ -39,6 +40,7 @@ export function withAuth(ComposedComponent) {
     };
 
     function mapStateToProps(store) {
+        console.log(store);
         return {
             isAuthenticated: store.identity.isAuthenticated,
             isFetchingIdentity: store.identity.identity.isFetching
@@ -55,4 +57,15 @@ export function setAuthToken(token) {
 export function deleteAuthToken() {
     localStorage.removeItem('jwtoken');
     delete axios.defaults.headers.common['Authorization'];
+}
+
+export function checkToken(props) {
+    //use isFetchingIdentity ?
+    if(!props.isFetchingIdentity && !localStorage.jwtoken) {
+        logout();
+        if(props.location.pathname !== "/login")
+            props.history.push("/login");
+            return true;
+    }
+    return false;
 }

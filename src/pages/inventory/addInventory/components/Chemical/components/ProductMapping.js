@@ -5,6 +5,8 @@ import {required, isNumber, min, messages} from "../../../../../../utils/validat
 import './ProductMapping.css'
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";
 import {FormattedMessage} from 'react-intl';
+import {logout} from "../../../../../../modules/identity";
+import {checkToken} from "../../../../../../utils/auth";
 export default class ProductMapping extends Component {
     constructor(props){
         super(props);
@@ -20,6 +22,8 @@ export default class ProductMapping extends Component {
     }
 
     saveMapping(values){
+        if (checkToken(this.props)) return;
+
         values = Object.assign({}, values, {
             packaging: { ...values.packaging, size: Number(values.packaging.size) },
             product: this.props.productID
