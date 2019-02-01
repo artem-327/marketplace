@@ -36,7 +36,7 @@ class Location extends Component {
 
     setInitialValue() {
         if (this.props.edit) {
-            console.log(this.props.productOffer.warehouse);
+            //console.log(this.props.productOffer.warehouse);
             this.setState({
                 warehouseIndex: this.props.productOffer.warehouse.id,
                 street: this.props.productOffer.warehouse.address.streetAddress,

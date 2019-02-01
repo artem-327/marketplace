@@ -23,7 +23,7 @@ class LoginForm extends React.Component {
     }
 
     render() {
-        console.log(this.props);
+        //console.log(this.props);
         const { formatMessage } = this.props.intl;
         let {isFetching, hasError} = this.props.formStatus;
         let {email, password} = this.props.loginInputs;

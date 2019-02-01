@@ -12,7 +12,6 @@ import createSagaMiddleware from 'redux-saga'
 import identity, {initialState as identityFormInit} from './modules/identity';
 import users from './modules/users';
 
-
 import companies from './modules/companies';
 import productOffers, {initialState as addProductsInit} from './modules/productOffers';
 import shippingQuotes, {initialState as shippingQuotesInit} from './modules/shippingQuotes';
@@ -26,6 +25,8 @@ import products, {initialState as productsInit} from './modules/products';
 import location from './modules/location';
 import errors from "./modules/errors";
 import dataTables from "./modules/dataTables";
+
+import {show as saveFilterItem} from './components/Filter/components/SavedFilters/reducers/SaveFilterItem.reducers';
 
 import companiesSaga from "./saga/companies";
 import officesSaga from "./saga/offices";
@@ -54,6 +55,7 @@ const reducer = combineReducers({
     filter,
     errors,
     dataTables,
+    saveFilterItem,
     forms: combineForms({
         filter: filterInit.data,
         brcRules: broadcastInit.broadcastData,

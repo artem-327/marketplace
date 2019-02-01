@@ -10,19 +10,27 @@ class AddedLots extends Component {
     }
 
     renderLots(){
-        return this.props.lots.map((value,index)=>{
-            return (
-            <AddedLot
-                position={index + 1}
-                lot={value}
-                removeLots={()=>this.removeLots(index)}
-                key={index}
-            />);
-        });
+
+            const props = {
+                productOffer: this.props.productOffer,
+                edit: this.props.edit,
+                productOffering: this.props.productOffering
+            }
+
+            return this.props.lots.map((value,index)=>{
+                return (
+                <AddedLot
+                    position={index + 1}
+                    lot={value}
+                    removeLots={()=>this.removeLots(index)}
+                    key={index}
+                    {...props}
+                />);
+            });
     }
 
     render(){
-        
+        //console.log(this.props.lots)
         return (
         <div className='lots-container'>
                 <div className='lots-header'>
