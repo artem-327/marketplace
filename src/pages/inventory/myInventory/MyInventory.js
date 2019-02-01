@@ -135,6 +135,7 @@ class MyInventory extends Component {
                     productGrade
                     form
                     filterFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}}
+                    {...this.props}
                 />
                 {content}
             </div>

@@ -91,8 +91,6 @@ export default class AddForm extends Component {
             }
         });
 
-        console.log(params);
-
         delete params.packaging.splits;
         delete params.packaging.minimum;
 

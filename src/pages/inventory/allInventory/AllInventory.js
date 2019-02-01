@@ -67,6 +67,7 @@ class AllInventory extends Component {
                     package
                     productGrade
                     filterFunc={(inputs) => this.props.fetchAllProductOffers(inputs)}
+                    {...this.props}
                 />
                 {content}
             </div>
