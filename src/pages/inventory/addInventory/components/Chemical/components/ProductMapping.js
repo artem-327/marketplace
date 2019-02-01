@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
-import {required, isNumber, min, messages} from "../../../../../../utils/validation";
+import {required, isInteger, min, messages} from "../../../../../../utils/validation";
 import './ProductMapping.css'
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";
 import {FormattedMessage} from 'react-intl';
-import {logout} from "../../../../../../modules/identity";
 import {checkToken} from "../../../../../../utils/auth";
 export default class ProductMapping extends Component {
     constructor(props){
@@ -188,7 +187,7 @@ export default class ProductMapping extends Component {
                             messages={{
                                 required: messages.required,
                                 min: messages.min,
-                                isNumber: messages.isNumber
+                                isInteger: messages.isInteger
                             }}
                         />
                         <label htmlFor=".measurements">
@@ -198,7 +197,7 @@ export default class ProductMapping extends Component {
                             />
                         </label>
                         <Control.text model=".packaging.size"
-                                      validators={{min: (val) => min(val, 0), isNumber, required}}
+                                      validators={{min: (val) => min(val, 0), isInteger, required}}
                                       id=".measurements"
                                       onChange={this.props.measureHandler}
                                       //defaultValue=""
