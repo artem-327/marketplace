@@ -1,7 +1,7 @@
 export const required = (val) => val && val !== "";
 export const isNumber = (val) => val === '' || (!isNaN(parseFloat(val)) && isFinite(val));
-export const isInteger = (val) => val === '' || (Number.isInteger(Number(val)))
-export const min = (val, min) => val === '' || (val > min);
+export const isInteger = (val) => val === '' || (Number.isInteger(Number(val))); //
+export const min = (val, min) => (val === '' || (val > min) || !isInteger(val));
 export const maxPercent = (val) => val === '' || val < 101;
 export const smaller = (val, max) => {
         return (parseInt(val) <= parseInt(max))
