@@ -116,13 +116,13 @@ class Location extends Component {
 
         if (checkToken(this.props)) return;
 
-        let {warehouseName, street, city, state, zip, contact, phone, email} = this.state;
+        let {warehouseName, street, city, stateId, zip, contact, phone, email} = this.state;
 
         this.setState({isSubmitted: true})
 
         if (!this.validateForms()) return;
 
-        this.props.saveWarehouse(warehouseName, street, city, state, contact, phone, email, zip).then(() => {
+        this.props.saveWarehouse(warehouseName, street, city, stateId, contact, phone, email, zip).then(() => {
             this.props.fetchWarehouses().then(() => {
                 this.setState({edit: false}, () => this.changeLocation('saved'))
             })
@@ -482,7 +482,7 @@ class Location extends Component {
                             </div>
                             : null}
                         <RemoteComboBox id="state-search" scroll={0}
-                                        items={this.props.filterLocations}
+                                        getObject={(location) => { console.log(location); this.setState({stateId : location.id})}}                                        items={this.props.filterLocations}
                                         api={(text) => this.props.fetchFilterLocations(text)}
                                         dataFetched={this.props.locationsFetched}
                                         isFetching={this.props.filterLocationsFetching}
