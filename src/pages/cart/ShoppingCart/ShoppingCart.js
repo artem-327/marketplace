@@ -8,6 +8,7 @@ import Spinner from '../../../components/Spinner/Spinner'
 import Button from '../../../components/Button/Button'
 import {NavLink} from 'react-router-dom'
 import {FormattedMessage} from 'react-intl';
+import {checkToken} from "../../../utils/auth";
 
 class ShoppingCart extends Component {
   componentDidMount(){
@@ -20,6 +21,7 @@ class ShoppingCart extends Component {
   }
 
   handleContinue = () => {
+    if (checkToken(this.props)) return;
     this.props.history.push("/cart/purchase-order")
   }
 
@@ -81,6 +83,7 @@ class ShoppingCart extends Component {
           addPopup={addPopup}
           removePopup={removePopup}
           history={history}
+          location={this.props.location}
           key={cartItem.id}
           cartItem={cartItem}
           deleteCart={deleteCart}

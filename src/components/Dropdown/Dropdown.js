@@ -95,7 +95,7 @@ class Dropdown extends Component {
                         )
                 }
                      onClick={()=>this.toggleDropdown()}>
-                    <div>{currentValue || this.props.placeholder || 'Select'}{arrow}</div>
+                    <div className="dropdown-current-placeholder">{currentValue || this.props.placeholder || 'Select'}{arrow}</div>
                 </div>
                 {options}
             </div>

@@ -1,6 +1,6 @@
 import axios from "axios";
 import qs from "qs";
-import {setAuthToken, deleteAuthToken} from '../utils/auth'
+import {setAuthToken, deleteAuthToken, finishLogout} from '../utils/auth'
 import '../utils/constants';
 import {ROLE_GUEST} from "../utils/constants";
 

@@ -8,6 +8,7 @@ import ShippingQuotes from './components/ShippingQuotes';
 import {getSelectedRowsDataTable} from "../../../utils/functions";
 import './allinventory.css';
 import {FormattedMessage} from 'react-intl';
+import {checkToken} from "../../../utils/auth";
 
 class AllInventory extends Component {
 
@@ -22,11 +23,14 @@ class AllInventory extends Component {
     }
 
     openShippingQuote(){
+        if (checkToken(this.props)) return;
+
         const selectedRows = getSelectedRowsDataTable(this.props.productOffersTable);
         this.props.addPopup(<ShippingQuotes
                                 selectedRows={selectedRows}
                                 className='shipping-quotes-popup'
-                                removePopup={this.props.removePopup}/>);
+                                removePopup={this.props.removePopup}
+                                {...this.props}/>);
     }
 
     render() {
@@ -63,6 +67,7 @@ class AllInventory extends Component {
                     package
                     productGrade
                     filterFunc={(inputs) => this.props.fetchAllProductOffers(inputs)}
+                    {...this.props}
                 />
                 {content}
             </div>

@@ -9,11 +9,13 @@ class Chemical extends Component {
     constructor(props) {
         super(props);
         this.setProductMapping = this.setProductMapping.bind(this);
+        this.handleArrow = this.handleArrow.bind(this);
         this.state = {
             selectedProduct: null,
             selectedProductMapping: null,
             productID: null,
-            lots: []
+            lots: [],
+            scroll: -1
         }
     }
 
@@ -34,6 +36,89 @@ class Chemical extends Component {
         }
 
         console.log(JSON.parse(localStorage.getItem('productLots')))
+    }
+
+    componentDidMount() {
+        if(this.props.edit) return;
+        document.getElementById("cas-search").addEventListener("keyup", this.handleArrow, false);
+        document.getElementById("map-search").addEventListener("keyup", this.handleArrow, false);
+    }
+
+    componentWillUnmount() {
+        if(this.props.edit) return;
+        document.getElementById("cas-search").removeEventListener('keyup', this.handleArrow, false);
+        document.getElementById("map-search").addEventListener("keyup", this.handleArrow, false);
+    }
+
+    handleArrow(e) {
+        e.preventDefault();
+
+        if(this.props.edit) return;
+
+        if (e.keyCode !== 40 && e.keyCode !== 38) {
+            this.setState(prevState => ({
+                scroll: -1
+            }));
+            return;
+        }
+
+        // this.props.isFetchingManufacturer || this.props.isFetchingOrigin
+        if (this.props.isSearching || this.props.isMapping) {
+            this.setState(prevState => ({
+                scroll: -1
+            }));
+            return;
+        }
+
+        if(this.props.searchedProducts.length === 0 && e.target.id === "cas-search") {
+            this.setState(prevState => ({
+                scroll: -1
+            }));
+            return;
+        }
+
+        if(this.props.mappedProducts.length === 0 && e.target.id === "map-search") {
+            this.setState(prevState => ({
+                scroll: -1
+            }));
+            return;
+        }
+
+        if (!document.getElementsByClassName("combo-results")[0]) return;
+        const cr = document.getElementsByClassName("combo-results")[0].childElementCount;
+
+        let comboItemsHeight = 0;
+        for (let i = 0; i < cr; i++) {
+            comboItemsHeight += document.getElementsByClassName("combo-item")[i].offsetHeight;
+        }
+
+        if (e.keyCode === 40 && this.state.scroll === (cr - 1)) {
+            document.getElementsByClassName("combo-results")[0].scrollTop = 0;
+            this.setState(prevState => ({
+                scroll: -1
+            }));
+            document.getElementsByClassName("combo-results")[0].scrollTop = 0;
+        } else if (e.keyCode === 38 && this.state.scroll === 0) {
+            this.setState(prevState => ({
+                scroll: -1
+            }));
+        } else if (e.keyCode === 40 && this.state.scroll < cr) {
+            const prev = document.getElementsByClassName("combo-item")[this.state.scroll];
+            if (prev) {
+                document.getElementsByClassName("combo-results")[0].scrollTop += prev.offsetHeight;
+            }
+            this.setState(prevState => ({
+                scroll: prevState.scroll+1
+            }));
+        } else if (e.keyCode === 38 && this.state.scroll > 0){
+            const prev = document.getElementsByClassName("combo-item")[this.state.scroll-1];
+            if (prev) {
+                document.getElementsByClassName("combo-results")[0].scrollTop -= prev.offsetHeight;
+            }
+            this.setState(prevState => ({
+                scroll: prevState.scroll-1
+            }));
+        }
     }
 
     setProductMapping(mapping) {
@@ -107,6 +192,7 @@ class Chemical extends Component {
                         isVisible={true}
                         onSelectProductMapping={mapping => this.setProductMapping(mapping)}
                         onSelect={product => this.setSelectedProduct(product)}
+                        scroll={this.state.scroll}
                         {...this.props}
                     />
                 </React.Fragment>

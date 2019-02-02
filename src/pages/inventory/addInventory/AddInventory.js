@@ -5,6 +5,7 @@ import AddGroup from './components/AddGroup';
 import Chemical from "./components/Chemical";
 import {actions} from "react-redux-form";
 import {FormattedMessage} from 'react-intl';
+import {logout} from "../../../modules/identity";
 
 export default class AddInventory extends Component {
     componentDidMount(){
@@ -40,7 +41,6 @@ export default class AddInventory extends Component {
             }))
         } 
     }
-    
 
     render() {
         const { productOffer } = this.props;

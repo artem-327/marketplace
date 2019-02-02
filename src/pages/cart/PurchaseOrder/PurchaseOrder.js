@@ -12,6 +12,7 @@ import Button from '../../../components/Button/Button'
 import Spinner from '../../../components/Spinner/Spinner'
 import "./PurchaseOrder.css"
 import {FormattedMessage} from 'react-intl';
+import {checkToken} from "../../../utils/auth";
 
 class PurchaseOrder extends Component {
   //TODO: maybe move internal state to redux? decide it later
@@ -119,6 +120,16 @@ class PurchaseOrder extends Component {
       </table>
     )
   }
+
+  deleteCart() {
+      if (checkToken(this.props)) return;
+      this.props.deleteCart();
+  }
+
+    constructor(props) {
+        super(props);
+        this.deleteCart = this.deleteCart.bind(this);
+    }
 
   render() {
     const {cart, deliveryAddresses, payments, dispatch, deleteCart, cartIsFetching, postNewDeliveryAddress, putDeliveryAddressEdit, shippingQuotes} = this.props;

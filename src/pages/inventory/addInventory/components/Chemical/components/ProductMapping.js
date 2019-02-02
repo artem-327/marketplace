@@ -1,16 +1,14 @@
 import React, {Component} from 'react';
 import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
-import {required, isNumber, min, messages} from "../../../../../../utils/validation";
+import {required, isInteger, min, messages} from "../../../../../../utils/validation";
 import './ProductMapping.css'
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";
 import {FormattedMessage} from 'react-intl';
+import {checkToken} from "../../../../../../utils/auth";
 export default class ProductMapping extends Component {
     constructor(props){
         super(props);
-        this.state = {
-            save: false,
-        }
     }
 
     componentDidMount(){
@@ -23,20 +21,21 @@ export default class ProductMapping extends Component {
     }
 
     saveMapping(values){
+        if (checkToken(this.props)) return;
+
         values = Object.assign({}, values, {
+            packaging: { ...values.packaging, size: Number(values.packaging.size) },
             product: this.props.productID
         });
-        this.setState({save: true}, ()=>{
-            this.props.saveMapping(values);
-                setTimeout(function(){
-                    this.setState({save: false});
-                }.bind(this),1000);
-        });
+
+        this.props.saveMapping(values);
+        setTimeout(function(){
+            this.props.setSavedMappingToFalse();
+        }.bind(this),1000);
     }
 
     render() {
-
-        let button = this.state.save ?
+        let button = this.props.savedMapping ?
             <button className='saved-productMapping'>
                 <FormattedMessage
                     id='addInventory.saved'
@@ -188,8 +187,7 @@ export default class ProductMapping extends Component {
                             messages={{
                                 required: messages.required,
                                 min: messages.min,
-                                isNumber: messages.isNumber
-
+                                isInteger: messages.isInteger
                             }}
                         />
                         <label htmlFor=".measurements">
@@ -199,7 +197,7 @@ export default class ProductMapping extends Component {
                             />
                         </label>
                         <Control.text model=".packaging.size"
-                                      validators={{min: (val) => min(val, 0), isNumber, required}}
+                                      validators={{required, min: (val) => min(val, 0), isInteger}}
                                       id=".measurements"
                                       onChange={this.props.measureHandler}
                                       //defaultValue=""

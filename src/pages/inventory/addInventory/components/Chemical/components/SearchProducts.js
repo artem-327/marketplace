@@ -18,8 +18,7 @@ class SearchProducts extends Component {
                     />
                 </h4>
 
-                <RemoteComboBox
-                    items={this.props.searchedProducts}
+                <RemoteComboBox id="cas-search" scroll={this.props.scroll} items={this.props.searchedProducts}
                     api={(text) => this.props.searchProducts(text)}
                     dataFetched={this.props.productsFetched}
                     className="cas-search"
@@ -40,7 +39,7 @@ class SearchProducts extends Component {
                     )}
                     getObject={(product) => this.props.onSelect(product)} displayAttr="chemicalName"/>
 
-                <RemoteComboBox
+                <RemoteComboBox id="map-search" scroll={this.props.scroll}
                     items={this.props.mappedProducts}
                     api={(text) => this.props.mapProducts(text)}
                     dataFetched={this.props.mappedDataFetched}

@@ -8,6 +8,7 @@ import {filterNonEmptyAttributes} from "../../utils/functions";
 import SavedFilters from "./components/SavedFilters/SavedFilters";
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {FormattedMessage, injectIntl} from 'react-intl';
+import {checkToken} from "../../utils/auth";
 
 class Filter extends Component {
 
@@ -22,6 +23,8 @@ class Filter extends Component {
     }
 
     handleSubmit(inputs){
+        if (checkToken(this.props)) return;
+
         let filter = Object.assign({}, inputs,
             {pckgs : Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key)},
             {cndt: Object.entries(inputs.cndt || {}).filter(([key, value]) => value).map(([key]) => key)},
@@ -38,6 +41,7 @@ class Filter extends Component {
     }
 
     handleReset(e){
+        if (checkToken(this.props)) return;
         e.preventDefault();
         this.props.resetForm('forms.filter');
         this.props.filterFunc({});

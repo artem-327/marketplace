@@ -12,10 +12,13 @@ import {Form} from 'react-redux-form';
 import Checkbox from '../../../../../components/Checkbox/Checkbox';
 import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
 import PerfectScrollbar from 'react-perfect-scrollbar';
+import {checkToken} from "../../../../../utils/auth";
 
 class ShippingQuotes extends Component {
 
     getShippingQuotes(inputs) {
+        if (checkToken(this.props)) return;
+
         let params = {};
         params.productOfferIds = this.props.selectedRows;
         params.destinationZIP = inputs.destination.zip;

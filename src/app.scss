@@ -2,6 +2,7 @@
 @import "./styles/fonts.scss";
 @import "./styles/main.scss";
 
+
 .App {
   font-family: $app-font-family;
 }
@@ -549,6 +550,10 @@ i {
       }
     }
   }
+}
+
+.activeSearchResult {
+  background-color: #f5f5f5;
 }
 
 

@@ -89,6 +89,7 @@ class ProductOffers extends Component {
                                {name: 'Location'}]}
                            rows={rows}
                            history={this.props.history}
+                           location={this.props.location}
                 />
             </div>
         );

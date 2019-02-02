@@ -5,11 +5,13 @@ import AddCart from "../AddCart"
 import {getUnit} from '../../../../utils/functions';
 import confirm from '../../../../components/Confirmable/confirm';
 import {FormattedMessage} from 'react-intl';
+import {checkToken} from "../../../../utils/auth";
 
 class ItemCartBody extends Component {
 
   editCart(offerId, cartId) {
       // check that new popup has different id than previous
+      if (checkToken(this.props)) return;
       if (AddCart.openedPopup.id !== offerId) {
           // previous popup has different id - remove it
           if (AddCart.openedPopup.id) {
@@ -104,6 +106,8 @@ class ItemCartBody extends Component {
                               (result) => {
                                   // `proceed`
                                   // remove Edit Cart popup if opened currently deleted offer
+                                  if (checkToken(this.props)) return;
+
                                   if (AddCart.openedPopup.id === productOffer.id) {
                                       AddCart.openedPopup.id = false;
                                       this.props.removePopup();

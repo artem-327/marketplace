@@ -9,6 +9,7 @@ import moment from "moment";
 import {getUnit} from "../../../../utils/functions";
 import confirm from '../../../../components/Confirmable/confirm';
 import {NavLink} from 'react-router-dom';
+import {checkToken} from "../../../../utils/auth";
 
 class ProductOffers extends Component {
 
@@ -100,14 +101,14 @@ class ProductOffers extends Component {
                                 sortFunc={(nameColumn) => console.log(nameColumn)}
                                 headerInit={headerInit}
                                 contextMenu={[
-                                         {action: (id) => this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'editListing',},
-                                         {action: (id) => this.openBroadcast(id), label: 'customBroadcast'},
-                                         {action: (id) => confirm('removeListings', 'Are you sure you want to remove listings from Your Inventory?').then(
+                                         {action: (id) => { if (checkToken(this.props)) return; this.props.history.push(`/inventory/edit-inventory/${id}`) }, label: 'editListing',},
+                                         {action: (id) => { if (checkToken(this.props)) return; this.openBroadcast(id) }, label: 'customBroadcast'},
+                                         {action: (id) => { if (checkToken(this.props)) return; confirm('removeListings', 'Are you sure you want to remove listings from Your Inventory?').then(
                                                  () => {
                                                      this.props.deleteProductOffer(id, () => this.props.fetchMyProductOffers({}))
                                                  },
                                                  () => {}
-                                             ), label: 'Delete Listing'}
+                                             ) }, label: 'Delete Listing'}
                                      ]}
                                 rows={rows}
                                 rowComponent={<BroadcastRule

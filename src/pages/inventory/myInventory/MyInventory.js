@@ -98,7 +98,8 @@ class MyInventory extends Component {
                 selections={this.state.selections}
                 currentSelected={this.state.currentSelected}
                 setActiveBroadcastButton={active => this.setActiveBroadcastButton(active)}
-                broadcastActive={this.state.brActive}/>;
+                broadcastActive={this.state.brActive}
+                {...this.props}/>;
         const number = getSelectedDataTable(this.props.productOffersTable);
         return (
             <div className='my-inventory'>
@@ -134,6 +135,7 @@ class MyInventory extends Component {
                     productGrade
                     form
                     filterFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}}
+                    {...this.props}
                 />
                 {content}
             </div>

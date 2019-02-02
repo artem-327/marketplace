@@ -6,6 +6,7 @@ import Location from './Location';
 import classnames from 'classnames';
 import Chemical from "../Chemical";
 import {FormattedMessage} from 'react-intl';
+import {checkToken} from "../../../../../utils/auth";
 
 export default class AddForm extends Component {
     constructor(props) {
@@ -41,6 +42,8 @@ export default class AddForm extends Component {
     }
 
     addProductOffer(inputs){
+        if (checkToken(this.props)) return;
+
         if (!this.props.productMappingValidation || !this.props.productOfferingValidation) return;
 
         let newPricing = inputs['pricing'];

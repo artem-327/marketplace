@@ -8,6 +8,7 @@ import RemoteComboBoxRedux from "../../../../../../components/ComboBox/RemoteCom
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";
 import moment from 'moment';
 import {FormattedMessage, injectIntl} from 'react-intl';
+import {checkToken} from "../../../../../../utils/auth";
 
 class ProductOffering extends Component {
     constructor(props) {
@@ -41,7 +42,6 @@ class ProductOffering extends Component {
     // }
 
     saveOffering(values) {
-
         if (!parseInt(this.props.productOffering.assayMin) && !parseInt(this.props.productOffering.assayMax)) {
             this.setState({minWarning: 'Required', maxWarning: 'Required'})
         }
@@ -51,6 +51,8 @@ class ProductOffering extends Component {
             return;
         }
         */
+
+        if (checkToken(this.props)) return;
 
         if (!this.state.minWarning && !this.state.maxWarning) {
             this.setState({save: true, firstValue: false});
@@ -428,7 +430,7 @@ class ProductOffering extends Component {
                                 show="touched"
                                 messages={{
                                     required: messages.required,
-                                    lotNumber: messages.lotNumber
+                                    // lotNumber: messages.lotNumber
                                 }}
                             />
                             <label htmlFor=".lotNumber">
@@ -438,7 +440,7 @@ class ProductOffering extends Component {
                                 />
                             </label>
                             <Control.text model=".lotNumber"
-                                        validators={{required, lotNumber}}
+                                        // validators={{required, lotNumber}}
                                         id=".lotNumber"/>
                             </div>
 

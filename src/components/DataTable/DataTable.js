@@ -86,6 +86,7 @@ class DataTable extends Component {
               addPopup={this.props.addPopup}
               removePopup={this.props.removePopup}
               history={this.props.history}
+              location={this.props.location}
               rows={this.props.rows}
               rowsOpns={this.props.dataTable.rowsOpns}
               selectable={this.props.selectableRows}

@@ -93,6 +93,7 @@ class GroupRow extends Component {
                             return (
                                 <Row selectable={this.props.selectable}
                                      history={this.props.history}
+                                     location={this.props.location}
                                      tableType={this.props.tableType}
                                      addPopup={this.props.addPopup}
                                      removePopup={this.props.removePopup}
