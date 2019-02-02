@@ -7,13 +7,25 @@ function transformToRows(data) {
     // you can transform your data for rendering here
     return data.map(i => ({
         id: i.id,
-        // you can add another fields here
+        orderStatus: i.orderStatus,
+        date: i.orderDate,
+        customer: '',
+        productName: '',
+        order: '',
+        shipping: i.shippingStatus,
+        review: '',
+        credit: '',
+        payment: '',
+        bl: '',
+        sds: '',
+        cofA: '',
+        total: '',
+        button: ''
     }))
 }
 
 function mapStateToProps(state) {
     const {orders} = state
-    console.log(state)
     return {
         ...orders,
         rows: transformToRows(orders.data)

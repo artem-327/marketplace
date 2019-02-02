@@ -1,0 +1,14 @@
+i {
+  display: block; }
+  i.list {
+    width: 27px;
+    height: 30px;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: contain; }
+    i.list.unknown {
+      background-image: url("../../../images/orders/list-gray.png"); }
+    i.list.positive {
+      background-image: url("../../../images/orders/list-green.png"); }
+    i.list.negative {
+      background-image: url("../../../images/orders/list-red.png"); }
