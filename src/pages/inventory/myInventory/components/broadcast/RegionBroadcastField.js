@@ -13,7 +13,7 @@ const RegionBroadcastField = ({ regionsExpanded, filteredOffices, filteredStates
 
   const isFiltering = filterInput !== "";
   const isExpanded = regionsExpanded.includes(regionData.id) || isFiltering
-  const showedStates = isFiltering ? filterByUniqueProperty(finalFilteredStates, "id").filter(i => i.regionId === regionData.id) : regionData.states
+  const showedStates = isFiltering ? filterByUniqueProperty(finalFilteredStates, "id").filter(i => i.regionId === regionData.id) : regionData.elements
   return (
     <React.Fragment>
       <BroadcastField
@@ -24,7 +24,7 @@ const RegionBroadcastField = ({ regionsExpanded, filteredOffices, filteredStates
         id={regionData.id}
         isExpanded={isExpanded}
         handleExpanded={handleExpanded}
-        hasChildren={regionData.states.length > 0}
+        hasChildren={regionData.elements.length > 0}
         handleRuleClick={handleRuleClick}
         partlybrc={partlybrc}
         partlyanonym={partlyanonym}

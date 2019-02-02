@@ -180,10 +180,18 @@
               }
             }
             &.state ~ .office > .field-name {
-                padding-left: 69px;
+                padding-left: 72px;
+
+                &.pointer {
+                    padding-left: 45px;
+                }
             }
             &.company ~ .office > .field-name {
-                padding-left: 42px;
+                padding-left: 57px;
+
+                &.pointer {
+                    padding-left: 30px;
+                }
             }
         }
         i.arrow {

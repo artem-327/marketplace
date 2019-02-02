@@ -46,7 +46,7 @@ class ProductOffers extends Component {
 
                 const location = (this.props.identity.data.id === offer.merchant.id || this.props.identity.data.branch.id === offer.merchant.id)
                         ? `${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`
-                        : `${offer.warehouse.address.province.name}, ${offer.warehouse.address.country.name}`;
+                        : `${offer.warehouse.address.province.name}` + (typeof offer.warehouse.address.country !== 'undefined' ? `, ${offer.warehouse.address.country.name}` : ``);
 
                 return{
                     id: offer.id,

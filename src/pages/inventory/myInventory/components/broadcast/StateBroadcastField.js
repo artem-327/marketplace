@@ -2,7 +2,7 @@ import React from 'react';
 import BroadcastField from "./BroadcastField";
 
 const StateBroadcastField = ({dispatch, storedState, stateData, filterInput, statesExpanded, handleExpanded, handleRuleClick, isClientList}) => {
-  const branches = stateData.companies.map(i => i.branches)
+  const branches = stateData.elements.map(i => i.elements)
   const flattenBranches = branches.flat()
   const partlybrc = storedState && storedState.broadcastPartly
   const partlyanonym = storedState && storedState.anonymousPartly
