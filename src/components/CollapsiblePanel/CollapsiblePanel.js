@@ -20,13 +20,11 @@ export default class CollapsiblePanel extends Component {
                         <img src={dropdown} alt='drop'/>
                         : <img src={dropdownClose} alt='drop-close'/>
                     }
-                    <h2>
-                        {header}
-                    </h2>
+                    <h2>{header}</h2>
                 </div>
-                    <div className={'add-body' + styleOpen}>
-                        {children}
-                    </div>
+                <div className={'add-body' + styleOpen}>
+                    {children}
+                </div>
             </div>
         )
     }
