@@ -116,14 +116,12 @@ class Location extends Component {
 
         if (checkToken(this.props)) return;
 
-        // stateId!
         let {warehouseName, street, city, state, zip, contact, phone, email} = this.state;
 
         this.setState({isSubmitted: true})
 
         if (!this.validateForms()) return;
 
-        // stateId!
         this.props.saveWarehouse(warehouseName, street, city, state, contact, phone, email, zip).then(() => {
             this.props.fetchWarehouses().then(() => {
                 this.setState({edit: false}, () => this.changeLocation('saved'))
@@ -483,15 +481,39 @@ class Location extends Component {
                                 </span>
                             </div>
                             : null}
-                        <Dropdown
-                            opns={this.props.locations.map((item)=>{
-                                if(item.province) return ({id: item.province.id, name: item.province.name});
-                                if(item.country) return ({id: item.country.id, name: item.country.name});
-                                return {id: 0, name: 'no province or country'}
-                            })}
-                            onChange={(value) => {
-                                this.handleInputs(value, 'state')
-                            }}/>
+                        <RemoteComboBox id="state-search" scroll={0}
+                                        getObject={(location) => {
+                                            if(location.country) this.setState({state : location.country.id})
+                                            else if(location.country) this.setState({state : location.province.id})
+                                            else this.setState({state : 1});
+                                        }}
+                                        items={this.props.filterLocations}
+                                        api={(text) => this.props.fetchFilterLocations(text)}
+                                        dataFetched={this.props.locationsFetched}
+                                        isFetching={this.props.filterLocationsFetching}
+                                        className="cas-search"
+                                        limit={5}
+                                        placeholder={formatMessage({
+                                            id: 'global.state',
+                                            defaultMessage: 'State'
+                                        })}
+                                        label={formatMessage({
+                                            id: 'global.state',
+                                            defaultMessage: 'State'
+                                        })}
+                                        /*
+                                        displayName={(location) => (
+                                            location.country ?
+                                                location.country.name : location.province.name
+                                        )}
+                                        */
+                                        validators={{required}}
+                                        onChange={ (value) => this.setState({state : value})}
+                                        displayName={(location) => {
+                                            if (location.country) return location.country.name;
+                                            else if (location.province) return location.province.name;
+                                            else return 'no province or country';
+                                        }} />
                     </div>
                     <div className='group-item-wr'>
                         {(this.state.isSubmitted && this.state.zip === '') ?
