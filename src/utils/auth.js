@@ -39,7 +39,6 @@ export function withAuth(ComposedComponent) {
     };
 
     function mapStateToProps(store) {
-        console.log(store);
         return {
             isAuthenticated: store.identity.isAuthenticated,
             isFetchingIdentity: store.identity.identity.isFetching

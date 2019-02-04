@@ -235,6 +235,22 @@ position: absolute;
     width: 110px;
     height: 35px;
   }
+  &.smaller {
+    width: auto;
+    min-width: 86px;
+    height: 27px;
+    padding: 0 10px;
+    font-family: $helvetica-roman;
+    font-size: 12px;
+  }
+  &.smallest {
+    width: auto;
+    min-width: 68px;
+    height: 21px;
+    padding: 0 10px;
+    font-family: $helvetica-md;
+    font-size: 10px;
+  }
   &.big {
     width: auto;
     min-width: 160px;
