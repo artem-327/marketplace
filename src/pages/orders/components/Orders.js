@@ -36,7 +36,6 @@ class Orders extends Component {
                     <thead>
                         <tr>
                             <th>Order ID</th>
-                            <th>Status</th>
                             <th>Order Date</th>
                             <th>Customer</th>
                             <th>Product Name</th>
@@ -56,11 +55,10 @@ class Orders extends Component {
                     {rows.map(r => (
                         <tr key={r.id}>
                             <td>{r.id}</td>
-                            <td>{r.orderStatus}</td>
                             <td>{moment(r.date).format('MM/DD/YYYY')}</td>
                             <td></td>
                             <td></td>
-                            <td></td>
+                            <td>{r.orderStatus}</td>
                             <td>{r.shippingStatus}</td>
                             <td>{r.reviewStatus}</td>
                             <td>{r.creditStatus}</td>
