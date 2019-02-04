@@ -116,13 +116,15 @@ class Location extends Component {
 
         if (checkToken(this.props)) return;
 
-        let {warehouseName, street, city, stateId, zip, contact, phone, email} = this.state;
+        // stateId!
+        let {warehouseName, street, city, state, zip, contact, phone, email} = this.state;
 
         this.setState({isSubmitted: true})
 
         if (!this.validateForms()) return;
 
-        this.props.saveWarehouse(warehouseName, street, city, stateId, contact, phone, email, zip).then(() => {
+        // stateId!
+        this.props.saveWarehouse(warehouseName, street, city, state, contact, phone, email, zip).then(() => {
             this.props.fetchWarehouses().then(() => {
                 this.setState({edit: false}, () => this.changeLocation('saved'))
             })
@@ -481,34 +483,15 @@ class Location extends Component {
                                 </span>
                             </div>
                             : null}
-                        <RemoteComboBox id="state-search" scroll={0}
-                                        getObject={(location) => { console.log(location); this.setState({stateId : location.id})}}                                        items={this.props.filterLocations}
-                                        api={(text) => this.props.fetchFilterLocations(text)}
-                                        dataFetched={this.props.locationsFetched}
-                                        isFetching={this.props.filterLocationsFetching}
-                                        className="cas-search"
-                                        limit={5}
-                                        placeholder={formatMessage({
-                                            id: 'global.state',
-                                            defaultMessage: 'State'
-                                        })}
-                                        label={formatMessage({
-                                            id: 'global.state',
-                                            defaultMessage: 'State'
-                                        })}
-                                        /*
-                                        displayName={(location) => (
-                                            location.country ?
-                                                location.country.name : location.province.name
-                                        )}
-                                        */
-                                        validators={{required}}
-                                        onChange={ (value) => this.setState({state : value})}
-                                        displayName={(location) => {
-                                            if (location.country) return location.country.name;
-                                            else if (location.province) return location.province.name;
-                                            else return "undefined";
-                                        }} />
+                        <Dropdown
+                            opns={this.props.locations.map((item)=>{
+                                if(item.province) return ({id: item.province.id, name: item.province.name});
+                                if(item.country) return ({id: item.country.id, name: item.country.name});
+                                return {id: 0, name: 'no province or country'}
+                            })}
+                            onChange={(value) => {
+                                this.handleInputs(value, 'state')
+                            }}/>
                     </div>
                     <div className='group-item-wr'>
                         {(this.state.isSubmitted && this.state.zip === '') ?
