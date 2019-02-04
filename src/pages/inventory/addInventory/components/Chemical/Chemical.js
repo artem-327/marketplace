@@ -160,23 +160,20 @@ class Chemical extends Component {
             this.setState({lots: values});
             this.props.addLotSaveOffering();
 
-        }else{
+        } else{
             let newLots = JSON.parse(localStorage.getItem('productLots'));
             newLots.push({...lots, ...productMapping, product: this.state.productID});
             localStorage.setItem('productLots', JSON.stringify(newLots));
             this.setState({lots: newLots});
             this.props.addLotSaveOffering();
         }
-
-        console.log(JSON.parse(localStorage.getItem('productLots')))
     }
 
-    removeLots(index){
+    removeLots(index) {
         let newLots = JSON.parse(localStorage.getItem('productLots'));
         newLots.splice(index, 1);
         localStorage.setItem('productLots', JSON.stringify(newLots));
         this.setState({lots: newLots})
-        console.log(index)
     }
 
     render() {
