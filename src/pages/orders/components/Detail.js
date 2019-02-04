@@ -1,4 +1,6 @@
 import React, {Component} from 'react'
+import CollapsiblePanel from '../../../components/CollapsiblePanel'
+import '../../../pages/inventory/addInventory/AddInventory.css'
 import * as OrdersHelper from '../../../helpers/Orders'
 
 class Detail extends Component {
@@ -50,13 +52,17 @@ class Detail extends Component {
                 {action ? (
                     <form className='action-required'>
                         <h3>Action Required</h3>
-                        <p>This order is in pending status. Please select ‚Äúaccept‚Äù to move forward with the order. If you press ‚Äúreject‚Äù the order will be cancelled. </p>
+                        <p>This order is in pending status. Please select ìacceptî to move forward with the order. If you press ìrejectî the order will be cancelled. </p>
                         <div>
                             <button type="button" className="button blue">Accept</button>
                             <button type="button" className="button grey">Decline</button>
                         </div>
                     </form>
                 ) : ''}
+
+                <CollapsiblePanel header="Detail of order">
+                    
+                </CollapsiblePanel>
             </div>
         )
     }
