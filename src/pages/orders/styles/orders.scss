@@ -26,8 +26,8 @@ i {
 }
 
 #saleOrdersTable {
-  width: calc(100% - 58px);
-  margin: 0 29px;
+  width: 100%;
+  margin: 0;
   font-size: 0.875rem;
   color: #33373e;
 
@@ -55,4 +55,49 @@ i {
     vertical-align: middle;
     font-family: $helvetica-roman;
   }
+}
+
+.order-statuses {
+  list-style: none;
+  float: right;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  width: calc(100% - 404px);
+  max-width: 1000px;
+  height: 65px;
+  margin: 24px 0;
+  padding: 0;
+
+  li {
+    height: 65px;
+
+    &.separator {
+      width: 1px;
+      background: rgba(151,151,151,0.3);
+    }
+
+    label {
+      display: block;
+      margin: 0;
+      padding: 11px 0 5px;
+      font-family: $helvetica-md;
+      font-size: 0.875rem;
+      letter-spacing: 0.2px;
+      color: #33373e;
+      line-height: 1.2143;
+    }
+
+    span {
+      display: block;
+      font-family: $helvetica-md;
+      font-size: 1rem;
+      color: #979797;
+      line-height: 1.1875;
+    }
+  }
+}
+
+.action-required {
+  background-color: #fafafa;
 }

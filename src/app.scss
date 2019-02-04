@@ -7,12 +7,20 @@
   font-family: $app-font-family;
 }
 
+#page {
+  margin: 0 29px;
+}
+
 .capitalize{
   text-transform: capitalize;
 }
 
 .clearfix{
   clear: both;
+}
+
+.left {
+  float: left !important;
 }
 
 .header {

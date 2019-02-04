@@ -15,8 +15,8 @@ i {
       background-image: url("../../../images/orders/list-red.png"); }
 
 #saleOrdersTable {
-  width: calc(100% - 58px);
-  margin: 0 29px;
+  width: 100%;
+  margin: 0;
   font-size: 0.875rem;
   color: #33373e; }
   #saleOrdersTable .a-center {
@@ -36,3 +36,38 @@ i {
     padding: 0 15px;
     vertical-align: middle;
     font-family: "HelveticaNeueLTPro-Roman", sans-serif; }
+
+.order-statuses {
+  list-style: none;
+  float: right;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  width: calc(100% - 404px);
+  max-width: 1000px;
+  height: 65px;
+  margin: 24px 0;
+  padding: 0; }
+  .order-statuses li {
+    height: 65px; }
+    .order-statuses li.separator {
+      width: 1px;
+      background: rgba(151, 151, 151, 0.3); }
+    .order-statuses li label {
+      display: block;
+      margin: 0;
+      padding: 11px 0 5px;
+      font-family: "HelveticaNeueLTPro-Md", sans-serif;
+      font-size: 0.875rem;
+      letter-spacing: 0.2px;
+      color: #33373e;
+      line-height: 1.2143; }
+    .order-statuses li span {
+      display: block;
+      font-family: "HelveticaNeueLTPro-Md", sans-serif;
+      font-size: 1rem;
+      color: #979797;
+      line-height: 1.1875; }
+
+.action-required {
+  background-color: #fafafa; }

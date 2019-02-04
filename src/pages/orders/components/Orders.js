@@ -30,7 +30,7 @@ class Orders extends Component {
         ]
 
         return (
-            <div>
+            <div id="page">
                 <h1 className='header'>Orders {isFetching ? 'Loading...' : ''}</h1>
                 <table id="saleOrdersTable">
                     <thead>
