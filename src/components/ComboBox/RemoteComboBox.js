@@ -40,6 +40,13 @@ class RemoteComboBox extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.currentValue) {
+        this.setState({ fulltext: nextProps.currentValue}, () => {
+        });
+    }
+    }
+
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClickOutside, false);
   }

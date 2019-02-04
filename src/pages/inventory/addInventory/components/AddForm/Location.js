@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
 import {Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
-import Dropdown from "../../../../../components/Dropdown/Dropdown";
 import {messages, required} from "../../../../../utils/validation";
 import classnames from "classnames";
 import "./Location.css"
 import {FormattedMessage, injectIntl} from 'react-intl';
-import RemoteComboBoxRedux from "../../../../../components/ComboBox/RemoteComboBoxRedux";
 import RemoteComboBox from "../../../../../components/ComboBox/RemoteComboBox";
 import {checkToken} from "../../../../../utils/auth";
 
@@ -36,7 +34,6 @@ class Location extends Component {
 
     setInitialValue() {
         if (this.props.edit) {
-            //console.log(this.props.productOffer.warehouse);
             this.setState({
                 warehouseIndex: this.props.productOffer.warehouse.id,
                 street: this.props.productOffer.warehouse.address.streetAddress,
@@ -116,13 +113,13 @@ class Location extends Component {
 
         if (checkToken(this.props)) return;
 
-        let {warehouseName, street, city, stateId, zip, contact, phone, email} = this.state;
+        let {warehouseName, street, city, state, zip, contact, phone, email} = this.state;
 
         this.setState({isSubmitted: true})
 
         if (!this.validateForms()) return;
 
-        this.props.saveWarehouse(warehouseName, street, city, stateId, contact, phone, email, zip).then(() => {
+        this.props.saveWarehouse(warehouseName, street, city, state, contact, phone, email, zip).then(() => {
             this.props.fetchWarehouses().then(() => {
                 this.setState({edit: false}, () => this.changeLocation('saved'))
             })
@@ -145,13 +142,16 @@ class Location extends Component {
     }
 
     getCurrentItemById(id){
-        if (id === '') return 'Select';
+        if (id === '') return ''; // 'Select'
         for (let i = 0; i < this.props.locations.length; i++) {
             if (this.props.locations[i].province && id === this.props.locations[i].province.id) {
                 return this.props.locations[i].province.name
+            } else if (this.props.locations[i].country && id === this.props.locations[i].country.id) {
+                return this.props.locations[i].country.name
             }
         }
-        return 'error'
+        return '';
+        // return 'error'
     }
 
     renderSavedLocation() {
@@ -256,23 +256,40 @@ class Location extends Component {
                                         </span>
                                     </div>
                                     : null}
-                                <label>
-                                    <FormattedMessage
-                                        id='global.state'
-                                        defaultMessage='State'
-                                    />
-                                </label>
-                                <Dropdown
-                                    opns={this.props.locations.map((item)=>{
-                                            if(item.province) return ({id: item.province.id, name: item.province.name});
-                                            if(item.country) return ({id: item.country.id, name: item.country.name});
-                                            return {id: 0, name: 'no province or country'}
-                                        })}
-                                    disabled={!this.state.edit}
-                                    currentValue={this.getCurrentItemById(this.state.state)}
-                                    onChange={(value) => {
-                                            this.handleInputs(value, 'state')
-                                        }}/>
+                                <RemoteComboBox id="state-search" scroll={0} disabled={!this.state.edit}
+                                                currentValue={this.getCurrentItemById(this.state.state)}
+                                                getObject={(location) => {
+                                                    if(location.country) this.setState({state : location.country.id})
+                                                    else if(location.province) this.setState({state : location.province.id})
+                                                    else this.setState({state : 1});
+                                                }}
+                                                items={this.props.filterLocations}
+                                                api={(text) => this.props.fetchFilterLocations(text)}
+                                                dataFetched={this.props.locationsFetched}
+                                                isFetching={this.props.filterLocationsFetching}
+                                                className="cas-search"
+                                                limit={5}
+                                                placeholder={formatMessage({
+                                                    id: 'global.state',
+                                                    defaultMessage: 'State'
+                                                })}
+                                                label={formatMessage({
+                                                    id: 'global.state',
+                                                    defaultMessage: 'State'
+                                                })}
+                                                /*
+                                                displayName={(location) => (
+                                                    location.country ?
+                                                        location.country.name : location.province.name
+                                                )}
+                                                */
+                                                validators={{required}}
+                                                onChange={ (value) => this.setState({state : value})}
+                                                displayName={(location) => {
+                                                    if (location.country) return location.country.name;
+                                                    else if (location.province) return location.province.name;
+                                                    else return 'no province or country';
+                                                }} />
                             </div>
                             <div className='group-item-wr'>
                                 {(this.state.isSubmitted && this.state.zip === '') ?
@@ -482,7 +499,12 @@ class Location extends Component {
                             </div>
                             : null}
                         <RemoteComboBox id="state-search" scroll={0}
-                                        getObject={(location) => { console.log(location); this.setState({stateId : location.id})}}                                        items={this.props.filterLocations}
+                                        getObject={(location) => {
+                                            if(location.country) this.setState({state : location.country.id})
+                                            else if(location.province) this.setState({state : location.province.id})
+                                            else this.setState({state : 1});
+                                        }}
+                                        items={this.props.filterLocations}
                                         api={(text) => this.props.fetchFilterLocations(text)}
                                         dataFetched={this.props.locationsFetched}
                                         isFetching={this.props.filterLocationsFetching}
@@ -507,7 +529,7 @@ class Location extends Component {
                                         displayName={(location) => {
                                             if (location.country) return location.country.name;
                                             else if (location.province) return location.province.name;
-                                            else return "undefined";
+                                            else return 'no province or country';
                                         }} />
                     </div>
                     <div className='group-item-wr'>
@@ -677,8 +699,6 @@ class Location extends Component {
     }
 
     render() {
-        //console.log(this.props)
-
         const location = this.state.location === "saved" ? this.renderSavedLocation() : this.renderNewLocation();
         return (
             <div className='location-wr'>
