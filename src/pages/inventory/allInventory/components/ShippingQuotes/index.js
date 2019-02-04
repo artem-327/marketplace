@@ -15,7 +15,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({getShippingQuotes, dispatch}, dispatch)
+    return bindActionCreators({getShippingQuotes}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShippingQuotes);
