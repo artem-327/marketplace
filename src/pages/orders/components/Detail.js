@@ -15,6 +15,7 @@ class Detail extends Component {
                 <h1 className='header'>Sales Order {isDetailFetching ? 'Loading...' : '# '+detail.id}</h1>
 
                 <CollapsiblePanel header="Detail of order">
+                    
                 </CollapsiblePanel>
             </div>
         )
