@@ -8,6 +8,12 @@ export default class CollapsiblePanel extends Component {
     state = {
         open: true
     }
+
+    componentWillMount() {
+        if (typeof this.props.open !== 'undefined')
+            this.state.open = this.props.open
+    }
+
     render() {
         const { header, children } = this.props
         const { open } = this.state

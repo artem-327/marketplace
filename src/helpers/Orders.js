@@ -1,68 +1,79 @@
 export function getOrderStatus(orderStatus) {
     switch (orderStatus) {
         case 1:
-            return 'Pending';
+            return 'Pending'
         case 2:
-            return 'Confirmed';
+            return 'Confirmed'
         case 3:
-            return 'Rejected';
+            return 'Rejected'
         default:
-            return 'N/A';
+            return 'N/A'
     }
 }
 
 export function getShippingStatus(shippingStatus) {
     switch (shippingStatus) {
         case 1:
-            return 'Not Shipped';
+            return 'Not Shipped'
         case 2:
-            return 'In Transit';
+            return 'In Transit'
         case 3:
-            return 'Delivered';
+            return 'Delivered'
         case 4:
-            return 'Returned';
+            return 'Returned'
         default:
-            return 'N/A';
+            return 'N/A'
     }
 }
 
 export function getReviewStatus(reviewStatus) {
     switch (reviewStatus) {
         case 1:
-            return 'Pending';
+            return 'Pending'
         case 2:
-            return 'Accepted';
+            return 'Accepted'
         case 3:
-            return 'Rejected';
+            return 'Rejected'
         default:
-            return 'N/A';
+            return 'N/A'
     }
 }
 
 export function getPaymentStatus(paymentStatus) {
     switch (paymentStatus) {
         case 1:
-            return 'Escrow';
+            return 'Escrow'
         case 2:
-            return 'Paid';
+            return 'Paid'
         case 3:
-            return 'Refunded';
+            return 'Refunded'
         default:
-            return 'N/A';
+            return 'N/A'
     }
 }
 
 export function getCreditStatus(creditStatus) {
     switch (creditStatus) {
         case 1:
-            return 'Pending';
+            return 'Pending'
         case 2:
-            return 'Counter Offer Pending';
+            return 'Counter Offer Pending'
         case 3:
-            return 'Accepted';
+            return 'Accepted'
         case 4:
-            return 'Rejected';
+            return 'Rejected'
         default:
-            return 'N/A';
+            return 'N/A'
+    }
+}
+
+export function getReturnStatus(returnStatus) {
+    switch (returnStatus) {
+        case 1:
+            return 'In Transit'
+        case 2:
+            return 'Delivered'
+        default:
+            return 'N/A'
     }
 }

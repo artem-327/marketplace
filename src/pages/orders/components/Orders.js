@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import '../styles/orders.css'
-import moment from "moment/moment"
 
 class Orders extends Component {
 
@@ -36,6 +35,7 @@ class Orders extends Component {
                     <thead>
                         <tr>
                             <th>Order ID</th>
+                            <th>Status</th>
                             <th>Order Date</th>
                             <th>Customer</th>
                             <th>Product Name</th>
@@ -55,8 +55,9 @@ class Orders extends Component {
                     {rows.map(r => (
                         <tr key={r.id}>
                             <td>{r.id}</td>
-                            <td>{moment(r.date).format('MM/DD/YYYY')}</td>
-                            <td></td>
+                            <td>{r.globalStatus}</td>
+                            <td>{r.date}</td>
+                            <td>{r.customerName}</td>
                             <td></td>
                             <td>{r.orderStatus}</td>
                             <td>{r.shippingStatus}</td>
@@ -66,7 +67,7 @@ class Orders extends Component {
                             <td className="a-center"><i className="list unknown"></i></td>
                             <td className="a-center"><i className="list positive"></i></td>
                             <td className="a-center"><i className="list negative"></i></td>
-                            <td className="a-right"></td>
+                            <td className="a-right">{r.orderTotal}</td>
                             <td className="a-right"><button type="button" className="button light-blue smallest" onClick={() => {this.props.history.push(`/orders/${r.id}`)}}>View</button></td>
                         </tr>
                     ))}

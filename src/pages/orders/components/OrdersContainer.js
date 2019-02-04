@@ -3,13 +3,15 @@ import {bindActionCreators} from 'redux'
 import Orders from './Orders'
 import * as OrdersHelper from '../../../helpers/Orders'
 import * as Actions from '../actions'
+import {formatMoney} from "../../../utils/functions";
+import moment from "moment/moment"
 
 function transformToRows(data) {
-    // you can transform your data for rendering here
     return data.map(i => ({
         id: i.id,
-        date: i.orderDate,
-        customer: '',
+        globalStatus: i.globalStatus,
+        date: moment(i.orderDate).format('MM/DD/YYYY'),
+        customerName: i.buyer.firstname + (i.buyer.middlename ? ' ' + i.buyer.middlename : '') + ' ' + i.buyer.lastname,
         productName: '',
         orderStatus: OrdersHelper.getOrderStatus(i.orderStatus),
         shippingStatus: OrdersHelper.getShippingStatus(i.shippingStatus),
@@ -19,7 +21,8 @@ function transformToRows(data) {
         bl: '',
         sds: '',
         cofA: '',
-        total: ''
+        total: '',
+        orderTotal: "$" + i.totalPrice.formatMoney(2)
     }))
 }
 
