@@ -5,9 +5,9 @@ import {getShippingQuotes} from '../../../../../modules/shippingQuotes';
 
 function mapStateToProps(store) {
     return {
-        quantity: 0,
-        destinationZIP: '',
-        maxTransit: 0,
+        quantity: store.shippingQuotes.quantity,
+        destinationZIP: store.shippingQuotes.destinationZIP,
+        maxTransit: store.shippingQuotes.maxTransit,
         shippingQuotes: store.shippingQuotes.shippingQuotes,
         shippingQuotesIsFetching: store.shippingQuotes.shippingQuotesIsFetching,
         shippingQuotesForm: store.forms.shippingQuotes

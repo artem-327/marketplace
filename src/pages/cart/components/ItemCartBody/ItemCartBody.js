@@ -4,11 +4,14 @@ import Button from '../../../../components/Button/Button'
 import AddCart from "../AddCart"
 import {getUnit} from '../../../../utils/functions';
 import confirm from '../../../../components/Confirmable/confirm';
+import {FormattedMessage} from 'react-intl';
+import {checkToken} from "../../../../utils/auth";
 
 class ItemCartBody extends Component {
 
   editCart(offerId, cartId) {
       // check that new popup has different id than previous
+      if (checkToken(this.props)) return;
       if (AddCart.openedPopup.id !== offerId) {
           // previous popup has different id - remove it
           if (AddCart.openedPopup.id) {
@@ -37,29 +40,62 @@ class ItemCartBody extends Component {
                           {productOffer.product.casIndexName}
                       </div>
                       <div>
-                          Merchant: {productOffer.merchant.email}
+                          <FormattedMessage
+                            id='cart.merchant.email'
+                            defaultMessage={'Merchant: ' + productOffer.merchant.email}
+                            values={{merchant: productOffer.merchant.email}}
+                          />
                       </div>
                       <div>
-                          Location: {location}
+                          <FormattedMessage
+                              id='cart.location'
+                              defaultMessage={'Location: ' + location}
+                              values={{location: location}}
+                          />
                       </div>
                       <div>
-                          Price Per Lb: ${productOffer.pricing.price}
+                          <FormattedMessage
+                            id='cart.pricePer'
+                            defaultMessage={`Price per ${'Lb'}: $${productOffer.pricing.price}`}
+                            values={{unit: 'Lb', price: productOffer.pricing.price}}
+                          />
                       </div>
                       <div>
-                          Total Weight: {cartItem.quantity * productOffer.packaging.size} {unitName}
+                          <FormattedMessage
+                            id='cart.totalWeight'
+                            defaultMessage={`Total Weight: ${cartItem.quantity * productOffer.packaging.size} ${unitName}`}
+                            values={{weight: cartItem.quantity * productOffer.packaging.size, unit: unitName}}
+                          />
                       </div>
                   </div>
                   <div className="item-cart-body-section">
                       <div>
-                          Origin: {productOffer.origin.name}
+                          <FormattedMessage
+                            id='cart.origin'
+                            defaultMessage={`Origin: ${productOffer.origin.name}`}
+                            values={{origin: productOffer.origin.name}}
+                          />
                       </div>
                       <div>
-                          Assay: {productOffer.assayMin} - {productOffer.assayMax}
+                          <FormattedMessage
+                              id='cart.assay'
+                              defaultMessage={`Assay: ${productOffer.assayMin || ''} - ${productOffer.assayMax || ''}`}
+                              values={{first: productOffer.origin.name || '', second: productOffer.assayMax || ''}}
+                          />
                       </div>
                       <div>
-                          Condition: {productOffer.productCondition.name}
+                          <FormattedMessage
+                            id='cart.condition'
+                            defaultMessage={`Condition: ${productOffer.productCondition.name}`}
+                            values={{condition: productOffer.productCondition.name}}
+                          />
                       </div>
                       <div>
+                          <FormattedMessage
+                            id='cart.form'
+                            defaultMessage={`Form ${productOffer.productForm.name}`}
+                            values={{form: productOffer.productForm.name}}
+                          />
                           Form: {productOffer.productForm.name}
                       </div>
                   </div>
@@ -70,6 +106,8 @@ class ItemCartBody extends Component {
                               (result) => {
                                   // `proceed`
                                   // remove Edit Cart popup if opened currently deleted offer
+                                  if (checkToken(this.props)) return;
+
                                   if (AddCart.openedPopup.id === productOffer.id) {
                                       AddCart.openedPopup.id = false;
                                       this.props.removePopup();
@@ -79,11 +117,21 @@ class ItemCartBody extends Component {
                               (result) => {
                                   // `cancel`
                               }
-                          )}>Remove</Button>
+                          )}>
+                      <FormattedMessage
+                        id='global.remove'
+                        defaultMessage='Remove'
+                      />
+                  </Button>
                   <Button
                       color="blue"
                       onClick={() => this.editCart(productOffer.id, cartItem.id)}
-                  >Edit</Button>
+                  >
+                     <FormattedMessage
+                        id='global.edit'
+                        defaultMessage='Edit'
+                     />
+                  </Button>
               </footer>
           </div>
       );

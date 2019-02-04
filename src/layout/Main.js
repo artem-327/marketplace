@@ -4,6 +4,7 @@ import {Switch, Route} from 'react-router-dom';
 import Dashboard from '../pages/dashboard'
 import Inventory from "../pages/inventory/InventoryHOC";
 import Orders from "../pages/orders";
+import OrderDetail from "../pages/orders/detail";
 import Clients from "../pages/clients/Clients";
 import Reports from "../pages/reports/Reports";
 import Settings from "../pages/settings/Settings";
@@ -40,6 +41,7 @@ class Main extends Component {
                     <Route exact path="/inventory/add-inventory" component={withAuth(Inventory(AddInventory))}/>
                     <Route exact path="/inventory/edit-inventory/:id" component={withAuth(Inventory(withEdit(AddInventory)))}/>
                     <Route exact path="/orders" component={withAuth(Orders)}/>
+                    <Route exact path="/orders/:id" component={withAuth(OrderDetail)}/>
                     <Route exact path="/clients" component={withAuth(Clients)}/>
                     <Route exact path="/reports" component={withAuth(Reports)}/>
                     <Route exact path="/settings" component={withAuth(Settings)}/>

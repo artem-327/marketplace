@@ -12,6 +12,17 @@ function* getOrders() {
     }
 }
 
+function* get(action) {
+    try {
+        yield put({type: AT.ORDERS_DETAIL_FETCH_REQUESTED})
+        const detail = yield call(Api.get, action.payload.selectedIndex)
+        yield put({type: AT.ORDERS_DETAIL_FETCH_SUCCESS, payload: detail})
+    } catch (error) {
+        yield put({type: AT.ORDERS_DETAIL_FETCH_FAILURE})
+    }
+}
+
 export default function* () {
-    yield takeLatest(AT.ORDERS_FETCH, getOrders)
+    yield takeEvery(AT.ORDERS_FETCH, getOrders)
+    yield takeEvery(AT.ORDERS_DETAIL_FETCH, get)
 }

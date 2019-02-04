@@ -4,10 +4,12 @@ import AddForm from "./components/AddForm";
 import AddGroup from './components/AddGroup';
 import Chemical from "./components/Chemical";
 import {actions} from "react-redux-form";
+import {FormattedMessage} from 'react-intl';
+import {logout} from "../../../modules/identity";
 
 export default class AddInventory extends Component {
     componentDidMount(){
-        if(this.props.edit && this.props.productOffer){
+        if(this.props.edit && this.props.productOffer) {
             this.props.dispatch(actions.merge('forms.productMapping', {
                 casNumber: this.props.productOffer.product.casNumber,
                 chemicalName: this.props.productOffer.product.chemicalName,
@@ -33,20 +35,35 @@ export default class AddInventory extends Component {
                 productCondition: this.props.productOffer.productCondition.id,
                 productForm: this.props.productOffer.productForm.id,
                 productGrade: this.props.productOffer.productGrade.id,
-                pkgAmount: this.props.productOffer.pkgAmount,
             }));
             this.props.dispatch(actions.merge('forms.addProductOffer', {
                 warehouse: this.props.productOffer.warehouse.id
             }))
         } 
     }
-    
 
     render() {
+        const { productOffer } = this.props;
         return(
-        <div>
-            <h1 className='header'>{!this.props.edit ? 'ADD INVENTORY' : 'EDIT PRODUCT OFFER - ' + (this.props.productOffer.productName || this.props.productOffer.tradeName)}</h1>
-            <AddForm {...this.props}/>
-        </div>)
+            <div>
+                <h1
+                    className='header'>
+                    {
+                        !this.props.edit ?
+                            <FormattedMessage
+                                id='addInventory.addInventory'
+                                defaultMessage='ADD INVENTORY'
+                            />
+                            :
+                            <FormattedMessage
+                                id='addInventory.editProductOffer'
+                                defaultMessage={'EDIT PRODUCT OFFER - ' + productOffer.productName || productOffer.tradeName}
+                                values={{productName: productOffer.productName || productOffer.tradeName}}
+                            />
+                    }
+                </h1>
+                <AddForm {...this.props}/>
+            </div>
+        )
     }
 }

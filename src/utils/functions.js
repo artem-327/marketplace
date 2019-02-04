@@ -51,7 +51,7 @@ export const getSelectedDataTable = (dataTable) => {
         }
     }
     return selected;
-}
+};
 
 export const getSelectedRowsDataTable = (dataTable) => {
     if(!dataTable) return false;

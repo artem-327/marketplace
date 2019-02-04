@@ -84,8 +84,18 @@ class Dropdown extends Component {
             </ul> : null;
         return (
             <div className='dropdown-wr' ref={this.dropdownRef} >
-                <div className={'dropdown-trigger ' + classnames({'disabled' : this.props.disabled, 'open' : isOpen, 'selected' : isSelected})} onClick={()=>this.toggleDropdown()}>
-                    <div>{currentValue || this.props.placeholder || 'Select'}{arrow}</div>
+                <div className={
+                    'dropdown-trigger '
+                    + classnames(
+                        {
+                            'disabled' : this.props.disabled,
+                            'open' : isOpen,
+                            'selected' : isSelected
+                        }
+                        )
+                }
+                     onClick={()=>this.toggleDropdown()}>
+                    <div className="dropdown-current-placeholder">{currentValue || this.props.placeholder || 'Select'}{arrow}</div>
                 </div>
                 {options}
             </div>

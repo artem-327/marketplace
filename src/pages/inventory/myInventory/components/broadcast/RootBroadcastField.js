@@ -25,14 +25,14 @@ const RootBroadcastField = ({
   filteredCompanies, 
   filteredOffices
 }) => {
-  if (!rootData.regions) return <Spinner />
+  if (!rootData.elements) return <Spinner />
   const partlybrc = storedRoot && storedRoot["1"].broadcastPartly
   const partlyanonym = storedRoot && storedRoot["1"].anonymousPartly
-  const statessData =  rootData.regions.map(i => i.states)
+  const statessData =  rootData.elements.map(i => i.elements)
   const flattenStates = statessData.flat()
-  const companiesData =  flattenStates.map(i => i.companies)
+  const companiesData =  flattenStates.map(i => i.elements)
   const flattenCompanies = companiesData.flat()
-  const officesData =  flattenCompanies.map(i => i.branches)
+  const officesData =  flattenCompanies.map(i => i.elements)
   const flattenOffices = officesData.flat()
   const uniqueCompanies = filterByUniqueProperty(flattenCompanies, "id")
 
@@ -44,13 +44,13 @@ const RootBroadcastField = ({
   const showedCompanies = isFiltering ? filterByUniqueProperty(finalFilteredCompanies, "id") : uniqueCompanies
 
   const regionsOfFilteredStatesIds = filteredStates.map(i => i.regionId)
-  const regionsOfFilteredStatess = rootData.regions.filter(i => regionsOfFilteredStatesIds.includes(i.id))
+  const regionsOfFilteredStatess = rootData.elements.filter(i => regionsOfFilteredStatesIds.includes(i.id))
 
   const regionsOfFilteredOfficesIds = filteredOffices.map(i => i.regionId)
-  const regionsOfFilteredOffices = rootData.regions.filter(i => regionsOfFilteredOfficesIds.includes(i.id))
+  const regionsOfFilteredOffices = rootData.elements.filter(i => regionsOfFilteredOfficesIds.includes(i.id))
 
   const finalFilteredRegions = [...filteredRegions, ...regionsOfFilteredStatess, ...regionsOfFilteredOffices]
-  const showedRegions = isFiltering? filterByUniqueProperty(finalFilteredRegions, "id") : rootData.regions
+  const showedRegions = isFiltering? filterByUniqueProperty(finalFilteredRegions, "id") : rootData.elements
 
   return (
     <>
@@ -61,7 +61,7 @@ const RootBroadcastField = ({
         isClientList={isClientList}
         id={1}
         isExpanded={true}
-        hasChildren={rootData.regions.length > 0}
+        hasChildren={rootData.elements.length > 0}
         partlybrc={partlybrc}
         partlyanonym={partlyanonym}
         handleExpanded={handleExpanded}

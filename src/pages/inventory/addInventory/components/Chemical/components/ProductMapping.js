@@ -1,15 +1,14 @@
 import React, {Component} from 'react';
 import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
-import {required, isNumber, min, messages} from "../../../../../../utils/validation";
+import {required, isInteger, min, messages} from "../../../../../../utils/validation";
 import './ProductMapping.css'
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";
+import {FormattedMessage} from 'react-intl';
+import {checkToken} from "../../../../../../utils/auth";
 export default class ProductMapping extends Component {
     constructor(props){
         super(props);
-        this.state = {
-            save: false,
-        }
     }
 
     componentDidMount(){
@@ -22,27 +21,46 @@ export default class ProductMapping extends Component {
     }
 
     saveMapping(values){
+        if (checkToken(this.props)) return;
+
         values = Object.assign({}, values, {
+            packaging: { ...values.packaging, size: Number(values.packaging.size) },
             product: this.props.productID
         });
-        this.setState({save: true}, ()=>{
-            this.props.saveMapping(values);
-                setTimeout(function(){
-                    this.setState({save: false});
-                }.bind(this),1000);
-        });
+
+        this.props.saveMapping(values);
+        setTimeout(function(){
+            this.props.setSavedMappingToFalse();
+        }.bind(this),1000);
     }
 
     render() {
-
-        let button = this.state.save ? <button className='saved-productMapping'>SAVED</button> :
-            <button id="mapping-btn" className='save-productMapping'>Save Mapping</button>;
+        let button = this.props.savedMapping ?
+            <button className='saved-productMapping'>
+                <FormattedMessage
+                    id='addInventory.saved'
+                    defaultMessage='SAVED'
+                />
+            </button>
+            : <button id="mapping-btn" className='save-productMapping'>
+                <FormattedMessage
+                    id='addInventory.saveMapping'
+                    defaultMessage='Save Mapping'
+                />
+            </button>;
 
         return (
 
             <div>
-                <h4 className=''>PRODUCT MAPPING</h4>
-                <Form model="forms.productMapping" onSubmit={(values)=>this.saveMapping(values)} >
+                <h4>
+                    <FormattedMessage
+                        id='addInventory.productMapping'
+                        defaultMessage='PRODUCT MAPPING'
+                    />
+                </h4>
+                <Form
+                    model="forms.productMapping"
+                    onSubmit={(values)=>this.saveMapping(values)}>
                 <div>
                     <div className='group-item-wr'>
                         <Errors
@@ -53,7 +71,12 @@ export default class ProductMapping extends Component {
                                 required: messages.required,
                             }}
                         />
-                        <label htmlFor=".indexName">CAS Index Name</label>
+                        <label htmlFor=".indexName">
+                            <FormattedMessage
+                                id='addInventory.CasIndexName'
+                                defaultMessage='CAS Index Name'
+                            />
+                        </label>
                         <Control.text model=".indexName"
                                       validators={{
                                           required,
@@ -73,7 +96,12 @@ export default class ProductMapping extends Component {
                                 isCasNumber: messages.isCasNumber
                             }}
                         />
-                        <label htmlFor=".casNumber">CAS Number</label>
+                        <label htmlFor=".casNumber">
+                            <FormattedMessage
+                                id='addInventory.CasNumber'
+                                defaultMessage='CAS Number'
+                            />
+                        </label>
                         <Control.text model=".casNumber"
                                       validators={{required}}
                                       disabled={true}
@@ -90,7 +118,12 @@ export default class ProductMapping extends Component {
                                 required: messages.required,
                             }}
                         />
-                        <label htmlFor=".chemicalName">Chemical Name</label>
+                        <label htmlFor=".chemicalName">
+                            <FormattedMessage
+                                id='addInventory.chemicalName'
+                                defaultMessage='Chemical Name'
+                            />
+                        </label>
                         <Control.text model=".chemicalName"
                                       validators={{required}}
                                       disabled={true}
@@ -111,7 +144,12 @@ export default class ProductMapping extends Component {
                                 required: messages.required,
                             }}
                         />
-                        <label htmlFor=".productName">Product Name</label>
+                        <label htmlFor=".productName">
+                            <FormattedMessage
+                                id='addInventory.productName'
+                                defaultMessage='Product Name'
+                            />
+                        </label>
                         <Control.text model=".productName"
                                       validators={{required}}
                                       id=".productName"
@@ -127,7 +165,12 @@ export default class ProductMapping extends Component {
                                 required: messages.required,
                             }}
                         />
-                        <label htmlFor=".productNumber">Product Number</label>
+                        <label htmlFor=".productNumber">
+                            <FormattedMessage
+                                id='addInventory.productNumber'
+                                defaultMessage='Product Number'
+                            />
+                        </label>
                         <Control.text model=".productNumber"
                                       validators={{required}}
                                       id=".productNumber"
@@ -144,13 +187,17 @@ export default class ProductMapping extends Component {
                             messages={{
                                 required: messages.required,
                                 min: messages.min,
-                                isNumber: messages.isNumber
-
+                                isInteger: messages.isInteger
                             }}
                         />
-                        <label htmlFor=".measurements">Measure</label>
+                        <label htmlFor=".measurements">
+                            <FormattedMessage
+                                id='addInventory.measure'
+                                defaultMessage='Measure'
+                            />
+                        </label>
                         <Control.text model=".packaging.size"
-                                      validators={{min: (val) => min(val, 0), isNumber, required}}
+                                      validators={{required, min: (val) => min(val, 0), isInteger}}
                                       id=".measurements"
                                       onChange={this.props.measureHandler}
                                       //defaultValue=""
@@ -165,7 +212,12 @@ export default class ProductMapping extends Component {
                                 required: messages.required,
                             }}
                         />
-                        <label htmlFor=".productGrade">U/M</label>
+                        <label htmlFor=".productGrade">
+                            <FormattedMessage
+                                id='addInventory.UM'
+                                defaultMessage='U/M'
+                            />
+                        </label>
                         <DropdownRedux opns={this.props.unitOfMeasurement} placeholder='Select'
                                        model="forms.productMapping.packaging.unit"
                                        validators={{required}}
@@ -182,7 +234,12 @@ export default class ProductMapping extends Component {
                                 required: messages.required,
                             }}
                         />
-                        <label htmlFor=".productCondition">U/P</label>
+                        <label htmlFor=".productCondition">
+                            <FormattedMessage
+                                id='addInventory.UP'
+                                defaultMessage='U/P'
+                            />
+                        </label>
                         <DropdownRedux opns={this.props.unitOfPackaging} placeholder='Select'
                                        model="forms.productMapping.packaging.packagingType"
                                        dispatch={this.props.dispatch}
@@ -191,8 +248,9 @@ export default class ProductMapping extends Component {
                     </div>
                     {!this.props.edit ?
                     <React.Fragment>
-                        <Tooltip className="save-mapping" content="By selecting 'Save Mapping' CAS Name, CAS Number, Product Name and Product Number will be mapped
-                                  in our system. Next time you enter this product these fields will be pre-populated for you."/>
+                        <Tooltip
+                            className="save-mapping"
+                        />
                         {button}
                     </React.Fragment>
                     : null

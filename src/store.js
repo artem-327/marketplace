@@ -1,6 +1,5 @@
 import { createStore, applyMiddleware } from 'redux'
 import { createLogger } from 'redux-logger'
-import { localeReducer as locale } from 'react-localize-redux'
 import thunk from 'redux-thunk'
 import promise from 'redux-promise-middleware'
 import { combineReducers } from 'redux'
@@ -12,7 +11,6 @@ import createSagaMiddleware from 'redux-saga'
 // import identity, {initialState as identityFormInit, logout} from './modules/identity'
 import identity, {initialState as identityFormInit} from './modules/identity'
 import users from './modules/users'
-
 
 import companies from './modules/companies'
 import productOffers, {initialState as addProductsInit} from './modules/productOffers'
@@ -28,6 +26,7 @@ import location from './modules/location'
 import errors from "./modules/errors"
 import dataTables from "./modules/dataTables"
 
+import {show as saveFilterItem} from './components/Filter/components/SavedFilters/reducers/SaveFilterItem.reducers'
 import companiesSaga from "./saga/companies"
 import officesSaga from "./saga/offices"
 import merchantsSaga from "./saga/merchants"
@@ -47,7 +46,6 @@ const reducer = combineReducers({
     identity,
     brcRules,
     companies,
-    locale,
     users,
     location,
     productOffers,
@@ -60,6 +58,7 @@ const reducer = combineReducers({
     filter,
     errors,
     dataTables,
+    saveFilterItem,
     orders: ordersReducers,
     forms: combineForms({
         filter: filterInit.data,

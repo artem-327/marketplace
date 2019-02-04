@@ -8,6 +8,7 @@ import {getUnit} from '../../../../utils/functions'
 import './AddCart.css';
 import file from '../../../../images/file.svg';
 import InputControlled from '../../../../components/InputControlled/InputControlled'
+import {checkToken} from "../../../../utils/auth";
 
 class AddCart extends Component {
 
@@ -32,6 +33,7 @@ class AddCart extends Component {
   }
 
   createOrder = async () => {
+    if (checkToken(this.props)) return;
     const {removePopup, postNewOrder, offer, history} = this.props;
     const offerpayload = {
         productOffer: offer.id,

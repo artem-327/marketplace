@@ -11,17 +11,15 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import Login from './pages/login'
 import Registration from './pages/registration'
 import axios from "axios";
-import { initialize, addTranslationForLanguage } from 'react-localize-redux';
 import { setAuthToken } from './utils/auth';
 import {getIdentity}from './modules/identity';
+import { IntlProvider } from 'react-intl';
+import messages_en from './translations/en.json';
 
-//TODO::move include for translation
-const enJson = require('./translations/en.json');
+const messages = {
+    en: messages_en
+};
 
-const languages = [{ name: 'English', code: 'en' }];
-store.dispatch(initialize(languages, { defaultLanguage: 'en' }));
-
-store.dispatch(addTranslationForLanguage(enJson, 'en'));
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 axios.defaults.headers.common = {
@@ -35,13 +33,15 @@ if(localStorage.jwtoken){
 }
 
 ReactDOM.render(
-    <BrowserRouter>
-        <Provider store={store}>
-           <Switch>
-                <Route exact path="/login" component={Login}/>
-                <Route exact path="/registration" component={Registration}/>
-                <Route path="/" component={App}/>
-            </Switch>
-        </Provider>
-    </BrowserRouter>, document.getElementById('root'));
+    <IntlProvider locale='en' messages={messages['en']}>
+        <BrowserRouter>
+            <Provider store={store}>
+               <Switch>
+                    <Route exact path="/login" component={Login}/>
+                    <Route exact path="/registration" component={Registration}/>
+                    <Route path="/" component={App}/>
+                </Switch>
+            </Provider>
+        </BrowserRouter>
+    </IntlProvider>, document.getElementById('root'));
 registerServiceWorker();

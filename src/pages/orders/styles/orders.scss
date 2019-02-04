@@ -1,0 +1,58 @@
+@import "../../../styles/fonts.scss";
+
+i {
+  display: inline-block;
+  vertical-align: middle;
+
+  &.list {
+    width: 18px;
+    height: 20px;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-size: contain;
+
+    &.unknown {
+      background-image: url('../../../images/orders/list-gray.png');
+    }
+
+    &.positive {
+      background-image: url('../../../images/orders/list-green.png');
+    }
+
+    &.negative {
+      background-image: url('../../../images/orders/list-red.png');
+    }
+  }
+}
+
+#saleOrdersTable {
+  width: calc(100% - 58px);
+  margin: 0 29px;
+  font-size: 0.875rem;
+  color: #33373e;
+
+  .a-center {
+    text-align: center;
+  }
+
+  .a-right {
+    text-align: right;
+  }
+
+  thead th {
+    height: 50px;
+    padding: 0 15px;
+    background-color: #fafafa;
+    vertical-align: middle;
+    font-family: $helvetica-md;
+    line-height: 17px;
+  }
+
+  tbody td {
+    height: 35px;
+    border-bottom: 2px solid #eee;
+    padding: 0 15px;
+    vertical-align: middle;
+    font-family: $helvetica-roman;
+  }
+}

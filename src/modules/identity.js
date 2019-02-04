@@ -1,5 +1,6 @@
 import axios from "axios";
-import {setAuthToken, deleteAuthToken} from '../utils/auth'
+import qs from "qs";
+import {setAuthToken, deleteAuthToken, finishLogout} from '../utils/auth'
 import '../utils/constants';
 import {ROLE_GUEST} from "../utils/constants";
 
@@ -131,10 +132,11 @@ export function getIdentity() {
     }
 }
 
-export function login(email, password) {
+export function login(username, password) {
+    let grant_type = "password";
     return {
         type: LOGIN,
-        payload: axios.post("/prodex/api/auth/login", {email, password}).then(response => setAuthToken(response.data.token))
+        payload: axios.post("/prodex/oauth/token", qs.stringify({grant_type, username, password}), {headers: {'Authorization': 'Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs'}}).then(response => setAuthToken(response.data.access_token))
     }
 }
 

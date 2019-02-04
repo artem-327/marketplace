@@ -8,7 +8,7 @@ import {
 
 function* getShippingQuotes(action) {
     try {
-        const shippingQuotes = yield call(Api.getShippingQuotes, action.payload.pack);
+        const shippingQuotes = yield call(Api.getShippingQuotes, JSON.stringify(action.payload.pack));
         yield put({type: SHIPPINGQUOTES_FETCH_SUCCEEDED, payload: shippingQuotes});
     } catch (e) {
         yield put({type: SHIPPINGQUOTES_FETCH_FAILED, message: e.message});
