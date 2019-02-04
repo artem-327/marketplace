@@ -214,10 +214,10 @@ export function saveWarehouse(warehouseName, streetAddress, city, province, name
 
 export function updateWarehouse(id, warehouseName, streetAddress, city, province, name, number, email, zip){
     let address = {streetAddress, city, zip, province};
-    let contact = {name, number, email};
+    let contact = {name, phone: number, email};
     return {
         type: UPDATE_WAREHOUSE,
-        payload: axios.put(`prodex/api/branches/${id}`, {warehouseName, address, contact})
+        payload: axios.put(`prodex/api/branches/${id}`, {address, company: 1, contact, warehouse: true, warehouseName})
     }
 }
 
