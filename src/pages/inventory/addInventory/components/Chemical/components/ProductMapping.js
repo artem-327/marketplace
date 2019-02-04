@@ -7,6 +7,7 @@ import Tooltip from "../../../../../../components/Tooltip/Tooltip";
 import {FormattedMessage} from 'react-intl';
 import {checkToken} from "../../../../../../utils/auth";
 export default class ProductMapping extends Component {
+    
     constructor(props){
         super(props);
     }
