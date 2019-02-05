@@ -179,22 +179,23 @@ class Nav extends Component {
         let currentLogo;
         const path = this.props.location.pathname;
 
+        // TODO: There should be only one logo for all pages
         if (path.includes('/inventory')) {
             currentLogo = inventory
         } else if (path.includes('/settings')) {
-            currentLogo = settings
+            currentLogo = inventory
         } else if (path.includes('/orders')) {
-            currentLogo = orders
+            currentLogo = inventory
         } else if (path.includes('/clients')) {
-            currentLogo = clients
+            currentLogo = inventory
         } else if (path.includes('/reports')) {
-            currentLogo = reports
+            currentLogo = inventory
         } else if (path.includes('/settings')) {
-            currentLogo = settings
+            currentLogo = inventory
         } else if (path.includes('/administration')) {
-            currentLogo = myAccount
+            currentLogo = inventory
         } else {
-            currentLogo = dashboard
+            currentLogo = inventory
         }
 
         // const mobileState = menuOpen ? 'open' : '';

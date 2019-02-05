@@ -10,21 +10,24 @@ class Orders extends Component {
     }
 
     render() {
-        const {match, rows, isFetching} = this.props
+        const {match, rows, isFetching, activeStatus} = this.props
         let ordersType = match.params.type.charAt(0).toUpperCase() + match.params.type.slice(1)
+
+        // TODO: generate quick-filter with array
+        let quickFilter = ['All', 'Pending', 'In Transit', 'Review', 'Credit', 'Completed', 'Returned', 'Declined'];
 
         return (
             <div id="page">
                 <div className='top-toolbar'>
                     <ul className='quick-filter'>
-                        <li className='active'>ALL</li>
-                        <li>PENDING</li>
-                        <li>IN TRANSIT</li>
-                        <li>REVIEW</li>
-                        <li>CREDIT</li>
-                        <li>COMPLETED</li>
-                        <li>RETURNED</li>
-                        <li>DECLINED</li>
+                        <li value={ordersType} onClick={() => this.props.loadData(ordersType.toLowerCase())} className={activeStatus === null ? 'active' : ''}>ALL</li>
+                        <li value={ordersType} onClick={() => this.props.loadData(ordersType.toLowerCase(), 'Pending')} className={activeStatus === 'Pending' ? 'active' : ''}>PENDING</li>
+                        <li value={ordersType} onClick={() => this.props.loadData(ordersType.toLowerCase(), 'In Transit')} className={activeStatus === 'In Transit' ? 'active' : ''}>IN TRANSIT</li>
+                        <li value={ordersType} onClick={() => this.props.loadData(ordersType.toLowerCase(), 'Review')} className={activeStatus === 'Review' ? 'active' : ''}>REVIEW</li>
+                        <li value={ordersType} onClick={() => this.props.loadData(ordersType.toLowerCase(), 'Credit')} className={activeStatus === 'Credit' ? 'active' : ''}>CREDIT</li>
+                        <li value={ordersType} onClick={() => this.props.loadData(ordersType.toLowerCase(), 'Completed')} className={activeStatus === 'Completed' ? 'active' : ''}>COMPLETED</li>
+                        <li value={ordersType} onClick={() => this.props.loadData(ordersType.toLowerCase(), 'Returned')} className={activeStatus === 'Returned' ? 'active' : ''}>RETURNED</li>
+                        <li value={ordersType} onClick={() => this.props.loadData(ordersType.toLowerCase(), 'Declined')} className={activeStatus === 'Declined' ? 'active' : ''}>DECLINED</li>
                     </ul>
                 </div>
                 <div className='header-top clean'>

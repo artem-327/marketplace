@@ -86,11 +86,11 @@ class Detail extends Component {
                             <div className='row order-space'>
                                 <div className='col-md-6'>
                                     <dl className='data-list'>
-                                        <dt>Sales Order</dt>
+                                        <dt>{ordersType} Order</dt>
                                         <dd>{order.id}</dd>
-                                        <dt>SO Date</dt>
+                                        <dt>{ordersType.charAt(0)}O Date</dt>
                                         <dd>{order.orderDate}</dd>
-                                        <dt>SO Confirmation Date</dt>
+                                        <dt>{ordersType.charAt(0)}O Confirmation Date</dt>
                                         <dd>{order.confirmationDate}</dd>
                                         <dt>Order Acceptance Date</dt>
                                         <dd>{order.acceptanceDate}</dd>

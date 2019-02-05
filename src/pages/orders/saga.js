@@ -5,7 +5,8 @@ import * as AT from './action-types'
 function* getOrders(action) {
     try {
         yield put({type: AT.ORDERS_FETCH_REQUESTED})
-        const data = yield call(Api.getAll, action.payload.endpointType)
+        const data = yield call(Api.getAll, action.payload.endpointType, action.payload.orderStatus)
+        data.statusFilter = action.payload.orderStatus
         yield put({type: AT.ORDERS_FETCH_SUCCESS, payload: data})
     } catch (error) {
         yield put({type: AT.ORDERS_FETCH_FAILURE})
@@ -43,7 +44,7 @@ function* reject(action) {
 }
 
 export default function* () {
-    yield takeEvery(AT.ORDERS_FETCH, getOrders)
+    yield takeLatest(AT.ORDERS_FETCH, getOrders)
     yield takeEvery(AT.ORDERS_DETAIL_FETCH, getOrder)
     yield takeEvery(AT.ORDER_CONFIRM_FETCH, confirm)
     yield takeEvery(AT.ORDER_REJECT_FETCH, reject)

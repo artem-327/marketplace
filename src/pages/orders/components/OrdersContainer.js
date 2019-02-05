@@ -11,7 +11,9 @@ function transformToRows(data) {
         id: i.id,
         globalStatus: i.globalStatus,
         date: moment(i.orderDate).format('MM/DD/YYYY'),
-        customerName: (typeof i.buyer !== 'undefined' ? i.buyer.firstname + (i.buyer.middlename ? ' ' + i.buyer.middlename : '') + ' ' + i.buyer.lastname : ''),
+        customerName: (typeof i.buyer.id !== 'undefined' ?
+            i.buyer.firstname + (i.buyer.middlename ? ' ' + i.buyer.middlename : '') + ' ' + i.buyer.lastname :
+            i.seller.firstname + (i.seller.middlename ? ' ' + i.seller.middlename : '') + ' ' + i.seller.lastname),
         productName: '',
         orderStatus: OrdersHelper.getOrderStatus(i.orderStatus),
         shippingStatus: OrdersHelper.getShippingStatus(i.shippingStatus),
@@ -30,7 +32,8 @@ function mapStateToProps(state) {
     const {orders} = state
     return {
         ...orders,
-        rows: transformToRows(orders.data)
+        rows: transformToRows(orders.data),
+        activeStatus: orders.statusFilter
     }
 }
 

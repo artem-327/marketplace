@@ -8,7 +8,8 @@ const initialState = {
     isConfirmFetching: false,
     isRejectFetching: false,
     reloadPage: false,
-    selectedIndex: -1
+    selectedIndex: -1,
+    statusFilter: null
 }
 
 export default function(state = initialState, action) {
@@ -24,7 +25,8 @@ export default function(state = initialState, action) {
                 ...state,
                 isFetching: false,
                 data: action.payload.data,
-                reloadPage: false
+                reloadPage: false,
+                statusFilter: action.payload.statusFilter
             }
         case AT.ORDERS_FETCH_FAILURE:
             return {
