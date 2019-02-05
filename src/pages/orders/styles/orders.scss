@@ -20,6 +20,7 @@
       font-family: $helvetica-roman;
       font-size: 0.875rem;
       line-height: 44px;
+      cursor: pointer;
 
       &.active {
         height: 47px;
@@ -132,6 +133,14 @@ i {
       font-weight: 400;
       color: #979797;
       line-height: 1.1875;
+
+      &.negative {
+        color: #e62f2f;
+      }
+
+      &.positive {
+        color: #5cbb5a;
+      }
     }
   }
 }

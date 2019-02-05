@@ -6,15 +6,13 @@ import * as Actions from '../actions'
 import {formatMoney} from "../../../utils/functions";
 import moment from "moment/moment"
 
-function transformToRows(data) {
+function transformToRows(data, type) {
     return data.map(i => ({
         id: i.id,
         globalStatus: i.globalStatus,
         date: moment(i.orderDate).format('MM/DD/YYYY'),
-        customerName: (typeof i.buyer.id !== 'undefined' ?
-            i.buyer.firstname + (i.buyer.middlename ? ' ' + i.buyer.middlename : '') + ' ' + i.buyer.lastname :
-            i.seller.firstname + (i.seller.middlename ? ' ' + i.seller.middlename : '') + ' ' + i.seller.lastname),
-        productName: '',
+        customerName: (type === 'sales' ? i.buyer.name : i.seller.company.name),
+        productName: (typeof i.orderItems[0].name !== 'undefined' ? i.orderItems[0].name : 'N/A'),
         orderStatus: OrdersHelper.getOrderStatus(i.orderStatus),
         shippingStatus: OrdersHelper.getShippingStatus(i.shippingStatus),
         reviewStatus: OrdersHelper.getReviewStatus(i.reviewStatus),
@@ -28,11 +26,11 @@ function transformToRows(data) {
     }))
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
     const {orders} = state
     return {
         ...orders,
-        rows: transformToRows(orders.data),
+        rows: transformToRows(orders.data, ownProps.match.params.type),
         activeStatus: orders.statusFilter
     }
 }

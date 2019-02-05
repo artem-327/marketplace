@@ -15,7 +15,8 @@
       padding: 0 8px;
       font-family: "HelveticaNeueLTPro-Roman", sans-serif;
       font-size: 0.875rem;
-      line-height: 44px; }
+      line-height: 44px;
+      cursor: pointer; }
       .top-toolbar .quick-filter li.active {
         height: 47px;
         margin-bottom: -3px;
@@ -98,6 +99,10 @@ i {
       font-weight: 400;
       color: #979797;
       line-height: 1.1875; }
+      .order-statuses li span.negative {
+        color: #e62f2f; }
+      .order-statuses li span.positive {
+        color: #5cbb5a; }
 
 .data-list {
   display: grid;

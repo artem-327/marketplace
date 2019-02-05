@@ -12,6 +12,7 @@ class Orders extends Component {
     render() {
         const {match, rows, isFetching, activeStatus} = this.props
         let ordersType = match.params.type.charAt(0).toUpperCase() + match.params.type.slice(1)
+        let endpointType = match.params.type === 'sales' ? 'sale' : match.params.type
 
         // TODO: generate quick-filter with array
         let quickFilter = ['All', 'Pending', 'In Transit', 'Review', 'Credit', 'Completed', 'Returned', 'Declined'];
@@ -20,14 +21,14 @@ class Orders extends Component {
             <div id="page">
                 <div className='top-toolbar'>
                     <ul className='quick-filter'>
-                        <li value={ordersType} onClick={() => this.props.loadData(ordersType.toLowerCase())} className={activeStatus === null ? 'active' : ''}>ALL</li>
-                        <li value={ordersType} onClick={() => this.props.loadData(ordersType.toLowerCase(), 'Pending')} className={activeStatus === 'Pending' ? 'active' : ''}>PENDING</li>
-                        <li value={ordersType} onClick={() => this.props.loadData(ordersType.toLowerCase(), 'In Transit')} className={activeStatus === 'In Transit' ? 'active' : ''}>IN TRANSIT</li>
-                        <li value={ordersType} onClick={() => this.props.loadData(ordersType.toLowerCase(), 'Review')} className={activeStatus === 'Review' ? 'active' : ''}>REVIEW</li>
-                        <li value={ordersType} onClick={() => this.props.loadData(ordersType.toLowerCase(), 'Credit')} className={activeStatus === 'Credit' ? 'active' : ''}>CREDIT</li>
-                        <li value={ordersType} onClick={() => this.props.loadData(ordersType.toLowerCase(), 'Completed')} className={activeStatus === 'Completed' ? 'active' : ''}>COMPLETED</li>
-                        <li value={ordersType} onClick={() => this.props.loadData(ordersType.toLowerCase(), 'Returned')} className={activeStatus === 'Returned' ? 'active' : ''}>RETURNED</li>
-                        <li value={ordersType} onClick={() => this.props.loadData(ordersType.toLowerCase(), 'Declined')} className={activeStatus === 'Declined' ? 'active' : ''}>DECLINED</li>
+                        <li value={endpointType} onClick={() => this.props.loadData(endpointType)} className={activeStatus === null ? 'active' : ''}>ALL</li>
+                        <li value={endpointType} onClick={() => this.props.loadData(endpointType, 'Pending')} className={activeStatus === 'Pending' ? 'active' : ''}>PENDING</li>
+                        <li value={endpointType} onClick={() => this.props.loadData(endpointType, 'In Transit')} className={activeStatus === 'In Transit' ? 'active' : ''}>IN TRANSIT</li>
+                        <li value={endpointType} onClick={() => this.props.loadData(endpointType, 'Review')} className={activeStatus === 'Review' ? 'active' : ''}>REVIEW</li>
+                        <li value={endpointType} onClick={() => this.props.loadData(endpointType, 'Credit')} className={activeStatus === 'Credit' ? 'active' : ''}>CREDIT</li>
+                        <li value={endpointType} onClick={() => this.props.loadData(endpointType, 'Completed')} className={activeStatus === 'Completed' ? 'active' : ''}>COMPLETED</li>
+                        <li value={endpointType} onClick={() => this.props.loadData(endpointType, 'Returned')} className={activeStatus === 'Returned' ? 'active' : ''}>RETURNED</li>
+                        <li value={endpointType} onClick={() => this.props.loadData(endpointType, 'Declined')} className={activeStatus === 'Declined' ? 'active' : ''}>DECLINED</li>
                     </ul>
                 </div>
                 <div className='header-top clean'>
@@ -61,7 +62,7 @@ class Orders extends Component {
                                 <td>{r.globalStatus}</td>
                                 <td>{r.date}</td>
                                 <td>{r.customerName}</td>
-                                <td></td>
+                                <td>{r.productName}</td>
                                 <td>{r.orderStatus}</td>
                                 <td>{r.shippingStatus}</td>
                                 <td>{r.reviewStatus}</td>

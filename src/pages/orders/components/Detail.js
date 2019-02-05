@@ -40,7 +40,7 @@ class Detail extends Component {
                         <ul className="order-statuses">
                             <li>
                                 <label>Order Status</label>
-                                <span>{order.orderStatus}</span>
+                                <span className={order.orderStatus === 'Rejected' ? 'negative' : (order.orderStatus === 'Confirmed' ? 'positive' : '')}>{order.orderStatus}</span>
                             </li>
                             <li className="separator"></li>
                             <li>
