@@ -5,6 +5,6 @@ axios.defaults.validateStatus = (status) => {
 }
 
 const instance = axios.create({
-    baseURL: process.env.REACT_APP_API_URL + 'prodex/api'
+    baseURL: (typeof process.env.REACT_APP_API_URL !== 'undefined' ? process.env.REACT_APP_API_URL : '') + 'prodex/api'
 })
 export default instance

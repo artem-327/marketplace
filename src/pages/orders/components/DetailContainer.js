@@ -33,6 +33,9 @@ function prepareDetail(data) {
         totalPkg: data.orderItems[0].amount,
         quantityOrdered: data.orderItems[0].amount * data.orderItems[0].packaging.size,
         unit: data.orderItems[0].packaging.unit.name,
+        amount: "$" + data.totalPrice.formatMoney(2),
+        feesPercent: 0,
+        total: "$" + data.totalPrice.formatMoney(2),
         carrier: data.shippingMethod,
         shipTo: data.buyer.firstname + (data.buyer.middlename ? ' ' + data.buyer.middlename : '') + ' ' + data.buyer.lastname
     }

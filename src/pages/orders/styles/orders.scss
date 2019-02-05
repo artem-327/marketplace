@@ -29,6 +29,10 @@ i {
   }
 }
 
+.order-space {
+  margin: 6px 0;
+}
+
 #saleOrdersTable {
   width: 100%;
   margin: 0;
@@ -111,10 +115,6 @@ i {
   color: #33373e;
   line-height: 1.1667;
 
-  .border-left & {
-    padding-left: 24px;
-  }
-
   dt:first-of-type,
   dd:first-of-type {
     padding-top: 5px;
@@ -130,6 +130,7 @@ i {
     text-align: left;
     font-family: $helvetica-md;
     font-size: 1.125rem;
+    font-weight: 400;
   }
 
   dd {
@@ -140,6 +141,77 @@ i {
     font-family: $helvetica-roman;
     font-size: 1.125rem;
     letter-spacing: 0.3px;
+  }
+}
+
+.order-total {
+  width: 100%;
+  min-width: 355px;
+  margin-left: -17px;
+
+  thead {
+
+    th {
+      padding: 17px 29px 20px 17px;
+      text-transform: uppercase;
+      font-family: $helvetica-md;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.1875;
+
+      &:nth-child(2) {
+        padding-left: 29px;
+        text-align: right;
+      }
+    }
+  }
+
+  tbody {
+
+    th,
+    td {
+      padding: 12px 29px 12px 17px;
+      white-space: nowrap;
+      font-size: 1.125rem;
+      font-weight: 400;
+      line-height: 1.2222;
+
+      &:nth-child(2) {
+        padding-left: 29px;
+        text-align: right;
+      }
+    }
+
+    th {
+      font-family: $helvetica-md;
+    }
+
+    td {
+      font-family: $helvetica-roman;
+    }
+  }
+
+  tfoot {
+
+    th,
+    td {
+      border-top: 1px solid #33373e;
+      padding: 12px 29px 12px 17px;
+      white-space: nowrap;
+      font-size: 1.125rem;
+      font-weight: 400;
+      font-family: $helvetica-md;
+      line-height: 1.2222;
+
+      &:nth-child(2) {
+        padding-left: 29px;
+        text-align: right;
+      }
+    }
+  }
+
+  + .order-total {
+    margin-top: 96px;
   }
 }
 

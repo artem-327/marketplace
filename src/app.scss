@@ -9,10 +9,19 @@
 
 #page {
   margin: 0 29px;
+
+  .add-group {
+    margin-left: 0;
+    margin-right: 0;
+  }
 }
 
 .border-left {
   border-left: 1px solid #dedede;
+
+  > * {
+    margin-left: 24px;
+  }
 }
 
 .capitalize{

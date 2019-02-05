@@ -60,7 +60,7 @@ class Detail extends Component {
                 ) : ''}
 
                 <CollapsiblePanel header="Order Info">
-                    <div className='row'>
+                    <div className='row order-space'>
                         <div className='col-md-6'>
                             <dl className='data-list'>
                                 <dt>Sales Order</dt>
@@ -85,30 +85,75 @@ class Detail extends Component {
                 </CollapsiblePanel>
 
                 <CollapsiblePanel header="Product Info">
-                    <dl className='data-list'>
-                        <dt>Chemical Name</dt>
-                        <dd></dd>
-                        <dt>Product Name</dt>
-                        <dd>{order.productName}</dd>
-                        <dt>Product Number</dt>
-                        <dd>{order.productNumber}</dd>
-                        <dt>Packaging</dt>
-                        <dd>{order.size}#{order.packaging}</dd>
-                        <dt>Total PKG</dt>
-                        <dd>{order.totalPkg}</dd>
-                        <dt>Quantity Ordered</dt>
-                        <dd>{order.quantityOrdered}</dd>
-                        <dt>Unit</dt>
-                        <dd>{order.unit}</dd>
-                        <dt>Unit Price</dt>
-                        <dd></dd>
-                        <dt>Unit Cost</dt>
-                        <dd></dd>
-                    </dl>
+                    <div className='row order-space'>
+                        <div className='col-md-6'>
+                            <dl className='data-list'>
+                                <dt>Chemical Name</dt>
+                                <dd></dd>
+                                <dt>Product Name</dt>
+                                <dd>{order.productName}</dd>
+                                <dt>Product Number</dt>
+                                <dd>{order.productNumber}</dd>
+                                <dt>Packaging</dt>
+                                <dd>{order.size}#{order.packaging}</dd>
+                                <dt>Total PKG</dt>
+                                <dd>{order.totalPkg}</dd>
+                                <dt>Quantity Ordered</dt>
+                                <dd>{order.quantityOrdered}</dd>
+                                <dt>Unit</dt>
+                                <dd>{order.unit}</dd>
+                                <dt>Unit Price</dt>
+                                <dd></dd>
+                                <dt>Unit Cost</dt>
+                                <dd></dd>
+                            </dl>
+                        </div>
+                        <div className='col-md-6 border-left'>
+                            <div className='left'>
+                                <table className='order-total'>
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2">Order Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th>Amount</th>
+                                            <td>{order.amount}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Echo Fees ({order.feesPercent}%)</th>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Total</th>
+                                            <td>{order.total}</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <table className='order-total'>
+                                    <tbody>
+                                        <tr>
+                                            <th>COGS</th>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Gross Profit</th>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </CollapsiblePanel>
 
                 <CollapsiblePanel header="Pick Up Info" open={false}>
-                    <div className='row'>
+                    <div className='row order-space'>
                         <div className='col-md-6'>
                             <dl className='data-list'>
                                 <dt>Pick-Up Address</dt>
@@ -129,7 +174,7 @@ class Detail extends Component {
                 </CollapsiblePanel>
 
                 <CollapsiblePanel header="Shipping" open={false}>
-                    <div className='row'>
+                    <div className='row order-space'>
                         <div className='col-md-6'>
                             <dl className='data-list'>
                                 <dt>Shipping Status</dt>
@@ -164,7 +209,7 @@ class Detail extends Component {
                 </CollapsiblePanel>
 
                 <CollapsiblePanel header="Payment / Customer" open={false}>
-                    <div className='row'>
+                    <div className='row order-space'>
                         <div className='col-md-6'>
                             <dl className='data-list'>
                                 <dt>Payment Status</dt>
