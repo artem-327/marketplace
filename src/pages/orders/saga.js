@@ -32,8 +32,19 @@ function* confirm(action) {
     }
 }
 
+function* reject(action) {
+    try {
+        yield put({type: AT.ORDER_REJECT_FETCH_REQUESTED})
+        yield call(Api.reject, action.payload.orderId)
+        yield put({type: AT.ORDER_REJECT_FETCH_SUCCESS})
+    } catch (error) {
+        yield put({type: AT.ORDER_REJECT_FETCH_FAILURE})
+    }
+}
+
 export default function* () {
     yield takeEvery(AT.ORDERS_FETCH, getOrders)
     yield takeEvery(AT.ORDERS_DETAIL_FETCH, getOrder)
     yield takeEvery(AT.ORDER_CONFIRM_FETCH, confirm)
+    yield takeEvery(AT.ORDER_REJECT_FETCH, reject)
 }

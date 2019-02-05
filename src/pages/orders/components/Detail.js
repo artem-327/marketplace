@@ -10,8 +10,10 @@ class Detail extends Component {
     }
 
     componentDidUpdate() {
+        let endpointType = this.props.match.params.type === 'sales' ? 'sale' : this.props.match.params.type
+
         if (this.props.reloadPage)
-            this.props.loadDetail(this.props.order.id)
+            this.props.loadDetail(endpointType, this.props.order.id)
 
         let dataCells = document.querySelectorAll('.data-list dd')
         for (let i = 0; i < dataCells.length; i++) {
@@ -70,7 +72,7 @@ class Detail extends Component {
                         <p>This order is in pending status. Please select &quot;accept&quot; to move forward with the order. If you press &quot;reject&quot; the order will be cancelled. </p>
                         <div className="buttons-wrapper">
                             <button type="button" className="button blue" value={order.id} onClick={() => this.props.confirmOrder(order.id)}>Accept</button>
-                            <button type="button" className="button grey">Decline</button>
+                            <button type="button" className="button grey" value={order.id} onClick={() => this.props.rejectOrder(order.id)}>Decline</button>
                         </div>
                     </form>
                 ) : ''}

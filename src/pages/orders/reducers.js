@@ -6,6 +6,7 @@ const initialState = {
     isFetching: false,
     isDetailFetching: false,
     isConfirmFetching: false,
+    isRejectFetching: false,
     reloadPage: false,
     selectedIndex: -1
 }
@@ -66,6 +67,24 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 isConfirmFetching: false,
+                reloadPage: false
+            }
+        case AT.ORDER_REJECT_FETCH_REQUESTED:
+            return {
+                ...state,
+                isRejectFetching: true,
+                reloadPage: false
+            }
+        case AT.ORDER_REJECT_FETCH_SUCCESS:
+            return {
+                ...state,
+                isRejectFetching: false,
+                reloadPage: true
+            }
+        case AT.ORDER_REJECT_FETCH_FAILURE:
+            return {
+                ...state,
+                isRejectFetching: false,
                 reloadPage: false
             }
         default:
