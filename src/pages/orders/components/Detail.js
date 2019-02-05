@@ -8,6 +8,11 @@ class Detail extends Component {
         this.props.loadDetail(this.props.match.params.id)
     }
 
+    componentDidUpdate() {
+        if (this.props.reloadPage)
+            this.props.loadDetail(this.props.order.id)
+    }
+
     render() {
         const {order, action, isDetailFetching} = this.props
 

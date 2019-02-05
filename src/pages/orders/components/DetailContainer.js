@@ -46,7 +46,8 @@ function mapStateToProps(state) {
 
     return {
         order: prepareDetail(orders.detail),
-        action: actionRequired(orders.detail)
+        action: actionRequired(orders.detail),
+        reloadPage: orders.reloadPage
     }
 }
 
