@@ -4,7 +4,7 @@ import '../../../pages/inventory/addInventory/AddInventory.css'
 
 class Detail extends Component {
 
-    componentWillMount() {
+    componentDidMount() {
         this.props.loadDetail(this.props.match.params.id)
     }
 
@@ -53,7 +53,7 @@ class Detail extends Component {
                         <h3>Action Required</h3>
                         <p>This order is in pending status. Please select &quot;accept&quot; to move forward with the order. If you press &quot;reject&quot; the order will be cancelled. </p>
                         <div className="buttons-wrapper">
-                            <button type="button" className="button blue">Accept</button>
+                            <button type="button" className="button blue" value={order.id} onClick={() => this.props.confirmOrder(order.id)}>Accept</button>
                             <button type="button" className="button grey">Decline</button>
                         </div>
                     </form>
@@ -113,7 +113,7 @@ class Detail extends Component {
                                 <table className='order-total'>
                                     <thead>
                                         <tr>
-                                            <th colspan="2">Order Total</th>
+                                            <th colSpan="2">Order Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>

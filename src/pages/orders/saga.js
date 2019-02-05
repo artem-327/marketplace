@@ -12,17 +12,28 @@ function* getOrders() {
     }
 }
 
-function* get(action) {
+function* getOrder(action) {
     try {
         yield put({type: AT.ORDERS_DETAIL_FETCH_REQUESTED})
-        const detail = yield call(Api.get, action.payload.selectedIndex)
+        const detail = yield call(Api.getOrder, action.payload.selectedIndex)
         yield put({type: AT.ORDERS_DETAIL_FETCH_SUCCESS, payload: detail})
     } catch (error) {
         yield put({type: AT.ORDERS_DETAIL_FETCH_FAILURE})
     }
 }
 
+function* confirm(action) {
+    try {
+        yield put({type: AT.ORDER_CONFIRM_FETCH_REQUESTED})
+        yield call(Api.confirm, action.payload.orderId)
+        yield put({type: AT.ORDER_CONFIRM_FETCH_SUCCESS})
+    } catch (error) {
+        yield put({type: AT.ORDER_CONFIRM_FETCH_FAILURE})
+    }
+}
+
 export default function* () {
     yield takeEvery(AT.ORDERS_FETCH, getOrders)
-    yield takeEvery(AT.ORDERS_DETAIL_FETCH, get)
+    yield takeEvery(AT.ORDERS_DETAIL_FETCH, getOrder)
+    yield takeEvery(AT.ORDER_CONFIRM_FETCH, confirm)
 }

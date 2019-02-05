@@ -5,6 +5,8 @@ const initialState = {
     detail: [],
     isFetching: false,
     isDetailFetching: false,
+    isConfirmFetching: false,
+    reloadPage: false,
     selectedIndex: -1
 }
 
@@ -41,6 +43,22 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 isDetailFetching: false
+            }
+        case AT.ORDER_CONFIRM_FETCH_REQUESTED:
+            return {
+                ...state,
+                isConfirmFetching: true
+            }
+        case AT.ORDER_CONFIRM_FETCH_SUCCESS:
+            return {
+                ...state,
+                isConfirmFetching: false,
+                reloadPage: true
+            }
+        case AT.ORDER_CONFIRM_FETCH_FAILURE:
+            return {
+                ...state,
+                isConfirmFetching: false
             }
         default:
             return state
