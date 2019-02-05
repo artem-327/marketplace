@@ -30,7 +30,8 @@ i {
 }
 
 .order-space {
-  margin: 6px 0;
+  margin-top: 16px;
+  margin-bottom: 16px;
 }
 
 #saleOrdersTable {
@@ -53,6 +54,7 @@ i {
     background-color: #fafafa;
     vertical-align: middle;
     font-family: $helvetica-md;
+    font-weight: 400;
     line-height: 17px;
   }
 
@@ -100,6 +102,7 @@ i {
       display: block;
       font-family: $helvetica-md;
       font-size: 1rem;
+      font-weight: 400;
       color: #979797;
       line-height: 1.1875;
     }
@@ -138,13 +141,17 @@ i {
   }
 
   dd {
-    opacity: 0.6;
+    opacity: 1;
     margin: 0;
     padding: 0;
     text-align: left;
     font-family: $helvetica-roman;
     font-size: 1.125rem;
     letter-spacing: 0.3px;
+
+    &.na {
+      opacity: 0.6;
+    }
   }
 }
 
@@ -193,6 +200,11 @@ i {
     td {
       font-family: $helvetica-roman;
     }
+
+    tr:last-child th,
+    tr:last-child td {
+      padding-bottom: 17px;
+    }
   }
 
   tfoot {
@@ -200,7 +212,7 @@ i {
     th,
     td {
       border-top: 1px solid #33373e;
-      padding: 12px 29px 12px 17px;
+      padding: 15px 29px 15px 17px;
       white-space: nowrap;
       font-size: 1.125rem;
       font-weight: 400;

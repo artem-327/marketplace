@@ -213,8 +213,9 @@ class Nav extends Component {
                         {name: 'Add Inventory', url: '/inventory/add-inventory'},
                         {name: 'Shopping Cart', url: '/cart/shopping-cart'}
                     ], 'Inventory')}
-                    {this.renderMenuItem('orders', [
-                        {name: 'Orders', url: '/orders'},
+                    {this.renderDropdown('orders', [
+                        {name: 'Sales Orders', url: '/orders/sales'},
+                        {name: 'Purchase Orders', url: '/orders/purchase'}
                     ], 'Orders')}
                     {this.renderMenuItem('clients', [
                         {name: 'Clients', url: '/clients'},

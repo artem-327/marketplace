@@ -5,20 +5,31 @@ import '../../../pages/inventory/addInventory/AddInventory.css'
 class Detail extends Component {
 
     componentDidMount() {
-        this.props.loadDetail(this.props.match.params.id)
+        let endpointType = this.props.match.params.type === 'sales' ? 'sale' : this.props.match.params.type
+        this.props.loadDetail(endpointType, this.props.match.params.id)
     }
 
     componentDidUpdate() {
         if (this.props.reloadPage)
             this.props.loadDetail(this.props.order.id)
+
+        let dataCells = document.querySelectorAll('.data-list dd')
+        for (let i = 0; i < dataCells.length; i++) {
+            if (dataCells[i].textContent === 'N/A') {
+                dataCells[i].className = 'na'
+            } else {
+                dataCells[i].className = ''
+            }
+        }
     }
 
     render() {
-        const {order, action, isDetailFetching} = this.props
+        const {match, order, action, isDetailFetching} = this.props
+        let ordersType = match.params.type.charAt(0).toUpperCase() + match.params.type.slice(1)
 
         return (
             <div id="page">
-                <h1 className='header left'>Sales Order {isDetailFetching ? 'Loading...' : '# '+order.id}</h1>
+                <h1 className='header left'>{ordersType} Order {isDetailFetching ? 'Loading...' : '# '+order.id}</h1>
                 <ul className="order-statuses">
                     <li>
                         <label>Order Status</label>
@@ -53,7 +64,7 @@ class Detail extends Component {
 
                 <div className="clearfix"></div>
 
-                {action ? (
+                {action && (ordersType === 'Sales') ? /* This action is not prepared for Purchase Orders yet! */ (
                     <form className='action-required'>
                         <h3>Action Required</h3>
                         <p>This order is in pending status. Please select &quot;accept&quot; to move forward with the order. If you press &quot;reject&quot; the order will be cancelled. </p>
@@ -84,6 +95,12 @@ class Detail extends Component {
                                 <dd>{order.sellerRejectionDate}</dd>
                                 <dt>Buyer Rejection Date</dt>
                                 <dd>{order.buyerRejectionDate}</dd>
+                                {ordersType === 'Purchase' ? (
+                                    <>
+                                        <dt>Created By</dt>
+                                        <dd></dd>
+                                    </>
+                                ) : ''}
                             </dl>
                         </div>
                     </div>
@@ -109,49 +126,100 @@ class Detail extends Component {
                                 <dd>{order.unit}</dd>
                                 <dt>Unit Price</dt>
                                 <dd></dd>
-                                <dt>Unit Cost</dt>
-                                <dd></dd>
+
+                                {ordersType === 'Sales' ? (
+                                    <>
+                                        <dt>Unit Cost</dt>
+                                        <dd></dd>
+                                    </>
+                                ) : ''}
                             </dl>
                         </div>
                         <div className='col-md-6 border-left'>
                             <div className='left'>
-                                <table className='order-total'>
-                                    <thead>
-                                        <tr>
-                                            <th colSpan="2">Order Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th>Amount</th>
-                                            <td>{order.amount}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Echo Fees ({order.feesPercent}%)</th>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Total</th>
-                                            <td>{order.total}</td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                                <table className='order-total'>
-                                    <tbody>
-                                        <tr>
-                                            <th>COGS</th>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Gross Profit</th>
-                                            <td></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                                {ordersType === 'Sales' ? (
+                                    <>
+                                        <table className='order-total'>
+                                            <thead>
+                                                <tr>
+                                                    <th colSpan="2">Order Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th>Amount</th>
+                                                    <td>{order.amount}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Echo Fees ({order.feesPercent}%)</th>
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Total</th>
+                                                    <td>{order.total}</td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                        <table className='order-total'>
+                                            <tbody>
+                                                <tr>
+                                                    <th>COGS</th>
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>Gross Profit</th>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </>
+                                ) : (
+                                  <>
+                                      <table className='order-total'>
+                                          <thead>
+                                              <tr>
+                                                  <th colSpan="2">Order Total</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody>
+                                              <tr>
+                                                  <th>Amount</th>
+                                                  <td>{order.amount}</td>
+                                              </tr>
+                                              <tr>
+                                                  <th>Subtotal</th>
+                                                  <td></td>
+                                              </tr>
+                                              <tr>
+                                                  <th>Freight</th>
+                                                  <td></td>
+                                              </tr>
+                                              <tr>
+                                                  <th>Other</th>
+                                                  <td></td>
+                                              </tr>
+                                              <tr>
+                                                  <th>Delivery Cost</th>
+                                                  <td></td>
+                                              </tr>
+                                              <tr>
+                                                  <th>Delivery Total</th>
+                                                  <td></td>
+                                              </tr>
+                                          </tbody>
+                                          <tfoot>
+                                              <tr>
+                                                  <th>Total</th>
+                                                  <td>{order.total}</td>
+                                              </tr>
+                                          </tfoot>
+                                      </table>
+                                  </>
+                                )}
                             </div>
                         </div>
                     </div>

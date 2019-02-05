@@ -4,40 +4,24 @@ import '../styles/orders.css'
 class Orders extends Component {
 
     componentDidMount() {
-        this.props.loadData()
+        let endpointType = this.props.match.params.type === 'sales' ? 'sale' : this.props.match.params.type
+        this.props.loadData(endpointType)
     }
 
     render() {
-        const {rows, isFetching} = this.props
-
-        const headerInit = [
-            {name: 'Order ID'},
-            {name: 'Status'},
-            {name: 'Order Date'},
-            {name: 'Customer'},
-            {name: 'Product Name'},
-            {name: 'Order'},
-            {name: 'Shipping'},
-            {name: 'Review'},
-            {name: 'Credit'},
-            {name: 'Payment'},
-            {name: 'B/L'},
-            {name: 'SDS'},
-            {name: 'CofA'},
-            {name: 'Order Total'},
-            {name: ''}
-        ]
+        const {match, rows, isFetching} = this.props
+        let ordersType = match.params.type.charAt(0).toUpperCase() + match.params.type.slice(1)
 
         return (
             <div id="page">
-                <h1 className='header'>Orders {isFetching ? 'Loading...' : ''}</h1>
+                <h1 className='header'>{ordersType} Orders {isFetching ? 'Loading...' : ''}</h1>
                 <table id="saleOrdersTable">
                     <thead>
                         <tr>
                             <th>Order ID</th>
                             <th>Status</th>
                             <th>Order Date</th>
-                            <th>Customer</th>
+                            <th>{ordersType === 'Sales' ? 'Customer' : 'Vendor'}</th>
                             <th>Product Name</th>
                             <th>Order</th>
                             <th>Shipping</th>
@@ -68,7 +52,7 @@ class Orders extends Component {
                             <td className="a-center"><i className="list positive"></i></td>
                             <td className="a-center"><i className="list negative"></i></td>
                             <td className="a-right">{r.orderTotal}</td>
-                            <td className="a-right"><button type="button" className="button light-blue smallest" onClick={() => {this.props.history.push(`/orders/${r.id}`)}}>View</button></td>
+                            <td className="a-right"><button type="button" className="button light-blue smallest" onClick={() => {this.props.history.push(`/orders/${ordersType.toLowerCase()}/${r.id}`)}}>View</button></td>
                         </tr>
                     ))}
                     </tbody>

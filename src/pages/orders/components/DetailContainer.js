@@ -37,7 +37,7 @@ function prepareDetail(data) {
         feesPercent: 0,
         total: "$" + data.totalPrice.formatMoney(2),
         carrier: data.shippingMethod,
-        shipTo: data.buyer.firstname + (data.buyer.middlename ? ' ' + data.buyer.middlename : '') + ' ' + data.buyer.lastname
+        shipTo: (typeof data.buyer !== 'undefined' ? data.buyer.firstname + (data.buyer.middlename ? ' ' + data.buyer.middlename : '') + ' ' + data.buyer.lastname : '')
     }
 }
 

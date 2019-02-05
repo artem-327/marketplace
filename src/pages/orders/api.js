@@ -1,9 +1,9 @@
 import api from '../../api'
 
 export default {
-    getAll: () => api.get('/sale-orders'),
+    getAll: (endpointType) => api.get(`/${endpointType}-orders`),
     create: (model) => api.post('/orders', model),
-    getOrder: (orderId) => api.get(`/sale-orders/${orderId}`),
+    getOrder: (endpointType, orderId) => api.get(`/${endpointType}-orders/${orderId}`),
     update: (orderId, model) => api.put(`/orders/${orderId}`, model),
     confirm: (orderId) => api.post(`/sale-orders/${orderId}/confirm`)
 }

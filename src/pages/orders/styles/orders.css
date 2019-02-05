@@ -18,7 +18,8 @@ i {
       background-image: url("../../../images/orders/list-red.png"); }
 
 .order-space {
-  margin: 6px 0; }
+  margin-top: 16px;
+  margin-bottom: 16px; }
 
 #saleOrdersTable {
   width: 100%;
@@ -35,6 +36,7 @@ i {
     background-color: #fafafa;
     vertical-align: middle;
     font-family: "HelveticaNeueLTPro-Md", sans-serif;
+    font-weight: 400;
     line-height: 17px; }
   #saleOrdersTable tbody td {
     height: 35px;
@@ -72,6 +74,7 @@ i {
       display: block;
       font-family: "HelveticaNeueLTPro-Md", sans-serif;
       font-size: 1rem;
+      font-weight: 400;
       color: #979797;
       line-height: 1.1875; }
 
@@ -98,13 +101,15 @@ i {
     font-size: 1.125rem;
     font-weight: 400; }
   .data-list dd {
-    opacity: 0.6;
+    opacity: 1;
     margin: 0;
     padding: 0;
     text-align: left;
     font-family: "HelveticaNeueLTPro-Roman", sans-serif;
     font-size: 1.125rem;
     letter-spacing: 0.3px; }
+    .data-list dd.na {
+      opacity: 0.6; }
 
 .order-total {
   width: 100%;
@@ -135,10 +140,13 @@ i {
     font-family: "HelveticaNeueLTPro-Md", sans-serif; }
   .order-total tbody td {
     font-family: "HelveticaNeueLTPro-Roman", sans-serif; }
+  .order-total tbody tr:last-child th,
+  .order-total tbody tr:last-child td {
+    padding-bottom: 17px; }
   .order-total tfoot th,
   .order-total tfoot td {
     border-top: 1px solid #33373e;
-    padding: 12px 29px 12px 17px;
+    padding: 15px 29px 15px 17px;
     white-space: nowrap;
     font-size: 1.125rem;
     font-weight: 400;

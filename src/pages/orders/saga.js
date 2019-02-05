@@ -2,10 +2,10 @@ import { call, put, takeEvery, takeLatest } from 'redux-saga/effects'
 import Api from './api'
 import * as AT from './action-types'
 
-function* getOrders() {
+function* getOrders(action) {
     try {
         yield put({type: AT.ORDERS_FETCH_REQUESTED})
-        const data = yield call(Api.getAll)
+        const data = yield call(Api.getAll, action.payload.endpointType)
         yield put({type: AT.ORDERS_FETCH_SUCCESS, payload: data})
     } catch (error) {
         yield put({type: AT.ORDERS_FETCH_FAILURE})
@@ -15,7 +15,7 @@ function* getOrders() {
 function* getOrder(action) {
     try {
         yield put({type: AT.ORDERS_DETAIL_FETCH_REQUESTED})
-        const detail = yield call(Api.getOrder, action.payload.selectedIndex)
+        const detail = yield call(Api.getOrder, action.payload.endpointType, action.payload.selectedIndex)
         yield put({type: AT.ORDERS_DETAIL_FETCH_SUCCESS, payload: detail})
     } catch (error) {
         yield put({type: AT.ORDERS_DETAIL_FETCH_FAILURE})
