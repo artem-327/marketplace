@@ -39,6 +39,8 @@ class Chemical extends Component {
     }
 
     componentDidMount() {
+        localStorage.removeItem('productLots');
+
         if(this.props.edit) return;
         document.getElementById("cas-search").addEventListener("keyup", this.handleArrow, false);
         document.getElementById("map-search").addEventListener("keyup", this.handleArrow, false);
