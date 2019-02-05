@@ -65,6 +65,22 @@
   background-color: #f1f1f1;
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.075);
 
+  &.clean {
+    min-height: 39px;
+    margin-bottom: 22px;
+    padding: 27px 0 10px;
+    background: transparent;
+    box-shadow: 0 0 0 0 transparent;
+    font-family: $helvetica-md;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.1875;
+  }
+
+  &.detail-align {
+    padding-top: 35px;
+  }
+
   &:after {
     content: "";
     clear: both;
@@ -77,6 +93,7 @@
     min-height: 32px;
     margin: 0 15px 0 0;
     padding: 0;
+    text-transform: uppercase;
   }
 
   h3.header {
