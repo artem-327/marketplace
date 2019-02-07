@@ -133,7 +133,7 @@ class ProductOffering extends Component {
                                 items={this.props.manufacturer}
                                 api={(text) => this.props.fetchManufacturer(text)}
                                 dataFetched={this.props.manufacturerFetched}
-                                currentValue={this.props.edit ? this.props.productOffer.manufacturer.name : null}
+                                currentValue={this.props.edit && !this.props.isFetchingManufacturer && !this.props.manufacturerFetched ? this.props.productOffer.manufacturer.name : null}
                                 className="manufacturer"
                                 limit={5}
                                 label={formatMessage({
