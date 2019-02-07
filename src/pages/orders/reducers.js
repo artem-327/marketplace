@@ -2,7 +2,9 @@ import * as AT from './action-types'
 
 const initialState = {
     data: [],
-    detail: [],
+    dataType: null,
+    detail: {},
+    detailType: null,
     isFetching: false,
     isDetailFetching: false,
     isConfirmFetching: false,
@@ -25,6 +27,7 @@ export default function(state = initialState, action) {
                 ...state,
                 isFetching: false,
                 data: action.payload.data,
+                dataType: (action.payload.dataType === 'sale' ? 'sales' : action.payload.dataType),
                 reloadPage: false,
                 statusFilter: action.payload.statusFilter
             }
@@ -45,6 +48,7 @@ export default function(state = initialState, action) {
                 ...state,
                 isDetailFetching: false,
                 detail: action.payload.data,
+                detailType: (action.payload.detailType === 'sale' ? 'sales' : action.payload.detailType),
                 reloadPage: false
             }
         case AT.ORDERS_DETAIL_FETCH_FAILURE:

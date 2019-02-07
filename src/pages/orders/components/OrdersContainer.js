@@ -28,6 +28,9 @@ function transformToRows(data, type) {
 
 function mapStateToProps(state, ownProps) {
     const {orders} = state
+    if (ownProps.match.params.type !== orders.dataType) {
+        orders.data = []
+    }
     return {
         ...orders,
         rows: transformToRows(orders.data, ownProps.match.params.type),

@@ -41,8 +41,12 @@ function prepareDetail(data) {
     }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
     const {orders} = state
+
+    if (ownProps.match.params.type !== orders.detailType) {
+        orders.detail = {}
+    }
 
     return {
         order: prepareDetail(orders.detail),

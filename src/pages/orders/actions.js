@@ -1,5 +1,4 @@
 import * as AT from './action-types'
-import api from './api';
 
 export const loadData = (endpointType, orderStatus = null) => ({type: AT.ORDERS_FETCH, payload: {endpointType, orderStatus}})
 export const loadDetail = (endpointType, selectedIndex) => ({type: AT.ORDERS_DETAIL_FETCH, payload: {endpointType, selectedIndex}})
