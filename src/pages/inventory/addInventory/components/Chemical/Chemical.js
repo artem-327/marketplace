@@ -35,12 +35,6 @@ class Chemical extends Component {
             this.setState({productID: this.props.productOffer.product.id})
         }
 
-        console.log(JSON.parse(localStorage.getItem('productLots')))
-    }
-
-    componentDidMount() {
-        localStorage.removeItem('productLots');
-
         if(this.props.edit) return;
         document.getElementById("cas-search").addEventListener("keyup", this.handleArrow, false);
         document.getElementById("map-search").addEventListener("keyup", this.handleArrow, false);

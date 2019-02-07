@@ -160,7 +160,7 @@ export default class AddForm extends Component {
 
         const localLots = JSON.parse(localStorage.getItem('productLots'));
         let lots = [];
-                     
+
         for(let i = 0; i < localLots.length; i++) {
             lots.push({
                 //id: i,
