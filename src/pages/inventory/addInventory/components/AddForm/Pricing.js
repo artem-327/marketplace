@@ -227,12 +227,16 @@ class Pricing extends Component {
       }, ()=>this.validateInputs())
     };
 
+    calculateMargin = (price, cost) => {
+        return Number(((Number(price) - Number(cost)) / Number(cost) * 100).toFixed(3));
+    };
+
     handlePrice = (e, index) => {
         let value = e.target.value;
         let newIncremental = this.state.incrementalPricing.slice(0);
   
         newIncremental[index].price = value;
-        newIncremental[index].margin = Number(((Number(value) - Number(this.props.form.pricing.cost)) / Number(this.props.form.pricing.cost) * 100).toFixed(3));
+        newIncremental[index].margin = this.calculateMargin(value, this.props.form.pricing.cost);
         
         if (isNaN(newIncremental[index].margin)) {newIncremental[index].margin = ''}
         if (newIncremental[index].price !== '') {newIncremental[index].price = Number(newIncremental[index].price)}
@@ -543,6 +547,7 @@ class Pricing extends Component {
                         handleChange={this.handleChange}
                         handlePrice={this.handlePrice}
                         handleMargin={this.handleMargin}
+                        calculateMargin={this.calculateMargin}
                         validateInputs={this.validateInputs}
                       />
                     </div>}

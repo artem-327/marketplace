@@ -21,12 +21,13 @@ export default class AddInventory extends Component {
                 },
             }));
             this.props.dispatch(actions.merge('forms.productOffering', {
+                tradeName: this.props.productOffer.tradeName,
                 assayMax: this.props.productOffer.assayMax,
                 assayMin: this.props.productOffer.assayMin,
                 creationDate: this.props.productOffer.creationDate,
                 expirationDate: this.props.productOffer.expirationDate,
-                externalNotes: this.props.productOffer.internalNotes,
-                internalNotes: this.props.productOffer.externalNotes,
+                externalNotes: this.props.productOffer.externalNotes,
+                internalNotes: this.props.productOffer.internalNotes,
                 lotNumber: this.props.productOffer.lotNumber,
                 manufacturer: this.props.productOffer.manufacturer,
                 anonymous: this.props.productOffer.anonymous,

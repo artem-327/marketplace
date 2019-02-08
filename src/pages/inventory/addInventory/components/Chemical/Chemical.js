@@ -140,7 +140,7 @@ class Chemical extends Component {
             let inputs = {
                 indexName: this.state.selectedProduct.casIndexName,
                 casNumber: this.state.selectedProduct.casNumber,
-                chemicalName: this.state.selectedProduct.chemicalName,
+                chemicalName: this.state.selectedProduct.chemicalName
             };
             this.props.setMapping(inputs);
         })

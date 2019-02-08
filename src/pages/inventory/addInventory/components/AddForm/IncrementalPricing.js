@@ -18,7 +18,9 @@ const IncrementalPricing = (props) => {
 
       const renderIncrementalPricing = () => {
         const {
-          addNewIncrementalPricing, 
+          addNewIncrementalPricing,
+          calculateMargin,
+          cost,
           disabled, 
           handleChange,
           handlePrice,
@@ -29,7 +31,7 @@ const IncrementalPricing = (props) => {
           splits, 
           validateInputs
         } = props;
-        
+
         return incrementalPricing.map((item, index) => {
             const grossMargin = calculateGrossMargin(index)
             const lastPriceLevel = index === incrementalPricing.length-1
@@ -40,6 +42,9 @@ const IncrementalPricing = (props) => {
               ? <button onClick={e => removeIncrementalPricing(e, index)} className='incremental-button remove'>-</button> 
               : null
 
+            if (typeof item.margin === 'undefined' && item.price) {
+                item.margin = calculateMargin(item.price, cost);
+            }
 
             const quantityFrom = 
 
