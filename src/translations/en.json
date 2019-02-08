@@ -105,6 +105,7 @@
     "filter.chemicalSearch": "Chemical Search",
     "filter.location": "Location",
     "dataTable.ProductName": "Product Name",
+    "dataTable.ProductNumber": "Product Number",
     "dataTable.Available": "Available",
     "dataTable.Packaging": "Packaging",
     "dataTable.Pkg.size": "Pkg. size",
