@@ -160,21 +160,21 @@ export default class ProductMapping extends Component {
                     <div className='group-item-wr'>
                         <Errors
                             className="form-error"
-                            model=".productNumber"
+                            model=".productCode"
                             show="touched"
                             messages={{
                                 required: messages.required,
                             }}
                         />
-                        <label htmlFor=".productNumber">
+                        <label htmlFor=".productCode">
                             <FormattedMessage
-                                id='addInventory.productNumber'
+                                id='addInventory.productCode'
                                 defaultMessage='Product Number'
                             />
                         </label>
-                        <Control.text model=".productNumber"
+                        <Control.text model=".productCode"
                                       validators={{required}}
-                                      id=".productNumber"
+                                      id=".productCode"
                                       defaultValue=""
                                       />
                     </div>

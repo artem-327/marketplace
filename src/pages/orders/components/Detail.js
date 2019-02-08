@@ -122,7 +122,7 @@ class Detail extends Component {
                                         <dt>Product Name</dt>
                                         <dd>{order.productName}</dd>
                                         <dt>Product Number</dt>
-                                        <dd>{order.productNumber}</dd>
+                                        <dd>{order.productCode}</dd>
                                         <dt>Packaging</dt>
                                         <dd>{order.size}#{order.packaging}</dd>
                                         <dt>Total PKG</dt>

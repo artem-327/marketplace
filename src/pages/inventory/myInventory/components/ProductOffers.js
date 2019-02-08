@@ -43,7 +43,7 @@ class ProductOffers extends Component {
                 rows: product.productOffers.map((productOffer) => {
                     const productOfferId = productOffer.id
                     const productName = productOffer.productName;
-                    const productNumber = productOffer.hasOwnProperty('productNumber') ? productOffer.productNumber : '';
+                    const productCode = productOffer.hasOwnProperty('productCode') ? productOffer.productCode : '';
                     const available = productOffer.pkgAmount.formatNumber();
                     const packaging = productOffer.packaging.packagingType.name;
                     const pkgSize = `${productOffer.packaging.size} ${getUnit(productOffer.packaging.unit.name)}`;
@@ -65,7 +65,7 @@ class ProductOffers extends Component {
                         id: productOfferId,
                         data: [
                             productName,
-                            productNumber,
+                            productCode,
                             available,
                             packaging,
                             pkgSize,
