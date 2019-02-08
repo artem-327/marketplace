@@ -42,7 +42,8 @@ class ProductOffers extends Component {
                 countLabel: 'Product Offerings: ',
                 rows: product.productOffers.map((productOffer) => {
                     const productOfferId = productOffer.id
-                    const productName = productOffer.product.casIndexName;
+                    const productName = productOffer.productName;
+                    const productNumber = productOffer.hasOwnProperty('productNumber') ? productOffer.productNumber : '';
                     const available = productOffer.pkgAmount.formatNumber();
                     const packaging = productOffer.packaging.packagingType.name;
                     const pkgSize = `${productOffer.packaging.size} ${getUnit(productOffer.packaging.unit.name)}`;
@@ -53,16 +54,18 @@ class ProductOffers extends Component {
                         ("$" + productOffer.pricing.tiers[productOffer.pricing.tiers.length - 1].price.formatMoney(3)
                             + ' - ' + "$" + productOffer.pricing.tiers[0].price.formatMoney(3))
                         : ("$" + productOffer.pricing.price.formatMoney(3));
-                    const tradeName = productOffer.name;
+                    const tradeName = productOffer.tradeName;
                     const mfr = productOffer.manufacturer.name;
-                    const condition = productOffer.productCondition.name;
-                    const mfgDate = productOffer.creationDate ? moment(productOffer.creationDate).format(DATE_FORMAT) : 'none';
+                    /* temporarily removed */ //const condition = productOffer.productCondition.name;
+                    /* temporarily removed */ //const mfgDate = productOffer.creationDate ? moment(productOffer.creationDate).format(DATE_FORMAT) : 'none';
                     const broadcast = <ToggleBroadcast offerId={productOfferId} broadcasted={productOffer.broadcasted}/>;
+                    const warehouse = productOffer.warehouse.warehouseName;
 
                     return ({
                         id: productOfferId,
                         data: [
                             productName,
+                            productNumber,
                             available,
                             packaging,
                             pkgSize,
@@ -71,9 +74,10 @@ class ProductOffers extends Component {
                             fobPrice,
                             tradeName,
                             mfr,
-                            condition,
-                            mfgDate,
-                            broadcast
+                            /* temporarily removed */ //condition,
+                            /* temporarily removed */ //mfgDate,
+                            broadcast,
+                            warehouse
                         ]
                     })
                 })
@@ -82,6 +86,7 @@ class ProductOffers extends Component {
 
         const headerInit = [
             {name: 'ProductName'},
+            {name: 'ProductNumber'},
             {name: 'Available'},
             {name: 'Packaging'},
             {name: 'Pkg.size'},
@@ -90,9 +95,10 @@ class ProductOffers extends Component {
             {name: 'FOBPrice'},
             {name: 'TradeName'},
             {name: 'MFR.'},
-            {name: 'Condition'},
-            {name: 'MFGDate'},
-            {name: 'Broadcast'}
+            /* temporarily removed */ //{name: 'Condition'},
+            /* temporarily removed */ //{name: 'MFGDate'},
+            {name: 'Broadcast'},
+            {name: 'Warehouse'}
         ];
 
         const dataTable = <DataTable

@@ -25,7 +25,7 @@ class Tooltip extends Component {
                         id='addInventory.infoLabel'
                         defaultMessage={
                             'By clicking Save Mapping; CAS Name, CAS Number, Product Name and Product Number will be mapped'
-                            + 'in our system. Next time you enter this product these fields will be pre-populated for you.'
+                            + ' in our system. Next time you enter this product these fields will be pre-populated for you.'
                         }
                     />
                     {this.props.content}
