@@ -44,6 +44,7 @@ class ProductOffers extends Component {
                     const productOfferId = productOffer.id
                     const productName = productOffer.productName;
                     const productCode = productOffer.hasOwnProperty('productCode') ? productOffer.productCode : '';
+                    const warehouse = productOffer.warehouse.warehouseName;
                     const available = productOffer.pkgAmount.formatNumber();
                     const packaging = productOffer.packaging.packagingType.name;
                     const pkgSize = `${productOffer.packaging.size} ${productOffer.packaging.unit.nameAbbreviation}`;
@@ -59,13 +60,13 @@ class ProductOffers extends Component {
                     /* temporarily removed */ //const condition = productOffer.productCondition.name;
                     /* temporarily removed */ //const mfgDate = productOffer.creationDate ? moment(productOffer.creationDate).format(DATE_FORMAT) : 'none';
                     const broadcast = <ToggleBroadcast offerId={productOfferId} broadcasted={productOffer.broadcasted}/>;
-                    const warehouse = productOffer.warehouse.warehouseName;
 
                     return ({
                         id: productOfferId,
                         data: [
                             productName,
                             productCode,
+                            warehouse,
                             available,
                             packaging,
                             pkgSize,
@@ -76,8 +77,7 @@ class ProductOffers extends Component {
                             mfr,
                             /* temporarily removed */ //condition,
                             /* temporarily removed */ //mfgDate,
-                            broadcast,
-                            warehouse
+                            broadcast
                         ]
                     })
                 })
@@ -87,6 +87,7 @@ class ProductOffers extends Component {
         const headerInit = [
             {name: 'ProductName'},
             {name: 'ProductNumber'},
+            {name: 'Warehouse'},
             {name: 'Available'},
             {name: 'Packaging'},
             {name: 'Pkg.size'},
@@ -97,8 +98,7 @@ class ProductOffers extends Component {
             {name: 'MFR.'},
             /* temporarily removed */ //{name: 'Condition'},
             /* temporarily removed */ //{name: 'MFGDate'},
-            {name: 'Broadcast'},
-            {name: 'Warehouse'}
+            {name: 'Broadcast'}
         ];
 
         const dataTable = <DataTable
