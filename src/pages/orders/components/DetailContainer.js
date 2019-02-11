@@ -27,7 +27,7 @@ function prepareDetail(data) {
         paymentStatus: OrdersHelper.getPaymentStatus(data.paymentStatus),
         returnStatus: OrdersHelper.getReturnStatus(data.returnStatus),
         productName: (typeof data.orderItems[0].name !== 'undefined' ? data.orderItems[0].name : 'N/A'),
-        productNumber: data.orderItems[0].casNumber,
+        productCode: data.orderItems[0].casNumber,
         packaging: data.orderItems[0].packaging.packagingType.name,
         size: data.orderItems[0].packaging.size,
         totalPkg: data.orderItems[0].amount,

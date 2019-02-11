@@ -163,7 +163,7 @@
     "addInventory.CasNumber": "CAS Number",
     "addInventory.chemicalName": "Chemical Name",
     "addInventory.productName": "Product Name",
-    "addInventory.productNumber": "Product Number",
+    "addInventory.productCode": "Product Number",
     "addInventory.measure": "Measure",
     "addInventory.UM": "U/M",
     "addInventory.UP": "U/P",

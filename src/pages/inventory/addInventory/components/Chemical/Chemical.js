@@ -123,7 +123,7 @@ class Chemical extends Component {
                 indexName: this.state.selectedProductMapping.product.casIndexName,
                 casNumber: this.state.selectedProductMapping.product.casNumber,
                 productName: this.state.selectedProductMapping.productName,
-                productNumber: this.state.selectedProductMapping.productNumber,
+                productCode: this.state.selectedProductMapping.productCode,
                 chemicalName: this.state.selectedProductMapping.product.chemicalName,
                 packaging:{
                     unit: this.state.selectedProductMapping.packaging.unit.id,

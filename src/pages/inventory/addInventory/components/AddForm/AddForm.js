@@ -119,7 +119,7 @@ export default class AddForm extends Component {
         delete params.lotNumber;
         delete params.pkgAmount;
         //delete params.productName;
-        //delete params.productNumber;
+        //delete params.productCode;
         
         this.props.addProductOffer(params).then(()=>{
             this.props.history.push("/inventory/my-inventory");
@@ -192,7 +192,7 @@ export default class AddForm extends Component {
             origin: this.props.productOfferingForm.origin.id || this.props.productOffer.origin.id,
             product: this.props.productOffer.product.id,
             productName: this.props.productOffer.product.casIndexName,
-            productNumber: this.props.productOffer.product.id,
+            productCode: this.props.productOffer.product.id,
             packaging: {...this.props.mappingForm.packaging}
         });
 
