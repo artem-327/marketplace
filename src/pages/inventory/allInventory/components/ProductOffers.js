@@ -15,7 +15,7 @@ class ProductOffers extends Component {
 
     groupProductOffers(productOffers) {
         return productOffers.reduce((carry, offer) => {
-            (carry[offer.product.id] = carry[offer.product.id] || {...offer.product, visible: true, productOffers: []}).productOffers.push(offer);
+            (carry[(typeof offer.product !== 'undefined' ? offer.product.id : 0)] = carry[(typeof offer.product !== 'undefined' ? offer.product.id : 0)] || {...offer.product, visible: true, productOffers: []}).productOffers.push(offer);
             return carry;
         }, {});
     }
@@ -26,16 +26,18 @@ class ProductOffers extends Component {
         let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
             return {
                 group: <>
-                            <span
-                                className="product-casnumber">
-                                    {product.casNumber}
-                            </span>
+                            {typeof product.casNumber !== 'undefined' ?
+                                <span
+                                    className="product-casnumber ">
+                                                {product.casNumber}
+                                </span> : ''
+                            }
                             <span className="product-name capitalize">
-                                {product.casIndexName}
+                                {typeof product.casIndexName !== 'undefined' ? product.casIndexName : 'Unmapped'}
                             </span>
                         </>,
                 rows: product.productOffers.map((offer)=>{
-                const unit = getUnit(offer.packaging.unit.name);
+                const unit = offer.packaging.unit.nameAbbreviation;
                 const price = offer.pricing.tiers.length > 1 ?
                     "$" + offer.pricing.tiers[offer.pricing.tiers.length - 1].price.formatMoney(3) + ' - ' + "$" + offer.pricing.tiers[0].price.formatMoney(3)
                     : "$" + offer.pricing.price.formatMoney(3);
@@ -57,8 +59,8 @@ class ProductOffers extends Component {
                         `${(parseInt(offer.pkgAmount, 10) * parseInt(offer.packaging.size, 10)).formatNumber()} ${unit}`,
                         price,
                         offer.name,
-                        offer.manufacturer.name,
-                        offer.origin.name,
+                        (typeof offer.manufacturer !== 'undefined' ? offer.manufacturer.name : ''),
+                        (typeof offer.origin !== 'undefined' ? offer.origin.name : ''),
                         offer.expirationDate ? moment(offer.expirationDate).format(DATE_FORMAT) : 'none',
                         offer.assayMin + '/' + offer.assayMax,
                         offer.productCondition.name,
