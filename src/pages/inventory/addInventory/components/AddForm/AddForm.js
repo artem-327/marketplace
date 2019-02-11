@@ -103,8 +103,8 @@ export default class AddForm extends Component {
                 tiers: newTiers
             },
             lots: lots,
-            manufacturer: this.props.productOfferingForm.manufacturer.id || this.props.productOffer.manufacturer.id,
-            origin: this.props.productOfferingForm.origin.id || this.props.productOffer.origin.id,
+            manufacturer: (typeof this.props.productOfferingForm.manufacturer !== 'undefined' ? this.props.productOfferingForm.manufacturer.id : (this.props.edit ? this.props.productOffer.manufacturer.id : '')),
+            origin: (typeof this.props.productOfferingForm.origin !== 'undefined' ? this.props.productOfferingForm.origin.id : (this.props.edit ? this.props.productOffer.origin.id : '')),
             product: parseInt(this.props.mappingForm.casNumber.replace(/-/g,"")),
             packaging: {
                 ...this.props.mappingForm.packaging,

@@ -15,7 +15,7 @@ class ProductOffers extends Component {
 
     groupProductOffers(productOffers) {
         return productOffers.reduce((carry, offer) => {
-            (carry[offer.product.id] = carry[offer.product.id] || {...offer.product, visible: true, productOffers: []}).productOffers.push(offer);
+            (carry[(typeof offer.product !== 'undefined' ? offer.product.id : 0)] = carry[(typeof offer.product !== 'undefined' ? offer.product.id : 0)] || {...offer.product, visible: true, productOffers: []}).productOffers.push(offer);
             return carry;
         }, {});
     }
@@ -30,13 +30,15 @@ class ProductOffers extends Component {
         const rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
             return {
                 group: <React.Fragment>
-                            <span
-                                className="product-casnumber ">
-                                    {product.casNumber}
-                            </span>
+                            {typeof product.casNumber !== 'undefined' ?
+                                <span
+                                    className="product-casnumber ">
+                                        {product.casNumber}
+                                </span> : ''
+                            }
                             <span
                                 className="product-name capitalize">
-                                    {product.casIndexName}
+                                    {typeof product.casIndexName !== 'undefined' ? product.casIndexName : 'Unmapped'}
                             </span>
                         </React.Fragment>,
                 countLabel: 'Product Offerings: ',
@@ -55,7 +57,7 @@ class ProductOffers extends Component {
                             + ' - ' + "$" + productOffer.pricing.tiers[0].price.formatMoney(3))
                         : ("$" + productOffer.pricing.price.formatMoney(3));
                     const tradeName = productOffer.tradeName;
-                    const mfr = productOffer.manufacturer.name;
+                    const mfr = (typeof productOffer.manufacturer !== 'undefined' ? productOffer.manufacturer.name : '');
                     /* temporarily removed */ //const condition = productOffer.productCondition.name;
                     /* temporarily removed */ //const mfgDate = productOffer.creationDate ? moment(productOffer.creationDate).format(DATE_FORMAT) : 'none';
                     const broadcast = <ToggleBroadcast offerId={productOfferId} broadcasted={productOffer.broadcasted}/>;
