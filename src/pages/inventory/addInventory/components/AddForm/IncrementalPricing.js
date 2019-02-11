@@ -71,11 +71,12 @@ const IncrementalPricing = (props) => {
               const price = 
 
                 <input type='number'
-                      className='tieredPricing'
-                      value={item.price}
-                      onBlur={validateInputs}
-                      onChange={e => handlePrice(e, index)}
-                      disabled={disabled}/>
+                       className='tieredPricing'
+                       value={item.price}
+                       onBlur={validateInputs}
+                       onChange={e => handlePrice(e, index)}
+                       disabled={disabled}
+                       step="0.001"/>
 
               const margin = 
 
@@ -85,6 +86,7 @@ const IncrementalPricing = (props) => {
                        value={item.margin}
                        onChange={e => handleMargin(e, index)}
                        disabled={disabled}
+                       step="0.001"
                        />
 
             return <tr key={index}>

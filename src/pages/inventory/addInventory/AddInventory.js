@@ -15,9 +15,9 @@ export default class AddInventory extends Component {
                 chemicalName: this.props.productOffer.product.chemicalName,
                 indexName: this.props.productOffer.product.casIndexName,
                 packaging: {
-                    size: this.props.productOffer.packaging.size,
-                    packagingType: this.props.productOffer.packaging.packagingType.id,
-                    unit: this.props.productOffer.packaging.unit.id
+                    size: (typeof this.props.productOffer.packaging !== 'undefined' ? this.props.productOffer.packaging.size : 1),
+                    packagingType: (typeof this.props.productOffer.packaging !== 'undefined' ? this.props.productOffer.packaging.packagingType.id : 0),
+                    unit: (typeof this.props.productOffer.packaging !== 'undefined' ? this.props.productOffer.packaging.unit.id : 0)
                 },
             }));
             this.props.dispatch(actions.merge('forms.productOffering', {

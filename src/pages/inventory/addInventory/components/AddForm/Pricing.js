@@ -19,8 +19,8 @@ class Pricing extends Component {
             priceFlag: false,
             costFlag: false,
             marginFlag: false,
-            splits: !this.props.edit ? 1 : this.props.productOffer.packaging.splits,
-            minimum: !this.props.edit ? 1 : this.props.productOffer.packaging.minimum,
+            splits: !this.props.edit ? 1 : (typeof this.props.productOffer.packaging !== 'undefined' ? this.props.productOffer.packaging.splits : 1),
+            minimum: !this.props.edit ? 1 : (typeof this.props.productOffer.packaging !== 'undefined' ? this.props.productOffer.packaging.minimum : 1),
             disabled: !this.props.edit ? false : true,
             incrementalPricing: [{
               quantityFrom: '',
@@ -36,7 +36,7 @@ class Pricing extends Component {
         if(this.props.edit){
             this.setState({
                 margin: parseInt((this.props.productOffer.pricing.price - this.props.productOffer.pricing.cost) / this.props.productOffer.pricing.cost * 100),
-                totalSalesPrice: parseInt(this.props.productOffer.packaging.size * this.props.productOffer.pricing.price * this.props.productOffer.pkgAmount)
+                totalSalesPrice: parseInt((typeof this.props.productOffer.packaging !== 'undefined' ? this.props.productOffer.packaging.size : 0) * this.props.productOffer.pricing.price * this.props.productOffer.pkgAmount)
             });
             this.validateMinimum('splits');
             this.validateMinimum('minimum');
@@ -364,6 +364,7 @@ class Pricing extends Component {
                             disabled={!!this.state.showIncrementalPricing}
                             placeholder="$"
                             defaultValue={this.props.edit ? this.props.productOffer.pricing.price : ''}
+                            step="0.001"
                         />
                     </div>
                     <div className='group-item-wr'>
@@ -391,7 +392,8 @@ class Pricing extends Component {
                             name='cost'
                             onChange={(e)=>this.calculatePricing(e)}
                             //onBlur={()=>this.checkFilledInputs()}
-                            placeholder="$"/>
+                            placeholder="$"
+                            step="0.001"/>
                     </div>
                     
 
@@ -419,6 +421,7 @@ class Pricing extends Component {
                                     onChange={(e)=>this.calculatePricing(e)}
                                     //onBlur={()=>this.checkFilledInputs()}
                                     placeholder="%"
+                                    step="0.001"
                                 />
                             </div>
                         </div>
