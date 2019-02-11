@@ -69,14 +69,6 @@ export default class ProductMapping extends Component {
                     onSubmit={(values)=>this.saveMapping(values)}>
                 <div>
                     <div className='group-item-wr'>
-                        <Errors
-                            className="form-error"
-                            model=".indexName"
-                            show="touched"
-                            messages={{
-                                required: messages.required,
-                            }}
-                        />
                         <label htmlFor=".indexName">
                             <FormattedMessage
                                 id='addInventory.CasIndexName'
@@ -84,9 +76,6 @@ export default class ProductMapping extends Component {
                             />
                         </label>
                         <Control.text model=".indexName"
-                                      validators={{
-                                          required,
-                                      }}
                                       disabled={true}
                                       id=".indexName"
                                       defaultValue={""}
@@ -98,7 +87,6 @@ export default class ProductMapping extends Component {
                             model=".casNumber"
                             show="touched"
                             messages={{
-                                required: messages.required,
                                 isCasNumber: messages.isCasNumber
                             }}
                         />
@@ -109,21 +97,13 @@ export default class ProductMapping extends Component {
                             />
                         </label>
                         <Control.text model=".casNumber"
-                                      validators={{required}}
+                                      //validators={{required}} //! ! validace cisla??
                                       disabled={true}
                                       id=".casNumber"
                                       defaultValue={""}
                         />
                     </div>
                     <div className='group-item-wr'>
-                        <Errors
-                            className="form-error"
-                            model=".chemicalName"
-                            show="touched"
-                            messages={{
-                                required: messages.required,
-                            }}
-                        />
                         <label htmlFor=".chemicalName">
                             <FormattedMessage
                                 id='addInventory.chemicalName'
@@ -131,7 +111,6 @@ export default class ProductMapping extends Component {
                             />
                         </label>
                         <Control.text model=".chemicalName"
-                                      validators={{required}}
                                       disabled={true}
                                       id=".chemicalName"
                                       defaultValue={""}
@@ -163,14 +142,6 @@ export default class ProductMapping extends Component {
                                       />
                     </div>
                     <div className='group-item-wr'>
-                        <Errors
-                            className="form-error"
-                            model=".productCode"
-                            show="touched"
-                            messages={{
-                                required: messages.required,
-                            }}
-                        />
                         <label htmlFor=".productCode">
                             <FormattedMessage
                                 id='addInventory.productCode'
@@ -178,7 +149,6 @@ export default class ProductMapping extends Component {
                             />
                         </label>
                         <Control.text model=".productCode"
-                                      validators={{required}}
                                       id=".productCode"
                                       defaultValue=""
                                       />

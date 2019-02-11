@@ -373,7 +373,6 @@ class Pricing extends Component {
                             model=".pricing.cost"
                             show="touched"
                             messages={{
-                                required: messages.required,
                                 isNumber: messages.isNumber,
                                 min: messages.min
                             }}
@@ -384,8 +383,7 @@ class Pricing extends Component {
                             id=".costPr"
                             validators={{
                                   min: (val) => min(val, 0),
-                                  isNumber,
-                                  required
+                                  isNumber
                               }}
                             defaultValue={this.props.edit ? this.props.productOffer.pricing.cost : ''}
                             type='number'
@@ -495,7 +493,7 @@ class Pricing extends Component {
                               }}
                               defaultValue={this.state.minimum}
                               onChange={e => this.splitsMinimumChange(e)}
-                              onBlur={e => this.validateMinimum('minimum')}
+                              onBlur={() => this.validateMinimum('minimum')}
                               className='minimum'
                               type='number'
                               min={'0'}/>
