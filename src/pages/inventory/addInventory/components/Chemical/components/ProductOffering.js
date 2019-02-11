@@ -64,8 +64,8 @@ class ProductOffering extends Component {
     }
 
     minValidationHandler(e) {
-        let assayMin = parseInt(e.target.value);
-        let assayMax = parseInt(this.props.productOffering.assayMax);
+        let assayMin = parseFloat(e.target.value);
+        let assayMax = parseFloat(this.props.productOffering.assayMax);
         let newMinWarning;
         let newMaxWarning;
 
@@ -83,8 +83,8 @@ class ProductOffering extends Component {
     }
 
     maxValidationHandler(e) {
-        let assayMax = parseInt(e.target.value);
-        let assayMin = parseInt(this.props.productOffering.assayMin);
+        let assayMax = parseFloat(e.target.value);
+        let assayMin = parseFloat(this.props.productOffering.assayMin);
         let newMinWarning;
         let newMaxWarning;
 
@@ -235,6 +235,7 @@ class ProductOffering extends Component {
                                           min: (val) => min(val, 0),
                                           maxPercent
                                     }}
+                                    step="0.001"
                                 />
                                 <div className="warning">{this.state.minWarning}</div>
                             </div>
@@ -265,6 +266,7 @@ class ProductOffering extends Component {
                                         min: (val) => min(val, 0),
                                         maxPercent
                                       }}
+                                    step="0.001"
                                 />
                                 <div className="warning">{this.state.maxWarning}</div>
                             </div>

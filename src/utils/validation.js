@@ -1,13 +1,13 @@
 export const required = (val) => val && val !== "";
-export const isNumber = (val) => val === '' || (!isNaN(parseFloat(val)) && isFinite(val));
-export const isInteger = (val) => val === '' || (Number.isInteger(Number(val))); //
-export const min = (val, min) => (val === '' || (val > min) || !isInteger(val));
-export const maxPercent = (val) => val === '' || val < 101;
+export const isNumber = (val) => typeof val === 'undefined' || (!isNaN(parseFloat(val)) && isFinite(val));
+export const isInteger = (val) => typeof val === 'undefined' || (Number.isInteger(Number(val))); //
+export const min = (val, min) => typeof val === 'undefined' || val > min;
+export const maxPercent = (val) => typeof val === 'undefined' || val <= 100
 export const smaller = (val, max) => {
-        return (parseInt(val) <= parseInt(max))
+    return (parseFloat(val) <= parseFloat(max))
 };
 export const bigger = (val, min) => {
-    return (parseInt(val) >= parseInt(min));
+    return (parseFloat(val) >= parseFloat(min));
 };
 
 export const lotNumber = (val) => {
