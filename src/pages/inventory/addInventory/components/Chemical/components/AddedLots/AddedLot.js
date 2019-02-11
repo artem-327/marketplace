@@ -25,7 +25,7 @@ class AddedLot extends Component {
             lotNumber = this.props.lot.lotNumber !== '' ? this.props.lot.lotNumber : 'No Lot Number';
         } else if (this.props.edit) {
             productName = this.props.productOffer.productName !== '' ? this.props.productOffer.productName : 'No Product Name';
-            casNumber = this.props.productOffer.product.casNumber !== '' ? this.props.productOffer.product.casNumber : 'No CAS Number';
+            casNumber = typeof this.props.productOffer.product !== 'undefined' && this.props.productOffer.product.casNumber !== '' ? this.props.productOffer.product.casNumber : 'No CAS Number';
             lotNumber = this.props.lot.lotNumber !== '' ? this.props.lot.lotNumber : 'No Lot Number';
         }
         

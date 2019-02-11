@@ -31,7 +31,7 @@ class Chemical extends Component {
             localStorage.setItem('productLots', JSON.stringify(this.props.productOffer.lots))
         }
 
-        if (this.props.edit) {
+        if (this.props.edit && typeof this.props.productOffer.product !== 'undefined') {
             this.setState({productID: this.props.productOffer.product.id})
         }
 

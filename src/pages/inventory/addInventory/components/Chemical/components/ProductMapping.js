@@ -118,8 +118,6 @@ export default class ProductMapping extends Component {
                     </div>
                 </div>
                 <div>
-                {!this.props.edit ?
-                    <React.Fragment>
                     <div className='group-item-wr'>
                         <Errors
                             className="form-error"
@@ -138,7 +136,7 @@ export default class ProductMapping extends Component {
                         <Control.text model=".productName"
                                       validators={{required}}
                                       id=".productName"
-                                      defaultValue=""
+                                      defaultValue={this.props.edit ? this.props.productOffer.productName : ''}
                                       />
                     </div>
                     <div className='group-item-wr'>
@@ -150,11 +148,9 @@ export default class ProductMapping extends Component {
                         </label>
                         <Control.text model=".productCode"
                                       id=".productCode"
-                                      defaultValue=""
+                                      defaultValue={this.props.edit ? this.props.productOffer.productCode : ''}
                                       />
                     </div>
-                    </React.Fragment>
-                    : null }
                     <div className='group-item-wr'>
                         <Errors
                             className="form-error"

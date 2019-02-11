@@ -112,6 +112,8 @@ class ProductOffering extends Component {
             </button>;
 
         const { formatMessage } = this.props.intl;
+        const manufacturerName = (typeof this.props.productOffer.manufacturer !== 'undefined' ? this.props.productOffer.manufacturer.name : null)
+        const originName = (typeof this.props.productOffer.origin !== 'undefined' ? this.props.productOffer.origin.name : null)
 
         return (
             <div>
@@ -128,7 +130,7 @@ class ProductOffering extends Component {
                                 items={this.props.manufacturer}
                                 api={(text) => this.props.fetchManufacturer(text)}
                                 dataFetched={this.props.manufacturerFetched}
-                                currentValue={this.props.edit && !this.props.isFetchingManufacturer && !this.props.manufacturerFetched ? this.props.productOffer.manufacturer.name : null}
+                                currentValue={this.props.edit && !this.props.isFetchingManufacturer && !this.props.manufacturerFetched ? manufacturerName : null}
                                 className="manufacturer"
                                 limit={5}
                                 label={formatMessage({
@@ -161,7 +163,7 @@ class ProductOffering extends Component {
                                     id: 'addInventory.search',
                                     defaultMessage: 'Search'
                                 })}
-                                currentValue={this.props.edit ? this.props.productOffer.origin.name : null}
+                                currentValue={this.props.edit ? originName : null}
                                 isFetching={this.props.isFetchingOrigin}
                                 saveObj={obj=>obj}
                                 dispatch={this.props.dispatch}

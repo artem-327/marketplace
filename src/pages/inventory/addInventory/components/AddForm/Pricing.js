@@ -316,15 +316,9 @@ class Pricing extends Component {
        productLotsPkgAmount += Number(productLots[i].pkgAmount);
     }}
 
-    if(this.props.edit) {
-        totalSalesPrice = this.props.mappingForm.packaging && this.state.price
-        ? Number(this.props.mappingForm.packaging.size) * Number(this.props.productOfferingForm.pkgAmount) * Number(this.state.price)
-        : 0;
-    } else if (!this.props.edit) {
-        totalSalesPrice = this.props.form.pricing && this.props.mappingForm.packaging.size
-        ? productLotsPkgAmount * Number(this.props.form.pricing.price * Number(this.props.mappingForm.packaging.size))
-        : 0;
-    }
+    totalSalesPrice = this.props.form.pricing && this.props.mappingForm.packaging.size
+    ? productLotsPkgAmount * Number(this.props.form.pricing.price * Number(this.props.mappingForm.packaging.size))
+    : 0;
     
     const { formatMessage } = this.props.intl;
 

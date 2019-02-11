@@ -11,9 +11,9 @@ export default class AddInventory extends Component {
     componentDidMount(){
         if(this.props.edit && this.props.productOffer) {
             this.props.dispatch(actions.merge('forms.productMapping', {
-                casNumber: this.props.productOffer.product.casNumber,
-                chemicalName: this.props.productOffer.product.chemicalName,
-                indexName: this.props.productOffer.product.casIndexName,
+                casNumber: (typeof this.props.productOffer.product !== 'undefined' ? this.props.productOffer.product.casNumber : ''),
+                chemicalName: (typeof this.props.productOffer.product !== 'undefined' ? this.props.productOffer.product.chemicalName : ''),
+                indexName: (typeof this.props.productOffer.product !== 'undefined' ? this.props.productOffer.product.casIndexName : ''),
                 packaging: {
                     size: (typeof this.props.productOffer.packaging !== 'undefined' ? this.props.productOffer.packaging.size : 1),
                     packagingType: (typeof this.props.productOffer.packaging !== 'undefined' ? this.props.productOffer.packaging.packagingType.id : 0),
