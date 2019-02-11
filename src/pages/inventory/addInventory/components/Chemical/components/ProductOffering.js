@@ -121,14 +121,6 @@ class ProductOffering extends Component {
                 <Form model="forms.productOffering" onSubmit={(values) => this.saveOffering(values)}>
                     <div>
                         <div className='group-item-wr'>
-                            <Errors
-                                className="form-error"
-                                model=".manufacturer"
-                                show="touched"
-                                messages={{
-                                    required: messages.required,
-                                }}
-                            />
                             <RemoteComboBoxRedux
                                 items={this.props.manufacturer}
                                 api={(text) => this.props.fetchManufacturer(text)}
@@ -146,21 +138,12 @@ class ProductOffering extends Component {
                                 })}
                                 isFetching={this.props.isFetchingManufacturer}
                                 saveObj={obj=>obj}
-                                validators={{required}}
                                 dispatch={this.props.dispatch}
                                 model="forms.productOffering.manufacturer"
                             />
                         </div>
 
                         <div className='group-item-wr'>
-                            <Errors
-                                className="form-error"
-                                model="forms.productOffering.origin"
-                                show="touched"
-                                messages={{
-                                    required: messages.required,
-                                }}
-                            />
                             <RemoteComboBoxRedux
                                 items={this.props.originData}
                                 dataFetched={this.props.originFetched}
@@ -178,7 +161,6 @@ class ProductOffering extends Component {
                                 currentValue={this.props.edit ? this.props.productOffer.origin.name : null}
                                 isFetching={this.props.isFetchingOrigin}
                                 saveObj={obj=>obj}
-                                validators={{required}}
                                 dispatch={this.props.dispatch}
                                 model="forms.productOffering.origin"
                             />
@@ -210,11 +192,6 @@ class ProductOffering extends Component {
                             />
                         </div>
                         <div className='group-item-wr'>
-                            <Errors
-                                className="form-error"
-                                model=".name"
-                                show="touched"
-                            />
                             <label htmlFor=".tradeName">
                                 <FormattedMessage
                                     id='dataTable.TradeName'
@@ -233,7 +210,6 @@ class ProductOffering extends Component {
                                     model=".assayMin"
                                     show="touched"
                                     messages={{
-                                        required: messages.required,
                                         min: messages.min,
                                         isNumber: messages.isNumber,
                                         maxPercent: messages.maxPercent,
@@ -252,13 +228,12 @@ class ProductOffering extends Component {
                                     type="number"
                                     id=".assayMin"
                                     validators={{
-                                          required,
                                           isNumber,
                                           min: (val) => min(val, 0),
                                           maxPercent
                                     }}
                                 />
-                                <div class="warning">{this.state.minWarning}</div>
+                                <div className="warning">{this.state.minWarning}</div>
                             </div>
                             <div className='group-item-wr'>
                                 <Errors
@@ -266,7 +241,6 @@ class ProductOffering extends Component {
                                     model=".assayMax"
                                     show="touched"
                                     messages={{
-                                        required: messages.required,
                                         min: messages.min,
                                         isNumber: messages.isNumber,
                                         maxPercent: messages.maxPercent,
@@ -284,13 +258,12 @@ class ProductOffering extends Component {
                                     type="number"
                                     id=".assayMax"
                                     validators={{
-                                        required,
                                         isNumber,
                                         min: (val) => min(val, 0),
                                         maxPercent
                                       }}
                                 />
-                                <div class="warning">{this.state.maxWarning}</div>
+                                <div className="warning">{this.state.maxWarning}</div>
                             </div>
                             <div className='group-item-wr'>
                                 <Errors
@@ -440,15 +413,11 @@ class ProductOffering extends Component {
                                 />
                             </label>
                             <Control.text model=".lotNumber"
-                                        // validators={{required, lotNumber}}
+                                        validators={{required}}  //! ! validace cisla - validators={{required, lotNumber}}
                                         id=".lotNumber"/>
                             </div>
 
                         <div className='group-item-wr'>
-                            <Errors
-                                model='forms.productOffering.creationDate'
-                                show="touched"
-                                messages={{required: messages.required}}/>
                             <label htmlFor=".creationDate">
                                 <FormattedMessage
                                     id='dataTable.MFGDate'
