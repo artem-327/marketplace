@@ -312,6 +312,13 @@ export function fetchRecentAddedProducts(limit = 3) {
 }
 
 export function saveMapping(values) {
+    if (values.fakeSubmit) {
+        return {
+            type: SAVE_MAPPING_FULFILLED
+        }
+    } else {
+		delete values.fakeSubmit
+	}
     return {
         type: SAVE_MAPPING,
         payload: axios.post("/prodex/api/product-templates", values)

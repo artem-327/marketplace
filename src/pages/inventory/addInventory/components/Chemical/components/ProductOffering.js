@@ -52,7 +52,10 @@ class ProductOffering extends Component {
         }
         */
 
-        if (checkToken(this.props)) return;
+        let validateOnly = (document.getElementById('form-offering').classList.contains('validate-only') && typeof localStorage.productLots !== 'undefined')
+        document.getElementById("form-offering").classList.remove('validate-only')
+
+        if (checkToken(this.props) || validateOnly) return;
 
         if (!this.state.minWarning && !this.state.maxWarning) {
             this.setState({save: true, firstValue: false});
@@ -118,7 +121,7 @@ class ProductOffering extends Component {
                         defaultMessage='PRODUCT OFFERING'
                     />
                 </h4>
-                <Form model="forms.productOffering" onSubmit={(values) => this.saveOffering(values)}>
+                <Form id="form-offering" model="forms.productOffering" onSubmit={(values) => this.saveOffering(values)}>
                     <div>
                         <div className='group-item-wr'>
                             <Errors

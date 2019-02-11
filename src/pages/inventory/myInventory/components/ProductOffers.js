@@ -46,9 +46,9 @@ class ProductOffers extends Component {
                     const productCode = productOffer.hasOwnProperty('productCode') ? productOffer.productCode : '';
                     const available = productOffer.pkgAmount.formatNumber();
                     const packaging = productOffer.packaging.packagingType.name;
-                    const pkgSize = `${productOffer.packaging.size} ${getUnit(productOffer.packaging.unit.name)}`;
-                    const quantityPart2 = `${getUnit(productOffer.packaging.unit.name)}`;
-                    const quantity = `${(parseInt(productOffer.pkgAmount, 10) * parseInt(productOffer.packaging.size, 10)).formatNumber()}` + quantityPart2;
+                    const pkgSize = `${productOffer.packaging.size} ${productOffer.packaging.unit.nameAbbreviation}`;
+                    const quantityPart2 = `${productOffer.packaging.unit.nameAbbreviation}`;
+                    const quantity = `${(parseInt(productOffer.pkgAmount, 10) * parseInt(productOffer.packaging.size, 10)).formatNumber()} ` + quantityPart2;
                     const cost = "$" + productOffer.pricing.cost.formatMoney(3);
                     const fobPrice = productOffer.pricing.tiers.length > 1 ?
                         ("$" + productOffer.pricing.tiers[productOffer.pricing.tiers.length - 1].price.formatMoney(3)

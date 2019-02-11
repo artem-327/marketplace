@@ -33,18 +33,21 @@ export default class AddForm extends Component {
     }
 
     addProductOfferTimeout = async (inputs) => {
-        document.getElementById("mapping-btn").click();
-        document.getElementById("offering-btn").click();
+        document.getElementById("form-mapping").classList.add('validate-only')
+        document.getElementById("mapping-btn").click()
+
+        document.getElementById("form-offering").classList.add('validate-only')
+        document.getElementById("offering-btn").click()
 
         setTimeout(function(){
-            this.addProductOffer(inputs);
-        }.bind(this), 3000);
+            this.addProductOffer(inputs)
+        }.bind(this), 2000);
     }
 
     addProductOffer(inputs){
         if (checkToken(this.props)) return;
 
-        if (!this.props.productMappingValidation || !this.props.productOfferingValidation) return;
+        if (!this.props.productMappingValidation || typeof localStorage.productLots === 'undefined') return
 
         let newPricing = inputs['pricing'];
         if(inputs['incrementalSelected']){
@@ -78,12 +81,12 @@ export default class AddForm extends Component {
                 //originalPkgAmount: Number(localLots[i].pkgAmount),
                 quantity: Number(this.props.mappingForm.packaging.size) * Number(localLots[i].pkgAmount),
                 lotNumber: localLots[i].lotNumber,
-                expirationDate: localLots[i].expirationDate.includes("T") ? localLots[i].expirationDate : `${localLots[i].expirationDate}T00:00:00Z`,
-                manufacturedDate: localLots[i].creationDate.includes("T") ? localLots[i].creationDate : `${localLots[i].creationDate}T00:00:00Z`
+                expirationDate: typeof localLots[i].expirationDate !== 'undefined' ? (localLots[i].expirationDate.includes("T") ? localLots[i].expirationDate : `${localLots[i].expirationDate}T00:00:00Z`) : null,
+                manufacturedDate: typeof localLots[i].creationDate !== 'undefined' ? (localLots[i].creationDate.includes("T") ? localLots[i].creationDate : `${localLots[i].creationDate}T00:00:00Z`) : null
             })
         }
 
-        lots.splice(-1, 1);
+        //lots.splice(-1, 1);
 
         let params = Object.assign({}, inputs, {
             ...this.props.mappingForm,

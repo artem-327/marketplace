@@ -26,8 +26,12 @@ export default class ProductMapping extends Component {
 
         values = Object.assign({}, values, {
             packaging: { ...values.packaging, size: Number(values.packaging.size) },
-            product: this.props.productID
+            product: this.props.productID,
+            fakeSubmit: document.getElementById('form-mapping').classList.contains('validate-only')
         });
+
+        // clear validate-only mark
+        document.getElementById("form-mapping").classList.remove('validate-only')
 
         this.props.saveMapping(values);
         setTimeout(function(){
@@ -60,6 +64,7 @@ export default class ProductMapping extends Component {
                     />
                 </h4>
                 <Form
+                    id="form-mapping"
                     model="forms.productMapping"
                     onSubmit={(values)=>this.saveMapping(values)}>
                 <div>
