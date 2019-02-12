@@ -67,10 +67,10 @@ class Pricing extends Component {
 
     calculatePricing(e){
 
-        let price = parseInt(this.props.form.pricing.price,10);
-        let cost = parseInt(this.props.form.pricing.cost,10);
+        let price = Number(this.props.form.pricing.price,10).toFixed(3);
+        let cost = Number(this.props.form.pricing.cost,10).toFixed(3);
         let active = e.target.name;
-        let activeVal = parseInt(e.target.value,10);
+        let activeVal = Number(e.target.value,10).toFixed(3);
 
             switch(active){
                 case 'price': {
@@ -273,14 +273,6 @@ class Pricing extends Component {
     };
 
     render() {
-        //console.log(this.props)
-
-        //console.log(JSON.parse(localStorage.getItem('productLots')));
-
-        //console.log(this.props.productOffer.packaging.size)
-        //console.log(this.props.productOffer.pricing.price)
-        //console.log(this.props.productOffer.pkgAmount)
-
       //const {
         //mappingForm: {packaging},
         //addProductOfferForm: {pricing}
@@ -317,7 +309,7 @@ class Pricing extends Component {
     }}
 
     totalSalesPrice = this.props.form.pricing && this.props.mappingForm.packaging.size
-    ? productLotsPkgAmount * Number(this.props.form.pricing.price * Number(this.props.mappingForm.packaging.size))
+    ? Number(productLotsPkgAmount * Number(this.props.form.pricing.price * Number(this.props.mappingForm.packaging.size))).formatMoney(3)
     : 0;
     
     const { formatMessage } = this.props.intl;

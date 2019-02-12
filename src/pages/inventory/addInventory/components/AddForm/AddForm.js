@@ -62,13 +62,17 @@ export default class AddForm extends Component {
             delete newTiers[i].id
         }
 
-        const creationDate = this.props.productOfferingForm.creationDate && this.props.productOfferingForm.creationDate.includes("T") 
-                             ? this.props.productOfferingForm.creationDate 
-                             : `${this.props.productOfferingForm.creationDate}T00:00:00Z`
+        const creationDate = (this.props.productOfferingForm.creationDate
+                                     ? (this.props.productOfferingForm.creationDate.includes("T")
+                                             ? this.props.productOfferingForm.creationDate
+                                             : `${this.props.productOfferingForm.creationDate}T00:00:00Z`)
+                                     : null)
 
-        const expirationDate = this.props.productOfferingForm.expirationDate && this.props.productOfferingForm.expirationDate.includes("T") 
-                             ? this.props.productOfferingForm.expirationDate 
-                             : `${this.props.productOfferingForm.expirationDate}T00:00:00Z`
+        const expirationDate = (this.props.productOfferingForm.expirationDate
+                                     ? (this.props.productOfferingForm.expirationDate.includes("T")
+                                             ? this.props.productOfferingForm.expirationDate
+                                             : `${this.props.productOfferingForm.expirationDate}T00:00:00Z`)
+                                     : null)
 
 
         const localLots = JSON.parse(localStorage.getItem('productLots'));
@@ -98,8 +102,8 @@ export default class AddForm extends Component {
             expirationDate: expirationDate,
             pricing: {
                 ...this.props.addProductOfferForm.pricing,
-                price: parseInt(this.props.addProductOfferForm.pricing.price),
-                cost: parseInt(this.props.addProductOfferForm.pricing.cost),
+                price: Number(this.props.addProductOfferForm.pricing.price).toFixed(3),
+                cost: Number(this.props.addProductOfferForm.pricing.cost).toFixed(3),
                 tiers: newTiers
             },
             lots: lots,
@@ -153,13 +157,17 @@ export default class AddForm extends Component {
             delete newTiers[i].id
         }
 
-        const creationDate = this.props.productOfferingForm.creationDate && this.props.productOfferingForm.creationDate.includes("T") 
-                             ? this.props.productOfferingForm.creationDate 
-                             : `${this.props.productOfferingForm.creationDate}T00:00:00Z`
+        const creationDate = (this.props.productOfferingForm.creationDate
+                                     ? (this.props.productOfferingForm.creationDate.includes("T")
+                                             ? this.props.productOfferingForm.creationDate
+                                             : `${this.props.productOfferingForm.creationDate}T00:00:00Z`)
+                                     : null)
 
-        const expirationDate = this.props.productOfferingForm.expirationDate && this.props.productOfferingForm.expirationDate.includes("T") 
-                             ? this.props.productOfferingForm.expirationDate 
-                             : `${this.props.productOfferingForm.expirationDate}T00:00:00Z`
+        const expirationDate = (this.props.productOfferingForm.expirationDate
+                                     ? (this.props.productOfferingForm.expirationDate.includes("T")
+                                             ? this.props.productOfferingForm.expirationDate
+                                             : `${this.props.productOfferingForm.expirationDate}T00:00:00Z`)
+                                     : null)
 
         const localLots = JSON.parse(localStorage.getItem('productLots'));
         let lots = [];
@@ -186,8 +194,8 @@ export default class AddForm extends Component {
             anonymous: false,
             pricing: {
                 ...this.props.addProductOfferForm.pricing,
-                price: parseInt(this.props.addProductOfferForm.pricing.price),
-                cost: parseInt(this.props.addProductOfferForm.pricing.cost),
+                price: parseFloat(Number(this.props.addProductOfferForm.pricing.price).toFixed(3)),
+                cost: parseFloat(Number(this.props.addProductOfferForm.pricing.cost).toFixed(3)),
                 tiers: newTiers
             },
             lots: lots,
