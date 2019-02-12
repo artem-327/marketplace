@@ -61,7 +61,9 @@ export default function reducer(state = initialState, action) {
         case ADD_PRODUCT_OFFER_REJECTED: {
             return {
                 ...state,
-                messages: [...state.messages, action.payload.message]
+                messages: [...state.messages, (
+                    action.payload.response && action.payload.response.data.message ? action.payload.response.data.message : action.payload.message
+                )]
             }
         }
         case SAVE_MAPPING_REJECTED: {

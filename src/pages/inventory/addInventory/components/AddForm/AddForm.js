@@ -102,8 +102,8 @@ export default class AddForm extends Component {
             expirationDate: expirationDate,
             pricing: {
                 ...this.props.addProductOfferForm.pricing,
-                price: Number(this.props.addProductOfferForm.pricing.price).toFixed(3),
-                cost: Number(this.props.addProductOfferForm.pricing.cost).toFixed(3),
+                price: parseFloat(Number(this.props.addProductOfferForm.pricing.price).toFixed(3)),
+                cost: parseFloat(Number(this.props.addProductOfferForm.pricing.cost).toFixed(3)),
                 tiers: newTiers
             },
             lots: lots,
