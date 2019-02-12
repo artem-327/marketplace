@@ -18,7 +18,7 @@ class AddCart extends Component {
 
   state = {
     pricing: false,
-    quantity: null,
+    quantity: 0,
     warning: null
   }
 
@@ -175,7 +175,7 @@ class AddCart extends Component {
             <div className="add-cart-prod-info">
               <div>
                 <span>Merchant: </span>
-                  {offer.merchant.branch.company.name}
+                  {offer.merchant.companyName}
               </div>
               <div>
                   <span>Location: </span>

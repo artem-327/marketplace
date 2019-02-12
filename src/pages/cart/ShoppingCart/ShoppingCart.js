@@ -77,7 +77,7 @@ class ShoppingCart extends Component {
   render() {
     const {cart, deleteCart, history, addPopup, removePopup, cartIsFetching} = this.props;
     if (cartIsFetching) return <Spinner />
-    const itemContent = cart.orders && cart.orders.map(cartItem => {
+    const itemContent = cart.cartItems && cart.cartItems.map(cartItem => {
       return (
         <ItemCartBody
           addPopup={addPopup}
@@ -89,7 +89,7 @@ class ShoppingCart extends Component {
           deleteCart={deleteCart}
           />)
     });
-    const itemsNumber = cart.orders ? cart.orders.length : 0;
+    const itemsNumber = cart.cartItems ? cart.cartItems.length : 0;
     const headerTitle =
         <FormattedMessage
             id='cart.shoppingCartHeader'

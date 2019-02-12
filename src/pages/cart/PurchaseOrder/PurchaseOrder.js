@@ -135,7 +135,7 @@ class PurchaseOrder extends Component {
     const {cart, deliveryAddresses, payments, dispatch, deleteCart, cartIsFetching, postNewDeliveryAddress, putDeliveryAddressEdit, shippingQuotes} = this.props;
     if (cartIsFetching) return <Spinner />
     let index = 0;
-    const itemContent = cart.orders.map(cartItem => {
+    const itemContent = cart.cartItems.map(cartItem => {
       return (
       <CartItemSummary
         deleteCart={deleteCart}
