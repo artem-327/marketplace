@@ -64,7 +64,7 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 messages: [...state.messages, (
-                    action.payload.response && action.payload.response.data.message ? action.payload.response.data.message : action.payload.message
+                    action.payload.response && action.payload.response.data.message && action.payload.response.data.message.length <= 100 ? action.payload.response.data.message : action.payload.message
                 )]
             }
         }
