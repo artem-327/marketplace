@@ -284,20 +284,26 @@ class Pricing extends Component {
 
     const { packaging } = this.props.mappingForm;
     let pricePer, costPer, unit;
-    const arrayUnit = ['unit', '(lb)', '(gl)'];
     if(packaging) {
         unit  = !packaging.unit ? 0 : packaging.unit;
+        let unitTxt = 'unit'
+        for (let i = 0; i < this.props.unitOfMeasurement.length; i++) {
+            if (this.props.unitOfMeasurement[i].id === unit) {
+                unitTxt = this.props.unitOfMeasurement[i].nameAbbreviation
+                break
+            }
+        }
         pricePer =
             <FormattedMessage
                 id='global.pricePer'
-                defaultMessage={'Price per ' + arrayUnit[unit]}
-                values={{unit: arrayUnit[unit]}}
+                defaultMessage={'Price per ' + unitTxt}
+                values={{unit: unitTxt}}
             />;
         costPer =
             <FormattedMessage
                 id='addInventory.costPer'
-                defaultMessage={'Cost per ' + arrayUnit[unit]}
-                values={{unit: arrayUnit[unit]}}
+                defaultMessage={'Cost per ' + unitTxt}
+                values={{unit: unitTxt}}
             />;
     }
     let totalSalesPrice;

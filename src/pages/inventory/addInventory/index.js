@@ -7,7 +7,8 @@ function mapStateToProps(store) {
     return {
         mappingForm: store.forms.productMapping,
         productOfferingForm: store.forms.productOffering,
-        addProductOfferForm: store.forms.addProductOffer
+        addProductOfferForm: store.forms.addProductOffer,
+        unitOfMeasurement: store.productOffers.unitOfMeasurement
     }
 }
 
