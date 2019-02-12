@@ -127,15 +127,13 @@ export function deleteProductOffersList(){
 }
 
 export function fetchMyProductOffers(filter = {}) {
-    let mrchnt = true;
     return {
         type: GET_PRODUCT_OFFERS_MY,
         payload: axios.get(
             "/prodex/api/product-offers",
             {
                 params: {
-                    ...filter,
-                    mrchnt
+                    ...filter
                 },
                 'paramsSerializer': params => transformRequestOptions(params)}).then(response => {
                     const productOffers = response.data;
@@ -145,11 +143,9 @@ export function fetchMyProductOffers(filter = {}) {
 }
 
 export function fetchAllProductOffers(filter = {}) {
-    let mrchnt = false;
-
     return {
         type: GET_PRODUCT_OFFERS_ALL,
-        payload: axios.get("/prodex/api/product-offers", {params: {...filter, mrchnt}, 'paramsSerializer': params => transformRequestOptions(params)}).then(response => {
+        payload: axios.get("/prodex/api/product-offers/broadcasted", {params: {...filter}, 'paramsSerializer': params => transformRequestOptions(params)}).then(response => {
             const productOffers = response.data;
             return filterByUniqueProperty(productOffers, "id")
         })
