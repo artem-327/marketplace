@@ -47,7 +47,12 @@ export default class AddForm extends Component {
     addProductOffer(inputs){
         if (checkToken(this.props)) return;
 
-        if (!this.props.productMappingValidation || typeof localStorage.productLots === 'undefined') return
+        if (!this.props.productMappingValidation || typeof localStorage.productLots === 'undefined') {
+            if (document.getElementsByClassName('form-error').length) {
+                document.getElementsByClassName('form-error')[0].scrollIntoView({ block: 'start',  behavior: 'smooth' })
+            }
+            return
+        }
 
         let newPricing = inputs['pricing'];
         if(inputs['incrementalSelected']){
@@ -142,7 +147,27 @@ export default class AddForm extends Component {
         this.setState({incrementalPricing:data},()=>this.validateIncPricing());
     }
 
+    editProductOfferTimeout = async (inputs) => {
+        document.getElementById("form-mapping").classList.add('validate-only')
+        document.getElementById("form-mapping").submit()
+
+        document.getElementById("form-offering").classList.add('validate-only')
+        document.getElementById("offering-btn").click()
+
+        setTimeout(function(){
+            this.editProductOffer(inputs)
+        }.bind(this), 2000);
+    }
+
     editProductOffer(inputs){
+        if (checkToken(this.props)) return;
+
+        if (!this.props.productMappingValidation || typeof localStorage.productLots === 'undefined') {
+            if (document.getElementsByClassName('form-error').length) {
+                document.getElementsByClassName('form-error')[0].scrollIntoView({ block: 'start',  behavior: 'smooth' })
+            }
+            return
+        }
 
         let newPricing = inputs['pricing'];
         if(inputs['incrementalSelected']){
@@ -247,7 +272,7 @@ export default class AddForm extends Component {
                     model="forms.addProductOffer"
                     onSubmit={(inputs) =>
                         this.props.edit ?
-                            this.editProductOffer(inputs)
+                            this.editProductOfferTimeout(inputs)
                             : this.addProductOfferTimeout(inputs)}
                 >
                     <AddGroup

@@ -40,7 +40,7 @@ export default class AddInventory extends Component {
             this.props.dispatch(actions.merge('forms.addProductOffer', {
                 warehouse: this.props.productOffer.warehouse.id
             }))
-        } 
+        }
     }
 
     render() {

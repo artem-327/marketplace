@@ -4,6 +4,7 @@ const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
 const ADD_MESSAGE = 'ADD_MESSAGE';
 //register const for all axios endpoints
 const ADD_PRODUCT_OFFER_REJECTED = 'ADD_PRODUCT_OFFER_REJECTED';
+const EDIT_PRODUCT_OFFER_REJECTED = 'EDIT_PRODUCT_OFFER_REJECTED';
 const SAVE_MAPPING_REJECTED = 'SAVE_MAPPING_REJECTED';
 // const SAVE_MAPPING_REJECTED = 'SAVE_MAPPING_REJECTED';
 // const FETCH_ORIGIN_REJECTED = 'FETCH_ORIGIN_REJECTED';
@@ -58,7 +59,8 @@ export default function reducer(state = initialState, action) {
         // case CHANGE_RULES_REJECTED:
         // case PACKAGE_OPTIONS_REJECTED:
         // case MANUFACTURER_REJECTED:
-        case ADD_PRODUCT_OFFER_REJECTED: {
+        case ADD_PRODUCT_OFFER_REJECTED:
+        case EDIT_PRODUCT_OFFER_REJECTED: {
             return {
                 ...state,
                 messages: [...state.messages, (
