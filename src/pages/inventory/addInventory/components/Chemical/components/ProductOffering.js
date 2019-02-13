@@ -17,7 +17,9 @@ class ProductOffering extends Component {
             save: false,
             firstValue: true,
             minWarning: null,
-            maxWarning: null
+            maxWarning: null,
+            originSearched: false,
+            manufacturerSearched: false
         }
 
         this.minValidationHandler = this.minValidationHandler.bind(this)
@@ -61,6 +63,16 @@ class ProductOffering extends Component {
             this.setState({save: true, firstValue: false});
             this.props.addLot(values);
         }
+    }
+
+    fetchManufacturer(text) {
+        this.setState({manufacturerSearched: true})
+        this.props.fetchManufacturer(text)
+    }
+
+    fetchOrigin(text) {
+        this.setState({originSearched: true})
+        this.props.fetchOrigin(text)
     }
 
     minValidationHandler(e) {
@@ -128,9 +140,9 @@ class ProductOffering extends Component {
                         <div className='group-item-wr'>
                             <RemoteComboBoxRedux
                                 items={this.props.manufacturer}
-                                api={(text) => this.props.fetchManufacturer(text)}
+                                api={(text) => this.fetchManufacturer(text)}
                                 dataFetched={this.props.manufacturerFetched}
-                                currentValue={this.props.edit && !this.props.isFetchingManufacturer && !this.props.manufacturerFetched ? manufacturerName : null}
+                                currentValue={this.props.edit && !this.props.isFetchingManufacturer && !this.state.manufacturerSearched ? manufacturerName : null}
                                 className="manufacturer"
                                 limit={5}
                                 label={formatMessage({
@@ -152,7 +164,7 @@ class ProductOffering extends Component {
                             <RemoteComboBoxRedux
                                 items={this.props.originData}
                                 dataFetched={this.props.originFetched}
-                                api={(text) => this.props.fetchOrigin(text)}
+                                api={(text) => this.fetchOrigin(text)}
                                 className="origin"
                                 limit={5}
                                 label={formatMessage({
@@ -163,7 +175,7 @@ class ProductOffering extends Component {
                                     id: 'addInventory.search',
                                     defaultMessage: 'Search'
                                 })}
-                                currentValue={this.props.edit ? originName : null}
+                                currentValue={this.props.edit && !this.props.isFetchingOrigin && !this.state.originSearched ? originName : null}
                                 isFetching={this.props.isFetchingOrigin}
                                 saveObj={obj=>obj}
                                 dispatch={this.props.dispatch}
