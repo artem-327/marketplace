@@ -145,7 +145,7 @@ export function fetchMyProductOffers(filter = {}) {
 export function fetchAllProductOffers(filter = {}) {
     return {
         type: GET_PRODUCT_OFFERS_ALL,
-        payload: axios.get("/prodex/api/product-offers/broadcasted", {params: {...filter}, 'paramsSerializer': params => transformRequestOptions(params)}).then(response => {
+        payload: axios.get("/prodex/api/product-offers/broadcasted/all", {params: {...filter}, 'paramsSerializer': params => transformRequestOptions(params)}).then(response => {
             const productOffers = response.data;
             return filterByUniqueProperty(productOffers, "id")
         })
