@@ -1,0 +1,82 @@
+@import url(../../../src/styles/flexboxgrid.css);
+.capitalize {
+  text-transform: capitalize; }
+
+.uppercase {
+  text-transform: uppercase; }
+
+button,
+button:focus {
+  border: none;
+  outline: none !important; }
+
+.b-for-shadow {
+  box-shadow: 0px 2px 5px 0px #665d66; }
+
+.b-wrapper {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0.7em; }
+
+.page-title {
+  font-size: 26px;
+  line-height: 2em; }
+
+.b-search {
+  display: flex;
+  justify-content: space-around; }
+  .b-search__select-field, .b-search__search-field, .b-search__add-user-btn {
+    height: 2.6em; }
+  .b-search__search-field {
+    position: relative;
+    display: flex;
+    justify-content: flex-start;
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    border-radius: 4px; }
+  .b-search .search-icon {
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%); }
+  .b-search .input-base {
+    width: 100%;
+    margin-left: 2.5em; }
+  .b-search__add-user-btn {
+    background-color: #2599d5;
+    color: #ffffff; }
+
+.tabs-wrapper {
+  flex-direction: column;
+  padding: 30px 0 0;
+  border-right: 2px solid #d0d1d4; }
+  .tabs-wrapper__tabs-btn {
+    position: relative;
+    font-family: "HelveticaNeueLTPro-Roman", sans-serif;
+    font-size: 14px;
+    line-height: 2.57;
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 0;
+    background-color: transparent;
+    color: #000;
+    text-align: left;
+    cursor: pointer; }
+  .tabs-wrapper .b-tabs {
+    padding: 0 0 0 17px; }
+  .tabs-wrapper .active {
+    font-family: "HelveticaNeueLTPro-Md", sans-serif;
+    border-left: 4px solid #2599d5;
+    background-color: rgba(37, 153, 213, 0.15); }
+
+.main-table {
+  font-family: "HelveticaNeueLTPro-Roman", sans-serif;
+  font-size: 14px;
+  margin-top: 5px;
+  border: 0 solid #fff; }
+
+.permissions-cell {
+  height: 3em; }
+
+.formatter-input {
+  font-size: 12px;
+  margin-right: 1.5em; }
