@@ -1,15 +1,12 @@
-import React, {Component} from 'react';
+import React from 'react';
 
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
-import Chip from '@material-ui/core/Chip';
-import Input from '@material-ui/core/Input';
-import Select from '@material-ui/core/Select';
 
 function UsersTableHandlers(props) {
-  const { filterFieldSelectValues, filterFieldCurrentValue, handleChangeFieldsCurrentValue } = props;
+  const { filterFieldSelectValues, filterFieldCurrentValue, handleChangeFieldsCurrentValue, filtersHandler } = props;
   
   return (					
     <div className="b-search col-xs-6">
@@ -20,16 +17,21 @@ function UsersTableHandlers(props) {
         onChange={ handleChangeFieldsCurrentValue('filterFieldCurrentValue') }
         variant="outlined"
         onClick={ (e) => { 
-          if(e.target.value === undefined) return;
-          return console.log(e.target.value, 'val')} 
+            if(e.target.value === undefined) return;
+            if(e.target.value === 'None') return filtersHandler('');
+            return filtersHandler(e.target.value);
+          } 
         }
-      >
+      > 
+        <MenuItem  
+          value={ 'None' }
+        >
+          { 'None' }
+        </MenuItem>
         {filterFieldSelectValues.map(option => (
           <MenuItem 
             key={ option.name }  
             value={ option.name }
-            data-city-id={ option.id }
-            onClick={ () => console.log('im here') }
           >
             { option.name }
           </MenuItem>
@@ -41,9 +43,11 @@ function UsersTableHandlers(props) {
         </div>
         <InputBase
           placeholder="Search users by name, title or branch"
-          classes={{
-            input: "input-base",
-          }}
+          classes={{ input: "input-base" }}
+          onChange={ e => {
+              return filtersHandler(e.target.value);
+            }
+          }
           fullWidth
         />
       </div>

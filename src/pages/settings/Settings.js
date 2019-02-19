@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from "prop-types";
 
+import './settings.css';
+
 import { DataTypeProvider } from '@devexpress/dx-react-grid';
 import Paper from '@material-ui/core/Paper';
-
-import './settings.css'
 
 import Api from '../../api/users';
 import unitedStates from '../../../src/components/unitedStates';
@@ -30,8 +30,8 @@ class Settings extends Component {
 				{ name: 'editDeleteBtn', title: ' ' },
 			],
 			rows: [
-				{ checkbox: ' ', userName: "Female", title: "V.P Operations", email: "email@gmail.com", phone: "+123456", homeBranch: 'Arizona', permissions: 'Admin' },
-				{ checkbox: ' ', userName: "Male", title: "Sales Executive", email: "email@gmail.com", phone: "+123456", homeBranch: 'Arizona', permissions: 'Super Admin' }
+				{ checkbox: ' ', userName: "Female", title: "V.P Operations", email: "lis@gmail.com", phone: "+32456", homeBranch: 'Arizona', permissions: 'Admin' },
+				{ checkbox: ' ', userName: "Male", title: "Sales Executive", email: "den@gmail.com", phone: "+123456", homeBranch: 'Arizona', permissions: 'Super Admin' }
 			],
 			checkboxColumns: ['checkbox'],
 			permissionsColumns: ['permissions'],
@@ -40,9 +40,16 @@ class Settings extends Component {
 			tabsValue: 0,
 			filterFieldSelectValues: unitedStates,
 			filterFieldCurrentValue: unitedStates[0].name,
-			currentTab: 'Users'
+			currentTab: 'Users',
+			filterValue: ' '
 		}
 	};
+
+	filtersHandler = ( value ) => {		
+		this.setState({ 
+			filterValue: value 
+		});
+	}
 
 	handleChangeSelectField = (event, value) => {
 		this.setState({ 
@@ -74,7 +81,8 @@ class Settings extends Component {
 			rows, 
 			permissionsColumns,
 			editDeleteColumns,
-			checkboxColumns
+			checkboxColumns,
+			filterValue
 		} = this.state;
 		
 		return (
@@ -86,6 +94,7 @@ class Settings extends Component {
 							filterFieldSelectValues={ filterFieldSelectValues }
 							filterFieldCurrentValue={ filterFieldCurrentValue }
 							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
+							filtersHandler={ this.filtersHandler }
 						/>
 					</div>
 				</div>
@@ -101,6 +110,7 @@ class Settings extends Component {
 						permissionsColumns={ permissionsColumns}
 						editDeleteColumns={ editDeleteColumns }
 						checkboxColumns={ checkboxColumns }
+						filterValue={ filterValue }
 					/>		
 				</div>
 			</main>

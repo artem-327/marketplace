@@ -106,18 +106,86 @@ button:focus {
 }
 
 //table
-.main-table {  
-  font-family: $helvetica-roman;
-  font-size: 14px;
-  margin-top: 5px;
+.main-table {
+  padding-top: 1em;
   border: 0 solid #fff;
 }
 
-.permissions-cell {
-  height: 3em;
+.columns-title-cell {
+  font-family: $helvetica-md;
+  font-size: 14px !important;
+  color: #000000 !important;
 }
 
-.formatter-input {
+.columns-rows-cell {
+  position: relative;
+  font-family: $helvetica-roman;
+  font-size: 14px !important;
+  color: $grey-color !important;
+}
+
+.wrapper-permissions {
+  height: 2.10em;
+  min-width: 8.7em;
+  background-color: transparent;
+  border-radius: 3px;
+  outline: none;
+  padding-left: 0.4em;
+  background: no-repeat 90% 50% ;
+  background-image: url("../../images/inv-filter/dropdown.png");
+  background-size: 0.66em;
+  
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.permissions-input {
   font-size: 12px;
   margin-right: 1.5em;
+  background-color: transparent;
+}
+
+.search-input {
+  width: 100px;
+}
+
+.editDelete-btn {
+  width: 100%;
+  background: no-repeat 50% 50%;
+  background-image: url("../../images/data-table/3dots.png");
+  background-size: 1em;
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.editDelete-wrapper:hover .popup-menu {
+  display: block;
+}
+
+.popup-menu {
+  position: absolute;
+  display: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  list-style: none;
+  background-color: #fff;
+  -webkit-box-shadow: 0px 3px 12px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 3px 12px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 3px 12px 0px rgba(0,0,0,0.75);
+  border-radius: 4px;
+  padding: 0;  
+  
+  li {
+    cursor: pointer;
+    padding: 0 1em;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.08);;
+    }
+  }
 }

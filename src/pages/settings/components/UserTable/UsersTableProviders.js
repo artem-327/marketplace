@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import React from 'react';
 
 import { DataTypeProvider } from '@devexpress/dx-react-grid';
 import {
   checkboxFormatter,
   permissionCellFormatter,
   editDeleteCellFormatter
-} from './UserTableFormatters';
+} from './UsersTableFormatters';
 
 export const CheckboxFormatterProvider = props => {
 	return (

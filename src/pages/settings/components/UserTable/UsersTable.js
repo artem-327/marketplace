@@ -1,22 +1,30 @@
-import React, {Component} from 'react';
+import React from 'react';
 
-import { DataTypeProvider, FilteringState, IntegratedFiltering } from '@devexpress/dx-react-grid';
+import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid';
 import {
   Grid,
   Table,
-	TableHeaderRow,
-	TableFilterRow
+	TableHeaderRow
 } from '@devexpress/dx-react-grid-material-ui';
 
 import { 
 	CheckboxFormatterProvider, 
 	PermissionsTypeProvider, 
 	EditDeleteTypeProvider 
-} from './UserTableProviders';
+} from './UsersTableProviders';
 
 function UsersTable(props) {
-	const { columns, rows, checkboxColumns, permissionsColumns, editDeleteColumns } = props;
-	const GridRoot = props => <Grid.Root {...props} className={ "col-xs-10 main-table" } />
+	const GridRoot = props => <Grid.Root {...props} className={ 'col-xs-10 main-table' } />
+	const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
+	const TableCells = props => <Table.Cell {...props} className={ 'columns-rows-cell' } />
+	const { 
+		columns, 
+		rows, 
+		checkboxColumns, 
+		permissionsColumns, 
+		editDeleteColumns, 
+		filterValue 
+	} = props;	
 
 	return (					
 		<Grid
@@ -24,12 +32,16 @@ function UsersTable(props) {
 			rows={ rows }
 			columns={ columns }						
 		>	
-			<FilteringState
-				defaultFilters={[{ columnName: 'homeBranch', value: 'Arizona' }]}
-			/>			
-			<IntegratedFiltering />
-			<TableFilterRow showFilterSelector={ true } />
-
+			<SearchState 
+				value={ filterValue } 
+			/>
+			<IntegratedFiltering />	
+			<Table 
+				cellComponent={ TableCells }
+			/>
+			<TableHeaderRow 
+				cellComponent={ HeaderCells }
+			/>
 			<CheckboxFormatterProvider 
 				for={ checkboxColumns }
 				rows={ rows }
@@ -42,9 +54,6 @@ function UsersTable(props) {
 				for={ editDeleteColumns }
 				rows={ rows }
 			/>
-			<IntegratedFiltering />
-			<Table />
-			<TableHeaderRow />
 		</Grid>		
 	);
 }
