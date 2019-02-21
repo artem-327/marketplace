@@ -8,9 +8,9 @@ import {
 } from '@devexpress/dx-react-grid-material-ui';
 
 import { 
-	CheckboxFormatterProvider, 
-	PermissionsTypeProvider, 
-	EditDeleteTypeProvider 
+	CheckboxFormatterProvider,
+	EditDeleteFormatterProvider,
+	PermissionFormatterProvider
 } from './UsersTableProviders';
 
 function cn(){
@@ -59,11 +59,11 @@ function UsersTable(props) {
 				for={ checkboxColumns }
 				rows={ rows }
 			/>
-			<PermissionsTypeProvider
+			<PermissionFormatterProvider
 				for={ permissionsColumns }
 				rows={ rows }
 			/>
-			<EditDeleteTypeProvider
+			<EditDeleteFormatterProvider
 				for={ editDeleteColumns }
 				rows={ rows }
 			/>

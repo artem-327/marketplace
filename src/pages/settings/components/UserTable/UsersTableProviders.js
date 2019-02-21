@@ -7,38 +7,13 @@ import {
   editDeleteCellFormatter
 } from './UsersTableFormatters';
 
-export const CheckboxFormatterProvider = props => {
-	return (
-		<DataTypeProvider
-			formatterComponent={ checkboxFormatter }			
+const makeFormatterComponent = component => props => (
+	<DataTypeProvider
+			formatterComponent={ component }			
     	{...props}	
 		/>
-	)
-}
+)
 
-export const PermissionsTypeProvider = props => {
-  return (
-		<DataTypeProvider
-			formatterComponent={ permissionCellFormatter }			
-    	{...props}	
-		/>
-	)
-}
-
-export const EditDeleteTypeProvider = props => {
-	return (
-		<DataTypeProvider
-			formatterComponent={ editDeleteCellFormatter }			
-    	{...props}	
-		/>
-	)
-}
-
-// const makeFormatterComponent = formatterComponent => props => (
-// 	<DataTypeProvider
-// 			formatterComponent={ checkboxFormatter }			
-//     	{...props}	
-// 		/>
-// )
-
-// export const CheckboxFormatterProvider = makeFormatterComponent( checkboxFormatter );
+export const CheckboxFormatterProvider = makeFormatterComponent( checkboxFormatter );
+export const EditDeleteFormatterProvider = makeFormatterComponent( editDeleteCellFormatter );
+export const PermissionFormatterProvider = makeFormatterComponent( permissionCellFormatter );
