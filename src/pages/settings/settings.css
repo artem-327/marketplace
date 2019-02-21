@@ -1,4 +1,9 @@
 @import url(../../../src/styles/flexboxgrid.css);
+a {
+  text-decoration: none;
+  color: #000000;
+  list-style: none; }
+
 .capitalize {
   text-transform: capitalize; }
 
@@ -41,28 +46,32 @@ button:focus {
     width: 100%;
     margin-left: 2.5em; }
   .b-search__add-user-btn {
+    cursor: pointer;
     background-color: #2599d5;
     color: #ffffff; }
 
 .tabs-wrapper {
+  display: flex;
   flex-direction: column;
   padding: 30px 0 0;
-  border-right: 2px solid #d0d1d4; }
-  .tabs-wrapper__tabs-btn {
+  height: 100vh;
+  border-right: 2px solid #d0d1d4;
+  list-style: none; }
+  .tabs-wrapper__b-tabs {
     position: relative;
     font-family: "HelveticaNeueLTPro-Roman", sans-serif;
     font-size: 14px;
     line-height: 2.57;
-    border: none;
-    outline: none;
     width: 100%;
     padding: 0;
-    background-color: transparent;
-    color: #000;
-    text-align: left;
+    max-width: 83.33333333%; }
+  .tabs-wrapper .tab-link {
+    display: block;
+    padding: 0 0 0 17px;
+    color: #000000;
     cursor: pointer; }
-  .tabs-wrapper .b-tabs {
-    padding: 0 0 0 17px; }
+    .tabs-wrapper .tab-link:hover {
+      text-decoration: none; }
   .tabs-wrapper .active {
     font-family: "HelveticaNeueLTPro-Md", sans-serif;
     border-left: 4px solid #2599d5;
@@ -96,6 +105,9 @@ button:focus {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none; }
+
+.user-checkbox {
+  float: right; }
 
 .permissions-input {
   font-size: 12px;

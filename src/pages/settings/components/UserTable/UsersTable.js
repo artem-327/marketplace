@@ -13,10 +13,23 @@ import {
 	EditDeleteTypeProvider 
 } from './UsersTableProviders';
 
+function cn(){
+		let res = "";
+		for( let j = 0, len = arguments.length, v; j < len; j++ ){
+			v = arguments[ j ];	
+			if( v ){
+				res += " " + v;
+			}
+		}
+		return res.trim();
+}
+
+const GridRoot = props => <Grid.Root {...props} className={cn(props.className,'col-xs-10 main-table')} />
+const HeaderCells = props => <TableHeaderRow.Cell {...props} className={cn(props.className,'columns-title-cell')} />
+const TableCells = props => <Table.Cell {...props} className={cn(props.className,'columns-rows-cell')} />
+
 function UsersTable(props) {
-	const GridRoot = props => <Grid.Root {...props} className={ 'col-xs-10 main-table' } />
-	const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
-	const TableCells = props => <Table.Cell {...props} className={ 'columns-rows-cell' } />
+	
 	const { 
 		columns, 
 		rows, 

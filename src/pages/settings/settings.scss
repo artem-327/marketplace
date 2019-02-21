@@ -4,6 +4,12 @@
 
 // helpers
 
+a {
+  text-decoration: none;
+  color: #000000;
+  list-style: none;
+}
+
 .capitalize {
   text-transform: capitalize;
 }
@@ -66,6 +72,7 @@ button:focus {
   }
 
   &__add-user-btn {
+    cursor: pointer;
     background-color: $blue-color;
     color: $white-color;
   }
@@ -75,27 +82,32 @@ button:focus {
 
 //tabs
 .tabs-wrapper {
+  display: flex;
   flex-direction: column;
   padding: 30px 0 0;
+  height: 100vh;
   border-right: 2px solid $light-50-grey-color;
+  list-style: none;
 
-  &__tabs-btn {
+  &__b-tabs {
     position: relative;
     font-family: $helvetica-roman;
     font-size: 14px;
     line-height: 2.57;
-    border: none;
-    outline: none;   
     width: 100%;
     padding: 0;
-    background-color: transparent;
-    color: #000;
-    text-align: left;
-    cursor: pointer;   
+    max-width: 83.33333333%;    
   }
 
-  .b-tabs {    
+  .tab-link {
+    display: block;
     padding: 0 0 0 17px;
+    color: #000000;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: none;
+    }
   }
 
   .active {    
@@ -138,6 +150,10 @@ button:focus {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+}
+
+.user-checkbox {
+  float: right;
 }
 
 .permissions-input {

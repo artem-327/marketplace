@@ -1,32 +1,38 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
+import UsersTable from './UserTable/UsersTable';
 
 function Tabs(props) {
   const { tabsNames, handleActiveTab, currentTab } = props;
   
   return (					
-    <div className="tabs-wrapper col-xs-2 center-xs">
+    <ul className="tabs-wrapper col-xs-2 middle-xs">
       { tabsNames.map(tab => {
           return (
-            <button
-              key={ tab }
-              className="tabs-wrapper__tabs-btn uppercase col-xs-10" 
-              data-tab-name={ tab } 
-              onClick={handleActiveTab}
+            <li
+              key={ tab.link }
+              className="tabs-wrapper__b-tabs uppercase"               
+              onClick={ handleActiveTab }
             >	
             {
-            currentTab === tab ?	
-              <div className="b-tabs active" data-tab-name={ tab }>
-                { tab }
-              </div> :
-              <div className="b-tabs" data-tab-name={ tab }>
-                { tab }
-              </div>
+            currentTab === tab.name ?	
+              <a className="tab-link active"
+                data-tab-name={ tab.name } 
+              >
+                { tab.name }
+              </a> :
+              <a className="tab-link" 
+                data-tab-name={ tab.name }
+              >
+                { tab.name }
+              </a>
             }		
-            </button>
+            </li>
           )								
         })
       }
-    </div>
+    </ul>
   );
 }
 

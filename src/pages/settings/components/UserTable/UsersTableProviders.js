@@ -33,3 +33,12 @@ export const EditDeleteTypeProvider = props => {
 		/>
 	)
 }
+
+// const makeFormatterComponent = formatterComponent => props => (
+// 	<DataTypeProvider
+// 			formatterComponent={ checkboxFormatter }			
+//     	{...props}	
+// 		/>
+// )
+
+// export const CheckboxFormatterProvider = makeFormatterComponent( checkboxFormatter );

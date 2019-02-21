@@ -6,16 +6,20 @@ export const checkboxFormatter = props => {
 	return (
 		<Checkbox 
 			color="default" 
-			value="checkedG" 
+			value="checkedG"
+			className="user-checkbox"
 		/>
 	)
 }
 
-export const permissionCellFormatter = ({ value }) => {
-	const permissions = [ 'Admin', 'Default user', 'Super Admin' ];
+export const permissionCellFormatter = ( ({ value }) => {
+	const permissions = [ 'Admin', 'User', 'Super Admin' ];
 
 	return (		
-		<select className={ 'wrapper-permissions' }>
+		<select 
+			className={ 'wrapper-permissions' }
+			defaultValue={ 'User' }
+		>
 			{permissions.map(option => (
 				<option 
 					key={ option } 
@@ -27,11 +31,10 @@ export const permissionCellFormatter = ({ value }) => {
 			))}
 		</select>	
 	)
-};
+});
 
 export const editDeleteCellFormatter = props => {
 	const options = ['Edit', 'Delete'];
-	let open = false;
 
 	return (
 		<div className="editDelete-wrapper">

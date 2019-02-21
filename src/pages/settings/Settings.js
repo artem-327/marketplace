@@ -1,5 +1,6 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import PropTypes from "prop-types";
 
@@ -8,44 +9,65 @@ import './settings.css';
 import { DataTypeProvider } from '@devexpress/dx-react-grid';
 import Paper from '@material-ui/core/Paper';
 
-import Api from '../../api/users';
 import unitedStates from '../../../src/components/unitedStates';
 import Tabs from './components/Tabs';
 import UsersTable from './components/UserTable/UsersTable';
-import UsersTableHandlers from './components/UserTable/UsersTableHandlers';
+import WarehouseTable from './components/WarehouseTable/WarehouseTable';
+import TablesHandlers from './components/TablesHandlers';
+import Users from '../administration/users/Users';
+import { withAuth } from '../../utils/auth';
+import usersReq from '../../api/users';
+import warehousesReq from '../../api/branches';
 
 class Settings extends Component {
-	constructor(props) {
-		super(props);
+	
+	state = {
+		usersColumns: [
+			{ name: 'checkbox', title: ' '},
+			{ name: 'userName', title: 'User Name' },
+			{ name: 'title', title: 'Title' },
+			{ name: 'email', title: 'E-mail' },
+			{ name: 'phone', title: 'Phone' },
+			{ name: 'homeBranch', title: 'Home Branch'},
+			{ name: 'permissions', title: 'Permissions' },
+			{ name: 'editDeleteBtn', title: ' ' }
+		],
+		usersRows: [],
+		warehouseColumns: [
+			{ name: 'warehouseName', title: 'Warehouse Name'},
+			{ name: 'address', title: 'Adress' },
+			{ name: 'contactName', title: 'Contact name' },
+			{ name: 'phone', title: 'Phone' },
+			{ name: 'email', title: 'E-mail' }
+		],
+		warehousesRows: [],
+		checkboxColumns: ['checkbox'],
+		permissionsColumns: ['permissions'],
+		editDeleteColumns: ['editDeleteBtn'],
+		tabsNames: [
+			{	name: 'Users', link: 'users', component: <UsersTable />}, 
+			{	name: 'Branches', link: 'branches'	}, 
+			{	name: 'Warehouses', link: 'warehouses'	}, 
+			{	name: 'Product catalog', link: 'productCatalog'}, 
+			{	name: 'Price list', link: 'priceList'	}, 
+			{	name: 'Client list', link: 'clientList'	}, 
+			{	name: 'Payment methods', link: 'paymentMethods'	}, 
+			{	name: 'Tax manager', link: 'taxManager'	}, 
+			{	name: 'Terms', link: 'terms'	}, 
+			{	name: 'Website Controls', link: 'websiteControls'	}],
+		filterFieldSelectValues: unitedStates,
+		filterFieldCurrentValue: 'None',
+		currentTab: 'Users',
+		filterValue: ''
+	}
 
-		this.state = {
-			columns: [
-				{ name: 'checkbox', title: ' '},
-				{ name: 'userName', title: 'User Name' },
-				{ name: 'title', title: 'Title' },
-				{ name: 'email', title: 'E-mail' },
-				{ name: 'phone', title: 'Phone' },
-				{ name: 'homeBranch', title: 'Home Branch'},
-				{ name: 'permissions', title: 'Permissions' },
-				{ name: 'editDeleteBtn', title: ' ' },
-			],
-			rows: [
-				{ checkbox: ' ', userName: "Female", title: "V.P Operations", email: "lis@gmail.com", phone: "+32456", homeBranch: 'Arizona', permissions: 'Admin' },
-				{ checkbox: ' ', userName: "Male", title: "Sales Executive", email: "den@gmail.com", phone: "+123456", homeBranch: 'Arizona', permissions: 'Super Admin' }
-			],
-			checkboxColumns: ['checkbox'],
-			permissionsColumns: ['permissions'],
-			editDeleteColumns: ['editDeleteBtn'],
-			tabsNames: ['Users', 'Branches', 'Warehouses', 'Product catalog', 'Price list', 'Client list', 'Payment methods', 'Tax manager', 'Terms', 'Website Controls'],
-			tabsValue: 0,
-			filterFieldSelectValues: unitedStates,
-			filterFieldCurrentValue: unitedStates[0].name,
-			currentTab: 'Users',
-			filterValue: ' '
-		}
-	};
 
-	filtersHandler = ( value ) => {		
+	componentDidMount() {
+		this.setStateWarehouses();
+		this.setUsersToState();
+	}
+
+	filtersHandler = value => {		
 		this.setState({ 
 			filterValue: value 
 		});
@@ -70,6 +92,47 @@ class Settings extends Component {
 		});
 	};
 
+	setStateWarehouses = () => {
+		warehousesReq.getWarehouses().then(res => {
+			let warehousesRows = res.map(warehouse => {				
+				return (
+					{
+						warehouseName: warehouse.company.name,
+						address: warehouse.address.streetAddress + ' ' + warehouse.address.city,
+						contactName: warehouse.contact.name,
+						phone: warehouse.contact.phone,
+						email: warehouse.contact.email
+					}
+				)			
+			});
+
+			this.setState({
+				warehousesRows
+			})
+		})
+	}
+
+	setUsersToState = () => {
+		usersReq.getUsers().then(res => {
+			let usersRows = res.map(user => {				
+				return (
+					{
+						checkbox: ' ',
+						userName: user.firstname + ' ' + user.lastname,
+						title: 'title' ,
+						email: user.email,
+						phone: 'phone',
+						homeBranch: user.branch.address.province.name,
+						permissions: user.roles.name
+					}
+				)			
+			});
+
+			this.setState({
+				usersRows
+			})
+		})
+	}
 	
 	render() {
 		const {
@@ -77,12 +140,14 @@ class Settings extends Component {
 			filterFieldCurrentValue,
 			currentTab, 
 			tabsNames, 			
-			columns, 
-			rows, 
+			usersColumns, 
+			usersRows, 
 			permissionsColumns,
 			editDeleteColumns,
 			checkboxColumns,
-			filterValue
+			filterValue,
+			warehouseColumns,
+			warehousesRows
 		} = this.state;
 		
 		return (
@@ -90,11 +155,12 @@ class Settings extends Component {
 				<div className="b-for-shadow">
 					<div className="b-wrapper row between-xs container-fluid">
 						<span className="uppercase page-title col-xs-3">User settings</span>
-						<UsersTableHandlers 
+						<TablesHandlers 
 							filterFieldSelectValues={ filterFieldSelectValues }
 							filterFieldCurrentValue={ filterFieldCurrentValue }
 							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
 							filtersHandler={ this.filtersHandler }
+							currentTab={ currentTab }
 						/>
 					</div>
 				</div>
@@ -104,14 +170,22 @@ class Settings extends Component {
 						tabsNames={ tabsNames } 
 						handleActiveTab={ this.handleActiveTab }
 					/>
+					{ currentTab === 'Users' ?
 					<UsersTable
-						columns={ columns }
-						rows={ rows }
+						columns={ usersColumns }
+						rows={ usersRows }
 						permissionsColumns={ permissionsColumns}
 						editDeleteColumns={ editDeleteColumns }
 						checkboxColumns={ checkboxColumns }
 						filterValue={ filterValue }
-					/>		
+					/>
+					:
+					<WarehouseTable 
+						columns={ warehouseColumns }
+						rows={ warehousesRows }
+						filterValue={ filterValue }
+					/>
+					}
 				</div>
 			</main>
 		);
