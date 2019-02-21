@@ -10,6 +10,11 @@ export default class ProductMapping extends Component {
     
     constructor(props){
         super(props);
+
+        this.state = {
+            'packagingType': (props.productOffer.packaging && props.productOffer.packaging.unit.measureType ? props.productOffer.packaging.unit.measureType : null),
+            'measurementType': null
+        }
     }
 
     componentDidMount(){
@@ -37,6 +42,52 @@ export default class ProductMapping extends Component {
         setTimeout(function(){
             this.props.setSavedMappingToFalse();
         }.bind(this),1000);
+    }
+
+    selectedMeasurementUnit(value) {
+        if (this.state && this.state.measurementType)
+            return
+
+        for (let j = 0; j < this.props.unitOfMeasurement.length; j++) {
+            if (this.props.unitOfMeasurement[j].id === value) {
+                this.setState({
+                    'packagingType': this.props.unitOfMeasurement[j].measureType
+                })
+            }
+        }
+    }
+
+    selectedPackagingUnit(value) {
+        if (this.state && this.state.packagingType)
+            return
+
+        for (let j = 0; j < this.props.unitOfPackaging.length; j++) {
+            if (this.props.unitOfPackaging[j].id === value) {
+                this.setState({
+                    'measurementType': this.props.unitOfPackaging[j].measureType
+                })
+            }
+        }
+    }
+
+    getMeasurementUnits() {
+        let type = this.state && this.state.measurementType ? this.state.measurementType : null
+        if (!type)
+            return this.props.unitOfMeasurement
+
+        return this.props.unitOfMeasurement.filter((unit) => {
+            return (unit.measureType === type)
+        })
+    }
+
+    getPackagingUnits() {
+        let type = this.state && this.state.packagingType ? this.state.packagingType : null
+        if (!type)
+            return this.props.unitOfPackaging
+
+        return this.props.unitOfPackaging.filter((unit) => {
+            return (unit.measureType === type)
+        })
     }
 
     render() {
@@ -190,10 +241,11 @@ export default class ProductMapping extends Component {
                                 defaultMessage='U/M'
                             />
                         </label>
-                        <DropdownRedux opns={this.props.unitOfMeasurement} placeholder='Select'
+                        <DropdownRedux opns={this.getMeasurementUnits()} placeholder='Select'
                                        model="forms.productMapping.packaging.unit"
                                        validators={{required}}
                                        dispatch={this.props.dispatch}
+                                       onChange={(value)=>this.selectedMeasurementUnit(value)}
                                        //defaultValue=""
                                        />
                     </div>
@@ -212,10 +264,11 @@ export default class ProductMapping extends Component {
                                 defaultMessage='U/P'
                             />
                         </label>
-                        <DropdownRedux opns={this.props.unitOfPackaging} placeholder='Select'
+                        <DropdownRedux opns={this.getPackagingUnits()} placeholder='Select'
                                        model="forms.productMapping.packaging.packagingType"
                                        dispatch={this.props.dispatch}
                                        validators={{required}}
+                                       onChange={(value)=>this.selectedPackagingUnit(value)}
                                        />
                     </div>
                     {!this.props.edit ?

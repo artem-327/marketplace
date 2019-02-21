@@ -139,7 +139,7 @@ class ProductOffering extends Component {
                     <div>
                         <div className='group-item-wr'>
                             <RemoteComboBoxRedux
-                                items={this.props.manufacturer}
+                                items={this.props.manufacturer ? this.props.manufacturer : []}
                                 api={(text) => this.fetchManufacturer(text)}
                                 dataFetched={this.props.manufacturerFetched}
                                 currentValue={this.props.edit && !this.props.isFetchingManufacturer && !this.state.manufacturerSearched ? manufacturerName : null}
@@ -162,7 +162,7 @@ class ProductOffering extends Component {
 
                         <div className='group-item-wr'>
                             <RemoteComboBoxRedux
-                                items={this.props.originData}
+                                items={this.props.originData ? this.props.originData : []}
                                 dataFetched={this.props.originFetched}
                                 api={(text) => this.fetchOrigin(text)}
                                 className="origin"
