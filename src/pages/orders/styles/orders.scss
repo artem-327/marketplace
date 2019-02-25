@@ -5,8 +5,15 @@
   background-color: #fff;
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.25);
 
+  &:after {
+    content: "";
+    clear: both;
+    display: block;
+  }
+
   .quick-filter {
     list-style: none;
+    float: left;
     display: flex;
     flex-flow: row nowrap;
     margin: 8px 0 0;
@@ -77,6 +84,7 @@ i {
   }
 
   thead th {
+    position: relative;
     height: 50px;
     padding: 0 15px;
     background-color: #fafafa;
@@ -84,14 +92,36 @@ i {
     font-family: $helvetica-md;
     font-weight: 400;
     line-height: 17px;
+
+    .fix-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50px;
+      padding: 0 15px;
+      background: #fafafa;
+      line-height: 50px;
+    }
   }
 
-  tbody td {
-    height: 35px;
-    border-bottom: 2px solid #eee;
-    padding: 0 15px;
-    vertical-align: middle;
-    font-family: $helvetica-roman;
+  tbody {
+
+    > tr {
+
+      > td {
+        height: 35px;
+        border-bottom: 2px solid #eee;
+        padding: 0 15px;
+        vertical-align: middle;
+        font-family: $helvetica-roman;
+        cursor: pointer;
+      }
+
+      &:hover > td {
+        background-color: #e0eff4;
+      }
+    }
   }
 }
 

@@ -15,6 +15,11 @@ export const initialState = {
     isOpen: false,
     data: {},
     filterGroup: {
+        orderId: true,
+        orderDate: true,
+        customer: false,
+        product: false,
+        orderStatus: false,
         chemName: true,
         quantity: true,
         price: true,

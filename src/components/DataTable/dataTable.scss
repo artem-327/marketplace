@@ -12,6 +12,10 @@
   overflow-y: visible;
   padding: 0;
 
+  &.orders {
+    top: 193px;
+  }
+
   .scrollbar-container {
     position: relative;
     overflow: hidden;

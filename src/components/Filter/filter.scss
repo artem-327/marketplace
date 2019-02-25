@@ -135,7 +135,7 @@ $font-family: 'Cabin', sans-serif;
       }
     }
     .filter-input-dropdown {
-      height: 240px;
+      height: auto;
       margin-left: 12px;
       width: 380px;
       p {
@@ -157,6 +157,14 @@ $font-family: 'Cabin', sans-serif;
           margin: 0;
           vertical-align: top;
         }
+      }
+    }
+    .half {
+      float: left;
+      width: 50%;
+
+      + * {
+        width: 50%;
       }
     }
   }

@@ -2,8 +2,13 @@
   margin: 0 -29px;
   background-color: #fff;
   box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.25); }
+  .top-toolbar:after {
+    content: "";
+    clear: both;
+    display: block; }
   .top-toolbar .quick-filter {
     list-style: none;
+    float: left;
     display: flex;
     flex-flow: row nowrap;
     margin: 8px 0 0;
@@ -53,6 +58,7 @@ i {
   #saleOrdersTable .a-right {
     text-align: right; }
   #saleOrdersTable thead th {
+    position: relative;
     height: 50px;
     padding: 0 15px;
     background-color: #fafafa;
@@ -60,12 +66,24 @@ i {
     font-family: "HelveticaNeueLTPro-Md", sans-serif;
     font-weight: 400;
     line-height: 17px; }
-  #saleOrdersTable tbody td {
+    #saleOrdersTable thead th .fix-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50px;
+      padding: 0 15px;
+      background: #fafafa;
+      line-height: 50px; }
+  #saleOrdersTable tbody > tr > td {
     height: 35px;
     border-bottom: 2px solid #eee;
     padding: 0 15px;
     vertical-align: middle;
-    font-family: "HelveticaNeueLTPro-Roman", sans-serif; }
+    font-family: "HelveticaNeueLTPro-Roman", sans-serif;
+    cursor: pointer; }
+  #saleOrdersTable tbody > tr:hover > td {
+    background-color: #e0eff4; }
 
 .order-statuses {
   list-style: none;

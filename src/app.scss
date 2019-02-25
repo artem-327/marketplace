@@ -61,6 +61,55 @@
   color: #33373e;
   line-height: 32px;
 }
+.header-top,
+.top-toolbar {
+
+  .submenu {
+    float: right;
+    height: 55px;
+    margin: -10px 0 -13px;
+
+    .submenu-filter {
+      position: relative;
+      top: auto;
+      right: auto;
+      transition: border 125ms linear 0ms, padding 125ms linear 0ms, width 250ms linear 125ms, margin 250ms linear 125ms;
+      overflow: hidden;
+      width: 34px;
+      height: 55px;
+      margin: 0 29px 0 0;
+      padding-top: 14px;
+      padding-bottom: 18px;
+      text-align: left;
+      text-indent: 42px;
+
+      img {
+        position: absolute;
+        left: 6px;
+      }
+
+      &.opened {
+        transition: border 125ms linear 250ms, padding 125ms linear 250ms, width 250ms linear 0ms, margin 250ms linear 0ms;
+        width: 120px;
+        margin-right: 0;
+        border-bottom: 3px double #2392cb;
+        padding-bottom: 15px;
+      }
+    }
+
+    .link {
+      margin-right: 29px;
+      height: 55px;
+      line-height: 35px;
+    }
+  }
+}
+
+.top-toolbar .submenu {
+  height: 55px;
+  margin: 0 0 -3px;
+}
+
 .header-top {
   display: block;
   min-height: 52px;
@@ -110,46 +159,6 @@
     letter-spacing: 0.2px;
     color: #979797;
     line-height: normal;
-  }
-
-  .submenu {
-    float: right;
-    height: 55px;
-    margin: -10px 0 -13px;
-
-    .submenu-filter {
-      position: relative;
-      top: auto;
-      right: auto;
-      transition: border 125ms linear 0ms, padding 125ms linear 0ms, width 250ms linear 125ms, margin 250ms linear 125ms;
-      overflow: hidden;
-      width: 34px;
-      height: 55px;
-      margin: 0 29px 0 0;
-      padding-top: 14px;
-      padding-bottom: 18px;
-      text-align: left;
-      text-indent: 42px;
-
-      img {
-        position: absolute;
-        left: 6px;
-      }
-
-      &.opened {
-        transition: border 125ms linear 250ms, padding 125ms linear 250ms, width 250ms linear 0ms, margin 250ms linear 0ms;
-        width: 120px;
-        margin-right: 0;
-        border-bottom: 3px double #2392cb;
-        padding-bottom: 15px;
-      }
-    }
-
-    .link {
-      margin-right: 29px;
-      height: 55px;
-      line-height: 35px;
-    }
   }
 
   .filterTags {

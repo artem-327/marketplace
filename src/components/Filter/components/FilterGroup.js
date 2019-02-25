@@ -89,6 +89,7 @@ class FilterGroup extends Component {
                                         dispatch={this.props.dispatch}
                                         model={input.model}
                                         opns={input.data}
+                                        currentValue={input.filterValue}
                                     />
                                 </div>
                             )
@@ -253,6 +254,7 @@ FilterGroup.propTypes = {
             placeholder: PropTypes.string,
             model: PropTypes.string.isRequired,
             type: PropTypes.string.isRequired,
+            filterValue: PropTypes.string
         })
     ),
     split: PropTypes.bool,

@@ -32,7 +32,10 @@ function mapStateToProps(state, ownProps) {
         orders.data = []
     }
     return {
+        endpointType: ownProps.match.params.type === 'sales' ? 'sale' : ownProps.match.params.type,
         ...orders,
+        isOpen: state.isOpen,
+        filterData: state.forms.filter,
         rows: transformToRows(orders.data, ownProps.match.params.type),
         activeStatus: orders.statusFilter
     }

@@ -136,6 +136,88 @@ class Filter extends Component {
                     onSubmit={(val) => this.handleSubmit(val)}>
                         <PerfectScrollbar>
                             <FilterGroup className="filterGroup"
+                                         header='order'
+                                         isVisible={!!this.props.orderId}
+                                         data={this.props.filterData}
+                                         isOpen={this.props.filterGroupStatus.orderId}
+                                         onOpen={(value)=>{this.props.toggleFilterGroup('orderId', value)}}
+                                         inputs={[
+                                             {
+                                                 label: 'orderId',
+                                                 model: '.orderId',
+                                                 type: 'text'
+                                             }
+                                         ]}/>
+                            <FilterGroup className="filterGroup"
+                                         header='orderDate'
+                                         isVisible={!!this.props.orderDate}
+                                         data={this.props.filterData}
+                                         isOpen={this.props.filterGroupStatus.orderDate}
+                                         onOpen={(value)=>{this.props.toggleFilterGroup('orderDate', value)}}
+                                         split
+                                         inputs={[
+                                             {
+                                                 label: 'orderFrom',
+                                                 model: '.orderFrom',
+                                                 type: 'date'
+                                             }, {
+                                                 label: 'orderTo',
+                                                 model: '.orderTo',
+                                                 type: 'date'
+                                             }
+                                         ]}/>
+                            <FilterGroup className="filterGroup"
+                                         header='customer'
+                                         isVisible={!!this.props.customer}
+                                         data={this.props.filterData}
+                                         isOpen={this.props.filterGroupStatus.customer}
+                                         onOpen={(value)=>{this.props.toggleFilterGroup('customer', value)}}
+                                         inputs={[
+                                             {
+                                                 label: 'customerName',
+                                                 model: '.customer',
+                                                 type: 'text'
+                                             }
+                                         ]}/>
+                            <FilterGroup className="filterGroup"
+                                         header='product'
+                                         isVisible={!!this.props.product}
+                                         data={this.props.filterData}
+                                         isOpen={this.props.filterGroupStatus.product}
+                                         onOpen={(value)=>{this.props.toggleFilterGroup('product', value)}}
+                                         inputs={[
+                                             {
+                                                 label: 'productName',
+                                                 model: '.product',
+                                                 type: 'text'
+                                             }
+                                         ]}/>
+                            <FilterGroup className="filterGroup"
+                                         header='orderStatus'
+                                         isVisible={!!this.props.orderStatus}
+                                         data={this.props.filterData}
+                                         isOpen={this.props.filterGroupStatus.orderStatus}
+                                         onOpen={(value)=>{this.props.toggleFilterGroup('orderStatus', value)}}
+                                         dispatch={this.props.dispatch}
+                                         inputs={[
+                                             {
+                                                 label: 'orderStatus',
+                                                 model: '.status',
+                                                 type: 'dropdown',
+                                                 data: [
+                                                     {id: 'All', name: 'All'},
+                                                     {id: 'Pending', name: 'Pending'},
+                                                     {id: 'In Transit', name: 'In Transit'},
+                                                     {id: 'Review', name: 'Review'},
+                                                     {id: 'Credit', name: 'Credit'},
+                                                     {id: 'Completed', name: 'Completed'},
+                                                     {id: 'Returned', name: 'Returned'},
+                                                     {id: 'Declined', name: 'Declined'}
+                                                 ],
+                                                 filterValue: this.props.orderStatus && this.props.orderStatus.filterValue ? this.props.orderStatus.filterValue : null
+                                             }
+                                         ]}/>
+                            <FilterGroup className="filterGroup"
                                          header='chemicalType'
                                          isVisible={!!this.props.chemicalName}
                                          data={this.props.filterData}
