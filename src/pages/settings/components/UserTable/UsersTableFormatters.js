@@ -34,20 +34,20 @@ export const permissionCellFormatter = ( ({ value }) => {
 });
 
 export const editDeleteCellFormatter = props => {
-	const options = ['Edit', 'Delete'];
 
 	return (
 		<div className="editDelete-wrapper">
 			<button className="editDelete-btn" />
-			<ul className="popup-menu">
-				{options.map(option => (
-				<li
-					key={ option }
-				>
-					{ option }
-				</li>
-				))}
-			</ul>
+			<div className="handlers-row-menu">
+				<input 
+					value={'Edit'}
+					className="handlers-row-menu__btn"
+				/>
+				<input 
+					value={'Delete'}
+					className="handlers-row-menu__btn"
+				/>
+			</div>
 		</div>		
 	);
 }

@@ -1,0 +1,2 @@
+export const EDIT_POPUP = 'EDIT_POPUP';
+export const SUBMIT_EDIT_POPUP = 'SUBMIT_EDIT_POPUP';

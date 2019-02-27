@@ -10,6 +10,10 @@ a {
   list-style: none;
 }
 
+li {
+  list-style: none; 
+}
+
 .capitalize {
   text-transform: capitalize;
 }
@@ -19,9 +23,14 @@ a {
 }
 
 button,
-button:focus {
+button:focus,
+input {
   border: none;
   outline: none !important;
+}
+
+.hide {
+  display: none !important;
 }
 
 // main
@@ -29,6 +38,7 @@ button:focus {
 // filter block
 .b-for-shadow {
   box-shadow: 0px 2px 5px 0px rgba(102,93,102,1);
+  margin-bottom: 5px;
 }
 
 .b-wrapper {
@@ -178,17 +188,17 @@ button:focus {
   transform: rotate(90deg);
 }
 
-.editDelete-wrapper:hover .popup-menu {
-  display: block;
+.editDelete-wrapper:hover .handlers-row-menu {
+  display: flex;
 }
 
-.popup-menu {
+.handlers-row-menu {
   position: absolute;
   display: none;
+  flex-direction: column;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  list-style: none;
   background-color: #fff;
   -webkit-box-shadow: 0px 3px 12px 0px rgba(0,0,0,0.75);
   -moz-box-shadow: 0px 3px 12px 0px rgba(0,0,0,0.75);
@@ -196,12 +206,91 @@ button:focus {
   border-radius: 4px;
   padding: 0;  
   
-  li {
+  &__btn {
     cursor: pointer;
+    width: 5em;
     padding: 0 1em;
+    border: none;
+    background: transparent;
+    color: #000000;
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.08);;
+      background-color: rgba(0, 0, 0, 0.08);
     }
   }
+}
+
+//popup
+.popup-wrapper {
+  display: flex;
+  width: 100%;
+  background-color: #d8d8d8;
+}
+
+.b-popup {
+  height: 75%;
+  background-color: #ffffff;
+  padding: 2.12em 2.12em 0 2.12em;
+  text-align: start; 
+
+  h2 {
+    font-size: 16px;
+    font-family: $helvetica-md;
+    margin-bottom: 2.12em;
+  }
+
+  ul {
+    padding: 0;
+  }
+
+  .buttons-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    font-family: $helvetica-md;
+    font-size: 16px;
+  }
+}
+
+.inputs-wrapper {
+  display: flex;
+  width: 58%;
+
+  .email {
+    flex: 2;
+  }
+
+  .phone {
+    flex: 1;
+  }
+
+  .cancel-popup-btn {
+    font-family: $helvetica-md;
+    font-size: 16px !important;
+    width: 7em;
+    background-color: $light-50-grey-color;
+    cursor: pointer;
+  }
+
+  .submit-popup-btn {
+    font-family: $helvetica-md;
+    font-size: 16px;
+    width: 8.75em;
+    flex: 0 1 auto;
+    margin-left: 1.25em;
+    cursor: pointer;
+  }
+}
+
+.warehouse-label {
+  display: inline-block;
+  margin: 0 1.5em 1.18em 0;
+  font-size: 12px;  
+}
+
+.warehouse-input {
+  display: block;
+  border-radius: 3px;
+  border: 1px solid $light-50-grey-color;
+  width: 100%;
 }

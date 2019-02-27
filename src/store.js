@@ -25,6 +25,7 @@ import products, {initialState as productsInit} from './modules/products'
 import location from './modules/location'
 import errors from "./modules/errors"
 import dataTables from "./modules/dataTables"
+import settings from './modules/settings'
 
 import {show as saveFilterItem} from './components/Filter/components/SavedFilters/reducers/SaveFilterItem.reducers'
 import companiesSaga from "./saga/companies"
@@ -37,6 +38,7 @@ import locationsSaga from "./saga/locations"
 import broadcastSaga from "./saga/broadcast"
 import productOffersSaga from "./saga/productOffers"
 import shippingQuotesSaga from "./saga/shippingQuotes"
+import settingsSaga from "./saga/settingsSaga"
 
 // Orders
 import ordersReducers from './pages/orders/reducers'
@@ -72,7 +74,11 @@ const reducer = combineReducers({
         merchants: merchantsInit,
         cart: cartInit,
         shippingEdit: {},
+        settingsEdit: {
+            name: ""
+        }
     }, 'forms'),
+    settings
 })
 
 const logger = createLogger({
@@ -111,3 +117,4 @@ sagaMiddleware.run(broadcastSaga)
 sagaMiddleware.run(productOffersSaga)
 sagaMiddleware.run(shippingQuotesSaga)
 sagaMiddleware.run(ordersSaga)
+sagaMiddleware.run(settingsSaga)

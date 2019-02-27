@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Provider } from 'react-redux';
 import { connect } from 'react-redux';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
@@ -13,11 +14,13 @@ import unitedStates from '../../../src/components/unitedStates';
 import Tabs from './components/Tabs';
 import UsersTable from './components/UserTable/UsersTable';
 import WarehouseTable from './components/WarehouseTable/WarehouseTable';
+import PopupForm from './components/editPopup/popupForm'
 import TablesHandlers from './components/TablesHandlers';
 import Users from '../administration/users/Users';
 import { withAuth } from '../../utils/auth';
 import usersReq from '../../api/users';
 import warehousesReq from '../../api/branches';
+import api from '../../api/users';
 
 class Settings extends Component {
 	
@@ -38,7 +41,8 @@ class Settings extends Component {
 			{ name: 'address', title: 'Adress' },
 			{ name: 'contactName', title: 'Contact name' },
 			{ name: 'phone', title: 'Phone' },
-			{ name: 'email', title: 'E-mail' }
+			{ name: 'email', title: 'E-mail' },
+			{ name: 'editDeleteBtn', title: ' ' }
 		],
 		warehousesRows: [],
 		checkboxColumns: ['checkbox'],
@@ -57,12 +61,12 @@ class Settings extends Component {
 			{	name: 'Website Controls' }],
 		filterFieldSelectValues: unitedStates,
 		filterFieldCurrentValue: 'None',
-		currentTab: 'Users',
+		currentTab: 'Warehouses',
 		filterValue: ''
 	}
 
 
-	componentDidMount() {
+	componentDidMount() {		
 		this.setStateWarehouses();
 		this.setUsersToState();
 	}
@@ -80,7 +84,8 @@ class Settings extends Component {
 	};
 
 	handleActiveTab = event => {
-		const target = event.target;
+		
+		const target = event.target
 		this.setState({
 			currentTab: target.getAttribute('data-tab-name')
 		});
@@ -94,17 +99,21 @@ class Settings extends Component {
 
 	setStateWarehouses = () => {
 		warehousesReq.getWarehouses().then(res => {
-			let warehousesRows = res.map(warehouse => {				
+			let warehousesRows = res.map(warehouse => {
+				console.log(warehouse, 12312)			
 				return (
 					{
 						warehouseName: warehouse.company.name,
-						address: warehouse.address.streetAddress + ' ' + warehouse.address.city,
+						address: warehouse.address.streetAddress + ', ' + warehouse.address.city,
 						contactName: warehouse.contact.name,
 						phone: warehouse.contact.phone,
-						email: warehouse.contact.email
+						email: warehouse.contact.email,
+						branchId: warehouse.id
 					}
 				)			
 			});
+
+			console.log(res, 'res')
 
 			this.setState({
 				warehousesRows
@@ -147,9 +156,13 @@ class Settings extends Component {
 			checkboxColumns,
 			filterValue,
 			warehouseColumns,
-			warehousesRows
+			warehousesRows			
 		} = this.state;
-		
+
+		const { 
+			editWarehousePopup
+		} = this.props;
+
 		return (
 			<main>
 				<div className="b-for-shadow">
@@ -160,7 +173,7 @@ class Settings extends Component {
 							filterFieldCurrentValue={ filterFieldCurrentValue }
 							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
 							filtersHandler={ this.filtersHandler }
-							currentTab={ currentTab }
+							currentTab={ currentTab }							
 						/>
 					</div>
 				</div>
@@ -170,6 +183,12 @@ class Settings extends Component {
 						tabsNames={ tabsNames } 
 						handleActiveTab={ this.handleActiveTab }
 					/>
+					{ editWarehousePopup ? 
+					<PopupForm 
+						hideEditPopup={ this.hideEditPopup }
+					/>
+					: null
+					}
 					{ currentTab === 'Users' ?
 					<UsersTable
 						columns={ usersColumns }
@@ -184,6 +203,8 @@ class Settings extends Component {
 						columns={ warehouseColumns }
 						rows={ warehousesRows }
 						filterValue={ filterValue }
+						editDeleteColumns={ editDeleteColumns }
+						popupStatus={ editWarehousePopup }
 					/>
 					}
 				</div>
@@ -192,4 +213,10 @@ class Settings extends Component {
 	}
 }
 
-export default connect()(Settings);
+const mapStateToProps = store => {
+  return {
+		editWarehousePopup: store.settings.editWarehousePopup
+  }
+}
+
+export default connect(mapStateToProps, null)(Settings);
