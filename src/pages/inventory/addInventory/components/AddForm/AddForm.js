@@ -100,6 +100,7 @@ export default class AddForm extends Component {
         let params = Object.assign({}, inputs, {
             ...this.props.mappingForm,
             ...this.props.productOfferingForm,
+            productGrades: [{id: this.props.productOfferingForm.productGrade}],
             anonymous: false,
             assayMin: parseInt(this.props.productOfferingForm.assayMin),
             assayMax: parseInt(this.props.productOfferingForm.assayMax),
@@ -216,6 +217,7 @@ export default class AddForm extends Component {
         let params = Object.assign({}, inputs, {
             ...this.props.mappingForm,
             ...this.props.productOfferingForm,
+            productGrades: [{id: this.props.productOfferingForm.productGrade}],
             anonymous: false,
             pricing: {
                 ...this.props.addProductOfferForm.pricing,

@@ -130,7 +130,8 @@ export function fetchMyProductOffers(filter = {}) {
     return {
         type: GET_PRODUCT_OFFERS_MY,
         payload: axios.get(
-            "/prodex/api/product-offers/own/all",
+            "/prodex/api/product-offers/own/all",//! !
+            //"/prodex/api/product-offers",
             {
                 params: {
                     ...filter

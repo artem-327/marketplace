@@ -26,7 +26,6 @@ class ProductOffers extends Component {
 
     render() {
         if(this.props.productOffers.length === 0) return null;
-
         const rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
             return {
                 group: <React.Fragment>
