@@ -1,17 +1,42 @@
+import axios from 'axios';
 import { call, put, takeEvery } from "redux-saga/effects";
-import { SUBMIT_EDIT_POPUP } from "../constants/settings";
 
-import Api from "../api/branches"
+import { SUBMIT_EDIT_POPUP, DELETE_WAREHOUSE, ADD_NEW_WAREHOUSE_REQUEST } from "../constants/settings";
+import branches from "../api/branches";
+import api from "../api/users";
 
-function* submitEditPopupWorker({ warehouseData, branchId }) {
-  try {
-		const authToken = localStorage.getItem('jwtoken');
-		console.log(warehouseData, 'inside')
-		const address = warehouseData.address.split(',');
+function* saveNewWarehouseWorker({ warehouseData }) {
+	try {
+		const currentUserRequest = yield axios.get("/prodex/api/users/me");
+		const currentUser = yield currentUserRequest.data;
+		const dataBody = {
+			address: {
+				city: warehouseData.address,
+				province: 44,
+				streetAddress: warehouseData.city,				
+				zip: warehouseData.zipCode
+			},
+			company: currentUser.company.id,
+      contact: {
+				email: warehouseData.email,
+				name: warehouseData.contactName,
+				phone: warehouseData.phone
+			},
+			warehouse: true,
+			warehouseName: warehouseData.warehouseName
+		};
+		const putWarehouse = yield axios.post("/prodex/api/branches/", dataBody);
+  } catch (e) {
+    yield console.log("error:", e);
+  }
+}
+
+function* editWarehouseWorker({ warehouseData, branchId }) {
+  try {	
     const dataBody = {
 			address: {
-				city: address[1],
-				streetAddress: address[0],
+				city: warehouseData.address,
+				streetAddress: warehouseData.city,
 				province: 44,
 				zip: "0"
 			},
@@ -22,27 +47,24 @@ function* submitEditPopupWorker({ warehouseData, branchId }) {
 				phone: warehouseData.phone
 			},
 			warehouse: true,
-			warehouseName: 'warehouseData.contactName'
+			warehouseName: warehouseData.warehouseName
 		};	
-		const putWarehouse = yield Api.putWarehouse(branchId, dataBody)
-    // const putWarehouse = yield fetch(`/api/branches/${branchId}`, {
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "Accept": "application/json",
-		// 		"Authorization": `Bearer ${authToken}`
-    //   },
-    //   body: JSON.stringify(dataBody)
-    // });
-		const answer = yield putWarehouse.json();
-		console.log(putWarehouse, '32131')
+		const putWarehouse = yield branches.putWarehouse(branchId, dataBody);
   } catch (e) {
     yield console.log("error:", e);
   }
 }
 
-function* submitEditPopupWatcher() {
-  yield takeEvery(SUBMIT_EDIT_POPUP, submitEditPopupWorker);
+function* deleteWarehouseWorker({ warehouseId }) {
+	try {
+		yield branches.deleteWarehouse(warehouseId);
+	} catch (e) {
+		yield console.log("error:", e);
+	}
 }
 
-export default submitEditPopupWatcher;
+export default function* settingsSaga() {
+	yield takeEvery(ADD_NEW_WAREHOUSE_REQUEST, saveNewWarehouseWorker);
+	yield takeEvery(DELETE_WAREHOUSE, deleteWarehouseWorker);
+	yield takeEvery(SUBMIT_EDIT_POPUP, editWarehouseWorker);
+}

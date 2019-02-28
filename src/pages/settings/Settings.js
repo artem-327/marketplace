@@ -10,11 +10,11 @@ import './settings.css';
 import { DataTypeProvider } from '@devexpress/dx-react-grid';
 import Paper from '@material-ui/core/Paper';
 
-import unitedStates from '../../../src/components/unitedStates';
 import Tabs from './components/Tabs';
 import UsersTable from './components/UserTable/UsersTable';
 import WarehouseTable from './components/WarehouseTable/WarehouseTable';
-import PopupForm from './components/editPopup/popupForm'
+import EditWarehousePopup from './components/WarehouseTable/EditWarehousePopup';
+import AddNewWarehousePopup from './components/WarehouseTable/AddNewWarehousePopup';
 import TablesHandlers from './components/TablesHandlers';
 import Users from '../administration/users/Users';
 import { withAuth } from '../../utils/auth';
@@ -59,7 +59,6 @@ class Settings extends Component {
 			{	name: 'Tax manager' }, 
 			{	name: 'Terms' }, 
 			{	name: 'Website Controls' }],
-		filterFieldSelectValues: unitedStates,
 		filterFieldCurrentValue: 'None',
 		currentTab: 'Warehouses',
 		filterValue: ''
@@ -97,10 +96,10 @@ class Settings extends Component {
 		});
 	};
 
+	//temporarily
 	setStateWarehouses = () => {
 		warehousesReq.getWarehouses().then(res => {
-			let warehousesRows = res.map(warehouse => {
-				console.log(warehouse, 12312)			
+			let warehousesRows = res.map(warehouse => {	
 				return (
 					{
 						warehouseName: warehouse.company.name,
@@ -112,15 +111,13 @@ class Settings extends Component {
 					}
 				)			
 			});
-
-			console.log(res, 'res')
-
 			this.setState({
 				warehousesRows
 			})
 		})
 	}
 
+	//temporarily
 	setUsersToState = () => {
 		usersReq.getUsers().then(res => {
 			let usersRows = res.map(user => {				
@@ -144,8 +141,7 @@ class Settings extends Component {
 	}
 	
 	render() {
-		const {
-			filterFieldSelectValues, 
+		const { 
 			filterFieldCurrentValue,
 			currentTab, 
 			tabsNames, 			
@@ -160,7 +156,8 @@ class Settings extends Component {
 		} = this.state;
 
 		const { 
-			editWarehousePopup
+			editWarehousePopup,
+			addNewWarehousePopup
 		} = this.props;
 
 		return (
@@ -168,8 +165,7 @@ class Settings extends Component {
 				<div className="b-for-shadow">
 					<div className="b-wrapper row between-xs container-fluid">
 						<span className="uppercase page-title col-xs-3">User settings</span>
-						<TablesHandlers 
-							filterFieldSelectValues={ filterFieldSelectValues }
+						<TablesHandlers
 							filterFieldCurrentValue={ filterFieldCurrentValue }
 							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
 							filtersHandler={ this.filtersHandler }
@@ -184,10 +180,14 @@ class Settings extends Component {
 						handleActiveTab={ this.handleActiveTab }
 					/>
 					{ editWarehousePopup ? 
-					<PopupForm 
-						hideEditPopup={ this.hideEditPopup }
-					/>
-					: null
+						<EditWarehousePopup	/>
+						: null
+					}
+					{ addNewWarehousePopup ?
+						<AddNewWarehousePopup
+							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
+						/>
+						: null
 					}
 					{ currentTab === 'Users' ?
 					<UsersTable
@@ -204,7 +204,7 @@ class Settings extends Component {
 						rows={ warehousesRows }
 						filterValue={ filterValue }
 						editDeleteColumns={ editDeleteColumns }
-						popupStatus={ editWarehousePopup }
+						popupStatus={ editWarehousePopup || addNewWarehousePopup }
 					/>
 					}
 				</div>
@@ -215,7 +215,8 @@ class Settings extends Component {
 
 const mapStateToProps = store => {
   return {
-		editWarehousePopup: store.settings.editWarehousePopup
+		editWarehousePopup: store.settings.editWarehousePopup,
+		addNewWarehousePopup: store.settings.addNewWarehousePopup
   }
 }
 

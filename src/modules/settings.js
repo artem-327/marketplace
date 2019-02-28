@@ -1,10 +1,14 @@
 import {
-  EDIT_POPUP,
-  SUBMIT_EDIT_POPUP
+  EDIT_POPUP,    
+  SUBMIT_EDIT_POPUP,
+  DELETE_WAREHOUSE,
+  ADD_NEW_WAREHOUSE_POPUP,
+  ADD_NEW_WAREHOUSE_REQUEST
 } from "../constants/settings";
 
 export const initialState = {
   editWarehousePopup: false,
+  addNewWarehousePopup: false,
   popupValues: []
 };
 
@@ -17,6 +21,13 @@ export default function reducer(state = initialState, action) {
         popupValues: action.payload
       }
     }
+    
+    case ADD_NEW_WAREHOUSE_POPUP: {
+      return {
+        ...state,
+        addNewWarehousePopup: state.addNewWarehousePopup === false ? true : false,
+      }
+    }
     default: {
       return state
     }
@@ -24,18 +35,36 @@ export default function reducer(state = initialState, action) {
 }
 
 export function handleEditPopup(payload) {
-  // console.log(payload, 'payload action')
   return {
     type: EDIT_POPUP,
     payload
   }
 }
 
-export function handleSumbitEditPopup(warehouseData, branchId) {
-  // console.log(payload, 'payload action')
+export function deleteWarehouse(warehouseId) {
+  return {
+    type: DELETE_WAREHOUSE,
+    warehouseId
+  }
+}
+
+export function handleSubmitEditPopup(warehouseData, branchId) {
   return {
     type: SUBMIT_EDIT_POPUP,
     warehouseData,
     branchId
+  }
+}
+
+export function handleAddNewWarehousePopup() {
+  return {
+    type: ADD_NEW_WAREHOUSE_POPUP
+  }
+}
+
+export function AddNewWarehouseRequest(warehouseData) {
+  return {
+    type: ADD_NEW_WAREHOUSE_REQUEST,
+    warehouseData
   }
 }

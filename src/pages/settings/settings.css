@@ -168,7 +168,7 @@ input {
   background-color: #d8d8d8; }
 
 .b-popup {
-  height: 75%;
+  height: 42%;
   background-color: #ffffff;
   padding: 2.12em 2.12em 0 2.12em;
   text-align: start; }
@@ -185,20 +185,20 @@ input {
     font-family: "HelveticaNeueLTPro-Md", sans-serif;
     font-size: 16px; }
 
-.inputs-wrapper {
+.edit-inputs-wrapper {
   display: flex;
   width: 58%; }
-  .inputs-wrapper .email {
+  .edit-inputs-wrapper .email {
     flex: 2; }
-  .inputs-wrapper .phone {
+  .edit-inputs-wrapper .phone {
     flex: 1; }
-  .inputs-wrapper .cancel-popup-btn {
+  .edit-inputs-wrapper .cancel-popup-btn {
     font-family: "HelveticaNeueLTPro-Md", sans-serif;
     font-size: 16px !important;
     width: 7em;
     background-color: #d0d1d4;
     cursor: pointer; }
-  .inputs-wrapper .submit-popup-btn {
+  .edit-inputs-wrapper .submit-popup-btn {
     font-family: "HelveticaNeueLTPro-Md", sans-serif;
     font-size: 16px;
     width: 8.75em;
@@ -216,3 +216,43 @@ input {
   border-radius: 3px;
   border: 1px solid #d0d1d4;
   width: 100%; }
+
+.add-warehouse-inputs-wrapper {
+  display: flex;
+  width: 100%; }
+  .add-warehouse-inputs-wrapper .warehouse-label {
+    flex: 1; }
+  .add-warehouse-inputs-wrapper .name {
+    flex: 2; }
+  .add-warehouse-inputs-wrapper .contact-name {
+    flex: 2; }
+  .add-warehouse-inputs-wrapper .state-input {
+    padding: 12px 9px;
+    font-size: 0.875rem !important;
+    line-height: 1.1429 !important; }
+  .add-warehouse-inputs-wrapper .buttons-wrapper {
+    display: flex;
+    flex: 2;
+    font-family: "HelveticaNeueLTPro-Md", sans-serif;
+    font-size: 16px;
+    align-items: flex-end;
+    margin: 0 1.5em 1.18em 0;
+    height: 3.75em; }
+  .add-warehouse-inputs-wrapper .cancel-popup-btn {
+    font-family: "HelveticaNeueLTPro-Md", sans-serif;
+    font-size: 16px !important;
+    width: 7em;
+    border-radius: 3px;
+    background-color: #d0d1d4;
+    cursor: pointer; }
+  .add-warehouse-inputs-wrapper .save-btn {
+    font-family: "HelveticaNeueLTPro-Md", sans-serif;
+    font-size: 16px !important;
+    width: 8.75em;
+    flex: 0 1 auto;
+    margin-left: 1.25em;
+    border-radius: 3px;
+    border: 1px solid #2599d5;
+    color: #2599d5;
+    background-color: #ffffff;
+    cursor: pointer; }

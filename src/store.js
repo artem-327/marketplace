@@ -74,8 +74,9 @@ const reducer = combineReducers({
         merchants: merchantsInit,
         cart: cartInit,
         shippingEdit: {},
-        settingsEdit: {
-            name: ""
+        settingsPopup: {
+            editWarehouse: {},
+            addNewWarehouse: {}
         }
     }, 'forms'),
     settings

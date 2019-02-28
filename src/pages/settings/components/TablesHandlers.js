@@ -1,17 +1,21 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 
+import { handleAddNewWarehousePopup } from '../../../modules/settings';
+import unitedStates from '../../../components/unitedStates';
+
 function TablesHandlers(props) {
   const { 
-    filterFieldSelectValues, 
     filterFieldCurrentValue, 
     handleChangeFieldsCurrentValue, 
     filtersHandler, 
-    currentTab 
+    currentTab ,
+    handleAddNewWarehousePopup
   } = props;
   
   return (					
@@ -35,7 +39,7 @@ function TablesHandlers(props) {
           >
             { 'None' }
           </MenuItem>
-          {filterFieldSelectValues.map(option => (
+          {unitedStates.map(option => (
             <MenuItem 
               key={ option.name }  
               value={ option.name }
@@ -59,11 +63,18 @@ function TablesHandlers(props) {
           fullWidth
         />
       </div>
-      <button className="b-search__add-user-btn capitalize col-xs-3">
+      <button
+        onClick={ handleAddNewWarehousePopup }
+        className="b-search__add-user-btn capitalize col-xs-3"
+      >
         Add new { currentTab }
       </button>
     </div>
   );
 }
 
-export default TablesHandlers;
+const mapDispatchToProps = {   
+  handleAddNewWarehousePopup
+};
+
+export default connect(null, mapDispatchToProps)(TablesHandlers);

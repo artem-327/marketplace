@@ -220,7 +220,7 @@ input {
   }
 }
 
-//popup
+//edit popup
 .popup-wrapper {
   display: flex;
   width: 100%;
@@ -228,7 +228,7 @@ input {
 }
 
 .b-popup {
-  height: 75%;
+  height: 42%;
   background-color: #ffffff;
   padding: 2.12em 2.12em 0 2.12em;
   text-align: start; 
@@ -252,7 +252,7 @@ input {
   }
 }
 
-.inputs-wrapper {
+.edit-inputs-wrapper {
   display: flex;
   width: 58%;
 
@@ -293,4 +293,61 @@ input {
   border-radius: 3px;
   border: 1px solid $light-50-grey-color;
   width: 100%;
+}
+
+//add new warehouse popup
+
+.add-warehouse-inputs-wrapper {
+  display: flex;
+  width: 100%;
+
+  .warehouse-label {
+    flex: 1;
+  }
+
+  .name {
+    flex: 2;
+  }
+
+  .contact-name {
+    flex: 2;
+  }
+
+  .state-input {
+    padding: 12px 9px;
+    font-size: 0.875rem !important;
+    line-height: 1.1429 !important;
+  }
+
+  .buttons-wrapper {
+    display: flex;
+    flex: 2;
+    font-family: $helvetica-md;
+    font-size: 16px;
+    align-items: flex-end;
+    margin: 0 1.5em 1.18em 0;
+    height: 3.75em;
+  }
+
+  .cancel-popup-btn {
+    font-family: $helvetica-md;
+    font-size: 16px !important;
+    width: 7em;
+    border-radius: 3px;
+    background-color: $light-50-grey-color; 
+    cursor: pointer;
+  }
+
+  .save-btn {
+    font-family: $helvetica-md;
+    font-size: 16px !important;
+    width: 8.75em;
+    flex: 0 1 auto;
+    margin-left: 1.25em;    
+    border-radius: 3px;
+    border: 1px solid #2599d5;
+    color: #2599d5;
+    background-color: #ffffff;
+    cursor: pointer;
+  }
 }

@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 
 function Tabs(props) {
   const { tabsNames, handleActiveTab, currentTab } = props;
-
+  
+  //temporarily
   let temporaryRandomId = Math.random().toString(36).substring(7);
   
   return (					
