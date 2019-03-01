@@ -6,6 +6,7 @@ const ADD_MESSAGE = 'ADD_MESSAGE';
 const ADD_PRODUCT_OFFER_REJECTED = 'ADD_PRODUCT_OFFER_REJECTED';
 const EDIT_PRODUCT_OFFER_REJECTED = 'EDIT_PRODUCT_OFFER_REJECTED';
 const SAVE_MAPPING_REJECTED = 'SAVE_MAPPING_REJECTED';
+const ADD_ATTACHMENT_REJECTED = 'ADD_ATTACHMENT_REJECTED';
 // const SAVE_MAPPING_REJECTED = 'SAVE_MAPPING_REJECTED';
 // const FETCH_ORIGIN_REJECTED = 'FETCH_ORIGIN_REJECTED';
 // const FETCH_RECENT_ADDED_PRODUCTS_REJECTED = 'FETCH_RECENT_ADDED_PRODUCTS_REJECTED';
@@ -85,6 +86,12 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 messages: [...state.messages, action.payload]
+            }
+        }
+        case ADD_ATTACHMENT_REJECTED: {
+            return {
+                ...state,
+                messages: [...state.messages, action.payload.response.data.message]
             }
         }
         default: {

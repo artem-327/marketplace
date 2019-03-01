@@ -193,7 +193,7 @@
     "addInventory.totalPackages": "Total Packages",
     "addInventory.expirationDate": "Expiration Date",
     "addInventory.addedLots": "ADDED LOTS",
-    "addInventory.uploadDocument": "Click To Upload C of A",
+    "addInventory.uploadDocument": "Click to upload",
     "addInventory.setPriceAndRules": "SET PRICE & RULES",
     "addInventory.costPer": "Cost per {unit}",
     "addInventory.grossMargin": "Gross Margin %",

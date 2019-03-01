@@ -3,6 +3,7 @@ import {transformRequestOptions, filterByUniqueProperty} from "../utils/function
 import {
     PRODUCTOFFER_REMOVE_REQUESTED
 } from "../constants/productOffers";
+import FormData from 'form-data'
 
 const GET_PRODUCT_OFFERS_MY = 'GET_PRODUCT_OFFERS_MY';
 const GET_PRODUCT_OFFERS_MY_FULFILLED = 'GET_PRODUCT_OFFERS_MY_FULFILLED';
@@ -18,6 +19,14 @@ const GET_UNIT_OF_MEASUREMENT = 'GET_UNIT_OF_MEASUREMENT';
 const GET_UNIT_OF_MEASUREMENT_FULFILLED = 'GET_UNIT_OF_MEASUREMENT_FULFILLED';
 const GET_UNIT_OF_PACKAGING = 'GET_UNIT_OF_PACKAGING';
 const GET_UNIT_OF_PACKAGING_FULFILLED = 'GET_UNIT_OF_PACKAGING_FULFILLED';
+const LOAD_FILE = 'LOAD_FILE';
+const ADD_ATTACHMENT = 'ADD_ATTACHMENT';
+const ADD_ATTACHMENT_FULFILLED = 'ADD_ATTACHMENT_FULFILLED';
+const REMOVE_ATTACHMENT = 'REMOVE_ATTACHMENT';
+const REMOVE_ATTACHMENT_FULFILLED = 'REMOVE_ATTACHMENT_FULFILLED';
+const REMOVE_ATTACHMENT_LINK = 'REMOVE_ATTACHMENT_LINK';
+const REMOVE_ATTACHMENT_LINK_FULFILLED = 'REMOVE_ATTACHMENT_LINK_FULFILLED';
+const LINK_ATTACHMENT = 'LINK_ATTACHMENT';
 const ADD_PRODUCT_OFFER = 'ADD_PRODUCT_OFFER';
 const ADD_PRODUCT_OFFER_FULFILLED = 'ADD_PRODUCT_OFFER_FULFILLED';
 const RESET_PRODUCT_OFFER = 'RESET_PRODUCT_OFFER';
@@ -33,7 +42,8 @@ export const initialState = {
     unitOfPackaging: [],
     productOffer: {},
     productOfferFetching: true,
-    productOffersIsFetching: true
+    productOffersIsFetching: true,
+    attachmentAdded: false
 };
 
 export default function reducer(state = initialState, action) {
@@ -95,6 +105,12 @@ export default function reducer(state = initialState, action) {
                     isValid: true,
                     hasError: false,
                 }
+            }
+        }
+        case ADD_ATTACHMENT_FULFILLED: {
+            return {
+                ...state,
+                attachmentAdded: true
             }
         }
         case GET_UNIT_OF_MEASUREMENT_FULFILLED: {
@@ -170,6 +186,57 @@ export function addProductOffer(inputs) {
     return {
         type: ADD_PRODUCT_OFFER,
         payload: axios.post('/prodex/api/product-offers', inputs)
+    }
+}
+
+export function loadFile(attachment) {
+    return {
+        type: LOAD_FILE,
+        payload: axios({
+            baseURL: '',
+            url: attachment.preview,
+            method: "GET",
+            responseType: "blob"
+        }).then(r => new File([r.data], attachment.name, {type: attachment.type}))
+    }
+}
+
+export function addAttachment(file, docType) {
+    let data = new FormData()
+
+    if (file)
+        data.append('file', file, file.name);
+    else
+        return false
+
+    return {
+        type: ADD_ATTACHMENT,
+        payload: axios.post(`/prodex/api/attachments?type=${docType}`, data, {headers: {
+                'accept': 'application/json',
+                'Accept-Language': 'en-US,en;q=0.8',
+                'Content-Type': `multipart/form-data; boundary=${data._boundary}`
+            }})
+    }
+}
+
+export function linkAttachment(poId, aId) {
+    return {
+        type: LINK_ATTACHMENT,
+        payload: axios.post('/prodex/api/attachment-links/to-product-offer?attachmentId='+aId+'&productOfferId='+poId)
+    }
+}
+
+export function removeAttachmentLink(poId, aId) {
+    return {
+        type: REMOVE_ATTACHMENT_LINK,
+        payload: axios.delete(`/prodex/api/attachment-links/to-product-offer?attachmentId=${aId}&productOfferId=${poId}`)
+    }
+}
+
+export function removeAttachment(aId) {
+    return {
+        type: REMOVE_ATTACHMENT,
+        payload: axios.delete('/prodex/api/attachments/'+aId)
     }
 }
 

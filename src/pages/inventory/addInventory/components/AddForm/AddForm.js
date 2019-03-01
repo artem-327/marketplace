@@ -100,6 +100,7 @@ export default class AddForm extends Component {
         let params = Object.assign({}, inputs, {
             ...this.props.mappingForm,
             ...this.props.productOfferingForm,
+            productGrades: [{id: this.props.productOfferingForm.productGrade}],
             anonymous: false,
             assayMin: parseInt(this.props.productOfferingForm.assayMin),
             assayMax: parseInt(this.props.productOfferingForm.assayMax),
@@ -132,9 +133,20 @@ export default class AddForm extends Component {
         delete params.pkgAmount;
         //delete params.productName;
         //delete params.productCode;
+        delete params.productGrade;
         
         this.props.addProductOffer(params).then(()=>{
-            this.props.history.push("/inventory/my-inventory");
+            let attachments = JSON.parse(localStorage.getItem('attachments'))
+            if (attachments && attachments.length) {
+                for (let i = 0; i < attachments.length; i++) {
+                    this.props.addAttachments(attachments[i]).then(() => {
+                        // join attachment to newly created product offer - need ID of product offer
+                    })
+                    //this.props.history.push("/inventory/my-inventory")
+                }
+            } else {
+                this.props.history.push("/inventory/my-inventory")
+            }
         });
     }
 
@@ -157,6 +169,15 @@ export default class AddForm extends Component {
         setTimeout(function(){
             this.editProductOffer(inputs)
         }.bind(this), 2000);
+    }
+
+    checkAttsUploadStatus(attActions, attSuccesses, attErrors) {
+        console.log('Attachments: ' + attActions + '; Successes: ' + attSuccesses + '; Errors: ' + attErrors)
+        if (attActions === attSuccesses) {
+            this.props.history.push("/inventory/my-inventory")
+        } else if (attActions === (attSuccesses + attErrors)) {
+            console.log('not all Attachments were saved :-/')
+        }
     }
 
     editProductOffer(inputs){
@@ -216,6 +237,7 @@ export default class AddForm extends Component {
         let params = Object.assign({}, inputs, {
             ...this.props.mappingForm,
             ...this.props.productOfferingForm,
+            productGrades: [{id: this.props.productOfferingForm.productGrade}],
             anonymous: false,
             pricing: {
                 ...this.props.addProductOfferForm.pricing,
@@ -232,14 +254,51 @@ export default class AddForm extends Component {
             packaging: {...this.props.mappingForm.packaging}
         });
 
-        this.props.editProductOffer(this.props.productOffer.id, params).then(()=>{
-            this.props.history.push("/inventory/my-inventory");
+        this.props.editProductOffer(this.props.productOffer.id, params).then((productOffer)=>{
+            let productOfferId = productOffer.value.data
+            let attachments = JSON.parse(localStorage.getItem('attachments'))
+            if (attachments && attachments.length) {
+                attachments = attachments.filter(attachment => {
+                    return attachment && attachment.preview
+                })
+            }
+
+            var attSuccesses = 0
+            var attErrors = 0
+            var attActions = attachments ? attachments.length : 0
+
+            if (attActions > 0) {
+                for (let at = 0; at < attachments.length; at++) {
+                    if (attachments[at] && attachments[at].preview) {
+                        this.props.loadFile(attachments[at]).then(file => {
+                            this.props.addAttachment(file.value, attachments[at].docType).then((aId) => {
+                                this.props.linkAttachment(productOfferId, aId.value.data).then((r) => {
+                                    attSuccesses++
+                                    this.checkAttsUploadStatus(attActions, attSuccesses, attErrors)
+                                }).catch(e => {
+                                    attErrors++
+                                    this.checkAttsUploadStatus(attActions, attSuccesses, attErrors)
+                                })
+                            }).catch(e => {
+                                attErrors++
+                                this.checkAttsUploadStatus(attActions, attSuccesses, attErrors)
+                            })
+                        }).catch(e => {
+                            attErrors++
+                            this.checkAttsUploadStatus(attActions, attSuccesses, attErrors)
+                        })
+                    }
+                }
+            } else {
+                this.props.history.push("/inventory/my-inventory")
+            }
         });
 
         delete params.casNumber;
         delete params.chemicalName;
         delete params.indexName;
         delete params.pkgAmount;
+        delete params.productGrade;
     }
 
     cancelEdit() {
