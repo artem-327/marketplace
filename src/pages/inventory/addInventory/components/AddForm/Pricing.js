@@ -35,8 +35,8 @@ class Pricing extends Component {
         
         if(this.props.edit){
             this.setState({
-                margin: parseInt((this.props.productOffer.pricing.price - this.props.productOffer.pricing.cost) / this.props.productOffer.pricing.cost * 100),
-                totalSalesPrice: parseInt((typeof this.props.productOffer.packaging !== 'undefined' ? this.props.productOffer.packaging.size : 0) * this.props.productOffer.pricing.price * this.props.productOffer.pkgAmount)
+                margin: this.calculateMargin(this.props.productOffer.pricing.price, this.props.productOffer.pricing.cost),
+                totalSalesPrice: Number(((typeof this.props.productOffer.packaging !== 'undefined' ? this.props.productOffer.packaging.size : 0) * this.props.productOffer.pricing.price * this.props.productOffer.pkgAmount).toFixed(3))
             });
             this.validateMinimum('splits');
             this.validateMinimum('minimum');
@@ -67,35 +67,31 @@ class Pricing extends Component {
 
     calculatePricing(e){
 
-        let price = Number(this.props.form.pricing.price,10).toFixed(3);
-        let cost = Number(this.props.form.pricing.cost,10).toFixed(3);
+        let price = Number(Number(this.props.form.pricing.price).toFixed(3));
+        let cost = Number(Number(this.props.form.pricing.cost).toFixed(3));
         let active = e.target.name;
-        let activeVal = Number(e.target.value,10).toFixed(3);
+        let activeVal = Number(Number(e.target.value).toFixed(3));
 
             switch(active){
                 case 'price': {
-                    let newprice = activeVal;
-                    let newmargin = (activeVal - cost) / cost * 100;
-                    newmargin = Number(newmargin.toFixed(3));
+                    let newmargin = this.calculateMargin(activeVal, cost);
                     if (isNaN(newmargin)) {
                         this.setState({margin: ''})
                     } else {
                         this.setState({
                             margin: newmargin,
-                            price: newprice
+                            price: activeVal
                         })
                     }
                     break;
                 }
 
                 case 'cost': {
-                    let newmargin = (price - activeVal) / activeVal * 100;
-                    newmargin = Number(newmargin.toFixed(3));
-                    
+                    let newmargin = this.calculateMargin(price, activeVal);
                     let newIncrementalPricing = this.state.incrementalPricing.slice(0);
 
                     for (let i = 0; i < newIncrementalPricing.length; i++) {
-                        newIncrementalPricing[i].margin = Number(((newIncrementalPricing[i].price - activeVal) / activeVal * 100).toFixed(3))
+                        newIncrementalPricing[i].margin = this.calculateMargin(newIncrementalPricing[i].price, activeVal);
                     }
 
                     if (isNaN(newmargin)) {
@@ -107,13 +103,10 @@ class Pricing extends Component {
                 }
 
                 case 'margin': {
-
-                    const newmargin = e.target.value;
-                    this.setState({margin: newmargin});
-
-                    const newprice = Number((cost + (cost * newmargin / 100)).toFixed(3));
+                    this.setState({margin: activeVal});
+                    let newprice = cost + (cost * activeVal / 100);
+                    newprice =  Number(newprice.toFixed(3));
                     this.handlePriceChange('forms.addProductOffer.pricing.price', newprice);
-
                     break;
                 }
 
