@@ -6,7 +6,7 @@ import InputBase from '@material-ui/core/InputBase';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 
-import { handleAddNewWarehousePopup } from '../../../modules/settings';
+import { handleAddNewWarehousePopup } from '../actions';
 import unitedStates from '../../../components/unitedStates';
 
 function TablesHandlers(props) {

@@ -1,29 +1,19 @@
 import React, { Component } from 'react';
-import { Provider } from 'react-redux';
 import { connect } from 'react-redux';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { bindActionCreators } from 'redux';
 import PropTypes from "prop-types";
-
-import './settings.css';
-
 import { DataTypeProvider } from '@devexpress/dx-react-grid';
-import Paper from '@material-ui/core/Paper';
 
-import Tabs from './components/Tabs';
-import UsersTable from './components/UserTable/UsersTable';
-import WarehouseTable from './components/WarehouseTable/WarehouseTable';
-import EditWarehousePopup from './components/WarehouseTable/EditWarehousePopup';
-import AddNewWarehousePopup from './components/WarehouseTable/AddNewWarehousePopup';
-import TablesHandlers from './components/TablesHandlers';
-import Users from '../administration/users/Users';
-import { withAuth } from '../../utils/auth';
-import usersReq from '../../api/users';
-import warehousesReq from '../../api/branches';
-import api from '../../api/users';
+import '../styles/settings.css';
+
+import Tabs from './Tabs';
+import UsersTable from './UserTable/UsersTable';
+import WarehouseTable from './WarehouseTable/WarehouseTable';
+import EditWarehousePopup from './WarehouseTable/EditWarehousePopup';
+import AddNewWarehousePopup from './WarehouseTable/AddNewWarehousePopup';
+import TablesHandlers from './TablesHandlers';
 
 class Settings extends Component {
-	
+
 	state = {
 		usersColumns: [
 			{ name: 'checkbox', title: ' '},
@@ -35,7 +25,6 @@ class Settings extends Component {
 			{ name: 'permissions', title: 'Permissions' },
 			{ name: 'editDeleteBtn', title: ' ' }
 		],
-		usersRows: [],
 		warehouseColumns: [
 			{ name: 'warehouseName', title: 'Warehouse Name'},
 			{ name: 'address', title: 'Adress' },
@@ -44,7 +33,6 @@ class Settings extends Component {
 			{ name: 'email', title: 'E-mail' },
 			{ name: 'editDeleteBtn', title: ' ' }
 		],
-		warehousesRows: [],
 		checkboxColumns: ['checkbox'],
 		permissionsColumns: ['permissions'],
 		editDeleteColumns: ['editDeleteBtn'],
@@ -62,12 +50,6 @@ class Settings extends Component {
 		filterFieldCurrentValue: 'None',
 		currentTab: 'Warehouses',
 		filterValue: ''
-	}
-
-
-	componentDidMount() {		
-		this.setStateWarehouses();
-		this.setUsersToState();
 	}
 
 	filtersHandler = value => {		
@@ -95,50 +77,6 @@ class Settings extends Component {
 			[fieldStateName]: event.target.value 
 		});
 	};
-
-	//temporarily
-	setStateWarehouses = () => {
-		warehousesReq.getWarehouses().then(res => {
-			let warehousesRows = res.map(warehouse => {	
-				return (
-					{
-						warehouseName: warehouse.company.name,
-						address: warehouse.address.streetAddress + ', ' + warehouse.address.city,
-						contactName: warehouse.contact.name,
-						phone: warehouse.contact.phone,
-						email: warehouse.contact.email,
-						branchId: warehouse.id
-					}
-				)			
-			});
-			this.setState({
-				warehousesRows
-			})
-		})
-	}
-
-	//temporarily
-	setUsersToState = () => {
-		usersReq.getUsers().then(res => {
-			let usersRows = res.map(user => {				
-				return (
-					{
-						checkbox: ' ',
-						userName: user.firstname + ' ' + user.lastname,
-						title: 'title' ,
-						email: user.email,
-						phone: 'phone',
-						homeBranch: user.branch.address.province.name,
-						permissions: user.roles.name
-					}
-				)			
-			});
-
-			this.setState({
-				usersRows
-			})
-		})
-	}
 	
 	render() {
 		const { 
@@ -192,7 +130,6 @@ class Settings extends Component {
 					{ currentTab === 'Users' ?
 					<UsersTable
 						columns={ usersColumns }
-						rows={ usersRows }
 						permissionsColumns={ permissionsColumns}
 						editDeleteColumns={ editDeleteColumns }
 						checkboxColumns={ checkboxColumns }
@@ -201,7 +138,6 @@ class Settings extends Component {
 					:
 					<WarehouseTable 
 						columns={ warehouseColumns }
-						rows={ warehousesRows }
 						filterValue={ filterValue }
 						editDeleteColumns={ editDeleteColumns }
 						popupStatus={ editWarehousePopup || addNewWarehousePopup }

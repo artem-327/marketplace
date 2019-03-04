@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Control, Form } from 'react-redux-form';
 
-import { handleEditPopup, handleSubmitEditPopup } from '../../../../modules/settings';
+import { handleEditPopup, handleSubmitEditPopup } from '../../actions';
 
 function EditWarehousePopup(props) {
   const { handleEditPopup, handleSubmitEditPopup, popupValues } = props;
@@ -16,8 +16,8 @@ function EditWarehousePopup(props) {
         className="b-popup col-xs-8"
       >    
         <h2>{'Warehouse'} Profile</h2>
-        <ul>
-          <li className="edit-inputs-wrapper">
+        <ul className="">
+          <li className="inputs-wrapper">
             <label className="warehouse-label name" htmlFor="warehouse-name">                        
               Warehouse name
             <Control.text model=".warehouseName" className="warehouse-input" id="warehouse-name" defaultValue={ popupValues.warehouseName } />

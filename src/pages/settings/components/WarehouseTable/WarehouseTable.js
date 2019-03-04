@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid';
 import {
@@ -6,42 +7,63 @@ import {
   Table,
 	TableHeaderRow
 } from '@devexpress/dx-react-grid-material-ui';
+
 import { 	EditDeleteFormatterProvider } from './WarehouseTableProviders';
+import { getWarehousesDataRequest } from '../../actions';
 
-function UsersTable(props) {
-	const GridRoot = props => <Grid.Root {...props} className={ popupStatus ? 'hide' : 'col-xs-10 main-table' } />
-	const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
-	const TableCells = props => <Table.Cell {...props} className={ 'columns-rows-cell' } />
-	const { 
-		columns, 
-		rows,
-		filterValue,
-		editDeleteColumns,
-		popupStatus
-	} = props;	
+class WarehouseTable extends Component {	
 
-	return (					
-		<Grid
-			rootComponent={ GridRoot }
-			rows={ rows }
-			columns={ columns }						
-		>	
-			<SearchState 
-				value={ filterValue } 
-			/>
-			<IntegratedFiltering />	
-			<Table 
-				cellComponent={ TableCells }
-			/>
-			<TableHeaderRow 
-				cellComponent={ HeaderCells }
-			/>
-			<EditDeleteFormatterProvider
-				for={ editDeleteColumns }
+	componentDidMount() {
+		this.props.getWarehousesDataRequest();
+	}
+	
+	render() {
+		const { 
+			columns, 
+			rows,
+			filterValue,
+			editDeleteColumns,
+			popupStatus
+		} = this.props;
+
+		const GridRoot = props => <Grid.Root {...props} className={ popupStatus ? 'hide' : 'col-xs-10 main-table' } />
+		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
+		const TableCells = props => <Table.Cell {...props} className={ 'columns-rows-cell' } />
+
+
+		return (					
+			<Grid
+				rootComponent={ GridRoot }
 				rows={ rows }
-			/>
-		</Grid>		
-	);
+				columns={ columns }						
+			>	
+				<SearchState 
+					value={ filterValue } 
+				/>
+				<IntegratedFiltering />	
+				<Table 
+					cellComponent={ TableCells }
+				/>
+				<TableHeaderRow 
+					cellComponent={ HeaderCells }
+				/>
+				<EditDeleteFormatterProvider
+					for={ editDeleteColumns }
+					rows={ rows }
+				/>
+			</Grid>		
+		);		
+	}
 }
 
-export default UsersTable;
+const mapDispatchToProps = {   
+	getWarehousesDataRequest
+};
+
+const mapStateToProps = store => {
+  return {
+		rows: store.settings.warehousesRows
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(WarehouseTable);

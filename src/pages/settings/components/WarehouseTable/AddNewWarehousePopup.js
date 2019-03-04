@@ -1,12 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Control, Form } from 'react-redux-form';
 
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
+// import TextField from '@material-ui/core/TextField';
+// import MenuItem from '@material-ui/core/MenuItem';
 
-import { handleAddNewWarehousePopup, AddNewWarehouseRequest } from '../../../../modules/settings';
-import unitedStates from '../../../../components/unitedStates';
+import { handleAddNewWarehousePopup, AddNewWarehouseRequest } from '../../actions';
 
 class EditWarehousePopup extends React.Component {
   constructor(props) {
@@ -36,8 +35,7 @@ class EditWarehousePopup extends React.Component {
       emailValue 
     } = this.state
     const { 
-      handleAddNewWarehousePopup, 
-      handleChangeFieldsCurrentValue, 
+      handleAddNewWarehousePopup,  
       AddNewWarehouseRequest 
     } = this.props;
 
@@ -108,11 +106,11 @@ class EditWarehousePopup extends React.Component {
               <div className="buttons-wrapper">
                 <input 
                   type="button" 
-                  value="Cancel"
+                  defaultValue="Cancel"
                   onClick={ handleAddNewWarehousePopup }
                   className="cancel-popup-btn"
                 />
-                <button className="save-btn" >Update Warehouse</button> 
+                <button className="save-btn">Save</button>
               </div>
             </li>          
           </ul>

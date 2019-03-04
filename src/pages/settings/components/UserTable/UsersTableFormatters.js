@@ -23,7 +23,7 @@ export const permissionCellFormatter = ( ({ value }) => {
 			{permissions.map(option => (
 				<option 
 					key={ option } 
-					value={ option }
+					defaultValue={ option }
 					className={ 'permissions-input' }
 				>
 					{ option }
@@ -40,11 +40,11 @@ export const editDeleteCellFormatter = props => {
 			<button className="editDelete-btn" />
 			<div className="handlers-row-menu">
 				<input 
-					value={'Edit'}
+					defaultValue={'Edit'}
 					className="handlers-row-menu__btn"
 				/>
 				<input 
-					value={'Delete'}
+					defaultValue={'Delete'}
 					className="handlers-row-menu__btn"
 				/>
 			</div>

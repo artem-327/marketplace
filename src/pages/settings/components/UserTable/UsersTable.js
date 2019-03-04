@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid';
 import {
@@ -12,6 +13,7 @@ import {
 	EditDeleteFormatterProvider,
 	PermissionFormatterProvider
 } from './UsersTableProviders';
+import { getUsersDataRequest } from '../../actions';
 
 function cn(){
 		let res = "";
@@ -28,47 +30,63 @@ const GridRoot = props => <Grid.Root {...props} className={cn(props.className,'c
 const HeaderCells = props => <TableHeaderRow.Cell {...props} className={cn(props.className,'columns-title-cell')} />
 const TableCells = props => <Table.Cell {...props} className={cn(props.className,'columns-rows-cell')} />
 
-function UsersTable(props) {
-	
-	const { 
-		columns, 
-		rows, 
-		checkboxColumns, 
-		permissionsColumns, 
-		editDeleteColumns, 
-		filterValue 
-	} = props;	
+class UsersTable extends Component {	
 
-	return (					
-		<Grid
-			rootComponent={ GridRoot }
-			rows={ rows }
-			columns={ columns }						
-		>	
-			<SearchState 
-				value={ filterValue } 
-			/>
-			<IntegratedFiltering />	
-			<Table 
-				cellComponent={ TableCells }
-			/>
-			<TableHeaderRow 
-				cellComponent={ HeaderCells }
-			/>
-			<CheckboxFormatterProvider 
-				for={ checkboxColumns }
+	componentDidMount() {
+		this.props.getUsersDataRequest();
+	}
+	
+	render() {
+		const { 
+			columns, 
+			rows, 
+			checkboxColumns, 
+			permissionsColumns, 
+			editDeleteColumns, 
+			filterValue 
+		} = this.props;
+
+		return (					
+			<Grid
+				rootComponent={ GridRoot }
 				rows={ rows }
-			/>
-			<PermissionFormatterProvider
-				for={ permissionsColumns }
-				rows={ rows }
-			/>
-			<EditDeleteFormatterProvider
-				for={ editDeleteColumns }
-				rows={ rows }
-			/>
-		</Grid>		
-	);
+				columns={ columns }						
+			>	
+				<SearchState 
+					value={ filterValue } 
+				/>
+				<IntegratedFiltering />	
+				<Table 
+					cellComponent={ TableCells }
+				/>
+				<TableHeaderRow 
+					cellComponent={ HeaderCells }
+				/>
+				<CheckboxFormatterProvider 
+					for={ checkboxColumns }
+					rows={ rows }
+				/>
+				<PermissionFormatterProvider
+					for={ permissionsColumns }
+					rows={ rows }
+				/>
+				<EditDeleteFormatterProvider
+					for={ editDeleteColumns }
+					rows={ rows }
+				/>
+			</Grid>		
+		)		
+	}
 }
 
-export default UsersTable;
+const mapDispatchToProps = {   
+	getUsersDataRequest
+};
+
+const mapStateToProps = store => {
+  return {
+		rows: store.settings.usersRows
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UsersTable);

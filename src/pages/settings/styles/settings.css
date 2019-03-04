@@ -1,4 +1,4 @@
-@import url(../../../src/styles/flexboxgrid.css);
+@import url(../../../../src/styles/flexboxgrid.css);
 a {
   text-decoration: none;
   color: #000000;
@@ -108,7 +108,7 @@ input {
   outline: none;
   padding-left: 0.4em;
   background: no-repeat 90% 50%;
-  background-image: url("../../images/inv-filter/dropdown.png");
+  background-image: url("../../../images/inv-filter/dropdown.png");
   background-size: 0.66em;
   appearance: none;
   -webkit-appearance: none;
@@ -128,7 +128,7 @@ input {
 .editDelete-btn {
   width: 100%;
   background: no-repeat 50% 50%;
-  background-image: url("../../images/data-table/3dots.png");
+  background-image: url("../../../images/data-table/3dots.png");
   background-size: 1em;
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
@@ -150,7 +150,6 @@ input {
   -webkit-box-shadow: 0px 3px 12px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 3px 12px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 3px 12px 0px rgba(0, 0, 0, 0.75);
-  border-radius: 4px;
   padding: 0; }
   .handlers-row-menu__btn {
     cursor: pointer;
@@ -168,7 +167,7 @@ input {
   background-color: #d8d8d8; }
 
 .b-popup {
-  height: 42%;
+  height: 44%;
   background-color: #ffffff;
   padding: 2.12em 2.12em 0 2.12em;
   text-align: start; }
@@ -185,20 +184,20 @@ input {
     font-family: "HelveticaNeueLTPro-Md", sans-serif;
     font-size: 16px; }
 
-.edit-inputs-wrapper {
+.inputs-wrapper {
   display: flex;
   width: 58%; }
-  .edit-inputs-wrapper .email {
+  .inputs-wrapper .email {
     flex: 2; }
-  .edit-inputs-wrapper .phone {
+  .inputs-wrapper .phone {
     flex: 1; }
-  .edit-inputs-wrapper .cancel-popup-btn {
+  .inputs-wrapper .cancel-popup-btn {
     font-family: "HelveticaNeueLTPro-Md", sans-serif;
     font-size: 16px !important;
     width: 7em;
     background-color: #d0d1d4;
     cursor: pointer; }
-  .edit-inputs-wrapper .submit-popup-btn {
+  .inputs-wrapper .submit-popup-btn {
     font-family: "HelveticaNeueLTPro-Md", sans-serif;
     font-size: 16px;
     width: 8.75em;

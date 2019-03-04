@@ -8,7 +8,7 @@ import PurchaseOrders from "../pages/orders";
 import OrderDetail from "../pages/orders/detail";
 import Clients from "../pages/clients/Clients";
 import Reports from "../pages/reports/Reports";
-import Settings from "../pages/settings/Settings";
+import Settings from "../pages/settings/";
 import Support from "../pages/support/Support";
 import AddInventory from "../pages/inventory/addInventory";
 import AllInventory from "../pages/inventory/allInventory";

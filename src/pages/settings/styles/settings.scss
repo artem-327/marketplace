@@ -1,6 +1,6 @@
-@import "../../../src/styles/main.scss";
-@import "../../../src/styles/flexboxgrid.css";
-@import "../../../src/styles/fonts.scss";
+@import "../../../../src/styles/main.scss";
+@import "../../../../src/styles/flexboxgrid.css";
+@import "../../../../src/styles/fonts.scss";
 
 // helpers
 
@@ -154,7 +154,7 @@ input {
   outline: none;
   padding-left: 0.4em;
   background: no-repeat 90% 50% ;
-  background-image: url("../../images/inv-filter/dropdown.png");
+  background-image: url("../../../images/inv-filter/dropdown.png");
   background-size: 0.66em;
   
   appearance: none;
@@ -179,7 +179,7 @@ input {
 .editDelete-btn {
   width: 100%;
   background: no-repeat 50% 50%;
-  background-image: url("../../images/data-table/3dots.png");
+  background-image: url("../../../images/data-table/3dots.png");
   background-size: 1em;
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
@@ -203,7 +203,6 @@ input {
   -webkit-box-shadow: 0px 3px 12px 0px rgba(0,0,0,0.75);
   -moz-box-shadow: 0px 3px 12px 0px rgba(0,0,0,0.75);
   box-shadow: 0px 3px 12px 0px rgba(0,0,0,0.75);
-  border-radius: 4px;
   padding: 0;  
   
   &__btn {
@@ -228,7 +227,7 @@ input {
 }
 
 .b-popup {
-  height: 42%;
+  height: 44%;
   background-color: #ffffff;
   padding: 2.12em 2.12em 0 2.12em;
   text-align: start; 
@@ -252,7 +251,7 @@ input {
   }
 }
 
-.edit-inputs-wrapper {
+.inputs-wrapper {
   display: flex;
   width: 58%;
 
@@ -285,7 +284,7 @@ input {
 .warehouse-label {
   display: inline-block;
   margin: 0 1.5em 1.18em 0;
-  font-size: 12px;  
+  font-size: 12px;
 }
 
 .warehouse-input {
