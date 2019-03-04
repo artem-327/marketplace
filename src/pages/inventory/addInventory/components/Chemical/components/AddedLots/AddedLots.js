@@ -14,7 +14,9 @@ class AddedLots extends Component {
             const props = {
                 productOffer: this.props.productOffer,
                 edit: this.props.edit,
-                productOffering: this.props.productOffering
+                productOffering: this.props.productOffering,
+                removeAttachment: this.props.removeAttachment,
+                removeAttachmentLink: this.props.removeAttachmentLink
             }
 
             return this.props.lots.map((value,index)=>{

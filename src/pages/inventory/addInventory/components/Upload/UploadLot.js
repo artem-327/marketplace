@@ -14,21 +14,30 @@ class UploadLot extends Component {
         this.state = {
             files: [],
             filesIds: []
-        };
+        }
     }
 
     componentDidMount() {
-        let files = this.state.files
-        let attachments = this.props.productOffer ? this.props.productOffer.attachments : null
-        if (attachments) {
-            for (let i = 0; i < attachments.length; i++) {
-                if (attachments[i].type === this.props.type) {
-                    files = files.concat([attachments[i]])
+        if (this.props.edit) {
+            let files = this.state.files
+            let attachments
+
+            if (this.props.lot) {
+                attachments = this.props.lot.attachments
+            } else {
+                attachments = this.props.productOffer ? this.props.productOffer.attachments : null
+            }
+
+            if (attachments) {
+                for (let i = 0; i < attachments.length; i++) {
+                    if (attachments[i].type === this.props.type) {
+                        files = files.concat([attachments[i]])
+                    }
                 }
             }
-        }
-        if (files && files.length) {
-            this.setState({files: files})
+            if (files && files.length) {
+                this.setState({files: files})
+            }
         }
     }
 
@@ -43,7 +52,7 @@ class UploadLot extends Component {
 
             // remove only own files - change to null so indexes for other UploadLot(s) still work
             for (let i = 0; i < filesIds.length; i++) {
-                if (attachments[filesIds[i]].filesIndex === index) {
+                if (attachments[filesIds[i]] && (attachments[filesIds[i]].filesIndex === index)) {
                     attachments.splice(filesIds[i], 1, null)
                     break;
                 }
@@ -57,7 +66,7 @@ class UploadLot extends Component {
             let poId = this.props.productOffer.id
 
             // delete attachment from database
-            this.props.removeAttachmentLink(poId, attachmentId).then(() => {
+            this.props.removeAttachmentLink(this.props.lot ? true : false, this.props.lot ? this.props.lot.id : poId, attachmentId).then(() => {
                 this.props.removeAttachment(attachmentId)
             })
         }
@@ -91,7 +100,8 @@ class UploadLot extends Component {
                 name: files[i].name,
                 type: files[i].type,
                 docType: this.props.type,
-                filesIndex: this.state.files.length + i
+                filesIndex: this.state.files.length + i,
+                lot: this.props.lot ? this.props.lot.id : false
             }
             filesIds.push(attachments.length)
             attachments.push(filesData)
@@ -106,10 +116,10 @@ class UploadLot extends Component {
 
     render() {
         let files = this.state.files.map((file, index) => (
-            <File key={index} onRemove={() => this.removeFile(index)} className="file lot" name={file.name} index={index} />));
+            <File id={index} onRemove={() => this.removeFile(index)} className="file lot" name={file.name} index={index} />));
         let hasFile = this.state.files.length !== 0;
         return (
-            <div className={"uploadLot " + this.props.className}>
+            <div className={"uploadLot " + this.props.className + (hasFile ? ' has-file' : '')}>
                 {this.props.header}
                 {hasFile ?
                     <React.Fragment>

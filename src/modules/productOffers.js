@@ -219,17 +219,17 @@ export function addAttachment(file, docType) {
     }
 }
 
-export function linkAttachment(poId, aId) {
+export function linkAttachment(isLot, itemId, aId) {
     return {
         type: LINK_ATTACHMENT,
-        payload: axios.post('/prodex/api/attachment-links/to-product-offer?attachmentId='+aId+'&productOfferId='+poId)
+        payload: axios.post(`/prodex/api/attachment-links/to-${isLot ? 'lot' : 'product-offer'}?attachmentId=${aId}&${isLot ? 'lotId' : 'productOfferId'}=${itemId}`)
     }
 }
 
-export function removeAttachmentLink(poId, aId) {
+export function removeAttachmentLink(isLot, itemId, aId) {
     return {
         type: REMOVE_ATTACHMENT_LINK,
-        payload: axios.delete(`/prodex/api/attachment-links/to-product-offer?attachmentId=${aId}&productOfferId=${poId}`)
+        payload: axios.delete(`/prodex/api/attachment-links/to-${isLot ? 'lot' : 'product-offer'}?attachmentId=${aId}&${isLot ? 'lotId' : 'productOfferId'}=${itemId}`)
     }
 }
 

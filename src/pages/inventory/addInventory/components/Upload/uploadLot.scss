@@ -1,6 +1,8 @@
 .uploadLot {
   label {
-    margin: 0 0 0 37px;
+    height: 40px;
+    margin: 0 0 0 24px;
+    padding: 6px 4px 6px 13px;
     font-size: 0.875rem;
     color: #289ada;
     vertical-align: bottom;
@@ -10,11 +12,17 @@
     position: relative;
     display: inline-block;
     width: auto;
+    min-width: 211px;
+    height: 42px;
     vertical-align: bottom;
     margin: 0 11px;
-    padding: 2px 25px 2px 11px;
+    padding: 0 10px 0 11px;
     border: 1px solid #289ada;
     border-radius: 4px;
+
+    &.has-file {
+      border-color: #4cd136;
+    }
 
     &:first-child {
       margin-left: 0;
@@ -24,25 +32,32 @@
 .file-space{
   position: relative;
   display: inline-block;
+  height: 40px;
 }
 .upload {
   float: left;
-  height: 27px;
+  width: 24px;
   margin-top: 0;
   margin-bottom: 5px;
 }
 .uploaded {
-  height: 32px;
+  width: 24px;
   float: left;
 }
 
 .dropzoneLot {
   position: relative;
   display: inline-block;
+  height: 40px;
   font-size: 1.1rem;
   color: black;
-  padding-top: 4px;
+  padding-top: 0;
   transition: all .2s ease;
+
+  img {
+    margin-top: 6px;
+  }
+
   &.active{
     color: #4cd136;
   }
