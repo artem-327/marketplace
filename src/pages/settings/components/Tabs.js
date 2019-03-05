@@ -9,7 +9,7 @@ function Tabs(props) {
   
   return (					
     <ul className="tabs-wrapper col-xs-2 middle-xs">
-      { tabsNames.map(tab => {
+      { tabsNames.map((tab, i) => {
           return (
             <li
               key={ tab.link }
@@ -20,13 +20,13 @@ function Tabs(props) {
             currentTab === tab.name ?	
               <a className="tab-link active"
                 data-tab-name={ tab.name }
-                key={ temporaryRandomId }
+                key={ i }
               >
                 { tab.name }
               </a> :
               <a className="tab-link" 
                 data-tab-name={ tab.name }
-                key={ temporaryRandomId }
+                key={ i }
               >
                 { tab.name }
               </a>
