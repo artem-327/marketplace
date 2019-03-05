@@ -3,29 +3,59 @@ import { call, put, takeEvery } from "redux-saga/effects";
 
 import * as AT from './action-types';
 import api from "./api";
-import { getUsersDataRequestSuccess, getWarehousesDataRequestSuccess } from './actions';
 
-function* saveNewWarehouseWorker({ dataBody }) {
+function* saveNewWarehouseWorker({ payload }) {
   try {
-    const currentUser = yield call(api.getCurrentUser);  
-    const newArr = yield { ...dataBody, company: currentUser.company.id };
+    const currentUser = yield call(api.getCurrentUser); 
+    const dataBody = {
+      address: {
+        city: payload.address,
+        province: 44,
+        streetAddress: payload.city,
+        zip: payload.zipCode
+      },
+      contact: {
+        email: payload.email,
+        name: payload.contactName,
+        phone: payload.phone
+      },
+      warehouse: true,
+      warehouseName: payload.warehouseName
+    };     
+    const newArr = { ...dataBody, company: currentUser.company.id };
     yield call(api.createWarehouse, newArr);
   } catch (e) {
     yield console.log("error:", e);
   }
 }
 
-function* editWarehouseWorker({ dataBody, branchId }) {
-  try {    
-    yield call(api.putWarehouse, branchId, dataBody);
+function* editWarehouseWorker({ payload, id }) { 
+  try {
+    const dataBody = {
+      address: {
+        city: payload.address,
+        streetAddress: payload.city,
+        province: 44,
+        zip: "35"
+      },
+      company: 3,
+      contact: {
+        email: payload.email,
+        name: payload.contactName,
+        phone: payload.phone
+      },
+      warehouse: true,
+      warehouseName: payload.warehouseName
+    }
+    yield call(api.putWarehouse, id, dataBody);
   } catch (e) {
     yield console.log("error:", e);
   }
 }
 
-function* deleteWarehouseWorker({ warehouseId }) {
+function* deleteWarehouseWorker({ payload }) {
   try {
-    yield call(api.deleteWarehouse, warehouseId);
+    yield call(api.deleteWarehouse, payload);
   } catch (e) {
     yield console.log("error:", e);
   }
@@ -34,7 +64,7 @@ function* deleteWarehouseWorker({ warehouseId }) {
 function* getUsersDataWorker() {
   try {
     const users = yield call(api.getUsers);
-    yield put(getUsersDataRequestSuccess(users));
+    yield put({ type: AT.GET_USERS_DATA_SUCCESS, payload: users});
   } catch (e) {
     yield console.log("error:", e);
   }
@@ -43,8 +73,7 @@ function* getUsersDataWorker() {
 function* getWarehousesDataWorker() {
   try {
     const warehouses = yield call(api.getWarehouses);
-    console.log(warehouses)
-    yield put(getWarehousesDataRequestSuccess(warehouses));
+    yield put({ type: AT.GET_WAREHOUSES_DATA_SUCCESS, payload: warehouses });
   } catch (e) {
     yield console.log("error:", e);
   }

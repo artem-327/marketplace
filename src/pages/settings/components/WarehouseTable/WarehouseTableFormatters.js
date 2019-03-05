@@ -32,9 +32,9 @@ const mapDispatchToProps = {
 	deleteWarehouse
 };
 
-const mapStateToProps = store => {
+const mapStateToProps = state => {
   return {
-		store
+		state
   }
 }
 

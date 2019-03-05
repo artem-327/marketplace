@@ -127,6 +127,7 @@ class Settings extends Component {
 						/>
 						: null
 					}
+					{ console.log(this.props.children, '1') }
 					{ currentTab === 'Users' ?
 					<UsersTable
 						columns={ usersColumns }
@@ -149,10 +150,10 @@ class Settings extends Component {
 	}
 }
 
-const mapStateToProps = store => {
+const mapStateToProps = state => {
   return {
-		editWarehousePopup: store.settings.editWarehousePopup,
-		addNewWarehousePopup: store.settings.addNewWarehousePopup
+		editWarehousePopup: state.settings.editWarehousePopup,
+		addNewWarehousePopup: state.settings.addNewWarehousePopup
   }
 }
 

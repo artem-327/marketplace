@@ -67,9 +67,9 @@ const mapDispatchToProps = {
   handleSubmitEditPopup
 };
 
-const mapStateToProps = store => {
+const mapStateToProps = state => {
   return {
-		popupValues: store.settings.popupValues
+		popupValues: state.settings.popupValues
   }
 }
 

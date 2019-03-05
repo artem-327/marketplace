@@ -254,4 +254,5 @@ input {
     border: 1px solid #2599d5;
     color: #2599d5;
     background-color: #ffffff;
-    cursor: pointer; }
+    cursor: pointer;
+    height: 42px; }

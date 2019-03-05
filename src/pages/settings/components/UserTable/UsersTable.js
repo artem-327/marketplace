@@ -83,9 +83,9 @@ const mapDispatchToProps = {
 	getUsersDataRequest
 };
 
-const mapStateToProps = store => {
+const mapStateToProps = state => {
   return {
-		rows: store.settings.usersRows
+		rows: state.settings.usersRows
   }
 }
 

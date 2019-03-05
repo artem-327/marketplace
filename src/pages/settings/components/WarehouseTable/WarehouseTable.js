@@ -60,9 +60,9 @@ const mapDispatchToProps = {
 	getWarehousesDataRequest
 };
 
-const mapStateToProps = store => {
+const mapStateToProps = state => {
   return {
-		rows: store.settings.warehousesRows
+		rows: state.settings.warehousesRows
   }
 }
 
