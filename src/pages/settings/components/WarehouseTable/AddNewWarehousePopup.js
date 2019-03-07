@@ -5,7 +5,7 @@ import { Control, Form } from 'react-redux-form';
 // import TextField from '@material-ui/core/TextField';
 // import MenuItem from '@material-ui/core/MenuItem';
 
-import { handleAddNewWarehousePopup, AddNewWarehouseRequest } from '../../actions';
+import { handleAddNewWarehousePopup, addNewWarehouseRequest } from '../../actions';
 
 class EditWarehousePopup extends React.Component {
   constructor(props) {
@@ -36,14 +36,14 @@ class EditWarehousePopup extends React.Component {
     } = this.state
     const { 
       handleAddNewWarehousePopup,  
-      AddNewWarehouseRequest 
+      addNewWarehouseRequest 
     } = this.props;
 
     return (					
       <div className="popup-wrapper col-xs-10 center-xs">      
         <Form 
           model="forms.settingsPopup.addNewWarehouse" 
-          onSubmit={ (value) => AddNewWarehouseRequest(value) }
+          onSubmit={ (value) => addNewWarehouseRequest(value) }
           className="b-popup col-xs-10"
         >    
           <h2>{'Warehouse'} Profile</h2>
@@ -122,7 +122,7 @@ class EditWarehousePopup extends React.Component {
 
 const mapDispatchToProps = {   
   handleAddNewWarehousePopup,
-  AddNewWarehouseRequest
+  addNewWarehouseRequest
 };
 
 export default connect(null, mapDispatchToProps)(EditWarehousePopup);

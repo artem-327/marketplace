@@ -5,7 +5,9 @@ export const initialState = {
   addNewWarehousePopup: false,
   popupValues: [],
   usersRows: [],
-  warehousesRows: []
+  warehousesRows: [],
+  branchesRows: [],
+  creditCardsRows: []
 };
 
 export default function reducer(state = initialState, action) {
@@ -43,7 +45,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_WAREHOUSES_DATA_SUCCESS: {
+    case AT.GET_WAREHOUSES_DATA_SUCCESS: {      
       const warehousesRows = action.payload.map(warehouse => {	
         return (
           {
@@ -60,6 +62,66 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         warehousesRows: warehousesRows,
+      }
+    }
+
+    case AT.GET_BRANCHES_DATA_SUCCESS: {
+      const rows = action.payload.map(branch => {	
+        return (
+          {
+            warehouseName: branch.company.name,
+            address: branch.address.streetAddress + ', ' + branch.address.city,
+            contactName: branch.contact.name,
+            phone: branch.contact.phone,
+            email: branch.contact.email,
+            branchId: branch.id
+          }
+        )			
+      });
+
+      return {
+        ...state,
+        branchesRows: rows
+      }
+    }
+
+    case AT.GET_CREDIT_CARDS_DATA_SUCCESS: {
+      const rows = action.payload.map(card => {	
+        return (
+          {
+            id: card.id,
+            cardNumber: card.cardNumber,
+            cvc: card.cvc,
+            expirationMonth: card.expirationMonth,
+            expirationYear: card.expirationYear            
+          }
+        )			
+      });
+
+      return {
+        ...state,
+        creditCardsRows: rows
+      }
+    }
+
+    case AT.GET_BANK_ACCOUNTS_DATA_SUCCESS: {      
+      const rows = action.payload.map(account => {	
+        return (
+          {
+            id: account.id,
+            accountHolderName: account.accountHolderName,
+            accountHolderType: account.accountHolderType,
+            accountNumber: account.accountNumber,
+            country: account.country,
+            currency: account.currency,
+            routingNumber: account.routingNumber
+          }
+        )			
+      });
+
+      return {
+        ...state,
+        bankAccountsRows: rows
       }
     }
 

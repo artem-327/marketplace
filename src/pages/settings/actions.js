@@ -29,7 +29,7 @@ export function handleAddNewWarehousePopup() {
   }
 }
 
-export function AddNewWarehouseRequest(warehouseData) { 
+export function addNewWarehouseRequest(warehouseData) { 
   return {
     type: AT.ADD_NEW_WAREHOUSE_REQUEST,
     payload: warehouseData
@@ -45,5 +45,37 @@ export function getUsersDataRequest() {
 export function getWarehousesDataRequest() {  
   return {
     type: AT.GET_WAREHOUSES_DATA
+  }
+}
+
+export function getBranchesDataRequest() {
+  return {
+    type: AT.GET_BRANCHES_DATA
+  }
+}
+
+export function getCreditCardsDataRequest() {
+  return {
+    type: AT.GET_CREDIT_CARDS_DATA
+  }
+}
+
+export function getBankAccountsDataRequest() {
+  return {
+    type: AT.GET_BANK_ACCOUNTS_DATA
+  }
+}
+
+export function postNewCreditCardRequest(creditCardData) {
+  return {
+    type: AT.POST_NEW_CREDIT_CARD_REQUEST,
+    payload: creditCardData
+  }
+}
+
+export function postNewBankAccountRequest(bankAccountData) {
+  return {
+    type: AT.POST_NEW_BANK_ACCOUNT_REQUEST,
+    payload: bankAccountData
   }
 }

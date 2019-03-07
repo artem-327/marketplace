@@ -8,47 +8,35 @@ import '../styles/settings.css';
 import Tabs from './Tabs';
 import UsersTable from './UserTable/UsersTable';
 import WarehouseTable from './WarehouseTable/WarehouseTable';
+import BranchTable from './BranchTable/BranchTable';
+import BankAccountsTable from './BankAccountsTable/BankAccountsTable';
+import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
 import EditWarehousePopup from './WarehouseTable/EditWarehousePopup';
 import AddNewWarehousePopup from './WarehouseTable/AddNewWarehousePopup';
+import AddNewCreditCardPopup from './CreditCardsTable/AddNewCreditCardPopup';
+import AddNewBankAccountPopup from './BankAccountsTable/AddNewBankAccountPopup';
 import TablesHandlers from './TablesHandlers';
 
 class Settings extends Component {
 
 	state = {
-		usersColumns: [
-			{ name: 'checkbox', title: ' '},
-			{ name: 'userName', title: 'User Name' },
-			{ name: 'title', title: 'Title' },
-			{ name: 'email', title: 'E-mail' },
-			{ name: 'phone', title: 'Phone' },
-			{ name: 'homeBranch', title: 'Home Branch'},
-			{ name: 'permissions', title: 'Permissions' },
-			{ name: 'editDeleteBtn', title: ' ' }
-		],
-		warehouseColumns: [
-			{ name: 'warehouseName', title: 'Warehouse Name'},
-			{ name: 'address', title: 'Adress' },
-			{ name: 'contactName', title: 'Contact name' },
-			{ name: 'phone', title: 'Phone' },
-			{ name: 'email', title: 'E-mail' },
-			{ name: 'editDeleteBtn', title: ' ' }
-		],
 		checkboxColumns: ['checkbox'],
 		permissionsColumns: ['permissions'],
 		editDeleteColumns: ['editDeleteBtn'],
 		tabsNames: [
-			{	name: 'Users' }, 
-			{	name: 'Branches' }, 
-			{	name: 'Warehouses' }, 
-			{	name: 'Product catalog' }, 
-			{	name: 'Price list' }, 
-			{	name: 'Client list' }, 
-			{	name: 'Payment methods' }, 
-			{	name: 'Tax manager' }, 
-			{	name: 'Terms' }, 
-			{	name: 'Website Controls' }],
+			{	name: 'Users', id: 1 }, 
+			{	name: 'Branches', id: 2 }, 
+			{	name: 'Warehouses', id: 3 }, 
+			{	name: 'Product catalog', id: 4 }, 
+			{	name: 'Price list', id: 5 }, 
+			{	name: 'Client list', id: 6 }, 
+			{	name: 'Credit cards', id: 7 },
+			{	name: 'Bank accounts', id: 8 },
+			{	name: 'Tax manager', id: 9 }, 
+			{	name: 'Terms', id: 10 }, 
+			{	name: 'Website Controls', id: 11 }],
 		filterFieldCurrentValue: 'None',
-		currentTab: 'Warehouses',
+		currentTab: 'Credit cards',
 		filterValue: ''
 	}
 
@@ -82,15 +70,11 @@ class Settings extends Component {
 		const { 
 			filterFieldCurrentValue,
 			currentTab, 
-			tabsNames, 			
-			usersColumns, 
-			usersRows, 
+			tabsNames,			 
 			permissionsColumns,
 			editDeleteColumns,
 			checkboxColumns,
-			filterValue,
-			warehouseColumns,
-			warehousesRows			
+			filterValue			
 		} = this.state;
 
 		const { 
@@ -98,7 +82,8 @@ class Settings extends Component {
 			addNewWarehousePopup
 		} = this.props;
 
-		return (
+		console.log(currentTab, 'currentTab')
+		return (			
 			<main>
 				<div className="b-for-shadow">
 					<div className="b-wrapper row between-xs container-fluid">
@@ -121,28 +106,49 @@ class Settings extends Component {
 						<EditWarehousePopup	/>
 						: null
 					}
-					{ addNewWarehousePopup ?
-						<AddNewWarehousePopup
+					{ 
+						// addNewWarehousePopup ?
+						// <AddNewWarehousePopup
+						// 	handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
+						// />
+						// : null
+						addNewWarehousePopup ?
+						<AddNewBankAccountPopup
 							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
 						/>
-						: null
+						: null						
 					}
-					{ console.log(this.props.children, '1') }
 					{ currentTab === 'Users' ?
 					<UsersTable
-						columns={ usersColumns }
 						permissionsColumns={ permissionsColumns}
 						editDeleteColumns={ editDeleteColumns }
 						checkboxColumns={ checkboxColumns }
 						filterValue={ filterValue }
-					/>
-					:
+					/> :
+					currentTab === 'Warehouses' ?
 					<WarehouseTable 
-						columns={ warehouseColumns }
 						filterValue={ filterValue }
 						editDeleteColumns={ editDeleteColumns }
 						popupStatus={ editWarehousePopup || addNewWarehousePopup }
-					/>
+					/> :
+					currentTab === 'Branch' ?
+					<BranchTable 
+						filterValue={ filterValue }
+						editDeleteColumns={ editDeleteColumns }
+						popupStatus={ editWarehousePopup || addNewWarehousePopup }
+					/> :
+					currentTab === 'Bank accounts' ?
+					<BankAccountsTable
+						filterValue={ filterValue }
+						editDeleteColumns={ editDeleteColumns }
+						popupStatus={ editWarehousePopup || addNewWarehousePopup }
+					/> : 
+					currentTab === 'Credit cards' ?
+					<CreditCardsTable
+						filterValue={ filterValue }
+						editDeleteColumns={ editDeleteColumns }
+						popupStatus={ editWarehousePopup || addNewWarehousePopup }
+					/> : null			
 					}
 				</div>
 			</main>

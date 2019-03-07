@@ -30,15 +30,26 @@ const GridRoot = props => <Grid.Root {...props} className={cn(props.className,'c
 const HeaderCells = props => <TableHeaderRow.Cell {...props} className={cn(props.className,'columns-title-cell')} />
 const TableCells = props => <Table.Cell {...props} className={cn(props.className,'columns-rows-cell')} />
 
-class UsersTable extends Component {	
+class UsersTable extends Component {
+	state = {
+		columns: [
+			{ name: 'checkbox', title: ' '},
+			{ name: 'userName', title: 'User Name' },
+			{ name: 'title', title: 'Title' },
+			{ name: 'email', title: 'E-mail' },
+			{ name: 'phone', title: 'Phone' },
+			{ name: 'homeBranch', title: 'Home Branch'},
+			{ name: 'permissions', title: 'Permissions' },
+			{ name: 'editDeleteBtn', title: ' ' }
+		]
+	}
 
 	componentDidMount() {
 		this.props.getUsersDataRequest();
 	}
 	
 	render() {
-		const { 
-			columns, 
+		const {
 			rows, 
 			checkboxColumns, 
 			permissionsColumns, 
@@ -46,11 +57,13 @@ class UsersTable extends Component {
 			filterValue 
 		} = this.props;
 
-		return (					
+		const { columns } = this.state;
+
+		return (			
 			<Grid
 				rootComponent={ GridRoot }
 				rows={ rows }
-				columns={ columns }						
+				columns={ columns }
 			>	
 				<SearchState 
 					value={ filterValue } 

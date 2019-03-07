@@ -8,29 +8,25 @@ import {
 	TableHeaderRow
 } from '@devexpress/dx-react-grid-material-ui';
 
-import { 	EditDeleteFormatterProvider } from './WarehouseTableProviders';
-import { getWarehousesDataRequest } from '../../actions';
+import { 	EditDeleteFormatterProvider } from './BankAccountsProviders';
+import { getBankAccountsDataRequest } from '../../actions';
 
-class WarehouseTable extends Component {
-	
+class BankAccountsTable extends Component {
 	state = {		
 		columns: [
-			{ name: 'warehouseName', title: 'Warehouse Name'},
-			{ name: 'address', title: 'Address' },
-			{ name: 'contactName', title: 'Contact name' },
-			{ name: 'phone', title: 'Phone' },
-			{ name: 'email', title: 'E-mail' },
-			{ name: 'editDeleteBtn', title: ' ' }
+			{ name: 'accountHolderName', title: 'Account Holder Name'},
+			{ name: 'accountNumber', title: 'Account Number' },
+			{ name: 'currency', title: 'Currency' },			
+			{ name: 'editDeleteBtn', title: ' ' },
+			{ name: 'accountHolderType', title: ' ' },			
+			{ name: 'country', title: ' ' },
+			{ name: 'routingNumber', title: ' ' }
 		]
-	}
+	}	
 
 	componentDidMount() {
-		this.props.getWarehousesDataRequest();
+		this.props.getBankAccountsDataRequest();
 	}
-
-	setTextInputRef = element => {
-		this.textInput = element;
-	};
 	
 	render() {
 		const {			 
@@ -46,11 +42,12 @@ class WarehouseTable extends Component {
 		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
 		const TableCells = props => <Table.Cell {...props} className={ 'columns-rows-cell' } />
 
+
 		return (					
 			<Grid
 				rootComponent={ GridRoot }
 				rows={ rows }
-				columns={ columns }									
+				columns={ columns }						
 			>	
 				<SearchState 
 					value={ filterValue } 
@@ -72,13 +69,13 @@ class WarehouseTable extends Component {
 }
 
 const mapDispatchToProps = {   
-	getWarehousesDataRequest
+	getBankAccountsDataRequest
 };
 
 const mapStateToProps = state => {
   return {
-		rows: state.settings.warehousesRows
+		rows: state.settings.branchesRows
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WarehouseTable);
+export default connect(mapStateToProps, mapDispatchToProps)(BankAccountsTable);
