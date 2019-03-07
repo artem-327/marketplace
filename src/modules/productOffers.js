@@ -212,7 +212,7 @@ export function addAttachment(file, docType) {
 
     return {
         type: ADD_ATTACHMENT,
-        payload: axios.post(`/prodex/api/attachments?type=${docType}`, data, {headers: {
+        payload: axios.post(`/prodex/api/attachments?type=${docType}&isTemporary=true`, data, {headers: {
                 'accept': 'application/json',
                 'Accept-Language': 'en-US,en;q=0.8',
                 'Content-Type': `multipart/form-data; boundary=${data._boundary}`

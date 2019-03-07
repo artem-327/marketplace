@@ -39,7 +39,8 @@ const mapStateToProps = store => ({
     comboData: store.products.origin,
     productOffering: store.forms.productOffering,
     productOffer: store.productOffers.productOffer,
-    savedMapping: store.products.savedMapping
+    savedMapping: store.products.savedMapping,
+    fileMaxSize: store.products.fileMaxSize
 });
 
 const mapDispatchToProps = dispatch => (

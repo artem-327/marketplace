@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import File from "./components/File";
 import ReactDropzone from "react-dropzone";
 import {FormattedMessage} from 'react-intl';
+import {TOO_LARGE_FILE} from '../../../../../modules/errors.js'
 
 class UploadLot extends Component {
     constructor(props) {
@@ -84,6 +85,21 @@ class UploadLot extends Component {
         return true
     }
 
+    onDropRejected = (blobs) => {
+        let {fileMaxSize, dispatch} = this.props
+        blobs.forEach(function(blob) {
+            if (blob.size > (fileMaxSize * 1024 * 1024)) {
+                dispatch(() => ({
+                    type: TOO_LARGE_FILE,
+                    payload: {
+                        fileName: blob.name,
+                        maxSize: fileMaxSize
+                    }
+                }))
+            }
+        })
+    }
+
     onPreviewDrop = (files) => {
         let attachments = []
         let filesIds = []
@@ -123,7 +139,7 @@ class UploadLot extends Component {
                 {this.props.header}
                 {hasFile ?
                     <React.Fragment>
-                        <ReactDropzone className="dropzoneLot" activeClassName="active" onDrop={this.onPreviewDrop}>
+                        <ReactDropzone className="dropzoneLot" activeClassName="active" maxSize={this.props.fileMaxSize * 1024 * 1024} onDrop={this.onPreviewDrop} onDropRejected={this.onDropRejected}>
                             <img className="uploaded" src={uploaded} alt='drop'/>
                         </ReactDropzone>
                         <span className="file-space">{files}</span>

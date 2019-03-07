@@ -32,7 +32,6 @@ class AddedLots extends Component {
     }
 
     render(){
-        //console.log(this.props.lots)
         return (
         <div className='lots-container'>
                 <div className='lots-header'>
