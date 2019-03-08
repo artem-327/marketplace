@@ -6,10 +6,19 @@ import Chemical from "./components/Chemical";
 import {actions} from "react-redux-form";
 import {FormattedMessage} from 'react-intl';
 import {logout} from "../../../modules/identity";
+import moment from "moment"
 
 export default class AddInventory extends Component {
     componentDidMount(){
         if(this.props.edit && this.props.productOffer) {
+            // find lowest manufacturedDate and expirationDate in lots
+            let manufacturedDate, expirationDate
+            this.props.productOffer.lots.forEach(function(lot) {
+                manufacturedDate = (!manufacturedDate ? lot.manufacturedDate : (moment(lot.manufacturedDate).unix() < moment(manufacturedDate).unix() ? lot.manufacturedDate : manufacturedDate))
+                expirationDate = (!expirationDate ? lot.expirationDate : (moment(lot.expirationDate).unix() < moment(expirationDate).unix() ? lot.expirationDate : expirationDate))
+
+            })
+
             this.props.dispatch(actions.merge('forms.productMapping', {
                 casNumber: (typeof this.props.productOffer.product !== 'undefined' ? this.props.productOffer.product.casNumber : ''),
                 chemicalName: (typeof this.props.productOffer.product !== 'undefined' ? this.props.productOffer.product.chemicalName : ''),
@@ -24,8 +33,8 @@ export default class AddInventory extends Component {
                 tradeName: this.props.productOffer.tradeName,
                 assayMax: this.props.productOffer.assayMax,
                 assayMin: this.props.productOffer.assayMin,
-                creationDate: this.props.productOffer.creationDate,
-                expirationDate: this.props.productOffer.expirationDate,
+                creationDate: manufacturedDate,
+                expirationDate: expirationDate,
                 externalNotes: this.props.productOffer.externalNotes,
                 internalNotes: this.props.productOffer.internalNotes,
                 lotNumber: this.props.productOffer.lotNumber,
