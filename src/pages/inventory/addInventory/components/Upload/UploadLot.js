@@ -110,23 +110,23 @@ class UploadLot extends Component {
     }
 
     onPreviewDrop = (files) => {
-        let {loadFile, addAttachment, type, fileMaxSize} = this.props
-        let {onDropRejected, onUploadFail, removeFile} = this
-        let attachments = []
-        let filesIds = []
-        let filesLength = this.state.files.length
+        let {loadFile, addAttachment, type, fileMaxSize} = this.props;
+        let {onDropRejected, onUploadFail, removeFile} = this;
+        let attachments = [];
+        let filesIds = [];
+        let filesLength = this.state.files.length;
 
         // get attachments from local storage
         if (localStorage.getItem('attachments'))
-            attachments = JSON.parse(localStorage.getItem('attachments'))
+            attachments = JSON.parse(localStorage.getItem('attachments'));
 
         // add new files to attachments and save indexes of own files
         for (let i = 0; i < files.length; i++) {
             if (files[i].size > fileMaxSize * 1024 * 1024) {
                 // remove attachment
-                onDropRejected([files[i]])
-                files.splice(i, 1)
-                i--
+                onDropRejected([files[i]]);
+                files.splice(i, 1);
+                i--;
             } else {
                 // JSON.stringify on blob saves only preview - not enough
                 let filesData = {
@@ -136,16 +136,16 @@ class UploadLot extends Component {
                     docType: this.props.type,
                     filesIndex: filesLength + i,
                     lot: this.props.lot ? this.props.lot.id : false
-                }
-                filesIds.push(attachments.length)
-                attachments.push(filesData)
+                };
+                filesIds.push(attachments.length);
+                attachments.push(filesData);
             }
         }
 
-        localStorage.setItem('attachments', JSON.stringify(attachments))
+        localStorage.setItem('attachments', JSON.stringify(attachments));
 
-        let filesNew = this.state.files.concat(files)
-        filesIds = this.state.filesIds.concat(filesIds)
+        let filesNew = this.state.files.concat(files);
+        filesIds = this.state.filesIds.concat(filesIds);
         this.setState({files: filesNew, filesIds});
 
         // upload new files as temporary attachments
@@ -155,30 +155,28 @@ class UploadLot extends Component {
                     addAttachment(file.value, type).then((aId) => {
                         // add attachmentId to items in localStorage
                         if (localStorage.getItem('attachments'))
-                            attachments = JSON.parse(localStorage.getItem('attachments'))
+                            attachments = JSON.parse(localStorage.getItem('attachments'));
 
                         attachments = attachments.map(function (attachment) {
-                            if (attachment.filesIndex === (filesLength + j)) {
-                                attachment.attachmentId = aId.value.data
+                            if (attachment && (attachment.filesIndex === (filesLength + j))) {
+                                attachment.attachmentId = aId.value.data;
                             }
-                            return attachment
+                            return attachment;
                         })
 
-                        localStorage.setItem('attachments', JSON.stringify(attachments))
+                        localStorage.setItem('attachments', JSON.stringify(attachments));
 
-                        resolve()
+                        resolve();
                     }).catch(e => {
-                        onUploadFail(files[j].name)
-                        resolve()
+                        onUploadFail(files[j].name);
+                        resolve();
                     })
                 }).catch(e => {
-                    onUploadFail(files[j].name)
-                    resolve()
+                    onUploadFail(files[j].name);
+                    resolve();
                 });
-            }).then(loop.bind(null, j+1))
+            }).then(loop.bind(null, j+1));
         })(0)
-
-        console.log(this.state)
     };
 
     render() {
