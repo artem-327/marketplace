@@ -48,19 +48,9 @@ export default class AddForm extends Component {
         if (attActions > 0) {
             for (let at = 0; at < attachments.length; at++) {
                 if (attachments[at] && attachments[at].preview) {
-                    this.props.loadFile(attachments[at]).then(file => {
-                        this.props.addAttachment(file.value, attachments[at].docType).then((aId) => {
-                            this.props.linkAttachment(attachments[at].lot ? true : false, attachments[at].lot ? attachments[at].lot : productOfferId, aId.value.data).then((r) => {
-                                attSuccesses++
-                                this.checkUploadDocumentsStatus(attActions, attSuccesses, attErrors)
-                            }).catch(e => {
-                                attErrors++
-                                this.checkUploadDocumentsStatus(attActions, attSuccesses, attErrors)
-                            })
-                        }).catch(e => {
-                            attErrors++
-                            this.checkUploadDocumentsStatus(attActions, attSuccesses, attErrors)
-                        })
+                    this.props.linkAttachment(attachments[at].lot ? true : false, attachments[at].lot ? attachments[at].lot : productOfferId, attachments[at].attachmentId).then((r) => {
+                        attSuccesses++
+                        this.checkUploadDocumentsStatus(attActions, attSuccesses, attErrors)
                     }).catch(e => {
                         attErrors++
                         this.checkUploadDocumentsStatus(attActions, attSuccesses, attErrors)

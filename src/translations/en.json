@@ -271,5 +271,6 @@
     "cart.shoppingCartHeader": "Items ({number})",
     "notFound": "... think we are lost, sir !",
     "tooLargeFile": "File \"{fileName}\" is larger than maximal allowed size: {maxSize} MB",
+    "uploadFileFailed": "File \"{fileName}\" was not uploaded due to error.",
     "cart.keepShopping": "Keep Shopping"
 }

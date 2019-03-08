@@ -15,6 +15,10 @@ class AddedLots extends Component {
                 productOffer: this.props.productOffer,
                 edit: this.props.edit,
                 productOffering: this.props.productOffering,
+                dispatch: this.props.dispatch,
+                fileMaxSize: this.props.fileMaxSize,
+                loadFile: this.props.loadFile,
+                addAttachment: this.props.addAttachment,
                 removeAttachment: this.props.removeAttachment,
                 removeAttachmentLink: this.props.removeAttachmentLink
             }

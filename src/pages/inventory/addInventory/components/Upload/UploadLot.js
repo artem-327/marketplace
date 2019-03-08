@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import File from "./components/File";
 import ReactDropzone from "react-dropzone";
 import {FormattedMessage} from 'react-intl';
-import {TOO_LARGE_FILE} from '../../../../../modules/errors.js'
+import {TOO_LARGE_FILE, UPLOAD_FILE_FAILED} from '../../../../../modules/errors.js'
 
 class UploadLot extends Component {
     constructor(props) {
@@ -42,7 +42,7 @@ class UploadLot extends Component {
         }
     }
 
-    removeFile(index) {
+    removeFile = (index) => {
         if (this.state.files[index] instanceof Blob) {
             let filesIds = this.state.filesIds
             let attachments = []
@@ -100,9 +100,21 @@ class UploadLot extends Component {
         })
     }
 
+    onUploadFail = (fileName) => {
+        this.props.dispatch(() => ({
+            type: UPLOAD_FILE_FAILED,
+            payload: {
+                fileName: fileName
+            }
+        }))
+    }
+
     onPreviewDrop = (files) => {
+        let {loadFile, addAttachment, type, fileMaxSize} = this.props
+        let {onDropRejected, onUploadFail, removeFile} = this
         let attachments = []
         let filesIds = []
+        let filesLength = this.state.files.length
 
         // get attachments from local storage
         if (localStorage.getItem('attachments'))
@@ -110,24 +122,63 @@ class UploadLot extends Component {
 
         // add new files to attachments and save indexes of own files
         for (let i = 0; i < files.length; i++) {
-            // JSON.stringify on blob saves only preview - not enough
-            let filesData = {
-                preview: files[i].preview,
-                name: files[i].name,
-                type: files[i].type,
-                docType: this.props.type,
-                filesIndex: this.state.files.length + i,
-                lot: this.props.lot ? this.props.lot.id : false
+            if (files[i].size > fileMaxSize * 1024 * 1024) {
+                // remove attachment
+                onDropRejected([files[i]])
+                files.splice(i, 1)
+                i--
+            } else {
+                // JSON.stringify on blob saves only preview - not enough
+                let filesData = {
+                    preview: files[i].preview,
+                    name: files[i].name,
+                    type: files[i].type,
+                    docType: this.props.type,
+                    filesIndex: filesLength + i,
+                    lot: this.props.lot ? this.props.lot.id : false
+                }
+                filesIds.push(attachments.length)
+                attachments.push(filesData)
             }
-            filesIds.push(attachments.length)
-            attachments.push(filesData)
         }
 
         localStorage.setItem('attachments', JSON.stringify(attachments))
 
-        files = this.state.files.concat(files)
+        let filesNew = this.state.files.concat(files)
         filesIds = this.state.filesIds.concat(filesIds)
-        this.setState({files, filesIds});
+        this.setState({files: filesNew, filesIds});
+
+        // upload new files as temporary attachments
+        (function loop(j) {
+            if (j < files.length) new Promise((resolve, reject) => {
+                loadFile(files[j]).then(file => {
+                    addAttachment(file.value, type).then((aId) => {
+                        // add attachmentId to items in localStorage
+                        if (localStorage.getItem('attachments'))
+                            attachments = JSON.parse(localStorage.getItem('attachments'))
+
+                        attachments = attachments.map(function (attachment) {
+                            if (attachment.filesIndex === (filesLength + j)) {
+                                attachment.attachmentId = aId.value.data
+                            }
+                            return attachment
+                        })
+
+                        localStorage.setItem('attachments', JSON.stringify(attachments))
+
+                        resolve()
+                    }).catch(e => {
+                        onUploadFail(files[j].name)
+                        resolve()
+                    })
+                }).catch(e => {
+                    onUploadFail(files[j].name)
+                    resolve()
+                });
+            }).then(loop.bind(null, j+1))
+        })(0)
+
+        console.log(this.state)
     };
 
     render() {
@@ -139,7 +190,7 @@ class UploadLot extends Component {
                 {this.props.header}
                 {hasFile ?
                     <React.Fragment>
-                        <ReactDropzone className="dropzoneLot" activeClassName="active" maxSize={this.props.fileMaxSize * 1024 * 1024} onDrop={this.onPreviewDrop} onDropRejected={this.onDropRejected}>
+                        <ReactDropzone className="dropzoneLot" activeClassName="active" onDrop={this.onPreviewDrop} onDropRejected={this.onDropRejected}>
                             <img className="uploaded" src={uploaded} alt='drop'/>
                         </ReactDropzone>
                         <span className="file-space">{files}</span>

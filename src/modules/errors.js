@@ -9,7 +9,8 @@ const ADD_PRODUCT_OFFER_REJECTED = 'ADD_PRODUCT_OFFER_REJECTED';
 const EDIT_PRODUCT_OFFER_REJECTED = 'EDIT_PRODUCT_OFFER_REJECTED';
 const SAVE_MAPPING_REJECTED = 'SAVE_MAPPING_REJECTED';
 const ADD_ATTACHMENT_REJECTED = 'ADD_ATTACHMENT_REJECTED';
-export const TOO_LARGE_FILE = 'TOO_LARGE_FILE';
+export const TOO_LARGE_FILE = 'TOO_LARGE_FILE'
+export const UPLOAD_FILE_FAILED = 'UPLOAD_FILE_FAILED'
 // const SAVE_MAPPING_REJECTED = 'SAVE_MAPPING_REJECTED';
 // const FETCH_ORIGIN_REJECTED = 'FETCH_ORIGIN_REJECTED';
 // const FETCH_RECENT_ADDED_PRODUCTS_REJECTED = 'FETCH_RECENT_ADDED_PRODUCTS_REJECTED';
@@ -107,7 +108,17 @@ export default function reducer(state = initialState, action) {
                         values={{ fileName: action.payload.fileName, maxSize: action.payload.maxSize }}
                     />)]
             }
-            //'File "'+action.payload.fileName+'" is larger than maximal allowed size: '+action.payload.maxSize+' MB'
+        }
+        case UPLOAD_FILE_FAILED: {
+            return {
+                ...state,
+                messages: [...state.messages,
+                    (<FormattedMessage
+                        id='uploadFileFailed'
+                        defaultMessage='File "{fileName}" was not uploaded due to error.'
+                        values={{ fileName: action.payload.fileName }}
+                    />)]
+            }
         }
         default: {
             return state
