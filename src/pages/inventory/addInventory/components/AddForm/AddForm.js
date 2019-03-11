@@ -106,18 +106,6 @@ export default class AddForm extends Component {
             delete newTiers[i].id
         }
 
-        const creationDate = (this.props.productOfferingForm.creationDate
-                                     ? (this.props.productOfferingForm.creationDate.includes("T")
-                                             ? this.props.productOfferingForm.creationDate
-                                             : `${this.props.productOfferingForm.creationDate}T00:00:00Z`)
-                                     : null)
-
-        const expirationDate = (this.props.productOfferingForm.expirationDate
-                                     ? (this.props.productOfferingForm.expirationDate.includes("T")
-                                             ? this.props.productOfferingForm.expirationDate
-                                             : `${this.props.productOfferingForm.expirationDate}T00:00:00Z`)
-                                     : null)
-
 
         const localLots = JSON.parse(localStorage.getItem('productLots'));
         let lots = [];
@@ -143,8 +131,6 @@ export default class AddForm extends Component {
             anonymous: false,
             assayMin: parseInt(this.props.productOfferingForm.assayMin),
             assayMax: parseInt(this.props.productOfferingForm.assayMax),
-            creationDate: creationDate,
-            expirationDate: expirationDate,
             pricing: {
                 ...this.props.addProductOfferForm.pricing,
                 price: parseFloat(Number(this.props.addProductOfferForm.pricing.price).toFixed(3)),
@@ -165,6 +151,8 @@ export default class AddForm extends Component {
         delete params.packaging.splits;
         delete params.packaging.minimum;
 
+        delete params.creationDate;
+        delete params.expirationDate;
         delete params.casNumber;
         delete params.chemicalName;
         delete params.indexName;
@@ -223,18 +211,6 @@ export default class AddForm extends Component {
             delete newTiers[i].id
         }
 
-        const creationDate = (this.props.productOfferingForm.creationDate
-                                     ? (this.props.productOfferingForm.creationDate.includes("T")
-                                             ? this.props.productOfferingForm.creationDate
-                                             : `${this.props.productOfferingForm.creationDate}T00:00:00Z`)
-                                     : null)
-
-        const expirationDate = (this.props.productOfferingForm.expirationDate
-                                     ? (this.props.productOfferingForm.expirationDate.includes("T")
-                                             ? this.props.productOfferingForm.expirationDate
-                                             : `${this.props.productOfferingForm.expirationDate}T00:00:00Z`)
-                                     : null)
-
         const localLots = JSON.parse(localStorage.getItem('productLots'));
         let lots = [];
 
@@ -266,13 +242,14 @@ export default class AddForm extends Component {
                 tiers: newTiers
             },
             lots: lots,
-            creationDate: creationDate,
-            expirationDate: expirationDate,
             manufacturer: (typeof this.props.productOfferingForm.manufacturer !== 'undefined' ? this.props.productOfferingForm.manufacturer.id : (typeof this.props.productOffer.manufacturer !== 'undefined' ? this.props.productOffer.manufacturer.id : '')),
             origin: (typeof this.props.productOfferingForm.origin !== 'undefined' ? this.props.productOfferingForm.origin.id : (typeof this.props.productOffer.origin !== 'undefined' ? this.props.productOffer.origin.id : '')),
             product: (typeof this.props.productOffer.product !== 'undefined' ? this.props.productOffer.product.id : ''),
             packaging: {...this.props.mappingForm.packaging}
         });
+
+        delete params.creationDate;
+        delete params.expirationDate;
 
         this.props.editProductOffer(this.props.productOffer.id, params).then((productOffer)=>{
             this.uploadDocuments(productOffer)
