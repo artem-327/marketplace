@@ -1,8 +1,9 @@
+@import "../../styles/fonts.scss";
 @import "../../styles/main.scss";
 
 .popup-component {
   display: grid;
-  grid-template-rows: 100px 1fr 70px;
+  grid-template-rows: 91px 1fr 96px;
   background-color: $white-color;
   @include mq('m') {
     min-width: 50vh;
@@ -16,11 +17,14 @@
     margin: 0;
 
       h1 {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: darken( $beige-color, 30% );
-        text-transform: uppercase;
-        margin: 0;
+        margin: 15px 0 0;
+        text-transform: none;
+        font-family: $helvetica-roman;
+        font-size: 1.375rem;
+        font-weight: 400;
+        color: #33373e;
+        letter-spacing: 0.2px;
+        line-height: 1.1818;
       }
 
       .close-mark {

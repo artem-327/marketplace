@@ -15,9 +15,9 @@ class Users extends Component {
         <User
           key={user.id}
           {...user}
-          fetchOffices={this.props.fetchOffices}
-          promoteToOperator={this.props.promoteToOperator}
-          promoteToMerchant={this.props.promoteToMerchant}
+          getOffices={this.props.getOffices}
+          putPromoteToOperator={this.props.putPromoteToOperator}
+          putPromoteToMerchant={this.props.putPromoteToMerchant}
           offices={this.props.offices}
           isFetching={this.props.isFetchingOffices}
         />
@@ -52,17 +52,17 @@ class Users extends Component {
         id="users"
         sortFunc={nameColumn => console.log(nameColumn)}
         headerInit={[
-          { name: "Company" },
-          { name: "Company Office" },
-          { name: "Username" },
-          { name: "Last Name" },
-          { name: "First Name" },
-          { name: "Roles" }
+          { name: "company" },
+          { name: "companyOffice" },
+          { name: "username" },
+          { name: "lastName" },
+          { name: "firstName" },
+          { name: "roles" }
         ]}
         contextMenu={
           [
-              {action: (id) => console.log("edit user with id: " + id), label: 'Edit User'},
-              {action: (id) => console.log("remove user with id: " + id), label: 'Remove User'},
+              {action: (id) => console.log("edit user with id: " + id), label: 'editUser'},
+              {action: (id) => console.log("remove user with id: " + id), label: 'removeUser'},
           ]
         }
         rows={rows}

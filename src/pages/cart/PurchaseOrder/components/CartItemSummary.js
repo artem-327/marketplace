@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from "prop-types";
+import {FormattedMessage} from 'react-intl';
 
 const CartItemSummary = ({cartItem,  deleteCart, itemIndex}) => {
     const {productOffer} = cartItem;
@@ -8,14 +9,95 @@ const CartItemSummary = ({cartItem,  deleteCart, itemIndex}) => {
       <div className="cart-item-summary">
         <table>
           <tbody>
-            <tr><td className="title">Item {itemIndex}</td><td className="action"><span className="headerAddtext" onClick={() => deleteCart(productOffer.id)}>remove</span></td></tr>
-            <tr><td className="subtitle" colspan="2">{productOffer.product.casIndexName}</td></tr>
-            <tr><td>Merchant</td><td>{productOffer.merchant.email}</td></tr>
-            <tr><td>Location</td><td>{location}</td></tr>
-            <tr><td>Quantity</td><td>{cartItem.quantity} packs</td></tr>
-            <tr><td>Weight</td><td>{cartItem.quantity * productOffer.packaging.capacity} lbs</td></tr>
-            <tr><td>Price per Lb</td><td>{productOffer.pricing.price}$</td></tr>
-            <tr className="total"><td>Product Total</td><td>{cartItem.selectedOfferPrice}$</td></tr>
+            <tr>
+                <td className="title">
+                    <FormattedMessage
+                        id='cart.item'
+                        defaultMessage={'Item ' + itemIndex}
+                        values={{index: itemIndex}}
+                    />
+                </td>
+                <td className="action">
+                    <span
+                        className="headerAddtext"
+                        onClick={() => deleteCart(productOffer.id)}>
+                        <FormattedMessage
+                            id='global.remove'
+                            defaultMessage='Remove'
+                        />
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td
+                    className="subtitle"
+                    colspan="2">
+                        {productOffer.product.casIndexName}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <FormattedMessage
+                        id='cart.merchant'
+                        defaultMessage='Merchant'
+                    />
+                </td>
+                <td>{productOffer.merchant.email}</td>
+            </tr>
+            <tr>
+                <td>
+                    <FormattedMessage
+                        id='global.location'
+                        defaultMessage='Location'
+                    />
+                </td>
+                <td>{location}</td>
+            </tr>
+            <tr>
+                <td>
+                    <FormattedMessage
+                        id='global.quantity'
+                        defaultMessage='Quantity'
+                    />
+                </td>
+                <td>
+                    <FormattedMessage
+                        id='cart.packs'
+                        defaultMessage={cartItem.quantity + ' Packs'}
+                        values={{quantity: cartItem.quantity}}
+                    />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <FormattedMessage
+                        id='global.weight'
+                        defaultMessage='Weight'
+                    />
+                </td>
+                <td>
+                    {cartItem.quantity * productOffer.packaging.size} lbs
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <FormattedMessage
+                        id='global.pricePer'
+                        defaultMessage='Price per Lb'
+                        values={{unit: 'Lb'}}
+                    />
+                </td>
+                <td>{productOffer.pricing.price}$</td>
+            </tr>
+            <tr className="total">
+                <td>
+                    <FormattedMessage
+                        id='cart.productTotal'
+                        defaultMessage='Product Total'
+                    />
+                </td>
+                <td>{cartItem.selectedOfferPrice}$</td>
+            </tr>
           </tbody>
         </table>
       </div>

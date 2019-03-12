@@ -6,6 +6,7 @@ import Spinner from "../../../components/Spinner/Spinner";
 import FilterTag from "../../../components/Filter/components/FilterTag";
 import {getSelectedDataTable} from "../../../utils/functions";
 import SubMenu from '../../../components/SubMenu';
+import {FormattedMessage} from 'react-intl';
 
 const GROUP_BY_ALL_COMPANIES = 1;
 const GROUP_BY_REGIONS = 2;
@@ -18,10 +19,7 @@ class MyInventory extends Component {
             targetGroups: [],
             currentSelected: 'All companies',
             selections: [
-                {
-                    name: 'All companies',
-                    id: GROUP_BY_ALL_COMPANIES
-                },
+                {name: 'All companies', id: GROUP_BY_ALL_COMPANIES},
                 // {name: 'Region', id: GROUP_BY_REGIONS}
             ]
         };
@@ -43,9 +41,7 @@ class MyInventory extends Component {
     }
 
     setActiveBroadcastButton(active){
-        this.setState({
-            brActive:active
-        })
+        this.setState({brActive:active})
     }
 
     setFilter(type, companies = this.props.companies) {
@@ -63,22 +59,10 @@ class MyInventory extends Component {
     }
 
     groupByAllCompanies(companies) {
-        let targets = companies.map(company => (
-            {
-                name: company.name,
-                company: company.id
-            }
-        ));
+        let targets = companies.map(company => ({name: company.name, company: company.id}));
         this.setState({
             currentSelected: 'All companies',
-            targetGroups: [
-                {
-                    name: 'All Companies',
-                    type:'company',
-                    visible: true,
-                    targets: targets
-                }
-            ]
+            targetGroups: [{name: 'All Companies', type:'company', visible: true, targets: targets}],
         });
     }
 
@@ -86,21 +70,9 @@ class MyInventory extends Component {
         let targetsGroups = Object.values(companies.reduce((carry, company) => {
             let locations = company.offices.map(office => office.location);
             locations.forEach(location => {
-                carry[location.id] =
-                    carry[location.id] ||
-                    {
-                        name: location.state,
-                        type:'location',
-                        id: location.id,
-                        visible: true,
-                        targets: []
-                    }
-                    .targets.push(
-                            {
-                                name: company.name,
-                                company: company.id
-                            }
-                    );
+                (carry[location.id] = carry[location.id] || {name: location.state, type:'location', id: location.id, visible: true, targets: []})
+                    .targets
+                    .push({name: company.name, company: company.id});
             });
             return carry;
         }, {}));
@@ -111,50 +83,44 @@ class MyInventory extends Component {
     }
 
     render() {
-        const {
-            isFetching,
-            productOffers,
-            fetchMyProductOffers,
-            sendRules,
-            addPopup,
-            removePopup,
-            removeProductOffer,
-            targetGroups,
-            history,
-            selections,
-            currentSelected,
-            dispatch,
-            productOffersTable
-        } = this.props;
-        let content = isFetching ? <Spinner/> :
+        let content = this.props.isFetching ? <Spinner/> :
             <ProductOffers
-                productOffers={productOffers}
-                fetchMyProductOffers={fetchMyProductOffers}
-                submitRules={sendRules}
-                addPopup={addPopup}
-                removePopup={removePopup}
-                removeProductOffer={removeProductOffer}
-                getProductOffers={fetchMyProductOffers}
-                targetGroups={targetGroups}
-                setFilter={type => this.setFilter(type)}
-                history={history}
-                selections={selections}
-                currentSelected={currentSelected}
+                productOffers={this.props.productOffers}
+                fetchMyProductOffers={this.props.fetchMyProductOffers}
+                submitRules={this.props.sendRules}
+                addPopup={this.props.addPopup}
+                removePopup={this.props.removePopup}
+                deleteProductOffer={this.props.deleteProductOffer}
+                getProductOffers={this.props.fetchMyProductOffers}
+                targetGroups={this.state.targetGroups}
+                setFilter={(type) => this.setFilter(type)}
+                history={this.props.history}
+                selections={this.state.selections}
+                currentSelected={this.state.currentSelected}
                 setActiveBroadcastButton={active => this.setActiveBroadcastButton(active)}
-                broadcastActive={this.state.brActive}/>;
+                broadcastActive={this.state.brActive}
+                {...this.props}/>;
+        const number = getSelectedDataTable(this.props.productOffersTable);
         return (
             <div className='my-inventory'>
                 <div className='header-top'>
-                    <h1 className='header inv-header'>MY INVENTORY</h1>
+                    <h1 className='header inv-header'>
+                        <FormattedMessage
+                            id='myInventory.myInventory'
+                            defaultMessage='MY INVENTORY'
+                        />
+                    </h1>
                     <SubMenu/>
                     <FilterTag
-                        dispatch={dispatch}
-                        closeFunc={filter => fetchMyProductOffers({...filter})}
+                        dispatch={this.props.dispatch}
+                        closeFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}}
                     />
-                    <h3
-                        className='header small'
-                    >
-                        {getSelectedDataTable(productOffersTable)} product offerings selected
+                    <h3 className='header small'>
+                        <FormattedMessage
+                            id='myInventory.smallHeader'
+                            defaultMessage={number + ' products offerings selected'}
+                            values={{number: number}}
+                        />
                     </h3>
                 </div>
                 <Filter
@@ -168,7 +134,8 @@ class MyInventory extends Component {
                     condition
                     productGrade
                     form
-                    filterFunc={filter => fetchMyProductOffers({...filter})}
+                    filterFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}}
+                    {...this.props}
                 />
                 {content}
             </div>

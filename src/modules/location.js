@@ -13,6 +13,8 @@ const FETCH_WAREHOUSE_FULFILLED = 'FETCH_WAREHOUSE_FULFILLED';
 const FETCH_LOCATIONS = 'FETCH_LOCATIONS';
 const FETCH_LOCATIONS_PENDING = 'FETCH_LOCATIONS_PENDING';
 const FETCH_LOCATIONS_FULFILLED = 'FETCH_LOCATIONS_FULFILLED';
+const FETCH_FILTER_LOCATIONS = 'FETCH_FILTER_LOCATIONS';
+const FETCH_FILTER_LOCATIONS_FULFILLED = 'FETCH_FILTER_LOCATIONS_FULFILLED';
 
 const SAVE_WAREHOUSE = 'SAVE_WAREHOUSE';
 const UPDATE_WAREHOUSE = 'UPDATE_WAREHOUSE';
@@ -24,6 +26,7 @@ export const initialState = {
     hasError: false,
     warehouse: [],
     locations: [],
+    filterLocations: [],
     regions: [],
     states: [],
     provinces: [],
@@ -36,6 +39,7 @@ export const initialState = {
     isFetching: false,
     warehouseDistances: [], //filter location
     locationFetching: false,
+    filterLocationsFetching: false,
     data:{}
 };
 
@@ -70,6 +74,24 @@ export default function reducer(state = initialState, action) {
                 locationsFetched: action.payload.status,
             }
         }
+
+        case FETCH_FILTER_LOCATIONS_FULFILLED: {
+            const filterLocations = action.payload.map((loc)=> {
+                return {
+                    id: loc.id,
+                    province: loc.province,
+                    country: loc.country,
+                }
+            })
+
+            return {
+                ...state,
+                filterLocationsFetching: false,
+                filterLocations: filterLocations,
+                filterLocationsFetched: action.payload.status,
+            }
+        }
+
 
         case STATES_FETCH_REQUESTED: {
             return {
@@ -165,36 +187,49 @@ export function fetchLocations(filter = {}){
     }
 }
 
+export function fetchFilterLocations(filter = ""){
+    return {
+        type: FETCH_FILTER_LOCATIONS,
+        payload: axios.get('/prodex/api/locations', {params: {search: filter}}).then(result => {
+            return result.data
+        })
+    }
+}
+
 export function fetchWarehouses(){
     return {
         type: FETCH_WAREHOUSE,
-        payload: axios.get('/prodex/api/warehouses').then(result => {return result.data})
+        payload: axios.get('/prodex/api/branches/warehouses').then(result => {return result.data})
     }
 }
 
-export function saveWarehouse(name, address, city, location, contactName, contactNumber, contactEmail, zip) {
+export function saveWarehouse(warehouseName, streetAddress, city, province, name, number, email, zip) {
+    let address = {streetAddress, city, zip, province};
+    let contact = {name, phone: number, email};
     return {
         type: SAVE_WAREHOUSE,
-        payload: axios.post('/prodex/api/warehouses', {name, address, city, location, contactName, contactNumber, contactEmail, zip})
+        payload: axios.post('/prodex/api/branches', {address, company: 1, contact, warehouse: true, warehouseName})
     }
 }
 
-export function updateWarehouse(id, name, address, city, location, contactName, contactNumber, contactEmail, zip){
+export function updateWarehouse(id, warehouseName, streetAddress, city, province, name, number, email, zip){
+    let address = {streetAddress, city, zip, province};
+    let contact = {name, phone: number, email};
     return {
         type: UPDATE_WAREHOUSE,
-        payload: axios.put(`/prodex/api/warehouses/${id}`, {name, address, city, location, contactName, contactNumber, contactEmail, zip})
+        payload: axios.put(`prodex/api/branches/${id}`, {address, company: 1, contact, warehouse: true, warehouseName})
     }
 }
 
-export function fetchRegions(search = null){
+export function getRegions(search = null){
     return {type: REGIONS_FETCH_REQUESTED, payload:{search}}
 }
 
-export function fetchStates(search = null){
+export function getStates(search = null){
     return {type: STATES_FETCH_REQUESTED, payload:{search}}
 }
 
-export function fetchStateDetail(id) {
+export function getStateDetail(id) {
     return {type: STATEDETAIL_FETCH_REQUESTED, payload: {id}}
 }
 
@@ -210,7 +245,7 @@ export function fetchWarehouseDistances(){
     }
 }
 
-export function fetchRegionDetail(id) {
+export function getRegionDetail(id) {
     return {type: REGIONDETAIL_FETCH_REQUESTED, payload: {id}}
 }
 

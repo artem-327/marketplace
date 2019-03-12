@@ -3,13 +3,20 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types'
 import Spinner from "../components/Spinner/Spinner";
+import {logout} from "../modules/identity";
 
 export function withAuth(ComposedComponent) {
     class requireAuth extends React.Component {
 
         verify(props) {
             if (!props.isAuthenticated && !props.isFetchingIdentity) {
-                if(props.location.pathname !== "/login") props.history.push("/login");
+                if(props.location.pathname !== "/login")
+                    props.history.push("/login");
+            }
+            if(!props.isFetchingIdentity && !localStorage.jwtoken) {
+                logout();
+                if(props.location.pathname !== "/login")
+                    props.history.push("/login");
             }
         }
 
@@ -48,4 +55,15 @@ export function setAuthToken(token) {
 export function deleteAuthToken() {
     localStorage.removeItem('jwtoken');
     delete axios.defaults.headers.common['Authorization'];
+}
+
+export function checkToken(props) {
+    //use isFetchingIdentity ?
+    if(!props.isFetchingIdentity && !localStorage.jwtoken) {
+        logout();
+        if(props.location.pathname !== "/login")
+            props.history.push("/login");
+            return true;
+    }
+    return false;
 }

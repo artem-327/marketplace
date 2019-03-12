@@ -5,15 +5,15 @@ import OfficesDetailAdmin from "./OfficesDetailAdmin";
 import Spinner from "../../../components/Spinner/Spinner";
 import DataTable from "../../../components/DataTable";
 import {
-  removeOffice,
-  fetchOffices,
-  createOffice
+  deleteOffice,
+  getOffices,
+  postNewOffice
 } from "../../../modules/companies";
 import { fetchLocations } from "../../../modules/location";
-import {addPopup, removePopup} from "../../../modules/popup";
-import { required } from "../../../utils/validation";
-import RemoteComboBox from "../../../components/ComboBox/RemoteComboBox";
-import Button from "../../../components/Button/Button";
+import {addPopup, /*removePopup*/} from "../../../modules/popup";
+//import { required } from "../../../utils/validation";
+//import RemoteComboBox from "../../../components/ComboBox/RemoteComboBox";
+//import Button from "../../../components/Button/Button";
 
 class Offices extends Component {
   state = {
@@ -22,7 +22,7 @@ class Offices extends Component {
   };
 
   componentDidMount() {
-    this.props.fetchOffices();
+    this.props.getOffices();
     this.props.fetchLocations();
   }
 
@@ -50,18 +50,18 @@ class Offices extends Component {
         id="offices"
         sortFunc={nameColumn => console.log(nameColumn)}
         headerInit={[
-          { name: "Office Name" },
-          { name: "Company Name" },
-          { name: "Merchants" }
+          { name: "officeName" },
+          { name: "companyName" },
+          { name: "merchants" }
         ]}
         contextMenu={[
           {
             action: id =>  this.props.addPopup(<OfficesDetailAdmin id={id}/>),
-            label: "Edit Office"
+            label: "editOffice"
           },
           {
-            action: id => this.props.removeOffice(id),
-            label: "Remove Office"
+            action: id => this.props.deleteOffice(id),
+            label: "removeOffice"
           }
         ]}
         rows={rows}
@@ -73,7 +73,7 @@ class Offices extends Component {
     // }
     // const officesData = offices.map(office => (
     //    <Office
-    //       removeOffice={(id) => this.props.removeOffice(id, this.props.company)}
+    //       deleteOffice={(id) => this.props.deleteOffice(id, this.props.company)}
     //       key={office.id}
     //       id={office.id}
     //       office={office}
@@ -109,7 +109,7 @@ class Offices extends Component {
     //             validators={{ required }}
     //          />
     //          <Button
-    //             onClick={() => this.props.createOffice(newOfficePayload, () => this.setState({name: "", location: {}}))}
+    //             onClick={() => this.props.postNewOffice(newOfficePayload, () => this.setState({name: "", location: {}}))}
     //          >Add</Button>
     //       </div>
     //    </div>
@@ -129,7 +129,7 @@ function mapStateToProps(store) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { fetchOffices, removeOffice, createOffice, fetchLocations, addPopup },
+    { getOffices, deleteOffice, postNewOffice, fetchLocations, addPopup },
     dispatch
   );
 }

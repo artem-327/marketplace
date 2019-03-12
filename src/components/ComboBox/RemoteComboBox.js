@@ -40,6 +40,13 @@ class RemoteComboBox extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.currentValue) {
+        this.setState({ fulltext: nextProps.currentValue}, () => {
+        });
+    }
+    }
+
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClickOutside, false);
   }
@@ -49,8 +56,22 @@ class RemoteComboBox extends Component {
     this.setState({ isOpen: false });
   }
 
+
+  setActive(index) {
+    if(this.props.scroll === undefined || this.props.scroll === -1) {
+        return "";
+    } else {
+        if (index == this.props.scroll) {
+            return " activeSearchResult";
+        }
+        return "";
+    };
+  }
+
+
   renderResults() {
-    if (!this.state.hasSearched || !this.state.isOpen || this.state.fulltext.length < 2) return;
+    if (!this.state.hasSearched || !this.state.isOpen || this.state.fulltext.length < 3) return;
+
     if (this.props.isFetching)
       return (
         <div className="combo-results">
@@ -60,14 +81,14 @@ class RemoteComboBox extends Component {
       if (this.state.items.length > 0) {
         let res = this.state.items.map((combo, index) => (
             <div
-              key={index + combo.id}
-              className="combo-item"
+              key={index}
+              className={"combo-item" + this.setActive(index)}
               onClick={() => {
                 this.setState(
                   {
                     fulltext: this.props.displayName
                       ? this.props.displayName(combo)
-                      : combo[this.props.displayAttr] || combo.name,
+                      : combo[this.props.displayAttr] /* || combo.country.name || combo.province.name */ || combo.name,
                     hasSearched: false, items: [], dataFetched: false
                   },
                   () => {
@@ -91,10 +112,11 @@ class RemoteComboBox extends Component {
           ));
           return (
             <div
+              tabIndex="-1"
               className={"combo-results"}
               style={{ maxHeight: 44 * this.state.results_count }}
             >
-              {res}
+                {res}
             </div>
           );
       } 
@@ -112,12 +134,17 @@ class RemoteComboBox extends Component {
 
   handleChange(e) {
     //if(e.target.value === "") this.setState({items: [], dataFetched: false})
-    this.setState(
+      this.setState(
       { fulltext: e.target.value, hasSearched: true, isOpen: true },
       () => {
-        if (this.state.fulltext.length > 1) this.filterData();
+        if (!!this.state.fulltext.length) setTimeout(() => {
+        if (this.state.fulltext.length > 2)  this.filterData() }, 700);
       }
     );
+  }
+
+  handleTab(e) {
+    if(e.keyCode == 9) this.setState({ isOpen: false });
   }
 
   filterData() {
@@ -127,6 +154,8 @@ class RemoteComboBox extends Component {
   render() {
     let { fulltext } = this.state;
     let results = this.renderResults();
+    let validate = this.state.fulltext.length < 3 && this.state.fulltext.length > 0 ? <span className="combo-validate">Please enter at least 3 characters.</span> : null;
+
     return (
       <div
         className={
@@ -135,13 +164,17 @@ class RemoteComboBox extends Component {
         ref={this.comboRef}
       >
         <label>{this.props.label}</label>
-        <i className="fas fa-search combo-icon" />
+        <i className="search combo-icon" />
         <input
+          id = {this.props.id}
+          autoComplete="off"
           value={fulltext}
           onChange={e => this.handleChange(e)}
+          onKeyDown={e => this.handleTab(e)}
           disabled={this.props.disabled || false}
           placeholder={this.props.placeholder || "Search"}
         />
+          {validate}
         {results}
       </div>
     );

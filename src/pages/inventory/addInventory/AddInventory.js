@@ -4,6 +4,8 @@ import AddForm from "./components/AddForm";
 import AddGroup from './components/AddGroup';
 import Chemical from "./components/Chemical";
 import {actions} from "react-redux-form";
+import {FormattedMessage} from 'react-intl';
+import {logout} from "../../../modules/identity";
 
 export default class AddInventory extends Component {
     componentDidMount(){
@@ -13,8 +15,8 @@ export default class AddInventory extends Component {
                 chemicalName: this.props.productOffer.product.chemicalName,
                 indexName: this.props.productOffer.product.casIndexName,
                 packaging: {
-                    capacity: this.props.productOffer.packaging.size,
-                    container: this.props.productOffer.packaging.packagingType.id,
+                    size: this.props.productOffer.packaging.size,
+                    packagingType: this.props.productOffer.packaging.packagingType.id,
                     unit: this.props.productOffer.packaging.unit.id
                 },
             }));
@@ -25,29 +27,43 @@ export default class AddInventory extends Component {
                 expirationDate: this.props.productOffer.expirationDate,
                 externalNotes: this.props.productOffer.internalNotes,
                 internalNotes: this.props.productOffer.externalNotes,
-                lotNumber: 'to do ', //needs to grab the proper index in order to work
+                lotNumber: this.props.productOffer.lotNumber,
                 manufacturer: this.props.productOffer.manufacturer,
-                merchantVisibility: this.props.productOffer.merchantVisibility,
+                anonymous: this.props.productOffer.anonymous,
                 name: this.props.productOffer.name,
                 origin: this.props.productOffer.origin,
                 productCondition: this.props.productOffer.productCondition.id,
                 productForm: this.props.productOffer.productForm.id,
                 productGrade: this.props.productOffer.productGrade.id,
-                totalPackages: this.props.productOffer.pkgAmount,
             }));
             this.props.dispatch(actions.merge('forms.addProductOffer', {
                 warehouse: this.props.productOffer.warehouse.id
             }))
-        }
+        } 
     }
 
     render() {
-        console.log(this.props);
+        const { productOffer } = this.props;
         return(
-        <div>
-            <h1 className='header'>{!this.props.edit ? 'ADD INVENTORY' : 'EDIT PRODUCT OFFER - ' + this.props.productOffer.name}</h1>
-            <AddGroup header='CHEMICAL' component={<Chemical edit={this.props.edit} resetForm={this.props.resetForm}/>}/>
-            <AddForm {...this.props}/>
-        </div>)
+            <div>
+                <h1
+                    className='header'>
+                    {
+                        !this.props.edit ?
+                            <FormattedMessage
+                                id='addInventory.addInventory'
+                                defaultMessage='ADD INVENTORY'
+                            />
+                            :
+                            <FormattedMessage
+                                id='addInventory.editProductOffer'
+                                defaultMessage={'EDIT PRODUCT OFFER - ' + productOffer.productName || productOffer.tradeName}
+                                values={{productName: productOffer.productName || productOffer.tradeName}}
+                            />
+                    }
+                </h1>
+                <AddForm {...this.props}/>
+            </div>
+        )
     }
 }

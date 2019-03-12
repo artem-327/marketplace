@@ -8,9 +8,14 @@ import {getUnit} from '../../../../utils/functions'
 import './AddCart.css';
 import file from '../../../../images/file.svg';
 import InputControlled from '../../../../components/InputControlled/InputControlled'
-import Row from "../../../../components/DataTable/components/Row";
+import {checkToken} from "../../../../utils/auth";
 
 class AddCart extends Component {
+
+  static openedPopup = {
+    id: false
+  }
+
   state = {
     pricing: false,
     quantity: null,
@@ -23,12 +28,13 @@ class AddCart extends Component {
   }
 
   onClick = () => {
-    Row.openedPopup.id = false;
+    AddCart.openedPopup.id = false;
     this.props.removePopup();
   }
 
   createOrder = async () => {
-    const {removePopup, createNewOrder, offer, history} = this.props;
+    if (checkToken(this.props)) return;
+    const {removePopup, postNewOrder, offer, history} = this.props;
     const offerpayload = {
         productOffer: offer.id,
         quantity: this.state.quantity
@@ -37,21 +43,23 @@ class AddCart extends Component {
       this.setState({warning: "quantity is required"})
       return
     } else {
-      await createNewOrder(offerpayload)
+      await postNewOrder(offerpayload)
+      AddCart.openedPopup.id = false
       removePopup()
       history.push("/cart/shopping-cart")
     }
   }
 
   editOrder = () => {
-    const {removePopup, editOrder, order} = this.props;
+    const {removePopup, postOrderEdit, order} = this.props;
     const orderpayload = {
         id: order.productOffer.id,
         quantity: this.state.quantity || order.quantity,
         selectedOfferPrice: this.state.pricing.price || order.selectedOfferPrice
     }
-    editOrder(orderpayload)
+    postOrderEdit(orderpayload)
     this.props.history.push("/cart/shopping-cart")
+    AddCart.openedPopup.id = false
     removePopup()
   }
 
@@ -64,8 +72,9 @@ class AddCart extends Component {
       }
       return options;
     } else {
-      const {minimum, amount} = this.props.offer.packaging;
-      for (let i = minimum; i <= amount; i = i + split) {
+      const {minimum} = this.props.offer.packaging;
+      const {pkgAmount} = this.props.offer;
+      for (let i = minimum; i <= pkgAmount; i = i + split) {
         options.push(i);
       }
     }
@@ -73,12 +82,13 @@ class AddCart extends Component {
   }
 
   handleQuantity = e => {
-    const {minimum, amount, splits} = this.props.offer.packaging;
+    const {pkgAmount} = this.props.offer;
+    const {minimum, splits} = this.props.offer.packaging;
     const value = parseInt(e.target.value, 10)
     const warning = value < minimum || !value 
       ? `minimum is ${minimum}`
-      :  value > amount 
-        ? `maximum is ${amount}`
+      :  value > pkgAmount
+        ? `maximum is ${pkgAmount}`
         : value % parseInt(splits, 10) === 0 || value === parseInt(minimum, 10)
           ? null
           : `split is ${splits}`
@@ -86,6 +96,9 @@ class AddCart extends Component {
   };
 
   render() {
+
+    //console.log(this.props)
+
     // load data if creating popup with different offer id
     if (this.props.offer.id && this.props.id !== this.props.offer.id) {
         this.props.getProductOffer(this.props.id);
@@ -94,13 +107,11 @@ class AddCart extends Component {
     if (isEdit && orderDetailIsFetching) return <Spinner />
     if (offerDetailIsFetching) return <Spinner />
     const location =`${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`;
-    const {minimum, splits} = offer.packaging;
-    const unit = offer.packaging.packagingType;
-    const size = offer.packaging.size;
-    const amount = offer.pkgAmount;
+    const {pkgAmount} = offer;
+    const {unit, size, minimum, splits} = offer.packaging;
     const unitName = `${getUnit(unit.name)}${size > 1 && 's'}`;
     const packageSize = `${size} ${unitName}`;
-    const availableProducts = `${amount} pck / ${(amount * size).formatNumber()} ${unitName}`;
+    const availableProducts = `${pkgAmount} pck / ${(pkgAmount * size).formatNumber()} ${unitName}`;
     const totalPrice = this.state.quantity ? offer.pricing.price * this.state.quantity * size : "";
     const {tiers} = offer.pricing;
     const priceLevelOptions = tiers.map(i => {
@@ -164,7 +175,7 @@ class AddCart extends Component {
             <div className="add-cart-prod-info">
               <div>
                 <span>Merchant: </span>
-                {offer.manufacturer.name}
+                  {offer.merchant.branch.company.name}
               </div>
               <div>
                   <span>Location: </span>
@@ -230,7 +241,7 @@ class AddCart extends Component {
                     placeholder=""
                     type="number"
                     min={parseInt(minimum-1, 10)}
-                    max={parseInt(amount, 10)}
+                    max={parseInt(pkgAmount, 10)}
                     step={parseInt(5, 10)}
                   />
                   {this.state.warning && <label>{this.state.warning}</label>}
@@ -273,7 +284,7 @@ export default AddCart
 
 AddCart.propTypes = {
   offer: PropTypes.object,
-  createNewOrder: PropTypes.func,
+  postNewOrder: PropTypes.func,
   id: PropTypes.number,
   isFetching: PropTypes.bool,
   removePopup: PropTypes.func,

@@ -2,16 +2,25 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import DropdownRedux from '../../../../components/Dropdown/DropdownRedux'
 import {required} from '../../../../utils/validation'
+import {FormattedMessage, injectIntl} from 'react-intl';
 
-const Payment = ({dispatch, payments, selectedAddress, selectedPayment, getPayment}) => {
+const Payment = ({dispatch, payments, selectedAddress, selectedPayment, getPayment, intl}) => {
   //dropdown component requires object with name key
   const paymentsWithName = payments.map(i => {
     i.name = `${i.cardType}`;
     return i;
-  })
+  });
+  const { formatMessage } = intl;
   return (
     <div className="shopping-cart-items">
-      <header><h2>2. Payment</h2></header>
+      <header>
+          <h2>
+              <FormattedMessage
+                id='cart.3payment'
+                defaultMessage='3. Payment'
+              />
+          </h2>
+      </header>
       <div className="purchase-order-section">
         <div className="group-item-wr">
           <DropdownRedux
@@ -20,14 +29,22 @@ const Payment = ({dispatch, payments, selectedAddress, selectedPayment, getPayme
             opns={paymentsWithName}
             validators={{required}}
             onChange={id => getPayment(id)}
-            placeholder="Select Credit Card"
+            placeholder={formatMessage({
+                id: 'cart.selectCreditCard',
+                defaultMessage: 'Select Credit Card'
+            })}
           />
         </div>
         {(!!Object.keys(selectedPayment).length || !!Object.keys(selectedAddress).length) &&
         <div className="text-sections">
           {!!Object.keys(selectedPayment).length &&
           <div className="text-section">
-              <div className="subtitle">Payment Method</div>
+              <div className="subtitle">
+                  <FormattedMessage
+                    id='cart.paymentMethod'
+                    defaultMessage='Payment Method'
+                  />
+              </div>
               <div>xxxx-xxxx-xxxx-{selectedPayment.cardNumber.slice(-4)}</div>
               <div>{selectedPayment.cardType}</div>
               <div>Exp: {new Intl.DateTimeFormat('en-GB', {
@@ -50,7 +67,7 @@ const Payment = ({dispatch, payments, selectedAddress, selectedPayment, getPayme
   )
 }
 
-export default Payment
+export default injectIntl(Payment);
 
 Payment.propTypes = {
   getPayment: PropTypes.func,
@@ -58,4 +75,4 @@ Payment.propTypes = {
   selectedPayment: PropTypes.object,
   selectedAddress: PropTypes.object,
   payments: PropTypes.array,
-}
+};

@@ -11,7 +11,7 @@ class BroadcastTargets extends Component {
 
     addToTargets(id, targets){
         this.setState({[id]: targets},()=>{
-            console.log("BRCTargets", id, targets);
+            //console.log("BRCTargets", id, targets);
             this.props.getData(this.state);
         })
     }

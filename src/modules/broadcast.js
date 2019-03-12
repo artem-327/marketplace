@@ -30,7 +30,7 @@ export default function reducer(state = initialState, action) {
       }
   }
 }
-export function fetchBroadcast(id, resolve){
+export function getBroadcast(id, resolve){
   return {type: BROADCAST_FETCH_REQUESTED, payload: {id}, resolve: resolve}
 }
 

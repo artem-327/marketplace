@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { createOffice, editCompany, editOffice, fetchDetail, removeCompany, createCompany, removeOffice, fetchOffices } from "../../../modules/companies";
+import { postNewOffice, putCompanyEdit, putOfficeEdit, fetchDetail, deleteCompany, postNewCompany, deleteOffice, getOffices } from "../../../modules/companies";
 import { bindActionCreators } from "redux";
 import "./companiesAdmin.css";
-import Company from "./components/Company";
+//import Company from "./components/Company";
 import Spinner from "../../../components/Spinner/Spinner";
 import InputControlled from "../../../components/InputControlled/InputControlled";
 import DataTable from "../../../components/DataTable";
+import { injectIntl } from 'react-intl';
+
 class CompaniesAdmin extends Component {
   state = {
     name: ""
@@ -23,7 +25,7 @@ class CompaniesAdmin extends Component {
   };
 
   render() {
-    const { createCompany, companies, isFetching } = this.props;
+    const { postNewCompany, companies, isFetching } = this.props;
     if (isFetching) return <Spinner />;
     const rows = companies.map(company => {
       return {
@@ -36,20 +38,21 @@ class CompaniesAdmin extends Component {
         ]
       };
     });
+    const { formatMessage } = this.props.intl;
     return (
       <>
         <DataTable
           id="offices"
           sortFunc={nameColumn => console.log(nameColumn)}
-          headerInit={[{ name: "Company Name" }]}
+          headerInit={[{ name: "companyName" }]}
           contextMenu={[
             {
               action: id => console.log("edit Company with id: " + id),
-              label: "Edit Company"
+              label: "editCompany"
             },
             {
-              action: id => this.props.removeCompany(id),
-              label: "Remove Company"
+              action: id => this.props.deleteCompany(id),
+              label: "removeCompany"
             }
           ]}
           rows={rows}
@@ -59,13 +62,16 @@ class CompaniesAdmin extends Component {
             value={this.state.name}
             handleChange={this.handleChange}
             name="name"
-            placeholder="New company name"
+            placeholder={formatMessage({
+                id: 'administration.newCompanyName',
+                defaultMessage: 'New Company Name'
+            })}
           />
           <i
             className="fas fa-plus"
             title="Add new company"
             onClick={() =>
-              createCompany(this.state.name, () => this.setState({ name: "" }))
+              postNewCompany(this.state.name, () => this.setState({ name: "" }))
             }
           />
         </div>
@@ -85,7 +91,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchDetail, fetchOffices, editOffice, editCompany, createCompany, createOffice, removeOffice, removeCompany }, dispatch)
+  return bindActionCreators({ fetchDetail, getOffices, putOfficeEdit, putCompanyEdit, postNewCompany, postNewOffice, deleteOffice, deleteCompany }, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CompaniesAdmin);
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(CompaniesAdmin));

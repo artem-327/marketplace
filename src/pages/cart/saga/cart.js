@@ -11,6 +11,7 @@ import {
     ORDERDETAIL_FETCH_REQUESTED, ORDERDETAIL_FETCH_FAILED, ORDERDETAIL_FETCH_SUCCEEDED,
     ORDER_EDIT_SUCCEEDED, ORDER_EDIT_FAILED, ORDER_EDIT_REQUESTED,
     DELIVERYADDRESS_EDIT_SUCCEEDED, DELIVERYADDRESS_EDIT_FAILED, DELIVERYADDRESS_EDIT_REQUESTED,
+    SHIPPING_QUOTES_FETCH_REQUESTED, SHIPPING_QUOTES_FETCH_SUCCEEDED, SHIPPING_QUOTES_FETCH_FAILED
 } from "../../../constants/cart";
 
 function* getProductOffer(action) {
@@ -31,18 +32,18 @@ function* getCart() {
     }
 }
 
-function* fetchDeliveryAddresses() {
+function* getDeliveryAddresses() {
     try {
-        const addresses = yield call(Api.fetchDeliveryAddresses);
+        const addresses = yield call(Api.getDeliveryAddresses);
         yield put({type: DELIVERYADDRESSES_FETCH_SUCCEEDED, payload: addresses});
     } catch (e) {
         yield put({type: DELIVERYADDRESSES_FETCH_FAILED, message: e.message});
     }
 }
 
-function* fetchPayments() {
+function* getPayments() {
     try {
-        const addresses = yield call(Api.fetchPayments);
+        const addresses = yield call(Api.getPayments);
         yield put({type: PAYMENTS_FETCH_SUCCEEDED, payload: addresses});
     } catch (e) {
         yield put({type: PAYMENTS_FETCH_FAILED, message: e.message});
@@ -60,18 +61,18 @@ function* deleteCart(action) {
     }
 }
 
-function* createNewOrder(action) {
+function* postNewOrder(action) {
     try {
-        yield call(Api.createNewOrder, action.payload.product);
+        yield call(Api.postNewOrder, action.payload.product);
         yield put({type: CARTITEM_CREATE_SUCCEEDED});
     } catch (e) {
         yield put({type: CARTITEM_CREATE_FAILED, message: e.message});
     }
 }
 
-function* createDeliveryAddress(action) {
+function* postNewDeliveryAddress(action) {
     try {
-        yield call(Api.createDeliveryAddress, action.payload);
+        yield call(Api.postNewDeliveryAddress, action.payload);
         yield put({type: DELIVERYADDRESS_CREATE_SUCCEEDED});
     } catch (e) {
         yield put({type: DELIVERYADDRESS_CREATE_FAILED, message: e.message});
@@ -87,16 +88,16 @@ function* getOrderDetail(action) {
     }
 }
 
-function* editOrder(action) {
+function* postOrderEdit(action) {
     try {
-        yield call(Api.editOrder, action.payload.order);
+        yield call(Api.postOrderEdit, action.payload.order);
         yield put({type: ORDER_EDIT_SUCCEEDED});
     } catch (e) {
         yield put({type: ORDER_EDIT_FAILED, message: e.message});
     }
 }
 
-function* editDeliveryAddress(action) {
+function* putDeliveryAddressEdit(action) {
     try {
         yield call(Api.editDeliveryAddress, action.payload.address);
         yield put({type: DELIVERYADDRESS_EDIT_SUCCEEDED});
@@ -105,17 +106,27 @@ function* editDeliveryAddress(action) {
     }
 }
 
+function* getShippingQuotes(action) {
+    try {
+        const shippingQuotes = yield call(Api.getShippingQuotes, action.payload.countryId, action.payload.zip);
+        yield put({type: SHIPPING_QUOTES_FETCH_SUCCEEDED, payload: shippingQuotes});
+    } catch (e) {
+        yield put({type: SHIPPING_QUOTES_FETCH_FAILED, message: e.message})
+    }
+}
+
 function* cartSaga() {
     yield takeEvery(OFFER_FETCH_REQUESTED, getProductOffer);
     yield takeEvery(CART_FETCH_REQUESTED, getCart);
-    yield takeEvery(DELIVERYADDRESSES_FETCH_REQUESTED, fetchDeliveryAddresses);
-    yield takeEvery(PAYMENTS_FETCH_REQUESTED, fetchPayments);
+    yield takeEvery(DELIVERYADDRESSES_FETCH_REQUESTED, getDeliveryAddresses);
+    yield takeEvery(PAYMENTS_FETCH_REQUESTED, getPayments);
     yield takeEvery(PRODUCTFROMCART_REMOVE_REQUESTED, deleteCart);
-    yield takeEvery(CARTITEM_CREATE_REQUESTED, createNewOrder);
-    yield takeEvery(DELIVERYADDRESS_CREATE_REQUESTED, createDeliveryAddress);
+    yield takeEvery(CARTITEM_CREATE_REQUESTED, postNewOrder);
+    yield takeEvery(DELIVERYADDRESS_CREATE_REQUESTED, postNewDeliveryAddress);
     yield takeEvery(ORDERDETAIL_FETCH_REQUESTED, getOrderDetail);
-    yield takeEvery(ORDER_EDIT_REQUESTED, editOrder);
-    yield takeEvery(DELIVERYADDRESS_EDIT_REQUESTED, editDeliveryAddress);
+    yield takeEvery(ORDER_EDIT_REQUESTED, postOrderEdit);
+    yield takeEvery(DELIVERYADDRESS_EDIT_REQUESTED, putDeliveryAddressEdit);
+    yield takeEvery(SHIPPING_QUOTES_FETCH_REQUESTED, getShippingQuotes);
 }
 
 export default cartSaga;

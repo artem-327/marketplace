@@ -2,14 +2,14 @@ import React from 'react';
 import BroadcastField from "./BroadcastField";
 
 const StateBroadcastField = ({dispatch, storedState, stateData, filterInput, statesExpanded, handleExpanded, handleRuleClick, isClientList}) => {
-  const offices = stateData.companies.map(i => i.offices)
-  const flattenOffices = offices.flat()
+  const branches = stateData.elements.map(i => i.elements)
+  const flattenBranches = branches.flat()
   const partlybrc = storedState && storedState.broadcastPartly
   const partlyanonym = storedState && storedState.anonymousPartly
 
   const isFiltering = filterInput !== "";
-  const filteredOffices = flattenOffices.filter(i => i.name.toLowerCase().startsWith(filterInput.toLowerCase()))
-  const showedOffices = isFiltering ? filteredOffices : flattenOffices
+  const filteredBranches = flattenBranches.filter(i => i.name.toLowerCase().startsWith(filterInput.toLowerCase()))
+  const showedBranches = isFiltering ? filteredBranches : flattenBranches
   const isExpanded = statesExpanded.includes(stateData.id) || isFiltering
   return (
     <React.Fragment>
@@ -21,14 +21,14 @@ const StateBroadcastField = ({dispatch, storedState, stateData, filterInput, sta
         id={stateData.id}
         isExpanded={isExpanded}
         handleExpanded={handleExpanded}
-        hasChildren={flattenOffices.length > 0}
+        hasChildren={flattenBranches.length > 0}
         handleRuleClick={handleRuleClick}
         partlyanonym={partlyanonym}
         partlybrc={partlybrc}
         isFiltering={isFiltering}
       />
 
-      {isExpanded && showedOffices.map(i => {
+      {isExpanded && showedBranches.map(i => {
         return <BroadcastField
         name={i.name}
         type="office"

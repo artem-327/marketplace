@@ -3,13 +3,13 @@ import Api from '../api/productOffers';
 import {
     PRODUCTOFFER_REMOVE_REQUESTED,
     PRODUCTOFFER_REMOVE_FAILED,
-    PRODUCTOFFER_REMOVE_SUCCEEDED,
+    PRODUCTOFFER_REMOVE_SUCCEEDED
 } from "../constants/productOffers";
 
 
-function* removeProductOffer(action) {
+function* deleteProductOffer(action) {
     try {
-        yield call(Api.removeProductOffer, action.payload.id);
+        yield call(Api.deleteProductOffer, action.payload.id);
         yield put({type: PRODUCTOFFER_REMOVE_SUCCEEDED});
         yield call(action.payload.onSuccess);
     } catch (e) {
@@ -18,7 +18,7 @@ function* removeProductOffer(action) {
 }
 
 function* productOffersSaga() {
-    yield takeEvery(PRODUCTOFFER_REMOVE_REQUESTED, removeProductOffer);
+    yield takeEvery(PRODUCTOFFER_REMOVE_REQUESTED, deleteProductOffer);
 }
 
 export default productOffersSaga;
