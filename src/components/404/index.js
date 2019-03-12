@@ -1,16 +1,9 @@
 import React from 'react';
 import './404.css';
-import '../../styles/flexboxgrid.css';
-import {FormattedMessage} from 'react-intl';
 
 const NoMatch = () => (
-    <div class="row center-xs middle-xs wrapper">
-        <div class="col-xs-8 hash">#404<span class="lost">
-            <FormattedMessage
-                id='notFound'
-                defaultMessage='... think we are lost, sir !'
-            />
-        </span></div>
+    <div className="no-match">
+       <p>#404<span> ...&nbsp;think&nbsp;we&nbsp;are&nbsp;lost,&nbsp;sir&nbsp;!</span></p>
     </div>
 );
 

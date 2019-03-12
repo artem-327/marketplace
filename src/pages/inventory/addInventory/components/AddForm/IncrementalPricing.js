@@ -2,14 +2,13 @@ import React from 'react';
 import './Pricing.css';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import {FormattedMessage} from 'react-intl';
 
 const IncrementalPricing = (props) => {
 
     const calculateGrossMargin = index => {
         const {cost, incrementalPricing} = props
-        const margin = ((incrementalPricing[index].price - parseInt(cost, 10)) / parseInt(cost, 10) * 100);
-        if (isNaN(margin) || incrementalPricing[index].price === '') {   
+        const margin = ((incrementalPricing[index].price - parseInt(cost,10)) / parseInt(cost,10) * 100);
+        if(isNaN(margin) || incrementalPricing[index].price === ''){   
             return '';
         }
         
@@ -28,7 +27,7 @@ const IncrementalPricing = (props) => {
           removeIncrementalPricing,  
           splits, 
           validateInputs
-        } = props;
+        } = props
         
         return incrementalPricing.map((item, index) => {
             const grossMargin = calculateGrossMargin(index)
@@ -57,7 +56,7 @@ const IncrementalPricing = (props) => {
               <input type='number'
                      className='tieredPricing'
                      step={splits}
-                     value={lastPriceLevel ? '' : item.quantityTo}
+                     value={lastPriceLevel ? "" : item.quantityTo}
                      title={lastPriceLevel ? "There is no upper limit." : ""}
                      onBlur={validateInputs}
                      onChange={e => handleChange(e, index, 'quantityTo')}
@@ -75,12 +74,12 @@ const IncrementalPricing = (props) => {
               const margin = 
 
                 <input type='number'
-                       className={classnames({inRed:grossMargin < 0})}
-                       // defaultValue={grossMargin}
+                       className={classnames({inRed:item.margin < 0})}
                        value={item.margin}
+                       onBlur={validateInputs}
                        onChange={e => handleMargin(e, index)}
-                       disabled={disabled}
-                       />
+                       disabled={disabled}/>
+
 
             return <tr key={index}>
 
@@ -106,36 +105,14 @@ const IncrementalPricing = (props) => {
 
     return (
       <div>
-        <h4>
-            <FormattedMessage
-                id='addInventory.tieredPricing'
-                defaultMessage='TIERED PRICING'
-            />
-        </h4>
+        <h4>Tiered Pricing</h4>
         <table className='incremental-pricing-table'>
           <thead>
             <tr>
-              <th>
-                  <FormattedMessage
-                    id='addInventory.quantityFrom'
-                    defaultMessage='Quantity From'
-                  />
-              </th>
-              <th>
-                  <FormattedMessage
-                      id='addInventory.quantityTo'
-                      defaultMessage='Quantity To'
-                  />
-              </th>
-              <th>
-                  {props.pricePer}
-              </th>
-              <th>
-                  <FormattedMessage
-                      id='addInventory.grossMargin'
-                      defaultMessage='Gross Margin %'
-                  />
-              </th>
+              <th>Quantity From</th>
+              <th>Quantity To</th>
+              <th>Price per lb</th>
+              <th>Gross Margin %</th>
             </tr>
           </thead>
           <tbody>

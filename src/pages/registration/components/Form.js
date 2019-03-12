@@ -1,9 +1,9 @@
 import React from 'react';
 import classnames from 'classnames'
 import {Control, Form} from 'react-redux-form';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import {Translate} from 'react-localize-redux'
 
-class RegistrationForm extends React.Component {
+export default class extends React.Component {
 
     handleSubmit(input) {
         this.props.registration(input.email, input.password, input.firstName, input.middleName, input.lastName).then(() => {
@@ -12,62 +12,34 @@ class RegistrationForm extends React.Component {
     }
 
     render() {
-        const { formatMessage } = this.props.intl;
         let {isFetching, hasError} = this.props.formStatus;
         let butLogin = isFetching ?
-            <FormattedMessage
-                id='registration.fetching'
-                defaultMessage='Fetching'
-            />
+            <Translate id="registration.fetching"/>
             :
-            <FormattedMessage
-                id='registration.submit'
-                defaultMessage='Submit'
-            />;
-            const placeholders = {
-                email: formatMessage({
-                    id: 'global.email',
-                    defaultMessage: 'E-mail'
-                }),
-                password: formatMessage({
-                    id: 'global.password',
-                    defaultMessage: 'Password'
-                }),
-                firstName: formatMessage({
-                    id: 'registration.firstName',
-                    defaultMessage: 'Your First Name'
-                }),
-                middleName: formatMessage({
-                    id: 'registration.middleName',
-                    defaultMessage: 'Your Middle Name'
-                }),
-                lastName: formatMessage({
-                    id: 'registration.lastName',
-                    defaultMessage: 'Your Last Name'
-                }),
-            };
+            <Translate id="registration.submit"/>;
+
         return (
             <Form model="forms.registrationForm" onSubmit={(val) => this.handleSubmit(val)}>
                 <div>
                     {/*<label htmlFor="forms.registrationForm.email"><Translate id="registration.email"/></label>*/}
-                    <Control.text model="forms.registrationForm.email" placeholder={placeholders.email} required/>
+                    <Control.text model="forms.registrationForm.email" placeholder="Email" required/>
                 </div>
                 <div>
                     {/*<label htmlFor="forms.registrationForm.password"><Translate id="registration.password"/></label>*/}
-                    <Control.password model="forms.registrationForm.password" placeholder={placeholders.password} required/>
+                    <Control.password model="forms.registrationForm.password" placeholder="Password" required/>
                 </div>
                 <div>
                     {/*<label htmlFor="forms.registrationForm.firstName"><Translate id="registration.firstName"/></label>*/}
-                    <Control.text model="forms.registrationForm.firstName" placeholder={placeholders.firstName} required/>
+                    <Control.text model="forms.registrationForm.firstName" placeholder="Your firstname" required/>
                 </div>
                 <div>
                     {/*<label htmlFor="forms.registrationForm.middleName"><Translate*/}
                         {/*id="registration.middleName"/></label>*/}
-                    <Control.text model="forms.registrationForm.middleName" placeholder={placeholders.middleName} required/>
+                    <Control.text model="forms.registrationForm.middleName" placeholder="Your middle name" required/>
                 </div>
                 <div>
                     {/*<label htmlFor="forms.registrationForm.lastName"><Translate id="registration.lastName"/></label>*/}
-                    <Control.text model="forms.registrationForm.lastName" placeholder={placeholders.lastName} required/>
+                    <Control.text model="forms.registrationForm.lastName" placeholder="Your lastname" required/>
                 </div>
                 <div className="form-middle">
                     <button
@@ -77,5 +49,3 @@ class RegistrationForm extends React.Component {
         );
     }
 }
-
-export default injectIntl(RegistrationForm);

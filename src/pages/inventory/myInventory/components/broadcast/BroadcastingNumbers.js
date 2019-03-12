@@ -7,7 +7,7 @@ const BroadcastingNumbers = ({storedOffices, convertObjectToArray}) => {
   const broadcastingTo = brcOffices.filter(i => i.broadcast === true).length
   return (
     <div className="broadcasting-info">
-    <i className="info small" />
+    <i className="fas fa-info-circle" />
     <span>
       Broadcasting to: <b>{broadcastingTo}/{brcOffices.length}</b>
     </span>

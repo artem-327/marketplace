@@ -20,7 +20,6 @@
     height: 22px;
     width: 22px;
     border-radius: 50%;
-    background-color: $white-color;
     &.small {
       height: 16px;
       width: 16px;
@@ -55,24 +54,6 @@
     }
     &.disabled:hover {
       border-color: #B0B0B0;
-    }
-  }
-
-  &.small {
-    padding-left: 18px;
-    font-size: 0.75rem;
-    line-height: 1.1667;
-
-    .radiomark {
-      width: 14px;
-      height: 14px;
-
-      &:after {
-        top: 3px;
-        left: 3px;
-        width: 6px;
-        height: 6px;
-      }
     }
   }
 }

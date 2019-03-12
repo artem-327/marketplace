@@ -1,5 +1,4 @@
 @import "../../../../styles/main.scss";
-@import "../../../../styles/fonts.scss";
 $side-padding: 17px;
 
 .summary-table {
@@ -26,6 +25,45 @@ $side-padding: 17px;
       margin: 0;
       line-height: 1.2222;
     }
+
+    i {
+      font-size: 1.4rem;
+      color: $blue-color;
+
+      &.fa-info-circle {
+        position: relative;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        padding: 0;
+        background-color: #fff;
+        box-shadow: 0 0 0 2px $blue-color;
+        text-align: center;
+        font-size: 1rem;
+        color: $blue-color;
+        line-height: 18px;
+
+        &:before {
+          content: "" !important;
+          position: absolute;
+          top: 3px;
+          left: 8px;
+          width: 2px;
+          height: 2px;
+          background-color: $blue-color;
+        }
+
+        &:after {
+          content: "" !important;
+          position: absolute;
+          top: 7px;
+          left: 8px;
+          width: 2px;
+          height: 8px;
+          background-color: $blue-color;
+        }
+      }
+    }
   }
 
   main.summary-main {
@@ -36,27 +74,20 @@ $side-padding: 17px;
       width: 100%;
 
       tr.total td {
-        font-family: $helvetica-md;
-        font-size: 1rem;
-        font-weight: 400;
+        font-size: 1.25rem;
+        font-weight: 500;
         line-height: 1.2;
       }
     }
 
     td {
       padding: 4px 0;
-      font-size: 1rem;
-      line-height: 1.125;
+      font-size: 1.125rem;
+      line-height: 1.1666;
     }
 
     td:first-child{
       width: 80%;
-    }
-
-    > table td,
-    > table tr.total td {
-      font-size: 1.25rem;
-      line-height: 1.2;
     }
   }
 }

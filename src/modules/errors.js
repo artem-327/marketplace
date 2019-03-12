@@ -1,10 +1,7 @@
-import axios from "axios";
-
 const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
 const ADD_MESSAGE = 'ADD_MESSAGE';
 //register const for all axios endpoints
 const ADD_PRODUCT_OFFER_REJECTED = 'ADD_PRODUCT_OFFER_REJECTED';
-const SAVE_MAPPING_REJECTED = 'SAVE_MAPPING_REJECTED';
 // const SAVE_MAPPING_REJECTED = 'SAVE_MAPPING_REJECTED';
 // const FETCH_ORIGIN_REJECTED = 'FETCH_ORIGIN_REJECTED';
 // const FETCH_RECENT_ADDED_PRODUCTS_REJECTED = 'FETCH_RECENT_ADDED_PRODUCTS_REJECTED';
@@ -59,12 +56,6 @@ export default function reducer(state = initialState, action) {
         // case PACKAGE_OPTIONS_REJECTED:
         // case MANUFACTURER_REJECTED:
         case ADD_PRODUCT_OFFER_REJECTED: {
-            return {
-                ...state,
-                messages: [...state.messages, action.payload.message]
-            }
-        }
-        case SAVE_MAPPING_REJECTED: {
             return {
                 ...state,
                 messages: [...state.messages, action.payload.message]

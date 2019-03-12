@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './companiesAdmin.css';
 import { connect } from "react-redux";
-import { postNewOffice, putCompanyEdit, putOfficeEdit, fetchDetail, deleteCompany, postNewCompany, deleteOffice, getOffices } from "../../../modules/companies";
+import { createOffice, editCompany, editOffice, fetchDetail, removeCompany, createCompany, removeOffice, fetchOffices } from "../../../modules/companies";
 import { bindActionCreators } from "redux";
 import Office from "./components/Office";
 import { fetchLocations } from "../../../modules/location";
@@ -9,7 +9,6 @@ import Spinner from "../../../components/Spinner/Spinner";
 import InputControlled from '../../../components/InputControlled/InputControlled'
 import Button from '../../../components/Button/Button'
 import Dropdown from '../../../components/Dropdown/Dropdown'
-import {FormattedMessage, injectIntl} from 'react-intl';
 
 class CompaniesDetailAdmin extends Component {
   state = {
@@ -29,7 +28,7 @@ class CompaniesDetailAdmin extends Component {
     }).then(() => {
       this.setState({ name: this.props.company.name })
     })
-    this.props.getOffices(this.props.match.params.id)
+    this.props.fetchOffices(this.props.match.params.id)
   }
 
   renderOffices() {
@@ -38,7 +37,7 @@ class CompaniesDetailAdmin extends Component {
       ? <Spinner />
       : this.props.offices.map(office => (
         <Office
-          deleteOffice={(id) => this.props.deleteOffice(id, this.props.company)}
+          removeOffice={(id) => this.props.removeOffice(id, this.props.company)}
           key={office.id}
           id={office.id}
           office={office}
@@ -58,61 +57,28 @@ class CompaniesDetailAdmin extends Component {
   }
 
   render() {
-    const { formatMessage } = this.props.intl;
     return (
       <div className="admin-companies">
-        <h1 className='header'>
-            <FormattedMessage
-                id='administration.companyAdministration'
-                defaultMessage={`Companies administration - ${this.props.company.name}`}
-                values={{company: this.props.company.name}}
-            />
-        </h1>
+        <h1 className='header'>Companies administration - {this.props.company.name}</h1>
         <div className="list-companies">
-          <h4>
-              <FormattedMessage
-                id='administration.companyDetail'
-                defaultMessage='Company Detail'
-              />
-          </h4>
+          <h4>Company Detail</h4>
           <div className="company-detail">
             <InputControlled
               value={this.state.name}
               handleChange={this.handleChange}
               name="name"
             />
-            <Button
-                color="red"
-                onClick={() => this.props.deleteCompany(this.props.company.id, () => this.props.history.push('/administration/companies/'))}>
-                    <FormattedMessage
-                        id='global.delete'
-                        defaultMessage='Delete'
-                    />
+            <Button color="red" onClick={() => this.props.removeCompany(this.props.company.id, () => this.props.history.push('/administration/companies/'))}>
+              Delete
             </Button>
-            <Button color="blue" onClick={() => this.props.putCompanyEdit(Object.assign({}, this.props.company, { name: this.state.name }))}>
-              <FormattedMessage
-                id='global.edit'
-                defaultMessage='Edit'
-              />
+            <Button color="blue" onClick={() => this.props.editCompany(Object.assign({}, this.props.company, { name: this.state.name }))}>
+              Edit
             </Button>
           </div>
-          <h4>
-              <FormattedMessage
-                id='administration.companyOffices'
-                defaultMessage='Company Offices'
-              />
-          </h4>
+          <h4>Company Offices</h4>
           <table className="company-table">
             <thead>
-              <tr>
-                  <th>
-                      <FormattedMessage
-                        id='global.name'
-                        defaultMessage='Name'
-                      />
-                  </th>
-                  <th></th>
-              </tr>
+              <tr><th>Name</th><th></th></tr>
             </thead>
             <tbody>
               {this.renderOffices()}
@@ -123,10 +89,7 @@ class CompaniesDetailAdmin extends Component {
         <div className="add-new-company">
           <Dropdown
             opns={this.props.offices} //TODO: only offices without company
-            placeholder={formatMessage({
-                id: 'administration.addNewOffice',
-                defaultMessage: 'Add New Office To Company'
-            })}
+            placeholder="Add new office to company"
             onChange={value => {
               this.setState({ officeId: value })
             }}
@@ -134,13 +97,8 @@ class CompaniesDetailAdmin extends Component {
 
           <Button
             color="green"
-            onClick={() => this.props.putOfficeEdit(this.getOfficePayload(this.state.officeId), () => { })}
-          >
-              <FormattedMessage
-                id='global.addNew'
-                defaultMessage='Add New'
-              />
-          </Button>
+            onClick={() => this.props.editOffice(this.getOfficePayload(this.state.officeId), () => { })}
+          >Add New</Button>
         </div>
       </div>
     )
@@ -158,7 +116,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ fetchDetail, getOffices, putOfficeEdit, putCompanyEdit, postNewCompany, fetchLocations, postNewOffice, deleteOffice, deleteCompany }, dispatch)
+  return bindActionCreators({ fetchDetail, fetchOffices, editOffice, editCompany, createCompany, fetchLocations, createOffice, removeOffice, removeCompany }, dispatch)
 }
 
-export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(CompaniesDetailAdmin));
+export default connect(mapStateToProps, mapDispatchToProps)(CompaniesDetailAdmin);

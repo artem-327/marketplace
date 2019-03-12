@@ -11,12 +11,12 @@ import RemoteComboBox from "../../components/ComboBox/RemoteComboBox";
 class TestPage extends Component {
 
     keepShopping(){
-        //console.log(this.props);
+        console.log(this.props);
         this.props.addPopup(<KeepShopping/>);
     }
 
     render(){
-        //console.log(this.props);
+        console.log(this.props);
         return (
             <div>
                 <div>

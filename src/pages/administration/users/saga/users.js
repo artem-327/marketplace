@@ -4,7 +4,8 @@ import ApiOffice from '../../../../api/offices';
 import {
     PROMOTE_TO_MERCHANT_FAILED, PROMOTE_TO_MERCHANT_REQUESTED,
     PROMOTE_TO_MERCHANT_SUCCEEDED, PROMOTE_TO_OPERATOR_FAILED, PROMOTE_TO_OPERATOR_REQUESTED,
-    PROMOTE_TO_OPERATOR_SUCCEEDED, USERS_FETCH_NEW_REQUESTED,
+    PROMOTE_TO_OPERATOR_SUCCEEDED,
+    USERS_FETCH_NEW_FAILED, USERS_FETCH_NEW_REQUESTED,
     USERS_FETCH_REQUESTED, USERS_FETCH_SUCCEEDED, USERS_FETCH_FAILED
 } from "../../../../constants/users";
 import {OFFICES_FETCH_FAILED, OFFICES_FETCH_REQUESTED, OFFICES_FETCH_SUCCEEDED} from "../../../../constants/offices";
@@ -18,18 +19,18 @@ function* getUsers() {
     }
 }
 
-function* getOffices() {
+function* fetchOffices() {
     try {
-        const offices = yield call(ApiOffice.getOffices);
+        const offices = yield call(ApiOffice.fetchOffices);
         yield put({type: OFFICES_FETCH_SUCCEEDED, payload: offices});
     } catch (e) {
         yield put({type: OFFICES_FETCH_FAILED, message: e.message});
     }
 }
 
-function* putPromoteToMerchant(action) {
+function* promoteToMerchant(action) {
     try {
-        yield call(Api.putPromoteToMerchant, action.payload);
+        yield call(Api.promoteToMerchant, action.payload);
         yield put({type: PROMOTE_TO_MERCHANT_SUCCEEDED});
         yield put({type: USERS_FETCH_NEW_REQUESTED});
     } catch (e) {
@@ -37,9 +38,9 @@ function* putPromoteToMerchant(action) {
     }
 }
 
-function* putPromoteToOperator(action) {
+function* promoteToOperator(action) {
     try {
-        yield call(Api.putPromoteToOperator, action.payload);
+        yield call(Api.promoteToOperator, action.payload);
         yield put({type: PROMOTE_TO_OPERATOR_SUCCEEDED});
         yield put({type: USERS_FETCH_NEW_REQUESTED});
     } catch (e) {
@@ -49,9 +50,9 @@ function* putPromoteToOperator(action) {
 
 function* usersSaga() {
     yield takeEvery(USERS_FETCH_REQUESTED, getUsers);
-    yield takeEvery(OFFICES_FETCH_REQUESTED, getOffices);
-    yield takeEvery(PROMOTE_TO_OPERATOR_REQUESTED, putPromoteToOperator);
-    yield takeEvery(PROMOTE_TO_MERCHANT_REQUESTED, putPromoteToMerchant);
+    yield takeEvery(OFFICES_FETCH_REQUESTED, fetchOffices);
+    yield takeEvery(PROMOTE_TO_OPERATOR_REQUESTED, promoteToOperator);
+    yield takeEvery(PROMOTE_TO_MERCHANT_REQUESTED, promoteToMerchant);
 }
 
 export default usersSaga;

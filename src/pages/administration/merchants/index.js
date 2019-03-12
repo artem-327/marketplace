@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux'
-import {getMerchants, getMerchant, approveMerchant, putMerchantEdit} from '../../../modules/merchants';
+import {fetchMerchants, fetchMerchant, approveMerchant, editMerchant} from '../../../modules/merchants';
 import MerchantsTable from './MerchantsTable';
 import {addPopup} from '../../../modules/popup';
 
@@ -14,7 +14,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({getMerchants, getMerchant, approveMerchant, putMerchantEdit, addPopup}, dispatch)
+    return bindActionCreators({fetchMerchants, fetchMerchant, approveMerchant, editMerchant, addPopup}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MerchantsTable);

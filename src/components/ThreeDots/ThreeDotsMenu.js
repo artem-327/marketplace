@@ -1,17 +1,13 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import './ThreeDotsMenu.css';
-import {FormattedMessage} from 'react-intl';
 class ThreeDotsMenu extends Component {
 
     renderLinks() {
         if (!this.props.links) return;
         let links = this.props.links.map((link, index) => {
             return <li key={index} onClick={(e)=>link.action(this.props.id, this.props.callback, e)}>
-                <FormattedMessage
-                    id={'dataTable.' + link.label}
-                    defaultMessage={link.label}
-                />
+                {link.label}
             </li>
         });
         return <span className="submenu-links">{links}</span>;

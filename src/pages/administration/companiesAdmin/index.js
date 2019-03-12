@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux'
 import CompaniesAdmin from "./CompaniesAdmin";
-import {postNewCompany, fetchAll} from "../../../modules/companies";
+import {createCompany, fetchAll} from "../../../modules/companies";
 
 function mapStateToProps(store) {
     return {
@@ -11,7 +11,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch){
-    return bindActionCreators({fetchAll, postNewCompany}, dispatch)
+    return bindActionCreators({fetchAll, createCompany}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(CompaniesAdmin);

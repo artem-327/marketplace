@@ -9,18 +9,18 @@ import {
 } from "../constants/locations";
 
 
-function* getRegions(action) {
+function* fetchRegions(action) {
     try {
-        const regions = yield call(Api.getRegions, action.payload.search);
+        const regions = yield call(Api.fetchRegions, action.payload.search);
         yield put({type: REGIONS_FETCH_SUCCEEDED, payload: regions});
     } catch (e) {
         yield put({type: REGIONS_FETCH_FAILED, message: e.message});
     }
 }
 
-function* getStates(action) {
+function* fetchStates(action) {
     try {
-        const states = yield call(Api.getStates, action.payload.search);
+        const states = yield call(Api.fetchStates, action.payload.search);
         yield put({type: STATES_FETCH_SUCCEEDED, payload: states});
     } catch (e) {
         yield put({type: STATES_FETCH_FAILED, message: e.message});
@@ -36,9 +36,9 @@ function* fetchProvinces(action) {
     }
 }
 
-function* getStateDetail(action) {
+function* fetchStateDetail(action) {
     try {
-        const stateDetail = yield call(Api.getStateDetail, action.payload.id);
+        const stateDetail = yield call(Api.fetchStateDetail, action.payload.id);
         const stateDetailWithId = {...stateDetail, id: action.payload.id};
         yield put({type: STATEDETAIL_FETCH_SUCCEEDED, payload: stateDetailWithId});
     } catch (e) {
@@ -46,9 +46,9 @@ function* getStateDetail(action) {
     }
 }
 
-function* getRegionDetail(action) {
+function* fetchRegionDetail(action) {
     try {
-        const regionDetail = yield call(Api.getRegionDetail, action.payload.id);
+        const regionDetail = yield call(Api.fetchRegionDetail, action.payload.id);
         const regionDetailWithId = {...regionDetail, id: action.payload.id};
         yield put({type: REGIONDETAIL_FETCH_SUCCEEDED, payload: regionDetailWithId});
     } catch (e) {
@@ -57,10 +57,10 @@ function* getRegionDetail(action) {
 }
 
 function* locationsSaga() {
-    yield takeEvery(REGIONS_FETCH_REQUESTED, getRegions);
-    yield takeEvery(STATES_FETCH_REQUESTED, getStates);
-    yield takeEvery(STATEDETAIL_FETCH_REQUESTED, getStateDetail);
-    yield takeEvery(REGIONDETAIL_FETCH_REQUESTED, getRegionDetail);
+    yield takeEvery(REGIONS_FETCH_REQUESTED, fetchRegions);
+    yield takeEvery(STATES_FETCH_REQUESTED, fetchStates);
+    yield takeEvery(STATEDETAIL_FETCH_REQUESTED, fetchStateDetail);
+    yield takeEvery(REGIONDETAIL_FETCH_REQUESTED, fetchRegionDetail);
     yield takeEvery(PROVINCES_FETCH_REQUESTED, fetchProvinces);
 }
 

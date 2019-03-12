@@ -4,39 +4,25 @@
   //min-width: 500px;
   position: relative;
   &.cas-search{
-    width: calc(50% - 16px);
-    margin: 0 0 12px;
+    width: calc(50% - 25px);
+    margin: 0 15px 12px 10px;
     z-index: +2;
   }
   &.map-search{
-    float: right;
-    width: calc(50% - 16px);
-    margin: 0 0 12px;
+    width: calc(50% - 25px);
+    margin: 0 15px 12px 10px;
     z-index: +2;
-  }
-  .combo-validate{
-    position: absolute;
-    top: 62px;
-    left: 0;
-    width: 100%;
-    text-align: right;
-    z-index: -1;
-    background-color: white;
-    border-radius: 4px;
-    color: #ef3157;
-    font-size: .75rem;
-    padding: 1px 2px;
   }
   .combo-icon{
     position: absolute;
-    top: 34px;
-    left: 6px;
+    top: 32px;
+    left: 11px;
     color: #a9a9a9;
     font-size: 18px;
   }
   input{
     width: 100%;
-    padding-left: 27px;
+    padding-left: 40px;
   }
   button{
     width: 200px;
