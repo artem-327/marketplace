@@ -1,5 +1,8 @@
-@import "../../../../styles/fonts.scss";
 @import "../../../../styles/main.scss";
+
+$helvetica-roman: 'HelveticaNeueLTPro-Roman', sans-serif;
+$helvetica-md: 'HelveticaNeueLTPro-Md', sans-serif;
+$helvetica-bd: 'HelveticaNeueLTPro-Bd', sans-serif;
 
 .fileicon {
   height: 16px;
@@ -22,12 +25,12 @@
     display: block;
     width: auto;
     height: 2px;
-    margin: 20px 19px 20px 0;
+    margin: 23px 19px 23px 0;
     background: darken($white-color, 40.6%);
   }
 
   .add-cart-body-section {
-    padding: 10px 28px 15px;
+    padding: 10px 28px 21px;
 
     @include mq('m', max) {
       &:first-child{
@@ -37,8 +40,8 @@
 
     h3 {
       display: block;
-      margin: -10px -28px 15px;
-      padding: 12px 24px;
+      margin: -10px -28px 20px;
+      padding: 15px 24px;
       background: darken($white-color, 7%);
       font-family: $helvetica-bd;
       font-size: 1.125rem;
@@ -46,18 +49,17 @@
     }
 
     .add-cart-product-name {
-      padding: 5px 0;
+      padding: 9px 0;
       font-family: $helvetica-md;
       font-size: 1rem;
       font-weight: 500;
-      line-height: 1.1875;
     }
 
     .add-cart-prod-info {
       padding: 4px 0 3px;
 
       > div {
-        padding: 4px 0 5px 50%;
+        padding: 5px 0 6px 50%;
         font-family: $helvetica-md;
         font-size: 1rem;
         font-weight: 500;
@@ -83,7 +85,7 @@
     .add-cart-form-input {
 
       + .add-cart-form-input {
-        margin-top: 15px;
+        margin-top: 22px;
       }
 
       label {
@@ -93,7 +95,7 @@
 
       > div {
         max-width: 62%;
-        margin: 0 0 5px;
+        margin: 0 0 9px;
 
         &.purchase-info {
           position: relative;
@@ -131,7 +133,7 @@
     }
 
     .purchase-summary-info {
-      margin: 10px 19px 10px 0;
+      margin: 15px 19px 15px 0;
       font-size: 1rem;
       line-height: 1.125;
 

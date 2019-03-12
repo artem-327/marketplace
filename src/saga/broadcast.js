@@ -9,9 +9,9 @@ import {
   BROADCAST_POST_FAILED
 } from "../constants/broadcast";
 
-function* getBroadcast(action) {
+function* fetchBroadcast(action) {
     try {
-        const broadcastData = yield call(Api.getBroadcast, action.payload.id);
+        const broadcastData = yield call(Api.fetchBroadcast, action.payload.id);
         yield put({type: BROADCAST_FETCH_SUCCEEDED, payload: broadcastData});
         action.resolve()
     } catch (e) {
@@ -29,7 +29,7 @@ function* postBroadcast(action) {
 }
 
 function* broadcastSaga() {
-    yield takeEvery(BROADCAST_FETCH_REQUESTED, getBroadcast);
+    yield takeEvery(BROADCAST_FETCH_REQUESTED, fetchBroadcast);
     yield takeEvery(BROADCAST_POST_REQUESTED, postBroadcast);
 }
 

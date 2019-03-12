@@ -14,7 +14,7 @@ class TestPage extends Component {
                            headerInit={[{name: 'test'}, {name: 'test2'}, {name: null}]}
                            contextMenu={
                                [
-                                   {action: (id)=> this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'Edit Listing',},
+                                   {action: (id)=>this.props.history.push(`/inventory/edit-inventory/${id}`), label: 'Edit Listing',},
                                    {action: (id)=>console.log('BR'), label: 'Custom Broadcast'},
                                    {action: (id)=>console.log('delete'), label: 'Delete Listing'}
                                ]

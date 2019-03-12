@@ -25,14 +25,14 @@ const RootBroadcastField = ({
   filteredCompanies, 
   filteredOffices
 }) => {
-  if (!rootData.elements) return <Spinner />
+  if (!rootData.regions) return <Spinner />
   const partlybrc = storedRoot && storedRoot["1"].broadcastPartly
   const partlyanonym = storedRoot && storedRoot["1"].anonymousPartly
-  const statessData =  rootData.elements.map(i => i.elements)
+  const statessData =  rootData.regions.map(i => i.states)
   const flattenStates = statessData.flat()
-  const companiesData =  flattenStates.map(i => i.elements)
+  const companiesData =  flattenStates.map(i => i.companies)
   const flattenCompanies = companiesData.flat()
-  const officesData =  flattenCompanies.map(i => i.elements)
+  const officesData =  flattenCompanies.map(i => i.offices)
   const flattenOffices = officesData.flat()
   const uniqueCompanies = filterByUniqueProperty(flattenCompanies, "id")
 
@@ -44,24 +44,24 @@ const RootBroadcastField = ({
   const showedCompanies = isFiltering ? filterByUniqueProperty(finalFilteredCompanies, "id") : uniqueCompanies
 
   const regionsOfFilteredStatesIds = filteredStates.map(i => i.regionId)
-  const regionsOfFilteredStatess = rootData.elements.filter(i => regionsOfFilteredStatesIds.includes(i.id))
+  const regionsOfFilteredStatess = rootData.regions.filter(i => regionsOfFilteredStatesIds.includes(i.id))
 
   const regionsOfFilteredOfficesIds = filteredOffices.map(i => i.regionId)
-  const regionsOfFilteredOffices = rootData.elements.filter(i => regionsOfFilteredOfficesIds.includes(i.id))
+  const regionsOfFilteredOffices = rootData.regions.filter(i => regionsOfFilteredOfficesIds.includes(i.id))
 
   const finalFilteredRegions = [...filteredRegions, ...regionsOfFilteredStatess, ...regionsOfFilteredOffices]
-  const showedRegions = isFiltering? filterByUniqueProperty(finalFilteredRegions, "id") : rootData.elements
+  const showedRegions = isFiltering? filterByUniqueProperty(finalFilteredRegions, "id") : rootData.regions
 
   return (
     <>
       <BroadcastField
-        name={categoryFilter==="allregions" ? "By Region" : "By Company" }
+        name={categoryFilter==="allregions" ? "All Regions" : "All Companies" }
         type="root"
         dispatch={dispatch}
         isClientList={isClientList}
         id={1}
         isExpanded={true}
-        hasChildren={rootData.elements.length > 0}
+        hasChildren={rootData.regions.length > 0}
         partlybrc={partlybrc}
         partlyanonym={partlyanonym}
         handleExpanded={handleExpanded}

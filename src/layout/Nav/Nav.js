@@ -10,7 +10,6 @@ import clients from '../../images/nav/clients.png';
 import inventory from '../../images/nav/inventory.png';
 import reports from '../../images/nav/reports.png';
 import myAccount from '../../images/nav/myAccount.svg';
-import {FormattedMessage} from 'react-intl';
 
 class Nav extends Component {
     constructor(props) {
@@ -77,58 +76,22 @@ class Nav extends Component {
         this.setState({dropdown: {[id]: !this.state.dropdown[id]}})
     }
 
-    renderDropdown(id, links, name){
+    renderDropdown(id, links, name, img = null){
         const activeClass = this.props.location.pathname.split('/')[1] === id || this.state.dropdown[id] ? 'active' : null;
-        const dropdown =
-            <div
-                className="dropdown-nav-inside">
-            {links.map((link, index) => (
-                    <NavLink
-                        key={index}
-                        to={link.url}
-                        className='dropdown-nav-item'
-                        activeClassName='active'>
-                        <FormattedMessage
-                            id={'nav.dropdown.' + link.name.split(' ').join('')}
-                            defaultMessage={link.name}
-                        />
-                    </NavLink>
-            ))}
-            </div>;
-        return (
-            <div
-                className={"dropdown-nav parent " + activeClass}
-                onClick={()=>this.openDropdown(id)}>
-                <span
-                    className='dropdown-link-center'>
-                    <FormattedMessage
-                        id={'nav.' + name}
-                        defaultMessage={name}
-                    />
-                    <i className="icon down dropdown-nav-icon"/>
-                </span>
+        const dropdown = <div className="dropdown-nav-inside">
+            {links.map((link, index) => (<NavLink key={index} to={link.url} className='dropdown-nav-item' activeClassName='active'>{link.name}</NavLink>
+            ))}</div>;
+        return <div className={"dropdown-nav " + activeClass} onClick={()=>this.openDropdown(id)}>
+            <span className='dropdown-link-center'>{name} <i className="icon fas fa-angle-down dropdown-nav-icon"/></span>
             {this.state.dropdown[id] ? dropdown : null}
-            </div>
-        );
+        </div>
     }
 
     renderMenuItem(id, link, name){
         const activeClass = this.props.location.pathname.split('/')[1] === id ? 'active' : null;
-        return (
-            <div
-                className={"dropdown-nav " + activeClass}>
-                <NavLink
-                    to={id === 'dashboard' ? '/' : '/' + id}
-                    activeClassName='active'>
-                        <span className='dropdown-link-center'>
-                            <FormattedMessage
-                                id={'nav.' + name}
-                                defaultMessage={name}
-                            />
-                        </span>
-                </NavLink>
+        return <div className={"dropdown-nav " + activeClass}>
+            <NavLink to={id === 'dashboard' ? '/' : '/' + id} activeClassName='active'><span className='dropdown-link-center'>{name}</span></NavLink>
         </div>
-        );
     }
 
     /*
@@ -146,19 +109,9 @@ class Nav extends Component {
         const dropdown = <div className="dropdown-nav-inside-myaccount">
             {links.map((link, index) =>
             
-            link.name === 'Logout' ?
+            link.name === 'Logout' ? 
 
-            (<div
-                key={index}
-                to={link.url}
-                className='dropdown-nav-item'
-                onClick={this.props.logout}
-                activeClassName='active'>
-                    <FormattedMessage
-                        id={'nav.' + link.name}
-                        defaultMessage={link.name}
-                    />
-            </div>)
+            (<div key={index} to={link.url} className='dropdown-nav-item' onClick={this.props.logout} activeClassName='active'>{link.name}</div>)
             
             : 
 
@@ -179,23 +132,22 @@ class Nav extends Component {
         let currentLogo;
         const path = this.props.location.pathname;
 
-        // TODO: There should be only one logo for all pages
         if (path.includes('/inventory')) {
             currentLogo = inventory
         } else if (path.includes('/settings')) {
-            currentLogo = inventory
+            currentLogo = settings
         } else if (path.includes('/orders')) {
-            currentLogo = inventory
+            currentLogo = orders
         } else if (path.includes('/clients')) {
-            currentLogo = inventory
+            currentLogo = clients
         } else if (path.includes('/reports')) {
-            currentLogo = inventory
+            currentLogo = reports
         } else if (path.includes('/settings')) {
-            currentLogo = inventory
+            currentLogo = settings
         } else if (path.includes('/administration')) {
-            currentLogo = inventory
+            currentLogo = myAccount
         } else {
-            currentLogo = inventory
+            currentLogo = dashboard
         }
 
         // const mobileState = menuOpen ? 'open' : '';
@@ -214,9 +166,8 @@ class Nav extends Component {
                         {name: 'Add Inventory', url: '/inventory/add-inventory'},
                         {name: 'Shopping Cart', url: '/cart/shopping-cart'}
                     ], 'Inventory')}
-                    {this.renderDropdown('orders', [
-                        {name: 'Sales Orders', url: '/orders/sales'},
-                        {name: 'Purchase Orders', url: '/orders/purchase'}
+                    {this.renderMenuItem('orders', [
+                        {name: 'Orders', url: '/orders'},
                     ], 'Orders')}
                     {this.renderMenuItem('clients', [
                         {name: 'Clients', url: '/clients'},

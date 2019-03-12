@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import InputEdit from "../../../../components/InputEdit/InputEdit";
-import {FormattedMessage} from 'react-intl';
 
 class NamesSynonyms extends Component {
     constructor(props){
@@ -23,50 +22,22 @@ class NamesSynonyms extends Component {
     saveNewName(text, index){
         let newAlternativeNames = this.state.alternativeNames.slice();
         newAlternativeNames[index].alternativeName = text;
-        this.setState({
-            alternativeNames: newAlternativeNames
-        })
+        this.setState({alternativeNames: newAlternativeNames})
     }
 
     render(){
         return this.props.selectedProduct ?
             <div className="edit">
-                <h2>
-                    <FormattedMessage
-                        id='namesSynonyms.editPrimaryName'
-                        defaultMessage='Edit Primary name and synonyms'
-                    />
-                </h2>
-                <h3>
-                    <FormattedMessage
-                        id='namesSynonyms.primaryName'
-                        defaultMessage='Primary Name'
-                    />
-                </h3>
+                <h2>Edit Primary name and synonyms</h2>
+                <h3>Primary Name</h3>
                 <InputEdit value={this.state.primaryName} onSave={(text) => this.setState({primaryName: text})}/>
-                <h3>
-                    <FormattedMessage
-                        id='namesSynonyms.synonyms'
-                        defaultMessage='Synonyms'
-                    />
-                </h3>
+                <h3>Synonyms</h3>
                 <ul className="synonyms-list">
                 {this.state.alternativeNames.map((item, index)=>{
-                    return (
-                        <InputEdit
-                            key={item.id}
-                            value={item.alternativeName}
-                            onSave={(text) => this.saveNewName(text, index)}
-                        />
-                    );
+                    return <InputEdit key={item.id} value={item.alternativeName} onSave={(text) => this.saveNewName(text, index)}/>
                 })}
                 </ul>
-                <button className="button">
-                    <FormattedMessage
-                        id='global.save'
-                        defaultMessage='Save'
-                    />
-                </button>
+                <button className="button">Save</button>
             </div> : null
 
     }

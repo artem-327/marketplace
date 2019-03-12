@@ -28,10 +28,10 @@ class MerchantDetail extends Component {
   }
 
   componentDidMount() {
-    const {merchantDetail, getMerchant, id} = this.props
+    const {merchantDetail, fetchMerchant, id} = this.props
     if (merchantDetail.id !== id) {
       new Promise((resolve) => {
-        getMerchant(id, resolve)
+        fetchMerchant(id, resolve)
       }).then(() => {
         this.setState({...this.props.merchantDetail})
       })
@@ -41,7 +41,7 @@ class MerchantDetail extends Component {
   }
 
   render() {
-    const {isFetching, id, removePopup, putMerchantEdit, deleteMerchant} = this.props;
+    const {isFetching, id, removePopup, editMerchant, removeMerchant} = this.props;
     if (isFetching) return <Spinner />
     const editBody = {
       id: id,
@@ -53,10 +53,10 @@ class MerchantDetail extends Component {
     }
     const footerComponent = (
       <React.Fragment>
-        <Button color="red" onClick={() => deleteMerchant(id)}>
+        <Button color="red" onClick={() => removeMerchant(id)}>
           Delete
         </Button>
-        <Button color="blue" onClick={() => putMerchantEdit(editBody)}>
+        <Button color="blue" onClick={() => editMerchant(editBody)}>
           Edit
         </Button>
       </React.Fragment>
@@ -118,6 +118,6 @@ MerchantDetail.propTypes = {
   isFetching:PropTypes.bool,
   id:PropTypes.number,
   removePopup:PropTypes.func,
-  putMerchantEdit:PropTypes.func,
-  deleteMerchant:PropTypes.func
+  editMerchant:PropTypes.func,
+  removeMerchant:PropTypes.func
 };

@@ -1,11 +1,11 @@
 import React from 'react';
 import classnames from 'classnames';
 import {Control, Form} from 'react-redux-form';
+import {Translate} from 'react-localize-redux';
 import '../login.css';
-import { FormattedMessage, injectIntl } from 'react-intl';
 
 
-class LoginForm extends React.Component {
+export default class LoginForm extends React.Component {
 
     handleSubmit(input) {
         let {email, password} = this.props.loginInputs;
@@ -23,47 +23,18 @@ class LoginForm extends React.Component {
     }
 
     render() {
-        //console.log(this.props);
-        const { formatMessage } = this.props.intl;
         let {isFetching, hasError} = this.props.formStatus;
         let {email, password} = this.props.loginInputs;
-        let butLogin = isFetching ?
-            <FormattedMessage
-                id='login.loging'
-                defaultMessage='Logging'
-                description='Login button during request'
-            />
-            :
-            <FormattedMessage
-                id='login.login'
-                defaultMessage='Login'
-                description='Login button static'
-            />;
+        let butLogin = isFetching ? <Translate id="login.logging"/> : <Translate id="login.login"/>;
         //TODO:: react to all types of errors
-        let loginErr = hasError ? <div className="login-err"><i className="fas fa-exclamation-triangle"></i>
-            <FormattedMessage
-                id='login.incorrect'
-                defaultMessage='Incorrect username or password'
-                description='Incorrect username or password'
-            />
-        </div> : null;
-        const placeHolders = {
-            username: formatMessage({
-                id: 'login.username',
-                defaultMessage: 'Username'
-            }),
-            password: formatMessage({
-                id: 'login.password',
-                defaultMessage: 'Password'
-            })
-        };
+        let loginErr = hasError ? <div className="login-err"><i className="fas fa-exclamation-triangle"></i>Incorrect username or password</div> : null;
         return (
             <Form model="forms.loginForm" onSubmit={(val) => this.handleSubmit(val)}>
                 <div>
-                    <Control.text model="forms.loginForm.email" placeholder={placeHolders.username}/>
+                    <Control.text model="forms.loginForm.email" placeholder="Username"/>
                 </div>
                 <div>
-                    <Control.password model="forms.loginForm.password" placeholder={placeHolders.password}/>
+                    <Control.password model="forms.loginForm.password" placeholder="Password"/>
                 </div>
                 <div className='error-holder'>{loginErr}</div>
                 <div className="form-middle">
@@ -74,5 +45,3 @@ class LoginForm extends React.Component {
         );
     }
 }
-
-export default injectIntl(LoginForm);

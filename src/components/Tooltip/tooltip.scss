@@ -17,7 +17,7 @@
   }
   &.save-mapping{
     position: absolute;
-    margin: -5px 0 10px 25px;
+    margin: 0 0 10px 25px;
     .tooltip-icon {
       font-weight: bold;
       color: #289ada;
@@ -26,10 +26,6 @@
       padding: 0px 6px;
       font-size: 0.8rem;
       transform: translateY(-50%);
-    }
-
-    + button {
-      margin-top: 20px;
     }
   }
   .tooltip-icon {

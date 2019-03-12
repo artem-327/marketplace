@@ -12,13 +12,14 @@ import {
     fetchProductForms,
     fetchProductGrade,
     fetchProductConditions,
-    fetchOrigin, fetchManufacturer, addLotSaveOffering, setSavedMappingToFalse
+    fetchOrigin, fetchManufacturer,
 } from "../../../../../modules/products";
 import { getUnitOfMeasurement, getUnitOfPackaging} from "../../../../../modules/productOffers";
 
 const mapStateToProps = store => ({
     isSearching: store.products.isFetching,
     isMapping: store.products.isMapFetching,
+    searchedProducts: store.products.data,
     searchedProducts: store.products.data,
     productsFetched: store.products.productsFetched,
     mappedProducts: store.products.mappedData,
@@ -38,8 +39,7 @@ const mapStateToProps = store => ({
     productMapping: store.forms.productMapping,
     comboData: store.products.origin,
     productOffering: store.forms.productOffering,
-    productOffer: store.productOffers.productOffer,
-    savedMapping: store.products.savedMapping
+    productOffer: store.productOffers.productOffer
 });
 
 const mapDispatchToProps = dispatch => (
@@ -57,8 +57,6 @@ const mapDispatchToProps = dispatch => (
         fetchProductConditions,
         fetchOrigin,
         addMessage,
-        addLotSaveOffering,
-        setSavedMappingToFalse,
         dispatch
     }, dispatch)
 );

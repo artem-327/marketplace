@@ -14,13 +14,13 @@ class Operator extends Component {
   };
 
   render() {
-    const {deleteOperator, putOperatorEdit, ...operator} = this.props;
+    const {removeOperator, editOperator, ...operator} = this.props;
     const {isEditation} = this.state;
     if(isEditation) {
         return (
         <OperatorEditation 
             operator={operator} 
-            putOperatorEdit={putOperatorEdit} 
+            editOperator={editOperator} 
             toogleEditation={this.toogleEditation}
         />);
     }
@@ -32,7 +32,7 @@ class Operator extends Component {
             <td>{operator.email}</td>
             <td>{operator.login}</td>
             <td>
-                <button className="button small red" onClick={() => deleteOperator(operator.id)}>Delete</button>
+                <button className="button small red" onClick={() => removeOperator(operator.id)}>Delete</button>
                 <button className="button small" onClick={this.toogleEditation}>Edit</button>
             </td>
         </tr>

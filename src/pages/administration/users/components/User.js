@@ -19,7 +19,7 @@ class User extends Component {
     }
 
     componentDidMount() {
-        this.props.getOffices();
+        this.props.fetchOffices();
     }
 
     renderMode() {
@@ -42,7 +42,7 @@ class User extends Component {
                         {this.state.office ?
                             <React.Fragment>
                                 <button className="button small" onClick={() => this.setState({approved: !this.state.approved})}>{this.state.approved ? "Approved!" : "Approve"}</button>
-                                <button className="button small green" onClick={()=>this.props.putPromoteToMerchant(this.props.id, {...user})}>Save</button>
+                                <button className="button small green" onClick={()=>this.props.promoteToMerchant(this.props.id, {...user})}>Save</button>
                             </React.Fragment>
                         : null}
                     </React.Fragment>;
@@ -54,7 +54,7 @@ class User extends Component {
                         <input placeholder="Login"
                                onChange={(e) => this.setState({operator: e.target.value})}
                                value={this.state.operator}/>
-                        {this.state.operator !== "" ? <button className="button small green" onClick={()=>this.props.putPromoteToOperator(this.props.id, {...user})}>Save</button> : null}
+                        {this.state.operator !== "" ? <button className="button small green" onClick={()=>this.props.promoteToOperator(this.props.id, {...user})}>Save</button> : null}
                     </React.Fragment>;
             }
             default:

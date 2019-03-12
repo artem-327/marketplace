@@ -11,7 +11,6 @@ class Rows extends Component {
             key={index}
             rows={this.props.rows[item.index]}
             history={this.props.history}
-            location={this.props.location}
             rowsOpns={this.props.rowsOpns[item.index]}
             rowComponent={this.props.rowComponent}
             contextMenu={this.props.contextMenu}

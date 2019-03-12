@@ -53,17 +53,6 @@ export const getSelectedDataTable = (dataTable) => {
     return selected;
 };
 
-export const getSelectedRowsDataTable = (dataTable) => {
-    if(!dataTable) return false;
-    let selectedRows = [];
-    for(let i = 0; i < dataTable.rowsOpns.length; i++){
-        for(let j = 0; j < dataTable.rowsOpns[i].rows.length; j++){
-            if(dataTable.rowsOpns[i].rows[j].selected) selectedRows.push(dataTable.rowsOpns[i].rows[j].id);
-        }
-    }
-    return selectedRows;
-}
-
 export const transformRequestOptions = params => {
     let options = '';
     for (const key in params) {

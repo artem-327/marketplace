@@ -17,7 +17,6 @@ class App extends Component {
   onIdle = () => {
     this.props.history.push('/');
     localStorage.clear();
-    //Not translated yet
     alert("You've been logged out due to being inactive for " + this.timeout.toString() + (this.timeout === 1 ? " minute." : " minutes."));
     window.location.reload();
   };

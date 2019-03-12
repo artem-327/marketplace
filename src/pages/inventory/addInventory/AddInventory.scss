@@ -1,21 +1,36 @@
-@import "../../../styles/fonts.scss";
-
 .add-group{
   border-radius: 4px;
   border: 1px solid #eeeeee;
   margin: 20px;
-  font-family: $helvetica-roman;
   .notes-textarea{
     vertical-align: top;
   }
   .location-wr{
+    .warehouse-val{
+      position: relative;
+      display: inline-block;
+      span {
+        position: absolute;
+        top: 25px;
+        right:-105px;
+        width: 192px;
+        text-align: right;
+        z-index: -1;
+        background-color: white;
+        transform: translate(-50%, -50%);
+        border-radius: 4px;
+        color: #ef3157;
+        font-size: .9rem;
+        padding: 10px;
+      }
+    }
     .edit-location{
       background-color: #d4eaf7;
       color: #3b98d3;
       border: 2px solid #3b98d3;
       border-radius: 5px;
       width: 110px;
-      height: 42px;
+      height: 40px;
       font-weight: bold;
       margin-left: 25px;
       transition: all .2s ease;
@@ -35,61 +50,27 @@
         }
       }
     }
-
-    .group-item-wr {
-      width: 12.5%;
-      margin: 0 0 16px;
-
-      &:first-child {
-        width: 25%;
-      }
-
-      > input,
-      > div {
-        width: calc(100% - 16px);
-      }
-    }
   }
   .incremental-pricing-table{
-    width: calc(50% + 100px);
-    min-width: calc(50% + 100px);
-    max-width: calc(50% + 100px);
-
-    td {
-      padding: 0 0 8px;
-
-      input{
-        width: calc(100% - 16px);
-        margin: 0 16px 0 0;
-      }
+    td input{
+      width: 150px;
+      margin: 0 20px 7px 0;
     }
     th{
-      padding: 0 0 5px;
-      width: calc((100% - 100px) / 4);
-      font-size: .875rem;
       font-weight: lighter;
-      line-height: 1.1428;
-
-      &.btn-col {
-        width: 50px;
-      }
     }
     .incremental-button{
       border-radius: 5px;
       font-weight: bold;
       font-size: 22px;
-      width: 42px;
-      height: 42px;
-      padding: 6px 6px 12px;
+      width: 39px;
       transition: all .2s ease;
-      line-height: 1;
-
       &:hover{
         cursor: pointer;
       }
       &.add{
         background-color: #dcf7d8;
-        border: 1px solid #56d347;
+        border: 2px solid #56d347;
         color: #56d347;
         &:hover{
           background-color: #56d347;
@@ -97,8 +78,7 @@
         }
       }
       &.remove{
-        border: 1px solid #d32a2e;
-        padding: 8px 6px 10px;
+        border: 2px solid #d32a2e;
         color: #d32a2e;
         background-color: #f7ddd3;
         &:hover{
@@ -127,11 +107,13 @@
   }
   label{
     display: block;
-    margin: 0 0 5px;
-    font-size: .875rem;
-    line-height: 1.1428;
+    margin: 0;
+    font-size: .9rem;
   }
   .incremental-wr{
+    border-top: 1px solid #eeeeee;
+    margin: 15px 10px;
+    padding: 15px 0;
     h4{
       font-size: 1rem;
     }
@@ -149,96 +131,16 @@
   }
   .group-item-wr{
     display: inline-block;
-    width: calc(16.6666% - 14px);
-    margin: 0 8px 24px;
-    vertical-align: top;
-
-    &.infoLabel {
-      width: 100%;
-      margin: 13px 0 0;
-    }
-
-    &.long {
-      width: calc(33.3333% - 12px);
-    }
-
-    &:nth-child(6n+1) {
-      clear: both;
-      margin-left: 0;
-    }
-
-    &:nth-child(6n+6) {
-      margin-right: 0;
-    }
-
+    margin: 10px;
     &.notes {
       vertical-align: top;
-    }
-
-    label.input-checkbox {
-      margin-bottom: 0;
-      padding-left: 27px;
-      line-height: 1.5;
-
-      p {
-        margin: 0;
-      }
-
-      .checkmark {
-        margin-right: 6px;
-      }
-    }
-
-    &.inputs-align label.input-checkbox {
-      margin: 41px 0 0;
-    }
-
-    .total {
-      float: left;
-      padding-top: 20px;
-      text-align: right;
-
-      h5 {
-        margin: 0;
-        font-family: $helvetica-md;
-        font-size: 1.125em;
-        line-height: 1.2222;
-      }
-
-      output {
-        font-size: 1.125em;
-        line-height: 1.1666;
-      }
-    }
-
-    input,
-    textarea,
-    .dropdown-wr,
-    .comboBox,
-    .react-datepicker-wrapper,
-    .react-datepicker__input-container,
-    .notes-textarea {
-      width: 100%;
     }
     
     .gross-margin{
       position: relative;
       display: inline-block;
-      width: 100%;
-      margin: 0;
+      margin: 10px;
       //left:34%;
-    }
-
-    .tooltip-component {
-      margin-top: -5px;
-    }
-
-    + button {
-      margin-top: 20px;
-
-      &.big.add-productOffering {
-        margin-top: 98px;
-      }
     }
   }
   .warlb {
@@ -249,7 +151,7 @@
     display: inline-block;
   }
   .add-body{
-    margin: 10px 22px;
+    margin: 10px;
     display: none;
     &.open{
       display: block;
@@ -262,15 +164,14 @@
     &.open{
       border-radius: 4px 4px 0 0;
     }
-    h2{
-      display: inline-block;
-      margin: 0;
-      padding: 13px 15px 14px;
-      border: none;
-      font-family: $helvetica-md;
+    h1{
       font-size: 1rem;
-      font-weight: 400;
-      color:#33373e;
+      display: inline-block;
+      font-weight: bold;
+      margin: 0;
+      padding: 15px;
+      color:#373b42;
+      border: none;
     }
     i{
       float: right;
@@ -286,13 +187,16 @@
       font-size: 1rem;
     }
   }
-  h4{
-    margin: 20px 0 32px;
-    font-family: $helvetica-md;
-    font-size: 1rem;
-    font-weight: 400;
-    color:#33373e;
-    line-height: 1.1875;
+
+  h6{
+    margin-left: 10px;
+    margin-right: 0px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    &.total {
+      margin: 10px;
+    }
   }
 
   .margin-fix {
@@ -310,23 +214,20 @@
   }
   .add-inventory{
     margin: 20px;
+    font-size: 1rem;
     float: right;
   }
   .location-submenu{
     margin-bottom: 20px;
     div{
       display: inline-block;
-      padding: 0 5px 1px;
+      padding: 0 5px;
       margin: 0 10px 0 0;
-      font-size: 1rem;
+      font-size: .9rem;
       transition: all .2s ease;
-      line-height: 1.1875;
       &:hover{
         cursor: pointer;
         color: #3b98d3;
-      }
-      > div {
-        border-bottom: 1px solid transparent;
       }
     }
     &.saved{
@@ -376,32 +277,21 @@
 //  }
 //}
 
-.form-error,
-.location-wr .warehouse-val {
+.form-error {
   position: relative;
-  display: block;
+  display: inline-block;
   span {
     position: absolute;
-    top: 62px;
-    left: 0;
-    width: 100%;
+    top: 25px;
+    right:-307px;
+    width: 192px;
     text-align: right;
     z-index: -1;
     background-color: white;
+    transform: translate(-50%, -50%);
     border-radius: 4px;
     color: #ef3157;
-    font-size: .75rem;
-    padding: 1px 2px;
-  }
-
-  .warehouse-val-fm {
-    position: absolute;
-    top: 0px;
-  }
-
-  ~ input,
-  ~ .dropdown-wr .dropdown-trigger,
-  ~ .comboBox input {
-    border-color: #ef3157;
+    font-size: .9rem;
+    padding: 10px;
   }
 }

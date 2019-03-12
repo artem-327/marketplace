@@ -1,23 +1,14 @@
-@import "../../../../../../../styles/fonts.scss";
-
 .lots-container{
     background-color: rgb(252, 252, 252);
     .lots-header{
         background-color: rgb(245, 245, 245);
         position: relative;
-        margin: 0 -22px;
-        padding: 0;
-
-        h3 {
-            padding: 13px 22px 14px;
-            font-family: $helvetica-md;
-            font-size: 1rem;
-            font-weight: 400;
-            color:#33373e;
-        }
+        padding: 12px 12px 12px 20px;
+        border-bottom: 1.3px solid rgb(239, 239, 239);
     }
     .lots-item-container{
         display: flex;
+        
         
         border-bottom: 1.3px solid #ededed;
         border-top: 1.3px solid #ededed;
