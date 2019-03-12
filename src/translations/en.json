@@ -193,7 +193,7 @@
     "addInventory.totalPackages": "Total Packages",
     "addInventory.expirationDate": "Expiration Date",
     "addInventory.addedLots": "ADDED LOTS",
-    "addInventory.uploadDocument": "Click To Upload C of A",
+    "addInventory.uploadDocument": "Click to upload",
     "addInventory.setPriceAndRules": "SET PRICE & RULES",
     "addInventory.costPer": "Cost per {unit}",
     "addInventory.grossMargin": "Gross Margin %",
@@ -270,5 +270,7 @@
     "cart.backToProductPurchaseInfo": "Back to Product/Purchase info",
     "cart.shoppingCartHeader": "Items ({number})",
     "notFound": "... think we are lost, sir !",
+    "tooLargeFile": "File \"{fileName}\" is larger than maximal allowed size: {maxSize} MB",
+    "uploadFileFailed": "File \"{fileName}\" was not uploaded due to error.",
     "cart.keepShopping": "Keep Shopping"
 }

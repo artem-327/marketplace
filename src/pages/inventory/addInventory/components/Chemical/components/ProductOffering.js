@@ -44,9 +44,6 @@ class ProductOffering extends Component {
     // }
 
     saveOffering(values) {
-        if (!parseInt(this.props.productOffering.assayMin) && !parseInt(this.props.productOffering.assayMax)) {
-            this.setState({minWarning: 'Required', maxWarning: 'Required'})
-        }
         /*
         if (this.validateMapping()) {
             this.props.addMessage("Please fill mapping forms before you add new lot.");

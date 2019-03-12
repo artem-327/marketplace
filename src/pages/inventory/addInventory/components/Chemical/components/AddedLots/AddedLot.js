@@ -36,7 +36,7 @@ class AddedLot extends Component {
             </div>
             <div className="vm">
             <div className='lots-item-docs'>
-                <UploadLot/>
+                <UploadLot type="C of A" lot={lotNumber} {...this.props} />
             </div>
             </div>
             <div className="vl"></div>

@@ -1,4 +1,6 @@
 import axios from "axios";
+import React, { Component }  from 'react';
+import {FormattedMessage} from 'react-intl';
 
 const CLOSE_MESSAGE = 'CLOSE_MESSAGE';
 const ADD_MESSAGE = 'ADD_MESSAGE';
@@ -6,6 +8,9 @@ const ADD_MESSAGE = 'ADD_MESSAGE';
 const ADD_PRODUCT_OFFER_REJECTED = 'ADD_PRODUCT_OFFER_REJECTED';
 const EDIT_PRODUCT_OFFER_REJECTED = 'EDIT_PRODUCT_OFFER_REJECTED';
 const SAVE_MAPPING_REJECTED = 'SAVE_MAPPING_REJECTED';
+const ADD_ATTACHMENT_REJECTED = 'ADD_ATTACHMENT_REJECTED';
+export const TOO_LARGE_FILE = 'TOO_LARGE_FILE'
+export const UPLOAD_FILE_FAILED = 'UPLOAD_FILE_FAILED'
 // const SAVE_MAPPING_REJECTED = 'SAVE_MAPPING_REJECTED';
 // const FETCH_ORIGIN_REJECTED = 'FETCH_ORIGIN_REJECTED';
 // const FETCH_RECENT_ADDED_PRODUCTS_REJECTED = 'FETCH_RECENT_ADDED_PRODUCTS_REJECTED';
@@ -85,6 +90,34 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 messages: [...state.messages, action.payload]
+            }
+        }
+        case ADD_ATTACHMENT_REJECTED: {
+            return {
+                ...state,
+                messages: [...state.messages, action.payload.response.data.message]
+            }
+        }
+        case TOO_LARGE_FILE: {
+            return {
+                ...state,
+                messages: [...state.messages,
+                    (<FormattedMessage
+                        id='tooLargeFile'
+                        defaultMessage='File "{fileName}" is larger than maximal allowed size: {maxSize} MB'
+                        values={{ fileName: action.payload.fileName, maxSize: action.payload.maxSize }}
+                    />)]
+            }
+        }
+        case UPLOAD_FILE_FAILED: {
+            return {
+                ...state,
+                messages: [...state.messages,
+                    (<FormattedMessage
+                        id='uploadFileFailed'
+                        defaultMessage='File "{fileName}" was not uploaded due to error.'
+                        values={{ fileName: action.payload.fileName }}
+                    />)]
             }
         }
         default: {

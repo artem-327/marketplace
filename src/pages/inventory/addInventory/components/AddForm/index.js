@@ -8,7 +8,7 @@ import {
     fetchLocations,
     fetchFilterLocations
 } from "../../../../../modules/location";
-import {addProductOffer, editProductOffer} from '../../../../../modules/productOffers';
+import {addProductOffer, editProductOffer, loadFile, addAttachment, linkAttachment, removeAttachment, removeAttachmentLink} from '../../../../../modules/productOffers';
 import {validatePackageType} from "../../../../../modules/packageTypes";
 import {addMessage} from "../../../../../modules/errors";
 import {getMerchant} from "../../../../../modules/merchants";
@@ -20,6 +20,7 @@ function mapStateToProps(store) {
         locations: store.location.locations,
         location: store.location,
         form: store.forms.addProductOffer,
+        files: store.products.files,
         productOfferingForm: store.forms.productOffering,
         merchantDetail: store.merchants.merchantDetail,
         productMappingValidation: store.products.productMappingValidation,
@@ -35,6 +36,11 @@ function mapDispatchToProps(dispatch) {
         validatePackageType,
         updateWarehouse,
         addProductOffer,
+        loadFile,
+        addAttachment,
+        linkAttachment,
+        removeAttachment,
+        removeAttachmentLink,
         fetchWarehouses,
         addMessage,
         editProductOffer,

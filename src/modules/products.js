@@ -40,7 +40,7 @@ export const initialState = {
     mappedData: [],
     productForms: [],
     productConditions: [],
-    productGrade: [],
+    productGrades: [],
     productAge: [],
     location: [],
     recentProducts: [],
@@ -56,8 +56,8 @@ export const initialState = {
     alternativeNames: [],
     productMappingValidation: false,
     productOfferingValidation: false,
-    savedMapping: false
-
+    savedMapping: false,
+    fileMaxSize: 20 // MB
 };
 
 export default function reducer(state = initialState, action) {

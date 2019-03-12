@@ -6,6 +6,7 @@ import Chemical from "./components/Chemical";
 import {actions} from "react-redux-form";
 import {FormattedMessage} from 'react-intl';
 import {logout} from "../../../modules/identity";
+import moment from "moment"
 
 export default class AddInventory extends Component {
     componentDidMount(){
@@ -24,7 +25,7 @@ export default class AddInventory extends Component {
                 tradeName: this.props.productOffer.tradeName,
                 assayMax: this.props.productOffer.assayMax,
                 assayMin: this.props.productOffer.assayMin,
-                creationDate: this.props.productOffer.creationDate,
+                creationDate: this.props.productOffer.manufacturedDate,
                 expirationDate: this.props.productOffer.expirationDate,
                 externalNotes: this.props.productOffer.externalNotes,
                 internalNotes: this.props.productOffer.internalNotes,

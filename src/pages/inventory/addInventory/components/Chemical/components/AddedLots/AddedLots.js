@@ -14,7 +14,13 @@ class AddedLots extends Component {
             const props = {
                 productOffer: this.props.productOffer,
                 edit: this.props.edit,
-                productOffering: this.props.productOffering
+                productOffering: this.props.productOffering,
+                dispatch: this.props.dispatch,
+                fileMaxSize: this.props.fileMaxSize,
+                loadFile: this.props.loadFile,
+                addAttachment: this.props.addAttachment,
+                removeAttachment: this.props.removeAttachment,
+                removeAttachmentLink: this.props.removeAttachmentLink
             }
 
             return this.props.lots.map((value,index)=>{
@@ -30,7 +36,6 @@ class AddedLots extends Component {
     }
 
     render(){
-        //console.log(this.props.lots)
         return (
         <div className='lots-container'>
                 <div className='lots-header'>

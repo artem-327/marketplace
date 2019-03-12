@@ -32,6 +32,45 @@ export default class AddForm extends Component {
         this.props.resetForm('forms.addProductOffer');
     }
 
+    uploadDocuments(productOffer){
+        let productOfferId = productOffer.value.data
+        let attachments = JSON.parse(localStorage.getItem('attachments'))
+        if (attachments && attachments.length) {
+            attachments = attachments.filter(attachment => {
+                return attachment && attachment.preview
+            })
+        }
+
+        var attSuccesses = 0
+        var attErrors = 0
+        var attActions = attachments ? attachments.length : 0
+
+        if (attActions > 0) {
+            for (let at = 0; at < attachments.length; at++) {
+                if (attachments[at] && attachments[at].preview) {
+                    this.props.linkAttachment(attachments[at].lot ? true : false, attachments[at].lot ? attachments[at].lot : productOfferId, attachments[at].attachmentId).then((r) => {
+                        attSuccesses++
+                        this.checkUploadDocumentsStatus(attActions, attSuccesses, attErrors)
+                    }).catch(e => {
+                        attErrors++
+                        this.checkUploadDocumentsStatus(attActions, attSuccesses, attErrors)
+                    })
+                }
+            }
+        } else {
+            this.props.history.push("/inventory/my-inventory")
+        }
+    }
+
+    checkUploadDocumentsStatus(attActions, attSuccesses, attErrors) {
+        console.log('Attachments: ' + attActions + '; Successes: ' + attSuccesses + '; Errors: ' + attErrors)
+        if (attActions === attSuccesses) {
+            this.props.history.push("/inventory/my-inventory")
+        } else if (attActions === (attSuccesses + attErrors)) {
+            console.log('not all Attachments were saved :-/')
+        }
+    }
+
     addProductOfferTimeout = async (inputs) => {
         document.getElementById("form-mapping").classList.add('validate-only')
         document.getElementById("mapping-btn").click()
@@ -67,18 +106,6 @@ export default class AddForm extends Component {
             delete newTiers[i].id
         }
 
-        const creationDate = (this.props.productOfferingForm.creationDate
-                                     ? (this.props.productOfferingForm.creationDate.includes("T")
-                                             ? this.props.productOfferingForm.creationDate
-                                             : `${this.props.productOfferingForm.creationDate}T00:00:00Z`)
-                                     : null)
-
-        const expirationDate = (this.props.productOfferingForm.expirationDate
-                                     ? (this.props.productOfferingForm.expirationDate.includes("T")
-                                             ? this.props.productOfferingForm.expirationDate
-                                             : `${this.props.productOfferingForm.expirationDate}T00:00:00Z`)
-                                     : null)
-
 
         const localLots = JSON.parse(localStorage.getItem('productLots'));
         let lots = [];
@@ -104,8 +131,6 @@ export default class AddForm extends Component {
             anonymous: false,
             assayMin: parseInt(this.props.productOfferingForm.assayMin),
             assayMax: parseInt(this.props.productOfferingForm.assayMax),
-            creationDate: creationDate,
-            expirationDate: expirationDate,
             pricing: {
                 ...this.props.addProductOfferForm.pricing,
                 price: parseFloat(Number(this.props.addProductOfferForm.pricing.price).toFixed(3)),
@@ -126,6 +151,8 @@ export default class AddForm extends Component {
         delete params.packaging.splits;
         delete params.packaging.minimum;
 
+        delete params.creationDate;
+        delete params.expirationDate;
         delete params.casNumber;
         delete params.chemicalName;
         delete params.indexName;
@@ -133,9 +160,10 @@ export default class AddForm extends Component {
         delete params.pkgAmount;
         //delete params.productName;
         //delete params.productCode;
+        delete params.productGrade;
         
-        this.props.addProductOffer(params).then(()=>{
-            this.props.history.push("/inventory/my-inventory");
+        this.props.addProductOffer(params).then((productOffer)=>{
+            this.uploadDocuments(productOffer)
         });
     }
 
@@ -183,18 +211,6 @@ export default class AddForm extends Component {
             delete newTiers[i].id
         }
 
-        const creationDate = (this.props.productOfferingForm.creationDate
-                                     ? (this.props.productOfferingForm.creationDate.includes("T")
-                                             ? this.props.productOfferingForm.creationDate
-                                             : `${this.props.productOfferingForm.creationDate}T00:00:00Z`)
-                                     : null)
-
-        const expirationDate = (this.props.productOfferingForm.expirationDate
-                                     ? (this.props.productOfferingForm.expirationDate.includes("T")
-                                             ? this.props.productOfferingForm.expirationDate
-                                             : `${this.props.productOfferingForm.expirationDate}T00:00:00Z`)
-                                     : null)
-
         const localLots = JSON.parse(localStorage.getItem('productLots'));
         let lots = [];
 
@@ -226,22 +242,24 @@ export default class AddForm extends Component {
                 tiers: newTiers
             },
             lots: lots,
-            creationDate: creationDate,
-            expirationDate: expirationDate,
             manufacturer: (typeof this.props.productOfferingForm.manufacturer !== 'undefined' ? this.props.productOfferingForm.manufacturer.id : (typeof this.props.productOffer.manufacturer !== 'undefined' ? this.props.productOffer.manufacturer.id : '')),
             origin: (typeof this.props.productOfferingForm.origin !== 'undefined' ? this.props.productOfferingForm.origin.id : (typeof this.props.productOffer.origin !== 'undefined' ? this.props.productOffer.origin.id : '')),
             product: (typeof this.props.productOffer.product !== 'undefined' ? this.props.productOffer.product.id : ''),
             packaging: {...this.props.mappingForm.packaging}
         });
 
-        this.props.editProductOffer(this.props.productOffer.id, params).then(()=>{
-            this.props.history.push("/inventory/my-inventory");
+        delete params.creationDate;
+        delete params.expirationDate;
+
+        this.props.editProductOffer(this.props.productOffer.id, params).then((productOffer)=>{
+            this.uploadDocuments(productOffer)
         });
 
         delete params.casNumber;
         delete params.chemicalName;
         delete params.indexName;
         delete params.pkgAmount;
+        delete params.productGrade;
     }
 
     cancelEdit() {

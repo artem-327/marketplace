@@ -7,7 +7,7 @@ class File extends Component {
     render () {
         return (
             <React.Fragment>
-            <span id={this.props.name} className={this.props.className}>
+            <span key={this.props.index} className={this.props.className}>
                 <i className="close" onClick={()=>this.props.onRemove()} />
                 {this.props.name}
             </span>

@@ -14,9 +14,9 @@ class AdditionalDocuments extends Component {
                     />
                 </h4>
                 <div className="add-documents">
-                <UploadLot className="add-doc" />
-                <UploadLot className="add-doc" />
-                <UploadLot className="add-doc" />
+                    <UploadLot className="add-doc" type="MSDS" {...this.props} />
+                    <UploadLot className="add-doc" type="Spec Sheet" {...this.props} />
+                    <UploadLot className="add-doc" type="Product Image" {...this.props} />
                 </div>
             </div>
         )
