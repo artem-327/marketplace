@@ -1,5 +1,5 @@
-import {connect} from 'react-redux';
-import Settings from './Settings';
+import { connect } from 'react-redux';
+import Settings from './components/Settings';
 
 export default connect()(Settings);
 
