@@ -16,11 +16,8 @@ class BankAccountsTable extends Component {
 		columns: [
 			{ name: 'accountHolderName', title: 'Account Holder Name'},
 			{ name: 'accountNumber', title: 'Account Number' },
-			{ name: 'currency', title: 'Currency' },			
-			{ name: 'editDeleteBtn', title: ' ' },
-			{ name: 'accountHolderType', title: ' ' },			
-			{ name: 'country', title: ' ' },
-			{ name: 'routingNumber', title: ' ' }
+			{ name: 'currency', title: 'Currency' },
+			{ name: 'editDeleteBtn', title: ' ' }
 		]
 	}	
 
@@ -74,7 +71,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-		rows: state.settings.branchesRows
+		rows: state.settings.bankAccountsRows
   }
 }
 

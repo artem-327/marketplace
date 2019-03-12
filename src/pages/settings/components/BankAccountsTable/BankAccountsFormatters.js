@@ -2,7 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 
-import { handleEditPopup, deleteWarehouse } from '../../actions';
+import { 
+	handleEditPopup, 
+	deleteBankAccount 
+} from '../../actions';
 
 const editDeleteCell = props => {
 	
@@ -10,15 +13,15 @@ const editDeleteCell = props => {
 		<div className="editDelete-wrapper">
 			<button className="editDelete-btn" />
 			<ul className="handlers-row-menu">
-				<li 
+				{/* <li 
 					className="handlers-row-menu__btn"
 					onClick={ () => props.handleEditPopup(props.row) }
 				>
 					{'Edit'}
-				</ li>
+				</ li> */}
 				<li 
 					className="handlers-row-menu__btn"
-					onClick={ () => props.deleteWarehouse(props.row.branchId) }
+					onClick={ () => props.deleteBankAccount(props.row.branchId) }
 				>
 					{'Delete'}
 				</ li>
@@ -29,7 +32,7 @@ const editDeleteCell = props => {
 
 const mapDispatchToProps = {   
 	handleEditPopup,
-	deleteWarehouse
+	deleteBankAccount
 };
 
 const mapStateToProps = state => {

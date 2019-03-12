@@ -12,6 +12,7 @@ import BranchTable from './BranchTable/BranchTable';
 import BankAccountsTable from './BankAccountsTable/BankAccountsTable';
 import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
 import EditWarehousePopup from './WarehouseTable/EditWarehousePopup';
+import AddNewBranchPopup from './BranchTable/AddNewBranchPopup';
 import AddNewWarehousePopup from './WarehouseTable/AddNewWarehousePopup';
 import AddNewCreditCardPopup from './CreditCardsTable/AddNewCreditCardPopup';
 import AddNewBankAccountPopup from './BankAccountsTable/AddNewBankAccountPopup';
@@ -107,13 +108,20 @@ class Settings extends Component {
 						: null
 					}
 					{ 
-						// addNewWarehousePopup ?
-						// <AddNewWarehousePopup
-						// 	handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
-						// />
-						// : null
-						addNewWarehousePopup ?
+						addNewWarehousePopup && currentTab === 'Branches' ?
+						<AddNewBranchPopup
+							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
+						/> :
+						addNewWarehousePopup && currentTab === 'Warehouses' ?
+						<AddNewWarehousePopup
+							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
+						/> :
+						addNewWarehousePopup && currentTab === 'Bank accounts' ?
 						<AddNewBankAccountPopup
+							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
+						/> :
+						addNewWarehousePopup && currentTab === 'Credit cards' ?
+						<AddNewCreditCardPopup
 							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
 						/>
 						: null						
@@ -131,7 +139,7 @@ class Settings extends Component {
 						editDeleteColumns={ editDeleteColumns }
 						popupStatus={ editWarehousePopup || addNewWarehousePopup }
 					/> :
-					currentTab === 'Branch' ?
+					currentTab === 'Branches' ?
 					<BranchTable 
 						filterValue={ filterValue }
 						editDeleteColumns={ editDeleteColumns }

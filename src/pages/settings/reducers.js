@@ -7,23 +7,17 @@ export const initialState = {
   usersRows: [],
   warehousesRows: [],
   branchesRows: [],
-  creditCardsRows: []
+  creditCardsRows: [],
+  bankAccountsRows: []
 };
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case AT.EDIT_POPUP: {
+    case AT.EDIT_POPUP_TRIGGER: {
       return {
         ...state,
         editWarehousePopup: state.editWarehousePopup === false ? true : false,
         popupValues: action.payload
-      }
-    }
-    
-    case AT.ADD_NEW_WAREHOUSE_POPUP: {
-      return {
-        ...state,
-        addNewWarehousePopup: state.addNewWarehousePopup === false ? true : false,
       }
     }
 
@@ -91,9 +85,11 @@ export default function reducer(state = initialState, action) {
           {
             id: card.id,
             cardNumber: card.cardNumber,
-            cvc: card.cvc,
-            expirationMonth: card.expirationMonth,
-            expirationYear: card.expirationYear            
+            cvc: card.cvcCheck,
+            expirationMonth: card.expMonth,
+            expirationYear: card.expYear,
+            last4: card.last4
+            // cardNumber what does it mean
           }
         )			
       });
@@ -104,8 +100,9 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_BANK_ACCOUNTS_DATA_SUCCESS: {      
-      const rows = action.payload.map(account => {	
+    case AT.GET_BANK_ACCOUNTS_DATA_SUCCESS: {
+      console.log(action.payload, 'bankAccountsRows')   
+      const rows = action.payload.map(account => {
         return (
           {
             id: account.id,
@@ -115,6 +112,7 @@ export default function reducer(state = initialState, action) {
             country: account.country,
             currency: account.currency,
             routingNumber: account.routingNumber
+            // accountNumber - what does it mean
           }
         )			
       });
@@ -122,6 +120,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         bankAccountsRows: rows
+      }
+    }
+    
+    case AT.POST_NEW_WAREHOUSE_POPUP: {
+      return {
+        ...state,
+        addNewWarehousePopup: state.addNewWarehousePopup === false ? true : false,
       }
     }
 

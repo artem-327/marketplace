@@ -38,7 +38,7 @@ class EditWarehousePopup extends React.Component {
           onSubmit={ (value) => postNewCreditCardRequest(value) }
           className="b-popup col-xs-10"
         >    
-          <h2>{'Warehouse'} Profile</h2>
+          <h2>{'Credit Card'} Profile</h2>
           <ul>
             <li className="add-warehouse-inputs-wrapper">
               <label className="warehouse-label name" htmlFor="warehouse-name">                        

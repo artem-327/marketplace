@@ -2,22 +2,15 @@ import * as AT from './action-types';
 
 export function handleEditPopup(rows) {
   return {
-    type: AT.EDIT_POPUP,
+    type: AT.EDIT_POPUP_TRIGGER,
     payload: rows
-  }
-}
-
-export function deleteWarehouse(warehouseId) {
-  return {
-    type: AT.DELETE_WAREHOUSE,
-    payload: warehouseId
   }
 }
 
 export function handleSubmitEditPopup(warehouseData, branchId) {  
 
   return {
-    type: AT.SUBMIT_EDIT_POPUP,
+    type: AT.SUBMIT_EDIT_POPUP_HANDLER,
     payload: warehouseData,
     id: branchId
   }
@@ -25,14 +18,7 @@ export function handleSubmitEditPopup(warehouseData, branchId) {
 
 export function handleAddNewWarehousePopup() {
   return {
-    type: AT.ADD_NEW_WAREHOUSE_POPUP
-  }
-}
-
-export function addNewWarehouseRequest(warehouseData) { 
-  return {
-    type: AT.ADD_NEW_WAREHOUSE_REQUEST,
-    payload: warehouseData
+    type: AT.POST_NEW_WAREHOUSE_POPUP
   }
 }
 
@@ -66,6 +52,13 @@ export function getBankAccountsDataRequest() {
   }
 }
 
+export function postNewWarehouseRequest(warehouseData) { 
+  return {
+    type: AT.POST_NEW_WAREHOUSE_REQUEST,
+    payload: warehouseData
+  }
+}
+
 export function postNewCreditCardRequest(creditCardData) {
   return {
     type: AT.POST_NEW_CREDIT_CARD_REQUEST,
@@ -79,3 +72,25 @@ export function postNewBankAccountRequest(bankAccountData) {
     payload: bankAccountData
   }
 }
+
+export function deleteWarehouse(warehouseId) {
+  return {
+    type: AT.DELETE_WAREHOUSE,
+    payload: warehouseId
+  }
+}
+
+export function deleteCreditCard(cardId) {
+  return {
+    type: AT.DELETE_CREDIT_CARD,
+    payload: cardId
+  }
+}
+
+export function deleteBankAccount(accountId) {
+  return {
+    type: AT.DELETE_BANK_ACCOUNT,
+    payload: accountId
+  }
+}
+
