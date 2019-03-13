@@ -5,7 +5,13 @@ import {resetForm} from "../../../utils/functions";
 
 function mapStateToProps(store) {
     return {
-        mappingForm: store.forms.productMapping,
+        mappingForm: {
+            ...store.forms.productMapping,
+            packaging: {
+                ...store.forms.productMapping.packaging,
+                packagingType: store.productOffers.productOffer.packaging && store.productOffers.productOffer.packaging.packagingType.measureType === store.productOffers.productOffer.packaging.unit.measureType ? store.forms.productMapping.packaging.packagingType : ""
+            }
+        },
         productOfferingForm: store.forms.productOffering,
         addProductOfferForm: store.forms.addProductOffer,
         unitOfMeasurement: store.productOffers.unitOfMeasurement

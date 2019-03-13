@@ -34,7 +34,18 @@ const FETCH_PACKAGING_TYPES = 'FETCH_PACKAGING_TYPES';
 const FETCH_PACKAGING_TYPES_FULFILLED = 'FETCH_PACKAGING_TYPES_FULFILLED';
 
 export const initialState = {
-    productsMapping: {},
+    productsMapping: {
+        casNumber: '',
+        chemicalName: '',
+        indexName: '',
+        packaging: {
+            size: '',
+            packagingType: '',
+            unit: ''
+        },
+        productCode: '',
+        productName: ''
+    },
     productOffering: {},
     data: [],
     mappedData: [],
