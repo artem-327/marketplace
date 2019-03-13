@@ -1,10 +1,11 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import {withRouter} from 'next/router'
-import {Container, Menu, Icon, Image} from 'semantic-ui-react'
+import {Container, Menu, Icon, Image, Dropdown} from 'semantic-ui-react'
 import Logo from '~/assets/images/nav/Logo.png'
 import 'semantic-ui-css/semantic.min.css'
 import '~/styles/base.scss'
+import cn from 'classnames'
 
 const MenuLink = withRouter(({router: {pathname}, to, children}) => (
   <Link prefetch href={to}>
@@ -12,7 +13,7 @@ const MenuLink = withRouter(({router: {pathname}, to, children}) => (
   </Link>
 ))
 
-const Layout = ({children, title = "Echo exchange"}) => (
+const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
   <Container style={{paddingTop: 40}}>
     <Head>
       <title>Echo exchange / {title}</title>
@@ -26,7 +27,12 @@ const Layout = ({children, title = "Echo exchange"}) => (
 
         <MenuLink to='/dashboard'>Dashboard</MenuLink>
         <MenuLink to='/inventory'>Inventory</MenuLink>
-        <MenuLink to='/orders/sales'>Orders</MenuLink>
+        <Dropdown item text="Orders" className={cn({active: pathname.startsWith('/orders')})}>
+          <Dropdown.Menu>
+            <Dropdown.Item as={MenuLink} to="/orders/sale">Sale orders</Dropdown.Item>
+            <Dropdown.Item as={MenuLink} to="/orders/sales">Purchase orders</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
         <MenuLink to='/settings'>Settings</MenuLink>
         
         <Menu.Menu position="right">
