@@ -1,8 +1,8 @@
-export const required = (val) => val && val !== "";
-export const isNumber = (val) => typeof val === 'undefined' || (!isNaN(parseFloat(val)) && isFinite(val));
-export const isInteger = (val) => typeof val === 'undefined' || (Number.isInteger(Number(val))); //
-export const min = (val, min) => typeof val === 'undefined' || val > min;
-export const maxPercent = (val) => typeof val === 'undefined' || val <= 100
+export const required = (val) => typeof val !== 'undefined' && val !== "";
+export const isNumber = (val) => typeof val === 'undefined' || val === "" || (!isNaN(parseFloat(val)) && isFinite(val));
+export const isInteger = (val) => typeof val === 'undefined' || val === "" || (Number.isInteger(Number(val)));
+export const min = (val, min) => typeof val === 'undefined' || val === "" || val > min;
+export const maxPercent = (val) => typeof val === 'undefined' || val === "" || val <= 100
 export const smaller = (val, max) => {
     return (parseFloat(val) <= parseFloat(max))
 };

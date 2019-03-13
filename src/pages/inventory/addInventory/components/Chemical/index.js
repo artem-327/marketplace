@@ -35,7 +35,13 @@ const mapStateToProps = store => ({
     recentProducts: store.products.recentProducts,
     unitOfMeasurement: store.productOffers.unitOfMeasurement,
     unitOfPackaging: store.productOffers.unitOfPackaging,
-    productMapping: store.forms.productMapping,
+    productMapping: {
+        ...store.forms.productMapping,
+        packaging: {
+            ...store.forms.productMapping.packaging,
+            packagingType: store.productOffers.productOffer.packaging && store.productOffers.productOffer.packaging.packagingType.measureType === store.productOffers.productOffer.packaging.unit.measureType ? store.forms.productMapping.packaging.packagingType : ""
+        }
+    },
     comboData: store.products.origin,
     productOffering: store.forms.productOffering,
     productOffer: store.productOffers.productOffer,
