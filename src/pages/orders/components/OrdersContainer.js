@@ -28,8 +28,9 @@ function transformToRows(data, type) {
 
 function mapStateToProps(state, ownProps) {
     const {orders} = state
-    const {router: {query}} = ownProps
-    
+    const {router} = ownProps
+    const query = router ? router.query : ownProps.match.params
+
     if (query.type !== orders.dataType) {
         orders.data = []
     }
