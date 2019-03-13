@@ -25,6 +25,7 @@ class WarehouseTable extends Component {
 	}
 
 	componentDidMount() {
+		console.log('did mount werehouses')
 		this.props.getWarehousesDataRequest();
 	}
 

@@ -2,15 +2,13 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import Layout from 'components/Layout'
 import securePage from '../hocs/securePage'
+import Router from 'next/router'
 
 class Index extends Component {
-  render() {
-    return (
-      <Layout title="Dashboard">
-        <h1>Version: {this.state.version}</h1>
-      </Layout>
-    )
+  componentDidMount() {
+    Router.push('/dashboard')
   }
+  render() { return null }
 }
 
 export default connect()(securePage(Index))

@@ -37,9 +37,9 @@ class Orders extends Component {
     }
 
     render() {
-        const {endpointType, match, rows, isFetching, activeStatus} = this.props
+        const {endpointType, match, rows, isFetching, activeStatus, router: {query}} = this.props
         const {status} = this.props.filterData
-        let ordersType = match.params.type.charAt(0).toUpperCase() + match.params.type.slice(1)
+        let ordersType = query.type.charAt(0).toUpperCase() + query.type.slice(1)
 
         return (
             <div id="page">

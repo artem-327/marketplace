@@ -9,24 +9,25 @@ import createSagaMiddleware from 'redux-saga'
 // import moment from "moment"
 
 // import identity, {initialState as identityFormInit, logout} from './modules/identity'
-import identity, {initialState as identityFormInit} from './modules/identity'
+import identity, { initialState as identityFormInit } from './modules/identity'
 import users from './modules/users'
 
 import companies from './modules/companies'
-import productOffers, {initialState as addProductsInit} from './modules/productOffers'
-import shippingQuotes, {initialState as shippingQuotesInit} from './modules/shippingQuotes'
+import productOffers, { initialState as addProductsInit } from './modules/productOffers'
+import shippingQuotes, { initialState as shippingQuotesInit } from './modules/shippingQuotes'
 import popup from './modules/popup'
-import filter, {initialState as filterInit} from './modules/filter'
+import filter, { initialState as filterInit } from './modules/filter'
 import packageTypes from './modules/packageTypes'
-import brcRules, {initialState as broadcastInit} from "./modules/broadcast"
-import cart, {initialState as cartInit} from "./modules/cart"
-import merchants, {initialState as merchantsInit} from "./modules/merchants"
-import products, {initialState as productsInit} from './modules/products'
+import brcRules, { initialState as broadcastInit } from "./modules/broadcast"
+import cart, { initialState as cartInit } from "./modules/cart"
+import merchants, { initialState as merchantsInit } from "./modules/merchants"
+import products, { initialState as productsInit } from './modules/products'
 import location from './modules/location'
 import errors from "./modules/errors"
 import dataTables from "./modules/dataTables"
+import settings from './pages/settings/reducers'
 
-import {show as saveFilterItem} from './components/Filter/components/SavedFilters/reducers/SaveFilterItem.reducers'
+import { show as saveFilterItem } from './components/Filter/components/SavedFilters/reducers/SaveFilterItem.reducers'
 import companiesSaga from "./saga/companies"
 import officesSaga from "./saga/offices"
 import merchantsSaga from "./saga/merchants"
@@ -37,46 +38,52 @@ import locationsSaga from "./saga/locations"
 import broadcastSaga from "./saga/broadcast"
 import productOffersSaga from "./saga/productOffers"
 import shippingQuotesSaga from "./saga/shippingQuotes"
+import settingsSaga from "./pages/settings/saga"
 
 // Orders
 import ordersReducers from './pages/orders/reducers'
 import ordersSaga from './pages/orders/saga'
 
 const reducer = combineReducers({
-    identity,
-    brcRules,
-    companies,
-    users,
-    location,
-    productOffers,
-    shippingQuotes,
-    products,
-    packageTypes,
-    cart,
-    popup,
-    merchants,
-    filter,
-    errors,
-    dataTables,
-    saveFilterItem,
-    orders: ordersReducers,
-    forms: combineForms({
-        filter: filterInit.data,
-        brcRules: broadcastInit.broadcastData,
-        addProductOffer: addProductsInit.addProductOffer,
-        shippingQuotes: shippingQuotesInit.shippingQuotes,
-        productMapping: productsInit.productsMapping,
-        productOffering: productsInit.productOffering,
-        loginForm: identityFormInit.loginForm.data,
-        registrationForm: identityFormInit.registrationForm.data,
-        merchants: merchantsInit,
-        cart: cartInit,
-        shippingEdit: {},
-    }, 'forms'),
+  identity,
+  brcRules,
+  companies,
+  users,
+  location,
+  productOffers,
+  shippingQuotes,
+  products,
+  packageTypes,
+  cart,
+  popup,
+  merchants,
+  filter,
+  errors,
+  dataTables,
+  saveFilterItem,
+  orders: ordersReducers,
+  forms: combineForms({
+    filter: filterInit.data,
+    brcRules: broadcastInit.broadcastData,
+    addProductOffer: addProductsInit.addProductOffer,
+    shippingQuotes: shippingQuotesInit.shippingQuotes,
+    productMapping: productsInit.productsMapping,
+    productOffering: productsInit.productOffering,
+    loginForm: identityFormInit.loginForm.data,
+    registrationForm: identityFormInit.registrationForm.data,
+    merchants: merchantsInit,
+    cart: cartInit,
+    shippingEdit: {},
+    settingsPopup: {
+      editWarehouse: {},
+      addNewWarehouse: {}
+    }
+  }, 'forms'),
+  settings,
 })
 
 const logger = createLogger({
-    predicate: (getState, action) => process.env.NODE_ENV === "development"
+  predicate: (getState, action) => true //process.env.NODE_ENV === "development"
 })
 
 // Middleware to check token expiration and potentially redirect user to login package
@@ -93,14 +100,14 @@ const logger = createLogger({
 //     next(action)
 //   }
 
-export const makeStore = () => {
+export const makeStore = (preloadedState) => {
   // create the saga middleware
   const sagaMiddleware = createSagaMiddleware()
 
-  const middleware = applyMiddleware(thunk, promise, sagaMiddleware, logger)
+  const middleware = applyMiddleware(thunk, promise(), logger, sagaMiddleware)
   // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   let store = createStore(reducer, middleware)
-  
+
   sagaMiddleware.run(companiesSaga)
   sagaMiddleware.run(officesSaga)
   sagaMiddleware.run(usersSaga)
@@ -112,6 +119,7 @@ export const makeStore = () => {
   sagaMiddleware.run(productOffersSaga)
   sagaMiddleware.run(shippingQuotesSaga)
   sagaMiddleware.run(ordersSaga)
-
+  sagaMiddleware.run(settingsSaga)
+  
   return store
 }
