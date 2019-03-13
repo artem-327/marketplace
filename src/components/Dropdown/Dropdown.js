@@ -41,7 +41,7 @@ class Dropdown extends Component {
         }
     }
 
-    componentWillMount(){
+    componentDidMount(){
         document.addEventListener('mousedown', this.handleClickOutside, false);
     }
 

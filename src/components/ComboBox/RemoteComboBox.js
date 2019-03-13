@@ -22,10 +22,6 @@ class RemoteComboBox extends Component {
     };
   }
 
-  componentWillMount() {
-    document.addEventListener("mousedown", this.handleClickOutside, false);
-  }
-
   componentDidUpdate(prevProps, prevState) {
     if(this.props.dataFetched !== prevProps.dataFetched) this.setState({dataFetched: this.props.dataFetched})
     if(this.props.items !== prevProps.items) this.setState({items: this.props.items})
@@ -38,6 +34,8 @@ class RemoteComboBox extends Component {
         if (this.props.onChange) this.props.onChange(this.state.fulltext);
       });
     }
+
+    document.addEventListener("mousedown", this.handleClickOutside, false);
   }
 
   componentWillReceiveProps(nextProps) {
