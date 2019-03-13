@@ -26,7 +26,14 @@ const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
         <Image src={Logo} style={{padding: '4px 10px 4px 0', height: '47px'}}></Image>  
 
         <MenuLink to='/dashboard'>Dashboard</MenuLink>
-        <MenuLink to='/inventory'>Inventory</MenuLink>
+        <Dropdown item text="Inventory" className={cn({active: pathname.startsWith('/inventory') || pathname.startsWith('/inventory')})}>
+          <Dropdown.Menu>
+            <Dropdown.Item as={MenuLink} to="/inventory/my">My inventory</Dropdown.Item>
+            <Dropdown.Item as={MenuLink} to="/inventory/all">Marketplace</Dropdown.Item>
+            <Dropdown.Item as={MenuLink} to="/inventory/add">Add Inventory</Dropdown.Item>
+            <Dropdown.Item as={MenuLink} to="/cart">Shopping Cart</Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
         <Dropdown item text="Orders" className={cn({active: pathname.startsWith('/orders')})}>
           <Dropdown.Menu>
             <Dropdown.Item as={MenuLink} to="/orders/sale">Sale orders</Dropdown.Item>
