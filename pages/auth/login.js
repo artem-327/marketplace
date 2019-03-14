@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import LoginForm from '~/modules/login/Form'
+import {LoginForm} from '~/modules/login'
 import defaultPage from '~/hocs/defaultPage'
 import Router, {withRouter} from 'next/router'
 import {setToken} from '~/utils/auth'

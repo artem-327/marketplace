@@ -83,7 +83,7 @@ const reducer = combineReducers({
 })
 
 const logger = createLogger({
-  predicate: (getState, action) => true //process.env.NODE_ENV === "development"
+  predicate: (getState, action) => process.env.NODE_ENV === "development"
 })
 
 // Middleware to check token expiration and potentially redirect user to login package
