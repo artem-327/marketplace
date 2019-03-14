@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
 import PropTypes from "prop-types";
 import { DataTypeProvider } from '@devexpress/dx-react-grid';
 
@@ -10,7 +11,8 @@ import UsersTable from './UserTable/UsersTable';
 import WarehouseTable from './WarehouseTable/WarehouseTable';
 import BranchTable from './BranchTable/BranchTable';
 import BankAccountsTable from './BankAccountsTable/BankAccountsTable';
-import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
+import CreditCardsTable from './CreditCardsTable/CreditCardsTable';
+import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable';
 import EditWarehousePopup from './WarehouseTable/EditWarehousePopup';
 import AddNewBranchPopup from './BranchTable/AddNewBranchPopup';
 import AddNewWarehousePopup from './WarehouseTable/AddNewWarehousePopup';
@@ -21,9 +23,6 @@ import TablesHandlers from './TablesHandlers';
 class Settings extends Component {
 
 	state = {
-		checkboxColumns: ['checkbox'],
-		permissionsColumns: ['permissions'],
-		editDeleteColumns: ['editDeleteBtn'],
 		tabsNames: [
 			{	name: 'Users', id: 1 }, 
 			{	name: 'Branches', id: 2 }, 
@@ -36,8 +35,7 @@ class Settings extends Component {
 			{	name: 'Tax manager', id: 9 }, 
 			{	name: 'Terms', id: 10 }, 
 			{	name: 'Website Controls', id: 11 }],
-		filterFieldCurrentValue: 'None',
-		currentTab: 'Credit cards',
+		currentTab: 'Product catalog',
 		filterValue: ''
 	}
 
@@ -47,57 +45,38 @@ class Settings extends Component {
 		});
 	}
 
-	handleChangeSelectField = (event, value) => {
-		this.setState({ 
-			filterFieldCurrentValue: value 
-		});
-	};
-
-	handleActiveTab = event => {
-		
+	handleActiveTab = event => {		
 		const target = event.target
+		
 		this.setState({
 			currentTab: target.getAttribute('data-tab-name')
 		});
 	}
-
-	handleChangeFieldsCurrentValue = fieldStateName => event => {
-		this.setState({ 
-			[fieldStateName]: event.target.value 
-		});
-	};
 	
 	render() {
-		const { 
-			filterFieldCurrentValue,
+		const {
 			currentTab, 
-			tabsNames,			 
-			permissionsColumns,
-			editDeleteColumns,
-			checkboxColumns,
-			filterValue			
+			tabsNames,
+			filterValue	
 		} = this.state;
 
-		const { 
+		const {
 			editWarehousePopup,
 			addNewWarehousePopup
 		} = this.props;
 
-		console.log(currentTab, 'currentTab')
-		return (			
-			<main>
+		return (
+			<main className="b-settings-content">
 				<div className="b-for-shadow">
 					<div className="b-wrapper row between-xs container-fluid">
 						<span className="uppercase page-title col-xs-3">User settings</span>
 						<TablesHandlers
-							filterFieldCurrentValue={ filterFieldCurrentValue }
-							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
 							filtersHandler={ this.filtersHandler }
-							currentTab={ currentTab }							
+							currentTab={ currentTab }
 						/>
 					</div>
 				</div>
-				<div className="main-content-wrapper row between-xs container-fluid">					
+				<div className="main-content-wrapper row between-xs container-fluid">
 					<Tabs
 						currentTab={ currentTab }
 						tabsNames={ tabsNames } 
@@ -109,53 +88,38 @@ class Settings extends Component {
 					}
 					{ 
 						addNewWarehousePopup && currentTab === 'Branches' ?
-						<AddNewBranchPopup
-							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
-						/> :
+						<AddNewBranchPopup /> :
 						addNewWarehousePopup && currentTab === 'Warehouses' ?
-						<AddNewWarehousePopup
-							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
-						/> :
+						<AddNewWarehousePopup /> :
 						addNewWarehousePopup && currentTab === 'Bank accounts' ?
-						<AddNewBankAccountPopup
-							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
-						/> :
+						<AddNewBankAccountPopup /> :
 						addNewWarehousePopup && currentTab === 'Credit cards' ?
-						<AddNewCreditCardPopup
-							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
-						/>
+						<AddNewCreditCardPopup />
 						: null						
 					}
 					{ currentTab === 'Users' ?
 					<UsersTable
-						permissionsColumns={ permissionsColumns}
-						editDeleteColumns={ editDeleteColumns }
-						checkboxColumns={ checkboxColumns }
 						filterValue={ filterValue }
 					/> :
 					currentTab === 'Warehouses' ?
 					<WarehouseTable 
 						filterValue={ filterValue }
-						editDeleteColumns={ editDeleteColumns }
-						popupStatus={ editWarehousePopup || addNewWarehousePopup }
+					/> :
+					currentTab === 'Product catalog' ?
+					<ProductCatalogTable 
+						filterValue={ filterValue }
 					/> :
 					currentTab === 'Branches' ?
 					<BranchTable 
 						filterValue={ filterValue }
-						editDeleteColumns={ editDeleteColumns }
-						popupStatus={ editWarehousePopup || addNewWarehousePopup }
 					/> :
 					currentTab === 'Bank accounts' ?
 					<BankAccountsTable
 						filterValue={ filterValue }
-						editDeleteColumns={ editDeleteColumns }
-						popupStatus={ editWarehousePopup || addNewWarehousePopup }
 					/> : 
 					currentTab === 'Credit cards' ?
 					<CreditCardsTable
 						filterValue={ filterValue }
-						editDeleteColumns={ editDeleteColumns }
-						popupStatus={ editWarehousePopup || addNewWarehousePopup }
 					/> : null			
 					}
 				</div>

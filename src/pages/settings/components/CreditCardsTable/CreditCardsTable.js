@@ -11,7 +11,7 @@ import {
 import { 	EditDeleteFormatterProvider } from './CreditCardsTableProviders';
 import { getCreditCardsDataRequest } from '../../actions';
 
-class BranchTable extends Component {
+class CreditCardsTable extends Component {
 	state = {		
 		columns: [
 			{ name: 'last4', title: 'last4'},
@@ -29,12 +29,13 @@ class BranchTable extends Component {
 			rows,
 			filterValue,
 			editDeleteColumns,
-			popupStatus
+			editWarehousePopup,
+			addNewWarehousePopup
 		} = this.props;
 
 		const { columns } = this.state;
 
-		const GridRoot = props => <Grid.Root {...props} className={ popupStatus ? 'hide' : 'col-xs-10 main-table' } />
+		const GridRoot = props => <Grid.Root {...props} className={ editWarehousePopup || addNewWarehousePopup ? 'hide' : 'col-xs-10 main-table' } />
 		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
 		const TableCells = props => <Table.Cell {...props} className={ 'columns-rows-cell' } />
 
@@ -70,8 +71,11 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-		rows: state.settings.branchesRows
+		rows: state.settings.creditCardsRows,
+		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
+		editWarehousePopup: state.settings.editWarehousePopup,
+		addNewWarehousePopup: state.settings.addNewWarehousePopup
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BranchTable);
+export default connect(mapStateToProps, mapDispatchToProps)(CreditCardsTable);

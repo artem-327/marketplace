@@ -8,7 +8,12 @@ export const initialState = {
   warehousesRows: [],
   branchesRows: [],
   creditCardsRows: [],
-  bankAccountsRows: []
+  bankAccountsRows: [],
+  columnsForFormatter: {
+    checkboxColumns: ['checkbox'],
+    permissionsColumns: ['permissions'],
+    editDeleteColumns: ['editDeleteBtn']
+  }  
 };
 
 export default function reducer(state = initialState, action) {
@@ -79,8 +84,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_CREDIT_CARDS_DATA_SUCCESS: {
-      const rows = action.payload.map(card => {	
+    case AT.GET_CREDIT_CARDS_DATA_SUCCESS: {      
+      const rows = action.payload.map(card => {        
         return (
           {
             id: card.id,
@@ -88,7 +93,7 @@ export default function reducer(state = initialState, action) {
             cvc: card.cvcCheck,
             expirationMonth: card.expMonth,
             expirationYear: card.expYear,
-            last4: card.last4
+            last4: `**** **** **** ${card.last4}`
             // cardNumber what does it mean
           }
         )			
@@ -100,15 +105,14 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_BANK_ACCOUNTS_DATA_SUCCESS: {
-      console.log(action.payload, 'bankAccountsRows')   
+    case AT.GET_BANK_ACCOUNTS_DATA_SUCCESS: { 
       const rows = action.payload.map(account => {
         return (
           {
             id: account.id,
             accountHolderName: account.accountHolderName,
             accountHolderType: account.accountHolderType,
-            accountNumber: account.accountNumber,
+            accountNumber: `**** **** **** ${account.last4}`,
             country: account.country,
             currency: account.currency,
             routingNumber: account.routingNumber
@@ -120,6 +124,26 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         bankAccountsRows: rows
+      }
+    }
+
+    case AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS: {
+      console.log(action.payload)
+      const rows = action.payload.map(product => {
+        return (
+          {
+            productName: product,
+            productNumber: product,
+            productId: product,
+            packagingType: product,
+            packagingSize: product
+          }
+        )			
+      });
+      
+      return {
+        ...state,
+        productsCatalogRows: rows
       }
     }
     

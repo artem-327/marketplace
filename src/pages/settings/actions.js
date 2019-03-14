@@ -7,8 +7,7 @@ export function handleEditPopup(rows) {
   }
 }
 
-export function handleSubmitEditPopup(warehouseData, branchId) {  
-
+export function handleSubmitEditPopup(warehouseData, branchId) {
   return {
     type: AT.SUBMIT_EDIT_POPUP_HANDLER,
     payload: warehouseData,
@@ -49,6 +48,12 @@ export function getCreditCardsDataRequest() {
 export function getBankAccountsDataRequest() {
   return {
     type: AT.GET_BANK_ACCOUNTS_DATA
+  }
+}
+
+export function getProductsCatalogRequest() {
+  return {
+    type: AT.GET_PRODUCTS_CATALOG_DATA
   }
 }
 

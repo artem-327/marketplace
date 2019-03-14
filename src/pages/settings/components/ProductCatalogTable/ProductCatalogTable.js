@@ -8,21 +8,23 @@ import {
 	TableHeaderRow
 } from '@devexpress/dx-react-grid-material-ui';
 
-import { 	EditDeleteFormatterProvider } from './BankAccountsProviders';
-import { getBankAccountsDataRequest } from '../../actions';
+import { 	EditDeleteFormatterProvider } from './ProductCatalogProviders';
+import { getProductsCatalogRequest } from '../../actions';
 
-class BankAccountsTable extends Component {
+class ProductCatalogTable extends Component {
 	state = {		
 		columns: [
-			{ name: 'accountHolderName', title: 'Account Holder Name'},
-			{ name: 'accountNumber', title: 'Account Number' },
-			{ name: 'currency', title: 'Currency' },
+			{ name: 'productName', title: 'Product Name'},
+			{ name: 'productNumber', title: 'Product Number' },
+			{ name: 'productId', title: 'Product ID' },
+			{ name: 'packagingType', title: 'Packaging Type' },
+			{ name: 'packagingSize', title: 'Packaging Size' },
 			{ name: 'editDeleteBtn', title: ' ' }
 		]
 	}	
 
 	componentDidMount() {
-		this.props.getBankAccountsDataRequest();
+		this.props.getProductsCatalogRequest();
 	}
 	
 	render() {
@@ -67,7 +69,7 @@ class BankAccountsTable extends Component {
 }
 
 const mapDispatchToProps = {   
-	getBankAccountsDataRequest
+	getProductsCatalogRequest
 };
 
 const mapStateToProps = state => {
@@ -79,4 +81,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BankAccountsTable);
+export default connect(mapStateToProps, mapDispatchToProps)(ProductCatalogTable);

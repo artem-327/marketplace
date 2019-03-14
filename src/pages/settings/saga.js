@@ -1,4 +1,3 @@
-import axios from "axios";
 import { call, put, takeEvery } from "redux-saga/effects";
 
 import * as AT from './action-types';
@@ -25,7 +24,6 @@ function* getWarehousesDataWorker() {
 function* getBranchesDataWorker() {
   try {
     const branches = yield call(api.getBranches);
-    console.log('pass to reducer:', branches)
     yield put({ type: AT.GET_BRANCHES_DATA_SUCCESS, payload: branches });
   } catch (e) {
     yield console.log("error:", e);
@@ -44,8 +42,16 @@ function* getCreditCardsDataWorker() {
 function* getBankAccountsDataWorker() {
   try {
     const bankAccountsData = yield call(api.getBankAccountsData);
-    console.log(bankAccountsData)
     yield put({ type: AT.GET_BANK_ACCOUNTS_DATA_SUCCESS, payload: bankAccountsData });
+  } catch (e) {
+    yield console.log("error:", e);
+  }
+}
+
+function* getProductCatalogWorker() {
+  try {
+    // const productCatalog = yield call(api.getProductsCatalog);
+    // yield put({ type: AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS, payload: productCatalog });
   } catch (e) {
     yield console.log("error:", e);
   }
@@ -84,8 +90,7 @@ function* postNewCreditCardWorker({ payload }) {
       expirationMonth: Number(payload.expirationMonth),
       expirationYear: Number(payload.expirationYear)
     }
-    console.log(dataBody)
-    const bankAccountsData = yield call(api.postNewCreditCard, dataBody);
+    yield call(api.postNewCreditCard, dataBody);
   } catch (e) {
     yield console.log("error:", e);
   }
@@ -101,7 +106,7 @@ function* postNewBankAccountWorker({ payload }) {
       currency: payload.currency,
       routingNumber: payload.routingNumber
     }
-    const bankAccountsData = yield call(api.postNewBankAccount, dataBody);
+    yield call(api.postNewBankAccount, dataBody);
   } catch (e) {
     yield console.log("error:", e);
   }
@@ -162,6 +167,7 @@ export default function* settingsSaga() {
   yield takeEvery(AT.GET_BRANCHES_DATA, getBranchesDataWorker);
   yield takeEvery(AT.GET_CREDIT_CARDS_DATA, getCreditCardsDataWorker);
   yield takeEvery(AT.GET_BANK_ACCOUNTS_DATA, getBankAccountsDataWorker);
+  yield takeEvery(AT.GET_PRODUCTS_CATALOG_DATA, getProductCatalogWorker)
   yield takeEvery(AT.POST_NEW_WAREHOUSE_REQUEST, postNewWarehouseWorker);
   yield takeEvery(AT.POST_NEW_CREDIT_CARD_REQUEST, postNewCreditCardWorker);
   yield takeEvery(AT.POST_NEW_BANK_ACCOUNT_REQUEST, postNewBankAccountWorker);  
