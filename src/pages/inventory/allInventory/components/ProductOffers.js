@@ -10,7 +10,7 @@ import Spinner from '../../../../components/Spinner/Spinner'
 class ProductOffers extends Component {
   componentDidMount() {
     new Promise(resolve => {
-      this.props.getMerchant(this.props.identity.data.id, resolve)
+      this.props.getMerchant(this.props.identity.id, resolve)
     }).then(() => console.log("data fetched"))
   }
 
@@ -47,7 +47,7 @@ class ProductOffers extends Component {
           //const countryException = ["USA", "Canada"]
           //const countryName = offer.warehouse.address.province.country ? offer.warehouse.address.province.country.name : null
 
-          const location = (this.props.identity.data.id === offer.merchant.id || this.props.identity.data.branch.id === offer.merchant.id)
+          const location = (this.props.identity.id === offer.merchant.id || this.props.identity.branch.id === offer.merchant.id)
             ? `${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`
             : `${offer.warehouse.address.province.name}` + (typeof offer.warehouse.address.country !== 'undefined' ? `, ${offer.warehouse.address.country.name}` : ``)
 

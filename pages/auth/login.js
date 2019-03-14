@@ -1,28 +1,22 @@
 import React, {Component} from 'react'
-import {LoginForm} from '~/modules/login'
+import {LoginForm} from '~/modules/auth'
 import defaultPage from '~/hocs/defaultPage'
-import Router, {withRouter} from 'next/router'
-import {setToken} from '~/utils/auth'
 import styled from 'styled-components'
+import Layout from '~/components/LayoutUnauthorized'
 
 const Container = styled.div`
   padding: 60px 0;
 `
 class Login extends Component {
-
-  handleSuccess = async (token) => {
-    setToken(token)
-    
-    Router.push('/dashboard')
-  }
-
   render() {
     return (
-      <Container>
-        <LoginForm onSuccess={this.handleSuccess} />
-      </Container>
+      <Layout>
+        <Container>
+          <LoginForm />
+        </Container>
+      </Layout>
     )
   }
 }
 
-export default withRouter(defaultPage(Login))
+export default defaultPage(Login)

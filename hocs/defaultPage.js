@@ -1,8 +1,8 @@
 import React from 'react'
-import Router, { withRouter } from 'next/router'
+import Router from 'next/router'
 
 // import { getUserFromServerCookie, getUserFromLocalCookie } from '~/utils/auth'
-import { getTokenFromServerCookie, getTokenFromLocalCookie, unsetToken } from '~/utils/auth'
+import { getTokenFromServerCookie, getTokenFromLocalCookie } from '~/utils/auth'
 
 export default Page => class DefaultPage extends React.Component {
   static getInitialProps(ctx) {

@@ -1,7 +1,7 @@
 import api from '~/api'
 
-export function login(username, password) {
-  return api.post(
+export async function login(username, password) {
+  const {data} = await api.post(
     '/prodex/oauth/token',
     `grant_type=password&username=${username}&password=${password}`,
     {
@@ -9,18 +9,17 @@ export function login(username, password) {
         'Authorization': 'Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs'
       }
     })
+    
+  return data
 }
 
-export function getIdentity() {
-  return api.get("/prodex/api/users/me")
-    .then(response => response.data)
-    .catch(e => {
-      deleteAuthToken();
-      throw e;
-    })
+export async function getIdentity() {
+  const {data} = await api.get("/prodex/api/users/me")
+  return data
 }
 
-export function getVersion() {
-  return api.get("/prodex/api/version")
+export async function getVersion() {
+  const {data} = await api.get("/prodex/api/version")
+  return data
 }
 

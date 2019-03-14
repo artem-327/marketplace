@@ -11,7 +11,7 @@ import {getOffice} from '../../../modules/companies';
 const mapStateToProps = store => ({
     productOffers: store.productOffers.allProductOffers,
     isFetching: store.productOffers.isFetching,
-    identity: store.identity.identity,
+    identity: store.auth.identity,
     merchantDetail: store.merchants.merchantDetail,
     officeDetail: store.companies.office,
     productOffersIsFetching: store.productOffers.productOffersIsFetching,

@@ -12,7 +12,7 @@ const securePageHoc = Page => class SecurePage extends React.Component {
   }
 
   componentDidMount() {
-    if (!this.props.isAuthenticated) Router.push('/auth/logout')
+    if (!this.props.isAuthenticated) Router.push('/auth/login')
   }
   
   render () {

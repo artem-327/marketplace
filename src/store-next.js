@@ -5,6 +5,9 @@ import promise from 'redux-promise-middleware'
 import { combineReducers } from 'redux'
 import { combineForms } from 'react-redux-form'
 import createSagaMiddleware from 'redux-saga'
+import {loadState, saveState} from '~/utils/storePersist'
+import {throttle} from 'lodash'
+
 // import jwtDecode from 'jwt-decode'
 // import moment from "moment"
 
@@ -44,7 +47,10 @@ import settingsSaga from "./pages/settings/saga"
 import ordersReducers from './pages/orders/reducers'
 import ordersSaga from './pages/orders/saga'
 
+import auth from '~/modules/auth/reducer'
+
 const reducer = combineReducers({
+  auth,
   identity,
   brcRules,
   companies,
@@ -106,7 +112,12 @@ export const makeStore = (preloadedState) => {
 
   const middleware = applyMiddleware(thunk, promise(), logger, sagaMiddleware)
   // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-  let store = createStore(reducer, middleware)
+
+  let store = createStore(reducer, loadState(), middleware)
+
+  store.subscribe(throttle(() => {
+    saveState(store.getState())
+  }, 1000))
 
   sagaMiddleware.run(companiesSaga)
   sagaMiddleware.run(officesSaga)

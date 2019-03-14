@@ -19,6 +19,7 @@ export const unsetToken = () => {
 
   // to support logging out from all windows
   window.localStorage.setItem('logout', Date.now())
+  window.localStorage.removeItem('state')
 }
 
 export const getTokenFromServerCookie = (req) => {
