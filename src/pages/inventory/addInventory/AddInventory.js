@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './AddInventory.css'
+import './AddInventory.scss'
 import AddForm from "./components/AddForm";
 import AddGroup from './components/AddGroup';
 import Chemical from "./components/Chemical";

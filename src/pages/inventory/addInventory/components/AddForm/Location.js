@@ -3,7 +3,7 @@ import {Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../components/Dropdown/DropdownRedux";
 import {messages, required} from "../../../../../utils/validation";
 import classnames from "classnames";
-import "./Location.css"
+import "./Location.scss"
 import {FormattedMessage, injectIntl} from 'react-intl';
 import RemoteComboBox from "../../../../../components/ComboBox/RemoteComboBox";
 import {checkToken} from "../../../../../utils/auth";

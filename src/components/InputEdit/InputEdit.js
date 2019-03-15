@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './inputEdit.css';
+import './inputEdit.scss';
 import PropTypes from "prop-types";
 
 class InputEdit extends Component {

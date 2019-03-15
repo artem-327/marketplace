@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import './app.css';
+import React, { Component } from 'react'
+import './app.scss'
 import Main from './layout/Main'
 import Header from './layout/Header'
 import PopUp from './components/PopUp'

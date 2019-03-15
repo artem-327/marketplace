@@ -6,7 +6,7 @@ import FilterTag from "../../../components/Filter/components/FilterTag";
 import SubMenu from '../../../components/SubMenu';
 import ShippingQuotes from './components/ShippingQuotes';
 import {getSelectedRowsDataTable} from "../../../utils/functions";
-import './allinventory.css';
+import './allinventory.scss';
 import {FormattedMessage} from 'react-intl';
 import {checkToken} from "../../../utils/auth";
 

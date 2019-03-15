@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './filterTag.css'
+import './filterTag.scss'
 import PropTypes from "prop-types";
 
 class FilterTag extends Component {

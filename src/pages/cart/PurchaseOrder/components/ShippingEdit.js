@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import "./ShippingEdit.css"
+import "./ShippingEdit.scss"
 import Button from '../../../../components/Button/Button'
 import {FormInput /*, FormSelect*/} from '../../../../components/Form/FormInput'
 import Radio from "../../../../components/Radio/Radio";

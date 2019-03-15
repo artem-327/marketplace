@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import './AddedLots.css';
+import './AddedLots.scss';
 import AddedLot from './AddedLot';
 import {FormattedMessage} from 'react-intl';
 

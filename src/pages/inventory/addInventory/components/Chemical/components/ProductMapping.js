@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import {required, isInteger, min, messages} from "../../../../../../utils/validation";
-import './ProductMapping.css'
+import './ProductMapping.scss'
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";
 import {FormattedMessage} from 'react-intl';
 import {checkToken} from "../../../../../../utils/auth";

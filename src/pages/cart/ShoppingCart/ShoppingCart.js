@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from "prop-types";
-import "./ShoppingCart.css"
+import "./ShoppingCart.scss"
 import SummaryTable from "../components/SummaryTable/SummaryTable"
 import ItemCartBody from "../components/ItemCartBody/ItemCartBody"
 import KeepShoppingPopup from "../components/KeepShoppingPopup/KeepShoppingPopup"

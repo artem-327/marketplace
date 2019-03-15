@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./Administration.css";
+import "./Administration.scss";
 
 import AdministrationMenu from "./AdministrationMenu";
 import AdministrationContent from "./AdministrationContent";

@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import './SavedFilters.css';
+import './SavedFilters.scss';
 import SaveFilterItem from "./SaveFilterItem";
 
 class SavedFilters extends Component {

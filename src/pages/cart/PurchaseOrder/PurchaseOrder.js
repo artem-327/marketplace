@@ -10,7 +10,7 @@ import Payment from "./components/Payment"
 import CartItemSummary from './components/CartItemSummary'
 import Button from '../../../components/Button/Button'
 import Spinner from '../../../components/Spinner/Spinner'
-import "./PurchaseOrder.css"
+import "./PurchaseOrder.scss"
 import {FormattedMessage} from 'react-intl';
 import {checkToken} from "../../../utils/auth";
 

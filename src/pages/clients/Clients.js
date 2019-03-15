@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './clients.css';
+import './clients.scss';
 import ConMess from '../../components/constructionMessage';
 
 class Clients extends Component {

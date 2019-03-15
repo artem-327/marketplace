@@ -1,7 +1,7 @@
 import React from 'react';
 import classnames from 'classnames';
 import {Control, Form} from 'react-redux-form';
-import '../login.css';
+import '../login.scss';
 import { FormattedMessage, injectIntl } from 'react-intl';
 
 

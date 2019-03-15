@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './BroadcastRule.css';
+import './BroadcastRule.scss';
 import BroadcastTargets from "./BroadcastTargets";
 import Dropdown from "../../../../components/Dropdown/Dropdown";
 import classnames from 'classnames';

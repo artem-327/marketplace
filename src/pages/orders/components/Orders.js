@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import '../styles/orders.css'
+import '../styles/orders.scss'
 import Spinner from "../../../components/Spinner/Spinner"
 import Filter from '../../../components/Filter'
 import SubMenu from '../../../components/SubMenu'

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./ComboBox.css";
+import "./ComboBox.scss";
 import debounce from "debounce";
 import PropTypes from "prop-types";
 import { DEBOUNCE_TIME } from "../../utils/constants";

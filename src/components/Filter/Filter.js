@@ -1,5 +1,5 @@
 import {Form} from 'react-redux-form';
-import './filter.css';
+import './filter.scss';
 import classnames from 'classnames';
 import FilterGroup from './components/FilterGroup';
 import React, {Component} from 'react';

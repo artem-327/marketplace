@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from "prop-types";
 import { DataTypeProvider } from '@devexpress/dx-react-grid';
 
-import '../styles/settings.css';
+import '../styles/settings.scss';
 
 import Tabs from './Tabs';
 import UsersTable from './UserTable/UsersTable';

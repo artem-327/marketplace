@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './SavedFilters.css';
+import './SavedFilters.scss';
 import TooltipFilter from "./TooltipFilter";
 import Bell from '../../../../images/bell.png';
 import BellTrans from '../../../../images/bell_transparent.png';

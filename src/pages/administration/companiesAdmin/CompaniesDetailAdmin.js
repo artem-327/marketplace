@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './companiesAdmin.css';
+import './companiesAdmin.scss';
 import { connect } from "react-redux";
 import { postNewOffice, putCompanyEdit, putOfficeEdit, fetchDetail, deleteCompany, postNewCompany, deleteOffice, getOffices } from "../../../modules/companies";
 import { bindActionCreators } from "redux";

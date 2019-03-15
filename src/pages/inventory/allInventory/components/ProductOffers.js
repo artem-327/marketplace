@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import './ProductOffers.css'
+import './ProductOffers.scss'
 import moment from "moment"
 //import AddCart from '../../../cart/components/AddCart'
 import { DATE_FORMAT } from "../../../../utils/constants"

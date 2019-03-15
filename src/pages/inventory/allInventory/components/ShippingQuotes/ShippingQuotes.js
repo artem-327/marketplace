@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import './shippingquotes.css';
+import './shippingquotes.scss';
 import Button from '../../../../../components/Button/Button'
-import '../../../../../components/PopUp/popup.css'
+import '../../../../../components/PopUp/popup.scss'
 import PopupComponent from '../../../../../components/PopUp/PopupComponent'
 import Spinner from '../../../../../components/Spinner/Spinner'
 import NumberFormat from 'react-number-format';

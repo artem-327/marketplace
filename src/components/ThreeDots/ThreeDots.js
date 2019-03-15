@@ -1,5 +1,5 @@
 import React from 'react';
-import './threeDots.css';
+import './threeDots.scss';
 import PropTypes from "prop-types";
 
 const ThreeDots = props => {

@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import CollapsiblePanel from '../../../components/CollapsiblePanel'
-import '../../../pages/inventory/addInventory/AddInventory.css'
+import '../../../pages/inventory/addInventory/AddInventory.scss'
 import Spinner from "../../../components/Spinner/Spinner"
 
 class Detail extends Component {

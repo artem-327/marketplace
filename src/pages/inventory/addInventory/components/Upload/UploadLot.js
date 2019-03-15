@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './uploadLot.css'
+import './uploadLot.scss'
 import upload from '../../../../../images/upload/upload.png';
 import uploaded from '../../../../../images/upload/uploaded.png';
 import PropTypes from "prop-types";

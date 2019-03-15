@@ -3,7 +3,7 @@ import { Control, Errors, actions } from 'react-redux-form'
 import { required, isNumber, min, messages } from "../../../../../utils/validation"
 import IncrementalPricing from "./IncrementalPricing"
 import CheckboxRedux from "../../../../../components/Checkbox/CheckboxRedux"
-import './Pricing.css'
+import './Pricing.scss'
 import classNames from 'classnames'
 import WarningLabel from "../../../../../components/WarningLabel/WarningLabel"
 import { FormattedMessage, injectIntl } from 'react-intl'

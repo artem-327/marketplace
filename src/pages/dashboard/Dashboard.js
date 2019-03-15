@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './dashboard.css'
+import './dashboard.scss'
 import ConMess from '../../components/constructionMessage';
 import {FormattedMessage} from 'react-intl';
 

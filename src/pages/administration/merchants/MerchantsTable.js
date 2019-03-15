@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import MerchantTableRow from './components/MerchantTableRow';
-import './MerchantsTable.css';
+import './MerchantsTable.scss';
 import {FormattedMessage} from 'react-intl';
 
 class MerchantsTable extends Component {

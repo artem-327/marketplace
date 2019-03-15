@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import Layout from 'components/Layout'
 import securePage from '../hocs/securePage'
 import Router from 'next/router'
 

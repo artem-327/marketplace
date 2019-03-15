@@ -6,7 +6,7 @@ import PopupComponent from "../../../../../components/PopUp/PopupComponent";
 import Button from "../../../../../components/Button/Button";
 import Spinner from '../../../../../components/Spinner/Spinner'
 import InputControlled from '../../../../../components/InputControlled/InputControlled'
-import "./AddBroadcast.css";
+import "./AddBroadcast.scss";
 import {FormattedMessage} from 'react-intl';
 const RootBroadcastField = lazy(() => import('./RootBroadcastField'));
 const BroadcastingNumbers = lazy(() => import('./BroadcastingNumbers'));

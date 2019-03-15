@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { postNewOffice, putCompanyEdit, putOfficeEdit, fetchDetail, deleteCompany, postNewCompany, deleteOffice, getOffices } from "../../../modules/companies";
 import { bindActionCreators } from "redux";
-import "./companiesAdmin.css";
+import "./companiesAdmin.scss";
 //import Company from "./components/Company";
 import Spinner from "../../../components/Spinner/Spinner";
 import InputControlled from "../../../components/InputControlled/InputControlled";

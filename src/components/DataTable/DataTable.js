@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Header from './components/Header';
 import Rows from './components/Rows';
-import './dataTable.css';
+import './dataTable.scss';
 import Spinner from '../Spinner/Spinner';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 

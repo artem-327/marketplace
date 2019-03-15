@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
-import './dropdown.css';
+import './dropdown.scss';
 import classnames from 'classnames';
 import ArrowDown from '../../images/inv-filter/dropdown-close.png';
 import ArrowUp from '../../images/inv-filter/dropdown.png';

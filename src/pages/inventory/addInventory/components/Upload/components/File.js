@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './file.css'
+import './file.scss'
 import PropTypes from "prop-types";
 
 class File extends Component {
