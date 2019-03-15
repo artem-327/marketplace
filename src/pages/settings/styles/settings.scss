@@ -283,13 +283,13 @@ input {
   }
 }
 
-.warehouse-label {
+.settings-popup-label {
   display: inline-block;
   margin: 0 1.5em 1.18em 0;
   font-size: 12px;
 }
 
-.warehouse-input {
+.popup-input {
   display: block;
   border-radius: 3px;
   border: 1px solid $light-50-grey-color;
@@ -302,7 +302,7 @@ input {
   display: flex;
   width: 100%;
 
-  .warehouse-label {
+  .settings-popup-label {
     flex: 1;
   }
 

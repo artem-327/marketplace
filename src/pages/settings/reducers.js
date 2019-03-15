@@ -13,7 +13,22 @@ export const initialState = {
     checkboxColumns: ['checkbox'],
     permissionsColumns: ['permissions'],
     editDeleteColumns: ['editDeleteBtn']
-  }  
+  },
+  tabsNames: [
+    {	name: 'Users', id: 1 }, 
+    {	name: 'Branches', id: 2 }, 
+    {	name: 'Warehouses', id: 3 }, 
+    {	name: 'Product catalog', id: 4 }, 
+    {	name: 'Price list', id: 5 }, 
+    {	name: 'Client list', id: 6 }, 
+    {	name: 'Credit cards', id: 7 },
+    {	name: 'Bank accounts', id: 8 },
+    {	name: 'Tax manager', id: 9 }, 
+    {	name: 'Terms', id: 10 }, 
+    {	name: 'Website Controls', id: 11 }
+  ],
+  currentTab: 'Product catalog',
+  filterValue: ''
 };
 
 export default function reducer(state = initialState, action) {
@@ -23,6 +38,20 @@ export default function reducer(state = initialState, action) {
         ...state,
         editWarehousePopup: state.editWarehousePopup === false ? true : false,
         popupValues: action.payload
+      }
+    }
+
+    case AT.HANDLE_ACTIVE_TAB: {
+      return {
+        ...state,
+        currentTab: action.payload.getAttribute('data-tab-name')
+      }
+    }
+
+    case AT.HANDLE_FILTERS_VALUE: {
+      return {
+        ...state,
+        filterValue: action.payload
       }
     }
 
@@ -128,7 +157,6 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS: {
-      console.log(action.payload)
       const rows = action.payload.map(product => {
         return (
           {

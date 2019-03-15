@@ -7,6 +7,20 @@ export function handleEditPopup(rows) {
   }
 }
 
+export function handleActiveTab(event) {
+  return {
+    type: AT.HANDLE_ACTIVE_TAB,
+    payload: event.target
+  }
+}
+
+export function handleFiltersValue(value) {
+  return {
+    type: AT.HANDLE_FILTERS_VALUE,
+    payload: value
+  }
+}
+
 export function handleSubmitEditPopup(warehouseData, branchId) {
   return {
     type: AT.SUBMIT_EDIT_POPUP_HANDLER,

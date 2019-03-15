@@ -18,70 +18,30 @@ import AddNewBranchPopup from './BranchTable/AddNewBranchPopup';
 import AddNewWarehousePopup from './WarehouseTable/AddNewWarehousePopup';
 import AddNewCreditCardPopup from './CreditCardsTable/AddNewCreditCardPopup';
 import AddNewBankAccountPopup from './BankAccountsTable/AddNewBankAccountPopup';
+import AddNewProductCatalogPopup from './ProductCatalogTable/AddNewProductCatalogPopup';
 import TablesHandlers from './TablesHandlers';
 
 class Settings extends Component {
-
-	state = {
-		tabsNames: [
-			{	name: 'Users', id: 1 }, 
-			{	name: 'Branches', id: 2 }, 
-			{	name: 'Warehouses', id: 3 }, 
-			{	name: 'Product catalog', id: 4 }, 
-			{	name: 'Price list', id: 5 }, 
-			{	name: 'Client list', id: 6 }, 
-			{	name: 'Credit cards', id: 7 },
-			{	name: 'Bank accounts', id: 8 },
-			{	name: 'Tax manager', id: 9 }, 
-			{	name: 'Terms', id: 10 }, 
-			{	name: 'Website Controls', id: 11 }],
-		currentTab: 'Product catalog',
-		filterValue: ''
-	}
-
-	filtersHandler = value => {		
-		this.setState({ 
-			filterValue: value 
-		});
-	}
-
-	handleActiveTab = event => {		
-		const target = event.target
-		
-		this.setState({
-			currentTab: target.getAttribute('data-tab-name')
-		});
-	}
 	
 	render() {
 		const {
-			currentTab, 
-			tabsNames,
-			filterValue	
-		} = this.state;
-
-		const {
 			editWarehousePopup,
-			addNewWarehousePopup
+			addNewWarehousePopup,
+			currentTab
 		} = this.props;
+
+		console.log(currentTab, 'addNewWarehousePopup')
 
 		return (
 			<main className="b-settings-content">
 				<div className="b-for-shadow">
 					<div className="b-wrapper row between-xs container-fluid">
 						<span className="uppercase page-title col-xs-3">User settings</span>
-						<TablesHandlers
-							filtersHandler={ this.filtersHandler }
-							currentTab={ currentTab }
-						/>
+						<TablesHandlers />
 					</div>
 				</div>
 				<div className="main-content-wrapper row between-xs container-fluid">
-					<Tabs
-						currentTab={ currentTab }
-						tabsNames={ tabsNames } 
-						handleActiveTab={ this.handleActiveTab }
-					/>
+					<Tabs />
 					{ editWarehousePopup ? 
 						<EditWarehousePopup	/>
 						: null
@@ -94,33 +54,23 @@ class Settings extends Component {
 						addNewWarehousePopup && currentTab === 'Bank accounts' ?
 						<AddNewBankAccountPopup /> :
 						addNewWarehousePopup && currentTab === 'Credit cards' ?
-						<AddNewCreditCardPopup />
-						: null						
+						<AddNewCreditCardPopup /> :
+						addNewWarehousePopup && currentTab === 'Product catalog' ?
+						<AddNewProductCatalogPopup />
+						: null
 					}
 					{ currentTab === 'Users' ?
-					<UsersTable
-						filterValue={ filterValue }
-					/> :
+					<UsersTable /> :
 					currentTab === 'Warehouses' ?
-					<WarehouseTable 
-						filterValue={ filterValue }
-					/> :
+					<WarehouseTable /> :
 					currentTab === 'Product catalog' ?
-					<ProductCatalogTable 
-						filterValue={ filterValue }
-					/> :
+					<ProductCatalogTable /> :
 					currentTab === 'Branches' ?
-					<BranchTable 
-						filterValue={ filterValue }
-					/> :
+					<BranchTable /> :
 					currentTab === 'Bank accounts' ?
-					<BankAccountsTable
-						filterValue={ filterValue }
-					/> : 
+					<BankAccountsTable /> : 
 					currentTab === 'Credit cards' ?
-					<CreditCardsTable
-						filterValue={ filterValue }
-					/> : null			
+					<CreditCardsTable /> : null
 					}
 				</div>
 			</main>
@@ -131,7 +81,8 @@ class Settings extends Component {
 const mapStateToProps = state => {
   return {
 		editWarehousePopup: state.settings.editWarehousePopup,
-		addNewWarehousePopup: state.settings.addNewWarehousePopup
+		addNewWarehousePopup: state.settings.addNewWarehousePopup,
+		currentTab: state.settings.currentTab
   }
 }
 

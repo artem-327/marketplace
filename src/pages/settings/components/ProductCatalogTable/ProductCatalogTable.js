@@ -24,7 +24,7 @@ class ProductCatalogTable extends Component {
 	}	
 
 	componentDidMount() {
-		this.props.getProductsCatalogRequest();
+		// this.props.getProductsCatalogRequest();
 	}
 	
 	render() {
@@ -77,7 +77,8 @@ const mapStateToProps = state => {
 		rows: state.settings.bankAccountsRows,
 		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
 		editWarehousePopup: state.settings.editWarehousePopup,
-		addNewWarehousePopup: state.settings.addNewWarehousePopup
+		addNewWarehousePopup: state.settings.addNewWarehousePopup,
+		filterValue: state.settings.filterValue
   }
 }
 

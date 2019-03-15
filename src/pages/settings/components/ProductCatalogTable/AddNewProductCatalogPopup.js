@@ -7,28 +7,28 @@ import { Control, Form } from 'react-redux-form';
 
 import { handleAddNewWarehousePopup, postNewBankAccountRequest } from '../../actions';
 
-class EditWarehousePopup extends React.Component {
+class AddNewProductCatalogPopup extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      accountHolderName: '',
-      accountHolderType: '',
-      accountNumber: '',
-      country: '',
-      currency: '',
-      routingNumber: ''
+      searchValue: '',
+      productName: '',
+      productNumber: '',
+      productId: '',
+      productType: '',
+      productSize: ''
     }
   }
 
   render() {
-    const { 
-      accountHolderName,
-      accountHolderType,
-      accountNumber,
-      country,
-      currency,
-      routingNumber 
+    const {
+      searchValue,
+      productName,
+      productNumber,
+      productId,
+      productType,
+      productSize
     } = this.state
     const { 
       handleAddNewWarehousePopup,  
@@ -44,34 +44,36 @@ class EditWarehousePopup extends React.Component {
         >    
           <h2>{'Bank Account'} Profile</h2>
           <ul>
-            <li className="add-warehouse-inputs-wrapper">
-              <label className="warehouse-label name" htmlFor="warehouse-name">                        
-                Account Holder Name
-              <Control.text model=".accountHolderName" className="warehouse-input" id="warehouse-name" defaultValue={ accountHolderName } />
-              </label>
-              <label className="warehouse-label address" htmlFor="warehouse-address">
-                Account Holder Type
-                <Control.text model=".accountHolderType" className="warehouse-input" id="warehouse-address" defaultValue={ accountHolderType } />
-              </label>
-              <label className="warehouse-label city" htmlFor="warehouse-city">
-                Account Number
-                <Control.text model=".accountNumber" className="warehouse-input" id="warehouse-city" defaultValue={ accountNumber } />
+            <li className="inputs-wrapper">
+              <label className="settings-popup-label name" htmlFor="product-search">                        
+                CAS Number / Product Search
+                <input className="popup-input" id="product-search" defaultValue={ searchValue } />
               </label>            
             </li>
-            <li className="add-warehouse-inputs-wrapper">
-              <label className="warehouse-label state" htmlFor="warehouse-state">  
-                Country
-                <Control.text model=".country" className="warehouse-input" id="warehouse-state" defaultValue={ country } />               
-              </label>            
-              <label className="warehouse-label zip-code" htmlFor="warehouse-zip-code">
-                Currency
-                <Control.text model=".currency" className="warehouse-input" id="warehouse-zip-code" defaultValue={ currency } />
+            <li className="inputs-wrapper">
+              <label className="settings-popup-label name" htmlFor="product-name">                        
+                Product Name
+                <Control.text model=".accountHolderName" className="popup-input" id="product-name" defaultValue={ productName } />
               </label>
-              <label className="warehouse-label contact-name" htmlFor="warehouse-contactName">
-                Routing Number
-                <Control.text model=".routingNumber" className="warehouse-input" id="warehouse-contactName" defaultValue={ routingNumber } />
-              </label>              
-            </li> 
+              <label className="settings-popup-label address" htmlFor="product-number">
+                Product Number
+                <Control.text model=".accountHolderType" className="popup-input" id="product-number" defaultValue={ productNumber } />
+              </label>
+              <label className="settings-popup-label city" htmlFor="product-id">
+                Product ID
+                <Control.text model=".accountNumber" className="popup-input" id="product-id" defaultValue={ productId } />
+              </label>
+            </li>
+            <li className="inputs-wrapper">
+              <label className="settings-popup-label state" htmlFor="product-packaging-type">  
+                Packaging Type
+                <Control.text model=".country" className="popup-input" id="product-packaging-type" defaultValue={ productType } />
+              </label>
+              <label className="settings-popup-label zip-code" htmlFor="product-packaging-size">
+                Packaging Size
+                <Control.text model=".currency" className="popup-input" id="product-packaging-size" defaultValue={ productSize } />
+              </label>
+            </li>
             <li className="add-warehouse-inputs-wrapper">                         
               <div className="buttons-wrapper">
                 <input 
@@ -95,4 +97,4 @@ const mapDispatchToProps = {
   postNewBankAccountRequest
 };
 
-export default connect(null, mapDispatchToProps)(EditWarehousePopup);
+export default connect(null, mapDispatchToProps)(AddNewProductCatalogPopup);

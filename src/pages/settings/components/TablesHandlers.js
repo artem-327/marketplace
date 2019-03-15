@@ -6,7 +6,7 @@ import InputBase from '@material-ui/core/InputBase';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 
-import { handleAddNewWarehousePopup } from '../actions';
+import { handleAddNewWarehousePopup, handleFiltersValue } from '../actions';
 import unitedStates from '../../../components/unitedStates';
 
 class TablesHandlers extends Component {
@@ -28,13 +28,12 @@ class TablesHandlers extends Component {
   
   render() {
     const {
-      filtersHandler, 
+      handleFiltersValue, 
       currentTab,
       handleAddNewWarehousePopup
     } = this.props;
     
-    const {
-      handleChangeFieldsCurrentValue,
+    const {      
       filterFieldCurrentValue
     } = this.state;
 
@@ -45,12 +44,12 @@ class TablesHandlers extends Component {
             select
             className="b-search__select-field col-xs-3"
             value={ filterFieldCurrentValue }
-            onChange={ handleChangeFieldsCurrentValue('filterFieldCurrentValue') }
+            onChange={ this.handleChangeFieldsCurrentValue('filterFieldCurrentValue') }
             variant="outlined"
             onClick={ (e) => { 
                 if(e.target.value === undefined) return;
-                if(e.target.value === 'None') return filtersHandler('');
-                return filtersHandler(e.target.value);
+                if(e.target.value === 'None') return handleFiltersValue('');
+                return handleFiltersValue(e.target.value);
               } 
             }
           > 
@@ -77,7 +76,7 @@ class TablesHandlers extends Component {
             placeholder="Search..."
             classes={{ input: "input-base" }}
             onChange={ e => {
-                return filtersHandler(e.target.value);
+                return handleFiltersValue(e.target.value);
               }
             }
             fullWidth
@@ -94,8 +93,15 @@ class TablesHandlers extends Component {
   }  
 }
 
-const mapDispatchToProps = {   
-  handleAddNewWarehousePopup
+const mapStateToProps = state => {
+  return {
+    currentTab: state.settings.currentTab
+  }
+}
+
+const mapDispatchToProps = {
+  handleAddNewWarehousePopup,
+  handleFiltersValue
 };
 
-export default connect(null, mapDispatchToProps)(TablesHandlers);
+export default connect(mapStateToProps, mapDispatchToProps)(TablesHandlers);

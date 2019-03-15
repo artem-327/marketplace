@@ -104,6 +104,7 @@ const mapStateToProps = state => {
 		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
 		permissionsColumns: state.settings.columnsForFormatter.permissionsColumns,
 		checkboxColumns: state.settings.columnsForFormatter.checkboxColumns,
+		filterValue: state.settings.filterValue
 		// editWarehousePopup: state.settings.editWarehousePopup,
 		// addNewWarehousePopup: state.settings.addNewWarehousePopup
   }

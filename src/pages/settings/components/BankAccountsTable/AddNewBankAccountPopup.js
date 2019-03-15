@@ -45,31 +45,31 @@ class EditWarehousePopup extends React.Component {
           <h2>{'Bank Account'} Profile</h2>
           <ul>
             <li className="add-warehouse-inputs-wrapper">
-              <label className="warehouse-label name" htmlFor="warehouse-name">                        
+              <label className="settings-popup-label name" htmlFor="warehouse-name">                        
                 Account Holder Name
-              <Control.text model=".accountHolderName" className="warehouse-input" id="warehouse-name" defaultValue={ accountHolderName } />
+              <Control.text model=".accountHolderName" className="popup-input" id="warehouse-name" defaultValue={ accountHolderName } />
               </label>
-              <label className="warehouse-label address" htmlFor="warehouse-address">
+              <label className="settings-popup-label address" htmlFor="warehouse-address">
                 Account Holder Type
-                <Control.text model=".accountHolderType" className="warehouse-input" id="warehouse-address" defaultValue={ accountHolderType } />
+                <Control.text model=".accountHolderType" className="popup-input" id="warehouse-address" defaultValue={ accountHolderType } />
               </label>
-              <label className="warehouse-label city" htmlFor="warehouse-city">
+              <label className="settings-popup-label city" htmlFor="warehouse-city">
                 Account Number
-                <Control.text model=".accountNumber" className="warehouse-input" id="warehouse-city" defaultValue={ accountNumber } />
+                <Control.text model=".accountNumber" className="popup-input" id="warehouse-city" defaultValue={ accountNumber } />
               </label>            
             </li>
             <li className="add-warehouse-inputs-wrapper">
-              <label className="warehouse-label state" htmlFor="warehouse-state">  
+              <label className="settings-popup-label state" htmlFor="warehouse-state">  
                 Country
-                <Control.text model=".country" className="warehouse-input" id="warehouse-state" defaultValue={ country } />               
+                <Control.text model=".country" className="popup-input" id="warehouse-state" defaultValue={ country } />               
               </label>            
-              <label className="warehouse-label zip-code" htmlFor="warehouse-zip-code">
+              <label className="settings-popup-label zip-code" htmlFor="warehouse-zip-code">
                 Currency
-                <Control.text model=".currency" className="warehouse-input" id="warehouse-zip-code" defaultValue={ currency } />
+                <Control.text model=".currency" className="popup-input" id="warehouse-zip-code" defaultValue={ currency } />
               </label>
-              <label className="warehouse-label contact-name" htmlFor="warehouse-contactName">
+              <label className="settings-popup-label contact-name" htmlFor="warehouse-contactName">
                 Routing Number
-                <Control.text model=".routingNumber" className="warehouse-input" id="warehouse-contactName" defaultValue={ routingNumber } />
+                <Control.text model=".routingNumber" className="popup-input" id="warehouse-contactName" defaultValue={ routingNumber } />
               </label>              
             </li> 
             <li className="add-warehouse-inputs-wrapper">                         

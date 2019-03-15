@@ -81,7 +81,8 @@ const mapStateToProps = state => {
 		rows: state.settings.warehousesRows,
 		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
 		editWarehousePopup: state.settings.editWarehousePopup,
-		addNewWarehousePopup: state.settings.addNewWarehousePopup
+		addNewWarehousePopup: state.settings.addNewWarehousePopup,
+		filterValue: state.settings.filterValue
   }
 }
 
