@@ -7,7 +7,7 @@ export default {
     getBranches: () => axios.get('/prodex/api/branches').then(response => response.data),
     getCreditCardsData: () => axios.get('/prodex/api/payments/cards').then(response => response.data),
     getBankAccountsData: () => axios.get('/prodex/api/payments/bank-accounts').then(response => response.data),
-    getProductsCatalog: () => axios.get('/prodex/api/products').then(response => response.data),
+    getProductsWithRequiredParamPar: char => axios.get(`/prodex/api/product-templates?search=${char}`).then(response => response.data),
 
     postNewWarehouse: body => axios.post('/prodex/api/branches/', body),
     postNewCreditCard: body => axios.post('/prodex/api/payments/cards/add', body),

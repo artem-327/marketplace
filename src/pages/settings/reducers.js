@@ -9,6 +9,7 @@ export const initialState = {
   branchesRows: [],
   creditCardsRows: [],
   bankAccountsRows: [],
+  productsCatalogRows: [],
   columnsForFormatter: {
     checkboxColumns: ['checkbox'],
     permissionsColumns: ['permissions'],
@@ -28,7 +29,8 @@ export const initialState = {
     {	name: 'Website Controls', id: 11 }
   ],
   currentTab: 'Product catalog',
-  filterValue: ''
+  filterValue: '',
+  editPopupSearchProducts: []
 };
 
 export default function reducer(state = initialState, action) {
@@ -172,6 +174,23 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         productsCatalogRows: rows
+      }
+    }
+
+    case AT.GET_PRODUCTS_WITH_REQUIRED_PARAM_SUCCESS: {
+      const editPopupSearchProducts = action.payload.map(item => {        
+        return {
+          id: item.id,
+          productName: item.productName,
+          productNumber: item.product.unNumber,
+          productId: item.product.id,
+          packagingType: item.packaging.packagingType === undefined ? '' : item.packaging.packagingType.name,
+          packagingSize: item.packaging.size 
+        }
+      })
+      return {
+        ...state,
+        editPopupSearchProducts
       }
     }
     

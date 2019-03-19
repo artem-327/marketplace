@@ -74,7 +74,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-		rows: state.settings.bankAccountsRows,
+		rows: state.settings.productsCatalogRows,
 		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
 		editWarehousePopup: state.settings.editWarehousePopup,
 		addNewWarehousePopup: state.settings.addNewWarehousePopup,

@@ -13,7 +13,9 @@ import BranchTable from './BranchTable/BranchTable';
 import BankAccountsTable from './BankAccountsTable/BankAccountsTable';
 import CreditCardsTable from './CreditCardsTable/CreditCardsTable';
 import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable';
+// import EditBranchPopup from './BranchTable/EditBranchPopup';
 import EditWarehousePopup from './WarehouseTable/EditWarehousePopup';
+import EditProductCatalogPopup from './ProductCatalogTable/EditProductCatalogPopup';
 import AddNewBranchPopup from './BranchTable/AddNewBranchPopup';
 import AddNewWarehousePopup from './WarehouseTable/AddNewWarehousePopup';
 import AddNewCreditCardPopup from './CreditCardsTable/AddNewCreditCardPopup';
@@ -30,8 +32,6 @@ class Settings extends Component {
 			currentTab
 		} = this.props;
 
-		console.log(currentTab, 'addNewWarehousePopup')
-
 		return (
 			<main className="b-settings-content">
 				<div className="b-for-shadow">
@@ -42,8 +42,12 @@ class Settings extends Component {
 				</div>
 				<div className="main-content-wrapper row between-xs container-fluid">
 					<Tabs />
-					{ editWarehousePopup ? 
-						<EditWarehousePopup	/>
+					{ editWarehousePopup && currentTab === 'Product catalog' ?
+						<EditProductCatalogPopup /> :
+						editWarehousePopup && currentTab === 'Warehouses' ? 
+						<EditWarehousePopup	/> :
+						editWarehousePopup && currentTab === 'Branches' ?
+						<EditWarehousePopup /> 
 						: null
 					}
 					{ 
@@ -70,7 +74,7 @@ class Settings extends Component {
 					currentTab === 'Bank accounts' ?
 					<BankAccountsTable /> : 
 					currentTab === 'Credit cards' ?
-					<CreditCardsTable /> : null
+					<CreditCardsTable /> : <div className="conMess col-xs-10" style={{textAlign: 'center'}}>This page is still under construction</div>
 					}
 				</div>
 			</main>

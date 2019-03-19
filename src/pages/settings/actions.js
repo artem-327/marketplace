@@ -71,6 +71,13 @@ export function getProductsCatalogRequest() {
   }
 }
 
+export function getProductsWithRequiredParam(payload) {
+  return {
+    type: AT.GET_PRODUCTS_WITH_REQUIRED_PARAM,
+    payload
+  }
+}
+
 export function postNewWarehouseRequest(warehouseData) { 
   return {
     type: AT.POST_NEW_WAREHOUSE_REQUEST,
