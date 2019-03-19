@@ -14,7 +14,7 @@ const MenuLink = withRouter(({router: {pathname}, to, children}) => (
 ))
 
 const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
-  <Container style={{paddingTop: 40}}>
+  <Container style={{paddingTop: 47}}>
     <Head>
       <title>Echo exchange / {title}</title>
       <meta charSet='utf-8' />
@@ -49,8 +49,8 @@ const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
         </Menu.Menu>
       </Container>
     </Menu>
-
-    {children}
+    
+    {children}    
 
   </Container>
 )
