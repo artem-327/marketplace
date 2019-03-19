@@ -49,21 +49,21 @@ class EditWarehousePopup extends React.Component {
           <h2>{'Warehouse'} Profile</h2>
           <ul>
             <li className="add-warehouse-inputs-wrapper">
-              <label className="warehouse-label name" htmlFor="warehouse-name">                        
+              <label className="settings-popup-label name" htmlFor="warehouse-name">                        
                 Warehouse name
-              <Control.text model=".warehouseName" className="warehouse-input" id="warehouse-name" defaultValue={ warehouseNameValue } />
+              <Control.text model=".warehouseName" className="popup-input" id="warehouse-name" defaultValue={ warehouseNameValue } />
               </label>
-              <label className="warehouse-label address" htmlFor="warehouse-address">
+              <label className="settings-popup-label address" htmlFor="warehouse-address">
                 Address
-                <Control.text model=".address" className="warehouse-input" id="warehouse-address" defaultValue={ addressValue } />
+                <Control.text model=".address" className="popup-input" id="warehouse-address" defaultValue={ addressValue } />
               </label>
-              <label className="warehouse-label city" htmlFor="warehouse-city">
+              <label className="settings-popup-label city" htmlFor="warehouse-city">
                 City
-                <Control.text model=".city" className="warehouse-input" id="warehouse-city" defaultValue={ cityValue } />
+                <Control.text model=".city" className="popup-input" id="warehouse-city" defaultValue={ cityValue } />
               </label>            
-              <label className="warehouse-label state" htmlFor="warehouse-state">  
+              <label className="settings-popup-label state" htmlFor="warehouse-state">  
                 State
-                <Control.text model=".state" className="warehouse-input" id="warehouse-state" defaultValue={ stateValue } />
+                <Control.text model=".state" className="popup-input" id="warehouse-state" defaultValue={ stateValue } />
                 {/* <TextField
                   select
                   className="b-search__select-field col-xs-3"
@@ -85,23 +85,23 @@ class EditWarehousePopup extends React.Component {
                   ))}
                 </TextField>  */}
               </label>            
-              <label className="warehouse-label zip-code" htmlFor="warehouse-zip-code">
+              <label className="settings-popup-label zip-code" htmlFor="warehouse-zip-code">
                 Zip Code
-                <Control.text model=".zipCode" className="warehouse-input" id="warehouse-zip-code" defaultValue={ zipCodeValue } />
+                <Control.text model=".zipCode" className="popup-input" id="warehouse-zip-code" defaultValue={ zipCodeValue } />
               </label>
             </li>
             <li className="add-warehouse-inputs-wrapper">
-              <label className="warehouse-label contact-name" htmlFor="warehouse-contactName">
+              <label className="settings-popup-label contact-name" htmlFor="warehouse-contactName">
                 Contact name
-                <Control.text model=".contactName" className="warehouse-input" id="warehouse-contactName" defaultValue={ warehouseContactNameValue } />
+                <Control.text model=".contactName" className="popup-input" id="warehouse-contactName" defaultValue={ warehouseContactNameValue } />
               </label>                    
-              <label className="warehouse-label phone" htmlFor="warehouse-phone">
+              <label className="settings-popup-label phone" htmlFor="warehouse-phone">
                 Phone number
-                <Control.text model=".phone" className="warehouse-input" id="warehouse-phone" defaultValue={ phoneValue } />
+                <Control.text model=".phone" className="popup-input" id="warehouse-phone" defaultValue={ phoneValue } />
               </label>
-              <label className="warehouse-label email" htmlFor="warehouse-email">  
+              <label className="settings-popup-label email" htmlFor="warehouse-email">  
                 E-mail
-                <Control.text model=".email" className="warehouse-input" id="warehouse-email" defaultValue={ emailValue } />
+                <Control.text model=".email" className="popup-input" id="warehouse-email" defaultValue={ emailValue } />
               </label>
               <div className="buttons-wrapper">
                 <input 

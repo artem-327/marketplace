@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
 import PropTypes from "prop-types";
 import { DataTypeProvider } from '@devexpress/dx-react-grid';
 
@@ -10,153 +11,70 @@ import UsersTable from './UserTable/UsersTable';
 import WarehouseTable from './WarehouseTable/WarehouseTable';
 import BranchTable from './BranchTable/BranchTable';
 import BankAccountsTable from './BankAccountsTable/BankAccountsTable';
-import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
+import CreditCardsTable from './CreditCardsTable/CreditCardsTable';
+import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable';
+// import EditBranchPopup from './BranchTable/EditBranchPopup';
 import EditWarehousePopup from './WarehouseTable/EditWarehousePopup';
+import EditProductCatalogPopup from './ProductCatalogTable/EditProductCatalogPopup';
 import AddNewBranchPopup from './BranchTable/AddNewBranchPopup';
 import AddNewWarehousePopup from './WarehouseTable/AddNewWarehousePopup';
 import AddNewCreditCardPopup from './CreditCardsTable/AddNewCreditCardPopup';
 import AddNewBankAccountPopup from './BankAccountsTable/AddNewBankAccountPopup';
+import AddNewProductCatalogPopup from './ProductCatalogTable/AddNewProductCatalogPopup';
 import TablesHandlers from './TablesHandlers';
 
 class Settings extends Component {
-
-	state = {
-		checkboxColumns: ['checkbox'],
-		permissionsColumns: ['permissions'],
-		editDeleteColumns: ['editDeleteBtn'],
-		tabsNames: [
-			{	name: 'Users', id: 1 }, 
-			{	name: 'Branches', id: 2 }, 
-			{	name: 'Warehouses', id: 3 }, 
-			{	name: 'Product catalog', id: 4 }, 
-			{	name: 'Price list', id: 5 }, 
-			{	name: 'Client list', id: 6 }, 
-			{	name: 'Credit cards', id: 7 },
-			{	name: 'Bank accounts', id: 8 },
-			{	name: 'Tax manager', id: 9 }, 
-			{	name: 'Terms', id: 10 }, 
-			{	name: 'Website Controls', id: 11 }],
-		filterFieldCurrentValue: 'None',
-		currentTab: 'Credit cards',
-		filterValue: ''
-	}
-
-	filtersHandler = value => {		
-		this.setState({ 
-			filterValue: value 
-		});
-	}
-
-	handleChangeSelectField = (event, value) => {
-		this.setState({ 
-			filterFieldCurrentValue: value 
-		});
-	};
-
-	handleActiveTab = event => {
-		
-		const target = event.target
-		this.setState({
-			currentTab: target.getAttribute('data-tab-name')
-		});
-	}
-
-	handleChangeFieldsCurrentValue = fieldStateName => event => {
-		this.setState({ 
-			[fieldStateName]: event.target.value 
-		});
-	};
 	
 	render() {
-		const { 
-			filterFieldCurrentValue,
-			currentTab, 
-			tabsNames,			 
-			permissionsColumns,
-			editDeleteColumns,
-			checkboxColumns,
-			filterValue			
-		} = this.state;
-
-		const { 
+		const {
 			editWarehousePopup,
-			addNewWarehousePopup
+			addNewWarehousePopup,
+			currentTab
 		} = this.props;
 
-		console.log(currentTab, 'currentTab')
-		return (			
-			<main>
+		return (
+			<main className="b-settings-content">
 				<div className="b-for-shadow">
 					<div className="b-wrapper row between-xs container-fluid">
 						<span className="uppercase page-title col-xs-3">User settings</span>
-						<TablesHandlers
-							filterFieldCurrentValue={ filterFieldCurrentValue }
-							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
-							filtersHandler={ this.filtersHandler }
-							currentTab={ currentTab }							
-						/>
+						<TablesHandlers />
 					</div>
 				</div>
-				<div className="main-content-wrapper row between-xs container-fluid">					
-					<Tabs
-						currentTab={ currentTab }
-						tabsNames={ tabsNames } 
-						handleActiveTab={ this.handleActiveTab }
-					/>
-					{ editWarehousePopup ? 
-						<EditWarehousePopup	/>
+				<div className="main-content-wrapper row between-xs container-fluid">
+					<Tabs />
+					{ editWarehousePopup && currentTab === 'Product catalog' ?
+						<EditProductCatalogPopup /> :
+						editWarehousePopup && currentTab === 'Warehouses' ? 
+						<EditWarehousePopup	/> :
+						editWarehousePopup && currentTab === 'Branches' ?
+						<EditWarehousePopup /> 
 						: null
 					}
 					{ 
 						addNewWarehousePopup && currentTab === 'Branches' ?
-						<AddNewBranchPopup
-							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
-						/> :
+						<AddNewBranchPopup /> :
 						addNewWarehousePopup && currentTab === 'Warehouses' ?
-						<AddNewWarehousePopup
-							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
-						/> :
+						<AddNewWarehousePopup /> :
 						addNewWarehousePopup && currentTab === 'Bank accounts' ?
-						<AddNewBankAccountPopup
-							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
-						/> :
+						<AddNewBankAccountPopup /> :
 						addNewWarehousePopup && currentTab === 'Credit cards' ?
-						<AddNewCreditCardPopup
-							handleChangeFieldsCurrentValue={ this.handleChangeFieldsCurrentValue }
-						/>
-						: null						
+						<AddNewCreditCardPopup /> :
+						addNewWarehousePopup && currentTab === 'Product catalog' ?
+						<AddNewProductCatalogPopup />
+						: null
 					}
 					{ currentTab === 'Users' ?
-					<UsersTable
-						permissionsColumns={ permissionsColumns}
-						editDeleteColumns={ editDeleteColumns }
-						checkboxColumns={ checkboxColumns }
-						filterValue={ filterValue }
-					/> :
+					<UsersTable /> :
 					currentTab === 'Warehouses' ?
-					<WarehouseTable 
-						filterValue={ filterValue }
-						editDeleteColumns={ editDeleteColumns }
-						popupStatus={ editWarehousePopup || addNewWarehousePopup }
-					/> :
+					<WarehouseTable /> :
+					currentTab === 'Product catalog' ?
+					<ProductCatalogTable /> :
 					currentTab === 'Branches' ?
-					<BranchTable 
-						filterValue={ filterValue }
-						editDeleteColumns={ editDeleteColumns }
-						popupStatus={ editWarehousePopup || addNewWarehousePopup }
-					/> :
+					<BranchTable /> :
 					currentTab === 'Bank accounts' ?
-					<BankAccountsTable
-						filterValue={ filterValue }
-						editDeleteColumns={ editDeleteColumns }
-						popupStatus={ editWarehousePopup || addNewWarehousePopup }
-					/> : 
+					<BankAccountsTable /> : 
 					currentTab === 'Credit cards' ?
-					<CreditCardsTable
-						filterValue={ filterValue }
-						editDeleteColumns={ editDeleteColumns }
-						popupStatus={ editWarehousePopup || addNewWarehousePopup }
-					/> : null			
+					<CreditCardsTable /> : <div className="conMess col-xs-10" style={{textAlign: 'center'}}>This page is still under construction</div>
 					}
 				</div>
 			</main>
@@ -167,7 +85,8 @@ class Settings extends Component {
 const mapStateToProps = state => {
   return {
 		editWarehousePopup: state.settings.editWarehousePopup,
-		addNewWarehousePopup: state.settings.addNewWarehousePopup
+		addNewWarehousePopup: state.settings.addNewWarehousePopup,
+		currentTab: state.settings.currentTab
   }
 }
 

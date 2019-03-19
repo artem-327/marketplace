@@ -26,10 +26,6 @@ function cn(){
 		return res.trim();
 }
 
-const GridRoot = props => <Grid.Root {...props} className={cn(props.className,'col-xs-10 main-table')} />
-const HeaderCells = props => <TableHeaderRow.Cell {...props} className={cn(props.className,'columns-title-cell')} />
-const TableCells = props => <Table.Cell {...props} className={cn(props.className,'columns-rows-cell')} />
-
 class UsersTable extends Component {
 	state = {
 		columns: [
@@ -54,10 +50,16 @@ class UsersTable extends Component {
 			checkboxColumns, 
 			permissionsColumns, 
 			editDeleteColumns, 
-			filterValue 
+			filterValue,
+			// editWarehousePopup,
+			// addNewWarehousePopup
 		} = this.props;
 
 		const { columns } = this.state;
+
+		const GridRoot = props => <Grid.Root {...props} className={cn(props.className,'col-xs-10 main-table')} />
+		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={cn(props.className,'columns-title-cell')} />
+		const TableCells = props => <Table.Cell {...props} className={cn(props.className,'columns-rows-cell')} />
 
 		return (			
 			<Grid
@@ -98,7 +100,13 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-		rows: state.settings.usersRows
+		rows: state.settings.usersRows,
+		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
+		permissionsColumns: state.settings.columnsForFormatter.permissionsColumns,
+		checkboxColumns: state.settings.columnsForFormatter.checkboxColumns,
+		filterValue: state.settings.filterValue
+		// editWarehousePopup: state.settings.editWarehousePopup,
+		// addNewWarehousePopup: state.settings.addNewWarehousePopup
   }
 }
 

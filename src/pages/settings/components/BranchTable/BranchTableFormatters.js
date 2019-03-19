@@ -18,7 +18,7 @@ const editDeleteCell = props => {
 				</ li>
 				<li 
 					className="handlers-row-menu__btn"
-					onClick={ () => props.deleteWarehouse(props.row.branchId) }
+					onClick={ () => props.deleteWarehouse(props.row.id) }
 				>
 					{'Delete'}
 				</ li>
