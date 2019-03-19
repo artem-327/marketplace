@@ -7,8 +7,21 @@ export function handleEditPopup(rows) {
   }
 }
 
-export function handleSubmitEditPopup(warehouseData, branchId) {  
+export function handleActiveTab(event) {
+  return {
+    type: AT.HANDLE_ACTIVE_TAB,
+    payload: event.target
+  }
+}
 
+export function handleFiltersValue(value) {
+  return {
+    type: AT.HANDLE_FILTERS_VALUE,
+    payload: value
+  }
+}
+
+export function handleSubmitEditPopup(warehouseData, branchId) {
   return {
     type: AT.SUBMIT_EDIT_POPUP_HANDLER,
     payload: warehouseData,
@@ -49,6 +62,19 @@ export function getCreditCardsDataRequest() {
 export function getBankAccountsDataRequest() {
   return {
     type: AT.GET_BANK_ACCOUNTS_DATA
+  }
+}
+
+export function getProductsCatalogRequest() {
+  return {
+    type: AT.GET_PRODUCTS_CATALOG_DATA
+  }
+}
+
+export function getProductsWithRequiredParam(payload) {
+  return {
+    type: AT.GET_PRODUCTS_WITH_REQUIRED_PARAM,
+    payload
   }
 }
 

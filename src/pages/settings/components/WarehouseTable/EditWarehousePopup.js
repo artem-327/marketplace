@@ -18,33 +18,33 @@ function EditWarehousePopup(props) {
         <h2>{'Warehouse'} Profile</h2>
         <ul className="">
           <li className="inputs-wrapper">
-            <label className="warehouse-label name" htmlFor="warehouse-name">                        
+            <label className="settings-popup-label name" htmlFor="warehouse-name">                        
               Warehouse name
-            <Control.text model=".warehouseName" className="warehouse-input" id="warehouse-name" defaultValue={ popupValues.warehouseName } />
+            <Control.text model=".warehouseName" className="popup-input" id="warehouse-name" defaultValue={ popupValues.warehouseName } />
             </label>            
-            <label className="warehouse-label contact-name" htmlFor="warehouse-contactName">
+            <label className="settings-popup-label contact-name" htmlFor="warehouse-contactName">
               Contact name
-              <Control.text model=".contactName" className="warehouse-input" id="warehouse-contactName" defaultValue={ popupValues.contactName } />
+              <Control.text model=".contactName" className="popup-input" id="warehouse-contactName" defaultValue={ popupValues.contactName } />
             </label>             
           </li>
           <li className="inputs-wrapper">
-            <label className="warehouse-label email" htmlFor="warehouse-email">  
+            <label className="settings-popup-label email" htmlFor="warehouse-email">  
               E-mail
-              <Control.text model=".email" className="warehouse-input" id="warehouse-email" defaultValue={ popupValues.email } />
+              <Control.text model=".email" className="popup-input" id="warehouse-email" defaultValue={ popupValues.email } />
             </label>            
-            <label className="warehouse-label phone" htmlFor="warehouse-phone">
+            <label className="settings-popup-label phone" htmlFor="warehouse-phone">
               Phone
-              <Control.text model=".phone" className="warehouse-input" id="warehouse-phone" defaultValue={ popupValues.phone } />
+              <Control.text model=".phone" className="popup-input" id="warehouse-phone" defaultValue={ popupValues.phone } />
             </label>            
           </li>
           <li className="inputs-wrapper">
-            <label className="warehouse-label address" htmlFor="warehouse-address">
+            <label className="settings-popup-label address" htmlFor="warehouse-address">
               Address
-              <Control.text model=".address" className="warehouse-input" id="warehouse-address" defaultValue={ address } />
+              <Control.text model=".address" className="popup-input" id="warehouse-address" defaultValue={ address } />
             </label>
-            <label className="warehouse-label address" htmlFor="warehouse-city">
+            <label className="settings-popup-label address" htmlFor="warehouse-city">
               City
-              <Control.text model=".city" className="warehouse-input" id="warehouse-city" defaultValue={ city } />
+              <Control.text model=".city" className="popup-input" id="warehouse-city" defaultValue={ city } />
             </label>                    
           </li>
           <li className="inputs-wrapper buttons-wrapper">

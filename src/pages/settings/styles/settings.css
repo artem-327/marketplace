@@ -205,21 +205,42 @@ input {
     margin-left: 1.25em;
     cursor: pointer; }
 
-.warehouse-label {
+.settings-popup-label {
   display: inline-block;
   margin: 0 1.5em 1.18em 0;
   font-size: 12px; }
 
-.warehouse-input {
+.popup-input {
   display: block;
   border-radius: 3px;
   border: 1px solid #d0d1d4;
   width: 100%; }
 
+.b-product-search {
+  position: relative;
+  width: 100%; }
+  .b-product-search__found-products {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    width: 100%;
+    height: 170px;
+    border: 1px solid #d0d1d4;
+    border-radius: 0 0 4px 4px;
+    overflow-y: auto; }
+  .b-product-search .product-item {
+    height: 42px;
+    font-size: 16px;
+    padding: 10px; }
+    .b-product-search .product-item:hover {
+      background-color: #d0d1d4; }
+  .b-product-search:hover .b-product-search__found-products {
+    display: block; }
+
 .add-warehouse-inputs-wrapper {
   display: flex;
   width: 100%; }
-  .add-warehouse-inputs-wrapper .warehouse-label {
+  .add-warehouse-inputs-wrapper .settings-popup-label {
     flex: 1; }
   .add-warehouse-inputs-wrapper .name {
     flex: 2; }

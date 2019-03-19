@@ -8,20 +8,23 @@ import {
 	TableHeaderRow
 } from '@devexpress/dx-react-grid-material-ui';
 
-import { 	EditDeleteFormatterProvider } from './CreditCardsTableProviders';
-import { getCreditCardsDataRequest } from '../../actions';
+import { 	EditDeleteFormatterProvider } from './ProductCatalogProviders';
+import { getProductsCatalogRequest } from '../../actions';
 
-class CreditCardsTable extends Component {
+class ProductCatalogTable extends Component {
 	state = {		
 		columns: [
-			{ name: 'last4', title: 'last4'},
-			{ name: 'expirationMonthYear', title: 'ExpirationMonth / ExpirationYear' },
+			{ name: 'productName', title: 'Product Name'},
+			{ name: 'productNumber', title: 'Product Number' },
+			{ name: 'productId', title: 'Product ID' },
+			{ name: 'packagingType', title: 'Packaging Type' },
+			{ name: 'packagingSize', title: 'Packaging Size' },
 			{ name: 'editDeleteBtn', title: ' ' }
 		]
 	}	
 
 	componentDidMount() {
-		this.props.getCreditCardsDataRequest();
+		// this.props.getProductsCatalogRequest();
 	}
 	
 	render() {
@@ -66,12 +69,12 @@ class CreditCardsTable extends Component {
 }
 
 const mapDispatchToProps = {   
-	getCreditCardsDataRequest
+	getProductsCatalogRequest
 };
 
 const mapStateToProps = state => {
   return {
-		rows: state.settings.creditCardsRows,
+		rows: state.settings.productsCatalogRows,
 		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
 		editWarehousePopup: state.settings.editWarehousePopup,
 		addNewWarehousePopup: state.settings.addNewWarehousePopup,
@@ -79,4 +82,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditCardsTable);
+export default connect(mapStateToProps, mapDispatchToProps)(ProductCatalogTable);

@@ -27,6 +27,8 @@ button:focus,
 input {
   border: none;
   outline: none !important;
+  // font-size: 14px;
+  // font-weight: 500;
 }
 
 .hide {
@@ -281,18 +283,54 @@ input {
   }
 }
 
-.warehouse-label {
+.settings-popup-label {
   display: inline-block;
   margin: 0 1.5em 1.18em 0;
   font-size: 12px;
 }
 
-.warehouse-input {
+.popup-input {
   display: block;
   border-radius: 3px;
   border: 1px solid $light-50-grey-color;
   width: 100%;
 }
+
+.b-product-search {
+  position: relative;
+  width: 100%;
+
+  // &__select-field {
+  //   width: 100%;
+  //   height: 42px;
+  // }  
+
+  &__found-products {
+    display: none;
+    position: absolute;
+    background-color: #fff;
+    width: 100%;
+    height: 170px;
+    border: 1px solid $light-50-grey-color;
+    border-radius: 0 0 4px 4px;
+    overflow-y: auto;
+  }
+
+  .product-item {    
+    height: 42px;
+    font-size: 16px;
+    padding: 10px;
+
+    &:hover {
+      background-color: $light-50-grey-color;
+    }
+  }
+
+  &:hover &__found-products {
+    display: block;
+  }
+}
+
 
 //add new warehouse popup
 
@@ -300,7 +338,7 @@ input {
   display: flex;
   width: 100%;
 
-  .warehouse-label {
+  .settings-popup-label {
     flex: 1;
   }
 

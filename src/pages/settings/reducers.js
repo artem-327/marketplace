@@ -8,7 +8,29 @@ export const initialState = {
   warehousesRows: [],
   branchesRows: [],
   creditCardsRows: [],
-  bankAccountsRows: []
+  bankAccountsRows: [],
+  productsCatalogRows: [],
+  columnsForFormatter: {
+    checkboxColumns: ['checkbox'],
+    permissionsColumns: ['permissions'],
+    editDeleteColumns: ['editDeleteBtn']
+  },
+  tabsNames: [
+    {	name: 'Users', id: 1 }, 
+    {	name: 'Branches', id: 2 }, 
+    {	name: 'Warehouses', id: 3 }, 
+    {	name: 'Product catalog', id: 4 }, 
+    {	name: 'Price list', id: 5 }, 
+    {	name: 'Client list', id: 6 }, 
+    {	name: 'Credit cards', id: 7 },
+    {	name: 'Bank accounts', id: 8 },
+    {	name: 'Tax manager', id: 9 }, 
+    {	name: 'Terms', id: 10 }, 
+    {	name: 'Website Controls', id: 11 }
+  ],
+  currentTab: 'Product catalog',
+  filterValue: '',
+  editPopupSearchProducts: []
 };
 
 export default function reducer(state = initialState, action) {
@@ -18,6 +40,20 @@ export default function reducer(state = initialState, action) {
         ...state,
         editWarehousePopup: state.editWarehousePopup === false ? true : false,
         popupValues: action.payload
+      }
+    }
+
+    case AT.HANDLE_ACTIVE_TAB: {
+      return {
+        ...state,
+        currentTab: action.payload.getAttribute('data-tab-name')
+      }
+    }
+
+    case AT.HANDLE_FILTERS_VALUE: {
+      return {
+        ...state,
+        filterValue: action.payload
       }
     }
 
@@ -79,8 +115,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_CREDIT_CARDS_DATA_SUCCESS: {
-      const rows = action.payload.map(card => {	
+    case AT.GET_CREDIT_CARDS_DATA_SUCCESS: {      
+      const rows = action.payload.map(card => {        
         return (
           {
             id: card.id,
@@ -88,7 +124,7 @@ export default function reducer(state = initialState, action) {
             cvc: card.cvcCheck,
             expirationMonth: card.expMonth,
             expirationYear: card.expYear,
-            last4: card.last4
+            last4: `**** **** **** ${card.last4}`
             // cardNumber what does it mean
           }
         )			
@@ -100,15 +136,14 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_BANK_ACCOUNTS_DATA_SUCCESS: {
-      console.log(action.payload, 'bankAccountsRows')   
+    case AT.GET_BANK_ACCOUNTS_DATA_SUCCESS: { 
       const rows = action.payload.map(account => {
         return (
           {
             id: account.id,
             accountHolderName: account.accountHolderName,
             accountHolderType: account.accountHolderType,
-            accountNumber: account.accountNumber,
+            accountNumber: `**** **** **** ${account.last4}`,
             country: account.country,
             currency: account.currency,
             routingNumber: account.routingNumber
@@ -120,6 +155,42 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         bankAccountsRows: rows
+      }
+    }
+
+    case AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS: {
+      const rows = action.payload.map(product => {
+        return (
+          {
+            productName: product,
+            productNumber: product,
+            productId: product,
+            packagingType: product,
+            packagingSize: product
+          }
+        )			
+      });
+      
+      return {
+        ...state,
+        productsCatalogRows: rows
+      }
+    }
+
+    case AT.GET_PRODUCTS_WITH_REQUIRED_PARAM_SUCCESS: {
+      const editPopupSearchProducts = action.payload.map(item => {        
+        return {
+          id: item.id,
+          productName: item.productName,
+          productNumber: item.product.unNumber,
+          productId: item.product.id,
+          packagingType: item.packaging.packagingType === undefined ? '' : item.packaging.packagingType.name,
+          packagingSize: item.packaging.size 
+        }
+      })
+      return {
+        ...state,
+        editPopupSearchProducts
       }
     }
     

@@ -7,19 +7,17 @@ import {
 	deleteBankAccount 
 } from '../../actions';
 
-const editDeleteCell = props => {
-	console.log(props)
-	
+const editDeleteCell = props => {	
 	return (
 		<div className="editDelete-wrapper">
 			<button className="editDelete-btn" />
 			<ul className="handlers-row-menu">
-				{/* <li 
+				<li 
 					className="handlers-row-menu__btn"
 					onClick={ () => props.handleEditPopup(props.row) }
 				>
 					{'Edit'}
-				</ li> */}
+				</ li>
 				<li 
 					className="handlers-row-menu__btn"
 					onClick={ () => props.deleteBankAccount(props.row.id) }
