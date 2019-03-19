@@ -8,7 +8,6 @@ class Index extends Component {
   render() {
     return (
       <Layout title="Dashboard">
-        <h1>Settings</h1>
         <SettingsPage />
       </Layout>
     )

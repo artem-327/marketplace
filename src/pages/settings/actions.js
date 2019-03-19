@@ -7,10 +7,10 @@ export function handleEditPopup(rows) {
   }
 }
 
-export function handleActiveTab(event) {
+export function handleActiveTab(tab) {
   return {
     type: AT.HANDLE_ACTIVE_TAB,
-    payload: event.target
+    payload: {tab}
   }
 }
 

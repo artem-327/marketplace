@@ -6,6 +6,7 @@ import Logo from '~/assets/images/nav/Logo.png'
 import 'semantic-ui-css/semantic.min.css'
 import '~/styles/base.scss'
 import cn from 'classnames'
+import ErrorsHandler from '~/src/utils/errorsHandler'
 
 import PopUp from '~/src/components/PopUp'
 
@@ -18,6 +19,7 @@ const MenuLink = withRouter(({router: {pathname}, to, children}) => (
 const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
   <Container style={{paddingTop: 47}}>
     <PopUp />
+    <ErrorsHandler />
     <Head>
       <title>Echo exchange / {title}</title>
       <meta charSet='utf-8' />
