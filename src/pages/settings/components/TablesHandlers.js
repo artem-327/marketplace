@@ -84,7 +84,7 @@ class TablesHandlers extends Component {
         </div>
         <button
           onClick={ handleAddNewWarehousePopup }
-          className="b-search__add-user-btn capitalize col-xs-3"
+          className="b-search__add-user-btn capitalize col-xs-4"
         >
           Add new { currentTab }
         </button>
