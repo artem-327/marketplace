@@ -7,6 +7,8 @@ import 'semantic-ui-css/semantic.min.css'
 import '~/styles/base.scss'
 import cn from 'classnames'
 
+import PopUp from '~/src/components/PopUp'
+
 const MenuLink = withRouter(({router: {pathname}, to, children}) => (
   <Link prefetch href={to}>
     <Menu.Item as="a" active={pathname === to}>{children}</Menu.Item>
@@ -15,6 +17,7 @@ const MenuLink = withRouter(({router: {pathname}, to, children}) => (
 
 const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
   <Container style={{paddingTop: 47}}>
+    <PopUp />
     <Head>
       <title>Echo exchange / {title}</title>
       <meta charSet='utf-8' />
