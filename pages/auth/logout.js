@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
 import defaultPage from '~/hocs/defaultPage'
 import {Logout} from '~/modules/auth'
+import {withRouter} from 'next/router'
 
 class LogoutPage extends Component {
   render() { 
-    return <Logout /> 
+    return <Logout {...this.props} /> 
   }
 }
 
-export default LogoutPage
+export default withRouter(LogoutPage)

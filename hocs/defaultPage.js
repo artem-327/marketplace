@@ -18,7 +18,7 @@ export default Page => class DefaultPage extends React.Component {
 
   logout = (eve) => {
     if (eve.key === 'logout') {
-      Router.push(`/auth/logout`)
+      Router.push(`/auth/logout?auto=true`)
     }
   }
 

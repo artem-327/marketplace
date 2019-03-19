@@ -35,8 +35,8 @@ export function getVersion() {
   }
 }
 
-export function logout() {
-  unsetToken()
+export function logout(isAutologout) {
+  if (!isAutologout) unsetToken()
   
   Router.push('/auth/login')
 
