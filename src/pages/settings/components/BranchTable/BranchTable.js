@@ -1,30 +1,30 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from 'react' 
+import { connect } from 'react-redux' 
 
-import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid';
+import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid' 
 import {
   Grid,
   Table,
 	TableHeaderRow
-} from '@devexpress/dx-react-grid-material-ui';
+} from '@devexpress/dx-react-grid-material-ui' 
 
-import { 	EditDeleteFormatterProvider } from './BranchTableProviders';
-import { getBranchesDataRequest } from '../../actions';
+import { 	EditDeleteFormatterProvider } from './BranchTableProviders' 
+import { getBranchesDataRequest } from '../../actions' 
 
 class BranchTable extends Component {
 	state = {		
 		columns: [
+			{ name: 'editDeleteBtn', title: ' ' },
 			{ name: 'warehouseName', title: 'Warehouse Name'},
 			{ name: 'address', title: 'Adress' },
 			{ name: 'contactName', title: 'Contact name' },
 			{ name: 'phone', title: 'Phone' },
-			{ name: 'email', title: 'E-mail' },
-			{ name: 'editDeleteBtn', title: ' ' }
+			{ name: 'email', title: 'E-mail' }
 		]
 	}	
 
 	componentDidMount() {
-		this.props.getBranchesDataRequest();
+		this.props.getBranchesDataRequest() 
 	}
 	
 	render() {
@@ -34,9 +34,9 @@ class BranchTable extends Component {
 			editDeleteColumns,
 			editWarehousePopup,
 			addNewWarehousePopup
-		} = this.props;
+		} = this.props 
 
-		const { columns } = this.state;
+		const { columns } = this.state 
 
 		const GridRoot = props => <Grid.Root {...props} className={ editWarehousePopup || addNewWarehousePopup ? 'hide' : 'col-xs-10 main-table' } />
 		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
@@ -64,13 +64,13 @@ class BranchTable extends Component {
 					rows={ rows }
 				/>
 			</Grid>		
-		);		
+		) 		
 	}
 }
 
 const mapDispatchToProps = {   
 	getBranchesDataRequest
-};
+} 
 
 const mapStateToProps = state => {
   return {
@@ -82,4 +82,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BranchTable);
+export default connect(mapStateToProps, mapDispatchToProps)(BranchTable) 

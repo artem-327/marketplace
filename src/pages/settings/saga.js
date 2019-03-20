@@ -1,66 +1,66 @@
-import { call, put, takeEvery } from "redux-saga/effects";
+import { call, put, takeEvery } from "redux-saga/effects" 
 
-import * as AT from './action-types';
-import api from "./api";
+import * as AT from './action-types' 
+import api from "./api" 
 
 function* getUsersDataWorker() {
   try {
-    const users = yield call(api.getUsers);
-    yield put({ type: AT.GET_USERS_DATA_SUCCESS, payload: users});
+    const users = yield call(api.getUsers) 
+    yield put({ type: AT.GET_USERS_DATA_SUCCESS, payload: users}) 
   } catch(e) {
-    yield console.log("error:", e);
+    yield console.log("error:", e) 
   }
 }
 
 function* getWarehousesDataWorker() {
   try {
-    const warehouses = yield call(api.getWarehouses);
-    yield put({ type: AT.GET_WAREHOUSES_DATA_SUCCESS, payload: warehouses });
+    const warehouses = yield call(api.getWarehouses)
+    yield put({ type: AT.GET_WAREHOUSES_DATA_SUCCESS, payload: warehouses }) 
   } catch(e) {
-    yield console.log("error:", e);
+    yield console.log("error:", e) 
   }
 }
 
 function* getBranchesDataWorker() {
   try {
-    const branches = yield call(api.getBranches);
-    yield put({ type: AT.GET_BRANCHES_DATA_SUCCESS, payload: branches });
+    const branches = yield call(api.getBranches) 
+    yield put({ type: AT.GET_BRANCHES_DATA_SUCCESS, payload: branches }) 
   } catch(e) {
-    yield console.log("error:", e);
+    yield console.log("error:", e) 
   }
 }
 
 function* getCreditCardsDataWorker() {
   try {
     const creditCardsData = yield call(api.getCreditCardsData)
-    yield put({ type: AT.GET_CREDIT_CARDS_DATA_SUCCESS, payload: creditCardsData });
+    yield put({ type: AT.GET_CREDIT_CARDS_DATA_SUCCESS, payload: creditCardsData }) 
   } catch(e) {
-    yield console.log("error:", e);
+    yield console.log("error:", e) 
   }
 }
 
 function* getBankAccountsDataWorker() {
   try {
-    const bankAccountsData = yield call(api.getBankAccountsData);
-    yield put({ type: AT.GET_BANK_ACCOUNTS_DATA_SUCCESS, payload: bankAccountsData });
+    const bankAccountsData = yield call(api.getBankAccountsData) 
+    yield put({ type: AT.GET_BANK_ACCOUNTS_DATA_SUCCESS, payload: bankAccountsData }) 
   } catch(e) {
-    yield console.log("error:", e);
+    yield console.log("error:", e) 
   }
 }
 
 function* getProductCatalogWorker() {
   try {
-    // const productCatalog = yield call(api.getProductsCatalog);
-    // yield put({ type: AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS, payload: productCatalog });
+    // const productCatalog = yield call(api.getProductsCatalog) 
+    // yield put({ type: AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS, payload: productCatalog }) 
   } catch(e) {
-    yield console.log("error:", e);
+    yield console.log("error:", e) 
   }
 }
 
 function* getProductsWithRequiredParamWorker({ payload }) {
   try {
-    const products = yield call(api.getProductsWithRequiredParamPar, payload);
-    yield put({ type: AT.GET_PRODUCTS_WITH_REQUIRED_PARAM_SUCCESS, payload: products });
+    const products = yield call(api.getProductsWithRequiredParamPar, payload) 
+    yield put({ type: AT.GET_PRODUCTS_WITH_REQUIRED_PARAM_SUCCESS, payload: products }) 
   } catch(e) {
 
   }
@@ -68,7 +68,7 @@ function* getProductsWithRequiredParamWorker({ payload }) {
 
 function* postNewWarehouseWorker({ payload }) {
   try {
-    const currentUser = yield call(api.getCurrentUser); 
+    const currentUser = yield call(api.getCurrentUser)  
     const dataBody = {
       address: {
         city: payload.address,
@@ -84,10 +84,10 @@ function* postNewWarehouseWorker({ payload }) {
       },
       warehouse: true,
       warehouseName: payload.warehouseName
-    };     
-    yield call(api.postNewWarehouse, dataBody);
+    }      
+    yield call(api.postNewWarehouse, dataBody) 
   } catch(e) {
-    yield console.log("error:", e);
+    yield console.log("error:", e) 
   }
 }
 
@@ -99,9 +99,9 @@ function* postNewCreditCardWorker({ payload }) {
       expirationMonth: Number(payload.expirationMonth),
       expirationYear: Number(payload.expirationYear)
     }
-    yield call(api.postNewCreditCard, dataBody);
+    yield call(api.postNewCreditCard, dataBody) 
   } catch(e) {
-    yield console.log("error:", e);
+    yield console.log("error:", e) 
   }
 }
 
@@ -115,9 +115,30 @@ function* postNewBankAccountWorker({ payload }) {
       currency: payload.currency,
       routingNumber: payload.routingNumber
     }
-    yield call(api.postNewBankAccount, dataBody);
+    yield call(api.postNewBankAccount, dataBody) 
   } catch(e) {
-    yield console.log("error:", e);
+    yield console.log("error:", e) 
+  }
+}
+
+function* postNewProductWorker({ payload }) {
+  try {
+    console.log('here saga')
+    console.log(payload, 'saga')
+    // const productData = {
+    //   packaging: {
+    //     packagingType: 0,
+    //     size: 0,
+    //     unit: 0
+    //   },
+    //   product: 0,
+    //   productCode: "string",
+    //   productName: "string",
+    //   valid: true
+    // } 
+    // yield call(api.postNewProduct, productData)
+  } catch(e) {
+    yield console.log("error:", e)
   }
 }
 
@@ -139,49 +160,76 @@ function* putWarehouseWorker({ payload, id }) {
       warehouse: true,
       warehouseName: payload.warehouseName
     }
-    yield call(api.putWarehouse, id, dataBody);
+    yield call(api.putWarehouse, id, dataBody) 
   } catch(e) {
-    yield console.log("error:", e);
+    yield console.log("error:", e) 
+  }
+}
+
+function* putWarehouseWorker({ payload, id }) { 
+  try {
+    const dataBody = {
+      address: {
+        city: payload.address,
+        streetAddress: payload.city,
+        province: 44,
+        zip: "35"
+      },
+      company: 3,
+      contact: {
+        email: payload.email,
+        name: payload.contactName,
+        phone: payload.phone
+      },
+      warehouse: true,
+      warehouseName: payload.warehouseName
+    }
+    yield call(api.putWarehouse, id, dataBody) 
+  } catch(e) {
+    yield console.log("error:", e) 
   }
 }
 
 function* deleteWarehouseWorker({ payload }) {
   try {
-    yield call(api.deleteWarehouse, payload);
+    yield call(api.deleteWarehouse, payload) 
   } catch (e) {
-    yield console.log("error:", e);
+    yield console.log("error:", e) 
   }
 }
 
 function* deleteCreditCardWorker({ payload }) {
   try {
-    yield call(api.deleteWarehouse, payload);
+    yield call(api.deleteWarehouse, payload) 
   } catch (e) {
-    yield console.log("error:", e);
+    yield console.log("error:", e) 
   }
 }
 
 function* deleteBankAccountWorker({ payload }) {
   try {
-    yield call(api.deleteWarehouse, payload);
+    yield call(api.deleteWarehouse, payload) 
   } catch(e) {
-    yield console.log("error:", e);
+    yield console.log("error:", e) 
   }
 }
 
 export default function* settingsSaga() {
-  yield takeEvery(AT.SUBMIT_EDIT_POPUP_HANDLER, putWarehouseWorker);
-  yield takeEvery(AT.GET_USERS_DATA, getUsersDataWorker);
-  yield takeEvery(AT.GET_WAREHOUSES_DATA, getWarehousesDataWorker);
-  yield takeEvery(AT.GET_BRANCHES_DATA, getBranchesDataWorker);
-  yield takeEvery(AT.GET_CREDIT_CARDS_DATA, getCreditCardsDataWorker);
-  yield takeEvery(AT.GET_BANK_ACCOUNTS_DATA, getBankAccountsDataWorker);
+  yield takeEvery(AT.SUBMIT_EDIT_POPUP_HANDLER, putWarehouseWorker) 
+  yield takeEvery(AT.GET_USERS_DATA, getUsersDataWorker) 
+  yield takeEvery(AT.GET_WAREHOUSES_DATA, getWarehousesDataWorker) 
+  yield takeEvery(AT.GET_BRANCHES_DATA, getBranchesDataWorker) 
+  yield takeEvery(AT.GET_CREDIT_CARDS_DATA, getCreditCardsDataWorker) 
+  yield takeEvery(AT.GET_BANK_ACCOUNTS_DATA, getBankAccountsDataWorker) 
   yield takeEvery(AT.GET_PRODUCTS_CATALOG_DATA, getProductCatalogWorker)
-  yield takeEvery(AT.POST_NEW_WAREHOUSE_REQUEST, postNewWarehouseWorker);
-  yield takeEvery(AT.POST_NEW_CREDIT_CARD_REQUEST, postNewCreditCardWorker);
-  yield takeEvery(AT.POST_NEW_BANK_ACCOUNT_REQUEST, postNewBankAccountWorker);  
-  yield takeEvery(AT.DELETE_WAREHOUSE, deleteWarehouseWorker);
-  yield takeEvery(AT.DELETE_CREDIT_CARD, deleteCreditCardWorker);
-  yield takeEvery(AT.DELETE_BANK_ACCOUNT, deleteBankAccountWorker);
   yield takeEvery(AT.GET_PRODUCTS_WITH_REQUIRED_PARAM, getProductsWithRequiredParamWorker)
+
+  yield takeEvery(AT.POST_NEW_WAREHOUSE_REQUEST, postNewWarehouseWorker) 
+  yield takeEvery(AT.POST_NEW_CREDIT_CARD_REQUEST, postNewCreditCardWorker) 
+  yield takeEvery(AT.POST_NEW_BANK_ACCOUNT_REQUEST, postNewBankAccountWorker)
+  yield takeEvery(AT.POST_NEW_PRODUCT_REQUEST, postNewProductWorker)
+
+  yield takeEvery(AT.DELETE_WAREHOUSE, deleteWarehouseWorker) 
+  yield takeEvery(AT.DELETE_CREDIT_CARD, deleteCreditCardWorker) 
+  yield takeEvery(AT.DELETE_BANK_ACCOUNT, deleteBankAccountWorker)  
 }

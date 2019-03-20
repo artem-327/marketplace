@@ -1,29 +1,29 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from 'react' 
+import { connect } from 'react-redux' 
 
-import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid';
+import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid' 
 import {
   Grid,
   Table,
 	TableHeaderRow
-} from '@devexpress/dx-react-grid-material-ui';
+} from '@devexpress/dx-react-grid-material-ui' 
 
 import { 
 	CheckboxFormatterProvider,
 	EditDeleteFormatterProvider,
 	PermissionFormatterProvider
-} from './UsersTableProviders';
-import { getUsersDataRequest } from '../../actions';
+} from './UsersTableProviders' 
+import { getUsersDataRequest } from '../../actions' 
 
 function cn(){
-		let res = "";
-		for( let j = 0, len = arguments.length, v; j < len; j++ ){
-			v = arguments[ j ];	
-			if( v ){
-				res += " " + v;
-			}
+	let res = "" 
+	for( let j = 0, len = arguments.length, v;  j < len; j++ ){
+		v = arguments[ j ] 	
+		if( v ){
+			res += " " + v 
 		}
-		return res.trim();
+	}
+	return res.trim() 
 }
 
 class UsersTable extends Component {
@@ -35,13 +35,12 @@ class UsersTable extends Component {
 			{ name: 'email', title: 'E-mail' },
 			{ name: 'phone', title: 'Phone' },
 			{ name: 'homeBranch', title: 'Home Branch'},
-			{ name: 'permissions', title: 'Permissions' },
-			{ name: 'editDeleteBtn', title: ' ' }
+			{ name: 'permissions', title: 'Permissions' }
 		]
 	}
 
 	componentDidMount() {
-		this.props.getUsersDataRequest();
+		this.props.getUsersDataRequest() 
 	}
 	
 	render() {
@@ -53,9 +52,9 @@ class UsersTable extends Component {
 			filterValue,
 			// editWarehousePopup,
 			// addNewWarehousePopup
-		} = this.props;
+		} = this.props 
 
-		const { columns } = this.state;
+		const { columns } = this.state 
 
 		const GridRoot = props => <Grid.Root {...props} className={cn(props.className,'col-xs-10 main-table')} />
 		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={cn(props.className,'columns-title-cell')} />
@@ -96,7 +95,7 @@ class UsersTable extends Component {
 
 const mapDispatchToProps = {   
 	getUsersDataRequest
-};
+} 
 
 const mapStateToProps = state => {
   return {
@@ -110,4 +109,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UsersTable);
+export default connect(mapStateToProps, mapDispatchToProps)(UsersTable) 

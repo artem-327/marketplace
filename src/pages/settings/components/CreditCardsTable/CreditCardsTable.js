@@ -1,27 +1,27 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from 'react' 
+import { connect } from 'react-redux' 
 
-import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid';
+import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid' 
 import {
   Grid,
   Table,
 	TableHeaderRow
-} from '@devexpress/dx-react-grid-material-ui';
+} from '@devexpress/dx-react-grid-material-ui' 
 
-import { 	EditDeleteFormatterProvider } from './CreditCardsTableProviders';
-import { getCreditCardsDataRequest } from '../../actions';
+import { 	EditDeleteFormatterProvider } from './CreditCardsTableProviders' 
+import { getCreditCardsDataRequest } from '../../actions' 
 
 class CreditCardsTable extends Component {
 	state = {		
 		columns: [
+			{ name: 'editDeleteBtn', title: ' ' },
 			{ name: 'last4', title: 'last4'},
-			{ name: 'expirationMonthYear', title: 'ExpirationMonth / ExpirationYear' },
-			{ name: 'editDeleteBtn', title: ' ' }
+			{ name: 'expirationMonthYear', title: 'ExpirationMonth / ExpirationYear' }
 		]
 	}	
 
 	componentDidMount() {
-		this.props.getCreditCardsDataRequest();
+		this.props.getCreditCardsDataRequest() 
 	}
 	
 	render() {
@@ -31,9 +31,9 @@ class CreditCardsTable extends Component {
 			editDeleteColumns,
 			editWarehousePopup,
 			addNewWarehousePopup
-		} = this.props;
+		} = this.props 
 
-		const { columns } = this.state;
+		const { columns } = this.state 
 
 		const GridRoot = props => <Grid.Root {...props} className={ editWarehousePopup || addNewWarehousePopup ? 'hide' : 'col-xs-10 main-table' } />
 		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
@@ -61,13 +61,13 @@ class CreditCardsTable extends Component {
 					rows={ rows }
 				/>
 			</Grid>		
-		);		
+		) 		
 	}
 }
 
 const mapDispatchToProps = {   
 	getCreditCardsDataRequest
-};
+} 
 
 const mapStateToProps = state => {
   return {
@@ -79,4 +79,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreditCardsTable);
+export default connect(mapStateToProps, mapDispatchToProps)(CreditCardsTable) 

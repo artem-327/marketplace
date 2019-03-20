@@ -1,15 +1,15 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Control, Form } from 'react-redux-form';
+import React from 'react' 
+import { connect } from 'react-redux' 
+import { Control, Form } from 'react-redux-form' 
 
-// import TextField from '@material-ui/core/TextField';
-// import MenuItem from '@material-ui/core/MenuItem';
+// import TextField from '@material-ui/core/TextField' 
+// import MenuItem from '@material-ui/core/MenuItem' 
 
-import { handleAddNewWarehousePopup, postNewWarehouseRequest } from '../../actions';
+import { handleAddNewWarehousePopup, postNewWarehouseRequest } from '../../actions' 
 
 class EditWarehousePopup extends React.Component {
   constructor(props) {
-    super(props);
+    super(props) 
 
     this.state = {
       warehouseNameValue: '',
@@ -37,7 +37,7 @@ class EditWarehousePopup extends React.Component {
     const { 
       handleAddNewWarehousePopup,  
       postNewWarehouseRequest 
-    } = this.props;
+    } = this.props 
 
     return (					
       <div className="popup-wrapper col-xs-10 center-xs">      
@@ -70,8 +70,8 @@ class EditWarehousePopup extends React.Component {
                   onChange={ handleChangeFieldsCurrentValue('filterFieldCurrentValue') }
                   variant="outlined"
                   onClick={ (e) => { 
-                      if(e.target.value === undefined) return;
-                      return 123;
+                      if(e.target.value === undefined) return 
+                      return 123 
                     } 
                   }
                 > 
@@ -116,13 +116,13 @@ class EditWarehousePopup extends React.Component {
           </ul>
         </Form>
       </div>
-    );    
+    )     
   }
 }
 
 const mapDispatchToProps = {   
   handleAddNewWarehousePopup,
   postNewWarehouseRequest
-};
+} 
 
-export default connect(null, mapDispatchToProps)(EditWarehousePopup);
+export default connect(null, mapDispatchToProps)(EditWarehousePopup) 
