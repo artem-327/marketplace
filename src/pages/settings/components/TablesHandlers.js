@@ -46,6 +46,22 @@ class TablesHandlers extends Component {
         <Menu.Item header><h1>Users Settings</h1></Menu.Item>
         
         <Menu.Menu position='right'>
+          {currentTab === 'Users' 
+            ? <Dropdown item text='Language' scrolling
+                
+              >
+                <Dropdown.Menu>
+                  <Dropdown.Item>English</Dropdown.Item>
+                  <Dropdown.Item>Russian</Dropdown.Item>
+                  <Dropdown.Item>Spanish</Dropdown.Item>
+                  {unitedStates.map(option => (
+                    <Dropdown.Item key={option.name} value={option.name}>{option.name}</Dropdown.Item> 
+                  ))}
+                </Dropdown.Menu>
+            </Dropdown>
+            : null
+          }
+            
           <Menu.Item>
             <Input icon='search' placeholder="Search..."
             onChange={ e => handleFiltersValue(e.target.value)} />

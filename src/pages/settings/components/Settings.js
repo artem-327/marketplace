@@ -23,7 +23,7 @@ import AddNewBankAccountPopup from './BankAccountsTable/AddNewBankAccountPopup'
 import AddNewProductCatalogPopup from './ProductCatalogTable/AddNewProductCatalogPopup'
 import TablesHandlers from './TablesHandlers'
 
-import {Container, Grid, Segment, Menu, Button, Input, Divider} from 'semantic-ui-react'
+import {Container, Grid, Divider} from 'semantic-ui-react'
 
 class Settings extends Component {
 	

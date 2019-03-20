@@ -6,7 +6,10 @@ import {
   Grid,
   Table,
 	TableHeaderRow
-} from '@devexpress/dx-react-grid-material-ui';
+} from '~/components/dx-grid-semantic-ui/plugins'
+// } from '@devexpress/dx-react-grid-material-ui';
+
+
 
 import { 	EditDeleteFormatterProvider } from './WarehouseTableProviders';
 import { getWarehousesDataRequest } from '../../actions';
