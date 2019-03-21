@@ -1,11 +1,11 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import React from 'react' 
+import { connect } from 'react-redux' 
+import { Link } from 'react-router-dom' 
 
-import { handleActiveTab } from '../actions';
+import { handleActiveTab } from '../actions' 
 
 function Tabs(props) {
-  const { tabsNames, handleActiveTab, currentTab } = props;
+  const { tabsNames, handleActiveTab, currentTab, editWarehousePopup, addNewWarehousePopup } = props 
   
   return (					
     <ul className="tabs-wrapper col-xs-2 middle-xs">
@@ -14,7 +14,7 @@ function Tabs(props) {
             <li
               key={ i }
               className="tabs-wrapper__b-tabs uppercase"
-              onClick={ handleActiveTab }
+              onClick={ editWarehousePopup || addNewWarehousePopup ? null : handleActiveTab }
             >
             {
             currentTab === tab.name ?	
@@ -36,19 +36,21 @@ function Tabs(props) {
         })
       }
     </ul>
-  );
+  ) 
 }
 
 
 const mapStateToProps = state => {
   return {
     tabsNames: state.settings.tabsNames,
-    currentTab: state.settings.currentTab
+    currentTab: state.settings.currentTab,
+    editWarehousePopup: state.settings.editWarehousePopup,
+    addNewWarehousePopup: state.settings.addNewWarehousePopup
   }
 }
 
 const mapDispatchToProps = {   
   handleActiveTab
-};
+} 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Tabs);
+export default connect(mapStateToProps, mapDispatchToProps)(Tabs) 

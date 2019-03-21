@@ -1,15 +1,15 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Control, Form } from 'react-redux-form';
+import React from 'react' 
+import { connect } from 'react-redux' 
+import { Control, Form } from 'react-redux-form' 
 
-// import TextField from '@material-ui/core/TextField';
-// import MenuItem from '@material-ui/core/MenuItem';
+// import TextField from '@material-ui/core/TextField' 
+// import MenuItem from '@material-ui/core/MenuItem' 
 
-import { handleAddNewWarehousePopup, postNewBankAccountRequest } from '../../actions';
+import { handleAddNewWarehousePopup, postNewBankAccountRequest } from '../../actions' 
 
 class EditWarehousePopup extends React.Component {
   constructor(props) {
-    super(props);
+    super(props) 
 
     this.state = {
       accountHolderName: '',
@@ -33,7 +33,7 @@ class EditWarehousePopup extends React.Component {
     const { 
       handleAddNewWarehousePopup,  
       postNewBankAccountRequest 
-    } = this.props;
+    } = this.props 
 
     return (					
       <div className="popup-wrapper col-xs-10 center-xs">      
@@ -86,13 +86,13 @@ class EditWarehousePopup extends React.Component {
           </ul>
         </Form>
       </div>
-    );    
+    )     
   }
 }
 
 const mapDispatchToProps = {   
   handleAddNewWarehousePopup,
   postNewBankAccountRequest
-};
+} 
 
-export default connect(null, mapDispatchToProps)(EditWarehousePopup);
+export default connect(null, mapDispatchToProps)(EditWarehousePopup) 

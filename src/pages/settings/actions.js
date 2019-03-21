@@ -1,4 +1,4 @@
-import * as AT from './action-types';
+import * as AT from './action-types' 
 
 export function handleEditPopup(rows) {
   return {
@@ -96,6 +96,14 @@ export function postNewBankAccountRequest(bankAccountData) {
   return {
     type: AT.POST_NEW_BANK_ACCOUNT_REQUEST,
     payload: bankAccountData
+  }
+}
+
+export function postNewProductRequest(inputsValue, id) {
+  console.log(inputsValue, id,'here action')
+  return {
+    type: AT.POST_NEW_PRODUCT_REQUEST,
+    // payload: inputsValue
   }
 }
 

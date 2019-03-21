@@ -1,28 +1,28 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from 'react' 
+import { connect } from 'react-redux' 
 
-import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid';
+import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid' 
 import {
   Grid,
   Table,
 	TableHeaderRow
-} from '@devexpress/dx-react-grid-material-ui';
+} from '@devexpress/dx-react-grid-material-ui' 
 
-import { 	EditDeleteFormatterProvider } from './BankAccountsProviders';
-import { getBankAccountsDataRequest } from '../../actions';
+import { 	EditDeleteFormatterProvider } from './BankAccountsProviders' 
+import { getBankAccountsDataRequest } from '../../actions' 
 
 class BankAccountsTable extends Component {
 	state = {		
 		columns: [
+			{ name: 'editDeleteBtn', title: ' ' },
 			{ name: 'accountHolderName', title: 'Account Holder Name'},
 			{ name: 'accountNumber', title: 'Account Number' },
-			{ name: 'currency', title: 'Currency' },
-			{ name: 'editDeleteBtn', title: ' ' }
+			{ name: 'currency', title: 'Currency' }
 		]
 	}	
 
 	componentDidMount() {
-		this.props.getBankAccountsDataRequest();
+		this.props.getBankAccountsDataRequest() 
 	}
 	
 	render() {
@@ -32,9 +32,9 @@ class BankAccountsTable extends Component {
 			editDeleteColumns,
 			editWarehousePopup,
 			addNewWarehousePopup
-		} = this.props;
+		} = this.props 
 
-		const { columns } = this.state;
+		const { columns } = this.state 
 
 		const GridRoot = props => <Grid.Root {...props} className={ editWarehousePopup || addNewWarehousePopup ? 'hide' : 'col-xs-10 main-table' } />
 		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
@@ -62,13 +62,13 @@ class BankAccountsTable extends Component {
 					rows={ rows }
 				/>
 			</Grid>		
-		);		
+		) 		
 	}
 }
 
 const mapDispatchToProps = {   
 	getBankAccountsDataRequest
-};
+} 
 
 const mapStateToProps = state => {
   return {
@@ -80,4 +80,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(BankAccountsTable);
+export default connect(mapStateToProps, mapDispatchToProps)(BankAccountsTable) 

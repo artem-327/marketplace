@@ -1,27 +1,27 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from 'react' 
+import { connect } from 'react-redux' 
 
-import PropTypes from "prop-types";
-import { DataTypeProvider } from '@devexpress/dx-react-grid';
+import PropTypes from "prop-types" 
+import { DataTypeProvider } from '@devexpress/dx-react-grid' 
 
-import '../styles/settings.css';
+import '../styles/settings.css' 
 
-import Tabs from './Tabs';
-import UsersTable from './UserTable/UsersTable';
-import WarehouseTable from './WarehouseTable/WarehouseTable';
-import BranchTable from './BranchTable/BranchTable';
-import BankAccountsTable from './BankAccountsTable/BankAccountsTable';
-import CreditCardsTable from './CreditCardsTable/CreditCardsTable';
-import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable';
-// import EditBranchPopup from './BranchTable/EditBranchPopup';
-import EditWarehousePopup from './WarehouseTable/EditWarehousePopup';
-import EditProductCatalogPopup from './ProductCatalogTable/EditProductCatalogPopup';
-import AddNewBranchPopup from './BranchTable/AddNewBranchPopup';
-import AddNewWarehousePopup from './WarehouseTable/AddNewWarehousePopup';
-import AddNewCreditCardPopup from './CreditCardsTable/AddNewCreditCardPopup';
-import AddNewBankAccountPopup from './BankAccountsTable/AddNewBankAccountPopup';
-import AddNewProductCatalogPopup from './ProductCatalogTable/AddNewProductCatalogPopup';
-import TablesHandlers from './TablesHandlers';
+import Tabs from './Tabs' 
+import UsersTable from './UserTable/UsersTable' 
+import WarehouseTable from './WarehouseTable/WarehouseTable' 
+import BranchTable from './BranchTable/BranchTable' 
+import BankAccountsTable from './BankAccountsTable/BankAccountsTable' 
+import CreditCardsTable from './CreditCardsTable/CreditCardsTable' 
+import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable' 
+// import EditBranchPopup from './BranchTable/EditBranchPopup' 
+import EditWarehousePopup from './WarehouseTable/EditWarehousePopup' 
+import EditProductCatalogPopup from './ProductCatalogTable/EditProductCatalogPopup' 
+import AddNewBranchPopup from './BranchTable/AddNewBranchPopup' 
+import AddNewWarehousePopup from './WarehouseTable/AddNewWarehousePopup' 
+import AddNewCreditCardPopup from './CreditCardsTable/AddNewCreditCardPopup' 
+import AddNewBankAccountPopup from './BankAccountsTable/AddNewBankAccountPopup' 
+import AddNewProductCatalogPopup from './ProductCatalogTable/AddNewProductCatalogPopup' 
+import TablesHandlers from './TablesHandlers' 
 
 class Settings extends Component {
 	
@@ -30,7 +30,7 @@ class Settings extends Component {
 			editWarehousePopup,
 			addNewWarehousePopup,
 			currentTab
-		} = this.props;
+		} = this.props 
 
 		return (
 			<main className="b-settings-content">
@@ -78,7 +78,7 @@ class Settings extends Component {
 					}
 				</div>
 			</main>
-		);
+		) 
 	}
 }
 
@@ -90,4 +90,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, null)(Settings);
+export default connect(mapStateToProps, null)(Settings) 

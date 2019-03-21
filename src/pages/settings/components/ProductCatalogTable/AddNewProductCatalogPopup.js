@@ -1,100 +1,206 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Control, Form } from 'react-redux-form';
+import React from 'react' 
+import { connect } from 'react-redux' 
+import { Control, Form } from 'react-redux-form'
 
-// import TextField from '@material-ui/core/TextField';
-// import MenuItem from '@material-ui/core/MenuItem';
-
-import { handleAddNewWarehousePopup, postNewBankAccountRequest } from '../../actions';
+import { handleEditPopup, getProductsWithRequiredParam, postNewProductRequest } from '../../actions' 
 
 class AddNewProductCatalogPopup extends React.Component {
-  constructor(props) {
-    super(props);
+  state = {
+    searchProductInputValue: '',
+    productName: '',
+    productNumber: '',
+    productId: '',
+    packagingTypeInputValue: '',
+    packagingSize: '',
+    packagingTypes: [
+      {name: 'gallons'}, 
+      {name: 'kilograms'}, 
+      {name: 'liters'}, 
+      {name:'milliliters'}, 
+      {name: 'pounds'}
+    ],
+    packagingTypeSelectIsOpen: false
+  }
 
-    this.state = {
-      searchValue: '',
-      productName: '',
-      productNumber: '',
-      productId: '',
-      productType: '',
-      productSize: ''
+  componentDidUpdate(prevProps, prevState) {
+    if(this.state.searchProductInputValue !== prevState.searchProductInputValue) {
+      if(this.state.searchProductInputValue.length < 3) return;
+      this.props.getProductsWithRequiredParam(this.state.searchProductInputValue)
     }
   }
 
+  handleSearchInputValue = e => {
+    this.setState({
+      searchProductInputValue: e.target.value
+    })
+  }
+
+  handleProductInputsValue = stateKey => e => {
+    this.setState({
+      [stateKey]: e.target.value
+    })
+  }
+
+  handleChosenProduct = (e) => {
+    const targetId = Number(e.target.getAttribute('data-id')) 
+    this.props.editPopupSearchProducts.forEach(item => {
+      if(item.id === targetId){
+        return this.setState({
+          productId: item.productId
+        })
+      }
+    })   
+  }
+
+  handleProductsRequest = e => {
+    if (e.target.value.length < 3) return;
+    this.props.getProductsWithRequiredParam(e.target.value) 
+  }
+
+  setCurrentPackagingTypeValue = e => {
+    this.setState({
+      packagingTypeInputValue: e.target.innerText
+    })
+  }
+
+  popupPackagingIsOpenHandler = () => {
+    this.setState({
+      packagingTypeSelectIsOpen: !this.state.packagingTypeSelectIsOpen
+    })
+  }
+
   render() {
+    const { handleEditPopup, handleSubmitEditPopup, popupValues, editPopupSearchProducts } = this.props 
     const {
-      searchValue,
       productName,
       productNumber,
       productId,
-      productType,
-      productSize
-    } = this.state
-    const { 
-      handleAddNewWarehousePopup,  
-      postNewBankAccountRequest 
-    } = this.props;
+      packagingTypeInputValue,
+      packagingTypes,
+      packagingSize,
+      searchProductInputValue
+    } = this.state 
 
     return (					
       <div className="popup-wrapper col-xs-10 center-xs">      
         <Form 
-          model="forms.settingsPopup.addNewBankAccount" 
-          onSubmit={ (value) => postNewBankAccountRequest(value) }
-          className="b-popup col-xs-10"
+          model="forms.settingsPopup.newProduct" 
+          onSubmit={ value => postNewProductRequest(value, productId) }
+          className="b-popup col-xs-8"
         >    
-          <h2>{'Bank Account'} Profile</h2>
-          <ul>
+          <h2>{'Warehouse'} Profile</h2>
+          <ul className="">
             <li className="inputs-wrapper">
-              <label className="settings-popup-label name" htmlFor="product-search">                        
+              <label className="b-product-search settings-popup-label" htmlFor="product-search">
                 CAS Number / Product Search
-                <input className="popup-input" id="product-search" defaultValue={ searchValue } />
+                <input 
+                  className="popup-input" 
+                  id="product-search" 
+                  value={ searchProductInputValue }
+                  onChange={ e => this.handleSearchInputValue(e) || this.handleProductsRequest(e) }
+                  autoComplete="off"
+                />
+                {
+                  editPopupSearchProducts.length !== 0 ? 
+                  <ul className="b-product-search__found-products">
+                    {
+                      editPopupSearchProducts.map(product => {
+                        return (
+                          <li
+                            className="product-item" 
+                            value={ product.productName }
+                            key={ product.id }
+                            data-id={ product.id }
+                            onClick={ e => this.handleChosenProduct(e) }
+                          >
+                            { product.productName }
+                          </li>
+                        )
+                      })
+                    }
+                  </ul> 
+                  : null
+                }
               </label>            
             </li>
             <li className="inputs-wrapper">
               <label className="settings-popup-label name" htmlFor="product-name">                        
                 Product Name
-                <Control.text model=".accountHolderName" className="popup-input" id="product-name" defaultValue={ productName } />
+                <Control.text model=".productName" className="popup-input" id="product-name" value={ productName } onChange={ this.handleProductInputsValue('productName') } />
               </label>
               <label className="settings-popup-label address" htmlFor="product-number">
                 Product Number
-                <Control.text model=".accountHolderType" className="popup-input" id="product-number" defaultValue={ productNumber } />
+                <Control.text model=".productNumber" className="popup-input" id="product-number" value={ productNumber } onChange={ this.handleProductInputsValue('productNumber') } />
               </label>
-              <label className="settings-popup-label city" htmlFor="product-id">
+              {/* <label className="settings-popup-label city" htmlFor="product-id">
                 Product ID
-                <Control.text model=".accountNumber" className="popup-input" id="product-id" defaultValue={ productId } />
-              </label>
+                <Control.text model=".accountNumber" className="popup-input" id="product-id" value={ productId } onChange={ this.handleProductInputsValue('productId') } />
+              </label> */}
             </li>
             <li className="inputs-wrapper">
-              <label className="settings-popup-label state" htmlFor="product-packaging-type">  
+              <label className="settings-popup-label packaging-type" htmlFor="product-packaging-type">  
                 Packaging Type
-                <Control.text model=".country" className="popup-input" id="product-packaging-type" defaultValue={ productType } />
+                <Control.text 
+                  model=".packagingType" 
+                  className="popup-input" 
+                  id="product-packaging-type" 
+                  autoComplete="off" 
+                  value={ packagingTypeInputValue }                
+                  onClick={ this.popupPackagingIsOpenHandler } 
+                  placeholder="Select"  
+                />
+                {
+                  this.state.packagingTypeSelectIsOpen ?
+                    <ul className='dropdown-packaging-types' style={{ height: 39 * packagingTypes.length }}>
+                        {
+                          this.state.packagingTypes.map((unit, index) => {
+                            return (
+                              <li 
+                                key={ index } 
+                                onClick={ (e) => this.setCurrentPackagingTypeValue(e) }
+                                value={ unit.name }
+                              >
+                                { unit.name }
+                              </li>
+                            )
+                          })
+                        }
+                    </ul> 
+                  : null
+                }
               </label>
               <label className="settings-popup-label zip-code" htmlFor="product-packaging-size">
                 Packaging Size
-                <Control.text model=".currency" className="popup-input" id="product-packaging-size" defaultValue={ productSize } />
+                <Control.text model=".packagingSize" className="popup-input" id="product-packaging-size" value={ packagingSize } onChange={ this.handleProductInputsValue('packagingSize') } />
               </label>
             </li>
-            <li className="add-warehouse-inputs-wrapper">                         
-              <div className="buttons-wrapper">
-                <input 
-                  type="button" 
-                  defaultValue="Cancel"
-                  onClick={ handleAddNewWarehousePopup }
-                  className="cancel-popup-btn"
-                />
-                <button className="save-btn">Save</button>
-              </div>
-            </li>          
+            <li className="inputs-wrapper buttons-wrapper">
+              <input 
+                type="button" 
+                value="Cancel"
+                onClick={ handleEditPopup }
+                className="cancel-popup-btn"
+              />
+              <button type="submit" className="submit-popup-btn" >Save</button> 
+            </li>
           </ul>
         </Form>
       </div>
-    );    
+    )     
   }
 }
 
 const mapDispatchToProps = {   
-  handleAddNewWarehousePopup,
-  postNewBankAccountRequest
-};
+  handleEditPopup,
+  postNewProductRequest,
+  getProductsWithRequiredParam
+} 
 
-export default connect(null, mapDispatchToProps)(AddNewProductCatalogPopup);
+const mapStateToProps = state => {
+  return {
+    popupValues: state.settings.popupValues,
+    editPopupSearchProducts: state.settings.editPopupSearchProducts
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddNewProductCatalogPopup) 

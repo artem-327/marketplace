@@ -146,6 +146,20 @@ input {
   font-family: $helvetica-roman;
   font-size: 14px !important;
   color: $grey-color !important;
+
+  &:first-child {
+    overflow: visible;
+  }
+
+  .three-dots-menu {
+    left: 65px;
+  }
+
+  .three-dots-menu__opener {
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+  }
 }
 
 .wrapper-permissions {
@@ -176,49 +190,6 @@ input {
 
 .search-input {
   width: 100px;
-}
-
-.editDelete-btn {
-  width: 100%;
-  background: no-repeat 50% 50%;
-  background-image: url("../../../images/data-table/3dots.png");
-  background-size: 1em;
-  -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  transform: rotate(90deg);
-}
-
-.editDelete-wrapper:hover .handlers-row-menu {
-  display: flex;
-}
-
-.handlers-row-menu {
-  position: absolute;
-  display: none;
-  flex-direction: column;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fff;
-  -webkit-box-shadow: 0px 3px 12px 0px rgba(0,0,0,0.75);
-  -moz-box-shadow: 0px 3px 12px 0px rgba(0,0,0,0.75);
-  box-shadow: 0px 3px 12px 0px rgba(0,0,0,0.75);
-  padding: 0;  
-  
-  &__btn {
-    cursor: pointer;
-    width: 5em;
-    padding: 0 1em;
-    border: none;
-    background: transparent;
-    color: #000000;
-
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.08);
-    }
-  }
 }
 
 //edit popup
@@ -283,10 +254,11 @@ input {
   }
 }
 
-.settings-popup-label {
+.settings-popup-label {  
   display: inline-block;
   margin: 0 1.5em 1.18em 0;
   font-size: 12px;
+  flex: 1;
 }
 
 .popup-input {
@@ -314,12 +286,14 @@ input {
     border: 1px solid $light-50-grey-color;
     border-radius: 0 0 4px 4px;
     overflow-y: auto;
+    z-index: 10;
   }
 
   .product-item {    
     height: 42px;
     font-size: 16px;
     padding: 10px;
+    cursor: pointer;
 
     &:hover {
       background-color: $light-50-grey-color;
@@ -328,6 +302,37 @@ input {
 
   &:hover &__found-products {
     display: block;
+  }
+}
+
+.packaging-type {
+  position: relative;
+  z-index: 1;
+}
+
+.dropdown-packaging-types {
+  position: absolute;
+  top: 58px;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  width: 100%;
+  border: 1px solid #289ada;
+  border-top: none;
+
+  li {
+    flex: 1;
+    padding: 12px 9px;
+    font-size: 0.875rem;
+    line-height: 1.1429;
+
+    &:hover {
+      background-color: #289ada;
+      color: white;
+      cursor: pointer;
+      box-shadow: none;
+      outline: none;
+    }
   }
 }
 

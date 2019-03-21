@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios' 
 
 export default {
     getUsers: () => axios.get('/prodex/api/users').then(response => response.data),
@@ -12,6 +12,7 @@ export default {
     postNewWarehouse: body => axios.post('/prodex/api/branches/', body),
     postNewCreditCard: body => axios.post('/prodex/api/payments/cards/add', body),
     postNewBankAccount: body => axios.post('/prodex/api/payments/bank-accounts/add', body),
+    postNewProduct: body => axios.post('/prodex/api/product-templates', body),
 
     putWarehouse: (branchId, body) => axios.put(`/prodex/api/branches/${branchId}`, body ),
 

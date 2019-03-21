@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { Control, Form } from 'react-redux-form';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
+import React, { Component } from 'react' 
+import { connect } from 'react-redux' 
+import { Control, Form } from 'react-redux-form'
 
-import { handleEditPopup, handleSubmitEditPopup, getProductsWithRequiredParam } from '../../actions';
+import { handleEditPopup, handleSubmitEditPopup, getProductsWithRequiredParam } from '../../actions' 
 
 class EditProductCatalogPopup extends React.Component {
   state = {
@@ -14,7 +12,14 @@ class EditProductCatalogPopup extends React.Component {
     productId: '',
     packagingType: '',
     packagingSize: ''
-  };
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if(this.state.searchProductInputValue !== prevState.searchProductInputValue) {
+      if(this.state.searchProductInputValue.length < 3) return;
+      this.props.getProductsWithRequiredParam(this.state.searchProductInputValue)
+    }
+  }
 
   handleSearchInputValue = e => {
     this.setState({
@@ -29,36 +34,36 @@ class EditProductCatalogPopup extends React.Component {
   }
 
   handleChosenProduct = (e) => {
-    const itemId = Number(e.target.getAttribute('data-id'));
-    const chosenItem = this.props.editPopupSearchProducts.filter(item => {
-      return item.id === itemId;
-    });
-    // const item = ...chosenItem
-
-    this.setState({
-      productName: chosenItem.productName,
-      productNumber: chosenItem.productNumber,
-      productId: chosenItem.productId,
-      packagingType: chosenItem.packagingType,
-      packagingSize: chosenItem.packagingSize
-    }, () => console.log(this.state, 354))
+    const targetId = Number(e.target.getAttribute('data-id')) 
+    this.props.editPopupSearchProducts.forEach(item => {
+      if(item.id === targetId){
+        return this.setState({
+          searchProductInputValue: item.productName,
+          productName: item.productName,
+          productNumber: item.productNumber === undefined ? '' : item.productNumber,
+          productId: item.productId,
+          packagingType: item.packagingType,
+          packagingSize: item.packagingSize
+        })
+      }
+    })
   }
 
   handleProductsRequest = e => {
-    if(e.target.value.length < 3) return;
-    this.props.getProductsWithRequiredParam(e.target.value);
+    if(e.target.value.length < 3) return 
+    this.props.getProductsWithRequiredParam(e.target.value) 
   }
 
   render() {
-    const { handleEditPopup, handleSubmitEditPopup, popupValues, searchProductInputValue, editPopupSearchProducts } = this.props;
-    const { 
-      productsArr,
+    const { handleEditPopup, handleSubmitEditPopup, popupValues, editPopupSearchProducts } = this.props 
+    const {
       productName,
       productNumber,
       productId,
       packagingType,
-      packagingSize
-    } = this.state;
+      packagingSize,
+      searchProductInputValue
+    } = this.state 
 
     return (					
       <div className="popup-wrapper col-xs-10 center-xs">      
@@ -133,12 +138,12 @@ class EditProductCatalogPopup extends React.Component {
                 onClick={ handleEditPopup }
                 className="cancel-popup-btn"
               />
-              <button className="submit-popup-btn" >Save Mapping</button> 
+              <button className="submit-popup-btn" >Save</button> 
             </li>
           </ul>
         </Form>
       </div>
-    );    
+    )     
   }
 }
 
@@ -146,7 +151,7 @@ const mapDispatchToProps = {
   handleEditPopup,
   handleSubmitEditPopup,
   getProductsWithRequiredParam
-};
+} 
 
 const mapStateToProps = state => {
   return {
@@ -155,4 +160,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditProductCatalogPopup);
+export default connect(mapStateToProps, mapDispatchToProps)(EditProductCatalogPopup) 

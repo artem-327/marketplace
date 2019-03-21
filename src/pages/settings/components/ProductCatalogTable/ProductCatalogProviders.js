@@ -1,7 +1,7 @@
-import React from 'react';
+import React from 'react' 
 
-import { DataTypeProvider } from '@devexpress/dx-react-grid';
-import { editDeleteCellFormatter } from './ProductCatalogFormatters';
+import { DataTypeProvider } from '@devexpress/dx-react-grid' 
+import { editDeleteCellFormatter } from './ProductCatalogFormatters' 
 
 const makeFormatterComponent = component => props => (
 	<DataTypeProvider
@@ -9,4 +9,4 @@ const makeFormatterComponent = component => props => (
     	{...props}	
 		/>
 )
-export const EditDeleteFormatterProvider = makeFormatterComponent( editDeleteCellFormatter );
+export const EditDeleteFormatterProvider = makeFormatterComponent( editDeleteCellFormatter ) 
