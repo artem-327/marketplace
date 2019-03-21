@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from 'react' 
+import { connect } from 'react-redux' 
 
-import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid';
+import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid' 
 import {
   Grid,
   Table,
@@ -11,19 +11,19 @@ import {
 
 
 
-import { 	EditDeleteFormatterProvider } from './WarehouseTableProviders';
-import { getWarehousesDataRequest } from '../../actions';
+import { 	EditDeleteFormatterProvider } from './WarehouseTableProviders' 
+import { getWarehousesDataRequest } from '../../actions' 
 
 class WarehouseTable extends Component {
 	
 	state = {		
 		columns: [
-			{ name: 'warehouseName', title: 'Warehouse Name'},
+			{ name: 'editDeleteBtn', title: ' ' },
+			{ name: 'warehouseName', title: 'branch Name'},
 			{ name: 'address', title: 'Address' },
-			{ name: 'contactName', title: 'Contact name' },
+			{ name: 'contactName', title: 'Contact Name' },
 			{ name: 'phone', title: 'Phone' },
-			{ name: 'email', title: 'E-mail' },
-			{ name: 'editDeleteBtn', title: ' ' }
+			{ name: 'email', title: 'E-mail' }
 		]
 	}
 
@@ -33,8 +33,8 @@ class WarehouseTable extends Component {
 	}
 
 	setTextInputRef = element => {
-		this.textInput = element;
-	};
+		this.textInput = element 
+	} 
 	
 	render() {
 		const {			 
@@ -43,9 +43,9 @@ class WarehouseTable extends Component {
 			editDeleteColumns,
 			editWarehousePopup,
 			addNewWarehousePopup
-		} = this.props;
+		} = this.props 
 
-		const { columns } = this.state;
+		const { columns } = this.state 
 
 		const GridRoot = props => <Grid.Root {...props} className={ editWarehousePopup || addNewWarehousePopup ? 'hide' : 'col-xs-10 main-table' } />
 		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
@@ -72,13 +72,13 @@ class WarehouseTable extends Component {
 					rows={ rows }
 				/>
 			</Grid>		
-		);		
+		) 		
 	}
 }
 
 const mapDispatchToProps = {   
 	getWarehousesDataRequest
-};
+} 
 
 const mapStateToProps = state => {
   return {
@@ -90,4 +90,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WarehouseTable);
+export default connect(mapStateToProps, mapDispatchToProps)(WarehouseTable) 

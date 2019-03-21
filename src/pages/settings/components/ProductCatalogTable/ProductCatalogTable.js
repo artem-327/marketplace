@@ -1,30 +1,30 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { Component } from 'react' 
+import { connect } from 'react-redux' 
 
-import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid';
+import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid' 
 import {
   Grid,
   Table,
 	TableHeaderRow
-} from '@devexpress/dx-react-grid-material-ui';
+} from '@devexpress/dx-react-grid-material-ui' 
 
-import { 	EditDeleteFormatterProvider } from './ProductCatalogProviders';
-import { getProductsCatalogRequest } from '../../actions';
+import { 	EditDeleteFormatterProvider } from './ProductCatalogProviders' 
+import { getProductsCatalogRequest } from '../../actions' 
 
 class ProductCatalogTable extends Component {
 	state = {		
 		columns: [
+			{ name: 'editDeleteBtn', title: ' ' },
 			{ name: 'productName', title: 'Product Name'},
 			{ name: 'productNumber', title: 'Product Number' },
 			{ name: 'productId', title: 'Product ID' },
 			{ name: 'packagingType', title: 'Packaging Type' },
-			{ name: 'packagingSize', title: 'Packaging Size' },
-			{ name: 'editDeleteBtn', title: ' ' }
+			{ name: 'packagingSize', title: 'Packaging Size' }
 		]
 	}	
 
 	componentDidMount() {
-		// this.props.getProductsCatalogRequest();
+		// this.props.getProductsCatalogRequest() 
 	}
 	
 	render() {
@@ -34,9 +34,9 @@ class ProductCatalogTable extends Component {
 			editDeleteColumns,
 			editWarehousePopup,
 			addNewWarehousePopup
-		} = this.props;
+		} = this.props 
 
-		const { columns } = this.state;
+		const { columns } = this.state 
 
 		const GridRoot = props => <Grid.Root {...props} className={ editWarehousePopup || addNewWarehousePopup ? 'hide' : 'col-xs-10 main-table' } />
 		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
@@ -64,13 +64,13 @@ class ProductCatalogTable extends Component {
 					rows={ rows }
 				/>
 			</Grid>		
-		);		
+		) 		
 	}
 }
 
 const mapDispatchToProps = {   
 	getProductsCatalogRequest
-};
+} 
 
 const mapStateToProps = state => {
   return {
@@ -82,4 +82,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductCatalogTable);
+export default connect(mapStateToProps, mapDispatchToProps)(ProductCatalogTable) 

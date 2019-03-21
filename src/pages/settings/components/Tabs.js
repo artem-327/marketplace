@@ -27,7 +27,9 @@ function Tabs(props) {
 const mapStateToProps = state => {
   return {
     tabsNames: state.settings.tabsNames,
-    currentTab: state.settings.currentTab
+    currentTab: state.settings.currentTab,
+    editWarehousePopup: state.settings.editWarehousePopup,
+    addNewWarehousePopup: state.settings.addNewWarehousePopup
   }
 }
 

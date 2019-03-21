@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react' 
 
-import Checkbox from '@material-ui/core/Checkbox';
+import Checkbox from '@material-ui/core/Checkbox' 
 
 export const checkboxFormatter = props => {
 	return (
@@ -13,7 +13,7 @@ export const checkboxFormatter = props => {
 }
 
 export const permissionCellFormatter = ( ({ value }) => {
-	const permissions = [ 'Admin', 'User', 'Super Admin' ];
+	const permissions = [ 'Admin', 'User', 'Super Admin' ] 
 
 	return (		
 		<select 
@@ -31,7 +31,7 @@ export const permissionCellFormatter = ( ({ value }) => {
 			))}
 		</select>	
 	)
-});
+}) 
 
 export const editDeleteCellFormatter = props => {
 
@@ -49,5 +49,5 @@ export const editDeleteCellFormatter = props => {
 				/>
 			</div>
 		</div>		
-	);
+	) 
 }

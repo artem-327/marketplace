@@ -1,12 +1,12 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { Control, Form } from 'react-redux-form';
+import React from 'react' 
+import { connect } from 'react-redux' 
+import { Control, Form } from 'react-redux-form' 
 
-import { handleEditPopup, handleSubmitEditPopup } from '../../actions';
+import { handleEditPopup, handleSubmitEditPopup } from '../../actions' 
 
 function EditBranchPopup(props) {
-  const { handleEditPopup, handleSubmitEditPopup, popupValues } = props;
-  const [ address, city ]  = popupValues.address.split(','); 
+  const { handleEditPopup, handleSubmitEditPopup, popupValues } = props 
+  const [ address, city ]  = popupValues.address.split(',')  
 
   return (					
     <div className="popup-wrapper col-xs-10 center-xs">      
@@ -57,13 +57,13 @@ function EditBranchPopup(props) {
         </ul>
       </Form>
     </div>
-  );
+  ) 
 }
 
 const mapDispatchToProps = {   
   handleEditPopup,
   handleSubmitEditPopup
-};
+} 
 
 const mapStateToProps = state => {
   return {
@@ -71,4 +71,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditWarehousePopup);
+export default connect(mapStateToProps, mapDispatchToProps)(EditWarehousePopup) 

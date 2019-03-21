@@ -125,7 +125,7 @@ class TablesHandlers extends Component {
           Add new { currentTab }
         </button>
       </div>
-    );  
+    )   
   }  
 }
 

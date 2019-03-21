@@ -12,6 +12,7 @@ export default {
     postNewWarehouse: body => api.post('/prodex/api/branches/', body),
     postNewCreditCard: body => api.post('/prodex/api/payments/cards/add', body),
     postNewBankAccount: body => api.post('/prodex/api/payments/bank-accounts/add', body),
+    postNewProduct: body => api.post('/prodex/api/product-templates', body),
 
     putWarehouse: (branchId, body) => api.put(`/prodex/api/branches/${branchId}`, body ),
 

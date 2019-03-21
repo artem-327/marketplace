@@ -1,8 +1,8 @@
-import * as AT from './action-types';
+import * as AT from './action-types' 
   
 export const initialState = {
   editWarehousePopup: false,
-  addNewWarehousePopup: false,
+  addNewWarehousePopup: true,
   popupValues: [],
   usersRows: [],
   warehousesRows: [],
@@ -31,7 +31,7 @@ export const initialState = {
   currentTab: 'Product catalog',
   filterValue: '',
   editPopupSearchProducts: []
-};
+} 
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -67,19 +67,19 @@ export default function reducer(state = initialState, action) {
           phone: "phone",
           homeBranch: user.branch.address.province.name,
           permissions: user.roles.name
-        };
-      });
+        } 
+      }) 
       return {
         ...state,
         usersRows: usersRows,
       }
     }
 
-    case AT.GET_WAREHOUSES_DATA_SUCCESS: {      
+    case AT.GET_WAREHOUSES_DATA_SUCCESS: {
       const warehousesRows = action.payload.map(warehouse => {	
         return (
           {
-            warehouseName: warehouse.company.name,
+            warehouseName: warehouse.name,
             address: warehouse.address.streetAddress + ', ' + warehouse.address.city,
             contactName: warehouse.contact.name,
             phone: warehouse.contact.phone,
@@ -87,7 +87,7 @@ export default function reducer(state = initialState, action) {
             branchId: warehouse.id
           }
         )			
-      });
+      }) 
 
       return {
         ...state,
@@ -99,7 +99,7 @@ export default function reducer(state = initialState, action) {
       const rows = action.payload.map(branch => {	
         return (
           {
-            warehouseName: branch.company.name,
+            warehouseName: branch.name,
             address: branch.address.streetAddress + ', ' + branch.address.city,
             contactName: branch.contact.name,
             phone: branch.contact.phone,
@@ -107,7 +107,7 @@ export default function reducer(state = initialState, action) {
             branchId: branch.id
           }
         )			
-      });
+      }) 
 
       return {
         ...state,
@@ -120,7 +120,7 @@ export default function reducer(state = initialState, action) {
         return (
           {
             id: card.id,
-            cardNumber: card.cardNumber,
+            cardNumber: `**** **** **** ${card.last4}`,
             cvc: card.cvcCheck,
             expirationMonth: card.expMonth,
             expirationYear: card.expYear,
@@ -128,7 +128,7 @@ export default function reducer(state = initialState, action) {
             // cardNumber what does it mean
           }
         )			
-      });
+      }) 
 
       return {
         ...state,
@@ -150,7 +150,7 @@ export default function reducer(state = initialState, action) {
             // accountNumber - what does it mean
           }
         )			
-      });
+      }) 
 
       return {
         ...state,
@@ -169,7 +169,7 @@ export default function reducer(state = initialState, action) {
             packagingSize: product
           }
         )			
-      });
+      }) 
       
       return {
         ...state,
