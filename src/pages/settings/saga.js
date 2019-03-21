@@ -166,30 +166,6 @@ function* putWarehouseWorker({ payload, id }) {
   }
 }
 
-function* putWarehouseWorker({ payload, id }) { 
-  try {
-    const dataBody = {
-      address: {
-        city: payload.address,
-        streetAddress: payload.city,
-        province: 44,
-        zip: "35"
-      },
-      company: 3,
-      contact: {
-        email: payload.email,
-        name: payload.contactName,
-        phone: payload.phone
-      },
-      warehouse: true,
-      warehouseName: payload.warehouseName
-    }
-    yield call(api.putWarehouse, id, dataBody) 
-  } catch(e) {
-    yield console.log("error:", e) 
-  }
-}
-
 function* deleteWarehouseWorker({ payload }) {
   try {
     yield call(api.deleteWarehouse, payload) 

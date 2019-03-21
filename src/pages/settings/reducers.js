@@ -2,7 +2,7 @@ import * as AT from './action-types'
   
 export const initialState = {
   editWarehousePopup: false,
-  addNewWarehousePopup: true,
+  addNewWarehousePopup: false,
   popupValues: [],
   usersRows: [],
   warehousesRows: [],
