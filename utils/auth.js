@@ -2,18 +2,18 @@
 import Cookie from 'js-cookie'
 
 export const setToken = (accessToken) => {
-  if (!process.browser) {
-    return
-  }
+  // if (!process.browser) {
+  //   return
+  // }
   // Cookie.set('user', jwtDecode(idToken))
   // Cookie.set('idToken', idToken)
   Cookie.set('accessToken', accessToken)
 }
 
 export const unsetToken = () => {
-  if (!process.browser) {
-    return
-  }
+  // if (!process.browser) {
+  //   return
+  // }
   
   Cookie.remove('accessToken')
 
