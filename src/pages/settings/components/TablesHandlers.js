@@ -51,9 +51,6 @@ class TablesHandlers extends Component {
                 
               >
                 <Dropdown.Menu>
-                  <Dropdown.Item>English</Dropdown.Item>
-                  <Dropdown.Item>Russian</Dropdown.Item>
-                  <Dropdown.Item>Spanish</Dropdown.Item>
                   {unitedStates.map(option => (
                     <Dropdown.Item key={option.name} value={option.name}>{option.name}</Dropdown.Item> 
                   ))}
