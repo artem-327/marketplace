@@ -1,4 +1,4 @@
-import api from '../../../api/_base'
+import api from '~/api'
 
 import {transformRequestOptions} from "../../utils/functions";
 
