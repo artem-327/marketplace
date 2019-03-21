@@ -5,14 +5,15 @@ const routes = require('./routes')
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = routes.getRequestHandler(app)
+const port = process.env.port || 3000
 
 app.prepare()
 .then(() => {
   express()
     .use(handle)
-    .listen(3000, (err) => {
+    .listen(port, (err) => {
       if (err) throw err
-      console.log('> Ready on http://localhost:3000')
+      console.log('> Ready on http://localhost:'+port)
     })
 })
 .catch((ex) => {

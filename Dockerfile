@@ -47,6 +47,10 @@ RUN npm install
 # Copying source files
 COPY . .
 
+ENV REACT_APP_API_URL=https://test.echoexchange.net/
+ENV PORT=3000
+ENV NODE_ENV=production
+
 # Building app
 RUN npm run build
 

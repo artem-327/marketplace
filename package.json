@@ -73,7 +73,7 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
-    "start": "next start"
+    "start": "node server.js"
   },
   "devDependencies": {
     "react-intl": "^2.8.0"
