@@ -35,7 +35,7 @@
 #RUN /etc/periodic/weekly/certbot-renew.sh
 
 
-FROM node:10
+FROM node:10-alpine
 
 # Setting working directory. All the path will be relative to WORKDIR
 WORKDIR /usr/src/app
