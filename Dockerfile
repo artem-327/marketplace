@@ -47,7 +47,7 @@ RUN npm install --production
 # Copying source files
 COPY . .
 
-ENV REACT_APP_API_URL=https://test.echoexchange.net/
+#ENV REACT_APP_API_URL=https://test.echoexchange.net/
 ENV NODE_ENV=production
 
 # Building app
