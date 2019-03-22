@@ -1,7 +1,7 @@
 const express = require('express')
 const next = require('next')
 const routes = require('./routes')
-const proxy = require('express-http-proxy')
+const proxy = require('http-proxy-middleware')
 const dev = process.env.NODE_ENV !== 'production'
 const nextApp = next({ dev })
 const handle = routes.getRequestHandler(nextApp)
@@ -11,7 +11,7 @@ nextApp.prepare()
 .then(() => {
   const app = express()
 
-  if (!process.env.REACT_APP_API_URL) app.use('/prodex', proxy('http://127.0.0.1:8080'))
+  app.use('/prodex', proxy({ target: process.env.REACT_APP_API_URL || 'localhost:8080', changeOrigin: true }))
 
   app.use(handle).listen(port, (err) => {
     if (err) throw err
