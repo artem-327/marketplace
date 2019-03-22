@@ -39,7 +39,19 @@ class editDeleteCell extends Component {
 					</ul> 
 					: null
 				}
-			</div>		
+			</div>
+			<Dropdown icon='ellipsis vertical'>
+				<Dropdown.Menu>
+					<Dropdown.Item 
+						text='Edit' 
+						onClick={ () => this.props.handleEditPopup(this.props.row }
+					/>
+					<Dropdown.Item 
+						text='Delete' 
+						onClick={ () => this.props.deleteWarehouse(this.props.row.branchId) }
+					/>
+				</Dropdown.Menu>
+			</Dropdown>	
 		) 		
 	}
 }

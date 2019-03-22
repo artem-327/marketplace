@@ -37,7 +37,15 @@ class editDeleteCell extends Component {
 					</ul> 
 					: null
 				}
-			</div>		
+			</div>
+			<Dropdown icon='ellipsis vertical'>
+				<Dropdown.Menu>
+					<Dropdown.Item 
+						text='Delete' 
+						onClick={ () => this.props.deleteBankAccount(this.props.row.id) }
+					/>
+				</Dropdown.Menu>
+			</Dropdown>	
 		) 		
 	}
 }

@@ -6,7 +6,7 @@ import {
   Grid,
   Table,
 	TableHeaderRow
-} from '@devexpress/dx-react-grid-material-ui' 
+} from '~/components/dx-grid-semantic-ui/plugins' 
 
 import { 	EditDeleteFormatterProvider } from './BranchTableProviders' 
 import { getBranchesDataRequest } from '../../actions' 

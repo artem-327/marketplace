@@ -20,23 +20,15 @@ class editDeleteCell extends Component {
 	}
 
 	render() {
-		return (
-			<div className="editDelete-wrapper">			
-				<div onClick={ (e) => this.handler(e) } className="three-dots-menu__opener">
-            <span id='three-dots' className={ this.state.treeDotsIsActive } />
-        </div>
-				{
-					this.state.treeDotsIsOpen ? 
-					<ul className="three-dots-menu">
-						<li
-							onClick={ () => this.props.deleteCreditCard(this.props.row.branchId) }
-						>
-							Delete
-						</li>
-					</ul> 
-					: null
-				}
-			</div>		
+		return (			
+			<Dropdown icon='ellipsis vertical'>
+				<Dropdown.Menu>					
+					<Dropdown.Item 
+						text='Delete' 
+						onClick={ () => this.props.deleteCreditCard(this.props.row.branchId) }
+					/>
+				</Dropdown.Menu>
+			</Dropdown>	
 		) 		
 	}
 }
