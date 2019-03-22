@@ -2,7 +2,7 @@ import * as AT from './action-types'
   
 export const initialState = {
   editWarehousePopup: false,
-  addNewWarehousePopup: true,
+  addNewWarehousePopup: false,
   popupValues: [],
   usersRows: [],
   warehousesRows: [],
@@ -28,7 +28,7 @@ export const initialState = {
     {	name: 'Terms', id: 10 }, 
     {	name: 'Website Controls', id: 11 }
   ],
-  currentTab: 'Product catalog',
+  currentTab: 'Warehouses',
   filterValue: '',
   editPopupSearchProducts: []
 } 

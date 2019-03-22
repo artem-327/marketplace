@@ -41,14 +41,17 @@ class Settings extends Component {
 				<Grid columns='equal'>
 					<Grid.Row>
 						<Grid.Column width={4}>
-							<Tabs />
-							{editWarehousePopup && currentTab === 'Product catalog' ?
-								<EditProductCatalogPopup /> :
-								editWarehousePopup && currentTab === 'Warehouses' ?
-									<EditWarehousePopup /> :
-									editWarehousePopup && currentTab === 'Branches' ?
-										<EditWarehousePopup />
-										: null
+							<Tabs />							
+						</Grid.Column>
+						<Grid.Column>
+							{
+								editWarehousePopup && currentTab === 'Product catalog' ?
+									<EditProductCatalogPopup /> :
+									editWarehousePopup && currentTab === 'Warehouses' ?
+										<EditWarehousePopup /> :
+										editWarehousePopup && currentTab === 'Branches' ?
+											<EditWarehousePopup />
+											: null
 							}
 							{
 								addNewWarehousePopup && currentTab === 'Branches' ?
@@ -63,8 +66,6 @@ class Settings extends Component {
 													<AddNewProductCatalogPopup />
 													: null
 							}
-						</Grid.Column>
-						<Grid.Column>
 							{currentTab === 'Users' ?
 								<UsersTable /> :
 								currentTab === 'Warehouses' ?
