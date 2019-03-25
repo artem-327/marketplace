@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import {withRouter} from 'next/router'
 import {Container, Menu, Icon, Image, Dropdown} from 'semantic-ui-react'
+import styled from 'styled-components'
 import Logo from '~/assets/images/nav/inventory.png'
 import 'semantic-ui-css/semantic.min.css'
 import '~/styles/base.scss'
@@ -9,6 +10,7 @@ import cn from 'classnames'
 import ErrorsHandler from '~/src/utils/errorsHandler'
 
 import PopUp from '~/src/components/PopUp'
+
 
 const MenuLink = withRouter(({router: {pathname}, to, children}) => (
   <Link prefetch href={to}>
@@ -25,7 +27,7 @@ const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
       <meta charSet='utf-8' />
       <meta name='viewport' content='initial-scale=1.0, width=device-width' />
     </Head>
-    <Menu fixed="top" inverted size="large" borderless>
+    <Menu fixed="top" inverted size="large" borderless style={{backgroundColor: '#33373e'}}>
       
       <Container fluid style={{padding: '0 29px'}}>
         <Image src={Logo} style={{margin: '9px 10px 4px 0', height: '23.78px'}}></Image>
