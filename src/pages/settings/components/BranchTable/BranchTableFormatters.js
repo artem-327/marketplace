@@ -5,29 +5,19 @@ import { Dropdown } from 'semantic-ui-react'
 import { handleEditPopup, deleteWarehouse } from '../../actions' 
 
 class editDeleteCell extends Component {
-	state = {
-		treeDotsIsOpen: false,
-		treeDotsIsActive: 'threeDots small'
-	}
-
-	handler	= (e) => {		
-		this.setState({
-			treeDotsIsOpen: !this.state.treeDotsIsOpen,
-			treeDotsIsActive: this.state.treeDotsIsActive === 'threeDots small' ? 'threeDots small active' : 'threeDots small'
-		})
-	}
-
 	render() {
+		const {row, handleEditPopup, deleteWarehouse} = this.props
+
 		return (
 			<Dropdown icon='ellipsis vertical'>
 				<Dropdown.Menu>
 					<Dropdown.Item 
 						text='Edit' 
-						onClick={ () => this.props.handleEditPopup(this.props.row) } 
+						onClick={ () => handleEditPopup(row) } 
 					/>
 					<Dropdown.Item 
 						text='Delete' 
-						onClick={ () => this.props.deleteWarehouse(this.props.row.branchId) }
+						onClick={ () => deleteWarehouse(row.branchId) }
 					/>
 				</Dropdown.Menu>
 			</Dropdown>	
