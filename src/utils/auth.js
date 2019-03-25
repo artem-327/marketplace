@@ -11,12 +11,12 @@ export function withAuth(ComposedComponent) {
         verify(props) {
             if (!props.isAuthenticated && !props.isFetchingIdentity) {
                 if(props.location.pathname !== "/login")
-                    props.history.push("/login");
+                    props.router.push("/login");
             }
             if(!props.isFetchingIdentity && !localStorage.jwtoken) {
                 logout();
                 if(props.location.pathname !== "/login")
-                    props.history.push("/login");
+                    props.router.push("/login");
             }
         }
 
@@ -59,10 +59,11 @@ export function deleteAuthToken() {
 
 export function checkToken(props) {
     //use isFetchingIdentity ?
+    return false;
     if(!props.isFetchingIdentity && !localStorage.jwtoken) {
         logout();
-        if(props.location.pathname !== "/login")
-            props.history.push("/login");
+        if(props.location.pathname !== "/auth/login")
+            props.router.push("/auth/login");
             return true;
     }
     return false;
