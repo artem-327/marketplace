@@ -1,3 +1,9 @@
 body {
   background: #EEE;
 }
+
+// Secondary pointing menu override
+.ui.secondary.vertical.pointing.menu .active.item {
+  border-color: #2599d5;
+  background-color: rgba(37,153,213,.15);
+}
