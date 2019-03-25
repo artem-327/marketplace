@@ -19,7 +19,7 @@ const MenuLink = withRouter(({router: {pathname}, to, children}) => (
 ))
 
 const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
-  <Container fluid style={{backgroundColor: '#ffffff', padding: '47px 0 0'}}>
+  <Container fluid style={{padding: '47px 0 0'}}>
     <PopUp />
     <ErrorsHandler />
     <Head>
