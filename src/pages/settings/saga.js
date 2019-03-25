@@ -123,8 +123,6 @@ function* postNewBankAccountWorker({ payload }) {
 
 function* postNewProductWorker({ payload }) {
   try {
-    console.log('here saga')
-    console.log(payload, 'saga')
     // const productData = {
     //   packaging: {
     //     packagingType: 0,

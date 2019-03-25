@@ -1,7 +1,7 @@
 import React, { Component } from 'react' 
-import { connect } from 'react-redux' 
-import { bindActionCreators } from "redux"
-import {Dropdown} from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { Dropdown } from 'semantic-ui-react'
+
 import { handleEditPopup, deleteWarehouse } from '../../actions' 
 
 class editDeleteCell extends Component {

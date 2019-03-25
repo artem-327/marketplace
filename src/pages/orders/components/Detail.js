@@ -2,16 +2,28 @@ import React, {Component} from 'react'
 import CollapsiblePanel from '../../../components/CollapsiblePanel'
 import '../../../pages/inventory/addInventory/AddInventory.scss'
 import Spinner from "../../../components/Spinner/Spinner"
+import { Grid, Segment, Accordion, Table, List, Label, Button, Icon, Divider } from 'semantic-ui-react'
 
 class Detail extends Component {
+    state = { activeIndexes: [
+            true,
+            true,
+            false,
+            false,
+            false
+        ]}
+
+    constructor(props) {
+        super(props);
+    }
 
     componentDidMount() {
-        let endpointType = this.props.match.params.type === 'sales' ? 'sale' : this.props.match.params.type
-        this.props.loadDetail(endpointType, this.props.match.params.id)
+        let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
+        this.props.loadDetail(endpointType, this.props.router.query.id)
     }
 
     componentDidUpdate() {
-        let endpointType = this.props.match.params.type === 'sales' ? 'sale' : this.props.match.params.type
+        let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
 
         if (this.props.reloadPage)
             this.props.loadDetail(endpointType, this.props.order.id)
@@ -26,302 +38,370 @@ class Detail extends Component {
         }
     }
 
+    handleClick = (e, titleProps) => {
+        const {index} = titleProps
+        const {activeIndexes} = this.state
+
+        activeIndexes[index] = activeIndexes[index] ? false : true
+
+        this.setState({ activeIndexes })
+    }
+
     render() {
-        const {match, order, action, isDetailFetching} = this.props
-        let ordersType = match.params.type.charAt(0).toUpperCase() + match.params.type.slice(1)
+        const {router, order, action, isDetailFetching} = this.props
+        const {activeIndexes} = this.state
+        let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
 
         return (
             <div id="page">
-                <div className='header-top clean left detail-align'>
-                    <h1 className='header inv-header'>{ordersType} Order {isDetailFetching ? '' : '# '+order.id}</h1>
-                </div>
+                <Divider hidden />
+                <Grid verticalAlign='middle' columns='equal'>
+                    <Grid.Column width={6}>
+                        <div className='header-top clean left detail-align'>
+                            <h1 className='header inv-header'>{ordersType} Order {isDetailFetching ? '' : '# '+order.id}</h1>
+                        </div>
+                    </Grid.Column>
+                    <Grid.Column>
+                        <List divided relaxed horizontal size='large' floated='right' style={{whiteSpace: 'nowrap'}}>
+                            <List.Item>
+                                <List.Content>
+                                    <List.Header as='label'>Order Status</List.Header>
+                                    <List.Description as='span'><Label color='red'>{order.orderStatus}</Label></List.Description>
+                                </List.Content>
+                            </List.Item>
+                            <List.Item>
+                                <List.Content>
+                                    <List.Header as='label'>Shipping Status</List.Header>
+                                    <List.Description as='span'>{order.shippingStatus}</List.Description>
+                                </List.Content>
+                            </List.Item>
+                            <List.Item>
+                                <List.Content>
+                                    <List.Header as='label'>Review Status</List.Header>
+                                    <List.Description as='span'>{order.reviewStatus}</List.Description>
+                                </List.Content>
+                            </List.Item>
+                            <List.Item>
+                                <List.Content>
+                                    <List.Header as='label'>Credit Status</List.Header>
+                                    <List.Description as='span'>{order.creditStatus}</List.Description>
+                                </List.Content>
+                            </List.Item>
+                            <List.Item>
+                                <List.Content>
+                                    <List.Header as='label'>Return Status</List.Header>
+                                    <List.Description as='span'>{order.returnStatus}</List.Description>
+                                </List.Content>
+                            </List.Item>
+                            <List.Item>
+                                <List.Content>
+                                    <List.Header as='label'>Payment Status</List.Header>
+                                    <List.Description as='span'>{order.paymentStatus}</List.Description>
+                                </List.Content>
+                            </List.Item>
+                        </List>
+                    </Grid.Column>
+                </Grid>
                 {isDetailFetching ? <Spinner /> : (
                     <>
-                        <ul className="order-statuses">
-                            <li>
-                                <label>Order Status</label>
-                                <span className={order.orderStatus === 'Rejected' ? 'negative' : (order.orderStatus === 'Confirmed' ? 'positive' : '')}>{order.orderStatus}</span>
-                            </li>
-                            <li className="separator"></li>
-                            <li>
-                                <label>Shipping Status</label>
-                                <span>{order.shippingStatus}</span>
-                            </li>
-                            <li className="separator"></li>
-                            <li>
-                                <label>Review Status</label>
-                                <span>{order.reviewStatus}</span>
-                            </li>
-                            <li className="separator"></li>
-                            <li>
-                                <label>Credit Status</label>
-                                <span>{order.creditStatus}</span>
-                            </li>
-                            <li className="separator"></li>
-                            <li>
-                                <label>Return Status</label>
-                                <span>{order.returnStatus}</span>
-                            </li>
-                            <li className="separator"></li>
-                            <li>
-                                <label>Payment Status</label>
-                                <span>{order.paymentStatus}</span>
-                            </li>
-                        </ul>
-
-                        <div className="clearfix"></div>
-
                         {action && (ordersType === 'Sales') ? /* This action is not prepared for Purchase Orders yet! */ (
-                            <form className='action-required'>
-                                <h3>Action Required</h3>
-                                <p>This order is in pending status. Please select &quot;accept&quot; to move forward with the order. If you press &quot;reject&quot; the order will be cancelled. </p>
-                                <div className="buttons-wrapper">
-                                    <button type="button" className="button blue" value={order.id} onClick={() => this.props.confirmOrder(order.id)}>Accept</button>
-                                    <button type="button" className="button grey" value={order.id} onClick={() => this.props.rejectOrder(order.id)}>Decline</button>
-                                </div>
-                            </form>
+                            <Segment color='blue'>
+                                <Grid verticalAlign='middle' columns='equal'>
+                                    <Grid.Column width={13}>
+                                        <h3>Action Required</h3>
+                                        <p>This order is in pending status. Please select &quot;accept&quot; to move forward with the order. If you press &quot;reject&quot; the order will be cancelled. </p>
+                                    </Grid.Column>
+                                    <Grid.Column>
+                                        <Grid verticalAlign='middle' columns='equal'>
+                                            <Grid.Column>
+                                                <Button primary fluid size='large' value={order.id} onClick={() => this.props.confirmOrder(order.id)}>Accept</Button>
+                                            </Grid.Column>
+                                            <Grid.Column>
+                                                <Button basic fluid size='large' value={order.id} onClick={() => this.props.rejectOrder(order.id)}>Decline</Button>
+                                            </Grid.Column>
+                                        </Grid>
+                                    </Grid.Column>
+                                </Grid>
+                            </Segment>
                         ) : ''}
 
-                        <CollapsiblePanel header="Order Info">
-                            <div className='row order-space'>
-                                <div className='col-md-6'>
-                                    <dl className='data-list'>
-                                        <dt>{ordersType} Order</dt>
-                                        <dd>{order.id}</dd>
-                                        <dt>{ordersType.charAt(0)}O Date</dt>
-                                        <dd>{order.orderDate}</dd>
-                                        <dt>{ordersType.charAt(0)}O Confirmation Date</dt>
-                                        <dd>{order.confirmationDate}</dd>
-                                        <dt>Order Acceptance Date</dt>
-                                        <dd>{order.acceptanceDate}</dd>
-                                    </dl>
-                                </div>
-                                <div className='col-md-6 border-left'>
-                                    <dl className='data-list'>
-                                        <dt>Seller Rejection Date</dt>
-                                        <dd>{order.sellerRejectionDate}</dd>
-                                        <dt>Buyer Rejection Date</dt>
-                                        <dd>{order.buyerRejectionDate}</dd>
-                                        {ordersType === 'Purchase' ? (
-                                            <>
-                                                <dt>Created By</dt>
+                        <Divider hidden />
+
+                        <Accordion defaultActiveIndex={[0,1]} styled fluid>
+                            <Accordion.Title active={activeIndexes[0]} index={0} onClick={this.handleClick}>
+                                <Icon name={'chevron ' + (activeIndexes[0] ? 'down' : 'up')}  size='large' color={activeIndexes[0] ? 'blue' : 'black'}/>
+                                Order Info
+                            </Accordion.Title>
+                            <Accordion.Content active={activeIndexes[0]}>
+                                <Grid divided='horizontally'>
+                                    <Grid.Row columns={2}>
+                                        <Grid.Column>
+                                            <dl className='data-list'>
+                                                <dt><strong>{ordersType} Order</strong></dt>
+                                                <dd>{order.id}</dd>
+                                                <dt><strong>{ordersType.charAt(0)}O Date</strong></dt>
+                                                <dd>{order.orderDate}</dd>
+                                                <dt><strong>{ordersType.charAt(0)}O Confirmation Date</strong></dt>
+                                                <dd>{order.confirmationDate}</dd>
+                                                <dt><strong>Order Acceptance Date</strong></dt>
+                                                <dd>{order.acceptanceDate}</dd>
+                                            </dl>
+                                        </Grid.Column>
+                                        <Grid.Column>
+                                            <dl className='data-list'>
+                                                <dt><strong>Seller Rejection Date</strong></dt>
+                                                <dd>{order.sellerRejectionDate}</dd>
+                                                <dt><strong>Buyer Rejection Date</strong></dt>
+                                                <dd>{order.buyerRejectionDate}</dd>
+                                                {ordersType === 'Purchase' ? (
+                                                    <>
+                                                        <dt>Created By</dt>
+                                                        <dd></dd>
+                                                    </>
+                                                ) : ''}
+                                            </dl>
+                                        </Grid.Column>
+                                    </Grid.Row>
+                                </Grid>
+                            </Accordion.Content>
+
+                            <Accordion.Title active={activeIndexes[1]} index={1} onClick={this.handleClick}>
+                                <Icon name={'chevron ' + (activeIndexes[1] ? 'down' : 'up')}  size='large' color={activeIndexes[1] ? 'blue' : 'black'}/>
+                                Product Info
+                            </Accordion.Title>
+                            <Accordion.Content active={activeIndexes[1]}>
+                                <Grid divided='horizontally'>
+                                    <Grid.Row columns={2}>
+                                        <Grid.Column>
+                                            <dl className='data-list'>
+                                                <dt><strong>Chemical Name</strong></dt>
                                                 <dd></dd>
-                                            </>
-                                        ) : ''}
-                                    </dl>
-                                </div>
-                            </div>
-                        </CollapsiblePanel>
-
-                        <CollapsiblePanel header="Product Info">
-                            <div className='row order-space'>
-                                <div className='col-md-6'>
-                                    <dl className='data-list'>
-                                        <dt>Chemical Name</dt>
-                                        <dd></dd>
-                                        <dt>Product Name</dt>
-                                        <dd>{order.productName}</dd>
-                                        <dt>Product Number</dt>
-                                        <dd>{order.productCode}</dd>
-                                        <dt>Packaging</dt>
-                                        <dd>{order.size}#{order.packaging}</dd>
-                                        <dt>Total PKG</dt>
-                                        <dd>{order.totalPkg}</dd>
-                                        <dt>Quantity Ordered</dt>
-                                        <dd>{order.quantityOrdered}</dd>
-                                        <dt>Unit</dt>
-                                        <dd>{order.unit}</dd>
-                                        <dt>Unit Price</dt>
-                                        <dd></dd>
-
-                                        {ordersType === 'Sales' ? (
-                                            <>
-                                                <dt>Unit Cost</dt>
+                                                <dt><strong>Product Name</strong></dt>
+                                                <dd>{order.productName}</dd>
+                                                <dt><strong>Product Number</strong></dt>
+                                                <dd>{order.productCode}</dd>
+                                                <dt><strong>Packaging</strong></dt>
+                                                <dd>{order.size}#{order.packaging}</dd>
+                                                <dt><strong>Total PKG</strong></dt>
+                                                <dd>{order.totalPkg}</dd>
+                                                <dt><strong>Quantity Ordered</strong></dt>
+                                                <dd>{order.quantityOrdered}</dd>
+                                                <dt><strong>Unit</strong></dt>
+                                                <dd>{order.unit}</dd>
+                                                <dt><strong>Unit Price</strong></dt>
                                                 <dd></dd>
-                                            </>
-                                        ) : ''}
-                                    </dl>
-                                </div>
-                                <div className='col-md-6 border-left'>
-                                    <div className='left'>
-                                        {ordersType === 'Sales' ? (
-                                            <>
-                                                <table className='order-total'>
-                                                    <thead>
-                                                        <tr>
-                                                            <th colSpan="2">Order Total</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <th>Amount</th>
-                                                            <td>{order.amount}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Echo Fees ({order.feesPercent}%)</th>
-                                                            <td></td>
-                                                        </tr>
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <th>Total</th>
-                                                            <td>{order.total}</td>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
-                                                <table className='order-total'>
-                                                    <tbody>
-                                                        <tr>
-                                                            <th>COGS</th>
-                                                            <td></td>
-                                                        </tr>
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <th>Gross Profit</th>
-                                                            <td></td>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
-                                            </>
-                                        ) : (
-                                          <>
-                                              <table className='order-total'>
-                                                  <thead>
-                                                      <tr>
-                                                          <th colSpan="2">Order Total</th>
-                                                      </tr>
-                                                  </thead>
-                                                  <tbody>
-                                                      <tr>
-                                                          <th>Amount</th>
-                                                          <td>{order.amount}</td>
-                                                      </tr>
-                                                      <tr>
-                                                          <th>Subtotal</th>
-                                                          <td></td>
-                                                      </tr>
-                                                      <tr>
-                                                          <th>Freight</th>
-                                                          <td></td>
-                                                      </tr>
-                                                      <tr>
-                                                          <th>Other</th>
-                                                          <td></td>
-                                                      </tr>
-                                                      <tr>
-                                                          <th>Delivery Cost</th>
-                                                          <td></td>
-                                                      </tr>
-                                                      <tr>
-                                                          <th>Delivery Total</th>
-                                                          <td></td>
-                                                      </tr>
-                                                  </tbody>
-                                                  <tfoot>
-                                                      <tr>
-                                                          <th>Total</th>
-                                                          <td>{order.total}</td>
-                                                      </tr>
-                                                  </tfoot>
-                                              </table>
-                                          </>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </CollapsiblePanel>
 
-                        <CollapsiblePanel header="Pick Up Info" open={false}>
-                            <div className='row order-space'>
-                                <div className='col-md-6'>
-                                    <dl className='data-list'>
-                                        <dt>Pick-Up Address</dt>
-                                        <dd></dd>
-                                    </dl>
-                                </div>
-                                <div className='col-md-6 border-left'>
-                                    <dl className='data-list'>
-                                        <dt>Shipping Contact</dt>
-                                        <dd></dd>
-                                        <dt>Contact Number</dt>
-                                        <dd></dd>
-                                        <dt>Contact E-Mail</dt>
-                                        <dd></dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        </CollapsiblePanel>
+                                                {ordersType === 'Sales' ? (
+                                                    <>
+                                                        <dt><strong>Unit Cost</strong></dt>
+                                                        <dd></dd>
+                                                    </>
+                                                ) : ''}
+                                            </dl>
+                                        </Grid.Column>
+                                        <Grid.Column>
+                                            <div className='left'>
+                                                {ordersType === 'Sales' ? (
+                                                    <>
+                                                        <Table basic='very' collapsing singleLine className='order-total'>
+                                                            <Table.Header>
+                                                                <Table.Row>
+                                                                    <Table.HeaderCell colSpan="2"><strong>Order Total</strong></Table.HeaderCell>
+                                                                </Table.Row>
+                                                            </Table.Header>
+                                                            <Table.Body>
+                                                                <Table.Row>
+                                                                    <Table.Cell><strong>Amount</strong></Table.Cell>
+                                                                    <Table.Cell textAlign='right'>{order.amount}</Table.Cell>
+                                                                </Table.Row>
+                                                                <Table.Row>
+                                                                    <Table.Cell><strong>Echo Fees ({order.feesPercent}%)</strong></Table.Cell>
+                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                </Table.Row>
+                                                            </Table.Body>
+                                                            <Table.Footer>
+                                                                <Table.Row>
+                                                                    <Table.HeaderCell><strong>Total</strong></Table.HeaderCell>
+                                                                    <Table.HeaderCell textAlign='right'><strong>{order.total}</strong></Table.HeaderCell>
+                                                                </Table.Row>
+                                                            </Table.Footer>
+                                                        </Table>
 
-                        <CollapsiblePanel header="Shipping" open={false}>
-                            <div className='row order-space'>
-                                <div className='col-md-6'>
-                                    <dl className='data-list'>
-                                        <dt>Shipping Status</dt>
-                                        <dd>{order.shippingStatus}</dd>
-                                        <dt>Ship To</dt>
-                                        <dd>{order.shipTo}</dd>
-                                        <dt>Ship To Address</dt>
-                                        <dd></dd>
-                                        <dt>Ship Date</dt>
-                                        <dd></dd>
-                                        <dt>Delivery Date</dt>
-                                        <dd></dd>
-                                        <dt>Return Ship Date</dt>
-                                        <dd></dd>
-                                        <dt>Return Delivery Date</dt>
-                                        <dd></dd>
-                                    </dl>
-                                </div>
-                                <div className='col-md-6 border-left'>
-                                    <dl className='data-list'>
-                                        <dt>Carrier</dt>
-                                        <dd>{order.carrier}</dd>
-                                        <dt>Service</dt>
-                                        <dd></dd>
-                                        <dt>Pro Number</dt>
-                                        <dd></dd>
-                                        <dt>Incoterms</dt>
-                                        <dd></dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        </CollapsiblePanel>
+                                                        <Divider hidden />
 
-                        <CollapsiblePanel header="Payment / Customer" open={false}>
-                            <div className='row order-space'>
-                                <div className='col-md-6'>
-                                    <dl className='data-list'>
-                                        <dt>Payment Status</dt>
-                                        <dd></dd>
-                                        <dt>Payment Send Date</dt>
-                                        <dd></dd>
-                                        <dt>Payment Initiation Date</dt>
-                                        <dd></dd>
-                                        <dt>Payment Received Date</dt>
-                                        <dd></dd>
-                                        <dt>Refund Date</dt>
-                                        <dd></dd>
-                                        <dt>Terms</dt>
-                                        <dd></dd>
-                                    </dl>
-                                </div>
-                                <div className='col-md-6 border-left'>
-                                    <dl className='data-list'>
-                                        <dt>Vendor Name</dt>
-                                        <dd></dd>
-                                        <dt>Vendor Address</dt>
-                                        <dd></dd>
-                                        <dt>Vendor Phone</dt>
-                                        <dd></dd>
-                                        <dt>Vendor E-Mail</dt>
-                                        <dd></dd>
-                                        <dt>Vendor Contact</dt>
-                                        <dd></dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        </CollapsiblePanel>
+                                                        <Table basic='very' collapsing singleLine className='order-total'>
+                                                            <Table.Body>
+                                                                <Table.Row>
+                                                                    <Table.Cell><strong>COGS</strong></Table.Cell>
+                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                </Table.Row>
+                                                            </Table.Body>
+                                                            <Table.Footer>
+                                                                <Table.Row>
+                                                                    <Table.HeaderCell><strong>Gross Profit</strong></Table.HeaderCell>
+                                                                    <Table.HeaderCell textAlign='right'><strong></strong></Table.HeaderCell>
+                                                                </Table.Row>
+                                                            </Table.Footer>
+                                                        </Table>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Table basic='very' collapsing singleLine className='order-total'>
+                                                            <Table.Header>
+                                                                <Table.Row>
+                                                                    <Table.HeaderCell colSpan="2"><strong>Order Total</strong></Table.HeaderCell>
+                                                                </Table.Row>
+                                                            </Table.Header>
+                                                            <Table.Body>
+                                                                <Table.Row>
+                                                                    <Table.Cell><strong>Amount</strong></Table.Cell>
+                                                                    <Table.Cell textAlign='right'>{order.amount}</Table.Cell>
+                                                                </Table.Row>
+                                                                <Table.Row>
+                                                                    <Table.Cell><strong>Subtotal</strong></Table.Cell>
+                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                </Table.Row>
+                                                                <Table.Row>
+                                                                    <Table.Cell><strong>Freight</strong></Table.Cell>
+                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                </Table.Row>
+                                                                <Table.Row>
+                                                                    <Table.Cell><strong>Other</strong></Table.Cell>
+                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                </Table.Row>
+                                                                <Table.Row>
+                                                                    <Table.Cell><strong>Delivery Cost</strong></Table.Cell>
+                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                </Table.Row>
+                                                                <Table.Row>
+                                                                    <Table.Cell><strong>Delivery Total</strong></Table.Cell>
+                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                </Table.Row>
+                                                            </Table.Body>
+                                                            <Table.Footer>
+                                                                <Table.Row>
+                                                                    <Table.HeaderCell><strong>Total</strong></Table.HeaderCell>
+                                                                    <Table.HeaderCell textAlign='right'><strong>{order.total}</strong></Table.HeaderCell>
+                                                                </Table.Row>
+                                                            </Table.Footer>
+                                                        </Table>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </Grid.Column>
+                                    </Grid.Row>
+                                </Grid>
+                            </Accordion.Content>
+
+                            <Accordion.Title active={activeIndexes[2]} index={2} onClick={this.handleClick}>
+                                <Icon name={'chevron ' + (activeIndexes[2] ? 'down' : 'up')}  size='large' color={activeIndexes[2] ? 'blue' : 'black'}/>
+                                Pick Up Info
+                            </Accordion.Title>
+                            <Accordion.Content active={activeIndexes[2]}>
+                                <Grid divided='horizontally'>
+                                    <Grid.Row columns={2}>
+                                        <Grid.Column>
+                                            <dl className='data-list'>
+                                                <dt><strong>Pick-Up Address</strong></dt>
+                                                <dd></dd>
+                                            </dl>
+                                        </Grid.Column>
+                                        <Grid.Column>
+                                            <dl className='data-list'>
+                                                <dt><strong>Shipping Contact</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Contact Number</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Contact E-Mail</strong></dt>
+                                                <dd></dd>
+                                            </dl>
+                                        </Grid.Column>
+                                    </Grid.Row>
+                                </Grid>
+                            </Accordion.Content>
+
+                            <Accordion.Title active={activeIndexes[3]} index={3} onClick={this.handleClick}>
+                                <Icon name={'chevron ' + (activeIndexes[3] ? 'down' : 'up')}  size='large' color={activeIndexes[3] ? 'blue' : 'black'}/>
+                                Shipping
+                            </Accordion.Title>
+                            <Accordion.Content active={activeIndexes[3]}>
+                                <Grid divided='horizontally'>
+                                    <Grid.Row columns={2}>
+                                        <Grid.Column>
+                                            <dl className='data-list'>
+                                                <dt><strong>Shipping Status</strong></dt>
+                                                <dd>{order.shippingStatus}</dd>
+                                                <dt><strong>Ship To</strong></dt>
+                                                <dd>{order.shipTo}</dd>
+                                                <dt><strong>Ship To Address</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Ship Date</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Delivery Date</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Return Ship Date</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Return Delivery Date</strong></dt>
+                                                <dd></dd>
+                                            </dl>
+                                        </Grid.Column>
+                                        <Grid.Column>
+                                            <dl className='data-list'>
+                                                <dt><strong>Carrier</strong></dt>
+                                                <dd>{order.carrier}</dd>
+                                                <dt><strong>Service</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Pro Number</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Incoterms</strong></dt>
+                                                <dd></dd>
+                                            </dl>
+                                        </Grid.Column>
+                                    </Grid.Row>
+                                </Grid>
+                            </Accordion.Content>
+
+                            <Accordion.Title active={activeIndexes[4]} index={4} onClick={this.handleClick}>
+                                <Icon name={'chevron ' + (activeIndexes[4] ? 'down' : 'up')}  size='large' color={activeIndexes[4] ? 'blue' : 'black'}/>
+                                Payment / Customer
+                            </Accordion.Title>
+                            <Accordion.Content active={activeIndexes[4]}>
+                                <Grid divided='horizontally'>
+                                    <Grid.Row columns={2}>
+                                        <Grid.Column>
+                                            <dl className='data-list'>
+                                                <dt><strong>Payment Status</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Payment Send Date</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Payment Initiation Date</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Payment Received Date</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Refund Date</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Terms</strong></dt>
+                                                <dd></dd>
+                                            </dl>
+                                        </Grid.Column>
+                                        <Grid.Column>
+                                            <dl className='data-list'>
+                                                <dt><strong>Vendor Name</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Vendor Address</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Vendor Phone</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Vendor E-Mail</strong></dt>
+                                                <dd></dd>
+                                                <dt><strong>Vendor Contact</strong></dt>
+                                                <dd></dd>
+                                            </dl>
+                                        </Grid.Column>
+                                    </Grid.Row>
+                                </Grid>
+                            </Accordion.Content>
+                        </Accordion>
                     </>
                 )}
             </div>

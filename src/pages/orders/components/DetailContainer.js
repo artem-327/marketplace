@@ -44,7 +44,7 @@ function prepareDetail(data) {
 function mapStateToProps(state, ownProps) {
     const {orders} = state
 
-    if (ownProps.match.params.type !== orders.detailType) {
+    if (ownProps.router.query.type !== orders.detailType) {
         orders.detail = {}
     }
 

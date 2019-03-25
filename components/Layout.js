@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import {withRouter} from 'next/router'
 import {Container, Menu, Icon, Image, Dropdown} from 'semantic-ui-react'
-import Logo from '~/assets/images/nav/Logo.png'
+import Logo from '~/assets/images/nav/inventory.png'
 import 'semantic-ui-css/semantic.min.css'
 import '~/styles/base.scss'
 import cn from 'classnames'
@@ -17,7 +17,7 @@ const MenuLink = withRouter(({router: {pathname}, to, children}) => (
 ))
 
 const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
-  <Container fluid style={{paddingTop: 47}}>
+  <Container fluid style={{backgroundColor: '#ffffff', padding: '47px 29px 29px'}}>
     <PopUp />
     <ErrorsHandler />
     <Head>
@@ -27,8 +27,8 @@ const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
     </Head>
     <Menu fixed="top" inverted size="large" borderless>
       
-      <Container style={{padding: '0 20px'}} fluid>
-        <Image src={Logo} style={{padding: '4px 10px 4px 0', height: '47px'}}></Image>  
+      <Container fluid style={{padding: '0 29px'}}>
+        <Image src={Logo} style={{margin: '9px 10px 4px 0', height: '23.78px'}}></Image>
 
         <MenuLink to='/dashboard'>Dashboard</MenuLink>
         <Dropdown item text="Inventory" className={cn({active: pathname.startsWith('/inventory') || pathname.startsWith('/inventory')})}>
@@ -41,8 +41,8 @@ const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
         </Dropdown>
         <Dropdown item text="Orders" className={cn({active: pathname.startsWith('/orders')})}>
           <Dropdown.Menu>
-            <Dropdown.Item as={MenuLink} to="/orders/sale">Sale orders</Dropdown.Item>
-            <Dropdown.Item as={MenuLink} to="/orders/sales">Purchase orders</Dropdown.Item>
+            <Dropdown.Item as={MenuLink} to="/orders/sales">Sales Orders</Dropdown.Item>
+            <Dropdown.Item as={MenuLink} to="/orders/purchase">Purchase Orders</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
         <MenuLink to='/settings'>Settings</MenuLink>
