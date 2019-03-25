@@ -71,4 +71,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditWarehousePopup) 
+export default connect(mapStateToProps, mapDispatchToProps)(editPopupBoolean) 

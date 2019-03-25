@@ -1,7 +1,7 @@
 import * as AT from './action-types' 
   
 export const initialState = {
-  editWarehousePopup: false,
+  editPopupBoolean: false,
   addNewWarehousePopup: false,
   popupValues: [],
   usersRows: [],
@@ -38,7 +38,7 @@ export default function reducer(state = initialState, action) {
     case AT.EDIT_POPUP_TRIGGER: {
       return {
         ...state,
-        editWarehousePopup: state.editWarehousePopup === false ? true : false,
+        editPopupBoolean: state.editPopupBoolean === false ? true : false,
         popupValues: action.payload
       }
     }
@@ -65,8 +65,10 @@ export default function reducer(state = initialState, action) {
           title: "title",
           email: user.email,
           phone: "phone",
-          homeBranch: user.branch.address.province.name,
-          permissions: user.roles.name
+          homeBranch: user.branch ? user.branch.address.province.name : '',
+          permissions: user.roles ? user.roles.name : '',
+          middleName: user.middlename,
+          id: user.id
         } 
       }) 
       return {

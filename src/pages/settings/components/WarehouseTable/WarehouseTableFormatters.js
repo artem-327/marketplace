@@ -4,17 +4,17 @@ import { Dropdown } from 'semantic-ui-react'
 
 import { handleEditPopup, deleteWarehouse } from '../../actions' 
 
-function editDeleteCell(value) {
+function editDeleteCell(props) {
 	return (
 		<Dropdown icon='ellipsis vertical'>
 			<Dropdown.Menu>
 				<Dropdown.Item 
 					text='Edit' 
-					onClick={ () => this.props.handleEditPopup(this.props.row) }
+					onClick={ () => props.handleEditPopup(props.row) }
 				/>
 				<Dropdown.Item 
 					text='Delete' 
-					onClick={ () => this.props.deleteWarehouse(this.props.row.branchId) }
+					onClick={ () => props.deleteWarehouse(props.row.branchId) }
 				/>
 			</Dropdown.Menu>
 		</Dropdown>	

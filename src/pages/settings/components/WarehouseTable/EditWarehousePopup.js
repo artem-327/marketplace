@@ -4,9 +4,9 @@ import { Control, Form } from 'react-redux-form'
 
 import { handleEditPopup, handleSubmitEditPopup } from '../../actions' 
 
-function EditWarehousePopup(props) {
+function editWarehousePopup(props) {
   const { handleEditPopup, handleSubmitEditPopup, popupValues } = props 
-  const [ address, city ]  = popupValues.address.split(',')  
+  const [ address, city ]  = popupValues.address ? popupValues.address.split(',') : ['', ''] 
 
   return (					
     <div className="popup-wrapper col-xs-10 center-xs">      
@@ -73,4 +73,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditWarehousePopup) 
+export default connect(mapStateToProps, mapDispatchToProps)(editWarehousePopup) 

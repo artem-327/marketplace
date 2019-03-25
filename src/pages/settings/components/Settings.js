@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import PropTypes from "prop-types"
-import { DataTypeProvider } from '@devexpress/dx-react-grid'
-
 // import '../styles/settings.scss'
 
 import Tabs from './Tabs'
@@ -15,6 +12,7 @@ import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
 import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
 // import EditBranchPopup from './BranchTable/EditBranchPopup'
 import EditWarehousePopup from './WarehouseTable/EditWarehousePopup'
+import EditUsersPopup from './UserTable/EditUsersPopup'
 import EditProductCatalogPopup from './ProductCatalogTable/EditProductCatalogPopup'
 import AddNewBranchPopup from './BranchTable/AddNewBranchPopup'
 import AddNewWarehousePopup from './WarehouseTable/AddNewWarehousePopup'
@@ -29,7 +27,7 @@ class Settings extends Component {
 
 	render() {
 		const {
-			editWarehousePopup,
+			editPopupBoolean,
 			addNewWarehousePopup,
 			currentTab
 		} = this.props
@@ -45,13 +43,15 @@ class Settings extends Component {
 						</Grid.Column>
 						<Grid.Column>
 							{
-								editWarehousePopup && currentTab === 'Product catalog' ?
+								editPopupBoolean && currentTab === 'Product catalog' ?
 									<EditProductCatalogPopup /> :
-									editWarehousePopup && currentTab === 'Warehouses' ?
+									editPopupBoolean && currentTab === 'Warehouses' ?
 										<EditWarehousePopup /> :
-										editWarehousePopup && currentTab === 'Branches' ?
-											<EditWarehousePopup />
-											: null
+										editPopupBoolean && currentTab === 'Users' ?
+											<EditUsersPopup /> :
+											editPopupBoolean && currentTab === 'Branches' ?
+												<EditWarehousePopup />
+												: null
 							}
 							{
 								addNewWarehousePopup && currentTab === 'Branches' ?
@@ -89,7 +89,7 @@ class Settings extends Component {
 
 const mapStateToProps = state => {
 	return {
-		editWarehousePopup: state.settings.editWarehousePopup,
+		editPopupBoolean: state.settings.editPopupBoolean,
 		addNewWarehousePopup: state.settings.addNewWarehousePopup,
 		currentTab: state.settings.currentTab
 	}

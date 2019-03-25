@@ -38,13 +38,13 @@ class WarehouseTable extends Component {
 			rows,
 			filterValue,
 			editDeleteColumns,
-			editWarehousePopup,
+			editPopupBoolean,
 			addNewWarehousePopup
 		} = this.props 
 
 		const { columns } = this.state 
 
-		const GridRoot = props => <Grid.Root {...props} className={ editWarehousePopup || addNewWarehousePopup ? 'hide' : 'col-xs-10 main-table' } />
+		const GridRoot = props => <Grid.Root {...props} className={ editPopupBoolean || addNewWarehousePopup ? 'hide' : 'col-xs-10 main-table' } />
 		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
 		const TableCells = props => <Table.Cell {...props} className={ 'columns-rows-cell' } />
 
@@ -81,7 +81,7 @@ const mapStateToProps = state => {
   return {
 		rows: state.settings.warehousesRows,
 		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
-		editWarehousePopup: state.settings.editWarehousePopup,
+		editPopupBoolean: state.settings.editPopupBoolean,
 		addNewWarehousePopup: state.settings.addNewWarehousePopup,
 		filterValue: state.settings.filterValue
   }

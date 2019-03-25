@@ -1,5 +1,13 @@
 import * as AT from './action-types' 
 
+export function handlerSubmitUserEditPopup(value, id) {
+  return {
+    type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
+    payload: value,
+    id
+  }
+}
+
 export function handleEditPopup(rows) {
   return {
     type: AT.EDIT_POPUP_TRIGGER,
