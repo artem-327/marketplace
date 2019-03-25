@@ -100,7 +100,6 @@ export function postNewBankAccountRequest(bankAccountData) {
 }
 
 export function postNewProductRequest(inputsValue, id) {
-  console.log(inputsValue, id,'here action')
   return {
     type: AT.POST_NEW_PRODUCT_REQUEST,
     // payload: inputsValue

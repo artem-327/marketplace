@@ -1,12 +1,10 @@
-import React, { Component } from 'react' 
+import React from 'react' 
 import { connect } from 'react-redux' 
-import { bindActionCreators } from 'redux'
 import { Dropdown } from 'semantic-ui-react'
 
 import { handleEditPopup, deleteWarehouse } from '../../actions' 
 
 function editDeleteCell(value) {
-	console.log(value, '333')
 	return (
 		<Dropdown icon='ellipsis vertical'>
 			<Dropdown.Menu>
