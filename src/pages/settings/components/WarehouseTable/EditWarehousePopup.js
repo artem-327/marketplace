@@ -2,10 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux' 
 import { Control, Form } from 'react-redux-form' 
 
-import { handleEditPopup, handleSubmitEditPopup } from '../../actions' 
+import { closeEditPopup, handleSubmitEditPopup } from '../../actions' 
 
 function EditWarehousePopup(props) {
-  const { handleEditPopup, handleSubmitEditPopup, popupValues } = props 
+  const { closeEditPopup, handleSubmitEditPopup, popupValues } = props 
   const [ address, city ]  = popupValues.address.split(',')  
 
   return (					
@@ -51,7 +51,7 @@ function EditWarehousePopup(props) {
             <input 
               type="button" 
               value="Cancel"
-              onClick={ handleEditPopup }
+              onClick={ closeEditPopup }
               className="cancel-popup-btn"
             />
             <button className="submit-popup-btn" >Update Warehouse</button> 
@@ -63,7 +63,7 @@ function EditWarehousePopup(props) {
 }
 
 const mapDispatchToProps = {   
-  handleEditPopup,
+  closeEditPopup,
   handleSubmitEditPopup
 } 
 

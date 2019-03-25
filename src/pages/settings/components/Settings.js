@@ -25,15 +25,46 @@ import TablesHandlers from './TablesHandlers'
 
 import { Container, Grid, Divider } from 'semantic-ui-react'
 
+const tables = {
+	'Users': <UsersTable />,
+	'Warehouses': <WarehouseTable />,
+	'Product catalog': <ProductCatalogTable />,
+	'Branches': <BranchTable />,
+	'Bank accounts': <BankAccountsTable />,
+	'Credit cards': <CreditCardsTable />
+}
+const editForms = {
+	'Warehouses': <EditWarehousePopup />,
+	'Product catalog': <EditProductCatalogPopup />,
+	'Branches': <EditWarehousePopup />,
+}
+
+const addForms = {
+	'Warehouses': <AddNewWarehousePopup />,
+	'Product catalog': <AddNewProductCatalogPopup />,
+	'Branches': <AddNewBranchPopup /> ,
+	'Bank accounts': <AddNewBankAccountPopup />,
+}
+
 class Settings extends Component {
 
-	render() {
+	renderContent = () => {
 		const {
-			editWarehousePopup,
-			addNewWarehousePopup,
+			currentEditForm,
+			currentAddForm,
 			currentTab
 		} = this.props
+		console.log(this.props)
+		if (currentAddForm) {
+			return addForms[currentTab] || <p>Not implemented</p>
+		} else if (currentEditForm) {
+			return editForms[currentTab] || <p>Not implemented</p>
+		} else {
+			return tables[currentTab] || <p>This page is still under construction</p>
+		}
+	}
 
+	render() {
 		return (
 			<Container fluid style={{ marginTop: 20 }}>
 				<TablesHandlers />
@@ -44,41 +75,7 @@ class Settings extends Component {
 							<Tabs />							
 						</Grid.Column>
 						<Grid.Column>
-							{
-								editWarehousePopup && currentTab === 'Product catalog' ?
-									<EditProductCatalogPopup /> :
-									editWarehousePopup && currentTab === 'Warehouses' ?
-										<EditWarehousePopup /> :
-										editWarehousePopup && currentTab === 'Branches' ?
-											<EditWarehousePopup />
-											: null
-							}
-							{
-								addNewWarehousePopup && currentTab === 'Branches' ?
-									<AddNewBranchPopup /> :
-									addNewWarehousePopup && currentTab === 'Warehouses' ?
-										<AddNewWarehousePopup /> :
-										addNewWarehousePopup && currentTab === 'Bank accounts' ?
-											<AddNewBankAccountPopup /> :
-											addNewWarehousePopup && currentTab === 'Credit cards' ?
-												<AddNewCreditCardPopup /> :
-												addNewWarehousePopup && currentTab === 'Product catalog' ?
-													<AddNewProductCatalogPopup />
-													: null
-							}
-							{currentTab === 'Users' ?
-								<UsersTable /> :
-								currentTab === 'Warehouses' ?
-									<WarehouseTable /> :
-									currentTab === 'Product catalog' ?
-										<ProductCatalogTable /> :
-										currentTab === 'Branches' ?
-											<BranchTable /> :
-											currentTab === 'Bank accounts' ?
-												<BankAccountsTable /> :
-												currentTab === 'Credit cards' ?
-													<CreditCardsTable /> : <div className="conMess col-xs-10" style={{ textAlign: 'center' }}>This page is still under construction</div>
-							}
+							{this.renderContent()}
 						</Grid.Column>
 					</Grid.Row>
 				</Grid>
@@ -88,11 +85,7 @@ class Settings extends Component {
 }
 
 const mapStateToProps = state => {
-	return {
-		editWarehousePopup: state.settings.editWarehousePopup,
-		addNewWarehousePopup: state.settings.addNewWarehousePopup,
-		currentTab: state.settings.currentTab
-	}
+	return state.settings
 }
 
 export default connect(mapStateToProps, null)(Settings) 

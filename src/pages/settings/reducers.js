@@ -29,17 +29,39 @@ export const initialState = {
     {	name: 'Website Controls', id: 11 }
   ],
   currentTab: 'Warehouses',
+  currentEditForm: null,
+  currentAddForm: null,
   filterValue: '',
   editPopupSearchProducts: []
 } 
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case AT.EDIT_POPUP_TRIGGER: {
+    case AT.OPEN_EDIT_POPUP: {
       return {
         ...state,
-        editWarehousePopup: state.editWarehousePopup === false ? true : false,
+        currentEditForm: state.currentTab,
         popupValues: action.payload
+      }
+    }
+    case AT.CLOSE_EDIT_POPUP: {
+      return {
+        ...state,
+        currentEditForm: null,
+      }
+    }
+
+    case AT.OPEN_ADD_POPUP: {
+      return {
+        ...state,
+        currentAddForm: state.currentTab,
+        popupValues: action.payload
+      }
+    }
+    case AT.CLOSE_ADD_POPUP: {
+      return {
+        ...state,
+        currentAddForm: null,
       }
     }
 
@@ -197,7 +219,7 @@ export default function reducer(state = initialState, action) {
     case AT.POST_NEW_WAREHOUSE_POPUP: {
       return {
         ...state,
-        addNewWarehousePopup: state.addNewWarehousePopup === false ? true : false,
+        currentAddForm: state.currentTab
       }
     }
 

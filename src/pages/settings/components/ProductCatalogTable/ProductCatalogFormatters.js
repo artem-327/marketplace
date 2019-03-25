@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Dropdown } from 'semantic-ui-react'
 
 import { 
-	handleEditPopup, 
+	openEditPopup, 
 	deleteBankAccount 
 } from '../../actions' 
 
@@ -29,7 +29,7 @@ class editDeleteCell extends Component {
 }
 
 const mapDispatchToProps = {   
-	handleEditPopup,
+	openEditPopup,
 	deleteBankAccount
 } 
 

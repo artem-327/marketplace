@@ -2,18 +2,18 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Dropdown } from 'semantic-ui-react'
 
-import { handleEditPopup, deleteWarehouse } from '../../actions' 
+import { openEditPopup, deleteWarehouse } from '../../actions' 
 
 class editDeleteCell extends Component {
 	render() {
-		const {row, handleEditPopup, deleteWarehouse} = this.props
+		const {row, openEditPopup, deleteWarehouse} = this.props
 
 		return (
 			<Dropdown icon='ellipsis vertical'>
 				<Dropdown.Menu>
 					<Dropdown.Item 
 						text='Edit' 
-						onClick={ () => handleEditPopup(row) } 
+						onClick={ () => openEditPopup(row) } 
 					/>
 					<Dropdown.Item 
 						text='Delete' 
@@ -26,7 +26,7 @@ class editDeleteCell extends Component {
 }
 
 const mapDispatchToProps = {   
-	handleEditPopup,
+	openEditPopup,
 	deleteWarehouse
 } 
 

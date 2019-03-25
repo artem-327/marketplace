@@ -2,15 +2,15 @@ import React from 'react'
 import { connect } from 'react-redux' 
 import { Dropdown } from 'semantic-ui-react'
 
-import { handleEditPopup, deleteWarehouse } from '../../actions' 
+import { openEditPopup, deleteWarehouse } from '../../actions' 
 
-function editDeleteCell({row, deleteWarehouse, handleEditPopup}) {
+function editDeleteCell({row, deleteWarehouse, openEditPopup}) {
 	return (
 		<Dropdown icon='ellipsis vertical'>
 			<Dropdown.Menu>
 				<Dropdown.Item 
 					text='Edit' 
-					onClick={ () => handleEditPopup(row) }
+					onClick={ () => openEditPopup(row) }
 				/>
 				<Dropdown.Item 
 					text='Delete' 
@@ -22,7 +22,7 @@ function editDeleteCell({row, deleteWarehouse, handleEditPopup}) {
 }
 
 const mapDispatchToProps = {   
-	handleEditPopup,
+	openEditPopup,
 	deleteWarehouse
 } 
 

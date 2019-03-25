@@ -1,9 +1,26 @@
 import * as AT from './action-types' 
 
-export function handleEditPopup(rows) {
+export function openEditPopup(rows) {
   return {
-    type: AT.EDIT_POPUP_TRIGGER,
+    type: AT.OPEN_EDIT_POPUP,
     payload: rows
+  }
+}
+export function closeEditPopup() {
+  return {
+    type: AT.CLOSE_EDIT_POPUP
+  }
+}
+export function openAddPopup(rows) {
+  return {
+    type: AT.OPEN_EDIT_POPUP,
+    payload: rows
+  }
+}
+export function closeAddPopup(payload) {
+  return {
+    type: AT.CLOSE_EDIT_POPUP,
+    payload
   }
 }
 

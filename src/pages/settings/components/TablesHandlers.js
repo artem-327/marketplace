@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField'
 
 import {Menu, Button, Input, Dropdown} from 'semantic-ui-react'
 
-import { handleAddNewWarehousePopup, handleFiltersValue } from '../actions'
+import { openAddPopup, handleFiltersValue } from '../actions'
 import unitedStates from '../../../components/unitedStates'
 
 
@@ -34,7 +34,7 @@ class TablesHandlers extends Component {
     const {
       handleFiltersValue, 
       currentTab,
-      handleAddNewWarehousePopup
+      openAddPopup
     } = this.props
     
     const {      
@@ -64,7 +64,7 @@ class TablesHandlers extends Component {
             onChange={ e => handleFiltersValue(e.target.value)} />
           </Menu.Item>
           <Menu.Item>
-            <Button primary onClick={ handleAddNewWarehousePopup }>
+            <Button primary onClick={ openAddPopup }>
               Add new { currentTab }
             </Button>
           </Menu.Item>
@@ -136,7 +136,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-  handleAddNewWarehousePopup,
+  openAddPopup,
   handleFiltersValue
 }
 
