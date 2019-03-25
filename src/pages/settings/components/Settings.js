@@ -35,12 +35,12 @@ class Settings extends Component {
 		} = this.props
 
 		return (
-			<Container style={{ marginTop: 20 }}>
+			<Container fluid style={{ marginTop: 20 }}>
 				<TablesHandlers />
 				<Divider />
 				<Grid columns='equal'>
 					<Grid.Row>
-						<Grid.Column width={4}>
+						<Grid.Column width={3}>
 							<Tabs />							
 						</Grid.Column>
 						<Grid.Column>

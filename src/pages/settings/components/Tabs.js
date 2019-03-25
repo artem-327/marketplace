@@ -10,7 +10,7 @@ function Tabs(props) {
   const { tabsNames, handleActiveTab, currentTab } = props
   
   return (					
-    <Menu pointing secondary vertical>
+    <Menu pointing secondary vertical fluid>
       {tabsNames.map((tab,i) => (
         <Menu.Item 
           name={tab.name}
