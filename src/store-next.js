@@ -114,11 +114,12 @@ export const makeStore = (preloadedState) => {
   const middleware = applyMiddleware(thunk, promise(), logger, sagaMiddleware)
   // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 
-  let store = createStore(reducer, loadState(), middleware)
+  // let store = createStore(reducer, loadState(), middleware)
+  let store = createStore(reducer, middleware)
 
-  store.subscribe(throttle(() => {
-    saveState(store.getState())
-  }, 1000))
+  // store.subscribe(throttle(() => {
+  //   saveState(store.getState())
+  // }, 1000))
 
   sagaMiddleware.run(companiesSaga)
   sagaMiddleware.run(officesSaga)
