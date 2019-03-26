@@ -54,7 +54,9 @@ class Settings extends Component {
 			currentAddForm,
 			currentTab
 		} = this.props
-		console.log(this.props)
+		
+		console.log(currentAddForm, currentEditForm)
+
 		if (currentAddForm) {
 			return addForms[currentTab] || <p>Not implemented</p>
 		} else if (currentEditForm) {

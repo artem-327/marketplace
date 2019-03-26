@@ -13,13 +13,13 @@ export function closeEditPopup() {
 }
 export function openAddPopup(rows) {
   return {
-    type: AT.OPEN_EDIT_POPUP,
+    type: AT.OPEN_ADD_POPUP,
     payload: rows
   }
 }
 export function closeAddPopup(payload) {
   return {
-    type: AT.CLOSE_EDIT_POPUP,
+    type: AT.CLOSE_ADD_POPUP,
     payload
   }
 }
