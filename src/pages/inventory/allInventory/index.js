@@ -10,6 +10,11 @@ import {getOffice} from '../../../modules/companies';
 
 const mapStateToProps = store => ({
     productOffers: store.productOffers.allProductOffers,
+    shippingQuotes: store.dataTables.allInventoryTable && store.dataTables.allInventoryTable.rowsOpns.some((po) => {
+        return po.rows.some((row) => {
+            return row.selected
+        })
+    }),
     isFetching: store.productOffers.isFetching,
     identity: store.auth.identity,
     merchantDetail: store.merchants.merchantDetail,

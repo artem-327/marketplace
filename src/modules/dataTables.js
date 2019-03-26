@@ -17,35 +17,80 @@ export default function reducer(state = initialState, action) {
                 }
             }
         }
-        case SELECT_ROW:{
+        case SELECT_ROW: {
+            const {id} = action.payload
+            const {groupId, rowId, checked, othersChecked, disabling} = action.payload.data
             return{
                 ...state,
-                [action.payload.id]: {
-                    ...state[action.payload.id],
-                    rowsOpns: state[action.payload.id].rowsOpns.map((row) => (
-                        row.index === action.payload.groupId ?
-                            {...state[action.payload.id].rowsOpns[action.payload.groupId],
-                                rows: state[action.payload.id].rowsOpns[action.payload.groupId].rows.map((rw) => (
-                                    rw.index === action.payload.rowId ?
-                                        {...state[action.payload.id].rowsOpns[action.payload.groupId].rows[action.payload.rowId],
-                                            selected: action.payload.value
-                                        } : rw
+                [id]: {
+                    ...state[id],
+                    rowsOpns: state[id].rowsOpns.map((row) => (
+                        row.index === groupId ?
+                            // modify selection of checkbox
+                            {
+                                ...state[id].rowsOpns[groupId],
+                                rows: state[id].rowsOpns[groupId].rows.map((rw) => (
+                                    rw.index === rowId ?
+                                        {
+                                            ...state[id].rowsOpns[groupId].rows[rowId],
+                                            disabled: false,
+                                            selected: checked
+                                        } : {
+                                            ...state[id].rowsOpns[groupId].rows[rw.index],
+                                            disabled: false
+                                        }
                                 ))
-                            } : row
+                            } :
+                            // modify other rows if disabling allowed
+                            (disabling ?
+                                {
+                                    ...state[id].rowsOpns[row.index],
+                                    group: {
+                                        ...state[id].rowsOpns[row.index].group,
+                                        disabled: (checked || othersChecked)
+                                    },
+                                    rows: state[id].rowsOpns[row.index].rows.map((rw) => (
+                                        {
+                                            ...state[id].rowsOpns[row.index].rows[rw.index],
+                                            disabled: (checked || othersChecked),
+                                            selected: false
+                                        }
+                                    ))
+                                } : row
+                            )
                     ))
                 }
             }
         }
-        case SELECT_GROUP:{
+        case SELECT_GROUP: {
+            const {id} = action.payload
+            const {groupId, rows, checked, disabling} = action.payload.data
             return{
                 ...state,
-                [action.payload.id]: {
-                    ...state[action.payload.id],
-                    rowsOpns: state[action.payload.id].rowsOpns.map((row) => (
-                        row.index === action.payload.groupId ?
-                            {...state[action.payload.id].rowsOpns[action.payload.groupId],
-                                rows: action.payload.rows
-                            } : row
+                [id]: {
+                    ...state[id],
+                    rowsOpns: state[id].rowsOpns.map((row) => (
+                        row.index === groupId ?
+                            // modify selection of checkboxes
+                            {
+                                ...state[id].rowsOpns[groupId],
+                                rows: rows
+                            } :
+                            // modify other rows if disabling allowed
+                            (disabling ?
+                                {
+                                    ...state[id].rowsOpns[row.index],
+                                    group: {
+                                        ...state[id].rowsOpns[row.index].group,
+                                        disabled: checked
+                                    },
+                                    rows: state[id].rowsOpns[row.index].rows.map((rw) => (
+                                        {
+                                            ...state[id].rowsOpns[row.index].rows[rw.index],
+                                            disabled: checked
+                                        }
+                                    ))
+                                } : row)
                     ))
                 }
             }
@@ -84,17 +129,17 @@ export function initDataTable(id, header, rowsOpns){
     }
 }
 
-export function selectRow(id, groupId, rowId, value){
+export function selectRow(id, data){
     return {
         type: SELECT_ROW,
-        payload: {id, groupId, rowId, value}
+        payload: {id, data}
     }
 }
 
-export function selectGroup(id, groupId, rows){
+export function selectGroup(id, data){
     return {
         type: SELECT_GROUP,
-        payload: {id, groupId, rows}
+        payload: {id, data}
     }
 }
 
