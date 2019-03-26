@@ -68,7 +68,9 @@ export default function reducer(state = initialState, action) {
     case AT.HANDLE_ACTIVE_TAB: {
       return {
         ...state,
-        currentTab: action.payload.tab
+        currentTab: action.payload.tab,
+        currentAddForm: null,
+        currentEditForm: null
       }
     }
 
