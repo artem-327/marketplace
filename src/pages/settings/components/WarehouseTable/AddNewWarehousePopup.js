@@ -1,104 +1,55 @@
-import React from 'react' 
-import { connect } from 'react-redux' 
-import { Control, Form } from 'react-redux-form' 
+import React from 'react'
+import { connect } from 'react-redux'
+import { Control, Form } from 'react-redux-form'
 
-// import TextField from '@material-ui/core/TextField' 
-// import MenuItem from '@material-ui/core/MenuItem' 
+import { Modal, Button, FormField, Header, Segment, FormGroup, Form as SForm } from 'semantic-ui-react'
 
-import { handleAddNewWarehousePopup, postNewWarehouseRequest } from '../../actions' 
+import { closeAddPopup, postNewWarehouseRequest } from '../../actions'
 
 class EditWarehousePopup extends React.Component {
 
   render() {
-    const { 
-      handleAddNewWarehousePopup,  
-      postNewWarehouseRequest 
-    } = this.props 
+    const {
+      closeAddPopup,
+      postNewWarehouseRequest
+    } = this.props
 
-    return (					
-      <div className="popup-wrapper col-xs-10 center-xs">      
-        <Form 
-          model="forms.settingsPopup.addNewWarehouse" 
-          onSubmit={ (value) => postNewWarehouseRequest(value) }
-          className="b-popup col-xs-10"
-        >    
-          <h2>{'Warehouse'} Profile</h2>
-          <ul>
-            <li className="add-warehouse-inputs-wrapper">
-              <label className="settings-popup-label name" htmlFor="warehouse-name">                        
-                Warehouse name
-              <Control.text model=".warehouseName" className="popup-input" id="warehouse-name" defaultValue={ '' } />
-              </label>
-              <label className="settings-popup-label address" htmlFor="warehouse-address">
-                Address
-                <Control.text model=".address" className="popup-input" id="warehouse-address" defaultValue={ '' } />
-              </label>
-              <label className="settings-popup-label city" htmlFor="warehouse-city">
-                City
-                <Control.text model=".city" className="popup-input" id="warehouse-city" defaultValue={ '' } />
-              </label>            
-              <label className="settings-popup-label state" htmlFor="warehouse-state">  
-                State
-                <Control.text model=".state" className="popup-input" id="warehouse-state" defaultValue={ '' } />
-                {/* <TextField
-                  select
-                  className="b-search__select-field col-xs-3"
-                  onChange={ handleChangeFieldsCurrentValue('filterFieldCurrentValue') }
-                  variant="outlined"
-                  onClick={ (e) => { 
-                      if(e.target.value === undefined) return 
-                      return 123 
-                    } 
-                  }
-                > 
-                  {unitedStates.map(option => (
-                    <MenuItem 
-                      key={ option.name }  
-                      value={ option.name }
-                    >
-                      { option.name }
-                    </MenuItem>
-                  ))}
-                </TextField>  */}
-              </label>            
-              <label className="settings-popup-label zip-code" htmlFor="warehouse-zip-code">
-                Zip Code
-                <Control.text model=".zipCode" className="popup-input" id="warehouse-zip-code" defaultValue={ '' } />
-              </label>
-            </li>
-            <li className="add-warehouse-inputs-wrapper">
-              <label className="settings-popup-label contact-name" htmlFor="warehouse-contactName">
-                Contact name
-                <Control.text model=".contactName" className="popup-input" id="warehouse-contactName" defaultValue={ '' } />
-              </label>                    
-              <label className="settings-popup-label phone" htmlFor="warehouse-phone">
-                Phone number
-                <Control.text model=".phone" className="popup-input" id="warehouse-phone" defaultValue={ '' } />
-              </label>
-              <label className="settings-popup-label email" htmlFor="warehouse-email">  
-                E-mail
-                <Control.text model=".email" className="popup-input" id="warehouse-email" defaultValue={ '' } />
-              </label>
-              <div className="buttons-wrapper">
-                <input 
-                  type="button" 
-                  defaultValue="Cancel"
-                  onClick={ handleAddNewWarehousePopup }
-                  className="cancel-popup-btn"
-                />
-                <button className="save-btn">Save</button>
-              </div>
-            </li>          
-          </ul>
+    return (
+      <Segment padded raised style={{width: '70%', margin: 'auto'}}>
+        <Header>Add new warehouse</Header>
+        <Form
+          model="forms.settingsPopup.addNewWarehouse"
+          onSubmit={(value) => postNewWarehouseRequest(value)}
+          component={SForm}
+        >
+          <FormGroup widths="equal">
+            <FormField label="Warehouse name" control={Control.text} model=".warehouseName" defaultValue={''}/>
+            <FormField label="Contact Name" control={Control.text} model=".contactName" defaultValue={''} />
+          </FormGroup>
+          <FormGroup widths="equal">
+            <FormField label="Address" control={Control.text} model=".address" defaultValue={''} />
+            <FormField label="City" control={Control.text} model=".city" defaultValue={''} />
+            <FormField label="State" control={Control.text} model=".state" defaultValue={''} />
+            <FormField label="Zipcode" control={Control.text} model=".zipCode" defaultValue={''} />
+          </FormGroup>
+          <FormGroup widths="equal">
+            <FormField label="Phone" control={Control.text} model=".phone" defaultValue={''} />
+            <FormField label="e-mail" control={Control.text} model=".email" defaultValue={''} />
+          </FormGroup>
+          
+          <div style={{textAlign: 'right'}}>
+            <Button onClick={closeAddPopup}>Cancel</Button>
+            <Button primary>Save</Button>
+          </div>
         </Form>
-      </div>
-    )     
+      </Segment>
+    )
   }
 }
 
-const mapDispatchToProps = {   
-  handleAddNewWarehousePopup,
+const mapDispatchToProps = {
+  closeAddPopup,
   postNewWarehouseRequest
-} 
+}
 
 export default connect(null, mapDispatchToProps)(EditWarehousePopup) 

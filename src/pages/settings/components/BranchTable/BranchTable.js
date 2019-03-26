@@ -14,9 +14,9 @@ import { getBranchesDataRequest } from '../../actions'
 class BranchTable extends Component {
 	state = {		
 		columns: [
-			{ name: 'editDeleteBtn', title: ' ' },
+			{ name: 'editDeleteBtn', title: ' ', width: 45, dropdown: true },
 			{ name: 'warehouseName', title: 'Warehouse Name'},
-			{ name: 'address', title: 'Adress' },
+			{ name: 'address', title: 'Adress', },
 			{ name: 'contactName', title: 'Contact name' },
 			{ name: 'phone', title: 'Phone' },
 			{ name: 'email', title: 'E-mail' }
@@ -38,9 +38,9 @@ class BranchTable extends Component {
 
 		const { columns } = this.state 
 
-		const GridRoot = props => <Grid.Root {...props} className={ editWarehousePopup || addNewWarehousePopup ? 'hide' : 'col-xs-10 main-table' } />
-		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
-		const TableCells = props => <Table.Cell {...props} className={ 'columns-rows-cell' } />
+		const GridRoot = props => <Grid.Root {...props} />
+		const HeaderCells = props => <TableHeaderRow.Cell {...props} />
+		const TableCells = props => <Table.Cell {...props} />
 
 
 		return (					

@@ -19,11 +19,17 @@ export const TableHeaderCell = ({
   sortingEnabled,
   onSort,
   before,
+  style,
   ...restProps
 }) => (
   <TableSUI.HeaderCell
     textAlign={tableColumn.align}
     singleLine={!tableColumn.wordWrapEnabled}
+    style={{
+      ...style,
+      width: column.width || 'auto',
+      overflow: column.dropdown ? 'unset':'hidden'
+    }}
     {...restProps}
   />
 );

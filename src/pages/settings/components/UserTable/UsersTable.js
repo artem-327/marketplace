@@ -29,13 +29,13 @@ function cn(){
 class UsersTable extends Component {
 	state = {
 		columns: [
-			{ name: 'checkbox', title: ' '},
+			{ name: 'checkbox', width: 40, title: ' '},
 			{ name: 'userName', title: 'User Name' },
 			{ name: 'title', title: 'Title' },
 			{ name: 'email', title: 'E-mail' },
 			{ name: 'phone', title: 'Phone' },
 			{ name: 'homeBranch', title: 'Home Branch'},
-			{ name: 'permissions', title: 'Permissions' }
+			{ name: 'permissions', title: 'Permissions', dropdown: true }
 		]
 	}
 

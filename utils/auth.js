@@ -1,13 +1,18 @@
 // import jwtDecode from 'jwt-decode'
 import Cookie from 'js-cookie'
 
+const EXPIRE_TIME = 30
+
 export const setToken = (accessToken) => {
   // if (!process.browser) {
   //   return
   // }
   // Cookie.set('user', jwtDecode(idToken))
   // Cookie.set('idToken', idToken)
-  Cookie.set('accessToken', accessToken)
+
+  let now = new Date()
+  now.setTime(now.getTime() + (EXPIRE_TIME * 60 * 1000))
+  Cookie.set('accessToken', accessToken, {expires: now})
 }
 
 export const unsetToken = () => {

@@ -8,11 +8,17 @@ export const TableCell = ({
   row,
   children,
   value,
+  style,
   ...restProps
 }) => (
   <TableSUI.Cell
     textAlign={tableColumn.align}
     singleLine={!tableColumn.wordWrapEnabled}
+    style={{
+      ...style,
+      width: column.width || 'auto',
+      overflow: column.dropdown ? 'unset':'hidden'
+    }}
     {...restProps}
   >
     {children || value}

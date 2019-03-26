@@ -1,53 +1,42 @@
 import React from 'react' 
 
-import Checkbox from '@material-ui/core/Checkbox' 
+import {Checkbox, Dropdown} from 'semantic-ui-react'
 
 export const checkboxFormatter = props => {
 	return (
 		<Checkbox 
 			color="default" 
-			value="checkedG"
-			className="user-checkbox"
+			value="checked"
 		/>
 	)
 }
 
 export const permissionCellFormatter = ( ({ value }) => {
-	const permissions = [ 'Admin', 'User', 'Super Admin' ] 
+	const permissions = [ 'Admin', 'User', 'Super Admin' ].map(o => ({text: o, key: o, value: o}))
 
-	return (		
-		<select 
-			className={ 'wrapper-permissions' }
-			defaultValue={ 'User' }
-		>
-			{permissions.map(option => (
-				<option 
-					key={ option } 
-					defaultValue={ option }
-					className={ 'permissions-input' }
-				>
-					{ option }
-				</option>
-			))}
-		</select>	
+	return (
+		<Dropdown style={{margin: -6}}
+			placeholder='Select permission'
+			selection
+			defaultValue={permissions[0].value}
+			options={permissions}
+		/>
 	)
 }) 
 
-export const editDeleteCellFormatter = props => {
-
+export const editDeleteCellFormatter = () => {
 	return (
-		<div className="editDelete-wrapper">
-			<button className="editDelete-btn" />
-			<div className="handlers-row-menu">
-				<input 
-					defaultValue={'Edit'}
-					className="handlers-row-menu__btn"
+		<Dropdown icon='ellipsis vertical'>
+			<Dropdown.Menu>
+				<Dropdown.Item 
+					text='Edit' 
+					onClick={ () => {} }
 				/>
-				<input 
-					defaultValue={'Delete'}
-					className="handlers-row-menu__btn"
+				<Dropdown.Item 
+					text='Delete' 
+					onClick={ () => {} }
 				/>
-			</div>
-		</div>		
-	) 
+			</Dropdown.Menu>
+		</Dropdown>	
+	)
 }

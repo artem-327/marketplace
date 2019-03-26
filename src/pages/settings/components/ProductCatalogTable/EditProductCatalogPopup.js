@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux' 
 import { Control, Form } from 'react-redux-form'
 
-import { handleEditPopup, handleSubmitEditPopup, getProductsWithRequiredParam } from '../../actions' 
+import { closeEditPopup, handleSubmitEditPopup, getProductsWithRequiredParam } from '../../actions' 
 
 class EditProductCatalogPopup extends React.Component {
   state = {
@@ -55,7 +55,7 @@ class EditProductCatalogPopup extends React.Component {
   }
 
   render() {
-    const { handleEditPopup, handleSubmitEditPopup, popupValues, editPopupSearchProducts } = this.props 
+    const { closeEditPopup, handleSubmitEditPopup, popupValues, editPopupSearchProducts } = this.props 
     const {
       productName,
       productNumber,
@@ -135,7 +135,7 @@ class EditProductCatalogPopup extends React.Component {
               <input 
                 type="button" 
                 value="Cancel"
-                onClick={ handleEditPopup }
+                onClick={ closeEditPopup }
                 className="cancel-popup-btn"
               />
               <button className="submit-popup-btn" >Save</button> 
@@ -148,7 +148,7 @@ class EditProductCatalogPopup extends React.Component {
 }
 
 const mapDispatchToProps = {   
-  handleEditPopup,
+  closeEditPopup,
   handleSubmitEditPopup,
   getProductsWithRequiredParam
 } 
