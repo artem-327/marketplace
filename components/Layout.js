@@ -48,7 +48,7 @@ const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
           </Dropdown.Menu>
         </Dropdown>
         <MenuLink to='/settings'>Settings</MenuLink>
-        
+        <MenuLink to='/admin'>Admin</MenuLink>
         <Menu.Menu position="right">
           <MenuLink to='/auth/logout'>
             Logout
