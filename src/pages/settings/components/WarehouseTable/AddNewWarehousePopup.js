@@ -6,7 +6,7 @@ import { Modal, Button, FormField, Header, Segment, FormGroup, Form as SForm } f
 
 import { closeAddPopup, postNewWarehouseRequest } from '../../actions'
 
-class editPopupBoolean extends React.Component {
+class EditPopupBoolean extends React.Component {
 
   render() {
     const {
@@ -53,4 +53,4 @@ const mapDispatchToProps = {
   postNewWarehouseRequest
 }
 
-export default connect(null, mapDispatchToProps)(editPopupBoolean) 
+export default connect(null, mapDispatchToProps)(EditPopupBoolean) 

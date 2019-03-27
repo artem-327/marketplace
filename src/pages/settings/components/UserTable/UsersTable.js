@@ -9,7 +9,7 @@ import {
 } from '~/components/dx-grid-semantic-ui/plugins'
 
 import { 
-	DropdownEditDeliteProvider,
+	// DropdownEditDeliteProvider,
 	EditDeleteFormatterProvider,
 	PermissionFormatterProvider
 } from './UsersTableProviders' 
@@ -29,7 +29,7 @@ function cn(){
 class UsersTable extends Component {
 	state = {
 		columns: [
-			{ name: 'editDeleteBtn', title: ' '},
+			{ name: 'editDeleteBtn', title: ' ', dropdown: true, width: 45},
 			{ name: 'userName', title: 'User Name' },
 			{ name: 'title', title: 'Title' },
 			{ name: 'email', title: 'E-mail' },
@@ -56,13 +56,13 @@ class UsersTable extends Component {
 
 		const { columns } = this.state 
 
-		const GridRoot = props => <Grid.Root {...props} className={cn(props.className,'col-xs-10 main-table')} />
-		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={cn(props.className,'columns-title-cell')} />
-		const TableCells = props => <Table.Cell {...props} className={cn(props.className,'columns-rows-cell')} />
+		// const GridRoot = props => <Grid.Root {...props} className={cn(props.className,'col-xs-10 main-table')} />
+		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
+		const TableCells = props => <Table.Cell {...props} className={ 'columns-rows-cell' } />
 
 		return (			
 			<Grid
-				rootComponent={ GridRoot }
+				// rootComponent={ GridRoot }
 				rows={ rows }
 				columns={ columns }
 			>	
@@ -76,14 +76,18 @@ class UsersTable extends Component {
 				<TableHeaderRow 
 					cellComponent={ HeaderCells }
 				/>
-				<DropdownEditDeliteProvider 
+				{/* <DropdownEditDeliteProvider 
+					for={ editDeleteColumns }
+					rows={ rows }
+				/> */}
+				<EditDeleteFormatterProvider 
 					for={ editDeleteColumns }
 					rows={ rows }
 				/>
-				<PermissionFormatterProvider
+				{/* <PermissionFormatterProvider
 					for={ permissionsColumns }
 					rows={ rows }
-				/>
+				/> */}
 			</Grid>		
 		)		
 	}
