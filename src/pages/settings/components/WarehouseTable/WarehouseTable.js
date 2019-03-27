@@ -7,7 +7,6 @@ import {
   Table,
 	TableHeaderRow
 } from '~/components/dx-grid-semantic-ui/plugins'
-// } from '@devexpress/dx-react-grid-material-ui'
 
 import { 	EditDeleteFormatterProvider } from './WarehouseTableProviders' 
 import { getWarehousesDataRequest } from '../../actions' 
@@ -44,13 +43,12 @@ class WarehouseTable extends Component {
 
 		const { columns } = this.state 
 
-		const GridRoot = props => <Grid.Root {...props} className={ editWarehousePopup || addNewWarehousePopup ? 'hide' : 'col-xs-10 main-table' } />
+		// const GridRoot = props => <Grid.Root {...props} className={ editWarehousePopup || addNewWarehousePopup ? 'hide' : 'col-xs-10 main-table' } />
 		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
 		const TableCells = props => <Table.Cell {...props} className={ 'columns-rows-cell' } />
 
 		return (					
 			<Grid
-				rootComponent={ GridRoot }
 				rows={ rows }
 				columns={ columns }									
 			>	
