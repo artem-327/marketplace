@@ -29,7 +29,7 @@ function cn(){
 class UsersTable extends Component {
 	state = {
 		columns: [
-			{ name: 'editDeleteBtn', title: ' '},
+			{ name: 'editDeleteBtn', title: ' ', dropdown: true, width: 50},
 			{ name: 'userName', title: 'User Name' },
 			{ name: 'title', title: 'Title' },
 			{ name: 'email', title: 'E-mail' },

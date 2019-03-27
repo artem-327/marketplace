@@ -64,68 +64,13 @@ class TablesHandlers extends Component {
             onChange={ e => handleFiltersValue(e.target.value)} />
           </Menu.Item>
           <Menu.Item>
-            <Button primary onClick={ openAddPopup }>
+            <Button primary onClick={() => openAddPopup(currentTab) }>
               Add new { currentTab }
             </Button>
           </Menu.Item>
         </Menu.Menu>
       </Menu>
-    )
-
-    return (			
-
-      <div className="b-search col-xs-6">
-        { currentTab === 'Users' ?
-          <TextField
-            select
-            className="b-search__select-field col-xs-3"
-            value={ filterFieldCurrentValue }
-            onChange={ this.handleChangeFieldsCurrentValue('filterFieldCurrentValue') }
-            variant="outlined"
-            onClick={ (e) => { 
-                if(e.target.value === undefined) return
-                if(e.target.value === 'None') return handleFiltersValue('')
-                return handleFiltersValue(e.target.value)
-              } 
-            }
-          > 
-            <MenuItem  
-              value={ 'None' }
-            >
-              { 'None' }
-            </MenuItem>
-            {unitedStates.map(option => (
-              <MenuItem 
-                key={ option.name }  
-                value={ option.name }
-              >
-                { option.name }
-              </MenuItem>
-            ))}
-          </TextField> 
-        : null }
-        <div className="b-search__search-field col-xs-5">
-          <div className="search-icon">
-            <SearchIcon />
-          </div>
-          <InputBase
-            placeholder="Search..."
-            classes={{ input: "input-base" }}
-            onChange={ e => {
-                return handleFiltersValue(e.target.value)
-              }
-            }
-            fullWidth
-          />
-        </div>
-        <button
-          onClick={ handleAddNewWarehousePopup }
-          className="b-search__add-user-btn capitalize col-xs-4"
-        >
-          Add new { currentTab }
-        </button>
-      </div>
-    )   
+    ) 
   }  
 }
 

@@ -42,7 +42,11 @@ export const dropdownEditDeleteFormatter =  connect(null, mapDispatchToProps)(dr
 // }
 
 export const permissionCellFormatter = ({ value }) => {
-	const permissions = [ 'Admin', 'User', 'Super Admin' ] 
+	const permissions = [ 'Admin', 'User', 'Super Admin' ].map(p => ({
+		text: p,
+		value: p,
+		key: p
+	}))
 
 	return (
 		<Dropdown style={{margin: -6}}
