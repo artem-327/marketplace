@@ -6,4 +6,8 @@
   padding: 0 10px;
   font-size: 1rem;
   line-height: 34px;
+
+  &.hidden {
+    display: none;
+  }
 }

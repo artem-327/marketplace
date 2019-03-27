@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {transformRequestOptions, filterByUniqueProperty} from "../utils/functions";
+import api from '../api/productOffers'
 import {
     PRODUCTOFFER_REMOVE_REQUESTED
 } from "../constants/productOffers";
@@ -32,6 +33,8 @@ const ADD_PRODUCT_OFFER_FULFILLED = 'ADD_PRODUCT_OFFER_FULFILLED';
 const RESET_PRODUCT_OFFER = 'RESET_PRODUCT_OFFER';
 //const SAVE_INCREMENTAL_PRICING = 'SAVE_INCREMENTAL_PRICING';
 const DELETE_PRODUCT_OFFERS_LIST = 'DELETE_PRODUCT_OFFERS_LIST';
+const OFFER_BROADCAST = "OFFER_BROADCAST";
+const OFFER_BROADCAST_FULFILLED = "OFFER_BROADCAST_FULFILLED";
 
 export const initialState = {
     myProductOffers: [],
@@ -129,6 +132,22 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 addProductOffer: {}
+            }
+        }
+
+        case OFFER_BROADCAST_FULFILLED: {
+            const {offerId, checked} = action.payload
+            return {
+                ...state,
+                myProductOffers: state.myProductOffers.map(function(po) {
+                    if (po.id === offerId) {
+                        return {
+                            ...po,
+                            broadcasted: checked
+                        }
+                    }
+                    return po
+                })
             }
         }
 
@@ -270,4 +289,19 @@ export function getUnitOfPackaging(pack) {
 
 export function deleteProductOffer(id, onSuccess) {
     return {type: PRODUCTOFFER_REMOVE_REQUESTED, payload: {id, onSuccess}} //TODO: refactor all product offers to saga, then remove onSuccess
+}
+
+export function offerBroadcast(data) {
+    const {offerId, checked} = data
+    return {
+        type: OFFER_BROADCAST,
+        async payload() {
+            const dataResponse = await api.offerBroadcast(offerId, checked)
+            return {
+                ...dataResponse,
+                offerId,
+                checked
+            }
+        }
+    }
 }

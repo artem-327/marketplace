@@ -25,6 +25,7 @@ class DataTable extends Component {
             ...item,
             index: index,
             rows: item.rows.map((row, index2) => ({
+                disabled: false,
                 selected: false,
                 index: index2,
                 id: row.id
@@ -93,11 +94,11 @@ class DataTable extends Component {
               contextMenu={this.props.contextMenu}
               rowComponent={this.props.rowComponent}
               headers={this.props.dataTable.header}
-              selectGroupFunc={(groupId, rows) =>
-                this.props.selectGroup(this.props.id, groupId, rows)
+              selectGroupFunc={(data) =>
+                this.props.selectGroup(this.props.id, data)
               }
-              selectFunc={(groupId, rowId, value) =>
-                this.props.selectRow(this.props.id, groupId, rowId, value)
+              selectFunc={(data) =>
+                this.props.selectRow(this.props.id, data)
               }
             />
           </table>

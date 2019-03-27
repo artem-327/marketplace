@@ -10,6 +10,7 @@ import {getUnit} from "../../../../utils/functions";
 import confirm from '../../../../components/Confirmable/confirm';
 import {NavLink} from 'react-router-dom';
 import {checkToken} from "../../../../utils/auth";
+import {Checkbox} from "semantic-ui-react"
 
 class ProductOffers extends Component {
 
@@ -60,7 +61,7 @@ class ProductOffers extends Component {
                     const mfr = (typeof productOffer.manufacturer !== 'undefined' ? productOffer.manufacturer.name : '');
                     /* temporarily removed */ //const condition = productOffer.productCondition.name;
                     /* temporarily removed */ //const mfgDate = productOffer.creationDate ? moment(productOffer.creationDate).format(DATE_FORMAT) : 'none';
-                    const broadcast = <ToggleBroadcast offerId={productOfferId} broadcasted={productOffer.broadcasted}/>;
+                    const broadcast = <Checkbox toggle checked={productOffer.broadcasted} offerId={productOfferId} onChange={(event, data) => this.props.offerBroadcast(data)} />;
 
                     return ({
                         id: productOfferId,

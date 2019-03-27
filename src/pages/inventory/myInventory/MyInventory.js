@@ -99,6 +99,7 @@ class MyInventory extends Component {
                 currentSelected={this.state.currentSelected}
                 setActiveBroadcastButton={active => this.setActiveBroadcastButton(active)}
                 broadcastActive={this.state.brActive}
+                offerBroadcast={this.props.offerBroadcast}
                 {...this.props}/>;
         const number = getSelectedDataTable(this.props.productOffersTable);
         return (

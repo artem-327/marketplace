@@ -9,6 +9,8 @@ import {getSelectedRowsDataTable} from "../../../utils/functions";
 import './allinventory.scss';
 import {FormattedMessage} from 'react-intl';
 import {checkToken} from "../../../utils/auth";
+import cn from "classnames"
+import {Button} from "semantic-ui-react"
 
 class AllInventory extends Component {
 
@@ -48,12 +50,12 @@ class AllInventory extends Component {
                         />
                     </h1>
                     <SubMenu/>
-                    <button id='shippingQuotes' className='button hidden' onClick={() => this.openShippingQuote()}>
+                    <Button primary id='shippingQuotes' className={cn({hidden: !this.props.shippingQuotes})} onClick={() => this.openShippingQuote()}>
                         <FormattedMessage
                             id='allInventory.shippingQuote'
                             defaultMessage='Shipping Quote'
                         />
-                    </button>
+                    </Button>
                     <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchAllProductOffers({...filter})}}/>
                 </div>
                 <Filter

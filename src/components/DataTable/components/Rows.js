@@ -9,6 +9,7 @@ class Rows extends Component {
         return (
           <GroupRow
             key={index}
+            disabled={item.group.disabled}
             rows={this.props.rows[item.index]}
             history={this.props.history}
             location={this.props.location}
