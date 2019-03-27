@@ -2,9 +2,8 @@ import React from 'react'
 
 import { DataTypeProvider } from '@devexpress/dx-react-grid' 
 import {
-  checkboxFormatter,
-  permissionCellFormatter,
-  editDeleteCellFormatter
+  dropdownEditDeleteFormatter,
+  permissionCellFormatter
 } from './UsersTableFormatters' 
 
 const makeFormatterComponent = component => props => (
@@ -14,6 +13,5 @@ const makeFormatterComponent = component => props => (
 		/>
 )
 
-export const CheckboxFormatterProvider = makeFormatterComponent( checkboxFormatter ) 
-export const EditDeleteFormatterProvider = makeFormatterComponent( editDeleteCellFormatter ) 
+export const DropdownEditDeliteProvider = makeFormatterComponent( dropdownEditDeleteFormatter ) 
 export const PermissionFormatterProvider = makeFormatterComponent( permissionCellFormatter ) 

@@ -1,7 +1,7 @@
 import * as AT from './action-types' 
   
 export const initialState = {
-  editWarehousePopup: false,
+  editPopupBoolean: false,
   addNewWarehousePopup: false,
   popupValues: [],
   usersRows: [],
@@ -41,6 +41,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentEditForm: state.currentTab,
+        editPopupBoolean: state.editPopupBoolean === false ? true : false,
         popupValues: action.payload
       }
     }
@@ -90,7 +91,9 @@ export default function reducer(state = initialState, action) {
           email: user.email,
           phone: "phone",
           homeBranch: user.branch ? user.branch.address.province.name : '',
-          permissions: user.roles.name
+          permissions: user.roles ? user.roles.name : '',
+          middleName: user.middlename,
+          id: user.id
         } 
       }) 
       return {

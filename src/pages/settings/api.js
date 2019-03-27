@@ -15,6 +15,7 @@ export default {
     postNewProduct: body => api.post('/prodex/api/product-templates', body),
 
     putWarehouse: (branchId, body) => api.put(`/prodex/api/branches/${branchId}`, body ),
+    putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
 
     deleteWarehouse: branchId => api.delete(`/prodex/api/branches/${branchId}`),
     deleteCreditCard: cardId => api.delete(`/prodex/api/payments/cards/${cardId}`),

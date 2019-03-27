@@ -7,7 +7,7 @@ import { Control, Form } from 'react-redux-form'
 
 import { handleAddNewWarehousePopup, postNewWarehouseRequest } from '../../actions' 
 
-class EditWarehousePopup extends React.Component {
+class editPopupBoolean extends React.Component {
   constructor(props) {
     super(props) 
 
@@ -125,4 +125,4 @@ const mapDispatchToProps = {
   postNewWarehouseRequest
 } 
 
-export default connect(null, mapDispatchToProps)(EditWarehousePopup) 
+export default connect(null, mapDispatchToProps)(editPopupBoolean) 

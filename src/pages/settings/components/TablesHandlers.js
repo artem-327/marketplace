@@ -46,7 +46,7 @@ class TablesHandlers extends Component {
         <Menu.Item header><h1>Users Settings</h1></Menu.Item>
         
         <Menu.Menu position='right'>
-          {currentTab === 'Users' 
+          {/* {currentTab === 'Users' 
             ? <Dropdown item text='Language' scrolling
                 
               >
@@ -57,7 +57,7 @@ class TablesHandlers extends Component {
                 </Dropdown.Menu>
             </Dropdown>
             : null
-          }
+          } */}
             
           <Menu.Item>
             <Input icon='search' placeholder="Search..."

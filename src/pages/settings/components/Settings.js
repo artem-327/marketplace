@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import PropTypes from "prop-types"
-import { DataTypeProvider } from '@devexpress/dx-react-grid'
-
 // import '../styles/settings.scss'
 
 import Tabs from './Tabs'
@@ -15,6 +12,7 @@ import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
 import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
 // import EditBranchPopup from './BranchTable/EditBranchPopup'
 import EditWarehousePopup from './WarehouseTable/EditWarehousePopup'
+import EditUsersPopup from './UserTable/EditUsersPopup'
 import EditProductCatalogPopup from './ProductCatalogTable/EditProductCatalogPopup'
 import AddNewBranchPopup from './BranchTable/AddNewBranchPopup'
 import AddNewWarehousePopup from './WarehouseTable/AddNewWarehousePopup'
