@@ -32,7 +32,7 @@ class BranchTable extends Component {
 			rows,
 			filterValue,
 			editDeleteColumns,
-			editWarehousePopup,
+			editPopupBoolean,
 			addNewWarehousePopup
 		} = this.props 
 
@@ -41,6 +41,10 @@ class BranchTable extends Component {
 		const GridRoot = props => <Grid.Root {...props} />
 		const HeaderCells = props => <TableHeaderRow.Cell {...props} />
 		const TableCells = props => <Table.Cell {...props} />
+
+		// const GridRoot = props => <Grid.Root {...props} className={ editPopupBoolean || addNewWarehousePopup ? 'hide' : 'col-xs-10 main-table' } />
+		// const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
+		// const TableCells = props => <Table.Cell {...props} className={ 'columns-rows-cell' } />
 
 
 		return (					
@@ -76,7 +80,7 @@ const mapStateToProps = state => {
   return {
 		rows: state.settings.branchesRows,
 		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
-		editWarehousePopup: state.settings.editWarehousePopup,
+		editPopupBoolean: state.settings.editPopupBoolean,
 		addNewWarehousePopup: state.settings.addNewWarehousePopup,
 		filterValue: state.settings.filterValue
   }

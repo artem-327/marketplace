@@ -6,6 +6,20 @@ export function openEditPopup(rows) {
     payload: rows
   }
 }
+export function handlerSubmitUserEditPopup(value, id) {
+  return {
+    type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
+    payload: value,
+    id
+  }
+}
+
+export function handleEditPopup(rows) {
+  return {
+    type: AT.OPEN_EDIT_POPUP,
+    payload: rows
+  }
+}
 export function closeEditPopup() {
   return {
     type: AT.CLOSE_EDIT_POPUP

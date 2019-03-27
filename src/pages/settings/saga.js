@@ -8,7 +8,7 @@ function* getUsersDataWorker() {
     const users = yield call(api.getUsers) 
     yield put({ type: AT.GET_USERS_DATA_SUCCESS, payload: users}) 
   } catch(e) {
-    yield console.log("error:", e) 
+    yield console.log("error 12121:", e) 
   }
 }
 
@@ -164,6 +164,21 @@ function* putWarehouseWorker({ payload, id }) {
   }
 }
 
+function* putUserWorker({payload, id}){
+  try {
+    const updateUser = {
+      firstname: payload.firstName,
+      lastname: payload.lastName,
+      middlename: payload.middleName,
+      email: payload.email
+    }
+    console.log(updateUser)
+    yield call(api.putUser, id, updateUser)
+  } catch(e) {
+    console.log('error', e)
+  }
+}
+
 function* deleteWarehouseWorker({ payload }) {
   try {
     yield call(api.deleteWarehouse, payload) 
@@ -203,7 +218,10 @@ export default function* settingsSaga() {
   yield takeEvery(AT.POST_NEW_BANK_ACCOUNT_REQUEST, postNewBankAccountWorker)
   yield takeEvery(AT.POST_NEW_PRODUCT_REQUEST, postNewProductWorker)
 
+  yield takeEvery(AT.HANDLE_SUBMIT_USER_EDIT_POPUP, putUserWorker)
+
   yield takeEvery(AT.DELETE_WAREHOUSE, deleteWarehouseWorker) 
   yield takeEvery(AT.DELETE_CREDIT_CARD, deleteCreditCardWorker) 
   yield takeEvery(AT.DELETE_BANK_ACCOUNT, deleteBankAccountWorker)  
+
 }

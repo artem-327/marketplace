@@ -4,7 +4,7 @@ import { Control, Form } from 'react-redux-form'
 
 import { handleEditPopup, handleSubmitEditPopup } from '../../actions' 
 
-function EditBranchPopup(props) {
+function EditWarehousePopup(props) {
   const { handleEditPopup, handleSubmitEditPopup, popupValues } = props 
   const [ address, city ]  = popupValues.address.split(',')  
 

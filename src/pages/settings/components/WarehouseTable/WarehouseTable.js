@@ -37,7 +37,7 @@ class WarehouseTable extends Component {
 			rows,
 			filterValue,
 			editDeleteColumns,
-			editWarehousePopup,
+			editPopupBoolean,
 			addNewWarehousePopup
 		} = this.props 
 
@@ -79,7 +79,7 @@ const mapStateToProps = state => {
   return {
 		rows: state.settings.warehousesRows,
 		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
-		editWarehousePopup: state.settings.editWarehousePopup,
+		editPopupBoolean: state.settings.editPopupBoolean,
 		addNewWarehousePopup: state.settings.addNewWarehousePopup,
 		filterValue: state.settings.filterValue
   }

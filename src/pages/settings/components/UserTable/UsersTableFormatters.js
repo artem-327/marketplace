@@ -1,18 +1,48 @@
 import React from 'react' 
+import { connect } from 'react-redux' 
+import { Dropdown } from 'semantic-ui-react'
 
-import {Checkbox, Dropdown} from 'semantic-ui-react'
+import { handleEditPopup, deleteWarehouse } from '../../actions' 
 
-export const checkboxFormatter = props => {
+function dropdownEditDelete(props) {
 	return (
-		<Checkbox 
-			color="default" 
-			value="checked"
-		/>
+		<Dropdown icon='ellipsis vertical'>
+			<Dropdown.Menu>
+				<Dropdown.Item 
+					text='Edit' 
+					onClick={ () => props.handleEditPopup(props.row) }
+				/>
+				<Dropdown.Item 
+					text='Delete' 
+					// onClick={ () => props.deleteWarehouse(this.props.row.branchId) }
+				/>
+			</Dropdown.Menu>
+		</Dropdown>	
 	)
 }
 
-export const permissionCellFormatter = ( ({ value }) => {
-	const permissions = [ 'Admin', 'User', 'Super Admin' ].map(o => ({text: o, key: o, value: o}))
+const mapDispatchToProps = {   
+		handleEditPopup,
+		deleteWarehouse
+} 
+
+export const dropdownEditDeleteFormatter =  connect(null, mapDispatchToProps)(dropdownEditDelete) 
+// import React from 'react' 
+
+// import Checkbox from '@material-ui/core/Checkbox' 
+
+// export const checkboxFormatter = props => {
+// 	return (
+// 		<Checkbox 
+// 			color="default" 
+// 			value="checkedG"
+// 			className="user-checkbox"
+// 		/>
+// 	)
+// }
+
+export const permissionCellFormatter = ({ value }) => {
+	const permissions = [ 'Admin', 'User', 'Super Admin' ] 
 
 	return (
 		<Dropdown style={{margin: -6}}
@@ -22,21 +52,5 @@ export const permissionCellFormatter = ( ({ value }) => {
 			options={permissions}
 		/>
 	)
-}) 
-
-export const editDeleteCellFormatter = () => {
-	return (
-		<Dropdown icon='ellipsis vertical'>
-			<Dropdown.Menu>
-				<Dropdown.Item 
-					text='Edit' 
-					onClick={ () => {} }
-				/>
-				<Dropdown.Item 
-					text='Delete' 
-					onClick={ () => {} }
-				/>
-			</Dropdown.Menu>
-		</Dropdown>	
-	)
 }
+

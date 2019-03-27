@@ -7,7 +7,7 @@ import { Control, Form } from 'react-redux-form'
 
 import { handleAddNewWarehousePopup, postNewCreditCardRequest } from '../../actions' 
 
-class EditWarehousePopup extends React.Component {
+class AddNewCreditCardPopup extends React.Component {
   constructor(props) {
     super(props) 
 
@@ -83,4 +83,4 @@ const mapDispatchToProps = {
   postNewCreditCardRequest
 } 
 
-export default connect(null, mapDispatchToProps)(EditWarehousePopup) 
+export default connect(null, mapDispatchToProps)(AddNewCreditCardPopup) 

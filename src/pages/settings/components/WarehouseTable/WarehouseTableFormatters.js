@@ -5,6 +5,7 @@ import { Dropdown } from 'semantic-ui-react'
 import { openEditPopup, deleteWarehouse } from '../../actions' 
 
 function editDeleteCell({row, deleteWarehouse, openEditPopup}) {
+
 	return (
 		<Dropdown icon='ellipsis vertical'>
 			<Dropdown.Menu>
