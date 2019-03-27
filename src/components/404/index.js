@@ -1,6 +1,6 @@
 import React from 'react';
-import './404.css';
-import '../../styles/flexboxgrid.css';
+import './404.scss';
+import '../../styles/flexboxgrid.scss';
 import {FormattedMessage} from 'react-intl';
 
 const NoMatch = () => (

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './operators.css';
+import './operators.scss';
 import Operator from "./components/Operator";
 import Spinner from '../../../components/Spinner/Spinner'
 import {FormattedMessage} from 'react-intl';

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { confirmable } from 'react-confirm';
 import Dialog from '@material-ui/core/Dialog';
-import './confirmDialog.css';
+import './confirmDialog.scss';
 
 const ConfirmDialog = ({show, proceed, dismiss, cancel, title, confirmation, options}) => {
     return <Dialog onHide={dismiss} open={show}>

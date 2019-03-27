@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './officesAdmin.css';
+import './officesAdmin.scss';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import InputEdit from "../../../components/InputEdit/InputEdit";

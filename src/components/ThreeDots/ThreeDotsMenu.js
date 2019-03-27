@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import './ThreeDotsMenu.css';
+import './ThreeDotsMenu.scss';
 import {FormattedMessage} from 'react-intl';
 class ThreeDotsMenu extends Component {
 

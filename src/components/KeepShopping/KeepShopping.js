@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import "./keepshopping.css";
+import "./keepshopping.scss";
 
 class KeepShopping extends Component {
 

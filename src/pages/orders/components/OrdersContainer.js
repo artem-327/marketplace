@@ -28,15 +28,18 @@ function transformToRows(data, type) {
 
 function mapStateToProps(state, ownProps) {
     const {orders} = state
-    if (ownProps.match.params.type !== orders.dataType) {
+    const {router} = ownProps
+    const query = router ? router.query : ownProps.match.params
+
+    if (query.type !== orders.dataType) {
         orders.data = []
     }
     return {
-        endpointType: ownProps.match.params.type === 'sales' ? 'sale' : ownProps.match.params.type,
+        endpointType: query.type === 'sales' ? 'sale' : query.type,
         ...orders,
         isOpen: state.isOpen,
         filterData: state.forms.filter,
-        rows: transformToRows(orders.data, ownProps.match.params.type),
+        rows: transformToRows(orders.data, query.type),
         activeStatus: orders.statusFilter
     }
 }

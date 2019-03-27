@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './ProductOffers.css';
+import './ProductOffers.scss';
 import DataTable from "../../../../components/DataTable";
 import BroadcastRule from "./BroadcastRule";
 import AddBroadcast from "../../../../pages/inventory/myInventory/components/broadcast";

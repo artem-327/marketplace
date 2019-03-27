@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import './AddedLots.css';
+import './AddedLots.scss';
 import UploadLot from "../../../Upload/UploadLot";
 
 class AddedLot extends Component {

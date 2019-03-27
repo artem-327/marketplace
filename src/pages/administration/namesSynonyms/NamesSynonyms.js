@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './namesSynonyms.css';
+import './namesSynonyms.scss';
 import RemoteComboBox from "../../../components/ComboBox/RemoteComboBox";
 import Edit from "./components/Edit";
 import { FormattedMessage, injectIntl } from 'react-intl';

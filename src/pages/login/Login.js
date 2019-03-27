@@ -2,7 +2,7 @@ import React from 'react';
 import logoLogin from '../../images/login/logo_echo.png';
 
 import Form from './components/Form'
-import './login.css'
+import './login.scss'
 
 
 const Login = props => {

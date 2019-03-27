@@ -6,10 +6,10 @@ import {
   Grid,
   Table,
 	TableHeaderRow
-} from '@devexpress/dx-react-grid-material-ui' 
+} from '~/components/dx-grid-semantic-ui/plugins'
 
 import { 
-	CheckboxFormatterProvider,
+	DropdownEditDeliteProvider,
 	EditDeleteFormatterProvider,
 	PermissionFormatterProvider
 } from './UsersTableProviders' 
@@ -29,7 +29,7 @@ function cn(){
 class UsersTable extends Component {
 	state = {
 		columns: [
-			{ name: 'checkbox', title: ' '},
+			{ name: 'editDeleteBtn', title: ' '},
 			{ name: 'userName', title: 'User Name' },
 			{ name: 'title', title: 'Title' },
 			{ name: 'email', title: 'E-mail' },
@@ -50,7 +50,7 @@ class UsersTable extends Component {
 			permissionsColumns, 
 			editDeleteColumns, 
 			filterValue,
-			// editWarehousePopup,
+			// editPopupBoolean,
 			// addNewWarehousePopup
 		} = this.props 
 
@@ -76,16 +76,12 @@ class UsersTable extends Component {
 				<TableHeaderRow 
 					cellComponent={ HeaderCells }
 				/>
-				<CheckboxFormatterProvider 
-					for={ checkboxColumns }
+				<DropdownEditDeliteProvider 
+					for={ editDeleteColumns }
 					rows={ rows }
 				/>
 				<PermissionFormatterProvider
 					for={ permissionsColumns }
-					rows={ rows }
-				/>
-				<EditDeleteFormatterProvider
-					for={ editDeleteColumns }
 					rows={ rows }
 				/>
 			</Grid>		
@@ -102,9 +98,9 @@ const mapStateToProps = state => {
 		rows: state.settings.usersRows,
 		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
 		permissionsColumns: state.settings.columnsForFormatter.permissionsColumns,
-		checkboxColumns: state.settings.columnsForFormatter.checkboxColumns,
+		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
 		filterValue: state.settings.filterValue
-		// editWarehousePopup: state.settings.editWarehousePopup,
+		// editPopupBoolean: state.settings.editPopupBoolean,
 		// addNewWarehousePopup: state.settings.addNewWarehousePopup
   }
 }

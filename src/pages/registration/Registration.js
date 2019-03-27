@@ -1,8 +1,8 @@
 import React from 'react';
 
 import Form from './components/Form'
-import './registration.css'
-import './registration.css'
+import './registration.scss'
+import './registration.scss'
 import regLogin from '../../images/login/logo_echo.png';
 import { FormattedMessage } from 'react-intl';
 

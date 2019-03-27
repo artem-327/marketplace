@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from "prop-types"
-import "./SummaryTable.css"
+import "./SummaryTable.scss"
 import Button from '../../../../components/Button/Button'
 import {FormattedMessage} from 'react-intl';
 

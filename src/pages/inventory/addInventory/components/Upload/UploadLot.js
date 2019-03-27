@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './uploadLot.css'
+import './uploadLot.scss'
 import upload from '../../../../../images/upload/upload.png';
 import uploaded from '../../../../../images/upload/uploaded.png';
 import PropTypes from "prop-types";
@@ -11,7 +11,6 @@ import {TOO_LARGE_FILE, UPLOAD_FILE_FAILED} from '../../../../../modules/errors.
 class UploadLot extends Component {
     constructor(props) {
         super(props);
-        localStorage.removeItem('attachments')
         this.state = {
             files: [],
             filesIds: []
@@ -19,6 +18,8 @@ class UploadLot extends Component {
     }
 
     componentDidMount() {
+        localStorage.removeItem('attachments')
+        
         if (this.props.edit) {
             let files = this.state.files
             let attachments

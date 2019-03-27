@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './checkbox.css';
+import './checkbox.scss';
 import PropTypes from "prop-types";
 
 class CheckboxControlled extends Component {

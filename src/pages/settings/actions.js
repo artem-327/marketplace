@@ -1,5 +1,13 @@
 import * as AT from './action-types' 
 
+export function handlerSubmitUserEditPopup(value, id) {
+  return {
+    type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
+    payload: value,
+    id
+  }
+}
+
 export function handleEditPopup(rows) {
   return {
     type: AT.EDIT_POPUP_TRIGGER,
@@ -7,10 +15,10 @@ export function handleEditPopup(rows) {
   }
 }
 
-export function handleActiveTab(event) {
+export function handleActiveTab(tab) {
   return {
     type: AT.HANDLE_ACTIVE_TAB,
-    payload: event.target
+    payload: {tab}
   }
 }
 
@@ -100,7 +108,6 @@ export function postNewBankAccountRequest(bankAccountData) {
 }
 
 export function postNewProductRequest(inputsValue, id) {
-  console.log(inputsValue, id,'here action')
   return {
     type: AT.POST_NEW_PRODUCT_REQUEST,
     // payload: inputsValue

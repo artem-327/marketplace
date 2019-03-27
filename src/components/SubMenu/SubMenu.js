@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import './submenu.css';
+import './submenu.scss';
 import filterIconClose from '../../images/subMenu/filter-icon-transparent.png';
 import filterIconOpen from '../../images/subMenu/filter-icon-transparent-active.png';
 import classNames from 'classnames';

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Control, Form, Errors} from 'react-redux-form';
 import DropdownRedux from "../../../../../../components/Dropdown/DropdownRedux";
 import DatepickerRedux from "../../../../../../components/Datepicker/DatepickerRedux";
-import './ProductOffering.css'
+import './ProductOffering.scss'
 import {required, messages, min, isNumber, maxPercent, lotNumber} from "../../../../../../utils/validation";
 import RemoteComboBoxRedux from "../../../../../../components/ComboBox/RemoteComboBoxRedux";
 import Tooltip from "../../../../../../components/Tooltip/Tooltip";

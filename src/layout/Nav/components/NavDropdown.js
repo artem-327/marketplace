@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import inventory from '../../../images/nav/inventory.png';
-import '../nav.css'
+import '../nav.scss'
 import {Link} from 'react-router-dom'
 
 class NavDropdown extends Component {

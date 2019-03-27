@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './SearchProducts.css';
+import './SearchProducts.scss';
 import RemoteComboBox from "../../../../../../components/ComboBox/RemoteComboBox";
 import InfoLabel from "./InfoLabel.js";
 import {FormattedMessage, injectIntl} from 'react-intl';

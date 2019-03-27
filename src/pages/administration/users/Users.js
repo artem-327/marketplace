@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./Users.css";
+import "./Users.scss";
 import User from "./components/User";
 import DataTable from "../../../components/DataTable";
 import Spinner from "../../../components/Spinner/Spinner";

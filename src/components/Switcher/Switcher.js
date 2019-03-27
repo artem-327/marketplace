@@ -1,5 +1,5 @@
 import React from 'react';
-import './Switcher.css';
+import './Switcher.scss';
 
 const Switcher = (props) => {
   const sliderType = props.isrounded ? "slider round" : "slider"

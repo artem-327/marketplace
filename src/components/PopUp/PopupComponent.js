@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from "prop-types"
-import './popupComponent.css'
+import './popupComponent.scss'
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 const PopupComponent = ({removePopup, headerTitle, children, footerComponent}) => {

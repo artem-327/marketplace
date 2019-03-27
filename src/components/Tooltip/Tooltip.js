@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from "prop-types";
-import './tooltip.css'
+import './tooltip.scss'
 import classnames from 'classnames';
 import {FormattedMessage} from 'react-intl';
 

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './radioButton.css';
+import './radioButton.scss';
 import PropTypes from "prop-types";
 import { Control } from 'react-redux-form';
 

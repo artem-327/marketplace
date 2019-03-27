@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ProductOffers from "./components/ProductOffers";
 import Filter from '../../../components/Filter';
-import './myInventory.css';
+import './myInventory.scss';
 import Spinner from "../../../components/Spinner/Spinner";
 import FilterTag from "../../../components/Filter/components/FilterTag";
 import {getSelectedDataTable} from "../../../utils/functions";

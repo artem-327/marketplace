@@ -1,5 +1,5 @@
 import React, { Component, Children } from 'react'
-import './style.css'
+import './style.scss'
 import {FormattedMessage} from 'react-intl'
 import dropdown from '../../images/inv-filter/dropdown.png'
 import dropdownClose from '../../images/inv-filter/dropdown-close.png'

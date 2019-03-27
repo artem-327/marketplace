@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './support.css'
+import './support.scss'
 import ConMess from '../../components/constructionMessage';
 
 class Support extends Component {

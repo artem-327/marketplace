@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import '../styles/orders.css'
+import '../styles/orders.scss'
 import Spinner from "../../../components/Spinner/Spinner"
 import Filter from '../../../components/Filter'
 import SubMenu from '../../../components/SubMenu'
@@ -37,9 +37,10 @@ class Orders extends Component {
     }
 
     render() {
-        const {endpointType, match, rows, isFetching, activeStatus} = this.props
+        const {endpointType, match, rows, isFetching, activeStatus, router} = this.props
         const {status} = this.props.filterData
-        let ordersType = match.params.type.charAt(0).toUpperCase() + match.params.type.slice(1)
+        const query = router ? router.query : match.params
+        let ordersType = query.type.charAt(0).toUpperCase() + query.type.slice(1)
 
         return (
             <div id="page">

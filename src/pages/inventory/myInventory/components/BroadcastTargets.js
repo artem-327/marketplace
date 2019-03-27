@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import BroadcastTargetGroup from './BroadcastTargetGroup';
-import './BroadcastTargets.css';
+import './BroadcastTargets.scss';
 
 class BroadcastTargets extends Component {
 

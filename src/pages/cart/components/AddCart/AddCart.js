@@ -5,7 +5,7 @@ import Spinner from '../../../../components/Spinner/Spinner'
 import Button from '../../../../components/Button/Button'
 import PopupComponent from '../../../../components/PopUp/PopupComponent'
 import {getUnit} from '../../../../utils/functions'
-import './AddCart.css';
+import './AddCart.scss';
 import file from '../../../../images/file.svg';
 import InputControlled from '../../../../components/InputControlled/InputControlled'
 import {checkToken} from "../../../../utils/auth";

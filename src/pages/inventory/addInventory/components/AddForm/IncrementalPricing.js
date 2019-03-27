@@ -1,5 +1,5 @@
 import React from 'react';
-import './Pricing.css';
+import './Pricing.scss';
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import {FormattedMessage} from 'react-intl';

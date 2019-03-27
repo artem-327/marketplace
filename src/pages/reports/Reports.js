@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './reports.css'
+import './reports.scss'
 import ConMess from '../../components/constructionMessage';
 
 

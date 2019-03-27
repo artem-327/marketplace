@@ -1,7 +1,7 @@
 import * as AT from './action-types' 
   
 export const initialState = {
-  editWarehousePopup: false,
+  editPopupBoolean: false,
   addNewWarehousePopup: false,
   popupValues: [],
   usersRows: [],
@@ -28,7 +28,7 @@ export const initialState = {
     {	name: 'Terms', id: 10 }, 
     {	name: 'Website Controls', id: 11 }
   ],
-  currentTab: 'Product catalog',
+  currentTab: 'Warehouses',
   filterValue: '',
   editPopupSearchProducts: []
 } 
@@ -38,7 +38,7 @@ export default function reducer(state = initialState, action) {
     case AT.EDIT_POPUP_TRIGGER: {
       return {
         ...state,
-        editWarehousePopup: state.editWarehousePopup === false ? true : false,
+        editPopupBoolean: state.editPopupBoolean === false ? true : false,
         popupValues: action.payload
       }
     }
@@ -46,7 +46,7 @@ export default function reducer(state = initialState, action) {
     case AT.HANDLE_ACTIVE_TAB: {
       return {
         ...state,
-        currentTab: action.payload.getAttribute('data-tab-name')
+        currentTab: action.payload.tab
       }
     }
 
@@ -65,8 +65,10 @@ export default function reducer(state = initialState, action) {
           title: "title",
           email: user.email,
           phone: "phone",
-          homeBranch: user.branch.address.province.name,
-          permissions: user.roles.name
+          homeBranch: user.branch ? user.branch.address.province.name : '',
+          permissions: user.roles ? user.roles.name : '',
+          middleName: user.middlename,
+          id: user.id
         } 
       }) 
       return {

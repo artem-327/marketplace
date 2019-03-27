@@ -1,13 +1,17 @@
-import React, { Component } from 'react' 
-import { connect } from 'react-redux' 
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
-import SearchIcon from '@material-ui/icons/Search' 
-import InputBase from '@material-ui/core/InputBase' 
-import MenuItem from '@material-ui/core/MenuItem' 
-import TextField from '@material-ui/core/TextField' 
+import SearchIcon from '@material-ui/icons/Search'
+import InputBase from '@material-ui/core/InputBase'
+import MenuItem from '@material-ui/core/MenuItem'
+import TextField from '@material-ui/core/TextField'
 
-import { handleAddNewWarehousePopup, handleFiltersValue } from '../actions' 
-import unitedStates from '../../../components/unitedStates' 
+import {Menu, Button, Input, Dropdown} from 'semantic-ui-react'
+
+import { handleAddNewWarehousePopup, handleFiltersValue } from '../actions'
+import unitedStates from '../../../components/unitedStates'
+
+
 
 class TablesHandlers extends Component {
 	state = {		
@@ -17,27 +21,59 @@ class TablesHandlers extends Component {
   handleChangeSelectField = (event, value) => {
 		this.setState({ 
 			filterFieldCurrentValue: value 
-		}) 
-  } 
+		})
+  }
   
   handleChangeFieldsCurrentValue = fieldStateName => event => {
 		this.setState({ 
 			[fieldStateName]: event.target.value 
-		}) 
-	} 
+		})
+	}
   
   render() {
     const {
       handleFiltersValue, 
       currentTab,
       handleAddNewWarehousePopup
-    } = this.props 
+    } = this.props
     
     const {      
       filterFieldCurrentValue
-    } = this.state 
+    } = this.state
 
-    return (					
+    return (
+      <Menu secondary>
+        <Menu.Item header><h1>Users Settings</h1></Menu.Item>
+        
+        <Menu.Menu position='right'>
+          {/* {currentTab === 'Users' 
+            ? <Dropdown item text='Language' scrolling
+                
+              >
+                <Dropdown.Menu>
+                  {unitedStates.map(option => (
+                    <Dropdown.Item key={option.name} value={option.name}>{option.name}</Dropdown.Item> 
+                  ))}
+                </Dropdown.Menu>
+            </Dropdown>
+            : null
+          } */}
+            
+          <Menu.Item>
+            <Input icon='search' placeholder="Search..."
+            onChange={ e => handleFiltersValue(e.target.value)} />
+          </Menu.Item>
+          <Menu.Item>
+            <Button primary onClick={ handleAddNewWarehousePopup }>
+              Add new { currentTab }
+            </Button>
+          </Menu.Item>
+        </Menu.Menu>
+      </Menu>
+    )
+
+    return (			
+
       <div className="b-search col-xs-6">
         { currentTab === 'Users' ?
           <TextField
@@ -47,9 +83,9 @@ class TablesHandlers extends Component {
             onChange={ this.handleChangeFieldsCurrentValue('filterFieldCurrentValue') }
             variant="outlined"
             onClick={ (e) => { 
-                if(e.target.value === undefined) return 
-                if(e.target.value === 'None') return handleFiltersValue('') 
-                return handleFiltersValue(e.target.value) 
+                if(e.target.value === undefined) return
+                if(e.target.value === 'None') return handleFiltersValue('')
+                return handleFiltersValue(e.target.value)
               } 
             }
           > 
@@ -76,7 +112,7 @@ class TablesHandlers extends Component {
             placeholder="Search..."
             classes={{ input: "input-base" }}
             onChange={ e => {
-                return handleFiltersValue(e.target.value) 
+                return handleFiltersValue(e.target.value)
               }
             }
             fullWidth
@@ -102,6 +138,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   handleAddNewWarehousePopup,
   handleFiltersValue
-} 
+}
 
-export default connect(mapStateToProps, mapDispatchToProps)(TablesHandlers) 
+export default connect(mapStateToProps, mapDispatchToProps)(TablesHandlers)

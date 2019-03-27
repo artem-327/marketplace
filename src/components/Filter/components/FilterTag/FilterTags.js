@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import FilterTag from "./FilterTag";
-import './filterTags.css'
+import './filterTags.scss'
 class FilterTags extends Component {
 
 

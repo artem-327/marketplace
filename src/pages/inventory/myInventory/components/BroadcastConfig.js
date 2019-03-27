@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './BroadcastTargets.css';
+import './BroadcastTargets.scss';
 import Radio from "../../../../components/Radio/Radio";
 
 class BroadcastConfig extends Component {

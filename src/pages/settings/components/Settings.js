@@ -1,93 +1,98 @@
-import React, { Component } from 'react' 
-import { connect } from 'react-redux' 
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
-import PropTypes from "prop-types" 
-import { DataTypeProvider } from '@devexpress/dx-react-grid' 
+// import '../styles/settings.scss'
 
-import '../styles/settings.css' 
+import Tabs from './Tabs'
+import UsersTable from './UserTable/UsersTable'
+import WarehouseTable from './WarehouseTable/WarehouseTable'
+import BranchTable from './BranchTable/BranchTable'
+import BankAccountsTable from './BankAccountsTable/BankAccountsTable'
+import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
+import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
+// import EditBranchPopup from './BranchTable/EditBranchPopup'
+import EditWarehousePopup from './WarehouseTable/EditWarehousePopup'
+import EditUsersPopup from './UserTable/EditUsersPopup'
+import EditProductCatalogPopup from './ProductCatalogTable/EditProductCatalogPopup'
+import AddNewBranchPopup from './BranchTable/AddNewBranchPopup'
+import AddNewWarehousePopup from './WarehouseTable/AddNewWarehousePopup'
+import AddNewCreditCardPopup from './CreditCardsTable/AddNewCreditCardPopup'
+import AddNewBankAccountPopup from './BankAccountsTable/AddNewBankAccountPopup'
+import AddNewProductCatalogPopup from './ProductCatalogTable/AddNewProductCatalogPopup'
+import TablesHandlers from './TablesHandlers'
 
-import Tabs from './Tabs' 
-import UsersTable from './UserTable/UsersTable' 
-import WarehouseTable from './WarehouseTable/WarehouseTable' 
-import BranchTable from './BranchTable/BranchTable' 
-import BankAccountsTable from './BankAccountsTable/BankAccountsTable' 
-import CreditCardsTable from './CreditCardsTable/CreditCardsTable' 
-import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable' 
-// import EditBranchPopup from './BranchTable/EditBranchPopup' 
-import EditWarehousePopup from './WarehouseTable/EditWarehousePopup' 
-import EditProductCatalogPopup from './ProductCatalogTable/EditProductCatalogPopup' 
-import AddNewBranchPopup from './BranchTable/AddNewBranchPopup' 
-import AddNewWarehousePopup from './WarehouseTable/AddNewWarehousePopup' 
-import AddNewCreditCardPopup from './CreditCardsTable/AddNewCreditCardPopup' 
-import AddNewBankAccountPopup from './BankAccountsTable/AddNewBankAccountPopup' 
-import AddNewProductCatalogPopup from './ProductCatalogTable/AddNewProductCatalogPopup' 
-import TablesHandlers from './TablesHandlers' 
+import { Container, Grid, Divider } from 'semantic-ui-react'
 
 class Settings extends Component {
-	
+
 	render() {
 		const {
-			editWarehousePopup,
+			editPopupBoolean,
 			addNewWarehousePopup,
 			currentTab
-		} = this.props 
+		} = this.props
 
 		return (
-			<main className="b-settings-content">
-				<div className="b-for-shadow">
-					<div className="b-wrapper row between-xs container-fluid">
-						<span className="uppercase page-title col-xs-3">User settings</span>
-						<TablesHandlers />
-					</div>
-				</div>
-				<div className="main-content-wrapper row between-xs container-fluid">
-					<Tabs />
-					{ editWarehousePopup && currentTab === 'Product catalog' ?
-						<EditProductCatalogPopup /> :
-						editWarehousePopup && currentTab === 'Warehouses' ? 
-						<EditWarehousePopup	/> :
-						editWarehousePopup && currentTab === 'Branches' ?
-						<EditWarehousePopup /> 
-						: null
-					}
-					{ 
-						addNewWarehousePopup && currentTab === 'Branches' ?
-						<AddNewBranchPopup /> :
-						addNewWarehousePopup && currentTab === 'Warehouses' ?
-						<AddNewWarehousePopup /> :
-						addNewWarehousePopup && currentTab === 'Bank accounts' ?
-						<AddNewBankAccountPopup /> :
-						addNewWarehousePopup && currentTab === 'Credit cards' ?
-						<AddNewCreditCardPopup /> :
-						addNewWarehousePopup && currentTab === 'Product catalog' ?
-						<AddNewProductCatalogPopup />
-						: null
-					}
-					{ currentTab === 'Users' ?
-					<UsersTable /> :
-					currentTab === 'Warehouses' ?
-					<WarehouseTable /> :
-					currentTab === 'Product catalog' ?
-					<ProductCatalogTable /> :
-					currentTab === 'Branches' ?
-					<BranchTable /> :
-					currentTab === 'Bank accounts' ?
-					<BankAccountsTable /> : 
-					currentTab === 'Credit cards' ?
-					<CreditCardsTable /> : <div className="conMess col-xs-10" style={{textAlign: 'center'}}>This page is still under construction</div>
-					}
-				</div>
-			</main>
-		) 
+			<Container style={{ marginTop: 20 }}>
+				<TablesHandlers />
+				<Divider />
+				<Grid columns='equal'>
+					<Grid.Row>
+						<Grid.Column width={4}>
+							<Tabs />							
+						</Grid.Column>
+						<Grid.Column>
+							{
+								editPopupBoolean && currentTab === 'Product catalog' ?
+									<EditProductCatalogPopup /> :
+									editPopupBoolean && currentTab === 'Warehouses' ?
+										<EditWarehousePopup /> :
+										editPopupBoolean && currentTab === 'Users' ?
+											<EditUsersPopup /> :
+											editPopupBoolean && currentTab === 'Branches' ?
+												<EditWarehousePopup />
+												: null
+							}
+							{
+								addNewWarehousePopup && currentTab === 'Branches' ?
+									<AddNewBranchPopup /> :
+									addNewWarehousePopup && currentTab === 'Warehouses' ?
+										<AddNewWarehousePopup /> :
+										addNewWarehousePopup && currentTab === 'Bank accounts' ?
+											<AddNewBankAccountPopup /> :
+											addNewWarehousePopup && currentTab === 'Credit cards' ?
+												<AddNewCreditCardPopup /> :
+												addNewWarehousePopup && currentTab === 'Product catalog' ?
+													<AddNewProductCatalogPopup />
+													: null
+							}
+							{currentTab === 'Users' ?
+								<UsersTable /> :
+								currentTab === 'Warehouses' ?
+									<WarehouseTable /> :
+									currentTab === 'Product catalog' ?
+										<ProductCatalogTable /> :
+										currentTab === 'Branches' ?
+											<BranchTable /> :
+											currentTab === 'Bank accounts' ?
+												<BankAccountsTable /> :
+												currentTab === 'Credit cards' ?
+													<CreditCardsTable /> : <div className="conMess col-xs-10" style={{ textAlign: 'center' }}>This page is still under construction</div>
+							}
+						</Grid.Column>
+					</Grid.Row>
+				</Grid>
+			</Container>
+		)
 	}
 }
 
 const mapStateToProps = state => {
-  return {
-		editWarehousePopup: state.settings.editWarehousePopup,
+	return {
+		editPopupBoolean: state.settings.editPopupBoolean,
 		addNewWarehousePopup: state.settings.addNewWarehousePopup,
 		currentTab: state.settings.currentTab
-  }
+	}
 }
 
 export default connect(mapStateToProps, null)(Settings) 

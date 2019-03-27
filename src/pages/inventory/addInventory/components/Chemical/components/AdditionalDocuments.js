@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import './AdditionalDocuments.css'
+import './AdditionalDocuments.scss'
 import UploadLot from "../../Upload/UploadLot";
 import { FormattedMessage } from 'react-intl';
 
