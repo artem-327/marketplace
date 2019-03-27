@@ -89,7 +89,7 @@ export default function reducer(state = initialState, action) {
           title: "title",
           email: user.email,
           phone: "phone",
-          homeBranch: user.branch.address ? user.branch.address.province.name : '',
+          homeBranch: user.branch ? user.branch.address.province.name : '',
           permissions: user.roles.name
         } 
       }) 
