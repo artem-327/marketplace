@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Control, Form } from 'react-redux-form'
 
-import { Modal, Button, FormField, Header, Segment, FormGroup, Form as SForm } from 'semantic-ui-react'
+import { Modal, Button, FormField, FormGroup, Form as SForm } from 'semantic-ui-react'
 
 import { closeAddPopup, postNewWarehouseRequest } from '../../actions'
 

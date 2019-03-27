@@ -9,7 +9,6 @@ import {
 } from '~/components/dx-grid-semantic-ui/plugins'
 
 import { 
-	// DropdownEditDeliteProvider,
 	EditDeleteFormatterProvider,
 	PermissionFormatterProvider
 } from './UsersTableProviders' 
@@ -76,18 +75,14 @@ class UsersTable extends Component {
 				<TableHeaderRow 
 					cellComponent={ HeaderCells }
 				/>
-				{/* <DropdownEditDeliteProvider 
-					for={ editDeleteColumns }
-					rows={ rows }
-				/> */}
 				<EditDeleteFormatterProvider 
 					for={ editDeleteColumns }
 					rows={ rows }
 				/>
-				{/* <PermissionFormatterProvider
+				<PermissionFormatterProvider
 					for={ permissionsColumns }
 					rows={ rows }
-				/> */}
+				/>
 			</Grid>		
 		)		
 	}
