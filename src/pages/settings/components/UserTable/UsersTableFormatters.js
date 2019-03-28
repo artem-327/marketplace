@@ -1,32 +1,32 @@
-import React from 'react' 
-import { connect } from 'react-redux' 
+import React from 'react'
+import { connect } from 'react-redux'
 import { Dropdown } from 'semantic-ui-react'
 
-import { handleEditPopup, deleteWarehouse } from '../../actions' 
+import { handleEditPopup, deleteWarehouse } from '../../actions'
 
 function dropdownEditDelete(props) {
 	return (
 		<Dropdown icon='ellipsis vertical'>
 			<Dropdown.Menu>
-				<Dropdown.Item 
-					text='Edit' 
-					onClick={ () => props.handleEditPopup(props.row) }
+				<Dropdown.Item
+					text='Edit'
+					onClick={() => props.handleEditPopup(props.row)}
 				/>
-				<Dropdown.Item 
-					text='Delete' 
-					// onClick={ () => props.deleteWarehouse(this.props.row.branchId) }
+				<Dropdown.Item
+					text='Delete'
+				// onClick={ () => props.deleteWarehouse(this.props.row.branchId) }
 				/>
 			</Dropdown.Menu>
-		</Dropdown>	
+		</Dropdown>
 	)
 }
 
-const mapDispatchToProps = {   
-		handleEditPopup,
-		deleteWarehouse
-} 
+const mapDispatchToProps = {
+	handleEditPopup,
+	deleteWarehouse
+}
 
-export const editDeleteFormatterProvider =  connect(null, mapDispatchToProps)(dropdownEditDelete) 
+export const editDeleteFormatterProvider = connect(null, mapDispatchToProps)(dropdownEditDelete)
 // import React from 'react' 
 
 // import Checkbox from '@material-ui/core/Checkbox' 
@@ -42,14 +42,14 @@ export const editDeleteFormatterProvider =  connect(null, mapDispatchToProps)(dr
 // }
 
 export const permissionCellFormatter = ({ value }) => {
-	const permissions = [ 'Admin', 'User', 'Super Admin' ].map(p => ({
+	const permissions = ['Admin', 'User', 'Super Admin'].map(p => ({
 		text: p,
 		value: p,
 		key: p
 	}))
 
 	return (
-		<Dropdown style={{margin: '-6px'}}
+		<Dropdown style={{ margin: '-6px' }}
 			placeholder='Select permission'
 			selection
 			fluid

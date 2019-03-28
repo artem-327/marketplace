@@ -60,11 +60,11 @@ class TablesHandlers extends Component {
           } */}
             
           <Menu.Item>
-            <Input icon='search' placeholder="Search..."
+            <Input style={{width: 340}} size="large" icon='search' placeholder="Search users by name, title or branch ..."
             onChange={ e => handleFiltersValue(e.target.value)} />
           </Menu.Item>
           <Menu.Item>
-            <Button primary onClick={() => openAddPopup(currentTab) }>
+            <Button size="large" primary onClick={() => openAddPopup(currentTab) }>
               Add new { currentTab }
             </Button>
           </Menu.Item>

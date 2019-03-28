@@ -5,8 +5,11 @@ import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid'
 import {
   Grid,
   Table,
-	TableHeaderRow
-} from '~/components/dx-grid-semantic-ui/plugins'
+	TableHeaderRow,
+	DragDropProvider,
+	TableColumnReordering,
+} from '@devexpress/dx-react-grid-bootstrap4'
+// } from '~/components/dx-grid-semantic-ui/plugins'
 
 import { 
 	EditDeleteFormatterProvider,
@@ -59,31 +62,35 @@ class UsersTable extends Component {
 		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
 		const TableCells = props => <Table.Cell {...props} className={ 'columns-rows-cell' } />
 
-		return (			
-			<Grid
-				// rootComponent={ GridRoot }
-				rows={ rows }
-				columns={ columns }
-			>	
-				<SearchState 
-					value={ filterValue } 
-				/>
-				<IntegratedFiltering />	
-				<Table 
-					cellComponent={ TableCells }
-				/>
-				<TableHeaderRow 
-					cellComponent={ HeaderCells }
-				/>
-				<EditDeleteFormatterProvider 
-					for={ editDeleteColumns }
+		return (	
+			<div className="bootstrapiso">
+				<Grid
+					// rootComponent={ GridRoot }
 					rows={ rows }
-				/>
-				<PermissionFormatterProvider
-					for={ permissionsColumns }
-					rows={ rows }
-				/>
-			</Grid>		
+					columns={ columns }
+				>	
+					<DragDropProvider />
+					<SearchState 
+						value={ filterValue } 
+					/>
+					<IntegratedFiltering />	
+					<Table
+						cellComponent={ TableCells }
+					/>
+					<TableHeaderRow 
+						cellComponent={ HeaderCells }
+					/>
+					<EditDeleteFormatterProvider 
+						for={ editDeleteColumns }
+						rows={ rows }
+					/>
+					<PermissionFormatterProvider
+						for={ permissionsColumns }
+						rows={ rows }
+					/>
+					<TableColumnReordering defaultOrder={columns.map(c => c.name)} />
+				</Grid>		
+			</div>		
 		)		
 	}
 }
