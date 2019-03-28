@@ -29,6 +29,7 @@ import location from './modules/location'
 import errors from "./modules/errors"
 import dataTables from "./modules/dataTables"
 import settings from './pages/settings/reducers'
+import admin from './pages/admin/reducers'
 
 import { show as saveFilterItem } from './components/Filter/components/SavedFilters/reducers/SaveFilterItem.reducers'
 import companiesSaga from "./saga/companies"
@@ -51,6 +52,7 @@ import auth from '~/modules/auth/reducer'
 
 const reducer = combineReducers({
   auth,
+  admin,
   identity,
   brcRules,
   companies,

@@ -5,11 +5,16 @@ import { connect } from 'react-redux'
 import TablesHandlers from './TablesHandlers'
 
 import { Container, Grid, Divider } from 'semantic-ui-react'
+import Tabs from './Tabs'
+
 class Admin extends Component {
 
     renderContent = () => {
-        const {} = this.props
+        const {
+            currentTab,
+        } = this.props
 
+        return ('nejaky obsah')
 
     }
 
@@ -21,11 +26,10 @@ class Admin extends Component {
                 <Grid columns='equal'>
                     <Grid.Row>
                         <Grid.Column width={3}>
-                            Tabs
+                            <Tabs />
                         </Grid.Column>
                         <Grid.Column>
                             {this.renderContent()}
-                            contents
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
