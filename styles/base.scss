@@ -2,6 +2,13 @@ body {
   background: #FFF;
 }
 
+.sui-error-message {
+  display: block;
+  margin: 0.28571429rem 0;
+  color: rgb(159, 58, 56);
+  font-size: 0.92857143em;
+}
+
 // Secondary pointing menu override
 .ui.secondary.vertical.pointing.menu .active.item {
   border-color: #2599d5;
