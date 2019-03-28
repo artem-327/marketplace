@@ -1,13 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid'
+import { 
+	SearchState, 
+	IntegratedFiltering,
+	SortingState,
+	IntegratedSorting
+} from '@devexpress/dx-react-grid'
 import {
 	Grid,
 	Table,
 	TableHeaderRow,
 	DragDropProvider,
-	TableColumnReordering,
+	TableColumnReordering
 } from '@devexpress/dx-react-grid-bootstrap4'
 // } from '~/components/dx-grid-semantic-ui/plugins'
 
@@ -15,6 +20,7 @@ import {
 	EditDeleteFormatterProvider,
 	PermissionFormatterProvider
 } from './UsersTableProviders'
+
 import { getUsersDataRequest } from '../../actions'
 
 function cn() {
@@ -63,32 +69,31 @@ class UsersTable extends Component {
 		const TableCells = props => <Table.Cell {...props} className={'columns-rows-cell'} />
 
 		return (
-			<Grid
-				rootComponent={GridRoot}
-				rows={rows}
-				columns={columns}
-			>
-				<DragDropProvider />
-				<SearchState
-					value={filterValue}
-				/>
-				<IntegratedFiltering />
-				<Table
-					cellComponent={TableCells}
-				/>
-				<TableHeaderRow
-					cellComponent={HeaderCells}
-				/>
-				<EditDeleteFormatterProvider
-					for={editDeleteColumns}
+			<div className="bootstrapiso">
+				<Grid
+					rootComponent={GridRoot}
 					rows={rows}
-				/>
-				<PermissionFormatterProvider
-					for={permissionsColumns}
-					rows={rows}
-				/>
-				<TableColumnReordering defaultOrder={columns.map(c => c.name)} />
-			</Grid>
+					columns={columns}
+				>
+					<DragDropProvider />
+					<SearchState value={filterValue} />
+					<IntegratedFiltering />
+					<SortingState defaultSorting={[{columnName: 'userName'}]} />
+					<IntegratedSorting />
+
+					<Table cellComponent={TableCells} />
+					<TableHeaderRow showSortingControls cellComponent={HeaderCells} />
+					<EditDeleteFormatterProvider
+						for={editDeleteColumns}
+						rows={rows}
+					/>
+					<PermissionFormatterProvider
+						for={permissionsColumns}
+						rows={rows}
+					/>
+					<TableColumnReordering defaultOrder={columns.map(c => c.name)} />
+				</Grid>
+			</div>
 		)
 	}
 }
@@ -102,7 +107,6 @@ const mapStateToProps = state => {
 		rows: state.settings.usersRows,
 		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
 		permissionsColumns: state.settings.columnsForFormatter.permissionsColumns,
-		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
 		filterValue: state.settings.filterValue
 		// editPopupBoolean: state.settings.editPopupBoolean,
 		// addNewWarehousePopup: state.settings.addNewWarehousePopup

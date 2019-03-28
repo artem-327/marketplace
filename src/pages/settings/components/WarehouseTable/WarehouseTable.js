@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid'
+import { SearchState, IntegratedFiltering, IntegratedSelection, SelectionState } from '@devexpress/dx-react-grid'
 import {
 	Grid,
 	Table,
@@ -9,6 +9,8 @@ import {
 	DragDropProvider,
 	TableColumnReordering
 } from '@devexpress/dx-react-grid-bootstrap4'
+import {TableSelection} from '~/components/dx-grid-semantic-ui/plugins'
+
 // } from '~/components/dx-grid-semantic-ui/plugins'
 
 import { EditDeleteFormatterProvider } from './WarehouseTableProviders'
@@ -46,34 +48,38 @@ class WarehouseTable extends Component {
 
 		const { columns } = this.state
 
-		const GridRoot = props => <Grid.Root {...props} className="bootstrapiso" />
+		const GridRoot = props => <Grid.Root {...props} className="" />
 		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={'columns-title-cell'} />
 		const TableCells = props => <Table.Cell {...props} className={'columns-rows-cell'} />
 
 		return (
-			<Grid
-				rows={rows}
-				columns={columns}
-				rootComponent={GridRoot}
-			>
-				<DragDropProvider />
-
-				<SearchState
-					value={filterValue}
-				/>
-				<IntegratedFiltering />
-				<Table clssName="table-bordered"
-					cellComponent={TableCells}
-				/>
-				<TableHeaderRow
-					cellComponent={HeaderCells}
-				/>
-				<EditDeleteFormatterProvider
-					for={editDeleteColumns}
+			<div className="bootstrapiso">
+				<Grid
 					rows={rows}
-				/>
-				<TableColumnReordering defaultOrder={columns.map(c => c.name)} />
-			</Grid>
+					columns={columns}
+					rootComponent={GridRoot}
+				>
+					<DragDropProvider />
+					<SelectionState />
+					<IntegratedSelection />
+					<SearchState
+						value={filterValue}
+					/>
+					<IntegratedFiltering />
+					<Table clssName="table-bordered"
+						cellComponent={TableCells}
+					/>
+					<TableHeaderRow
+						cellComponent={HeaderCells}
+					/>
+					<EditDeleteFormatterProvider
+						for={editDeleteColumns}
+						rows={rows}
+					/>
+					<TableColumnReordering defaultOrder={columns.map(c => c.name)} />
+					<TableSelection showSelectAll selectByRowClick />
+				</Grid>
+			</div>
 		)
 	}
 }
