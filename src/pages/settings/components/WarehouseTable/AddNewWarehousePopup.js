@@ -1,5 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
+
+// import { Control, Form } from 'react-redux-form'
+// import { Modal, Button, FormField, FormGroup, Form as SForm } from 'semantic-ui-react'
+
 import { Modal, FormGroup } from 'semantic-ui-react'
 
 import { closeAddPopup, postNewWarehouseRequest } from '../../actions'
@@ -23,6 +27,7 @@ const formValidation = Yup.object().shape({
   email: Yup.string().email("Invalid email").required("Emails is required")
 })
 
+// class EditPopupBoolean extends React.Component {
 
 class AddNewWarehousePopup extends React.Component {
   render() {
@@ -74,5 +79,8 @@ const mapDispatchToProps = {
   closeAddPopup,
   postNewWarehouseRequest
 }
+
+
+// export default connect(null, mapDispatchToProps)(EditPopupBoolean) 
 
 export default connect(null, mapDispatchToProps)(AddNewWarehousePopup) 

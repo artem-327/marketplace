@@ -32,6 +32,7 @@ const tables = {
 	'Credit cards': <CreditCardsTable />
 }
 const editForms = {
+	'Users': <EditUsersPopup/>,
 	'Warehouses': <EditWarehousePopup />,
 	'Product catalog': <EditProductCatalogPopup />,
 	'Branches': <EditWarehousePopup />,

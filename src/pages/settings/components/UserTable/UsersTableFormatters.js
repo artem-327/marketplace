@@ -26,7 +26,7 @@ const mapDispatchToProps = {
 		deleteWarehouse
 } 
 
-export const dropdownEditDeleteFormatter =  connect(null, mapDispatchToProps)(dropdownEditDelete) 
+export const editDeleteFormatterProvider =  connect(null, mapDispatchToProps)(dropdownEditDelete) 
 // import React from 'react' 
 
 // import Checkbox from '@material-ui/core/Checkbox' 

@@ -63,6 +63,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentAddForm: null,
+        currentEditForm: null
       }
     }
 
