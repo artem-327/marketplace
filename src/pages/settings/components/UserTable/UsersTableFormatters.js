@@ -49,9 +49,10 @@ export const permissionCellFormatter = ({ value }) => {
 	}))
 
 	return (
-		<Dropdown style={{margin: -6}}
+		<Dropdown style={{margin: '-6px'}}
 			placeholder='Select permission'
 			selection
+			fluid
 			defaultValue={permissions[0].value}
 			options={permissions}
 		/>
