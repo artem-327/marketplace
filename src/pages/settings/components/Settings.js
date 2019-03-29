@@ -62,17 +62,13 @@ class Settings extends Component {
 			currentTab
 		} = this.props
 		
-		// console.log(currentAddForm, currentEditForm)
-
-		if (currentAddForm) {
-			return addForms[currentTab] || <p>Not implemented</p>
-		} else if (currentEditForm) {
-			return editForms[currentTab] || <p>Not implemented</p>
-		} else if (confirmMessage) {
-			return confMessage[currentTab] || <p>Not implemented</p>
-		} else {
-			return tables[currentTab] || <p>This page is still under construction</p>
-		}
+		return (
+			<>
+				{currentAddForm && addForms[currentTab]}
+				{currentEditForm && editForms[currentTab]}
+				{tables[currentTab] || <p>This page is still under construction</p>}
+			</>
+		)
 	}
 
 	render() {
