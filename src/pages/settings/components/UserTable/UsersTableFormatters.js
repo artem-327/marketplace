@@ -1,5 +1,5 @@
-import React from 'react' 
-import { connect } from 'react-redux' 
+import React from 'react'
+import { connect } from 'react-redux'
 import { Dropdown } from 'semantic-ui-react'
 
 import { handleEditPopup, handleConfirmPopup } from '../../actions' 
@@ -9,17 +9,16 @@ function dropdownEditDelete(props) {
 	return (
 		<Dropdown icon='ellipsis vertical'>
 			<Dropdown.Menu>
-				<Dropdown.Item 
-					text='Edit' 
-					onClick={ () => props.handleEditPopup(props.row) }
+				<Dropdown.Item
+					text='Edit'
+					onClick={() => props.handleEditPopup(props.row)}
 				/>
 				<Dropdown.Item 
 					text='Delete' 
-					// onClick={ () => props.handleConfirmPopup(props.row.branchId) }
 					onClick={ () => props.handleConfirmPopup(props.row.id) }
 				/>
 			</Dropdown.Menu>
-		</Dropdown>	
+		</Dropdown>
 	)
 }
 
@@ -28,7 +27,7 @@ const mapDispatchToProps = {
 		handleConfirmPopup
 } 
 
-export const editDeleteFormatterProvider =  connect(null, mapDispatchToProps)(dropdownEditDelete) 
+export const editDeleteFormatterProvider = connect(null, mapDispatchToProps)(dropdownEditDelete)
 // import React from 'react' 
 
 // import Checkbox from '@material-ui/core/Checkbox' 
@@ -44,16 +43,17 @@ export const editDeleteFormatterProvider =  connect(null, mapDispatchToProps)(dr
 // }
 
 export const permissionCellFormatter = ({ value }) => {
-	const permissions = [ 'Admin', 'User', 'Super Admin' ].map(p => ({
+	const permissions = ['Admin', 'User', 'Super Admin'].map(p => ({
 		text: p,
 		value: p,
 		key: p
 	}))
 
 	return (
-		<Dropdown style={{margin: -6}}
+		<Dropdown style={{ margin: '-6px' }}
 			placeholder='Select permission'
 			selection
+			fluid
 			defaultValue={permissions[0].value}
 			options={permissions}
 		/>
