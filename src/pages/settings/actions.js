@@ -1,6 +1,7 @@
 import * as AT from "./action-types";
 
 export function openEditPopup(rows) {
+  console.log("ROWS", rows);
   return {
     type: AT.OPEN_EDIT_POPUP,
     payload: rows
