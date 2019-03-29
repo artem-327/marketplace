@@ -5,7 +5,6 @@ import { Dropdown } from 'semantic-ui-react'
 import { handleEditPopup, handleConfirmPopup } from '../../actions' 
 
 function dropdownEditDelete(props) {
-	// console.log('OHOOOO', props.row);
 	return (
 		<Dropdown icon='ellipsis vertical'>
 			<Dropdown.Menu>

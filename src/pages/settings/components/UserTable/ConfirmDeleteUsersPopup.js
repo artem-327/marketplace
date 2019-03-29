@@ -5,13 +5,7 @@ import { Button, Modal } from 'semantic-ui-react'
 import { closeConfirmPopup, deleteUser } from '../../actions' 
 
 class ConfirmDeleteUsersPopup extends Component {
-//   state = { open: false }
-
-//   open = () => this.setState({ open: true })
-//   close = () => this.setState({ open: false })
-
   render() {
-      console.log('SDFSDF', this.props.userid);
     return (
         <Modal open centered={false}>
             <Modal.Header>Confirm delete user</Modal.Header>
