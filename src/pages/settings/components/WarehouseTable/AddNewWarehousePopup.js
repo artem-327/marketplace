@@ -45,9 +45,7 @@ class AddNewWarehousePopup extends React.Component {
             validationSchema={formValidation}
             onReset={closeAddPopup}
             onSubmit={(values, actions) => {
-              console.log(values)
               postNewWarehouseRequest(values)
-              actions.setSubmitting(false)
             }}
           >
             <FormGroup widths="equal">
@@ -64,9 +62,9 @@ class AddNewWarehousePopup extends React.Component {
               <Input type="text" label="Phone" name="phone" />
               <Input type="text" label="e-mail" name="email" />
             </FormGroup>
-            
+
             <div style={{ textAlign: 'right' }}>
-              <Button.Reset onClick={closeAddPopup}>Cancel</Button.Reset>
+              <Button.Reset>Cancel</Button.Reset>
               <Button.Submit>Save</Button.Submit>
             </div>
             

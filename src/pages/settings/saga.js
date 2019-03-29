@@ -8,7 +8,7 @@ function* getUsersDataWorker() {
     const users = yield call(api.getUsers) 
     yield put({ type: AT.GET_USERS_DATA_SUCCESS, payload: users}) 
   } catch(e) {
-    yield console.log("error 12121:", e) 
+    yield console.log("error:", e) 
   }
 }
 
