@@ -129,7 +129,7 @@ export default function reducer(state = initialState, action) {
             contactName: warehouse.contact.name,
             phone: warehouse.contact.phone,
             email: warehouse.contact.email,
-            branchId: warehouse.id
+            id: warehouse.id
           }
         )			
       }) 

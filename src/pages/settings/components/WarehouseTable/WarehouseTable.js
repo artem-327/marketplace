@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexGrid from '~/components/table'
-import { getWarehousesDataRequest } from '../../actions'
+import { getWarehousesDataRequest, openEditPopup, deleteWarehouse } from '../../actions'
 
 class WarehouseTable extends Component {
 
@@ -28,9 +28,8 @@ class WarehouseTable extends Component {
 		const {
 			rows,
 			filterValue,
-			editDeleteColumns,
-			editPopupBoolean,
-			addNewWarehousePopup
+			openEditPopup,
+			deleteWarehouse
 		} = this.props
 
 		const { columns } = this.state
@@ -41,8 +40,8 @@ class WarehouseTable extends Component {
 				columns={columns} 
 				rows={rows} 
 				rowActions={[
-					{text: 'Edit', callback: (row) => console.log('Edit:', row)},
-					{text: 'Delete', callback: (row) => console.log('Delete:', row)}
+					{text: 'Edit', callback: (row) => openEditPopup(row)},
+					{text: 'Delete', callback: (row) => deleteWarehouse(row.id)}
 				]} 
 			/>
 		)
@@ -51,7 +50,9 @@ class WarehouseTable extends Component {
 }
 
 const mapDispatchToProps = {
-	getWarehousesDataRequest
+	getWarehousesDataRequest,
+	openEditPopup,
+	deleteWarehouse
 }
 
 const mapStateToProps = state => {
