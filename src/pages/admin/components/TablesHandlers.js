@@ -6,10 +6,7 @@ import InputBase from '@material-ui/core/InputBase'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 
-
-//import { openAddPopup, handleFiltersValue } from '../actions'
-
-
+import { openAddPopup, handleFiltersValue } from '../actions'
 import { Menu, Button, Input, Dropdown } from 'semantic-ui-react'
 
 
@@ -28,9 +25,9 @@ class TablesHandlers extends Component {
 
     render() {
         const {
-            //handleFiltersValue,
+            handleFiltersValue,
             currentTab,
-            //openAddPopup
+            openAddPopup
         } = this.props
 
         const {
@@ -44,10 +41,10 @@ class TablesHandlers extends Component {
                 <Menu.Menu position='right'>
                     <Menu.Item>
                         <Input icon='search' placeholder="Search..."
-                                />
+                               onChange={ e => handleFiltersValue(e.target.value)} />
                     </Menu.Item>
                     <Menu.Item>
-                        <Button primary >
+                        <Button primary onClick={ openAddPopup }>
                             Add new { currentTab }
                         </Button>
                     </Menu.Item>
@@ -66,7 +63,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-
+    openAddPopup,
+    handleFiltersValue
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TablesHandlers)

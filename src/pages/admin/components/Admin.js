@@ -1,20 +1,43 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-
-
 import TablesHandlers from './TablesHandlers'
-
 import { Container, Grid, Divider } from 'semantic-ui-react'
 import Tabs from './Tabs'
+
+import UnitsOfMeasureTable from './UnitsOfMeasureTable/UnitsOfMeasureTable'
+
+
+const tables = {
+    'Units of Measure': <UnitsOfMeasureTable />,
+}
+
+const editForms = {
+
+}
+
+const addForms = {
+
+}
+
 
 class Admin extends Component {
 
     renderContent = () => {
         const {
+            currentEditForm,
+            currentAddForm,
             currentTab,
         } = this.props
 
-        return ('nejaky obsah')
+        console.log('currentTab: ', currentTab, '   currentAddForm: ', currentAddForm, '   currentEditForm: ', currentEditForm);
+
+        if (currentAddForm) {
+            return addForms[currentTab] || <p>This page is still under construction</p>
+        } else if (currentEditForm) {
+            return editForms[currentTab] || <p>This page is still under construction</p>
+        } else {
+            return tables[currentTab] || <p>This page is still under construction</p>
+        }
 
     }
 

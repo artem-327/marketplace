@@ -26,7 +26,6 @@ const mapStateToProps = state => {
         tabsNames: state.admin.tabsNames,
         currentTab: state.admin.currentTab,
         editPopupBoolean: state.admin.editPopupBoolean,
-        //! !addNewWarehousePopup: state.admin.addNewWarehousePopup
     }
 }
 
