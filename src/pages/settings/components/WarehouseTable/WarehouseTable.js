@@ -1,19 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-
-import { SearchState, IntegratedFiltering, IntegratedSelection, SelectionState } from '@devexpress/dx-react-grid'
-import {
-	Grid,
-	Table,
-	TableHeaderRow,
-	DragDropProvider,
-	TableColumnReordering
-} from '@devexpress/dx-react-grid-bootstrap4'
-import {TableSelection} from '~/components/dx-grid-semantic-ui/plugins'
-
-// } from '~/components/dx-grid-semantic-ui/plugins'
-
-import { EditDeleteFormatterProvider } from './WarehouseTableProviders'
+import ProdexGrid from '~/components/table'
 import { getWarehousesDataRequest } from '../../actions'
 
 class WarehouseTable extends Component {
@@ -48,39 +35,18 @@ class WarehouseTable extends Component {
 
 		const { columns } = this.state
 
-		const GridRoot = props => <Grid.Root {...props} className="" />
-		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={'columns-title-cell'} />
-		const TableCells = props => <Table.Cell {...props} className={'columns-rows-cell'} />
-
 		return (
-			<div className="bootstrapiso">
-				<Grid
-					rows={rows}
-					columns={columns}
-					rootComponent={GridRoot}
-				>
-					<DragDropProvider />
-					<SelectionState />
-					<IntegratedSelection />
-					<SearchState
-						value={filterValue}
-					/>
-					<IntegratedFiltering />
-					<Table clssName="table-bordered"
-						cellComponent={TableCells}
-					/>
-					<TableHeaderRow
-						cellComponent={HeaderCells}
-					/>
-					<EditDeleteFormatterProvider
-						for={editDeleteColumns}
-						rows={rows}
-					/>
-					<TableColumnReordering defaultOrder={columns.map(c => c.name)} />
-					<TableSelection showSelectAll selectByRowClick />
-				</Grid>
-			</div>
+			<ProdexGrid 
+				filterValue={filterValue}
+				columns={columns} 
+				rows={rows} 
+				rowActions={[
+					{text: 'Edit', callback: (row) => console.log('Edit:', row)},
+					{text: 'Delete', callback: (row) => console.log('Delete:', row)}
+				]} 
+			/>
 		)
+
 	}
 }
 
