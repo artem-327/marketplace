@@ -1,5 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects" 
 
+import { closeAddPopup, closeConfirmPopup } from './actions'
 import * as AT from './action-types' 
 import api from "./api" 
 
@@ -63,6 +64,24 @@ function* getProductsWithRequiredParamWorker({ payload }) {
     yield put({ type: AT.GET_PRODUCTS_WITH_REQUIRED_PARAM_SUCCESS, payload: products }) 
   } catch(e) {
 
+  }
+}
+
+function* postNewUserWorker({ payload }) {
+  try {
+    // const currentUser = yield call(api.getCurrentUser)  
+    const dataBody = {
+      email: payload.email,
+      firstname: payload.firstName,
+      lastname: payload.lastName,
+      middlename: payload.middleName
+    }      
+    yield call(api.postNewUser, dataBody) 
+    yield put(closeAddPopup({payload: null }))
+
+  } catch(e) {
+    yield console.log("error:", e)
+    yield put(closeAddPopup({payload: null }))
   }
 }
 
@@ -179,6 +198,16 @@ function* putUserWorker({payload, id}){
   }
 }
 
+function* deleteUserWorker({ payload }) {
+  try {
+    yield call(api.deleteUser, payload) 
+    yield put(closeConfirmPopup({payload: null}))
+  } catch (e) {
+    yield console.log("error:", e) 
+    yield put(closeConfirmPopup({payload: null}))
+  }
+}
+
 function* deleteWarehouseWorker({ payload }) {
   try {
     yield call(api.deleteWarehouse, payload) 
@@ -213,6 +242,7 @@ export default function* settingsSaga() {
   yield takeEvery(AT.GET_PRODUCTS_CATALOG_DATA, getProductCatalogWorker)
   yield takeEvery(AT.GET_PRODUCTS_WITH_REQUIRED_PARAM, getProductsWithRequiredParamWorker)
 
+  yield takeEvery(AT.POST_NEW_USER_REQUEST, postNewUserWorker) 
   yield takeEvery(AT.POST_NEW_WAREHOUSE_REQUEST, postNewWarehouseWorker) 
   yield takeEvery(AT.POST_NEW_CREDIT_CARD_REQUEST, postNewCreditCardWorker) 
   yield takeEvery(AT.POST_NEW_BANK_ACCOUNT_REQUEST, postNewBankAccountWorker)
@@ -220,6 +250,7 @@ export default function* settingsSaga() {
 
   yield takeEvery(AT.HANDLE_SUBMIT_USER_EDIT_POPUP, putUserWorker)
 
+  yield takeEvery(AT.DELETE_USER, deleteUserWorker) 
   yield takeEvery(AT.DELETE_WAREHOUSE, deleteWarehouseWorker) 
   yield takeEvery(AT.DELETE_CREDIT_CARD, deleteCreditCardWorker) 
   yield takeEvery(AT.DELETE_BANK_ACCOUNT, deleteBankAccountWorker)  

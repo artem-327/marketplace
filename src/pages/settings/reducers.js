@@ -31,6 +31,8 @@ export const initialState = {
   currentTab: 'Warehouses',
   currentEditForm: null,
   currentAddForm: null,
+  confirmMessage: null,
+  deleteUserById: null,
   filterValue: '',
   editPopupSearchProducts: []
 } 
@@ -49,6 +51,21 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentEditForm: null,
+      }
+    }
+    case AT.OPEN_CONFIRM_POPUP: {
+      return {
+        ...state,
+        confirmMessage: state.currentTab,
+        popupValues: state.currentTab,
+        deleteUserById: action.payload
+      }
+    }
+    case AT.CLOSE_CONFIRM_POPUP: {
+      return {
+        ...state,
+        confirmMessage: null,
+        popupValues: state.currentTab
       }
     }
 

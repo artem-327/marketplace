@@ -13,8 +13,10 @@ import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
 // import EditBranchPopup from './BranchTable/EditBranchPopup'
 import EditWarehousePopup from './WarehouseTable/EditWarehousePopup'
 import EditUsersPopup from './UserTable/EditUsersPopup'
+import ConfirmDeleteUsersPopup from './UserTable/ConfirmDeleteUsersPopup'
 import EditProductCatalogPopup from './ProductCatalogTable/EditProductCatalogPopup'
 import AddNewBranchPopup from './BranchTable/AddNewBranchPopup'
+import AddNewUsersPopup from './UserTable/AddNewUsersPopup'
 import AddNewWarehousePopup from './WarehouseTable/AddNewWarehousePopup'
 import AddNewCreditCardPopup from './CreditCardsTable/AddNewCreditCardPopup'
 import AddNewBankAccountPopup from './BankAccountsTable/AddNewBankAccountPopup'
@@ -39,10 +41,15 @@ const editForms = {
 }
 
 const addForms = {
+	'Users': <AddNewUsersPopup />,
 	'Warehouses': <AddNewWarehousePopup />,
 	'Product catalog': <AddNewProductCatalogPopup />,
 	'Branches': <AddNewBranchPopup /> ,
 	'Bank accounts': <AddNewBankAccountPopup />,
+}
+
+const confMessage = {
+	'Users': <ConfirmDeleteUsersPopup />,
 }
 
 class Settings extends Component {
@@ -51,15 +58,18 @@ class Settings extends Component {
 		const {
 			currentEditForm,
 			currentAddForm,
+			confirmMessage,
 			currentTab
 		} = this.props
 		
-		console.log(currentAddForm, currentEditForm)
+		// console.log(currentAddForm, currentEditForm)
 
 		if (currentAddForm) {
 			return addForms[currentTab] || <p>Not implemented</p>
 		} else if (currentEditForm) {
 			return editForms[currentTab] || <p>Not implemented</p>
+		} else if (confirmMessage) {
+			return confMessage[currentTab] || <p>Not implemented</p>
 		} else {
 			return tables[currentTab] || <p>This page is still under construction</p>
 		}

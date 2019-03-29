@@ -37,6 +37,19 @@ export function closeAddPopup(payload) {
     payload
   }
 }
+export function handleConfirmPopup(id) {
+  console.log('OLOLOOOOOOO', id);
+  return {
+    type: AT.OPEN_CONFIRM_POPUP,
+    payload: id
+  }
+}
+export function closeConfirmPopup() {
+  return {
+    type: AT.CLOSE_CONFIRM_POPUP,
+    payload: null
+  }
+}
 
 export function handleActiveTab(tab) {
   return {
@@ -109,6 +122,13 @@ export function getProductsWithRequiredParam(payload) {
   }
 }
 
+export function postNewUserRequest(userData) { 
+  return {
+    type: AT.POST_NEW_USER_REQUEST,
+    payload: userData
+  }
+}
+
 export function postNewWarehouseRequest(warehouseData) { 
   return {
     type: AT.POST_NEW_WAREHOUSE_REQUEST,
@@ -134,6 +154,13 @@ export function postNewProductRequest(inputsValue, id) {
   return {
     type: AT.POST_NEW_PRODUCT_REQUEST,
     // payload: inputsValue
+  }
+}
+
+export function deleteUser(userId) {
+  return {
+    type: AT.DELETE_USER,
+    payload: userId
   }
 }
 

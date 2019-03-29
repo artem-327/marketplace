@@ -3,37 +3,34 @@ import { connect } from 'react-redux'
 
 import { Modal, FormGroup } from 'semantic-ui-react'
 
-import { closeAddPopup, postNewWarehouseRequest } from '../../actions'
+import { closeAddPopup, postNewUserRequest } from '../../actions'
 import { Form, Input, Button } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 
 const initialFormValues = {
-  warehouseName: '',
-  contactName: '',
-  address: '',
-  city: '',
-  state: '',
-  zipCode: '',
-  phone: '',
+  firstName: '',
+  lastName: '',
+  middleName: '',
   email: ''
 }
 const formValidation = Yup.object().shape({
-  warehouseName: Yup.string().min(3, "Too short").required("Required"),
-  contactName: Yup.string().min(3, "Too short").required("Required"),
+  firstName: Yup.string().min(3, "Too short").required("Required"),
+  lastName: Yup.string().min(3, "Too short").required("Required"),
+  middleName: Yup.string().min(3, "Too short").required("Required"),
   email: Yup.string().email("Invalid email").required("Emails is required")
 })
 
-class AddNewWarehousePopup extends React.Component {
+class AddNewUsersPopup extends React.Component {
   render() {
     const {
       closeAddPopup,
-      postNewWarehouseRequest
+      postNewUserRequest
     } = this.props
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>Add new warehouse</Modal.Header>
+        <Modal.Header>Add new user</Modal.Header>
         <Modal.Content>
           <Form
             initialValues={initialFormValues}
@@ -41,25 +38,18 @@ class AddNewWarehousePopup extends React.Component {
             onReset={closeAddPopup}
             onSubmit={(values, actions) => {
               console.log(values)
-              postNewWarehouseRequest(values)
+              postNewUserRequest(values)
               actions.setSubmitting(false)
             }}
           >
             <FormGroup widths="equal">
-              <Input type="text" label="Warehouse name" name="warehouseName" />
-              <Input type="text" label="Contact Name" name="contactName" />
+              <Input type="text" label="First name" name="firstName" />
+              <Input type="text" label="Last Name" name="lastName" />
             </FormGroup>
             <FormGroup widths="equal">
-              <Input type="text" label="Address" name="address" />
-              <Input type="text" label="City" name="city" />
-              <Input type="text" label="State" name="state" />
-              <Input type="text" label="Zipcode" name="zipCode" />
-            </FormGroup>
-            <FormGroup widths="equal">
-              <Input type="text" label="Phone" name="phone" />
+              <Input type="text" label="Middle Name" name="middleName" />
               <Input type="text" label="e-mail" name="email" />
             </FormGroup>
-            
             <div style={{ textAlign: 'right' }}>
               <Button.Reset onClick={closeAddPopup}>Cancel</Button.Reset>
               <Button.Submit>Save</Button.Submit>
@@ -74,7 +64,7 @@ class AddNewWarehousePopup extends React.Component {
 
 const mapDispatchToProps = {
   closeAddPopup,
-  postNewWarehouseRequest
+  postNewUserRequest
 }
 
-export default connect(null, mapDispatchToProps)(AddNewWarehousePopup) 
+export default connect(null, mapDispatchToProps)(AddNewUsersPopup) 

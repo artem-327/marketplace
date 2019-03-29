@@ -2,9 +2,10 @@ import React from 'react'
 import { connect } from 'react-redux' 
 import { Dropdown } from 'semantic-ui-react'
 
-import { handleEditPopup, deleteWarehouse } from '../../actions' 
+import { handleEditPopup, handleConfirmPopup } from '../../actions' 
 
 function dropdownEditDelete(props) {
+	// console.log('OHOOOO', props.row);
 	return (
 		<Dropdown icon='ellipsis vertical'>
 			<Dropdown.Menu>
@@ -14,7 +15,8 @@ function dropdownEditDelete(props) {
 				/>
 				<Dropdown.Item 
 					text='Delete' 
-					// onClick={ () => props.deleteWarehouse(this.props.row.branchId) }
+					// onClick={ () => props.handleConfirmPopup(props.row.branchId) }
+					onClick={ () => props.handleConfirmPopup(props.row.id) }
 				/>
 			</Dropdown.Menu>
 		</Dropdown>	
@@ -23,7 +25,7 @@ function dropdownEditDelete(props) {
 
 const mapDispatchToProps = {   
 		handleEditPopup,
-		deleteWarehouse
+		handleConfirmPopup
 } 
 
 export const editDeleteFormatterProvider =  connect(null, mapDispatchToProps)(dropdownEditDelete) 
