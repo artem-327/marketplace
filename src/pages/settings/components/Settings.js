@@ -61,8 +61,6 @@ class Settings extends Component {
 			confirmMessage,
 			currentTab
 		} = this.props
-		
-		// console.log(currentAddForm, currentEditForm)
 
 		if (currentAddForm) {
 			return addForms[currentTab] || <p>Not implemented</p>

@@ -37,7 +37,6 @@ class AddNewUsersPopup extends React.Component {
             validationSchema={formValidation}
             onReset={closeAddPopup}
             onSubmit={(values, actions) => {
-              console.log(values)
               postNewUserRequest(values)
               actions.setSubmitting(false)
             }}

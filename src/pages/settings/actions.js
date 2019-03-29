@@ -38,7 +38,6 @@ export function closeAddPopup(payload) {
   }
 }
 export function handleConfirmPopup(id) {
-  console.log('OLOLOOOOOOO', id);
   return {
     type: AT.OPEN_CONFIRM_POPUP,
     payload: id
