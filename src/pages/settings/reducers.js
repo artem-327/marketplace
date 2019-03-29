@@ -28,7 +28,7 @@ export const initialState = {
     {	name: 'Terms', id: 10 }, 
     {	name: 'Website Controls', id: 11 }
   ],
-  currentTab: 'Warehouses',
+  currentTab: 'Users',
   currentEditForm: null,
   currentAddForm: null,
   confirmMessage: null,

@@ -53,7 +53,6 @@ class AddNewUsersPopup extends React.Component {
               <Button.Reset onClick={closeAddPopup}>Cancel</Button.Reset>
               <Button.Submit>Save</Button.Submit>
             </div>
-            
           </Form>
         </Modal.Content>
       </Modal>
