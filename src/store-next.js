@@ -119,7 +119,7 @@ export const makeStore = (preloadedState) => {
   // create the saga middleware
   const sagaMiddleware = createSagaMiddleware()
 
-  const middleware = composeEnhancers(applyMiddleware(thunk, promise(), sagaMiddleware))
+  const middleware = composeEnhancers(applyMiddleware(thunk, promise(), sagaMiddleware, logger))
   // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 
   // let store = createStore(reducer, loadState(), middleware)
