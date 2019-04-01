@@ -28,15 +28,7 @@ class WarehouseTable extends Component {
   };
 
   render() {
-    const {
-      rows,
-      filterValue,
-      openEditPopup,
-      deleteWarehouse,
-      editDeleteColumns,
-      editPopupBoolean,
-      addNewWarehousePopup
-    } = this.props;
+    const { rows, filterValue, openEditPopup, deleteWarehouse } = this.props;
 
     const { columns } = this.state;
 
@@ -47,7 +39,7 @@ class WarehouseTable extends Component {
         rows={rows}
         rowActions={[
           { text: "Edit", callback: row => openEditPopup(row) },
-          { text: "Delete", callback: row => deleteWarehouse(row.branchId) }
+          { text: "Delete", callback: row => deleteWarehouse(row.id) }
         ]}
       />
     );
