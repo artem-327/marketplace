@@ -12,7 +12,7 @@ export const initialState = {
 
     tabsNames: [
         {	name: 'Units of Measure', id: 1 },
-        {	name: 'Unit of Packaging', id: 2 },
+        {	name: 'Units of Packaging', id: 2 },
         {	name: 'Manufacturers', id: 3 },
         {	name: 'Grades', id: 4 },
         {	name: 'Forms', id: 5 },
@@ -22,6 +22,34 @@ export const initialState = {
     currentEditForm: null,
     currentAddForm: null,
     filterValue: '',
+
+    config: {
+        'Units of Measure': {
+            columns: [
+                {name: 'editDeleteBtn', title: ' ', width: 45, dropdown: true},
+                {name: 'name', title: 'Name'},
+                {name: 'nameAbbreviation', title: 'Name abbreviation',},
+                {name: 'measureType', title: 'Measure type'},
+            ],
+            cosiDalsiho: 10
+        },
+        'Units of Packaging': {
+            columns: [
+                {name: 'editDeleteBtn', title: ' ', width: 45, dropdown: true},
+                {name: 'name', title: 'Name'},
+                {name: 'measureType', title: 'Measure type'},
+            ],
+            cosiDalsiho: 20
+        },
+        'Manufacturers': {
+            columns: [
+                {name: 'editDeleteBtn', title: ' ', width: 45, dropdown: true},
+                {name: 'name', title: 'Name'},
+            ],
+            cosiDalsiho: 30
+        }
+    },
+
 
 }
 
@@ -66,17 +94,16 @@ export default function reducer(state = initialState, action) {
 
 
         case AT.ADMIN_GET_UNITS_OF_MEASURE_DATA_SUCCESS: {
-            const rows = action.payload.map(unitsOfMeasure => {
+            const rows = action.payload.map(data => {
                 return (
                     {
-                        name: unitsOfMeasure.name,
-                        nameAbbreviation: unitsOfMeasure.nameAbbreviation,
-                        measureType: unitsOfMeasure.measureType,
-                        id: unitsOfMeasure.id
+                        name: data.name,
+                        nameAbbreviation: data.nameAbbreviation,
+                        measureType: data.measureType,
+                        id: data.id
                     }
                 )
             })
-
             return {
                 ...state,
                 unitsOfMeasureRows: rows

@@ -4,9 +4,9 @@ import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid'
 import { Grid, Table, TableHeaderRow } from '~/components/dx-grid-semantic-ui/plugins'
 
 import { getUnitsOfMeasureDataRequest } from '../../actions'
-import {EditDeleteFormatterProvider} from "./UnitsOfMeasureTableProviders";
+import {EditDeleteFormatterProvider} from "../TableProviders"
 
-class UnitsOfMeasureTable extends Component {
+class DataTable extends Component {
     state = {
         columns: [
             {name: 'editDeleteBtn', title: ' ', width: 45, dropdown: true},
@@ -17,6 +17,7 @@ class UnitsOfMeasureTable extends Component {
     }
 
     componentDidMount() {
+        console.log('!!!!!!!!!! DataTable - componentDidMount !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
         this.props.getUnitsOfMeasureDataRequest()
     }
 
@@ -26,10 +27,20 @@ class UnitsOfMeasureTable extends Component {
             filterValue,
             editDeleteColumns,
             editPopupBoolean,
-            addNewUnitsOfMeasurePopup    //! !
-        } = this.props
+            addNewUnitsOfMeasurePopup,    //! !
+            currentTab,
+        } = this.props;
 
-        const { columns } = this.state
+        const { config } = this.props;
+
+        console.log('TTTTTTTTTTTTTTTT this.props - ', this.props);
+        console.log('TTTTTTTTTTTTTTTT this.props.currentTab - ', this.props.currentTab);
+        console.log('TTTTTTTTTTTTTTTT config - ', config);
+        console.log('TTTTTTTTTTTTTTTT currentTab - ', currentTab);
+        console.log('TTTTTTTTTTTTTTTT config[currentTab] - ', config[currentTab]);
+        console.log('TTTTTTTTTTTTTTTT config[currentTab].columns - ', config[currentTab].columns);
+
+        const { columns } = config[currentTab];
 
         const GridRoot = props => <Grid.Root {...props} />
         const HeaderCells = props => <TableHeaderRow.Cell {...props} />
@@ -70,8 +81,10 @@ const mapStateToProps = state => {
         editDeleteColumns: state.admin.columnsForFormatter.editDeleteColumns,
         editPopupBoolean: state.admin.editPopupBoolean,
         addNewUnitsOfMeasurePopup: state.settings.addNewUnitsOfMeasurePopup,
-        filterValue: state.admin.filterValue
+        filterValue: state.admin.filterValue,
+        currentTab: state.admin.currentTab,
+        config: state.admin.config,
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UnitsOfMeasureTable)
+export default connect(mapStateToProps, mapDispatchToProps)(DataTable)

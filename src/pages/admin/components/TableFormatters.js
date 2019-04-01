@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Dropdown } from 'semantic-ui-react'
 
-import { openEditPopup, deleteUnitsOfMeasure } from '../../actions'
+import { openEditPopup, deleteUnitsOfMeasure } from '../actions'
 
 class editDeleteCell extends Component {
     render() {

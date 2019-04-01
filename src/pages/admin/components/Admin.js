@@ -4,11 +4,13 @@ import TablesHandlers from './TablesHandlers'
 import { Container, Grid, Divider } from 'semantic-ui-react'
 import Tabs from './Tabs'
 
-import UnitsOfMeasureTable from './UnitsOfMeasureTable/UnitsOfMeasureTable'
+import DataTable from './DataTable/DataTable'
 
 
 const tables = {
-    'Units of Measure': <UnitsOfMeasureTable />,
+    'Units of Measure': <DataTable />,
+    'Units of Packaging': <DataTable />,
+    'Manufacturers': <DataTable />,
 }
 
 const editForms = {
@@ -19,7 +21,6 @@ const addForms = {
 
 }
 
-
 class Admin extends Component {
 
     renderContent = () => {
@@ -29,6 +30,7 @@ class Admin extends Component {
             currentTab,
         } = this.props
 
+        console.log(this.props);
         console.log('currentTab: ', currentTab, '   currentAddForm: ', currentAddForm, '   currentEditForm: ', currentEditForm);
 
         if (currentAddForm) {
@@ -51,7 +53,7 @@ class Admin extends Component {
                         <Grid.Column width={3}>
                             <Tabs />
                         </Grid.Column>
-                        <Grid.Column>
+                        <Grid.Column key={ this.props.currentTab }>
                             {this.renderContent()}
                         </Grid.Column>
                     </Grid.Row>
