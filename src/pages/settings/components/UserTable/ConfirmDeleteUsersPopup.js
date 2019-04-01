@@ -10,7 +10,7 @@ class ConfirmDeleteUsersPopup extends Component {
       <Modal open centered={false}>
         <Modal.Header>Confirm delete user</Modal.Header>
         <Modal.Content>
-          <p>Do you really want to delete user?</p>
+          <p>Do you really want to delete?</p>
           <Modal.Actions>
             <Button
               content="Delete"

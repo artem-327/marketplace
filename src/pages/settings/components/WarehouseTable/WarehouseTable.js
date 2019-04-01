@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import ProdexGrid from "~/components/table";
+import { Confirm } from "semantic-ui-react";
 import {
   getWarehousesDataRequest,
   openEditPopup,
-  deleteWarehouse
+  closeConfirmPopup,
+  deleteConfirmation,
+  handleOpenConfirmPopup
 } from "../../actions";
 
 class WarehouseTable extends Component {
@@ -23,20 +26,37 @@ class WarehouseTable extends Component {
   }
 
   render() {
-    const { rows, filterValue, openEditPopup, deleteWarehouse } = this.props;
+    const {
+      rows,
+      filterValue,
+      openEditPopup,
+      closeConfirmPopup,
+      deleteConfirmation,
+      confirmMessage,
+      handleOpenConfirmPopup
+    } = this.props;
 
     const { columns } = this.state;
 
     return (
-      <ProdexGrid
-        filterValue={filterValue}
-        columns={columns}
-        rows={rows}
-        rowActions={[
-          { text: "Edit", callback: row => openEditPopup(row) },
-          { text: "Delete", callback: row => deleteWarehouse(row.id) }
-        ]}
-      />
+      <React.Fragment>
+        <Confirm
+          size="tiny"
+          content="Do you really want to delete warehouse?"
+          open={confirmMessage}
+          onCancel={closeConfirmPopup}
+          onConfirm={deleteConfirmation}
+        />
+        <ProdexGrid
+          filterValue={filterValue}
+          columns={columns}
+          rows={rows}
+          rowActions={[
+            { text: "Edit", callback: row => openEditPopup(row) },
+            { text: "Delete", callback: row => handleOpenConfirmPopup(row.id) }
+          ]}
+        />
+      </React.Fragment>
     );
   }
 }
@@ -44,7 +64,10 @@ class WarehouseTable extends Component {
 const mapDispatchToProps = {
   getWarehousesDataRequest,
   openEditPopup,
-  deleteWarehouse
+  openEditPopup,
+  closeConfirmPopup,
+  deleteConfirmation,
+  handleOpenConfirmPopup
 };
 
 const mapStateToProps = state => {
@@ -53,7 +76,8 @@ const mapStateToProps = state => {
     editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
     editPopupBoolean: state.settings.editPopupBoolean,
     addNewWarehousePopup: state.settings.addNewWarehousePopup,
-    filterValue: state.settings.filterValue
+    filterValue: state.settings.filterValue,
+    confirmMessage: state.settings.confirmMessage
   };
 };
 

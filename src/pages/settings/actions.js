@@ -13,7 +13,6 @@ export function handlerSubmitUserEditPopup(value, id) {
     id
   };
 }
-
 export function handleEditPopup(rows) {
   return {
     type: AT.OPEN_EDIT_POPUP,
@@ -37,16 +36,26 @@ export function closeAddPopup() {
     payload: null
   };
 }
-export function handleConfirmPopup(id) {
+export function handleOpenConfirmPopup(payload) {
   return {
     type: AT.OPEN_CONFIRM_POPUP,
-    payload: id
+    payload
+  };
+}
+export function deleteConfirmation() {
+  // console.log("ID", payload);
+  return {
+    type: AT.DELETE_CONFIRM_POPUP
+  };
+}
+export function confirmationSuccess() {
+  return {
+    type: AT.CONFIRM_SUCCESS
   };
 }
 export function closeConfirmPopup() {
   return {
-    type: AT.CLOSE_CONFIRM_POPUP,
-    payload: null
+    type: AT.CLOSE_CONFIRM_POPUP
   };
 }
 
@@ -152,7 +161,6 @@ export function postNewBankAccountRequest(bankAccountData) {
 export function postNewProductRequest(inputsValue, id) {
   return {
     type: AT.POST_NEW_PRODUCT_REQUEST
-    // payload: inputsValue
   };
 }
 

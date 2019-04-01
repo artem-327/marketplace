@@ -1,8 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import ProdexGrid from "~/components/table";
+import { Confirm } from "semantic-ui-react";
 
-import { getUsersDataRequest, openEditPopup, deleteUser } from "../../actions";
+import {
+  getUsersDataRequest,
+  openEditPopup,
+  deleteUser,
+  handleOpenConfirmPopup,
+  closeConfirmPopup,
+  deleteConfirmation
+} from "../../actions";
 
 class UsersTable extends Component {
   state = {
@@ -20,7 +28,9 @@ class UsersTable extends Component {
           { text: "User", value: "user" }
         ]
       }
-    ]
+    ],
+    open: false,
+    result: "show the modal to capture a result"
   };
 
   componentDidMount() {
@@ -28,20 +38,39 @@ class UsersTable extends Component {
   }
 
   render() {
-    const { rows, filterValue, openEditPopup, deleteUser } = this.props;
+    const {
+      rows,
+      filterValue,
+      openEditPopup,
+      confirmMessage,
+      handleOpenConfirmPopup,
+      closeConfirmPopup,
+      deleteConfirmation
+    } = this.props;
+
+    console.log("ROWS", rows);
 
     const { columns } = this.state;
 
     return (
-      <ProdexGrid
-        filterValue={filterValue}
-        columns={columns}
-        rows={rows}
-        rowActions={[
-          { text: "Edit", callback: row => openEditPopup(row) },
-          { text: "Delete", callback: row => deleteUser(row.id) }
-        ]}
-      />
+      <React.Fragment>
+        <Confirm
+          size="tiny"
+          content="Do you really want to delete user?"
+          open={confirmMessage}
+          onCancel={closeConfirmPopup}
+          onConfirm={deleteConfirmation}
+        />
+        <ProdexGrid
+          filterValue={filterValue}
+          columns={columns}
+          rows={rows}
+          rowActions={[
+            { text: "Edit", callback: row => openEditPopup(row) },
+            { text: "Delete", callback: row => handleOpenConfirmPopup(row.id) }
+          ]}
+        />
+      </React.Fragment>
     );
   }
 }
@@ -49,13 +78,17 @@ class UsersTable extends Component {
 const mapDispatchToProps = {
   getUsersDataRequest,
   openEditPopup,
-  deleteUser
+  deleteUser,
+  handleOpenConfirmPopup,
+  closeConfirmPopup,
+  deleteConfirmation
 };
 
 const mapStateToProps = state => {
   return {
     rows: state.settings.usersRows,
-    filterValue: state.settings.filterValue
+    filterValue: state.settings.filterValue,
+    confirmMessage: state.settings.confirmMessage
   };
 };
 

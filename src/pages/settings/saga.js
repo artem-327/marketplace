@@ -1,6 +1,11 @@
-import { call, put, takeEvery } from "redux-saga/effects";
+import { call, put, takeEvery, select } from "redux-saga/effects";
 
-import { closeAddPopup, closeConfirmPopup } from "./actions";
+import {
+  closeAddPopup,
+  closeConfirmPopup,
+  deleteUser,
+  confirmationSuccess
+} from "./actions";
 import * as AT from "./action-types";
 import api from "./api";
 
@@ -239,6 +244,26 @@ function* deleteBankAccountWorker({ payload }) {
   }
 }
 
+function* deleteConfirmPopup({}) {
+  const {
+    settings: { deleteRowByid, currentTab }
+  } = yield select();
+  try {
+    switch (currentTab) {
+      case "Users":
+        yield call(api.deleteUser, deleteRowByid);
+      case "Warehouses":
+        yield call(api.deleteWarehouse, deleteRowByid);
+      default:
+        break;
+    }
+  } catch (e) {
+    yield console.log("error:", e);
+  } finally {
+    yield put(confirmationSuccess());
+  }
+}
+
 export default function* settingsSaga() {
   yield takeEvery(AT.SUBMIT_EDIT_POPUP_HANDLER, putWarehouseWorker);
   yield takeEvery(AT.GET_USERS_DATA, getUsersDataWorker);
@@ -264,4 +289,5 @@ export default function* settingsSaga() {
   yield takeEvery(AT.DELETE_WAREHOUSE, deleteWarehouseWorker);
   yield takeEvery(AT.DELETE_CREDIT_CARD, deleteCreditCardWorker);
   yield takeEvery(AT.DELETE_BANK_ACCOUNT, deleteBankAccountWorker);
+  yield takeEvery(AT.DELETE_CONFIRM_POPUP, deleteConfirmPopup);
 }
