@@ -21,7 +21,7 @@ export function rowActionsCellFormatter({column: {actions}, row}) {
 }
 
 export const dropdownFormatter = ({column: {options}, row}) => {
-	console.log(column)
+	
 	const opts = options.map(p => ({
 		text: p.text,
 		value: p.value,
