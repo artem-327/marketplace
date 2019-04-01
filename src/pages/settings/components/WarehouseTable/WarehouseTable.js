@@ -19,10 +19,6 @@ class WarehouseTable extends Component {
 		this.props.getWarehousesDataRequest();
 	}
 
-	setTextInputRef = element => {
-		this.textInput = element
-	}
-
 	render() {
 		const {
 			rows,
