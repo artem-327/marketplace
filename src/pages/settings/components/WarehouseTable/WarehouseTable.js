@@ -40,24 +40,26 @@ class WarehouseTable extends Component {
 				]} 
 			/>
 		)
-
 	}
 }
 
 const mapDispatchToProps = {
-	getWarehousesDataRequest,
-	openEditPopup,
-	deleteWarehouse
-}
+  getWarehousesDataRequest,
+  openEditPopup,
+  deleteWarehouse
+};
 
 const mapStateToProps = state => {
-	return {
-		rows: state.settings.warehousesRows,
-		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
-		editPopupBoolean: state.settings.editPopupBoolean,
-		addNewWarehousePopup: state.settings.addNewWarehousePopup,
-		filterValue: state.settings.filterValue
-	}
-}
+  return {
+    rows: state.settings.warehousesRows,
+    editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
+    editPopupBoolean: state.settings.editPopupBoolean,
+    addNewWarehousePopup: state.settings.addNewWarehousePopup,
+    filterValue: state.settings.filterValue
+  };
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(WarehouseTable) 
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WarehouseTable);

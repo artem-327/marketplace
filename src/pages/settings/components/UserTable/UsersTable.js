@@ -23,9 +23,9 @@ class UsersTable extends Component {
 		]
 	}
 
-	componentDidMount() {
-		this.props.getUsersDataRequest()
-	}
+  componentDidMount() {
+    this.props.getUsersDataRequest();
+  }
 
 	render() {
 		const {
@@ -35,7 +35,7 @@ class UsersTable extends Component {
 			deleteUser
 		} = this.props
 
-		const { columns } = this.state
+    const { columns } = this.state;
 
 		return (
 			<ProdexTable 
@@ -64,4 +64,7 @@ const mapStateToProps = state => {
 	}
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UsersTable) 
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(UsersTable);

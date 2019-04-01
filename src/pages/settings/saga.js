@@ -168,6 +168,7 @@ function* postNewProductWorker({ payload }) {
 function* putWarehouseWorker({ payload, id }) {
   try {
     const dataBody = {
+      accessorials: [0],
       address: {
         city: payload.address,
         streetAddress: payload.city,
@@ -197,6 +198,7 @@ function* putUserWorker({ payload, id }) {
       middlename: payload.middleName,
       email: payload.email
     };
+    yield put({ type: AT.CLOSE_EDIT_POPUP, payload: null });
     yield call(api.putUser, id, updateUser);
   } catch (e) {
     console.log("error", e);
