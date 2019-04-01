@@ -1,7 +1,7 @@
 import React from 'react' 
 
 import { DataTypeProvider } from '@devexpress/dx-react-grid' 
-import { rowActionsCellFormatter } from './formatters' 
+import { rowActionsCellFormatter, dropdownFormatter } from './formatters' 
 
 const makeFormatterComponent = component => props => (
 	<DataTypeProvider
@@ -10,3 +10,4 @@ const makeFormatterComponent = component => props => (
 	/>
 )
 export const RowActionsFormatterProvider = makeFormatterComponent( rowActionsCellFormatter ) 
+export const DropdownFormatterProvider = makeFormatterComponent( dropdownFormatter )

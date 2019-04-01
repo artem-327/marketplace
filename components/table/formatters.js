@@ -19,3 +19,21 @@ export function rowActionsCellFormatter({column: {actions}, row}) {
 		</Dropdown>	
 	)
 }
+
+export const dropdownFormatter = ({column: {options}, row}) => {
+	const opts = options.map(p => ({
+		text: p.text,
+		value: p.value,
+		key: p.value
+	}))
+
+	return (
+		<Dropdown style={{ margin: '-6px' }}
+			placeholder='Select permission'
+			selection
+			fluid
+			defaultValue={opts[0].value}
+			options={opts}
+		/>
+	)
+}

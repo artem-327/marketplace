@@ -13,7 +13,7 @@ import {
   TableSelection
 } from '~/components/dx-grid-semantic-ui/plugins'
 
-import { RowActionsFormatterProvider } from './providers'
+import { RowActionsFormatterProvider, DropdownFormatterProvider } from './providers'
 
 const GridRoot = props => <Grid.Root {...props} />
 const HeaderCells = props => <TableHeaderRow.Cell {...props} />
@@ -31,7 +31,8 @@ export default class _Table extends Component {
     rowSelection: pt.bool,
     showSelectAll: pt.bool,
     selectByRowClick: pt.bool,
-    showHeader: pt.bool
+    showHeader: pt.bool,
+    onSelectionChange: pt.func
   }
 
   static defaultProps = {
@@ -40,13 +41,14 @@ export default class _Table extends Component {
     selectByRowClick: true,
     showSelectAll: true,
     showHeader: true,
+    onSelectionChange: () => {}
   }
 
   getColumns = () => {
-    const {rowActions, columns} = this.props
+    const { rowActions, columns } = this.props
 
     return rowActions ? [
-      {name: '__actions', title: ' ', width: 45, actions: rowActions},
+      { name: '__actions', title: ' ', width: 45, actions: rowActions },
       ...columns
     ] : columns
   }
@@ -61,7 +63,9 @@ export default class _Table extends Component {
       selectByRowClick,
       showSelectAll,
       rowActions,
-      showHeader
+      showHeader,
+      onSelectionChange,
+      dropdownColumns
     } = this.props
 
     return (
@@ -72,12 +76,12 @@ export default class _Table extends Component {
           rootComponent={GridRoot}
         >
           {columnReordering && <DragDropProvider />}
-          {rowSelection && <SelectionState />}
+          {rowSelection && <SelectionState onSelectionChange={onSelectionChange} />}
           {rowSelection && <IntegratedSelection />}
 
           <SearchState value={filterValue} />
           <IntegratedFiltering />
-          
+
           <Table cellComponent={TableCells} />
 
           {showHeader && <TableHeaderRow cellComponent={HeaderCells} />}
@@ -85,7 +89,13 @@ export default class _Table extends Component {
           <RowActionsFormatterProvider for={['__actions']} actions={rowActions} />
 
           {columnReordering && <TableColumnReordering defaultOrder={columns.map(c => c.name)} />}
-          {rowSelection && <TableSelection showSelectAll={showSelectAll} selectByRowClick={selectByRowClick} />}
+          {rowSelection &&
+            <TableSelection
+              showSelectAll={showSelectAll}
+              selectByRowClick={selectByRowClick}
+            />
+          }
+          <DropdownFormatterProvider for={columns.filter(c => c.options).map(c => c.name)} />
         </Grid>
       </div>
     )
