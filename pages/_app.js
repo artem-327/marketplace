@@ -8,7 +8,9 @@ import EN from '../localization/en.json'
 import NProgress from 'nprogress'
 import Router from 'next/router'
 
-// NProgress.configure({ parent: '#content' })
+import 'semantic-ui-css/semantic.min.css'
+import '~/styles/base.scss'
+import 'nprogress/nprogress.css'
 
 Router.events.on('routeChangeStart', url => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())

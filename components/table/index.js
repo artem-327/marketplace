@@ -91,14 +91,20 @@ export default class _Table extends Component {
 
             <RowActionsFormatterProvider for={['__actions']} actions={rowActions} />
 
-            {columnReordering && <TableColumnReordering defaultOrder={columns.map(c => c.name)} />}
+            {columnReordering && 
+              <TableColumnReordering 
+                defaultOrder={columns.map(c => c.name)} 
+              />
+            }
             {rowSelection &&
               <TableSelection
                 showSelectAll={showSelectAll}
                 selectByRowClick={selectByRowClick}
               />
             }
-            <DropdownFormatterProvider for={columns.filter(c => c.options).map(c => c.name)} />
+            <DropdownFormatterProvider 
+              for={columns.filter(c => c.options).map(c => c.name)} 
+            />
           </Grid>
         </div>
       </Segment>
