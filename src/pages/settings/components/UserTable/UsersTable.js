@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
 
-import { getUsersDataRequest } from '../../actions'
+import { getUsersDataRequest, openEditPopup, deleteUser } from '../../actions'
 
 class UsersTable extends Component {
 	state = {
@@ -31,6 +31,8 @@ class UsersTable extends Component {
 		const {
 			rows,
 			filterValue,
+			openEditPopup,
+			deleteUser
 		} = this.props
 
 		const { columns } = this.state
@@ -41,8 +43,8 @@ class UsersTable extends Component {
 				columns={columns} 
 				rows={rows} 
 				rowActions={[
-					{text: 'Edit', callback: (row) => {}},
-					{text: 'Delete', callback: (row) => {}}
+					{text: 'Edit', callback: (row) => openEditPopup(row)},
+					{text: 'Delete', callback: (row) => deleteUser(row.id)}
 				]}
 			/>
 		)
@@ -50,7 +52,9 @@ class UsersTable extends Component {
 }
 
 const mapDispatchToProps = {
-	getUsersDataRequest
+	getUsersDataRequest,
+	openEditPopup,
+	deleteUser
 }
 
 const mapStateToProps = state => {
