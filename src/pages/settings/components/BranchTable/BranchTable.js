@@ -1,21 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import ProdexTable from '~/components/table'
 
-import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid'
-import {
-	Grid,
-	Table,
-	TableHeaderRow, DragDropProvider,
-	TableColumnReordering,
-} from '@devexpress/dx-react-grid-bootstrap4'
-
-import { EditDeleteFormatterProvider } from './BranchTableProviders'
-import { getBranchesDataRequest } from '../../actions'
+import { getBranchesDataRequest, openEditPopup, deleteWarehouse } from '../../actions'
 
 class BranchTable extends Component {
 	state = {
 		columns: [
-			{ name: 'editDeleteBtn', title: ' ', width: 45, dropdown: true },
 			{ name: 'warehouseName', title: 'Warehouse Name' },
 			{ name: 'address', title: 'Adress', },
 			{ name: 'contactName', title: 'Contact name' },
@@ -31,49 +22,34 @@ class BranchTable extends Component {
 	render() {
 		const {
 			rows,
-			filterValue,
-			editDeleteColumns,
-			editPopupBoolean,
-			addNewWarehousePopup
+			filterValue
 		} = this.props
 
 		const { columns } = this.state
 
-		const GridRoot = props => <Grid.Root className="bootstrapiso" {...props} />
-		const HeaderCells = props => <TableHeaderRow.Cell {...props} />
-		const TableCells = props => <Table.Cell {...props} />
-
 		return (
-			<Grid
-				rootComponent={GridRoot}
-				rows={rows}
+			<ProdexTable 
 				columns={columns}
-			>
-				<DragDropProvider />
-				<SearchState value={filterValue} />
-				<IntegratedFiltering />
-				<Table cellComponent={TableCells} />
-				<TableHeaderRow cellComponent={HeaderCells} />
-				<EditDeleteFormatterProvider
-					for={editDeleteColumns}
-					rows={rows}
-				/>
-				<TableColumnReordering defaultOrder={columns.map(c => c.name)} />
-			</Grid>
+				rows={rows}
+				filterValue={filterValue}
+				rowActions={[
+					{text: 'Edit', callback: (row) => openEditPopup(row)},
+					{text: 'Delete', callback: (row) => deleteWarehouse(row.id)}
+				]} 
+			/>
 		)
 	}
 }
 
 const mapDispatchToProps = {
-	getBranchesDataRequest
+	getBranchesDataRequest,
+	openEditPopup, 
+	deleteWarehouse
 }
 
 const mapStateToProps = state => {
 	return {
 		rows: state.settings.branchesRows,
-		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
-		editPopupBoolean: state.settings.editPopupBoolean,
-		addNewWarehousePopup: state.settings.addNewWarehousePopup,
 		filterValue: state.settings.filterValue
 	}
 }

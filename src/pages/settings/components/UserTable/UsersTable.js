@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import ProdexGrid from '~/components/table'
+import ProdexTable from '~/components/table'
 
 import { getUsersDataRequest } from '../../actions'
 
@@ -36,7 +36,7 @@ class UsersTable extends Component {
 		const { columns } = this.state
 
 		return (
-			<ProdexGrid 
+			<ProdexTable 
 				filterValue={filterValue}
 				columns={columns} 
 				rows={rows} 

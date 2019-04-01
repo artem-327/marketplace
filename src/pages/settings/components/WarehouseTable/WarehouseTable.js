@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import ProdexGrid from '~/components/table'
+import ProdexTable from '~/components/table'
 import { getWarehousesDataRequest, openEditPopup, deleteWarehouse } from '../../actions'
 
 class WarehouseTable extends Component {
@@ -30,7 +30,7 @@ class WarehouseTable extends Component {
 		const { columns } = this.state
 
 		return (
-			<ProdexGrid 
+			<ProdexTable 
 				filterValue={filterValue}
 				columns={columns} 
 				rows={rows} 
