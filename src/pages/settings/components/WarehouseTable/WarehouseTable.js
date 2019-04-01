@@ -7,7 +7,6 @@ class WarehouseTable extends Component {
 
 	state = {
 		columns: [
-			{ name: 'editDeleteBtn', title: ' ', dropdown: true, width: 45 },
 			{ name: 'warehouseName', title: 'Warehouse Name' },
 			{ name: 'address', title: 'Address' },
 			{ name: 'contactName', title: 'Contact Name' },
