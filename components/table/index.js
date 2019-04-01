@@ -13,7 +13,7 @@ import {
   TableSelection
 } from '~/components/dx-grid-semantic-ui/plugins'
 
-import { RowActionsFormatterProvider } from './providers'
+import { RowActionsFormatterProvider, DropdownFormatterProvider } from './providers'
 
 const GridRoot = props => <Grid.Root {...props} />
 const HeaderCells = props => <TableHeaderRow.Cell {...props} />
@@ -64,7 +64,8 @@ export default class _Table extends Component {
       showSelectAll,
       rowActions,
       showHeader,
-      onSelectionChange
+      onSelectionChange,
+      dropdownColumns
     } = this.props
 
     return (
@@ -94,6 +95,7 @@ export default class _Table extends Component {
               selectByRowClick={selectByRowClick}
             />
           }
+          <DropdownFormatterProvider for={columns.filter(c => c.options).map(c => c.name)} />
         </Grid>
       </div>
     )
