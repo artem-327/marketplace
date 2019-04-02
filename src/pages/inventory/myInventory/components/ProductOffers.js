@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Router from 'next/router'
 import './ProductOffers.scss';
 import DataTable from "../../../../components/DataTable";
 import BroadcastRule from "./BroadcastRule";
@@ -109,7 +110,7 @@ class ProductOffers extends Component {
                                 sortFunc={(nameColumn) => console.log(nameColumn)}
                                 headerInit={headerInit}
                                 contextMenu={[
-                                         {action: (id) => { if (checkToken(this.props)) return; this.props.history.push(`/inventory/edit-inventory/${id}`) }, label: 'editListing',},
+                                         {action: (id) => { if (checkToken(this.props)) return; Router.push(`/inventory/edit/${id}`) }, label: 'editListing',},
                                          {action: (id) => { if (checkToken(this.props)) return; this.openBroadcast(id) }, label: 'customBroadcast'},
                                          {action: (id) => { if (checkToken(this.props)) return; confirm('removeListings', 'Are you sure you want to remove listings from Your Inventory?').then(
                                                  () => {
