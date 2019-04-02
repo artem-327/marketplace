@@ -110,6 +110,12 @@ export function getCreditCardsDataRequest() {
   };
 }
 
+export function getProductsCatalogRequest() {
+  return {
+    type: AT.GET_PRODUCTS_CATALOG_DATA
+  };
+}
+
 export function getBankAccountsDataRequest() {
   return {
     type: AT.GET_BANK_ACCOUNTS_DATA
