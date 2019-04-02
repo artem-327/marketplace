@@ -21,10 +21,12 @@ export function rowActionsCellFormatter({column: {actions}, row}) {
 }
 
 export const dropdownFormatter = ({column: {options}, row}) => {
+	
 	const opts = options.map(p => ({
 		text: p.text,
 		value: p.value,
-		key: p.value
+		key: p.value,
+		callback: p.callback
 	}))
 
 	return (

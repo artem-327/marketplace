@@ -253,10 +253,7 @@ export default function* settingsSaga() {
   yield takeEvery(AT.GET_CREDIT_CARDS_DATA, getCreditCardsDataWorker);
   yield takeEvery(AT.GET_BANK_ACCOUNTS_DATA, getBankAccountsDataWorker);
   yield takeEvery(AT.GET_PRODUCTS_CATALOG_DATA, getProductCatalogWorker);
-  yield takeEvery(
-    AT.GET_PRODUCTS_WITH_REQUIRED_PARAM,
-    getProductsWithRequiredParamWorker
-  );
+  yield takeEvery(AT.GET_PRODUCTS_WITH_REQUIRED_PARAM, getProductsWithRequiredParamWorker);
 
   yield takeEvery(AT.POST_NEW_USER_REQUEST, postNewUserWorker);
   yield takeEvery(AT.POST_NEW_WAREHOUSE_REQUEST, postNewWarehouseWorker);

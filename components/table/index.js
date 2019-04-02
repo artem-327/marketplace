@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import pt from 'prop-types'
-
+import { Segment } from 'semantic-ui-react'
 import { SearchState, IntegratedFiltering, IntegratedSelection, SelectionState } from '@devexpress/dx-react-grid'
 import {
   Grid,
@@ -32,6 +32,7 @@ export default class _Table extends Component {
     showSelectAll: pt.bool,
     selectByRowClick: pt.bool,
     showHeader: pt.bool,
+    loading: pt.bool,
     onSelectionChange: pt.func
   }
 
@@ -41,7 +42,8 @@ export default class _Table extends Component {
     selectByRowClick: true,
     showSelectAll: true,
     showHeader: true,
-    onSelectionChange: () => {}
+    loading: false,
+    onSelectionChange: () => { }
   }
 
   getColumns = () => {
@@ -65,39 +67,47 @@ export default class _Table extends Component {
       rowActions,
       showHeader,
       onSelectionChange,
-      dropdownColumns
+      loading
     } = this.props
 
     return (
-      <div className="bootstrapiso">
-        <Grid
-          rows={rows}
-          columns={this.getColumns()}
-          rootComponent={GridRoot}
-        >
-          {columnReordering && <DragDropProvider />}
-          {rowSelection && <SelectionState onSelectionChange={onSelectionChange} />}
-          {rowSelection && <IntegratedSelection />}
+      <Segment basic loading={loading}>
+        <div className="bootstrapiso">
+          <Grid
+            rows={rows}
+            columns={this.getColumns()}
+            rootComponent={GridRoot}
+          >
+            {columnReordering && <DragDropProvider />}
+            {rowSelection && <SelectionState onSelectionChange={onSelectionChange} />}
+            {rowSelection && <IntegratedSelection />}
 
-          <SearchState value={filterValue} />
-          <IntegratedFiltering />
+            <SearchState value={filterValue} />
+            <IntegratedFiltering />
 
-          <Table cellComponent={TableCells} />
+            <Table cellComponent={TableCells} />
 
-          {showHeader && <TableHeaderRow cellComponent={HeaderCells} />}
+            {showHeader && <TableHeaderRow cellComponent={HeaderCells} />}
 
-          <RowActionsFormatterProvider for={['__actions']} actions={rowActions} />
+            <RowActionsFormatterProvider for={['__actions']} actions={rowActions} />
 
-          {columnReordering && <TableColumnReordering defaultOrder={columns.map(c => c.name)} />}
-          {rowSelection &&
-            <TableSelection
-              showSelectAll={showSelectAll}
-              selectByRowClick={selectByRowClick}
+            {columnReordering && 
+              <TableColumnReordering 
+                defaultOrder={columns.map(c => c.name)} 
+              />
+            }
+            {rowSelection &&
+              <TableSelection
+                showSelectAll={showSelectAll}
+                selectByRowClick={selectByRowClick}
+              />
+            }
+            <DropdownFormatterProvider 
+              for={columns.filter(c => c.options).map(c => c.name)} 
             />
-          }
-          <DropdownFormatterProvider for={columns.filter(c => c.options).map(c => c.name)} />
-        </Grid>
-      </div>
+          </Grid>
+        </div>
+      </Segment>
     )
   }
 }
