@@ -60,6 +60,15 @@ function* getBankAccountsDataWorker() {
   }
 }
 
+function* getProductCatalogWorker() {
+  try {
+    // const productCatalog = yield call(api.getProductsCatalog)
+    // yield put({ type: AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS, payload: productCatalog })
+  } catch (e) {
+    yield console.log("error:", e);
+  }
+}
+
 function* getProductsWithRequiredParamWorker({ payload }) {
   try {
     const products = yield call(api.getProductsWithRequiredParamPar, payload);
@@ -243,6 +252,7 @@ export default function* settingsSaga() {
   yield takeEvery(AT.GET_BRANCHES_DATA, getBranchesDataWorker);
   yield takeEvery(AT.GET_CREDIT_CARDS_DATA, getCreditCardsDataWorker);
   yield takeEvery(AT.GET_BANK_ACCOUNTS_DATA, getBankAccountsDataWorker);
+  yield takeEvery(AT.GET_PRODUCTS_CATALOG_DATA, getProductCatalogWorker);
   yield takeEvery(
     AT.GET_PRODUCTS_WITH_REQUIRED_PARAM,
     getProductsWithRequiredParamWorker
