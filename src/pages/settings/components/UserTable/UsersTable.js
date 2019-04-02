@@ -28,9 +28,7 @@ class UsersTable extends Component {
           { text: "User", value: "user" }
         ]
       }
-    ],
-    open: false,
-    result: "show the modal to capture a result"
+    ]
   };
 
   componentDidMount() {
@@ -47,8 +45,6 @@ class UsersTable extends Component {
       closeConfirmPopup,
       deleteConfirmation
     } = this.props;
-
-    console.log("ROWS", rows);
 
     const { columns } = this.state;
 

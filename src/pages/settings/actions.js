@@ -43,7 +43,6 @@ export function handleOpenConfirmPopup(payload) {
   };
 }
 export function deleteConfirmation() {
-  // console.log("ID", payload);
   return {
     type: AT.DELETE_CONFIRM_POPUP
   };
@@ -114,12 +113,6 @@ export function getCreditCardsDataRequest() {
 export function getBankAccountsDataRequest() {
   return {
     type: AT.GET_BANK_ACCOUNTS_DATA
-  };
-}
-
-export function getProductsCatalogRequest() {
-  return {
-    type: AT.GET_PRODUCTS_CATALOG_DATA
   };
 }
 
