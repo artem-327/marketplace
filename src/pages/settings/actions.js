@@ -151,6 +151,13 @@ export function postNewCreditCardRequest(creditCardData) {
   };
 }
 
+export function postNewProductRequest(inputsValue, id) {
+  return {
+    type: AT.POST_NEW_PRODUCT_REQUEST
+    // payload: inputsValue
+  };
+}
+
 export function postNewBankAccountRequest(bankAccountData) {
   return {
     type: AT.POST_NEW_BANK_ACCOUNT_REQUEST,
