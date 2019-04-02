@@ -1,13 +1,30 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Control, Form } from 'react-redux-form'
 
-import { Modal, Button, FormField, Header, Segment, FormGroup, Form as SForm } from 'semantic-ui-react'
+import { Modal, FormGroup } from 'semantic-ui-react'
 
 import { closeAddPopup, postNewWarehouseRequest } from '../../actions'
+import { Form, Input, Button } from 'formik-semantic-ui'
+import * as Yup from 'yup'
 
-class EditWarehousePopup extends React.Component {
 
+const initialFormValues = {
+  warehouseName: '',
+  contactName: '',
+  address: '',
+  city: '',
+  state: '',
+  zipCode: '',
+  phone: '',
+  email: ''
+}
+const formValidation = Yup.object().shape({
+  warehouseName: Yup.string().min(3, "Too short").required("Required"),
+  contactName: Yup.string().min(3, "Too short").required("Required"),
+  email: Yup.string().email("Invalid email").required("Email is required")
+})
+
+class AddNewWarehousePopup extends React.Component {
   render() {
     const {
       closeAddPopup,
@@ -15,34 +32,40 @@ class EditWarehousePopup extends React.Component {
     } = this.props
 
     return (
-      <Segment padded raised style={{width: '70%', margin: 'auto'}}>
-        <Header>Add new warehouse</Header>
-        <Form
-          model="forms.settingsPopup.addNewWarehouse"
-          onSubmit={(value) => postNewWarehouseRequest(value)}
-          component={SForm}
-        >
-          <FormGroup widths="equal">
-            <FormField label="Warehouse name" control={Control.text} model=".warehouseName" defaultValue={''}/>
-            <FormField label="Contact Name" control={Control.text} model=".contactName" defaultValue={''} />
-          </FormGroup>
-          <FormGroup widths="equal">
-            <FormField label="Address" control={Control.text} model=".address" defaultValue={''} />
-            <FormField label="City" control={Control.text} model=".city" defaultValue={''} />
-            <FormField label="State" control={Control.text} model=".state" defaultValue={''} />
-            <FormField label="Zipcode" control={Control.text} model=".zipCode" defaultValue={''} />
-          </FormGroup>
-          <FormGroup widths="equal">
-            <FormField label="Phone" control={Control.text} model=".phone" defaultValue={''} />
-            <FormField label="e-mail" control={Control.text} model=".email" defaultValue={''} />
-          </FormGroup>
-          
-          <div style={{textAlign: 'right'}}>
-            <Button onClick={closeAddPopup}>Cancel</Button>
-            <Button primary>Save</Button>
-          </div>
-        </Form>
-      </Segment>
+      <Modal open centered={false}>
+        <Modal.Header>Add new warehouse</Modal.Header>
+        <Modal.Content>
+          <Form
+            initialValues={initialFormValues}
+            validationSchema={formValidation}
+            onReset={closeAddPopup}
+            onSubmit={(values, actions) => {
+              postNewWarehouseRequest(values)
+            }}
+          >
+            <FormGroup widths="equal">
+              <Input type="text" label="Warehouse name" name="warehouseName" />
+              <Input type="text" label="Contact Name" name="contactName" />
+            </FormGroup>
+            <FormGroup widths="equal">
+              <Input type="text" label="Address" name="address" />
+              <Input type="text" label="City" name="city" />
+              <Input type="text" label="State" name="state" />
+              <Input type="text" label="Zipcode" name="zipCode" />
+            </FormGroup>
+            <FormGroup widths="equal">
+              <Input type="text" label="Phone" name="phone" />
+              <Input type="text" label="Email" name="email" />
+            </FormGroup>
+
+            <div style={{ textAlign: 'right' }}>
+              <Button.Reset>Cancel</Button.Reset>
+              <Button.Submit>Save</Button.Submit>
+            </div>
+            
+          </Form>
+        </Modal.Content>
+      </Modal>
     )
   }
 }
@@ -52,4 +75,4 @@ const mapDispatchToProps = {
   postNewWarehouseRequest
 }
 
-export default connect(null, mapDispatchToProps)(EditWarehousePopup) 
+export default connect(null, mapDispatchToProps)(AddNewWarehousePopup) 

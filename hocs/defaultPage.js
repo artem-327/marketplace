@@ -2,32 +2,31 @@ import React from 'react'
 import Router from 'next/router'
 
 // import { getUserFromServerCookie, getUserFromLocalCookie } from '~/utils/auth'
-import { getTokenFromServerCookie, getTokenFromLocalCookie } from '~/utils/auth'
+import { getAuthFromServerCookie, getAuthFromLocalCookie } from '~/utils/auth'
 
 export default Page => class DefaultPage extends React.Component {
   static getInitialProps(ctx) {
-    const token = process.browser ? getTokenFromLocalCookie() : getTokenFromServerCookie(ctx.req)
+    const auth = process.browser ? getAuthFromLocalCookie() : getAuthFromServerCookie(ctx.req)
     const pageProps = Page.getInitialProps && Page.getInitialProps(ctx)
     return {
       ...pageProps,
-      // loggedUser,
       currentUrl: ctx.pathname,
-      isAuthenticated: !!token
+      isAuthenticated: !!auth
     }
   }
 
-  logout = (eve) => {
+  logoutEvent = (eve) => {
     if (eve.key === 'logout') {
       Router.push(`/auth/logout?auto=true`)
     }
   }
 
   componentDidMount() {
-    window.addEventListener('storage', this.logout, false)
+    window.addEventListener('storage', this.logoutEvent, false)
   }
 
   componentWillUnmount() {
-    window.removeEventListener('storage', this.logout, false)
+    window.removeEventListener('storage', this.logoutEvent, false)
   }
 
   render() {

@@ -3,6 +3,16 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import pt from 'prop-types'
 import { Segment, Form, Image, Button, Message } from 'semantic-ui-react'
 import Logo from '~/assets/images/login/logo_echo.png'
+import styled from 'styled-components'
+
+const LoginSegment = styled(Segment)`
+  width: 400px;
+  margin: auto !important;
+`
+const LogoImage = styled(Image)`
+  width: 40%;
+  margin: auto;
+`
 
 export default class LoginForm extends Component {
   
@@ -31,10 +41,10 @@ export default class LoginForm extends Component {
     const { usernameError, passwordError} = this.state
     
     return (
-      <Segment loading={isLoading} raised padded="very" style={{ width: 400, margin: 'auto' }}>
+      <LoginSegment loading={isLoading} raised padded="very">
 
         <Segment basic textAlign="center">
-          <Image src={Logo} style={{ width: '40%', margin: 'auto' }} />
+          <LogoImage src={Logo} />
         </Segment>
 
         <Form onSubmit={this.handleSubmit}>
@@ -50,7 +60,7 @@ export default class LoginForm extends Component {
         </Form>
 
         <Message error content={message} hidden={!message} />
-      </Segment>
+      </LoginSegment>
     )
   }
 }

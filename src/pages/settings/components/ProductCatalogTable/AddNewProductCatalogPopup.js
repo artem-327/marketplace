@@ -71,6 +71,7 @@ class AddNewProductCatalogPopup extends React.Component {
 
   render() {
     const { closeAddPopup, handleSubmitEditPopup, popupValues, editPopupSearchProducts } = this.props 
+    // const { handleEditPopup, postNewProductRequest, popupValues, editPopupSearchProducts } = this.props 
     const {
       productName,
       productNumber,

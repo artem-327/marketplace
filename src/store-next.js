@@ -2,7 +2,7 @@ import { createStore, applyMiddleware } from 'redux'
 import { createLogger } from 'redux-logger'
 import thunk from 'redux-thunk'
 import promise from 'redux-promise-middleware'
-import { combineReducers } from 'redux'
+import { combineReducers, compose } from 'redux'
 import { combineForms } from 'react-redux-form'
 import createSagaMiddleware from 'redux-saga'
 import {loadState, saveState} from '~/utils/storePersist'
@@ -112,11 +112,19 @@ const logger = createLogger({
 //     next(action)
 //   }
 
+const composeEnhancers =
+  typeof window === 'object' &&
+  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?   
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+      // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
+    }) : compose;
+
+
 export const makeStore = (preloadedState) => {
   // create the saga middleware
   const sagaMiddleware = createSagaMiddleware()
 
-  const middleware = applyMiddleware(thunk, promise(), logger, sagaMiddleware)
+  const middleware = composeEnhancers(applyMiddleware(thunk, promise(), sagaMiddleware, logger))
   // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 
   // let store = createStore(reducer, loadState(), middleware)

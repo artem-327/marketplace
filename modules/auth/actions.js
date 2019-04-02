@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 import * as api from './api'
-import {setToken, unsetToken} from '~/utils/auth'
+import {setAuth, unsetAuth, authorize} from '~/utils/auth'
 import Router from 'next/router'
 
 export function getIdentity() {
@@ -14,8 +14,8 @@ export function login(username, password) {
   return {
     type: AT.LOGIN,
     async payload() {
-      const auth = await api.login(username, password)
-      setToken(auth.access_token)
+      const auth = await authorize(username, password)
+      setAuth(auth)
       const identity = await api.getIdentity()
       
       Router.push('/dashboard')
@@ -36,7 +36,7 @@ export function getVersion() {
 }
 
 export function logout(isAutologout) {
-  if (!isAutologout) unsetToken()
+  if (!isAutologout) unsetAuth()
   
   Router.push('/auth/login')
 
