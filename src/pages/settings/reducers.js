@@ -1,4 +1,5 @@
-import * as AT from "./action-types";
+import * as AT from "./action-types"
+import get from "lodash/get"
 
 export const initialState = {
   editPopupBoolean: false,
@@ -35,7 +36,7 @@ export const initialState = {
   deleteUserById: null,
   filterValue: "",
   editPopupSearchProducts: []
-};
+}
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -45,13 +46,13 @@ export default function reducer(state = initialState, action) {
         currentEditForm: state.currentTab,
         editPopupBoolean: state.editPopupBoolean === false ? true : false,
         popupValues: action.payload
-      };
+      }
     }
     case AT.CLOSE_EDIT_POPUP: {
       return {
         ...state,
         currentEditForm: null
-      };
+      }
     }
     case AT.OPEN_CONFIRM_POPUP: {
       return {
@@ -59,14 +60,14 @@ export default function reducer(state = initialState, action) {
         confirmMessage: state.currentTab,
         popupValues: state.currentTab,
         deleteUserById: action.payload
-      };
+      }
     }
     case AT.CLOSE_CONFIRM_POPUP: {
       return {
         ...state,
         confirmMessage: null,
         popupValues: state.currentTab
-      };
+      }
     }
 
     case AT.OPEN_ADD_POPUP: {
@@ -74,14 +75,14 @@ export default function reducer(state = initialState, action) {
         ...state,
         currentAddForm: state.currentTab,
         popupValues: action.payload
-      };
+      }
     }
     case AT.CLOSE_ADD_POPUP: {
       return {
         ...state,
         currentAddForm: null,
         currentEditForm: null
-      };
+      }
     }
 
     case AT.HANDLE_ACTIVE_TAB: {
@@ -90,14 +91,14 @@ export default function reducer(state = initialState, action) {
         currentTab: action.payload.tab,
         currentAddForm: null,
         currentEditForm: null
-      };
+      }
     }
 
     case AT.HANDLE_FILTERS_VALUE: {
       return {
         ...state,
         filterValue: action.payload
-      };
+      }
     }
 
     case AT.GET_USERS_DATA_SUCCESS: {
@@ -112,12 +113,12 @@ export default function reducer(state = initialState, action) {
           permissions: user.roles ? user.roles.name : "",
           middleName: user.middlename,
           id: user.id
-        };
-      });
+        }
+      })
       return {
         ...state,
         usersRows: usersRows
-      };
+      }
     }
 
     case AT.GET_WAREHOUSES_DATA_SUCCESS: {
@@ -130,13 +131,13 @@ export default function reducer(state = initialState, action) {
           phone: warehouse.contact.phone,
           email: warehouse.contact.email,
           id: warehouse.id
-        };
-      });
+        }
+      })
 
       return {
         ...state,
         warehousesRows: warehousesRows
-      };
+      }
     }
 
     case AT.GET_BRANCHES_DATA_SUCCESS: {
@@ -148,13 +149,13 @@ export default function reducer(state = initialState, action) {
           phone: branch.contact.phone,
           email: branch.contact.email,
           branchId: branch.id
-        };
-      });
+        }
+      })
 
       return {
         ...state,
         branchesRows: rows
-      };
+      }
     }
 
     case AT.GET_CREDIT_CARDS_DATA_SUCCESS: {
@@ -167,13 +168,13 @@ export default function reducer(state = initialState, action) {
           expirationYear: card.expYear,
           last4: `**** **** **** ${card.last4}`
           // cardNumber what does it mean
-        };
-      });
+        }
+      })
 
       return {
         ...state,
         creditCardsRows: rows
-      };
+      }
     }
 
     case AT.GET_BANK_ACCOUNTS_DATA_SUCCESS: {
@@ -187,30 +188,36 @@ export default function reducer(state = initialState, action) {
           currency: account.currency,
           routingNumber: account.routingNumber
           // accountNumber - what does it mean
-        };
-      });
+        }
+      })
 
       return {
         ...state,
         bankAccountsRows: rows
-      };
+      }
     }
 
     case AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS: {
-      const rows = action.payload.map(product => {
+      const rows = action.payload.slice(270)
+      const shortRows = rows.map(product => {
+        const packaging = get(product, ["packaging"], false)
         return {
-          productName: product,
-          productNumber: product,
-          productId: product,
-          packagingType: product,
-          packagingSize: product
-        };
-      });
+          productName: product.productName,
+          productNumber: product.productCode,
+          productId: product.product.id,
+          packagingType: packaging
+            ? product.packaging.packagingType
+              ? product.packaging.packagingType.name
+              : ""
+            : "",
+          packagingSize: packaging ? product.packaging.size : 0
+        }
+      })
 
       return {
         ...state,
-        productsCatalogRows: rows
-      };
+        productsCatalogRows: shortRows
+      }
     }
 
     case AT.GET_PRODUCTS_WITH_REQUIRED_PARAM_SUCCESS: {
@@ -225,23 +232,23 @@ export default function reducer(state = initialState, action) {
               ? ""
               : item.packaging.packagingType.name,
           packagingSize: item.packaging.size
-        };
-      });
+        }
+      })
       return {
         ...state,
         editPopupSearchProducts
-      };
+      }
     }
 
     case AT.POST_NEW_WAREHOUSE_POPUP: {
       return {
         ...state,
         currentAddForm: state.currentTab
-      };
+      }
     }
 
     default: {
-      return state;
+      return state
     }
   }
 }

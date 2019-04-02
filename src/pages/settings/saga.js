@@ -57,8 +57,11 @@ function* getBankAccountsDataWorker() {
 
 function* getProductCatalogWorker() {
   try {
-    // const productCatalog = yield call(api.getProductsCatalog)
-    // yield put({ type: AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS, payload: productCatalog })
+    const productCatalog = yield call(api.getProductsCatalog)
+    yield put({
+      type: AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS,
+      payload: productCatalog
+    })
   } catch (e) {
     yield console.log("error:", e)
   }
