@@ -1,8 +1,11 @@
 import * as AT from './action-types'
+import { config } from './config'
 
 export const initialState = {
     editPopupBoolean: false,
     unitsOfMeasureRows: [],
+    unitsOfPackagingRows: [],
+    manufacturersRows: [],
 
     columnsForFormatter: {
         checkboxColumns: ['checkbox'],
@@ -18,37 +21,12 @@ export const initialState = {
         {	name: 'Forms', id: 5 },
         {	name: 'Conditions', id: 6 },
     ],
-    currentTab: 'Manufacturers',
+    currentTab: 'Units of Measure',
     currentEditForm: null,
     currentAddForm: null,
     filterValue: '',
 
-    config: {
-        'Units of Measure': {
-            columns: [
-                {name: 'editDeleteBtn', title: ' ', width: 45, dropdown: true},
-                {name: 'name', title: 'Name'},
-                {name: 'nameAbbreviation', title: 'Name abbreviation',},
-                {name: 'measureType', title: 'Measure type'},
-            ],
-            cosiDalsiho: 10
-        },
-        'Units of Packaging': {
-            columns: [
-                {name: 'editDeleteBtn', title: ' ', width: 45, dropdown: true},
-                {name: 'name', title: 'Name'},
-                {name: 'measureType', title: 'Measure type'},
-            ],
-            cosiDalsiho: 20
-        },
-        'Manufacturers': {
-            columns: [
-                {name: 'editDeleteBtn', title: ' ', width: 45, dropdown: true},
-                {name: 'name', title: 'Name'},
-            ],
-            cosiDalsiho: 30
-        }
-    },
+    config: config,
 
 
 }

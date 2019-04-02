@@ -27,15 +27,11 @@ export function closeAddPopup(payload) {
 }
 
 
-export function getUnitsOfMeasureDataRequest() {
+export function getDataRequest(api) {
     return {
-        type: AT.ADMIN_GET_UNITS_OF_MEASURE_DATA
+        type: api.typeRequest
     }
 }
-
-
-
-
 
 
 export function handleActiveTab(tab) {

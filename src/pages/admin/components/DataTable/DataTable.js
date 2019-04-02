@@ -3,22 +3,13 @@ import { connect } from 'react-redux'
 import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid'
 import { Grid, Table, TableHeaderRow } from '~/components/dx-grid-semantic-ui/plugins'
 
-import { getUnitsOfMeasureDataRequest } from '../../actions'
+import { getDataRequest } from '../../actions'
 import {EditDeleteFormatterProvider} from "../TableProviders"
 
 class DataTable extends Component {
-    state = {
-        columns: [
-            {name: 'editDeleteBtn', title: ' ', width: 45, dropdown: true},
-            {name: 'name', title: 'Name'},
-            {name: 'nameAbbreviation', title: 'Name abbreviation',},
-            {name: 'measureType', title: 'Measure type'},
-        ]
-    }
-
     componentDidMount() {
-        console.log('!!!!!!!!!! DataTable - componentDidMount !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-        this.props.getUnitsOfMeasureDataRequest()
+        console.log('!!!!!!!!!! DataTable - componentDidMount !!!!!!!!!!!!!!!!!!! props..get ', this.props.config.api.get);
+        this.props.getDataRequest(this.props.config.api.get)
     }
 
     render() {
@@ -28,19 +19,9 @@ class DataTable extends Component {
             editDeleteColumns,
             editPopupBoolean,
             addNewUnitsOfMeasurePopup,    //! !
-            currentTab,
         } = this.props;
 
-        const { config } = this.props;
-
-        console.log('TTTTTTTTTTTTTTTT this.props - ', this.props);
-        console.log('TTTTTTTTTTTTTTTT this.props.currentTab - ', this.props.currentTab);
-        console.log('TTTTTTTTTTTTTTTT config - ', config);
-        console.log('TTTTTTTTTTTTTTTT currentTab - ', currentTab);
-        console.log('TTTTTTTTTTTTTTTT config[currentTab] - ', config[currentTab]);
-        console.log('TTTTTTTTTTTTTTTT config[currentTab].columns - ', config[currentTab].columns);
-
-        const { columns } = config[currentTab];
+        const { columns } = this.props.config;
 
         const GridRoot = props => <Grid.Root {...props} />
         const HeaderCells = props => <TableHeaderRow.Cell {...props} />
@@ -72,18 +53,27 @@ class DataTable extends Component {
 }
 
 const mapDispatchToProps = {
-    getUnitsOfMeasureDataRequest
+    getDataRequest
 }
 
 const mapStateToProps = state => {
+    let cfg = state.admin.config[state.admin.currentTab];
+
+    console.log('!!!!!!! state.admin.config', state.admin.config);
+    //console.log('!!!!!!! state.admin.config[state.admin.currentTab].fetchedDataName', state.admin.config[state.admin.currentTab].fetchedDataName);
+    console.log('!!!!!!! cfg - ', cfg);
+
     return {
+        config: cfg,
+        //! !config: state.admin.config,
+        //rows: state.admin[cfg.fetchedDataName],
         rows: state.admin.unitsOfMeasureRows,
+
         editDeleteColumns: state.admin.columnsForFormatter.editDeleteColumns,
         editPopupBoolean: state.admin.editPopupBoolean,
         addNewUnitsOfMeasurePopup: state.settings.addNewUnitsOfMeasurePopup,
         filterValue: state.admin.filterValue,
         currentTab: state.admin.currentTab,
-        config: state.admin.config,
     }
 }
 

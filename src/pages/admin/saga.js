@@ -1,16 +1,15 @@
 import { call, put, takeEvery } from "redux-saga/effects"
+import { config } from './config'
 
 import * as AT from './action-types'
 import api from "./api"
 
 
-function* getUnitsOfMeasureDataWorker() {
+function* getUnitsOfMeasureDataWorker(config) {
+    console.log('XXXXXXXXXX adminSaga - cosi ', config);
     try {
-        console.log('!!!!!!!!! getUnitsOfMeasureDataWorker start')
         const unitsOfMeasure = yield call(api.getUnitsOfMeasure)
-        console.log('!!!!!!!!! getUnitsOfMeasureDataWorker - unitsOfMeasure', unitsOfMeasure)
         yield put({ type: AT.ADMIN_GET_UNITS_OF_MEASURE_DATA_SUCCESS, payload: unitsOfMeasure })
-        console.log('!!!!!!!!! getUnitsOfMeasureDataWorker - unitsOfMeasure', unitsOfMeasure)
     } catch(e) {
         yield console.log("error:", e)
     }
@@ -18,8 +17,8 @@ function* getUnitsOfMeasureDataWorker() {
 
 
 export default function* adminSaga() {
+    console.log('XXXXXXXXXX adminSaga - config ', config);
 
-
-    yield takeEvery(AT.ADMIN_GET_UNITS_OF_MEASURE_DATA, getUnitsOfMeasureDataWorker)
+    yield takeEvery(AT.ADMIN_GET_UNITS_OF_MEASURE_DATA, getUnitsOfMeasureDataWorker, config['Manufacturers'])
 
 }
