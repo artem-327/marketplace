@@ -11,6 +11,9 @@ const tables = {
     'Units of Measure': <DataTable />,
     'Units of Packaging': <DataTable />,
     'Manufacturers': <DataTable />,
+    'Grades': <DataTable />,
+    'Forms': <DataTable />,
+    'Conditions': <DataTable />,
 }
 
 const editForms = {

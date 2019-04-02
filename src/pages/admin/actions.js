@@ -35,7 +35,6 @@ export function getDataRequest(api) {
 
 
 export function handleActiveTab(tab) {
-    console.log('!!!!!!! - ADMIN_HANDLE_ACTIVE_TAB - actions - tab - ', tab);
     return {
         type: AT.ADMIN_HANDLE_ACTIVE_TAB,
         payload: {tab}
@@ -43,7 +42,6 @@ export function handleActiveTab(tab) {
 }
 
 export function handleFiltersValue(value) {
-    console.log('!!!!!!! - ADMIN_HANDLE_FILTERS_VALUE - actions - value - ', value);
     return {
         type: AT.ADMIN_HANDLE_FILTERS_VALUE,
         payload: value

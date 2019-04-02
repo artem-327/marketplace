@@ -8,7 +8,6 @@ import {EditDeleteFormatterProvider} from "../TableProviders"
 
 class DataTable extends Component {
     componentDidMount() {
-        console.log('!!!!!!!!!! DataTable - componentDidMount !!!!!!!!!!!!!!!!!!! props..get ', this.props.config.api.get);
         this.props.getDataRequest(this.props.config.api.get)
     }
 
@@ -18,7 +17,7 @@ class DataTable extends Component {
             filterValue,
             editDeleteColumns,
             editPopupBoolean,
-            addNewUnitsOfMeasurePopup,    //! !
+            addNewPopupBoolean,
         } = this.props;
 
         const { columns } = this.props.config;
@@ -58,20 +57,13 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
     let cfg = state.admin.config[state.admin.currentTab];
-
-    console.log('!!!!!!! state.admin.config', state.admin.config);
-    //console.log('!!!!!!! state.admin.config[state.admin.currentTab].fetchedDataName', state.admin.config[state.admin.currentTab].fetchedDataName);
-    console.log('!!!!!!! cfg - ', cfg);
-
     return {
         config: cfg,
-        //! !config: state.admin.config,
-        //rows: state.admin[cfg.fetchedDataName],
-        rows: state.admin.unitsOfMeasureRows,
+        rows: state.admin[cfg.api.get.dataName],
 
         editDeleteColumns: state.admin.columnsForFormatter.editDeleteColumns,
         editPopupBoolean: state.admin.editPopupBoolean,
-        addNewUnitsOfMeasurePopup: state.settings.addNewUnitsOfMeasurePopup,
+        addNewPopupBoolean: state.admin.addNewPopupBoolean,
         filterValue: state.admin.filterValue,
         currentTab: state.admin.currentTab,
     }

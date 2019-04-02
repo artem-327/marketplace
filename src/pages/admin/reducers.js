@@ -3,9 +3,13 @@ import { config } from './config'
 
 export const initialState = {
     editPopupBoolean: false,
+    addNewPopupBoolean: false,
     unitsOfMeasureRows: [],
     unitsOfPackagingRows: [],
     manufacturersRows: [],
+    gradesRows: [],
+    formsRows: [],
+    conditionsRows: [],
 
     columnsForFormatter: {
         checkboxColumns: ['checkbox'],
@@ -34,14 +38,7 @@ export const initialState = {
 export default function reducer(state = initialState, action) {
     switch (action.type) {
 
-
-
-
-
-
-
         case AT.ADMIN_HANDLE_ACTIVE_TAB: {
-            console.log('!!!!!!! - ADMIN_HANDLE_ACTIVE_TAB - Reducers - ', action.payload.tab);
             return {
                 ...state,
                 currentTab: action.payload.tab,
@@ -51,7 +48,6 @@ export default function reducer(state = initialState, action) {
         }
 
         case AT.ADMIN_HANDLE_FILTERS_VALUE: {
-            console.log('!!!!!!! - ADMIN_HANDLE_FILTERS_VALUE - Reducers - ', action.payload);
             return {
                 ...state,
                 filterValue: action.payload
@@ -59,7 +55,6 @@ export default function reducer(state = initialState, action) {
         }
 
         case AT.ADMIN_OPEN_ADD_POPUP: {
-            console.log('!!!!!!! - ADMIN_OPEN_ADD_POPUP - Reducers - ', action.payload);
             return {
                 ...state,
                 currentAddForm: state.currentTab,
@@ -67,37 +62,31 @@ export default function reducer(state = initialState, action) {
             }
         }
 
-
-
-
-
-        case AT.ADMIN_GET_UNITS_OF_MEASURE_DATA_SUCCESS: {
-            const rows = action.payload.map(data => {
-                return (
-                    {
-                        name: data.name,
-                        nameAbbreviation: data.nameAbbreviation,
-                        measureType: data.measureType,
-                        id: data.id
-                    }
-                )
-            })
-            return {
-                ...state,
-                unitsOfMeasureRows: rows
-            }
-        }
-
-
-
-
-
-
-
-
-
-
         default: {
+            for (let groupName in config) {
+                if (typeof config[groupName].api !== 'undefined') {
+                    for (let item in config[groupName].api) {
+                        switch (item) {
+                            case 'get':
+                                    if (config[groupName].api.get.typeSuccess === action.type)
+                                    {
+                                        const rows = action.payload.map(data => {
+                                            return data
+                                        });
+                                        return {
+                                            ...state,
+                                            [config[groupName].api.get.dataName]: rows
+                                        }
+                                    }
+                                break;
+
+                            case 'put':
+                                // ...
+                                break;
+                        }
+                    }
+                }
+            }
             return state
         }
     }
