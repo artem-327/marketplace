@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import defaultPage from '~/hocs/defaultPage'
 import {Logout} from '~/modules/auth'
 import {withRouter} from 'next/router'
 

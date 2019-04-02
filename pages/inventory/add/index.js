@@ -1,35 +1,17 @@
-import {connect} from 'react-redux';
-import Router from 'next/router'
-import AddInventory from './AddInventory';
-import {bindActionCreators} from 'redux'
-import {addAttachment, addProductOffer, getProductOffer, getWarehouses, linkAttachment, loadFile, searchProducts, setFileIds} from '~/modules/add/actions'
+import React, {Component} from 'react'
+import Layout from '~/components/Layout'
+import securePage from '~/hocs/securePage'
+import {AddInventory} from '~/modules/inventory'
 
-function mapStateToProps(store) {
-    return {
-        ...store.forms.simpleAdd,
-        edit: (Router.router && Router.router.query.type === 'edit' ? Router.router.query.id : false),
-        fileIds: store.simpleAdd.fileIds,
-        router: store.router,
-        searchedProducts: store.simpleAdd.searchedProducts,
-        searchedProductsFetched: store.simpleAdd.searchedProductsFetched,
-        warehousesList: store.simpleAdd.warehouses
-    }
+class Index extends Component {
+
+  render() {
+    return (
+      <Layout title="Add Iventory">
+        <AddInventory />
+      </Layout>
+    )
+  }
 }
 
-
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({
-        addAttachment,
-        addProductOffer,
-        getProductOffer,
-        getWarehouses,
-        linkAttachment,
-        loadFile,
-        searchProducts,
-        setFileIds,
-        dispatch
-    }, dispatch)
-}
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddInventory);
+export default Index
