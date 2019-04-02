@@ -158,12 +158,6 @@ export function postNewBankAccountRequest(bankAccountData) {
   };
 }
 
-export function postNewProductRequest(inputsValue, id) {
-  return {
-    type: AT.POST_NEW_PRODUCT_REQUEST
-  };
-}
-
 export function deleteUser(userId) {
   return {
     type: AT.DELETE_USER,

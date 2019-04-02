@@ -151,25 +151,6 @@ function* postNewBankAccountWorker({ payload }) {
   }
 }
 
-function* postNewProductWorker({ payload }) {
-  try {
-    // const productData = {
-    //   packaging: {
-    //     packagingType: 0,
-    //     size: 0,
-    //     unit: 0
-    //   },
-    //   product: 0,
-    //   productCode: "string",
-    //   productName: "string",
-    //   valid: true
-    // }
-    // yield call(api.postNewProduct, productData)
-  } catch (e) {
-    yield console.log("error:", e);
-  }
-}
-
 function* putWarehouseWorker({ payload, id }) {
   try {
     const dataBody = {
@@ -281,7 +262,6 @@ export default function* settingsSaga() {
   yield takeEvery(AT.POST_NEW_WAREHOUSE_REQUEST, postNewWarehouseWorker);
   yield takeEvery(AT.POST_NEW_CREDIT_CARD_REQUEST, postNewCreditCardWorker);
   yield takeEvery(AT.POST_NEW_BANK_ACCOUNT_REQUEST, postNewBankAccountWorker);
-  yield takeEvery(AT.POST_NEW_PRODUCT_REQUEST, postNewProductWorker);
 
   yield takeEvery(AT.HANDLE_SUBMIT_USER_EDIT_POPUP, putUserWorker);
 
