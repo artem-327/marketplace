@@ -86,11 +86,28 @@ class Settings extends Component {
     )
   }
 
+  // <<<<<<< HEAD
+  //   render() {
+  //     return (
+  //       <Container fluid style={{ marginTop: 20 }}>
+  //         <TablesHandlers />
+  //         <Divider />
+  //         <Grid columns="equal">
+  //           <Grid.Row>
+  //             <Grid.Column width={3}>
+  //               <Tabs />
+  //             </Grid.Column>
+  //             <Grid.Column>{this.renderContent()}</Grid.Column>
+  //           </Grid.Row>
+  //         </Grid>
+  //       </Container>
+  //     )
+  //   }
+  // =======
   render() {
     return (
-      <Container fluid style={{ marginTop: 20 }}>
+      <Container fluid>
         <TablesHandlers />
-        <Divider />
         <Grid columns="equal">
           <Grid.Row>
             <Grid.Column width={3}>
@@ -102,6 +119,7 @@ class Settings extends Component {
       </Container>
     )
   }
+  // >>>>>>> 0.8.0
 }
 
 const mapStateToProps = state => {

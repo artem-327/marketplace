@@ -18,7 +18,7 @@ export function login(username, password) {
       setAuth(auth)
       const identity = await api.getIdentity()
       
-      Router.push('/dashboard')
+      Router.push('/inventory/my')
 
       return {
         auth,
