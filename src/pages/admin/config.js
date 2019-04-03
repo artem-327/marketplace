@@ -28,8 +28,8 @@ export const config = {
                 typeRequest: 'ADMIN_GET_UNITS_OF_PACKAGING_DATA',
                 typeSuccess: 'ADMIN_GET_UNITS_OF_PACKAGING_DATA_SUCCESS',
                 apiCall: '/prodex/api/packaging-types',
-                retFcnProcess: (state, payload, groupName) => {
-                    const rows = payload.map(data => {
+                retFcnProcess: (state, action, config) => {
+                    const rows = action.payload.map(data => {
                         return {
                             name: data.name,
                             measureType: data.measureType,
@@ -37,7 +37,7 @@ export const config = {
                     });
                     return {
                         ...state,
-                        [config[groupName].api.get.dataName]: rows
+                        [config.api.get.dataName]: rows
                     }
                 },
             },

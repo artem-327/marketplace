@@ -71,7 +71,7 @@ export default function reducer(state = initialState, action) {
                                     if (config[groupName].api.get.typeSuccess === action.type)
                                     {
                                         if (typeof config[groupName].api.get.retFcnProcess !== 'undefined') {
-                                            return config[groupName].api.get.retFcnProcess(state, action.payload, groupName);
+                                            return config[groupName].api.get.retFcnProcess(state, action, config[groupName]);
                                         }
                                         else {
                                             const rows = action.payload.map(data => {
