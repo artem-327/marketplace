@@ -26,6 +26,7 @@ const Navigation = withRouter(({ router: { pathname } }) => (
       </Dropdown.Menu>
     </Dropdown>
     <MenuLink to='/settings'>Settings</MenuLink>
+    <MenuLink to='/admin'>Admin</MenuLink>
   </>
 ))
 
