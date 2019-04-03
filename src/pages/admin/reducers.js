@@ -70,12 +70,18 @@ export default function reducer(state = initialState, action) {
                             case 'get':
                                     if (config[groupName].api.get.typeSuccess === action.type)
                                     {
-                                        const rows = action.payload.map(data => {
-                                            return data
-                                        });
-                                        return {
-                                            ...state,
-                                            [config[groupName].api.get.dataName]: rows
+                                        if (typeof config[groupName].api.get.retFcnProcess !== 'undefined') {
+                                            return config[groupName].api.get.retFcnProcess(state, action.payload, groupName);
+                                        }
+                                        else {
+                                            const rows = action.payload.map(data => {
+                                                return data
+                                            });
+
+                                            return {
+                                                ...state,
+                                                [config[groupName].api.get.dataName]: rows
+                                            }
                                         }
                                     }
                                 break;

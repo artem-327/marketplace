@@ -5,7 +5,6 @@ import api from '~/api'
 
 function* getDataWorker(config) {
     try {
-        //const data = yield call(api.getUnitsOfMeasure)
         const data = yield call(() => api.get(config.apiCall).then(response => response.data));
         yield put({ type: config.typeSuccess, payload: data })
     } catch(e) {
