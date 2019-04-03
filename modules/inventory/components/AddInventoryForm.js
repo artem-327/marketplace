@@ -4,6 +4,7 @@ import { Form, Input, Checkbox, Radio, Dropdown, Button } from 'formik-semantic-
 import { Segment, Header, Divider, Grid, GridColumn, FormGroup } from 'semantic-ui-react'
 import styled from 'styled-components'
 import * as val from 'yup'
+import deepmerge from 'deepmerge'
 
 // debug purposes only
 import JSONPretty from 'react-json-pretty'
@@ -16,13 +17,13 @@ const TopDivider = styled(Divider)`
 const initValues = {
   inStock: true,
   product: "",
-  processingTime: 2,
+  processingTime: 0,
   doesExpire: true,
-  pkgAmount: "1",
-  expirationDate: "2019-04-12",
+  pkgAmount: "",
+  expirationDate: "",
   minimumRequirement: true,
-  minimum: "0",
-  splits: "0",
+  minimum: "",
+  splits: "",
   priceTiers: 1,
   pricing: {
     tiers: [
@@ -51,6 +52,12 @@ const validationScheme = val.object().shape({
 })
 
 export default class AddInventoryForm extends Component {
+
+  state = {
+    initialState: {
+
+    }
+  }
 
   getProcessingTimes = (max) => {
     let processingTimes = []
@@ -99,12 +106,39 @@ export default class AddInventoryForm extends Component {
     )
   }
 
+  componentDidMount() {
+    //
+    // load initial values here
+    //
+    setTimeout(() => this.setState({
+      initialState: {
+        priceTiers: 2,
+        pricing: {
+          tiers: [
+            { price: 100, quantityFrom: 1 },
+            { price: 90, quantityFrom: 10 }
+          ]
+        }
+      }
+    }), 500)
+  }
+
   render() {
-    const { searchProducts, searchedProducts, searchedProductsLoading, warehousesList } = this.props
+    const { 
+      searchProducts, 
+      searchedProducts, 
+      searchedProductsLoading, 
+      warehousesList
+    } = this.props
+
+    const {
+      initialState
+    } = this.state
 
     return (
       <Form 
-        initialValues={initValues}
+        enableReinitialize
+        initialValues={{...initValues, ...initialState}}
         validationSchema={validationScheme}
       >
         {({ values, errors }) => (
