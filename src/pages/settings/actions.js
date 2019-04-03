@@ -13,7 +13,6 @@ export function handlerSubmitUserEditPopup(value, id) {
     id
   }
 }
-
 export function handleEditPopup(rows) {
   return {
     type: AT.OPEN_EDIT_POPUP,
@@ -37,16 +36,25 @@ export function closeAddPopup() {
     payload: null
   }
 }
-export function handleConfirmPopup(id) {
+export function handleOpenConfirmPopup(payload) {
   return {
     type: AT.OPEN_CONFIRM_POPUP,
-    payload: id
+    payload
+  }
+}
+export function deleteConfirmation() {
+  return {
+    type: AT.DELETE_CONFIRM_POPUP
+  }
+}
+export function confirmationSuccess() {
+  return {
+    type: AT.CONFIRM_SUCCESS
   }
 }
 export function closeConfirmPopup() {
   return {
-    type: AT.CLOSE_CONFIRM_POPUP,
-    payload: null
+    type: AT.CLOSE_CONFIRM_POPUP
   }
 }
 
@@ -102,13 +110,13 @@ export function getCreditCardsDataRequest() {
   }
 }
 
-export function getBankAccountsDataRequest() {
+export function getProductsCatalogRequest() {
   return {
-    type: AT.GET_BANK_ACCOUNTS_DATA
+    type: AT.GET_PRODUCTS_CATALOG_DATA
   }
 }
 
-export function getProductsCatalogRequest() {
+export function getBankAccountsDataRequest() {
   return {
     type: AT.GET_PRODUCTS_CATALOG_DATA
   }
@@ -142,14 +150,14 @@ export function postNewCreditCardRequest(creditCardData) {
   }
 }
 
-export function postNewBankAccountRequest(bankAccountData) {
+export function postNewProductRequest(inputsValue, id) {
   return {
     type: AT.POST_NEW_BANK_ACCOUNT_REQUEST,
     payload: bankAccountData
   }
 }
 
-export function postNewProductRequest(inputsValue, id) {
+export function postNewBankAccountRequest(bankAccountData) {
   return {
     type: AT.POST_NEW_PRODUCT_REQUEST
     // payload: inputsValue

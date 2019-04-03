@@ -1,7 +1,14 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import ProdexTable from "~/components/table"
-import { getProductsCatalogRequest } from "../../actions"
+import { Confirm } from "semantic-ui-react"
+import {
+  openEditPopup,
+  getProductsCatalogRequest,
+  handleOpenConfirmPopup,
+  closeConfirmPopup,
+  deleteConfirmation
+} from "../../actions"
 
 class ProductCatalogTable extends Component {
   state = {
@@ -19,32 +26,57 @@ class ProductCatalogTable extends Component {
   }
 
   render() {
-    const { rows, filterValue } = this.props
+    const {
+      rows,
+      filterValue,
+      confirmMessage,
+      openEditPopup,
+      handleOpenConfirmPopup,
+      closeConfirmPopup,
+      deleteConfirmation
+    } = this.props
 
     const { columns } = this.state
 
     return (
-      <ProdexTable
-        rows={rows}
-        columns={columns}
-        filterValue={filterValue}
-        rowActions={[
-          { text: "Edit", callback: row => "sdsd" },
-          { text: "Delete", callback: row => "1231" }
-        ]}
-      />
+      <React.Fragment>
+        <Confirm
+          size="tiny"
+          content="Do you really want to delete this product?"
+          open={confirmMessage}
+          onCancel={closeConfirmPopup}
+          onConfirm={deleteConfirmation}
+        />
+        <ProdexTable
+          rows={rows}
+          columns={columns}
+          filterValue={filterValue}
+          rowActions={[
+            { text: "Edit", callback: row => openEditPopup(row) },
+            {
+              text: "Delete",
+              callback: row => handleOpenConfirmPopup(row.id)
+            }
+          ]}
+        />
+      </React.Fragment>
     )
   }
 }
 
 const mapDispatchToProps = {
-  getProductsCatalogRequest
+  openEditPopup,
+  getProductsCatalogRequest,
+  handleOpenConfirmPopup,
+  closeConfirmPopup,
+  deleteConfirmation
 }
 
 const mapStateToProps = state => {
   return {
     rows: state.settings.productsCatalogRows,
-    filterValue: state.settings.filterValue
+    filterValue: state.settings.filterValue,
+    confirmMessage: state.settings.confirmMessage
   }
 }
 

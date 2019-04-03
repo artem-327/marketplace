@@ -34,6 +34,8 @@ export default {
 
   deleteUser: userId => api.delete(`/prodex/api/users/${userId}`),
   deleteWarehouse: branchId => api.delete(`/prodex/api/branches/${branchId}`),
+  deleteProduct: branchId =>
+    api.delete(`/prodex/api/product-templates/${branchId}`),
   deleteCreditCard: cardId =>
     api.delete(`/prodex/api/payments/cards/${cardId}`),
   deleteBankAccount: bankAccountId =>

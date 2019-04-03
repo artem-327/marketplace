@@ -34,6 +34,7 @@ export const initialState = {
   currentAddForm: null,
   confirmMessage: null,
   deleteUserById: null,
+  deleteRowByid: null,
   filterValue: "",
   editPopupSearchProducts: []
 }
@@ -57,16 +58,22 @@ export default function reducer(state = initialState, action) {
     case AT.OPEN_CONFIRM_POPUP: {
       return {
         ...state,
-        confirmMessage: state.currentTab,
-        popupValues: state.currentTab,
-        deleteUserById: action.payload
+        confirmMessage: true,
+        deleteRowByid: action.payload
       }
     }
     case AT.CLOSE_CONFIRM_POPUP: {
       return {
         ...state,
-        confirmMessage: null,
-        popupValues: state.currentTab
+        deleteRowByid: null,
+        confirmMessage: null
+      }
+    }
+    case AT.CONFIRM_SUCCESS: {
+      return {
+        ...state,
+        deleteRowByid: null,
+        confirmMessage: null
       }
     }
 
@@ -204,7 +211,7 @@ export default function reducer(state = initialState, action) {
         return {
           productName: product.productName,
           productNumber: product.productCode,
-          productId: product.product.id,
+          id: product.id,
           packagingType: packaging
             ? product.packaging.packagingType
               ? product.packaging.packagingType.name
@@ -213,7 +220,6 @@ export default function reducer(state = initialState, action) {
           packagingSize: packaging ? product.packaging.size : 0
         }
       })
-
       return {
         ...state,
         productsCatalogRows: shortRows
