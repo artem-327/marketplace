@@ -141,7 +141,7 @@ export default class AddInventoryForm extends Component {
         initialValues={{...initValues, ...initialState}}
         validationSchema={validationScheme}
       >
-        {({ values, errors }) => (
+        {({ values, errors, setFieldValue }) => (
           <>
             <Header as="h2">ADD INVENTORY</Header>
             <TopDivider />
@@ -213,7 +213,14 @@ export default class AddInventoryForm extends Component {
                 
                 <Header as='h3'>How many price tiers would you like to offer?</Header>
                 <FormGroup>
-                  <Dropdown label="Price tiers" name="priceTiers" options={this.getPriceTiers(10)} />
+                  <Dropdown 
+                    label="Price tiers" 
+                    name="priceTiers" 
+                    options={this.getPriceTiers(10)}
+                    inputProps={{
+                      onChange: (e,{value}) => setFieldValue("pricing.tiers", values.pricing.tiers.slice(0, value))
+                    }}
+                  />
                 </FormGroup>
                 <FieldArray>
                   {this.renderPricingTiers(values.priceTiers)}
