@@ -8,9 +8,9 @@ axios.defaults.validateStatus = (status) => {
 
 axios.interceptors.request.use(function (config) {
   // Do something before request is sent
-  const accessToken = Cookie.get('accessToken')
+  const auth = Cookie.getJSON('auth')
   
-  if (accessToken) config.headers['Authorization'] = 'Bearer ' + accessToken
+  if (auth && !config.headers['Authorization']) config.headers['Authorization'] = 'Bearer ' + auth.access_token
 
   return config;
 }, function (error) {

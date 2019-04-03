@@ -1,69 +1,83 @@
-import React from 'react' 
-import { connect } from 'react-redux' 
-import { Control, Form } from 'react-redux-form' 
+import React from "react";
+import { connect } from "react-redux";
 
-import { handleEditPopup, handlerSubmitUserEditPopup } from '../../actions' 
+import { Modal, FormGroup } from "semantic-ui-react";
 
-function editPopupBoolean(props) { 
+import { closeAddPopup, handlerSubmitUserEditPopup } from "../../actions";
+import { Form, Input, Button } from "formik-semantic-ui";
+import * as Yup from "yup";
 
-  const [firstName, lastName] = props.popupValues.userName ? props.popupValues.userName.split(' ') : ['',''];
-  const { popupValues, handleEditPopup } = props;
-  console.log(firstName, lastName, '1111111')
-  console.log(popupValues, 'props.popupValue')
+const formValidation = Yup.object().shape({
+  firstName: Yup.string()
+    .min(3, "Too short")
+    .required("Required"),
+  lastName: Yup.string()
+    .min(3, "Too short")
+    .required("Required"),
+  middleName: Yup.string()
+    .min(3, "Too short")
+    .required("Required"),
+  email: Yup.string()
+    .email("Invalid email")
+    .required("Emails is required")
+});
 
-  return (					
-    <div className="popup-wrapper col-xs-10 center-xs">      
-      <Form 
-        model="forms.settingsPopup.editUser" 
-        onSubmit={ value => props.handlerSubmitUserEditPopup(value, popupValues.id) }
-        className="b-popup col-xs-8"
-      >    
-        <h2>{'Warehouse'} Profile</h2>
-        <ul className="">
-          <li className="inputs-wrapper">
-            <label className="settings-popup-label name" htmlFor="warehouse-name">                        
-              First Name
-              <Control.text model=".firstName" className="popup-input" id="warehouse-name" defaultValue={ firstName } />
-            </label>            
-            <label className="settings-popup-label contact-name" htmlFor="warehouse-contactName">
-              Last Name
-              <Control.text model=".lastName" className="popup-input" id="warehouse-contactName" defaultValue={ lastName } />
-            </label>             
-          </li>
-          <li className="inputs-wrapper">
-            <label className="settings-popup-label email" htmlFor="warehouse-email">  
-              E-mail
-              <Control.text model=".email" className="popup-input" id="warehouse-email" defaultValue={ popupValues.email } />
-            </label>
-             <label className="settings-popup-label email" htmlFor="warehouse-email">  
-              Middlename
-              <Control.text model=".middleName" className="popup-input" id="warehouse-email" defaultValue={ popupValues.middleName } />
-            </label>       
-          </li>
-          <li className="inputs-wrapper buttons-wrapper">
-            <input 
-              type="button" 
-              value="Cancel"
-              onClick={ handleEditPopup }
-              className="cancel-popup-btn"
-            />
-            <button className="submit-popup-btn" >Update Warehouse</button> 
-          </li>
-        </ul>
-      </Form>
-    </div>
-  ) 
-}
+class AddNewUsersPopup extends React.Component {
+  render() {
+    const {
+      closeAddPopup,
+      handlerSubmitUserEditPopup,
+      popupValues
+    } = this.props;
+    const [firstName, lastName] = popupValues.userName
+      ? popupValues.userName.split(" ")
+      : ["", ""];
+    const { middleName, email, id } = popupValues;
+    const initialFormValues = { firstName, lastName, middleName, email };
 
-const mapDispatchToProps = {   
-  handleEditPopup,
-  handlerSubmitUserEditPopup
-} 
-
-const mapStateToProps = state => {
-  return {
-		popupValues: state.settings.popupValues
+    return (
+      <Modal open centered={false}>
+        <Modal.Header>Edit user profile</Modal.Header>
+        <Modal.Content>
+          <Form
+            initialValues={initialFormValues}
+            validationSchema={formValidation}
+            onReset={closeAddPopup}
+            onSubmit={(values, actions) => {
+              handlerSubmitUserEditPopup(values, id);
+              actions.setSubmitting(false);
+            }}
+          >
+            <FormGroup widths="equal">
+              <Input type="text" label="First name" name="firstName" />
+              <Input type="text" label="Last Name" name="lastName" />
+            </FormGroup>
+            <FormGroup widths="equal">
+              <Input type="text" label="Middle Name" name="middleName" />
+              <Input type="text" label="e-mail" name="email" />
+            </FormGroup>
+            <div style={{ textAlign: "right" }}>
+              <Button.Reset onClick={closeAddPopup}>Cancel</Button.Reset>
+              <Button.Submit>Save</Button.Submit>
+            </div>
+          </Form>
+        </Modal.Content>
+      </Modal>
+    );
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(editPopupBoolean) 
+const mapDispatchToProps = {
+  closeAddPopup,
+  handlerSubmitUserEditPopup
+};
+const mapStateToProps = state => {
+  return {
+    popupValues: state.settings.popupValues
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddNewUsersPopup);
