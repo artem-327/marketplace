@@ -1,10 +1,16 @@
 export const config = {
     'Units of Measure': {
-        columns: [
-            {name: 'editDeleteBtn', title: ' ', width: 45, dropdown: true},
-            {name: 'name', title: 'Name'},
-            {name: 'nameAbbreviation', title: 'Name abbreviation',},
-            {name: 'measureType', title: 'Measure type'},
+        display: {
+            columns: [
+                {name: 'name', title: 'Name'},
+                {name: 'nameAbbreviation', title: 'Name abbreviation',},
+                {name: 'measureType', title: 'Measure type'},
+            ],
+        },
+        edit: [
+            {name: 'name', title: 'Name', type: 'text', required: true},
+            {name: 'nameAbbreviation', title: 'Name abbreviation', type: 'text', required: true},
+            {name: 'measureType', title: 'Measure type',  type: 'text', required: true},
         ],
         api: {
             get: {
@@ -17,10 +23,15 @@ export const config = {
     },
 
     'Units of Packaging': {
-        columns: [
-            {name: 'editDeleteBtn', title: ' ', width: 45, dropdown: true},
-            {name: 'name', title: 'Name'},
-            {name: 'measureType', title: 'Measure type'},
+        display: {
+            columns: [
+                {name: 'name', title: 'Name'},
+                {name: 'measureType', title: 'Measure type'},
+            ],
+        },
+        edit: [
+            {name: 'name', title: 'Name', type: 'text', required: true},
+            {name: 'measureType', title: 'Measure type', type: 'text', required: true},
         ],
         api: {
             get: {
@@ -31,6 +42,7 @@ export const config = {
                 retFcnProcess: (state, action, config) => {
                     const rows = action.payload.map(data => {
                         return {
+                            id: data.id,
                             name: data.name,
                             measureType: data.measureType,
                         }
@@ -45,9 +57,13 @@ export const config = {
     },
 
     'Manufacturers': {
-        columns: [
-            {name: 'editDeleteBtn', title: ' ', width: 45, dropdown: true},
-            {name: 'name', title: 'Name'},
+        display: {
+            columns: [
+                {name: 'name', title: 'Name'},
+            ],
+        },
+        edit: [
+            {name: 'name', title: 'Name', type: 'text', required: true},
         ],
         api: {
             get: {
@@ -60,9 +76,13 @@ export const config = {
     },
 
     'Grades': {
-        columns: [
-            {name: 'editDeleteBtn', title: ' ', width: 45, dropdown: true},
-            {name: 'name', title: 'Name'},
+        display: {
+            columns: [
+                {name: 'name', title: 'Name'},
+            ],
+        },
+        edit: [
+            {name: 'name', title: 'Name', type: 'text', required: true},
         ],
         api: {
             get: {
@@ -75,9 +95,13 @@ export const config = {
     },
 
     'Forms': {
-        columns: [
-            {name: 'editDeleteBtn', title: ' ', width: 45, dropdown: true},
-            {name: 'name', title: 'Name'},
+        display: {
+            columns: [
+                {name: 'name', title: 'Name'},
+            ],
+        },
+        edit: [
+            {name: 'name', title: 'Name', type: 'text', required: true},
         ],
         api: {
             get: {
@@ -90,9 +114,13 @@ export const config = {
     },
 
     'Conditions': {
-        columns: [
-            {name: 'editDeleteBtn', title: ' ', width: 45, dropdown: true},
-            {name: 'name', title: 'Name'},
+        display: {
+            columns: [
+                {name: 'name', title: 'Name'},
+            ],
+        },
+        edit: [
+            {name: 'name', title: 'Name', type: 'text', required: true},
         ],
         api: {
             get: {

@@ -5,6 +5,7 @@ import { Container, Grid, Divider } from 'semantic-ui-react'
 import Tabs from './Tabs'
 
 import DataTable from './DataTable/DataTable'
+import AddNewPopup from './DataTable/AddNewPopup'
 
 
 const tables = {
@@ -17,11 +18,15 @@ const tables = {
 }
 
 const editForms = {
-
 }
 
 const addForms = {
-
+    'Units of Measure': <AddNewPopup />,
+    'Units of Packaging': <AddNewPopup />,
+    'Manufacturers': <AddNewPopup />,
+    'Grades': <AddNewPopup />,
+    'Forms': <AddNewPopup />,
+    'Conditions': <AddNewPopup />,
 }
 
 class Admin extends Component {
@@ -36,13 +41,13 @@ class Admin extends Component {
         console.log(this.props);
         console.log('currentTab: ', currentTab, '   currentAddForm: ', currentAddForm, '   currentEditForm: ', currentEditForm);
 
-        if (currentAddForm) {
-            return addForms[currentTab] || <p>This page is still under construction</p>
-        } else if (currentEditForm) {
-            return editForms[currentTab] || <p>This page is still under construction</p>
-        } else {
-            return tables[currentTab] || <p>This page is still under construction</p>
-        }
+        return (
+            <>
+                {currentAddForm && addForms[currentTab]}
+                {currentEditForm && editForms[currentTab]}
+                {tables[currentTab] || <p>This page is still under construction</p>}
+            </>
+        )
 
     }
 

@@ -3,7 +3,7 @@ import { config } from './config'
 
 export const initialState = {
     editPopupBoolean: false,
-    addNewPopupBoolean: false,
+    addNewPopup: false,
     unitsOfMeasureRows: [],
     unitsOfPackagingRows: [],
     manufacturersRows: [],
@@ -28,15 +28,32 @@ export const initialState = {
     currentTab: 'Units of Measure',
     currentEditForm: null,
     currentAddForm: null,
+    confirmMessage: null,
     filterValue: '',
-
     config: config,
-
-
-}
+};
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
+
+
+        case AT.ADMIN_OPEN_ADD_POPUP: {
+            return {
+                ...state,
+                currentAddForm: state.currentTab,
+                popupValues: action.payload
+            };
+        }
+        case AT.ADMIN_CLOSE_ADD_POPUP: {
+            return {
+                ...state,
+                currentAddForm: null,
+                currentEditForm: null
+            };
+        }
+
+
+
 
         case AT.ADMIN_HANDLE_ACTIVE_TAB: {
             return {
@@ -51,14 +68,6 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 filterValue: action.payload
-            }
-        }
-
-        case AT.ADMIN_OPEN_ADD_POPUP: {
-            return {
-                ...state,
-                currentAddForm: state.currentTab,
-                popupValues: action.payload
             }
         }
 

@@ -6,8 +6,10 @@ import InputBase from '@material-ui/core/InputBase'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 
+import {Menu, Button, Input, Dropdown} from 'semantic-ui-react'
+
 import { openAddPopup, handleFiltersValue } from '../actions'
-import { Menu, Button, Input, Dropdown } from 'semantic-ui-react'
+import unitedStates from '../../../components/unitedStates'
 
 
 
@@ -22,6 +24,11 @@ class TablesHandlers extends Component {
         })
     }
 
+    handleChangeFieldsCurrentValue = fieldStateName => event => {
+        this.setState({
+            [fieldStateName]: event.target.value
+        })
+    }
 
     render() {
         const {
@@ -31,7 +38,7 @@ class TablesHandlers extends Component {
         } = this.props
 
         const {
-            //filterFieldCurrentValue
+            filterFieldCurrentValue
         } = this.state
 
 
@@ -40,11 +47,11 @@ class TablesHandlers extends Component {
                 <Menu.Item header><h1>Admin Settings</h1></Menu.Item>
                 <Menu.Menu position='right'>
                     <Menu.Item>
-                        <Input icon='search' placeholder="Search..."
+                        <Input style={{width: 340}} size="large" icon='search' placeholder="Search ..."
                                onChange={ e => handleFiltersValue(e.target.value)} />
                     </Menu.Item>
                     <Menu.Item>
-                        <Button primary onClick={ openAddPopup }>
+                        <Button size="large" primary onClick={() => openAddPopup(currentTab) }>
                             Add new { currentTab }
                         </Button>
                     </Menu.Item>
@@ -52,8 +59,6 @@ class TablesHandlers extends Component {
             </Menu>
         )
     }
-
-
 }
 
 const mapStateToProps = state => {

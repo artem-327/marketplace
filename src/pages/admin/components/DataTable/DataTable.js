@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid'
-import { Grid, Table, TableHeaderRow } from '~/components/dx-grid-semantic-ui/plugins'
-
-import { getDataRequest } from '../../actions'
-import {EditDeleteFormatterProvider} from "../TableProviders"
+import ProdexTable from '~/components/table'
+import { getDataRequest, openEditPopup, deleteItem } from '../../actions'
 
 class DataTable extends Component {
     componentDidMount() {
@@ -15,44 +12,31 @@ class DataTable extends Component {
         const {
             rows,
             filterValue,
-            editDeleteColumns,
-            editPopupBoolean,
-            addNewPopupBoolean,
+            currentTab,
+            openEditPopup,
+            deleteItem,
         } = this.props;
 
-        const { columns } = this.props.config;
-
-        const GridRoot = props => <Grid.Root {...props} />
-        const HeaderCells = props => <TableHeaderRow.Cell {...props} />
-        const TableCells = props => <Table.Cell {...props} />
+        const { columns } = this.props.config.display;
 
         return (
-            <Grid
-                rootComponent={ GridRoot }
-                rows={ rows }
-                columns={ columns }
-            >
-                <SearchState
-                    value={ filterValue }
-                />
-                <IntegratedFiltering />
-                <Table
-                    cellComponent={ TableCells }
-                />
-                <TableHeaderRow
-                    cellComponent={ HeaderCells }
-                />
-                <EditDeleteFormatterProvider
-                    for={ editDeleteColumns }
-                    rows={ rows }
-                />
-            </Grid>
+            <ProdexTable
+                filterValue={filterValue}
+                columns={columns}
+                rows={rows}
+                rowActions={[
+                    {text: 'Edit', callback: (row) => openEditPopup({currentTab}, row)},
+                    {text: 'Delete', callback: (row) => deleteItem({currentTab}, row.id)}
+                ]}
+            />
         )
     }
 }
 
 const mapDispatchToProps = {
-    getDataRequest
+    getDataRequest,
+    openEditPopup,
+    deleteItem
 }
 
 const mapStateToProps = state => {
@@ -60,10 +44,9 @@ const mapStateToProps = state => {
     return {
         config: cfg,
         rows: state.admin[cfg.api.get.dataName],
-
-        editDeleteColumns: state.admin.columnsForFormatter.editDeleteColumns,
+        editDeleteColumns: state.admin.columnsForFormatter.editDeleteColumns, //! ! ??
         editPopupBoolean: state.admin.editPopupBoolean,
-        addNewPopupBoolean: state.admin.addNewPopupBoolean,
+        addNewPopup: state.admin.addNewPopup,
         filterValue: state.admin.filterValue,
         currentTab: state.admin.currentTab,
     }

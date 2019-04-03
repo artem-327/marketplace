@@ -1,9 +1,11 @@
 import * as AT from './action-types'
 
-export function openEditPopup(rows) {
+export function openEditPopup(currentTab, row) {
+    console.log('XXXXXX openEditPopup - currentTab - ', currentTab);
+    console.log('XXXXXX openEditPopup - row - ', row);
     return {
         type: AT.ADMIN_OPEN_EDIT_POPUP,
-        payload: rows
+        payload: {currentTab, row}
     }
 }
 
@@ -13,10 +15,20 @@ export function closeEditPopup() {
     }
 }
 
-export function openAddPopup(rows) {
+export function deleteItem(currentTab, id) {
+    console.log('XXXXXX deleteItem - currentTab - ', currentTab);
+    console.log('XXXXXX deleteItem - row - ', id);
+    return {
+        type: AT.ADMIN_DELETE_ITEM,
+        payload: {currentTab, id}
+    }
+}
+
+export function openAddPopup(currentTab) {
+    console.log('XXXXXX openAddPopup - currentTab - ', currentTab);
     return {
         type: AT.ADMIN_OPEN_ADD_POPUP,
-        payload: rows
+        payload: currentTab
     }
 }
 export function closeAddPopup(payload) {
