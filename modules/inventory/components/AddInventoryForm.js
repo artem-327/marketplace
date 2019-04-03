@@ -25,28 +25,29 @@ export default class AddInventoryForm extends Component {
   }
 
   render() {
-    const { searchProducts, searchedProducts, searchedProductsFetched } = this.props
+    const { searchProducts, searchedProducts, searchedProductsLoading, warehousesList } = this.props
 
     return (
       <Form>
         {({ values }) => (
           <>
-            {JSON.stringify(values)}
             <Header as="h2">ADD INVENTORY</Header>
             <TopDivider />
             <Grid columns="equal" divided>
               <Grid.Column>
                 <Header as='h3'>What product do you want to list?</Header>
-                <FormGroup widths='1'>
+                <FormGroup>
                   <Dropdown
                     label="Product search"
                     name="product"
+                    options={searchedProducts}
                     inputProps={{
                       minCharacters: 3,
+                      icon:"search",
                       search: true,
                       selection: true,
                       clearable: true,
-                      options: searchedProducts,
+                      loading: searchedProductsLoading,
                       onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchProducts(searchQuery)
                     }}
                   />
@@ -58,7 +59,7 @@ export default class AddInventoryForm extends Component {
                   <Radio label="No" value="" name="inStock" />
                   <Radio label="Yes" value="yes" name="inStock" />
                 </FormGroup>
-                <FormGroup widths='3'>
+                <FormGroup>
                   <Dropdown label="Processing time" name="processingTime" options={this.getProcessingTimes(14)} />
                 </FormGroup>
 
@@ -67,18 +68,18 @@ export default class AddInventoryForm extends Component {
                   <Radio label="No" value={false} name="doesExpire" />
                   <Radio label="Yes" value={true} name="doesExpire" />
                 </FormGroup>
-                <FormGroup widths='3'>
-                  {values.doesExpire && <Input inputProps={{type: 'date'}} label="Expiration date" name="expirationDate" />}
+                <FormGroup>
+                  {values.doesExpire && <Input inputProps={{ type: 'date' }} label="Expiration date" name="expirationDate" />}
                 </FormGroup>
 
                 <Header as='h3'>Where will this product ship from?</Header>
-                <FormGroup widths='1'>
-
+                <FormGroup>
+                  <Dropdown label="Warehouse" name="warehouse" options={warehousesList} />
                 </FormGroup>
 
                 <Header as='h3'>How many packages are available?</Header>
-                <FormGroup widths='3'>
-
+                <FormGroup>
+                  <Input label="Total Packages" inputProps={{type:'number'}} name="pkgAmount" />
                 </FormGroup>
               </Grid.Column>
               <GridColumn>

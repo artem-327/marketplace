@@ -1,18 +1,9 @@
 import * as AT from './action-types'
 
 export const initialState = {
-    addProductOffer: {
-        doesExpire: '',
-        inStock: 'Yes',
-        minimumRequirement: '',
-        priceTiers: 1,
-        pricing: {
-            tiers: []
-        }
-    },
     fileIds: [],
     searchedProducts: [],
-    searchedProductsFetched: false,
+    searchedProductsLoading: false,
     warehouses: []
 }
 
@@ -41,11 +32,18 @@ export default function reducer(state = initialState, action) {
             }
         }
 
+        case AT.INVENTORY_SEARCH_PRODUCTS_PENDING: {
+            return {
+                ...state,
+                searchedProductsLoading: true
+            }
+        }
+
         case AT.INVENTORY_SEARCH_PRODUCTS_FULFILLED: {
             return {
                 ...state,
                 searchedProducts: action.payload.data,
-                searchedProductsFetched: action.payload.status
+                searchedProductsLoading: false
             }
         }
 

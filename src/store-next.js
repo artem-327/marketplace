@@ -44,7 +44,7 @@ import shippingQuotesSaga from "./saga/shippingQuotes"
 import settingsSaga from "./pages/settings/saga"
 
 // Simple Add/Edit Inventory
-import simpleAdd, { initialState as simpleAddInit } from '../modules/add/reducer'
+import simpleAdd from  '~/modules/inventory/reducer'
 
 // Orders
 import ordersReducers from './pages/orders/reducers'
@@ -75,7 +75,6 @@ const reducer = combineReducers({
   forms: combineForms({
     filter: filterInit.data,
     brcRules: broadcastInit.broadcastData,
-    simpleAdd: simpleAddInit.addProductOffer,
     addProductOffer: addProductsInit.addProductOffer,
     shippingQuotes: shippingQuotesInit.shippingQuotes,
     productMapping: productsInit.productsMapping,
