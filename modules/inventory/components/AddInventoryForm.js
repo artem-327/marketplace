@@ -4,7 +4,7 @@ import { Form, Input, Checkbox, Radio, Dropdown, Button } from 'formik-semantic-
 import { Segment, Header, Divider, Grid, GridColumn, FormGroup } from 'semantic-ui-react'
 import styled from 'styled-components'
 import * as val from 'yup'
-import deepmerge from 'deepmerge'
+import {DateInput} from '~/components/custom-formik'
 
 // debug purposes only
 import JSONPretty from 'react-json-pretty'
@@ -19,7 +19,7 @@ const initValues = {
   product: "",
   processingTime: 0,
   doesExpire: true,
-  pkgAmount: "",
+  pkgAmount: "0",
   expirationDate: "",
   minimumRequirement: true,
   minimum: "",
@@ -140,6 +140,10 @@ export default class AddInventoryForm extends Component {
         enableReinitialize
         initialValues={{...initValues, ...initialState}}
         validationSchema={validationScheme}
+        onSubmit={(values, actions) => {
+          // postValuesToApi(value)
+          setTimeout(() => actions.setSubmitting(false), 1000)
+        }}
       >
         {({ values, errors, setFieldValue }) => (
           <>
@@ -185,7 +189,7 @@ export default class AddInventoryForm extends Component {
                   <Radio label="Yes" value={true} name="doesExpire" />
                 </FormGroup>
                 <FormGroup>
-                  <Input inputProps={{ type: 'date', disabled: !values.doesExpire }} label="Expiration date" name="expirationDate" />
+                  <DateInput inputProps={{ disabled: !values.doesExpire }} label="Expiration date" name="expirationDate" />
                 </FormGroup>
 
                 <Header as='h3'>Where will this product ship from?</Header>
@@ -235,10 +239,17 @@ export default class AddInventoryForm extends Component {
               </GridColumn>
 
               <GridColumn>
+                
                 <Header as="h3">Model values</Header>
                 <Segment>
                   <JSONPretty data={values} />
                 </Segment>
+                <Header as="h3">Errors</Header>
+                <Segment>
+                  <JSONPretty wrap={true} data={errors} />
+                </Segment>
+
+
                 <Button.Submit>Submit values</Button.Submit>
               </GridColumn>
             </Grid>
