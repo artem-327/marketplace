@@ -3,6 +3,7 @@ import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button } from 'formik-semantic-ui'
 import { Segment, Header, Divider, Grid, GridColumn, FormGroup } from 'semantic-ui-react'
 import styled from 'styled-components'
+import JSONPretty from 'react-json-pretty'
 
 const TopDivider = styled(Divider)`
   padding-bottom: 20px;
@@ -42,8 +43,10 @@ export default class AddInventoryForm extends Component {
                     name="product"
                     options={searchedProducts}
                     inputProps={{
+                      style: { width: '300px' },
+                      size: 'large',
                       minCharacters: 3,
-                      icon:"search",
+                      icon: "search",
                       search: true,
                       selection: true,
                       clearable: true,
@@ -79,14 +82,18 @@ export default class AddInventoryForm extends Component {
 
                 <Header as='h3'>How many packages are available?</Header>
                 <FormGroup>
-                  <Input label="Total Packages" inputProps={{type:'number'}} name="pkgAmount" />
+                  <Input label="Total Packages" inputProps={{ type: 'number' }} name="pkgAmount" />
                 </FormGroup>
               </Grid.Column>
               <GridColumn>
                 <Header as="h3">First</Header>
               </GridColumn>
               <GridColumn>
-                <Header as="h3">First</Header>
+                <Header as="h3">Model values</Header>
+                <Segment>
+                  <JSONPretty data={values} />
+                </Segment>
+
               </GridColumn>
             </Grid>
           </>
