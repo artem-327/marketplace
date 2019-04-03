@@ -19,6 +19,12 @@ export const config = {
                 typeSuccess: 'ADMIN_GET_UNITS_OF_MEASURE_DATA_SUCCESS',
                 apiCall: '/prodex/api/units',
             },
+            post: {
+                dataName: 'unitsOfMeasureRows',
+                typeRequest: 'ADMIN_POST_UNITS_OF_MEASURE_DATA',
+                typeSuccess: 'ADMIN_POST_UNITS_OF_MEASURE_DATA_SUCCESS',
+                apiCall: '/prodex/api/units',
+            },
         },
     },
 

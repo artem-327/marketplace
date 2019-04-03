@@ -45,6 +45,24 @@ export function getDataRequest(api) {
     }
 }
 
+export function postNewRequest(config, values) {
+    console.log('XXXXXXXXXXXXXXXXXXX postNewRequest - config - ', config);
+    console.log('XXXXXXXXXXXXXXXXXXX postNewRequest - values - ', values);
+    return {
+        type: config.api.post.typeRequest,
+        payload: values
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
 export function handleActiveTab(tab) {
     return {

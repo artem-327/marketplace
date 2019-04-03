@@ -95,8 +95,23 @@ export default function reducer(state = initialState, action) {
                                     }
                                 break;
 
-                            case 'put':
-                                // ...
+                            case 'post':
+                                if (config[groupName].api.post.typeSuccess === action.type)
+                                {
+                                    if (typeof config[groupName].api.post.retFcnProcess !== 'undefined') {
+                                        return config[groupName].api.post.retFcnProcess(state, action, config[groupName]);
+                                    }
+                                    else {
+                                        const rows = action.payload.map(data => {
+                                            return data
+                                        });
+
+                                        return {
+                                            ...state,
+                                            [config[groupName].api.post.dataName]: rows
+                                        }
+                                    }
+                                }
                                 break;
                         }
                     }

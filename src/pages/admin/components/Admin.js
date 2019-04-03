@@ -5,7 +5,7 @@ import { Container, Grid, Divider } from 'semantic-ui-react'
 import Tabs from './Tabs'
 
 import DataTable from './DataTable/DataTable'
-import AddNewPopup from './DataTable/AddNewPopup'
+import AddNewPopup3Parameters from './DataTable/AddNewPopup3Parameters'
 
 
 const tables = {
@@ -21,12 +21,12 @@ const editForms = {
 }
 
 const addForms = {
-    'Units of Measure': <AddNewPopup />,
-    'Units of Packaging': <AddNewPopup />,
+    'Units of Measure': <AddNewPopup3Parameters />,
+    /*'Units of Packaging': <AddNewPopup />,
     'Manufacturers': <AddNewPopup />,
     'Grades': <AddNewPopup />,
     'Forms': <AddNewPopup />,
-    'Conditions': <AddNewPopup />,
+    'Conditions': <AddNewPopup />,*/
 }
 
 class Admin extends Component {
