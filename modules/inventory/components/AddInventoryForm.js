@@ -45,8 +45,8 @@ const validationScheme = val.object().shape({
   priceTiers: val.number(),
   pricing: val.object().shape({
     tiers: val.array().of(val.object().shape({
-      price: val.number().required(),
-      quantityFrom: val.number().required()
+      price: val.number().moreThan(0, "Must be greater than 0").required("Price must be set"),
+      quantityFrom: val.number().moreThan(0, "Must be greater than 0").required("Minimum quantity must be set")
     }))
   })
 })
@@ -218,7 +218,13 @@ export default class AddInventoryForm extends Component {
                     name="priceTiers" 
                     options={this.getPriceTiers(10)}
                     inputProps={{
-                      onChange: (e,{value}) => setFieldValue("pricing.tiers", values.pricing.tiers.slice(0, value))
+                      onChange: (e,{value}) => setFieldValue(
+                        "pricing.tiers", 
+                        [
+                          ...values.pricing.tiers.slice(0, value),
+                          ...[...new Array((value - values.priceTiers) > 0 ? value - values.priceTiers : 0)].map(t => ({price: '0', quantityFrom: '0'}))
+                        ]
+                      )
                     }}
                   />
                 </FormGroup>
