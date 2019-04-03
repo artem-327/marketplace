@@ -3,11 +3,52 @@ import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button } from 'formik-semantic-ui'
 import { Segment, Header, Divider, Grid, GridColumn, FormGroup } from 'semantic-ui-react'
 import styled from 'styled-components'
+import * as val from 'yup'
+
+// debug purposes only
 import JSONPretty from 'react-json-pretty'
+import { FieldArray } from "formik"
 
 const TopDivider = styled(Divider)`
   padding-bottom: 20px;
 `
+
+const initValues = {
+  inStock: true,
+  product: "",
+  processingTime: 2,
+  doesExpire: true,
+  pkgAmount: "1",
+  expirationDate: "2019-04-12",
+  minimumRequirement: true,
+  minimum: "0",
+  splits: "0",
+  priceTiers: 1,
+  pricing: {
+    tiers: [
+      { price: null, quantityFrom: 0 }
+    ]
+  }
+}
+
+const validationScheme = val.object().shape({
+  inStock: val.bool().required("Is required"),
+  product: val.string().required("Is required"),
+  processingTime: val.number().required("Is required"),
+  doesExpire: val.bool(),
+  pkgAmount: val.number(),
+  expirationDate: val.date(),
+  minimumRequirement: val.bool(),
+  minimum: val.number(),
+  splits: val.number(),
+  priceTiers: val.number(),
+  pricing: val.object().shape({
+    tiers: val.array().of(val.object().shape({
+      price: val.number().required(),
+      quantityFrom: val.number().required()
+    }))
+  })
+})
 
 export default class AddInventoryForm extends Component {
 
@@ -25,17 +66,54 @@ export default class AddInventoryForm extends Component {
     return processingTimes
   }
 
+  getPriceTiers = (max) => {
+    let priceTiers = []
+
+    for (let i = 1; i <= max; i++) {
+      priceTiers.push({
+        value: i,
+        key: i,
+        text: i
+      })
+    }
+
+    return priceTiers
+  }
+
+  renderPricingTiers = (count) => {
+    let tiers = []
+
+    for (let i = 0; i < count; i++) {
+      tiers.push(
+        <FormGroup widths="equal" key={i}>
+          <Input name={`pricing.tiers[${i}].quantityFrom`} label="Minimum OQ" inputProps={{ type: 'number' }} />
+          <Input name={`pricing.tiers[${i}].price`} label="FOB Price" inputProps={{ type: 'number' }} />
+        </FormGroup>
+      )
+    }
+
+    return (
+      <>
+        {tiers}
+      </>
+    )
+  }
+
   render() {
     const { searchProducts, searchedProducts, searchedProductsLoading, warehousesList } = this.props
 
     return (
-      <Form>
-        {({ values }) => (
+      <Form 
+        initialValues={initValues}
+        validationSchema={validationScheme}
+      >
+        {({ values, errors }) => (
           <>
             <Header as="h2">ADD INVENTORY</Header>
             <TopDivider />
             <Grid columns="equal" divided>
               <Grid.Column>
+                
                 <Header as='h3'>What product do you want to list?</Header>
                 <FormGroup>
                   <Dropdown
@@ -51,6 +129,7 @@ export default class AddInventoryForm extends Component {
                       selection: true,
                       clearable: true,
                       loading: searchedProductsLoading,
+                      onChange: (e, v) => { console.log(v) },
                       onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchProducts(searchQuery)
                     }}
                   />
@@ -59,8 +138,8 @@ export default class AddInventoryForm extends Component {
 
                 <Header as='h3'>Is this product in stock?</Header>
                 <FormGroup inline>
-                  <Radio label="No" value="" name="inStock" />
-                  <Radio label="Yes" value="yes" name="inStock" />
+                  <Radio label="No" value={false} name="inStock" />
+                  <Radio label="Yes" value={true} name="inStock" />
                 </FormGroup>
                 <FormGroup>
                   <Dropdown label="Processing time" name="processingTime" options={this.getProcessingTimes(14)} />
@@ -72,7 +151,7 @@ export default class AddInventoryForm extends Component {
                   <Radio label="Yes" value={true} name="doesExpire" />
                 </FormGroup>
                 <FormGroup>
-                  {values.doesExpire && <Input inputProps={{ type: 'date' }} label="Expiration date" name="expirationDate" />}
+                  <Input inputProps={{ type: 'date', disabled: !values.doesExpire }} label="Expiration date" name="expirationDate" />
                 </FormGroup>
 
                 <Header as='h3'>Where will this product ship from?</Header>
@@ -84,16 +163,36 @@ export default class AddInventoryForm extends Component {
                 <FormGroup>
                   <Input label="Total Packages" inputProps={{ type: 'number' }} name="pkgAmount" />
                 </FormGroup>
+
               </Grid.Column>
               <GridColumn>
-                <Header as="h3">First</Header>
+                
+                <Header as="h3">Is there any order minimum requirement?</Header>
+                <FormGroup>
+                  <Radio label="No" value={false} name="minimumRequirement" />
+                  <Radio label="Yes" value={true} name="minimumRequirement" />
+                </FormGroup>
+                <FormGroup widths="equal">
+                  <Input label="Minimum OQ" name="minimum" inputProps={{ type: 'number', disabled: !values.minimumRequirement }} />
+                  <Input label="Splits" name="splits" inputProps={{ type: 'number', disabled: !values.minimumRequirement }} />
+                </FormGroup>
+                
+                <Header as='h3'>How many price tiers would you like to offer?</Header>
+                <FormGroup>
+                  <Dropdown label="Price tiers" name="priceTiers" options={this.getPriceTiers(10)} />
+                </FormGroup>
+                <FieldArray>
+                  {this.renderPricingTiers(values.priceTiers)}
+                </FieldArray>
+
               </GridColumn>
+
               <GridColumn>
                 <Header as="h3">Model values</Header>
                 <Segment>
                   <JSONPretty data={values} />
                 </Segment>
-
+                <Button.Submit>Submit values</Button.Submit>
               </GridColumn>
             </Grid>
           </>
