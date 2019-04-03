@@ -73,9 +73,8 @@ class Settings extends Component {
 
 	render() {
 		return (
-			<Container fluid style={{ marginTop: 20 }}>
+			<Container fluid>
 				<TablesHandlers />
-				<Divider />
 				<Grid columns='equal'>
 					<Grid.Row>
 						<Grid.Column width={3}>

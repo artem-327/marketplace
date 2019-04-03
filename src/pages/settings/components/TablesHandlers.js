@@ -43,7 +43,7 @@ class TablesHandlers extends Component {
 
     return (
       <Menu secondary>
-        <Menu.Item header><h1>Users Settings</h1></Menu.Item>
+        <Menu.Item header><h1>{currentTab}</h1></Menu.Item>
         
         <Menu.Menu position='right'>
           {/* {currentTab === 'Users' 
