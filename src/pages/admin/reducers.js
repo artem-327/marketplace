@@ -54,8 +54,6 @@ export default function reducer(state = initialState, action) {
         }
 
         case AT.ADMIN_OPEN_EDIT_POPUP: {
-            console.log('XXXXXX reducer - openEditPopup - action.payload - ', action.payload);
-            console.log('XXXXXX reducer - openEditPopup - state.currentTab - ', state.currentTab);
             return {
                 ...state,
                 currentEditForm: state.currentTab,

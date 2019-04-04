@@ -47,7 +47,7 @@ class TablesHandlers extends Component {
                 <Menu.Item header><h1>Admin Settings</h1></Menu.Item>
                 <Menu.Menu position='right'>
                     <Menu.Item>
-                        <Input style={{width: 340}} size="large" icon='search' placeholder="Search ..."
+                        <Input style={{width: 340}} size="large" icon='search' placeholder={"Search "+currentTab}
                                onChange={ e => handleFiltersValue(e.target.value)} />
                     </Menu.Item>
                     <Menu.Item>

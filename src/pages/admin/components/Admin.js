@@ -50,9 +50,6 @@ class Admin extends Component {
             currentTab,
         } = this.props
 
-        console.log(this.props);
-        console.log('currentTab: ', currentTab, '   currentAddForm: ', currentAddForm, '   currentEditForm: ', currentEditForm);
-
         return (
             <>
                 {currentAddForm && addForms[currentTab]}

@@ -1,23 +1,12 @@
 import * as AT from './action-types'
 
 export function openEditPopup(config, editedData) {
-    console.log('XXXXXX openEditPopup - config - ', config);
-    console.log('XXXXXX openEditPopup - editedData - ', editedData);
     return {
         type: AT.ADMIN_OPEN_EDIT_POPUP,
         payload: editedData
     }
 }
-/* ! !
-export function handleEditPopup(config, editedData) {   // ! ! ?????
-    console.log('XXXXXX handleEditPopup - config - ', config);
-    console.log('XXXXXX handleEditPopup - editedData - ', editedData);
-    return {
-        type: AT.ADMIN_OPEN_EDIT_POPUP,
-        payload: {config, editedData}
-    }
-}
-*/
+
 export function closeEditPopup() {
     return {
         type: AT.ADMIN_CLOSE_EDIT_POPUP,
