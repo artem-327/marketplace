@@ -11,15 +11,19 @@ const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
 
 const Navigation = withRouter(({ router: { pathname } }) => (
   <>
-    <Dropdown item text="Inventory" className={cn({ active: pathname.startsWith('/inventory') || pathname.startsWith('/inventory') })}>
+    <Dropdown item text="Inventory">
       <Dropdown.Menu>
         <Dropdown.Item as={MenuLink} to="/inventory/my">My Inventory</Dropdown.Item>
-        <Dropdown.Item as={MenuLink} to="/inventory/all">Marketplace</Dropdown.Item>
         <Dropdown.Item as={MenuLink} to="/inventory/add">Add Inventory</Dropdown.Item>
+      </Dropdown.Menu>
+    </Dropdown>
+    <Dropdown item text="Marketplace">
+      <Dropdown.Menu>
+        <Dropdown.Item as={MenuLink} to="/marketplace/all">Marketplace</Dropdown.Item>
         <Dropdown.Item as={MenuLink} to="/cart">Shopping Cart</Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
-    <Dropdown item text="Orders" className={cn({ active: pathname.startsWith('/orders') })}>
+    <Dropdown item text="Orders">
       <Dropdown.Menu>
         <Dropdown.Item as={MenuLink} to="/orders/sales">Sales Orders</Dropdown.Item>
         <Dropdown.Item as={MenuLink} to="/orders/purchase">Purchase Orders</Dropdown.Item>

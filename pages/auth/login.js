@@ -8,6 +8,14 @@ const Container = styled.div`
   padding: 60px 0;
 `
 class Login extends Component {
+  componentWillMount() {
+    //document.body.classList.add("login");
+  }
+
+  componentWillUnmount() {
+    //document.body.classList.remove("login");
+  }
+
   render() {
     return (
       <Layout>

@@ -122,6 +122,17 @@
         font-size: 0.875em;
         line-height: 17px;
 
+        i.icon {
+          overflow: hidden;
+          max-height: 18px;
+          vertical-align: bottom;
+          font-size: 1.4em;
+        }
+
+        .ui.checkbox {
+          vertical-align: bottom;
+        }
+
         &.data-table-select {
           line-height: 17px;
 
@@ -173,7 +184,7 @@
           }
 
           &.data-table-select {
-            padding: 12px 10px;
+            padding: 11px 10px;
             vertical-align: top;
             line-height: 16px;
 
