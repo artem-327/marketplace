@@ -5,6 +5,9 @@ import Router from 'next/router'
 import { getAuthFromServerCookie, getAuthFromLocalCookie } from '~/utils/auth'
 
 export default Page => class DefaultPage extends React.Component {
+
+  static bodyClassName = Page.bodyClassName
+
   static getInitialProps(ctx) {
     const auth = process.browser ? getAuthFromLocalCookie() : getAuthFromServerCookie(ctx.req)
     const pageProps = Page.getInitialProps && Page.getInitialProps(ctx)
