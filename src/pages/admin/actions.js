@@ -1,18 +1,27 @@
 import * as AT from './action-types'
 
-export function openEditPopup(config, currentTab, row) {
+export function openEditPopup(config, editedData) {
     console.log('XXXXXX openEditPopup - config - ', config);
-    console.log('XXXXXX openEditPopup - currentTab - ', currentTab);
-    console.log('XXXXXX openEditPopup - row - ', row);
+    console.log('XXXXXX openEditPopup - editedData - ', editedData);
     return {
         type: AT.ADMIN_OPEN_EDIT_POPUP,
-        payload: {currentTab, row}
+        payload: editedData
     }
 }
-
+/* ! !
+export function handleEditPopup(config, editedData) {   // ! ! ?????
+    console.log('XXXXXX handleEditPopup - config - ', config);
+    console.log('XXXXXX handleEditPopup - editedData - ', editedData);
+    return {
+        type: AT.ADMIN_OPEN_EDIT_POPUP,
+        payload: {config, editedData}
+    }
+}
+*/
 export function closeEditPopup() {
     return {
-        type: AT.ADMIN_CLOSE_EDIT_POPUP
+        type: AT.ADMIN_CLOSE_EDIT_POPUP,
+        payload: null
     }
 }
 
@@ -39,7 +48,6 @@ export function closeAddPopup() {
     }
 }
 
-
 export function closeConfirmPopup() {
     return {
         type: AT.ADMIN_CLOSE_CONFIRM_POPUP,
@@ -58,6 +66,13 @@ export function postNewRequest(config, values) {
     return {
         type: config.api.post.typeRequest,
         payload: values
+    }
+}
+
+export function putEditedDataRequest(config, id, values) {
+    return {
+        type: config.api.put.typeRequest,
+        payload: { values, id }
     }
 }
 

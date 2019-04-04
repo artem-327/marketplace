@@ -4,6 +4,7 @@ import { config } from './config'
 export const initialState = {
     editPopupBoolean: false,
     addNewPopup: false,
+    popupValues: [],
     unitsOfMeasureRows: [],
     unitsOfPackagingRows: [],
     manufacturersRows: [],
@@ -52,6 +53,22 @@ export default function reducer(state = initialState, action) {
             };
         }
 
+        case AT.ADMIN_OPEN_EDIT_POPUP: {
+            console.log('XXXXXX reducer - openEditPopup - action.payload - ', action.payload);
+            console.log('XXXXXX reducer - openEditPopup - state.currentTab - ', state.currentTab);
+            return {
+                ...state,
+                currentEditForm: state.currentTab,
+                editPopupBoolean: state.editPopupBoolean === false ? true : false,
+                popupValues: action.payload
+            };
+        }
+        case AT.ADMIN_CLOSE_EDIT_POPUP: {
+            return {
+                ...state,
+                currentEditForm: null
+            };
+        }
 
 
 
@@ -95,6 +112,7 @@ export default function reducer(state = initialState, action) {
                                     }
                                 break;
 
+                                  /*
                             case 'post':
                                 if (config[groupName].api.post.typeSuccess === action.type)
                                 {
@@ -106,6 +124,7 @@ export default function reducer(state = initialState, action) {
                                     }
                                 }
                                 break;
+                                */
                         }
                     }
                 }

@@ -9,6 +9,10 @@ import AddNewPopup3Parameters from './DataTable/AddNewPopup3Parameters'
 import AddNewPopup2Parameters from './DataTable/AddNewPopup2Parameters'
 import AddNewPopup1Parameter from './DataTable/AddNewPopup1Parameter'
 
+import EditPopup3Parameters from './DataTable/EditPopup3Parameters'
+import EditPopup2Parameters from './DataTable/EditPopup2Parameters'
+import EditPopup1Parameter from './DataTable/EditPopup1Parameter'
+
 
 const tables = {
     'Units of Measure': <DataTable />,
@@ -20,6 +24,12 @@ const tables = {
 }
 
 const editForms = {
+    'Units of Measure': <EditPopup3Parameters />,
+    'Units of Packaging': <EditPopup2Parameters />,
+    'Manufacturers': <EditPopup1Parameter />,
+    'Grades': <EditPopup1Parameter />,
+    'Forms': <EditPopup1Parameter />,
+    'Conditions': <EditPopup1Parameter />,
 }
 
 const addForms = {

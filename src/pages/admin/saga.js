@@ -1,6 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects"
 import { config } from './config'
-import { getDataRequest, closeAddPopup, closeConfirmPopup } from "./actions"
+import { getDataRequest, closeAddPopup, closeConfirmPopup, closeEditPopup } from "./actions"
 import api from '~/api'
 
 function* getDataWorker(config) {
@@ -23,6 +23,20 @@ function* postDataWorker(config, { payload }) {
     }
 }
 
+function* putDataWorker(config, { payload }) {
+    try {
+        console.log('XXXXXXXX putDataWorker - config - ', config);
+        console.log('XXXXXXXX putDataWorker - payload - ', payload);
+
+        yield call(() => { api.put(config.put.apiCall + payload.id, payload.values) });
+        yield put(closeEditPopup({ payload: null }))
+        //yield put(getDataRequest(config))
+    } catch(e) {
+        yield console.log("error:", e)
+        yield put(closeEditPopup({ payload: null }))
+    }
+}
+
 function* deleteDataWorker(config, { payload }) {
     try {
         yield call(() => { api.delete(config.delete.apiCall + payload) });
@@ -41,11 +55,15 @@ export default function* adminSaga() {
                 switch (item) {
                     case 'get':
                         yield takeEvery(config[groupName].api.get.typeRequest, getDataWorker, config[groupName].api)
-                    break;
+                        break;
 
                     case 'post':
                         yield takeEvery(config[groupName].api.post.typeRequest, postDataWorker, config[groupName].api)
-                    break;
+                        break;
+
+                    case 'put':
+                        yield takeEvery(config[groupName].api.put.typeRequest, putDataWorker, config[groupName].api)
+                        break;
 
                     case 'delete':
                         yield takeEvery(config[groupName].api.delete.typeRequest, deleteDataWorker, config[groupName].api)
