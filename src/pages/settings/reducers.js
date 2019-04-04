@@ -29,7 +29,8 @@ export const initialState = {
     //{ name: "Terms", id: 10 }, // removed #29771
     //{ name: "Website Controls", id: 11 } // removed #29771
   ],
-  currentTab: "Warehouses",
+  // currentTab: "Product catalog",
+  currentTab: "Users",
   currentEditForm: null,
   currentAddForm: null,
   confirmMessage: null,

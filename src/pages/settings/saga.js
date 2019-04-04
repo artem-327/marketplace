@@ -258,13 +258,6 @@ function* deleteConfirmPopup({}) {
     switch (currentTab) {
       case "Users":
         yield call(api.deleteUser, deleteRowByid)
-        // <<<<<<< HEAD
-        //       case "Warehouses":
-        //         yield call(api.deleteWarehouse, deleteRowByid)
-        //       case "Product catalog":
-        //         console.log("YES")
-        //         yield call(api.deleteProduct, deleteRowByid)
-        // =======
         toast = { message: "User delete success", isSuccess: true }
         break
       case "Warehouses":
