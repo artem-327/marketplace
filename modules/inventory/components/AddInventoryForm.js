@@ -17,10 +17,10 @@ const TopDivider = styled(Divider)`
 const initValues = {
   inStock: true,
   product: "",
-  processingTime: 0,
-  doesExpire: true,
+  processingTime: 1,
+  doesExpire: false,
   pkgAmount: "0",
-  expirationDate: "",
+  validityDate: "",
   minimumRequirement: true,
   minimum: "0",
   splits: "0",
@@ -33,12 +33,12 @@ const initValues = {
 }
 
 const validationScheme = val.object().shape({
-  inStock: val.bool().required("Is required"),
-  product: val.string().required("Is required"),
-  processingTime: val.number().required("Is required"),
+  inStock: val.bool().required("required"),
+  product: val.string().required("required"),
+  processingTime: val.number().required("required"),
   doesExpire: val.bool(),
-  pkgAmount: val.number(),
-  expirationDate: val.string(),
+  pkgAmount: val.number().required("Is required"),
+  validityDate: val.string().matches(/[0-9]{2}\-[0-9]{2}\-[0-9]{4}/, { message: 'not valid date' }),
   minimumRequirement: val.bool(),
   minimum: val.number(),
   splits: val.number(),
@@ -48,7 +48,8 @@ const validationScheme = val.object().shape({
       price: val.number().moreThan(0, "Must be greater than 0").required("Price must be set"),
       quantityFrom: val.number().moreThan(0, "Must be greater than 0").required("Minimum quantity must be set")
     }))
-  })
+  }),
+  warehouse: val.number().required('required')
 })
 
 export default class AddInventoryForm extends Component {
@@ -107,6 +108,7 @@ export default class AddInventoryForm extends Component {
   }
 
   componentDidMount() {
+    this.props.getWarehouses()
     //
     // load initial values here
     //
@@ -189,7 +191,7 @@ export default class AddInventoryForm extends Component {
                   <Radio label="Yes" value={true} name="doesExpire" />
                 </FormGroup>
                 <FormGroup>
-                  <DateInput inputProps={{ disabled: !values.doesExpire }} label="Expiration date" name="expirationDate" />
+                  <DateInput inputProps={{ disabled: !values.doesExpire }} label="Expiration date" name="validityDate" />
                 </FormGroup>
 
                 <Header as='h3'>Where will this product ship from?</Header>
