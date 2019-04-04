@@ -1,29 +1,3 @@
-// import React, { Component } from "react"
-// import { connect } from "react-redux"
-
-// // import '../styles/settings.scss'
-
-// import Tabs from "./Tabs"
-// import UsersTable from "./UserTable/UsersTable"
-// import WarehouseTable from "./WarehouseTable/WarehouseTable"
-// import BranchTable from "./BranchTable/BranchTable"
-// import BankAccountsTable from "./BankAccountsTable/BankAccountsTable"
-// import CreditCardsTable from "./CreditCardsTable/CreditCardsTable"
-// import ProductCatalogTable from "./ProductCatalogTable/ProductCatalogTable"
-// // import EditBranchPopup from './BranchTable/EditBranchPopup'
-// import EditWarehousePopup from "./WarehouseTable/EditWarehousePopup"
-// import EditUsersPopup from "./UserTable/EditUsersPopup"
-// import EditProductCatalogPopup from "./ProductCatalogTable/EditProductCatalogPopup"
-// import AddNewBranchPopup from "./BranchTable/AddNewBranchPopup"
-// import AddNewUsersPopup from "./UserTable/AddNewUsersPopup"
-// import AddNewWarehousePopup from "./WarehouseTable/AddNewWarehousePopup"
-// import AddNewCreditCardPopup from "./CreditCardsTable/AddNewCreditCardPopup"
-// import AddNewBankAccountPopup from "./BankAccountsTable/AddNewBankAccountPopup"
-// import AddNewProductCatalogPopup from "./ProductCatalogTable/AddNewProductCatalogPopup"
-// import TablesHandlers from "./TablesHandlers"
-
-// import { Container, Grid, Divider } from "semantic-ui-react"
-
 import React, { Component } from "react"
 import { connect } from "react-redux"
 
@@ -47,6 +21,7 @@ import AddNewCreditCardPopup from "./CreditCardsTable/AddNewCreditCardPopup"
 import AddNewBankAccountPopup from "./BankAccountsTable/AddNewBankAccountPopup"
 import AddNewProductCatalogPopup from "./ProductCatalogTable/AddNewProductCatalogPopup"
 import TablesHandlers from "./TablesHandlers"
+import Toast from "../../../../components/toast"
 
 import { Container, Grid, Divider } from "semantic-ui-react"
 
@@ -76,7 +51,6 @@ const addForms = {
 class Settings extends Component {
   renderContent = () => {
     const { currentEditForm, currentAddForm, currentTab } = this.props
-
     return (
       <>
         {currentAddForm && addForms[currentTab]}
@@ -106,7 +80,8 @@ class Settings extends Component {
   // =======
   render() {
     return (
-      <Container fluid>
+      <Container fluid style={{ marginTop: 20 }}>
+        <Toast />
         <TablesHandlers />
         <Grid columns="equal">
           <Grid.Row>

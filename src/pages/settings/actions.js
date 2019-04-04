@@ -57,6 +57,11 @@ export function closeConfirmPopup() {
     type: AT.CLOSE_CONFIRM_POPUP
   }
 }
+export function closeToast() {
+  return {
+    type: AT.CLOSE_TOAST
+  }
+}
 
 export function handleActiveTab(tab) {
   return {
@@ -152,15 +157,25 @@ export function postNewCreditCardRequest(creditCardData) {
 
 export function postNewProductRequest(inputsValue, id) {
   return {
+    // <<<<<<< HEAD
     type: AT.POST_NEW_BANK_ACCOUNT_REQUEST,
     payload: bankAccountData
+    // =======
+    //     type: AT.POST_NEW_PRODUCT_REQUEST
+    //     // payload: inputsValue
+    // >>>>>>> origin/t-27939
   }
 }
 
 export function postNewBankAccountRequest(bankAccountData) {
   return {
+    // <<<<<<< HEAD
     type: AT.POST_NEW_PRODUCT_REQUEST
     // payload: inputsValue
+    // =======
+    //     type: AT.POST_NEW_BANK_ACCOUNT_REQUEST,
+    //     payload: bankAccountData
+    // >>>>>>> origin/t-27939
   }
 }
 

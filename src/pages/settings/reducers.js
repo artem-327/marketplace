@@ -24,7 +24,7 @@ export const initialState = {
     { name: "Global Broadcast", id: 5 },
     //{ name: "Client list", id: 6 }, // removed #29771
     { name: "Credit cards", id: 7 },
-    { name: "Bank accounts", id: 8 },
+    { name: "Bank accounts", id: 8 }
     //{ name: "Tax manager", id: 9 }, // removed #29771
     //{ name: "Terms", id: 10 }, // removed #29771
     //{ name: "Website Controls", id: 11 } // removed #29771
@@ -33,6 +33,7 @@ export const initialState = {
   currentEditForm: null,
   currentAddForm: null,
   confirmMessage: null,
+  toast: { message: null, isSuccess: null },
   deleteUserById: null,
   deleteRowByid: null,
   filterValue: "",
@@ -60,6 +61,18 @@ export default function reducer(state = initialState, action) {
         ...state,
         confirmMessage: true,
         deleteRowByid: action.payload
+      }
+    }
+    case AT.OPEN_TOAST: {
+      return {
+        ...state,
+        toast: action.payload
+      }
+    }
+    case AT.CLOSE_TOAST: {
+      return {
+        ...state,
+        toast: { message: null, isSuccess: null }
       }
     }
     case AT.CLOSE_CONFIRM_POPUP: {

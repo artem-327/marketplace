@@ -227,6 +227,7 @@ function* deleteUserWorker({ payload }) {
 function* deleteWarehouseWorker({ payload }) {
   try {
     yield call(api.deleteWarehouse, payload)
+    yield put({ type: AT.OPEN_TOAST, payload: "Warehouse delete success" })
   } catch (e) {
     yield console.log("error:", e)
   }
@@ -252,12 +253,24 @@ function* deleteConfirmPopup({}) {
   const {
     settings: { deleteRowByid, currentTab }
   } = yield select()
+  let toast = {}
   try {
     switch (currentTab) {
       case "Users":
         yield call(api.deleteUser, deleteRowByid)
+        // <<<<<<< HEAD
+        //       case "Warehouses":
+        //         yield call(api.deleteWarehouse, deleteRowByid)
+        //       case "Product catalog":
+        //         console.log("YES")
+        //         yield call(api.deleteProduct, deleteRowByid)
+        // =======
+        toast = { message: "User delete success", isSuccess: true }
+        break
       case "Warehouses":
         yield call(api.deleteWarehouse, deleteRowByid)
+        toast = { message: "Warehouse delete success", isSuccess: false }
+        break
       case "Product catalog":
         console.log("YES")
         yield call(api.deleteProduct, deleteRowByid)
@@ -266,8 +279,10 @@ function* deleteConfirmPopup({}) {
     }
   } catch (e) {
     yield console.log("error:", e)
+    toast = { message: "User delete success", isSuccess: true }
   } finally {
     yield put(confirmationSuccess())
+    yield put({ type: AT.OPEN_TOAST, payload: toast })
   }
 }
 
