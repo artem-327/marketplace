@@ -21,7 +21,7 @@ import AddNewCreditCardPopup from "./CreditCardsTable/AddNewCreditCardPopup"
 import AddNewBankAccountPopup from "./BankAccountsTable/AddNewBankAccountPopup"
 import AddNewProductCatalogPopup from "./ProductCatalogTable/AddNewProductCatalogPopup"
 import TablesHandlers from "./TablesHandlers"
-import Toast from "components/toast"
+import Toast from "../../../../components/toast"
 
 import { Container, Grid, Divider } from "semantic-ui-react"
 

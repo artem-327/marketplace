@@ -1,7 +1,7 @@
 import React from "react"
 import { Message } from "semantic-ui-react"
 import { connect } from "react-redux"
-import { closeToast } from "src/pages/settings/actions"
+import { closeToast } from "../../src/pages/settings/actions"
 
 const Toast = ({ message, wasSuccess, closeToast }) =>
   message ? (
