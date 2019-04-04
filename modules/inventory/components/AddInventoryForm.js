@@ -22,12 +22,12 @@ const initValues = {
   pkgAmount: "0",
   expirationDate: "",
   minimumRequirement: true,
-  minimum: "",
-  splits: "",
+  minimum: "0",
+  splits: "0",
   priceTiers: 1,
   pricing: {
     tiers: [
-      { price: null, quantityFrom: 0 }
+      { price: 0, quantityFrom: 0 }
     ]
   }
 }
@@ -38,7 +38,7 @@ const validationScheme = val.object().shape({
   processingTime: val.number().required("Is required"),
   doesExpire: val.bool(),
   pkgAmount: val.number(),
-  expirationDate: val.date(),
+  expirationDate: val.string(),
   minimumRequirement: val.bool(),
   minimum: val.number(),
   splits: val.number(),
@@ -242,12 +242,9 @@ export default class AddInventoryForm extends Component {
                 
                 <Header as="h3">Model values</Header>
                 <Segment>
-                  <JSONPretty data={values} />
+                  <JSONPretty data={validationScheme.cast(values)} />
                 </Segment>
-                <Header as="h3">Errors</Header>
-                <Segment>
-                  <JSONPretty wrap={true} data={errors} />
-                </Segment>
+                
 
 
                 <Button.Submit>Submit values</Button.Submit>
