@@ -7,6 +7,7 @@ import FilterTag from "../../../components/Filter/components/FilterTag";
 import {getSelectedDataTable} from "../../../utils/functions";
 import SubMenu from '../../../components/SubMenu';
 import {FormattedMessage} from 'react-intl';
+import {Container, Menu, Header} from 'semantic-ui-react';
 
 const GROUP_BY_ALL_COMPANIES = 1;
 const GROUP_BY_REGIONS = 2;
@@ -105,24 +106,33 @@ class MyInventory extends Component {
         return (
             <div className='my-inventory'>
                 <div className='header-top'>
-                    <h1 className='header inv-header'>
-                        <FormattedMessage
-                            id='myInventory.myInventory'
-                            defaultMessage='MY INVENTORY'
-                        />
-                    </h1>
-                    <SubMenu/>
+                    <Container fluid>
+                      <Menu secondary>
+                        <Menu.Item header>
+                          <Header as='h1' size='medium'>
+                            <FormattedMessage id='myInventory.myInventory'
+                                              defaultMessage='MY INVENTORY' />
+                          </Header>
+                        </Menu.Item>
+                        <Menu.Item>
+                          <Header as='h3' size='small' color='grey'>
+                            <FormattedMessage id='myInventory.smallHeader'
+                                              defaultMessage={number + ' products offerings selected'}
+                                              values={{number: number}} />
+                          </Header>
+                        </Menu.Item>
+
+                        <Menu.Menu position='right'>
+                          <Menu.Item>
+                            <SubMenu/>
+                          </Menu.Item>
+                        </Menu.Menu>
+                      </Menu>
+                    </Container>
                     <FilterTag
                         dispatch={this.props.dispatch}
                         closeFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}}
                     />
-                    <h3 className='header small'>
-                        <FormattedMessage
-                            id='myInventory.smallHeader'
-                            defaultMessage={number + ' products offerings selected'}
-                            values={{number: number}}
-                        />
-                    </h3>
                 </div>
                 <Filter
                     chemicalName
