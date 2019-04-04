@@ -25,7 +25,7 @@ export const getAuthFromServerCookie = (req) => {
     return undefined
   }
   const cookie = ServerCookie.parse(req.headers.cookie)
-  console.log(cookie)
+  
   const auth = JSON.parse(cookie.auth || null)
   
   return auth
