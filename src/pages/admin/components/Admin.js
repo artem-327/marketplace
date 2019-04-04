@@ -6,6 +6,8 @@ import Tabs from './Tabs'
 
 import DataTable from './DataTable/DataTable'
 import AddNewPopup3Parameters from './DataTable/AddNewPopup3Parameters'
+import AddNewPopup2Parameters from './DataTable/AddNewPopup2Parameters'
+import AddNewPopup1Parameter from './DataTable/AddNewPopup1Parameter'
 
 
 const tables = {
@@ -22,11 +24,11 @@ const editForms = {
 
 const addForms = {
     'Units of Measure': <AddNewPopup3Parameters />,
-    /*'Units of Packaging': <AddNewPopup />,
-    'Manufacturers': <AddNewPopup />,
-    'Grades': <AddNewPopup />,
-    'Forms': <AddNewPopup />,
-    'Conditions': <AddNewPopup />,*/
+    'Units of Packaging': <AddNewPopup2Parameters />,
+    'Manufacturers': <AddNewPopup1Parameter />,
+    'Grades': <AddNewPopup1Parameter />,
+    'Forms': <AddNewPopup1Parameter />,
+    'Conditions': <AddNewPopup1Parameter />,
 }
 
 class Admin extends Component {

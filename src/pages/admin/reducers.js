@@ -102,14 +102,7 @@ export default function reducer(state = initialState, action) {
                                         return config[groupName].api.post.retFcnProcess(state, action, config[groupName]);
                                     }
                                     else {
-                                        const rows = action.payload.map(data => {
-                                            return data
-                                        });
-
-                                        return {
-                                            ...state,
-                                            [config[groupName].api.post.dataName]: rows
-                                        }
+                                        return state
                                     }
                                 }
                                 break;

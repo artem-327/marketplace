@@ -20,10 +20,12 @@ export const config = {
                 apiCall: '/prodex/api/units',
             },
             post: {
-                dataName: 'unitsOfMeasureRows',
                 typeRequest: 'ADMIN_POST_UNITS_OF_MEASURE_DATA',
-                typeSuccess: 'ADMIN_POST_UNITS_OF_MEASURE_DATA_SUCCESS',
                 apiCall: '/prodex/api/units',
+            },
+            delete: {
+                typeRequest: 'ADMIN_DELETE_UNITS_OF_MEASURE_DATA',
+                apiCall: '/prodex/api/units/',
             },
         },
     },
@@ -59,6 +61,14 @@ export const config = {
                     }
                 },
             },
+            post: {
+                typeRequest: 'ADMIN_POST_UNITS_OF_PACKAGING_DATA',
+                apiCall: '/prodex/api/packaging-types',
+            },
+            delete: {
+                typeRequest: 'ADMIN_DELETE_UNITS_OF_PACKAGING_DATA',
+                apiCall: '/prodex/api/packaging-types/',
+            },
         },
     },
 
@@ -77,6 +87,14 @@ export const config = {
                 typeRequest: 'ADMIN_GET_MANUFACTURERS_DATA',
                 typeSuccess: 'ADMIN_GET_MANUFACTURERS_DATA_SUCCESS',
                 apiCall: '/prodex/api/manufacturers',
+            },
+            post: { //! ! chybi POST na BE
+                typeRequest: 'ADMIN_POST_MANUFACTURERS_DATA',
+                apiCall: '/prodex/api/manufacturers',
+            },
+            delete: {
+                typeRequest: 'ADMIN_DELETE_MANUFACTURERS_DATA',
+                apiCall: '/prodex/api/manufacturers/',
             },
         },
     },
@@ -97,6 +115,14 @@ export const config = {
                 typeSuccess: 'ADMIN_GET_GRADES_DATA_SUCCESS',
                 apiCall: '/prodex/api/product-grades',
             },
+            post: {
+                typeRequest: 'ADMIN_POST_GRADES_DATA',
+                apiCall: '/prodex/api/product-grades',
+            },
+            delete: {
+                typeRequest: 'ADMIN_DELETE_GRADES_DATA',
+                apiCall: '/prodex/api/product-grades/',
+            },
         },
     },
 
@@ -116,6 +142,14 @@ export const config = {
                 typeSuccess: 'ADMIN_GET_FORMS_DATA_SUCCESS',
                 apiCall: '/prodex/api/product-forms',
             },
+            post: {
+                typeRequest: 'ADMIN_POST_FORMS_DATA',
+                apiCall: '/prodex/api/product-forms',
+            },
+            delete: {
+                typeRequest: 'ADMIN_DELETE_FORMS_DATA',
+                apiCall: '/prodex/api/product-forms/',
+            },
         },
     },
 
@@ -134,6 +168,14 @@ export const config = {
                 typeRequest: 'ADMIN_GET_CONDITIONS_DATA',
                 typeSuccess: 'ADMIN_GET_CONDITIONS_DATA_SUCCESS',
                 apiCall: '/prodex/api/product-conditions',
+            },
+            post: {
+                typeRequest: 'ADMIN_POST_CONDITIONS_DATA',
+                apiCall: '/prodex/api/product-conditions',
+            },
+            delete: {
+                typeRequest: 'ADMIN_DELETE_CONDITIONS_DATA',
+                apiCall: '/prodex/api/product-conditions/',
             },
         },
     },

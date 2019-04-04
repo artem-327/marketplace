@@ -5,11 +5,12 @@ import { getDataRequest, openEditPopup, deleteItem } from '../../actions'
 
 class DataTable extends Component {
     componentDidMount() {
-        this.props.getDataRequest(this.props.config.api.get)
+        this.props.getDataRequest(this.props.config.api)
     }
 
     render() {
         const {
+            config,
             rows,
             filterValue,
             currentTab,
@@ -25,8 +26,8 @@ class DataTable extends Component {
                 columns={columns}
                 rows={rows}
                 rowActions={[
-                    {text: 'Edit', callback: (row) => openEditPopup({currentTab}, row)},
-                    {text: 'Delete', callback: (row) => deleteItem({currentTab}, row.id)}
+                    {text: 'Edit', callback: (row) => openEditPopup(config, currentTab, row)},
+                    {text: 'Delete', callback: (row) => deleteItem(config, row.id)}
                 ]}
             />
         )
@@ -44,9 +45,9 @@ const mapStateToProps = state => {
     return {
         config: cfg,
         rows: state.admin[cfg.api.get.dataName],
-        editDeleteColumns: state.admin.columnsForFormatter.editDeleteColumns, //! ! ??
-        editPopupBoolean: state.admin.editPopupBoolean,
-        addNewPopup: state.admin.addNewPopup,
+        //editDeleteColumns: state.admin.columnsForFormatter.editDeleteColumns, //! ! ??
+        //editPopupBoolean: state.admin.editPopupBoolean,
+        //addNewPopup: state.admin.addNewPopup,
         filterValue: state.admin.filterValue,
         currentTab: state.admin.currentTab,
     }

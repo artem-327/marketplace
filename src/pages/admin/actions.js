@@ -1,6 +1,7 @@
 import * as AT from './action-types'
 
-export function openEditPopup(currentTab, row) {
+export function openEditPopup(config, currentTab, row) {
+    console.log('XXXXXX openEditPopup - config - ', config);
     console.log('XXXXXX openEditPopup - currentTab - ', currentTab);
     console.log('XXXXXX openEditPopup - row - ', row);
     return {
@@ -15,54 +16,50 @@ export function closeEditPopup() {
     }
 }
 
-export function deleteItem(currentTab, id) {
-    console.log('XXXXXX deleteItem - currentTab - ', currentTab);
-    console.log('XXXXXX deleteItem - row - ', id);
-    return {
-        type: AT.ADMIN_DELETE_ITEM,
-        payload: {currentTab, id}
+export function deleteItem(config, id) {
+    if (typeof config.api.delete !== 'undefined') {
+        return {
+            type: config.api.delete.typeRequest,
+            payload: id
+        }
     }
+    else { return { type: null, payload: null } }
 }
 
 export function openAddPopup(currentTab) {
-    console.log('XXXXXX openAddPopup - currentTab - ', currentTab);
     return {
         type: AT.ADMIN_OPEN_ADD_POPUP,
         payload: currentTab
     }
 }
-export function closeAddPopup(payload) {
+export function closeAddPopup() {
     return {
         type: AT.ADMIN_CLOSE_ADD_POPUP,
-        payload
+        payload: null
     }
 }
 
 
+export function closeConfirmPopup() {
+    return {
+        type: AT.ADMIN_CLOSE_CONFIRM_POPUP,
+        payload: null
+    };
+}
+
 export function getDataRequest(api) {
     return {
-        type: api.typeRequest
+        type: api.get.typeRequest,
+        payload: null
     }
 }
 
 export function postNewRequest(config, values) {
-    console.log('XXXXXXXXXXXXXXXXXXX postNewRequest - config - ', config);
-    console.log('XXXXXXXXXXXXXXXXXXX postNewRequest - values - ', values);
     return {
         type: config.api.post.typeRequest,
         payload: values
     }
 }
-
-
-
-
-
-
-
-
-
-
 
 export function handleActiveTab(tab) {
     return {
