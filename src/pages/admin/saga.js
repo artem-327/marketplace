@@ -14,9 +14,9 @@ function* getDataWorker(config) {
 
 function* postDataWorker(config, { payload }) {
     try {
-        yield call(() => { api.post(config.post.apiCall, payload) });
+        const data = yield call(() => api.post(config.post.apiCall, payload).then(response => response.data));
         yield put(closeAddPopup({ payload: null }))
-        //yield put(getDataRequest(config))
+        yield put(getDataRequest(config))
     } catch(e) {
         yield console.log("error:", e)
         yield put(closeAddPopup({ payload: null }))
@@ -25,12 +25,9 @@ function* postDataWorker(config, { payload }) {
 
 function* putDataWorker(config, { payload }) {
     try {
-        console.log('XXXXXXXX putDataWorker - config - ', config);
-        console.log('XXXXXXXX putDataWorker - payload - ', payload);
-
-        yield call(() => { api.put(config.put.apiCall + payload.id, payload.values) });
+        const data = yield call(() => api.put(config.put.apiCall + payload.id, payload.values).then(response => response.data));
         yield put(closeEditPopup({ payload: null }))
-        //yield put(getDataRequest(config))
+        yield put(getDataRequest(config))
     } catch(e) {
         yield console.log("error:", e)
         yield put(closeEditPopup({ payload: null }))
@@ -39,9 +36,9 @@ function* putDataWorker(config, { payload }) {
 
 function* deleteDataWorker(config, { payload }) {
     try {
-        yield call(() => { api.delete(config.delete.apiCall + payload) });
+        yield call(() => api.delete(config.delete.apiCall + payload).then(response => response.data));
         yield put(closeConfirmPopup({ payload: null }))
-        //yield put(getDataRequest(config))
+        yield put(getDataRequest(config))
     } catch(e) {
         yield console.log("error:", e)
         yield put(closeConfirmPopup({ payload: null }))
