@@ -31,6 +31,8 @@ export default {
   putWarehouse: (branchId, body) =>
     api.put(`/prodex/api/branches/${branchId}`, body),
   putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
+  putProduct: (id, body) =>
+    api.put(`/prodex/api/product-templates/${id}`, body),
 
   deleteUser: userId => api.delete(`/prodex/api/users/${userId}`),
   deleteWarehouse: branchId => api.delete(`/prodex/api/branches/${branchId}`),

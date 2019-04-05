@@ -54,7 +54,9 @@ export default function reducer(state = initialState, action) {
     case AT.CLOSE_EDIT_POPUP: {
       return {
         ...state,
-        currentEditForm: null
+        currentEditForm: null,
+        editPopupBoolean: state.editPopupBoolean === false ? true : false,
+        popupValues: null
       }
     }
     case AT.OPEN_CONFIRM_POPUP: {
@@ -223,9 +225,10 @@ export default function reducer(state = initialState, action) {
       const shortRows = rows.map(product => {
         const packaging = get(product, ["packaging"], false)
         return {
+          id: product.id,
           productName: product.productName,
           productNumber: product.productCode,
-          id: product.id,
+          casProduct: product.product.casNumber,
           packagingType: packaging
             ? product.packaging.packagingType
               ? product.packaging.packagingType.name

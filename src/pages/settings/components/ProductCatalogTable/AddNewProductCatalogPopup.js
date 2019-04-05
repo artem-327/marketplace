@@ -227,13 +227,13 @@ const formValidation = Yup.object().shape({
     .min(3, "Too short")
     .required("Required"),
   productNumber: Yup.string()
-    .min(3, "Too short")
+    .min(1, "Too short")
     .required("Required"),
   packagingType: Yup.string()
-    .min(3, "Too short")
+    .min(1, "Too short")
     .required("Required"),
   packagingSize: Yup.string()
-    .min(3, "Too short")
+    .min(1, "Too short")
     .required("Required")
 })
 

@@ -15,7 +15,7 @@ class ProductCatalogTable extends Component {
     columns: [
       { name: "productName", title: "Product Name" },
       { name: "productNumber", title: "Product Number" },
-      { name: "productId", title: "Product ID" },
+      { name: "casProduct", title: "CAS Product" },
       { name: "packagingType", title: "Packaging Type" },
       { name: "packagingSize", title: "Packaging Size" }
     ]

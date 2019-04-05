@@ -63,7 +63,6 @@ function* getBankAccountsDataWorker() {
 function* getProductCatalogWorker() {
   try {
     const productCatalog = yield call(api.getProductsCatalog)
-    console.log("SSS", productCatalog)
     yield put({
       type: AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS,
       payload: productCatalog
@@ -214,6 +213,17 @@ function* putUserWorker({ payload, id }) {
   }
 }
 
+function* putProductEditPopup({ payload, id }) {
+  try {
+    const updateProduct = {}
+    yield call(api.putProduct, id, updateProduct)
+  } catch {
+    yield console.log("error:", e)
+  } finally {
+    yield put({ type: AT.CLOSE_EDIT_POPUP, payload: null })
+  }
+}
+
 function* deleteUserWorker({ payload }) {
   try {
     yield call(api.deleteUser, payload)
@@ -265,7 +275,6 @@ function* deleteConfirmPopup({}) {
         toast = { message: "Warehouse delete success", isSuccess: false }
         break
       case "Product catalog":
-        console.log("YES")
         yield call(api.deleteProduct, deleteRowByid)
       default:
         break
@@ -299,6 +308,8 @@ export default function* settingsSaga() {
   yield takeEvery(AT.POST_NEW_PRODUCT_REQUEST, postNewProductWorker)
 
   yield takeEvery(AT.HANDLE_SUBMIT_USER_EDIT_POPUP, putUserWorker)
+
+  yield takeEvery(AT.PUT_PRODUCT_EDIT_POPUP, putProductEditPopup)
 
   yield takeEvery(AT.DELETE_USER, deleteUserWorker)
   yield takeEvery(AT.DELETE_WAREHOUSE, deleteWarehouseWorker)
