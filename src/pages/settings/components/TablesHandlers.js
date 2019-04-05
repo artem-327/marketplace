@@ -6,7 +6,7 @@ import InputBase from '@material-ui/core/InputBase'
 import MenuItem from '@material-ui/core/MenuItem'
 import TextField from '@material-ui/core/TextField'
 
-import {Menu, Button, Input, Dropdown} from 'semantic-ui-react'
+import {Header, Menu, Button, Input, Dropdown} from 'semantic-ui-react'
 
 import { openAddPopup, handleFiltersValue } from '../actions'
 import unitedStates from '../../../components/unitedStates'
@@ -43,7 +43,9 @@ class TablesHandlers extends Component {
 
     return (
       <Menu secondary>
-        <Menu.Item header><h1>Users Settings</h1></Menu.Item>
+        <Menu.Item header>
+          <Header as='h1' size='medium'>{currentTab}</Header>
+        </Menu.Item>
         
         <Menu.Menu position='right'>
           {/* {currentTab === 'Users' 

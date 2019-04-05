@@ -4,7 +4,7 @@ export const initialState = {
     fileIds: [],
     searchedProducts: [],
     searchedProductsLoading: false,
-    warehouses: []
+    warehousesList: []
 }
 
 export default function reducer(state = initialState, action) {
@@ -28,7 +28,13 @@ export default function reducer(state = initialState, action) {
         case AT.INVENTORY_GET_WAREHOUSES_FULFILLED: {
             return {
                 ...state,
-                warehouses: action.payload.data
+                warehousesList: action.payload.data.map((warehouse) => {
+                    return {
+                      ...warehouse,
+                      text: warehouse.name,
+                      value: warehouse.id
+                    }
+                })
             }
         }
 

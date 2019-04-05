@@ -17,38 +17,39 @@ const TopDivider = styled(Divider)`
 const initValues = {
   inStock: true,
   product: "",
-  processingTime: 0,
-  doesExpire: true,
+  processingTime: 1,
+  doesExpire: false,
   pkgAmount: "0",
-  expirationDate: "",
+  validityDate: "",
   minimumRequirement: true,
-  minimum: "0",
-  splits: "0",
+  minimum: 1,
+  splits: 1,
   priceTiers: 1,
   pricing: {
     tiers: [
-      { price: 0, quantityFrom: 0 }
+      { price: null, quantityFrom: 1 }
     ]
   }
 }
 
 const validationScheme = val.object().shape({
-  inStock: val.bool().required("Is required"),
-  product: val.string().required("Is required"),
-  processingTime: val.number().required("Is required"),
+  inStock: val.bool().required("required"),
+  product: val.string().required("required"),
+  processingTime: val.number().required("required"),
   doesExpire: val.bool(),
-  pkgAmount: val.number(),
-  expirationDate: val.string(),
+  pkgAmount: val.number().nullable().required("Is required"),
+  validityDate: val.string().matches(/[0-9]{2}\-[0-9]{2}\-[0-9]{4}/, { message: 'not valid date' }),
   minimumRequirement: val.bool(),
-  minimum: val.number(),
-  splits: val.number(),
+  minimum: val.number().nullable().moreThan(0, "Must be greater than 0"),
+  splits: val.number().nullable().moreThan(0, "Must be greater than 0"),
   priceTiers: val.number(),
   pricing: val.object().shape({
     tiers: val.array().of(val.object().shape({
-      price: val.number().moreThan(0, "Must be greater than 0").required("Price must be set"),
-      quantityFrom: val.number().moreThan(0, "Must be greater than 0").required("Minimum quantity must be set")
+      quantityFrom: val.number().nullable().moreThan(0, "Must be greater than 0").required("Minimum quantity must be set"),
+      price: val.number().nullable().moreThan(0, "Must be greater than 0").required("Price must be set")
     }))
-  })
+  }),
+  warehouse: val.number().required('required')
 })
 
 export default class AddInventoryForm extends Component {
@@ -93,8 +94,8 @@ export default class AddInventoryForm extends Component {
     for (let i = 0; i < count; i++) {
       tiers.push(
         <FormGroup widths="equal" key={i}>
-          <Input name={`pricing.tiers[${i}].quantityFrom`} label="Minimum OQ" inputProps={{ type: 'number' }} />
-          <Input name={`pricing.tiers[${i}].price`} label="FOB Price" inputProps={{ type: 'number' }} />
+          <Input name={`pricing.tiers[${i}].quantityFrom`} label="Minimum OQ" inputProps={{ type: 'number', readOnly: i === 0, value: null }} />
+          <Input name={`pricing.tiers[${i}].price`} label="FOB Price" inputProps={{ type: 'number', step: '0.001', value: null }} />
         </FormGroup>
       )
     }
@@ -107,10 +108,11 @@ export default class AddInventoryForm extends Component {
   }
 
   componentDidMount() {
+    this.props.getWarehouses()
     //
     // load initial values here
     //
-    setTimeout(() => this.setState({
+    /*setTimeout(() => this.setState({
       initialState: {
         priceTiers: 2,
         pricing: {
@@ -120,7 +122,7 @@ export default class AddInventoryForm extends Component {
           ]
         }
       }
-    }), 500)
+    }), 500)*/
   }
 
   render() {
@@ -189,7 +191,7 @@ export default class AddInventoryForm extends Component {
                   <Radio label="Yes" value={true} name="doesExpire" />
                 </FormGroup>
                 <FormGroup>
-                  <DateInput inputProps={{ disabled: !values.doesExpire }} label="Expiration date" name="expirationDate" />
+                  <DateInput inputProps={{ disabled: !values.doesExpire }} label="Expiration date" name="validityDate" />
                 </FormGroup>
 
                 <Header as='h3'>Where will this product ship from?</Header>
