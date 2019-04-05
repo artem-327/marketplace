@@ -242,7 +242,7 @@ export default class AddInventoryForm extends Component {
                 
                 <Header as="h3">Model values</Header>
                 <Segment>
-                  <JSONPretty data={validationScheme.cast(values)} />
+                  <JSONPretty data={values} />
                 </Segment>
                 
 
