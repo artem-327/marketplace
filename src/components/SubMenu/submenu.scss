@@ -28,6 +28,7 @@
       transition: margin 125ms linear 125ms;
       display: inline-block;
       height: 23px;
+      margin-right: 20px;
       vertical-align: top;
     }
     .arrow-down {
@@ -44,7 +45,6 @@
     &.opened {
       img {
         transition: margin 125ms linear 0ms;
-        margin-right: 20px;
       }
     }
   }
