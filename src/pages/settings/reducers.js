@@ -1,5 +1,5 @@
-import * as AT from './action-types' 
-  
+import * as AT from "./action-types"
+
 export const initialState = {
   editPopupBoolean: false,
   addNewWarehousePopup: false,
@@ -11,29 +11,29 @@ export const initialState = {
   bankAccountsRows: [],
   productsCatalogRows: [],
   columnsForFormatter: {
-    checkboxColumns: ['checkbox'],
-    permissionsColumns: ['permissions'],
-    editDeleteColumns: ['editDeleteBtn']
+    checkboxColumns: ["checkbox"],
+    permissionsColumns: ["permissions"],
+    editDeleteColumns: ["editDeleteBtn"]
   },
   tabsNames: [
-    {	name: 'Users', id: 1 }, 
-    {	name: 'Branches', id: 2 }, 
-    {	name: 'Warehouses', id: 3 }, 
-    {	name: 'Product catalog', id: 4 }, 
-    {	name: 'Price list', id: 5 }, 
-    {	name: 'Client list', id: 6 }, 
-    {	name: 'Credit cards', id: 7 },
-    {	name: 'Bank accounts', id: 8 },
-    {	name: 'Tax manager', id: 9 }, 
-    {	name: 'Terms', id: 10 }, 
-    {	name: 'Website Controls', id: 11 }
+    { name: "Users", id: 1 },
+    { name: "Branches", id: 2 },
+    { name: "Warehouses", id: 3 },
+    { name: "Product catalog", id: 4 },
+    { name: "Price list", id: 5 },
+    { name: "Client list", id: 6 },
+    { name: "Credit cards", id: 7 },
+    { name: "Bank accounts", id: 8 },
+    { name: "Tax manager", id: 9 },
+    { name: "Terms", id: 10 },
+    { name: "Website Controls", id: 11 }
   ],
-  currentTab: 'Warehouses',
+  currentTab: "Warehouses",
   currentEditForm: null,
   currentAddForm: null,
-  filterValue: '',
+  filterValue: "",
   editPopupSearchProducts: []
-} 
+}
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -48,7 +48,7 @@ export default function reducer(state = initialState, action) {
     case AT.CLOSE_EDIT_POPUP: {
       return {
         ...state,
-        currentEditForm: null,
+        currentEditForm: null
       }
     }
 
@@ -91,51 +91,48 @@ export default function reducer(state = initialState, action) {
           title: "title",
           email: user.email,
           phone: "phone",
-          homeBranch: user.branch ? user.branch.address.province.name : '',
-          permissions: user.roles ? user.roles.name : '',
+          homeBranch: user.branch ? user.branch.address.province.name : "",
+          permissions: user.roles ? user.roles.name : "",
           middleName: user.middlename,
           id: user.id
-        } 
-      }) 
+        }
+      })
       return {
         ...state,
-        usersRows: usersRows,
+        usersRows: usersRows
       }
     }
 
     case AT.GET_WAREHOUSES_DATA_SUCCESS: {
-      const warehousesRows = action.payload.map(warehouse => {	
-        return (
-          {
-            warehouseName: warehouse.name,
-            address: warehouse.address.streetAddress + ', ' + warehouse.address.city,
-            contactName: warehouse.contact.name,
-            phone: warehouse.contact.phone,
-            email: warehouse.contact.email,
-            branchId: warehouse.id
-          }
-        )			
-      }) 
+      const warehousesRows = action.payload.map(warehouse => {
+        return {
+          warehouseName: warehouse.name,
+          address:
+            warehouse.address.streetAddress + ", " + warehouse.address.city,
+          contactName: warehouse.contact.name,
+          phone: warehouse.contact.phone,
+          email: warehouse.contact.email,
+          branchId: warehouse.id
+        }
+      })
 
       return {
         ...state,
-        warehousesRows: warehousesRows,
+        warehousesRows: warehousesRows
       }
     }
 
     case AT.GET_BRANCHES_DATA_SUCCESS: {
-      const rows = action.payload.map(branch => {	
-        return (
-          {
-            warehouseName: branch.name,
-            address: branch.address.streetAddress + ', ' + branch.address.city,
-            contactName: branch.contact.name,
-            phone: branch.contact.phone,
-            email: branch.contact.email,
-            branchId: branch.id
-          }
-        )			
-      }) 
+      const rows = action.payload.map(branch => {
+        return {
+          warehouseName: branch.name,
+          address: branch.address.streetAddress + ", " + branch.address.city,
+          contactName: branch.contact.name,
+          phone: branch.contact.phone,
+          email: branch.contact.email,
+          branchId: branch.id
+        }
+      })
 
       return {
         ...state,
@@ -143,20 +140,18 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_CREDIT_CARDS_DATA_SUCCESS: {      
-      const rows = action.payload.map(card => {        
-        return (
-          {
-            id: card.id,
-            cardNumber: `**** **** **** ${card.last4}`,
-            cvc: card.cvcCheck,
-            expirationMonth: card.expMonth,
-            expirationYear: card.expYear,
-            last4: `**** **** **** ${card.last4}`
-            // cardNumber what does it mean
-          }
-        )			
-      }) 
+    case AT.GET_CREDIT_CARDS_DATA_SUCCESS: {
+      const rows = action.payload.map(card => {
+        return {
+          id: card.id,
+          cardNumber: `**** **** **** ${card.last4}`,
+          cvc: card.cvcCheck,
+          expirationMonth: card.expMonth,
+          expirationYear: card.expYear,
+          last4: `**** **** **** ${card.last4}`
+          // cardNumber what does it mean
+        }
+      })
 
       return {
         ...state,
@@ -164,21 +159,19 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_BANK_ACCOUNTS_DATA_SUCCESS: { 
+    case AT.GET_BANK_ACCOUNTS_DATA_SUCCESS: {
       const rows = action.payload.map(account => {
-        return (
-          {
-            id: account.id,
-            accountHolderName: account.accountHolderName,
-            accountHolderType: account.accountHolderType,
-            accountNumber: `**** **** **** ${account.last4}`,
-            country: account.country,
-            currency: account.currency,
-            routingNumber: account.routingNumber
-            // accountNumber - what does it mean
-          }
-        )			
-      }) 
+        return {
+          id: account.id,
+          accountHolderName: account.accountHolderName,
+          accountHolderType: account.accountHolderType,
+          accountNumber: `**** **** **** ${account.last4}`,
+          country: account.country,
+          currency: account.currency,
+          routingNumber: account.routingNumber
+          // accountNumber - what does it mean
+        }
+      })
 
       return {
         ...state,
@@ -188,17 +181,15 @@ export default function reducer(state = initialState, action) {
 
     case AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS: {
       const rows = action.payload.map(product => {
-        return (
-          {
-            productName: product,
-            productNumber: product,
-            productId: product,
-            packagingType: product,
-            packagingSize: product
-          }
-        )			
-      }) 
-      
+        return {
+          productName: product,
+          productNumber: product,
+          productId: product,
+          packagingType: product,
+          packagingSize: product
+        }
+      })
+
       return {
         ...state,
         productsCatalogRows: rows
@@ -206,14 +197,17 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_PRODUCTS_WITH_REQUIRED_PARAM_SUCCESS: {
-      const editPopupSearchProducts = action.payload.map(item => {        
+      const editPopupSearchProducts = action.payload.map(item => {
         return {
           id: item.id,
           productName: item.productName,
           productNumber: item.product.unNumber,
           productId: item.product.id,
-          packagingType: item.packaging.packagingType === undefined ? '' : item.packaging.packagingType.name,
-          packagingSize: item.packaging.size 
+          packagingType:
+            item.packaging.packagingType === undefined
+              ? ""
+              : item.packaging.packagingType.name,
+          packagingSize: item.packaging.size
         }
       })
       return {
@@ -221,7 +215,7 @@ export default function reducer(state = initialState, action) {
         editPopupSearchProducts
       }
     }
-    
+
     case AT.POST_NEW_WAREHOUSE_POPUP: {
       return {
         ...state,
