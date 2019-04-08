@@ -32,7 +32,9 @@ export const initialState = {
   currentEditForm: null,
   currentAddForm: null,
   confirmMessage: null,
+  toast: { message: null, isSuccess: null },
   deleteUserById: null,
+  deleteRowByid: null,
   filterValue: "",
   editPopupSearchProducts: []
 }
@@ -56,16 +58,34 @@ export default function reducer(state = initialState, action) {
     case AT.OPEN_CONFIRM_POPUP: {
       return {
         ...state,
-        confirmMessage: state.currentTab,
-        popupValues: state.currentTab,
-        deleteUserById: action.payload
+        confirmMessage: true,
+        deleteRowByid: action.payload
+      }
+    }
+    case AT.OPEN_TOAST: {
+      return {
+        ...state,
+        toast: action.payload
+      }
+    }
+    case AT.CLOSE_TOAST: {
+      return {
+        ...state,
+        toast: { message: null, isSuccess: null }
       }
     }
     case AT.CLOSE_CONFIRM_POPUP: {
       return {
         ...state,
-        confirmMessage: null,
-        popupValues: state.currentTab
+        deleteRowByid: null,
+        confirmMessage: null
+      }
+    }
+    case AT.CONFIRM_SUCCESS: {
+      return {
+        ...state,
+        deleteRowByid: null,
+        confirmMessage: null
       }
     }
 

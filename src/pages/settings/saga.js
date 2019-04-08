@@ -1,6 +1,10 @@
-import { call, put, takeEvery } from "redux-saga/effects"
-
-import { closeAddPopup, closeConfirmPopup } from "./actions"
+import { call, put, takeEvery, select } from "redux-saga/effects"
+import {
+  closeAddPopup,
+  closeConfirmPopup,
+  deleteUser,
+  confirmationSuccess
+} from "./actions"
 import * as AT from "./action-types"
 import api from "./api"
 
@@ -218,6 +222,7 @@ function* deleteUserWorker({ payload }) {
 function* deleteWarehouseWorker({ payload }) {
   try {
     yield call(api.deleteWarehouse, payload)
+    yield put({ type: AT.OPEN_TOAST, payload: "Warehouse delete success" })
   } catch (e) {
     yield console.log("error:", e)
   }
@@ -236,6 +241,33 @@ function* deleteBankAccountWorker({ payload }) {
     yield call(api.deleteWarehouse, payload)
   } catch (e) {
     yield console.log("error:", e)
+  }
+}
+
+function* deleteConfirmPopup({}) {
+  const {
+    settings: { deleteRowByid, currentTab }
+  } = yield select()
+  let toast = {}
+  try {
+    switch (currentTab) {
+      case "Users":
+        yield call(api.deleteUser, deleteRowByid)
+        toast = { message: "User delete success", isSuccess: true }
+        break
+      case "Warehouses":
+        yield call(api.deleteWarehouse, deleteRowByid)
+        toast = { message: "Warehouse delete success", isSuccess: false }
+        break
+      default:
+        break
+    }
+  } catch (e) {
+    yield console.log("error:", e)
+    toast = { message: "User delete success", isSuccess: true }
+  } finally {
+    yield put(confirmationSuccess())
+    yield put({ type: AT.OPEN_TOAST, payload: toast })
   }
 }
 
@@ -264,4 +296,5 @@ export default function* settingsSaga() {
   yield takeEvery(AT.DELETE_WAREHOUSE, deleteWarehouseWorker)
   yield takeEvery(AT.DELETE_CREDIT_CARD, deleteCreditCardWorker)
   yield takeEvery(AT.DELETE_BANK_ACCOUNT, deleteBankAccountWorker)
+  yield takeEvery(AT.DELETE_CONFIRM_POPUP, deleteConfirmPopup)
 }

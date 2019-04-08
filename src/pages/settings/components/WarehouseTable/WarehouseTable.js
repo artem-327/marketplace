@@ -1,16 +1,18 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import ProdexTable from "~/components/table"
+import ProdexGrid from "~/components/table"
+import { Confirm } from "semantic-ui-react"
 import {
   getWarehousesDataRequest,
   openEditPopup,
-  deleteWarehouse
+  closeConfirmPopup,
+  deleteConfirmation,
+  handleOpenConfirmPopup
 } from "../../actions"
 
 class WarehouseTable extends Component {
   state = {
     columns: [
-      { name: "editDeleteBtn", title: " ", dropdown: true, width: 45 },
       { name: "warehouseName", title: "Warehouse Name" },
       { name: "address", title: "Address" },
       { name: "contactName", title: "Contact Name" },
@@ -24,20 +26,37 @@ class WarehouseTable extends Component {
   }
 
   render() {
-    const { rows, filterValue, openEditPopup, deleteWarehouse } = this.props
+    const {
+      rows,
+      filterValue,
+      openEditPopup,
+      closeConfirmPopup,
+      deleteConfirmation,
+      confirmMessage,
+      handleOpenConfirmPopup
+    } = this.props
 
     const { columns } = this.state
 
     return (
-      <ProdexTable
-        filterValue={filterValue}
-        columns={columns}
-        rows={rows}
-        rowActions={[
-          { text: "Edit", callback: row => openEditPopup(row) },
-          { text: "Delete", callback: row => deleteWarehouse(row.id) }
-        ]}
-      />
+      <React.Fragment>
+        <Confirm
+          size="tiny"
+          content="Do you really want to delete warehouse?"
+          open={confirmMessage}
+          onCancel={closeConfirmPopup}
+          onConfirm={deleteConfirmation}
+        />
+        <ProdexGrid
+          filterValue={filterValue}
+          columns={columns}
+          rows={rows}
+          rowActions={[
+            { text: "Edit", callback: row => openEditPopup(row) },
+            { text: "Delete", callback: row => handleOpenConfirmPopup(row.id) }
+          ]}
+        />
+      </React.Fragment>
     )
   }
 }
@@ -45,7 +64,10 @@ class WarehouseTable extends Component {
 const mapDispatchToProps = {
   getWarehousesDataRequest,
   openEditPopup,
-  deleteWarehouse
+  openEditPopup,
+  closeConfirmPopup,
+  deleteConfirmation,
+  handleOpenConfirmPopup
 }
 
 const mapStateToProps = state => {
@@ -54,7 +76,8 @@ const mapStateToProps = state => {
     editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
     editPopupBoolean: state.settings.editPopupBoolean,
     addNewWarehousePopup: state.settings.addNewWarehousePopup,
-    filterValue: state.settings.filterValue
+    filterValue: state.settings.filterValue,
+    confirmMessage: state.settings.confirmMessage
   }
 }
 
