@@ -56,7 +56,6 @@ class AddNewUsersPopup extends React.Component {
 
     setTimeout(() => {
       // if (this.state.value.length < 1) return this.resetComponent()
-
       const re = new RegExp(escapeRegExp(this.state.value), "i")
       const isMatch = result => re.test(result.casProduct)
 
@@ -71,12 +70,16 @@ class AddNewUsersPopup extends React.Component {
     const {
       closeEditPopup,
       handleSubmitProductEditPopup,
-      popupValues
+      popupValues,
+      packagingType
     } = this.props
+    console.log("popupValues", popupValues)
     const { isLoading, results, value } = this.state
     const initialFormValues = {
-      ...popupValues
+      ...popupValues,
+      packagingType: 5
     }
+    console.log("initialFormValues", initialFormValues)
 
     return (
       <Modal open centered={false}>
@@ -118,13 +121,7 @@ class AddNewUsersPopup extends React.Component {
               <Dropdown
                 label="Packaging Type"
                 name="packagingType"
-                options={[
-                  { text: "gallons", value: "gallons" },
-                  { text: "kilograms", value: "kilograms" },
-                  { text: "liters", value: "liters" },
-                  { text: "milliliters", value: "milliliters" },
-                  { text: "pounds", value: "pounds" }
-                ]}
+                options={packagingType}
               />
               <Input type="text" label="Packaging Size" name="packagingSize" />
             </FormGroup>
@@ -146,7 +143,8 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues,
-    productsCatalogRows: state.settings.productsCatalogRows
+    productsCatalogRows: state.settings.productsCatalogRows,
+    packagingType: state.settings.productsPackagingType
   }
 }
 

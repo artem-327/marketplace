@@ -11,6 +11,7 @@ export const initialState = {
   creditCardsRows: [],
   bankAccountsRows: [],
   productsCatalogRows: [],
+  productsPackagingType: [],
   columnsForFormatter: {
     checkboxColumns: ["checkbox"],
     permissionsColumns: ["permissions"],
@@ -221,31 +222,38 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS: {
-      const rows = action.payload.slice(270)
-      const shortRows = rows.map(product => {
-        const packaging = get(product, ["packaging"], false)
+      const rows = action.payload.products.map(product => {
+        // const packaging = get(product, ["packaging"], false)
         return {
           id: product.id,
-          unit: packaging
-            ? product.packaging.unit
-              ? product.packaging.unit
-              : 0
-            : 0,
-          product: product.product.id,
+          // product: product.product.id,
           productName: product.productName,
           productNumber: product.productCode,
-          casProduct: product.product.casNumber,
-          packagingType: packaging
-            ? product.packaging.packagingType
-              ? product.packaging.packagingType.name
-              : ""
-            : "",
-          packagingSize: packaging ? product.packaging.size : 0
+          casProduct: product.casProduct
+            ? product.casProduct.casNumber
+              ? product.casProduct.casNumber
+              : null
+            : null,
+          packagingType: product.packagingType,
+          // packagingType: packaging
+          //   ? product.packaging.packagingType
+          //     ? product.packaging.packagingType.name
+          //     : ""
+          //   : "",
+          packagingSize: product.packagingSize
+        }
+      })
+      const packagingType = action.payload.productsTypes.map((type, id) => {
+        return {
+          key: id,
+          text: type.name,
+          value: type.measureType
         }
       })
       return {
         ...state,
-        productsCatalogRows: shortRows
+        productsCatalogRows: rows,
+        productsPackagingType: packagingType
       }
     }
 
