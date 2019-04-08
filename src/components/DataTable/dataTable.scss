@@ -122,6 +122,10 @@
         font-size: 0.875em;
         line-height: 17px;
 
+        &.a-center {
+          text-align: center;
+        }
+
         i.icon {
           overflow: hidden;
           max-height: 18px;
@@ -265,7 +269,12 @@
       font-weight: 500;
       color: #ffffff;
       padding: 13px 10px 12px;
+      text-align: left;
       line-height: 17px;
+
+      &.a-center {
+        text-align: center;
+      }
 
       &.data-table-select {
         padding: 12px 10px;
