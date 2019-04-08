@@ -20,17 +20,19 @@ export const initialState = {
     { name: "Branches", id: 2 },
     { name: "Warehouses", id: 3 },
     { name: "Product catalog", id: 4 },
-    { name: "Price list", id: 5 },
-    { name: "Client list", id: 6 },
+    { name: "Global Broadcast", id: 5 },
+    //{ name: "Client list", id: 6 }, // removed #29771
     { name: "Credit cards", id: 7 },
-    { name: "Bank accounts", id: 8 },
-    { name: "Tax manager", id: 9 },
-    { name: "Terms", id: 10 },
-    { name: "Website Controls", id: 11 }
+    { name: "Bank accounts", id: 8 }
+    //{ name: "Tax manager", id: 9 }, // removed #29771
+    //{ name: "Terms", id: 10 }, // removed #29771
+    //{ name: "Website Controls", id: 11 } // removed #29771
   ],
   currentTab: "Warehouses",
   currentEditForm: null,
   currentAddForm: null,
+  confirmMessage: null,
+  deleteUserById: null,
   filterValue: "",
   editPopupSearchProducts: []
 }
@@ -49,6 +51,21 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentEditForm: null
+      }
+    }
+    case AT.OPEN_CONFIRM_POPUP: {
+      return {
+        ...state,
+        confirmMessage: state.currentTab,
+        popupValues: state.currentTab,
+        deleteUserById: action.payload
+      }
+    }
+    case AT.CLOSE_CONFIRM_POPUP: {
+      return {
+        ...state,
+        confirmMessage: null,
+        popupValues: state.currentTab
       }
     }
 
@@ -112,7 +129,8 @@ export default function reducer(state = initialState, action) {
           contactName: warehouse.contact.name,
           phone: warehouse.contact.phone,
           email: warehouse.contact.email,
-          branchId: warehouse.id
+          branchId: warehouse.id,
+          id: warehouse.id
         }
       })
 

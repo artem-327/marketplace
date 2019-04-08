@@ -1,59 +1,67 @@
 // import jwtDecode from 'jwt-decode'
 import Cookie from 'js-cookie'
+import ServerCookie from 'cookie'
+import api from '~/api'
 
-const EXPIRE_TIME = 30
+export const IDLE_TIMEOUT = 30 * (60 * 1000)
 
-export const setToken = (accessToken) => {
-  // if (!process.browser) {
-  //   return
-  // }
-  // Cookie.set('user', jwtDecode(idToken))
-  // Cookie.set('idToken', idToken)
-
+export const setAuth = (auth) => {
   let now = new Date()
-  now.setTime(now.getTime() + (EXPIRE_TIME * 60 * 1000))
-  Cookie.set('accessToken', accessToken, {expires: now})
+  now.setTime(now.getTime() + (IDLE_TIMEOUT+1000))
+  Cookie.set('auth', auth, {expires: now})
 }
 
-export const unsetToken = () => {
-  // if (!process.browser) {
-  //   return
-  // }
-  
-  Cookie.remove('accessToken')
+export const unsetAuth = () => {
+
+  Cookie.remove('auth')
 
   // to support logging out from all windows
   window.localStorage.setItem('logout', Date.now())
   window.localStorage.removeItem('state')
 }
 
-export const getTokenFromServerCookie = (req) => {
+export const getAuthFromServerCookie = (req) => {
   if (!req.headers.cookie) {
     return undefined
   }
-
-  const tokenCookie = req.headers.cookie.split(';').find(c => c.trim().startsWith('accessToken='))
-
-  return tokenCookie
+  const cookie = ServerCookie.parse(req.headers.cookie)
+  
+  const auth = JSON.parse(cookie.auth || null)
+  
+  return auth
 }
 
-export const getTokenFromLocalCookie = () => {
-  return Cookie.get('accessToken')
+export const getAuthFromLocalCookie = () => {
+  return Cookie.getJSON('auth')
 }
 
-// Temporary unused. Waiting for valid jwt object from server
-// export const getUserFromServerCookie = (req) => {
-//   if (!req.headers.cookie) {
-//     return undefined
-//   }
-//   const jwtCookie = req.headers.cookie.split(';').find(c => c.trim().startsWith('idToken='))
-//   if (!jwtCookie) {
-//     return undefined
-//   }
-//   const jwt = jwtCookie.split('=')[1]
-//   return jwtDecode(jwt)
-// }
+export async function authorize(username, password) {
+  const {data} = await api.post(
+    '/prodex/oauth/token',
+    `grant_type=password&username=${username}&password=${password}`,
+    {
+      headers: {
+        'Authorization': 'Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs'
+      }
+    })
+    
+  return data
+}
 
-// export const getUserFromLocalCookie = () => {
-//   return Cookie.getJSON('user')
-// }
+export async function refreshToken() {
+  const auth = Cookie.getJSON('auth')
+  if (!auth) return
+
+  const {data} = await api.post('/prodex/oauth/token',
+    `grant_type=refresh_token&refresh_token=${auth.refresh_token}`,
+    {
+      headers: {
+        'Authorization': 'Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs',
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    })
+
+  setAuth(data)
+
+  return data
+}

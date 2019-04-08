@@ -1,0 +1,10 @@
+/*******************************
+     User Global Variables
+*******************************/
+
+@fontName           : 'Helvetica Neue';
+//@borderColor        : #a8a8a8;
+@relativeBorderRadius: @relative3px;
+@absoluteBorderRadius: @3px;
+
+@primaryColor: #2599d5;

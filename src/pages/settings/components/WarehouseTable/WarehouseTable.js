@@ -1,88 +1,64 @@
-import React, { Component } from 'react' 
-import { connect } from 'react-redux' 
-
-import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid' 
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import ProdexTable from "~/components/table"
 import {
-  Grid,
-  Table,
-	TableHeaderRow
-} from '~/components/dx-grid-semantic-ui/plugins'
-
-import { 	EditDeleteFormatterProvider } from './WarehouseTableProviders' 
-import { getWarehousesDataRequest } from '../../actions' 
+  getWarehousesDataRequest,
+  openEditPopup,
+  deleteWarehouse
+} from "../../actions"
 
 class WarehouseTable extends Component {
-	
-	state = {		
-		columns: [
-			{ name: 'editDeleteBtn', title: ' ', dropdown: true, width: 45 },
-			{ name: 'warehouseName', title: 'Warehouse Name'},
-			{ name: 'address', title: 'Address' },
-			{ name: 'contactName', title: 'Contact Name' },
-			{ name: 'phone', title: 'Phone' },
-			{ name: 'email', title: 'E-mail' }
-		]
-	}
+  state = {
+    columns: [
+      { name: "editDeleteBtn", title: " ", dropdown: true, width: 45 },
+      { name: "warehouseName", title: "Warehouse Name" },
+      { name: "address", title: "Address" },
+      { name: "contactName", title: "Contact Name" },
+      { name: "phone", title: "Phone" },
+      { name: "email", title: "E-mail" }
+    ]
+  }
 
-	componentDidMount() {
-		this.props.getWarehousesDataRequest();
-	}
+  componentDidMount() {
+    this.props.getWarehousesDataRequest()
+  }
 
-	setTextInputRef = element => {
-		this.textInput = element 
-	} 
-	
-	render() {
-		const {			 
-			rows,
-			filterValue,
-			editDeleteColumns,
-			editPopupBoolean,
-			addNewWarehousePopup
-		} = this.props 
+  render() {
+    const { rows, filterValue, openEditPopup, deleteWarehouse } = this.props
 
-		const { columns } = this.state 
+    const { columns } = this.state
 
-		// const GridRoot = props => <Grid.Root {...props} className={ editWarehousePopup || addNewWarehousePopup ? 'hide' : 'col-xs-10 main-table' } />
-		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
-		const TableCells = props => <Table.Cell {...props} className={ 'columns-rows-cell' } />
-
-		return (					
-			<Grid
-				rows={ rows }
-				columns={ columns }									
-			>	
-				<SearchState 
-					value={ filterValue } 
-				/>
-				<IntegratedFiltering />	
-				<Table 
-					cellComponent={ TableCells }
-				/>
-				<TableHeaderRow 
-					cellComponent={ HeaderCells }
-				/>
-				<EditDeleteFormatterProvider
-					for={ editDeleteColumns }
-					rows={ rows }
-				/>
-			</Grid>		
-		) 		
-	}
-}
-
-const mapDispatchToProps = {   
-	getWarehousesDataRequest
-} 
-
-const mapStateToProps = state => {
-  return {
-		rows: state.settings.warehousesRows,
-		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
-		editPopupBoolean: state.settings.editPopupBoolean,
-		addNewWarehousePopup: state.settings.addNewWarehousePopup,
-		filterValue: state.settings.filterValue
+    return (
+      <ProdexTable
+        filterValue={filterValue}
+        columns={columns}
+        rows={rows}
+        rowActions={[
+          { text: "Edit", callback: row => openEditPopup(row) },
+          { text: "Delete", callback: row => deleteWarehouse(row.id) }
+        ]}
+      />
+    )
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WarehouseTable) 
+const mapDispatchToProps = {
+  getWarehousesDataRequest,
+  openEditPopup,
+  deleteWarehouse
+}
+
+const mapStateToProps = state => {
+  return {
+    rows: state.settings.warehousesRows,
+    editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
+    editPopupBoolean: state.settings.editPopupBoolean,
+    addNewWarehousePopup: state.settings.addNewWarehousePopup,
+    filterValue: state.settings.filterValue
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WarehouseTable)

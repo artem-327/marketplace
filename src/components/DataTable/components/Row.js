@@ -115,14 +115,21 @@ class Row extends Component {
                 ? `${cellShortName}${
                     cellShortName.length < cell.length ? '...' : ''
                   }`
-                : cell;
+                : (
+                  typeof cell.content !== 'undefined'
+                    ? cell.content
+                    : cell
+                );
+
+            const cellAlign = cell.align ? cell.align : ''
 
             if (!this.props.headers[index].visible) return null;
 
             return (
               <td
                 key={index}
-                title={cellName && cellName.length > 14 ? cell : ''}>
+                title={cellName && cellName.length > 14 ? cell : ''}
+                className={cellAlign}>
                   {/*Decide if it will be formatted also through react-intl*/}
                   {cellName}
               </td>

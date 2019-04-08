@@ -10,7 +10,7 @@ import './allinventory.scss';
 import {FormattedMessage} from 'react-intl';
 import {checkToken} from "../../../utils/auth";
 import cn from "classnames"
-import {Button} from "semantic-ui-react"
+import {Menu, Header, Button} from "semantic-ui-react"
 
 class AllInventory extends Component {
 
@@ -42,36 +42,43 @@ class AllInventory extends Component {
 
         return (
             <div>
-                <div className='header-top'>
-                    <h1 className='header inv-header'>
-                        <FormattedMessage
-                            id='allInventory.marketplace'
-                            defaultMessage='MARKETPLACE'
-                        />
-                    </h1>
+
+              <Menu secondary>
+                <Menu.Item header>
+                  <Header as='h1' size='medium'>
+                    <FormattedMessage
+                        id='allInventory.marketplace'
+                        defaultMessage='MARKETPLACE'
+                    />
+                  </Header>
+                </Menu.Item>
+                <Menu.Menu position='right'>
+                  <Menu.Item>
                     <SubMenu/>
-                    <Button primary id='shippingQuotes' className={cn({hidden: !this.props.shippingQuotes})} onClick={() => this.openShippingQuote()}>
-                        <FormattedMessage
-                            id='allInventory.shippingQuote'
-                            defaultMessage='Shipping Quote'
-                        />
-                    </Button>
-                    <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchAllProductOffers({...filter})}}/>
-                </div>
-                <Filter
-                    chemicalName
-                    quantity
-                    date
-                    price
-                    assay
-                    condition
-                    form
-                    package
-                    productGrade
-                    filterFunc={(inputs) => this.props.fetchAllProductOffers(inputs)}
-                    {...this.props}
-                />
-                {content}
+                  </Menu.Item>
+                </Menu.Menu>
+                <Button primary id='shippingQuotes' className={cn({hidden: !this.props.shippingQuotes})} onClick={() => this.openShippingQuote()}>
+                    <FormattedMessage
+                        id='allInventory.shippingQuote'
+                        defaultMessage='Shipping Quote'
+                    />
+                </Button>
+                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchAllProductOffers({...filter})}}/>
+              </Menu>
+              <Filter
+                chemicalName
+                quantity
+                date
+                price
+                assay
+                condition
+                form
+                package
+                productGrade
+                filterFunc={(inputs) => this.props.fetchAllProductOffers(inputs)}
+                {...this.props}
+              />
+              {content}
             </div>
         )
     }

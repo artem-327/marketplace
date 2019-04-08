@@ -1,9 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-// import { Control, Form } from 'react-redux-form'
-// import { Modal, Button, FormField, FormGroup, Form as SForm } from 'semantic-ui-react'
-
 import { Modal, FormGroup } from 'semantic-ui-react'
 
 import { closeAddPopup, postNewWarehouseRequest } from '../../actions'
@@ -24,10 +21,8 @@ const initialFormValues = {
 const formValidation = Yup.object().shape({
   warehouseName: Yup.string().min(3, "Too short").required("Required"),
   contactName: Yup.string().min(3, "Too short").required("Required"),
-  email: Yup.string().email("Invalid email").required("Emails is required")
+  email: Yup.string().email("Invalid email").required("Email is required")
 })
-
-// class EditPopupBoolean extends React.Component {
 
 class AddNewWarehousePopup extends React.Component {
   render() {
@@ -45,9 +40,7 @@ class AddNewWarehousePopup extends React.Component {
             validationSchema={formValidation}
             onReset={closeAddPopup}
             onSubmit={(values, actions) => {
-              console.log(values)
               postNewWarehouseRequest(values)
-              actions.setSubmitting(false)
             }}
           >
             <FormGroup widths="equal">
@@ -62,11 +55,11 @@ class AddNewWarehousePopup extends React.Component {
             </FormGroup>
             <FormGroup widths="equal">
               <Input type="text" label="Phone" name="phone" />
-              <Input type="text" label="e-mail" name="email" />
+              <Input type="text" label="Email" name="email" />
             </FormGroup>
-            
+
             <div style={{ textAlign: 'right' }}>
-              <Button.Reset onClick={closeAddPopup}>Cancel</Button.Reset>
+              <Button.Reset>Cancel</Button.Reset>
               <Button.Submit>Save</Button.Submit>
             </div>
             
@@ -81,8 +74,5 @@ const mapDispatchToProps = {
   closeAddPopup,
   postNewWarehouseRequest
 }
-
-
-// export default connect(null, mapDispatchToProps)(EditPopupBoolean) 
 
 export default connect(null, mapDispatchToProps)(AddNewWarehousePopup) 

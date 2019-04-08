@@ -1,16 +1,30 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import {withRouter} from 'next/router'
-import {Container, Menu, Icon, Image, Dropdown} from 'semantic-ui-react'
+import {Container, Menu, Image, Dropdown} from 'semantic-ui-react'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/inventory.png'
-import 'semantic-ui-css/semantic.min.css'
-import '~/styles/base.scss'
-import cn from 'classnames'
 import ErrorsHandler from '~/src/utils/errorsHandler'
-
+import NavigationMenu from './NavigationMenu'
 import PopUp from '~/src/components/PopUp'
+import cn from "classnames"
 
+const TopMenu = styled(Menu)`
+  background-color: #33373e !important;
+`
+const TopMenuContainer = styled(Container)`
+  padding: 0 29px;
+`
+const MainContainer = styled(Container)`
+  padding: 49px 0 0;
+`
+const ContentContainer = styled(Container)`
+  padding: 0 20px;
+`
+const LogoImage = styled(Image)`
+  margin: 9px 10px 4px 0;
+  height: 23.78px;
+`
 
 const MenuLink = withRouter(({router: {pathname}, to, children}) => (
   <Link prefetch href={to}>
@@ -19,49 +33,34 @@ const MenuLink = withRouter(({router: {pathname}, to, children}) => (
 ))
 
 const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
-  <Container fluid style={{padding: '47px 0 0'}}>
+  <MainContainer fluid>
     <PopUp />
     <ErrorsHandler />
     <Head>
       <title>Echo exchange / {title}</title>
-      <meta charSet='utf-8' />
-      <meta name='viewport' content='initial-scale=1.0, width=device-width' />
     </Head>
-    <Menu fixed="top" inverted size="large" borderless style={{backgroundColor: '#33373e'}}>
+    <TopMenu fixed="top" inverted size="large" borderless>
       
-      <Container fluid style={{padding: '0 29px'}}>
-        <Image src={Logo} style={{margin: '9px 10px 4px 0', height: '23.78px'}}></Image>
+      <TopMenuContainer fluid>
+        <LogoImage src={Logo} />
 
-        <MenuLink to='/dashboard'>Dashboard</MenuLink>
-        <Dropdown item text="Inventory" className={cn({active: pathname.startsWith('/inventory') || pathname.startsWith('/inventory')})}>
-          <Dropdown.Menu>
-            <Dropdown.Item as={MenuLink} to="/inventory/my">My inventory</Dropdown.Item>
-            <Dropdown.Item as={MenuLink} to="/inventory/all">Marketplace</Dropdown.Item>
-            <Dropdown.Item as={MenuLink} to="/inventory/add">Add Inventory</Dropdown.Item>
-            <Dropdown.Item as={MenuLink} to="/cart">Shopping Cart</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-        <Dropdown item text="Orders" className={cn({active: pathname.startsWith('/orders')})}>
-          <Dropdown.Menu>
-            <Dropdown.Item as={MenuLink} to="/orders/sales">Sales Orders</Dropdown.Item>
-            <Dropdown.Item as={MenuLink} to="/orders/purchase">Purchase Orders</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-        <MenuLink to='/settings'>Settings</MenuLink>
+        <NavigationMenu />
         
-        <Menu.Menu position="right">
-          <MenuLink to='/auth/logout'>
-            Logout
-          </MenuLink>
+        <Menu.Menu position="right" className='black'>
+          <Dropdown item icon={{ name: 'user circle outline w-light', size: 'large' }}>
+            <Dropdown.Menu>
+              <Dropdown.Item as={MenuLink} to="/auth/logout">Logout</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </Menu.Menu>
-      </Container>
-    </Menu>
+      </TopMenuContainer>
+    </TopMenu>
     
-    <Container fluid style={{padding: '0 20px'}}>
+    <ContentContainer fluid className='page-wrapper'>
       {children} 
-    </Container>   
+    </ContentContainer>   
 
-  </Container>
+  </MainContainer>
 )
 
 export default withRouter(Layout)
