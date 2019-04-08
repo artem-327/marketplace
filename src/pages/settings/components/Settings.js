@@ -50,7 +50,13 @@ const addForms = {
 
 class Settings extends Component {
   renderContent = () => {
-    const { currentEditForm, currentAddForm, currentTab } = this.props
+    const {
+      currentEditForm,
+      currentAddForm,
+      confirmMessage,
+      currentTab
+    } = this.props
+
     return (
       <>
         {currentAddForm && addForms[currentTab]}
@@ -62,10 +68,9 @@ class Settings extends Component {
 
   render() {
     return (
-      <Container fluid style={{ marginTop: 20 }}>
+      <Container fluid>
         <Toast />
         <TablesHandlers />
-        <Divider />
         <Grid columns="equal">
           <Grid.Row>
             <Grid.Column width={3}>

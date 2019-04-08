@@ -32,7 +32,7 @@ class UsersTable extends Component {
   };
 
   componentDidMount() {
-    this.props.getUsersDataRequest();
+    this.props.getUsersDataRequest()
   }
 
   render() {
@@ -46,7 +46,7 @@ class UsersTable extends Component {
       deleteConfirmation
     } = this.props;
 
-    const { columns } = this.state;
+    const { columns } = this.state
 
     return (
       <React.Fragment>
@@ -91,4 +91,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(UsersTable);
+)(UsersTable)

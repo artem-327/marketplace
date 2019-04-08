@@ -8,11 +8,11 @@ import EN from '../localization/en.json'
 import NProgress from 'nprogress'
 import Router from 'next/router'
 
-import 'semantic-ui-css/semantic.min.css'
+import '~/semantic/dist/semantic.css'
 import '~/styles/base.scss'
 import 'nprogress/nprogress.css'
 
-Router.events.on('routeChangeStart', url => NProgress.start())
+Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
 Router.events.on('routeChangeError', () => NProgress.done())
 

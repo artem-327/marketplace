@@ -63,16 +63,17 @@ class Header extends Component {
             <thead className='data-table-header'>
                 <tr>
                     {this.props.selectable ?
-                        <th
-                            className="data-table-select">
+                        <th className="data-table-select">
+                            <CheckboxControlled
+                                value={this.isSelected()}
+                                onChange={(value)=>this.selectTable(value)}
+                            />
+                            <div className={'fix-header'}>
                                 <CheckboxControlled
                                     value={this.isSelected()}
-                                    onChange={(value)=>this.selectTable(value)}/>
-                                <div className={'fix-header'}>
-                                <CheckboxControlled
-                                    value={this.isSelected()}
-                                    onChange={(value)=>this.selectTable(value)}/>
-                                </div>
+                                    onChange={(value)=>this.selectTable(value)}
+                                />
+                            </div>
                         </th>
                         : null}
                     {!this.props.selectable && this.props.selectableRows ?
@@ -98,7 +99,7 @@ class Header extends Component {
                             onClick={() => this.leftClickSort(item.name)}
                             onContextMenu={(e) => this.handleClick(e, item.name)}
                             key={index}
-                            className={(item.name ? item.name.toLowerCase().replace(' ', '_').replace(/[^a-z_]/g, '') : item.name)}>
+                            className={(item.name ? item.name.toLowerCase().replace(' ', '_').replace(/[^a-z_]/g, '') : item.name) + ' ' + item.align}>
                             {item.name}
                             <div className={'fix-header'}>
                                 <FormattedMessage

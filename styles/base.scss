@@ -1,7 +1,32 @@
 @import 'isobs.scss';
+@import url(../src/fonts/Icons.css);
+@import url(../src/fonts/MyFontsWebfontsKit.css);
+
+$grey: #979797 !important;
 
 body {
-  background: #FFF;
+  background: #fff;
+  font-family: 'HelveticaNeueLTPro';
+}
+
+i.icon {
+  font-family: 'Font Awesome 5 Pro' !important;
+
+  &.w-light {
+    font-weight: 300;
+  }
+}
+
+.ui.menu .item > i.chevron.icon {
+  padding: 0em;
+  float: right;
+  margin: 0em 0em 0em 1em;
+  font-size: 70%;
+}
+
+div.page-wrapper {
+  width: 100%;
+  padding: 0 2.2857143em;
 }
 
 .sui-error-message {
@@ -11,17 +36,34 @@ body {
   font-size: 0.92857143em;
 }
 
-// Secondary pointing menu override
-.ui.secondary.vertical.pointing.menu .active.item {
-  border-color: #2599d5;
-  background-color: rgba(37,153,213,.15);
+.data-table-wr.orders {
+  padding: 0 2.071429rem;
 }
 
-.ui.secondary.pointing.menu { 
-  .active.item {
-    border-color: #2599d5;
-    &:hover {
-      border-color: #2599d5;
-    }
+
+h1.ui.header {
+  text-transform: uppercase;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &.medium {
+    font-size: 1.28571429em;
+    font-weight: 500;
+    line-height: 1.22223;
+  }
+}
+
+.ui.header {
+  font-family: 'HelveticaNeueLTPro';
+  font-weight: 500;
+
+  &.grey {
+    color: $grey;
+  }
+
+  &.small {
+    font-size: 1.142857em;
   }
 }

@@ -44,14 +44,14 @@ class ProductOffers extends Component {
                 countLabel: 'Product Offerings: ',
                 rows: product.productOffers.map((productOffer) => {
                     const productOfferId = productOffer.id
-                    const productName = productOffer.productName;
-                    const productCode = productOffer.hasOwnProperty('productCode') ? productOffer.productCode : '';
+                    const productName = productOffer.product.productName;
+                    const productCode = productOffer.product.hasOwnProperty('productCode') ? productOffer.product.productCode : '';
                     const warehouse = productOffer.warehouse.warehouseName;
                     const available = productOffer.pkgAmount.formatNumber();
-                    const packaging = productOffer.packaging.packagingType.name;
-                    const pkgSize = `${productOffer.packaging.size} ${productOffer.packaging.unit.nameAbbreviation}`;
-                    const quantityPart2 = `${productOffer.packaging.unit.nameAbbreviation}`;
-                    const quantity = `${(parseInt(productOffer.pkgAmount, 10) * parseInt(productOffer.packaging.size, 10)).formatNumber()} ` + quantityPart2;
+                    const packaging = productOffer.product.hasOwnProperty('productCode') ? productOffer.product.packagingType : 'N/A';
+                    const quantityPart2 = `${typeof productOffer.product.packagingUnit !== 'undefined' ? productOffer.product.packagingUnit : ''}`;
+                    const pkgSize = quantityPart2 ? `${productOffer.product.packagingSize} ${quantityPart2}` : 'N/A';
+                    const quantity = quantityPart2 ? `${(parseInt(productOffer.pkgAmount, 10) * parseInt(productOffer.product.packagingSize, 10)).formatNumber()} ` + quantityPart2 : 'N/A';
                     const cost = "$" + productOffer.pricing.cost.formatMoney(3);
                     const fobPrice = productOffer.pricing.tiers.length > 1 ?
                         ("$" + productOffer.pricing.tiers[productOffer.pricing.tiers.length - 1].price.formatMoney(3)
@@ -79,7 +79,10 @@ class ProductOffers extends Component {
                             mfr,
                             /* temporarily removed */ //condition,
                             /* temporarily removed */ //mfgDate,
-                            broadcast
+                            {
+                              content: broadcast,
+                              align: 'a-center'
+                            }
                         ]
                     })
                 })
@@ -100,7 +103,7 @@ class ProductOffers extends Component {
             {name: 'MFR.'},
             /* temporarily removed */ //{name: 'Condition'},
             /* temporarily removed */ //{name: 'MFGDate'},
-            {name: 'Broadcast'}
+            {name: 'Broadcast', align: 'a-center'}
         ];
 
         const dataTable = <DataTable
