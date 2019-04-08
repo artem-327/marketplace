@@ -1,5 +1,5 @@
-import LoginForm from './components/LoginFormContainer'
-import Logout from './components/Logout'
+import LoginForm from './Components/LoginFormContainer'
+import Logout from './Components/Logout'
 
 export {
   LoginForm,

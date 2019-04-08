@@ -58,7 +58,7 @@ const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
     
     <ContentContainer fluid className='page-wrapper'>
       {children} 
-    </ContentContainer>   
+    </ContentContainer>
 
   </MainContainer>
 )

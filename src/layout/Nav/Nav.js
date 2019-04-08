@@ -6,6 +6,7 @@ import './nav.scss'
 import dashboard from '../../images/nav/dashboard.png';
 import orders from '../../images/nav/orders.png';
 import settings from '../../images/nav/settings.png';
+import admin from '../../images/nav/admin.png';
 import clients from '../../images/nav/clients.png';
 import inventory from '../../images/nav/inventory.png';
 import reports from '../../images/nav/reports.png';
@@ -23,6 +24,7 @@ class Nav extends Component {
             dropdown: {
                 administration: false,
                 settings: false,
+                admin:  false,
                 reports: false,
                 clients: false,
                 orders: false,
@@ -36,6 +38,7 @@ class Nav extends Component {
         this.setState({dropdown: {
                 administration: false,
                 settings: false,
+                admin:  false,
                 reports: false,
                 clients: false,
                 orders: false,
@@ -192,6 +195,8 @@ class Nav extends Component {
             currentLogo = inventory
         } else if (path.includes('/settings')) {
             currentLogo = inventory
+        } else if (path.includes('/admin')) {
+            currentLogo = inventory
         } else if (path.includes('/administration')) {
             currentLogo = inventory
         } else {
@@ -227,6 +232,9 @@ class Nav extends Component {
                     {this.renderMenuItem('settings', [
                         {name: 'Settings', url: '/settings'},
                     ], 'Settings')}
+                    {this.renderMenuItem('admin', [
+                        {name: 'Admin', url: '/admin'},
+                    ], 'Admin')}
                 </div>
                 <div className='logout'>
                     {this.renderMyAccount('myaccount', [
