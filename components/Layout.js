@@ -7,7 +7,7 @@ import Logo from '~/assets/images/nav/inventory.png'
 import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
 import PopUp from '~/src/components/PopUp'
-import cn from "classnames";
+import cn from "classnames"
 
 const TopMenu = styled(Menu)`
   background-color: #33373e !important;

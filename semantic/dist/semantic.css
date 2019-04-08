@@ -25903,6 +25903,179 @@ Floated Menu / Item
 /*******************************
          Site Overrides
 *******************************/
+
+.top.menu.inverted {
+  background: #33373e;
+  font-size: 1em;
+  line-height: 1.214286;
+}
+
+.top.menu.inverted > .container > a.item,
+.top.menu.inverted .dropdown.item {
+  padding: 1.14286em 1.14286em 1.14286em 1.14286em !important;
+  font-size: 1em !important;
+  line-height: 1.214286;
+}
+
+.top.menu.inverted > .container > a.item:hover,
+.top.menu.inverted .dropdown.item:hover,
+.top.menu.inverted .dropdown.item.active,
+.top.menu.inverted .dropdown.item.active:hover {
+  background: #2b2e33;
+}
+
+.top.menu.inverted > .container > a.item:hover > .menu,
+.top.menu.inverted .dropdown.item:hover > .menu,
+.top.menu.inverted .dropdown.item.active > .menu,
+.top.menu.inverted .dropdown.item.active:hover > .menu {
+  padding: 0.64286em 0 0.57143em;
+  background: inherit;
+}
+
+.top.menu.inverted > .container > a.item:hover > .menu > a,
+.top.menu.inverted .dropdown.item:hover > .menu > a,
+.top.menu.inverted .dropdown.item.active > .menu > a,
+.top.menu.inverted .dropdown.item.active:hover > .menu > a {
+  padding: 0.5em 1.14286em 0.533334em !important;
+  background: inherit !important;
+  font-size: 1em !important;
+  color: #fff !important;
+  line-height: 1.214286;
+}
+
+.top.menu.inverted > .container > a.item:hover > .menu > a:hover,
+.top.menu.inverted .dropdown.item:hover > .menu > a:hover,
+.top.menu.inverted .dropdown.item.active > .menu > a:hover,
+.top.menu.inverted .dropdown.item.active:hover > .menu > a:hover {
+  background: rgba(37, 153, 213, 0.58) !important;
+}
+
+.top.menu.inverted .right.menu.black .dropdown.item {
+  padding-top: 1em !important;
+  padding-bottom: 1em !important;
+}
+
+.top.menu.inverted .right.menu.black .dropdown.item > .menu {
+  border: 0 none;
+  background-color: #51555b;
+  -webkit-box-shadow: 0 0 0 0 transparent;
+  box-shadow: 0 0 0 0 transparent;
+  color: #fff;
+}
+
+.top.menu.inverted .right.menu.black .dropdown.item > .menu > a {
+  color: inherit !important;
+}
+
+.ui.secondary.vertical.pointing.menu .active.item {
+  border-color: #2599d5;
+  background-color: rgba(37, 153, 213, 0.15);
+}
+
+.ui.secondary.menu:not(.vertical) {
+  min-height: 3.714286em;
+  margin: 0 -2.2857143rem;
+  padding: 0.64285714rem 2.2857143rem;
+  -webkit-box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.ui.secondary.menu:not(.vertical) .item {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.ui.secondary.menu:not(.vertical) .item > .ui.header {
+  margin-top: 0;
+}
+
+.ui.secondary.menu:not(.vertical) .item > .ui.header.small {
+  line-height: 2.125;
+}
+
+.ui.secondary.menu:not(.vertical) .header.item {
+  margin: 0;
+  padding: 0 0.857143em;
+}
+
+.ui.secondary.menu:not(.vertical) .header.item:first-child {
+  padding-left: 0;
+}
+
+.ui.secondary.menu:not(.vertical) .header.item .ui.header.medium {
+  line-height: 1.888889;
+}
+
+.ui.secondary.menu:not(.vertical) .right.menu > .item {
+  margin: 0;
+  padding: 0 0.5em;
+}
+
+.ui.secondary.menu:not(.vertical) .right.menu > .item:last-child {
+  padding-right: 1.07143em;
+}
+
+.ui.secondary.menu:not(.vertical) .right.menu > .item > .input input {
+  padding-top: 0.75em;
+  padding-bottom: 0.75em;
+  font-size: 0.75em;
+  line-height: 1.1667;
+}
+
+.ui.secondary.menu:not(.vertical) .right.menu > .item > button {
+  padding-top: 0.64285714em;
+  padding-bottom: 0.64285714em;
+  font-size: 1em;
+  line-height: 1.14285714;
+}
+
+.ui.secondary.menu:not(.vertical) .right.menu > .item .submenu-filter {
+  position: static;
+  top: auto;
+  right: auto;
+  margin: 0;
+  padding: 0.357143em 0 0.428571em;
+}
+
+.ui.secondary.menu:not(.vertical) + .ui.divider:not(.vertical) {
+  margin: 0.64285714rem -1.42857143rem;
+  padding: 0 1.42857143rem;
+}
+
+.ui.secondary.pointing.menu.vertical {
+  padding: 35px 0;
+}
+
+.ui.secondary.pointing.menu.vertical .active.item {
+  border-color: #2599d5;
+}
+
+.ui.secondary.pointing.menu.vertical .active.item:hover {
+  border-color: #2599d5;
+}
+
+.ui.secondary.pointing.menu:not(.vertical) {
+  border: 0 none;
+  padding: 0 1.714286em;
+}
+
+.ui.secondary.pointing.menu:not(.vertical) .item {
+  margin: 0 0.428572em -3px;
+  border-bottom-width: 3px;
+  padding: 1.5em 0.57143em 1em;
+  line-height: 1.14286;
+}
+
+.ui.secondary.pointing.menu:not(.vertical) .item:first-child {
+  margin-left: 0 !important;
+}
+
+.ui.secondary.pointing.menu:not(.vertical) .item.active {
+  margin: 0 0.428572em -3px;
+  border-color: #2599d5;
+  -webkit-box-shadow: 2px 0 0 0 #fff, -2px 0 0 0 #fff;
+  box-shadow: 2px 0 0 0 #fff, -2px 0 0 0 #fff;
+}
 /*!
  * # Semantic UI 2.4.2 - Message
  * http://github.com/semantic-org/semantic-ui/
@@ -31854,6 +32027,53 @@ a.ui.card:hover,
 /*******************************
          Site Overrides
 *******************************/
+
+.ui.toggle.checkbox.fitted {
+  width: 2.42857143rem;
+  height: 1.2857143rem;
+  min-height: 1.285714rem;
+}
+
+.ui.toggle.checkbox.fitted input {
+  width: 100%;
+  height: 100%;
+}
+
+.ui.toggle.checkbox.fitted .box,
+.ui.toggle.checkbox.fitted label {
+  min-height: 100%;
+  padding: 0;
+}
+
+.ui.toggle.checkbox.fitted .box:before,
+.ui.toggle.checkbox.fitted label:before {
+  width: 100%;
+  height: 100%;
+}
+
+.ui.toggle.checkbox.fitted .box:after,
+.ui.toggle.checkbox.fitted label:after {
+  width: 14px;
+  height: 14px;
+  margin: 2px;
+  border: 1px solid #979797;
+  background: #fff;
+  -webkit-box-shadow: 0 0 0 0 transparent;
+  box-shadow: 0 0 0 0 transparent;
+}
+
+.ui.toggle.checkbox input:checked ~ .box:before,
+.ui.toggle.checkbox input:checked ~ label:before,
+.ui.toggle.checkbox input:focus:checked ~ .box:before,
+.ui.toggle.checkbox input:focus:checked ~ label:before {
+  border: 1px solid #979797;
+  background: #4cd136 !important;
+}
+
+.ui.toggle.checkbox input:checked ~ .box:after,
+.ui.toggle.checkbox input:checked ~ label:after {
+  left: 1.14285714rem;
+}
 /*!
  * # Semantic UI 2.4.2 - Dimmer
  * http://github.com/semantic-org/semantic-ui/
@@ -31882,7 +32102,7 @@ a.ui.card:hover,
   text-align: center;
   vertical-align: middle;
   padding: 1em;
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: rgba(0, 0, 0, 0.65);
   opacity: 0;
   line-height: 1;
   -webkit-animation-fill-mode: both;
@@ -32100,7 +32320,7 @@ body.dimmable > .dimmer {
   opacity: 1;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: rgba(0, 0, 0, 0.65);
   z-index: 1;
 }
 
