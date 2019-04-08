@@ -17,6 +17,13 @@ i.icon {
   }
 }
 
+.ui.menu .item > i.chevron.icon {
+  padding: 0em;
+  float: right;
+  margin: 0em 0em 0em 1em;
+  font-size: 70%;
+}
+
 div.page-wrapper {
   width: 100%;
   padding: 0 2.2857143em;
