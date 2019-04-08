@@ -38,12 +38,12 @@ class ProductOffers extends Component {
           </span>
         </>,
         rows: product.productOffers.map((offer) => {
-          const unit = offer.packaging.unit.nameAbbreviation
+          const unit = offer.product.packagingUnit ? offer.product.packagingUnit.nameAbbreviation : ''
           const price = offer.pricing.tiers.length > 1 ?
             "$" + offer.pricing.tiers[offer.pricing.tiers.length - 1].price.formatMoney(3) + ' - ' + "$" + offer.pricing.tiers[0].price.formatMoney(3)
             : "$" + offer.pricing.price.formatMoney(3)
-          const packageSize = offer.packaging.size
-          const packageUnit = offer.packaging.packagingType.name
+          const packageSize = offer.product.packagingSize
+          const packageUnit = offer.product.packagingType ? offer.product.packagingType.name : ''
           //const countryException = ["USA", "Canada"]
           //const countryName = offer.warehouse.address.province.country ? offer.warehouse.address.province.country.name : null
 
@@ -56,8 +56,8 @@ class ProductOffers extends Component {
             data: [
               offer.warehouse.warehouseName,
               offer.pkgAmount.formatNumber(),
-              `${packageSize} ${unit} ${packageUnit}`,
-              `${(parseInt(offer.pkgAmount, 10) * parseInt(offer.packaging.size, 10)).formatNumber()} ${unit}`,
+              packageUnit ? `${packageSize} ${unit} ${packageUnit}` : 'N/A',
+              unit ? `${(parseInt(offer.pkgAmount, 10) * parseInt(offer.product.packagingSize, 10)).formatNumber()} ${unit}` : 'N/A',
               price,
               offer.name,
               (typeof offer.manufacturer !== 'undefined' ? offer.manufacturer.name : ''),

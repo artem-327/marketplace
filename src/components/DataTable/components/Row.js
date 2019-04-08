@@ -116,12 +116,12 @@ class Row extends Component {
                     cellShortName.length < cell.length ? '...' : ''
                   }`
                 : (
-                  typeof cell.content !== 'undefined'
+                  cell && cell.content
                     ? cell.content
                     : cell
                 );
 
-            const cellAlign = cell.align ? cell.align : ''
+            const cellAlign = cell && cell.align ? cell.align : ''
 
             if (!this.props.headers[index].visible) return null;
 
