@@ -60,7 +60,22 @@ class Admin extends Component {
 
     }
 
+    checkAdminRights()
+    {
+        if (this.props.auth && this.props.auth.identity && this.props.auth.identity.roles)
+        {
+            for (let role in this.props.auth.identity.roles)
+            {
+                if (this.props.auth.identity.roles[role].id === 1)  // roles.id === 1 means ADMIN role
+                    return true;
+            }
+        }
+        return false;
+    }
+
     render() {
+        if (!this.checkAdminRights()) return "Access denied!";
+
         return (
             <Container fluid style={{ marginTop: 20 }}>
                 <TablesHandlers />
@@ -81,8 +96,7 @@ class Admin extends Component {
 }
 
 const mapStateToProps = state => {
-    return state.admin
+    return {...state.admin, auth: state.auth}
 }
-
 
 export default connect(mapStateToProps, null)(Admin)
