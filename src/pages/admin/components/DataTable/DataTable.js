@@ -45,9 +45,6 @@ const mapStateToProps = state => {
     return {
         config: cfg,
         rows: state.admin[cfg.api.get.dataName],
-        //editDeleteColumns: state.admin.columnsForFormatter.editDeleteColumns, //! ! ??
-        //editPopupBoolean: state.admin.editPopupBoolean,
-        //addNewPopup: state.admin.addNewPopup,
         filterValue: state.admin.filterValue,
         currentTab: state.admin.currentTab,
     }
