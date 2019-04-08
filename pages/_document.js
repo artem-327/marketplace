@@ -4,21 +4,31 @@ import { ServerStyleSheet } from 'styled-components'
 export default class MyDocument extends Document {
   static getInitialProps({ renderPage }) {
     const sheet = new ServerStyleSheet()
-    const page = renderPage((App) => (props) => sheet.collectStyles(<App {...props} />),)
+    let bodyClassName
+    const page = renderPage((App) => {
+      bodyClassName = App.bodyClassName
+      return (props) => sheet.collectStyles(<App {...props} bodyClassName={App.bodyClassName} />)
+    })
     const styleTags = sheet.getStyleElement()
 
-    return { ...page, styleTags }
+    return {
+      ...page,
+      styleTags,
+      bodyClassName
+    }
   }
 
   render() {
+    const {styleTags, bodyClassName} = this.props
+
     return (
       <html>
         <Head>
-          {this.props.styleTags}
+          {styleTags}
           <meta charSet='utf-8' />
           <meta name='viewport' content='initial-scale=1.0, width=device-width' />
         </Head>
-        <body>
+        <body className={bodyClassName}>
           <Main />
           <NextScript />
         </body>

@@ -1,12 +1,13 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import {withRouter} from 'next/router'
-import {Container, Menu, Image} from 'semantic-ui-react'
+import {Container, Menu, Image, Dropdown} from 'semantic-ui-react'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/inventory.png'
 import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
 import PopUp from '~/src/components/PopUp'
+import cn from "classnames";
 
 const TopMenu = styled(Menu)`
   background-color: #33373e !important;
@@ -15,7 +16,7 @@ const TopMenuContainer = styled(Container)`
   padding: 0 29px;
 `
 const MainContainer = styled(Container)`
-  padding: 47px 0 0;
+  padding: 49px 0 0;
 `
 const ContentContainer = styled(Container)`
   padding: 0 20px;
@@ -45,15 +46,17 @@ const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
 
         <NavigationMenu />
         
-        <Menu.Menu position="right">
-          <MenuLink to='/auth/logout'>
-            Logout
-          </MenuLink>
+        <Menu.Menu position="right" className='black'>
+          <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
+            <Dropdown.Menu>
+              <Dropdown.Item as={MenuLink} to="/auth/logout">Logout</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </Menu.Menu>
       </TopMenuContainer>
     </TopMenu>
     
-    <ContentContainer fluid>
+    <ContentContainer fluid className='page-wrapper'>
       {children} 
     </ContentContainer>
 

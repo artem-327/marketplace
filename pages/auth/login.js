@@ -8,6 +8,9 @@ const Container = styled.div`
   padding: 60px 0;
 `
 class Login extends Component {
+
+  static bodyClassName = 'login'
+
   render() {
     return (
       <Layout>
