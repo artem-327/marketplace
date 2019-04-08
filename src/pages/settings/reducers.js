@@ -226,6 +226,12 @@ export default function reducer(state = initialState, action) {
         const packaging = get(product, ["packaging"], false)
         return {
           id: product.id,
+          unit: packaging
+            ? product.packaging.unit
+              ? product.packaging.unit
+              : 0
+            : 0,
+          product: product.product.id,
           productName: product.productName,
           productNumber: product.productCode,
           casProduct: product.product.casNumber,

@@ -156,18 +156,18 @@ function* postNewBankAccountWorker({ payload }) {
 
 function* postNewProductWorker({ payload }) {
   try {
-    // const productData = {
-    //   packaging: {
-    //     packagingType: 0,
-    //     size: 0,
-    //     unit: 0
-    //   },
-    //   product: 0,
-    //   productCode: "string",
-    //   productName: "string",
-    //   valid: true
-    // }
-    // yield call(api.postNewProduct, productData)
+    const productData = {
+      packaging: {
+        packagingType: payload.packagingType,
+        size: payload.packagingSize,
+        unit: 0
+      },
+      product: 0,
+      productCode: payload.productNumber,
+      productName: payload.productName,
+      valid: true
+    }
+    yield call(api.postNewProduct, productData)
   } catch (e) {
     yield console.log("error:", e)
   }
@@ -215,9 +215,19 @@ function* putUserWorker({ payload, id }) {
 
 function* putProductEditPopup({ payload, id }) {
   try {
-    const updateProduct = {}
+    const updateProduct = {
+      packaging: {
+        packagingType: payload.packagingType,
+        size: payload.packagingSize,
+        unit: payload.unit
+      },
+      product: payload.product,
+      productCode: payload.productNumber,
+      productName: payload.productName
+    }
+    // console.log(payload)
     yield call(api.putProduct, id, updateProduct)
-  } catch {
+  } catch (e) {
     yield console.log("error:", e)
   } finally {
     yield put({ type: AT.CLOSE_EDIT_POPUP, payload: null })

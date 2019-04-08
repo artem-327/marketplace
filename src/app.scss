@@ -2,7 +2,6 @@
 @import "./styles/fonts.scss";
 @import "./styles/main.scss";
 
-
 .App {
   font-family: $app-font-family;
 }
@@ -28,11 +27,11 @@
   }
 }
 
-.capitalize{
+.capitalize {
   text-transform: capitalize;
 }
 
-.clearfix{
+.clearfix {
   clear: both;
 }
 
@@ -63,7 +62,6 @@
 }
 .header-top,
 .top-toolbar {
-
   .submenu {
     float: right;
     height: 55px;
@@ -73,7 +71,8 @@
       position: relative;
       top: auto;
       right: auto;
-      transition: border 125ms linear 0ms, padding 125ms linear 0ms, width 250ms linear 125ms, margin 250ms linear 125ms;
+      transition: border 125ms linear 0ms, padding 125ms linear 0ms,
+        width 250ms linear 125ms, margin 250ms linear 125ms;
       overflow: hidden;
       width: 34px;
       height: 55px;
@@ -89,7 +88,8 @@
       }
 
       &.opened {
-        transition: border 125ms linear 250ms, padding 125ms linear 250ms, width 250ms linear 0ms, margin 250ms linear 0ms;
+        transition: border 125ms linear 250ms, padding 125ms linear 250ms,
+          width 250ms linear 0ms, margin 250ms linear 0ms;
         width: 120px;
         margin-right: 0;
         border-bottom: 3px double #2392cb;
@@ -205,7 +205,7 @@
         margin: 0;
         border-radius: 16px;
         padding: 0 7px;
-        background-color: rgba(198,198,198,0.2);
+        background-color: rgba(198, 198, 198, 0.2);
         text-align: right;
         line-height: 22px;
         cursor: pointer;
@@ -219,32 +219,32 @@
   }
 }
 
-.half-form{
+.half-form {
   display: inline-block;
   width: 50%;
-  &.left{
+  &.left {
     padding-right: 10px;
   }
-  &.right{
+  &.right {
     padding-left: 10px;
   }
 }
 
-.App-main{
+.App-main {
   min-height: 100vh;
 }
 
-.App-footer{
-position: absolute;
+.App-footer {
+  position: absolute;
   left: 50%;
   bottom: 20px;
   margin: auto;
 }
 
-.input-label{
+.input-label {
   font-size: 1rem;
   display: block;
-  &.bigger{
+  &.bigger {
     font-size: 1.2rem;
   }
 }
@@ -265,7 +265,7 @@ position: absolute;
       background-color: #489546;
     }
   }
-  &.grey{
+  &.grey {
     background-color: $beige-color;
     color: $grey-color;
 
@@ -273,7 +273,8 @@ position: absolute;
       background-color: darken($beige-color, 19.25%);
     }
   }
-  &:hover, &:focus{
+  &:hover,
+  &:focus {
     cursor: pointer;
     border-color: #0d82bf;
     box-shadow: none;
@@ -309,10 +310,10 @@ position: absolute;
     padding: 0 27px;
     font-size: 1.25em;
   }
-  &.disabled{
+  &.disabled {
     background-color: #cfe6f3;
   }
-  &.hidden{
+  &.hidden {
     display: none;
   }
 }
@@ -322,65 +323,68 @@ position: absolute;
   height: 130px;
   min-height: 60px;
   border-radius: 4px;
-  border: 1px solid #B0B0B0;
+  border: 1px solid #b0b0b0;
   padding: 7px;
   font-size: 0.875rem !important;
-  &:hover, &:focus{
+  &:hover,
+  &:focus {
     border-color: #289ada;
     box-shadow: none;
     outline: none;
   }
-  &.bigger{
+  &.bigger {
     padding: 12px 7px;
     font-size: 1.2rem;
   }
-  &[type='number']{
+  &[type="number"] {
     font-size: 1rem;
     border-radius: 4px;
-    border: 1px solid #B0B0B0;
+    border: 1px solid #b0b0b0;
     padding: 7px;
-    &:hover, &:focus{
+    &:hover,
+    &:focus {
       border-color: #289ada;
       box-shadow: none;
       outline: none;
     }
-    &.bigger{
+    &.bigger {
       padding: 12px 7px;
       font-size: 1.2rem;
     }
   }
 }
 
-
 input {
   width: 192px;
   border-radius: 4px;
-  border: 1px solid #B0B0B0;
+  border: 1px solid #b0b0b0;
   padding: 12px 9px;
   font-size: 0.875rem !important;
   line-height: 1.1429 !important;
 
-  &:hover, &:focus{
+  &:hover,
+  &:focus {
     border-color: #289ada;
     box-shadow: none;
     outline: none;
   }
-  &.bigger{
+  &.bigger {
     padding: 12px 7px;
     font-size: 1.2rem;
   }
-  &[type='number']{
+  &[type="number"] {
     font-size: 1rem;
     border-radius: 4px;
-    border: 1px solid #B0B0B0;
+    border: 1px solid #b0b0b0;
     padding: 12px 9px;
 
-    &:hover, &:focus{
+    &:hover,
+    &:focus {
       border-color: #289ada;
       box-shadow: none;
       outline: none;
     }
-    &.bigger{
+    &.bigger {
       padding: 12px 7px;
       font-size: 1.2rem;
     }
@@ -401,16 +405,20 @@ input {
   }
 }
 
-::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+::-webkit-input-placeholder {
+  /* Chrome/Opera/Safari */
   color: #a8a8a8;
 }
-::-moz-placeholder { /* Firefox 19+ */
+::-moz-placeholder {
+  /* Firefox 19+ */
   color: #a8a8a8;
 }
-:-ms-input-placeholder { /* IE 10+ */
+:-ms-input-placeholder {
+  /* IE 10+ */
   color: #a8a8a8;
 }
-:-moz-placeholder { /* Firefox 18- */
+:-moz-placeholder {
+  /* Firefox 18- */
   color: #a8a8a8;
 }
 .conMess {
@@ -420,7 +428,7 @@ input {
 .warningLabel {
   position: relative;
   display: inline-block;
-  .warningBody{
+  .warningBody {
     position: absolute;
     left: 10px;
     top: -25px;
@@ -431,7 +439,7 @@ input {
     height: 40px;
     width: 300px;
   }
-  .warningBody2{
+  .warningBody2 {
     position: absolute;
     left: 0px;
     top: -25px;
@@ -442,7 +450,7 @@ input {
     height: 40px;
     width: 300px;
   }
-  .warningBody3{
+  .warningBody3 {
     position: absolute;
     left: 0px;
     top: -25px;
@@ -454,12 +462,12 @@ input {
     width: 400px;
   }
 
-  label{
+  label {
     display: inline-block;
     width: calc(100% - 40px);
     float: right;
   }
-  .warning-icon{
+  .warning-icon {
     font-weight: bold;
     color: #dc3545;
     border: 1px solid #dc3545;
@@ -472,13 +480,13 @@ input {
   }
 }
 
-.errors-handler{
+.errors-handler {
   position: fixed;
   z-index: 998;
   text-align: center;
   width: 100%;
   bottom: 200px;
-  .error-close{
+  .error-close {
     position: absolute;
     width: 12px;
     height: 12px;
@@ -487,18 +495,18 @@ input {
     top: 4px;
     background: url("./images/cross.svg") no-repeat center center;
     background-size: contain;
-    transition: all .2s ease;
-    &:hover{
+    transition: all 0.2s ease;
+    &:hover {
       transform: rotate(-180deg);
       cursor: pointer;
     }
   }
-  .error-item{
-    p{
+  .error-item {
+    p {
       position: relative;
-      -webkit-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.2);
-      -moz-box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.2);
-      box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.2);
+      -webkit-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.2);
+      -moz-box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.2);
+      box-shadow: 0px 5px 5px 0px rgba(0, 0, 0, 0.2);
       padding: 10px 30px;
       background-color: #e0463c;
       border-radius: 6px;
@@ -622,7 +630,3 @@ i {
 .activeSearchResult {
   background-color: #f5f5f5;
 }
-
-
-
-

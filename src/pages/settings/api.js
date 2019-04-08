@@ -16,6 +16,8 @@ export default {
       .then(response => response.data),
   getProductsCatalog: () =>
     api.get("/prodex/api/product-templates").then(response => response.data),
+  getProductTypes: () =>
+    api.get("/prodex/api/packaging-types").then(response => response.data),
   getProductsWithRequiredParamPar: char =>
     api
       .get(`/prodex/api/product-templates?search=${char}`)

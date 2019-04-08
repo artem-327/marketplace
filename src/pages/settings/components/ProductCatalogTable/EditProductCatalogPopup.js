@@ -1,12 +1,15 @@
 import React from "react"
 import { connect } from "react-redux"
-import _ from "lodash"
+import filter from "lodash/filter"
+import escapeRegExp from "lodash/escapeRegExp"
+import debounce from "lodash/debounce"
 
 import { Modal, FormGroup, Search, Label } from "semantic-ui-react"
 
 import { closeEditPopup, handleSubmitProductEditPopup } from "../../actions"
-import { Form, Input, Button } from "formik-semantic-ui"
+import { Form, Input, Button, Dropdown } from "formik-semantic-ui"
 import * as Yup from "yup"
+import "./styles.scss"
 
 const formValidation = Yup.object().shape({
   productName: Yup.string()
@@ -23,19 +26,27 @@ const formValidation = Yup.object().shape({
     .required("Required")
 })
 
-const resultRenderer = ({ casProduct }) => <Label content={casProduct} />
+const resultRenderer = ({ casProduct, id }) => (
+  <Label content={casProduct} key={id} />
+)
 
 class AddNewUsersPopup extends React.Component {
-  constructor(props) {
-    super(props)
-    this.source = { ...this.props.productsCatalogRows }
-  }
   componentWillMount() {
     this.resetComponent()
   }
 
+  handleCasProduct = () => {
+    return this.props.productsCatalogRows.map(e => ({
+      casProduct: e.casProduct
+    }))
+  }
+
   resetComponent = () =>
-    this.setState({ isLoading: false, results: [], value: "" })
+    this.setState({
+      isLoading: false,
+      results: [],
+      value: this.props.popupValues.casProduct
+    })
 
   handleResultSelect = (e, { result }) =>
     this.setState({ value: result.casProduct })
@@ -44,14 +55,14 @@ class AddNewUsersPopup extends React.Component {
     this.setState({ isLoading: true, value })
 
     setTimeout(() => {
-      if (this.state.value.length < 1) return this.resetComponent()
+      // if (this.state.value.length < 1) return this.resetComponent()
 
-      const re = new RegExp(_.escapeRegExp(this.state.value), "i")
+      const re = new RegExp(escapeRegExp(this.state.value), "i")
       const isMatch = result => re.test(result.casProduct)
 
       this.setState({
         isLoading: false,
-        results: _.filter(this.source, isMatch)
+        results: filter(this.handleCasProduct(), isMatch)
       })
     }, 300)
   }
@@ -76,22 +87,27 @@ class AddNewUsersPopup extends React.Component {
             validationSchema={formValidation}
             onReset={closeEditPopup}
             onSubmit={(values, actions) => {
-              const newValue = { ...values, value }
-              handleSubmitProductEditPopup(newValue, popupValues.id)
+              console.log("values", values)
+              handleSubmitProductEditPopup({
+                ...values,
+                casProduct: value,
+                id: popupValues.id
+              })
               actions.setSubmitting(false)
             }}
           >
-            <FormGroup widths="equal">
+            <FormGroup widths="equal" className="customFormGroup">
+              <label>CAS Number / Product Search</label>
               <Search
+                className="customSearch"
                 loading={isLoading}
                 onResultSelect={this.handleResultSelect}
-                onSearchChange={_.debounce(this.handleSearchChange, 500, {
+                onSearchChange={debounce(this.handleSearchChange, 500, {
                   leading: true
                 })}
                 results={results}
                 value={value}
                 resultRenderer={resultRenderer}
-                {...this.props}
               />
             </FormGroup>
             <FormGroup widths="equal">
@@ -99,7 +115,17 @@ class AddNewUsersPopup extends React.Component {
               <Input type="text" label="Product Number" name="productNumber" />
             </FormGroup>
             <FormGroup widths="equal">
-              <Input type="text" label="Packaging Type" name="packagingType" />
+              <Dropdown
+                label="Packaging Type"
+                name="packagingType"
+                options={[
+                  { text: "gallons", value: "gallons" },
+                  { text: "kilograms", value: "kilograms" },
+                  { text: "liters", value: "liters" },
+                  { text: "milliliters", value: "milliliters" },
+                  { text: "pounds", value: "pounds" }
+                ]}
+              />
               <Input type="text" label="Packaging Size" name="packagingSize" />
             </FormGroup>
             <div style={{ textAlign: "right" }}>
