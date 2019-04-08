@@ -77,7 +77,7 @@ class AddNewUsersPopup extends React.Component {
     const { isLoading, results, value } = this.state
     const initialFormValues = {
       ...popupValues,
-      packagingType: 5
+      packagingType: ""
     }
     console.log("initialFormValues", initialFormValues)
 
