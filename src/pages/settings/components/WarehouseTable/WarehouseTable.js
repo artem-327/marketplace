@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import ProdexGrid from "~/components/table";
-import { Confirm } from "semantic-ui-react";
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import ProdexGrid from "~/components/table"
+import { Confirm } from "semantic-ui-react"
 import {
   getWarehousesDataRequest,
   openEditPopup,
   closeConfirmPopup,
   deleteConfirmation,
   handleOpenConfirmPopup
-} from "../../actions";
+} from "../../actions"
 
 class WarehouseTable extends Component {
   state = {
@@ -19,10 +19,10 @@ class WarehouseTable extends Component {
       { name: "phone", title: "Phone" },
       { name: "email", title: "E-mail" }
     ]
-  };
+  }
 
   componentDidMount() {
-    this.props.getWarehousesDataRequest();
+    this.props.getWarehousesDataRequest()
   }
 
   render() {
@@ -34,9 +34,9 @@ class WarehouseTable extends Component {
       deleteConfirmation,
       confirmMessage,
       handleOpenConfirmPopup
-    } = this.props;
+    } = this.props
 
-    const { columns } = this.state;
+    const { columns } = this.state
 
     return (
       <React.Fragment>
@@ -57,7 +57,7 @@ class WarehouseTable extends Component {
           ]}
         />
       </React.Fragment>
-    );
+    )
   }
 }
 
@@ -68,7 +68,7 @@ const mapDispatchToProps = {
   closeConfirmPopup,
   deleteConfirmation,
   handleOpenConfirmPopup
-};
+}
 
 const mapStateToProps = state => {
   return {
@@ -78,10 +78,10 @@ const mapStateToProps = state => {
     addNewWarehousePopup: state.settings.addNewWarehousePopup,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(WarehouseTable);
+)(WarehouseTable)

@@ -8,7 +8,7 @@ import EN from '../localization/en.json'
 import NProgress from 'nprogress'
 import Router from 'next/router'
 
-import 'semantic-ui-css/semantic.min.css'
+import '~/semantic/dist/semantic.css'
 import '~/styles/base.scss'
 import 'nprogress/nprogress.css'
 

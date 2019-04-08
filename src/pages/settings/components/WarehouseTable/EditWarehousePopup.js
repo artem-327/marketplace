@@ -53,7 +53,7 @@ class EditWarehousePopup extends React.Component {
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>Edit user profile</Modal.Header>
+        <Modal.Header>Edit Warehouse</Modal.Header>
         <Modal.Content>
           <Form
             initialValues={initialFormValues}

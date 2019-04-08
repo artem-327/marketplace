@@ -35,7 +35,7 @@ export default function reducer(state = initialState, action) {
       return { ...state,
         identity: payload.identity, 
         loginForm: { ...loginForm,
-          isLoading: false
+          // isLoading: false
         }
       }
     }
