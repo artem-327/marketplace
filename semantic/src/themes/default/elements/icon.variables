@@ -44,6 +44,17 @@
 ;
 @brandFallbackSRC: url("@{fontPath}/@{brandFontName}.eot");
 
+@importLightIcons: true;
+@lightFontName: 'thin-icons';
+@lightSrc:
+  url("@{fontPath}/@{lightFontName}.eot?#iefix") format('embedded-opentype'),
+  url("@{fontPath}/@{lightFontName}.woff2") format('woff2'),
+  url("@{fontPath}/@{lightFontName}.woff") format('woff'),
+  url("@{fontPath}/@{lightFontName}.ttf") format('truetype'),
+  url("@{fontPath}/@{lightFontName}.svg#icons") format('svg')
+;
+@lightallbackSRC: url("@{fontPath}/@{lightFontName}.eot");
+
 /*--------------
    Definition
 ---------------*/
