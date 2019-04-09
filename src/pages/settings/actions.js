@@ -85,6 +85,14 @@ export function handleSubmitEditPopup(warehouseData, branchId) {
   }
 }
 
+export function handlerSubmitWarehouseEditPopup(warehouseData, id) {
+  return {
+    type: AT.PUT_WAREHOUSE_EDIT_POPUP,
+    payload: warehouseData,
+    id
+  }
+}
+
 export function handleSubmitProductEditPopup(productData, id) {
   return {
     type: AT.PUT_PRODUCT_EDIT_POPUP,

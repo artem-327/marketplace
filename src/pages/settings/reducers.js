@@ -1,5 +1,5 @@
-import * as AT from "./action-types"
-import get from "lodash/get"
+import * as AT from './action-types'
+import get from 'lodash/get'
 
 export const initialState = {
   editPopupBoolean: false,
@@ -13,32 +13,32 @@ export const initialState = {
   productsCatalogRows: [],
   productsPackagingType: [],
   columnsForFormatter: {
-    checkboxColumns: ["checkbox"],
-    permissionsColumns: ["permissions"],
-    editDeleteColumns: ["editDeleteBtn"]
+    checkboxColumns: ['checkbox'],
+    permissionsColumns: ['permissions'],
+    editDeleteColumns: ['editDeleteBtn']
   },
   tabsNames: [
-    { name: "Users", id: 1 },
-    { name: "Branches", id: 2 },
-    { name: "Warehouses", id: 3 },
-    { name: "Product catalog", id: 4 },
-    { name: "Global Broadcast", id: 5 },
+    { name: 'Users', id: 1 },
+    { name: 'Branches', id: 2 },
+    { name: 'Warehouses', id: 3 },
+    { name: 'Product catalog', id: 4 },
+    { name: 'Global Broadcast', id: 5 },
     //{ name: "Client list", id: 6 }, // removed #29771
-    { name: "Credit cards", id: 7 },
-    { name: "Bank accounts", id: 8 }
+    { name: 'Credit cards', id: 7 },
+    { name: 'Bank accounts', id: 8 }
     //{ name: "Tax manager", id: 9 }, // removed #29771
     //{ name: "Terms", id: 10 }, // removed #29771
     //{ name: "Website Controls", id: 11 } // removed #29771
   ],
   // currentTab: "Product catalog",
-  currentTab: "Users",
+  currentTab: 'Users',
   currentEditForm: null,
   currentAddForm: null,
   confirmMessage: null,
   toast: { message: null, isSuccess: null },
   deleteUserById: null,
   deleteRowByid: null,
-  filterValue: "",
+  filterValue: '',
   editPopupSearchProducts: []
 }
 
@@ -128,13 +128,13 @@ export default function reducer(state = initialState, action) {
     case AT.GET_USERS_DATA_SUCCESS: {
       const usersRows = action.payload.map(user => {
         return {
-          checkbox: " ",
-          userName: user.firstname + " " + user.lastname,
-          title: "title",
+          checkbox: ' ',
+          userName: user.firstname + ' ' + user.lastname,
+          title: 'title',
           email: user.email,
-          phone: "phone",
-          homeBranch: user.branch ? user.branch.address.province.name : "",
-          permissions: user.roles ? user.roles.name : "",
+          phone: 'phone',
+          homeBranch: user.branch ? user.branch.address.province.name : '',
+          permissions: user.roles ? user.roles.name : '',
           middleName: user.middlename,
           id: user.id
         }
@@ -146,18 +146,27 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_WAREHOUSES_DATA_SUCCESS: {
-      const warehousesRows = action.payload.map(warehouse => {
-        return {
-          warehouseName: warehouse.name,
-          address:
-            warehouse.address.streetAddress + ", " + warehouse.address.city,
-          contactName: warehouse.contact.name,
-          phone: warehouse.contact.phone,
-          email: warehouse.contact.email,
-          branchId: warehouse.id,
-          id: warehouse.id
+      const warehousesRows = action.payload.map(warehouse => ({
+        warehouseName: warehouse.name,
+        address:
+          warehouse.address.streetAddress + ', ' + warehouse.address.city,
+        contactName: warehouse.contact.name,
+        phone: warehouse.contact.phone,
+        email: warehouse.contact.email,
+        branchId: warehouse.id,
+        id: warehouse.id
+      }))
+
+      warehousesRows.forEach(element => {
+        // console.log(element)
+        for (let key in element) {
+          console.log(element[key])
+          if (element[key] === 'unknown') {
+            element[key] = ''
+          }
         }
       })
+      console.log(warehousesRows)
 
       return {
         ...state,
@@ -169,7 +178,7 @@ export default function reducer(state = initialState, action) {
       const rows = action.payload.map(branch => {
         return {
           warehouseName: branch.name,
-          address: branch.address.streetAddress + ", " + branch.address.city,
+          address: branch.address.streetAddress + ', ' + branch.address.city,
           contactName: branch.contact.name,
           phone: branch.contact.phone,
           email: branch.contact.email,
@@ -235,7 +244,9 @@ export default function reducer(state = initialState, action) {
               ? product.casProduct.casNumber
               : null
             : null,
-          packagingType: product.packagingType,
+          packagingType: product.packagingType
+            ? product.packagingType.name
+            : null,
           // packagingType: packaging
           //   ? product.packaging.packagingType
           //     ? product.packaging.packagingType.name
@@ -253,8 +264,8 @@ export default function reducer(state = initialState, action) {
       })
       return {
         ...state,
-        productsCatalogRows: rows,
-        productsPackagingType: packagingType
+        productsCatalogRows: rows
+        // productsPackagingType: packagingType
       }
     }
 
@@ -267,7 +278,7 @@ export default function reducer(state = initialState, action) {
           productId: item.product.id,
           packagingType:
             item.packaging.packagingType === undefined
-              ? ""
+              ? ''
               : item.packaging.packagingType.name,
           packagingSize: item.packaging.size
         }

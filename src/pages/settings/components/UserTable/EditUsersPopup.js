@@ -37,7 +37,7 @@ class AddNewUsersPopup extends React.Component {
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>Edit user profile</Modal.Header>
+        <Modal.Header>Edit user</Modal.Header>
         <Modal.Content>
           <Form
             initialValues={initialFormValues}

@@ -1,37 +1,41 @@
-import React from "react"
-import { connect } from "react-redux"
+import React from 'react'
+import { connect } from 'react-redux'
 
-import { Modal, FormGroup } from "semantic-ui-react"
+import { Modal, FormGroup } from 'semantic-ui-react'
 
-import { closeAddPopup, handleSubmitEditPopup } from "../../actions"
-import { Form, Input, Button } from "formik-semantic-ui"
-import * as Yup from "yup"
+import { closeAddPopup, handlerSubmitWarehouseEditPopup } from '../../actions'
+import { Form, Input, Button } from 'formik-semantic-ui'
+import * as Yup from 'yup'
 
 const formValidation = Yup.object().shape({
   warehouseName: Yup.string()
-    .min(3, "Too short")
-    .required("Required"),
+    .min(3, 'Too short')
+    .required('Required'),
   contactName: Yup.string()
-    .min(3, "Too short")
-    .required("Required"),
+    .min(3, 'Too short')
+    .required('Required'),
   address: Yup.string()
-    .min(3, "Too short")
-    .required("Required"),
+    .min(3, 'Too short')
+    .required('Required'),
   city: Yup.string()
-    .min(3, "Too short")
-    .required("Required"),
+    .min(3, 'Too short')
+    .required('Required'),
   phone: Yup.string()
-    .min(3, "Too short")
-    .required("Required"),
+    .min(3, 'Too short')
+    .required('Required'),
   email: Yup.string()
-    .email("Invalid email")
-    .required("Emails is required")
+    .email('Invalid email')
+    .required('Emails is required')
 })
 
 class EditWarehousePopup extends React.Component {
   render() {
-    const { closeAddPopup, handleSubmitEditPopup, popupValues } = this.props
-    const [address, city] = popupValues.address.split(",")
+    const {
+      closeAddPopup,
+      handlerSubmitWarehouseEditPopup,
+      popupValues
+    } = this.props
+    const [address, city] = popupValues.address.split(',')
     // const { middleName, email, id } = popupValues;
     const {
       warehouseName,
@@ -49,7 +53,7 @@ class EditWarehousePopup extends React.Component {
       email
     }
 
-    console.log("Popup id", branchId)
+    console.log('Popup id', branchId)
 
     return (
       <Modal open centered={false}>
@@ -60,7 +64,7 @@ class EditWarehousePopup extends React.Component {
             validationSchema={formValidation}
             onReset={closeAddPopup}
             onSubmit={(values, actions) => {
-              handleSubmitEditPopup(values, branchId)
+              handlerSubmitWarehouseEditPopup(values, branchId)
               actions.setSubmitting(false)
             }}
           >
@@ -74,9 +78,9 @@ class EditWarehousePopup extends React.Component {
             </FormGroup>
             <FormGroup widths="equal">
               <Input type="text" label="Phone" name="phone" />
-              <Input type="text" label="e-mail" name="email" />
+              <Input type="text" label="E-mail" name="email" />
             </FormGroup>
-            <div style={{ textAlign: "right" }}>
+            <div style={{ textAlign: 'right' }}>
               <Button.Reset onClick={closeAddPopup}>Cancel</Button.Reset>
               <Button.Submit>Save</Button.Submit>
             </div>
@@ -89,7 +93,7 @@ class EditWarehousePopup extends React.Component {
 
 const mapDispatchToProps = {
   closeAddPopup,
-  handleSubmitEditPopup
+  handlerSubmitWarehouseEditPopup
 }
 const mapStateToProps = state => {
   return {

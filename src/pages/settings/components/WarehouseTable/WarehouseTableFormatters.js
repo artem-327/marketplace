@@ -1,8 +1,8 @@
-import React from "react";
-import { connect } from "react-redux";
-import { Dropdown } from "semantic-ui-react";
+import React from 'react'
+import { connect } from 'react-redux'
+import { Dropdown } from 'semantic-ui-react'
 
-import { openEditPopup, deleteWarehouse } from "../../actions";
+import { openEditPopup, deleteWarehouse } from '../../actions'
 
 function editDeleteCell({ row, deleteWarehouse, openEditPopup }) {
   return (
@@ -15,15 +15,15 @@ function editDeleteCell({ row, deleteWarehouse, openEditPopup }) {
         />
       </Dropdown.Menu>
     </Dropdown>
-  );
+  )
 }
 
 const mapDispatchToProps = {
   openEditPopup,
   deleteWarehouse
-};
+}
 
 export const editDeleteCellFormatter = connect(
   null,
   mapDispatchToProps
-)(editDeleteCell);
+)(editDeleteCell)

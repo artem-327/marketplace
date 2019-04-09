@@ -285,7 +285,7 @@ class AddNewUsersPopup extends React.Component {
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>Create new product catalog</Modal.Header>
+        <Modal.Header>Add product catalog</Modal.Header>
         <Modal.Content>
           <Form
             // initialValues={initialFormValues}
