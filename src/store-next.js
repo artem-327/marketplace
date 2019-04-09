@@ -29,6 +29,7 @@ import location from './modules/location'
 import errors from "./modules/errors"
 import dataTables from "./modules/dataTables"
 import settings from './pages/settings/reducers'
+import admin from './pages/admin/reducers'
 
 import { show as saveFilterItem } from './components/Filter/components/SavedFilters/reducers/SaveFilterItem.reducers'
 import companiesSaga from "./saga/companies"
@@ -42,6 +43,7 @@ import broadcastSaga from "./saga/broadcast"
 import productOffersSaga from "./saga/productOffers"
 import shippingQuotesSaga from "./saga/shippingQuotes"
 import settingsSaga from "./pages/settings/saga"
+import adminSaga from "./pages/admin/saga"
 
 // Simple Add/Edit Inventory
 import simpleAdd from  '~/modules/inventory/reducer'
@@ -54,6 +56,7 @@ import auth from '~/modules/auth/reducer'
 
 const reducer = combineReducers({
   auth,
+  admin,
   identity,
   brcRules,
   companies,
@@ -146,6 +149,7 @@ export const makeStore = (preloadedState) => {
   //sagaMiddleware.run(simpleAddSaga)
   sagaMiddleware.run(ordersSaga)
   sagaMiddleware.run(settingsSaga)
+  sagaMiddleware.run(adminSaga)
   
   return store
 }

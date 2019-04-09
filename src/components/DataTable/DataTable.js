@@ -17,6 +17,7 @@ class DataTable extends Component {
     let header = this.props.headerInit.map((item, index) => ({
       index: index,
       name: item.name,
+      align: item.align ? item.align : '',
       sort: item.sort !== undefined ? item.sort : true,
       visible: item.visible !== undefined ? item.visible : true
     }));

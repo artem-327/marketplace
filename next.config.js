@@ -11,7 +11,7 @@ module.exports = withCss(withSass({
       use: {
         loader: 'url-loader',
         options: {
-          limit: 100000,
+          limit: 3000000, // TODO: lower limit - if MIUN approve only woff2 (or any other better compressed) format
           name: '[name].[ext]'
         }
       }

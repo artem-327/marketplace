@@ -7,7 +7,7 @@ import Logo from '~/assets/images/nav/inventory.png'
 import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
 import PopUp from '~/src/components/PopUp'
-import cn from "classnames";
+import cn from "classnames"
 
 const TopMenu = styled(Menu)`
   background-color: #33373e !important;
@@ -47,7 +47,7 @@ const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
         <NavigationMenu />
         
         <Menu.Menu position="right" className='black'>
-          <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
+          <Dropdown item icon={{ name: 'user circle outline w-light', size: 'large' }}>
             <Dropdown.Menu>
               <Dropdown.Item as={MenuLink} to="/auth/logout">Logout</Dropdown.Item>
             </Dropdown.Menu>
@@ -58,7 +58,7 @@ const Layout = ({children, router: {pathname}, title = "Echo exchange"}) => (
     
     <ContentContainer fluid className='page-wrapper'>
       {children} 
-    </ContentContainer>   
+    </ContentContainer>
 
   </MainContainer>
 )

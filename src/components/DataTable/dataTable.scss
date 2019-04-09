@@ -111,7 +111,7 @@
   td {
     border-bottom: 1px solid #eeeeee;
     padding: 3px 10px;
-    font-size: 15.5px;
+    font-size: 1em;
   }
 
   tbody {
@@ -119,8 +119,11 @@
       td {
         height: 36px;
         padding: 9px 10px;
-        font-size: 0.875em;
         line-height: 17px;
+
+        &.a-center {
+          text-align: center;
+        }
 
         i.icon {
           overflow: hidden;
@@ -265,7 +268,12 @@
       font-weight: 500;
       color: #ffffff;
       padding: 13px 10px 12px;
+      text-align: left;
       line-height: 17px;
+
+      &.a-center {
+        text-align: center;
+      }
 
       &.data-table-select {
         padding: 12px 10px;

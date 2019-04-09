@@ -3,23 +3,18 @@ import {LoginForm} from '~/modules/auth'
 import defaultPage from '~/hocs/defaultPage'
 import styled from 'styled-components'
 import Layout from '~/components/LayoutUnauthorized'
+// import '~/styles/login.scss'
 
 const Container = styled.div`
   padding: 60px 0;
 `
 class Login extends Component {
-  componentWillMount() {
-    //document.body.classList.add("login");
-  }
-
-  componentWillUnmount() {
-    //document.body.classList.remove("login");
-  }
 
   render() {
     return (
       <Layout>
         <Container>
+          <style jsx global>{`body {background: #f2f2f2;}`}</style>
           <LoginForm />
         </Container>
       </Layout>

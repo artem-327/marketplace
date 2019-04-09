@@ -32,6 +32,8 @@
     "js-cookie": "^2.2.0",
     "jsonwebtoken": "^8.3.0",
     "jwt-decode": "^2.2.0",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "next": "^8.0.3",
@@ -70,10 +72,9 @@
     "redux-thunk": "^2.3.0",
     "sass-loader": "^7.1.0",
     "scroll-to-element": "^2.0.2",
-    "semantic-ui-calendar-react": "^0.14.4",
-    "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.86.0",
     "styled-components": "^4.2.0",
+    "styled-jsx": "^3.2.1",
     "url-loader": "^1.1.2",
     "webpack": "^4.29.6",
     "xlsx": "^0.12.13",
@@ -82,7 +83,9 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js"
+    "start": "NODE_ENV=production node server.js",
+    "semantic:build": "cd semantic && gulp build",
+    "semantic": "cd semantic && gulp watch"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
@@ -90,7 +93,9 @@
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-react": "^7.12.4",
-    "react-intl": "^2.8.0"
+    "gulp": "^3.0.0",
+    "react-intl": "^2.8.0",
+    "semantic-ui": "^2.4.2"
   },
   "browserslist": [
     ">0.2%",
