@@ -21,7 +21,7 @@ const formValidation = Yup.object().shape({
     .min(3, 'Too short')
     .required('Required'),
   country: Yup.string()
-    .min(3, 'Too short')
+    .min(1, 'Too short')
     .required('Required')
 })
 
@@ -34,10 +34,10 @@ class EditWarehousePopup extends React.Component {
       country
     } = this.props
     const [address, city] = popupValues.address.split(',')
-    // const { middleName, email, id } = popupValues;
     const {
       warehouseName,
       contactName,
+      countryId,
       phone,
       email,
       id: branchId
@@ -48,10 +48,11 @@ class EditWarehousePopup extends React.Component {
       address,
       city,
       phone,
-      email
+      email,
+      country: countryId
     }
 
-    console.log('Popup id', branchId)
+    console.log('Popup id', country.countryId)
 
     return (
       <Modal open centered={false}>

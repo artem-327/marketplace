@@ -151,6 +151,7 @@ export default function reducer(state = initialState, action) {
         warehouseName: warehouse.name,
         address:
           warehouse.address.streetAddress + ', ' + warehouse.address.city,
+        countryId: warehouse.address.country.id,
         contactName: warehouse.contact.name,
         phone: warehouse.contact.phone,
         email: warehouse.contact.email,

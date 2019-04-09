@@ -117,7 +117,7 @@ function* postNewWarehouseWorker({ payload }) {
       // accessorials: [0],
       address: {
         city: payload.address,
-        country: 1,
+        country: payload.country,
         province: 44,
         streetAddress: payload.city,
         zip: payload.zipCode
@@ -248,6 +248,7 @@ function* putWarehouseEditPopup({ payload, id }) {
       warehouse: true,
       warehouseName: payload.warehouseName
     }
+    yield put({ type: AT.CLOSE_EDIT_POPUP, payload: null })
     yield call(api.putWarehouse, id, dataBody)
   } catch (e) {
     yield console.log('error:', e)

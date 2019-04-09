@@ -86,6 +86,7 @@ export function handleSubmitEditPopup(warehouseData, branchId) {
 }
 
 export function handlerSubmitWarehouseEditPopup(warehouseData, id) {
+  console.log('warehouseData', warehouseData)
   return {
     type: AT.PUT_WAREHOUSE_EDIT_POPUP,
     payload: warehouseData,
@@ -158,7 +159,7 @@ export function postNewUserRequest(userData) {
 }
 
 export function postNewWarehouseRequest(warehouseData) {
-  console.log('SADASDASDASDASD')
+  console.log('SADASDASDASDASD', warehouseData)
   return {
     type: AT.POST_NEW_WAREHOUSE_REQUEST,
     payload: warehouseData
