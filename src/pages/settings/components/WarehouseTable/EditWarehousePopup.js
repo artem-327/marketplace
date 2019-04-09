@@ -51,8 +51,6 @@ class EditWarehousePopup extends React.Component {
       email
     }
 
-    console.log('Popup id', branchId)
-
     return (
       <Modal open centered={false}>
         <Modal.Header>Edit Warehouse</Modal.Header>

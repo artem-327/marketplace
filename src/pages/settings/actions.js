@@ -158,7 +158,6 @@ export function postNewUserRequest(userData) {
 }
 
 export function postNewWarehouseRequest(warehouseData) {
-  console.log('SADASDASDASDASD')
   return {
     type: AT.POST_NEW_WAREHOUSE_REQUEST,
     payload: warehouseData
