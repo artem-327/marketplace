@@ -11,7 +11,9 @@ module.exports = withCss(withSass({
       use: {
         loader: 'url-loader',
         options: {
-          limit: 100000,
+          limit: 8192,
+          publicPath: '/_next/static/',
+          outputPath: 'static/',
           name: '[name].[ext]'
         }
       }

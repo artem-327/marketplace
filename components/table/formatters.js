@@ -6,7 +6,7 @@ import { Dropdown } from 'semantic-ui-react'
 export function rowActionsCellFormatter({column: {actions}, row}) {
   
 	return (
-		<Dropdown icon='ellipsis vertical'>
+		<Dropdown icon='ellipsis vertical large'>
 			<Dropdown.Menu>
         {actions.map((a,i) => (
           <Dropdown.Item 

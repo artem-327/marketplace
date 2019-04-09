@@ -8,6 +8,10 @@ body {
   font-family: 'HelveticaNeueLTPro';
 }
 
+i.icon:not(.dropdown) {
+  font-family: 'thin-icons' !important;
+}
+
 div.page-wrapper {
   width: 100%;
   padding: 0 2.2857143em;
