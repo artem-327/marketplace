@@ -1,7 +1,8 @@
-import React from "react"
-import { Message } from "semantic-ui-react"
-import { connect } from "react-redux"
-import { closeToast } from "../../src/pages/settings/actions"
+import './style.scss'
+import React from 'react'
+import { Message } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { closeToast } from '../../src/pages/settings/actions'
 
 const Toast = ({ message, wasSuccess, closeToast }) =>
   message ? (
@@ -11,6 +12,7 @@ const Toast = ({ message, wasSuccess, closeToast }) =>
       error={!wasSuccess}
       header="Removal request"
       content={message}
+      className="toast-custom-style"
     />
   ) : null
 

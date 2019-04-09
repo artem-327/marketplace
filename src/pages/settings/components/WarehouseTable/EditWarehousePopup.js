@@ -4,14 +4,11 @@ import { connect } from 'react-redux'
 import { Modal, FormGroup } from 'semantic-ui-react'
 
 import { closeAddPopup, handlerSubmitWarehouseEditPopup } from '../../actions'
-import { Form, Input, Button } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 const formValidation = Yup.object().shape({
   warehouseName: Yup.string()
-    .min(3, 'Too short')
-    .required('Required'),
-  contactName: Yup.string()
     .min(3, 'Too short')
     .required('Required'),
   address: Yup.string()
@@ -23,9 +20,9 @@ const formValidation = Yup.object().shape({
   phone: Yup.string()
     .min(3, 'Too short')
     .required('Required'),
-  email: Yup.string()
-    .email('Invalid email')
-    .required('Emails is required')
+  country: Yup.string()
+    .min(3, 'Too short')
+    .required('Required')
 })
 
 class EditWarehousePopup extends React.Component {
@@ -33,7 +30,8 @@ class EditWarehousePopup extends React.Component {
     const {
       closeAddPopup,
       handlerSubmitWarehouseEditPopup,
-      popupValues
+      popupValues,
+      country
     } = this.props
     const [address, city] = popupValues.address.split(',')
     // const { middleName, email, id } = popupValues;
@@ -80,6 +78,9 @@ class EditWarehousePopup extends React.Component {
               <Input type="text" label="Phone" name="phone" />
               <Input type="text" label="E-mail" name="email" />
             </FormGroup>
+            <FormGroup>
+              <Dropdown label="Country" name="country" options={country} />
+            </FormGroup>
             <div style={{ textAlign: 'right' }}>
               <Button.Reset onClick={closeAddPopup}>Cancel</Button.Reset>
               <Button.Submit>Save</Button.Submit>
@@ -97,7 +98,8 @@ const mapDispatchToProps = {
 }
 const mapStateToProps = state => {
   return {
-    popupValues: state.settings.popupValues
+    popupValues: state.settings.popupValues,
+    country: state.settings.country
   }
 }
 

@@ -22,6 +22,8 @@ export default {
     api
       .get(`/prodex/api/product-templates?search=${char}`)
       .then(response => response.data),
+  getCountry: () =>
+    api.get('/prodex/api/countries').then(response => response.data),
 
   postNewUser: body => api.post('/prodex/api/users', body),
   postNewWarehouse: body => api.post('/prodex/api/branches/', body),

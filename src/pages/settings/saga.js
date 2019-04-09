@@ -20,7 +20,17 @@ function* getUsersDataWorker() {
 function* getWarehousesDataWorker() {
   try {
     const warehouses = yield call(api.getWarehouses)
-    yield put({ type: AT.GET_WAREHOUSES_DATA_SUCCESS, payload: warehouses })
+    const country = yield call(api.getCountry)
+    const newCountryFormat = country.map(country => {
+      return {
+        text: country.name,
+        value: country.id
+      }
+    })
+    yield put({
+      type: AT.GET_WAREHOUSES_DATA_SUCCESS,
+      payload: { warehouses, newCountryFormat }
+    })
   } catch (e) {
     yield console.log('error:', e)
   }
@@ -100,6 +110,7 @@ function* postNewUserWorker({ payload }) {
 }
 
 function* postNewWarehouseWorker({ payload }) {
+  console.log(payload)
   try {
     const currentUser = yield call(api.getCurrentUser)
     const dataBody = {
@@ -121,8 +132,10 @@ function* postNewWarehouseWorker({ payload }) {
       warehouseName: payload.warehouseName
     }
     yield call(api.postNewWarehouse, dataBody)
+    yield put(closeAddPopup({ payload: null }))
   } catch (e) {
     yield console.log('error:', e)
+    yield put(closeAddPopup({ payload: null }))
   }
 }
 
@@ -310,16 +323,17 @@ function* deleteConfirmPopup({}) {
         break
       case 'Warehouses':
         yield call(api.deleteWarehouse, deleteRowByid)
-        toast = { message: 'Warehouse delete success', isSuccess: false }
+        toast = { message: 'Warehouse delete success', isSuccess: true }
         break
       case 'Product catalog':
         yield call(api.deleteProduct, deleteRowByid)
+        toast = { message: 'Product delete success', isSuccess: true }
       default:
         break
     }
   } catch (e) {
     yield console.log('error:', e)
-    toast = { message: 'User delete success', isSuccess: true }
+    toast = { message: 'Network error', isSuccess: false }
   } finally {
     yield put(confirmationSuccess())
     yield put({ type: AT.OPEN_TOAST, payload: toast })

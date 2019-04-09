@@ -17,6 +17,7 @@ export const initialState = {
     permissionsColumns: ['permissions'],
     editDeleteColumns: ['editDeleteBtn']
   },
+  country: [],
   tabsNames: [
     { name: 'Users', id: 1 },
     { name: 'Branches', id: 2 },
@@ -146,7 +147,7 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_WAREHOUSES_DATA_SUCCESS: {
-      const warehousesRows = action.payload.map(warehouse => ({
+      const warehousesRows = action.payload.warehouses.map(warehouse => ({
         warehouseName: warehouse.name,
         address:
           warehouse.address.streetAddress + ', ' + warehouse.address.city,
@@ -158,19 +159,17 @@ export default function reducer(state = initialState, action) {
       }))
 
       warehousesRows.forEach(element => {
-        // console.log(element)
         for (let key in element) {
-          console.log(element[key])
           if (element[key] === 'unknown') {
             element[key] = ''
           }
         }
       })
-      console.log(warehousesRows)
 
       return {
         ...state,
-        warehousesRows: warehousesRows
+        warehousesRows: warehousesRows,
+        country: action.payload.newCountryFormat
       }
     }
 

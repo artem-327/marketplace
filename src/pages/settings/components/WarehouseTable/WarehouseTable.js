@@ -1,23 +1,23 @@
-import React, { Component } from "react"
-import { connect } from "react-redux"
-import ProdexGrid from "~/components/table"
-import { Confirm } from "semantic-ui-react"
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import ProdexGrid from '~/components/table'
+import { Confirm } from 'semantic-ui-react'
 import {
   getWarehousesDataRequest,
   openEditPopup,
   closeConfirmPopup,
   deleteConfirmation,
   handleOpenConfirmPopup
-} from "../../actions"
+} from '../../actions'
 
 class WarehouseTable extends Component {
   state = {
     columns: [
-      { name: "warehouseName", title: "Warehouse Name" },
-      { name: "address", title: "Address" },
-      { name: "contactName", title: "Contact Name" },
-      { name: "phone", title: "Phone" },
-      { name: "email", title: "E-mail" }
+      { name: 'warehouseName', title: 'Warehouse Name' },
+      { name: 'address', title: 'Address' },
+      { name: 'contactName', title: 'Contact Name' },
+      { name: 'phone', title: 'Phone' },
+      { name: 'email', title: 'E-mail' }
     ]
   }
 
@@ -52,8 +52,8 @@ class WarehouseTable extends Component {
           columns={columns}
           rows={rows}
           rowActions={[
-            { text: "Edit", callback: row => openEditPopup(row) },
-            { text: "Delete", callback: row => handleOpenConfirmPopup(row.id) }
+            { text: 'Edit', callback: row => openEditPopup(row) },
+            { text: 'Delete', callback: row => handleOpenConfirmPopup(row.id) }
           ]}
         />
       </React.Fragment>
