@@ -13,7 +13,7 @@ function Tabs(props) {
     <Menu pointing secondary vertical fluid>
       {tabsNames.map((tab,i) => (
         <Menu.Item 
-          name={tab.name}
+          name={tab.name.toUpperCase()}
           key={tab.id}
           onClick={() => handleActiveTab(tab.name)}
           active={currentTab === tab.name}

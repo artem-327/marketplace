@@ -96,9 +96,10 @@ function* postNewWarehouseWorker({ payload }) {
     const currentUser = yield call(api.getCurrentUser)
     const dataBody = {
       address: {
-        city: payload.address,
-        province: 44,
-        streetAddress: payload.city,
+        city: payload.city,
+        country: 1,   //! !
+        province: 44, //! !
+        streetAddress: payload.address,
         zip: payload.zipCode
       },
       company: currentUser.company.id,

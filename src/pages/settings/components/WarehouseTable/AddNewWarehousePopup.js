@@ -13,15 +13,31 @@ const initialFormValues = {
   contactName: '',
   address: '',
   city: '',
+  country: '',
   state: '',
   zipCode: '',
   phone: '',
   email: ''
 }
 const formValidation = Yup.object().shape({
-  warehouseName: Yup.string().min(3, "Too short").required("Required"),
-  contactName: Yup.string().min(3, "Too short").required("Required"),
-  email: Yup.string().email("Invalid email").required("Email is required")
+  warehouseName: Yup.string()
+      .min(3, "Too short")
+      .required("Required"),
+  address: Yup.string()
+      .min(3, "Too short")
+      .required("Required"),
+  city: Yup.string()
+      .min(3, "Too short")
+      .required("Required"),
+  country: Yup.string()
+      .min(3, "Too short")
+      .required("Required"),
+  zipCode: Yup.string()
+      .min(3, "Too short")
+      .required("Required"),
+  phone: Yup.string()
+      .min(3, "Too short")
+      .required("Required"),
 })
 
 class AddNewWarehousePopup extends React.Component {
@@ -33,7 +49,7 @@ class AddNewWarehousePopup extends React.Component {
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>Add new warehouse</Modal.Header>
+        <Modal.Header>Add Warehouse</Modal.Header>
         <Modal.Content>
           <Form
             initialValues={initialFormValues}
@@ -44,20 +60,24 @@ class AddNewWarehousePopup extends React.Component {
             }}
           >
             <FormGroup widths="equal">
-              <Input type="text" label="Warehouse name" name="warehouseName" />
+              <Input type="text" label="Warehouse Name" name="warehouseName" />
               <Input type="text" label="Contact Name" name="contactName" />
             </FormGroup>
             <FormGroup widths="equal">
               <Input type="text" label="Address" name="address" />
               <Input type="text" label="City" name="city" />
-              <Input type="text" label="State" name="state" />
-              <Input type="text" label="Zipcode" name="zipCode" />
             </FormGroup>
             <FormGroup widths="equal">
+              <Input type="text" label="Country" name="country" />
+              <Input type="text" label="State" name="state" />
+            </FormGroup>
+            <FormGroup widths="equal">
+              <Input type="text" label="Zip Code" name="zipCode" />
               <Input type="text" label="Phone" name="phone" />
+            </FormGroup>
+            <FormGroup widths="equal">
               <Input type="text" label="Email" name="email" />
             </FormGroup>
-
             <div style={{ textAlign: 'right' }}>
               <Button.Reset>Cancel</Button.Reset>
               <Button.Submit>Save</Button.Submit>

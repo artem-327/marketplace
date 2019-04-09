@@ -77,9 +77,8 @@ class Admin extends Component {
         if (!this.checkAdminRights()) return "Access denied!";
 
         return (
-            <Container fluid style={{ marginTop: 20 }}>
+            <Container fluid>
                 <TablesHandlers />
-                <Divider />
                 <Grid columns='equal'>
                     <Grid.Row>
                         <Grid.Column width={3}>

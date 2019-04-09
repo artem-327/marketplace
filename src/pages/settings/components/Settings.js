@@ -59,9 +59,9 @@ class Settings extends Component {
 			currentEditForm,
 			currentAddForm,
 			confirmMessage,
-			currentTab
+			currentTab,
 		} = this.props
-		
+
 		return (
 			<>
 				{currentAddForm && addForms[currentTab]}

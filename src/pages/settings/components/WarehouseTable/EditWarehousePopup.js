@@ -11,31 +11,36 @@ const formValidation = Yup.object().shape({
   warehouseName: Yup.string()
     .min(3, "Too short")
     .required("Required"),
-  contactName: Yup.string()
-    .min(3, "Too short")
-    .required("Required"),
   address: Yup.string()
     .min(3, "Too short")
     .required("Required"),
   city: Yup.string()
     .min(3, "Too short")
     .required("Required"),
+  country: Yup.string()
+      .min(3, "Too short")
+      .required("Required"),
+  zipCode: Yup.string()
+      .min(3, "Too short")
+      .required("Required"),
   phone: Yup.string()
     .min(3, "Too short")
     .required("Required"),
-  email: Yup.string()
-    .email("Invalid email")
-    .required("Emails is required")
 });
 
 class EditWarehousePopup extends React.Component {
   render() {
     const { closeAddPopup, handleSubmitEditPopup, popupValues } = this.props;
-    const [address, city] = popupValues.address.split(",");
+    //const [address, city] = popupValues.address.split(",");
     // const { middleName, email, id } = popupValues;
     const {
       warehouseName,
       contactName,
+      address,
+      city,
+      country,
+      state,
+      zipCode,
       phone,
       email,
       id: branchId
@@ -45,6 +50,9 @@ class EditWarehousePopup extends React.Component {
       contactName,
       address,
       city,
+      country,
+      state,
+      zipCode,
       phone,
       email
     };
@@ -53,7 +61,7 @@ class EditWarehousePopup extends React.Component {
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>Edit user profile</Modal.Header>
+        <Modal.Header>Edit Warehouse</Modal.Header>
         <Modal.Content>
           <Form
             initialValues={initialFormValues}
@@ -65,7 +73,7 @@ class EditWarehousePopup extends React.Component {
             }}
           >
             <FormGroup widths="equal">
-              <Input type="text" label="Warehouse name" name="warehouseName" />
+              <Input type="text" label="Warehouse Name" name="warehouseName" />
               <Input type="text" label="Contact Name" name="contactName" />
             </FormGroup>
             <FormGroup widths="equal">
@@ -73,8 +81,15 @@ class EditWarehousePopup extends React.Component {
               <Input type="text" label="City" name="city" />
             </FormGroup>
             <FormGroup widths="equal">
+              <Input type="text" label="Country" name="country" />
+              <Input type="text" label="State" name="state" />
+            </FormGroup>
+            <FormGroup widths="equal">
+              <Input type="text" label="Zip Code" name="zipCode" />
               <Input type="text" label="Phone" name="phone" />
-              <Input type="text" label="e-mail" name="email" />
+            </FormGroup>
+            <FormGroup widths="equal">
+              <Input type="text" label="Email" name="email" />
             </FormGroup>
             <div style={{ textAlign: "right" }}>
               <Button.Reset onClick={closeAddPopup}>Cancel</Button.Reset>
