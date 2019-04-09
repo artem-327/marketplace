@@ -1,4 +1,5 @@
 import * as AT from "./action-types"
+import get from "lodash/get"
 
 export const initialState = {
   editPopupBoolean: false,
@@ -10,6 +11,7 @@ export const initialState = {
   creditCardsRows: [],
   bankAccountsRows: [],
   productsCatalogRows: [],
+  productsPackagingType: [],
   columnsForFormatter: {
     checkboxColumns: ["checkbox"],
     permissionsColumns: ["permissions"],
@@ -28,11 +30,14 @@ export const initialState = {
     //{ name: "Terms", id: 10 }, // removed #29771
     //{ name: "Website Controls", id: 11 } // removed #29771
   ],
-  currentTab: "Warehouses",
+  // currentTab: "Product catalog",
+  currentTab: "Users",
   currentEditForm: null,
   currentAddForm: null,
   confirmMessage: null,
+  toast: { message: null, isSuccess: null },
   deleteUserById: null,
+  deleteRowByid: null,
   filterValue: "",
   editPopupSearchProducts: []
 }
@@ -50,22 +55,42 @@ export default function reducer(state = initialState, action) {
     case AT.CLOSE_EDIT_POPUP: {
       return {
         ...state,
-        currentEditForm: null
+        currentEditForm: null,
+        editPopupBoolean: state.editPopupBoolean === false ? true : false,
+        popupValues: null
       }
     }
     case AT.OPEN_CONFIRM_POPUP: {
       return {
         ...state,
-        confirmMessage: state.currentTab,
-        popupValues: state.currentTab,
-        deleteUserById: action.payload
+        confirmMessage: true,
+        deleteRowByid: action.payload
+      }
+    }
+    case AT.OPEN_TOAST: {
+      return {
+        ...state,
+        toast: action.payload
+      }
+    }
+    case AT.CLOSE_TOAST: {
+      return {
+        ...state,
+        toast: { message: null, isSuccess: null }
       }
     }
     case AT.CLOSE_CONFIRM_POPUP: {
       return {
         ...state,
-        confirmMessage: null,
-        popupValues: state.currentTab
+        deleteRowByid: null,
+        confirmMessage: null
+      }
+    }
+    case AT.CONFIRM_SUCCESS: {
+      return {
+        ...state,
+        deleteRowByid: null,
+        confirmMessage: null
       }
     }
 
@@ -129,6 +154,7 @@ export default function reducer(state = initialState, action) {
           contactName: warehouse.contact.name,
           phone: warehouse.contact.phone,
           email: warehouse.contact.email,
+          branchId: warehouse.id,
           id: warehouse.id
         }
       })
@@ -197,19 +223,38 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS: {
-      const rows = action.payload.map(product => {
+      const rows = action.payload.products.map(product => {
+        // const packaging = get(product, ["packaging"], false)
         return {
-          productName: product,
-          productNumber: product,
-          productId: product,
-          packagingType: product,
-          packagingSize: product
+          id: product.id,
+          // product: product.product.id,
+          productName: product.productName,
+          productNumber: product.productCode,
+          casProduct: product.casProduct
+            ? product.casProduct.casNumber
+              ? product.casProduct.casNumber
+              : null
+            : null,
+          packagingType: product.packagingType,
+          // packagingType: packaging
+          //   ? product.packaging.packagingType
+          //     ? product.packaging.packagingType.name
+          //     : ""
+          //   : "",
+          packagingSize: product.packagingSize
         }
       })
-
+      const packagingType = action.payload.productsTypes.map((type, id) => {
+        return {
+          key: id,
+          text: type.name,
+          value: type.measureType
+        }
+      })
       return {
         ...state,
-        productsCatalogRows: rows
+        productsCatalogRows: rows,
+        productsPackagingType: packagingType
       }
     }
 

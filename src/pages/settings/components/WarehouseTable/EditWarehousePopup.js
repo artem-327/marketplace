@@ -1,11 +1,11 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from "react"
+import { connect } from "react-redux"
 
-import { Modal, FormGroup } from "semantic-ui-react";
+import { Modal, FormGroup } from "semantic-ui-react"
 
-import { closeAddPopup, handleSubmitEditPopup } from "../../actions";
-import { Form, Input, Button } from "formik-semantic-ui";
-import * as Yup from "yup";
+import { closeAddPopup, handleSubmitEditPopup } from "../../actions"
+import { Form, Input, Button } from "formik-semantic-ui"
+import * as Yup from "yup"
 
 const formValidation = Yup.object().shape({
   warehouseName: Yup.string()
@@ -26,12 +26,12 @@ const formValidation = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email")
     .required("Emails is required")
-});
+})
 
 class EditWarehousePopup extends React.Component {
   render() {
-    const { closeAddPopup, handleSubmitEditPopup, popupValues } = this.props;
-    const [address, city] = popupValues.address.split(",");
+    const { closeAddPopup, handleSubmitEditPopup, popupValues } = this.props
+    const [address, city] = popupValues.address.split(",")
     // const { middleName, email, id } = popupValues;
     const {
       warehouseName,
@@ -39,7 +39,7 @@ class EditWarehousePopup extends React.Component {
       phone,
       email,
       id: branchId
-    } = popupValues;
+    } = popupValues
     const initialFormValues = {
       warehouseName,
       contactName,
@@ -47,21 +47,21 @@ class EditWarehousePopup extends React.Component {
       city,
       phone,
       email
-    };
+    }
 
-    console.log("Popup id", branchId);
+    console.log("Popup id", branchId)
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>Edit user profile</Modal.Header>
+        <Modal.Header>Edit Warehouse</Modal.Header>
         <Modal.Content>
           <Form
             initialValues={initialFormValues}
             validationSchema={formValidation}
             onReset={closeAddPopup}
             onSubmit={(values, actions) => {
-              handleSubmitEditPopup(values, branchId);
-              actions.setSubmitting(false);
+              handleSubmitEditPopup(values, branchId)
+              actions.setSubmitting(false)
             }}
           >
             <FormGroup widths="equal">
@@ -83,21 +83,21 @@ class EditWarehousePopup extends React.Component {
           </Form>
         </Modal.Content>
       </Modal>
-    );
+    )
   }
 }
 
 const mapDispatchToProps = {
   closeAddPopup,
   handleSubmitEditPopup
-};
+}
 const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(EditWarehousePopup);
+)(EditWarehousePopup)

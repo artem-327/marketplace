@@ -1,6 +1,10 @@
-import { call, put, takeEvery } from "redux-saga/effects"
-
-import { closeAddPopup, closeConfirmPopup } from "./actions"
+import { call, put, takeEvery, select } from "redux-saga/effects"
+import {
+  closeAddPopup,
+  closeConfirmPopup,
+  deleteUser,
+  confirmationSuccess
+} from "./actions"
 import * as AT from "./action-types"
 import api from "./api"
 
@@ -57,8 +61,12 @@ function* getBankAccountsDataWorker() {
 
 function* getProductCatalogWorker() {
   try {
-    // const productCatalog = yield call(api.getProductsCatalog)
-    // yield put({ type: AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS, payload: productCatalog })
+    const productCatalog = yield call(api.getProductsCatalog)
+    const productPacTypes = yield call(api.getProductTypes)
+    yield put({
+      type: AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS,
+      payload: { products: productCatalog, productsTypes: productPacTypes }
+    })
   } catch (e) {
     yield console.log("error:", e)
   }
@@ -148,18 +156,18 @@ function* postNewBankAccountWorker({ payload }) {
 
 function* postNewProductWorker({ payload }) {
   try {
-    // const productData = {
-    //   packaging: {
-    //     packagingType: 0,
-    //     size: 0,
-    //     unit: 0
-    //   },
-    //   product: 0,
-    //   productCode: "string",
-    //   productName: "string",
-    //   valid: true
-    // }
-    // yield call(api.postNewProduct, productData)
+    const productData = {
+      packaging: {
+        packagingType: payload.packagingType,
+        size: payload.packagingSize,
+        unit: 0
+      },
+      product: 0,
+      productCode: payload.productNumber,
+      productName: payload.productName,
+      valid: true
+    }
+    yield call(api.postNewProduct, productData)
   } catch (e) {
     yield console.log("error:", e)
   }
@@ -205,6 +213,27 @@ function* putUserWorker({ payload, id }) {
   }
 }
 
+function* putProductEditPopup({ payload, id }) {
+  try {
+    const updateProduct = {
+      packaging: {
+        packagingType: payload.packagingType,
+        size: payload.packagingSize,
+        unit: payload.unit
+      },
+      product: payload.product,
+      productCode: payload.productNumber,
+      productName: payload.productName
+    }
+    // console.log(payload)
+    yield call(api.putProduct, id, updateProduct)
+  } catch (e) {
+    yield console.log("error:", e)
+  } finally {
+    yield put({ type: AT.CLOSE_EDIT_POPUP, payload: null })
+  }
+}
+
 function* deleteUserWorker({ payload }) {
   try {
     yield call(api.deleteUser, payload)
@@ -218,6 +247,7 @@ function* deleteUserWorker({ payload }) {
 function* deleteWarehouseWorker({ payload }) {
   try {
     yield call(api.deleteWarehouse, payload)
+    yield put({ type: AT.OPEN_TOAST, payload: "Warehouse delete success" })
   } catch (e) {
     yield console.log("error:", e)
   }
@@ -236,6 +266,35 @@ function* deleteBankAccountWorker({ payload }) {
     yield call(api.deleteWarehouse, payload)
   } catch (e) {
     yield console.log("error:", e)
+  }
+}
+
+function* deleteConfirmPopup({}) {
+  const {
+    settings: { deleteRowByid, currentTab }
+  } = yield select()
+  let toast = {}
+  try {
+    switch (currentTab) {
+      case "Users":
+        yield call(api.deleteUser, deleteRowByid)
+        toast = { message: "User delete success", isSuccess: true }
+        break
+      case "Warehouses":
+        yield call(api.deleteWarehouse, deleteRowByid)
+        toast = { message: "Warehouse delete success", isSuccess: false }
+        break
+      case "Product catalog":
+        yield call(api.deleteProduct, deleteRowByid)
+      default:
+        break
+    }
+  } catch (e) {
+    yield console.log("error:", e)
+    toast = { message: "User delete success", isSuccess: true }
+  } finally {
+    yield put(confirmationSuccess())
+    yield put({ type: AT.OPEN_TOAST, payload: toast })
   }
 }
 
@@ -260,8 +319,11 @@ export default function* settingsSaga() {
 
   yield takeEvery(AT.HANDLE_SUBMIT_USER_EDIT_POPUP, putUserWorker)
 
+  yield takeEvery(AT.PUT_PRODUCT_EDIT_POPUP, putProductEditPopup)
+
   yield takeEvery(AT.DELETE_USER, deleteUserWorker)
   yield takeEvery(AT.DELETE_WAREHOUSE, deleteWarehouseWorker)
   yield takeEvery(AT.DELETE_CREDIT_CARD, deleteCreditCardWorker)
   yield takeEvery(AT.DELETE_BANK_ACCOUNT, deleteBankAccountWorker)
+  yield takeEvery(AT.DELETE_CONFIRM_POPUP, deleteConfirmPopup)
 }

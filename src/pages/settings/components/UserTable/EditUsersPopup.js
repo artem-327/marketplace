@@ -1,11 +1,11 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from "react"
+import { connect } from "react-redux"
 
-import { Modal, FormGroup } from "semantic-ui-react";
+import { Modal, FormGroup } from "semantic-ui-react"
 
-import { closeAddPopup, handlerSubmitUserEditPopup } from "../../actions";
-import { Form, Input, Button } from "formik-semantic-ui";
-import * as Yup from "yup";
+import { closeAddPopup, handlerSubmitUserEditPopup } from "../../actions"
+import { Form, Input, Button } from "formik-semantic-ui"
+import * as Yup from "yup"
 
 const formValidation = Yup.object().shape({
   firstName: Yup.string()
@@ -20,7 +20,7 @@ const formValidation = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email")
     .required("Emails is required")
-});
+})
 
 class AddNewUsersPopup extends React.Component {
   render() {
@@ -28,12 +28,12 @@ class AddNewUsersPopup extends React.Component {
       closeAddPopup,
       handlerSubmitUserEditPopup,
       popupValues
-    } = this.props;
+    } = this.props
     const [firstName, lastName] = popupValues.userName
       ? popupValues.userName.split(" ")
-      : ["", ""];
-    const { middleName, email, id } = popupValues;
-    const initialFormValues = { firstName, lastName, middleName, email };
+      : ["", ""]
+    const { middleName, email, id } = popupValues
+    const initialFormValues = { firstName, lastName, middleName, email }
 
     return (
       <Modal open centered={false}>
@@ -44,8 +44,8 @@ class AddNewUsersPopup extends React.Component {
             validationSchema={formValidation}
             onReset={closeAddPopup}
             onSubmit={(values, actions) => {
-              handlerSubmitUserEditPopup(values, id);
-              actions.setSubmitting(false);
+              handlerSubmitUserEditPopup(values, id)
+              actions.setSubmitting(false)
             }}
           >
             <FormGroup widths="equal">
@@ -63,21 +63,21 @@ class AddNewUsersPopup extends React.Component {
           </Form>
         </Modal.Content>
       </Modal>
-    );
+    )
   }
 }
 
 const mapDispatchToProps = {
   closeAddPopup,
   handlerSubmitUserEditPopup
-};
+}
 const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AddNewUsersPopup);
+)(AddNewUsersPopup)
