@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Modal, FormGroup } from 'semantic-ui-react'
 
 import { closeAddPopup, postNewWarehouseRequest } from '../../actions'
-import { Form, Input, Button } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 const initialFormValues = {
@@ -20,15 +20,18 @@ const initialFormValues = {
 const formValidation = Yup.object().shape({
   warehouseName: Yup.string()
     .min(3, 'Too short')
+    .required('Required'),
+  country: Yup.string()
+    .min(1, 'Too short')
     .required('Required')
   // country: Yup.string()
-  //   .min(3, 'Too short')
+  //   .min(1, 'Too short')
   //   .required('Required')
 })
 
 class AddNewWarehousePopup extends React.Component {
   render() {
-    const { closeAddPopup, postNewWarehouseRequest } = this.props
+    const { closeAddPopup, postNewWarehouseRequest, country } = this.props
 
     return (
       <Modal open centered={false}>
@@ -59,6 +62,9 @@ class AddNewWarehousePopup extends React.Component {
               <Input type="text" label="Phone" name="phone" />
               <Input type="text" label="Email" name="email" />
             </FormGroup>
+            <FormGroup>
+              <Dropdown label="Country" name="country" options={country} />
+            </FormGroup>
 
             <div style={{ textAlign: 'right' }}>
               <Button.Reset>Cancel</Button.Reset>
@@ -76,7 +82,13 @@ const mapDispatchToProps = {
   postNewWarehouseRequest
 }
 
+const mapStateToProps = state => {
+  return {
+    country: state.settings.country
+  }
+}
+
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(AddNewWarehousePopup)

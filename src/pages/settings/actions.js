@@ -86,6 +86,7 @@ export function handleSubmitEditPopup(warehouseData, branchId) {
 }
 
 export function handlerSubmitWarehouseEditPopup(warehouseData, id) {
+  console.log('warehouseData', warehouseData)
   return {
     type: AT.PUT_WAREHOUSE_EDIT_POPUP,
     payload: warehouseData,
