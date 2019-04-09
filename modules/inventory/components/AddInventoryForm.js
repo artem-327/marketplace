@@ -5,6 +5,7 @@ import { Segment, Header, Divider, Grid, GridColumn, FormGroup } from 'semantic-
 import styled from 'styled-components'
 import * as val from 'yup'
 import {DateInput} from '~/components/custom-formik'
+import UploadLot from "./upload/UploadLot";
 
 // debug purposes only
 import JSONPretty from 'react-json-pretty'
@@ -237,6 +238,15 @@ export default class AddInventoryForm extends Component {
                 <FieldArray>
                   {this.renderPricingTiers(values.priceTiers)}
                 </FieldArray>
+
+                <Header as='h3'>Upload Spec Sheet</Header>
+                <UploadLot {...this.props}
+                           control={UploadLot}
+                           model='.documents'
+                           type='Spec Sheet'
+                           fileMaxSize={20}>
+                  Drag and drop spec sheet file here or <a>select</a> from computer
+                </UploadLot>
 
               </GridColumn>
 

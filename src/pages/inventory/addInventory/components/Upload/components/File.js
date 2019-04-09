@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './file.scss'
 import PropTypes from "prop-types";
+import { Icon } from "semantic-ui-react"
 
 class File extends Component {
 
@@ -8,7 +9,7 @@ class File extends Component {
         return (
             <React.Fragment>
             <span key={this.props.index} className={this.props.className}>
-                <i className="close" onClick={()=>this.props.onRemove()} />
+                <Icon name='times circle outline' size='big' onClick={()=>this.props.onRemove()} />
                 {this.props.name}
             </span>
             </React.Fragment>

@@ -15,6 +15,25 @@ export function addProductOffer(values) {
   }
 }
 
+export function errorTooLarge(fileName, fileMaxSize) {
+  return {
+    type: AT.ERROR_TOO_LARGE_FILE,
+    payload: {
+      fileName: blob.name,
+      maxSize: fileMaxSize
+    }
+  }
+}
+
+export function errorUploadFail(fileName) {
+  return {
+    type: AT.ERROR_UPLOAD_FILE_FAILED,
+    payload: {
+      fileName: fileName
+    }
+  }
+}
+
 export function getProductOffer(productOfferId) {
   return {
     type: AT.INVENTORY_GET_PRODUCT_OFFER,
