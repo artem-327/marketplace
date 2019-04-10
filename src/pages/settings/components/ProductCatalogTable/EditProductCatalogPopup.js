@@ -1,29 +1,29 @@
-import React from "react"
-import { connect } from "react-redux"
-import filter from "lodash/filter"
-import escapeRegExp from "lodash/escapeRegExp"
-import debounce from "lodash/debounce"
+import React from 'react'
+import { connect } from 'react-redux'
+import filter from 'lodash/filter'
+import escapeRegExp from 'lodash/escapeRegExp'
+import debounce from 'lodash/debounce'
 
-import { Modal, FormGroup, Search, Label } from "semantic-ui-react"
+import { Modal, FormGroup, Search, Label } from 'semantic-ui-react'
 
-import { closeEditPopup, handleSubmitProductEditPopup } from "../../actions"
-import { Form, Input, Button, Dropdown } from "formik-semantic-ui"
-import * as Yup from "yup"
-import "./styles.scss"
+import { closePopup, handleSubmitProductEditPopup } from '../../actions'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
+import * as Yup from 'yup'
+import './styles.scss'
 
 const formValidation = Yup.object().shape({
   productName: Yup.string()
-    .min(3, "Too short")
-    .required("Required"),
+    .min(3, 'Too short')
+    .required('Required'),
   productNumber: Yup.string()
-    .min(1, "Too short")
-    .required("Required"),
+    .min(1, 'Too short')
+    .required('Required'),
   packagingType: Yup.string()
-    .min(1, "Too short")
-    .required("Required"),
+    .min(1, 'Too short')
+    .required('Required'),
   packagingSize: Yup.string()
-    .min(1, "Too short")
-    .required("Required")
+    .min(1, 'Too short')
+    .required('Required')
 })
 
 const resultRenderer = ({ casProduct, id }) => (
@@ -41,12 +41,14 @@ class AddNewUsersPopup extends React.Component {
     }))
   }
 
-  resetComponent = () =>
+  resetComponent = () => {
+    const { popupValues } = this.props
     this.setState({
       isLoading: false,
       results: [],
-      value: this.props.popupValues.casProduct
+      value: (popupValues && popupValues.casProduct.casNumber) || ''
     })
+  }
 
   handleResultSelect = (e, { result }) =>
     this.setState({ value: result.casProduct })
@@ -56,7 +58,7 @@ class AddNewUsersPopup extends React.Component {
 
     setTimeout(() => {
       // if (this.state.value.length < 1) return this.resetComponent()
-      const re = new RegExp(escapeRegExp(this.state.value), "i")
+      const re = new RegExp(escapeRegExp(this.state.value), 'i')
       const isMatch = result => re.test(result.casProduct)
 
       this.setState({
@@ -68,18 +70,18 @@ class AddNewUsersPopup extends React.Component {
 
   render() {
     const {
-      closeEditPopup,
+      closePopup,
       handleSubmitProductEditPopup,
       popupValues,
       packagingType
     } = this.props
-    console.log("popupValues", popupValues)
+    console.log('popupValues', popupValues)
     const { isLoading, results, value } = this.state
     const initialFormValues = {
       ...popupValues,
-      packagingType: ""
+      packagingType: ''
     }
-    console.log("initialFormValues", initialFormValues)
+    console.log('initialFormValues', initialFormValues)
 
     return (
       <Modal open centered={false}>
@@ -88,9 +90,9 @@ class AddNewUsersPopup extends React.Component {
           <Form
             initialValues={initialFormValues}
             validationSchema={formValidation}
-            onReset={closeEditPopup}
+            onReset={closePopup}
             onSubmit={(values, actions) => {
-              console.log("values", values)
+              console.log('values', values)
               handleSubmitProductEditPopup({
                 ...values,
                 casProduct: value,
@@ -125,8 +127,8 @@ class AddNewUsersPopup extends React.Component {
               />
               <Input type="text" label="Packaging Size" name="packagingSize" />
             </FormGroup>
-            <div style={{ textAlign: "right" }}>
-              <Button.Reset onClick={closeEditPopup}>Cancel</Button.Reset>
+            <div style={{ textAlign: 'right' }}>
+              <Button.Reset onClick={closePopup}>Cancel</Button.Reset>
               <Button.Submit>Save</Button.Submit>
             </div>
           </Form>
@@ -137,7 +139,7 @@ class AddNewUsersPopup extends React.Component {
 }
 
 const mapDispatchToProps = {
-  closeEditPopup,
+  closePopup,
   handleSubmitProductEditPopup
 }
 const mapStateToProps = state => {

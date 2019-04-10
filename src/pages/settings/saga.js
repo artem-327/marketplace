@@ -1,10 +1,5 @@
 import { call, put, takeEvery, select } from 'redux-saga/effects'
-import {
-  closeAddPopup,
-  closeConfirmPopup,
-  deleteUser,
-  confirmationSuccess
-} from './actions'
+import { closePopup, closeConfirmPopup, confirmationSuccess } from './actions'
 import * as AT from './action-types'
 import api from './api'
 
@@ -102,15 +97,14 @@ function* postNewUserWorker({ payload }) {
       middlename: payload.middleName
     }
     yield call(api.postNewUser, dataBody)
-    yield put(closeAddPopup({ payload: null }))
   } catch (e) {
     yield console.log('error:', e)
-    yield put(closeAddPopup({ payload: null }))
+  } finally {
+    yield put(closePopup({ payload: null }))
   }
 }
 
 function* postNewWarehouseWorker({ payload }) {
-  console.log(payload)
   try {
     const currentUser = yield call(api.getCurrentUser)
     const dataBody = {
@@ -120,7 +114,7 @@ function* postNewWarehouseWorker({ payload }) {
         country: payload.country,
         province: 44,
         streetAddress: payload.city,
-        zip: payload.zipCode
+        zip: payload.zip
       },
       company: currentUser.company.id,
       contact: {
@@ -132,10 +126,10 @@ function* postNewWarehouseWorker({ payload }) {
       warehouseName: payload.warehouseName
     }
     yield call(api.postNewWarehouse, dataBody)
-    yield put(closeAddPopup({ payload: null }))
   } catch (e) {
     yield console.log('error:', e)
-    yield put(closeAddPopup({ payload: null }))
+  } finally {
+    yield put(closePopup({ payload: null }))
   }
 }
 
@@ -185,6 +179,8 @@ function* postNewProductWorker({ payload }) {
     yield call(api.postNewProduct, productData)
   } catch (e) {
     yield console.log('error:', e)
+  } finally {
+    yield put(closePopup({ payload: null }))
   }
 }
 
@@ -196,7 +192,7 @@ function* putWarehouseWorker({ payload, id }) {
         city: payload.address,
         streetAddress: payload.city,
         province: 44,
-        zip: '35'
+        zip: payload.zip
       },
       company: 3,
       contact: {
@@ -210,6 +206,8 @@ function* putWarehouseWorker({ payload, id }) {
     yield call(api.putWarehouse, id, dataBody)
   } catch (e) {
     yield console.log('error:', e)
+  } finally {
+    yield put(closePopup({ payload: null }))
   }
 }
 
@@ -221,10 +219,11 @@ function* putUserWorker({ payload, id }) {
       middlename: payload.middleName,
       email: payload.email
     }
-    yield put({ type: AT.CLOSE_EDIT_POPUP, payload: null })
     yield call(api.putUser, id, updateUser)
   } catch (e) {
     console.log('error', e)
+  } finally {
+    yield put(closePopup({ payload: null }))
   }
 }
 
@@ -248,10 +247,11 @@ function* putWarehouseEditPopup({ payload, id }) {
       warehouse: true,
       warehouseName: payload.warehouseName
     }
-    yield put({ type: AT.CLOSE_EDIT_POPUP, payload: null })
     yield call(api.putWarehouse, id, dataBody)
   } catch (e) {
     yield console.log('error:', e)
+  } finally {
+    yield put(closePopup({ payload: null }))
   }
 }
 
@@ -272,7 +272,7 @@ function* putProductEditPopup({ payload, id }) {
   } catch (e) {
     yield console.log('error:', e)
   } finally {
-    yield put({ type: AT.CLOSE_EDIT_POPUP, payload: null })
+    yield put(closePopup({ payload: null }))
   }
 }
 

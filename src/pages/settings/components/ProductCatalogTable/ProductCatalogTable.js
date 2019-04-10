@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
 import { Confirm } from 'semantic-ui-react'
 import {
-  openEditPopup,
+  openPopup,
   getProductsCatalogRequest,
   handleOpenConfirmPopup,
-  closeConfirmPopup,
+  closePopup,
   deleteConfirmation
 } from '../../actions'
 
@@ -30,9 +30,9 @@ class ProductCatalogTable extends Component {
       rows,
       filterValue,
       confirmMessage,
-      openEditPopup,
+      openPopup,
       handleOpenConfirmPopup,
-      closeConfirmPopup,
+      closePopup,
       deleteConfirmation
     } = this.props
 
@@ -46,7 +46,7 @@ class ProductCatalogTable extends Component {
           size="tiny"
           content="Do you really want to delete this product?"
           open={confirmMessage}
-          onCancel={closeConfirmPopup}
+          onCancel={closePopup}
           onConfirm={deleteConfirmation}
         />
         <ProdexTable
@@ -54,7 +54,7 @@ class ProductCatalogTable extends Component {
           columns={columns}
           filterValue={filterValue}
           rowActions={[
-            { text: 'Edit', callback: row => openEditPopup(row) },
+            { text: 'Edit', callback: row => openPopup(row) },
             {
               text: 'Delete',
               callback: row => handleOpenConfirmPopup(row.id)
@@ -67,10 +67,10 @@ class ProductCatalogTable extends Component {
 }
 
 const mapDispatchToProps = {
-  openEditPopup,
+  openPopup,
   getProductsCatalogRequest,
   handleOpenConfirmPopup,
-  closeConfirmPopup,
+  closePopup,
   deleteConfirmation
 }
 

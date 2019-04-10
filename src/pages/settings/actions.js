@@ -1,5 +1,18 @@
 import * as AT from './action-types'
 
+export function openPopup(rows = null) {
+  return {
+    type: AT.OPEN_POPUP,
+    payload: rows
+  }
+}
+export function closePopup(rows = null) {
+  return {
+    type: AT.CLOSE_POPUP,
+    payload: rows
+  }
+}
+
 export function openEditPopup(rows) {
   return {
     type: AT.OPEN_EDIT_POPUP,

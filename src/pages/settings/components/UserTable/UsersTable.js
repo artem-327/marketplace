@@ -1,31 +1,31 @@
-import React, { Component } from "react"
-import { connect } from "react-redux"
-import ProdexGrid from "~/components/table"
-import { Confirm } from "semantic-ui-react"
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import ProdexGrid from '~/components/table'
+import { Confirm } from 'semantic-ui-react'
 
 import {
   getUsersDataRequest,
-  openEditPopup,
+  openPopup,
   deleteUser,
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation
-} from "../../actions"
+} from '../../actions'
 
 class UsersTable extends Component {
   state = {
     columns: [
-      { name: "userName", title: "User Name" },
-      { name: "title", title: "Title" },
-      { name: "email", title: "E-mail" },
-      { name: "phone", title: "Phone" },
-      { name: "homeBranch", title: "Home Branch" },
+      { name: 'userName', title: 'User Name' },
+      { name: 'title', title: 'Title' },
+      { name: 'email', title: 'E-mail' },
+      { name: 'phone', title: 'Phone' },
+      { name: 'homeBranch', title: 'Home Branch' },
       {
-        name: "permissions",
-        title: "Permissions",
+        name: 'permissions',
+        title: 'Permissions',
         options: [
-          { text: "Admin", value: "admin" },
-          { text: "User", value: "user" }
+          { text: 'Admin', value: 'admin' },
+          { text: 'User', value: 'user' }
         ]
       }
     ]
@@ -39,7 +39,7 @@ class UsersTable extends Component {
     const {
       rows,
       filterValue,
-      openEditPopup,
+      openPopup,
       confirmMessage,
       handleOpenConfirmPopup,
       closeConfirmPopup,
@@ -62,8 +62,8 @@ class UsersTable extends Component {
           columns={columns}
           rows={rows}
           rowActions={[
-            { text: "Edit", callback: row => openEditPopup(row) },
-            { text: "Delete", callback: row => handleOpenConfirmPopup(row.id) }
+            { text: 'Edit', callback: row => openPopup(row) },
+            { text: 'Delete', callback: row => handleOpenConfirmPopup(row.id) }
           ]}
         />
       </React.Fragment>
@@ -73,7 +73,7 @@ class UsersTable extends Component {
 
 const mapDispatchToProps = {
   getUsersDataRequest,
-  openEditPopup,
+  openPopup,
   deleteUser,
   handleOpenConfirmPopup,
   closeConfirmPopup,

@@ -1,51 +1,52 @@
-import React, { Component } from "react"
-import { connect } from "react-redux"
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
 // import '../styles/settings.scss'
 
-import Tabs from "./Tabs"
-import UsersTable from "./UserTable/UsersTable"
-import WarehouseTable from "./WarehouseTable/WarehouseTable"
-import BranchTable from "./BranchTable/BranchTable"
-import BankAccountsTable from "./BankAccountsTable/BankAccountsTable"
-import CreditCardsTable from "./CreditCardsTable/CreditCardsTable"
-import ProductCatalogTable from "./ProductCatalogTable/ProductCatalogTable"
+import Tabs from './Tabs'
+import UsersTable from './UserTable/UsersTable'
+import WarehouseTable from './WarehouseTable/WarehouseTable'
+import BranchTable from './BranchTable/BranchTable'
+import BankAccountsTable from './BankAccountsTable/BankAccountsTable'
+import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
+import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
 // import EditBranchPopup from './BranchTable/EditBranchPopup'
-import EditWarehousePopup from "./WarehouseTable/EditWarehousePopup"
-import EditUsersPopup from "./UserTable/EditUsersPopup"
-import EditProductCatalogPopup from "./ProductCatalogTable/EditProductCatalogPopup"
-import AddNewBranchPopup from "./BranchTable/AddNewBranchPopup"
-import AddNewUsersPopup from "./UserTable/AddNewUsersPopup"
-import AddNewWarehousePopup from "./WarehouseTable/AddNewWarehousePopup"
-import AddNewCreditCardPopup from "./CreditCardsTable/AddNewCreditCardPopup"
-import AddNewBankAccountPopup from "./BankAccountsTable/AddNewBankAccountPopup"
-import AddNewProductCatalogPopup from "./ProductCatalogTable/AddNewProductCatalogPopup"
-import TablesHandlers from "./TablesHandlers"
-import Toast from "../../../../components/toast"
+import EditWarehousePopup from './WarehouseTable/WarehousePopup'
+import EditUsersPopup from './UserTable/UsersPopup'
+// import AddNewUsersPopup from './UserTable/AddNewUsersPopup'
+import EditProductCatalogPopup from './ProductCatalogTable/EditProductCatalogPopup'
+import AddNewBranchPopup from './BranchTable/AddNewBranchPopup'
+// import AddNewWarehousePopup from './WarehouseTable/WarehousePopup'
+import AddNewCreditCardPopup from './CreditCardsTable/AddNewCreditCardPopup'
+import AddNewBankAccountPopup from './BankAccountsTable/AddNewBankAccountPopup'
+import AddNewProductCatalogPopup from './ProductCatalogTable/AddNewProductCatalogPopup'
+import TablesHandlers from './TablesHandlers'
+import Toast from '../../../../components/toast'
 
-import { Container, Grid, Divider } from "semantic-ui-react"
+import { Container, Grid, Divider } from 'semantic-ui-react'
 
 const tables = {
   Users: <UsersTable />,
   Warehouses: <WarehouseTable />,
-  "Product catalog": <ProductCatalogTable />,
+  'Product catalog': <ProductCatalogTable />,
   Branches: <BranchTable />,
-  "Bank accounts": <BankAccountsTable />,
-  "Credit cards": <CreditCardsTable />
+  'Bank accounts': <BankAccountsTable />,
+  'Credit cards': <CreditCardsTable />
 }
-const editForms = {
+
+const popupForm = {
   Users: <EditUsersPopup />,
   Warehouses: <EditWarehousePopup />,
-  "Product catalog": <EditProductCatalogPopup />,
+  'Product catalog': <EditProductCatalogPopup />
+}
+
+const editForms = {
   Branches: <EditWarehousePopup />
 }
 
 const addForms = {
-  Users: <AddNewUsersPopup />,
-  Warehouses: <AddNewWarehousePopup />,
-  "Product catalog": <AddNewProductCatalogPopup />,
   Branches: <AddNewBranchPopup />,
-  "Bank accounts": <AddNewBankAccountPopup />
+  'Bank accounts': <AddNewBankAccountPopup />
 }
 
 class Settings extends Component {
@@ -54,11 +55,14 @@ class Settings extends Component {
       currentEditForm,
       currentAddForm,
       confirmMessage,
-      currentTab
+      editPopupBoolean,
+      currentTab,
+      isOpenPopup
     } = this.props
 
     return (
       <>
+        {isOpenPopup && popupForm[currentTab]}
         {currentAddForm && addForms[currentTab]}
         {currentEditForm && editForms[currentTab]}
         {tables[currentTab] || <p>This page is still under construction</p>}
@@ -84,9 +88,7 @@ class Settings extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return state.settings
-}
+const mapStateToProps = ({ settings }) => settings
 
 export default connect(
   mapStateToProps,
