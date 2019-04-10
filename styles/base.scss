@@ -9,6 +9,10 @@ body {
   font-family: 'HelveticaNeueLTPro';
 }
 
+.bootstrapiso .table-responsive {
+  overflow-x: inherit !important;
+}
+
 .ui.menu .item > i.chevron.icon {
   padding: 0em;
   float: right;
