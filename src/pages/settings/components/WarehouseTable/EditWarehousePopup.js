@@ -52,11 +52,6 @@ class EditWarehousePopup extends React.Component {
       country: countryId
     }
 
-<<<<<<< HEAD
-=======
-    console.log('Popup id', country.countryId)
-
->>>>>>> local-master
     return (
       <Modal open centered={false}>
         <Modal.Header>Edit Warehouse</Modal.Header>
