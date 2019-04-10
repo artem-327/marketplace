@@ -1,63 +1,54 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react'
+import { connect } from 'react-redux'
 
-import { Modal, FormGroup } from "semantic-ui-react";
+import { Modal, FormGroup } from 'semantic-ui-react'
 
-import { closeAddPopup, handleSubmitEditPopup } from "../../actions";
-import { Form, Input, Button } from "formik-semantic-ui";
-import * as Yup from "yup";
+import { closeAddPopup, handlerSubmitWarehouseEditPopup } from '../../actions'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
+import * as Yup from 'yup'
 
 const formValidation = Yup.object().shape({
   warehouseName: Yup.string()
-    .min(3, "Too short")
-    .required("Required"),
+    .min(3, 'Too short')
+    .required('Required'),
   address: Yup.string()
-    .min(3, "Too short")
-    .required("Required"),
-  city: Yup.string()
-    .min(3, "Too short")
-    .required("Required"),
+    .min(3, 'Too short')
+    .required('Required'),
   country: Yup.string()
-      .min(3, "Too short")
-      .required("Required"),
-  zipCode: Yup.string()
-      .min(3, "Too short")
-      .required("Required"),
-  phone: Yup.string()
-    .min(3, "Too short")
-    .required("Required"),
-});
+    .min(1, 'Too short')
+    .required('Required')
+})
 
 class EditWarehousePopup extends React.Component {
   render() {
-    const { closeAddPopup, handleSubmitEditPopup, popupValues } = this.props;
-    //const [address, city] = popupValues.address.split(",");
-    // const { middleName, email, id } = popupValues;
+    const {
+      closeAddPopup,
+      handlerSubmitWarehouseEditPopup,
+      popupValues,
+      country
+    } = this.props
+    const [address, city] = popupValues.address.split(',')
     const {
       warehouseName,
       contactName,
-      address,
-      city,
-      country,
+      countryId,
       state,
       zipCode,
       phone,
       email,
       id: branchId
-    } = popupValues;
+    } = popupValues
     const initialFormValues = {
       warehouseName,
       contactName,
       address,
       city,
-      country,
       state,
       zipCode,
       phone,
-      email
-    };
-
-    console.log("Popup id", branchId);
+      email,
+      country: countryId
+    }
 
     return (
       <Modal open centered={false}>
@@ -68,8 +59,8 @@ class EditWarehousePopup extends React.Component {
             validationSchema={formValidation}
             onReset={closeAddPopup}
             onSubmit={(values, actions) => {
-              handleSubmitEditPopup(values, branchId);
-              actions.setSubmitting(false);
+              handlerSubmitWarehouseEditPopup(values, branchId)
+              actions.setSubmitting(false)
             }}
           >
             <FormGroup widths="equal">
@@ -81,38 +72,35 @@ class EditWarehousePopup extends React.Component {
               <Input type="text" label="City" name="city" />
             </FormGroup>
             <FormGroup widths="equal">
-              <Input type="text" label="Country" name="country" />
-              <Input type="text" label="State" name="state" />
-            </FormGroup>
-            <FormGroup widths="equal">
-              <Input type="text" label="Zip Code" name="zipCode" />
               <Input type="text" label="Phone" name="phone" />
-            </FormGroup>
-            <FormGroup widths="equal">
               <Input type="text" label="Email" name="email" />
             </FormGroup>
-            <div style={{ textAlign: "right" }}>
+            <FormGroup>
+              <Dropdown label="Country" name="country" options={country} />
+            </FormGroup>
+            <div style={{ textAlign: 'right' }}>
               <Button.Reset onClick={closeAddPopup}>Cancel</Button.Reset>
               <Button.Submit>Save</Button.Submit>
             </div>
           </Form>
         </Modal.Content>
       </Modal>
-    );
+    )
   }
 }
 
 const mapDispatchToProps = {
   closeAddPopup,
-  handleSubmitEditPopup
-};
+  handlerSubmitWarehouseEditPopup
+}
 const mapStateToProps = state => {
   return {
-    popupValues: state.settings.popupValues
-  };
-};
+    popupValues: state.settings.popupValues,
+    country: state.settings.country
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(EditWarehousePopup);
+)(EditWarehousePopup)

@@ -1,5 +1,4 @@
 @import 'isobs.scss';
-@import url(../src/fonts/Icons.css);
 @import url(../src/fonts/MyFontsWebfontsKit.css);
 
 $grey: #979797 !important;
@@ -7,6 +6,10 @@ $grey: #979797 !important;
 body {
   background: #fff;
   font-family: 'HelveticaNeueLTPro';
+}
+
+.bootstrapiso .table-responsive {
+  overflow-x: inherit !important;
 }
 
 .ui.menu .item > i.chevron.icon {

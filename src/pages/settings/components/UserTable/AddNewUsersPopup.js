@@ -7,7 +7,6 @@ import { closeAddPopup, postNewUserRequest } from '../../actions'
 import { Form, Input, Button } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
-
 const initialFormValues = {
   firstName: '',
   lastName: '',
@@ -15,22 +14,27 @@ const initialFormValues = {
   email: ''
 }
 const formValidation = Yup.object().shape({
-  firstName: Yup.string().min(3, "Too short").required("Required"),
-  lastName: Yup.string().min(3, "Too short").required("Required"),
-  middleName: Yup.string().min(3, "Too short").required("Required"),
-  email: Yup.string().email("Invalid email").required("Emails is required")
+  firstName: Yup.string()
+    .min(3, 'Too short')
+    .required('Required'),
+  lastName: Yup.string()
+    .min(3, 'Too short')
+    .required('Required'),
+  middleName: Yup.string()
+    .min(3, 'Too short')
+    .required('Required'),
+  email: Yup.string()
+    .email('Invalid email')
+    .required('Emails is required')
 })
 
 class AddNewUsersPopup extends React.Component {
   render() {
-    const {
-      closeAddPopup,
-      postNewUserRequest
-    } = this.props
+    const { closeAddPopup, postNewUserRequest } = this.props
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>Add new user</Modal.Header>
+        <Modal.Header>Add user</Modal.Header>
         <Modal.Content>
           <Form
             initialValues={initialFormValues}
@@ -42,12 +46,12 @@ class AddNewUsersPopup extends React.Component {
             }}
           >
             <FormGroup widths="equal">
-              <Input type="text" label="First name" name="firstName" />
+              <Input type="text" label="First Name" name="firstName" />
               <Input type="text" label="Last Name" name="lastName" />
             </FormGroup>
             <FormGroup widths="equal">
               <Input type="text" label="Middle Name" name="middleName" />
-              <Input type="text" label="e-mail" name="email" />
+              <Input type="text" label="Email" name="email" />
             </FormGroup>
             <div style={{ textAlign: 'right' }}>
               <Button.Reset onClick={closeAddPopup}>Cancel</Button.Reset>
@@ -65,4 +69,7 @@ const mapDispatchToProps = {
   postNewUserRequest
 }
 
-export default connect(null, mapDispatchToProps)(AddNewUsersPopup) 
+export default connect(
+  null,
+  mapDispatchToProps
+)(AddNewUsersPopup)

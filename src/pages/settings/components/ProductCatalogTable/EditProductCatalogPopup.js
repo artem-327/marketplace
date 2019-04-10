@@ -1,163 +1,154 @@
-import React from 'react' 
-import { connect } from 'react-redux' 
-import { Control, Form } from 'react-redux-form'
+import React from "react"
+import { connect } from "react-redux"
+import filter from "lodash/filter"
+import escapeRegExp from "lodash/escapeRegExp"
+import debounce from "lodash/debounce"
 
-import { closeEditPopup, handleSubmitEditPopup, getProductsWithRequiredParam } from '../../actions' 
+import { Modal, FormGroup, Search, Label } from "semantic-ui-react"
 
-class EditProductCatalogPopup extends React.Component {
-  state = {
-    searchProductInputValue: '',
-    productName: '',
-    productNumber: '',
-    productId: '',
-    packagingType: '',
-    packagingSize: ''
+import { closeEditPopup, handleSubmitProductEditPopup } from "../../actions"
+import { Form, Input, Button, Dropdown } from "formik-semantic-ui"
+import * as Yup from "yup"
+import "./styles.scss"
+
+const formValidation = Yup.object().shape({
+  productName: Yup.string()
+    .min(3, "Too short")
+    .required("Required"),
+  productNumber: Yup.string()
+    .min(1, "Too short")
+    .required("Required"),
+  packagingType: Yup.string()
+    .min(1, "Too short")
+    .required("Required"),
+  packagingSize: Yup.string()
+    .min(1, "Too short")
+    .required("Required")
+})
+
+const resultRenderer = ({ casProduct, id }) => (
+  <Label content={casProduct} key={id} />
+)
+
+class AddNewUsersPopup extends React.Component {
+  componentWillMount() {
+    this.resetComponent()
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if(this.state.searchProductInputValue !== prevState.searchProductInputValue) {
-      if(this.state.searchProductInputValue.length < 3) return;
-      this.props.getProductsWithRequiredParam(this.state.searchProductInputValue)
-    }
+  handleCasProduct = () => {
+    return this.props.productsCatalogRows.map(e => ({
+      casProduct: e.casProduct
+    }))
   }
 
-  handleSearchInputValue = e => {
+  resetComponent = () =>
     this.setState({
-      searchProductInputValue: e.target.value
+      isLoading: false,
+      results: [],
+      value: this.props.popupValues.casProduct
     })
-  }
 
-  handleProductInputsValue = stateKey => e => {
-    this.setState({
-      [stateKey]: e.target.value
-    })
-  }
+  handleResultSelect = (e, { result }) =>
+    this.setState({ value: result.casProduct })
 
-  handleChosenProduct = (e) => {
-    const targetId = Number(e.target.getAttribute('data-id')) 
-    this.props.editPopupSearchProducts.forEach(item => {
-      if(item.id === targetId){
-        return this.setState({
-          searchProductInputValue: item.productName,
-          productName: item.productName,
-          productNumber: item.productNumber === undefined ? '' : item.productNumber,
-          productId: item.productId,
-          packagingType: item.packagingType,
-          packagingSize: item.packagingSize
-        })
-      }
-    })
-  }
+  handleSearchChange = (e, { value }) => {
+    this.setState({ isLoading: true, value })
 
-  handleProductsRequest = e => {
-    if(e.target.value.length < 3) return 
-    this.props.getProductsWithRequiredParam(e.target.value) 
+    setTimeout(() => {
+      // if (this.state.value.length < 1) return this.resetComponent()
+      const re = new RegExp(escapeRegExp(this.state.value), "i")
+      const isMatch = result => re.test(result.casProduct)
+
+      this.setState({
+        isLoading: false,
+        results: filter(this.handleCasProduct(), isMatch)
+      })
+    }, 300)
   }
 
   render() {
-    const { closeEditPopup, handleSubmitEditPopup, popupValues, editPopupSearchProducts } = this.props 
     const {
-      productName,
-      productNumber,
-      productId,
-      packagingType,
-      packagingSize,
-      searchProductInputValue
-    } = this.state 
+      closeEditPopup,
+      handleSubmitProductEditPopup,
+      popupValues,
+      packagingType
+    } = this.props
+    console.log("popupValues", popupValues)
+    const { isLoading, results, value } = this.state
+    const initialFormValues = {
+      ...popupValues,
+      packagingType: ""
+    }
+    console.log("initialFormValues", initialFormValues)
 
-    return (					
-      <div className="popup-wrapper col-xs-10 center-xs">      
-        <Form 
-          model="forms.settingsPopup.editBankAccount" 
-          onSubmit={(value) => handleSubmitEditPopup(value, popupValues.branchId)}
-          className="b-popup col-xs-8"
-        >    
-          <h2>{'Warehouse'} Profile</h2>
-          <ul className="">
-            <li className="inputs-wrapper">
-              <label className="b-product-search settings-popup-label" htmlFor="product-search">
-                CAS Number / Product Search
-                <input 
-                  className="popup-input" 
-                  id="product-search" 
-                  value={ searchProductInputValue }
-                  onChange={ e => this.handleSearchInputValue(e) || this.handleProductsRequest(e) }
-                  autoComplete="off"
-                />
-                {
-                  editPopupSearchProducts.length !== 0 ? 
-                  <ul className="b-product-search__found-products">
-                    {
-                      editPopupSearchProducts.map(product => {
-                        return (
-                          <li
-                            className="product-item" 
-                            value={ product.productName }
-                            key={ product.id }
-                            data-id={ product.id }
-                            onClick={ e => this.handleChosenProduct(e) }
-                          >
-                            { product.productName }
-                          </li>
-                        )
-                      })
-                    }
-                  </ul> 
-                  : null
-                }
-              </label>            
-            </li>
-            <li className="inputs-wrapper">
-              <label className="settings-popup-label name" htmlFor="product-name">                        
-                Product Name
-                <Control.text model=".accountHolderName" className="popup-input" id="product-name" value={ productName } onChange={ this.handleProductInputsValue('productName') } />
-              </label>
-              <label className="settings-popup-label address" htmlFor="product-number">
-                Product Number
-                <Control.text model=".accountHolderType" className="popup-input" id="product-number" value={ productNumber } onChange={ this.handleProductInputsValue('productNumber') } />
-              </label>
-              <label className="settings-popup-label city" htmlFor="product-id">
-                Product ID
-                <Control.text model=".accountNumber" className="popup-input" id="product-id" value={ productId } onChange={ this.handleProductInputsValue('productId') } />
-              </label>
-            </li>
-            <li className="inputs-wrapper">
-              <label className="settings-popup-label state" htmlFor="product-packaging-type">  
-                Packaging Type
-                <Control.text model=".country" className="popup-input" id="product-packaging-type" value={ packagingType } onChange={ this.handleProductInputsValue('packagingType') } />
-              </label>
-              <label className="settings-popup-label zip-code" htmlFor="product-packaging-size">
-                Packaging Size
-                <Control.text model=".currency" className="popup-input" id="product-packaging-size" value={ packagingSize } onChange={ this.handleProductInputsValue('packagingSize') } />
-              </label>
-            </li>
-            <li className="inputs-wrapper buttons-wrapper">
-              <input 
-                type="button" 
-                value="Cancel"
-                onClick={ closeEditPopup }
-                className="cancel-popup-btn"
+    return (
+      <Modal open centered={false}>
+        <Modal.Header>Edit product catalog</Modal.Header>
+        <Modal.Content>
+          <Form
+            initialValues={initialFormValues}
+            validationSchema={formValidation}
+            onReset={closeEditPopup}
+            onSubmit={(values, actions) => {
+              console.log("values", values)
+              handleSubmitProductEditPopup({
+                ...values,
+                casProduct: value,
+                id: popupValues.id
+              })
+              actions.setSubmitting(false)
+            }}
+          >
+            <FormGroup widths="equal" className="customFormGroup">
+              <label>CAS Number / Product Search</label>
+              <Search
+                className="customSearch"
+                loading={isLoading}
+                onResultSelect={this.handleResultSelect}
+                onSearchChange={debounce(this.handleSearchChange, 500, {
+                  leading: true
+                })}
+                results={results}
+                value={value}
+                resultRenderer={resultRenderer}
               />
-              <button className="submit-popup-btn" >Save</button> 
-            </li>
-          </ul>
-        </Form>
-      </div>
-    )     
+            </FormGroup>
+            <FormGroup widths="equal">
+              <Input type="text" label="Product Name" name="productName" />
+              <Input type="text" label="Product Number" name="productNumber" />
+            </FormGroup>
+            <FormGroup widths="equal">
+              <Dropdown
+                label="Packaging Type"
+                name="packagingType"
+                options={packagingType}
+              />
+              <Input type="text" label="Packaging Size" name="packagingSize" />
+            </FormGroup>
+            <div style={{ textAlign: "right" }}>
+              <Button.Reset onClick={closeEditPopup}>Cancel</Button.Reset>
+              <Button.Submit>Save</Button.Submit>
+            </div>
+          </Form>
+        </Modal.Content>
+      </Modal>
+    )
   }
 }
 
-const mapDispatchToProps = {   
+const mapDispatchToProps = {
   closeEditPopup,
-  handleSubmitEditPopup,
-  getProductsWithRequiredParam
-} 
-
+  handleSubmitProductEditPopup
+}
 const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues,
-    editPopupSearchProducts: state.settings.editPopupSearchProducts
+    productsCatalogRows: state.settings.productsCatalogRows,
+    packagingType: state.settings.productsPackagingType
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditProductCatalogPopup) 
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddNewUsersPopup)

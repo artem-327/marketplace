@@ -33,7 +33,10 @@ export default function reducer(state = initialState, action) {
     }
     case AT.LOGIN_FULFILLED: {
       return { ...state,
-        identity: payload.identity, 
+        identity: {
+          ...payload.identity,
+          isAdmin: payload.identity.roles.map(r => r.id).indexOf(1) > -1
+        }, 
         loginForm: { ...loginForm,
           // isLoading: false
         }

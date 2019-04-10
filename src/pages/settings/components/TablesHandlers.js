@@ -1,16 +1,15 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { Component } from "react"
+import { connect } from "react-redux"
 
-import SearchIcon from '@material-ui/icons/Search'
-import InputBase from '@material-ui/core/InputBase'
-import MenuItem from '@material-ui/core/MenuItem'
-import TextField from '@material-ui/core/TextField'
+import SearchIcon from "@material-ui/icons/Search"
+import InputBase from "@material-ui/core/InputBase"
+import MenuItem from "@material-ui/core/MenuItem"
+import TextField from "@material-ui/core/TextField"
 
-import {Header, Menu, Button, Input, Dropdown} from 'semantic-ui-react'
+import { Header, Menu, Button, Input, Dropdown } from "semantic-ui-react"
 
-import { openAddPopup, handleFiltersValue } from '../actions'
-import unitedStates from '../../../components/unitedStates'
-
+import { openAddPopup, handleFiltersValue } from "../actions"
+import unitedStates from "../../../components/unitedStates"
 
 const textsTable = {
   "Users"             : {BtnAddText: 'Add User'             , SearchText: 'Search users by name, title or branch ...'},
@@ -23,41 +22,36 @@ const textsTable = {
 }
 
 class TablesHandlers extends Component {
-	state = {		
-		filterFieldCurrentValue: 'None',
+  state = {
+    filterFieldCurrentValue: "None"
   }
 
   handleChangeSelectField = (event, value) => {
-		this.setState({ 
-			filterFieldCurrentValue: value 
-		})
+    this.setState({
+      filterFieldCurrentValue: value
+    })
   }
-  
+
   handleChangeFieldsCurrentValue = fieldStateName => event => {
-		this.setState({ 
-			[fieldStateName]: event.target.value 
-		})
-	}
-  
+    this.setState({
+      [fieldStateName]: event.target.value
+    })
+  }
+
   render() {
-    const {
-      handleFiltersValue, 
-      currentTab,
-      openAddPopup,
-        tabsNames
-    } = this.props
-    
-    const {      
-      filterFieldCurrentValue
-    } = this.state
+    const { handleFiltersValue, currentTab, openAddPopup } = this.props
+
+    const { filterFieldCurrentValue } = this.state
 
     return (
       <Menu secondary>
         <Menu.Item header>
-          <Header as='h1' size='medium'>{currentTab}</Header>
+          <Header as="h1" size="medium">
+            {currentTab}
+          </Header>
         </Menu.Item>
-        
-        <Menu.Menu position='right'>
+
+        <Menu.Menu position="right">
           {/* {currentTab === 'Users' 
             ? <Dropdown item text='Language' scrolling
                 
@@ -70,7 +64,7 @@ class TablesHandlers extends Component {
             </Dropdown>
             : null
           } */}
-            
+
           <Menu.Item>
             <Input style={{width: 340}} size="large" icon='search' placeholder={ textsTable[currentTab].SearchText }
             onChange={ e => handleFiltersValue(e.target.value)} />
@@ -82,14 +76,13 @@ class TablesHandlers extends Component {
           </Menu.Item>
         </Menu.Menu>
       </Menu>
-    ) 
-  }  
+    )
+  }
 }
 
 const mapStateToProps = state => {
   return {
-    currentTab: state.settings.currentTab,
-    tabsNames: state.settings.tabsNames
+    currentTab: state.settings.currentTab
   }
 }
 
@@ -98,4 +91,7 @@ const mapDispatchToProps = {
   handleFiltersValue
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TablesHandlers)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TablesHandlers)
