@@ -8,10 +8,55 @@ export function addAttachment(attachment, type) {
   }
 }
 
-export function addProductOffer(values) {
-  return {
-    type: AT.INVENTORY_ADD_PRODUCT_OFFER,
-    payload: api.addProductOffer(values)
+export function addProductOffer(values, poId = false) {
+
+  let params = {
+    inStock: !!values.inStock,
+    pkgAmount: parseInt(values.pkgAmount),
+    pricing: {
+      cost: values.pricing.cost ? parseInt(values.pricing.cost) : null,
+      price: values.pricing.price ? parseInt(values.pricing.price) : parseInt(values.pricing.tiers[0].price),
+      tiers: values.pricing.tiers.map((tier, index) => {
+        return {
+          price: parseInt(tier.price),
+          quantityFrom: parseInt(!index ? values.minimum : tier.quantityFrom)
+        }
+      })
+    },
+    processingTimeDays: parseInt(values.processingTimeDays),
+    product: parseInt(values.product.id),
+    productCode: values.productCode ? values.productCode : null,
+    productCondition: values.productCondition ? parseInt(values.productCondition) : null,
+    productForm: values.productForm ? parseInt(values.productForm) : null,
+    productGrades: values.productGrades ? values.productGrades.map(pg => {
+      return {
+        id: parseInt(pg.id)
+      }
+    }) : [{id: 1}], // TODO: BE do not allow empty productGrades, but it is wrong add there specified grade
+    productName: values.product.chemicalName,
+    tradeName: values.tradeName ? values.tradeName : null,
+    validityDate: values.validityDate ? values.validityDate + "T00:00:00Z" : null,
+    warehouse: parseInt(values.warehouse)
+  }
+
+  if (!params.lots) {
+    params.lots = [{
+      expirationDate: values.validityDate ? values.validityDate + "T00:00:00Z" : null,
+      lotNumber: "1",
+      pkgAmount: params.pkgAmount
+    }]
+  }
+
+  if (poId) {
+    return {
+      type: AT.INVENTORY_EDIT_PRODUCT_OFFER,
+      payload: api.updateProductOffer(poId, params)
+    }
+  } else {
+    return {
+      type: AT.INVENTORY_ADD_PRODUCT_OFFER,
+      payload: api.addProductOffer(params)
+    }
   }
 }
 
@@ -30,6 +75,19 @@ export function errorUploadFail(fileName) {
     type: AT.ERROR_UPLOAD_FILE_FAILED,
     payload: {
       fileName: fileName
+    }
+  }
+}
+
+export function fillProduct(product) {
+  return {
+    type: AT.INVENTORY_FILL_PRODUCT,
+    payload: {
+      data: [{
+        text: product.casProduct.casIndexName,
+        value: product,
+        key: product.casProduct.id
+      }]
     }
   }
 }
@@ -67,12 +125,22 @@ export function searchProducts(text) {
     type: AT.INVENTORY_SEARCH_PRODUCTS,
     async payload() {
       const response = await api.searchProducts(text)
-      
+
+      if (response.data) {
+        response.data = response.data.filter((p, index) => {
+          if (index === 0) {
+            return true
+          } else {
+            return false
+          }
+        })
+      }
+
       return {
         data: response.data ? response.data.map(p => ({
-          text: p.casIndexName,
-          value: p.id,
-          key: p.id
+          text: p.casProduct.casIndexName,
+          value: p,
+          key: p.casProduct.id
         })) : []
       }
     }
@@ -86,4 +154,19 @@ export function setFileIds(fileId) {
       fileId: fileId
     }
   }
+}
+
+export function uploadDocuments(isLot, productOfferId, fileIds) {
+  let files = []
+  (function loop(j) {
+    if (j < fileIds.length) new Promise((resolve, reject) => {
+      files[j] = fileIds[j].id.id
+      linkAttachment(isLot, productOfferId, files[j]).then(() => {
+        resolve()
+      }).catch(e => {
+        // TODO: solve errors
+        reject()
+      });
+    }).then(loop.bind(null, j+1));
+  })(0)
 }

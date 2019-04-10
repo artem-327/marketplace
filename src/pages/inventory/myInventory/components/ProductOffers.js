@@ -53,7 +53,7 @@ class ProductOffers extends Component {
                     const quantityPart2 = `${productOffer.product.packagingUnit ? productOffer.product.packagingUnit.nameAbbreviation : ''}`;
                     const pkgSize = quantityPart2 ? `${productOffer.product.packagingSize} ${quantityPart2}` : 'N/A';
                     const quantity = quantityPart2 ? `${(parseInt(productOffer.pkgAmount, 10) * parseInt(productOffer.product.packagingSize, 10)).formatNumber()} ` + quantityPart2 : 'N/A';
-                    const cost = "$" + productOffer.pricing.cost.formatMoney(3);
+                    const cost = productOffer.pricing.cost ? "$" + productOffer.pricing.cost.formatMoney(3) : 'N/A';
                     const fobPrice = productOffer.pricing.tiers.length > 1 ?
                         ("$" + productOffer.pricing.tiers[productOffer.pricing.tiers.length - 1].price.formatMoney(3)
                             + ' - ' + "$" + productOffer.pricing.tiers[0].price.formatMoney(3))

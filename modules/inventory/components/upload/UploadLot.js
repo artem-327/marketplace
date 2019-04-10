@@ -12,7 +12,7 @@ class UploadLot extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            files: []
+            files: props.fileIds
         }
     }
 

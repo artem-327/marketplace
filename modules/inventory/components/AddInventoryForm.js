@@ -16,30 +16,30 @@ const TopDivider = styled(Divider)`
 `
 
 const initValues = {
-  inStock: true,
-  product: "",
-  processingTime: 1,
   doesExpire: false,
-  pkgAmount: "0",
-  validityDate: "",
+  inStock: true,
   minimumRequirement: true,
   minimum: 1,
-  splits: 1,
+  pkgAmount: "0",
   priceTiers: 1,
   pricing: {
     tiers: [
       { price: null, quantityFrom: 1 }
     ]
-  }
+  },
+  product: "",
+  processingTimeDays: 1,
+  splits: 1,
+  validityDate: ""
 }
 
 const validationScheme = val.object().shape({
   inStock: val.bool().required("required"),
   product: val.string().required("required"),
-  processingTime: val.number().required("required"),
+  processingTimeDays: val.number().required("required"),
   doesExpire: val.bool(),
   pkgAmount: val.number().nullable().required("Is required"),
-  validityDate: val.string().matches(/[0-9]{2}\-[0-9]{2}\-[0-9]{4}/, { message: 'not valid date' }),
+  validityDate: val.string().matches(/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, { message: 'not valid date' }),
   minimumRequirement: val.bool(),
   minimum: val.number().nullable().moreThan(0, "Must be greater than 0"),
   splits: val.number().nullable().moreThan(0, "Must be greater than 0"),
@@ -58,6 +58,20 @@ export default class AddInventoryForm extends Component {
   state = {
     initialState: {
 
+    }
+  }
+
+  uploadedDocuments = (files) => {
+    if (!this.state.documents) {
+      this.setState({
+        ...this.state,
+        documents: files
+      })
+    } else {
+      this.setState({
+        ...this.state,
+        documents: this.state.documents.concat(files)
+      })
     }
   }
 
@@ -108,22 +122,29 @@ export default class AddInventoryForm extends Component {
     )
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.props.getWarehouses()
-    //
-    // load initial values here
-    //
-    /*setTimeout(() => this.setState({
-      initialState: {
-        priceTiers: 2,
-        pricing: {
-          tiers: [
-            { price: 100, quantityFrom: 1 },
-            { price: 90, quantityFrom: 10 }
-          ]
-        }
-      }
-    }), 500)*/
+    if (this.props.edit) {
+      this.props.getProductOffer(this.props.edit).then(async (response) => {
+        // need to prepare searchedProducts before filling form data
+        await this.props.fillProduct(response.value.data.product)
+        this.setState({
+          initialState: {
+            doesExpire: !!response.value.data.lots[0].expirationDate,
+            lots: response.value.data.lots,
+            minimum: response.value.data.minimum,
+            pkgAmount: response.value.data.pkgAmount,
+            priceTiers: response.value.data.pricing.tiers.length,
+            pricing: response.value.data.pricing,
+            //processingTimeDays: response.value.data.processingTimeDays,
+            product: response.value.data.product,
+            splits: response.value.data.splits,
+            validityDate: response.value.data.lots[0].expirationDate.substring(0, 10), // TODO: check all lots and get one date (nearest or farthest date?)
+            warehouse: response.value.data.warehouse.id
+          }
+        })
+      })
+    }
   }
 
   render() {
@@ -131,7 +152,10 @@ export default class AddInventoryForm extends Component {
       searchProducts, 
       searchedProducts, 
       searchedProductsLoading, 
-      warehousesList
+      warehousesList,
+      addProductOffer,
+      editProductOffer,
+      uploadDocuments
     } = this.props
 
     const {
@@ -139,22 +163,27 @@ export default class AddInventoryForm extends Component {
     } = this.state
 
     return (
-      <Form 
+      <Form
         enableReinitialize
         initialValues={{...initValues, ...initialState}}
         validationSchema={validationScheme}
         onSubmit={(values, actions) => {
-          // postValuesToApi(value)
+          addProductOffer(values, this.props.edit).then((productOffer) => {
+            /*if (this.props.fileIds) {
+              // TODO: Rewrite to addProductOffer function (it should already allow to link attachments to current product offer)
+              uploadDocuments(false, productOffer.value.data, this.props.fileIds)
+            }*/
+          })
           setTimeout(() => actions.setSubmitting(false), 1000)
         }}
       >
         {({ values, errors, setFieldValue }) => (
           <>
-            <Header as="h2">ADD INVENTORY</Header>
+            <Header as="h2">{this.props.edit ? 'EDIT' : 'ADD'} INVENTORY</Header>
             <TopDivider />
             <Grid columns="equal" divided>
               <Grid.Column>
-                
+
                 <Header as='h3'>What product do you want to list?</Header>
                 <FormGroup>
                   <Dropdown
@@ -183,7 +212,7 @@ export default class AddInventoryForm extends Component {
                   <Radio label="Yes" value={true} name="inStock" />
                 </FormGroup>
                 <FormGroup>
-                  <Dropdown label="Processing time" name="processingTime" options={this.getProcessingTimes(14)} />
+                  <Dropdown label="Processing time" name="processingTimeDays" options={this.getProcessingTimes(14)} />
                 </FormGroup>
 
                 <Header as='h3'>Does this product expire?</Header>
@@ -207,7 +236,7 @@ export default class AddInventoryForm extends Component {
 
               </Grid.Column>
               <GridColumn>
-                
+
                 <Header as="h3">Is there any order minimum requirement?</Header>
                 <FormGroup>
                   <Radio label="No" value={false} name="minimumRequirement" />
@@ -217,16 +246,16 @@ export default class AddInventoryForm extends Component {
                   <Input label="Minimum OQ" name="minimum" inputProps={{ type: 'number', disabled: !values.minimumRequirement }} />
                   <Input label="Splits" name="splits" inputProps={{ type: 'number', disabled: !values.minimumRequirement }} />
                 </FormGroup>
-                
+
                 <Header as='h3'>How many price tiers would you like to offer?</Header>
                 <FormGroup>
-                  <Dropdown 
-                    label="Price tiers" 
-                    name="priceTiers" 
+                  <Dropdown
+                    label="Price tiers"
+                    name="priceTiers"
                     options={this.getPriceTiers(10)}
                     inputProps={{
                       onChange: (e,{value}) => setFieldValue(
-                        "pricing.tiers", 
+                        "pricing.tiers",
                         [
                           ...values.pricing.tiers.slice(0, value),
                           ...[...new Array((value - values.priceTiers) > 0 ? value - values.priceTiers : 0)].map(t => ({price: '0', quantityFrom: '0'}))
@@ -242,21 +271,26 @@ export default class AddInventoryForm extends Component {
                 <Header as='h3'>Upload Spec Sheet</Header>
                 <UploadLot {...this.props}
                            control={UploadLot}
-                           model='.documents'
+                           name='documents'
                            type='Spec Sheet'
-                           fileMaxSize={20}>
+                           fileMaxSize={20}
+                           onChange={(files) => setFieldValue(
+                             "documents",
+                             files
+                           )}
+                >
                   Drag and drop spec sheet file here or <a>select</a> from computer
                 </UploadLot>
 
               </GridColumn>
 
               <GridColumn>
-                
+
                 <Header as="h3">Model values</Header>
                 <Segment>
                   <JSONPretty data={values} />
                 </Segment>
-                
+
 
 
                 <Button.Submit>Submit values</Button.Submit>

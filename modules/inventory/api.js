@@ -44,3 +44,7 @@ export async function searchProducts(text) {
 
     return response
 }
+
+export function updateProductOffer(poId, values) {
+  return api.patch(`/prodex/api/product-offers/${poId}`, values)
+}

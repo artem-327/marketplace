@@ -51,6 +51,7 @@ class FormikInput extends Component {
                     })
                   }}
                   onBlur={form.handleBlur}
+                  dateFormat='YYYY-MM-DD'
                 />
               {/* </InputRef> */}
 
