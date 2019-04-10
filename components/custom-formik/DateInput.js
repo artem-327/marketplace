@@ -3,12 +3,13 @@ import {Form, Input} from 'semantic-ui-react'
 import {FastField, Field, getIn} from 'formik'
 import {InputRef} from 'formik-semantic-ui'
 import {getFieldError, setFieldValue} from './helpers'
+
 import {DateInput} from 'semantic-ui-calendar-react'
 
 class FormikInput extends Component {
   constructor(props) {
-    super(props);
-    const {id, name} = props;
+    super(props)
+    const {id, name} = props
     this.id = id || `field_input_${name}`
   }
 
