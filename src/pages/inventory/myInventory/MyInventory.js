@@ -114,13 +114,15 @@ class MyInventory extends Component {
                                               defaultMessage='MY INVENTORY' />
                           </Header>
                         </Menu.Item>
-                        <Menu.Item>
-                          <Header as='h3' size='small' color='grey'>
-                            <FormattedMessage id='myInventory.smallHeader'
-                                              defaultMessage={number + ' products offerings selected'}
-                                              values={{number: number}} />
-                          </Header>
-                        </Menu.Item>
+                        {number ? (
+                          <Menu.Item>
+                            <Header as='h3' size='small' color='grey'>
+                              <FormattedMessage id='myInventory.smallHeader'
+                                                defaultMessage={number + ' products offerings selected'}
+                                                values={{number: number}} />
+                            </Header>
+                          </Menu.Item>
+                        ) : ''}
 
                         <Menu.Menu position='right'>
                           <Menu.Item>

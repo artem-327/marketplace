@@ -9,19 +9,15 @@ body {
   font-family: 'HelveticaNeueLTPro';
 }
 
-i.icon {
-  font-family: 'Font Awesome 5 Pro' !important;
-
-  &.w-light {
-    font-weight: 300;
-  }
-}
-
 .ui.menu .item > i.chevron.icon {
   padding: 0em;
   float: right;
   margin: 0em 0em 0em 1em;
   font-size: 70%;
+}
+
+i.icon:not(.dropdown) {
+  font-family: 'thin-icons' !important;
 }
 
 div.page-wrapper {

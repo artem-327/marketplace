@@ -54,16 +54,20 @@ class AllInventory extends Component {
                 </Menu.Item>
                 <Menu.Menu position='right'>
                   <Menu.Item>
+                    <Button primary id='shippingQuotes' className={cn({hidden: !this.props.shippingQuotes})} onClick={() => this.openShippingQuote()}>
+                      <FormattedMessage
+                        id='allInventory.shippingQuote'
+                        defaultMessage='Shipping Quote'
+                      />
+                    </Button>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchAllProductOffers({...filter})}}/>
+                  </Menu.Item>
+                  <Menu.Item>
                     <SubMenu/>
                   </Menu.Item>
                 </Menu.Menu>
-                <Button primary id='shippingQuotes' className={cn({hidden: !this.props.shippingQuotes})} onClick={() => this.openShippingQuote()}>
-                    <FormattedMessage
-                        id='allInventory.shippingQuote'
-                        defaultMessage='Shipping Quote'
-                    />
-                </Button>
-                <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchAllProductOffers({...filter})}}/>
               </Menu>
               <Filter
                 chemicalName

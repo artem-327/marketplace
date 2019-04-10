@@ -27,14 +27,14 @@ class ProductOffers extends Component {
     let rows = Object.values(this.groupProductOffers(this.props.productOffers)).map((product) => {
       return {
         group: <>
-          {typeof product.casNumber !== 'undefined' ?
+          {product.casProduct && product.casProduct.casNumber ?
             <span
               className="product-casnumber ">
-              {product.casNumber}
+              {product.casProduct.casNumber}
             </span> : ''
           }
           <span className="product-name capitalize">
-            {typeof product.casIndexName !== 'undefined' ? product.casIndexName : 'Unmapped'}
+            {product.casProduct && product.casProduct.casIndexName ? product.casProduct.casIndexName : 'Unmapped'}
           </span>
         </>,
         rows: product.productOffers.map((offer) => {
