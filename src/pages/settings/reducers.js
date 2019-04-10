@@ -33,6 +33,7 @@ export const initialState = {
   ],
   // currentTab: "Product catalog",
   currentTab: 'Users',
+  isOpenPopup: false,
   currentEditForm: null,
   currentAddForm: null,
   confirmMessage: null,
@@ -45,10 +46,24 @@ export const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
+    case AT.OPEN_POPUP: {
+      return {
+        ...state,
+        isOpenPopup: true,
+        popupValues: action.payload
+      }
+    }
+    case AT.CLOSE_POPUP: {
+      return {
+        ...state,
+        isOpenPopup: false,
+        popupValues: null
+      }
+    }
     case AT.OPEN_EDIT_POPUP: {
       return {
         ...state,
-        currentEditForm: state.currentTab,
+        currentForm: state.currentTab,
         editPopupBoolean: state.editPopupBoolean === false ? true : false,
         popupValues: action.payload
       }
@@ -56,7 +71,7 @@ export default function reducer(state = initialState, action) {
     case AT.CLOSE_EDIT_POPUP: {
       return {
         ...state,
-        currentEditForm: null,
+        currentForm: null,
         editPopupBoolean: state.editPopupBoolean === false ? true : false,
         popupValues: null
       }
@@ -98,14 +113,14 @@ export default function reducer(state = initialState, action) {
     case AT.OPEN_ADD_POPUP: {
       return {
         ...state,
-        currentAddForm: state.currentTab,
+        currentForm: state.currentTab,
         popupValues: action.payload
       }
     }
     case AT.CLOSE_ADD_POPUP: {
       return {
         ...state,
-        currentAddForm: null,
+        currentForm: null,
         currentEditForm: null
       }
     }
@@ -152,6 +167,8 @@ export default function reducer(state = initialState, action) {
         address:
           warehouse.address.streetAddress + ', ' + warehouse.address.city,
         countryId: warehouse.address.country.id,
+        zip: warehouse.address.zip.zip,
+        zipID: warehouse.address.zip.id,
         contactName: warehouse.contact.name,
         phone: warehouse.contact.phone,
         email: warehouse.contact.email,
@@ -247,11 +264,6 @@ export default function reducer(state = initialState, action) {
             ? product.packagingType.name
             : null,
           packageID: product.packagingType ? product.packagingType.id : null,
-          // packagingType: packaging
-          //   ? product.packaging.packagingType
-          //     ? product.packaging.packagingType.name
-          //     : ""
-          //   : "",
           packagingSize: product.packagingSize
         }
       })
