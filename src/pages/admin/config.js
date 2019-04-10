@@ -3,14 +3,14 @@ export const config = {
         display: {
             columns: [
                 {name: 'name', title: 'Name'},
-                {name: 'nameAbbreviation', title: 'Name abbreviation',},
-                {name: 'measureType', title: 'Measure type'},
+                {name: 'nameAbbreviation', title: 'Name Abbreviation',},
+                {name: 'measureType', title: 'Measure Type'},
             ],
         },
         edit: [
             {name: 'name', title: 'Name', type: 'text', required: true},
-            {name: 'nameAbbreviation', title: 'Name abbreviation', type: 'text', required: true},
-            {name: 'measureType', title: 'Measure type',  type: 'text', required: true},
+            {name: 'nameAbbreviation', title: 'Name Abbreviation', type: 'text', required: true},
+            {name: 'measureType', title: 'Measure Type',  type: 'text', required: true},
         ],
         api: {
             get: {
@@ -38,12 +38,12 @@ export const config = {
         display: {
             columns: [
                 {name: 'name', title: 'Name'},
-                {name: 'measureType', title: 'Measure type'},
+                {name: 'measureType', title: 'Measure Type'},
             ],
         },
         edit: [
             {name: 'name', title: 'Name', type: 'text', required: true},
-            {name: 'measureType', title: 'Measure type', type: 'text', required: true},
+            {name: 'measureType', title: 'Measure Type', type: 'text', required: true},
         ],
         api: {
             get: {
