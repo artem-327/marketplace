@@ -35,7 +35,7 @@ class AddNewWarehousePopup extends React.Component {
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>Add warehouse</Modal.Header>
+        <Modal.Header>Add Warehouse</Modal.Header>
         <Modal.Content>
           <Form
             initialValues={initialFormValues}
@@ -55,17 +55,14 @@ class AddNewWarehousePopup extends React.Component {
               <Input type="text" label="City" name="city" />
             </FormGroup>
             <FormGroup widths="equal">
+              <Dropdown label="Country" name="country" options={country} />
               <Input type="text" label="State" name="state" />
-              <Input type="text" label="Zipcode" name="zipCode" />
+              <Input type="text" label="Zip Code" name="zipCode" />
             </FormGroup>
             <FormGroup widths="equal">
               <Input type="text" label="Phone" name="phone" />
               <Input type="text" label="Email" name="email" />
             </FormGroup>
-            <FormGroup>
-              <Dropdown label="Country" name="country" options={country} />
-            </FormGroup>
-
             <div style={{ textAlign: 'right' }}>
               <Button.Reset>Cancel</Button.Reset>
               <Button.Submit>Save</Button.Submit>

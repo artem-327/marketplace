@@ -60,26 +60,12 @@ class Admin extends Component {
 
     }
 
-    checkAdminRights()
-    {
-        if (this.props.auth && this.props.auth.identity && this.props.auth.identity.roles)
-        {
-            for (let role in this.props.auth.identity.roles)
-            {
-                if (this.props.auth.identity.roles[role].id === 1)  // roles.id === 1 means ADMIN role
-                    return true;
-            }
-        }
-        return false;
-    }
-
     render() {
-        if (!this.checkAdminRights()) return "Access denied!";
+        if (!this.props.auth.identity.isAdmin) return "Access denied!";
 
         return (
-            <Container fluid style={{ marginTop: 20 }}>
+            <Container fluid>
                 <TablesHandlers />
-                <Divider />
                 <Grid columns='equal'>
                     <Grid.Row>
                         <Grid.Column width={3}>

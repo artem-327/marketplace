@@ -11,6 +11,16 @@ import { Header, Menu, Button, Input, Dropdown } from "semantic-ui-react"
 import { openAddPopup, handleFiltersValue } from "../actions"
 import unitedStates from "../../../components/unitedStates"
 
+const textsTable = {
+  "Users"             : {BtnAddText: 'Add User'             , SearchText: 'Search user by name, title or branch ...'},
+  "Branches"          : {BtnAddText: 'Add Branch'           , SearchText: 'Search branch by name, address or contact ...'},
+  "Warehouses"        : {BtnAddText: 'Add Warehouse'        , SearchText: 'Search warehouse by name, address or contact ...'},
+  "Product catalog"   : {BtnAddText: 'Add Product Catalog'  , SearchText: 'Search product catalog by name, number ...'},
+  "Global Broadcast"  : {BtnAddText: 'Add Global Broadcast' , SearchText: 'Search global broadcast by name ...'},
+  "Credit cards"      : {BtnAddText: 'Add Credit Card'      , SearchText: 'Search credit card ...'},
+  "Bank accounts"     : {BtnAddText: 'Add Bank Account'     , SearchText: 'Search bank account ...'},
+}
+
 class TablesHandlers extends Component {
   state = {
     filterFieldCurrentValue: "None"
@@ -60,7 +70,7 @@ class TablesHandlers extends Component {
               style={{ width: 340 }}
               size="large"
               icon="search"
-              placeholder="Search users by name, title or branch ..."
+              placeholder={ textsTable[currentTab].SearchText }
               onChange={e => handleFiltersValue(e.target.value)}
             />
           </Menu.Item>
@@ -70,7 +80,7 @@ class TablesHandlers extends Component {
               primary
               onClick={() => openAddPopup(currentTab)}
             >
-              Add {currentTab}
+              { textsTable[currentTab].BtnAddText }
             </Button>
           </Menu.Item>
         </Menu.Menu>
