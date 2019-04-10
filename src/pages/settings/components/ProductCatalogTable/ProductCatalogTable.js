@@ -1,23 +1,23 @@
-import React, { Component } from "react"
-import { connect } from "react-redux"
-import ProdexTable from "~/components/table"
-import { Confirm } from "semantic-ui-react"
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import ProdexTable from '~/components/table'
+import { Confirm } from 'semantic-ui-react'
 import {
   openEditPopup,
   getProductsCatalogRequest,
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation
-} from "../../actions"
+} from '../../actions'
 
 class ProductCatalogTable extends Component {
   state = {
     columns: [
-      { name: "productName", title: "Product Name" },
-      { name: "productNumber", title: "Product Number" },
-      { name: "casProduct", title: "CAS Product" },
-      { name: "packagingType", title: "Packaging Type" },
-      { name: "packagingSize", title: "Packaging Size" }
+      { name: 'productName', title: 'Product Name' },
+      { name: 'productNumber', title: 'Product Number' },
+      { name: 'casProduct', title: 'CAS Product' },
+      { name: 'packagingType', title: 'Packaging Type' },
+      { name: 'packagingSize', title: 'Packaging Size' }
     ]
   }
 
@@ -36,7 +36,7 @@ class ProductCatalogTable extends Component {
       deleteConfirmation
     } = this.props
 
-    console.log("TABLE ROWS", rows)
+    console.log('TABLE ROWS', rows)
 
     const { columns } = this.state
 
@@ -54,9 +54,9 @@ class ProductCatalogTable extends Component {
           columns={columns}
           filterValue={filterValue}
           rowActions={[
-            { text: "Edit", callback: row => openEditPopup(row) },
+            { text: 'Edit', callback: row => openEditPopup(row) },
             {
-              text: "Delete",
+              text: 'Delete',
               callback: row => handleOpenConfirmPopup(row.id)
             }
           ]}

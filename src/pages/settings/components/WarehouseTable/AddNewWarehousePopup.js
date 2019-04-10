@@ -23,10 +23,10 @@ const formValidation = Yup.object().shape({
     .required('Required'),
   country: Yup.string()
     .min(1, 'Too short')
+    .required('Required'),
+  address: Yup.string()
+    .min(3, 'Too short')
     .required('Required')
-  // country: Yup.string()
-  //   .min(1, 'Too short')
-  //   .required('Required')
 })
 
 class AddNewWarehousePopup extends React.Component {
@@ -47,7 +47,7 @@ class AddNewWarehousePopup extends React.Component {
             }}
           >
             <FormGroup widths="equal">
-              <Input type="text" label="Warehouse name" name="warehouseName" />
+              <Input type="text" label="Warehouse Name" name="warehouseName" />
               <Input type="text" label="Contact Name" name="contactName" />
             </FormGroup>
             <FormGroup widths="equal">
