@@ -1,53 +1,74 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import ProdexTable from '~/components/table'
-import { getWarehousesDataRequest, openEditPopup, deleteWarehouse } from '../../actions'
+import ProdexGrid from '~/components/table'
+import { Confirm } from 'semantic-ui-react'
+import {
+  getWarehousesDataRequest,
+  openEditPopup,
+  closeConfirmPopup,
+  deleteConfirmation,
+  handleOpenConfirmPopup
+} from '../../actions'
 
 class WarehouseTable extends Component {
+  state = {
+    columns: [
+      { name: 'warehouseName', title: 'Warehouse Name' },
+      { name: 'address', title: 'Address' },
+      { name: 'contactName', title: 'Contact Name' },
+      { name: 'phone', title: 'Phone' },
+      { name: 'email', title: 'E-mail' }
+    ]
+  }
 
-	state = {
-		columns: [
-			{ name: 'warehouseName', title: 'Warehouse Name' },
-			{ name: 'address', title: 'Address' },
-			{ name: 'contactName', title: 'Contact Name' },
-			{ name: 'phone', title: 'Phone' },
-			{ name: 'email', title: 'E-mail' }
-		]
-	}
+  componentDidMount() {
+    this.props.getWarehousesDataRequest()
+  }
 
-	componentDidMount() {
-		this.props.getWarehousesDataRequest();
-	}
+  render() {
+    const {
+      rows,
+      filterValue,
+      openEditPopup,
+      closeConfirmPopup,
+      deleteConfirmation,
+      confirmMessage,
+      handleOpenConfirmPopup
+    } = this.props
 
-	render() {
-		const {
-			rows,
-			filterValue,
-			openEditPopup,
-			deleteWarehouse
-		} = this.props
+    const { columns } = this.state
 
-		const { columns } = this.state
-
-		return (
-			<ProdexTable 
-				filterValue={filterValue}
-				columns={columns} 
-				rows={rows} 
-				rowActions={[
-					{text: 'Edit', callback: (row) => openEditPopup(row)},
-					{text: 'Delete', callback: (row) => deleteWarehouse(row.id)}
-				]} 
-			/>
-		)
-	}
+    return (
+      <React.Fragment>
+        <Confirm
+          size="tiny"
+          content="Do you really want to delete warehouse?"
+          open={confirmMessage}
+          onCancel={closeConfirmPopup}
+          onConfirm={deleteConfirmation}
+        />
+        <ProdexGrid
+          filterValue={filterValue}
+          columns={columns}
+          rows={rows}
+          rowActions={[
+            { text: 'Edit', callback: row => openEditPopup(row) },
+            { text: 'Delete', callback: row => handleOpenConfirmPopup(row.id) }
+          ]}
+        />
+      </React.Fragment>
+    )
+  }
 }
 
 const mapDispatchToProps = {
   getWarehousesDataRequest,
   openEditPopup,
-  deleteWarehouse
-};
+  openEditPopup,
+  closeConfirmPopup,
+  deleteConfirmation,
+  handleOpenConfirmPopup
+}
 
 const mapStateToProps = state => {
   return {
@@ -55,11 +76,12 @@ const mapStateToProps = state => {
     editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
     editPopupBoolean: state.settings.editPopupBoolean,
     addNewWarehousePopup: state.settings.addNewWarehousePopup,
-    filterValue: state.settings.filterValue
-  };
-};
+    filterValue: state.settings.filterValue,
+    confirmMessage: state.settings.confirmMessage
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(WarehouseTable);
+)(WarehouseTable)
