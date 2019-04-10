@@ -4,7 +4,7 @@ import ProdexGrid from '~/components/table'
 import { Confirm } from 'semantic-ui-react'
 import {
   getWarehousesDataRequest,
-  openEditPopup,
+  openPopup,
   closeConfirmPopup,
   deleteConfirmation,
   handleOpenConfirmPopup
@@ -29,7 +29,7 @@ class WarehouseTable extends Component {
     const {
       rows,
       filterValue,
-      openEditPopup,
+      openPopup,
       closeConfirmPopup,
       deleteConfirmation,
       confirmMessage,
@@ -52,7 +52,7 @@ class WarehouseTable extends Component {
           columns={columns}
           rows={rows}
           rowActions={[
-            { text: 'Edit', callback: row => openEditPopup(row) },
+            { text: 'Edit', callback: row => openPopup(row) },
             { text: 'Delete', callback: row => handleOpenConfirmPopup(row.id) }
           ]}
         />
@@ -63,8 +63,7 @@ class WarehouseTable extends Component {
 
 const mapDispatchToProps = {
   getWarehousesDataRequest,
-  openEditPopup,
-  openEditPopup,
+  openPopup,
   closeConfirmPopup,
   deleteConfirmation,
   handleOpenConfirmPopup

@@ -3,7 +3,11 @@ import { connect } from 'react-redux'
 
 import { Modal, FormGroup } from 'semantic-ui-react'
 
-import { closeAddPopup, handlerSubmitUserEditPopup } from '../../actions'
+import {
+  closePopup,
+  handlerSubmitUserEditPopup,
+  postNewUserRequest
+} from '../../actions'
 import { Form, Input, Button } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
@@ -22,31 +26,37 @@ const formValidation = Yup.object().shape({
     .required('Emails is required')
 })
 
-class AddNewUsersPopup extends React.Component {
+class UsersPopup extends React.Component {
+  submitHandler = (values, actions) => {
+    console.log(this.props.popupValues)
+    if (this.props.popupValues) {
+      this.props.handlerSubmitUserEditPopup(values, this.props.popupValues.id)
+    } else {
+      this.props.postNewUserRequest(values)
+    }
+    actions.setSubmitting(false)
+  }
+
   render() {
-    const {
-      closeAddPopup,
-      handlerSubmitUserEditPopup,
-      popupValues
-    } = this.props
-    const [firstName, lastName] = popupValues.userName
-      ? popupValues.userName.split(' ')
-      : ['', '']
-    const { middleName, email, id } = popupValues
+    console.log(this.props)
+    const { closePopup, popupValues } = this.props
+    const [firstName, lastName] =
+      popupValues && popupValues.userName
+        ? popupValues.userName.split(' ')
+        : ['', '']
+    const { middleName = '', email = '' } = popupValues || {}
     const initialFormValues = { firstName, lastName, middleName, email }
+    const title = popupValues ? 'Edit' : 'Add'
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>Edit user</Modal.Header>
+        <Modal.Header>{`${title} `} User</Modal.Header>
         <Modal.Content>
           <Form
             initialValues={initialFormValues}
             validationSchema={formValidation}
-            onReset={closeAddPopup}
-            onSubmit={(values, actions) => {
-              handlerSubmitUserEditPopup(values, id)
-              actions.setSubmitting(false)
-            }}
+            onReset={closePopup}
+            onSubmit={this.submitHandler}
           >
             <FormGroup widths="equal">
               <Input type="text" label="First Name" name="firstName" />
@@ -57,7 +67,7 @@ class AddNewUsersPopup extends React.Component {
               <Input type="text" label="Email" name="email" />
             </FormGroup>
             <div style={{ textAlign: 'right' }}>
-              <Button.Reset onClick={closeAddPopup}>Cancel</Button.Reset>
+              <Button.Reset onClick={closePopup}>Cancel</Button.Reset>
               <Button.Submit>Save</Button.Submit>
             </div>
           </Form>
@@ -68,16 +78,14 @@ class AddNewUsersPopup extends React.Component {
 }
 
 const mapDispatchToProps = {
-  closeAddPopup,
+  postNewUserRequest,
+  closePopup,
   handlerSubmitUserEditPopup
 }
-const mapStateToProps = state => {
-  return {
-    popupValues: state.settings.popupValues
-  }
-}
+
+const mapStateToProps = ({ settings: { popupValues } }) => ({ popupValues })
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AddNewUsersPopup)
+)(UsersPopup)

@@ -1,19 +1,19 @@
-import React, { Component } from "react"
-import { connect } from "react-redux"
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
-import SearchIcon from "@material-ui/icons/Search"
-import InputBase from "@material-ui/core/InputBase"
-import MenuItem from "@material-ui/core/MenuItem"
-import TextField from "@material-ui/core/TextField"
+import SearchIcon from '@material-ui/icons/Search'
+import InputBase from '@material-ui/core/InputBase'
+import MenuItem from '@material-ui/core/MenuItem'
+import TextField from '@material-ui/core/TextField'
 
-import { Header, Menu, Button, Input, Dropdown } from "semantic-ui-react"
+import { Header, Menu, Button, Input, Dropdown } from 'semantic-ui-react'
 
-import { openAddPopup, handleFiltersValue } from "../actions"
-import unitedStates from "../../../components/unitedStates"
+import { openPopup, handleFiltersValue } from '../actions'
+import unitedStates from '../../../components/unitedStates'
 
 class TablesHandlers extends Component {
   state = {
-    filterFieldCurrentValue: "None"
+    filterFieldCurrentValue: 'None'
   }
 
   handleChangeSelectField = (event, value) => {
@@ -29,7 +29,7 @@ class TablesHandlers extends Component {
   }
 
   render() {
-    const { handleFiltersValue, currentTab, openAddPopup } = this.props
+    const { handleFiltersValue, currentTab, openPopup } = this.props
 
     const { filterFieldCurrentValue } = this.state
 
@@ -42,19 +42,6 @@ class TablesHandlers extends Component {
         </Menu.Item>
 
         <Menu.Menu position="right">
-          {/* {currentTab === 'Users' 
-            ? <Dropdown item text='Language' scrolling
-                
-              >
-                <Dropdown.Menu>
-                  {unitedStates.map(option => (
-                    <Dropdown.Item key={option.name} value={option.name}>{option.name}</Dropdown.Item> 
-                  ))}
-                </Dropdown.Menu>
-            </Dropdown>
-            : null
-          } */}
-
           <Menu.Item>
             <Input
               style={{ width: 340 }}
@@ -65,11 +52,7 @@ class TablesHandlers extends Component {
             />
           </Menu.Item>
           <Menu.Item>
-            <Button
-              size="large"
-              primary
-              onClick={() => openAddPopup(currentTab)}
-            >
+            <Button size="large" primary onClick={() => openPopup()}>
               Add {currentTab}
             </Button>
           </Menu.Item>
@@ -86,7 +69,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-  openAddPopup,
+  openPopup,
   handleFiltersValue
 }
 
