@@ -12,7 +12,7 @@ import { openAddPopup, handleFiltersValue } from "../actions"
 import unitedStates from "../../../components/unitedStates"
 
 const textsTable = {
-  "Users"             : {BtnAddText: 'Add User'             , SearchText: 'Search users by name, title or branch ...'},
+  "Users"             : {BtnAddText: 'Add User'             , SearchText: 'Search user by name, title or branch ...'},
   "Branches"          : {BtnAddText: 'Add Branch'           , SearchText: 'Search branch by name, address or contact ...'},
   "Warehouses"        : {BtnAddText: 'Add Warehouse'        , SearchText: 'Search warehouse by name, address or contact ...'},
   "Product catalog"   : {BtnAddText: 'Add Product Catalog'  , SearchText: 'Search product catalog by name, number ...'},
@@ -66,11 +66,20 @@ class TablesHandlers extends Component {
           } */}
 
           <Menu.Item>
-            <Input style={{width: 340}} size="large" icon='search' placeholder={ textsTable[currentTab].SearchText }
-            onChange={ e => handleFiltersValue(e.target.value)} />
+            <Input
+              style={{ width: 340 }}
+              size="large"
+              icon="search"
+              placeholder={ textsTable[currentTab].SearchText }
+              onChange={e => handleFiltersValue(e.target.value)}
+            />
           </Menu.Item>
           <Menu.Item>
-            <Button size="large" primary onClick={() => openAddPopup(currentTab) }>
+            <Button
+              size="large"
+              primary
+              onClick={() => openAddPopup(currentTab)}
+            >
               { textsTable[currentTab].BtnAddText }
             </Button>
           </Menu.Item>

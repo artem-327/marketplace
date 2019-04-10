@@ -72,11 +72,13 @@ class EditWarehousePopup extends React.Component {
               <Input type="text" label="City" name="city" />
             </FormGroup>
             <FormGroup widths="equal">
+              <Dropdown label="Country" name="country" options={country} />
+              <Input type="text" label="State" name="state" />
+              <Input type="text" label="Zip Code" name="zipCode" />
+            </FormGroup>
+            <FormGroup widths="equal">
               <Input type="text" label="Phone" name="phone" />
               <Input type="text" label="Email" name="email" />
-            </FormGroup>
-            <FormGroup>
-              <Dropdown label="Country" name="country" options={country} />
             </FormGroup>
             <div style={{ textAlign: 'right' }}>
               <Button.Reset onClick={closeAddPopup}>Cancel</Button.Reset>
