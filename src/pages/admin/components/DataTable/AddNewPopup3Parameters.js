@@ -32,7 +32,7 @@ class AddNewPopup3Parameters extends React.Component {
 
             return (
                 <Modal open centered={false}>
-                    <Modal.Header>Add new { currentTab }</Modal.Header>
+                    <Modal.Header>Add { config.addEditText }</Modal.Header>
                     <Modal.Content>
                         <Form
                             initialValues={initialFormValues}

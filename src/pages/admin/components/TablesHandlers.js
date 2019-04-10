@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { config } from '../config'
 
 import SearchIcon from '@material-ui/icons/Search'
 import InputBase from '@material-ui/core/InputBase'
@@ -50,12 +51,12 @@ class TablesHandlers extends Component {
 
                 <Menu.Menu position='right'>
                     <Menu.Item>
-                        <Input style={{width: 340}} size="large" icon='search' placeholder={"Search "+currentTab.toLowerCase()}
+                        <Input style={{width: 340}} size="large" icon='search' placeholder={config[currentTab].searchText}
                                onChange={ e => handleFiltersValue(e.target.value)} />
                     </Menu.Item>
                     <Menu.Item>
                         <Button size="large" primary onClick={() => openAddPopup(currentTab) }>
-                            Add new { currentTab }
+                            Add { config[currentTab].addEditText }
                         </Button>
                     </Menu.Item>
                 </Menu.Menu>
