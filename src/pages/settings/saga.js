@@ -233,9 +233,9 @@ function* putWarehouseEditPopup({ payload, id }) {
     const dataBody = {
       // accessorials: [0],
       address: {
-        city: payload.address,
+        city: payload.city,
         country: 1,
-        streetAddress: payload.city,
+        streetAddress: payload.address,
         province: 44,
         zip: '35'
       },

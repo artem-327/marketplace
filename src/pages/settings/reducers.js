@@ -11,7 +11,7 @@ export const initialState = {
   creditCardsRows: [],
   bankAccountsRows: [],
   productsCatalogRows: [],
-  productsPackagingType: [],
+  productsPackagingType: null,
   columnsForFormatter: {
     checkboxColumns: ['checkbox'],
     permissionsColumns: ['permissions'],
@@ -233,7 +233,6 @@ export default function reducer(state = initialState, action) {
 
     case AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS: {
       const rows = action.payload.products.map(product => {
-        // const packaging = get(product, ["packaging"], false)
         return {
           id: product.id,
           // product: product.product.id,
@@ -247,6 +246,7 @@ export default function reducer(state = initialState, action) {
           packagingType: product.packagingType
             ? product.packagingType.name
             : null,
+          packageID: product.packagingType ? product.packagingType.id : null,
           // packagingType: packaging
           //   ? product.packaging.packagingType
           //     ? product.packaging.packagingType.name
@@ -264,8 +264,8 @@ export default function reducer(state = initialState, action) {
       })
       return {
         ...state,
-        productsCatalogRows: rows
-        // productsPackagingType: packagingType
+        productsCatalogRows: rows,
+        productsPackagingType: packagingType
       }
     }
 
