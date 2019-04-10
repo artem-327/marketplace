@@ -45,6 +45,9 @@ import shippingQuotesSaga from "./saga/shippingQuotes"
 import settingsSaga from "./pages/settings/saga"
 import adminSaga from "./pages/admin/saga"
 
+// Simple Add/Edit Inventory
+import simpleAdd from  '~/modules/inventory/reducer'
+
 // Orders
 import ordersReducers from './pages/orders/reducers'
 import ordersSaga from './pages/orders/saga'
@@ -70,6 +73,7 @@ const reducer = combineReducers({
   errors,
   dataTables,
   saveFilterItem,
+  simpleAdd,
   orders: ordersReducers,
   forms: combineForms({
     filter: filterInit.data,
@@ -144,6 +148,7 @@ export const makeStore = (preloadedState) => {
   sagaMiddleware.run(broadcastSaga)
   sagaMiddleware.run(productOffersSaga)
   sagaMiddleware.run(shippingQuotesSaga)
+  //sagaMiddleware.run(simpleAddSaga)
   sagaMiddleware.run(ordersSaga)
   sagaMiddleware.run(settingsSaga)
   sagaMiddleware.run(adminSaga)
