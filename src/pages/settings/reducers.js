@@ -1,4 +1,5 @@
-import * as AT from "./action-types"
+import * as AT from './action-types'
+import get from 'lodash/get'
 
 export const initialState = {
   editPopupBoolean: false,
@@ -10,30 +11,35 @@ export const initialState = {
   creditCardsRows: [],
   bankAccountsRows: [],
   productsCatalogRows: [],
+  productsPackagingType: [],
   columnsForFormatter: {
-    checkboxColumns: ["checkbox"],
-    permissionsColumns: ["permissions"],
-    editDeleteColumns: ["editDeleteBtn"]
+    checkboxColumns: ['checkbox'],
+    permissionsColumns: ['permissions'],
+    editDeleteColumns: ['editDeleteBtn']
   },
+  country: [],
   tabsNames: [
-    { name: "Users", id: 1 },
-    { name: "Branches", id: 2 },
-    { name: "Warehouses", id: 3 },
-    { name: "Product catalog", id: 4 },
-    { name: "Global Broadcast", id: 5 },
+    { name: 'Users', id: 1 },
+    { name: 'Branches', id: 2 },
+    { name: 'Warehouses', id: 3 },
+    { name: 'Product catalog', id: 4 },
+    { name: 'Global Broadcast', id: 5 },
     //{ name: "Client list", id: 6 }, // removed #29771
-    { name: "Credit cards", id: 7 },
-    { name: "Bank accounts", id: 8 }
+    { name: 'Credit cards', id: 7 },
+    { name: 'Bank accounts', id: 8 }
     //{ name: "Tax manager", id: 9 }, // removed #29771
     //{ name: "Terms", id: 10 }, // removed #29771
     //{ name: "Website Controls", id: 11 } // removed #29771
   ],
-  currentTab: "Warehouses",
+  // currentTab: "Product catalog",
+  currentTab: 'Users',
   currentEditForm: null,
   currentAddForm: null,
   confirmMessage: null,
+  toast: { message: null, isSuccess: null },
   deleteUserById: null,
-  filterValue: "",
+  deleteRowByid: null,
+  filterValue: '',
   editPopupSearchProducts: []
 }
 
@@ -50,22 +56,42 @@ export default function reducer(state = initialState, action) {
     case AT.CLOSE_EDIT_POPUP: {
       return {
         ...state,
-        currentEditForm: null
+        currentEditForm: null,
+        editPopupBoolean: state.editPopupBoolean === false ? true : false,
+        popupValues: null
       }
     }
     case AT.OPEN_CONFIRM_POPUP: {
       return {
         ...state,
-        confirmMessage: state.currentTab,
-        popupValues: state.currentTab,
-        deleteUserById: action.payload
+        confirmMessage: true,
+        deleteRowByid: action.payload
+      }
+    }
+    case AT.OPEN_TOAST: {
+      return {
+        ...state,
+        toast: action.payload
+      }
+    }
+    case AT.CLOSE_TOAST: {
+      return {
+        ...state,
+        toast: { message: null, isSuccess: null }
       }
     }
     case AT.CLOSE_CONFIRM_POPUP: {
       return {
         ...state,
-        confirmMessage: null,
-        popupValues: state.currentTab
+        deleteRowByid: null,
+        confirmMessage: null
+      }
+    }
+    case AT.CONFIRM_SUCCESS: {
+      return {
+        ...state,
+        deleteRowByid: null,
+        confirmMessage: null
       }
     }
 
@@ -103,13 +129,13 @@ export default function reducer(state = initialState, action) {
     case AT.GET_USERS_DATA_SUCCESS: {
       const usersRows = action.payload.map(user => {
         return {
-          checkbox: " ",
-          userName: user.firstname + " " + user.lastname,
-          title: "title",
+          checkbox: ' ',
+          userName: user.firstname + ' ' + user.lastname,
+          title: 'title',
           email: user.email,
-          phone: "phone",
-          homeBranch: user.branch ? user.branch.address.province.name : "",
-          permissions: user.roles ? user.roles.name : "",
+          phone: 'phone',
+          homeBranch: user.branch ? user.branch.address.province.name : '',
+          permissions: user.roles ? user.roles.name : '',
           middleName: user.middlename,
           id: user.id
         }
@@ -121,21 +147,30 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_WAREHOUSES_DATA_SUCCESS: {
-      const warehousesRows = action.payload.map(warehouse => {
-        return {
-          warehouseName: warehouse.name,
-          address:
-            warehouse.address.streetAddress + ", " + warehouse.address.city,
-          contactName: warehouse.contact.name,
-          phone: warehouse.contact.phone,
-          email: warehouse.contact.email,
-          id: warehouse.id
+      const warehousesRows = action.payload.warehouses.map(warehouse => ({
+        warehouseName: warehouse.name,
+        address:
+          warehouse.address.streetAddress + ', ' + warehouse.address.city,
+        countryId: warehouse.address.country.id,
+        contactName: warehouse.contact.name,
+        phone: warehouse.contact.phone,
+        email: warehouse.contact.email,
+        branchId: warehouse.id,
+        id: warehouse.id
+      }))
+
+      warehousesRows.forEach(element => {
+        for (let key in element) {
+          if (element[key] === 'unknown') {
+            element[key] = ''
+          }
         }
       })
 
       return {
         ...state,
-        warehousesRows: warehousesRows
+        warehousesRows: warehousesRows,
+        country: action.payload.newCountryFormat
       }
     }
 
@@ -143,7 +178,7 @@ export default function reducer(state = initialState, action) {
       const rows = action.payload.map(branch => {
         return {
           warehouseName: branch.name,
-          address: branch.address.streetAddress + ", " + branch.address.city,
+          address: branch.address.streetAddress + ', ' + branch.address.city,
           contactName: branch.contact.name,
           phone: branch.contact.phone,
           email: branch.contact.email,
@@ -197,19 +232,40 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS: {
-      const rows = action.payload.map(product => {
+      const rows = action.payload.products.map(product => {
+        // const packaging = get(product, ["packaging"], false)
         return {
-          productName: product,
-          productNumber: product,
-          productId: product,
-          packagingType: product,
-          packagingSize: product
+          id: product.id,
+          // product: product.product.id,
+          productName: product.productName,
+          productNumber: product.productCode,
+          casProduct: product.casProduct
+            ? product.casProduct.casNumber
+              ? product.casProduct.casNumber
+              : null
+            : null,
+          packagingType: product.packagingType
+            ? product.packagingType.name
+            : null,
+          // packagingType: packaging
+          //   ? product.packaging.packagingType
+          //     ? product.packaging.packagingType.name
+          //     : ""
+          //   : "",
+          packagingSize: product.packagingSize
         }
       })
-
+      const packagingType = action.payload.productsTypes.map((type, id) => {
+        return {
+          key: id,
+          text: type.name,
+          value: type.measureType
+        }
+      })
       return {
         ...state,
         productsCatalogRows: rows
+        // productsPackagingType: packagingType
       }
     }
 
@@ -222,7 +278,7 @@ export default function reducer(state = initialState, action) {
           productId: item.product.id,
           packagingType:
             item.packaging.packagingType === undefined
-              ? ""
+              ? ''
               : item.packaging.packagingType.name,
           packagingSize: item.packaging.size
         }

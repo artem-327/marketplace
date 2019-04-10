@@ -4,9 +4,8 @@ import { connect } from 'react-redux'
 import { Modal, FormGroup } from 'semantic-ui-react'
 
 import { closeAddPopup, postNewWarehouseRequest } from '../../actions'
-import { Form, Input, Button } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
-
 
 const initialFormValues = {
   warehouseName: '',
@@ -19,21 +18,24 @@ const initialFormValues = {
   email: ''
 }
 const formValidation = Yup.object().shape({
-  warehouseName: Yup.string().min(3, "Too short").required("Required"),
-  contactName: Yup.string().min(3, "Too short").required("Required"),
-  email: Yup.string().email("Invalid email").required("Email is required")
+  warehouseName: Yup.string()
+    .min(3, 'Too short')
+    .required('Required'),
+  country: Yup.string()
+    .min(1, 'Too short')
+    .required('Required')
+  // country: Yup.string()
+  //   .min(1, 'Too short')
+  //   .required('Required')
 })
 
 class AddNewWarehousePopup extends React.Component {
   render() {
-    const {
-      closeAddPopup,
-      postNewWarehouseRequest
-    } = this.props
+    const { closeAddPopup, postNewWarehouseRequest, country } = this.props
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>Add new warehouse</Modal.Header>
+        <Modal.Header>Add warehouse</Modal.Header>
         <Modal.Content>
           <Form
             initialValues={initialFormValues}
@@ -41,6 +43,7 @@ class AddNewWarehousePopup extends React.Component {
             onReset={closeAddPopup}
             onSubmit={(values, actions) => {
               postNewWarehouseRequest(values)
+              actions.setSubmitting(false)
             }}
           >
             <FormGroup widths="equal">
@@ -50,6 +53,8 @@ class AddNewWarehousePopup extends React.Component {
             <FormGroup widths="equal">
               <Input type="text" label="Address" name="address" />
               <Input type="text" label="City" name="city" />
+            </FormGroup>
+            <FormGroup widths="equal">
               <Input type="text" label="State" name="state" />
               <Input type="text" label="Zipcode" name="zipCode" />
             </FormGroup>
@@ -57,12 +62,14 @@ class AddNewWarehousePopup extends React.Component {
               <Input type="text" label="Phone" name="phone" />
               <Input type="text" label="Email" name="email" />
             </FormGroup>
+            <FormGroup>
+              <Dropdown label="Country" name="country" options={country} />
+            </FormGroup>
 
             <div style={{ textAlign: 'right' }}>
               <Button.Reset>Cancel</Button.Reset>
               <Button.Submit>Save</Button.Submit>
             </div>
-            
           </Form>
         </Modal.Content>
       </Modal>
@@ -75,4 +82,13 @@ const mapDispatchToProps = {
   postNewWarehouseRequest
 }
 
-export default connect(null, mapDispatchToProps)(AddNewWarehousePopup) 
+const mapStateToProps = state => {
+  return {
+    country: state.settings.country
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AddNewWarehousePopup)
