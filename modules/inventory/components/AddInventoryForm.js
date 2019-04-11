@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button } from 'formik-semantic-ui'
-import { Segment, Header, Divider, Grid, GridColumn, FormGroup } from 'semantic-ui-react'
+import { Modal, Icon, Segment, Header, Divider, Grid, GridColumn, FormGroup } from 'semantic-ui-react'
 import styled from 'styled-components'
 import * as val from 'yup'
 import {DateInput} from '~/components/custom-formik'
@@ -122,6 +122,15 @@ export default class AddInventoryForm extends Component {
     )
   }
 
+  resetForm = () => {
+    this.props.resetForm()
+  }
+
+  goToList = () => {
+    this.resetForm()
+    Router.push('/inventory/my')
+  }
+
   componentDidMount = () => {
     this.props.getWarehouses()
     if (this.props.edit) {
@@ -168,17 +177,32 @@ export default class AddInventoryForm extends Component {
         initialValues={{...initValues, ...initialState}}
         validationSchema={validationScheme}
         onSubmit={(values, actions) => {
+          if (this.props.fileIds.length) {
+            values.attachments = this.props.fileIds.map(fi => {
+              return fi.id.id
+            })
+          }
           addProductOffer(values, this.props.edit).then((productOffer) => {
-            /*if (this.props.fileIds) {
-              // TODO: Rewrite to addProductOffer function (it should already allow to link attachments to current product offer)
-              uploadDocuments(false, productOffer.value.data, this.props.fileIds)
-            }*/
+            //Router.push('/inventory/my')
           })
-          setTimeout(() => actions.setSubmitting(false), 1000)
+          setTimeout(() => {
+            actions.setSubmitting(false)
+            actions.resetForm(initValues);
+          }, 1000)
         }}
       >
         {({ values, errors, setFieldValue }) => (
           <>
+            <Modal open={this.props.poCreated} closeOnDimmerClick={false} size='tiny'>
+              <Modal.Header>Product Offer was created</Modal.Header>
+              <Modal.Content>
+                  What now?
+              </Modal.Content>
+              <Modal.Actions>
+                <Button icon='add' labelPosition='right' content='Add another one' onClick={this.resetForm} />
+                <Button primary icon='checkmark' labelPosition='right' content='Go to My Inventory' onClick={this.goToList} />
+              </Modal.Actions>
+            </Modal>
             <Header as="h2">{this.props.edit ? 'EDIT' : 'ADD'} INVENTORY</Header>
             <TopDivider />
             <Grid columns="equal" divided>
