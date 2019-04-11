@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-// import '../styles/settings.scss'
-
 import Tabs from './Tabs'
 import UsersTable from './UserTable/UsersTable'
 import WarehouseTable from './WarehouseTable/WarehouseTable'
@@ -10,16 +8,12 @@ import BranchTable from './BranchTable/BranchTable'
 import BankAccountsTable from './BankAccountsTable/BankAccountsTable'
 import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
 import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
-// import EditBranchPopup from './BranchTable/EditBranchPopup'
 import EditWarehousePopup from './WarehouseTable/WarehousePopup'
 import EditUsersPopup from './UserTable/UsersPopup'
-// import AddNewUsersPopup from './UserTable/AddNewUsersPopup'
-import EditProductCatalogPopup from './ProductCatalogTable/EditProductCatalogPopup'
+import EditProductPopup from './ProductCatalogTable/ProductPopup'
 import AddNewBranchPopup from './BranchTable/AddNewBranchPopup'
-// import AddNewWarehousePopup from './WarehouseTable/WarehousePopup'
 import AddNewCreditCardPopup from './CreditCardsTable/AddNewCreditCardPopup'
 import AddNewBankAccountPopup from './BankAccountsTable/AddNewBankAccountPopup'
-import AddNewProductCatalogPopup from './ProductCatalogTable/AddNewProductCatalogPopup'
 import TablesHandlers from './TablesHandlers'
 import Toast from '../../../../components/toast'
 
@@ -37,7 +31,7 @@ const tables = {
 const popupForm = {
   Users: <EditUsersPopup />,
   Warehouses: <EditWarehousePopup />,
-  'Product catalog': <EditProductCatalogPopup />
+  'Product catalog': <EditProductPopup />
 }
 
 const editForms = {
@@ -54,8 +48,6 @@ class Settings extends Component {
     const {
       currentEditForm,
       currentAddForm,
-      confirmMessage,
-      editPopupBoolean,
       currentTab,
       isOpenPopup
     } = this.props

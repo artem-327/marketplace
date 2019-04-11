@@ -15,6 +15,15 @@ const formValidation = Yup.object().shape({
   warehouseName: Yup.string()
     .min(3, 'Too short')
     .required('Required'),
+  contactName: Yup.string()
+    .min(3, 'Too short')
+    .required('Required'),
+  phone: Yup.string()
+    .min(3, 'Too short')
+    .required('Required'),
+  city: Yup.string()
+    .min(3, 'Too short')
+    .required('Required'),
   address: Yup.string()
     .min(3, 'Too short')
     .required('Required'),
@@ -90,15 +99,7 @@ class WarehousePopup extends React.Component {
               <Input type="text" label="City" name="city" />
             </FormGroup>
             <FormGroup widths="equal">
-              {/* <<<<<<< HEAD:src/pages/settings/components/WarehouseTable/EditWarehousePopup.js
-              <Dropdown label="Country" name="country" options={country} />
-              <Input type="text" label="State" name="state" />
-              <Input type="text" label="Zip Code" name="zipCode" />
-            </FormGroup>
-            <FormGroup widths="equal">
-======= */}
               <Input type="text" label="Zip" name="zip" />
-              {/* >>>>>>> origin/t-29318:src/pages/settings/components/WarehouseTable/WarehousePopup.js */}
               <Input type="text" label="Phone" name="phone" />
             </FormGroup>
             <FormGroup widths="equal">

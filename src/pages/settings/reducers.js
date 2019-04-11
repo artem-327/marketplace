@@ -264,14 +264,19 @@ export default function reducer(state = initialState, action) {
             ? product.packagingType.name
             : null,
           packageID: product.packagingType ? product.packagingType.id : null,
-          packagingSize: product.packagingSize
+          packagingSize: product.packagingSize,
+          unNumber: product.unNumber
+            ? product.unNumber.id
+              ? product.unNumber.id
+              : 0
+            : 0
         }
       })
       const packagingType = action.payload.productsTypes.map((type, id) => {
         return {
           key: id,
           text: type.name,
-          value: type.measureType
+          value: type.id
         }
       })
       return {
