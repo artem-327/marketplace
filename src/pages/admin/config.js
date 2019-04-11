@@ -1,5 +1,7 @@
 export const config = {
     'Units of Measure': {
+        addEditText: 'Unit Of Measure',
+        searchText: 'Search unit of measure by name or measure type',
         display: {
             columns: [
                 {name: 'name', title: 'Name'},
@@ -35,6 +37,8 @@ export const config = {
     },
 
     'Units of Packaging': {
+        addEditText: 'Unit Of Packaging',
+        searchText: 'Search unit of packaging by name or measure type',
         display: {
             columns: [
                 {name: 'name', title: 'Name'},
@@ -81,6 +85,8 @@ export const config = {
     },
 
     'Manufacturers': {
+        addEditText: 'Manufacturer',
+        searchText: 'Search manufacturer by name',
         display: {
             columns: [
                 {name: 'name', title: 'Name'},
@@ -112,6 +118,8 @@ export const config = {
     },
 
     'Grades': {
+        addEditText: 'Grade',
+        searchText: 'Search grade by name',
         display: {
             columns: [
                 {name: 'name', title: 'Name'},
@@ -143,6 +151,8 @@ export const config = {
     },
 
     'Forms': {
+        addEditText: 'Form',
+        searchText: 'Search form by name',
         display: {
             columns: [
                 {name: 'name', title: 'Name'},
@@ -174,6 +184,8 @@ export const config = {
     },
 
     'Conditions': {
+        addEditText: 'Condition',
+        searchText: 'Search condition by name',
         display: {
             columns: [
                 {name: 'name', title: 'Name'},

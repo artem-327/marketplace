@@ -30,7 +30,7 @@ class EditPopup1Parameter extends React.Component {
 
         return (
             <Modal open centered={false}>
-                <Modal.Header>Edit { currentTab }</Modal.Header>
+                <Modal.Header>Edit { config.addEditText }</Modal.Header>
                 <Modal.Content>
                     <Form
                         initialValues={initialFormValues}
