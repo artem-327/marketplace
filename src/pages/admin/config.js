@@ -1,11 +1,36 @@
 export const config = {
+    'CAS Products': {
+        addEditText: 'CAS Product',
+        searchText: 'Search cas product by name ... TBD',
+        display: {
+            columns: [
+                {name: 'casIndexName', title: 'Index Name'},
+                {name: 'casNumber', title: 'CAS Number'},
+                {name: 'chemicalName', title: 'Chemical Name'},
+                {name: 'packagingGroup', title: 'Packaging Group'},
+                {name: 'unNumber', title: 'UN Number'},
+                {name: 'hazardClasses', title: 'Hazard Classes'},
+            ],
+        },
+        api: {
+            get: {
+                dataName: 'casProductsRows',
+                typeRequest: 'ADMIN_GET_CAS_PRODUCTS_DATA',
+                typeSuccess: 'ADMIN_GET_CAS_PRODUCTS_DATA_SUCCESS',
+                //apiCall: '/prodex/api/units',
+            },
+        },
+
+
+    },
+
     'Units of Measure': {
         addEditText: 'Unit Of Measure',
         searchText: 'Search unit of measure by name or measure type',
         display: {
             columns: [
                 {name: 'name', title: 'Name'},
-                {name: 'nameAbbreviation', title: 'Name Abbreviation',},
+                {name: 'nameAbbreviation', title: 'Name Abbreviation'},
                 {name: 'measureType', title: 'Measure Type'},
             ],
         },

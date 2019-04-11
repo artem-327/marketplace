@@ -13,6 +13,8 @@ import EditPopup3Parameters from './DataTable/EditPopup3Parameters'
 import EditPopup2Parameters from './DataTable/EditPopup2Parameters'
 import EditPopup1Parameter from './DataTable/EditPopup1Parameter'
 
+import CasProductsTable from './CasProductsTable/CasProductsTable'
+
 
 const tables = {
     'Units of Measure': <DataTable />,
@@ -21,6 +23,7 @@ const tables = {
     'Grades': <DataTable />,
     'Forms': <DataTable />,
     'Conditions': <DataTable />,
+    'CAS Products': <CasProductsTable />,
 }
 
 const editForms = {

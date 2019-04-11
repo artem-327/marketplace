@@ -11,6 +11,7 @@ export const initialState = {
     gradesRows: [],
     formsRows: [],
     conditionsRows: [],
+    casProductsRows: [],
 
     columnsForFormatter: {
         checkboxColumns: ['checkbox'],
@@ -19,6 +20,7 @@ export const initialState = {
     },
 
     tabsNames: [
+        {	name: 'CAS Products', id: 7 },
         {	name: 'Units of Measure', id: 1 },
         {	name: 'Units of Packaging', id: 2 },
         {	name: 'Manufacturers', id: 3 },
