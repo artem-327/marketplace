@@ -92,6 +92,13 @@ export function fillProduct(product) {
   }
 }
 
+export function getMyProductOffers() {
+  return {
+    type: AT.INVENTORY_GET_MY_PRODUCT_OFFERS,
+    payload: api.getMyProductOffers()
+  }
+}
+
 export function getProductOffer(productOfferId) {
   return {
     type: AT.INVENTORY_GET_PRODUCT_OFFER,

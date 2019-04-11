@@ -16,6 +16,10 @@ export function addProductOffer(values) {
     return api.post(`/prodex/api/product-offers/`, values)
 }
 
+export async function getMyProductOffers() {
+    return api.get(`/prodex/api/product-offers/own/all/`)
+}
+
 export async function getProductOffer(poId) {
     return api.get(`/prodex/api/product-offers/${poId}`)
 }

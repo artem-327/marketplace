@@ -2,6 +2,7 @@ import * as AT from './action-types'
 
 export const initialState = {
     fileIds: [],
+    myProductOffers: [],
     searchedProducts: [],
     searchedProductsLoading: false,
     warehousesList: []
@@ -17,6 +18,14 @@ export default function reducer(state = initialState, action) {
                 ...state,
                 ...action.payload.data
             }
+        }
+
+        case AT.INVENTORY_GET_MY_PRODUCT_OFFERS_FULFILLED: {
+          let {data} = action.payload
+          return {
+            ...state,
+            myProductOffers: action.payload.data
+          }
         }
 
         case AT.INVENTORY_GET_WAREHOUSES_FULFILLED: {
