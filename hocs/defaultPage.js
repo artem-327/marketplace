@@ -8,10 +8,12 @@ export default Page => class DefaultPage extends React.Component {
   static getInitialProps(ctx) {
     const auth = process.browser ? getAuthFromLocalCookie() : getAuthFromServerCookie(ctx.req)
     const pageProps = Page.getInitialProps && Page.getInitialProps(ctx)
+
     return {
       ...pageProps,
       currentUrl: ctx.pathname,
-      isAuthenticated: !!auth
+      isAuthenticated: !!auth,
+      auth
     }
   }
 

@@ -17,7 +17,10 @@ export function login(username, password) {
       const auth = await authorize(username, password)
       setAuth(auth)
       const identity = await api.getIdentity()
-      
+      setAuth({
+        ...auth,
+        isAdmin: identity.roles.map(r => r.id).indexOf(1) > -1
+      })
       Router.push('/inventory/my')
 
       return {
