@@ -30,18 +30,16 @@ export default {
   postNewCreditCard: body => api.post('/prodex/api/payments/cards/add', body),
   postNewBankAccount: body =>
     api.post('/prodex/api/payments/bank-accounts/add', body),
-  postNewProduct: body => api.post('/prodex/api/product-templates', body),
+  postNewProduct: body => api.post('/prodex/api/products', body),
 
   putWarehouse: (branchId, body) =>
     api.put(`/prodex/api/branches/${branchId}`, body),
   putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
-  putProduct: (id, body) =>
-    api.put(`/prodex/api/product-templates/${id}`, body),
+  putProduct: (id, body) => api.put(`/prodex/api/products/${id}`, body),
 
   deleteUser: userId => api.delete(`/prodex/api/users/${userId}`),
   deleteWarehouse: branchId => api.delete(`/prodex/api/branches/${branchId}`),
-  deleteProduct: branchId =>
-    api.delete(`/prodex/api/product-templates/${branchId}`),
+  deleteProduct: branchId => api.delete(`/prodex/api/products/${branchId}`),
   deleteCreditCard: cardId =>
     api.delete(`/prodex/api/payments/cards/${cardId}`),
   deleteBankAccount: bankAccountId =>

@@ -112,7 +112,7 @@ function* postNewWarehouseWorker({ payload }) {
       address: {
         city: payload.address,
         country: payload.country,
-        province: 44,
+        // province: 44,
         streetAddress: payload.city,
         zip: payload.zip
       },
@@ -166,15 +166,12 @@ function* postNewBankAccountWorker({ payload }) {
 function* postNewProductWorker({ payload }) {
   try {
     const productData = {
-      packaging: {
-        packagingType: payload.packagingType,
-        size: payload.packagingSize,
-        unit: 0
-      },
-      product: 0,
+      casProduct: payload.casProduct,
+      packagingSize: payload.packagingSize,
+      packagingType: payload.packageID,
+      packagingUnit: 0,
       productCode: payload.productNumber,
-      productName: payload.productName,
-      valid: true
+      productName: payload.productName
     }
     yield call(api.postNewProduct, productData)
   } catch (e) {
@@ -230,13 +227,11 @@ function* putUserWorker({ payload, id }) {
 function* putWarehouseEditPopup({ payload, id }) {
   try {
     const dataBody = {
-      // accessorials: [0],
       address: {
         city: payload.city,
-        country: 1,
+        country: payload.country,
         streetAddress: payload.address,
-        province: 44,
-        zip: '35'
+        zip: payload.zip
       },
       company: 3,
       contact: {
@@ -255,19 +250,18 @@ function* putWarehouseEditPopup({ payload, id }) {
   }
 }
 
-function* putProductEditPopup({ payload, id }) {
+function* putProductEditPopup({ payload }) {
   try {
+    const id = payload.id
     const updateProduct = {
-      packaging: {
-        packagingType: payload.packagingType,
-        size: payload.packagingSize,
-        unit: payload.unit
-      },
-      product: payload.product,
+      casProduct: payload.casProduct,
+      packagingSize: payload.packagingSize,
+      packagingType: payload.packageID,
+      packagingUnit: 0,
       productCode: payload.productNumber,
-      productName: payload.productName
+      productName: payload.productName,
+      unNumber: payload.unNumber
     }
-    // console.log(payload)
     yield call(api.putProduct, id, updateProduct)
   } catch (e) {
     yield console.log('error:', e)
@@ -334,7 +328,7 @@ function* deleteConfirmPopup({}) {
     }
   } catch (e) {
     yield console.log('error:', e)
-    toast = { message: 'Network error', isSuccess: false }
+    toast = { message: 'Network error', isSuccess: true }
   } finally {
     yield put(confirmationSuccess())
     yield put({ type: AT.OPEN_TOAST, payload: toast })
