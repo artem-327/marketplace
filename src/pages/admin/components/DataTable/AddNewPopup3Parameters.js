@@ -4,9 +4,13 @@ import { connect } from 'react-redux'
 import { Modal, FormGroup } from 'semantic-ui-react'
 
 import { closeAddPopup , postNewRequest } from '../../actions'
-import { Form, Input, Button } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
+const measureOptions = [
+    { text: 'volume', value: 'volume' },
+    { text: 'weight', value: 'weight' },
+]
 
 const initialFormValues = {
     val0: '',
@@ -54,9 +58,8 @@ class AddNewPopup3Parameters extends React.Component {
                                 <Input type={config.edit[1].type} label={config.edit[1].title} name="val1" />
                             </FormGroup>
                             <FormGroup widths="equal">
-                                <Input type={config.edit[2].type} label={config.edit[2].title} name="val2" />
+                                <Dropdown label={config.edit[2].title} options={measureOptions} name="val2" />
                             </FormGroup>
-
                             <div style={{ textAlign: 'right' }}>
                                 <Button.Reset>Cancel</Button.Reset>
                                 <Button.Submit>Save</Button.Submit>
