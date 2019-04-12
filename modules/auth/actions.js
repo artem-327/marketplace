@@ -10,9 +10,16 @@ export function getIdentity() {
   }
 }
 
+export function loginInit() {
+  return {
+    type: AT.LOGIN_INIT
+  }
+}
+
 export function login(username, password) {
   return {
     type: AT.LOGIN,
+
     async payload() {
       const auth = await authorize(username, password)
       setAuth(auth)

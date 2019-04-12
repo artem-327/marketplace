@@ -5,8 +5,9 @@ export const initialState = {
   loginForm: {
     isLoading: false,
     message: null,
+    isLogged: false
   },
-  identity: null
+  identity: null,
 }
 
 export default function reducer(state = initialState, action) {
@@ -14,6 +15,10 @@ export default function reducer(state = initialState, action) {
   const {type, payload} = action
 
   switch (type) {
+
+    case AT.LOGIN_INIT: {
+      return initialState
+    }
 
     case AT.LOGIN_PENDING: {
       return { ...state, 
@@ -38,8 +43,9 @@ export default function reducer(state = initialState, action) {
           isAdmin: payload.identity.roles.map(r => r.id).indexOf(1) > -1
         }, 
         loginForm: { ...loginForm,
-          // isLoading: false
-        }
+          //isLoading: false,
+          isLogged: true
+        },
       }
     }
 

@@ -21,6 +21,12 @@ export default class LoginForm extends Component {
     passwordError: false
   }
 
+  componentDidMount() {
+    const {loginInit} = this.props
+    
+    loginInit()
+  }
+
   handleSubmit = async (e) => {
     const {target, target: { username, password }} = e
     const {login} = this.props
@@ -37,7 +43,7 @@ export default class LoginForm extends Component {
   }
 
   render() {
-    const { isLoading, message } = this.props
+    const { isLoading, message, isLogged } = this.props
     const { usernameError, passwordError} = this.state
     
     return (
