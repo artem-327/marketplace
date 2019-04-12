@@ -163,7 +163,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.GET_WAREHOUSES_DATA_SUCCESS: {
       const warehousesRows = action.payload.warehouses.map(warehouse => ({
-        warehouseName: warehouse.name,
+        name: warehouse.name,
         address:
           warehouse.address.streetAddress + ', ' + warehouse.address.city,
         countryId: warehouse.address.country.id,
@@ -173,7 +173,8 @@ export default function reducer(state = initialState, action) {
         phone: warehouse.contact.phone,
         email: warehouse.contact.email,
         branchId: warehouse.id,
-        id: warehouse.id
+        id: warehouse.id,
+        warehouse: warehouse.warehouse
       }))
 
       warehousesRows.forEach(element => {
