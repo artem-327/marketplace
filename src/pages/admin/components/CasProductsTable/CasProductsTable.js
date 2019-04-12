@@ -1,32 +1,24 @@
 import React, {Component} from "react";
 import {connect} from "react-redux";
+import { Label } from 'semantic-ui-react'
 import ProdexTable from '~/components/table'
-import { getCasProductByFilter } from '../../actions'
+import { getCasProductByFilter, openEditCasPopup, casDeleteItem } from '../../actions'
 
-
-let listDataRequest = {
-  pageSize: 50,
-  pageStart: 0
-}
 
 class CasProductsTable extends Component {
-
-
-
   componentDidMount() {
-    console.log('xxxxxxxxxxxxxxxx - CasProductsTable - listDataRequest - ', listDataRequest);
-    //console.log('xxxxxxxxxxxxxxxx - CasProductsTable - casProductsRows 1- ', this.props.casProductsRows);
-    this.props.getCasProductByFilter(listDataRequest);
-    //console.log('xxxxxxxxxxxxxxxx - CasProductsTable - casProductsRows 2- ', this.props.casProductsRows);
+    this.props.getCasProductByFilter(this.props.casListDataRequest);
   }
 
   render() {
     const {
       config,
       rows,
-      filterValue,  //! !
+      filterValue,
       currentTab,
       openEditPopup,
+      openEditCasPopup,
+      casDeleteItem,
       deleteItem,
     } = this.props;
 
@@ -35,29 +27,48 @@ class CasProductsTable extends Component {
     return (
       <React.Fragment>
         <ProdexTable
-          filterValue={filterValue}
           columns={columns}
           rows={rows}
-
+          rowActions={[
+            {text: 'Edit', callback: (row) => openEditCasPopup(row)},
+            {text: 'Delete', callback: (row) => casDeleteItem(row.id)}
+          ]}
         />
       </React.Fragment>
     )
   }
-
-
 }
 
 const mapDispatchToProps = {
   getCasProductByFilter,
+  openEditCasPopup,
+  casDeleteItem
 }
 
 const mapStateToProps = state => {
   let cfg = state.admin.config[state.admin.currentTab];
   return {
     config: cfg,
-    rows: state.admin.casProductsRows,
     filterValue: state.admin.filterValue,
     currentTab: state.admin.currentTab,
+    casListDataRequest: state.admin.casListDataRequest,
+    //rows: state.admin.casProductsRows,
+    rows: state.admin.casProductsRows.map(d => {
+      return {
+        id: d.id,
+        casIndexName: d.casIndexName,
+        casNumber: d.casNumber,
+        chemicalName: d.chemicalName,
+        packagingGroup: d.packagingGroup,
+        unNumber: d.unNumber,
+        hazardClasses:
+            <Label.Group color='blue'>
+              {d.hazardClasses.map(b => {
+                return <Label size='medium' title={b.description}>{b.classCode}</Label>
+              })}
+            </Label.Group>
+      }
+    })
   }
 }
 

@@ -29,6 +29,7 @@ export const initialState = {
         {	name: 'Conditions', id: 6 },
     ],
     currentTab: 'Units of Measure',
+    casListDataRequest: { pageSize: 50, pageStart: 0},
     currentEditForm: null,
     currentAddForm: null,
     confirmMessage: null,
@@ -88,14 +89,13 @@ export default function reducer(state = initialState, action) {
             }
         }
 
-        case AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER_FULFILLED: {
-            console.log('!!!!!!!!!!!!!!!!!!!!!! ', action);
+        case AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER_FULFILLED:
+        case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_FULFILLED: {
             return {
                 ...state,
                 casProductsRows: action.payload
             }
         }
-
 
 
 
@@ -123,20 +123,6 @@ export default function reducer(state = initialState, action) {
                                         }
                                     }
                                 break;
-
-                                  /*
-                            case 'post':
-                                if (config[groupName].api.post.typeSuccess === action.type)
-                                {
-                                    if (typeof config[groupName].api.post.retFcnProcess !== 'undefined') {
-                                        return config[groupName].api.post.retFcnProcess(state, action, config[groupName]);
-                                    }
-                                    else {
-                                        return state
-                                    }
-                                }
-                                break;
-                                */
                         }
                     }
                 }

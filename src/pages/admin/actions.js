@@ -73,10 +73,29 @@ export function handleActiveTab(tab) {
     }
 }
 
-export function handleFiltersValue(value) {
-    return {
-        type: AT.ADMIN_HANDLE_FILTERS_VALUE,
-        payload: value
+export function handleFiltersValue(props, value) {
+    switch (props.currentTab)
+    {
+        case 'CAS Products': {
+            if (value.length < 3) {
+                return {
+                    type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
+                    payload: api.getCasProductByFilter(props.casListDataRequest)
+                }
+            }
+            else
+            {
+                return {
+                    type: AT.ADMIN_GET_CAS_PRODUCT_BY_STRING,
+                    payload: api.getCasProductByString(value)
+                }
+            }
+        }
+        default:
+            return {
+                type: AT.ADMIN_HANDLE_FILTERS_VALUE,
+                payload: value
+            }
     }
 }
 
@@ -86,5 +105,19 @@ export function getCasProductByFilter(value) {
     return {
         type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
         payload: api.getCasProductByFilter(value)
+    }
+}
+
+export function openEditCasPopup(value) {
+    return {
+        type: null,
+        payload: null
+    }
+}
+
+export function casDeleteItem(value) {
+    return {
+        type: null,
+        payload: null
     }
 }

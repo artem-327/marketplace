@@ -1,6 +1,3 @@
-import React from 'react'
-import { Button } from "semantic-ui-react"
-
 export const config = {
     'CAS Products': {
         addEditText: 'CAS Product',
@@ -12,19 +9,9 @@ export const config = {
                 {name: 'chemicalName', title: 'Chemical Name'},
                 {name: 'packagingGroup', title: 'Packaging Group'},
                 {name: 'unNumber', title: 'UN Number'},
-                {name: <Button content='Muj tlacitjko'/>, title: 'Hazard Classes'},
+                {name: 'hazardClasses', title: 'Hazard Classes'},
             ],
         },
-        api: {
-            get: {
-                dataName: 'casProductsRows',
-                typeRequest: 'ADMIN_GET_CAS_PRODUCTS_DATAxx',
-                typeSuccess: 'ADMIN_GET_CAS_PRODUCTS_DATA_SUCCESSxx',
-                //apiCall: '/prodex/api/units',
-            },
-        },
-
-
     },
 
     'Units of Measure': {
