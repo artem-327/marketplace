@@ -3,7 +3,7 @@ import Api from '../../../api/cart';
 import {
     OFFER_FETCH_SUCCEEDED, OFFER_FETCH_FAILED, OFFER_FETCH_REQUESTED,
     PAYMENTS_FETCH_SUCCEEDED, PAYMENTS_FETCH_FAILED, PAYMENTS_FETCH_REQUESTED,
-    CART_FETCH_SUCCEEDED, CART_FETCH_FAILED, CART_FETCH_REQUESTED,
+    CART_FETCH_REQUESTED_FULFILLED, CART_FETCH_FAILED, CART_FETCH_REQUESTED,
     DELIVERYADDRESSES_FETCH_REQUESTED, DELIVERYADDRESSES_FETCH_FAILED, DELIVERYADDRESSES_FETCH_SUCCEEDED,
     PRODUCTFROMCART_REMOVE_REQUESTED, PRODUCTFROMCART_REMOVE_FAILED, PRODUCTFROMCART_REMOVE_SUCCEEDED,
     CARTITEM_CREATE_REQUESTED, CARTITEM_CREATE_FAILED, CARTITEM_CREATE_SUCCEEDED,
@@ -20,15 +20,6 @@ function* getProductOffer(action) {
         yield put({type: OFFER_FETCH_SUCCEEDED, payload: offerDetail});
     } catch (e) {
         yield put({type: OFFER_FETCH_FAILED, message: e.message});
-    }
-}
-
-function* getCart() {
-    try {
-        const cart = yield call(Api.getCart);
-        yield put({type: CART_FETCH_SUCCEEDED, payload: cart});
-    } catch (e) {
-        yield put({type: CART_FETCH_FAILED, message: e.message});
     }
 }
 
@@ -117,7 +108,7 @@ function* getShippingQuotes(action) {
 
 function* cartSaga() {
     yield takeEvery(OFFER_FETCH_REQUESTED, getProductOffer);
-    yield takeEvery(CART_FETCH_REQUESTED, getCart);
+    //yield takeEvery(CART_FETCH_REQUESTED, getCart);
     yield takeEvery(DELIVERYADDRESSES_FETCH_REQUESTED, getDeliveryAddresses);
     yield takeEvery(PAYMENTS_FETCH_REQUESTED, getPayments);
     yield takeEvery(PRODUCTFROMCART_REMOVE_REQUESTED, deleteCart);

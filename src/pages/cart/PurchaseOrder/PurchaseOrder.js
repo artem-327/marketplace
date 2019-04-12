@@ -1,18 +1,18 @@
 import React, { Component } from 'react'
 import PropTypes from "prop-types"
-import { actions } from 'react-redux-form';
-import { NavLink } from 'react-router-dom';
+import { actions } from 'react-redux-form'
 import SummaryTable from "../components/SummaryTable/SummaryTable"
 import Shipping from "./components/Shipping"
 import ShippingEdit from "./components/ShippingEdit"
 import ShippingQuote from "./components/ShippingQuote"
 import Payment from "./components/Payment"
 import CartItemSummary from './components/CartItemSummary'
-import Button from '../../../components/Button/Button'
+import { Container, Menu, Header, Button, Icon } from "semantic-ui-react"
 import Spinner from '../../../components/Spinner/Spinner'
 import "./PurchaseOrder.scss"
-import {FormattedMessage} from 'react-intl';
-import {checkToken} from "../../../utils/auth";
+import {FormattedMessage} from 'react-intl'
+import {checkToken} from "../../../utils/auth"
+import Router from 'next/router'
 
 class PurchaseOrder extends Component {
   //TODO: maybe move internal state to redux? decide it later
@@ -22,6 +22,11 @@ class PurchaseOrder extends Component {
     isShippingEdit: false,
     isNewAddress: "isNew",
     shippingQuotes: []
+  }
+
+  constructor(props) {
+    super(props);
+    this.deleteCart = this.deleteCart.bind(this);
   }
 
   componentDidMount(){
@@ -126,10 +131,9 @@ class PurchaseOrder extends Component {
       this.props.deleteCart();
   }
 
-    constructor(props) {
-        super(props);
-        this.deleteCart = this.deleteCart.bind(this);
-    }
+  handlePurchase() {
+    // TODO: do purchase
+  }
 
   render() {
     const {cart, deliveryAddresses, payments, dispatch, deleteCart, cartIsFetching, postNewDeliveryAddress, putDeliveryAddressEdit, shippingQuotes} = this.props;
@@ -147,25 +151,26 @@ class PurchaseOrder extends Component {
     return (
       <div className="app-inner-main">
         <div className="header-top">
-          <h1 className='header inv-header'>
-              <FormattedMessage
-                id='cart.purchaseOrder'
-                defaultMessage='PURCHASE ORDER'
-              />
-          </h1>
-          <div className="submenu">
-            <div className="link">
-              <NavLink to="/inventory/all-inventory">
-                <i className="arrow-left"></i>
-                <b>
-                    <FormattedMessage
-                        id='cart.backToProductOfferings'
-                        defaultMessage='Back to Product Offerings'
-                    />
-                </b>
-              </NavLink>
-            </div>
-          </div>
+          <Container fluid>
+            <Menu secondary>
+              <Menu.Item header>
+                <Header as='h1' size='medium'>
+                  <FormattedMessage id='cart.purchaseOrder'
+                                    defaultMessage='PURCHASE ORDER' />
+                </Header>
+              </Menu.Item>
+
+              <Menu.Menu position='right'>
+                <Menu.Item>
+                  <Button icon basic labelPosition='left' onClick={() => { Router.push('/marketplace/all') }}>
+                    <Icon name='chevron left' />
+                    <FormattedMessage id='cart.backToProductOfferings'
+                                      defaultMessage='Back to Product Offerings' />
+                  </Button>
+                </Menu.Item>
+              </Menu.Menu>
+            </Menu>
+          </Container>
         </div>
         <div className="shopping-cart checkout">
           <div className="shopping-cart-body">
@@ -204,16 +209,8 @@ class PurchaseOrder extends Component {
             <SummaryTable title="Your Order">
               {itemContent}
             </SummaryTable>
-            <SummaryTable title="Summary">
+            <SummaryTable title="Summary" hasButton={<FormattedMessage id='cart.placeOrder' defaultMessage='Place Order' />} handleContinue={this.handlePurchase}>
               {this.renderSummary()}
-              <footer className="summary-footer">
-                  <Button color="blue">
-                      <FormattedMessage
-                        id='cart.placeOrder'
-                        defaultMessage='Place Order'
-                      />
-                  </Button>
-              </footer>
             </SummaryTable>
           </div>
           </div>

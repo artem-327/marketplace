@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from "prop-types";
-import Button from '../../../../components/Button/Button'
 import AddCart from "../AddCart"
 import {getUnit} from '../../../../utils/functions';
 import confirm from '../../../../components/Confirmable/confirm';
 import {FormattedMessage} from 'react-intl';
 import {checkToken} from "../../../../utils/auth";
+import { Button } from "semantic-ui-react"
 
 class ItemCartBody extends Component {
 
@@ -29,7 +29,8 @@ class ItemCartBody extends Component {
   render() {
       const {cartItem, deleteCart} = this.props;
       const {productOffer} = cartItem;
-      const {unit, size} = productOffer.packaging;
+      const unit = productOffer.product.packagingUnit
+      const size = productOffer.product.packagingSize
       const unitName = `${getUnit(unit.name)}${size > 1 && 's'}`;
       const location = `${productOffer.warehouse.address.city}, ${productOffer.warehouse.address.province.name}`;
       return (
@@ -37,7 +38,7 @@ class ItemCartBody extends Component {
               <div className="item-cart-body">
                   <div className="item-cart-body-section">
                       <div className="item-cart-body-section-name">
-                          {productOffer.product.casIndexName}
+                          {productOffer.product.casProduct.casIndexName}
                       </div>
                       <div>
                           <FormattedMessage
@@ -63,8 +64,8 @@ class ItemCartBody extends Component {
                       <div>
                           <FormattedMessage
                             id='cart.totalWeight'
-                            defaultMessage={`Total Weight: ${cartItem.quantity * productOffer.packaging.size} ${unitName}`}
-                            values={{weight: cartItem.quantity * productOffer.packaging.size, unit: unitName}}
+                            defaultMessage={`Total Weight: ${cartItem.quantity * productOffer.product.packagingSize} ${unitName}`}
+                            values={{weight: cartItem.quantity * productOffer.product.packagingSize, unit: unitName}}
                           />
                       </div>
                   </div>
@@ -101,8 +102,9 @@ class ItemCartBody extends Component {
                   </div>
               </div>
               <footer className="popup-footer">
-                  <Button color="grey"
-                          onClick={() => confirm('Remove item', 'Are you sure you want to remove item from Shopping Cart?').then(
+                  <Button control={Button}
+                           color="grey"
+                           onClick={() => confirm('Remove item', 'Are you sure you want to remove item from Shopping Cart?').then(
                               (result) => {
                                   // `proceed`
                                   // remove Edit Cart popup if opened currently deleted offer
@@ -123,9 +125,9 @@ class ItemCartBody extends Component {
                         defaultMessage='Remove'
                       />
                   </Button>
-                  <Button
-                      color="blue"
-                      onClick={() => this.editCart(productOffer.id, cartItem.id)}
+                  <Button control={Button}
+                           color="blue"
+                           onClick={() => this.editCart(productOffer.id, cartItem.id)}
                   >
                      <FormattedMessage
                         id='global.edit'

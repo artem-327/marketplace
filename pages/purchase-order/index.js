@@ -1,9 +1,9 @@
 import securePage from '~/hocs/securePage'
 import Layout from 'components/Layout'
-import ShoppingCart from "~/src/pages/cart/ShoppingCart"
+import PurchaseOrder from "~/src/pages/cart/PurchaseOrder"
 
 export default securePage(() => (
   <Layout title="Cart">
-    <ShoppingCart />
+    <PurchaseOrder />
   </Layout>
 ))

@@ -76,7 +76,7 @@ const CartItemSummary = ({cartItem,  deleteCart, itemIndex}) => {
                     />
                 </td>
                 <td>
-                    {cartItem.quantity * productOffer.packaging.size} lbs
+                    {cartItem.quantity * productOffer.product.packagingSize} lbs
                 </td>
             </tr>
             <tr>
