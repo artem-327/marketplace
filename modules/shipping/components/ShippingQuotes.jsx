@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import NumberFormat from 'react-number-format'
-import moment from "moment/moment"
+import moment from 'moment/moment'
 
 import { Modal, Button, Segment, Grid, Divider, FormGroup, FormField, Table, Checkbox } from 'semantic-ui-react'
 import {Form, Button as FButton, Input, Dropdown } from 'formik-semantic-ui'

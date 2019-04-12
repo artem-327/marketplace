@@ -5,11 +5,12 @@ import { Modal, Icon, Segment, Header, Divider, Grid, GridColumn, FormGroup } fr
 import styled from 'styled-components'
 import * as val from 'yup'
 import {DateInput} from '~/components/custom-formik'
-import UploadLot from "./upload/UploadLot";
+import UploadLot from './upload/UploadLot'
+import { FieldArray } from "formik"
 
 // debug purposes only
 import JSONPretty from 'react-json-pretty'
-import { FieldArray } from "formik"
+
 
 const TopDivider = styled(Divider)`
   padding-bottom: 20px;
