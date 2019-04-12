@@ -28,7 +28,6 @@ const formValidation = Yup.object().shape({
 
 class UsersPopup extends React.Component {
   submitHandler = (values, actions) => {
-    console.log(this.props.popupValues)
     if (this.props.popupValues) {
       this.props.handlerSubmitUserEditPopup(values, this.props.popupValues.id)
     } else {
@@ -38,7 +37,6 @@ class UsersPopup extends React.Component {
   }
 
   render() {
-    console.log(this.props)
     const { closePopup, popupValues } = this.props
     const [firstName, lastName] =
       popupValues && popupValues.userName

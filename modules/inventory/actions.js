@@ -11,6 +11,7 @@ export function addAttachment(attachment, type) {
 export function addProductOffer(values, poId = false) {
 
   let params = {
+    attachments: values.attachments ? values.attachments : null,
     inStock: !!values.inStock,
     pkgAmount: parseInt(values.pkgAmount),
     pricing: {
@@ -24,7 +25,7 @@ export function addProductOffer(values, poId = false) {
       })
     },
     processingTimeDays: parseInt(values.processingTimeDays),
-    product: parseInt(values.product.id),
+    product: parseInt(values.product),
     productCode: values.productCode ? values.productCode : null,
     productCondition: values.productCondition ? parseInt(values.productCondition) : null,
     productForm: values.productForm ? parseInt(values.productForm) : null,
@@ -32,8 +33,7 @@ export function addProductOffer(values, poId = false) {
       return {
         id: parseInt(pg.id)
       }
-    }) : [{id: 1}], // TODO: BE do not allow empty productGrades, but it is wrong add there specified grade
-    productName: values.product.chemicalName,
+    }) : null,
     tradeName: values.tradeName ? values.tradeName : null,
     validityDate: values.validityDate ? values.validityDate + "T00:00:00Z" : null,
     warehouse: parseInt(values.warehouse)
@@ -120,26 +120,23 @@ export function loadFile(attachment) {
   }
 }
 
+export function resetForm() {
+  return {
+    type: AT.INVENTORY_RESET_FORM,
+    payload: {}
+  }
+}
+
 export function searchProducts(text) {
   return {
     type: AT.INVENTORY_SEARCH_PRODUCTS,
     async payload() {
       const response = await api.searchProducts(text)
 
-      if (response.data) {
-        response.data = response.data.filter((p, index) => {
-          if (index === 0) {
-            return true
-          } else {
-            return false
-          }
-        })
-      }
-
       return {
         data: response.data ? response.data.map(p => ({
           text: p.casProduct.casIndexName,
-          value: p,
+          value: p.id,
           key: p.casProduct.id
         })) : []
       }

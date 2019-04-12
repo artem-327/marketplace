@@ -17,12 +17,12 @@ export function login(username, password) {
       const auth = await authorize(username, password)
       setAuth(auth)
       const identity = await api.getIdentity()
+      const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
       setAuth({
         ...auth,
-        isAdmin: identity.roles.map(r => r.id).indexOf(1) > -1
+        isAdmin: isAdmin
       })
-      Router.push('/inventory/my')
-
+      isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
       return {
         auth,
         identity

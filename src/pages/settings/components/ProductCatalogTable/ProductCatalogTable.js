@@ -36,8 +36,6 @@ class ProductCatalogTable extends Component {
       deleteConfirmation
     } = this.props
 
-    console.log('TABLE ROWS', rows)
-
     const { columns } = this.state
 
     return (

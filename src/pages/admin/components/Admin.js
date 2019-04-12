@@ -57,11 +57,10 @@ class Admin extends Component {
                 {tables[currentTab] || <p>This page is still under construction</p>}
             </>
         )
-
     }
 
     render() {
-        if (!this.props.auth.identity.isAdmin) return "Access denied!";
+        if (!!this.props.auth.identity && !this.props.auth.identity.isAdmin) return "Access denied!";
 
         return (
             <Container fluid>
