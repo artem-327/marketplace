@@ -41,7 +41,7 @@ class ProductOffers extends Component {
           const unit = offer.product.packagingUnit ? offer.product.packagingUnit.nameAbbreviation : ''
           const price = offer.pricing.tiers.length > 1 ?
             "$" + offer.pricing.tiers[offer.pricing.tiers.length - 1].price.formatMoney(3) + ' - ' + "$" + offer.pricing.tiers[0].price.formatMoney(3)
-            : "$" + offer.pricing.price.formatMoney(3)
+            : "$" + offer.pricing.price.amount.formatMoney(3)
           const packageSize = offer.product.packagingSize
           const packageUnit = offer.product.packagingType ? offer.product.packagingType.name : ''
           //const countryException = ["USA", "Canada"]
