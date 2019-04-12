@@ -1,4 +1,5 @@
 import * as AT from './action-types'
+import * as api from './api'
 
 export function openEditPopup(config, editedData) {
     return {
@@ -44,10 +45,10 @@ export function closeConfirmPopup() {
     };
 }
 
-export function getDataRequest(api) {
+export function getDataRequest(api, values = null) {
     return {
         type: api.get.typeRequest,
-        payload: null
+        payload: values
     }
 }
 
@@ -76,5 +77,14 @@ export function handleFiltersValue(value) {
     return {
         type: AT.ADMIN_HANDLE_FILTERS_VALUE,
         payload: value
+    }
+}
+
+
+
+export function getCasProductByFilter(value) {
+    return {
+        type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
+        payload: api.getCasProductByFilter(value)
     }
 }

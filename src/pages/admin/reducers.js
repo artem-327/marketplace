@@ -88,6 +88,18 @@ export default function reducer(state = initialState, action) {
             }
         }
 
+        case AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER_FULFILLED: {
+            console.log('!!!!!!!!!!!!!!!!!!!!!! ', action);
+            return {
+                ...state,
+                casProductsRows: action.payload
+            }
+        }
+
+
+
+
+
         default: {
             for (let groupName in config) {
                 if (typeof config[groupName].api !== 'undefined') {

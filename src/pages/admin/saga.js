@@ -3,9 +3,9 @@ import { config } from './config'
 import { getDataRequest, closeAddPopup, closeConfirmPopup, closeEditPopup } from "./actions"
 import api from '~/api'
 
-function* getDataWorker(config) {
+function* getDataWorker(config, { payload }) {
     try {
-        const data = yield call(() => api.get(config.get.apiCall).then(response => response.data));
+        const data = yield call(() => api.get(config.get.apiCall, payload).then(response => response.data));
         yield put({ type: config.get.typeSuccess, payload: data })
     } catch(e) {
         yield console.log("error:", e)
