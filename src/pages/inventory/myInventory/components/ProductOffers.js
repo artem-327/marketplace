@@ -58,7 +58,7 @@ class ProductOffers extends Component {
             ("$" + productOffer.pricing.tiers[productOffer.pricing.tiers.length - 1].price.formatMoney(3)
               + ' - ' + "$" + productOffer.pricing.tiers[0].price.formatMoney(3))
             : ("$" + productOffer.pricing.price.amount.formatMoney(3))
-            
+
           const tradeName = productOffer.tradeName
           const mfr = (typeof productOffer.manufacturer !== 'undefined' ? productOffer.manufacturer.name : '')
           /* temporarily removed */ //const condition = productOffer.productCondition.name
@@ -118,12 +118,11 @@ class ProductOffers extends Component {
         { action: (id) => { if (checkToken(this.props)) return; this.openBroadcast(id) }, label: 'customBroadcast' },
         {
           action: (id) => {
-            if (checkToken(this.props)) return; confirm('removeListings', 'Are you sure you want to remove listings from Your Inventory?').then(
-              () => {
+            if (checkToken(this.props)) return
+            confirm('Remove Listing', 'Are you sure you want to remove listings from Your Inventory?')
+              .then(() => {
                 this.props.deleteProductOffer(id, () => this.props.fetchMyProductOffers({}))
-              },
-              () => { }
-            )
+              })
           }, label: 'Delete Listing'
         }
       ]}
