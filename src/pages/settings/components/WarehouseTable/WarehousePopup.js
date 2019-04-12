@@ -12,7 +12,7 @@ import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 const formValidation = Yup.object().shape({
-  warehouseName: Yup.string()
+  name: Yup.string()
     .min(3, 'Too short')
     .required('Required'),
   contactName: Yup.string()
@@ -27,6 +27,9 @@ const formValidation = Yup.object().shape({
   address: Yup.string()
     .min(3, 'Too short')
     .required('Required'),
+  email: Yup.string()
+    .min(3, 'Too short')
+    .required('Required'),
   zip: Yup.string()
     .min(1, 'Too short')
     .required('Required'),
@@ -39,11 +42,17 @@ class WarehousePopup extends React.Component {
   submitHandler = (values, actions) => {
     if (this.props.popupValues) {
       this.props.handlerSubmitWarehouseEditPopup(
-        values,
+        {
+          ...values,
+          tab: this.props.currentTab === 'Branches' ? 'branches' : null
+        },
         this.props.popupValues.branchId
       )
     } else {
-      this.props.postNewWarehouseRequest(values)
+      this.props.postNewWarehouseRequest({
+        ...values,
+        tab: this.props.currentTab === 'Branches' ? 'branches' : null
+      })
     }
     actions.setSubmitting(false)
   }
@@ -56,7 +65,7 @@ class WarehousePopup extends React.Component {
         ? popupValues.address.split(',')
         : ['', '']
     const {
-      warehouseName = '',
+      name = '',
       contactName = '',
       countryId = '',
       phone = '',
@@ -64,7 +73,7 @@ class WarehousePopup extends React.Component {
       zip = ''
     } = popupValues || {}
     return {
-      warehouseName,
+      name,
       contactName,
       address,
       city,
@@ -77,12 +86,14 @@ class WarehousePopup extends React.Component {
   }
 
   render() {
-    const { closePopup, popupValues, country } = this.props
+    const { closePopup, popupValues, country, currentTab } = this.props
     const title = popupValues ? 'Edit' : 'Add'
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>{`${title} `} Warehouse</Modal.Header>
+        <Modal.Header>
+          {`${title} `} {currentTab}
+        </Modal.Header>
         <Modal.Content>
           <Form
             initialValues={this.getInitialFormValues()}
@@ -91,7 +102,7 @@ class WarehousePopup extends React.Component {
             onSubmit={this.submitHandler}
           >
             <FormGroup widths="equal">
-              <Input type="text" label="Warehouse Name" name="warehouseName" />
+              <Input type="text" label="Warehouse Name" name="name" />
               <Input type="text" label="Contact Name" name="contactName" />
             </FormGroup>
             <FormGroup widths="equal">
@@ -125,7 +136,8 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues,
-    country: state.settings.country
+    country: state.settings.country,
+    currentTab: state.settings.currentTab
   }
 }
 

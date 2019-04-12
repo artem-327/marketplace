@@ -99,7 +99,6 @@ export function handleSubmitEditPopup(warehouseData, branchId) {
 }
 
 export function handlerSubmitWarehouseEditPopup(warehouseData, id) {
-  console.log('warehouseData', warehouseData)
   return {
     type: AT.PUT_WAREHOUSE_EDIT_POPUP,
     payload: warehouseData,
@@ -198,21 +197,19 @@ export function postNewBankAccountRequest(bankAccountData) {
     payload: bankAccountData
   }
 }
+// export function deleteUser(userId) {
+//   return {
+//     type: AT.DELETE_USER,
+//     payload: userId
+//   }
+// }
 
-export function deleteUser(userId) {
-  return {
-    type: AT.DELETE_USER,
-    payload: userId
-  }
-}
-
-export function deleteWarehouse(warehouseId) {
-  return {
-    type: AT.DELETE_WAREHOUSE,
-    payload: warehouseId
-  }
-}
-
+// export function deleteWarehouse(warehouseId) {
+//   return {
+//     type: AT.DELETE_WAREHOUSE,
+//     payload: warehouseId
+//   }
+// }
 export function deleteCreditCard(cardId) {
   return {
     type: AT.DELETE_CREDIT_CARD,
