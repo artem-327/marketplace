@@ -4,12 +4,12 @@ import { Message } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { closeToast } from '../../src/pages/settings/actions'
 
-const Toast = ({ message, wasSuccess, closeToast }) =>
+const Toast = ({ message, closeToast, isSuccess }) =>
   message ? (
     <Message
       onDismiss={closeToast}
-      success={wasSuccess}
-      error={!wasSuccess}
+      success={isSuccess}
+      error={!isSuccess}
       header="Removal request"
       content={message}
       className="toast-custom-style"

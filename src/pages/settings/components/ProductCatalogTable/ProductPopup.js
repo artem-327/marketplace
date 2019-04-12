@@ -6,7 +6,11 @@ import debounce from 'lodash/debounce'
 
 import { Modal, FormGroup, Search, Label } from 'semantic-ui-react'
 
-import { closePopup, handleSubmitProductEditPopup } from '../../actions'
+import {
+  closePopup,
+  handleSubmitProductEditPopup,
+  handleSubmitProductEddPopup
+} from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 import './styles.scss'
@@ -18,9 +22,6 @@ const formValidation = Yup.object().shape({
   productNumber: Yup.string()
     .min(1, 'Too short')
     .required('Required'),
-  packagingType: Yup.string()
-    .min(1, 'Too short')
-    .required('Required'),
   packagingSize: Yup.string()
     .min(1, 'Too short')
     .required('Required')
@@ -29,10 +30,27 @@ const formValidation = Yup.object().shape({
 const resultRenderer = ({ casProduct, id }) => (
   <Label content={casProduct} key={id} />
 )
-
-class AddNewUsersPopup extends React.Component {
+class ProductPopup extends React.Component {
   componentWillMount() {
     this.resetComponent()
+  }
+
+  handlerSubmit = (values, actions) => {
+    const { popupValues } = this.props
+    if (popupValues) {
+      this.props.handleSubmitProductEditPopup({
+        ...values,
+        casProduct: this.state.value,
+        unNumber: popupValues.unNumber,
+        id: popupValues.id
+      })
+    } else {
+      this.props.handleSubmitProductEddPopup({
+        ...values,
+        casProduct: this.state.value
+      })
+    }
+    actions.setSubmitting(false)
   }
 
   handleCasProduct = () => {
@@ -46,7 +64,7 @@ class AddNewUsersPopup extends React.Component {
     this.setState({
       isLoading: false,
       results: [],
-      value: (popupValues && popupValues.casProduct.casNumber) || ''
+      value: (popupValues && popupValues.casProduct) || ''
     })
   }
 
@@ -57,7 +75,6 @@ class AddNewUsersPopup extends React.Component {
     this.setState({ isLoading: true, value })
 
     setTimeout(() => {
-      // if (this.state.value.length < 1) return this.resetComponent()
       const re = new RegExp(escapeRegExp(this.state.value), 'i')
       const isMatch = result => re.test(result.casProduct)
 
@@ -68,38 +85,38 @@ class AddNewUsersPopup extends React.Component {
     }, 300)
   }
 
-  render() {
+  getInitialFormValues = () => {
+    const { popupValues } = this.props
     const {
-      closePopup,
-      handleSubmitProductEditPopup,
-      popupValues,
-      packagingType
-    } = this.props
-    console.log('popupValues', popupValues)
-    const { isLoading, results, value } = this.state
-    const initialFormValues = {
-      ...popupValues,
-      packagingType: ''
+      casProduct = '',
+      productName = '',
+      productNumber = '',
+      packagingSize = '',
+      packageID = ''
+    } = popupValues || {}
+    return {
+      casProduct,
+      productName,
+      productNumber,
+      packagingSize,
+      packageID
     }
-    console.log('initialFormValues', initialFormValues)
+  }
+
+  render() {
+    const { closePopup, packagingType, popupValues } = this.props
+    const { isLoading, results, value } = this.state
+    const title = popupValues ? 'Edit' : 'Add'
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>Edit product catalog</Modal.Header>
+        <Modal.Header>{title} product catalog</Modal.Header>
         <Modal.Content>
           <Form
-            initialValues={initialFormValues}
+            initialValues={this.getInitialFormValues()}
             validationSchema={formValidation}
             onReset={closePopup}
-            onSubmit={(values, actions) => {
-              console.log('values', values)
-              handleSubmitProductEditPopup({
-                ...values,
-                casProduct: value,
-                id: popupValues.id
-              })
-              actions.setSubmitting(false)
-            }}
+            onSubmit={this.handlerSubmit}
           >
             <FormGroup widths="equal" className="customFormGroup">
               <label>CAS Number / Product Search</label>
@@ -122,7 +139,7 @@ class AddNewUsersPopup extends React.Component {
             <FormGroup widths="equal">
               <Dropdown
                 label="Packaging Type"
-                name="packagingType"
+                name="packageID"
                 options={packagingType}
               />
               <Input type="text" label="Packaging Size" name="packagingSize" />
@@ -140,7 +157,8 @@ class AddNewUsersPopup extends React.Component {
 
 const mapDispatchToProps = {
   closePopup,
-  handleSubmitProductEditPopup
+  handleSubmitProductEditPopup,
+  handleSubmitProductEddPopup
 }
 const mapStateToProps = state => {
   return {
@@ -153,4 +171,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AddNewUsersPopup)
+)(ProductPopup)
