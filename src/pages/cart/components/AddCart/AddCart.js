@@ -107,7 +107,6 @@ class AddCart extends Component {
     if (offerDetailIsFetching) return <Spinner />
     const location =`${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`;
     const {pkgAmount, minimum, splits} = offer;
-    //const {unit, size, minimum, splits} = offer.packaging;
     const unit = offer.product.packagingUnit ? offer.product.packagingUnit : null
     const size = offer.product.packagingSize ? offer.product.packagingSize : null
     const unitName = `${getUnit(unit.name)}`;
@@ -172,7 +171,7 @@ class AddCart extends Component {
           <div className="add-cart-body-section">
             <h3>1. Product Information</h3>
             <div className="add-cart-product-name">
-              {offer.product.casIndexName}
+              {offer.product.casProduct.casIndexName}
             </div>
             <div className="add-cart-prod-info">
               <div>
@@ -222,10 +221,10 @@ class AddCart extends Component {
               />
             </div>
 
-           
+
             <div className="add-cart-form-input">
               <label>Select Quantity</label>
-              {quantityOptionsWithName.length <= 10 
+              {quantityOptionsWithName.length <= 10
               ?  <Dropdown
                 opns={quantityOptionsWithName}
                 placeholder="Select Quantity"
@@ -235,7 +234,7 @@ class AddCart extends Component {
                   this.setState({quantity: value})
                 }}/>
                 : <div className="purchase-info">
-                  <InputControlled                             
+                  <InputControlled
                     value={this.state.quantity}
                     handleChange={this.handleQuantity}
                     className={this.state.warning ? "invalid" : ""}
@@ -262,11 +261,11 @@ class AddCart extends Component {
             </div>
             <div className="purchase-summary-info">
               <label>Price/LB:</label>
-              <span>${offer.pricing.price}</span> 
+              <span>${offer.pricing.price.amount}</span>
             </div>
             {/* <div className="purchase-summary-info">
-              <b>Delivered Price/LB:</b> 
-              <span>$</span> 
+              <b>Delivered Price/LB:</b>
+              <span>$</span>
             </div> */}
 
             <div className="divider" />

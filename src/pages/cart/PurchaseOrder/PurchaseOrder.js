@@ -81,7 +81,12 @@ class PurchaseOrder extends Component {
 
   //TODO:: same function in Shopping cart, define it just at one place
   renderSummary() {
-    const {totalPrice} = this.props.cart;
+    const {cartItems, totalPrice} = this.props.cart;
+    let subtotal = 0;
+    for (let i = 0; i < cartItems.length; i++) {
+      subtotal+= (cartItems[i].quantity * cartItems[i].productOffer.product.packagingSize * cartItems[i].productOffer.pricing.price.amount)
+    }
+    let currencySymbol = cartItems.length ? cartItems[0].productOffer.pricing.price.currency.symbol : '$'
     return (
       <table>
         <tbody>
@@ -92,7 +97,7 @@ class PurchaseOrder extends Component {
                       defaultMessage='Subtotal'
                   />
               </td>
-              <td>$111</td>
+              <td>{currencySymbol}{subtotal.formatMoney(0)}</td>
           </tr>
           <tr>
               <td>
@@ -101,7 +106,7 @@ class PurchaseOrder extends Component {
                     defaultMessage='Estimated Shipping'
                   />
               </td>
-              <td>$111</td>
+              <td></td>
           </tr>
           <tr>
               <td>
@@ -110,7 +115,7 @@ class PurchaseOrder extends Component {
                     defaultMessage='Estimated Tax'
                   />
               </td>
-              <td>$111</td>
+              <td></td>
           </tr>
           <tr>
               <td>
@@ -119,7 +124,7 @@ class PurchaseOrder extends Component {
                     defaultMessage='Total'
                   />
               </td>
-              <td>${totalPrice}</td>
+              <td>{currencySymbol}{totalPrice.formatMoney(0)}</td>
           </tr>
         </tbody>
       </table>
