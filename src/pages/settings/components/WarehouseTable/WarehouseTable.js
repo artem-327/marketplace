@@ -13,7 +13,7 @@ import {
 class WarehouseTable extends Component {
   state = {
     columns: [
-      { name: 'warehouseName', title: 'Warehouse Name' },
+      { name: 'name', title: 'Warehouse Name' },
       { name: 'address', title: 'Address' },
       { name: 'contactName', title: 'Contact Name' },
       { name: 'phone', title: 'Phone' },
@@ -23,6 +23,13 @@ class WarehouseTable extends Component {
 
   componentDidMount() {
     this.props.getWarehousesDataRequest()
+  }
+
+  handlerChangeRows(rows) {
+    if (this.props.currentTab === 'Branches') {
+      return rows.filter(item => item.warehouse === false)
+    }
+    return rows
   }
 
   render() {
@@ -50,7 +57,7 @@ class WarehouseTable extends Component {
         <ProdexGrid
           filterValue={filterValue}
           columns={columns}
-          rows={rows}
+          rows={this.handlerChangeRows(rows)}
           rowActions={[
             { text: 'Edit', callback: row => openPopup(row) },
             { text: 'Delete', callback: row => handleOpenConfirmPopup(row.id) }
@@ -76,7 +83,8 @@ const mapStateToProps = state => {
     editPopupBoolean: state.settings.editPopupBoolean,
     addNewWarehousePopup: state.settings.addNewWarehousePopup,
     filterValue: state.settings.filterValue,
-    confirmMessage: state.settings.confirmMessage
+    confirmMessage: state.settings.confirmMessage,
+    currentTab: state.settings.currentTab
   }
 }
 

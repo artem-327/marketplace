@@ -6,7 +6,6 @@ import { Confirm } from 'semantic-ui-react'
 import {
   getUsersDataRequest,
   openPopup,
-  deleteUser,
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation
@@ -74,7 +73,6 @@ class UsersTable extends Component {
 const mapDispatchToProps = {
   getUsersDataRequest,
   openPopup,
-  deleteUser,
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation

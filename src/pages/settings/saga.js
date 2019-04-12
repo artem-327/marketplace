@@ -1,5 +1,5 @@
 import { call, put, takeEvery, select } from 'redux-saga/effects'
-import { closePopup, closeConfirmPopup, confirmationSuccess } from './actions'
+import { closePopup, confirmationSuccess } from './actions'
 import * as AT from './action-types'
 import api from './api'
 
@@ -89,7 +89,6 @@ function* getProductsWithRequiredParamWorker({ payload }) {
 
 function* postNewUserWorker({ payload }) {
   try {
-    // const currentUser = yield call(api.getCurrentUser)
     const dataBody = {
       email: payload.email,
       firstname: payload.firstName,
@@ -97,6 +96,7 @@ function* postNewUserWorker({ payload }) {
       middlename: payload.middleName
     }
     yield call(api.postNewUser, dataBody)
+    yield put({ type: AT.GET_USERS_DATA })
   } catch (e) {
     yield console.log('error:', e)
   } finally {
@@ -122,10 +122,11 @@ function* postNewWarehouseWorker({ payload }) {
         name: payload.contactName,
         phone: payload.phone
       },
-      warehouse: true,
-      warehouseName: payload.warehouseName
+      warehouse: payload.tab ? false : true,
+      name: payload.name
     }
     yield call(api.postNewWarehouse, dataBody)
+    yield put({ type: AT.GET_WAREHOUSES_DATA })
   } catch (e) {
     yield console.log('error:', e)
   } finally {
@@ -174,6 +175,7 @@ function* postNewProductWorker({ payload }) {
       productName: payload.productName
     }
     yield call(api.postNewProduct, productData)
+    yield put({ type: AT.GET_WAREHOUSES_DATA })
   } catch (e) {
     yield console.log('error:', e)
   } finally {
@@ -198,7 +200,7 @@ function* putWarehouseWorker({ payload, id }) {
         phone: payload.phone
       },
       warehouse: true,
-      warehouseName: payload.warehouseName
+      name: payload.name
     }
     yield call(api.putWarehouse, id, dataBody)
   } catch (e) {
@@ -217,6 +219,7 @@ function* putUserWorker({ payload, id }) {
       email: payload.email
     }
     yield call(api.putUser, id, updateUser)
+    yield put({ type: AT.GET_USERS_DATA })
   } catch (e) {
     console.log('error', e)
   } finally {
@@ -225,6 +228,7 @@ function* putUserWorker({ payload, id }) {
 }
 
 function* putWarehouseEditPopup({ payload, id }) {
+  console.log('payload', payload)
   try {
     const dataBody = {
       address: {
@@ -239,10 +243,11 @@ function* putWarehouseEditPopup({ payload, id }) {
         name: payload.contactName,
         phone: payload.phone
       },
-      warehouse: true,
-      warehouseName: payload.warehouseName
+      warehouse: payload.tab ? false : true,
+      name: payload.name
     }
     yield call(api.putWarehouse, id, dataBody)
+    yield put({ type: AT.GET_WAREHOUSES_DATA })
   } catch (e) {
     yield console.log('error:', e)
   } finally {
@@ -263,29 +268,11 @@ function* putProductEditPopup({ payload }) {
       unNumber: payload.unNumber
     }
     yield call(api.putProduct, id, updateProduct)
+    yield put({ type: AT.GET_WAREHOUSES_DATA })
   } catch (e) {
     yield console.log('error:', e)
   } finally {
     yield put(closePopup({ payload: null }))
-  }
-}
-
-function* deleteUserWorker({ payload }) {
-  try {
-    yield call(api.deleteUser, payload)
-    yield put(closeConfirmPopup({ payload: null }))
-  } catch (e) {
-    yield console.log('error:', e)
-    yield put(closeConfirmPopup({ payload: null }))
-  }
-}
-
-function* deleteWarehouseWorker({ payload }) {
-  try {
-    yield call(api.deleteWarehouse, payload)
-    yield put({ type: AT.OPEN_TOAST, payload: 'Warehouse delete success' })
-  } catch (e) {
-    yield console.log('error:', e)
   }
 }
 
@@ -315,20 +302,28 @@ function* deleteConfirmPopup({}) {
       case 'Users':
         yield call(api.deleteUser, deleteRowByid)
         toast = { message: 'User delete success', isSuccess: true }
+        yield put({ type: AT.GET_USERS_DATA })
+        break
+      case 'Branches':
+        yield call(api.deleteWarehouse, deleteRowByid)
+        toast = { message: 'Warehouse delete success', isSuccess: true }
+        yield put({ type: AT.GET_WAREHOUSES_DATA })
         break
       case 'Warehouses':
         yield call(api.deleteWarehouse, deleteRowByid)
         toast = { message: 'Warehouse delete success', isSuccess: true }
+        yield put({ type: AT.GET_WAREHOUSES_DATA })
         break
       case 'Product catalog':
         yield call(api.deleteProduct, deleteRowByid)
         toast = { message: 'Product delete success', isSuccess: true }
+        yield put({ type: AT.GET_PRODUCTS_CATALOG_DATA })
       default:
         break
     }
   } catch (e) {
     yield console.log('error:', e)
-    toast = { message: 'Network error', isSuccess: true }
+    toast = { message: 'Network error', isSuccess: false }
   } finally {
     yield put(confirmationSuccess())
     yield put({ type: AT.OPEN_TOAST, payload: toast })
@@ -359,8 +354,6 @@ export default function* settingsSaga() {
   yield takeEvery(AT.PUT_WAREHOUSE_EDIT_POPUP, putWarehouseEditPopup)
   yield takeEvery(AT.PUT_PRODUCT_EDIT_POPUP, putProductEditPopup)
 
-  yield takeEvery(AT.DELETE_USER, deleteUserWorker)
-  yield takeEvery(AT.DELETE_WAREHOUSE, deleteWarehouseWorker)
   yield takeEvery(AT.DELETE_CREDIT_CARD, deleteCreditCardWorker)
   yield takeEvery(AT.DELETE_BANK_ACCOUNT, deleteBankAccountWorker)
   yield takeEvery(AT.DELETE_CONFIRM_POPUP, deleteConfirmPopup)
