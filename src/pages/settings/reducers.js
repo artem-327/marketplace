@@ -12,11 +12,6 @@ export const initialState = {
   bankAccountsRows: [],
   productsCatalogRows: [],
   productsPackagingType: null,
-  columnsForFormatter: {
-    checkboxColumns: ['checkbox'],
-    permissionsColumns: ['permissions'],
-    editDeleteColumns: ['editDeleteBtn']
-  },
   country: [],
   tabsNames: [
     { name: 'Users', id: 1 },
@@ -41,7 +36,8 @@ export const initialState = {
   deleteUserById: null,
   deleteRowByid: null,
   filterValue: '',
-  editPopupSearchProducts: []
+  editPopupSearchProducts: [],
+  loading: false,
 }
 
 export default function reducer(state = initialState, action) {
@@ -141,6 +137,12 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.GET_USERS_DATA: {
+      return {...state,
+        loading: true
+      }
+    }
+
     case AT.GET_USERS_DATA_SUCCESS: {
       const usersRows = action.payload.map(user => {
         return {
@@ -157,6 +159,7 @@ export default function reducer(state = initialState, action) {
       })
       return {
         ...state,
+        loading: false,
         usersRows: usersRows
       }
     }

@@ -67,11 +67,12 @@ export default class _Table extends Component {
       rowActions,
       showHeader,
       onSelectionChange,
-      loading
+      loading,
+      ...restProps
     } = this.props
 
     return (
-      <Segment basic loading={loading}>
+      <Segment basic loading={loading} {...restProps}>
         <div className="bootstrapiso">
           <Grid
             rows={rows}
