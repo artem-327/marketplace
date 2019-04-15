@@ -42,7 +42,6 @@ class Navigation extends Component {
           </Dropdown.Menu>
         </DropdownItem>
         <MenuLink to='/settings'>Settings</MenuLink>
-        
       </>
       : <>
         <MenuLink to="/admin">Admin</MenuLink>

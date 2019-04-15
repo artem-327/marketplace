@@ -15,6 +15,10 @@ export async function getHazardClasses() {
   return data
 }
 
+export function getCompanies() {
+  return api.get('/prodex/companies')
+}
+
 
 
 

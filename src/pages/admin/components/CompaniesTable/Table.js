@@ -1,18 +1,24 @@
-import React, {Component} from "react"
-import {connect} from "react-redux"
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Label } from 'semantic-ui-react'
 import ProdexTable from '~/components/table'
 import { getCasProductByFilter, openEditCasPopup, casDeleteItem } from '../../actions'
 
 
 class CasProductsTable extends Component {
+
+  state = {
+    columns: {
+
+    }
+  }
+
   componentDidMount() {
     this.props.getCasProductByFilter(this.props.casListDataRequest)
   }
 
   render() {
     const {
-      config,
       rows,
       filterValue,
       currentTab,
@@ -22,17 +28,16 @@ class CasProductsTable extends Component {
       deleteItem,
     } = this.props
 
-    const { columns } = config.display
+    const { columns } = this.state
 
     return (
       <React.Fragment>
         <ProdexTable
-          filterValue={filterValue}
           columns={columns}
           rows={rows}
           rowActions={[
-            {text: 'Edit', callback: (row) => openEditCasPopup(row)},
-            {text: 'Delete', callback: (row) => casDeleteItem(row.id)}
+            { text: 'Edit', callback: (row) => openEditCasPopup(row) },
+            { text: 'Delete', callback: (row) => casDeleteItem(row.id) }
           ]}
         />
       </React.Fragment>
@@ -45,12 +50,6 @@ const mapDispatchToProps = {
   openEditCasPopup,
   casDeleteItem
 }
-
-const transformHazardClasses = classes => (
-  <Label.Group color='blue'>
-    {classes.map((b,i) => <Label size='tiny' key={i} title={b.description}>{b.classCode}</Label>)}
-  </Label.Group>
-)
 
 const mapStateToProps = state => {
   let cfg = state.admin.config[state.admin.currentTab]
@@ -68,7 +67,7 @@ const mapStateToProps = state => {
         chemicalName: d.chemicalName,
         packagingGroup: d.packagingGroup,
         unNumber: d.unNumber,
-        hazardClasses: transformHazardClasses(d.hazardClasses)
+        hazardClasses: d.hazardClasses
       }
     })
   }
