@@ -97,6 +97,7 @@ function* postNewUserWorker({ payload }) {
     }
     yield call(api.postNewUser, dataBody)
     yield put({ type: AT.GET_USERS_DATA })
+    // yield put({ type: AT.UPDATE_USERS, payload: users })
   } catch (e) {
     yield console.log('error:', e)
   } finally {

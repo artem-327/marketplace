@@ -152,7 +152,8 @@ export function getProductsCatalogRequest() {
 
 export function getBankAccountsDataRequest() {
   return {
-    type: AT.GET_PRODUCTS_CATALOG_DATA
+    // type: AT.GET_PRODUCTS_CATALOG_DATA
+    type: AT.GET_BANK_ACCOUNTS_DATA
   }
 }
 
