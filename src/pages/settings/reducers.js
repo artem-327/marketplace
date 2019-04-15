@@ -12,11 +12,6 @@ export const initialState = {
   bankAccountsRows: [],
   productsCatalogRows: [],
   productsPackagingType: null,
-  columnsForFormatter: {
-    checkboxColumns: ['checkbox'],
-    permissionsColumns: ['permissions'],
-    editDeleteColumns: ['editDeleteBtn']
-  },
   country: [],
   tabsNames: [
     { name: 'Users', id: 1 },
@@ -41,7 +36,8 @@ export const initialState = {
   deleteUserById: null,
   deleteRowByid: null,
   filterValue: '',
-  editPopupSearchProducts: []
+  editPopupSearchProducts: [],
+  loading: false,
 }
 
 export default function reducer(state = initialState, action) {
@@ -141,6 +137,12 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.GET_USERS_DATA: {
+      return {...state,
+        loading: true
+      }
+    }
+
     case AT.GET_USERS_DATA_SUCCESS: {
       const usersRows = action.payload.map(user => {
         return {
@@ -157,7 +159,14 @@ export default function reducer(state = initialState, action) {
       })
       return {
         ...state,
+        loading: false,
         usersRows: usersRows
+      }
+    }
+
+    case AT.GET_WAREHOUSES_DATA: {
+      return {...state,
+        loading: true
       }
     }
 
@@ -187,8 +196,15 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
+        loading: false,
         warehousesRows: warehousesRows,
         country: action.payload.newCountryFormat
+      }
+    }
+
+    case AT.GET_BRANCHES_DATA: {
+      return {...state,
+        loading: true
       }
     }
 
@@ -206,7 +222,14 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
+        loading: false,
         branchesRows: rows
+      }
+    }
+
+    case AT.GET_CREDIT_CARDS_DATA: {
+      return {...state,
+        loading: true
       }
     }
 
@@ -225,7 +248,14 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
+        loading: false,
         creditCardsRows: rows
+      }
+    }
+
+    case AT.GET_BANK_ACCOUNTS_DATA: {
+      return {...state,
+        loading: true
       }
     }
 
@@ -245,7 +275,14 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
+        loading: false,
         bankAccountsRows: rows
+      }
+    }
+
+    case AT.GET_PRODUCTS_CATALOG_DATA: {
+      return {...state,
+        loading: true
       }
     }
 
@@ -282,6 +319,7 @@ export default function reducer(state = initialState, action) {
       })
       return {
         ...state,
+        loading: false,
         productsCatalogRows: rows,
         productsPackagingType: packagingType
       }

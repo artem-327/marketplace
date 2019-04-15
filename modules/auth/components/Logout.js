@@ -5,7 +5,7 @@ import {logout} from '~/modules/auth/actions'
 class Logout extends Component {
   componentDidMount() {
     const {logout, router} = this.props
-    console.log('router.query:', router.query)
+
     logout(router.query.autoLogout)
   }
 

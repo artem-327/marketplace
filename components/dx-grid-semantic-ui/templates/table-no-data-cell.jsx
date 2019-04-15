@@ -1,6 +1,9 @@
-import * as React from "react";
-import { Table as TableSUI } from "semantic-ui-react";
+import * as React from "react"
+import { Table as TableSUI } from "semantic-ui-react"
 
 export const TableNoDataCell = ({ getMessage, ...restProps }) => (
-  <TableSUI.Cell {...restProps}>{getMessage("noData")}</TableSUI.Cell>
-);
+  <TableSUI.Cell {...restProps}>
+    No records found
+    {/* {getMessage("noData")} */}
+  </TableSUI.Cell>
+)

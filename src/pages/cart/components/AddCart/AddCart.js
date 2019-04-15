@@ -9,6 +9,7 @@ import './AddCart.scss';
 import file from '../../../../images/file.svg';
 import InputControlled from '../../../../components/InputControlled/InputControlled'
 import {checkToken} from "../../../../utils/auth";
+import Router from 'next/router'
 
 class AddCart extends Component {
 
@@ -34,7 +35,7 @@ class AddCart extends Component {
 
   createOrder = async () => {
     if (checkToken(this.props)) return;
-    const {removePopup, postNewOrder, offer, history} = this.props;
+    const {removePopup, postNewOrder, offer} = this.props;
     const offerpayload = {
         productOffer: offer.id,
         quantity: this.state.quantity
@@ -46,7 +47,7 @@ class AddCart extends Component {
       await postNewOrder(offerpayload)
       AddCart.openedPopup.id = false
       removePopup()
-      history.push("/cart/shopping-cart")
+      Router.push("/cart")
     }
   }
 
@@ -58,7 +59,7 @@ class AddCart extends Component {
         selectedOfferPrice: this.state.pricing.price || order.selectedOfferPrice
     }
     postOrderEdit(orderpayload)
-    this.props.history.push("/cart/shopping-cart")
+    Router.push("/cart")
     AddCart.openedPopup.id = false
     removePopup()
   }
@@ -72,8 +73,7 @@ class AddCart extends Component {
       }
       return options;
     } else {
-      const {minimum} = this.props.offer.packaging;
-      const {pkgAmount} = this.props.offer;
+      const {minimum, pkgAmount} = this.props.offer;
       for (let i = minimum; i <= pkgAmount; i = i + split) {
         options.push(i);
       }
@@ -82,8 +82,7 @@ class AddCart extends Component {
   }
 
   handleQuantity = e => {
-    const {pkgAmount} = this.props.offer;
-    const {minimum, splits} = this.props.offer.packaging;
+    const {minimum, splits, pkgAmount} = this.props.offer;
     const value = parseInt(e.target.value, 10)
     const warning = value < minimum || !value 
       ? `minimum is ${minimum}`
@@ -107,23 +106,25 @@ class AddCart extends Component {
     if (isEdit && orderDetailIsFetching) return <Spinner />
     if (offerDetailIsFetching) return <Spinner />
     const location =`${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`;
-    const {pkgAmount} = offer;
-    const {unit, size, minimum, splits} = offer.packaging;
-    const unitName = `${getUnit(unit.name)}${size > 1 && 's'}`;
+    const {pkgAmount, minimum, splits} = offer;
+    const unit = offer.product.packagingUnit ? offer.product.packagingUnit : null
+    const size = offer.product.packagingSize ? offer.product.packagingSize : null
+    const unitName = `${getUnit(unit.name)}`;
     const packageSize = `${size} ${unitName}`;
     const availableProducts = `${pkgAmount} pck / ${(pkgAmount * size).formatNumber()} ${unitName}`;
-    const totalPrice = this.state.quantity ? offer.pricing.price * this.state.quantity * size : "";
+    const totalPrice = (this.state.quantity && this.state.pricing) ? this.state.pricing.price * this.state.quantity * size : "";
     const {tiers} = offer.pricing;
-    const priceLevelOptions = tiers.map(i => {
+    const priceLevelOptions = tiers.map((tier, i) => {
+      const quantityTo = (i + 1) >= tiers.length ? pkgAmount : (tier.quantityFrom > tiers[i+1].quantityFrom ? tier.quantityFrom : tiers[i+1].quantityFrom  - 1)
       const object = {
-        name: `${i.quantityFrom} - ${i.quantityTo} pck / $${i.price}`, //name: `${i.quantityFrom} - ${i.quantityTo} pck / $${i.price}`,
-        id: {quantityFrom: i.quantityFrom, quantityTo: i.quantityTo, price: i.price}
+        name: `${tier.quantityFrom} - ${quantityTo} pck / $${tier.price}`, //name: `${i.quantityFrom} - ${i.quantityTo} pck / $${i.price}`,
+        id: {quantityFrom: tier.quantityFrom, quantityTo: quantityTo, price: tier.price}
       };
       return object;
     })
     const noPriceTiersOption = [{
-      name: offer.pricing.price,
-      id:  offer.pricing.price
+      name: offer.pricing.price.amount,
+      id:  offer.pricing.price.amount
     }]
     const currentPriceLevel = isEdit 
       ? tiers.find(i => i.id === order.productOffer.pricing.tiers[0].id)
@@ -170,7 +171,7 @@ class AddCart extends Component {
           <div className="add-cart-body-section">
             <h3>1. Product Information</h3>
             <div className="add-cart-product-name">
-              {offer.product.casIndexName}
+              {offer.product.casProduct.casIndexName}
             </div>
             <div className="add-cart-prod-info">
               <div>
@@ -191,7 +192,7 @@ class AddCart extends Component {
               </div>
               <div>
                 <span>Packaging: </span>
-                {offer.packaging.packagingType.name}
+                {offer.product.packagingType.name}
               </div>
               <div>
                 <span>Package Size: </span>
@@ -220,10 +221,10 @@ class AddCart extends Component {
               />
             </div>
 
-           
+
             <div className="add-cart-form-input">
               <label>Select Quantity</label>
-              {quantityOptionsWithName.length <= 10 
+              {quantityOptionsWithName.length <= 10
               ?  <Dropdown
                 opns={quantityOptionsWithName}
                 placeholder="Select Quantity"
@@ -233,7 +234,7 @@ class AddCart extends Component {
                   this.setState({quantity: value})
                 }}/>
                 : <div className="purchase-info">
-                  <InputControlled                             
+                  <InputControlled
                     value={this.state.quantity}
                     handleChange={this.handleQuantity}
                     className={this.state.warning ? "invalid" : ""}
@@ -260,11 +261,11 @@ class AddCart extends Component {
             </div>
             <div className="purchase-summary-info">
               <label>Price/LB:</label>
-              <span>${offer.pricing.price}</span> 
+              <span>{offer.pricing.price.currency.symbol}{offer.pricing.price.amount}</span>
             </div>
             {/* <div className="purchase-summary-info">
-              <b>Delivered Price/LB:</b> 
-              <span>$</span> 
+              <b>Delivered Price/LB:</b>
+              <span>$</span>
             </div> */}
 
             <div className="divider" />

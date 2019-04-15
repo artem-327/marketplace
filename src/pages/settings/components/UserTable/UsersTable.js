@@ -38,13 +38,14 @@ class UsersTable extends Component {
     const {
       rows,
       filterValue,
+      loading,
       openPopup,
       confirmMessage,
       handleOpenConfirmPopup,
       closeConfirmPopup,
       deleteConfirmation
     } = this.props
-
+    
     const { columns } = this.state
 
     return (
@@ -60,6 +61,8 @@ class UsersTable extends Component {
           filterValue={filterValue}
           columns={columns}
           rows={rows}
+          loading={loading}
+          style={{marginTop: '5px'}}
           rowActions={[
             { text: 'Edit', callback: row => openPopup(row) },
             { text: 'Delete', callback: row => handleOpenConfirmPopup(row.id) }
@@ -82,7 +85,8 @@ const mapStateToProps = state => {
   return {
     rows: state.settings.usersRows,
     filterValue: state.settings.filterValue,
-    confirmMessage: state.settings.confirmMessage
+    confirmMessage: state.settings.confirmMessage,
+    loading: state.settings.loading
   }
 }
 

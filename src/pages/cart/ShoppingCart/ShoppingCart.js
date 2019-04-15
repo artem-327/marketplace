@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
-import PropTypes from "prop-types";
+import PropTypes from "prop-types"
 import "./ShoppingCart.scss"
 import SummaryTable from "../components/SummaryTable/SummaryTable"
 import ItemCartBody from "../components/ItemCartBody/ItemCartBody"
 import KeepShoppingPopup from "../components/KeepShoppingPopup/KeepShoppingPopup"
 import Spinner from '../../../components/Spinner/Spinner'
-import Button from '../../../components/Button/Button'
-import {NavLink} from 'react-router-dom'
-import {FormattedMessage} from 'react-intl';
-import {checkToken} from "../../../utils/auth";
+import {FormattedMessage} from 'react-intl'
+import {checkToken} from "../../../utils/auth"
+import { Container, Menu, Header, Button, Icon } from "semantic-ui-react"
+import Router from 'next/router'
 
 class ShoppingCart extends Component {
   componentDidMount(){
@@ -17,12 +17,12 @@ class ShoppingCart extends Component {
 
   handleContinueShopping = () => {
     this.props.removePopup()
-    this.props.history.push("/inventory/all-inventory")
+    Router.push("/marketplace/all")
   }
 
   handleContinue = () => {
     if (checkToken(this.props)) return;
-    this.props.history.push("/cart/purchase-order")
+    Router.push("/purchase-order")
   }
 
   keepShopping = () => {
@@ -87,58 +87,54 @@ class ShoppingCart extends Component {
           key={cartItem.id}
           cartItem={cartItem}
           deleteCart={deleteCart}
-          />)
+        />)
     });
     const itemsNumber = cart.cartItems ? cart.cartItems.length : 0;
-    const headerTitle =
-        <FormattedMessage
-            id='cart.shoppingCartHeader'
-            defaultMessage={`Items (${itemsNumber})`}
-            values={{number: itemsNumber}}
-        />;
+    const headerTitle = <FormattedMessage id='cart.shoppingCartHeader' defaultMessage={`Items (${itemsNumber})`} values={{number: itemsNumber}} />
 
     return (
       <div className="app-inner-main">
-      <div className='header-top'>
-          <h1 className='header inv-header'>
-              <FormattedMessage
-                id='cart.productOfferings'
-                defaultMessage='PRODUCT OFFERINGS'
-              />
-          </h1>
-          <div className="submenu">
-              <div className="link">
-                  <NavLink to={'/inventory/all-inventory'}>
-                      <i className="arrow-left"></i>
-                      <b>
-                          <FormattedMessage
-                            id='cart.backToProductPurchaseInfo'
-                            defaultMessage='Back to Product/Purchase info'
-                          />
-                      </b>
-                  </NavLink>
-              </div>
-          </div>
-      </div>
-      <div className="shopping-cart">
+        <div className='header-top'>
+          <Container fluid>
+            <Menu secondary>
+              <Menu.Item header>
+                <Header as='h1' size='medium'>
+                  <FormattedMessage id='cart.productOfferings'
+                                    defaultMessage='PRODUCT OFFERINGS' />
+                </Header>
+              </Menu.Item>
+
+              <Menu.Menu position='right'>
+                <Menu.Item>
+                  <Button icon basic labelPosition='left' onClick={() => { Router.push('/marketplace/all') }}>
+                    <Icon name='chevron left' />
+                    <FormattedMessage id='cart.backToProductPurchaseInfo'
+                                      defaultMessage='Back to Product/Purchase info' />
+                  </Button>
+                </Menu.Item>
+              </Menu.Menu>
+            </Menu>
+          </Container>
+        </div>
+        <div className="shopping-cart">
           <div className="shopping-cart-body">
-              <div className="shopping-cart-items">
+            <div className="shopping-cart-items">
               <header><h2>{headerTitle}</h2></header>
-                {itemContent}
-              </div>
-              <div className="shopping-cart-summary">
-                <SummaryTable title="Summary" hasButton={itemsNumber ? true : false} handleContinue={this.handleContinue}>
-                  {this.renderSummary()}
-                </SummaryTable>
-                <Button size="large" color="light-blue"onClick={this.keepShopping}>
-                    <FormattedMessage
-                        id='cart.keepShopping'
-                        defaultMessage='Keep Shopping'
-                    />
-                </Button>
-              </div>
+              {itemContent}
+            </div>
+            <div className="shopping-cart-summary">
+              <SummaryTable title="Summary" hasButton={itemsNumber ? true : false} handleContinue={this.handleContinue}>
+                {this.renderSummary()}
+              </SummaryTable>
+              <Button size="large" basic fluid color="blue" onClick={this.keepShopping}>
+                <FormattedMessage
+                  id='cart.keepShopping'
+                  defaultMessage='Keep Shopping'
+                />
+              </Button>
+            </div>
           </div>
-      </div>
+        </div>
       </div>
     )
   }

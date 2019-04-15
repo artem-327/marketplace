@@ -1,6 +1,6 @@
 import {
     OFFER_FETCH_SUCCEEDED, OFFER_FETCH_REQUESTED,
-    CART_FETCH_SUCCEEDED, CART_FETCH_REQUESTED,
+    CART_FETCH_REQUESTED_FULFILLED, CART_FETCH_REQUESTED,
     PAYMENTS_FETCH_REQUESTED, PAYMENTS_FETCH_SUCCEEDED,
     DELIVERYADDRESSES_FETCH_SUCCEEDED, DELIVERYADDRESSES_FETCH_REQUESTED,
     PRODUCTFROMCART_REMOVE_REQUESTED,
@@ -12,6 +12,7 @@ import {
     SHIPPING_QUOTES_FETCH_SUCCEEDED,
     SHIPPING_QUOTES_FETCH_REQUESTED
 } from "../constants/cart";
+import Api from "~/src/api/cart"
 
 export const initialState = {
     offerDetail: {},
@@ -88,7 +89,7 @@ export default function reducer(state = initialState, action) {
                 cartIsFetching: true,
             }
         }
-        case CART_FETCH_SUCCEEDED: {
+        case CART_FETCH_REQUESTED_FULFILLED: {
             return {
                 ...state,
                 cart: action.payload,
@@ -124,7 +125,7 @@ export function getProductOffer(id) {
 }
 
 export function getCart(){
-    return {type: CART_FETCH_REQUESTED}
+    return {type: CART_FETCH_REQUESTED, payload: Api.getCart() }
 }
 
 export function getDeliveryAddresses(){

@@ -36,6 +36,7 @@ class WarehouseTable extends Component {
     const {
       rows,
       filterValue,
+      loading,
       openPopup,
       closeConfirmPopup,
       deleteConfirmation,
@@ -57,7 +58,9 @@ class WarehouseTable extends Component {
         <ProdexGrid
           filterValue={filterValue}
           columns={columns}
+          loading={loading}
           rows={this.handlerChangeRows(rows)}
+          style={{marginTop: '5px'}}
           rowActions={[
             { text: 'Edit', callback: row => openPopup(row) },
             { text: 'Delete', callback: row => handleOpenConfirmPopup(row.id) }
@@ -79,12 +82,12 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     rows: state.settings.warehousesRows,
-    editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
     editPopupBoolean: state.settings.editPopupBoolean,
     addNewWarehousePopup: state.settings.addNewWarehousePopup,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
-    currentTab: state.settings.currentTab
+    currentTab: state.settings.currentTab,
+    loading: state.settings.loading
   }
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from "prop-types"
 import "./SummaryTable.scss"
-import Button from '../../../../components/Button/Button'
+import { Button } from "semantic-ui-react"
 import {FormattedMessage} from 'react-intl';
 
 const SummaryTable = ({hasButton, children, title, handleContinue}) => {
@@ -17,13 +17,16 @@ const SummaryTable = ({hasButton, children, title, handleContinue}) => {
       {hasButton && <footer>
         <Button
             size="large"
-            color="blue"
-            rounded="down"
+            primary
+            fluid
+            attached="bottom"
             onClick={handleContinue}>
+          {hasButton === true ? (
                 <FormattedMessage
                     id='global.continue'
                     defaultMessage='Continue'
                 />
+          ) : hasButton}
         </Button>
       </footer>}
     </div>

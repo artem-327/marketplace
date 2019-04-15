@@ -32,7 +32,7 @@ const CartItemSummary = ({cartItem,  deleteCart, itemIndex}) => {
                 <td
                     className="subtitle"
                     colspan="2">
-                        {productOffer.product.casIndexName}
+                        {productOffer.product.casProduct.casIndexName}
                 </td>
             </tr>
             <tr>
@@ -76,7 +76,7 @@ const CartItemSummary = ({cartItem,  deleteCart, itemIndex}) => {
                     />
                 </td>
                 <td>
-                    {cartItem.quantity * productOffer.packaging.size} lbs
+                    {cartItem.quantity * productOffer.product.packagingSize} lbs
                 </td>
             </tr>
             <tr>
@@ -87,7 +87,7 @@ const CartItemSummary = ({cartItem,  deleteCart, itemIndex}) => {
                         values={{unit: 'Lb'}}
                     />
                 </td>
-                <td>{productOffer.pricing.price}$</td>
+                <td>{productOffer.pricing.price.currency.symbol}{productOffer.pricing.price.amount.formatMoney(0)}</td>
             </tr>
             <tr className="total">
                 <td>
@@ -96,7 +96,7 @@ const CartItemSummary = ({cartItem,  deleteCart, itemIndex}) => {
                         defaultMessage='Product Total'
                     />
                 </td>
-                <td>{cartItem.selectedOfferPrice}$</td>
+                <td>{productOffer.pricing.price.currency.symbol}{(cartItem.quantity * productOffer.product.packagingSize * productOffer.pricing.price.amount).formatMoney(0)}</td>
             </tr>
           </tbody>
         </table>

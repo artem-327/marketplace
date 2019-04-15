@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+//import ProdexGrid from '~/components/table'
 import ProdexTable from '~/components/table'
 import { getDataRequest, openEditPopup, deleteItem } from '../../actions'
+import {Confirm} from "semantic-ui-react";
 
 class DataTable extends Component {
     componentDidMount() {
@@ -21,15 +23,17 @@ class DataTable extends Component {
         const { columns } = this.props.config.display;
 
         return (
-            <ProdexTable
-                filterValue={filterValue}
-                columns={columns}
-                rows={rows}
-                rowActions={[
-                    {text: 'Edit', callback: (row) => openEditPopup(config, row)},
-                    {text: 'Delete', callback: (row) => deleteItem(config, row.id)}
-                ]}
-            />
+            <React.Fragment>
+                <ProdexTable
+                    filterValue={filterValue}
+                    columns={columns}
+                    rows={rows}
+                    rowActions={[
+                        {text: 'Edit', callback: (row) => openEditPopup(config, row)},
+                        {text: 'Delete', callback: (row) => deleteItem(config, row.id)}
+                    ]}
+                />
+            </React.Fragment>
         )
     }
 }

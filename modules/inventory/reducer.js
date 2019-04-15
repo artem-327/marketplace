@@ -2,6 +2,7 @@ import * as AT from './action-types'
 
 export const initialState = {
     fileIds: [],
+    poCreated: false,
     searchedProducts: [],
     searchedProductsLoading: false,
     warehousesList: []
@@ -11,62 +12,76 @@ export default function reducer(state = initialState, action) {
     const {type, payload} = action
 
     switch (type) {
+        case AT.INVENTORY_ADD_PRODUCT_OFFER_FULFILLED: {
+          return {
+            ...state,
+            poCreated: true
+          }
+        }
+
         case AT.INVENTORY_GET_PRODUCT_OFFER_FULFILLED: {
-            let {data} = action.payload
-            return {
-                ...state,
-                ...action.payload.data
-            }
+          let {data} = action.payload
+          return {
+            ...state,
+            ...action.payload.data,
+            poCreated: false
+          }
         }
 
         case AT.INVENTORY_GET_WAREHOUSES_FULFILLED: {
-            return {
-                ...state,
-                warehousesList: action.payload.data.map((warehouse) => {
-                    return {
-                      ...warehouse,
-                      text: warehouse.name,
-                      value: warehouse.id
-                    }
-                })
-            }
+          return {
+            ...state,
+            warehousesList: action.payload.data.map((warehouse) => {
+              return {
+                ...warehouse,
+                text: warehouse.name,
+                value: warehouse.id
+              }
+            })
+          }
+        }
+
+        case AT.INVENTORY_RESET_FORM: {
+          return {
+            ...initialState
+          }
         }
 
         case AT.INVENTORY_SEARCH_PRODUCTS_PENDING: {
-            return {
-                ...state,
-                searchedProductsLoading: true
-            }
+          return {
+            ...state,
+            searchedProductsLoading: true
+          }
         }
 
         case AT.INVENTORY_SEARCH_PRODUCTS_FULFILLED: {
-            return {
-                ...state,
-                searchedProducts: action.payload.data,
-                searchedProductsLoading: false
-            }
+          return {
+            ...state,
+            searchedProducts: action.payload.data,
+            searchedProductsLoading: false
+          }
         }
 
         case AT.INVENTORY_FILL_PRODUCT: {
-            return {
-              ...state,
-              searchedProducts: action.payload.data,
-              searchedProductsLoading: false
-            }
+          return {
+            ...state,
+            searchedProducts: action.payload.data,
+            searchedProductsLoading: false
+          }
         }
 
         case AT.INVENTORY_SET_FILE_ID: {
-            state.fileIds.push({
-                id: action.payload.fileId
-            })
+          state.fileIds.push({
+            id: action.payload.fileId
+          })
 
-            return {
-                ...state
-            }
+          return {
+            ...state
+          }
         }
 
         default: {
-            return state
+          return state
         }
     }
 }

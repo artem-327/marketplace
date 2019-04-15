@@ -9,6 +9,7 @@ const securePageHoc = Page => class SecurePage extends React.Component {
   static getInitialProps (ctx) {
     return Page.getInitialProps && Page.getInitialProps(ctx)
   }
+  
   static propTypes = {
     isAuthenticated: PropTypes.bool.isRequired
   }
@@ -29,8 +30,8 @@ const securePageHoc = Page => class SecurePage extends React.Component {
         <IdleTimer
           timeout={IDLE_TIMEOUT}
           onIdle={() => Router.push(`/auth/logout?auto=true`)}
-          onAction={() => refreshToken()}
-          throttle={IDLE_TIMEOUT/2}
+          // onAction={() => refreshToken()}
+          // debounce={IDLE_TIMEOUT-5000}
         />
         <Page {...this.props} />
       </>
