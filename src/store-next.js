@@ -47,6 +47,7 @@ import adminSaga from "./pages/admin/saga"
 
 // Simple Add/Edit Inventory
 import simpleAdd from  '~/modules/inventory/reducer'
+import shipping from '~/modules/shipping/reducer'
 
 // Orders
 import ordersReducers from './pages/orders/reducers'
@@ -64,6 +65,7 @@ const reducer = combineReducers({
   location,
   productOffers,
   shippingQuotes,
+  shipping,
   products,
   packageTypes,
   cart,

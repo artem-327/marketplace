@@ -1,12 +1,9 @@
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import ShippingQuotes from './ShippingQuotes'
-import { getShippingQuotes } from '~/modules/shippingQuotes'
+import { getShippingQuotes } from '../actions'
 
-function mapStateToProps(store) {
-  return {
-    shippingQuotesIsFetching: store.shippingQuotes.shippingQuotesIsFetching,
-  }
+function mapStateToProps({shipping}) {
+  return shipping
 }
 
 const mapDispatchToProps = {
