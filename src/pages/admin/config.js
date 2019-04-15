@@ -14,6 +14,19 @@ export const config = {
     },
   },
 
+  'Companies Management': {
+    addEditText: 'New Company',
+    searchText: 'Search company by name',
+    display: {
+      columns: [
+        { name: 'name', title: 'Company name'},
+        { name: 'nacdMember', title: ' NACD Member'},
+        { name: 'phone', title: 'Phone number'},
+        { name: 'website', title: 'Web'}
+      ]
+    }
+  },
+
   'Units of Measure': {
     addEditText: 'Unit Of Measure',
     searchText: 'Search unit of measure by name or measure type',

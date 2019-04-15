@@ -15,7 +15,7 @@ import EditPopup2Parameters from './DataTable/EditPopup2Parameters'
 import EditPopup1Parameter from './DataTable/EditPopup1Parameter'
 
 import CasProductsTable from './CasProductsTable/CasProductsTable'
-
+import CompaniesTable from './CompaniesTable/Table'
 
 const tables = {
   'Units of Measure': <DataTable />,
@@ -25,6 +25,7 @@ const tables = {
   'Forms': <DataTable />,
   'Conditions': <DataTable />,
   'CAS Products': <CasProductsTable />,
+  'Companies Management': <CompaniesTable />
 }
 
 const editForms = {
@@ -59,7 +60,7 @@ class Admin extends Component {
       <>
         {currentAddForm && addForms[currentTab]}
         {currentEditForm && editForms[currentTab]}
-        {tables[currentTab] || <p>This page is still under construction</p>}
+        {<div style={{marginTop: '5px'}}>{tables[currentTab]}</div> || <p>This page is still under construction</p>}
       </>
     )
   }

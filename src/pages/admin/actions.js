@@ -129,6 +129,7 @@ export function casDeleteItem(value) {
 
 export function getCompanies() {
 	return {
-		type: AT.ADMIN_GET_COMPANIES
+		type: AT.ADMIN_GET_COMPANIES,
+		payload: api.getCompanies()
 	}
 }

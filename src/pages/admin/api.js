@@ -15,8 +15,9 @@ export async function getHazardClasses() {
   return data
 }
 
-export function getCompanies() {
-  return api.get('/prodex/companies')
+export async function getCompanies() {
+  const {data} = await api.get('/prodex/api/companies')
+  return data
 }
 
 

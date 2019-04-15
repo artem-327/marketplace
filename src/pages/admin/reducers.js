@@ -18,6 +18,7 @@ export const initialState = {
 
   tabsNames: [
     { name: 'CAS Products', id: 7 },
+    { name: 'Companies Management', id: 8 },
     { name: 'Units of Measure', id: 1 },
     { name: 'Units of Packaging', id: 2 },
     { name: 'Manufacturers', id: 3 },
@@ -25,12 +26,14 @@ export const initialState = {
     { name: 'Forms', id: 5 },
     { name: 'Conditions', id: 6 },
   ],
+
   currentTab: 'Units of Measure',
   casListDataRequest: { pageSize: 50, pageStart: 0 },
   currentEditForm: null,
   currentAddForm: null,
   confirmMessage: null,
   filterValue: '',
+  loading: false,
   config: config,
 }
 
@@ -100,7 +103,6 @@ export default function reducer(state = initialState, action) {
         hazardClasses: action.payload
       }
     }
-
 
     case AT.ADMIN_GET_COMPANIES_PENDING: {
       return { ...state,
