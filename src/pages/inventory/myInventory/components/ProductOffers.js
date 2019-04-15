@@ -17,7 +17,7 @@ class ProductOffers extends Component {
 
   groupProductOffers(productOffers) {
     return productOffers.reduce((carry, offer) => {
-      (carry[(typeof offer.product !== 'undefined' ? offer.product.id : 0)] = carry[(typeof offer.product !== 'undefined' ? offer.product.id : 0)] || { ...offer.product, visible: true, productOffers: [] }).productOffers.push(offer)
+      (carry[(offer.product && offer.product.casProduct ? offer.product.casProduct.id : 0)] = carry[(offer.product && offer.product.casProduct ? offer.product.casProduct.id : 0)] || { ...offer.product, visible: true, productOffers: [] }).productOffers.push(offer)
       return carry
     }, {})
   }
