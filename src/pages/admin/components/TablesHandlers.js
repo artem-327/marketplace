@@ -35,7 +35,7 @@ class TablesHandlers extends Component {
         const {
             handleFiltersValue,
             currentTab,
-            openAddPopup
+            openAddPopup,
         } = this.props
 
         const {
@@ -52,7 +52,7 @@ class TablesHandlers extends Component {
                 <Menu.Menu position='right'>
                     <Menu.Item>
                         <Input style={{width: 340}} size="large" icon='search' placeholder={config[currentTab].searchText}
-                               onChange={ e => handleFiltersValue(e.target.value)} />
+                               onChange={ e => handleFiltersValue(this.props, e.target.value)} />
                     </Menu.Item>
                     <Menu.Item>
                         <Button size="large" primary onClick={() => openAddPopup(currentTab) }>
@@ -67,7 +67,8 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
     return {
-        currentTab: state.admin.currentTab
+        currentTab: state.admin.currentTab,
+        casListDataRequest: state.admin.casListDataRequest
     }
 }
 
