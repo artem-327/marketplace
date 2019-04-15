@@ -1,5 +1,5 @@
-import React, {Component} from "react";
-import {connect} from "react-redux";
+import React, {Component} from "react"
+import {connect} from "react-redux"
 import { Label } from 'semantic-ui-react'
 import ProdexTable from '~/components/table'
 import { getCasProductByFilter, openEditCasPopup, casDeleteItem } from '../../actions'
@@ -7,7 +7,7 @@ import { getCasProductByFilter, openEditCasPopup, casDeleteItem } from '../../ac
 
 class CasProductsTable extends Component {
   componentDidMount() {
-    this.props.getCasProductByFilter(this.props.casListDataRequest);
+    this.props.getCasProductByFilter(this.props.casListDataRequest)
   }
 
   render() {
@@ -20,13 +20,14 @@ class CasProductsTable extends Component {
       openEditCasPopup,
       casDeleteItem,
       deleteItem,
-    } = this.props;
+    } = this.props
 
-    const { columns } = this.props.config.display;
+    const { columns } = config.display
 
     return (
       <React.Fragment>
         <ProdexTable
+          filterValue={filterValue}
           columns={columns}
           rows={rows}
           rowActions={[
@@ -45,8 +46,14 @@ const mapDispatchToProps = {
   casDeleteItem
 }
 
+const transformHazardClasses = classes => (
+  <Label.Group color='blue'>
+    {classes.map((b,i) => <Label size='tiny' key={i} title={b.description}>{b.classCode}</Label>)}
+  </Label.Group>
+)
+
 const mapStateToProps = state => {
-  let cfg = state.admin.config[state.admin.currentTab];
+  let cfg = state.admin.config[state.admin.currentTab]
   return {
     config: cfg,
     filterValue: state.admin.filterValue,
@@ -61,12 +68,7 @@ const mapStateToProps = state => {
         chemicalName: d.chemicalName,
         packagingGroup: d.packagingGroup,
         unNumber: d.unNumber,
-        hazardClasses:
-            <Label.Group color='blue'>
-              {d.hazardClasses.map(b => {
-                return <Label size='medium' key={d.id} title={b.description}>{b.classCode}</Label>
-              })}
-            </Label.Group>
+        hazardClasses: transformHazardClasses(d.hazardClasses)
       }
     })
   }
