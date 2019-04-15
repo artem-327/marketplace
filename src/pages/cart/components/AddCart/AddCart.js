@@ -112,10 +112,10 @@ class AddCart extends Component {
     const unitName = `${getUnit(unit.name)}`;
     const packageSize = `${size} ${unitName}`;
     const availableProducts = `${pkgAmount} pck / ${(pkgAmount * size).formatNumber()} ${unitName}`;
-    const totalPrice = this.state.quantity ? offer.pricing.price * this.state.quantity * size : "";
+    const totalPrice = (this.state.quantity && this.state.pricing) ? this.state.pricing.price * this.state.quantity * size : "";
     const {tiers} = offer.pricing;
     const priceLevelOptions = tiers.map((tier, i) => {
-      const quantityTo = (i + 1) >= tiers.length ? 1000000 : (tier.quantityFrom > tiers[i+1].quantityFrom ? tier.quantityFrom : tiers[i+1].quantityFrom  - 1)
+      const quantityTo = (i + 1) >= tiers.length ? pkgAmount : (tier.quantityFrom > tiers[i+1].quantityFrom ? tier.quantityFrom : tiers[i+1].quantityFrom  - 1)
       const object = {
         name: `${tier.quantityFrom} - ${quantityTo} pck / $${tier.price}`, //name: `${i.quantityFrom} - ${i.quantityTo} pck / $${i.price}`,
         id: {quantityFrom: tier.quantityFrom, quantityTo: quantityTo, price: tier.price}
@@ -123,8 +123,8 @@ class AddCart extends Component {
       return object;
     })
     const noPriceTiersOption = [{
-      name: offer.pricing.price,
-      id:  offer.pricing.price
+      name: offer.pricing.price.amount,
+      id:  offer.pricing.price.amount
     }]
     const currentPriceLevel = isEdit 
       ? tiers.find(i => i.id === order.productOffer.pricing.tiers[0].id)
@@ -261,7 +261,7 @@ class AddCart extends Component {
             </div>
             <div className="purchase-summary-info">
               <label>Price/LB:</label>
-              <span>${offer.pricing.price.amount}</span>
+              <span>{offer.pricing.price.currency.symbol}{offer.pricing.price.amount}</span>
             </div>
             {/* <div className="purchase-summary-info">
               <b>Delivered Price/LB:</b>
