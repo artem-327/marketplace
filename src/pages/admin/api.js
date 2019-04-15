@@ -10,6 +10,14 @@ export async function getCasProductByString(value) {
   return data
 }
 
+export async function getHazardClasses() {
+  const {data} = await api.get("/prodex/api/hazard-classes")
+  return data
+}
+
+
+
+
 
 
 

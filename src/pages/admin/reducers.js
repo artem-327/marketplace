@@ -12,6 +12,7 @@ export const initialState = {
     formsRows: [],
     conditionsRows: [],
     casProductsRows: [],
+    hazardClasses: [],
 
     columnsForFormatter: {
         checkboxColumns: ['checkbox'],
@@ -94,6 +95,13 @@ export default function reducer(state = initialState, action) {
             return {
                 ...state,
                 casProductsRows: action.payload
+            }
+        }
+
+        case AT.ADMIN_GET_HAZARD_CLASSES_FULFILLED: {
+            return {
+                ...state,
+                hazardClasses: action.payload
             }
         }
 

@@ -64,7 +64,7 @@ const mapStateToProps = state => {
         hazardClasses:
             <Label.Group color='blue'>
               {d.hazardClasses.map(b => {
-                return <Label size='medium' title={b.description}>{b.classCode}</Label>
+                return <Label size='medium' key={d.id} title={b.description}>{b.classCode}</Label>
               })}
             </Label.Group>
       }

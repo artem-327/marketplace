@@ -8,6 +8,7 @@ import DataTable from './DataTable/DataTable'
 import AddNewPopup3Parameters from './DataTable/AddNewPopup3Parameters'
 import AddNewPopup2Parameters from './DataTable/AddNewPopup2Parameters'
 import AddNewPopup1Parameter from './DataTable/AddNewPopup1Parameter'
+import AddNewPopupCasProducts from './CasProductsTable/AddNewPopupCasProducts'
 
 import EditPopup3Parameters from './DataTable/EditPopup3Parameters'
 import EditPopup2Parameters from './DataTable/EditPopup2Parameters'
@@ -42,6 +43,7 @@ const addForms = {
     'Grades': <AddNewPopup1Parameter />,
     'Forms': <AddNewPopup1Parameter />,
     'Conditions': <AddNewPopup1Parameter />,
+    'CAS Products': <AddNewPopupCasProducts />,
 }
 
 class Admin extends Component {

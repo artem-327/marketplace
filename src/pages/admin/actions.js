@@ -108,6 +108,13 @@ export function getCasProductByFilter(value) {
     }
 }
 
+export function getHazardClassesDataRequest() {
+    return {
+        type: AT.ADMIN_GET_HAZARD_CLASSES,
+        payload: api.getHazardClasses()
+    }
+}
+
 export function openEditCasPopup(value) {
     return {
         type: null,
