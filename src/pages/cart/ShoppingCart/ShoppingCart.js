@@ -32,6 +32,7 @@ class ShoppingCart extends Component {
 
   renderSummary() {
     const {totalPrice} = this.props.cart;
+    const {symbol} = this.props.identity.preferredCurrency
     return (
       <table>
         <tbody>
@@ -42,7 +43,7 @@ class ShoppingCart extends Component {
                     defaultMessage='Subtotal'
                   />
               </td>
-              <td>${totalPrice}</td>
+              <td>{symbol}{totalPrice.formatMoney(3)}</td>
           </tr>
           <tr>
               <td>
@@ -67,7 +68,7 @@ class ShoppingCart extends Component {
                     defaultMessage='Total'
                   />
               </td>
-              <td>${totalPrice}</td>
+              <td>{symbol}{totalPrice.formatMoney(3)}</td>
           </tr>
         </tbody>
       </table>

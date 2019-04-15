@@ -7,6 +7,7 @@ import {addPopup, removePopup} from '../../../modules/popup';
 function mapStateToProps(store) {
     return {
         cart: store.cart.cart,
+        identity: store.auth.identity,
         cartIsFetching: store.cart.cartIsFetching
     }
 }
