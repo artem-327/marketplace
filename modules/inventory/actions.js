@@ -135,9 +135,9 @@ export function searchProducts(text) {
 
       return {
         data: response.data ? response.data.map(p => ({
-          text: p.casProduct.casIndexName,
+          text: p.casProduct ? p.casProduct.casIndexName : p.productName + ' (Unmapped)',
           value: p.id,
-          key: p.casProduct.id
+          key: p.casProduct ? p.casProduct.id : ''
         })) : []
       }
     }
