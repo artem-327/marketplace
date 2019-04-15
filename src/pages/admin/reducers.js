@@ -13,6 +13,7 @@ export const initialState = {
   conditionsRows: [],
   casProductsRows: [],
   hazardClasses: [],
+  packagingGroups: [],
 
   companiesRows: [],
 
@@ -101,6 +102,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         hazardClasses: action.payload
+      }
+    }
+
+    case AT.ADMIN_GET_PACKAGING_GROUPS_FULFILLED: {
+      return {
+        ...state,
+        packagingGroups: action.payload
       }
     }
 

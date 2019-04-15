@@ -15,6 +15,11 @@ export async function getHazardClasses() {
   return data
 }
 
+export async function getPackagingGroups() {
+  const {data} = await api.get("/prodex/api/packaging-groups")
+  return data
+}
+
 export async function getCompanies() {
   const {data} = await api.get('/prodex/api/companies')
   return data

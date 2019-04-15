@@ -113,6 +113,13 @@ export function getHazardClassesDataRequest() {
 	}
 }
 
+export function getPackagingGroupsDataRequest() {
+	return {
+		type: AT.ADMIN_GET_PACKAGING_GROUPS,
+		payload: api.getPackagingGroups()
+	}
+}
+
 export function openEditCasPopup(value) {
 	return {
 		type: null,
