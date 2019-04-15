@@ -47,7 +47,10 @@ const mapStateToProps = ({admin}) => {
     filterValue: admin.filterValue,
     currentTab: admin.currentTab,
     loading: admin.loading,
-    rows: admin.companiesRows
+    rows: admin.companiesRows.map(c => ({
+      ...c,
+      nacdMember: c.nacdMember ? 'Yes' : 'No'
+    }))
   }
 }
 
