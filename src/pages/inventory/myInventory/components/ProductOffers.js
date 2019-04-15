@@ -51,8 +51,8 @@ class ProductOffers extends Component {
           const available = productOffer.pkgAmount.formatNumber()
           const packaging = productOffer.product.hasOwnProperty('packagingType') ? productOffer.product.packagingType.name : 'N/A'
           const quantityPart2 = `${productOffer.product.packagingUnit ? productOffer.product.packagingUnit.nameAbbreviation : ''}`
-          const pkgSize = quantityPart2 ? `${productOffer.product.packagingSize} ${quantityPart2}` : 'N/A'
-          const quantity = quantityPart2 ? `${(parseInt(productOffer.pkgAmount, 10) * parseInt(productOffer.product.packagingSize, 10)).formatNumber()} ` + quantityPart2 : 'N/A'
+          const pkgSize = quantityPart2 && productOffer.product.packagingSize ? `${productOffer.product.packagingSize} ${quantityPart2}` : 'N/A'
+          const quantity = quantityPart2 && productOffer.product.packagingSize ? `${(parseInt(productOffer.pkgAmount, 10) * parseInt(productOffer.product.packagingSize, 10)).formatNumber()} ` + quantityPart2 : 'N/A'
           const cost = productOffer.pricing.cost && productOffer.pricing.cost.amount ? "$" + productOffer.pricing.cost.amount.formatMoney(3) : 'N/A'
           const fobPrice = productOffer.pricing.tiers.length > 1 ?
             ("$" + productOffer.pricing.tiers[productOffer.pricing.tiers.length - 1].price.formatMoney(3)

@@ -269,6 +269,7 @@
     "cart.form": "Form: {form}",
     "cart.productOfferings": "PRODUCT OFFERINGS",
     "cart.backToProductPurchaseInfo": "Back to Product/Purchase info",
+    "cart.shoppingCart": "SHOPPING CART",
     "cart.shoppingCartHeader": "Items ({number})",
     "notFound": "... think we are lost, sir !",
     "tooLargeFile": "File \"{fileName}\" is larger than maximal allowed size: {maxSize} MB",

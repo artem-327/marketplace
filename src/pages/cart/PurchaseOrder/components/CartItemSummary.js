@@ -87,7 +87,7 @@ const CartItemSummary = ({cartItem,  deleteCart, itemIndex}) => {
                         values={{unit: 'Lb'}}
                     />
                 </td>
-                <td>{productOffer.pricing.price.currency.symbol}{productOffer.pricing.price.amount.formatMoney(0)}</td>
+                <td>{productOffer.pricing.price.currency.symbol}{productOffer.pricing.price.amount.formatMoney(3)}</td>
             </tr>
             <tr className="total">
                 <td>
@@ -96,7 +96,7 @@ const CartItemSummary = ({cartItem,  deleteCart, itemIndex}) => {
                         defaultMessage='Product Total'
                     />
                 </td>
-                <td>{productOffer.pricing.price.currency.symbol}{(cartItem.quantity * productOffer.product.packagingSize * productOffer.pricing.price.amount).formatMoney(0)}</td>
+                <td>{productOffer.pricing.price.currency.symbol}{(cartItem.quantity * productOffer.product.packagingSize * productOffer.pricing.price.amount).formatMoney(3)}</td>
             </tr>
           </tbody>
         </table>

@@ -100,8 +100,8 @@ class ShoppingCart extends Component {
             <Menu secondary>
               <Menu.Item header>
                 <Header as='h1' size='medium'>
-                  <FormattedMessage id='cart.productOfferings'
-                                    defaultMessage='PRODUCT OFFERINGS' />
+                  <FormattedMessage id='cart.shoppingCart'
+                                    defaultMessage='SHOPPING CART' />
                 </Header>
               </Menu.Item>
 

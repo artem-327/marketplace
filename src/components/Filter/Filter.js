@@ -10,7 +10,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { checkToken } from "../../utils/auth"
 
-import { Accordion, Button } from 'semantic-ui-react'
+import { Container, Accordion, Button } from 'semantic-ui-react'
 
 class Filter extends Component {
 
@@ -446,20 +446,24 @@ class Filter extends Component {
             </PerfectScrollbar>
 
             <div className="filterBottom">
-              <button className='button filter-button'>
-                <FormattedMessage
-                  id='global.apply'
-                  defaultMessage='Apply'
-                />
-              </button>
-              <button
-                className='button disabled filter-button'
-                onClick={(e) => { this.handleReset(e) }}>
-                <FormattedMessage
-                  id='filter.clearFilter'
-                  defaultMessage='Clear Filter'
-                />
-              </button>
+              <Container textAlign='right' style={{marginTop: '24px'}}>
+                <Button
+                  size='large'
+                  color='grey'
+                  onClick={(e) => { this.handleReset(e) }}>
+                  <FormattedMessage
+                    id='filter.clearFilter'
+                    defaultMessage='Clear Filter'
+                  />
+                </Button>
+                <Button primary
+                        size='large'>
+                  <FormattedMessage
+                    id='global.apply'
+                    defaultMessage='Apply'
+                  />
+                </Button>
+              </Container>
             </div>
           </Form>
           :

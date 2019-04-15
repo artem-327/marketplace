@@ -19,7 +19,7 @@ body {
   font-size: 70%;
 }
 
-i.icon:not(.dropdown) {
+i.icon:not(.dropdown):not(.times) {
   font-family: 'thin-icons' !important;
 }
 

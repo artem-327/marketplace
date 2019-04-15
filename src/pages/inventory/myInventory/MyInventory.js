@@ -126,15 +126,17 @@ class MyInventory extends Component {
 
                         <Menu.Menu position='right'>
                           <Menu.Item>
+                            <FilterTag
+                              dispatch={this.props.dispatch}
+                              closeFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}}
+                            />
+                          </Menu.Item>
+                          <Menu.Item>
                             <SubMenu/>
                           </Menu.Item>
                         </Menu.Menu>
                       </Menu>
                     </Container>
-                    <FilterTag
-                        dispatch={this.props.dispatch}
-                        closeFunc={(filter) => {this.props.fetchMyProductOffers({...filter})}}
-                    />
                 </div>
                 <Filter
                     chemicalName
