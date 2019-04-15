@@ -1,3 +1,3 @@
 import api from '~/api'
 
-export const getQuotes = params => api.post('/prodex/api/shipment/', pack).then(response => response.data)
+export const getQuotes = params => api.post('/prodex/api/shipment/', params).then(response => response.data)

@@ -28,6 +28,12 @@ export default function reducer(state = initialState, action) {
         quotes: payload
       }
     }
+
+    case AT.SHIPPING_GET_QUOTES_REJECTED: {
+      return {...state,
+        loading: false,
+      }
+    }
   
     default: {
       return state
