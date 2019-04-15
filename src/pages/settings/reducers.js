@@ -164,6 +164,12 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.GET_WAREHOUSES_DATA: {
+      return {...state,
+        loading: true
+      }
+    }
+
     case AT.GET_WAREHOUSES_DATA_SUCCESS: {
       const warehousesRows = action.payload.warehouses.map(warehouse => ({
         name: warehouse.name,
@@ -190,8 +196,15 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
+        loading: false,
         warehousesRows: warehousesRows,
         country: action.payload.newCountryFormat
+      }
+    }
+
+    case AT.GET_BRANCHES_DATA: {
+      return {...state,
+        loading: true
       }
     }
 
@@ -209,7 +222,14 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
+        loading: false,
         branchesRows: rows
+      }
+    }
+
+    case AT.GET_CREDIT_CARDS_DATA: {
+      return {...state,
+        loading: true
       }
     }
 
@@ -228,7 +248,14 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
+        loading: false,
         creditCardsRows: rows
+      }
+    }
+
+    case AT.GET_BANK_ACCOUNTS_DATA: {
+      return {...state,
+        loading: true
       }
     }
 
@@ -248,7 +275,14 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
+        loading: false,
         bankAccountsRows: rows
+      }
+    }
+
+    case AT.GET_PRODUCTS_CATALOG_DATA: {
+      return {...state,
+        loading: true
       }
     }
 
@@ -285,6 +319,7 @@ export default function reducer(state = initialState, action) {
       })
       return {
         ...state,
+        loading: false,
         productsCatalogRows: rows,
         productsPackagingType: packagingType
       }

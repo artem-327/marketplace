@@ -33,7 +33,8 @@ class ProductCatalogTable extends Component {
       openPopup,
       handleOpenConfirmPopup,
       closePopup,
-      deleteConfirmation
+      deleteConfirmation,
+      loading
     } = this.props
 
     const { columns } = this.state
@@ -50,6 +51,8 @@ class ProductCatalogTable extends Component {
         <ProdexTable
           rows={rows}
           columns={columns}
+          loading={loading}
+          style={{marginTop: '5px'}}
           filterValue={filterValue}
           rowActions={[
             { text: 'Edit', callback: row => openPopup(row) },
@@ -76,7 +79,8 @@ const mapStateToProps = state => {
   return {
     rows: state.settings.productsCatalogRows,
     filterValue: state.settings.filterValue,
-    confirmMessage: state.settings.confirmMessage
+    confirmMessage: state.settings.confirmMessage,
+    loading: state.settings.loading
   }
 }
 
