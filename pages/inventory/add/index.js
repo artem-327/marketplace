@@ -7,9 +7,7 @@ class Index extends Component {
 
   render() {
     return (
-      <Layout title="Add Iventory">
-        <AddInventory />
-      </Layout>
+      <AddInventory />
     )
   }
 }
