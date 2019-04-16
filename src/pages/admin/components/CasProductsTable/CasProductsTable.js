@@ -2,12 +2,21 @@ import React, {Component} from "react"
 import {connect} from "react-redux"
 import { Label } from 'semantic-ui-react'
 import ProdexTable from '~/components/table'
-import { getCasProductByFilter, openEditCasPopup, casDeleteItem } from '../../actions'
+import {
+  getCasProductByFilter,
+  openEditCasPopup,
+  casDeleteItem,
+  getUnNumbersDataRequest,
+  getHazardClassesDataRequest, getPackagingGroupsDataRequest
+} from '../../actions'
 
 
 class CasProductsTable extends Component {
   componentDidMount() {
     this.props.getCasProductByFilter(this.props.casListDataRequest)
+    this.props.getUnNumbersDataRequest();
+    this.props.getHazardClassesDataRequest();
+    this.props.getPackagingGroupsDataRequest();
   }
 
   render() {
@@ -43,7 +52,10 @@ class CasProductsTable extends Component {
 const mapDispatchToProps = {
   getCasProductByFilter,
   openEditCasPopup,
-  casDeleteItem
+  casDeleteItem,
+  getUnNumbersDataRequest,
+  getHazardClassesDataRequest,
+  getPackagingGroupsDataRequest,
 }
 
 const transformHazardClasses = classes => (
@@ -66,8 +78,8 @@ const mapStateToProps = state => {
         casIndexName: d.casIndexName,
         casNumber: d.casNumber,
         chemicalName: d.chemicalName,
-        packagingGroup: d.packagingGroup,
-        unNumber: d.unNumber,
+        packagingGroup: !!d.packagingGroup ? d.packagingGroup.groupCode : '',
+        unNumber: !!d.unNumber ? d.unNumber.unNumberCode : '',
         hazardClasses: transformHazardClasses(d.hazardClasses)
       }
     })

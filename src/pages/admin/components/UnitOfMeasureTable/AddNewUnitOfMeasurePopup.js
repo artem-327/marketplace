@@ -7,11 +7,6 @@ import { closeAddPopup , postNewRequest } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
-const measureOptions = [
-    { text: 'volume', value: 'volume' },
-    { text: 'weight', value: 'weight' },
-]
-
 const initialFormValues = {
     val0: '',
     val1: '',
@@ -21,17 +16,17 @@ const initialFormValues = {
 const formValidation = Yup.object().shape({
     val0: Yup.string().min(1, "Too short").required("Required"),
     val1: Yup.string().min(1, "Too short").required("Required"),
-    val2: Yup.string().min(1, "Too short").required("Required")
+    val2: Yup.number().required("Required")
 })
 
-class AddNewPopup3Parameters extends React.Component {
-
+class AddNewUnitOfMeasurePopup extends React.Component {
         render() {
             const {
                 closeAddPopup,
                 currentTab,
                 config,
-                postNewRequest
+                postNewRequest,
+                measureOptions
             } = this.props
 
             return (
@@ -77,11 +72,18 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = state => {
-    let cfg = state.admin.config[state.admin.currentTab];
-    return {
-        config: cfg,
-        currentTab: state.admin.currentTab,
-    }
+  let cfg = state.admin.config[state.admin.currentTab];
+  return {
+    config: cfg,
+    currentTab: state.admin.currentTab,
+    measureOptions: state.admin.measureTypes.map( d=> {
+      return {
+        id: d.id,
+        text: d.name,
+        value: d.id,
+      }
+    })
+  }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddNewPopup3Parameters)
+export default connect(mapStateToProps, mapDispatchToProps)(AddNewUnitOfMeasurePopup)

@@ -116,6 +116,20 @@ export function getPackagingGroupsDataRequest() {
 	}
 }
 
+export function getMeasureTypesDataRequest() {
+	return {
+		type: AT.ADMIN_GET_MEASURE_TYPES,
+		payload: api.getMeasureTypes()
+	}
+}
+
+export function getUnNumbersDataRequest() {
+	return {
+		type: AT.ADMIN_GET_UN_NUMBERS,
+		payload: api.getUnNumbers()
+	}
+}
+
 export function openEditCasPopup(value) {
 	return {
 		type: null,
@@ -135,7 +149,15 @@ export function getCountries() {
 		const {admin} = getState()
 		admin.countries.length === 0 && dispatch({
 			type: AT.ADMIN_GET_COUNTRIES,
-			payload: api.getCountries()
+			async payload() {
+				 const countries = await api.getCountries()
+				 const zipCodes = await api.getZipCodes()
+				 
+				 return {
+					 countries,
+					 zipCodes
+				 }
+			}
 		})
 	}
 }

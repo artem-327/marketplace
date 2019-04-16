@@ -7,32 +7,27 @@ import { closeEditPopup , putEditedDataRequest } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
-const measureOptions = [
-    { text: 'volume', value: 'volume' },
-    { text: 'weight', value: 'weight' },
-]
-
 const formValidation = Yup.object().shape({
     val0: Yup.string().min(1, "Too short").required("Required"),
-    val1: Yup.string().min(1, "Too short").required("Required"),
+    val1: Yup.number().required("Required"),
 })
 
-class EditPopup2Parameters extends React.Component {
-
+class EditUnitOfPackagingPopup extends React.Component {
     render() {
         const {
             closeEditPopup,
             currentTab,
             config,
             popupValues,
-            putEditedDataRequest
+            putEditedDataRequest,
+            measureOptions
         } = this.props
 
         const { id } = popupValues;
 
         const initialFormValues = {
             val0: popupValues[config.edit[0].name],
-            val1: popupValues[config.edit[1].name],
+            val1: popupValues.measureTypeId,
         }
 
         return (
@@ -79,8 +74,15 @@ const mapStateToProps = state => {
     return {
         config: cfg,
         currentTab: state.admin.currentTab,
-        popupValues: state.admin.popupValues
+        popupValues: state.admin.popupValues,
+        measureOptions: state.admin.measureTypes.map( d=> {
+            return {
+                id: d.id,
+                text: d.name,
+                value: d.id,
+            }
+        })
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditPopup2Parameters)
+export default connect(mapStateToProps, mapDispatchToProps)(EditUnitOfPackagingPopup)
