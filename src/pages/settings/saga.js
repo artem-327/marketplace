@@ -196,7 +196,7 @@ function* postNewProductWorker({ payload }) {
       casProduct: payload.casProduct,
       packagingSize: payload.packagingSize,
       packagingType: payload.packageID,
-      packagingUnit: 0,
+      packagingUnit: payload.unitID,
       productCode: payload.productNumber,
       productName: payload.productName
     }
@@ -352,7 +352,7 @@ function* deleteConfirmPopup({}) {
     }
   } catch (e) {
     yield console.log('error:', e)
-    toast = { message: 'Network error', isSuccess: false }
+    toast = { message: 'Error', isSuccess: false }
   } finally {
     yield put(confirmationSuccess())
     yield put({ type: AT.OPEN_TOAST, payload: toast })

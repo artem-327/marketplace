@@ -98,11 +98,9 @@ import {
 class ProductCatalogTable extends Component {
   state = {
     columns: [
-      { name: 'productName', title: 'Product Name' },
-      { name: 'productNumber', title: 'Product Number' },
-      { name: 'casProduct', title: 'CAS Product' },
-      { name: 'packagingType', title: 'Packaging Type' },
-      { name: 'packagingSize', title: 'Packaging Size' }
+      { name: 'accountNumber', title: 'Account Number' },
+      { name: 'accountHolderName', title: 'Account Name' },
+      { name: 'currency', title: 'Currency' }
 
       //   { name: 'editDeleteBtn', title: ' ' },
       //   { name: 'accountNumber', title: 'Account Number' },
