@@ -12,8 +12,10 @@ export const initialState = {
   formsRows: [],
   conditionsRows: [],
   casProductsRows: [],
+  measureTypes: [],
   hazardClasses: [],
   packagingGroups: [],
+  unNumbers: [],
 
   companiesRows: [],
   countries: [],
@@ -89,10 +91,15 @@ export default function reducer(state = initialState, action) {
 
     case AT.ADMIN_GET_COUNTRIES_FULFILLED: {
       return {...state,
-        countries: payload.map(c => ({
+        countries: payload.countries.map(c => ({
           text: c.name,
           value: c.id,
           key: c.id
+        })),
+        zipCodes: payload.zipCodes.map(z => ({
+          text: z.zip,
+          value: z.zip,
+          key: z.id
         }))
       }
     }
@@ -121,6 +128,13 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_GET_MEASURE_TYPES_FULFILLED: {
+      return {
+        ...state,
+        measureTypes: action.payload
+      }
+    }
+
     case AT.ADMIN_GET_HAZARD_CLASSES_FULFILLED: {
       return {
         ...state,
@@ -132,6 +146,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         packagingGroups: action.payload
+      }
+    }
+
+    case AT.ADMIN_GET_UN_NUMBERS_FULFILLED: {
+      return {
+        ...state,
+        unNumbers: action.payload
       }
     }
 

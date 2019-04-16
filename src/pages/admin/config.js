@@ -83,6 +83,7 @@ export const config = {
         typeRequest: 'ADMIN_GET_UNITS_OF_PACKAGING_DATA',
         typeSuccess: 'ADMIN_GET_UNITS_OF_PACKAGING_DATA_SUCCESS',
         apiCall: '/prodex/api/packaging-types',
+        /*
         retFcnProcess: (state, action, config) => {
           const rows = action.payload.map(data => {
             return {
@@ -95,7 +96,7 @@ export const config = {
             ...state,
             [config.api.get.dataName]: rows
           }
-        },
+        },*/
       },
       post: {
         typeRequest: 'ADMIN_POST_UNITS_OF_PACKAGING_DATA',
