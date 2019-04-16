@@ -89,10 +89,15 @@ export default function reducer(state = initialState, action) {
 
     case AT.ADMIN_GET_COUNTRIES_FULFILLED: {
       return {...state,
-        countries: payload.map(c => ({
+        countries: payload.countries.map(c => ({
           text: c.name,
           value: c.id,
           key: c.id
+        })),
+        zipCodes: payload.zipCodes.map(z => ({
+          text: z.zip,
+          value: z.zip,
+          key: z.id
         }))
       }
     }

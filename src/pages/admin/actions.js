@@ -135,7 +135,15 @@ export function getCountries() {
 		const {admin} = getState()
 		admin.countries.length === 0 && dispatch({
 			type: AT.ADMIN_GET_COUNTRIES,
-			payload: api.getCountries()
+			async payload() {
+				 const countries = await api.getCountries()
+				 const zipCodes = await api.getZipCodes()
+				 
+				 return {
+					 countries,
+					 zipCodes
+				 }
+			}
 		})
 	}
 }

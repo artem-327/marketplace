@@ -24,6 +24,10 @@ export async function getCountries() {
   const {data} = await api.get('/prodex/api/countries')
   return data
 }
+export async function getZipCodes() {
+  const {data} = await api.get('/prodex/api/zip-codes')
+  return data
+}
 
 export async function getCompanies() {
   const {data} = await api.get('/prodex/api/companies')

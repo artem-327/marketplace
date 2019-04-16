@@ -8,23 +8,22 @@ import { Form, Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 const initialFormValues = {
-  name: '',
+  name: 'Miro Company',
   nacdMember: true,
-  phone: '',
-  website: '',
+  phone: '44455556666',
+  website: 'www.miro.cz',
   primaryBranch: {
+    name: "Mirobrancho",
     accessorials: [],
     address: {
-      city: "",
-      country: 0,
-      province: 0,
-      streetAddress: "",
-      zip: ""
+      city: "Trinec",
+      country: 1,
+      streetAddress: "Duk",
+      zip: "87102"
     },
-    contactEmail: "",
-    contactName: "",
-    contactPhone: "",
-    name: "",
+    contactEmail: "miro@papa.cz",
+    contactName: "Mirooo",
+    contactPhone: "400500600",
     warehouse: true
   }
 }
@@ -49,6 +48,7 @@ class AddNewPopupCasProducts extends React.Component {
       updateCompany,
       createCompany,
       countries,
+      zipCodes,
       config,
     } = this.props
 
@@ -99,7 +99,7 @@ class AddNewPopupCasProducts extends React.Component {
                 <Input label="City" name="primaryBranch.address.city" />
               </FormGroup>
               <FormGroup widths="equal">
-                <Input label="Zip" name="primaryBranch.address.zip" />
+                <Dropdown label="Zip" name="primaryBranch.address.zip" inputProps={{search: true}} options={zipCodes} />
                 <Dropdown label="Country" name="primaryBranch.address.country" inputProps={{search: true}} options={countries} />
               </FormGroup>
             </>}
