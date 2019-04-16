@@ -1,7 +1,8 @@
 import React, { Component } from "react"
 import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button } from 'formik-semantic-ui'
-import { Modal, Icon, Segment, Header, Divider, Grid, GridColumn, FormGroup } from 'semantic-ui-react'
+import {FormattedMessage} from 'react-intl';
+import { Modal, Icon, Segment, Container, Menu, Header, Divider, Grid, GridColumn, FormGroup, FormField, Accordion, Message, Label } from 'semantic-ui-react'
 import styled from 'styled-components'
 import * as val from 'yup'
 import {DateInput} from '~/components/custom-formik'
@@ -59,7 +60,16 @@ export default class AddInventoryForm extends Component {
   state = {
     initialState: {
 
-    }
+    },
+    activeIndex: 0
+  }
+
+  accClick = (e, titleProps) => {
+    const { index } = titleProps
+    const { activeIndex } = this.state
+    const newIndex = activeIndex === index ? -1 : index
+
+    this.setState({ activeIndex: newIndex })
   }
 
   uploadedDocuments = (files) => {
@@ -109,10 +119,34 @@ export default class AddInventoryForm extends Component {
 
     for (let i = 0; i < count; i++) {
       tiers.push(
-        <FormGroup widths="equal" key={i}>
-          <Input name={`pricing.tiers[${i}].quantityFrom`} label="Minimum OQ" inputProps={{ type: 'number', readOnly: i === 0, value: null }} />
-          <Input name={`pricing.tiers[${i}].price`} label="FOB Price" inputProps={{ type: 'number', step: '0.001', value: null }} />
-        </FormGroup>
+        <Grid.Row key={i}>
+          <Grid.Column width={2}>
+            {i ? (
+              <Label name={`pricing.tiers[${i}].level`}>{i+1}</Label>
+            ) : (
+              <div className='field'>
+                <label>Level</label>
+                <Label name={`pricing.tiers[${i}].level`}>{i+1}</Label>
+              </div>
+            )}
+          </Grid.Column>
+          <Grid.Column width={1}>
+            <Icon.Group>
+              <Icon name='chevron right' />
+              <Icon name='window minimize outline' />
+            </Icon.Group>
+          </Grid.Column>
+          <Grid.Column width={10}>
+            <FormGroup widths='equal'>
+              <FormField width={8}>
+                <Input name={`pricing.tiers[${i}].quantityFrom`} label={i ? '' : "Minimum OQ"} inputProps={{ type: 'number', readOnly: i === 0, value: null }} />
+              </FormField>
+              <Form.Field width={8}>
+                <Input name={`pricing.tiers[${i}].price`} label={i ? '' : "FOB Price"} inputProps={{ type: 'number', step: '0.001', value: null }} />
+              </Form.Field>
+            </FormGroup>
+          </Grid.Column>
+        </Grid.Row>
       )
     }
 
@@ -132,27 +166,36 @@ export default class AddInventoryForm extends Component {
     Router.push('/inventory/my')
   }
 
-  componentDidMount = () => {
-    this.props.getWarehouses()
+  componentWillMount = async () => {
+    await this.props.resetForm()
+  }
+
+  componentDidMount = async () => {
+    await this.props.getWarehouses()
     if (this.props.edit) {
       this.props.getProductOffer(this.props.edit).then(async (response) => {
         // need to prepare searchedProducts before filling form data
         await this.props.fillProduct(response.value.data.product)
-        this.setState({
-          initialState: {
-            doesExpire: !!response.value.data.lots[0].expirationDate,
-            lots: response.value.data.lots,
-            minimum: response.value.data.minimum,
-            pkgAmount: response.value.data.pkgAmount,
-            priceTiers: response.value.data.pricing.tiers.length,
-            pricing: response.value.data.pricing,
-            //processingTimeDays: response.value.data.processingTimeDays,
-            product: response.value.data.product,
-            splits: response.value.data.splits,
-            validityDate: response.value.data.lots[0].expirationDate ? response.value.data.lots[0].expirationDate.substring(0, 10) : '', // TODO: check all lots and get one date (nearest or farthest date?)
-            warehouse: response.value.data.warehouse.id
-          }
-        })
+        setTimeout(() => {
+          this.setState({
+            initialState: {
+              doesExpire: !!response.value.data.lots[0].expirationDate,
+              lots: response.value.data.lots,
+              minimum: response.value.data.minimum,
+              pkgAmount: response.value.data.pkgAmount,
+              priceTiers: response.value.data.pricing.tiers.length,
+              pricing: {
+                ...response.value.data.pricing,
+                price: response.value.data.pricing.price.amount
+              },
+              processingTimeDays: 1,
+              product: response.value.data.product,
+              splits: response.value.data.splits,
+              validityDate: response.value.data.lots[0].expirationDate ? response.value.data.lots[0].expirationDate.substring(0, 10) : '', // TODO: check all lots and get one date (nearest or farthest date?)
+              warehouse: response.value.data.warehouse.id
+            }
+          })
+        }, 500)
       })
     }
   }
@@ -169,161 +212,258 @@ export default class AddInventoryForm extends Component {
     } = this.props
 
     const {
-      initialState
+      initialState,
+      activeIndex
     } = this.state
 
     return (
-      <Form
-        enableReinitialize
-        initialValues={{...initValues, ...initialState}}
-        validationSchema={validationScheme}
-        onSubmit={(values, actions) => {
-          if (this.props.fileIds.length) {
-            values.attachments = this.props.fileIds.map(fi => {
-              return fi.id.id
+      <>
+        <div className='header-top'>
+          <Menu secondary>
+            <Menu.Item header>
+              <Header as='h1' size='medium'>
+                <FormattedMessage id='myInventory.myInventory'
+                                  defaultMessage={this.props.edit ? 'EDIT INVENTORY' : 'ADD INVENTORY'} />
+              </Header>
+            </Menu.Item>
+          </Menu>
+        </div>
+
+        <Form
+          enableReinitialize
+          initialValues={{...initValues, ...initialState}}
+          validationSchema={validationScheme}
+          onSubmit={(values, actions) => {
+            if (this.props.fileIds.length) {
+              values.attachments = this.props.fileIds.map(fi => {
+                return fi.id
+              })
+            }
+            addProductOffer(values, this.props.edit).then((productOffer) => {
+              //Router.push('/inventory/my') xxx
             })
-          }
-          addProductOffer(values, this.props.edit).then((productOffer) => {
-            //Router.push('/inventory/my')
-          })
-          setTimeout(() => {
-            actions.setSubmitting(false)
-            actions.resetForm(initValues);
-          }, 1000)
-        }}
-      >
-        {({ values, errors, setFieldValue }) => (
-          <>
-            <Modal open={this.props.poCreated} closeOnDimmerClick={false} size='tiny'>
-              <Modal.Header>Product Offer was created</Modal.Header>
-              <Modal.Content>
-                  What now?
-              </Modal.Content>
-              <Modal.Actions>
-                <Button icon='add' labelPosition='right' content='Add another one' onClick={this.resetForm} />
-                <Button primary icon='checkmark' labelPosition='right' content='Go to My Inventory' onClick={this.goToList} />
-              </Modal.Actions>
-            </Modal>
-            <Header as="h2">{this.props.edit ? 'EDIT' : 'ADD'} INVENTORY</Header>
-            <TopDivider />
-            <Grid columns="equal" divided>
-              <Grid.Column>
+            setTimeout(() => {
+              actions.setSubmitting(false)
+              actions.resetForm(initValues);
+            }, 1000)
+          }}
+        >
+          {({ values, errors, setFieldValue }) => (
+            <>
+              <Modal open={this.props.poCreated} closeOnDimmerClick={false} size='tiny'>
+                <Modal.Header>Product Offer was created</Modal.Header>
+                <Modal.Content>
+                    What now?
+                </Modal.Content>
+                <Modal.Actions>
+                  <Button icon='add' labelPosition='right' content='Add another one' onClick={this.resetForm} />
+                  <Button primary icon='checkmark' labelPosition='right' content='Go to My Inventory' onClick={this.goToList} />
+                </Modal.Actions>
+              </Modal>
+              <Grid divided style={{marginTop: '2rem'}}>
+                <Grid.Column width={5}>
 
-                <Header as='h3'>What product do you want to list?</Header>
-                <FormGroup>
-                  <Dropdown
-                    label="Product search"
-                    name="product"
-                    options={searchedProducts}
-                    inputProps={{
-                      style: { width: '300px' },
-                      size: 'large',
-                      minCharacters: 3,
-                      icon: "search",
-                      search: true,
-                      selection: true,
-                      clearable: true,
-                      loading: searchedProductsLoading,
-                      onChange: (e, v) => { console.log(v) },
-                      onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchProducts(searchQuery)
-                    }}
-                  />
+                  <Header as='h3'>What product do you want to list?</Header>
+                  <FormGroup>
+                    <FormField width={13}>
+                      <Dropdown
+                        label="Product search"
+                        name="product"
+                        options={searchedProducts}
+                        inputProps={{
+                          style: { width: '300px' },
+                          size: 'large',
+                          minCharacters: 3,
+                          icon: "search",
+                          search: true,
+                          selection: true,
+                          clearable: true,
+                          loading: searchedProductsLoading,
+                          onChange: (e, v) => { console.log(v) },
+                          onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchProducts(searchQuery)
+                        }}
+                      />
+                    </FormField>
+                  </FormGroup>
 
-                </FormGroup>
+                  <Header as='h3'>Is this product in stock?</Header>
+                  <FormGroup inline>
+                    <Radio label="No" value={false} name="inStock" />
+                    <Radio label="Yes" value={true} name="inStock" />
+                  </FormGroup>
+                  <FormGroup>
+                    <FormField width={4}>
+                      <Dropdown label="Processing time" name="processingTimeDays" options={this.getProcessingTimes(14)} />
+                    </FormField>
+                  </FormGroup>
 
-                <Header as='h3'>Is this product in stock?</Header>
-                <FormGroup inline>
-                  <Radio label="No" value={false} name="inStock" />
-                  <Radio label="Yes" value={true} name="inStock" />
-                </FormGroup>
-                <FormGroup>
-                  <Dropdown label="Processing time" name="processingTimeDays" options={this.getProcessingTimes(14)} />
-                </FormGroup>
+                  <Header as='h3'>Does this product expire?</Header>
+                  <FormGroup inline>
+                    <Radio label="No" value={false} name="doesExpire" />
+                    <Radio label="Yes" value={true} name="doesExpire" />
+                  </FormGroup>
+                  <FormGroup>
+                    <FormField width={5}>
+                      <DateInput inputProps={{ disabled: !values.doesExpire }} label="Expiration date" name="validityDate" />
+                    </FormField>
+                  </FormGroup>
 
-                <Header as='h3'>Does this product expire?</Header>
-                <FormGroup inline>
-                  <Radio label="No" value={false} name="doesExpire" />
-                  <Radio label="Yes" value={true} name="doesExpire" />
-                </FormGroup>
-                <FormGroup>
-                  <DateInput inputProps={{ disabled: !values.doesExpire }} label="Expiration date" name="validityDate" />
-                </FormGroup>
+                  <Header as='h3'>Where will this product ship from?</Header>
+                  <FormGroup>
+                    <FormField width={10}>
+                      <Dropdown label="Warehouse" name="warehouse" options={warehousesList} />
+                    </FormField>
+                  </FormGroup>
 
-                <Header as='h3'>Where will this product ship from?</Header>
-                <FormGroup>
-                  <Dropdown label="Warehouse" name="warehouse" options={warehousesList} />
-                </FormGroup>
+                  <Header as='h3'>How many packages are available?</Header>
+                  <FormGroup>
+                    <FormField width={4}>
+                      <Input label="Total Packages" inputProps={{ type: 'number' }} name="pkgAmount" />
+                    </FormField>
+                  </FormGroup>
 
-                <Header as='h3'>How many packages are available?</Header>
-                <FormGroup>
-                  <Input label="Total Packages" inputProps={{ type: 'number' }} name="pkgAmount" />
-                </FormGroup>
+                </Grid.Column>
+                <GridColumn width={6}>
+                  <Grid centered>
+                    <GridColumn width={12}>
 
-              </Grid.Column>
-              <GridColumn>
+                      <Header as="h3">Is there any order minimum requirement?</Header>
+                      <FormGroup>
+                        <Radio label="No" value={false} name="minimumRequirement" />
+                        <Radio label="Yes" value={true} name="minimumRequirement" />
+                      </FormGroup>
+                      <FormGroup>
+                        <FormField width={5}>
+                          <Input label="Minimum OQ" name="minimum" inputProps={{ type: 'number', disabled: !values.minimumRequirement }} />
+                        </FormField>
+                        <FormField width={5}>
+                          <Input label="Splits" name="splits" inputProps={{ type: 'number', disabled: !values.minimumRequirement }} />
+                        </FormField>
+                      </FormGroup>
 
-                <Header as="h3">Is there any order minimum requirement?</Header>
-                <FormGroup>
-                  <Radio label="No" value={false} name="minimumRequirement" />
-                  <Radio label="Yes" value={true} name="minimumRequirement" />
-                </FormGroup>
-                <FormGroup widths="equal">
-                  <Input label="Minimum OQ" name="minimum" inputProps={{ type: 'number', disabled: !values.minimumRequirement }} />
-                  <Input label="Splits" name="splits" inputProps={{ type: 'number', disabled: !values.minimumRequirement }} />
-                </FormGroup>
+                      <Header as='h3'>How many price tiers would you like to offer?</Header>
+                      <FormGroup>
+                        <FormField width={5}>
+                          <Dropdown
+                            label="Price tiers"
+                            name="priceTiers"
+                            options={this.getPriceTiers(10)}
+                            inputProps={{
+                              onChange: (e,{value}) => setFieldValue(
+                                "pricing.tiers",
+                                [
+                                  ...values.pricing.tiers.slice(0, value),
+                                  ...[...new Array((value - values.priceTiers) > 0 ? value - values.priceTiers : 0)].map(t => ({price: '0', quantityFrom: '0'}))
+                                ]
+                              )
+                            }}
+                          />
+                        </FormField>
+                      </FormGroup>
 
-                <Header as='h3'>How many price tiers would you like to offer?</Header>
-                <FormGroup>
-                  <Dropdown
-                    label="Price tiers"
-                    name="priceTiers"
-                    options={this.getPriceTiers(10)}
-                    inputProps={{
-                      onChange: (e,{value}) => setFieldValue(
-                        "pricing.tiers",
-                        [
-                          ...values.pricing.tiers.slice(0, value),
-                          ...[...new Array((value - values.priceTiers) > 0 ? value - values.priceTiers : 0)].map(t => ({price: '0', quantityFrom: '0'}))
-                        ]
-                      )
-                    }}
-                  />
-                </FormGroup>
-                <FieldArray>
-                  {this.renderPricingTiers(values.priceTiers)}
-                </FieldArray>
+                      <Header as='h3' style={{marginBottom: '2rem'}}>What is the FOB price for each tier?</Header>
+                      <Grid className='tier-prices'>
+                        {this.renderPricingTiers(values.priceTiers)}
+                      </Grid>
 
-                <Header as='h3'>Upload Spec Sheet</Header>
-                <UploadLot {...this.props}
-                           control={UploadLot}
-                           name='documents'
-                           type='Spec Sheet'
-                           fileMaxSize={20}
-                           onChange={(files) => setFieldValue(
-                             "documents",
-                             files
-                           )}
-                >
-                  Drag and drop spec sheet file here or <a>select</a> from computer
-                </UploadLot>
+                      <Divider style={{marginTop: '3rem', marginBottom: '3rem'}}/>
 
-              </GridColumn>
+                      <Header as='h3'>Upload Spec Sheet</Header>
+                      <UploadLot {...this.props}
+                                 control={UploadLot}
+                                 name='documents'
+                                 type='Spec Sheet'
+                                 fileMaxSize={20}
+                                 onChange={(files) => setFieldValue(
+                                   "documents",
+                                   files
+                                 )}
+                      >
+                        Drag and drop spec sheet file here or <a>select</a> from computer
+                      </UploadLot>
 
-              <GridColumn>
+                    </GridColumn>
+                  </Grid>
+                </GridColumn>
 
-                <Header as="h3">Model values</Header>
-                <Segment>
-                  <JSONPretty data={values} />
-                </Segment>
+                <GridColumn width={5}>
+                  <Grid centered>
+                    <GridColumn width={12}>
+                      <Segment attached={values.product ? false : 'top'} style={{padding: '2em'}}>
+                        <Accordion>
+                          <Accordion.Title active={activeIndex === 0} index={0} onClick={this.accClick}>
+                            <Header as="h3">PRODUCT DETAILS</Header>
+                          </Accordion.Title>
+                          <Accordion.Content active={activeIndex === 0}>
+                            <Grid columns={2} className='data-grid'>
+                              <GridColumn>Product Name</GridColumn>
+                              <GridColumn>{values.product ? values.product.productName : ''}</GridColumn>
 
+                              <GridColumn>Product Number</GridColumn>
+                              <GridColumn>{values.product ? values.product.productCode : ''}</GridColumn>
 
+                              <GridColumn>Measurement</GridColumn>
+                              <GridColumn>{values.product ? values.product.packagingSize : ''}</GridColumn>
 
-                <Button.Submit>Submit values</Button.Submit>
-              </GridColumn>
-            </Grid>
-          </>
-        )}
-      </Form>
+                              <GridColumn>U/M</GridColumn>
+                              <GridColumn>{values.product && values.product.packagingUnit ? values.product.packagingUnit.name : ''}</GridColumn>
+
+                              <GridColumn>U/P</GridColumn>
+                              <GridColumn>{values.product && values.product.packagingType ? values.product.packagingType.name : ''}</GridColumn>
+
+                              <GridColumn>CAS Index Name</GridColumn>
+                              <GridColumn>{values.product && values.product.casProduct ? values.product.casProduct.casIndexName : ''}</GridColumn>
+
+                              <GridColumn>CAS Number</GridColumn>
+                              <GridColumn>{values.product && values.product.casProduct ? values.product.casProduct.casNumber : ''}</GridColumn>
+
+                              <GridColumn>Master Product</GridColumn>
+                              <GridColumn>{values.product ? !!values.product.masterProduct : ''}</GridColumn>
+
+                              <GridColumn>Chemical Name</GridColumn>
+                              <GridColumn>{values.product && values.product.casProduct ? values.product.casProduct.chemicalName : ''}</GridColumn>
+
+                              <GridColumn>Hazaardous</GridColumn>
+                              <GridColumn>{values.product && values.product.hazaardous ? !!values.product.hazaardous : ''}</GridColumn>
+
+                              <GridColumn>UN Code</GridColumn>
+                              <GridColumn>{values.product && values.product.unNumber ? values.product.unNumber.unNumberCode : ''}</GridColumn>
+
+                              <GridColumn>Packaging Group</GridColumn>
+                              <GridColumn>{values.product && values.product.packagingGroup ? values.product.packagingGroup.groupCode : ''}</GridColumn>
+
+                              <GridColumn>Hazaardous Class</GridColumn>
+                              <GridColumn><Label.Group color='blue'>{values.product && values.product.hazardClasses ? values.product.hazardClasses.map(hClass => { return (<Label title={hClass.description}>{hClass.classCode}</Label>) }) : ''}</Label.Group></GridColumn>
+
+                              <GridColumn>Stackable</GridColumn>
+                              <GridColumn>{values.product ? values.product.stackable : ''}</GridColumn>
+
+                              <GridColumn>Freight Class</GridColumn>
+                              <GridColumn>{values.product ? values.product.freightClass : ''}</GridColumn>
+
+                              <GridColumn>NMFC Number</GridColumn>
+                              <GridColumn>{values.product ? values.product.nmfcNumber : ''}</GridColumn>
+                            </Grid>
+                          </Accordion.Content>
+                        </Accordion>
+                      </Segment>
+                      {values.product ? '' : (
+                        <Message attached='bottom'>
+                          <Icon name='info circle outline' size='large' color='blue'/>
+                          Please search product to fill data above.
+                        </Message>
+                      )}
+
+                      <Button size='big' floated='left'>Discard</Button>
+                      <Button.Submit size='big' floated='right'>Submit values</Button.Submit>
+                    </GridColumn>
+                  </Grid>
+                </GridColumn>
+              </Grid>
+            </>
+          )}
+        </Form>
+      </>
     )
   }
 }
