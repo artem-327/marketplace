@@ -178,9 +178,9 @@ export default function reducer(state = initialState, action) {
         countryId: warehouse.address.country.id,
         zip: warehouse.address.zip.zip,
         zipID: warehouse.address.zip.id,
-        contactName: warehouse.contact.name,
-        phone: warehouse.contact.phone,
-        email: warehouse.contact.email,
+        contactName: warehouse.contactName,
+        phone: warehouse.contactPhone,
+        email: warehouse.contactEmail,
         branchId: warehouse.id,
         id: warehouse.id,
         warehouse: warehouse.warehouse
