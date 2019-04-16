@@ -8,22 +8,22 @@ import { Form, Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 const initialFormValues = {
-  name: 'Miro Company',
+  name: '',
   nacdMember: true,
-  phone: '44455556666',
-  website: 'www.miro.cz',
+  phone: '',
+  website: '',
   primaryBranch: {
-    name: "Mirobrancho",
+    name: '',
     accessorials: [],
     address: {
-      city: "Trinec",
+      city: '',
       country: 1,
-      streetAddress: "Duk",
-      zip: "87102"
+      streetAddress: '',
+      zip: ''
     },
-    contactEmail: "miro@papa.cz",
-    contactName: "Mirooo",
-    contactPhone: "400500600",
+    contactEmail: '',
+    contactName: '',
+    contactPhone: '',
     warehouse: true
   }
 }
@@ -33,19 +33,19 @@ const formValidation = Yup.object().shape({
   nacdMember: Yup.bool().required(),
   phone: Yup.string().min(9, 'Enter valid phone number').required(),
   website: Yup.string().required(),
-  primaryBranch: Yup.object().shape({
-    name: Yup.string().required(),
-    address: Yup.object().shape({
-      city: Yup.string().required(),
-      country: Yup.number().required(),
-      streetAddress: Yup.string().required(),
-      zip: Yup.string().required()
-    }),
-    contactEmail: Yup.string().email().required(),
-    contactName: Yup.string().required(),
-    contactPhone: Yup.string().required(),
-    warehouse: Yup.bool().required()
-  })
+  // primaryBranch: Yup.object().shape({
+  //   name: Yup.string().required(),
+  //   address: Yup.object().shape({
+  //     city: Yup.string().required(),
+  //     country: Yup.number().required(),
+  //     streetAddress: Yup.string().required(),
+  //     zip: Yup.string().required()
+  //   }),
+  //   contactEmail: Yup.string().email().required(),
+  //   contactName: Yup.string().required(),
+  //   contactPhone: Yup.string().required(),
+  //   warehouse: Yup.bool().required()
+  // })
 })
 
 class AddNewPopupCasProducts extends React.Component {
@@ -75,7 +75,10 @@ class AddNewPopupCasProducts extends React.Component {
             validationSchema={formValidation}
             onReset={closePopup}
             onSubmit={async (values, actions) => {
-              if (popupValues) await updateCompany(popupValues.id, values)
+              if (popupValues) {
+                let {primaryBranch, ...newValues} = values
+                await updateCompany(popupValues.id, newValues)
+              } 
               else await createCompany(values)
 
               actions.setSubmitting(false)
