@@ -6,8 +6,11 @@ export const initialState = {
   addNewWarehousePopup: false,
   popupValues: [],
   usersRows: [],
+  userEditRoles: false,
+  roles: [],
   warehousesRows: [],
   branchesRows: [],
+  branchesAll: [],
   creditCardsRows: [],
   bankAccountsRows: [],
   productsCatalogRows: [],
@@ -37,7 +40,7 @@ export const initialState = {
   deleteRowByid: null,
   filterValue: '',
   editPopupSearchProducts: [],
-  loading: false,
+  loading: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -54,6 +57,18 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenPopup: false,
         popupValues: null
+      }
+    }
+    case AT.OPEN_ROLES_POPUP: {
+      return {
+        ...state,
+        userEditRoles: true
+      }
+    }
+    case AT.CLOSE_ROLES_POPUP: {
+      return {
+        ...state,
+        userEditRoles: false
       }
     }
     case AT.OPEN_EDIT_POPUP: {
@@ -138,23 +153,30 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_USERS_DATA: {
-      return {...state,
-        loading: true
-      }
+      return { ...state, loading: true }
     }
 
     case AT.GET_USERS_DATA_SUCCESS: {
       const usersRows = action.payload.map(user => {
+        const firstTwoRoles = user.roles.splice(0, 2)
+        console.log('firstTwoRoles', user)
+
         return {
           checkbox: ' ',
           userName: user.firstname + ' ' + user.lastname,
           title: 'title',
           email: user.email,
-          phone: 'phone',
-          homeBranch: user.branch ? user.branch.address.province.name : '',
+          phone: user.homeBranch.contactPhone,
+          homeBranchId: user.homeBranch.id,
+          preferredCurrency: user.preferredCurrency.code,
+          // homeBranch: user.branch ? user.branch.address.province.name : '',
+          homeBranch: user.homeBranch.name,
           permissions: user.roles ? user.roles.name : '',
+          // permissions: user.
           middleName: user.middlename,
-          id: user.id
+          id: user.id,
+          firstTwoRoles,
+          allRoles: user.roles
         }
       })
       return {
@@ -164,10 +186,15 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_WAREHOUSES_DATA: {
-      return {...state,
-        loading: true
+    case AT.GET_ROLES_DATA: {
+      return {
+        ...state,
+        roles: action.payload
       }
+    }
+
+    case AT.GET_WAREHOUSES_DATA: {
+      return { ...state, loading: true }
     }
 
     case AT.GET_WAREHOUSES_DATA_SUCCESS: {
@@ -203,9 +230,7 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_BRANCHES_DATA: {
-      return {...state,
-        loading: true
-      }
+      return { ...state, loading: true }
     }
 
     case AT.GET_BRANCHES_DATA_SUCCESS: {
@@ -227,10 +252,21 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_CREDIT_CARDS_DATA: {
-      return {...state,
-        loading: true
+    case AT.GET_ALL_BRANCHES_DATA: {
+      const branches = action.payload.map(branch => {
+        return {
+          value: branch.id,
+          text: branch.name
+        }
+      })
+      return {
+        ...state,
+        branchesAll: branches
       }
+    }
+
+    case AT.GET_CREDIT_CARDS_DATA: {
+      return { ...state, loading: true }
     }
 
     case AT.GET_CREDIT_CARDS_DATA_SUCCESS: {
@@ -254,9 +290,7 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_BANK_ACCOUNTS_DATA: {
-      return {...state,
-        loading: true
-      }
+      return { ...state, loading: true }
     }
 
     case AT.GET_BANK_ACCOUNTS_DATA_SUCCESS: {
@@ -281,9 +315,7 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_PRODUCTS_CATALOG_DATA: {
-      return {...state,
-        loading: true
-      }
+      return { ...state, loading: true }
     }
 
     case AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS: {

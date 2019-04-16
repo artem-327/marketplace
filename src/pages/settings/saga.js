@@ -6,7 +6,28 @@ import api from './api'
 function* getUsersDataWorker() {
   try {
     const users = yield call(api.getUsers)
+    const branches = yield call(api.getBranches)
+    const roles = yield call(api.getRoles)
+
+    yield put({ type: AT.GET_ALL_BRANCHES_DATA, payload: branches })
     yield put({ type: AT.GET_USERS_DATA_SUCCESS, payload: users })
+    yield put({ type: AT.GET_ROLES_DATA, payload: roles })
+  } catch (e) {
+    yield console.log('error:', e)
+  }
+}
+
+function* openRolesPopup({ payload }) {
+  try {
+    yield put({ type: AT.OPEN_POPUP, payload })
+  } catch (e) {
+    yield console.log('error:', e)
+  }
+}
+
+function* closeRolesPopup() {
+  try {
+    yield put({ type: AT.CLOSE_POPUP })
   } catch (e) {
     yield console.log('error:', e)
   }
@@ -97,7 +118,6 @@ function* postNewUserWorker({ payload }) {
     }
     yield call(api.postNewUser, dataBody)
     yield put({ type: AT.GET_USERS_DATA })
-    // yield put({ type: AT.UPDATE_USERS, payload: users })
   } catch (e) {
     yield console.log('error:', e)
   } finally {
@@ -217,9 +237,13 @@ function* putUserWorker({ payload, id }) {
       firstname: payload.firstName,
       lastname: payload.lastName,
       middlename: payload.middleName,
-      email: payload.email
+      email: payload.email,
+      homeBranchId: payload.homeBranchId,
+      preferredCurrency: payload.preferredCurrency
     }
-    yield call(api.putUser, id, updateUser)
+
+    console.log('updateUser', updateUser)
+    yield call(api.patсhUser, id, updateUser)
     yield put({ type: AT.GET_USERS_DATA })
   } catch (e) {
     console.log('error', e)
@@ -358,4 +382,7 @@ export default function* settingsSaga() {
   yield takeEvery(AT.DELETE_CREDIT_CARD, deleteCreditCardWorker)
   yield takeEvery(AT.DELETE_BANK_ACCOUNT, deleteBankAccountWorker)
   yield takeEvery(AT.DELETE_CONFIRM_POPUP, deleteConfirmPopup)
+
+  yield takeEvery(AT.OPEN_ROLES_POPUP, openRolesPopup)
+  yield takeEvery(AT.CLOSE_ROLES_POPUP, closeRolesPopup)
 }

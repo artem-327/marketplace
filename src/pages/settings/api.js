@@ -2,6 +2,7 @@ import api from '~/api'
 
 export default {
   getUsers: () => api.get('/prodex/api/users').then(response => response.data),
+  getRoles: () => api.get('/prodex/api/roles').then(response => response.data),
   getCurrentUser: () =>
     api.get('/prodex/api/users/me').then(response => response.data),
   getWarehouses: () =>
@@ -34,7 +35,8 @@ export default {
 
   putWarehouse: (branchId, body) =>
     api.put(`/prodex/api/branches/${branchId}`, body),
-  putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
+  // putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
+  patсhUser: (id, body) => api.patсh(`/prodex/api/users/id/${id}`, body),
   putProduct: (id, body) => api.put(`/prodex/api/products/${id}`, body),
 
   deleteUser: userId => api.delete(`/prodex/api/users/${userId}`),
