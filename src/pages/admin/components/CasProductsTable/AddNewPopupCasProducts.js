@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { Modal, FormGroup, Header } from 'semantic-ui-react'
 
-import { closeAddPopup, postNewRequest } from '../../actions'
+import { closeAddPopup, postNewCasProductRequest } from '../../actions'
 import { Form, Input, Button, Dropdown, Field  } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
@@ -17,8 +17,9 @@ const initialFormValues = {
 }
 
 const formValidation = Yup.object().shape({
-  casIndexName: Yup.string().min(1, "Too short").required("Required"),
-  casNumber: Yup.string().min(1, "Too short").required("Required"),
+  casIndexName: Yup.string().min(3, "Too short").required("Required"),
+  casNumber: Yup.string().min(3, "Too short").required("Required"),
+  chemicalName: Yup.string().min(3, "Too short").required("Required"),
 })
 
 class AddNewPopupCasProducts extends React.Component {
@@ -27,10 +28,11 @@ class AddNewPopupCasProducts extends React.Component {
       closeAddPopup,
       currentTab,
       config,
-      //postNewRequest
+      postNewCasProductRequest
     } = this.props
 
     const unNumbers = this.props.unNumbers.map(d => {
+      //console.log('xxxxxxxxxx - map unNumbers');
       return {
         key: d.id,
         text: d.unNumberCode,
@@ -40,6 +42,7 @@ class AddNewPopupCasProducts extends React.Component {
     })
 
     const packagingGroups = this.props.packagingGroups.map(d => {
+      console.log('xxxxxxxxxx - map packagingGroups');
       return {
         key: d.id,
         text: d.groupCode,
@@ -49,6 +52,7 @@ class AddNewPopupCasProducts extends React.Component {
     })
 
     const hazardClasses = this.props.hazardClasses.map(d => {
+      console.log('xxxxxxxxxx - map hazardClasses');
       return {
         key: d.id,
         text: d.classCode,
@@ -66,14 +70,17 @@ class AddNewPopupCasProducts extends React.Component {
             validationSchema={formValidation}
             onReset={closeAddPopup}
             onSubmit={(values, actions) => {
-              /*let data = {
-                [config.edit[0].name]: values.val0
-              }*/
+              const data = {
+                casIndexName: values.casIndexName,
+                casNumber:    values.casNumber,
+                chemicalName: values.chemicalName,
+                ...(values.unNumber !== '' && {unNumber: values.unNumber}),
+                ...(values.packagingGroup !== '' && {packagingGroup: values.packagingGroup}),
+                ...(values.hazardClasses.length && {hazardClasses: values.hazardClasses}),
+              }
               console.log('xxxxxxxxxxx AddNewPopupCasProducts - submit values - ', values);
-              //postNewRequest(config, data)
-              //<Dropdown label={config.display.columns[4].title} options={packagingGroups} name="packagingGroup" />
-              //<Input type='text' label={config.display.columns[3].title} name="unNumber" />
-
+              console.log('xxxxxxxxxxx AddNewPopupCasProducts - submit data - ', data);
+              postNewCasProductRequest(data);
             }}
           >
             <FormGroup widths="equal">
@@ -126,15 +133,12 @@ class AddNewPopupCasProducts extends React.Component {
         </Modal.Content>
       </Modal>
     )
-
-
-
   }
 }
 
 const mapDispatchToProps = {
   closeAddPopup,
-  //postNewRequest
+  postNewCasProductRequest,
 };
 
 const mapStateToProps = state => {
