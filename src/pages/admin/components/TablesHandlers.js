@@ -4,7 +4,7 @@ import { config } from '../config'
 
 import { Header, Menu, Button, Input, Dropdown } from 'semantic-ui-react'
 
-import { openAddPopup, handleFiltersValue } from '../actions'
+import { openPopup, handleFiltersValue } from '../actions'
 import unitedStates from '../../../components/unitedStates'
 
 class TablesHandlers extends Component {
@@ -28,7 +28,7 @@ class TablesHandlers extends Component {
     const {
       handleFiltersValue,
       currentTab,
-      openAddPopup,
+      openPopup,
     } = this.props
 
     const {
@@ -48,7 +48,7 @@ class TablesHandlers extends Component {
               onChange={e => handleFiltersValue(this.props, e.target.value)} />
           </Menu.Item>
           <Menu.Item>
-            <Button size="large" primary onClick={() => openAddPopup(currentTab)}>
+            <Button size="large" primary onClick={() => openPopup()}>
               Add {config[currentTab].addEditText}
             </Button>
           </Menu.Item>
@@ -66,7 +66,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-  openAddPopup,
+  openPopup,
   handleFiltersValue
 }
 

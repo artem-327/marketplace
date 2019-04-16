@@ -14,14 +14,14 @@ export const config = {
     },
   },
 
-  'Companies Management': {
-    addEditText: 'New Company',
+  'Companies': {
+    addEditText: 'Company',
     searchText: 'Search company by name',
     display: {
       columns: [
-        { name: 'name', title: 'Company name'},
-        { name: 'nacdMember', title: ' NACD Member'},
-        { name: 'phone', title: 'Phone number'},
+        { name: 'name', title: 'Company Name'},
+        { name: 'nacdMemberText', title: ' NACD Member'},
+        { name: 'phone', title: 'Phone Number'},
         { name: 'website', title: 'Web'}
       ]
     }

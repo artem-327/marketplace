@@ -4,7 +4,7 @@ import { config } from './config'
 export const initialState = {
   editPopupBoolean: false,
   addNewPopup: false,
-  popupValues: [],
+  popupValues: null,
   unitsOfMeasureRows: [],
   unitsOfPackagingRows: [],
   manufacturersRows: [],
@@ -16,10 +16,10 @@ export const initialState = {
   packagingGroups: [],
 
   companiesRows: [],
-
+  countries: [],
   tabsNames: [
     { name: 'CAS Products', id: 7 },
-    { name: 'Companies Management', id: 8 },
+    { name: 'Companies', id: 8 },
     { name: 'Units of Measure', id: 1 },
     { name: 'Units of Packaging', id: 2 },
     { name: 'Manufacturers', id: 3 },
@@ -28,7 +28,7 @@ export const initialState = {
     { name: 'Conditions', id: 6 },
   ],
 
-  currentTab: 'Units of Measure',
+  currentTab: 'Companies',
   casListDataRequest: { pageSize: 50, pageStart: 0 },
   currentEditForm: null,
   currentAddForm: null,
@@ -39,8 +39,23 @@ export const initialState = {
 }
 
 export default function reducer(state = initialState, action) {
+  const {payload} = action
+  
   switch (action.type) {
 
+    case AT.ADMIN_OPEN_POPUP: {
+      return { ...state,
+        [payload.data ? 'currentEditForm' : 'currentAddForm']: state.currentTab,
+        popupValues: payload.data
+      }
+    }
+
+    case AT.ADMIN_CLOSE_POPUP: {
+      return { ...state,
+        currentAddForm: null,
+        currentEditForm: null
+      }
+    }
 
     case AT.ADMIN_OPEN_ADD_POPUP: {
       return {
@@ -72,7 +87,15 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-
+    case AT.ADMIN_GET_COUNTRIES_FULFILLED: {
+      return {...state,
+        countries: payload.map(c => ({
+          text: c.name,
+          value: c.id,
+          key: c.id
+        }))
+      }
+    }
 
     case AT.ADMIN_HANDLE_ACTIVE_TAB: {
       return {

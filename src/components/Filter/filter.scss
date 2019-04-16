@@ -15,7 +15,10 @@ $font-family: 'Cabin', sans-serif;
   padding: 10px 10px 80px;
   z-index: 4;
   text-align: left;
-
+  .error {
+    padding: 5px;
+    color: red;
+  }
   input {
     width: 192px;
     border-radius: 4px;
