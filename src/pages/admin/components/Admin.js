@@ -16,6 +16,7 @@ import EditPopup1Parameter from './DataTable/EditPopup1Parameter'
 
 import CasProductsTable from './CasProductsTable/CasProductsTable'
 import CompaniesTable from './CompaniesTable/Table'
+import CompaniesForm from './CompaniesTable/FormPopup'
 
 const tables = {
   'Units of Measure': <DataTable />,
@@ -25,7 +26,7 @@ const tables = {
   'Forms': <DataTable />,
   'Conditions': <DataTable />,
   'CAS Products': <CasProductsTable />,
-  'Companies Management': <CompaniesTable />
+  'Companies': <CompaniesTable />
 }
 
 const editForms = {
@@ -35,6 +36,7 @@ const editForms = {
   'Grades': <EditPopup1Parameter />,
   'Forms': <EditPopup1Parameter />,
   'Conditions': <EditPopup1Parameter />,
+  'Companies': <CompaniesForm />
 }
 
 const addForms = {
@@ -45,6 +47,7 @@ const addForms = {
   'Forms': <AddNewPopup1Parameter />,
   'Conditions': <AddNewPopup1Parameter />,
   'CAS Products': <AddNewPopupCasProducts />,
+  'Companies': <CompaniesForm />
 }
 
 class Admin extends Component {

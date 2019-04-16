@@ -11,7 +11,6 @@ export function openEditPopup(config, editedData) {
 export function closeEditPopup() {
 	return {
 		type: AT.ADMIN_CLOSE_EDIT_POPUP,
-		payload: null
 	}
 }
 
@@ -22,7 +21,6 @@ export function deleteItem(config, id) {
 			payload: id
 		}
 	}
-	else { return { type: null, payload: null } }
 }
 
 export function openAddPopup(currentTab) {
@@ -34,14 +32,12 @@ export function openAddPopup(currentTab) {
 export function closeAddPopup() {
 	return {
 		type: AT.ADMIN_CLOSE_ADD_POPUP,
-		payload: null
 	}
 }
 
 export function closeConfirmPopup() {
 	return {
 		type: AT.ADMIN_CLOSE_CONFIRM_POPUP,
-		payload: null
 	}
 }
 
@@ -138,5 +134,53 @@ export function getCompanies() {
 	return {
 		type: AT.ADMIN_GET_COMPANIES,
 		payload: api.getCompanies()
+	}
+}
+
+export function deleteCompany(id) {
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_DELETE_COMPANIES,
+			payload: api.deleteCompany(id)
+		})
+
+		dispatch(getCompanies())
+	}
+}
+
+export function createCompany(formData) {
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_CREATE_COMPANY,
+			payload: api.createCompany(formData)
+		})
+
+		dispatch(closePopup())
+		dispatch(getCompanies())
+	}
+}
+
+export function updateCompany(id, formData) {
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_UPDATE_COMPANY,
+			payload: api.updateCompany(id, formData)
+		})
+
+		dispatch(closePopup())
+		dispatch(getCompanies())
+	}
+}
+
+export function openPopup(data) {
+	return {
+		type: AT.ADMIN_OPEN_POPUP,
+		payload: {data}
+	}
+}
+
+export function closePopup() {
+	return {
+		type: AT.ADMIN_CLOSE_POPUP
 	}
 }

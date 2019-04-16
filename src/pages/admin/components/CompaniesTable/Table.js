@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
-import { getCompanies } from '../../actions'
+import { getCompanies, openPopup, deleteCompany } from '../../actions'
 
 class CompaniesTable extends Component {
 
@@ -16,8 +16,8 @@ class CompaniesTable extends Component {
       filterValue,
       currentTab,
       loading,
-      openEditCasPopup,
-      casDeleteItem,
+      openPopup,
+      deleteCompany,
     } = this.props
 
     return (
@@ -28,8 +28,8 @@ class CompaniesTable extends Component {
           loading={loading}
           filterValue={filterValue}
           rowActions={[
-            { text: 'Edit', callback: (row) => {} },
-            { text: 'Delete', callback: (row) => {} }
+            { text: 'Edit', callback: (row) => openPopup(row) },
+            { text: 'Delete', callback: (row) => confirm('Do you really want to delete?') && deleteCompany(row.id)}
           ]}
         />
       </React.Fragment>
@@ -38,7 +38,9 @@ class CompaniesTable extends Component {
 }
 
 const mapDispatchToProps = {
-  getCompanies
+  getCompanies,
+  deleteCompany,
+  openPopup
 }
 
 const mapStateToProps = ({admin}) => {

@@ -25,6 +25,26 @@ export async function getCompanies() {
   return data
 }
 
+export async function getCompany(id) {
+  const {data} = await api.get(`/prodex/api/companies/${id}`)
+  return data
+}
+
+export async function createCompany(formData) {
+  const {data} = await api.post('/prodex/api/companies', formData)
+  return data
+}
+
+export async function updateCompany(id, formData) {
+  const {data} = await api.put(`/prodex/api/companies/${id}`, formData)
+  return data
+}
+
+export async function deleteCompany(id) {
+  await api.delete(`/prodex/api/companies/${id}`)
+  return
+}
+
 
 
 
