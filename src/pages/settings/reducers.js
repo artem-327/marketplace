@@ -6,12 +6,16 @@ export const initialState = {
   addNewWarehousePopup: false,
   popupValues: [],
   usersRows: [],
+  userEditRoles: false,
+  roles: [],
   warehousesRows: [],
   branchesRows: [],
+  branchesAll: [],
   creditCardsRows: [],
   bankAccountsRows: [],
   productsCatalogRows: [],
   productsPackagingType: null,
+  productsUnitsType: [],
   country: [],
   tabsNames: [
     { name: 'Users', id: 1 },
@@ -37,7 +41,7 @@ export const initialState = {
   deleteRowByid: null,
   filterValue: '',
   editPopupSearchProducts: [],
-  loading: false,
+  loading: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -54,6 +58,18 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenPopup: false,
         popupValues: null
+      }
+    }
+    case AT.OPEN_ROLES_POPUP: {
+      return {
+        ...state,
+        userEditRoles: true
+      }
+    }
+    case AT.CLOSE_ROLES_POPUP: {
+      return {
+        ...state,
+        userEditRoles: false
       }
     }
     case AT.OPEN_EDIT_POPUP: {
@@ -138,23 +154,46 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_USERS_DATA: {
-      return {...state,
-        loading: true
-      }
+      return { ...state, loading: true }
     }
 
     case AT.GET_USERS_DATA_SUCCESS: {
       const usersRows = action.payload.map(user => {
+        const firstTwoRoles = user.roles.slice(0, 2)
+
+        let rolesStr = ''
+        switch (user.roles.length) {
+          case 0:
+            rolesStr = ''
+            break
+          case 1:
+            rolesStr = firstTwoRoles[0].name
+            break
+          case 2:
+            rolesStr = firstTwoRoles[0].name + ', ' + firstTwoRoles[1].name
+          default:
+            rolesStr =
+              firstTwoRoles[0].name + ', ' + firstTwoRoles[1].name + ' + X more'
+        }
+
         return {
           checkbox: ' ',
           userName: user.firstname + ' ' + user.lastname,
           title: 'title',
           email: user.email,
-          phone: 'phone',
-          homeBranch: user.branch ? user.branch.address.province.name : '',
+          phone: user.homeBranch.contactPhone,
+          homeBranchId: user.homeBranch.id,
+          preferredCurrency: user.preferredCurrency
+            ? user.preferredCurrency.code
+              ? user.preferredCurrency.code
+              : null
+            : null,
+          homeBranch: user.homeBranch.name,
           permissions: user.roles ? user.roles.name : '',
           middleName: user.middlename,
-          id: user.id
+          id: user.id,
+          firstTwoRoles: rolesStr,
+          allRoles: user.roles
         }
       })
       return {
@@ -164,10 +203,15 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_WAREHOUSES_DATA: {
-      return {...state,
-        loading: true
+    case AT.GET_ROLES_DATA: {
+      return {
+        ...state,
+        roles: action.payload
       }
+    }
+
+    case AT.GET_WAREHOUSES_DATA: {
+      return { ...state, loading: true }
     }
 
     case AT.GET_WAREHOUSES_DATA_SUCCESS: {
@@ -178,9 +222,9 @@ export default function reducer(state = initialState, action) {
         countryId: warehouse.address.country.id,
         zip: warehouse.address.zip.zip,
         zipID: warehouse.address.zip.id,
-        contactName: warehouse.contact.name,
-        phone: warehouse.contact.phone,
-        email: warehouse.contact.email,
+        contactName: warehouse.contactName,
+        phone: warehouse.contactPhone,
+        email: warehouse.contactEmail,
         branchId: warehouse.id,
         id: warehouse.id,
         warehouse: warehouse.warehouse
@@ -203,9 +247,7 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_BRANCHES_DATA: {
-      return {...state,
-        loading: true
-      }
+      return { ...state, loading: true }
     }
 
     case AT.GET_BRANCHES_DATA_SUCCESS: {
@@ -227,10 +269,21 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_CREDIT_CARDS_DATA: {
-      return {...state,
-        loading: true
+    case AT.GET_ALL_BRANCHES_DATA: {
+      const branches = action.payload.map(branch => {
+        return {
+          value: branch.id,
+          text: branch.name
+        }
+      })
+      return {
+        ...state,
+        branchesAll: branches
       }
+    }
+
+    case AT.GET_CREDIT_CARDS_DATA: {
+      return { ...state, loading: true }
     }
 
     case AT.GET_CREDIT_CARDS_DATA_SUCCESS: {
@@ -254,9 +307,7 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_BANK_ACCOUNTS_DATA: {
-      return {...state,
-        loading: true
-      }
+      return { ...state, loading: true }
     }
 
     case AT.GET_BANK_ACCOUNTS_DATA_SUCCESS: {
@@ -281,18 +332,20 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_PRODUCTS_CATALOG_DATA: {
-      return {...state,
-        loading: true
-      }
+      return { ...state, loading: true }
     }
 
     case AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS: {
       const rows = action.payload.products.map(product => {
         return {
           id: product.id,
-          // product: product.product.id,
           productName: product.productName,
           productNumber: product.productCode,
+          casName: product.casProduct
+            ? product.casProduct.casIndexName
+              ? product.casProduct.casIndexName
+              : null
+            : null,
           casProduct: product.casProduct
             ? product.casProduct.casNumber
               ? product.casProduct.casNumber
@@ -303,6 +356,10 @@ export default function reducer(state = initialState, action) {
             : null,
           packageID: product.packagingType ? product.packagingType.id : null,
           packagingSize: product.packagingSize,
+          unit: product.packagingUnit
+            ? product.packagingUnit.nameAbbreviation
+            : null,
+          unitID: product.packagingUnit ? product.packagingUnit.id : null,
           unNumber: product.unNumber
             ? product.unNumber.id
               ? product.unNumber.id
@@ -317,11 +374,19 @@ export default function reducer(state = initialState, action) {
           value: type.id
         }
       })
+      const packagingUnitsType = action.payload.units.map((type, id) => {
+        return {
+          key: id,
+          text: type.name,
+          value: type.id
+        }
+      })
       return {
         ...state,
         loading: false,
         productsCatalogRows: rows,
-        productsPackagingType: packagingType
+        productsPackagingType: packagingType,
+        productsUnitsType: packagingUnitsType
       }
     }
 

@@ -10,6 +10,16 @@ export async function getCasProductByString(value) {
   return data
 }
 
+export async function getUnNumbers() {
+  const {data} = await api.get("/prodex/api/un-numbers")
+  return data
+}
+
+export async function getMeasureTypes() {
+  const {data} = await api.get("/prodex/api/measure-types")
+  return data
+}
+
 export async function getHazardClasses() {
   const {data} = await api.get("/prodex/api/hazard-classes")
   return data
@@ -20,9 +30,38 @@ export async function getPackagingGroups() {
   return data
 }
 
+export async function getCountries() {
+  const {data} = await api.get('/prodex/api/countries')
+  return data
+}
+export async function getZipCodes() {
+  const {data} = await api.get('/prodex/api/zip-codes')
+  return data
+}
+
 export async function getCompanies() {
   const {data} = await api.get('/prodex/api/companies')
   return data
+}
+
+export async function getCompany(id) {
+  const {data} = await api.get(`/prodex/api/companies/${id}`)
+  return data
+}
+
+export async function createCompany(formData) {
+  const {data} = await api.post('/prodex/api/companies', formData)
+  return data
+}
+
+export async function updateCompany(id, formData) {
+  const {data} = await api.put(`/prodex/api/companies/${id}`, formData)
+  return data
+}
+
+export async function deleteCompany(id) {
+  await api.delete(`/prodex/api/companies/${id}`)
+  return
 }
 
 

@@ -59,6 +59,26 @@ class TablesHandlers extends Component {
     })
   }
 
+  currentTabTitle = currentTab => {
+    console.log(currentTab)
+    switch (currentTab) {
+      case 'Users':
+        return 'User'
+        break
+      case 'Branches':
+        return 'Branch'
+        break
+      case 'Warehouses':
+        return 'Warehouse'
+        break
+      case 'Product catalog':
+        return 'Product'
+        break
+      default:
+        null
+    }
+  }
+
   render() {
     const { handleFiltersValue, currentTab, openPopup } = this.props
 
@@ -84,7 +104,7 @@ class TablesHandlers extends Component {
           </Menu.Item>
           <Menu.Item>
             <Button size="large" primary onClick={() => openPopup()}>
-              Add {currentTab}
+              Add {this.currentTabTitle(currentTab)}
             </Button>
           </Menu.Item>
         </Menu.Menu>

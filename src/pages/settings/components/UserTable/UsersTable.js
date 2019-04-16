@@ -8,30 +8,35 @@ import {
   openPopup,
   handleOpenConfirmPopup,
   closeConfirmPopup,
-  deleteConfirmation
+  deleteConfirmation,
+  openRolesPopup
 } from '../../actions'
 
 class UsersTable extends Component {
   state = {
     columns: [
-      { name: 'userName', title: 'User Name' },
-      { name: 'title', title: 'Title' },
+      { name: 'userName', title: 'User' },
+      { name: 'title', title: 'Job Title' },
       { name: 'email', title: 'E-mail' },
       { name: 'phone', title: 'Phone' },
       { name: 'homeBranch', title: 'Home Branch' },
       {
-        name: 'permissions',
-        title: 'Permissions',
-        options: [
-          { text: 'Admin', value: 'admin' },
-          { text: 'User', value: 'user' }
-        ]
+        name: 'firstTwoRoles',
+        title: 'Roles'
+        // options: [
+        //   { text: 'Admin', value: 'admin' },
+        //   { text: 'User', value: 'user' }
+        // ]
       }
     ]
   }
 
   componentDidMount() {
     this.props.getUsersDataRequest()
+  }
+
+  openEditRolesPopup = row => {
+    this.props.openRolesPopup(row)
   }
 
   render() {
@@ -45,7 +50,8 @@ class UsersTable extends Component {
       closeConfirmPopup,
       deleteConfirmation
     } = this.props
-    
+    // console.log('rows', rows)
+
     const { columns } = this.state
 
     return (
@@ -62,9 +68,13 @@ class UsersTable extends Component {
           columns={columns}
           rows={rows}
           loading={loading}
-          style={{marginTop: '5px'}}
+          style={{ marginTop: '5px' }}
           rowActions={[
             { text: 'Edit', callback: row => openPopup(row) },
+            {
+              text: 'Edit Roles',
+              callback: row => this.openEditRolesPopup(row)
+            },
             { text: 'Delete', callback: row => handleOpenConfirmPopup(row.id) }
           ]}
         />
@@ -76,6 +86,7 @@ class UsersTable extends Component {
 const mapDispatchToProps = {
   getUsersDataRequest,
   openPopup,
+  openRolesPopup,
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation

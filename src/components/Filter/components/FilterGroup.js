@@ -1,17 +1,16 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Control, Errors } from 'react-redux-form'
-import { isNumber, min, messages, maxPercent, bigger } from "../../../utils/validation"
+import { isNumber, min, messages, maxPercent, bigger } from '../../../utils/validation'
 import dropdown from '../../../images/inv-filter/dropdown.png'
 import dropdownClose from '../../../images/inv-filter/dropdown-close.png'
-import classnames from "classnames"
-import DropdownRedux from "../../Dropdown/DropdownRedux"
-import RadioRedux from "../../Radio/RadioRedux"
-import DatepickerRedux from "../../Datepicker/DatepickerRedux"
-import ComboBoxRedux from "../../ComboBox/ComboBoxRedux"
+import classnames from 'classnames'
+import DropdownRedux from '../../Dropdown/DropdownRedux'
+import RadioRedux from '../../Radio/RadioRedux'
+import DatepickerRedux from '../../Datepicker/DatepickerRedux'
+import ComboBoxRedux from '../../ComboBox/ComboBoxRedux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {FormField} from 'semantic-ui-react'
 
 class FilterGroup extends Component {
 
@@ -44,20 +43,23 @@ class FilterGroup extends Component {
 
   renderInputs() {
     if (!this.props.inputs) return
+
+    let errorWrapper = (props) => props.children.map((prop, index) => <div className="error" key={index}>{prop}</div>)
+
     return (
       this.state.isOpen ?
         this.props.inputs.map((input, index) => {
           switch (input.type) {
             case 'checkbox': {
               return (
-                <div key={index} className="input-checkbox">
+                <div key={index} className='input-checkbox'>
                   <label key={index} htmlFor={input.model}>
                     <FormattedMessage
                       id={'filter.' + input.label.split(' ').join('')}
                       defaultMessage={input.label + '1'}
                     />
                     <Control.checkbox model={input.model} id={input.model} />
-                    <span className="checkmark">  </span>
+                    <span className='checkmark'>  </span>
                   </label>
                 </div>
               )
@@ -65,7 +67,7 @@ class FilterGroup extends Component {
             case 'radio': {
               return (
                 <div key={index} className='filter-input-radio'>
-                  <label className="input-label" htmlFor={input.model}>{input.label}</label>
+                  <label className='input-label' htmlFor={input.model}>{input.label}</label>
                   <RadioRedux
                     dispatch={this.props.dispatch}
                     model={input.model}
@@ -86,7 +88,7 @@ class FilterGroup extends Component {
             case 'dropdown': {
               return (
                 <div key={index} className='filter-input-dropdown'>
-                  <label className="input-label" htmlFor={input.model}>{input.label}</label>
+                  <label className='input-label' htmlFor={input.model}>{input.label}</label>
                   <DropdownRedux
                     dispatch={this.props.dispatch}
                     model={input.model}
@@ -100,7 +102,7 @@ class FilterGroup extends Component {
               return (
                 <div key={index} className='filter-input-dropdown'>
                   <label
-                    className="input-label"
+                    className='input-label'
                     htmlFor={input.model}>
                     <FormattedMessage
                       id={input.label.split(' ').join('')}
@@ -111,7 +113,7 @@ class FilterGroup extends Component {
                     dispatch={this.props.dispatch}
                     model={input.model}
                     limit={input.limit}
-                    placeholder="Select Condition"
+                    placeholder='Select Condition'
                     items={input.data}
                   />
                 </div>
@@ -121,7 +123,7 @@ class FilterGroup extends Component {
               return (
                 <div key={index} className='filter-input-date'>
                   <label
-                    className="input-label"
+                    className='input-label'
                     htmlFor={input.model}>
                     <FormattedMessage
                       id={'filter.' + input.label.split(' ').join('')}
@@ -139,7 +141,7 @@ class FilterGroup extends Component {
               return (
                 <div key={index} className='filter-input-text'>
                   <label
-                    className="input-label"
+                    className='input-label'
                     htmlFor={input.model}>
                     <FormattedMessage
                       id={'filter.' + input.label.split(' ').join('')}
@@ -153,61 +155,67 @@ class FilterGroup extends Component {
             case 'number': {
               return (
                 <div key={index} className='filter-input-text'>
-                  <label className="input-label" htmlFor={input.model}>
+                  <label className='input-label' htmlFor={input.model}>
                     <FormattedMessage
                       id={'filter.' + input.label}
                       defaultMessage={input.label + '1'}
                     />
                   </label>
-                  <Errors
-                    className="form-error"
-                    model={input.model}
-                    show="touched"
-                    messages={{
-                      isNumber: messages.isNumber,
-                      min: messages.min
-                    }}
-                  />
                   <Control.text
+                    validateOn='change'
                     type={input.type}
                     model={input.model}
                     id={input.model}
                     placeholder={this.props.intl.formatMessage({ id: 'filter.' + input.label })}
                     validators={{ min: (val) => min(val, 0) || !val }}
                   />
+
+                  <Errors
+                    wrapper={errorWrapper}
+                    model={input.model}
+                    show='touched'
+                    messages={{
+                      isNumber: messages.isNumber,
+                      min: messages.min
+                    }}
+                  />
                 </div>
               )
             }
             case 'assay': {
+
               let validator = input.bigger ?
-                { bigger: (val) => bigger(val, this.props.data.assmin), min: (val) => min(val, 0), maxPercent, isNumber } :
-                { min: (val) => min(val, 0), maxPercent, isNumber }
+                { bigger: (val) => bigger(val, this.props.data.assaylb), min: (val) => min(val, 0), maxPercent, isNumber }
+                : { min: (val) => min(val, 0), maxPercent, isNumber }
               return (
                 <div key={index} className='filter-input-text'>
                   <label
-                    className="input-label"
+                    className='input-label'
                     htmlFor={input.model}>
                     <FormattedMessage
                       id={'filter.' + input.label}
                       defaultMessage={input.label}
                     />
                   </label>
-                  <Errors
-                    className="form-error"
+                  <Control.text
+                    type={input.type}
+                    validateOn='change'
                     model={input.model}
-                    show="touched"
+                    id={input.model}
+                    placeholder={input.placeholder}
+                    validators={validator}
+                  />
+
+                  <Errors
+                    wrapper={errorWrapper}
+                    model={input.model}
+                    show='touched'
                     messages={{
                       bigger: input.bigger ? messages.bigger : null,
                       maxPercent: messages.maxPercent,
                       isNumber: messages.isNumber,
                       min: messages.min,
                     }}
-                  />
-                  <Control.text type={input.type}
-                    model={input.model}
-                    id={input.model}
-                    placeholder={input.placeholder}
-                    validators={validator}
                   />
                 </div>
               )
@@ -224,13 +232,13 @@ class FilterGroup extends Component {
   //TODO::refactor render
   render() {
     if (!this.props.isVisible) return null
-    
+
     return (
-      <div className={classnames("filter-group", { "split": (this.props.split) })}>
+      <div className={classnames('filter-group', { 'split': (this.props.split) })}>
         <div
-          className="header"
+          className='header'
           onClick={() => this.props.onOpen(!this.state.isOpen)}>
-          <div className="dropdown-icon">
+          <div className='dropdown-icon'>
             {
               this.state.isOpen ?
                 <img src={dropdown} alt='drop' />
