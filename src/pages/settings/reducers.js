@@ -15,6 +15,7 @@ export const initialState = {
   bankAccountsRows: [],
   productsCatalogRows: [],
   productsPackagingType: null,
+  productsUnitsType: [],
   country: [],
   tabsNames: [
     { name: 'Users', id: 1 },
@@ -158,8 +159,22 @@ export default function reducer(state = initialState, action) {
 
     case AT.GET_USERS_DATA_SUCCESS: {
       const usersRows = action.payload.map(user => {
-        const firstTwoRoles = user.roles.splice(0, 2)
-        console.log('firstTwoRoles', user)
+        const firstTwoRoles = user.roles.slice(0, 2)
+
+        let rolesStr = ''
+        switch (user.roles.length) {
+          case 0:
+            rolesStr = ''
+            break
+          case 1:
+            rolesStr = firstTwoRoles[0].name
+            break
+          case 2:
+            rolesStr = firstTwoRoles[0].name + ', ' + firstTwoRoles[1].name
+          default:
+            rolesStr =
+              firstTwoRoles[0].name + ', ' + firstTwoRoles[1].name + ' + X more'
+        }
 
         return {
           checkbox: ' ',
@@ -168,14 +183,16 @@ export default function reducer(state = initialState, action) {
           email: user.email,
           phone: user.homeBranch.contactPhone,
           homeBranchId: user.homeBranch.id,
-          preferredCurrency: user.preferredCurrency.code,
-          // homeBranch: user.branch ? user.branch.address.province.name : '',
+          preferredCurrency: user.preferredCurrency
+            ? user.preferredCurrency.code
+              ? user.preferredCurrency.code
+              : null
+            : null,
           homeBranch: user.homeBranch.name,
           permissions: user.roles ? user.roles.name : '',
-          // permissions: user.
           middleName: user.middlename,
           id: user.id,
-          firstTwoRoles,
+          firstTwoRoles: rolesStr,
           allRoles: user.roles
         }
       })
@@ -205,9 +222,9 @@ export default function reducer(state = initialState, action) {
         countryId: warehouse.address.country.id,
         zip: warehouse.address.zip.zip,
         zipID: warehouse.address.zip.id,
-        contactName: warehouse.contact.name,
-        phone: warehouse.contact.phone,
-        email: warehouse.contact.email,
+        contactName: warehouse.contactName,
+        phone: warehouse.contactPhone,
+        email: warehouse.contactEmail,
         branchId: warehouse.id,
         id: warehouse.id,
         warehouse: warehouse.warehouse
@@ -322,9 +339,13 @@ export default function reducer(state = initialState, action) {
       const rows = action.payload.products.map(product => {
         return {
           id: product.id,
-          // product: product.product.id,
           productName: product.productName,
           productNumber: product.productCode,
+          casName: product.casProduct
+            ? product.casProduct.casIndexName
+              ? product.casProduct.casIndexName
+              : null
+            : null,
           casProduct: product.casProduct
             ? product.casProduct.casNumber
               ? product.casProduct.casNumber
@@ -335,6 +356,10 @@ export default function reducer(state = initialState, action) {
             : null,
           packageID: product.packagingType ? product.packagingType.id : null,
           packagingSize: product.packagingSize,
+          unit: product.packagingUnit
+            ? product.packagingUnit.nameAbbreviation
+            : null,
+          unitID: product.packagingUnit ? product.packagingUnit.id : null,
           unNumber: product.unNumber
             ? product.unNumber.id
               ? product.unNumber.id
@@ -349,11 +374,19 @@ export default function reducer(state = initialState, action) {
           value: type.id
         }
       })
+      const packagingUnitsType = action.payload.units.map((type, id) => {
+        return {
+          key: id,
+          text: type.name,
+          value: type.id
+        }
+      })
       return {
         ...state,
         loading: false,
         productsCatalogRows: rows,
-        productsPackagingType: packagingType
+        productsPackagingType: packagingType,
+        productsUnitsType: packagingUnitsType
       }
     }
 

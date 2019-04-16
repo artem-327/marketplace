@@ -21,7 +21,7 @@ class UsersTable extends Component {
       { name: 'phone', title: 'Phone' },
       { name: 'homeBranch', title: 'Home Branch' },
       {
-        name: 'permissions',
+        name: 'firstTwoRoles',
         title: 'Roles'
         // options: [
         //   { text: 'Admin', value: 'admin' },
@@ -50,6 +50,7 @@ class UsersTable extends Component {
       closeConfirmPopup,
       deleteConfirmation
     } = this.props
+    // console.log('rows', rows)
 
     const { columns } = this.state
 

@@ -72,7 +72,7 @@ class TablesHandlers extends Component {
         return 'Warehouse'
         break
       case 'Product catalog':
-        return 'Product catalog'
+        return 'Product'
         break
       default:
         null

@@ -60,7 +60,7 @@ class WarehouseTable extends Component {
           columns={columns}
           loading={loading}
           rows={this.handlerChangeRows(rows)}
-          style={{marginTop: '5px'}}
+          style={{ marginTop: '5px' }}
           rowActions={[
             { text: 'Edit', callback: row => openPopup(row) },
             { text: 'Delete', callback: row => handleOpenConfirmPopup(row.id) }

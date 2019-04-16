@@ -10,8 +10,8 @@ function* getUsersDataWorker() {
     const roles = yield call(api.getRoles)
 
     yield put({ type: AT.GET_ALL_BRANCHES_DATA, payload: branches })
-    yield put({ type: AT.GET_USERS_DATA_SUCCESS, payload: users })
     yield put({ type: AT.GET_ROLES_DATA, payload: roles })
+    yield put({ type: AT.GET_USERS_DATA_SUCCESS, payload: users })
   } catch (e) {
     yield console.log('error:', e)
   }
@@ -37,6 +37,7 @@ function* getWarehousesDataWorker() {
   try {
     const warehouses = yield call(api.getWarehouses)
     const country = yield call(api.getCountry)
+
     const newCountryFormat = country.map(country => {
       return {
         text: country.name,
@@ -89,9 +90,15 @@ function* getProductCatalogWorker() {
   try {
     const productCatalog = yield call(api.getProductsCatalog)
     const productPacTypes = yield call(api.getProductTypes)
+    const units = yield call(api.getUnitsType)
+
     yield put({
       type: AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS,
-      payload: { products: productCatalog, productsTypes: productPacTypes }
+      payload: {
+        products: productCatalog,
+        productsTypes: productPacTypes,
+        units: units.data
+      }
     })
   } catch (e) {
     yield console.log('error:', e)
@@ -114,7 +121,9 @@ function* postNewUserWorker({ payload }) {
       email: payload.email,
       firstname: payload.firstName,
       lastname: payload.lastName,
-      middlename: payload.middleName
+      middlename: payload.middleName,
+      homeBranch: payload.homeBranchId,
+      password: '123'
     }
     yield call(api.postNewUser, dataBody)
     yield put({ type: AT.GET_USERS_DATA })
@@ -129,20 +138,16 @@ function* postNewWarehouseWorker({ payload }) {
   try {
     const currentUser = yield call(api.getCurrentUser)
     const dataBody = {
-      // accessorials: [0],
       address: {
         city: payload.address,
         country: payload.country,
-        // province: 44,
         streetAddress: payload.city,
         zip: payload.zip
       },
       company: currentUser.company.id,
-      contact: {
-        email: payload.email,
-        name: payload.contactName,
-        phone: payload.phone
-      },
+      contactEmail: payload.email,
+      contactName: payload.contactName,
+      contactPhone: payload.phone,
       warehouse: payload.tab ? false : true,
       name: payload.name
     }
@@ -243,7 +248,7 @@ function* putUserWorker({ payload, id }) {
     }
 
     console.log('updateUser', updateUser)
-    yield call(api.patсhUser, id, updateUser)
+    yield call(api.patchUser, id, updateUser)
     yield put({ type: AT.GET_USERS_DATA })
   } catch (e) {
     console.log('error', e)
@@ -253,7 +258,6 @@ function* putUserWorker({ payload, id }) {
 }
 
 function* putWarehouseEditPopup({ payload, id }) {
-  console.log('payload', payload)
   try {
     const dataBody = {
       address: {
@@ -263,11 +267,9 @@ function* putWarehouseEditPopup({ payload, id }) {
         zip: payload.zip
       },
       company: 3,
-      contact: {
-        email: payload.email,
-        name: payload.contactName,
-        phone: payload.phone
-      },
+      contactEmail: payload.email,
+      contactName: payload.contactName,
+      contactPhone: payload.phone,
       warehouse: payload.tab ? false : true,
       name: payload.name
     }
@@ -281,6 +283,7 @@ function* putWarehouseEditPopup({ payload, id }) {
 }
 
 function* putProductEditPopup({ payload }) {
+  console.log('payload', payload)
   try {
     const id = payload.id
     const updateProduct = {
@@ -290,6 +293,7 @@ function* putProductEditPopup({ payload }) {
       packagingUnit: 0,
       productCode: payload.productNumber,
       productName: payload.productName,
+      packagingUnit: payload.unitID,
       unNumber: payload.unNumber
     }
     yield call(api.putProduct, id, updateProduct)
