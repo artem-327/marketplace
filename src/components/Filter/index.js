@@ -26,7 +26,7 @@ function mapStateToProps(store) {
     productForms: store.products.productForms,
     productAge: store.products.productAge,
     productAgeModel: store.forms.filter.productAge,
-    productGradeTypes: store.products.productGrades,
+    productGradeTypes: store.products.productGrade,
     productAgeCustomModel: store.forms.filter.productAgeCustom,
     location: store.products.location,
     saveFilters: store.filter.saveFilters,

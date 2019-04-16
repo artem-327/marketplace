@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './filterTag.scss'
 import PropTypes from "prop-types";
+import {Icon} from "semantic-ui-react"
 
 class FilterTag extends Component {
 
@@ -123,7 +124,7 @@ class FilterTag extends Component {
         if(Array.isArray(this.props.value) && this.props.value.length === 0) return null;
         return (
             <div className="filterTag"><span>{this.checkName(this.props.name)}: {this.chooseFilter(this.props.name)}</span>
-                <i onClick={()=>{this.props.resetForm('forms.filter.' + this.props.name);this.props.close()}} className="fas fa-times"> </i>
+              <Icon name='times' onClick={()=>{this.props.resetForm('forms.filter.' + this.props.name);this.props.close()}} />
             </div>
     )}
 }

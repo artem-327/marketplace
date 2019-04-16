@@ -4,6 +4,7 @@ import DatePicker from 'react-datepicker'
 import moment from 'moment'
 import 'react-datepicker/dist/react-datepicker.css'
 import './datepicker.scss'
+import {Icon} from "semantic-ui-react"
 
 class Datepicker extends React.Component {
 
@@ -21,7 +22,7 @@ class Datepicker extends React.Component {
         return (
             <div className='datepicker'>
                <label>
-                    <i className="far fa-calendar-alt datepicker-icon"></i>
+                    <Icon name='calendar alternate outline' style={{position: 'absolute', top: '8px', left: '8px', zIndex: '1'}} />
                     <DatePicker
                         minDate={this.props.minDate}
                         maxDate={this.props.maxDate}

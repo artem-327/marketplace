@@ -149,7 +149,7 @@ export default class AddInventoryForm extends Component {
             //processingTimeDays: response.value.data.processingTimeDays,
             product: response.value.data.product,
             splits: response.value.data.splits,
-            validityDate: response.value.data.lots[0].expirationDate.substring(0, 10), // TODO: check all lots and get one date (nearest or farthest date?)
+            validityDate: response.value.data.lots[0].expirationDate ? response.value.data.lots[0].expirationDate.substring(0, 10) : '', // TODO: check all lots and get one date (nearest or farthest date?)
             warehouse: response.value.data.warehouse.id
           }
         })
