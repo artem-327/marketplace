@@ -120,6 +120,20 @@ export function getPackagingGroupsDataRequest() {
 	}
 }
 
+export function getMeasureTypesDataRequest() {
+	return {
+		type: AT.ADMIN_GET_MEASURE_TYPES,
+		payload: api.getMeasureTypes()
+	}
+}
+
+export function getUnNumbersDataRequest() {
+	return {
+		type: AT.ADMIN_GET_UN_NUMBERS,
+		payload: api.getUnNumbers()
+	}
+}
+
 export function openEditCasPopup(value) {
 	return {
 		type: null,

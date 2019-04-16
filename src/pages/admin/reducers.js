@@ -12,8 +12,10 @@ export const initialState = {
   formsRows: [],
   conditionsRows: [],
   casProductsRows: [],
+  measureTypes: [],
   hazardClasses: [],
   packagingGroups: [],
+  unNumbers: [],
 
   companiesRows: [],
 
@@ -98,6 +100,13 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_GET_MEASURE_TYPES_FULFILLED: {
+      return {
+        ...state,
+        measureTypes: action.payload
+      }
+    }
+
     case AT.ADMIN_GET_HAZARD_CLASSES_FULFILLED: {
       return {
         ...state,
@@ -109,6 +118,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         packagingGroups: action.payload
+      }
+    }
+
+    case AT.ADMIN_GET_UN_NUMBERS_FULFILLED: {
+      return {
+        ...state,
+        unNumbers: action.payload
       }
     }
 
