@@ -32,7 +32,20 @@ const formValidation = Yup.object().shape({
   name: Yup.string().min(2, 'Name should has at least 2 characters').required(),
   nacdMember: Yup.bool().required(),
   phone: Yup.string().min(9, 'Enter valid phone number').required(),
-  website: Yup.string().required()
+  website: Yup.string().required(),
+  primaryBranch: Yup.object().shape({
+    name: Yup.string().required(),
+    address: Yup.object().shape({
+      city: Yup.string().required(),
+      country: Yup.number().required(),
+      streetAddress: Yup.string().required(),
+      zip: Yup.string().required()
+    }),
+    contactEmail: Yup.string().email().required(),
+    contactName: Yup.string().required(),
+    contactPhone: Yup.string().required(),
+    warehouse: Yup.bool().required()
+  })
 })
 
 class AddNewPopupCasProducts extends React.Component {
