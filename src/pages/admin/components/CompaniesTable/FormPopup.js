@@ -1,17 +1,32 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { Modal, FormGroup } from 'semantic-ui-react'
+import { Modal, FormGroup, Divider } from 'semantic-ui-react'
 
-import { closePopup } from '../../actions'
-import { Form, Input, Button, Checkbox } from 'formik-semantic-ui'
+import { closePopup, updateCompany, createCompany, getCountries } from '../../actions'
+import { Form, Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 const initialFormValues = {
   name: '',
-  nacdMember: false,
+  nacdMember: true,
   phone: '',
-  website: ''
+  website: '',
+  primaryBranch: {
+    accessorials: [],
+    address: {
+      city: "",
+      country: 0,
+      province: 0,
+      streetAddress: "",
+      zip: ""
+    },
+    contactEmail: "",
+    contactName: "",
+    contactPhone: "",
+    name: "",
+    warehouse: true
+  }
 }
 
 const formValidation = Yup.object().shape({
@@ -24,13 +39,16 @@ const formValidation = Yup.object().shape({
 class AddNewPopupCasProducts extends React.Component {
   
   componentDidMount() {
-    
+    this.props.getCountries()
   }
 
   render() {
     const {
       closePopup,
       popupValues,
+      updateCompany,
+      createCompany,
+      countries,
       config,
     } = this.props
 
@@ -43,8 +61,11 @@ class AddNewPopupCasProducts extends React.Component {
             initialValues={{...initialFormValues, ...popupValues}}
             validationSchema={formValidation}
             onReset={closePopup}
-            onSubmit={(values, actions) => {
-              console.log(values)
+            onSubmit={async (values, actions) => {
+              if (popupValues) await updateCompany(popupValues.id, values)
+              else await createCompany(values)
+
+              actions.setSubmitting(false)
             }}
           >
             <FormGroup widths="equal">
@@ -57,6 +78,31 @@ class AddNewPopupCasProducts extends React.Component {
             <FormGroup widths="equal">
               <Checkbox label="NACD Member" name="nacdMember" />
             </FormGroup>
+            
+            {!popupValues && <>
+              <Divider />
+              <h4>Primary Branch</h4>
+              <FormGroup widths="equal">
+                <Input label="Name" name="primaryBranch.name" />
+              </FormGroup>
+              <FormGroup widths="equal">
+                <Input label="Contact Email" name="primaryBranch.contactEmail" />
+                <Input label="Contact Name" name="primaryBranch.contactName" />
+                <Input label="Contact Phone" name="primaryBranch.contactPhone" />
+              </FormGroup>
+              <FormGroup widths="equal">
+                <Checkbox label="Warehouse" name="primaryBranch.warehouse" />
+              </FormGroup>
+              <h5>Address</h5>
+              <FormGroup widths="equal">
+                <Input label="Street" name="primaryBranch.address.streetAddress" />
+                <Input label="City" name="primaryBranch.address.city" />
+              </FormGroup>
+              <FormGroup widths="equal">
+                <Input label="Zip" name="primaryBranch.address.zip" />
+                <Dropdown label="Country" name="primaryBranch.address.country" inputProps={{search: true}} options={countries} />
+              </FormGroup>
+            </>}
 
             <div style={{ textAlign: 'right' }}>
               <Button.Reset>Cancel</Button.Reset>
@@ -70,7 +116,10 @@ class AddNewPopupCasProducts extends React.Component {
 }
 
 const mapDispatchToProps = {
-  closePopup
+  closePopup,
+  updateCompany,
+  createCompany,
+  getCountries
 }
 
 const mapStateToProps = ({admin}) => {

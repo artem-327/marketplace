@@ -16,7 +16,7 @@ export const initialState = {
   packagingGroups: [],
 
   companiesRows: [],
-
+  countries: [],
   tabsNames: [
     { name: 'CAS Products', id: 7 },
     { name: 'Companies', id: 8 },
@@ -28,7 +28,7 @@ export const initialState = {
     { name: 'Conditions', id: 6 },
   ],
 
-  currentTab: 'Units of Measure',
+  currentTab: 'Companies',
   casListDataRequest: { pageSize: 50, pageStart: 0 },
   currentEditForm: null,
   currentAddForm: null,
@@ -40,7 +40,7 @@ export const initialState = {
 
 export default function reducer(state = initialState, action) {
   const {payload} = action
-
+  
   switch (action.type) {
 
     case AT.ADMIN_OPEN_POPUP: {
@@ -87,7 +87,15 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-
+    case AT.ADMIN_GET_COUNTRIES_FULFILLED: {
+      return {...state,
+        countries: payload.map(c => ({
+          text: c.name,
+          value: c.id,
+          key: c.id
+        }))
+      }
+    }
 
     case AT.ADMIN_HANDLE_ACTIVE_TAB: {
       return {

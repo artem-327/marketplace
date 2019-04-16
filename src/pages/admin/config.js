@@ -20,7 +20,7 @@ export const config = {
     display: {
       columns: [
         { name: 'name', title: 'Company Name'},
-        { name: 'nacdMember', title: ' NACD Member'},
+        { name: 'nacdMemberText', title: ' NACD Member'},
         { name: 'phone', title: 'Phone Number'},
         { name: 'website', title: 'Web'}
       ]

@@ -48,7 +48,7 @@ class TablesHandlers extends Component {
               onChange={e => handleFiltersValue(this.props, e.target.value)} />
           </Menu.Item>
           <Menu.Item>
-            <Button size="large" primary onClick={() => openPopup(currentTab)}>
+            <Button size="large" primary onClick={() => openPopup()}>
               Add {config[currentTab].addEditText}
             </Button>
           </Menu.Item>

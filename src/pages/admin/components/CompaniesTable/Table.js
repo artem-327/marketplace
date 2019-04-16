@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
-import { getCompanies, openPopup, deleteCompany } from '../../actions'
+import { getCompanies, openEditCompany, deleteCompany } from '../../actions'
 
 class CompaniesTable extends Component {
 
@@ -16,7 +16,7 @@ class CompaniesTable extends Component {
       filterValue,
       currentTab,
       loading,
-      openPopup,
+      openEditCompany,
       deleteCompany,
     } = this.props
 
@@ -28,7 +28,7 @@ class CompaniesTable extends Component {
           loading={loading}
           filterValue={filterValue}
           rowActions={[
-            { text: 'Edit', callback: (row) => openPopup(row) },
+            { text: 'Edit', callback: (row) => openEditCompany(row.id, row) },
             { text: 'Delete', callback: (row) => confirm('Do you really want to delete?') && deleteCompany(row.id)}
           ]}
         />
@@ -40,7 +40,7 @@ class CompaniesTable extends Component {
 const mapDispatchToProps = {
   getCompanies,
   deleteCompany,
-  openPopup
+  openEditCompany
 }
 
 const mapStateToProps = ({admin}) => {
@@ -51,7 +51,7 @@ const mapStateToProps = ({admin}) => {
     loading: admin.loading,
     rows: admin.companiesRows.map(c => ({
       ...c,
-      nacdMember: c.nacdMember ? 'Yes' : 'No'
+      nacdMemberText: c.nacdMember ? 'Yes' : 'No'
     }))
   }
 }

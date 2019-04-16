@@ -130,10 +130,27 @@ export function casDeleteItem(value) {
 	}
 }
 
+export function getCountries() {
+	return (dispatch, getState) => {
+		const {admin} = getState()
+		admin.countries.length === 0 && dispatch({
+			type: AT.ADMIN_GET_COUNTRIES,
+			payload: api.getCountries()
+		})
+	}
+}
+
 export function getCompanies() {
 	return {
 		type: AT.ADMIN_GET_COMPANIES,
 		payload: api.getCompanies()
+	}
+}
+
+export function getCompany(id) {
+	return {
+		type: AT.ADMIN_GET_COMPANY,
+		payload: api.getCompany(id)
 	}
 }
 
@@ -169,6 +186,14 @@ export function updateCompany(id, formData) {
 
 		dispatch(closePopup())
 		dispatch(getCompanies())
+	}
+}
+
+export function openEditCompany(id, formData) {
+	return async dispatch => {
+		dispatch(openPopup(formData))
+		// const data = await api.getCompany(id)
+		// dispatch(openPopup(data))
 	}
 }
 

@@ -72,6 +72,7 @@ class WarehousePopup extends React.Component {
       email = '',
       zip = ''
     } = popupValues || {}
+    
     return {
       name,
       contactName,
