@@ -126,6 +126,19 @@ export function getUsersDataRequest() {
   }
 }
 
+export function openRolesPopup(row) {
+  return {
+    type: AT.OPEN_ROLES_POPUP,
+    payload: row
+  }
+}
+
+export function closeRolesPopup() {
+  return {
+    type: AT.CLOSE_ROLES_POPUP
+  }
+}
+
 export function getWarehousesDataRequest() {
   return {
     type: AT.GET_WAREHOUSES_DATA
@@ -152,7 +165,8 @@ export function getProductsCatalogRequest() {
 
 export function getBankAccountsDataRequest() {
   return {
-    type: AT.GET_PRODUCTS_CATALOG_DATA
+    // type: AT.GET_PRODUCTS_CATALOG_DATA
+    type: AT.GET_BANK_ACCOUNTS_DATA
   }
 }
 

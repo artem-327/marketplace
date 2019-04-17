@@ -14,14 +14,14 @@ export const config = {
     },
   },
 
-  'Companies Management': {
-    addEditText: 'New Company',
+  'Companies': {
+    addEditText: 'Company',
     searchText: 'Search company by name',
     display: {
       columns: [
-        { name: 'name', title: 'Company name'},
-        { name: 'nacdMember', title: ' NACD Member'},
-        { name: 'phone', title: 'Phone number'},
+        { name: 'name', title: 'Company Name'},
+        { name: 'nacdMemberText', title: ' NACD Member'},
+        { name: 'phone', title: 'Phone Number'},
         { name: 'website', title: 'Web'}
       ]
     }
@@ -83,6 +83,7 @@ export const config = {
         typeRequest: 'ADMIN_GET_UNITS_OF_PACKAGING_DATA',
         typeSuccess: 'ADMIN_GET_UNITS_OF_PACKAGING_DATA_SUCCESS',
         apiCall: '/prodex/api/packaging-types',
+        /*
         retFcnProcess: (state, action, config) => {
           const rows = action.payload.map(data => {
             return {
@@ -95,7 +96,7 @@ export const config = {
             ...state,
             [config.api.get.dataName]: rows
           }
-        },
+        },*/
       },
       post: {
         typeRequest: 'ADMIN_POST_UNITS_OF_PACKAGING_DATA',

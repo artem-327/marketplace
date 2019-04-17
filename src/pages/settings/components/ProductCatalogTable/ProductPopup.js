@@ -92,19 +92,26 @@ class ProductPopup extends React.Component {
       productName = '',
       productNumber = '',
       packagingSize = '',
-      packageID = ''
+      packageID = '',
+      unitID = ''
     } = popupValues || {}
     return {
       casProduct,
       productName,
       productNumber,
       packagingSize,
-      packageID
+      packageID,
+      unitID
     }
   }
 
   render() {
-    const { closePopup, packagingType, popupValues } = this.props
+    const {
+      closePopup,
+      packagingType,
+      productsUnitsType,
+      popupValues
+    } = this.props
     const { isLoading, results, value } = this.state
     const title = popupValues ? 'Edit' : 'Add'
 
@@ -144,6 +151,13 @@ class ProductPopup extends React.Component {
               />
               <Input type="text" label="Packaging Size" name="packagingSize" />
             </FormGroup>
+            <FormGroup widths="equal">
+              <Dropdown
+                label="Units"
+                name="unitID"
+                options={productsUnitsType}
+              />
+            </FormGroup>
             <div style={{ textAlign: 'right' }}>
               <Button.Reset onClick={closePopup}>Cancel</Button.Reset>
               <Button.Submit>Save</Button.Submit>
@@ -164,7 +178,8 @@ const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues,
     productsCatalogRows: state.settings.productsCatalogRows,
-    packagingType: state.settings.productsPackagingType
+    packagingType: state.settings.productsPackagingType,
+    productsUnitsType: state.settings.productsUnitsType
   }
 }
 

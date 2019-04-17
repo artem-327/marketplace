@@ -2,6 +2,7 @@ import api from '~/api'
 
 export default {
   getUsers: () => api.get('/prodex/api/users').then(response => response.data),
+  getRoles: () => api.get('/prodex/api/roles').then(response => response.data),
   getCurrentUser: () =>
     api.get('/prodex/api/users/me').then(response => response.data),
   getWarehouses: () =>
@@ -18,6 +19,7 @@ export default {
     api.get('/prodex/api/products').then(response => response.data),
   getProductTypes: () =>
     api.get('/prodex/api/packaging-types').then(response => response.data),
+  getUnitsType: () => api.get('/prodex/api/units'),
   getProductsWithRequiredParamPar: char =>
     api
       .get(`/prodex/api/product-templates?search=${char}`)
@@ -34,10 +36,11 @@ export default {
 
   putWarehouse: (branchId, body) =>
     api.put(`/prodex/api/branches/${branchId}`, body),
-  putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
+  // putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
+  patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body),
   putProduct: (id, body) => api.put(`/prodex/api/products/${id}`, body),
 
-  deleteUser: userId => api.delete(`/prodex/api/users/${userId}`),
+  deleteUser: userId => api.delete(`/prodex/api/users/id/${userId}`),
   deleteWarehouse: branchId => api.delete(`/prodex/api/branches/${branchId}`),
   deleteProduct: branchId => api.delete(`/prodex/api/products/${branchId}`),
   deleteCreditCard: cardId =>

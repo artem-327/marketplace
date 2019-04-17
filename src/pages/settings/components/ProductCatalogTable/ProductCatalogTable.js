@@ -15,9 +15,11 @@ class ProductCatalogTable extends Component {
     columns: [
       { name: 'productName', title: 'Product Name' },
       { name: 'productNumber', title: 'Product Number' },
-      { name: 'casProduct', title: 'CAS Product' },
-      { name: 'packagingType', title: 'Packaging Type' },
-      { name: 'packagingSize', title: 'Packaging Size' }
+      { name: 'casProduct', title: 'CAS Number' },
+      { name: 'casName', title: 'CAS Name' },
+      { name: 'packagingSize', title: 'Packaging Size' },
+      { name: 'unit', title: 'Unit' },
+      { name: 'packagingType', title: 'Packaging Type' }
     ]
   }
 
@@ -38,6 +40,7 @@ class ProductCatalogTable extends Component {
     } = this.props
 
     const { columns } = this.state
+    console.log('rows', rows)
 
     return (
       <React.Fragment>
@@ -52,7 +55,7 @@ class ProductCatalogTable extends Component {
           rows={rows}
           columns={columns}
           loading={loading}
-          style={{marginTop: '5px'}}
+          style={{ marginTop: '5px' }}
           filterValue={filterValue}
           rowActions={[
             { text: 'Edit', callback: row => openPopup(row) },

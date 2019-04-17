@@ -24,6 +24,10 @@ export default function reducer(state = initialState, action) {
           return {
             ...state,
             ...action.payload.data,
+            fileIds: action.payload.data.attachments.map(att => {
+              att.attachment = true
+              return att
+            }).concat(state.fileIds),
             poCreated: false
           }
         }
@@ -71,9 +75,9 @@ export default function reducer(state = initialState, action) {
         }
 
         case AT.INVENTORY_SET_FILE_ID: {
-          state.fileIds.push({
-            id: action.payload.fileId
-          })
+          state.fileIds.push(
+            action.payload.data
+          )
 
           return {
             ...state
