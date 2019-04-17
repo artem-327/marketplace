@@ -6,7 +6,7 @@ export default {
   getCurrentUser: () =>
     api.get('/prodex/api/users/me').then(response => response.data),
   getWarehouses: () =>
-    api.get('/prodex/api/branches/warehouses/').then(response => response.data),
+    api.get('/prodex/api/branches/warehouses').then(response => response.data),
   getBranches: () =>
     api.get('/prodex/api/branches').then(response => response.data),
   getCreditCardsData: () =>
