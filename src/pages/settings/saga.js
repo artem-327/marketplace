@@ -56,7 +56,19 @@ function* getWarehousesDataWorker() {
 function* getBranchesDataWorker() {
   try {
     const branches = yield call(api.getBranches)
-    yield put({ type: AT.GET_BRANCHES_DATA_SUCCESS, payload: branches })
+    const country = yield call(api.getCountry)
+
+    const newCountryFormat = country.map(country => {
+      return {
+        text: country.name,
+        value: country.id
+      }
+    })
+
+    yield put({
+      type: AT.GET_BRANCHES_DATA_SUCCESS,
+      payload: { branches, newCountryFormat }
+    })
   } catch (e) {
     yield console.log('error:', e)
   }
@@ -152,7 +164,11 @@ function* postNewWarehouseWorker({ payload }) {
       name: payload.name
     }
     yield call(api.postNewWarehouse, dataBody)
-    yield put({ type: AT.GET_WAREHOUSES_DATA })
+    if (payload.tab) {
+      yield put({ type: AT.GET_BRANCHES_DATA })
+    } else {
+      yield put({ type: AT.GET_WAREHOUSES_DATA })
+    }
   } catch (e) {
     yield console.log('error:', e)
   } finally {
@@ -274,7 +290,11 @@ function* putWarehouseEditPopup({ payload, id }) {
       name: payload.name
     }
     yield call(api.putWarehouse, id, dataBody)
-    yield put({ type: AT.GET_WAREHOUSES_DATA })
+    if (payload.tab) {
+      yield put({ type: AT.GET_BRANCHES_DATA })
+    } else {
+      yield put({ type: AT.GET_WAREHOUSES_DATA })
+    }
   } catch (e) {
     yield console.log('error:', e)
   } finally {
@@ -290,7 +310,6 @@ function* putProductEditPopup({ payload }) {
       casProduct: payload.casProduct,
       packagingSize: payload.packagingSize,
       packagingType: payload.packageID,
-      packagingUnit: 0,
       productCode: payload.productNumber,
       productName: payload.productName,
       packagingUnit: payload.unitID,
@@ -335,8 +354,8 @@ function* deleteConfirmPopup({}) {
         break
       case 'Branches':
         yield call(api.deleteWarehouse, deleteRowByid)
-        toast = { message: 'Warehouse delete success', isSuccess: true }
-        yield put({ type: AT.GET_WAREHOUSES_DATA })
+        toast = { message: 'Branch delete success', isSuccess: true }
+        yield put({ type: AT.GET_BRANCHES_DATA })
         break
       case 'Warehouses':
         yield call(api.deleteWarehouse, deleteRowByid)
