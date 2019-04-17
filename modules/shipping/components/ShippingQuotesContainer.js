@@ -1,13 +1,9 @@
 import { connect } from 'react-redux'
 import ShippingQuotes from './ShippingQuotes'
-import { getShippingQuotes } from '../actions'
+import * as Actions from '../actions'
 
 function mapStateToProps({shipping}) {
   return shipping
 }
 
-const mapDispatchToProps = {
-  getShippingQuotes
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ShippingQuotes)
+export default connect(mapStateToProps, Actions)(ShippingQuotes)

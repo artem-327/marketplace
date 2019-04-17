@@ -15,6 +15,12 @@ const initialValues = {
 
 class ShippingQuotes extends Component {
 
+  componentDidMount() {
+    const {initShippingForm} = this.props
+
+    initShippingForm()
+  }
+
   getShippingQuotes(inputs) {
     // if (checkToken(this.props)) return
     console.log(inputs)
@@ -35,7 +41,7 @@ class ShippingQuotes extends Component {
   renderForm() {
     const sQuotes = this.renderShippingQuotes()
 
-    const { loading } = this.props
+    const { loading, zipCodes } = this.props
 
     return (
       <Form
@@ -49,7 +55,7 @@ class ShippingQuotes extends Component {
         <FormGroup widths="equal">
 
           <Input name="destination.quantity" type="number" label="Shipping Quantity" />
-          <Input name="destination.zip" label="Zip Code" />
+          <Dropdown name="destination.zip" label="Zip Code" inputProps={{search: true}} options={zipCodes} />
 
           <Dropdown
             name="destination.maxTransit"
