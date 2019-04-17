@@ -130,6 +130,21 @@ export function getUnNumbersDataRequest() {
 	}
 }
 
+export function postNewCasProductRequest(values) {
+	/*
+	return {
+		type: AT.ADMIN_POST_NEW_CAS_PRODUCT,
+		payload: api.postNewCasProduct(values)
+	}*/
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_POST_NEW_CAS_PRODUCT,
+			payload: api.postNewCasProduct(values)
+		})
+		dispatch(closePopup())
+	}
+}
+
 export function openEditCasPopup(value) {
 	return {
 		type: null,
@@ -139,8 +154,8 @@ export function openEditCasPopup(value) {
 
 export function casDeleteItem(value) {
 	return {
-		type: null,
-		payload: null
+		type: AT.ADMIN_DELETE_CAS_PRODUCT,
+		payload: api.deleteCasProduct(value)
 	}
 }
 

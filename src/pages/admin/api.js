@@ -10,6 +10,21 @@ export async function getCasProductByString(value) {
   return data
 }
 
+export async function postNewCasProduct(value) {
+  const {data} = await api.post('/prodex/api/cas-products', value)
+  return data
+}
+
+export async function updateCasProduct(id, value) {
+  const {data} = await api.put(`/prodex/api/cas-products${id}`, value)
+  return data
+}
+
+export async function deleteCasProduct(id) {
+  await api.delete(`/prodex/api/cas-products/${id}`)
+  return
+}
+
 export async function getUnNumbers() {
   const {data} = await api.get("/prodex/api/un-numbers")
   return data
