@@ -6,9 +6,9 @@ $font-family: 'Cabin', sans-serif;
   font-family: "Cabin", sans-serif;
   background-color: #fbfbfb;
   position: fixed;
-  width: 500px;
+  width: 500px !important;
   right: 0;
-  top: 105px;
+  top: 105px !important;
   bottom: 0;
   overflow-y: auto;
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
@@ -171,20 +171,6 @@ $font-family: 'Cabin', sans-serif;
     }
     .input-checkbox {
       margin: 0 25px 14px 10px;
-      line-height: 20px;
-
-      label {
-        margin: 0;
-        vertical-align: top;
-        font-size: 14px;
-        color: #33373e;
-        line-height: 20px;
-
-        .checkmark {
-          margin: 0;
-          vertical-align: top;
-        }
-      }
     }
     .half {
       float: left;
@@ -264,6 +250,9 @@ $font-family: 'Cabin', sans-serif;
     left: 6px;
     position: absolute;
     color: #289ada;
+    i {
+      font-weight: bolder;
+    }
   }
   .save-filter {
     border-top: 1px solid #f0f0f0;
