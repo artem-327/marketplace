@@ -3,16 +3,16 @@ import { connect } from 'react-redux'
 
 import { Modal, FormGroup, Header, Dropdown as SDropdown, FormField } from 'semantic-ui-react'
 
-import { closeAddPopup, postNewCasProductRequest } from '../../actions'
-import { Form, Input, Button, Dropdown, Field } from 'formik-semantic-ui'
+import { closeAddPopup, postNewCasProductRequest, updateCasProductRequest } from '../../actions'
+import { Form, Input, Button, Dropdown, Field  } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 const initialFormValues = {
-  'casIndexName': '',
-  'casNumber': '',
-  'chemicalName': '',
-  'unNumber': '',
-  'hazardClasses': [],
+  'casIndexName':   '',
+  'casNumber':      '',
+  'chemicalName':   '',
+  'unNumber':       '',
+  'hazardClasses':  [],
   'packagingGroup': '',
 }
 
@@ -22,7 +22,7 @@ const formValidation = Yup.object().shape({
   chemicalName: Yup.string().min(3, "Too short").required("Required"),
 })
 
-class AddNewPopupCasProducts extends React.Component {
+class AddEditCasProductsPopup extends React.Component {
 
   state = {
     unNumbers: [],
@@ -60,7 +60,7 @@ class AddNewPopupCasProducts extends React.Component {
       }
     })
 
-    
+
     this.setState({
       unNumbers,
       packagingGroups,
@@ -82,8 +82,10 @@ class AddNewPopupCasProducts extends React.Component {
     const {
       closeAddPopup,
       currentTab,
+      popupValues,
       config,
-      postNewCasProductRequest
+      postNewCasProductRequest,
+      updateCasProductRequest
     } = this.props
 
     const {
@@ -98,7 +100,7 @@ class AddNewPopupCasProducts extends React.Component {
         <Modal.Content>
           <Form
             enableReinitialize
-            initialValues={initialFormValues}
+            initialValues={{...initialFormValues, ...popupValues}}
             // validationSchema={formValidation}
             validateOnBlur={false}
             validateOnChange={false}
@@ -112,9 +114,9 @@ class AddNewPopupCasProducts extends React.Component {
                 ...(values.packagingGroup !== '' && { packagingGroup: values.packagingGroup }),
                 ...(values.hazardClasses.length && { hazardClasses: values.hazardClasses }),
               }
-              console.log('xxxxxxxxxxx AddNewPopupCasProducts - submit values - ', values)
-              console.log('xxxxxxxxxxx AddNewPopupCasProducts - submit data - ', data)
-              postNewCasProductRequest(data)
+              console.log('xxxxxxxxxxx AddEditCasProductsPopup - submit data - ', data);
+              if (popupValues) updateCasProductRequest(popupValues.id, data)
+              else postNewCasProductRequest(data)
             }}
           >
             {(props) => { return (
@@ -130,7 +132,7 @@ class AddNewPopupCasProducts extends React.Component {
                   <Dropdown
                     name="unNumber"
                     fast
-                    label={config.display.columns[3].title} 
+                    label={config.display.columns[3].title}
                     options={this.state.unNumbersReduced}
                     inputProps={{
                       selection: true,
@@ -182,7 +184,8 @@ class AddNewPopupCasProducts extends React.Component {
 const mapDispatchToProps = {
   closeAddPopup,
   postNewCasProductRequest,
-}
+  updateCasProductRequest,
+};
 
 const mapStateToProps = state => {
   let cfg = state.admin.config[state.admin.currentTab]
@@ -192,7 +195,8 @@ const mapStateToProps = state => {
     packagingGroups: state.admin.packagingGroups,
     unNumbers: state.admin.unNumbers,
     hazardClasses: state.admin.hazardClasses,
+    popupValues: state.admin.popupValues,
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddNewPopupCasProducts)
+export default connect(mapStateToProps, mapDispatchToProps)(AddEditCasProductsPopup)
