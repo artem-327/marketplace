@@ -5,7 +5,7 @@ import Spinner from '../../../components/Spinner/Spinner'
 import FilterTag from "../../../components/Filter/components/FilterTag"
 import SubMenu from '../../../components/SubMenu'
 // import ShippingQuotes from './components/ShippingQuotes'
-import { ShippingQuotes } from '~/modules/shipping'
+import { ShipingQuotes } from '~/modules/shiping'
 import { getSelectedRowsDataTable } from "../../../utils/functions"
 import './allinventory.scss'
 import { FormattedMessage } from 'react-intl'
@@ -29,7 +29,7 @@ class AllInventory extends Component {
     if (checkToken(this.props)) return
 
     const selectedRows = getSelectedRowsDataTable(this.props.productOffersTable)
-    this.props.addPopup(<ShippingQuotes
+    this.props.addPopup(<ShipingQuotes
       selectedRows={selectedRows}
       className='shipping-quotes-popup'
       removePopup={this.props.removePopup}

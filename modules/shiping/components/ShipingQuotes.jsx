@@ -13,12 +13,12 @@ const initialValues = {
   }
 }
 
-class ShippingQuotes extends Component {
+class ShipingQuotes extends Component {
 
   componentDidMount() {
-    const {initShippingForm} = this.props
+    const {initShipingForm} = this.props
 
-    initShippingForm()
+    initShipingForm()
   }
 
   getShippingQuotes(inputs) {
@@ -31,7 +31,7 @@ class ShippingQuotes extends Component {
     params.quantity = parseInt(inputs.destination.quantity)
     params.maxTransitDays = inputs.destination.maxTransit
 
-    this.props.getShippingQuotes(params)
+    this.props.getShipingQuotes(params)
   }
 
   checkBox(value) {
@@ -39,7 +39,7 @@ class ShippingQuotes extends Component {
   }
 
   renderForm() {
-    const sQuotes = this.renderShippingQuotes()
+    const sQuotes = this.renderShipingQuotes()
 
     const { loading, zipCodes } = this.props
 
@@ -49,7 +49,7 @@ class ShippingQuotes extends Component {
         ignoreLoading
         initialValues={initialValues}
         onSubmit={(values, actions) => {
-          this.getShippingQuotes(values)
+          this.getShipingQuotes(values)
         }}
       >
         <FormGroup widths="equal">
@@ -82,7 +82,7 @@ class ShippingQuotes extends Component {
     )
   }
 
-  renderShippingQuotes() {
+  renderShipingQuotes() {
     const { loading } = this.props
 
     return (
@@ -156,7 +156,7 @@ class ShippingQuotes extends Component {
   render() {
     return (
       <Modal open centered={false}>
-        <Modal.Header>Shipping Quote</Modal.Header>
+        <Modal.Header>Shiping Quote</Modal.Header>
         <Modal.Content>
           {this.renderForm()}
         </Modal.Content>
@@ -173,4 +173,4 @@ class ShippingQuotes extends Component {
   }
 }
 
-export default ShippingQuotes
+export default ShipingQuotes
