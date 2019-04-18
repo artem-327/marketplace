@@ -2,14 +2,13 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Control, Errors } from 'react-redux-form'
 import { isNumber, min, messages, maxPercent, bigger } from '../../../utils/validation'
-import dropdown from '../../../images/inv-filter/dropdown.png'
-import dropdownClose from '../../../images/inv-filter/dropdown-close.png'
 import classnames from 'classnames'
 import DropdownRedux from '../../Dropdown/DropdownRedux'
 import RadioRedux from '../../Radio/RadioRedux'
 import DatepickerRedux from '../../Datepicker/DatepickerRedux'
 import ComboBoxRedux from '../../ComboBox/ComboBoxRedux'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import { Icon, Input, Checkbox } from 'semantic-ui-react';
 
 
 class FilterGroup extends Component {
@@ -52,21 +51,21 @@ class FilterGroup extends Component {
           switch (input.type) {
             case 'checkbox': {
               return (
-                <div key={index} className='input-checkbox'>
-                  <label key={index} htmlFor={input.model}>
-                    <FormattedMessage
-                      id={'filter.' + input.label.split(' ').join('')}
-                      defaultMessage={input.label + '1'}
-                    />
-                    <Control.checkbox model={input.model} id={input.model} />
-                    <span className='checkmark'>  </span>
-                  </label>
+                <div className='input-checkbox' key={index}>
+                  <Control id={index} label={
+                    <label>
+                      <FormattedMessage
+                        id={'filter.' + input.label.split(' ').join('')}
+                        defaultMessage={input.label + '1'}
+                      />
+                    </label>
+                  } component={Checkbox} model={input.model} id={input.model} />
                 </div>
               )
             }
             case 'radio': {
               return (
-                <div key={index} className='filter-input-radio'>
+                <div key={index} className='filter-input-radio' >
                   <label className='input-label' htmlFor={input.model}>{input.label}</label>
                   <RadioRedux
                     dispatch={this.props.dispatch}
@@ -148,7 +147,7 @@ class FilterGroup extends Component {
                       defaultMessage={input.label + '1'}
                     />
                   </label>
-                  <Control.text type={input.type} model={input.model} id={input.model} placeholder={input.placeholder} />
+                  <Control component={Input} type={input.type} model={input.model} id={input.model} placeholder={input.placeholder} />
                 </div>
               )
             }
@@ -161,7 +160,8 @@ class FilterGroup extends Component {
                       defaultMessage={input.label + '1'}
                     />
                   </label>
-                  <Control.text
+                  <Control
+                    component={Input}
                     validateOn='change'
                     type={input.type}
                     model={input.model}
@@ -197,7 +197,8 @@ class FilterGroup extends Component {
                       defaultMessage={input.label}
                     />
                   </label>
-                  <Control.text
+                  <Control
+                    component={Input}
                     type={input.type}
                     validateOn='change'
                     model={input.model}
@@ -229,9 +230,10 @@ class FilterGroup extends Component {
     )
   }
 
-  //TODO::refactor render
+
   render() {
     if (!this.props.isVisible) return null
+    let { isOpen } = this.state
 
     return (
       <div className={classnames('filter-group', { 'split': (this.props.split) })}>
@@ -239,12 +241,7 @@ class FilterGroup extends Component {
           className='header'
           onClick={() => this.props.onOpen(!this.state.isOpen)}>
           <div className='dropdown-icon'>
-            {
-              this.state.isOpen ?
-                <img src={dropdown} alt='drop' />
-                :
-                <img src={dropdownClose} alt='drop-close' />
-            }
+            <Icon name={isOpen ? 'chevron up' : 'chevron down'} color={isOpen ? 'blue' : 'black'} />
           </div>
           <FormattedMessage
             id={'filter.' + this.props.header}

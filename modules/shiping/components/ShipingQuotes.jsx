@@ -13,7 +13,13 @@ const initialValues = {
   }
 }
 
-class ShippingQuotes extends Component {
+class ShipingQuotes extends Component {
+
+  componentDidMount() {
+    const {initShipingForm} = this.props
+
+    initShipingForm()
+  }
 
   getShippingQuotes(inputs) {
     // if (checkToken(this.props)) return
@@ -25,7 +31,7 @@ class ShippingQuotes extends Component {
     params.quantity = parseInt(inputs.destination.quantity)
     params.maxTransitDays = inputs.destination.maxTransit
 
-    this.props.getShippingQuotes(params)
+    this.props.getShipingQuotes(params)
   }
 
   checkBox(value) {
@@ -33,9 +39,9 @@ class ShippingQuotes extends Component {
   }
 
   renderForm() {
-    const sQuotes = this.renderShippingQuotes()
+    const sQuotes = this.renderShipingQuotes()
 
-    const { loading } = this.props
+    const { loading, zipCodes } = this.props
 
     return (
       <Form
@@ -43,13 +49,13 @@ class ShippingQuotes extends Component {
         ignoreLoading
         initialValues={initialValues}
         onSubmit={(values, actions) => {
-          this.getShippingQuotes(values)
+          this.getShipingQuotes(values)
         }}
       >
         <FormGroup widths="equal">
 
           <Input name="destination.quantity" type="number" label="Shipping Quantity" />
-          <Input name="destination.zip" label="Zip Code" />
+          <Dropdown name="destination.zip" label="Zip Code" inputProps={{search: true}} options={zipCodes} />
 
           <Dropdown
             name="destination.maxTransit"
@@ -76,7 +82,7 @@ class ShippingQuotes extends Component {
     )
   }
 
-  renderShippingQuotes() {
+  renderShipingQuotes() {
     const { loading } = this.props
 
     return (
@@ -150,7 +156,7 @@ class ShippingQuotes extends Component {
   render() {
     return (
       <Modal open centered={false}>
-        <Modal.Header>Shipping Quote</Modal.Header>
+        <Modal.Header>Shiping Quote</Modal.Header>
         <Modal.Content>
           {this.renderForm()}
         </Modal.Content>
@@ -167,4 +173,4 @@ class ShippingQuotes extends Component {
   }
 }
 
-export default ShippingQuotes
+export default ShipingQuotes

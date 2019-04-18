@@ -25,7 +25,7 @@ export function addProductOffer(values, poId = false) {
       })
     },
     processingTimeDays: parseInt(values.processingTimeDays),
-    product: parseInt(values.product),
+    product: parseInt(values.product.id),
     productCode: values.productCode ? values.productCode : null,
     productCondition: values.productCondition ? parseInt(values.productCondition) : null,
     productForm: values.productForm ? parseInt(values.productForm) : null,
@@ -120,6 +120,20 @@ export function loadFile(attachment) {
   }
 }
 
+export function removeAttachmentLink(isLot, itemId, aId) {
+  return {
+    type: AT.INVENTORY_REMOVE_ATTACHMENT_LINK,
+    payload: api.removeAttachmentLink(isLot, itemId, aId)
+  }
+}
+
+export function removeAttachment(aId) {
+  return {
+    type: AT.INVENTORY_REMOVE_ATTACHMENT,
+    payload: api.removeAttachment(aId)
+  }
+}
+
 export function resetForm() {
   return {
     type: AT.INVENTORY_RESET_FORM,
@@ -136,7 +150,7 @@ export function searchProducts(text) {
       return {
         data: response.data ? response.data.map(p => ({
           text: p.casProduct ? p.casProduct.casIndexName : p.productName + ' (Unmapped)',
-          value: p.id,
+          value: p,
           key: p.casProduct ? p.casProduct.id : ''
         })) : []
       }
@@ -148,7 +162,7 @@ export function setFileIds(fileId) {
   return {
     type: AT.INVENTORY_SET_FILE_ID,
     payload: {
-      fileId: fileId
+      data: fileId
     }
   }
 }
