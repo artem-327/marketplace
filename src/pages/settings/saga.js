@@ -17,22 +17,6 @@ function* getUsersDataWorker() {
   }
 }
 
-// function* openRolesPopup({ payload }) {
-//   try {
-//     yield put({ type: AT.OPEN_POPUP, payload })
-//   } catch (e) {
-//     yield console.log('error:', e)
-//   }
-// }
-
-// function* closeRolesPopup() {
-//   try {
-//     yield put({ type: AT.CLOSE_POPUP })
-//   } catch (e) {
-//     yield console.log('error:', e)
-//   }
-// }
-
 function* getWarehousesDataWorker() {
   try {
     const warehouses = yield call(api.getWarehouses)
