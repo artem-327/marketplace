@@ -7,7 +7,8 @@ import {
   closePopup,
   closeRolesPopup,
   handlerSubmitUserEditPopup,
-  postNewUserRequest
+  postNewUserRequest,
+  putNewUserRoleRequest
 } from '../../actions'
 import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui'
 import * as Yup from 'yup'
@@ -26,31 +27,13 @@ const formValidation = Yup.object().shape({
 
 class UsersPopup extends React.Component {
   submitHandler = (values, actions) => {
-    // console.log(
-    //   'this.props.popupValues',
-    //   Object.keys(values).reduce(
-    //     (acm, item) => {
-    //       if (item.includes('check-box-id')) {
-    //         const [_, id, name] = item.split('_')
-    //         acm.permissions.push({
-    //           id,
-    //           name
-    //         })
-    //       } else {
-    //         acm[item] = values[item]
-    //       }
-    //       return acm
-    //     },
-    //     {
-    //       permissions: []
-    //     }
-    //   )
-    // )
-
-    this.addNewRole(values)
-
-    console.log('value', values)
-
+    if (this.props.userEditRoles) {
+      this.props.putNewUserRoleRequest(
+        this.addNewRole(values),
+        this.props.popupValues.id
+      )
+      return
+    }
     if (this.props.popupValues) {
       this.props.handlerSubmitUserEditPopup(values, this.props.popupValues.id)
     } else {
@@ -62,13 +45,10 @@ class UsersPopup extends React.Component {
   addNewRole(values) {
     const newRoles = []
     for (let key in values) {
-      const id = key.split('check-box-id_')[1]
-      if (id) {
-        this.props.roles.forEach(role => {
-          console.log('OOOO', role)
-        })
-      }
+      const id = Number(key.split('check-box-id_')[1])
+      id && newRoles.push(id)
     }
+    return newRoles
   }
 
   render() {
@@ -118,7 +98,6 @@ class UsersPopup extends React.Component {
                 <FormGroup key={i}>
                   <Checkbox
                     label={role.name}
-                    // name={`check-box-id_${role.id}_${role.name}`}
                     name={`check-box-id_${role.id}`}
                   />
                 </FormGroup>
@@ -159,12 +138,12 @@ class UsersPopup extends React.Component {
 
 const mapDispatchToProps = {
   postNewUserRequest,
+  putNewUserRoleRequest,
   closePopup,
   closeRolesPopup,
   handlerSubmitUserEditPopup
 }
 
-// const mapStateToProps = ({ settings: { popupValues } }) => ({ popupValues })
 const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues,

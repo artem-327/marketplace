@@ -198,6 +198,14 @@ export function postNewCreditCardRequest(creditCardData) {
   }
 }
 
+export function putNewUserRoleRequest(roles, id) {
+  return {
+    type: AT.PUT_NEW_USER_ROLES_REQUEST,
+    payload: roles,
+    id
+  }
+}
+
 export function handleSubmitProductEddPopup(inputsValue, id) {
   return {
     type: AT.POST_NEW_PRODUCT_REQUEST,

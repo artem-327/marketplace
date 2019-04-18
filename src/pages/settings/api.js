@@ -38,6 +38,8 @@ export default {
     api.put(`/prodex/api/branches/${branchId}`, body),
   // putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
   patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body),
+  patchUserRole: (id, body) =>
+    api.patch(`/prodex/api/users/id/${id}/add-roles`, body),
   putProduct: (id, body) => api.put(`/prodex/api/products/${id}`, body),
 
   deleteUser: userId => api.delete(`/prodex/api/users/id/${userId}`),

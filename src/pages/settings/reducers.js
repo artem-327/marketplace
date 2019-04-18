@@ -63,12 +63,16 @@ export default function reducer(state = initialState, action) {
     case AT.OPEN_ROLES_POPUP: {
       return {
         ...state,
+        isOpenPopup: true,
+        popupValues: action.payload,
         userEditRoles: true
       }
     }
     case AT.CLOSE_ROLES_POPUP: {
       return {
         ...state,
+        isOpenPopup: false,
+        popupValues: null,
         userEditRoles: false
       }
     }
@@ -159,23 +163,6 @@ export default function reducer(state = initialState, action) {
 
     case AT.GET_USERS_DATA_SUCCESS: {
       const usersRows = action.payload.map(user => {
-        const firstTwoRoles = user.roles.slice(0, 2)
-
-        let rolesStr = ''
-        switch (user.roles.length) {
-          case 0:
-            rolesStr = ''
-            break
-          case 1:
-            rolesStr = firstTwoRoles[0].name
-            break
-          case 2:
-            rolesStr = firstTwoRoles[0].name + ', ' + firstTwoRoles[1].name
-          default:
-            rolesStr =
-              firstTwoRoles[0].name + ', ' + firstTwoRoles[1].name + ' + X more'
-        }
-
         return {
           checkbox: ' ',
           userName: user.firstname + ' ' + user.lastname,
@@ -192,8 +179,7 @@ export default function reducer(state = initialState, action) {
           permissions: user.roles ? user.roles.name : '',
           middleName: user.middlename,
           id: user.id,
-          firstTwoRoles: rolesStr,
-          allRoles: user.roles
+          allUserRoles: user.roles
         }
       })
       return {

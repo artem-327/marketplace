@@ -23,10 +23,6 @@ class UsersTable extends Component {
       {
         name: 'firstTwoRoles',
         title: 'Roles'
-        // options: [
-        //   { text: 'Admin', value: 'admin' },
-        //   { text: 'User', value: 'user' }
-        // ]
       }
     ]
   }
@@ -35,22 +31,18 @@ class UsersTable extends Component {
     this.props.getUsersDataRequest()
   }
 
-  openEditRolesPopup = row => {
-    this.props.openRolesPopup(row)
-  }
-
   render() {
     const {
       rows,
       filterValue,
       loading,
       openPopup,
+      openRolesPopup,
       confirmMessage,
       handleOpenConfirmPopup,
       closeConfirmPopup,
       deleteConfirmation
     } = this.props
-    // console.log('rows', rows)
 
     const { columns } = this.state
 
@@ -73,7 +65,7 @@ class UsersTable extends Component {
             { text: 'Edit', callback: row => openPopup(row) },
             {
               text: 'Edit Roles',
-              callback: row => this.openEditRolesPopup(row)
+              callback: row => openRolesPopup(row)
             },
             { text: 'Delete', callback: row => handleOpenConfirmPopup(row.id) }
           ]}
@@ -98,6 +90,7 @@ const mapStateToProps = state => {
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     loading: state.settings.loading
+    // roles: state.settings.roles
   }
 }
 
