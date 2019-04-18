@@ -263,7 +263,6 @@ function* putUserWorker({ payload, id }) {
       preferredCurrency: payload.preferredCurrency
     }
 
-    console.log('updateUser', updateUser)
     yield call(api.patchUser, id, updateUser)
     yield put({ type: AT.GET_USERS_DATA })
   } catch (e) {

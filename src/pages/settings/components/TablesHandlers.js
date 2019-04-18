@@ -60,7 +60,6 @@ class TablesHandlers extends Component {
   }
 
   currentTabTitle = currentTab => {
-    console.log(currentTab)
     switch (currentTab) {
       case 'Users':
         return 'User'
