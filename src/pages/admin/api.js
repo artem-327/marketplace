@@ -16,7 +16,7 @@ export async function postNewCasProduct(value) {
 }
 
 export async function updateCasProduct(id, value) {
-  const {data} = await api.put(`/prodex/api/cas-products${id}`, value)
+  const {data} = await api.put(`/prodex/api/cas-products/${id}`, value)
   return data
 }
 

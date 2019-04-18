@@ -11,7 +11,7 @@ import UnitOfPackagingTable from './UnitOfPackagingTable/UnitOfPackagingTable'
 import AddNewUnitOfMeasurePopup from './UnitOfMeasureTable/AddNewUnitOfMeasurePopup'
 import AddNewUnitOfPackagingPopup from './UnitOfPackagingTable/AddNewUnitOfPackagingPopup'
 import AddNewPopup1Parameter from './DataTable/AddNewPopup1Parameter'
-import AddNewPopupCasProducts from './CasProductsTable/AddNewPopupCasProducts'
+import AddEditCasProductsPopup from './CasProductsTable/AddEditCasProductsPopup'
 
 import EditUnitOfMeasurePopup from './UnitOfMeasureTable/EditUnitOfMeasurePopup'
 import EditUnitOfPackagingPopup from './UnitOfPackagingTable/EditUnitOfPackagingPopup'
@@ -39,6 +39,7 @@ const editForms = {
   'Grades': <EditPopup1Parameter />,
   'Forms': <EditPopup1Parameter />,
   'Conditions': <EditPopup1Parameter />,
+  'CAS Products': <AddEditCasProductsPopup />,
   'Companies': <CompaniesForm />
 }
 
@@ -49,7 +50,7 @@ const addForms = {
   'Grades': <AddNewPopup1Parameter />,
   'Forms': <AddNewPopup1Parameter />,
   'Conditions': <AddNewPopup1Parameter />,
-  'CAS Products': <AddNewPopupCasProducts />,
+  'CAS Products': <AddEditCasProductsPopup />,
   'Companies': <CompaniesForm />
 }
 
