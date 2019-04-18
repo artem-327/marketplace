@@ -17,22 +17,6 @@ function* getUsersDataWorker() {
   }
 }
 
-function* openRolesPopup({ payload }) {
-  try {
-    yield put({ type: AT.OPEN_POPUP, payload })
-  } catch (e) {
-    yield console.log('error:', e)
-  }
-}
-
-function* closeRolesPopup() {
-  try {
-    yield put({ type: AT.CLOSE_POPUP })
-  } catch (e) {
-    yield console.log('error:', e)
-  }
-}
-
 function* getWarehousesDataWorker() {
   try {
     const warehouses = yield call(api.getWarehouses)
@@ -56,7 +40,19 @@ function* getWarehousesDataWorker() {
 function* getBranchesDataWorker() {
   try {
     const branches = yield call(api.getBranches)
-    yield put({ type: AT.GET_BRANCHES_DATA_SUCCESS, payload: branches })
+    const country = yield call(api.getCountry)
+
+    const newCountryFormat = country.map(country => {
+      return {
+        text: country.name,
+        value: country.id
+      }
+    })
+
+    yield put({
+      type: AT.GET_BRANCHES_DATA_SUCCESS,
+      payload: { branches, newCountryFormat }
+    })
   } catch (e) {
     yield console.log('error:', e)
   }
@@ -152,7 +148,11 @@ function* postNewWarehouseWorker({ payload }) {
       name: payload.name
     }
     yield call(api.postNewWarehouse, dataBody)
-    yield put({ type: AT.GET_WAREHOUSES_DATA })
+    if (payload.tab) {
+      yield put({ type: AT.GET_BRANCHES_DATA })
+    } else {
+      yield put({ type: AT.GET_WAREHOUSES_DATA })
+    }
   } catch (e) {
     yield console.log('error:', e)
   } finally {
@@ -247,11 +247,26 @@ function* putUserWorker({ payload, id }) {
       preferredCurrency: payload.preferredCurrency
     }
 
-    console.log('updateUser', updateUser)
     yield call(api.patchUser, id, updateUser)
     yield put({ type: AT.GET_USERS_DATA })
   } catch (e) {
     console.log('error', e)
+  } finally {
+    yield put(closePopup({ payload: null }))
+  }
+}
+
+function* putNewUserRolesWorker({ payload, id }) {
+  try {
+    // const updateUser = {
+    //   roles: payload
+    // }
+    // console.log('payload', payload)
+    // const updateUser = [2, 1]
+    yield call(api.patchUserRole, id, payload)
+    yield put({ type: AT.GET_USERS_DATA })
+  } catch (e) {
+    yield console.log('error:', e)
   } finally {
     yield put(closePopup({ payload: null }))
   }
@@ -274,7 +289,11 @@ function* putWarehouseEditPopup({ payload, id }) {
       name: payload.name
     }
     yield call(api.putWarehouse, id, dataBody)
-    yield put({ type: AT.GET_WAREHOUSES_DATA })
+    if (payload.tab) {
+      yield put({ type: AT.GET_BRANCHES_DATA })
+    } else {
+      yield put({ type: AT.GET_WAREHOUSES_DATA })
+    }
   } catch (e) {
     yield console.log('error:', e)
   } finally {
@@ -290,7 +309,6 @@ function* putProductEditPopup({ payload }) {
       casProduct: payload.casProduct,
       packagingSize: payload.packagingSize,
       packagingType: payload.packageID,
-      packagingUnit: 0,
       productCode: payload.productNumber,
       productName: payload.productName,
       packagingUnit: payload.unitID,
@@ -335,8 +353,8 @@ function* deleteConfirmPopup({}) {
         break
       case 'Branches':
         yield call(api.deleteWarehouse, deleteRowByid)
-        toast = { message: 'Warehouse delete success', isSuccess: true }
-        yield put({ type: AT.GET_WAREHOUSES_DATA })
+        toast = { message: 'Branch delete success', isSuccess: true }
+        yield put({ type: AT.GET_BRANCHES_DATA })
         break
       case 'Warehouses':
         yield call(api.deleteWarehouse, deleteRowByid)
@@ -380,6 +398,7 @@ export default function* settingsSaga() {
 
   yield takeEvery(AT.HANDLE_SUBMIT_USER_EDIT_POPUP, putUserWorker)
 
+  yield takeEvery(AT.PUT_NEW_USER_ROLES_REQUEST, putNewUserRolesWorker)
   yield takeEvery(AT.PUT_WAREHOUSE_EDIT_POPUP, putWarehouseEditPopup)
   yield takeEvery(AT.PUT_PRODUCT_EDIT_POPUP, putProductEditPopup)
 
@@ -387,6 +406,6 @@ export default function* settingsSaga() {
   yield takeEvery(AT.DELETE_BANK_ACCOUNT, deleteBankAccountWorker)
   yield takeEvery(AT.DELETE_CONFIRM_POPUP, deleteConfirmPopup)
 
-  yield takeEvery(AT.OPEN_ROLES_POPUP, openRolesPopup)
-  yield takeEvery(AT.CLOSE_ROLES_POPUP, closeRolesPopup)
+  // yield takeEvery(AT.OPEN_ROLES_POPUP, openRolesPopup)
+  // yield takeEvery(AT.CLOSE_ROLES_POPUP, closeRolesPopup)
 }

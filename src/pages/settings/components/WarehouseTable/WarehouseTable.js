@@ -4,6 +4,7 @@ import ProdexGrid from '~/components/table'
 import { Confirm } from 'semantic-ui-react'
 import {
   getWarehousesDataRequest,
+  getBranchesDataRequest,
   openPopup,
   closeConfirmPopup,
   deleteConfirmation,
@@ -18,23 +19,51 @@ class WarehouseTable extends Component {
       { name: 'contactName', title: 'Contact Name' },
       { name: 'phone', title: 'Phone' },
       { name: 'email', title: 'E-mail' }
-    ]
+    ],
+    tab: ''
   }
 
   componentDidMount() {
-    this.props.getWarehousesDataRequest()
+    this.handlerLoadPage()
   }
 
-  handlerChangeRows(rows) {
-    if (this.props.currentTab === 'Branches') {
-      return rows.filter(item => item.warehouse === false)
+  handlerLoadPage() {
+    const {
+      currentTab,
+      getWarehousesDataRequest,
+      getBranchesDataRequest
+    } = this.props
+
+    if (currentTab === 'Warehouses') {
+      getWarehousesDataRequest()
+      this.setState({
+        tab: 'Warehouses'
+      })
     }
-    return rows
+    if (currentTab === 'Branches') {
+      getBranchesDataRequest()
+      this.setState({
+        tab: 'Branches'
+      })
+    }
+  }
+
+  handlerChangeRows() {
+    const { currentTab, rowsWarehouses, rowsBranches } = this.props
+    if (currentTab === 'Warehouses') {
+      return rowsWarehouses
+    }
+    if (currentTab === 'Branches') {
+      return rowsBranches.filter(branch => branch.warehouse == false)
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.state.tab != nextProps.currentTab ? this.handlerLoadPage() : null
   }
 
   render() {
     const {
-      rows,
       filterValue,
       loading,
       openPopup,
@@ -59,7 +88,7 @@ class WarehouseTable extends Component {
           filterValue={filterValue}
           columns={columns}
           loading={loading}
-          rows={this.handlerChangeRows(rows)}
+          rows={this.handlerChangeRows()}
           style={{ marginTop: '5px' }}
           rowActions={[
             { text: 'Edit', callback: row => openPopup(row) },
@@ -73,6 +102,7 @@ class WarehouseTable extends Component {
 
 const mapDispatchToProps = {
   getWarehousesDataRequest,
+  getBranchesDataRequest,
   openPopup,
   closeConfirmPopup,
   deleteConfirmation,
@@ -81,7 +111,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-    rows: state.settings.warehousesRows,
+    rowsWarehouses: state.settings.warehousesRows,
+    rowsBranches: state.settings.branchesRows,
     editPopupBoolean: state.settings.editPopupBoolean,
     addNewWarehousePopup: state.settings.addNewWarehousePopup,
     filterValue: state.settings.filterValue,

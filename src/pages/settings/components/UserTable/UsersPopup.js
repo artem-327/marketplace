@@ -1,15 +1,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { Modal, FormGroup } from 'semantic-ui-react'
+import { Modal, FormGroup, Item } from 'semantic-ui-react'
 
 import {
   closePopup,
   closeRolesPopup,
   handlerSubmitUserEditPopup,
-  postNewUserRequest
+  postNewUserRequest,
+  putNewUserRoleRequest
 } from '../../actions'
-import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 const formValidation = Yup.object().shape({
@@ -26,7 +27,13 @@ const formValidation = Yup.object().shape({
 
 class UsersPopup extends React.Component {
   submitHandler = (values, actions) => {
-    console.log('values', values)
+    if (this.props.userEditRoles) {
+      this.props.putNewUserRoleRequest(
+        this.addNewRole(values),
+        this.props.popupValues.id
+      )
+      return
+    }
     if (this.props.popupValues) {
       this.props.handlerSubmitUserEditPopup(values, this.props.popupValues.id)
     } else {
@@ -35,13 +42,23 @@ class UsersPopup extends React.Component {
     actions.setSubmitting(false)
   }
 
+  addNewRole(values) {
+    const newRoles = []
+    for (let key in values) {
+      const id = Number(key.split('check-box-id_')[1])
+      id && newRoles.push(id)
+    }
+    return newRoles
+  }
+
   render() {
     const {
       closePopup,
       popupValues,
       branchesAll,
       userEditRoles,
-      closeRolesPopup
+      closeRolesPopup,
+      roles
     } = this.props
 
     const [firstName, lastName] =
@@ -62,12 +79,13 @@ class UsersPopup extends React.Component {
       homeBranchId,
       preferredCurrency
     }
-    // console.log('branchesAll', initialFormValues)
     const title = popupValues ? 'Edit' : 'Add'
 
     return (
-      <Modal open centered={false}>
-        <Modal.Header>{`${title} `} User</Modal.Header>
+      <Modal open centered={false} size={userEditRoles ? 'mini' : null}>
+        <Modal.Header>
+          {title + (userEditRoles ? ' Role' : ' User')}
+        </Modal.Header>
         <Modal.Content>
           <Form
             initialValues={initialFormValues}
@@ -76,7 +94,14 @@ class UsersPopup extends React.Component {
             onSubmit={this.submitHandler}
           >
             {userEditRoles ? (
-              <Form.Checkbox label="I agree to the Terms and Conditions" />
+              roles.map((role, i) => (
+                <FormGroup key={i}>
+                  <Checkbox
+                    label={role.name}
+                    name={`check-box-id_${role.id}`}
+                  />
+                </FormGroup>
+              ))
             ) : (
               <div>
                 <FormGroup widths="equal">
@@ -113,12 +138,12 @@ class UsersPopup extends React.Component {
 
 const mapDispatchToProps = {
   postNewUserRequest,
+  putNewUserRoleRequest,
   closePopup,
   closeRolesPopup,
   handlerSubmitUserEditPopup
 }
 
-// const mapStateToProps = ({ settings: { popupValues } }) => ({ popupValues })
 const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues,
