@@ -93,8 +93,6 @@ export function handleFiltersValue(props, value) {
 	}
 }
 
-
-
 export function getCasProductByFilter(value) {
 	return {
 		type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
@@ -127,6 +125,13 @@ export function getUnNumbersDataRequest() {
 	return {
 		type: AT.ADMIN_GET_UN_NUMBERS,
 		payload: api.getUnNumbers()
+	}
+}
+
+export function getUnNumbersByString(value) {
+	return {
+		type: AT.ADMIN_GET_UN_NUMBERS_BY_STRING,
+		payload: api.getUnNumbersByString(value)
 	}
 }
 

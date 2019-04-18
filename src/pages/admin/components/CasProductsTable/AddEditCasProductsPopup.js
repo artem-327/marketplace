@@ -151,6 +151,7 @@ class AddEditCasProductsPopup extends React.Component {
                       selection: true,
                       search: true,
                       placeholder: 'Choose an option',
+                      clearable: true
                     }}
                   />
                 </FormGroup>

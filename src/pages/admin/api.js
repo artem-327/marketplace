@@ -30,6 +30,11 @@ export async function getUnNumbers() {
   return data
 }
 
+export async function getUnNumbersByString(value) {   // ! !
+  const {data} = await api.post("/prodex/api/un-numbers/filtered", value)
+  return data
+}
+
 export async function getMeasureTypes() {
   const {data} = await api.get("/prodex/api/measure-types")
   return data
