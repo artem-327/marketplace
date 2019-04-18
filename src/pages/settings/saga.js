@@ -17,21 +17,21 @@ function* getUsersDataWorker() {
   }
 }
 
-function* openRolesPopup({ payload }) {
-  try {
-    yield put({ type: AT.OPEN_POPUP, payload })
-  } catch (e) {
-    yield console.log('error:', e)
-  }
-}
+// function* openRolesPopup({ payload }) {
+//   try {
+//     yield put({ type: AT.OPEN_POPUP, payload })
+//   } catch (e) {
+//     yield console.log('error:', e)
+//   }
+// }
 
-function* closeRolesPopup() {
-  try {
-    yield put({ type: AT.CLOSE_POPUP })
-  } catch (e) {
-    yield console.log('error:', e)
-  }
-}
+// function* closeRolesPopup() {
+//   try {
+//     yield put({ type: AT.CLOSE_POPUP })
+//   } catch (e) {
+//     yield console.log('error:', e)
+//   }
+// }
 
 function* getWarehousesDataWorker() {
   try {
@@ -263,11 +263,26 @@ function* putUserWorker({ payload, id }) {
       preferredCurrency: payload.preferredCurrency
     }
 
-    console.log('updateUser', updateUser)
     yield call(api.patchUser, id, updateUser)
     yield put({ type: AT.GET_USERS_DATA })
   } catch (e) {
     console.log('error', e)
+  } finally {
+    yield put(closePopup({ payload: null }))
+  }
+}
+
+function* putNewUserRolesWorker({ payload, id }) {
+  try {
+    // const updateUser = {
+    //   roles: payload
+    // }
+    // console.log('payload', payload)
+    // const updateUser = [2, 1]
+    yield call(api.patchUserRole, id, payload)
+    yield put({ type: AT.GET_USERS_DATA })
+  } catch (e) {
+    yield console.log('error:', e)
   } finally {
     yield put(closePopup({ payload: null }))
   }
@@ -399,6 +414,7 @@ export default function* settingsSaga() {
 
   yield takeEvery(AT.HANDLE_SUBMIT_USER_EDIT_POPUP, putUserWorker)
 
+  yield takeEvery(AT.PUT_NEW_USER_ROLES_REQUEST, putNewUserRolesWorker)
   yield takeEvery(AT.PUT_WAREHOUSE_EDIT_POPUP, putWarehouseEditPopup)
   yield takeEvery(AT.PUT_PRODUCT_EDIT_POPUP, putProductEditPopup)
 
@@ -406,6 +422,6 @@ export default function* settingsSaga() {
   yield takeEvery(AT.DELETE_BANK_ACCOUNT, deleteBankAccountWorker)
   yield takeEvery(AT.DELETE_CONFIRM_POPUP, deleteConfirmPopup)
 
-  yield takeEvery(AT.OPEN_ROLES_POPUP, openRolesPopup)
-  yield takeEvery(AT.CLOSE_ROLES_POPUP, closeRolesPopup)
+  // yield takeEvery(AT.OPEN_ROLES_POPUP, openRolesPopup)
+  // yield takeEvery(AT.CLOSE_ROLES_POPUP, closeRolesPopup)
 }
