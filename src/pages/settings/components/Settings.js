@@ -4,20 +4,18 @@ import { connect } from 'react-redux'
 import Tabs from './Tabs'
 import UsersTable from './UserTable/UsersTable'
 import WarehouseTable from './WarehouseTable/WarehouseTable'
-// import BranchTable from './BranchTable/BranchTable'
 import BankAccountsTable from './BankAccountsTable/BankAccountsTable'
 import CreditCardsTable from './CreditCardsTable/CreditCardsTable'
 import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
 import EditWarehousePopup from './WarehouseTable/WarehousePopup'
 import EditUsersPopup from './UserTable/UsersPopup'
 import EditProductPopup from './ProductCatalogTable/ProductPopup'
-// import AddNewBranchPopup from './BranchTable/AddNewBranchPopup'
-// import AddNewCreditCardPopup from './CreditCardsTable/AddNewCreditCardPopup'
-import AddNewBankAccountPopup from './BankAccountsTable/AddNewBankAccountPopup'
+import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
+import BankAccountsPopup from './BankAccountsTable/BankAccountsPopup'
 import TablesHandlers from './TablesHandlers'
 import Toast from '../../../../components/toast'
 
-import { Container, Grid, Divider } from 'semantic-ui-react'
+import { Container, Grid } from 'semantic-ui-react'
 
 const tables = {
   Users: <UsersTable />,
@@ -32,27 +30,18 @@ const popupForm = {
   Users: <EditUsersPopup />,
   Branches: <EditWarehousePopup />,
   Warehouses: <EditWarehousePopup />,
-  'Product catalog': <EditProductPopup />
-}
-
-const addForms = {
-  'Bank accounts': <AddNewBankAccountPopup />
+  'Product catalog': <EditProductPopup />,
+  'Bank accounts': <BankAccountsPopup />,
+  'Credit cards': <CreditCardsPopup />
 }
 
 class Settings extends Component {
   renderContent = () => {
-    const {
-      currentEditForm,
-      currentAddForm,
-      currentTab,
-      isOpenPopup
-    } = this.props
+    const { currentTab, isOpenPopup } = this.props
 
     return (
       <>
         {isOpenPopup && popupForm[currentTab]}
-        {currentAddForm && addForms[currentTab]}
-        {currentEditForm && editForms[currentTab]}
         {tables[currentTab] || <p>This page is still under construction</p>}
       </>
     )

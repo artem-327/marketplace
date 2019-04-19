@@ -294,8 +294,8 @@ export default function reducer(state = initialState, action) {
           cvc: card.cvcCheck,
           expirationMonth: card.expMonth,
           expirationYear: card.expYear,
-          last4: `**** **** **** ${card.last4}`
-          // cardNumber what does it mean
+          last4: `**** **** **** ${card.last4}`,
+          expMonthYear: card.expMonth + ' / ' + card.expYear
         }
       })
 
@@ -311,13 +311,13 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_BANK_ACCOUNTS_DATA_SUCCESS: {
-      const rows = action.payload.map(account => {
+      const rows = action.payload.bankAccountsData.map(account => {
         return {
           id: account.id,
           accountHolderName: account.accountHolderName,
           accountHolderType: account.accountHolderType,
           accountNumber: `**** **** **** ${account.last4}`,
-          country: account.country,
+          // country: account.country,
           currency: account.currency,
           routingNumber: account.routingNumber
           // accountNumber - what does it mean
@@ -327,7 +327,8 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        bankAccountsRows: rows
+        bankAccountsRows: rows,
+        country: action.payload.newCountryFormat
       }
     }
 

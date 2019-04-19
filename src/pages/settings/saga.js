@@ -60,7 +60,34 @@ function* getBranchesDataWorker() {
 
 function* getCreditCardsDataWorker() {
   try {
-    const creditCardsData = yield call(api.getCreditCardsData)
+    // const creditCardsData = yield call(api.getCreditCardsData)
+    const creditCardsData = [
+      {
+        id: '3',
+        cardNumber: '15',
+        last4: '789',
+        expMonth: 8,
+        expYear: 21,
+        cvcCheck: '123'
+      },
+      {
+        id: '2',
+        cardNumber: '75',
+        last4: '456',
+        expMonth: 5,
+        expYear: 19,
+        cvcCheck: '951'
+      },
+      {
+        id: '8',
+        cardNumber: '9849',
+        last4: '123',
+        expMonth: 5,
+        expYear: 21,
+        cvcCheck: '753'
+      }
+    ]
+
     yield put({
       type: AT.GET_CREDIT_CARDS_DATA_SUCCESS,
       payload: creditCardsData
@@ -72,10 +99,42 @@ function* getCreditCardsDataWorker() {
 
 function* getBankAccountsDataWorker() {
   try {
-    const bankAccountsData = yield call(api.getBankAccountsData)
+    // const bankAccountsData = yield call(api.getBankAccountsData)
+    const bankAccountsData = [
+      {
+        accountHolderName: 'Dima1',
+        accountHolderType: 'type1',
+        last4: '1598',
+        currency: 'USD1',
+        routingNumber: '123qw'
+      },
+      {
+        accountHolderName: 'Dima2',
+        accountHolderType: 'type2',
+        last4: '159812',
+        currency: 'USD2',
+        routingNumber: '123qwer'
+      },
+      {
+        accountHolderName: 'Dima3',
+        accountHolderType: 'type3',
+        last4: '159812365',
+        currency: 'USD3',
+        routingNumber: '123trew'
+      }
+    ]
+
+    const country = yield call(api.getCountry)
+    const newCountryFormat = country.map(country => {
+      return {
+        text: country.name,
+        value: country.id
+      }
+    })
+
     yield put({
       type: AT.GET_BANK_ACCOUNTS_DATA_SUCCESS,
-      payload: bankAccountsData
+      payload: { bankAccountsData, newCountryFormat }
     })
   } catch (e) {
     yield console.log('error:', e)

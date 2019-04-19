@@ -1,94 +1,9 @@
-// import React, { Component } from 'react'
-// import { connect } from 'react-redux'
-
-// import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid'
-// import {
-//   Grid,
-//   Table,
-// 	TableHeaderRow
-// } from '~/components/dx-grid-semantic-ui/plugins'
-
-// import { 	EditDeleteFormatterProvider } from './BankAccountsProviders'
-// import { getBankAccountsDataRequest } from '../../actions'
-
-// class BankAccountsTable extends Component {
-// 	state = {
-// 		columns: [
-// 			{ name: 'editDeleteBtn', title: ' ' },
-// 			{ name: 'accountHolderName', title: 'Account Holder Name'},
-// 			{ name: 'accountNumber', title: 'Account Number' },
-// 			{ name: 'currency', title: 'Currency' }
-// 		]
-// 	}
-
-// 	componentDidMount() {
-// 		this.props.getBankAccountsDataRequest()
-// 	}
-
-// 	render() {
-// 		const {
-// 			rows,
-// 			filterValue,
-// 			editDeleteColumns,
-// 			editPopupBoolean,
-// 			addNewWarehousePopup
-// 		} = this.props
-
-// 		const { columns } = this.state
-
-// 		const GridRoot = props => <Grid.Root {...props} className={ editPopupBoolean || addNewWarehousePopup ? 'hide' : 'col-xs-10 main-table' } />
-// 		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
-// 		const TableCells = props => <Table.Cell {...props} className={ 'columns-rows-cell' } />
-
-// 		return (
-// 			<Grid
-// 				rootComponent={ GridRoot }
-// 				rows={ rows }
-// 				columns={ columns }
-// 			>
-// 				<SearchState
-// 					value={ filterValue }
-// 				/>
-// 				<IntegratedFiltering />
-// 				<Table
-// 					cellComponent={ TableCells }
-// 				/>
-// 				<TableHeaderRow
-// 					cellComponent={ HeaderCells }
-// 				/>
-// 				<EditDeleteFormatterProvider
-// 					for={ editDeleteColumns }
-// 					rows={ rows }
-// 				/>
-// 			</Grid>
-// 		)
-// 	}
-// }
-
-// const mapDispatchToProps = {
-// 	getBankAccountsDataRequest
-// }
-
-// const mapStateToProps = state => {
-//   return {
-// 		rows: state.settings.bankAccountsRows,
-// 		editDeleteColumns: state.settings.columnsForFormatter.editDeleteColumns,
-// 		editPopupBoolean: state.settings.editPopupBoolean,
-// 		addNewWarehousePopup: state.settings.addNewWarehousePopup,
-// 		filterValue: state.settings.filterValue
-//   }
-// }
-
-// export default connect(mapStateToProps, mapDispatchToProps)(BankAccountsTable)
-
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
 import { Confirm } from 'semantic-ui-react'
 import {
   openPopup,
-  //   getProductsCatalogRequest,
-  //   getBankAccountsDataRequest,
   getBankAccountsDataRequest,
   handleOpenConfirmPopup,
   closePopup,
@@ -101,11 +16,6 @@ class ProductCatalogTable extends Component {
       { name: 'accountNumber', title: 'Account Number' },
       { name: 'accountHolderName', title: 'Account Name' },
       { name: 'currency', title: 'Currency' }
-
-      //   { name: 'editDeleteBtn', title: ' ' },
-      //   { name: 'accountNumber', title: 'Account Number' },
-      //   { name: 'accountHolderName', title: 'Account Holder Name' },
-      //   { name: 'currency', title: 'Currency' }
     ]
   }
 
@@ -130,7 +40,7 @@ class ProductCatalogTable extends Component {
       <React.Fragment>
         <Confirm
           size="tiny"
-          content="Do you really want to delete this product?"
+          content="Do you really want to delete this Bank Account?"
           open={confirmMessage}
           onCancel={closePopup}
           onConfirm={deleteConfirmation}
@@ -154,9 +64,7 @@ class ProductCatalogTable extends Component {
 
 const mapDispatchToProps = {
   openPopup,
-  //   getProductsCatalogRequest,
   getBankAccountsDataRequest,
-  //   getCreditCardsDataRequest,
   handleOpenConfirmPopup,
   closePopup,
   deleteConfirmation

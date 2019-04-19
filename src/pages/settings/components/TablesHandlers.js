@@ -73,6 +73,12 @@ class TablesHandlers extends Component {
       case 'Product catalog':
         return 'Product'
         break
+      case 'Credit cards':
+        return 'Credit card'
+        break
+      case 'Bank accounts':
+        return 'Bank account'
+        break
       default:
         null
     }
