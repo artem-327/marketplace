@@ -1,93 +1,9 @@
-// import React, { Component } from 'react'
-// import { connect } from 'react-redux'
-
-// import { SearchState, IntegratedFiltering } from '@devexpress/dx-react-grid'
-// import {
-//   Grid,
-//   Table,
-// 	TableHeaderRow
-// } from '~/components/dx-grid-semantic-ui/plugins'
-
-// import { 	EditDeleteFormatterProvider } from './CreditCardsTableProviders'
-// import { getCreditCardsDataRequest } from '../../actions'
-
-// class CreditCardsTable extends Component {
-// 	state = {
-// 		columns: [
-// 			{ name: 'editDeleteBtn', title: ' ' },
-// 			{ name: 'last4', title: 'last4'},
-// 			{ name: 'expirationMonthYear', title: 'ExpirationMonth / ExpirationYear' }
-// 		]
-// 	}
-
-// 	componentDidMount() {
-// 		this.props.getCreditCardsDataRequest()
-// 	}
-
-// 	render() {
-// 		const {
-// 			rows,
-// 			filterValue,
-// 			editDeleteColumns,
-// 			editPopupBoolean,
-// 			addNewWarehousePopup
-// 		} = this.props
-
-// 		const { columns } = this.state
-
-// 		const GridRoot = props => <Grid.Root {...props} className={ editPopupBoolean || addNewWarehousePopup ? 'hide' : 'col-xs-10 main-table' } />
-// 		const HeaderCells = props => <TableHeaderRow.Cell {...props} className={ 'columns-title-cell' } />
-// 		const TableCells = props => <Table.Cell {...props} className={ 'columns-rows-cell' } />
-
-// 		return (
-// 			<Grid
-// 				rootComponent={ GridRoot }
-// 				rows={ rows }
-// 				columns={ columns }
-// 			>
-// 				<SearchState
-// 					value={ filterValue }
-// 				/>
-// 				<IntegratedFiltering />
-// 				<Table
-// 					cellComponent={ TableCells }
-// 				/>
-// 				<TableHeaderRow
-// 					cellComponent={ HeaderCells }
-// 				/>
-// 				<EditDeleteFormatterProvider
-// 					for={ editDeleteColumns }
-// 					rows={ rows }
-// 				/>
-// 			</Grid>
-// 		)
-// 	}
-// }
-
-// const mapDispatchToProps = {
-// 	getCreditCardsDataRequest
-// }
-
-// const mapStateToProps = state => {
-//   return {
-// 		rows: state.settings.creditCardsRows,
-// 		editPopupBoolean: state.settings.editPopupBoolean,
-// 		addNewWarehousePopup: state.settings.addNewWarehousePopup,
-// 		filterValue: state.settings.filterValue
-//   }
-// }
-
-// export default connect(mapStateToProps, mapDispatchToProps)(CreditCardsTable)
-
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
 import { Confirm } from 'semantic-ui-react'
 import {
-  openPopup,
-  //   getProductsCatalogRequest,
-  //   getBankAccountsDataRequest,
-  getBankAccountsDataRequest,
+  getCreditCardsDataRequest,
   handleOpenConfirmPopup,
   closePopup,
   deleteConfirmation
@@ -96,19 +12,13 @@ import {
 class ProductCatalogTable extends Component {
   state = {
     columns: [
-      { name: 'accountNumber', title: 'Account Number' },
-      { name: 'accountHolderName', title: 'Account Name' },
-      { name: 'currency', title: 'Currency' }
-
-      //   { name: 'editDeleteBtn', title: ' ' },
-      //   { name: 'accountNumber', title: 'Account Number' },
-      //   { name: 'accountHolderName', title: 'Account Holder Name' },
-      //   { name: 'currency', title: 'Currency' }
+      { name: 'cardNumber', title: 'Card Number' },
+      { name: 'expMonthYear', title: 'expMonth / expYear' }
     ]
   }
 
   componentDidMount() {
-    this.props.getBankAccountsDataRequest()
+    this.props.getCreditCardsDataRequest()
   }
 
   render() {
@@ -116,7 +26,6 @@ class ProductCatalogTable extends Component {
       rows,
       filterValue,
       confirmMessage,
-      openPopup,
       handleOpenConfirmPopup,
       closePopup,
       deleteConfirmation
@@ -128,7 +37,7 @@ class ProductCatalogTable extends Component {
       <React.Fragment>
         <Confirm
           size="tiny"
-          content="Do you really want to delete this product?"
+          content="Do you really want to delete this Credit Card?"
           open={confirmMessage}
           onCancel={closePopup}
           onConfirm={deleteConfirmation}
@@ -138,7 +47,6 @@ class ProductCatalogTable extends Component {
           columns={columns}
           filterValue={filterValue}
           rowActions={[
-            { text: 'Edit', callback: row => openPopup(row) },
             {
               text: 'Delete',
               callback: row => handleOpenConfirmPopup(row.id)
@@ -151,10 +59,7 @@ class ProductCatalogTable extends Component {
 }
 
 const mapDispatchToProps = {
-  openPopup,
-  //   getProductsCatalogRequest,
-  getBankAccountsDataRequest,
-  //   getCreditCardsDataRequest,
+  getCreditCardsDataRequest,
   handleOpenConfirmPopup,
   closePopup,
   deleteConfirmation
@@ -162,7 +67,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-    rows: state.settings.bankAccountsRows,
+    rows: state.settings.creditCardsRows,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage
   }
