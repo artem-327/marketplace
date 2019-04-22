@@ -218,19 +218,15 @@ export function postNewBankAccountRequest(bankAccountData) {
     payload: bankAccountData
   }
 }
-// export function deleteUser(userId) {
-//   return {
-//     type: AT.DELETE_USER,
-//     payload: userId
-//   }
-// }
 
-// export function deleteWarehouse(warehouseId) {
-//   return {
-//     type: AT.DELETE_WAREHOUSE,
-//     payload: warehouseId
-//   }
-// }
+export function putBankAccountRequest(account, id) {
+  return {
+    type: AT.PUT_BANK_ACCOUNT_EDIT_POPUP,
+    payload: account,
+    id
+  }
+}
+
 export function deleteCreditCard(cardId) {
   return {
     type: AT.DELETE_CREDIT_CARD,

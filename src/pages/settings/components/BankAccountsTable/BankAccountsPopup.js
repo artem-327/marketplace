@@ -5,34 +5,31 @@ import { Modal, FormGroup } from 'semantic-ui-react'
 
 import {
   closePopup,
-  handlerSubmitWarehouseEditPopup,
-  postNewWarehouseRequest
+  putBankAccountRequest,
+  postNewBankAccountRequest
 } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 const formValidation = Yup.object().shape({
-  accountHolderName: Yup.string()
-    .min(3, 'Too short')
-    .required('Required'),
-  accountHolderType: Yup.string()
-    .min(3, 'Too short')
-    .required('Required'),
-  account: Yup.string()
-    .min(3, 'Too short')
-    .required('Required'),
-  currency: Yup.string()
-    .min(3, 'Too short')
-    .required('Required'),
-  routingNumber: Yup.string()
-    .min(3, 'Too short')
-    .required('Required')
+  // accountHolderName: Yup.string()
+  //   .min(3, 'Too short')
+  //   .required('Required'),
+  // accountHolderType: Yup.string()
+  //   .min(3, 'Too short')
+  //   .required('Required'),
+  // account: Yup.string()
+  //   .min(3, 'Too short')
+  //   .required('Required'),
+  // routingNumber: Yup.string()
+  //   .min(3, 'Too short')
+  //   .required('Required')
 })
 
 class BankAccountsPopup extends React.Component {
   submitHandler = (values, actions) => {
     if (this.props.popupValues) {
-      this.props.handlerSubmitWarehouseEditPopup(
+      this.props.putBankAccountRequest(
         {
           ...values,
           tab: this.props.currentTab === 'Bank accounts' ? 'bank' : null
@@ -40,7 +37,7 @@ class BankAccountsPopup extends React.Component {
         this.props.popupValues.branchId
       )
     } else {
-      this.props.postNewWarehouseRequest({
+      this.props.postNewBankAccountRequest({
         ...values,
         tab: this.props.currentTab === 'Bank accounts' ? 'bank' : null
       })
@@ -55,7 +52,6 @@ class BankAccountsPopup extends React.Component {
       accountHolderName = '',
       accountHolderType = '',
       account = '',
-      currency = '',
       routingNumber = ''
     } = popupValues || {}
 
@@ -63,13 +59,18 @@ class BankAccountsPopup extends React.Component {
       accountHolderName,
       accountHolderType,
       account,
-      currency,
       routingNumber
     }
   }
 
   render() {
-    const { closePopup, popupValues, country, currentTab } = this.props
+    const {
+      closePopup,
+      popupValues,
+      country,
+      currency,
+      currentTab
+    } = this.props
     const title = popupValues ? 'Edit' : 'Add'
 
     return (
@@ -101,7 +102,7 @@ class BankAccountsPopup extends React.Component {
               <Dropdown label="Country" name="country" options={country} />
             </FormGroup>
             <FormGroup widths="equal">
-              <Input type="text" label="Currency" name="currency" />
+              <Dropdown label="Currency" name="currency" options={currency} />
               <Input type="text" label="Routing Number" name="routingNumber" />
             </FormGroup>
             <div style={{ textAlign: 'right' }}>
@@ -116,14 +117,15 @@ class BankAccountsPopup extends React.Component {
 }
 
 const mapDispatchToProps = {
-  postNewWarehouseRequest,
-  handlerSubmitWarehouseEditPopup,
+  postNewBankAccountRequest,
+  putBankAccountRequest,
   closePopup
 }
 const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues,
     country: state.settings.country,
+    currency: state.settings.currency,
     currentTab: state.settings.currentTab
   }
 }

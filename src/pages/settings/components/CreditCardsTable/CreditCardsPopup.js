@@ -6,68 +6,52 @@ import { Modal, FormGroup } from 'semantic-ui-react'
 import {
   closePopup,
   handlerSubmitWarehouseEditPopup,
-  postNewWarehouseRequest
+  postNewCreditCardRequest
 } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 const formValidation = Yup.object().shape({
-  accountHolderName: Yup.string()
-    .min(3, 'Too short')
-    .required('Required'),
-  accountHolderType: Yup.string()
-    .min(3, 'Too short')
-    .required('Required'),
-  account: Yup.string()
-    .min(3, 'Too short')
-    .required('Required'),
-  currency: Yup.string()
-    .min(3, 'Too short')
-    .required('Required'),
-  routingNumber: Yup.string()
-    .min(3, 'Too short')
+  cardNumber: Yup.string()
+    .min(16, 'Too short')
     .required('Required')
 })
 
 class CreditCardsPopup extends React.Component {
-  submitHandler = (values, actions) => {
-    if (this.props.popupValues) {
-      this.props.handlerSubmitWarehouseEditPopup(
-        {
-          ...values,
-          tab: this.props.currentTab === 'Bank accounts' ? 'bank' : null
-        },
-        this.props.popupValues.branchId
-      )
-    } else {
-      this.props.postNewWarehouseRequest({
-        ...values,
-        tab: this.props.currentTab === 'Bank accounts' ? 'bank' : null
-      })
-    }
-    actions.setSubmitting(false)
-  }
+  // submitHandler = (values, actions) => {
+  //   if (this.props.popupValues) {
+  //     this.props.handlerSubmitWarehouseEditPopup(
+  //       {
+  //         ...values,
+  //         tab: this.props.currentTab === 'Bank accounts' ? 'bank' : null
+  //       },
+  //       this.props.popupValues.branchId
+  //     )
+  //   } else {
+  //     this.props.postNewWarehouseRequest({
+  //       ...values,
+  //       tab: this.props.currentTab === 'Bank accounts' ? 'bank' : null
+  //     })
+  //   }
+  //   actions.setSubmitting(false)
+  // }
 
   getInitialFormValues = () => {
-    const { popupValues } = this.props
-
-    const {
-      cardNumber = '',
-      cvc = '',
-      expirationMonth = '',
-      expirationYear = ''
-    } = popupValues || {}
-
     return {
-      cardNumber,
-      cvc,
-      expirationMonth,
-      expirationYear
+      cardNumber: '',
+      cvc: '',
+      expirationMonth: '',
+      expirationYear: ''
     }
   }
 
   render() {
-    const { closePopup, popupValues, currentTab } = this.props
+    const {
+      closePopup,
+      popupValues,
+      currentTab,
+      postNewCreditCardRequest
+    } = this.props
     const title = popupValues ? 'Edit' : 'Add'
 
     return (
@@ -80,7 +64,7 @@ class CreditCardsPopup extends React.Component {
             initialValues={this.getInitialFormValues()}
             validationSchema={formValidation}
             onReset={closePopup}
-            onSubmit={this.submitHandler}
+            onSubmit={postNewCreditCardRequest}
           >
             <FormGroup widths="equal">
               <Input type="text" label="Card Number" name="cardNumber" />
@@ -110,7 +94,7 @@ class CreditCardsPopup extends React.Component {
 }
 
 const mapDispatchToProps = {
-  postNewWarehouseRequest,
+  postNewCreditCardRequest,
   handlerSubmitWarehouseEditPopup,
   closePopup
 }
