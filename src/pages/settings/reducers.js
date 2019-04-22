@@ -17,6 +17,7 @@ export const initialState = {
   productsPackagingType: null,
   productsUnitsType: [],
   country: [],
+  currency: [],
   tabsNames: [
     { name: 'Users', id: 1 },
     { name: 'Branches', id: 2 },
@@ -311,7 +312,12 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_BANK_ACCOUNTS_DATA_SUCCESS: {
-      const rows = action.payload.bankAccountsData.map(account => {
+      const {
+        bankAccountsData,
+        newCountryFormat,
+        newCurrencyFormat
+      } = action.payload
+      const rows = bankAccountsData.map(account => {
         return {
           id: account.id,
           accountHolderName: account.accountHolderName,
@@ -328,7 +334,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         bankAccountsRows: rows,
-        country: action.payload.newCountryFormat
+        country: newCountryFormat,
+        currency: newCurrencyFormat
       }
     }
 

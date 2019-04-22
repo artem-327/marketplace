@@ -26,6 +26,8 @@ export default {
       .then(response => response.data),
   getCountry: () =>
     api.get('/prodex/api/countries').then(response => response.data),
+  getCurrencies: () =>
+    api.get('/prodex/api/currencies').then(response => response.data),
 
   postNewUser: body => api.post('/prodex/api/users', body),
   postNewWarehouse: body => api.post('/prodex/api/branches/', body),
