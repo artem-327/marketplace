@@ -9,22 +9,6 @@ import {
   postNewBankAccountRequest
 } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
-import * as Yup from 'yup'
-
-const formValidation = Yup.object().shape({
-  // accountHolderName: Yup.string()
-  //   .min(3, 'Too short')
-  //   .required('Required'),
-  // accountHolderType: Yup.string()
-  //   .min(3, 'Too short')
-  //   .required('Required'),
-  // account: Yup.string()
-  //   .min(3, 'Too short')
-  //   .required('Required'),
-  // routingNumber: Yup.string()
-  //   .min(3, 'Too short')
-  //   .required('Required')
-})
 
 class BankAccountsPopup extends React.Component {
   submitHandler = (values, actions) => {
@@ -81,7 +65,6 @@ class BankAccountsPopup extends React.Component {
         <Modal.Content>
           <Form
             initialValues={this.getInitialFormValues()}
-            validationSchema={formValidation}
             onReset={closePopup}
             onSubmit={this.submitHandler}
           >
