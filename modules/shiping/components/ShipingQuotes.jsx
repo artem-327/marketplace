@@ -21,7 +21,7 @@ class ShipingQuotes extends Component {
     initShipingForm()
   }
 
-  getShippingQuotes(inputs) {
+  getShipingQuotes(inputs) {
     // if (checkToken(this.props)) return
     console.log(inputs)
     let params = {}
