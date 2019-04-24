@@ -165,7 +165,6 @@ export function getProductsCatalogRequest() {
 
 export function getBankAccountsDataRequest() {
   return {
-    // type: AT.GET_PRODUCTS_CATALOG_DATA
     type: AT.GET_BANK_ACCOUNTS_DATA
   }
 }
@@ -198,6 +197,14 @@ export function postNewCreditCardRequest(creditCardData) {
   }
 }
 
+export function putNewUserRoleRequest(roles, id) {
+  return {
+    type: AT.PUT_NEW_USER_ROLES_REQUEST,
+    payload: roles,
+    id
+  }
+}
+
 export function handleSubmitProductEddPopup(inputsValue, id) {
   return {
     type: AT.POST_NEW_PRODUCT_REQUEST,
@@ -211,19 +218,15 @@ export function postNewBankAccountRequest(bankAccountData) {
     payload: bankAccountData
   }
 }
-// export function deleteUser(userId) {
-//   return {
-//     type: AT.DELETE_USER,
-//     payload: userId
-//   }
-// }
 
-// export function deleteWarehouse(warehouseId) {
-//   return {
-//     type: AT.DELETE_WAREHOUSE,
-//     payload: warehouseId
-//   }
-// }
+export function putBankAccountRequest(account, id) {
+  return {
+    type: AT.PUT_BANK_ACCOUNT_EDIT_POPUP,
+    payload: account,
+    id
+  }
+}
+
 export function deleteCreditCard(cardId) {
   return {
     type: AT.DELETE_CREDIT_CARD,

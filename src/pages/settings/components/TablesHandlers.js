@@ -60,7 +60,6 @@ class TablesHandlers extends Component {
   }
 
   currentTabTitle = currentTab => {
-    console.log(currentTab)
     switch (currentTab) {
       case 'Users':
         return 'User'
@@ -73,6 +72,12 @@ class TablesHandlers extends Component {
         break
       case 'Product catalog':
         return 'Product'
+        break
+      case 'Credit cards':
+        return 'Credit card'
+        break
+      case 'Bank accounts':
+        return 'Bank account'
         break
       default:
         null

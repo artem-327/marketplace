@@ -149,6 +149,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_GET_UN_NUMBERS_BY_STRING_FULFILLED:
     case AT.ADMIN_GET_UN_NUMBERS_FULFILLED: {
       return {
         ...state,

@@ -16,7 +16,7 @@ export async function postNewCasProduct(value) {
 }
 
 export async function updateCasProduct(id, value) {
-  const {data} = await api.put(`/prodex/api/cas-products${id}`, value)
+  const {data} = await api.put(`/prodex/api/cas-products/${id}`, value)
   return data
 }
 
@@ -27,6 +27,11 @@ export async function deleteCasProduct(id) {
 
 export async function getUnNumbers() {
   const {data} = await api.get("/prodex/api/un-numbers")
+  return data
+}
+
+export async function getUnNumbersByString(value) {   // ! !
+  const {data} = await api.post("/prodex/api/un-numbers/filtered", value)
   return data
 }
 

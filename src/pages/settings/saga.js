@@ -17,22 +17,6 @@ function* getUsersDataWorker() {
   }
 }
 
-function* openRolesPopup({ payload }) {
-  try {
-    yield put({ type: AT.OPEN_POPUP, payload })
-  } catch (e) {
-    yield console.log('error:', e)
-  }
-}
-
-function* closeRolesPopup() {
-  try {
-    yield put({ type: AT.CLOSE_POPUP })
-  } catch (e) {
-    yield console.log('error:', e)
-  }
-}
-
 function* getWarehousesDataWorker() {
   try {
     const warehouses = yield call(api.getWarehouses)
@@ -56,7 +40,19 @@ function* getWarehousesDataWorker() {
 function* getBranchesDataWorker() {
   try {
     const branches = yield call(api.getBranches)
-    yield put({ type: AT.GET_BRANCHES_DATA_SUCCESS, payload: branches })
+    const country = yield call(api.getCountry)
+
+    const newCountryFormat = country.map(country => {
+      return {
+        text: country.name,
+        value: country.id
+      }
+    })
+
+    yield put({
+      type: AT.GET_BRANCHES_DATA_SUCCESS,
+      payload: { branches, newCountryFormat }
+    })
   } catch (e) {
     yield console.log('error:', e)
   }
@@ -64,7 +60,34 @@ function* getBranchesDataWorker() {
 
 function* getCreditCardsDataWorker() {
   try {
-    const creditCardsData = yield call(api.getCreditCardsData)
+    // const creditCardsData = yield call(api.getCreditCardsData)
+    const creditCardsData = [
+      {
+        id: '3',
+        cardNumber: '15',
+        last4: '7891',
+        expMonth: 8,
+        expYear: 21,
+        cvcCheck: '123'
+      },
+      {
+        id: '2',
+        cardNumber: '75',
+        last4: '4569',
+        expMonth: 5,
+        expYear: 19,
+        cvcCheck: '951'
+      },
+      {
+        id: '8',
+        cardNumber: '9849',
+        last4: '123',
+        expMonth: 5,
+        expYear: 21,
+        cvcCheck: '753'
+      }
+    ]
+
     yield put({
       type: AT.GET_CREDIT_CARDS_DATA_SUCCESS,
       payload: creditCardsData
@@ -76,10 +99,50 @@ function* getCreditCardsDataWorker() {
 
 function* getBankAccountsDataWorker() {
   try {
-    const bankAccountsData = yield call(api.getBankAccountsData)
+    // const bankAccountsData = yield call(api.getBankAccountsData)
+    const bankAccountsData = [
+      {
+        accountHolderName: 'Dima1',
+        accountHolderType: 'type1',
+        last4: '1234',
+        currency: 'USD1',
+        routingNumber: '123qw'
+      },
+      {
+        accountHolderName: 'Dima2',
+        accountHolderType: 'type2',
+        last4: '1462',
+        currency: 'USD2',
+        routingNumber: '123qwer'
+      },
+      {
+        accountHolderName: 'Dima3',
+        accountHolderType: 'type3',
+        last4: '1598',
+        currency: 'USD3',
+        routingNumber: '123trew'
+      }
+    ]
+
+    const country = yield call(api.getCountry)
+    const currency = yield call(api.getCurrencies)
+
+    const newCountryFormat = country.map(country => {
+      return {
+        text: country.name,
+        value: country.id
+      }
+    })
+    const newCurrencyFormat = currency.map(currency => {
+      return {
+        text: currency.code,
+        value: currency.id
+      }
+    })
+
     yield put({
       type: AT.GET_BANK_ACCOUNTS_DATA_SUCCESS,
-      payload: bankAccountsData
+      payload: { bankAccountsData, newCountryFormat, newCurrencyFormat }
     })
   } catch (e) {
     yield console.log('error:', e)
@@ -152,7 +215,11 @@ function* postNewWarehouseWorker({ payload }) {
       name: payload.name
     }
     yield call(api.postNewWarehouse, dataBody)
-    yield put({ type: AT.GET_WAREHOUSES_DATA })
+    if (payload.tab) {
+      yield put({ type: AT.GET_BRANCHES_DATA })
+    } else {
+      yield put({ type: AT.GET_WAREHOUSES_DATA })
+    }
   } catch (e) {
     yield console.log('error:', e)
   } finally {
@@ -161,6 +228,7 @@ function* postNewWarehouseWorker({ payload }) {
 }
 
 function* postNewCreditCardWorker({ payload }) {
+  console.log('payload', payload)
   try {
     const dataBody = {
       cardNumber: payload.cardNumber,
@@ -179,7 +247,7 @@ function* postNewBankAccountWorker({ payload }) {
     const dataBody = {
       accountHolderName: payload.accountHolderName,
       accountHolderType: payload.accountHolderType,
-      accountNumber: payload.accountNumber,
+      accountNumber: payload.account,
       country: payload.country,
       currency: payload.currency,
       routingNumber: payload.routingNumber
@@ -187,6 +255,8 @@ function* postNewBankAccountWorker({ payload }) {
     yield call(api.postNewBankAccount, dataBody)
   } catch (e) {
     yield console.log('error:', e)
+  } finally {
+    yield put(closePopup({ payload: null }))
   }
 }
 
@@ -247,11 +317,26 @@ function* putUserWorker({ payload, id }) {
       preferredCurrency: payload.preferredCurrency
     }
 
-    console.log('updateUser', updateUser)
     yield call(api.patchUser, id, updateUser)
     yield put({ type: AT.GET_USERS_DATA })
   } catch (e) {
     console.log('error', e)
+  } finally {
+    yield put(closePopup({ payload: null }))
+  }
+}
+
+function* putNewUserRolesWorker({ payload, id }) {
+  try {
+    // const updateUser = {
+    //   roles: payload
+    // }
+    // console.log('payload', payload)
+    // const updateUser = [2, 1]
+    yield call(api.patchUserRole, id, payload)
+    yield put({ type: AT.GET_USERS_DATA })
+  } catch (e) {
+    yield console.log('error:', e)
   } finally {
     yield put(closePopup({ payload: null }))
   }
@@ -274,7 +359,11 @@ function* putWarehouseEditPopup({ payload, id }) {
       name: payload.name
     }
     yield call(api.putWarehouse, id, dataBody)
-    yield put({ type: AT.GET_WAREHOUSES_DATA })
+    if (payload.tab) {
+      yield put({ type: AT.GET_BRANCHES_DATA })
+    } else {
+      yield put({ type: AT.GET_WAREHOUSES_DATA })
+    }
   } catch (e) {
     yield console.log('error:', e)
   } finally {
@@ -283,14 +372,12 @@ function* putWarehouseEditPopup({ payload, id }) {
 }
 
 function* putProductEditPopup({ payload }) {
-  console.log('payload', payload)
   try {
     const id = payload.id
     const updateProduct = {
       casProduct: payload.casProduct,
       packagingSize: payload.packagingSize,
       packagingType: payload.packageID,
-      packagingUnit: 0,
       productCode: payload.productNumber,
       productName: payload.productName,
       packagingUnit: payload.unitID,
@@ -298,6 +385,16 @@ function* putProductEditPopup({ payload }) {
     }
     yield call(api.putProduct, id, updateProduct)
     yield put({ type: AT.GET_WAREHOUSES_DATA })
+  } catch (e) {
+    yield console.log('error:', e)
+  } finally {
+    yield put(closePopup({ payload: null }))
+  }
+}
+
+function* putBankAccountEditPopup({ payload }) {
+  try {
+    console.log('payload', payload)
   } catch (e) {
     yield console.log('error:', e)
   } finally {
@@ -335,8 +432,8 @@ function* deleteConfirmPopup({}) {
         break
       case 'Branches':
         yield call(api.deleteWarehouse, deleteRowByid)
-        toast = { message: 'Warehouse delete success', isSuccess: true }
-        yield put({ type: AT.GET_WAREHOUSES_DATA })
+        toast = { message: 'Branch delete success', isSuccess: true }
+        yield put({ type: AT.GET_BRANCHES_DATA })
         break
       case 'Warehouses':
         yield call(api.deleteWarehouse, deleteRowByid)
@@ -347,6 +444,17 @@ function* deleteConfirmPopup({}) {
         yield call(api.deleteProduct, deleteRowByid)
         toast = { message: 'Product delete success', isSuccess: true }
         yield put({ type: AT.GET_PRODUCTS_CATALOG_DATA })
+        break
+      case 'Credit cards':
+        yield call(api.deleteCreditCard, deleteRowByid)
+        toast = { message: 'Credit cards delete success', isSuccess: true }
+        yield put({ type: AT.GET_CREDIT_CARDS_DATA })
+        break
+      case 'Bank accounts':
+        yield call(api.deleteBankAccount, deleteRowByid)
+        toast = { message: 'Bank account delete success', isSuccess: true }
+        yield put({ type: AT.GET_BANK_ACCOUNTS_DATA })
+        break
       default:
         break
     }
@@ -380,13 +488,15 @@ export default function* settingsSaga() {
 
   yield takeEvery(AT.HANDLE_SUBMIT_USER_EDIT_POPUP, putUserWorker)
 
+  yield takeEvery(AT.PUT_NEW_USER_ROLES_REQUEST, putNewUserRolesWorker)
   yield takeEvery(AT.PUT_WAREHOUSE_EDIT_POPUP, putWarehouseEditPopup)
   yield takeEvery(AT.PUT_PRODUCT_EDIT_POPUP, putProductEditPopup)
+  yield takeEvery(AT.PUT_BANK_ACCOUNT_EDIT_POPUP, putBankAccountEditPopup)
 
   yield takeEvery(AT.DELETE_CREDIT_CARD, deleteCreditCardWorker)
   yield takeEvery(AT.DELETE_BANK_ACCOUNT, deleteBankAccountWorker)
   yield takeEvery(AT.DELETE_CONFIRM_POPUP, deleteConfirmPopup)
 
-  yield takeEvery(AT.OPEN_ROLES_POPUP, openRolesPopup)
-  yield takeEvery(AT.CLOSE_ROLES_POPUP, closeRolesPopup)
+  // yield takeEvery(AT.OPEN_ROLES_POPUP, openRolesPopup)
+  // yield takeEvery(AT.CLOSE_ROLES_POPUP, closeRolesPopup)
 }

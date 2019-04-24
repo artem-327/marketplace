@@ -80,7 +80,11 @@ const mapStateToProps = state => {
         chemicalName: d.chemicalName,
         packagingGroup: !!d.packagingGroup ? d.packagingGroup.groupCode : '',
         unNumber: !!d.unNumber ? d.unNumber.unNumberCode : '',
-        hazardClasses: transformHazardClasses(d.hazardClasses)
+        hazardClasses: transformHazardClasses(d.hazardClasses),
+        // Prepare initial values for editing form
+        packagingGroupId: !!d.packagingGroup ? d.packagingGroup.id : '',
+        unNumberId: !!d.unNumber ? d.unNumber.id : '',
+        hazardClassesId: !!d.hazardClasses ? (d.hazardClasses.map(a => a.id)) : [],
       }
     })
   }

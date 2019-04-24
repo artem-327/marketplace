@@ -93,8 +93,6 @@ export function handleFiltersValue(props, value) {
 	}
 }
 
-
-
 export function getCasProductByFilter(value) {
 	return {
 		type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
@@ -130,12 +128,14 @@ export function getUnNumbersDataRequest() {
 	}
 }
 
-export function postNewCasProductRequest(values) {
-	/*
+export function getUnNumbersByString(value) {
 	return {
-		type: AT.ADMIN_POST_NEW_CAS_PRODUCT,
-		payload: api.postNewCasProduct(values)
-	}*/
+		type: AT.ADMIN_GET_UN_NUMBERS_BY_STRING,
+		payload: api.getUnNumbersByString(value)
+	}
+}
+
+export function postNewCasProductRequest(values) {
 	return async dispatch => {
 		await dispatch({
 			type: AT.ADMIN_POST_NEW_CAS_PRODUCT,
@@ -145,10 +145,29 @@ export function postNewCasProductRequest(values) {
 	}
 }
 
+export function updateCasProductRequest(id, values) {
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_UPDATE_CAS_PRODUCT,
+			payload: api.updateCasProduct(id, values)
+		})
+		dispatch(closePopup())
+	}
+}
+
 export function openEditCasPopup(value) {
-	return {
-		type: null,
-		payload: null
+	const data = {
+		casIndexName: value.casIndexName,
+		casNumber: value.casNumber,
+		chemicalName: value.chemicalName,
+		hazardClasses: value.hazardClassesId,
+		id: value.id,
+		packagingGroup: value.packagingGroupId,
+		unNumber: value.unNumberId,
+	}
+	console.log('xxxxxxxxxxx openEditCasPopup - data - ', data);
+	return async dispatch => {
+		dispatch(openPopup(data))
 	}
 }
 

@@ -7,31 +7,35 @@ import { Form, Button as FButton, Input, Dropdown } from 'formik-semantic-ui'
 
 const initialValues = {
   destination: {
-    quantity: 500,
-    zip: '93308',
-    maxTransit: 7
+    quantity: '',
+    zip: '',
+    maxTransit: 0
   }
 }
 
-class ShippingQuotes extends Component {
+class ShipingQuotes extends Component {
 
   componentDidMount() {
-    const {initShippingForm} = this.props
+    const {initShipingForm} = this.props
 
-    initShippingForm()
+    initShipingForm()
   }
 
-  getShippingQuotes(inputs) {
-    // if (checkToken(this.props)) return
-    console.log(inputs)
+  createOrder = () => {
+    alert('not implemented yet')
+  }
+
+  getShipingQuotes(inputs) {
+    const {selectedRows, getShipingQuotes} = this.props
     let params = {}
-    params.productOfferIds = this.props.selectedRows
+    
+    params.productOfferIds = selectedRows
     params.destinationZIP = inputs.destination.zip
     params.destinationCountry = 1
     params.quantity = parseInt(inputs.destination.quantity)
     params.maxTransitDays = inputs.destination.maxTransit
 
-    this.props.getShippingQuotes(params)
+    getShipingQuotes(params)
   }
 
   checkBox(value) {
@@ -39,8 +43,6 @@ class ShippingQuotes extends Component {
   }
 
   renderForm() {
-    const sQuotes = this.renderShippingQuotes()
-
     const { loading, zipCodes } = this.props
 
     return (
@@ -49,7 +51,7 @@ class ShippingQuotes extends Component {
         ignoreLoading
         initialValues={initialValues}
         onSubmit={(values, actions) => {
-          this.getShippingQuotes(values)
+          this.getShipingQuotes(values)
         }}
       >
         <FormGroup widths="equal">
@@ -77,12 +79,12 @@ class ShippingQuotes extends Component {
 
         <Divider />
 
-        {sQuotes}
+        {this.renderShipingQuotes()}
       </Form>
     )
   }
 
-  renderShippingQuotes() {
+  renderShipingQuotes() {
     const { loading } = this.props
 
     return (
@@ -156,7 +158,7 @@ class ShippingQuotes extends Component {
   render() {
     return (
       <Modal open centered={false}>
-        <Modal.Header>Shipping Quote</Modal.Header>
+        <Modal.Header>Shiping Quote</Modal.Header>
         <Modal.Content>
           {this.renderForm()}
         </Modal.Content>
@@ -173,4 +175,4 @@ class ShippingQuotes extends Component {
   }
 }
 
-export default ShippingQuotes
+export default ShipingQuotes
