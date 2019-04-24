@@ -7,9 +7,9 @@ import { Form, Button as FButton, Input, Dropdown } from 'formik-semantic-ui'
 
 const initialValues = {
   destination: {
-    quantity: 500,
-    zip: '93308',
-    maxTransit: 7
+    quantity: '',
+    zip: '',
+    maxTransit: 0
   }
 }
 
@@ -21,17 +21,21 @@ class ShipingQuotes extends Component {
     initShipingForm()
   }
 
+  createOrder = () => {
+    alert('not implemented yet')
+  }
+
   getShipingQuotes(inputs) {
-    // if (checkToken(this.props)) return
-    console.log(inputs)
+    const {selectedRows, getShipingQuotes} = this.props
     let params = {}
-    params.productOfferIds = this.props.selectedRows
+    
+    params.productOfferIds = selectedRows
     params.destinationZIP = inputs.destination.zip
     params.destinationCountry = 1
     params.quantity = parseInt(inputs.destination.quantity)
     params.maxTransitDays = inputs.destination.maxTransit
 
-    this.props.getShipingQuotes(params)
+    getShipingQuotes(params)
   }
 
   checkBox(value) {
@@ -39,8 +43,6 @@ class ShipingQuotes extends Component {
   }
 
   renderForm() {
-    const sQuotes = this.renderShipingQuotes()
-
     const { loading, zipCodes } = this.props
 
     return (
@@ -77,7 +79,7 @@ class ShipingQuotes extends Component {
 
         <Divider />
 
-        {sQuotes}
+        {this.renderShipingQuotes()}
       </Form>
     )
   }
