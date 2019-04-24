@@ -8,7 +8,7 @@ import {
   handlerSubmitWarehouseEditPopup,
   postNewCreditCardRequest
 } from '../../actions'
-import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
+import { Form, Input, Button } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 const formValidation = Yup.object().shape({
@@ -18,24 +18,6 @@ const formValidation = Yup.object().shape({
 })
 
 class CreditCardsPopup extends React.Component {
-  // submitHandler = (values, actions) => {
-  //   if (this.props.popupValues) {
-  //     this.props.handlerSubmitWarehouseEditPopup(
-  //       {
-  //         ...values,
-  //         tab: this.props.currentTab === 'Bank accounts' ? 'bank' : null
-  //       },
-  //       this.props.popupValues.branchId
-  //     )
-  //   } else {
-  //     this.props.postNewWarehouseRequest({
-  //       ...values,
-  //       tab: this.props.currentTab === 'Bank accounts' ? 'bank' : null
-  //     })
-  //   }
-  //   actions.setSubmitting(false)
-  // }
-
   getInitialFormValues = () => {
     return {
       cardNumber: '',
