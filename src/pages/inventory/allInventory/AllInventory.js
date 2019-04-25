@@ -56,10 +56,10 @@ export default class AllInventory extends Component {
 
         <Container fluid>
           <Menu secondary>
-            <Menu.Item header>`
+            <Menu.Item header>
               <Header as='h1' size='medium'>
-                <FormattedMessage id='myInventory.myInventory'
-                  defaultMessage='MY INVENTORY' />
+                <FormattedMessage id='allInventory.marketplace'
+                  defaultMessage='MARKETPLACE' />
               </Header>
             </Menu.Item>
 
