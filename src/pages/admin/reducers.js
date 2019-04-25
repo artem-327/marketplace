@@ -16,9 +16,11 @@ export const initialState = {
   hazardClasses: [],
   packagingGroups: [],
   unNumbers: [],
-
   companiesRows: [],
   countries: [],
+  countriesDropDown: [],
+  primaryBranchProvinces: [],
+  mailingBranchProvinces: [],
   tabsNames: [
     { name: 'CAS Products', id: 7 },
     { name: 'Companies', id: 8 },
@@ -91,10 +93,11 @@ export default function reducer(state = initialState, action) {
 
     case AT.ADMIN_GET_COUNTRIES_FULFILLED: {
       return {...state,
-        countries: payload.countries.map(c => ({
+        countries: payload.countries,
+        countriesDropDown: payload.countries.map(c => ({
           text: c.name,
           value: c.id,
-          key: c.id
+          key: c.id,
         })),
         zipCodes: payload.zipCodes.map(z => ({
           text: z.zip,
@@ -103,6 +106,31 @@ export default function reducer(state = initialState, action) {
         }))
       }
     }
+
+    case AT.ADMIN_GET_PRIMARY_BRANCH_PROVINCES_FULFILLED: {
+      return {
+        ...state,
+        primaryBranchProvinces: payload.map(d => ({
+          text: d.name,
+          value: d.id,
+          key: d.id
+        }))
+      }
+    }
+
+    case AT.ADMIN_GET_MAILING_BRANCH_PROVINCES_FULFILLED: {
+      return {
+        ...state,
+        mailingBranchProvinces: payload.map(d => ({
+          text: d.name,
+          value: d.id,
+          key: d.id
+        }))
+      }
+    }
+
+
+
 
     case AT.ADMIN_HANDLE_ACTIVE_TAB: {
       return {
