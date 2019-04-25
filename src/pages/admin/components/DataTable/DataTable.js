@@ -13,6 +13,7 @@ class DataTable extends Component {
   render() {
     const {
       config,
+      loading,
       rows,
       filterValue,
       currentTab,
@@ -26,6 +27,7 @@ class DataTable extends Component {
       <React.Fragment>
         <ProdexTable
           filterValue={filterValue}
+          loading={loading}
           columns={columns}
           rows={rows}
           rowActions={[
@@ -51,6 +53,7 @@ const mapStateToProps = state => {
     rows: state.admin[cfg.api.get.dataName],
     filterValue: state.admin.filterValue,
     currentTab: state.admin.currentTab,
+    loading: state.admin.loading,
   }
 }
 
