@@ -11,8 +11,21 @@ export function addAttachment(attachment, type) {
 export function addProductOffer(values, poId = false) {
 
   let params = {
+    assayMin: values.assayMin ? parseFloat(values.assayMin) : null,
+    assayMax: values.assayMax ? parseFloat(values.assayMax) : null,
     attachments: values.attachments ? values.attachments : null,
+    externalNotes: values.externalNotes ? values.externalNotes : null,
     inStock: !!values.inStock,
+    internalNotes: values.internalNotes ? values.internalNotes : null,
+    lots: values.lots ? values.lots.map(lot => {
+      return {
+        ...lot,
+        expirationDate: lot.expirationDate ? lot.expirationDate + "T00:00:00Z" : null,
+        manufacturedDate: lot.manufacturedDate ? lot.manufacturedDate + "T00:00:00Z" : null
+      }
+    }) : null,
+    manufacturer: values.manufacturer ? values.manufacturer : null,
+    origin: values.origin ? values.origin : null,
     pkgAmount: parseInt(values.pkgAmount),
     pricing: {
       cost: values.pricing.cost ? parseInt(values.pricing.cost) : null,
@@ -29,11 +42,7 @@ export function addProductOffer(values, poId = false) {
     productCode: values.productCode ? values.productCode : null,
     productCondition: values.productCondition ? parseInt(values.productCondition) : null,
     productForm: values.productForm ? parseInt(values.productForm) : null,
-    productGrades: values.productGrades ? values.productGrades.map(pg => {
-      return {
-        id: parseInt(pg.id)
-      }
-    }) : null,
+    productGrades: values.productGrade ? [{id: values.productGrade}] : null,
     tradeName: values.tradeName ? values.tradeName : null,
     validityDate: values.validityDate ? values.validityDate + "T00:00:00Z" : null,
     warehouse: parseInt(values.warehouse)
@@ -41,7 +50,6 @@ export function addProductOffer(values, poId = false) {
 
   if (!params.lots) {
     params.lots = [{
-      expirationDate: values.validityDate ? values.validityDate + "T00:00:00Z" : null,
       lotNumber: "1",
       pkgAmount: params.pkgAmount
     }]
@@ -92,6 +100,27 @@ export function fillProduct(product) {
   }
 }
 
+export function getProductConditions() {
+  return {
+    type: AT.INVENTORY_GET_PRODUCT_CONDITIONS,
+    payload: api.getProductConditions()
+  }
+}
+
+export function getProductForms() {
+  return {
+    type: AT.INVENTORY_GET_PRODUCT_FORMS,
+    payload: api.getProductForms()
+  }
+}
+
+export function getProductGrades() {
+  return {
+    type: AT.INVENTORY_GET_PRODUCT_GRADES,
+    payload: api.getProductGrades()
+  }
+}
+
 export function getProductOffer(productOfferId) {
   return {
     type: AT.INVENTORY_GET_PRODUCT_OFFER,
@@ -138,6 +167,40 @@ export function resetForm() {
   return {
     type: AT.INVENTORY_RESET_FORM,
     payload: {}
+  }
+}
+
+export function searchManufacturers(text) {
+  return {
+    type: AT.INVENTORY_SEARCH_MANUFACTURERS,
+    async payload() {
+      const response = await api.searchManufacturers(text)
+
+      return {
+        data: response.data ? response.data.map(p => ({
+          text: p.name,
+          value: p.id,
+          key: p.id
+        })) : []
+      }
+    }
+  }
+}
+
+export function searchOrigins(text) {
+  return {
+    type: AT.INVENTORY_SEARCH_ORIGINS,
+    async payload() {
+      const response = await api.searchOrigins(text)
+
+      return {
+        data: response.data ? response.data.map(p => ({
+          text: p.name,
+          value: p.id,
+          key: p.id
+        })) : []
+      }
+    }
   }
 }
 
