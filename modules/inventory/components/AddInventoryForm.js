@@ -1,11 +1,11 @@
 import React, { Component } from "react"
 import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button } from 'formik-semantic-ui'
-import {FormattedMessage} from 'react-intl';
-import { Modal, Icon, Segment, Container, Menu, Header, Divider, Grid, GridColumn, FormGroup, FormField, Accordion, Message, Label } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl';
+import { Modal, Icon, Segment, Container, Menu, Header, Divider, Grid, GridColumn, FormGroup, FormField, Accordion, Message, Label, GridRow } from 'semantic-ui-react'
 import styled from 'styled-components'
 import * as val from 'yup'
-import {DateInput} from '~/components/custom-formik'
+import { DateInput } from '~/components/custom-formik'
 import UploadLot from './upload/UploadLot'
 import { FieldArray } from "formik"
 
@@ -15,6 +15,24 @@ import JSONPretty from 'react-json-pretty'
 
 const TopDivider = styled(Divider)`
   padding-bottom: 20px;
+`
+
+const CustomPaddedColumn = styled(GridColumn)`
+  padding-top: 0px !important; 
+`
+
+const CustomMargedGrid = styled(Grid)`
+  margin: 0px 5px 5px 5px !important;
+`
+
+const CustomPaddedContent = styled(Accordion.Content)`
+  padding-top: 15px !important;
+`
+
+const ResponsiveColumn = styled(GridColumn)`
+  @media only screen and (max-device-width: 991px) {
+    padding-bottom: 14px;
+}
 `
 
 const initValues = {
@@ -122,13 +140,13 @@ export default class AddInventoryForm extends Component {
         <Grid.Row key={i}>
           <Grid.Column width={2}>
             {i ? (
-              <Label name={`pricing.tiers[${i}].level`}>{i+1}</Label>
+              <Label name={`pricing.tiers[${i}].level`}>{i + 1}</Label>
             ) : (
-              <div className='field'>
-                <label>Level</label>
-                <Label name={`pricing.tiers[${i}].level`}>{i+1}</Label>
-              </div>
-            )}
+                <div className='field'>
+                  <label>Level</label>
+                  <Label name={`pricing.tiers[${i}].level`}>{i + 1}</Label>
+                </div>
+              )}
           </Grid.Column>
           <Grid.Column width={1}>
             <Icon.Group>
@@ -201,10 +219,10 @@ export default class AddInventoryForm extends Component {
   }
 
   render() {
-    const { 
-      searchProducts, 
-      searchedProducts, 
-      searchedProductsLoading, 
+    const {
+      searchProducts,
+      searchedProducts,
+      searchedProductsLoading,
       warehousesList,
       addProductOffer,
       editProductOffer,
@@ -223,7 +241,7 @@ export default class AddInventoryForm extends Component {
             <Menu.Item header>
               <Header as='h1' size='medium'>
                 <FormattedMessage id='myInventory.myInventory'
-                                  defaultMessage={this.props.edit ? 'EDIT INVENTORY' : 'ADD INVENTORY'} />
+                  defaultMessage={this.props.edit ? 'EDIT INVENTORY' : 'ADD INVENTORY'} />
               </Header>
             </Menu.Item>
           </Menu>
@@ -231,7 +249,7 @@ export default class AddInventoryForm extends Component {
 
         <Form
           enableReinitialize
-          initialValues={{...initValues, ...initialState}}
+          initialValues={{ ...initValues, ...initialState }}
           validationSchema={validationScheme}
           onSubmit={(values, actions) => {
             if (this.props.fileIds.length) {
@@ -239,13 +257,14 @@ export default class AddInventoryForm extends Component {
                 return fi.id
               })
             }
-            addProductOffer(values, this.props.edit).then((productOffer) => {
-              //Router.push('/inventory/my') xxx
-            })
-            setTimeout(() => {
-              actions.setSubmitting(false)
-              actions.resetForm(initValues);
-            }, 1000)
+            addProductOffer(values, this.props.edit)
+              .then((productOffer) => {
+                //Router.push('/inventory/my') xxx
+              })
+              .finally(() => {
+                actions.setSubmitting(false)
+                actions.resetForm(initValues)
+              })
           }}
         >
           {({ values, errors, setFieldValue }) => (
@@ -253,14 +272,14 @@ export default class AddInventoryForm extends Component {
               <Modal open={this.props.poCreated} closeOnDimmerClick={false} size='tiny'>
                 <Modal.Header>Product Offer was created</Modal.Header>
                 <Modal.Content>
-                    What now?
+                  What now?
                 </Modal.Content>
                 <Modal.Actions>
                   <Button icon='add' labelPosition='right' content='Add another one' onClick={this.resetForm} />
                   <Button primary icon='checkmark' labelPosition='right' content='Go to My Inventory' onClick={this.goToList} />
                 </Modal.Actions>
               </Modal>
-              <Grid divided style={{marginTop: '2rem'}}>
+              <Grid divided style={{ marginTop: '2rem' }}>
                 <Grid.Column width={5}>
 
                   <Header as='h3'>What product do you want to list?</Header>
@@ -349,11 +368,11 @@ export default class AddInventoryForm extends Component {
                             name="priceTiers"
                             options={this.getPriceTiers(10)}
                             inputProps={{
-                              onChange: (e,{value}) => setFieldValue(
+                              onChange: (e, { value }) => setFieldValue(
                                 "pricing.tiers",
                                 [
                                   ...values.pricing.tiers.slice(0, value),
-                                  ...[...new Array((value - values.priceTiers) > 0 ? value - values.priceTiers : 0)].map(t => ({price: '0', quantityFrom: '0'}))
+                                  ...[...new Array((value - values.priceTiers) > 0 ? value - values.priceTiers : 0)].map(t => ({ price: '0', quantityFrom: '0' }))
                                 ]
                               )
                             }}
@@ -361,23 +380,23 @@ export default class AddInventoryForm extends Component {
                         </FormField>
                       </FormGroup>
 
-                      <Header as='h3' style={{marginBottom: '2rem'}}>What is the FOB price for each tier?</Header>
+                      <Header as='h3' style={{ marginBottom: '2rem' }}>What is the FOB price for each tier?</Header>
                       <Grid className='tier-prices'>
                         {this.renderPricingTiers(values.priceTiers)}
                       </Grid>
 
-                      <Divider style={{marginTop: '3rem', marginBottom: '3rem'}}/>
+                      <Divider style={{ marginTop: '3rem', marginBottom: '3rem' }} />
 
                       <Header as='h3'>Upload Spec Sheet</Header>
                       <UploadLot {...this.props}
-                                 control={UploadLot}
-                                 name='documents'
-                                 type='Spec Sheet'
-                                 fileMaxSize={20}
-                                 onChange={(files) => setFieldValue(
-                                   "documents",
-                                   files
-                                 )}
+                        control={UploadLot}
+                        name='documents'
+                        type='Spec Sheet'
+                        fileMaxSize={20}
+                        onChange={(files) => setFieldValue(
+                          "documents",
+                          files
+                        )}
                       >
                         Drag and drop spec sheet file here or <a>select</a> from computer
                       </UploadLot>
@@ -386,79 +405,125 @@ export default class AddInventoryForm extends Component {
                   </Grid>
                 </GridColumn>
 
-                <GridColumn width={5}>
-                  <Grid centered>
-                    <GridColumn width={12}>
-                      <Segment attached={values.product ? false : 'top'} style={{padding: '2em'}}>
-                        <Accordion>
-                          <Accordion.Title active={activeIndex === 0} index={0} onClick={this.accClick}>
-                            <Header as="h3">PRODUCT DETAILS</Header>
-                          </Accordion.Title>
-                          <Accordion.Content active={activeIndex === 0}>
-                            <Grid columns={2} className='data-grid'>
-                              <GridColumn>Product Name</GridColumn>
-                              <GridColumn>{values.product ? values.product.productName : ''}</GridColumn>
+                <CustomPaddedColumn width={5}>
+                  <CustomMargedGrid className='product-details' relaxed='very'>
+                    <Segment fluid attached={values.product ? false : 'top'} style={{ padding: '1.5em' }}>
+                      <Accordion>
+                        <Accordion.Title active={activeIndex === 0} index={0} onClick={this.accClick}>
+                          <Header as='h4'>
+                            <Icon name={activeIndex === 0 ? 'chevron down' : 'chevron right'} />PRODUCT DETAILS
+                          </Header>
+                        </Accordion.Title>
+                        <CustomPaddedContent active={activeIndex === 0}>
+                          <Grid verticalAlign='middle' className='data-grid'>
+                            <GridRow>
+                              <GridColumn computer={8} mobile={16}>Product Name</GridColumn>
+                              <GridColumn computer={8} mobile={16}>{values.product ? values.product.productName : ''}</GridColumn>
+                            </GridRow>
 
-                              <GridColumn>Product Number</GridColumn>
-                              <GridColumn>{values.product ? values.product.productCode : ''}</GridColumn>
+                            <GridRow>
+                              <GridColumn computer={8} mobile={16}>Product Number</GridColumn>
+                              <GridColumn computer={8} mobile={16}>{values.product ? values.product.productCode : ''}</GridColumn>
+                            </GridRow>
 
-                              <GridColumn>Measurement</GridColumn>
-                              <GridColumn>{values.product ? values.product.packagingSize : ''}</GridColumn>
+                            <GridRow>
+                              <GridColumn computer={8} mobile={16}>Measurement</GridColumn>
+                              <GridColumn computer={8} mobile={16}>{values.product ? values.product.packagingSize : ''}</GridColumn>
+                            </GridRow>
 
-                              <GridColumn>U/M</GridColumn>
-                              <GridColumn>{values.product && values.product.packagingUnit ? values.product.packagingUnit.name : ''}</GridColumn>
+                            <GridRow>
+                              <GridColumn computer={8} mobile={16}>U/M</GridColumn>
+                              <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingUnit ? values.product.packagingUnit.name : ''}</GridColumn>
+                            </GridRow>
 
-                              <GridColumn>U/P</GridColumn>
-                              <GridColumn>{values.product && values.product.packagingType ? values.product.packagingType.name : ''}</GridColumn>
+                            <GridRow>
+                              <GridColumn computer={8} mobile={16}>U/P</GridColumn>
+                              <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingType ? values.product.packagingType.name : ''}</GridColumn>
+                            </GridRow>
 
-                              <GridColumn>CAS Index Name</GridColumn>
-                              <GridColumn>{values.product && values.product.casProduct ? values.product.casProduct.casIndexName : ''}</GridColumn>
+                            <GridRow>
+                              <GridColumn computer={8} mobile={16}>CAS Index Name</GridColumn>
+                              <GridColumn computer={8} mobile={16}>{values.product && values.product.casProduct ? values.product.casProduct.casIndexName : ''}</GridColumn>
+                            </GridRow>
 
-                              <GridColumn>CAS Number</GridColumn>
-                              <GridColumn>{values.product && values.product.casProduct ? values.product.casProduct.casNumber : ''}</GridColumn>
+                            <GridRow>
+                              <GridColumn computer={8} mobile={16}>CAS Number</GridColumn>
+                              <GridColumn computer={8} mobile={16}>{values.product && values.product.casProduct ? values.product.casProduct.casNumber : ''}</GridColumn>
+                            </GridRow>
 
-                              <GridColumn>Master Product</GridColumn>
-                              <GridColumn>{values.product ? !!values.product.masterProduct : ''}</GridColumn>
+                            <GridRow>
+                              <GridColumn computer={8} mobile={16}>Master Product</GridColumn>
+                              <GridColumn computer={8} mobile={16}>{values.product ? !!values.product.masterProduct : ''}</GridColumn>
+                            </GridRow>
 
-                              <GridColumn>Chemical Name</GridColumn>
-                              <GridColumn>{values.product && values.product.casProduct ? values.product.casProduct.chemicalName : ''}</GridColumn>
+                            <GridRow>
+                              <GridColumn computer={8} mobile={16}>Chemical Name</GridColumn>
+                              <GridColumn computer={8} mobile={16}>{values.product && values.product.casProduct ? values.product.casProduct.chemicalName : ''}</GridColumn>
+                            </GridRow>
 
-                              <GridColumn>Hazaardous</GridColumn>
-                              <GridColumn>{values.product && values.product.hazaardous ? !!values.product.hazaardous : ''}</GridColumn>
+                            <GridRow>
+                              <GridColumn computer={8} mobile={16}>Hazaardous</GridColumn>
+                              <GridColumn computer={8} mobile={16}>{values.product && values.product.hazaardous ? !!values.product.hazaardous : ''}</GridColumn>
+                            </GridRow>
 
-                              <GridColumn>UN Code</GridColumn>
-                              <GridColumn>{values.product && values.product.unNumber ? values.product.unNumber.unNumberCode : ''}</GridColumn>
+                            <GridRow>
+                              <GridColumn computer={8} mobile={16}>UN Code</GridColumn>
+                              <GridColumn computer={8} mobile={16}>{values.product && values.product.unNumber ? values.product.unNumber.unNumberCode : ''}</GridColumn>
+                            </GridRow>
 
-                              <GridColumn>Packaging Group</GridColumn>
-                              <GridColumn>{values.product && values.product.packagingGroup ? values.product.packagingGroup.groupCode : ''}</GridColumn>
+                            <GridRow>
+                              <GridColumn computer={8} mobile={16}>Packaging Group</GridColumn>
+                              <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingGroup ? values.product.packagingGroup.groupCode : ''}</GridColumn>
+                            </GridRow>
 
-                              <GridColumn>Hazaardous Class</GridColumn>
-                              <GridColumn><Label.Group color='blue'>{values.product && values.product.hazardClasses ? values.product.hazardClasses.map(hClass => { return (<Label title={hClass.description}>{hClass.classCode}</Label>) }) : ''}</Label.Group></GridColumn>
+                            <GridRow>
+                              <GridColumn computer={8} mobile={16}>Hazaardous Class</GridColumn>
+                              <GridColumn computer={8} mobile={16}><Label.Group color='blue'>{values.product && values.product.hazardClasses ? values.product.hazardClasses.map(hClass => { return (<Label title={hClass.description}>{hClass.classCode}</Label>) }) : ''}</Label.Group></GridColumn>
+                            </GridRow>
 
-                              <GridColumn>Stackable</GridColumn>
-                              <GridColumn>{values.product ? values.product.stackable : ''}</GridColumn>
+                            <GridRow>
+                              <GridColumn computer={8} mobile={16}>Stackable</GridColumn>
+                              <GridColumn computer={8} mobile={16}>{values.product ? values.product.stackable : ''}</GridColumn>
+                            </GridRow>
 
-                              <GridColumn>Freight Class</GridColumn>
-                              <GridColumn>{values.product ? values.product.freightClass : ''}</GridColumn>
+                            <GridRow>
+                              <GridColumn computer={8} mobile={16}>Freight Class</GridColumn>
+                              <GridColumn computer={8} mobile={16}>{values.product ? values.product.freightClass : ''}</GridColumn>
+                            </GridRow>
 
-                              <GridColumn>NMFC Number</GridColumn>
-                              <GridColumn>{values.product ? values.product.nmfcNumber : ''}</GridColumn>
-                            </Grid>
-                          </Accordion.Content>
-                        </Accordion>
-                      </Segment>
-                      {values.product ? '' : (
-                        <Message attached='bottom'>
-                          <Icon name='info circle outline' size='large' color='blue'/>
-                          Please search product to fill data above.
-                        </Message>
-                      )}
+                            <GridRow>
+                              <GridColumn computer={8} mobile={16}>NMFC Number</GridColumn>
+                              <GridColumn computer={8} mobile={16}>{values.product ? values.product.nmfcNumber : ''}</GridColumn>
+                            </GridRow>
+                          </Grid>
+                        </CustomPaddedContent>
+                      </Accordion>
+                    </Segment>
+                    <Segment>
+                      <Grid verticalAlign='middle'>
+                        {values.product ? '' : (
+                          <GridRow>
+                            <GridColumn computer={16}>
+                              <Message attached='bottom'>
+                                <Icon name='info circle outline' size='large' color='blue' />
+                                Please search product to fill data above.
+                            </Message>
+                            </GridColumn>
+                          </GridRow>
+                        )}
 
-                      <Button size='big' floated='left'>Discard</Button>
-                      <Button.Submit size='big' floated='right'>Submit values</Button.Submit>
-                    </GridColumn>
-                  </Grid>
-                </GridColumn>
+                        <GridRow>
+                          <ResponsiveColumn computer={8} mobile={16}>
+                            <Button fluid size='big' floated='left'>Discard</Button>
+                          </ResponsiveColumn>
+                          <GridColumn computer={8} mobile={16}>
+                            <Button.Submit fluid size='big' floated='right'>Submit values</Button.Submit>
+                          </GridColumn>
+                        </GridRow>
+                      </Grid>
+                    </Segment>
+                  </CustomMargedGrid>
+                </CustomPaddedColumn>
               </Grid>
             </>
           )}

@@ -3,6 +3,7 @@
 
 $grey: #979797 !important;
 
+
 body {
   background: #fff;
   font-family: 'HelveticaNeueLTPro';
@@ -23,14 +24,25 @@ i.icon:not(.dropdown):not(.times) {
   font-family: 'thin-icons' !important;
 }
 
+.product-details {
+  > .segment {
+    width: 100%;
+  }
+}
+
 .ui.grid.data-grid {
   font-size: 1.2857143rem;
 
-  > .column {
-    height: 2em;
-    padding-top: .111111em;
-    padding-bottom: .111111em;
-    line-height: 1.777778em;
+  .row > .column {
+    @media only screen and (max-device-width: 991px) {
+      &:first-child {
+        padding-bottom: 14px;
+      }
+    }
+    // height: 2em;
+    // padding-top: .111111em;
+    // padding-bottom: .111111em;
+    // line-height: 1.777778em;
 
     &:nth-child(2n+1) {
       color: #777;
