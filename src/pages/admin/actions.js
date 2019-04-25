@@ -180,17 +180,19 @@ export function casDeleteItem(value) {
 
 export function getCountries() {
 	return (dispatch, getState) => {
-		const {admin} = getState()
+		const { admin } = getState()
 		admin.countries.length === 0 && dispatch({
 			type: AT.ADMIN_GET_COUNTRIES,
 			async payload() {
-				 const countries = await api.getCountries()
-				 const zipCodes = await api.getZipCodes()
-				 
-				 return {
-					 countries,
-					 zipCodes
-				 }
+				const [countries, zipCodes] = await Promise.all([
+					api.getCountries(),
+					api.getZipCodes()
+				])
+
+				return {
+					countries,
+					zipCodes
+				}
 			}
 		})
 	}
@@ -256,7 +258,7 @@ export function openEditCompany(id, formData) {
 export function openPopup(data) {
 	return {
 		type: AT.ADMIN_OPEN_POPUP,
-		payload: {data}
+		payload: { data }
 	}
 }
 
