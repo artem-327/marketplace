@@ -16,6 +16,18 @@ export function addProductOffer(values) {
   return api.post(`/prodex/api/product-offers/`, values)
 }
 
+export function getProductConditions() {
+  return api.get(`/prodex/api/product-conditions/`)
+}
+
+export function getProductForms() {
+  return api.get(`/prodex/api/product-forms/`)
+}
+
+export function getProductGrades() {
+  return api.get(`/prodex/api/product-grades/`)
+}
+
 export async function getProductOffer(poId) {
   return api.get(`/prodex/api/product-offers/${poId}`)
 }
@@ -44,6 +56,16 @@ export function removeAttachment(aId) {
 
 export function removeAttachmentLink(isLot, itemId, aId) {
   return api.delete(`/prodex/api/attachment-links/to-${isLot ? 'lot' : 'product-offer'}?attachmentId=${aId}&${isLot ? 'lotId' : 'productOfferId'}=${itemId}`)
+}
+
+export async function searchManufacturers(text) {
+  const response = await api.get(`/prodex/api/manufacturers?search=${text}`)
+  return response
+}
+
+export async function searchOrigins(text) {
+  const response = await api.get(`/prodex/api/countries/search?search=${text}`)
+  return response
 }
 
 export async function searchProducts(text) {

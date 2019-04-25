@@ -2,7 +2,14 @@ import * as AT from './action-types'
 
 export const initialState = {
     fileIds: [],
+    listConditions: [],
+    listForms: [],
+    listGrades: [],
     poCreated: false,
+    searchedManufacturers: [],
+    searchedManufacturersLoading: false,
+    searchedOrigins: [],
+    searchedOriginsLoading: false,
     searchedProducts: [],
     searchedProductsLoading: false,
     warehousesList: []
@@ -19,6 +26,45 @@ export default function reducer(state = initialState, action) {
           }
         }
 
+        case AT.INVENTORY_GET_PRODUCT_CONDITIONS_FULFILLED: {
+          return {
+            ...state,
+            listConditions: action.payload.data.map(condition => {
+              return {
+                key: condition.id,
+                value: condition.id,
+                text: condition.name
+              }
+            })
+          }
+        }
+
+        case AT.INVENTORY_GET_PRODUCT_FORMS_FULFILLED: {
+          return {
+            ...state,
+            listForms: action.payload.data.map(form => {
+              return {
+                key: form.id,
+                value: form.id,
+                text: form.name
+              }
+            })
+          }
+        }
+
+        case AT.INVENTORY_GET_PRODUCT_GRADES_FULFILLED: {
+          return {
+            ...state,
+            listGrades: action.payload.data.map(grade => {
+              return {
+                key: grade.id,
+                value: grade.id,
+                text: grade.name
+              }
+            })
+          }
+        }
+
         case AT.INVENTORY_GET_PRODUCT_OFFER_FULFILLED: {
           let {data} = action.payload
           return {
@@ -28,7 +74,17 @@ export default function reducer(state = initialState, action) {
               att.attachment = true
               return att
             }).concat(state.fileIds),
-            poCreated: false
+            poCreated: false,
+            searchedManufacturers: action.payload.data.manufacturer ? [{
+              key: action.payload.data.manufacturer.id,
+              value: action.payload.data.manufacturer.id,
+              text: action.payload.data.manufacturer.name
+            }] : [],
+            searchedOrigins: action.payload.data.origin ? [{
+              key: action.payload.data.origin.id,
+              value: action.payload.data.origin.id,
+              text: action.payload.data.origin.name
+            }]: []
           }
         }
 
@@ -48,6 +104,36 @@ export default function reducer(state = initialState, action) {
         case AT.INVENTORY_RESET_FORM: {
           return {
             ...initialState
+          }
+        }
+
+        case AT.INVENTORY_SEARCH_MANUFACTURERS_PENDING: {
+          return {
+            ...state,
+            searchedManufacturersLoading: true
+          }
+        }
+
+        case AT.INVENTORY_SEARCH_MANUFACTURERS_FULFILLED: {
+          return {
+            ...state,
+            searchedManufacturers: action.payload.data,
+            searchedManufacturersLoading: false
+          }
+        }
+
+        case AT.INVENTORY_SEARCH_ORIGINS_PENDING: {
+          return {
+            ...state,
+            searchedOriginsLoading: true
+          }
+        }
+
+        case AT.INVENTORY_SEARCH_ORIGINS_FULFILLED: {
+          return {
+            ...state,
+            searchedOrigins: action.payload.data,
+            searchedOriginsLoading: false
           }
         }
 

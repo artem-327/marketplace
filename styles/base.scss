@@ -3,6 +3,7 @@
 
 $grey: #979797 !important;
 
+
 body {
   background: #fff;
   font-family: 'HelveticaNeueLTPro';
@@ -23,14 +24,21 @@ i.icon:not(.dropdown):not(.times) {
   font-family: 'thin-icons' !important;
 }
 
+.product-details {
+  > .segment {
+    width: 100%;
+  }
+}
+
 .ui.grid.data-grid {
   font-size: 1.2857143rem;
 
-  > .column {
-    height: 2em;
-    padding-top: .111111em;
-    padding-bottom: .111111em;
-    line-height: 1.777778em;
+  .row > .column {
+    @media only screen and (max-device-width: 991px) {
+      &:first-child {
+        padding-bottom: 14px;
+      }
+    }
 
     &:nth-child(2n+1) {
       color: #777;
@@ -163,5 +171,80 @@ h1.ui.header {
 
   &.small {
     font-size: 1.142857em;
+  }
+}
+
+div.inventory {
+
+  .ui.secondary.pointing.menu:not(.vertical) {
+    border-bottom: 1px solid #d8d8d8;
+    box-shadow: 0 0 0 0 transparent;
+
+    .item {
+      margin-bottom: 0;
+    }
+
+    .item.active {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+
+  > .ui.bottom {
+    margin-left: -1em;
+    margin-right: -1em;
+    border: 0 none;
+    background: transparent;
+  }
+}
+
+.ui.attached.message.header-table-fields {
+  max-width: calc(100% + 2px);
+  border: 1px solid #ccc;
+  padding-left: 0.78571429em;
+  padding-right: 0.78571429em;
+  box-shadow: 0 0 0 0 transparent;
+
+  button {
+    margin-right: -0.28571429em;
+  }
+}
+
+table.ui.table.table-fields {
+  width: calc(100% + 2px);
+  border-collapse: collapse;
+
+  thead tr th {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    background: transparent;
+  }
+
+  tbody tr td {
+    height: 2.85714286em;
+    border-width: 0 1px 1px;
+    border-style: solid;
+    border-color: #ccc;
+    padding: 0.67857143em 0.78571429em;
+    vertical-align: middle;
+
+    input {
+      width: calc(100% + 1.57142858em);
+      max-width: calc(100% + 1.57142858em);
+      height: calc(2.85714286em - 1px);
+      margin: -0.60714286em -0.78571429em;
+      border: 0 none;
+      padding: 0.60714286em 0.78571429em;
+    }
+
+    div.ui.selection.dropdown {
+      display: inline-block;
+      width: calc(100% + 1.57142858em);
+      height: calc(2.85714286em - 1px);
+      margin: -0.60714286em -0.78571429em;
+      border: 0 none;
+      padding-top: 0.60714286em;
+      padding-bottom: 0.60714286em;
+      line-height: 1.57142857;
+    }
   }
 }
