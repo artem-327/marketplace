@@ -5,10 +5,10 @@ import Spinner from '../../../../components/Spinner/Spinner'
 import Button from '../../../../components/Button/Button'
 import PopupComponent from '../../../../components/PopUp/PopupComponent'
 import {getUnit} from '../../../../utils/functions'
-import './AddCart.scss';
-import file from '../../../../images/file.svg';
+import './AddCart.scss'
+import file from '../../../../images/file.svg'
 import InputControlled from '../../../../components/InputControlled/InputControlled'
-import {checkToken} from "../../../../utils/auth";
+import {checkToken} from "../../../../utils/auth"
 import Router from 'next/router'
 
 class AddCart extends Component {
@@ -29,13 +29,13 @@ class AddCart extends Component {
   }
 
   onClick = () => {
-    AddCart.openedPopup.id = false;
-    this.props.removePopup();
+    AddCart.openedPopup.id = false
+    this.props.removePopup()
   }
 
   createOrder = async () => {
-    if (checkToken(this.props)) return;
-    const {removePopup, postNewOrder, offer} = this.props;
+    if (checkToken(this.props)) return
+    const {removePopup, postNewOrder, offer} = this.props
     const offerpayload = {
         productOffer: offer.id,
         quantity: this.state.quantity
@@ -52,7 +52,7 @@ class AddCart extends Component {
   }
 
   editOrder = () => {
-    const {removePopup, postOrderEdit, order} = this.props;
+    const {removePopup, postOrderEdit, order} = this.props
     const orderpayload = {
         id: order.productOffer.id,
         quantity: this.state.quantity || order.quantity,
@@ -69,20 +69,20 @@ class AddCart extends Component {
     if (this.state.pricing) {
       const {quantityFrom, quantityTo} = this.state.pricing
       for (let i = quantityFrom; i <= quantityTo; i = i + split) {
-        options.push(i);
+        options.push(i)
       }
-      return options;
+      return options
     } else {
-      const {minimum, pkgAmount} = this.props.offer;
+      const {minimum, pkgAmount} = this.props.offer
       for (let i = minimum; i <= pkgAmount; i = i + split) {
-        options.push(i);
+        options.push(i)
       }
     }
-    return options;
+    return options
   }
 
   handleQuantity = e => {
-    const {minimum, splits, pkgAmount} = this.props.offer;
+    const {minimum, splits, pkgAmount} = this.props.offer
     const value = parseInt(e.target.value, 10)
     const warning = value < minimum || !value 
       ? `minimum is ${minimum}`
@@ -92,7 +92,7 @@ class AddCart extends Component {
           ? null
           : `split is ${splits}`
     this.setState({quantity: value, warning: warning})
-  };
+  }
 
   render() {
 
@@ -100,27 +100,27 @@ class AddCart extends Component {
 
     // load data if creating popup with different offer id
     if (this.props.offer.id && this.props.id !== this.props.offer.id) {
-        this.props.getProductOffer(this.props.id);
+        this.props.getProductOffer(this.props.id)
     }
-    const {offer, order, isEdit, removePopup, offerDetailIsFetching, orderDetailIsFetching} = this.props;
+    const {offer, order, isEdit, removePopup, offerDetailIsFetching, orderDetailIsFetching} = this.props
     if (isEdit && orderDetailIsFetching) return <Spinner />
     if (offerDetailIsFetching) return <Spinner />
-    const location =`${offer.warehouse.address.city}, ${offer.warehouse.address.province.name}`;
-    const {pkgAmount, minimum, splits} = offer;
+    const location =`${offer.warehouse.address.city}, ${offer.warehouse.address.province ? offer.warehouse.address.province.name : offer.warehouse.address.country.name}`
+    const {pkgAmount, minimum, splits} = offer
     const unit = offer.product.packagingUnit ? offer.product.packagingUnit : null
     const size = offer.product.packagingSize ? offer.product.packagingSize : null
-    const unitName = `${getUnit(unit.name)}`;
-    const packageSize = `${size} ${unitName}`;
-    const availableProducts = `${pkgAmount} pck / ${(pkgAmount * size).formatNumber()} ${unitName}`;
-    const totalPrice = (this.state.quantity && this.state.pricing) ? this.state.pricing.price * this.state.quantity * size : "";
-    const {tiers} = offer.pricing;
+    const unitName = `${getUnit(unit.name)}`
+    const packageSize = `${size} ${unitName}`
+    const availableProducts = `${pkgAmount} pck / ${(pkgAmount * size).formatNumber()} ${unitName}`
+    const totalPrice = (this.state.quantity && this.state.pricing) ? this.state.pricing.price * this.state.quantity * size : ""
+    const {tiers} = offer.pricing
     const priceLevelOptions = tiers.map((tier, i) => {
       const quantityTo = (i + 1) >= tiers.length ? pkgAmount : (tier.quantityFrom > tiers[i+1].quantityFrom ? tier.quantityFrom : tiers[i+1].quantityFrom  - 1)
       const object = {
         name: `${tier.quantityFrom} - ${quantityTo} pck / $${tier.price}`, //name: `${i.quantityFrom} - ${i.quantityTo} pck / $${i.price}`,
         id: {quantityFrom: tier.quantityFrom, quantityTo: quantityTo, price: tier.price}
-      };
-      return object;
+      }
+      return object
     })
     const noPriceTiersOption = [{
       name: offer.pricing.price.amount,
@@ -138,12 +138,12 @@ class AddCart extends Component {
     const quantityOptions = this.getQualityOptions(splits)
     const quantityOptionsWithName = quantityOptions.map(i => {
       const object = {name: `${i.toString()} pck`, id: i}
-      return object;
+      return object
     })
 
     const attachments = offer.attachments.map(att => {
       return <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
-    });
+    })
 
     const footerComponent = (
       <>
