@@ -10,7 +10,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { checkToken } from "../../utils/auth"
 
-import { Container, Accordion, Button, Sticky } from 'semantic-ui-react'
+import { Container, Accordion, Button, Grid, Sidebar, GridRow, GridColumn } from 'semantic-ui-react'
 
 class Filter extends Component {
 
@@ -23,6 +23,297 @@ class Filter extends Component {
       filterName: "",
       loaded: false
     }
+  }
+
+
+  getContent = () => {
+    return (
+      <div>
+
+
+        <FilterGroup className="filterGroup"
+          header='order'
+          isVisible={!!this.props.orderId}
+          data={this.props.filterData}
+          isOpen={this.props.filterGroupStatus.orderId}
+          onOpen={(value) => { this.props.toggleFilterGroup('orderId', value) }}
+          inputs={[
+            {
+              label: 'orderId',
+              model: '.orderId',
+              type: 'text'
+            }
+          ]} />
+        <FilterGroup className="filterGroup"
+          header='orderDate'
+          isVisible={!!this.props.orderDate}
+          data={this.props.filterData}
+          isOpen={this.props.filterGroupStatus.orderDate}
+          onOpen={(value) => { this.props.toggleFilterGroup('orderDate', value) }}
+          split
+          inputs={[
+            {
+              label: 'orderFrom',
+              model: '.orderFrom',
+              type: 'date'
+            }, {
+              label: 'orderTo',
+              model: '.orderTo',
+              type: 'date'
+            }
+          ]} />
+        <FilterGroup className="filterGroup"
+          header='customer'
+          isVisible={!!this.props.customer}
+          data={this.props.filterData}
+          isOpen={this.props.filterGroupStatus.customer}
+          onOpen={(value) => { this.props.toggleFilterGroup('customer', value) }}
+          inputs={[
+            {
+              label: 'customerName',
+              model: '.customer',
+              type: 'text'
+            }
+          ]} />
+        <FilterGroup className="filterGroup"
+          header='product'
+          isVisible={!!this.props.product}
+          data={this.props.filterData}
+          isOpen={this.props.filterGroupStatus.product}
+          onOpen={(value) => { this.props.toggleFilterGroup('product', value) }}
+          inputs={[
+            {
+              label: 'productName',
+              model: '.product',
+              type: 'text'
+            }
+          ]} />
+        <FilterGroup className="filterGroup"
+          header='orderStatus'
+          isVisible={!!this.props.orderStatus}
+          data={this.props.filterData}
+          isOpen={this.props.filterGroupStatus.orderStatus}
+          onOpen={(value) => { this.props.toggleFilterGroup('orderStatus', value) }}
+          dispatch={this.props.dispatch}
+          inputs={[
+            {
+              label: 'orderStatus',
+              model: '.status',
+              type: 'dropdown',
+              data: [
+                { id: 'All', name: 'All' },
+                { id: 'Pending', name: 'Pending' },
+                { id: 'In Transit', name: 'In Transit' },
+                { id: 'Review', name: 'Review' },
+                { id: 'Credit', name: 'Credit' },
+                { id: 'Completed', name: 'Completed' },
+                { id: 'Returned', name: 'Returned' },
+                { id: 'Declined', name: 'Declined' }
+              ],
+              filterValue: this.props.orderStatus && this.props.orderStatus.filterValue ? this.props.orderStatus.filterValue : null
+            }
+          ]} />
+        <FilterGroup className="filterGroup"
+          header='chemicalType'
+          isVisible={!!this.props.chemicalName}
+          data={this.props.filterData}
+          isOpen={this.props.filterGroupStatus.chemName}
+          onOpen={(value) => { this.props.toggleFilterGroup('chemName', value) }}
+          inputs={[
+            {
+              label: 'ChemicalNameCAS',
+              model: '.search',
+              type: 'text',
+            }
+          ]} />
+        <FilterGroup className="filterGroup"
+          isVisible={!!this.props.quantity}
+          isOpen={this.props.filterGroupStatus.quantity}
+          onOpen={(value) => { this.props.toggleFilterGroup('quantity', value) }}
+          header='quantity'
+          data={this.props.filterData}
+          split
+          inputs={[
+            {
+              label: 'FromQuantity',
+              model: '.qntylb',
+              type: 'number',
+              placeholder: '0'
+            },
+            {
+              label: 'ToQuantity',
+              model: '.qntyub',
+              type: 'number',
+              placeholder: '0'
+            }
+          ]} />
+        <FilterGroup className="filterGroup"
+          header='price'
+          split
+          isVisible={!!this.props.price}
+          data={this.props.filterData}
+          isOpen={this.props.filterGroupStatus.price}
+          onOpen={(value) => { this.props.toggleFilterGroup('price', value) }}
+          inputs={[
+            {
+              label: 'FromPrice',
+              model: '.prclb',
+              type: 'number',
+              placeholder: '0'
+            },
+            {
+              label: 'ToPrice',
+              model: '.prcub',
+              type: 'number',
+              placeholder: '0'
+            }
+          ]} />
+        <FilterGroup className="filterGroup"
+          header='packaging'
+          isVisible={!!this.props.package}
+          split
+          data={this.props.filterData}
+          isOpen={this.props.filterGroupStatus.packaging}
+          onOpen={(value) => { this.props.toggleFilterGroup('packaging', value) }}
+          checkboxModel='pckgs'
+          inputs={this.props.packagingTypes.map(packagingType => ({
+            label: packagingType.name,
+            type: 'checkbox',
+            id: packagingType.id,
+            model: `.pckgs[${packagingType.id}]`
+          }))} />
+        <FilterGroup className="filterGroup"
+          header='grade'
+          isVisible={!!this.props.productGrade}
+          split
+          data={this.props.filterData}
+          isOpen={this.props.filterGroupStatus.productGrade}
+          onOpen={(value) => { this.props.toggleFilterGroup('productGrade', value) }}
+          checkboxModel='grade'
+          inputs={this.props.productGradeTypes.map(productGradeType => ({
+            label: productGradeType.name,
+            type: 'checkbox',
+            id: productGradeType.id,
+            model: `.grade[${productGradeType.id}]`
+          }))} />
+        <FilterGroup className="filterGroup"
+          header='condition'
+          isVisible={!!this.props.condition}
+          split
+          data={this.props.productConditions}
+          isOpen={this.props.filterGroupStatus.condition}
+          onOpen={(value) => { this.props.toggleFilterGroup('condition', value) }}
+          checkboxModel='cndt'
+          inputs={this.props.productConditions.map(condition => ({
+            label: condition.name,
+            type: 'checkbox',
+            id: condition.id,
+            model: `.cndt[${condition.id}]`
+          }))} />
+        <FilterGroup className="filterGroup"
+          header='form'
+          isVisible={!!this.props.form}
+          split
+          data={this.props.productForms}
+          isOpen={this.props.filterGroupStatus.form}
+          onOpen={(value) => { this.props.toggleFilterGroup('form', value) }}
+          checkboxModel='frm'
+          inputs={this.props.productForms.map(form => (
+            {
+              label: form.name,
+              type: 'checkbox',
+              id: form.id,
+              model: `.frm[${form.id}]`
+            }
+          ))}
+        />
+
+
+        <FilterGroup className="filterGroup"
+          header='chemicalSearch'
+          isVisible={!!this.props.chemicalSearch}
+          data={this.props.filterData}
+          isOpen={this.props.filterGroupStatus.chemSearch}
+          onOpen={(value) => { this.props.toggleFilterGroup('chemSearch', value) }}
+          inputs={[
+            {
+              label: 'ChemicalSearch',
+              model: '.chemSearch',
+              type: 'text',
+            }
+          ]} />
+        <FilterGroup className="filterGroup"
+          header='productAge'
+          isVisible={!!this.props.productsAge}
+          split
+          data={this.props.filterData}
+          isOpen={this.props.filterGroupStatus.productAge}
+          onOpen={(value) => { this.props.toggleFilterGroup('productAge', value) }}
+          dispatch={this.props.dispatch}
+          inputs={[
+            {
+              model: 'forms.filter.data.productAge',
+              type: 'radio',
+            }
+          ]} />
+        <FilterGroup className="filterGroup"
+          header='location'
+          isVisible={!!this.props.loc}
+          data={this.props.filterData}
+          isOpen={this.props.filterGroupStatus.loc}
+          onOpen={(value) => { this.props.toggleFilterGroup('loc', value) }}
+          dispatch={this.props.dispatch}
+          inputs={[
+            {
+              label: 'Max. miles away',
+              model: 'forms.filter.data.loc',
+              type: 'dropdown',
+            }
+          ]} />
+        <FilterGroup className="filterGroup"
+          header='expiration'
+          split
+          isVisible={!!this.props.date}
+          data={this.props.filterData}
+          isOpen={this.props.filterGroupStatus.date}
+          onOpen={(value) => { this.props.toggleFilterGroup('date', value) }}
+          dispatch={this.props.dispatch}
+          inputs={[
+            {
+              label: 'From',
+              model: '.agelb',
+              type: 'date',
+            },
+            {
+              label: 'To',
+              model: '.ageub',
+              type: 'date',
+            }
+          ]} />
+        <FilterGroup className="filterGroup"
+          isVisible={!!this.props.assay}
+          isOpen={this.props.filterGroupStatus.assay}
+          onOpen={(value) => { this.props.toggleFilterGroup('assay', value) }}
+          header='Assay'
+          data={this.props.filterData}
+          split
+          inputs={[
+            {
+              label: 'Minimum(%)',
+              model: '.assaylb',
+              type: 'assay',
+              placeholder: '0'
+            },
+            {
+              label: 'Maximum(%)',
+              model: '.assayub',
+              type: 'assay',
+              placeholder: '0',
+              bigger: true
+            }
+          ]} />
+      </div>
+    )
   }
 
   handleSubmit(inputs) {
@@ -98,7 +389,7 @@ class Filter extends Component {
 
   render() {
     if (!this.state.loaded) return null
-    
+
     let saveFilter = this.state.saveFilter ?
       <span
         className="savedButton"
@@ -118,312 +409,42 @@ class Filter extends Component {
         />
       </span>
 
-    return this.state.isOpen ?
-      <div className="filter">
-        <Sticky className="filter-switch">
-          <Button attached="left" onClick={() => this.switchFilter(true)} primary={this.state.filterSwitch}>
-            <FormattedMessage
-              id='filter.setFilters'
-              defaultMessage='SET FILTERS'
-            />
-          </Button>
-          <Button attached="right" onClick={() => this.switchFilter(false)} primary={!this.state.filterSwitch}>
-            <FormattedMessage
-              id='filter.savedFilter'
-              defaultMessage='SAVED FILTERS'
-            />
-          </Button>
-        </Sticky>
-        {this.state.filterSwitch ?
-          <Form
-            model="forms.filter"
-            onSubmit={(val) => this.handleSubmit(val)}>
-            <PerfectScrollbar>
+    return (
+      <div>
+
+
+        <Sidebar
+          onHide={(event) => {
+            // If we clicked on filter icon, prevent duplicate calls of action toggleFilter
+            if (!event.target.className.includes('submenu-filter')) {
+              this.props.toggleFilter(false)
+            }
+          }}
+          visible={this.state.isOpen} className='filter'
+          width='very wide' direction='right' animation='overlay'>
+          <div className="filter-switch">
+            <Button attached="left" onClick={() => this.switchFilter(true)} primary={this.state.filterSwitch}>
+              <FormattedMessage
+                id='filter.setFilters'
+                defaultMessage='SET FILTERS'
+              />
+            </Button>
+            <Button attached="right" onClick={() => this.switchFilter(false)} primary={!this.state.filterSwitch}>
+              <FormattedMessage
+                id='filter.savedFilter'
+                defaultMessage='SAVED FILTERS'
+              />
+            </Button>
+          </div>
+          {this.state.filterSwitch ?
+            <Form
+              model="forms.filter"
+              onSubmit={(val) => this.handleSubmit(val)}>
+
               <Accordion>
 
 
-                <FilterGroup className="filterGroup"
-                  header='order'
-                  isVisible={!!this.props.orderId}
-                  data={this.props.filterData}
-                  isOpen={this.props.filterGroupStatus.orderId}
-                  onOpen={(value) => { this.props.toggleFilterGroup('orderId', value) }}
-                  inputs={[
-                    {
-                      label: 'orderId',
-                      model: '.orderId',
-                      type: 'text'
-                    }
-                  ]} />
-                <FilterGroup className="filterGroup"
-                  header='orderDate'
-                  isVisible={!!this.props.orderDate}
-                  data={this.props.filterData}
-                  isOpen={this.props.filterGroupStatus.orderDate}
-                  onOpen={(value) => { this.props.toggleFilterGroup('orderDate', value) }}
-                  split
-                  inputs={[
-                    {
-                      label: 'orderFrom',
-                      model: '.orderFrom',
-                      type: 'date'
-                    }, {
-                      label: 'orderTo',
-                      model: '.orderTo',
-                      type: 'date'
-                    }
-                  ]} />
-                <FilterGroup className="filterGroup"
-                  header='customer'
-                  isVisible={!!this.props.customer}
-                  data={this.props.filterData}
-                  isOpen={this.props.filterGroupStatus.customer}
-                  onOpen={(value) => { this.props.toggleFilterGroup('customer', value) }}
-                  inputs={[
-                    {
-                      label: 'customerName',
-                      model: '.customer',
-                      type: 'text'
-                    }
-                  ]} />
-                <FilterGroup className="filterGroup"
-                  header='product'
-                  isVisible={!!this.props.product}
-                  data={this.props.filterData}
-                  isOpen={this.props.filterGroupStatus.product}
-                  onOpen={(value) => { this.props.toggleFilterGroup('product', value) }}
-                  inputs={[
-                    {
-                      label: 'productName',
-                      model: '.product',
-                      type: 'text'
-                    }
-                  ]} />
-                <FilterGroup className="filterGroup"
-                  header='orderStatus'
-                  isVisible={!!this.props.orderStatus}
-                  data={this.props.filterData}
-                  isOpen={this.props.filterGroupStatus.orderStatus}
-                  onOpen={(value) => { this.props.toggleFilterGroup('orderStatus', value) }}
-                  dispatch={this.props.dispatch}
-                  inputs={[
-                    {
-                      label: 'orderStatus',
-                      model: '.status',
-                      type: 'dropdown',
-                      data: [
-                        { id: 'All', name: 'All' },
-                        { id: 'Pending', name: 'Pending' },
-                        { id: 'In Transit', name: 'In Transit' },
-                        { id: 'Review', name: 'Review' },
-                        { id: 'Credit', name: 'Credit' },
-                        { id: 'Completed', name: 'Completed' },
-                        { id: 'Returned', name: 'Returned' },
-                        { id: 'Declined', name: 'Declined' }
-                      ],
-                      filterValue: this.props.orderStatus && this.props.orderStatus.filterValue ? this.props.orderStatus.filterValue : null
-                    }
-                  ]} />
-                <FilterGroup className="filterGroup"
-                  header='chemicalType'
-                  isVisible={!!this.props.chemicalName}
-                  data={this.props.filterData}
-                  isOpen={this.props.filterGroupStatus.chemName}
-                  onOpen={(value) => { this.props.toggleFilterGroup('chemName', value) }}
-                  inputs={[
-                    {
-                      label: 'ChemicalNameCAS',
-                      model: '.search',
-                      type: 'text',
-                    }
-                  ]} />
-                <FilterGroup className="filterGroup"
-                  isVisible={!!this.props.quantity}
-                  isOpen={this.props.filterGroupStatus.quantity}
-                  onOpen={(value) => { this.props.toggleFilterGroup('quantity', value) }}
-                  header='quantity'
-                  data={this.props.filterData}
-                  split
-                  inputs={[
-                    {
-                      label: 'FromQuantity',
-                      model: '.qntylb',
-                      type: 'number',
-                      placeholder: '0'
-                    },
-                    {
-                      label: 'ToQuantity',
-                      model: '.qntyub',
-                      type: 'number',
-                      placeholder: '0'
-                    }
-                  ]} />
-                <FilterGroup className="filterGroup"
-                  header='price'
-                  split
-                  isVisible={!!this.props.price}
-                  data={this.props.filterData}
-                  isOpen={this.props.filterGroupStatus.price}
-                  onOpen={(value) => { this.props.toggleFilterGroup('price', value) }}
-                  inputs={[
-                    {
-                      label: 'FromPrice',
-                      model: '.prclb',
-                      type: 'number',
-                      placeholder: '0'
-                    },
-                    {
-                      label: 'ToPrice',
-                      model: '.prcub',
-                      type: 'number',
-                      placeholder: '0'
-                    }
-                  ]} />
-                <FilterGroup className="filterGroup"
-                  header='packaging'
-                  isVisible={!!this.props.package}
-                  split
-                  data={this.props.filterData}
-                  isOpen={this.props.filterGroupStatus.packaging}
-                  onOpen={(value) => { this.props.toggleFilterGroup('packaging', value) }}
-                  checkboxModel='pckgs'
-                  inputs={this.props.packagingTypes.map(packagingType => ({
-                    label: packagingType.name,
-                    type: 'checkbox',
-                    id: packagingType.id,
-                    model: `.pckgs[${packagingType.id}]`
-                  }))} />
-                <FilterGroup className="filterGroup"
-                  header='grade'
-                  isVisible={!!this.props.productGrade}
-                  split
-                  data={this.props.filterData}
-                  isOpen={this.props.filterGroupStatus.productGrade}
-                  onOpen={(value) => { this.props.toggleFilterGroup('productGrade', value) }}
-                  checkboxModel='grade'
-                  inputs={this.props.productGradeTypes.map(productGradeType => ({
-                    label: productGradeType.name,
-                    type: 'checkbox',
-                    id: productGradeType.id,
-                    model: `.grade[${productGradeType.id}]`
-                  }))} />
-                <FilterGroup className="filterGroup"
-                  header='condition'
-                  isVisible={!!this.props.condition}
-                  split
-                  data={this.props.productConditions}
-                  isOpen={this.props.filterGroupStatus.condition}
-                  onOpen={(value) => { this.props.toggleFilterGroup('condition', value) }}
-                  checkboxModel='cndt'
-                  inputs={this.props.productConditions.map(condition => ({
-                    label: condition.name,
-                    type: 'checkbox',
-                    id: condition.id,
-                    model: `.cndt[${condition.id}]`
-                  }))} />
-                <FilterGroup className="filterGroup"
-                  header='form'
-                  isVisible={!!this.props.form}
-                  split
-                  data={this.props.productForms}
-                  isOpen={this.props.filterGroupStatus.form}
-                  onOpen={(value) => { this.props.toggleFilterGroup('form', value) }}
-                  checkboxModel='frm'
-                  inputs={this.props.productForms.map(form => (
-                    {
-                      label: form.name,
-                      type: 'checkbox',
-                      id: form.id,
-                      model: `.frm[${form.id}]`
-                    }
-                  ))}
-                />
-
-
-                <FilterGroup className="filterGroup"
-                  header='chemicalSearch'
-                  isVisible={!!this.props.chemicalSearch}
-                  data={this.props.filterData}
-                  isOpen={this.props.filterGroupStatus.chemSearch}
-                  onOpen={(value) => { this.props.toggleFilterGroup('chemSearch', value) }}
-                  inputs={[
-                    {
-                      label: 'ChemicalSearch',
-                      model: '.chemSearch',
-                      type: 'text',
-                    }
-                  ]} />
-                {/*Product Age and Location do not show on page*/}
-                <FilterGroup className="filterGroup"
-                  header='productAge'
-                  isVisible={!!this.props.productsAge}
-                  split
-                  data={this.props.filterData}
-                  isOpen={this.props.filterGroupStatus.productAge}
-                  onOpen={(value) => { this.props.toggleFilterGroup('productAge', value) }}
-                  dispatch={this.props.dispatch}
-                  inputs={[
-                    {
-                      model: 'forms.filter.data.productAge',
-                      type: 'radio',
-                    }
-                  ]} />
-                <FilterGroup className="filterGroup"
-                  header='location'
-                  isVisible={!!this.props.loc}
-                  data={this.props.filterData}
-                  isOpen={this.props.filterGroupStatus.loc}
-                  onOpen={(value) => { this.props.toggleFilterGroup('loc', value) }}
-                  dispatch={this.props.dispatch}
-                  inputs={[
-                    {
-                      label: 'Max. miles away',
-                      model: 'forms.filter.data.loc',
-                      type: 'dropdown',
-                    }
-                  ]} />
-                <FilterGroup className="filterGroup"
-                  header='expiration'
-                  split
-                  isVisible={!!this.props.date}
-                  data={this.props.filterData}
-                  isOpen={this.props.filterGroupStatus.date}
-                  onOpen={(value) => { this.props.toggleFilterGroup('date', value) }}
-                  dispatch={this.props.dispatch}
-                  inputs={[
-                    {
-                      label: 'From',
-                      model: '.agelb',
-                      type: 'date',
-                    },
-                    {
-                      label: 'To',
-                      model: '.ageub',
-                      type: 'date',
-                    }
-                  ]} />
-                <FilterGroup className="filterGroup"
-                  isVisible={!!this.props.assay}
-                  isOpen={this.props.filterGroupStatus.assay}
-                  onOpen={(value) => { this.props.toggleFilterGroup('assay', value) }}
-                  header='Assay'
-                  data={this.props.filterData}
-                  split
-                  inputs={[
-                    {
-                      label: 'Minimum(%)',
-                      model: '.assaylb',
-                      type: 'assay',
-                      placeholder: '0'
-                    },
-                    {
-                      label: 'Maximum(%)',
-                      model: '.assayub',
-                      type: 'assay',
-                      placeholder: '0',
-                      bigger: true
-                    }
-                  ]} />
+                {this.getContent()}
                 <div className="save-filter">
                   <div className="header">
                     <FormattedMessage
@@ -453,41 +474,64 @@ class Filter extends Component {
                   </div>
                 </div>
               </Accordion>
-            </PerfectScrollbar>
 
-            <div className="filterBottom">
-              <Container textAlign='right' style={{ marginTop: '24px' }}>
-                <Button
-                  size='large'
-                  color='grey'
-                  onClick={(e) => { this.handleReset(e) }}>
-                  <FormattedMessage
-                    id='filter.clearFilter'
-                    defaultMessage='Clear Filter'
-                  />
-                </Button>
-                <Button primary
-                  size='large'>
-                  <FormattedMessage
-                    id='global.apply'
-                    defaultMessage='Apply'
-                  />
-                </Button>
-              </Container>
-            </div>
-          </Form>
-          :
-          <SavedFilters
-            fetchSavedFilters={this.props.fetchSavedFilters}
-            deleteSaveFilter={(id) => this.deleteSaveFilter(id)}
-            fillFilter={(inputs) => this.props.fillFilter(inputs)}
-            filterFunc={(inputs) => this.handleSubmit(inputs)}
-            saveFilters={this.props.saveFilters}
-          />
-        }
+
+              <Button
+                floated='right'
+                size='large'
+                color='grey'
+                onClick={(e) => { this.handleReset(e) }}>
+                <FormattedMessage
+                  id='filter.clearFilter'
+                  defaultMessage='Clear Filter'
+                />
+              </Button>
+
+              <Button primary
+                floated='right'
+                size='large'>
+                <FormattedMessage
+                  id='global.apply'
+                  defaultMessage='Apply'
+                />
+              </Button>
+
+
+
+
+            </Form>
+            :
+            <SavedFilters
+              fetchSavedFilters={this.props.fetchSavedFilters}
+              deleteSaveFilter={(id) => this.deleteSaveFilter(id)}
+              fillFilter={(inputs) => this.props.fillFilter(inputs)}
+              filterFunc={(inputs) => this.handleSubmit(inputs)}
+              saveFilters={this.props.saveFilters}
+            />
+          }
+          {/* <div className="filterBottom">
+          <Container textAlign='right' style={{ marginTop: '24px' }}>
+            <Button
+              size='large'
+              color='grey'
+              onClick={(e) => { this.handleReset(e) }}>
+              <FormattedMessage
+                id='filter.clearFilter'
+                defaultMessage='Clear Filter'
+              />
+            </Button>
+            <Button primary
+              size='large'>
+              <FormattedMessage
+                id='global.apply'
+                defaultMessage='Apply'
+              />
+            </Button>
+          </Container>
+        </div> */}
+        </Sidebar>
       </div>
-      : null
-
+    )
   }
 }
 

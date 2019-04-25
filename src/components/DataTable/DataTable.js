@@ -84,6 +84,7 @@ class DataTable extends Component {
               selectableRows={this.props.selectableRows}
             />
             <Rows
+              onRowClick={this.props.onRowClick}
               tableType={this.props.id}
               addPopup={this.props.addPopup}
               removePopup={this.props.removePopup}

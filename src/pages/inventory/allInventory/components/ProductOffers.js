@@ -14,6 +14,7 @@ class ProductOffers extends Component {
     }).then(() => console.log("data fetched"))
   }
 
+
   groupProductOffers(productOffers) {
     return productOffers.reduce((carry, offer) => {
       (carry[(typeof offer.product !== 'undefined' ? offer.product.id : 0)] = carry[(typeof offer.product !== 'undefined' ? offer.product.id : 0)] || { ...offer.product, visible: true, productOffers: [] }).productOffers.push(offer)
@@ -47,10 +48,9 @@ class ProductOffers extends Component {
           //const countryException = ["USA", "Canada"]
           //const countryName = offer.warehouse.address.province.country ? offer.warehouse.address.province.country.name : null
 
-          console.log(offer)
           const location = (this.props.identity.id === offer.merchant.id || this.props.identity.homeBranch.id === offer.merchant.id)
-            ? `${offer.warehouse.address.city}, ${offer.warehouse.address.province ? offer.warehouse.address.province.name : ''}`
-            : `${offer.warehouse.address.province ? offer.warehouse.address.province.name : ''}` + (typeof offer.warehouse.address.country !== 'undefined' ? `, ${offer.warehouse.address.country.name}` : ``)
+            ? `${offer.warehouse.address.city}, ${offer.warehouse.address.country.name}`
+            : `${offer.warehouse.address.country.name}` + (typeof offer.warehouse.address.country !== 'undefined' ? `, ${offer.warehouse.address.country.name}` : ``)
 
           return {
             id: offer.id,
@@ -77,6 +77,7 @@ class ProductOffers extends Component {
       <div className="App ">
         <DataTable id="allInventoryTable"
           selectableRows
+          onRowClick={this.props.onRowClick}
           sortFunc={(nameColumn) => console.log(nameColumn)}
           headerInit={[
             { name: 'Merchant' },

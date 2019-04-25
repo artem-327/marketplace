@@ -6,13 +6,13 @@ $font-family: 'Cabin', sans-serif;
   font-family: "Cabin", sans-serif;
   background-color: #fbfbfb;
   position: fixed;
-  width: 500px !important;
+  width: 500px;
   right: 0;
   top: 105px !important;
   bottom: 0;
-  overflow-y: auto;
+  overflow: auto !important;
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
-  padding: 10px 10px 80px;
+  padding: 10px 10px 125px;
   z-index: 4;
   text-align: left;
   .error {
@@ -40,7 +40,7 @@ $font-family: 'Cabin', sans-serif;
     left: 0;
     right: 0;
     bottom: 80px;
-    overflow: hidden;
+    // overflow: hidden;
     padding: 0 25px 0 10px;
     >.ps__rail-y {
       position: absolute;
@@ -273,7 +273,7 @@ $font-family: 'Cabin', sans-serif;
     .saveButton {
       transition: all .2s ease;
       display: inline-block;
-      width: 120px;
+      // width: 120px;
       min-height: 42px;
       margin-left: 20px;
       border: 1px solid #4cd136;
@@ -337,3 +337,29 @@ $font-family: 'Cabin', sans-serif;
 }
 
 
+.filter-fixed {
+  position: fixed;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.filter-inner-fixed {
+  position: fixed;
+  &.bottom {
+    bottom: 90px;
+  }
+
+  &.top {
+    top: 0px;
+  }
+}
+  
+  
+.filter-container-rel {
+  position: relative;
+  // overflow-y: auto;
+}
+
+p {
+  line-height: 400%;
+}

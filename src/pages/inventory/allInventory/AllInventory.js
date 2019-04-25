@@ -1,20 +1,31 @@
+import './allinventory.scss'
+
 import React, { Component } from 'react'
 import ProductOffers from "./components/ProductOffers"
 import Filter from '../../../components/Filter'
 import Spinner from '../../../components/Spinner/Spinner'
 import FilterTag from "../../../components/Filter/components/FilterTag"
 import SubMenu from '../../../components/SubMenu'
-// import ShippingQuotes from './components/ShippingQuotes'
-import { ShipingQuotes } from '~/modules/shiping'
-import { getSelectedRowsDataTable } from "../../../utils/functions"
-import './allinventory.scss'
 import { FormattedMessage } from 'react-intl'
-import { checkToken } from "../../../utils/auth"
-import cn from "classnames"
-import { Menu, Header, Button } from "semantic-ui-react"
+import { Menu, Header, Container, Sidebar } from "semantic-ui-react"
+import AddCart from '../../cart/components/AddCart'
 
-class AllInventory extends Component {
+const initialCartState = {
+  pricing: null,
+  quantity: 1,
+  warning: null
+}
 
+export default class AllInventory extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      sidebarOpen: false,
+      id: null,
+      ...initialCartState
+    }
+  }
   componentDidMount() {
     this.props.fetchAllProductOffers()
   }
@@ -25,51 +36,48 @@ class AllInventory extends Component {
     this.props.resetForm('forms.filter')
   }
 
-  openShippingQuote() {
-    if (checkToken(this.props)) return
+  tableRowClicked = (id) => {
+    let { sidebarOpen } = this.state
+    const { getProductOffer } = this.props
 
-    const selectedRows = getSelectedRowsDataTable(this.props.productOffersTable)
-    this.props.addPopup(<ShipingQuotes
-      selectedRows={selectedRows}
-      className='shipping-quotes-popup'
-      removePopup={this.props.removePopup}
-      {...this.props} />)
+    if (this.state.id !== id && this.state.id) this.setState({ sidebarOpen: true, id, ...initialCartState })
+    else this.setState({ sidebarOpen: !sidebarOpen, id, ...initialCartState })
+
+    getProductOffer(id)
   }
 
   render() {
     const content = this.props.productOffersIsFetching
       ? <div><Spinner /></div>
-      : <ProductOffers {...this.props} />
+      : <ProductOffers onRowClick={this.tableRowClicked} {...this.props} />
 
     return (
       <div>
 
-        <Menu secondary>
-          <Menu.Item header>
-            <Header as='h1' size='medium'>
-              <FormattedMessage
-                id='allInventory.marketplace'
-                defaultMessage='MARKETPLACE'
-              />
-            </Header>
-          </Menu.Item>
-          <Menu.Menu position='right'>
-            <Menu.Item>
-              <Button primary id='shippingQuotes' className={cn({ hidden: !this.props.shippingQuotes })} onClick={() => this.openShippingQuote()}>
-                <FormattedMessage
-                  id='allInventory.shippingQuote'
-                  defaultMessage='Shipping Quote'
+        <Container fluid>
+          <Menu secondary>
+            <Menu.Item header>`
+              <Header as='h1' size='medium'>
+                <FormattedMessage id='myInventory.myInventory'
+                  defaultMessage='MY INVENTORY' />
+              </Header>
+            </Menu.Item>
+
+            <Menu.Menu position='right'>
+              <Menu.Item>
+                <FilterTag
+                  dispatch={this.props.dispatch}
+                  closeFunc={(filter) => { this.props.fetchMyProductOffers({ ...filter }) }}
                 />
-              </Button>
-            </Menu.Item>
-            <Menu.Item>
-              <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => { this.props.fetchAllProductOffers({ ...filter }) }} />
-            </Menu.Item>
-            <Menu.Item>
-              <SubMenu />
-            </Menu.Item>
-          </Menu.Menu>
-        </Menu>
+              </Menu.Item>
+              <Menu.Item>
+                <SubMenu />
+              </Menu.Item>
+            </Menu.Menu>
+          </Menu>
+        </Container>
+
+
         <Filter
           chemicalName
           quantity
@@ -84,9 +92,36 @@ class AllInventory extends Component {
           {...this.props}
         />
         {content}
+        <AddCart
+          hideSidebar={() => this.setState({ sidebarOpen: false })}
+          visible={this.state.sidebarOpen}
+          id={this.state.id}
+          pricing={this.state.pricing}
+          warning={this.state.warning}
+          quantity={this.state.quantity}
+          valueChanged={(...values) => this.setState(...values)} />
+
       </div>
     )
   }
 }
 
-export default AllInventory
+
+
+
+
+
+
+
+
+  // openShippingQuote() {
+  //   if (checkToken(this.props)) return
+
+  //   const selectedRows = getSelectedRowsDataTable(this.props.productOffersTable)
+  //   this.props.addPopup(
+  //     <ShippingQuotes
+  //       selectedRows={selectedRows}
+  //       className='shipping-quotes-popup'
+  //       removePopup={this.props.removePopup}
+  //       {...this.props} />)
+  // }

@@ -1,9 +1,11 @@
 import './ShoppingCart.scss'
 
 import React, { Component } from 'react'
-import {func, array, object} from 'prop-types'
+import { func, array, object } from 'prop-types'
 import SummaryTable from '../components/SummaryTable/SummaryTable'
 import ItemCartBody from '../components/ItemCartBody/ItemCartBody'
+import AddCart from '../components/AddCart'
+
 import KeepShoppingPopup from '../components/KeepShoppingPopup/KeepShoppingPopup'
 import Spinner from '../../../components/Spinner/Spinner'
 import { FormattedMessage } from 'react-intl'
@@ -11,12 +13,18 @@ import { checkToken } from '../../../utils/auth'
 import { Container, Menu, Header, Button, Icon } from 'semantic-ui-react'
 import Router from 'next/router'
 
-class ShoppingCart extends Component {
+export default class ShoppingCart extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      modalOpen: false
+      modalOpen: false,
+      sidebarOpen: false,
+      id: null,
+      orderId: null,
+      quantity: 1,
+      warning: null,
+      pricing: null
     }
   }
   componentDidMount() {
@@ -31,6 +39,11 @@ class ShoppingCart extends Component {
   handleContinue = () => {
     if (checkToken(this.props)) return
     Router.push('/purchase-order')
+  }
+
+  editCart = (cartItem) => {
+    let { productOffer, quantity, id } = cartItem
+    this.setState({ quantity, orderId: id, id: productOffer.id, sidebarOpen: true })
   }
 
   renderSummary() {
@@ -80,13 +93,12 @@ class ShoppingCart extends Component {
   }
 
   render() {
-    const { cart, deleteCart, history, addPopup, removePopup, cartIsFetching } = this.props
+    const { cart, deleteCart, history, cartIsFetching } = this.props
     if (cartIsFetching) return <Spinner />
     const itemContent = cart.cartItems && cart.cartItems.map(cartItem => {
       return (
         <ItemCartBody
-          addPopup={addPopup}
-          removePopup={removePopup}
+          editCart={this.editCart}
           history={history}
           location={this.props.location}
           key={cartItem.id}
@@ -145,14 +157,24 @@ class ShoppingCart extends Component {
                   </Button>
                 } />
             </div>
+            {!this.state.id || !this.state.orderId ?
+              null
+              : <AddCart
+                hideSidebar={() => this.setState({ sidebarOpen: false })}
+                visible={this.state.sidebarOpen}
+                isEdit={true}
+                orderId={this.state.orderId}
+                id={this.state.id}
+                pricing={this.state.pricing}
+                warning={this.state.warning}
+                quantity={this.state.quantity}
+                valueChanged={(...values) => this.setState(...values)} />}
           </div>
         </div>
       </div>
     )
   }
 }
-
-export default ShoppingCart
 
 ShoppingCart.propTypes = {
   addPopup: func,
