@@ -51,7 +51,19 @@ const mapStateToProps = ({admin}) => {
     loading: admin.loading,
     rows: admin.companiesRows.map(c => ({
       ...c,
-      nacdMemberText: c.nacdMember ? 'Yes' : 'No'
+      primaryBranchAddress: c.primaryBranch && c.primaryBranch.address ?
+        c.primaryBranch.address.streetAddress + ', ' +
+        c.primaryBranch.address.city + ', ' +
+        (c.primaryBranch.address.province ? c.primaryBranch.address.province + ', ' : '') +
+        c.primaryBranch.address.country
+        : '',
+      primaryContact: c.primaryMerchant ?
+        c.primaryMerchant.firstname + ', ' +
+        c.primaryMerchant.lastname
+        : '',
+      contactEmail: c.primaryMerchant ?
+        c.primaryMerchant.email
+        : '',
     }))
   }
 }

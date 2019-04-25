@@ -14,6 +14,7 @@ class UnitOfPackagingTable extends Component {
   render() {
     const {
       config,
+      loading,
       rows,
       filterValue,
       currentTab,
@@ -27,6 +28,7 @@ class UnitOfPackagingTable extends Component {
       <React.Fragment>
         <ProdexTable
           filterValue={filterValue}
+          loading={loading}
           columns={columns}
           rows={rows}
           rowActions={[
@@ -61,6 +63,7 @@ const mapStateToProps = state => {
     }),
     filterValue: state.admin.filterValue,
     currentTab: state.admin.currentTab,
+    loading: state.admin.loading,
   }
 }
 

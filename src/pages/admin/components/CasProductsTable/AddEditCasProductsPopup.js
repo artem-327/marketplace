@@ -96,7 +96,7 @@ class AddEditCasProductsPopup extends React.Component {
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>Add {config.addEditText}</Modal.Header>
+        <Modal.Header>{popupValues ? ('Edit') : ('Add')} {config.addEditText}</Modal.Header>
         <Modal.Content>
           <Form
             enableReinitialize

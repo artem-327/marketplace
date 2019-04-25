@@ -22,6 +22,7 @@ class CasProductsTable extends Component {
   render() {
     const {
       config,
+      loading,
       rows,
       filterValue,
       currentTab,
@@ -37,6 +38,7 @@ class CasProductsTable extends Component {
       <React.Fragment>
         <ProdexTable
           filterValue={filterValue}
+          loading={loading}
           columns={columns}
           rows={rows}
           rowActions={[
@@ -72,6 +74,7 @@ const mapStateToProps = state => {
     currentTab: state.admin.currentTab,
     casListDataRequest: state.admin.casListDataRequest,
     //rows: state.admin.casProductsRows,
+    loading: state.admin.loading,
     rows: state.admin.casProductsRows.map(d => {
       return {
         id: d.id,

@@ -12,12 +12,13 @@ const initialFormValues = {
   nacdMember: true,
   phone: '',
   website: '',
-  primaryBranch: {
+  mailingBranch: {
     name: '',
     accessorials: [],
     address: {
       city: '',
-      country: 1,
+      country: '',
+      province: '',
       streetAddress: '',
       zip: ''
     },
@@ -25,14 +26,39 @@ const initialFormValues = {
     contactName: '',
     contactPhone: '',
     warehouse: true
+  },
+  primaryBranch: {
+    name: '',
+    accessorials: [],
+    address: {
+      city: '',
+      country: '',
+      province: '',
+      streetAddress: '',
+      zip: ''
+    },
+    contactEmail: '',
+    contactName: '',
+    contactPhone: '',
+    warehouse: true
+  },
+  primaryMerchant: {
+    email: '',
+    firstname: '',
+    lastname: '',
+    middlename: '',
   }
 }
 
-const formValidation = Yup.object().shape({
+const formValidationEdit = Yup.object().shape({
+  name: Yup.string().min(2, 'Name should has at least 2 characters').required()
+})
+
+const formValidationNew = Yup.object().shape({
   name: Yup.string().min(2, 'Name should has at least 2 characters').required(),
-  nacdMember: Yup.bool().required(),
-  phone: Yup.string().min(9, 'Enter valid phone number').required(),
-  website: Yup.string().required(),
+  //nacdMember: Yup.bool().required(),
+  //phone: Yup.string().min(9, 'Enter valid phone number').required(),
+  //website: Yup.string().required(),
   // primaryBranch: Yup.object().shape({
   //   name: Yup.string().required(),
   //   address: Yup.object().shape({
@@ -48,8 +74,13 @@ const formValidation = Yup.object().shape({
   // })
 })
 
+const removeEmpty = (obj) =>
+  Object.entries(obj).forEach(([key, val]) => {
+    if (val && typeof val === 'object') removeEmpty(val)
+    else if (val == null || val === '') delete obj[key]
+  })
+
 class AddNewPopupCasProducts extends React.Component {
-  
   componentDidMount() {
     this.props.getCountries()
   }
@@ -67,19 +98,24 @@ class AddNewPopupCasProducts extends React.Component {
 
     return (
       <Modal open centered={false} size="small">
-        <Modal.Header>Add { config.addEditText }</Modal.Header>
+        <Modal.Header>{popupValues ? ('Edit') : ('Add')} { config.addEditText }</Modal.Header>
         <Modal.Content>
           <Form
             enableReinitialize
             initialValues={{...initialFormValues, ...popupValues}}
-            validationSchema={formValidation}
+            validationSchema={popupValues ? formValidationNew : formValidationEdit}
             onReset={closePopup}
             onSubmit={async (values, actions) => {
               if (popupValues) {
                 let {primaryBranch, ...newValues} = values
                 await updateCompany(popupValues.id, newValues)
               } 
-              else await createCompany(values)
+              else {
+                console.log('!!!!!!! create company !! 1', values);//! !
+                removeEmpty(values);
+                console.log('!!!!!!! create company !! 2', values);//! !
+                //! !await createCompany(values)
+              }
 
               actions.setSubmitting(false)
             }}
@@ -117,6 +153,38 @@ class AddNewPopupCasProducts extends React.Component {
               <FormGroup widths="equal">
                 <Dropdown label="Zip" name="primaryBranch.address.zip" inputProps={{search: true}} options={zipCodes} />
                 <Dropdown label="Country" name="primaryBranch.address.country" inputProps={{search: true}} options={countries} />
+              </FormGroup>
+
+              <h4>Mailing Branch</h4>
+              <FormGroup widths="equal">
+                <Input label="Name" name="mailingBranch.name" />
+              </FormGroup>
+              <FormGroup widths="equal">
+                <Input label="Contact Email" name="mailingBranch.contactEmail" />
+                <Input label="Contact Name" name="mailingBranch.contactName" />
+                <Input label="Contact Phone" name="mailingBranch.contactPhone" />
+              </FormGroup>
+              <FormGroup widths="equal">
+                <Checkbox label="Warehouse" name="mailingBranch.warehouse" />
+              </FormGroup>
+              <h5>Address</h5>
+              <FormGroup widths="equal">
+                <Input label="Street" name="mailingBranch.address.streetAddress" />
+                <Input label="City" name="mailingBranch.address.city" />
+              </FormGroup>
+              <FormGroup widths="equal">
+                <Dropdown label="Zip" name="mailingBranch.address.zip" inputProps={{search: true}} options={zipCodes} />
+                <Dropdown label="Country" name="mailingBranch.address.country" inputProps={{search: true}} options={countries} />
+              </FormGroup>
+
+              <h4>Primary Merchant</h4>
+              <FormGroup widths="equal">
+                <Input label="Email" name="primaryMerchant.email" />
+              </FormGroup>
+              <FormGroup widths="equal">
+                <Input label="First Name" name="primaryMerchant.firstname" />
+                <Input label="Middle Name" name="primaryMerchant.middlename" />
+                <Input label="Last Name" name="primaryMerchant.lastname" />
               </FormGroup>
             </>}
 

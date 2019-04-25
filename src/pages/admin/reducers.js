@@ -120,11 +120,20 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER_PENDING:
+    case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
     case AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER_FULFILLED:
     case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_FULFILLED: {
       return {
         ...state,
-        casProductsRows: action.payload
+        casProductsRows: action.payload,
+        loading: false
       }
     }
 

@@ -20,9 +20,9 @@ export const config = {
     display: {
       columns: [
         { name: 'name', title: 'Company Name'},
-        { name: 'nacdMemberText', title: ' NACD Member'},
-        { name: 'phone', title: 'Phone Number'},
-        { name: 'website', title: 'Web'}
+        { name: 'primaryBranchAddress', title: 'Headquarters Address'},
+        { name: 'primaryContact', title: 'Primary Contact'},
+        { name: 'contactEmail', title: 'Contact E-mail'}
       ]
     }
   },
