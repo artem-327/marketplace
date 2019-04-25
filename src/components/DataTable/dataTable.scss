@@ -1,13 +1,14 @@
 @import "../../styles/main.scss";
 
 .data-table-wr{
-  position: absolute;
-  top: 125px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  min-height: 180px;
+  margin-top: 10px;
+  // position: absolute;
+  // top: 125px;
+  // left: 0;
+  // right: 0;
+  // bottom: 0;
+  // width: 100%;
+  // min-height: 180px;
   overflow-x: auto;
   overflow-y: visible;
   padding: 0;
@@ -85,7 +86,7 @@
 
     .data-table {
       margin: 0;
-      border: 29px solid transparent;
+      //border: 29px solid transparent;
       border-top: 0 none;
     }
   }
