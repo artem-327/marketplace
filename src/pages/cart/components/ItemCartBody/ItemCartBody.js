@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import PropTypes from "prop-types";
+import React, { Component } from 'react'
+import PropTypes from "prop-types"
 import AddCart from "../AddCart"
-import {getUnit} from '../../../../utils/functions';
-import confirm from '../../../../components/Confirmable/confirm';
-import {FormattedMessage} from 'react-intl';
-import {checkToken} from "../../../../utils/auth";
+import {getUnit} from '../../../../utils/functions'
+import confirm from '../../../../components/Confirmable/confirm'
+import {FormattedMessage} from 'react-intl'
+import {checkToken} from "../../../../utils/auth"
 import { Button } from "semantic-ui-react"
 
 class ItemCartBody extends Component {
@@ -22,7 +22,7 @@ class ItemCartBody extends Component {
           // create new popup
           AddCart.openedPopup.id = offerId;
           this.props.addPopup(<AddCart id={offerId} orderId={cartId} isEdit
-                                       history={this.props.history} className='add-cart-popup'/>);
+                                       history={this.props.history} className='add-cart-popup'/>)
       }
   }
 
