@@ -1,292 +1,309 @@
-import React, {Component} from 'react'
-import PropTypes from 'prop-types'
-import Dropdown from '../../../../components/Dropdown/Dropdown'
-import Spinner from '../../../../components/Spinner/Spinner'
-import Button from '../../../../components/Button/Button'
-import PopupComponent from '../../../../components/PopUp/PopupComponent'
-import {getUnit} from '../../../../utils/functions'
 import './AddCart.scss'
+import { getUnit } from '../../../../utils/functions'
 import file from '../../../../images/file.svg'
-import InputControlled from '../../../../components/InputControlled/InputControlled'
-import {checkToken} from "../../../../utils/auth"
+import { checkToken } from '../../../../utils/auth'
+
+import React, { Component } from 'react'
+import { object, func, number, string } from 'prop-types'
+import { Sidebar, Button, Header, Grid, GridRow, GridColumn, Loader, Dimmer, Dropdown, Input, Divider, Segment } from 'semantic-ui-react'
 import Router from 'next/router'
 
-class AddCart extends Component {
+export default class AddCart extends Component {
+  constructor(props) {
+    super(props)
 
-  static openedPopup = {
-    id: false
+    this.state = {
+      warning: null
+    }
   }
-
-  state = {
-    pricing: false,
-    quantity: 0,
-    warning: null
-  }
-
   componentDidMount() {
     if (this.props.isEdit) this.props.getOrderDetail(this.props.orderId)
     this.props.getProductOffer(this.props.id)
   }
 
-  onClick = () => {
-    AddCart.openedPopup.id = false
-    this.props.removePopup()
-  }
-
   createOrder = async () => {
+
     if (checkToken(this.props)) return
-    const {removePopup, postNewOrder, offer} = this.props
+
+    const { postNewOrder, quantity, offer } = this.props
+
     const offerpayload = {
-        productOffer: offer.id,
-        quantity: this.state.quantity
+      productOffer: offer.id,
+      quantity
     }
-    if (!this.state.quantity) {
-      this.setState({warning: "quantity is required"})
-      return
-    } else {
-      await postNewOrder(offerpayload)
-      AddCart.openedPopup.id = false
-      removePopup()
-      Router.push("/cart")
-    }
+
+    await postNewOrder(offerpayload)
+
+    Router.push('/cart')
   }
 
-  editOrder = () => {
-    const {removePopup, postOrderEdit, order} = this.props
+  editOrder = async () => {
+    const { postOrderEdit, offer, quantity, pricing, orderId, hideSidebar } = this.props
+
+    // TODO, wrong id??
     const orderpayload = {
-        id: order.productOffer.id,
-        quantity: this.state.quantity || order.quantity,
-        selectedOfferPrice: this.state.pricing.price || order.selectedOfferPrice
+      id: orderId,
+      quantity,
+      selectedOfferPrice: pricing
     }
-    postOrderEdit(orderpayload)
-    Router.push("/cart")
-    AddCart.openedPopup.id = false
-    removePopup()
-  }
 
-  getQualityOptions = (split) => {
-    const options = [] 
-    if (this.state.pricing) {
-      const {quantityFrom, quantityTo} = this.state.pricing
-      for (let i = quantityFrom; i <= quantityTo; i = i + split) {
-        options.push(i)
-      }
-      return options
-    } else {
-      const {minimum, pkgAmount} = this.props.offer
-      for (let i = minimum; i <= pkgAmount; i = i + split) {
-        options.push(i)
-      }
-    }
-    return options
+    await postOrderEdit(orderpayload)
+    hideSidebar()
+    Router.push('/cart')
   }
 
   handleQuantity = e => {
-    const {minimum, splits, pkgAmount} = this.props.offer
+    const { minimum, splits, pkgAmount } = this.props.offer
     const value = parseInt(e.target.value, 10)
-    const warning = value < minimum || !value 
-      ? `minimum is ${minimum}`
-      :  value > pkgAmount
-        ? `maximum is ${pkgAmount}`
-        : value % parseInt(splits, 10) === 0 || value === parseInt(minimum, 10)
-          ? null
-          : `split is ${splits}`
-    this.setState({quantity: value, warning: warning})
+    let warning = null
+
+    if (value < minimum || !value) {
+      warning = `minimum is ${minimum}`
+    } else if (value > pkgAmount) {
+      warning = `maximum is ${pkgAmount}`
+    } else if (!(value % parseInt(splits, 10) === 0 || value === parseInt(minimum, 10))) {
+      warning = `split is ${splits}`
+    }
+
+    this.setState({ warning })
+    this.props.valueChanged({ quantity: value, warning })
   }
 
-  render() {
 
-    //console.log(this.props)
 
-    // load data if creating popup with different offer id
-    if (this.props.offer.id && this.props.id !== this.props.offer.id) {
-        this.props.getProductOffer(this.props.id)
-    }
-    const {offer, order, isEdit, removePopup, offerDetailIsFetching, orderDetailIsFetching} = this.props
-    if (isEdit && orderDetailIsFetching) return <Spinner />
-    if (offerDetailIsFetching) return <Spinner />
-    const location =`${offer.warehouse.address.city}, ${offer.warehouse.address.province ? offer.warehouse.address.province.name : offer.warehouse.address.country.name}`
-    const {pkgAmount, minimum, splits} = offer
-    const unit = offer.product.packagingUnit ? offer.product.packagingUnit : null
-    const size = offer.product.packagingSize ? offer.product.packagingSize : null
+  getCartMarkup = () => {
+    const { offer, order, isEdit, quantity, pricing, warning } = this.props
+    const { pkgAmount } = offer
+
+    const location = `${offer.warehouse.address.city}, ${offer.warehouse.address.country.name}`
+    const unit = offer.product.packagingUnit
+    const size = offer.product.packagingSize
     const unitName = `${getUnit(unit.name)}`
     const packageSize = `${size} ${unitName}`
     const availableProducts = `${pkgAmount} pck / ${(pkgAmount * size).formatNumber()} ${unitName}`
-    const totalPrice = (this.state.quantity && this.state.pricing) ? this.state.pricing.price * this.state.quantity * size : ""
-    const {tiers} = offer.pricing
-    const priceLevelOptions = tiers.map((tier, i) => {
-      const quantityTo = (i + 1) >= tiers.length ? pkgAmount : (tier.quantityFrom > tiers[i+1].quantityFrom ? tier.quantityFrom : tiers[i+1].quantityFrom  - 1)
-      const object = {
-        name: `${tier.quantityFrom} - ${quantityTo} pck / $${tier.price}`, //name: `${i.quantityFrom} - ${i.quantityTo} pck / $${i.price}`,
-        id: {quantityFrom: tier.quantityFrom, quantityTo: quantityTo, price: tier.price}
-      }
-      return object
-    })
-    const noPriceTiersOption = [{
-      name: offer.pricing.price.amount,
-      id:  offer.pricing.price.amount
-    }]
-    const currentPriceLevel = isEdit 
-      ? tiers.find(i => i.id === order.productOffer.pricing.tiers[0].id)
-      : null
-    const currentPriceLevelName = currentPriceLevel 
-    ? {
-      name: `${currentPriceLevel.quantityFrom} - ${currentPriceLevel.quantityTo} pck / $${currentPriceLevel.price}`,
-      id: {quantityFrom: currentPriceLevel.quantityFrom, quantityTo: currentPriceLevel.quantityTo, price: currentPriceLevel.price}
-    } : null
-    const priceLevelDefault = !tiers.length ? noPriceTiersOption[0].name : currentPriceLevelName && currentPriceLevelName.name
-    const quantityOptions = this.getQualityOptions(splits)
-    const quantityOptionsWithName = quantityOptions.map(i => {
-      const object = {name: `${i.toString()} pck`, id: i}
-      return object
-    })
+
+    const totalPrice = (quantity && pricing) ? pricing.price * quantity * size : null
+    const { tiers } = offer.pricing
+
+    var dropdownOptions = []
+
+
+    if (tiers.length > 0) {
+      tiers.forEach((tier, i) => {
+        const quantityTo = (i + 1) >= tiers.length ? pkgAmount : (tier.quantityFrom > tiers[i + 1].quantityFrom ? tier.quantityFrom : tiers[i + 1].quantityFrom - 1)
+        let key = `${tier.quantityFrom} - ${quantityTo} pck / $${tier.price}`
+        dropdownOptions.push({
+          key,
+          value: { quantityFrom: tier.quantityFrom, quantityTo: quantityTo, price: tier.price },
+          text: key
+        })
+      })
+    } else {
+      let value = offer.pricing.price.amount
+      dropdownOptions.push({
+        key: value,
+        value: { price: value },
+        text: value
+      })
+    }
 
     const attachments = offer.attachments.map(att => {
       return <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
     })
 
-    const footerComponent = (
-      <>
-        <Button color="grey-white" onClick={this.onClick}>
-          Cancel
-        </Button>
-        {!isEdit 
-        ? <Button color="blue" onClick={this.createOrder}>
-          Continue
-        </Button>
-        :<Button color="blue" onClick={this.editOrder}>
-          Edit
-        </Button>}
-      </>
-    )
+
+    let canProceed = (!warning && !this.state.warning) && pricing
+
+
 
     return (
-        <PopupComponent 
-          footerComponent={footerComponent} 
-          handleContinue={this.handleContinue} 
-          removePopup={removePopup} 
-          headerTitle="Purchase"
-        >
-        <div className="add-cart-body">
-          <div className="add-cart-body-section">
-            <h3>1. Product Information</h3>
-            <div className="add-cart-product-name">
-              {offer.product.casProduct.casIndexName}
-            </div>
-            <div className="add-cart-prod-info">
-              <div>
-                <span>Merchant: </span>
-                  {offer.merchant.companyName}
-              </div>
-              <div>
-                  <span>Location: </span>
-                  {location}
-              </div>
-              <div>
-                <span>Available Product: </span>
-                {availableProducts}
-              </div>
-              <div>
-                  <span>Form: </span>
-                  {offer.productForm.name}
-              </div>
-              <div>
-                <span>Packaging: </span>
-                {offer.product.packagingType.name}
-              </div>
-              <div>
-                <span>Package Size: </span>
-                {packageSize}
-              </div>
-              <div>
-                <span>Attachments: </span>
-                {attachments}
-              </div>
-            </div>
-          </div>
+      <Segment basic>
+        <Grid verticalAlign='middle'>
+          <GridRow className='action' columns={1}>
+            <GridColumn>
+              <Header>1. Product Information</Header>
+            </GridColumn>
+          </GridRow>
 
-          <div className="add-cart-body-section">
-            <h3>2. Purchase Info</h3>
+          <GridRow columns={1}>
+            <GridColumn>
+              <b>{offer.product.casProduct.casIndexName}</b>
+            </GridColumn>
+          </GridRow>
 
-            <div className="add-cart-form-input">
-              <label>Select Price Level</label>
+          <GridRow columns={2}>
+            <GridColumn>
+              Merchant:
+          </GridColumn>
+            <GridColumn>
+              {offer.merchant.company.name}
+            </GridColumn>
+          </GridRow>
+
+
+          <GridRow columns={2}>
+            <GridColumn>
+              Location:
+         </GridColumn>
+            <GridColumn>
+              {location}
+            </GridColumn>
+          </GridRow>
+
+          <GridRow columns={2}>
+            <GridColumn>
+              Available Product:
+          </GridColumn>
+            <GridColumn>
+              {availableProducts}
+            </GridColumn>
+
+          </GridRow>
+
+          <GridRow columns={2}>
+            <GridColumn>
+              Form:
+         </GridColumn>
+            <GridColumn>
+              {offer.productForm.name}
+            </GridColumn>
+          </GridRow>
+
+          <GridRow columns={2}>
+            <GridColumn>
+              Packaging:
+          </GridColumn>
+
+            <GridColumn>
+              {offer.product.packagingType.name}
+            </GridColumn>
+          </GridRow>
+
+          <GridRow columns={2}>
+            <GridColumn>
+              Package Size:
+          </GridColumn>
+
+            <GridColumn>
+              {packageSize}
+            </GridColumn>
+          </GridRow>
+
+          <GridRow columns={2}>
+            <GridColumn>
+              Attachments:
+          </GridColumn>
+
+            <GridColumn>
+              {attachments}
+            </GridColumn>
+          </GridRow>
+
+          <GridRow className='action'>
+            <GridColumn>
+              <Header>2. Purchase Info</Header>
+            </GridColumn>
+          </GridRow>
+
+          <GridRow>
+            <GridColumn>
+              Select Price Level
+          </GridColumn>
+          </GridRow>
+
+          <GridRow>
+            <GridColumn>
               <Dropdown
-                opns={tiers.length ? priceLevelOptions : noPriceTiersOption}
-                placeholder="Select Price Level"
-                onChange={value => {
-                  this.setState({pricing: value})
-                }}
-                currentValue={priceLevelDefault}
-                disabled={!tiers.length && true}
+                // error={!pricing}
+                placeholder='Select Price Level'
+                value={pricing}
+                onChange={(e, data) => this.props.valueChanged({ pricing: data.value })}
+                selection
+                options={dropdownOptions}
               />
-            </div>
+            </GridColumn>
+          </GridRow>
+
+          <GridRow>
+            <GridColumn>
+              Select Quantity
+          </GridColumn>
+          </GridRow>
+
+          <GridRow>
+            <GridColumn>
+              <Input error={warning} value={quantity} onChange={this.handleQuantity} type='number' />
+            </GridColumn>
+          </GridRow>
 
 
-            <div className="add-cart-form-input">
-              <label>Select Quantity</label>
-              {quantityOptionsWithName.length <= 10
-              ?  <Dropdown
-                opns={quantityOptionsWithName}
-                placeholder="Select Quantity"
-                disabled={priceLevelOptions.length && !this.state.pricing && true}
-                currentValue={isEdit && `${order.quantity} pck`}
-                onChange={value => {
-                  this.setState({quantity: value})
-                }}/>
-                : <div className="purchase-info">
-                  <InputControlled
-                    value={this.state.quantity}
-                    handleChange={this.handleQuantity}
-                    className={this.state.warning ? "invalid" : ""}
-                    name="quantity"
-                    placeholder=""
-                    type="number"
-                    min={parseInt(minimum-1, 10)}
-                    max={parseInt(pkgAmount, 10)}
-                    step={parseInt(5, 10)}
-                  />
-                  {this.state.warning && <label>{this.state.warning}</label>}
-                </div>
+          <GridRow className='action'>
+            <GridColumn>
+              <Header>3. Summary</Header>
+            </GridColumn>
+          </GridRow>
+
+          <GridRow columns={2}>
+            <GridColumn>Total Quantity:</GridColumn>
+            <GridColumn>
+              {(quantity && !warning && `${quantity} pck`) || (isEdit && `${order.quantity} pck`)}
+            </GridColumn>
+          </GridRow>
+
+          <GridRow columns={2}>
+            <GridColumn>Price/LB:</GridColumn>
+            <GridColumn>{offer.pricing.price.currency.symbol}{offer.pricing.price.amount}</GridColumn>
+          </GridRow>
+          <Divider />
+          <GridRow columns={2}>
+            <GridColumn>Subtotal:</GridColumn>
+            <GridColumn>{totalPrice && totalPrice > 0 ? `$${totalPrice}` : null}</GridColumn>
+          </GridRow>
+
+
+          <GridRow className='action' columns={2}>
+            <GridColumn>
+              <Button fluid floated='right' onClick={this.props.hideSidebar}>Cancel</Button>
+            </GridColumn>
+
+            <GridColumn>
+              {!isEdit
+                ? <Button disabled={!canProceed} fluid floated='right' primary onClick={this.createOrder}>
+                  Continue
+              </Button>
+                : <Button disabled={!canProceed} fluid floated='right' primary onClick={this.editOrder}>
+                  Edit
+                </Button>
               }
-            </div>
-          </div>
+            </GridColumn>
+          </GridRow>
 
-          <div className="add-cart-body-section">
-            <h3>3. Summary</h3>
-            <div className="purchase-summary-info">
-              <label>Total Quantity:</label>
-              <span>
-                {(this.state.quantity && !this.state.warning && `${this.state.quantity} pck`) || (isEdit && `${order.quantity} pck`)}
-              </span>
-            </div>
-            <div className="purchase-summary-info">
-              <label>Price/LB:</label>
-              <span>{offer.pricing.price.currency.symbol}{offer.pricing.price.amount}</span>
-            </div>
-            {/* <div className="purchase-summary-info">
-              <b>Delivered Price/LB:</b>
-              <span>$</span>
-            </div> */}
+        </Grid>
+      </Segment>
+    )
+  }
 
-            <div className="divider" />
+  render() {
+    let { visible, isEdit, orderDetailIsFetching, offerDetailIsFetching } = this.props
+    const { hideSidebar } = this.props
 
-            <div className="purchase-summary-info purchase-summary-subtotal">
-              <label>Subtotal:</label>
-              {!this.state.warning && (totalPrice || order.selectedOfferPrice) && <span>${totalPrice || order.selectedOfferPrice}</span>}
-            </div>
-          </div>
-          </div>
-        </PopupComponent>
+    return (
+      <Sidebar onHide={hideSidebar} width='very wide' className='cart-sidebar' direction='right' animation='scale down' visible={visible}>
+        {
+          (offerDetailIsFetching || (isEdit && orderDetailIsFetching)) ? <Dimmer active inverted> <Loader size='large' /> </Dimmer>
+            : this.getCartMarkup()
+        }
+      </Sidebar>
     )
   }
 }
 
-export default AddCart
-
 AddCart.propTypes = {
-  offer: PropTypes.object,
-  postNewOrder: PropTypes.func,
-  id: PropTypes.number,
-  isFetching: PropTypes.bool,
-  removePopup: PropTypes.func,
+  offer: object,
+  order: object,
+  postNewOrder: func,
+  id: number,
+  quantity: number,
+  pricing: object,
+  warning: string
 }

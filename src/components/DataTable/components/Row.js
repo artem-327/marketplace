@@ -4,8 +4,8 @@ import ThreeDots from '../../ThreeDots/ThreeDots';
 import classnames from 'classnames';
 import ThreeDotsMenu from '../../ThreeDots/ThreeDotsMenu';
 import AddCart from '../../../pages/cart/components/AddCart';
-import {checkToken} from "../../../utils/auth";
-import {Icon, Checkbox} from "semantic-ui-react"
+import { checkToken } from "../../../utils/auth";
+import { Icon, Checkbox } from "semantic-ui-react"
 
 class Row extends Component {
 
@@ -35,7 +35,7 @@ class Row extends Component {
     this.setState({ openContext: !this.state.openContext });
   }
 
-  addCart(event, id){
+  addCart(event, id) {
     if (checkToken(this.props)) return;
 
     if (event.target.parentNode.classList.contains('checkbox') || event.target.getAttribute('type') === 'checkbox') {
@@ -54,33 +54,33 @@ class Row extends Component {
 
       // create new popup
       AddCart.openedPopup.id = id;
-      this.props.addPopup(<AddCart id={id} history={this.props.history} className='add-cart-popup'/>);
+      this.props.addPopup(<AddCart id={id} history={this.props.history} className='add-cart-popup' />);
     }
   }
 
   render() {
-    const {tableType} = this.props
+    const { tableType } = this.props
     const isAllInventory = tableType === "allInventoryTable"
     return (
       <React.Fragment>
-        <tr className={isAllInventory ? "isAllInventory" : ""} onClick={isAllInventory ? e => this.addCart(e, this.props.id) : () => {}}>
+        <tr className={isAllInventory ? "isAllInventory" : ""} onClick={isAllInventory ? () => this.props.onRowClick(this.props.id, this.props.history) : () => { }}>
           {this.props.selectable ? (
             <td className="data-table-select">
               <Checkbox checked={this.props.rowOpns.selected}
-                        disabled={this.props.rowOpns.disabled ? true : false}
-                        groupid={this.props.groupId}
-                        rowindex={this.props.rowOpns.index}
-                        disabling={isAllInventory}
-                        otherschecked={this.props.othersChecked}
-                        onChange={(event, data) => this.props.selectFunc({
-                                groupId: data.groupid,
-                                rowId: data.rowindex,
-                                checked: data.checked,
-                                othersChecked: data.otherschecked,
-                                disabling: data.disabling
-                            })
-                        }
-                />
+                disabled={this.props.rowOpns.disabled ? true : false}
+                groupid={this.props.groupId}
+                rowindex={this.props.rowOpns.index}
+                disabling={isAllInventory}
+                otherschecked={this.props.othersChecked}
+                onChange={(event, data) => this.props.selectFunc({
+                  groupId: data.groupid,
+                  rowId: data.rowindex,
+                  checked: data.checked,
+                  othersChecked: data.otherschecked,
+                  disabling: data.disabling
+                })
+                }
+              />
             </td>
           ) : null}
           {this.props.contextMenu ? (
@@ -113,8 +113,8 @@ class Row extends Component {
             const cellName =
               typeof cell === 'string'
                 ? `${cellShortName}${
-                    cellShortName.length < cell.length ? '...' : ''
-                  }`
+                cellShortName.length < cell.length ? '...' : ''
+                }`
                 : (
                   cell && cell.content
                     ? cell.content
@@ -130,8 +130,8 @@ class Row extends Component {
                 key={index}
                 title={cellName && cellName.length > 14 ? cell : ''}
                 className={cellAlign}>
-                  {/*Decide if it will be formatted also through react-intl*/}
-                  {cellName}
+                {/*Decide if it will be formatted also through react-intl*/}
+                {cellName}
               </td>
             );
           })}
