@@ -41,7 +41,7 @@ export default function reducer(state = initialState, action) {
         case TOGGLE_FILTER: {
             return {
                 ...state,
-                isOpen: !state.isOpen
+                isOpen: action.payload ? action.payload : !state.isOpen
             }
         }
         case TOGGLE_FILTER_GROUP: {
@@ -62,7 +62,7 @@ export default function reducer(state = initialState, action) {
         case CLOSE_FILTER_TAG_FULFILLED: {
             return {
                 ...state,
-                filterTags: [...state.filterTags.slice(0,action.payload), ...state.filterTags.slice(action.payload+1)]
+                filterTags: [...state.filterTags.slice(0, action.payload), ...state.filterTags.slice(action.payload + 1)]
             }
         }
         case RESET_TAGS: {
@@ -83,16 +83,17 @@ export default function reducer(state = initialState, action) {
     }
 }
 
-export function toggleFilter() {
+export function toggleFilter(value = null) {
     return {
         type: TOGGLE_FILTER,
+        payload: value
     }
 }
 
 export function toggleFilterGroup(name, value) {
     return {
         type: TOGGLE_FILTER_GROUP,
-        payload: {name, value}
+        payload: { name, value }
     }
 }
 export function addFilterTag(data) {
@@ -108,28 +109,28 @@ export function closeFilterTag(index) {
     }
 }
 
-export function resetFilterTags(){
+export function resetFilterTags() {
     return {
         type: RESET_TAGS
     }
 }
 
-export function fetchSavedFilters(){
-    return{
+export function fetchSavedFilters() {
+    return {
         type: GET_SAVE_FILTERS,
         payload: axios.get("/prodex/api/filters").then(response => response.data)
     }
 }
 
-export function deleteSaveFilter(id){
-    return{
+export function deleteSaveFilter(id) {
+    return {
         type: DELETE_SAVE_FILTER,
         payload: axios.delete(`/prodex/api/filters/${id}`)
     }
 }
 
-export function saveSaveFilter(inputs){
-    return{
+export function saveSaveFilter(inputs) {
+    return {
         type: SAVE_SAVE_FILTER,
         payload: axios.post("/prodex/api/filters", inputs)
     }

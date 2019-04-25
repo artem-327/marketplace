@@ -1,15 +1,15 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Row from "./Row";
 import CheckboxControlled from "../../Checkbox/CheckboxControlled";
-import {FormattedMessage} from 'react-intl';
-import {Checkbox, Icon} from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl';
+import { Checkbox, Icon } from 'semantic-ui-react'
 
 class GroupRow extends Component {
     state = { open: true };
     checkbox = React.createRef();
 
-    selectGroup(value, disabling){
-        let rows = this.props.rowsOpns.rows.map((r) => ({...r, selected: value}));
+    selectGroup(value, disabling) {
+        let rows = this.props.rowsOpns.rows.map((r) => ({ ...r, selected: value }));
         this.props.selectGroup({
             groupId: this.props.rowsOpns.index,
             rows: rows,
@@ -18,20 +18,20 @@ class GroupRow extends Component {
         })
     }
 
-    isSelected(){
-        for(let i = 0; i < this.props.rowsOpns.rows.length; i++){
-            if(!this.props.rowsOpns.rows[i].selected) return false
+    isSelected() {
+        for (let i = 0; i < this.props.rowsOpns.rows.length; i++) {
+            if (!this.props.rowsOpns.rows[i].selected) return false
         }
         return true
     }
 
-    toggleGroup(e){
+    toggleGroup(e) {
         if (this.checkbox.current && this.checkbox.current.contains(e.target)) return;
-        this.setState({open: !this.state.open})
+        this.setState({ open: !this.state.open })
     }
 
     render() {
-        const {tableType} = this.props;
+        const { tableType } = this.props;
         const isAllInventory = tableType === "allInventoryTable";
         return (
             <React.Fragment>
@@ -41,15 +41,15 @@ class GroupRow extends Component {
                             <td className="data-table-select"
                                 ref={this.checkbox}>
                                 <Checkbox checked={this.isSelected()}
-                                          disabled={this.props.disabled}
-                                          disabling={isAllInventory}
-                                          onChange={(event, data) => this.selectGroup(data.checked, data.disabling)}
-                                    />
+                                    disabled={this.props.disabled}
+                                    disabling={isAllInventory}
+                                    onChange={(event, data) => this.selectGroup(data.checked, data.disabling)}
+                                />
                             </td>
                             : null
                     }
-                    <td  className="group-header"
-                         colSpan={(this.props.headers.length+(this.props.contextMenu ? 2 : 0))} >{this.props.rows.group}
+                    <td className="group-header"
+                        colSpan={(this.props.headers.length + (this.props.contextMenu ? 2 : 0))} >{this.props.rows.group}
                         <span
                             className="data-table-group-count">
                             {this.props.rows.countLabel ?
@@ -59,32 +59,34 @@ class GroupRow extends Component {
                                     values={{ number: this.props.rows.rows.length }}
                                 />
                                 : null}
-                            {this.state.open ? <Icon name='chevron down' size='large' color='blue'/> : <Icon name='chevron up' size='large' color='blue'/>}
+                            {this.state.open ? <Icon name='chevron down' size='large' color='blue' /> : <Icon name='chevron up' size='large' color='blue' />}
                         </span>
                     </td>
                 </tr>
                 {this.state.open ?
                     this.props.rowsOpns.rows.map((opns, index) => {
-                        if (this.props.rows.rows[opns.index]){
+                        if (this.props.rows.rows[opns.index]) {
                             return (
-                                <Row selectable={this.props.selectable}
-                                     history={this.props.history}
-                                     location={this.props.location}
-                                     tableType={this.props.tableType}
-                                     addPopup={this.props.addPopup}
-                                     removePopup={this.props.removePopup}
-                                     id={opns.id}
-                                     rowOpns={opns}
-                                     rowComponent={this.props.rowComponent}
-                                     othersChecked={!!this.props.rowsOpns.rows.filter((gr, indexGr) => {
-                                         return gr.selected && (indexGr !== index)
-                                     }).length}
-                                     contextMenu={this.props.contextMenu}
-                                     headers={this.props.headers}
-                                     data={this.props.rows.rows[opns.index].data}
-                                     selectFunc={this.props.selectFunc}
-                                     groupId={this.props.rowsOpns.index}
-                                     key={index}/>
+                                <Row
+                                    onRowClick={this.props.onRowClick}
+                                    selectable={this.props.selectable}
+                                    history={this.props.history}
+                                    location={this.props.location}
+                                    tableType={this.props.tableType}
+                                    addPopup={this.props.addPopup}
+                                    removePopup={this.props.removePopup}
+                                    id={opns.id}
+                                    rowOpns={opns}
+                                    rowComponent={this.props.rowComponent}
+                                    othersChecked={!!this.props.rowsOpns.rows.filter((gr, indexGr) => {
+                                        return gr.selected && (indexGr !== index)
+                                    }).length}
+                                    contextMenu={this.props.contextMenu}
+                                    headers={this.props.headers}
+                                    data={this.props.rows.rows[opns.index].data}
+                                    selectFunc={this.props.selectFunc}
+                                    groupId={this.props.rowsOpns.index}
+                                    key={index} />
                             )
                         }
                     }

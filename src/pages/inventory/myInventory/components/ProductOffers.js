@@ -9,7 +9,6 @@ import { DATE_FORMAT } from "../../../../utils/constants"
 import moment from "moment"
 import { getUnit } from "../../../../utils/functions"
 import confirm from '../../../../components/Confirmable/confirm'
-import { NavLink } from 'react-router-dom'
 import { checkToken } from "../../../../utils/auth"
 import { Checkbox } from "semantic-ui-react"
 
