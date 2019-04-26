@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import ProdexGrid from '~/components/table'
 import { Confirm } from 'semantic-ui-react'
+
+import ProdexGrid from '~/components/table'
+import { TablePopUp } from '~/components/tablePopup'
 
 import {
   getUsersDataRequest,
@@ -21,7 +23,7 @@ class UsersTable extends Component {
       { name: 'phone', title: 'Phone' },
       { name: 'homeBranch', title: 'Home Branch' },
       {
-        name: 'firstTwoRoles',
+        name: 'allUserRoles',
         title: 'Roles'
       }
     ]
@@ -58,7 +60,10 @@ class UsersTable extends Component {
         <ProdexGrid
           filterValue={filterValue}
           columns={columns}
-          rows={rows}
+          rows={rows.map(r => ({
+            ...r,
+            allUserRoles: <TablePopUp row={r} />
+          }))}
           loading={loading}
           style={{ marginTop: '5px' }}
           rowActions={[

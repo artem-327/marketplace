@@ -20,36 +20,10 @@ import {
   RowActionsFormatterProvider,
   DropdownFormatterProvider
 } from './providers'
-import { Popup } from 'semantic-ui-react'
 
 const GridRoot = props => <Grid.Root {...props} />
 const HeaderCells = props => <TableHeaderRow.Cell {...props} />
-
-const TableCells = props => {
-  if (props.column.title === 'Roles') {
-    const opts = props.row.allUserRoles
-    const Roles = opts
-      .slice(0, 2)
-      .map(item => <div key={item.id}>{item.name}</div>)
-    const PopUpStr = opts.slice(2).map((item, i) => <p key={i}>{item.name}</p>)
-    return (
-      <Table.Cell>
-        {Roles}
-        {opts.length > 2 ? (
-          <Popup
-            trigger={
-              <span>
-                {/* <Icon name="list alternate outline" /> */}+ X more
-              </span>
-            }
-            content={PopUpStr}
-          />
-        ) : null}
-      </Table.Cell>
-    )
-  }
-  return <Table.Cell {...props} />
-}
+const TableCells = props => <Table.Cell {...props} />
 
 export default class _Table extends Component {
   static propTypes = {
@@ -106,7 +80,6 @@ export default class _Table extends Component {
       loading,
       ...restProps
     } = this.props
-
     return (
       <Segment basic loading={loading} {...restProps}>
         <div className="bootstrapiso">
