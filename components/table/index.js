@@ -23,9 +23,7 @@ import {
 
 const GridRoot = props => <Grid.Root {...props} />
 const HeaderCells = props => <TableHeaderRow.Cell {...props} />
-
-//COMPONENTS
-import { TableCells } from '../tableCells'
+const TableCells = props => <Table.Cell {...props} />
 
 export default class _Table extends Component {
   static propTypes = {
@@ -82,7 +80,6 @@ export default class _Table extends Component {
       loading,
       ...restProps
     } = this.props
-
     return (
       <Segment basic loading={loading} {...restProps}>
         <div className="bootstrapiso">
