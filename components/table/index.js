@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import pt from 'prop-types'
+import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css'
+
 import { Segment, Icon } from 'semantic-ui-react'
 import {
   SearchState,
@@ -12,7 +14,8 @@ import {
   Table,
   TableHeaderRow,
   DragDropProvider,
-  TableColumnReordering
+  TableColumnReordering,
+  VirtualTable
 } from '@devexpress/dx-react-grid-bootstrap4'
 import { TableSelection } from '~/components/dx-grid-semantic-ui/plugins'
 
@@ -22,7 +25,7 @@ import {
 } from './providers'
 import { Popup } from 'semantic-ui-react'
 
-const GridRoot = props => <Grid.Root {...props} />
+const GridRoot = props => <Grid.Root {...props} style={{ height: '100%' }} />
 const HeaderCells = props => <TableHeaderRow.Cell {...props} />
 
 const TableCells = props => {
@@ -48,7 +51,7 @@ const TableCells = props => {
       </Table.Cell>
     )
   }
-  return <Table.Cell {...props} />
+  return <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions':''} />
 }
 
 export default class _Table extends Component {
@@ -77,6 +80,7 @@ export default class _Table extends Component {
     showSelectAll: true,
     showHeader: true,
     loading: false,
+    virtual: true,
     onSelectionChange: () => {}
   }
 
@@ -104,16 +108,18 @@ export default class _Table extends Component {
       showHeader,
       onSelectionChange,
       loading,
+      virtual,
       ...restProps
     } = this.props
 
     return (
       <Segment basic loading={loading} {...restProps}>
-        <div className="bootstrapiso">
+        <div className="bootstrapiso" style={{height: '500px'}}>
           <Grid
             rows={rows}
             columns={this.getColumns()}
             rootComponent={GridRoot}
+            getRowId={r => r.id}
           >
             {columnReordering && <DragDropProvider />}
             {rowSelection && (
@@ -124,7 +130,7 @@ export default class _Table extends Component {
             <SearchState value={filterValue} />
             <IntegratedFiltering />
 
-            <Table cellComponent={TableCells} />
+            {virtual ? <VirtualTable height="auto" cellComponent={TableCells} /> : <Table />}            
 
             {showHeader && <TableHeaderRow cellComponent={HeaderCells} />}
 
