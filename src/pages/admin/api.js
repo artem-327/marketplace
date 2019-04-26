@@ -59,6 +59,16 @@ export async function getZipCodes() {
   return data
 }
 
+export async function getPrimaryBranchProvinces(id) {
+  const {data} = await api.get(`/prodex/api/provinces?countryId=${id}`)
+  return data
+}
+
+export async function getMailingBranchProvinces(id) {
+  const {data} = await api.get(`/prodex/api/provinces?countryId=${id}`)
+  return data
+}
+
 export async function getCompanies() {
   const {data} = await api.get('/prodex/api/companies/allinfo')
   return data

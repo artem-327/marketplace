@@ -3,9 +3,12 @@ import { connect } from 'react-redux'
 
 import { Modal, FormGroup, Divider } from 'semantic-ui-react'
 
-import { closePopup, updateCompany, createCompany, getCountries } from '../../actions'
+import { closePopup, updateCompany, createCompany, getCountries, getPrimaryBranchProvinces, getMailingBranchProvinces } from '../../actions'
 import { Form, Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
+
+// debug purposes only
+import JSONPretty from 'react-json-pretty'
 
 const initialFormValues = {
   name: '',
@@ -81,9 +84,50 @@ const removeEmpty = (obj) =>
   })
 
 class AddNewPopupCasProducts extends React.Component {
+  state = {
+    initialState: {...initialFormValues},
+    primaryBranchHasProvinces: false,
+    mailingBranchHasProvinces: false
+  }
+
   componentDidMount() {
     this.props.getCountries()
   }
+
+  handlePrimaryBranchCountry = (e, d) => {
+    let country = this.props.countries.find(obj => obj.id == d.value);
+    if (country.hasProvinces) {
+      //! ! tady smazat primaryBranch.address.province
+      this.setState({
+        //...this.state,
+        initialState: {
+          ...this.state.initialState,
+          primaryBranch: {
+            ...this.state.initialState.primaryBranch,
+            address: {
+              ...this.state.initialState.primaryBranch.address,
+              province: ''}}}});
+      this.props.getPrimaryBranchProvinces(country.id)
+    }
+    else {
+      //! ! tady smazat primaryBranch.address.province
+    }
+    this.setState({primaryBranchHasProvinces: country.hasProvinces})
+  }
+
+  handleMailingBranchCountry = (e, d) => {
+    let country = this.props.countries.find(obj => obj.id == d.value);
+    if (country.hasProvinces) {
+      //! ! tady smazat mailingBranch.address.province
+      this.props.getMailingBranchProvinces(country.id)
+    }
+    else {
+      //! ! tady smazat mailingBranch.address.province
+    }
+    this.setState({mailingBranchHasProvinces: country.hasProvinces})
+  }
+
+
 
   render() {
     const {
@@ -91,10 +135,16 @@ class AddNewPopupCasProducts extends React.Component {
       popupValues,
       updateCompany,
       createCompany,
-      countries,
+      countriesDropDown,
+      primaryBranchProvinces,
+      mailingBranchProvinces,
       zipCodes,
       config,
     } = this.props
+
+    const {
+      initialState,
+    } = this.state
 
     return (
       <Modal open centered={false} size="small">
@@ -102,7 +152,7 @@ class AddNewPopupCasProducts extends React.Component {
         <Modal.Content>
           <Form
             enableReinitialize
-            initialValues={{...initialFormValues, ...popupValues}}
+            initialValues={{...initialState, ...popupValues}}
             validationSchema={popupValues ? formValidationNew : formValidationEdit}
             onReset={closePopup}
             onSubmit={async (values, actions) => {
@@ -120,6 +170,8 @@ class AddNewPopupCasProducts extends React.Component {
               actions.setSubmitting(false)
             }}
           >
+            {({ values, errors, setFieldValue }) => (
+              <>
             <FormGroup widths="equal">
               <Input label="Company name" name="name" />
             </FormGroup>
@@ -152,7 +204,10 @@ class AddNewPopupCasProducts extends React.Component {
               </FormGroup>
               <FormGroup widths="equal">
                 <Dropdown label="Zip" name="primaryBranch.address.zip" inputProps={{search: true}} options={zipCodes} />
-                <Dropdown label="Country" name="primaryBranch.address.country" inputProps={{search: true}} options={countries} />
+                <Dropdown label="Country" name="primaryBranch.address.country" options={countriesDropDown}
+                          inputProps={{search: true, onChange:  this.handlePrimaryBranchCountry}} />
+                <Dropdown label="Province" name="primaryBranch.address.province" options={primaryBranchProvinces}
+                          inputProps={{search: true, disabled: !this.state.primaryBranchHasProvinces}} />
               </FormGroup>
 
               <h4>Mailing Branch</h4>
@@ -174,7 +229,10 @@ class AddNewPopupCasProducts extends React.Component {
               </FormGroup>
               <FormGroup widths="equal">
                 <Dropdown label="Zip" name="mailingBranch.address.zip" inputProps={{search: true}} options={zipCodes} />
-                <Dropdown label="Country" name="mailingBranch.address.country" inputProps={{search: true}} options={countries} />
+                <Dropdown label="Country" name="mailingBranch.address.country" options={countriesDropDown}
+                          inputProps={{search: true, onChange:  this.handleMailingBranchCountry}} />
+                <Dropdown label="Province" name="mailingBranch.address.province" options={primaryBranchProvinces}
+                          inputProps={{search: true, disabled: !this.state.mailingBranchHasProvinces}} />
               </FormGroup>
 
               <h4>Primary Merchant</h4>
@@ -192,6 +250,8 @@ class AddNewPopupCasProducts extends React.Component {
               <Button.Reset>Cancel</Button.Reset>
               <Button.Submit>Save</Button.Submit>
             </div>
+            <JSONPretty data={values} />
+            </>)}
           </Form>
         </Modal.Content>
       </Modal>
@@ -203,7 +263,9 @@ const mapDispatchToProps = {
   closePopup,
   updateCompany,
   createCompany,
-  getCountries
+  getCountries,
+  getPrimaryBranchProvinces,
+  getMailingBranchProvinces
 }
 
 const mapStateToProps = ({admin}) => {
