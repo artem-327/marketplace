@@ -113,8 +113,8 @@ export default class _Table extends Component {
     } = this.props
 
     return (
-      <Segment basic loading={loading} {...restProps}>
-        <div className="bootstrapiso" style={{height: '500px'}}>
+      <Segment basic loading={loading} {...restProps} className="flex stretched">
+        <div className="bootstrapiso flex stretched" style={{height: '500px'}}>
           <Grid
             rows={rows}
             columns={this.getColumns()}

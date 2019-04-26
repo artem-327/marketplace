@@ -66,7 +66,7 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange' }) => 
     </TopMenu>
     <ErrorMessage />
 
-    <ContentContainer fluid className='page-wrapper'>
+    <ContentContainer fluid className='page-wrapper flex stretched'>
       {children}
     </ContentContainer>
 
