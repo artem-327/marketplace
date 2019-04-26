@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import ProdexGrid from '~/components/table'
 import { Confirm } from 'semantic-ui-react'
 
-import { TablePopUp } from '../../../../../components/tableCells'
+import ProdexGrid from '~/components/table'
+import { TablePopUp } from '~/components/tablePopup'
 
 import {
   getUsersDataRequest,
