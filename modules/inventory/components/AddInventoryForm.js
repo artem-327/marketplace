@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button, TextArea } from 'formik-semantic-ui'
-import {FormattedMessage} from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Modal, Icon, Segment, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab } from 'semantic-ui-react'
 import styled from 'styled-components'
 import * as val from 'yup'
@@ -19,11 +19,12 @@ const TopDivider = styled(Divider)`
 `
 
 const CustomPaddedColumn = styled(GridColumn)`
-  padding-top: 0px !important; 
-`
-
-const CustomMargedGrid = styled(Grid)`
-  margin: 0px 5px 5px 5px !important;
+  width: 75% !important;
+  padding-top: 0px !important;
+  
+  @media only screen and (max-width: 1680px) {
+    width: 100% !important;
+  }
 `
 
 const CustomPaddedContent = styled(Accordion.Content)`
@@ -193,12 +194,14 @@ export default class AddInventoryForm extends Component {
     } = this.state
 
     return (
-      <Grid centered>
-        <GridColumn width={12}>
-          <Segment attached={values.product ? false : 'top'} style={{padding: '2em'}}>
+      <Grid className='product-details' centered>
+        <CustomPaddedColumn>
+          <Segment fluid attached={values.product ? false : 'top'} style={{ padding: '1.5em' }}>
             <Accordion>
               <Accordion.Title active={activeIndex === 0} index={0} onClick={this.accClick}>
-                <Header as="h3">PRODUCT DETAILS</Header>
+                <Header as='h4'>
+                  <Icon name={activeIndex === 0 ? 'chevron down' : 'chevron right'} />PRODUCT DETAILS
+                </Header>
               </Accordion.Title>
               <Accordion.Content active={activeIndex === 0}>
                 <Grid columns={2} className='data-grid'>
@@ -255,14 +258,24 @@ export default class AddInventoryForm extends Component {
           </Segment>
           {values.product ? '' : (
             <Message attached='bottom'>
-              <Icon name='info circle' size='large' color='blue' />
+              <Icon name='info circle outline' size='large' color='blue' />
               Please search product to fill data above.
             </Message>
           )}
 
-          <Button size='big' floated='left'>Discard</Button>
-          <Button.Submit size='big' floated='right'>Submit values</Button.Submit>
-        </GridColumn>
+          <Segment className='segment-fixed'>
+            <Grid verticalAlign='middle'>
+              <GridRow>
+                <ResponsiveColumn computer={6} mobile={16}>
+                  <Button fluid size='big' floated='left'>Discard</Button>
+                </ResponsiveColumn>
+                <GridColumn computer={10} mobile={16}>
+                  <Button.Submit fluid size='big' floated='right' style={{ paddingLeft: '1em', paddingRight: '1em' }}>Add Product Offer</Button.Submit>
+                </GridColumn>
+              </GridRow>
+            </Grid>
+          </Segment>
+        </CustomPaddedColumn>
       </Grid>
     )
   }
@@ -341,8 +354,8 @@ export default class AddInventoryForm extends Component {
       searchOrigins,
       searchedOrigins,
       searchedOriginsLoading,
-      searchProducts, 
-      searchedProducts, 
+      searchProducts,
+      searchedProducts,
       searchedProductsLoading,
       warehousesList,
       addProductOffer,
@@ -362,7 +375,7 @@ export default class AddInventoryForm extends Component {
             <Menu.Item header>
               <Header as='h1' size='medium'>
                 <FormattedMessage id='myInventory.myInventory'
-                  defaultMessage={this.props.edit ? 'EDIT INVENTORY' : 'ADD INVENTORY'} />
+                                  defaultMessage={this.props.edit ? 'EDIT INVENTORY' : 'ADD INVENTORY'} />
               </Header>
             </Menu.Item>
           </Menu>
@@ -405,7 +418,7 @@ export default class AddInventoryForm extends Component {
                   menuItem: 'PRODUCT OFFER',
                   render: () => (
                     <Tab.Pane>
-                      <Grid divided style={{marginTop: '2rem'}}>
+                      <Grid divided style={{ marginTop: '2rem' }}>
                         <Grid.Column width={5}>
                           <Header as='h3'>What product do you want to list?</Header>
                           <FormGroup>
@@ -493,7 +506,7 @@ export default class AddInventoryForm extends Component {
                                     name="priceTiers"
                                     options={this.getPriceTiers(10)}
                                     inputProps={{
-                                      onChange: (e,{value}) => setFieldValue(
+                                      onChange: (e, { value }) => setFieldValue(
                                         "pricing.tiers",
                                         [
                                           ...values.pricing.tiers.slice(0, value),
@@ -505,12 +518,12 @@ export default class AddInventoryForm extends Component {
                                 </FormField>
                               </FormGroup>
 
-                              <Header as='h3' style={{marginBottom: '2rem'}}>What is the FOB price for each tier?</Header>
+                              <Header as='h3' style={{ marginBottom: '2rem' }}>What is the FOB price for each tier?</Header>
                               <Grid className='tier-prices'>
                                 {this.renderPricingTiers(values.priceTiers)}
                               </Grid>
 
-                              <Divider style={{marginTop: '3rem', marginBottom: '3rem'}}/>
+                              <Divider style={{ marginTop: '3rem', marginBottom: '3rem' }}/>
 
                               <Header as='h3'>Upload Spec Sheet</Header>
                               <UploadLot {...this.props}
@@ -756,7 +769,9 @@ export default class AddInventoryForm extends Component {
 
                         </GridColumn>
 
-                        <GridColumn width={5} floated='right'>{this.renderProductDetails(values)}</GridColumn>
+                        <GridColumn width={5}>
+                          {this.renderProductDetails(values)}
+                        </GridColumn>
                       </Grid>
                     </Tab.Pane>
                   )

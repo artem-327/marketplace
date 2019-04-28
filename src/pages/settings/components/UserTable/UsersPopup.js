@@ -45,9 +45,12 @@ class UsersPopup extends React.Component {
   addNewRole(values) {
     const newRoles = []
     for (let key in values) {
-      const id = Number(key.split('check-box-id_')[1])
-      id && newRoles.push(id)
+      const id = Number(key.split('checkBoxId_')[1])
+      if (values[`checkBoxId_${id}`]) {
+        id && newRoles.push(id)
+      }
     }
+
     return newRoles
   }
 
@@ -79,6 +82,12 @@ class UsersPopup extends React.Component {
       homeBranchId,
       preferredCurrency
     }
+    this.props.roles.forEach(item => {
+      let flag = this.props.popupValues.allUserRoles.some(
+        role => role.id === item.id
+      )
+      initialFormValues[`checkBoxId_${item.id}`] = flag
+    })
     const title = popupValues ? 'Edit' : 'Add'
 
     return (
@@ -96,10 +105,7 @@ class UsersPopup extends React.Component {
             {userEditRoles ? (
               roles.map((role, i) => (
                 <FormGroup key={i}>
-                  <Checkbox
-                    label={role.name}
-                    name={`check-box-id_${role.id}`}
-                  />
+                  <Checkbox label={role.name} name={`checkBoxId_${role.id}`} />
                 </FormGroup>
               ))
             ) : (
