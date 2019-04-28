@@ -7,7 +7,7 @@ import { Confirm } from "semantic-ui-react"
 
 class UnitOfPackagingTable extends Component {
   componentDidMount() {
-    this.props.getDataRequest(this.props.config.api)
+    this.props.getDataRequest(this.props.config)
     this.props.getMeasureTypesDataRequest();
   }
 

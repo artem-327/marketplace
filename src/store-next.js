@@ -43,7 +43,6 @@ import broadcastSaga from "./saga/broadcast"
 import productOffersSaga from "./saga/productOffers"
 import shippingQuotesSaga from "./saga/shippingQuotes"
 import settingsSaga from "./pages/settings/saga"
-import adminSaga from "./pages/admin/saga"
 
 // Simple Add/Edit Inventory
 import simpleAdd from  '~/modules/inventory/reducer'
@@ -153,7 +152,6 @@ export const makeStore = (preloadedState) => {
   //sagaMiddleware.run(simpleAddSaga)
   sagaMiddleware.run(ordersSaga)
   sagaMiddleware.run(settingsSaga)
-  sagaMiddleware.run(adminSaga)
-  
+
   return store
 }

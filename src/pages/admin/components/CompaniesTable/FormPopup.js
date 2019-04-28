@@ -209,7 +209,7 @@ class AddNewPopupCasProducts extends React.Component {
                 <Dropdown label="Province" name="primaryBranch.address.province" options={primaryBranchProvinces}
                           inputProps={{search: true, disabled: !this.state.primaryBranchHasProvinces}} />
               </FormGroup>
-
+              <Divider />
               <h4>Mailing Branch</h4>
               <FormGroup widths="equal">
                 <Input label="Name" name="mailingBranch.name" />
@@ -231,10 +231,10 @@ class AddNewPopupCasProducts extends React.Component {
                 <Dropdown label="Zip" name="mailingBranch.address.zip" inputProps={{search: true}} options={zipCodes} />
                 <Dropdown label="Country" name="mailingBranch.address.country" options={countriesDropDown}
                           inputProps={{search: true, onChange:  this.handleMailingBranchCountry}} />
-                <Dropdown label="Province" name="mailingBranch.address.province" options={primaryBranchProvinces}
+                <Dropdown label="Province" name="mailingBranch.address.province" options={mailingBranchProvinces}
                           inputProps={{search: true, disabled: !this.state.mailingBranchHasProvinces}} />
               </FormGroup>
-
+              <Divider />
               <h4>Primary Merchant</h4>
               <FormGroup widths="equal">
                 <Input label="Email" name="primaryMerchant.email" />
