@@ -121,7 +121,7 @@ export default class _Table extends Component {
     return (
       <Segment basic loading={loading} {...restProps} className="flex stretched">
         <GlobalTableOverrideStyle />
-        <div className="bootstrapiso flex stretched" style={{height: '500px'}}>
+        <div className="bootstrapiso flex stretched" style={{flex: '1 300px'}}>
           <Grid
             rows={rows}
             columns={this.getColumns()}
