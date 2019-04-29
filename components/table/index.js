@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import pt from 'prop-types'
 import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css'
-
+import {createGlobalStyle} from 'styled-components'
 import { Segment, Icon } from 'semantic-ui-react'
 import {
   SearchState,
@@ -24,6 +24,12 @@ import {
   DropdownFormatterProvider
 } from './providers'
 import { Popup } from 'semantic-ui-react'
+
+const GlobalTableOverrideStyle = createGlobalStyle`
+  .dx-g-bs4-table {
+    margin-bottom: 0 !important;
+  }
+`
 
 const GridRoot = props => <Grid.Root {...props} style={{ height: '100%' }} />
 const HeaderCells = props => <TableHeaderRow.Cell {...props} />
@@ -114,6 +120,7 @@ export default class _Table extends Component {
 
     return (
       <Segment basic loading={loading} {...restProps} className="flex stretched">
+        <GlobalTableOverrideStyle />
         <div className="bootstrapiso flex stretched" style={{height: '500px'}}>
           <Grid
             rows={rows}

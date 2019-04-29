@@ -83,7 +83,7 @@ class Admin extends Component {
             <Grid.Column width={3}>
               <Tabs />
             </Grid.Column>
-            <Grid.Column key={this.props.currentTab} className="flex stretched"> 
+            <Grid.Column key={this.props.currentTab} style={{marginTop: '5px'}} className="flex stretched"> 
               {this.renderContent()}
             </Grid.Column>
           </Grid.Row>
