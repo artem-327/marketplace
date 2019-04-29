@@ -7,7 +7,9 @@ import {
   SearchState,
   IntegratedFiltering,
   IntegratedSelection,
-  SelectionState
+  SelectionState,
+  SortingState,
+  IntegratedSorting
 } from '@devexpress/dx-react-grid'
 import {
   Grid,
@@ -32,7 +34,7 @@ const GlobalTableOverrideStyle = createGlobalStyle`
 `
 
 const GridRoot = props => <Grid.Root {...props} style={{ height: '100%' }} />
-const HeaderCells = props => <TableHeaderRow.Cell {...props} />
+// const HeaderCells = props => <TableHeaderRow.Cell {...props} />
 
 const TableCells = props => {
   if (props.column.title === 'Roles') {
@@ -59,6 +61,19 @@ const TableCells = props => {
   }
   return <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions':''} />
 }
+
+const SortingIcon = ({ direction }) => (
+  <Icon className="thick" name={direction === 'asc' ? 'sort up' : 'sort down'} />
+)
+
+const SortLabel = ({ onSort, children, direction }) => (
+  <span
+    onClick={onSort}
+  >
+    {children}
+    {(direction && <SortingIcon direction={direction} />)}
+  </span>
+)
 
 export default class _Table extends Component {
   static propTypes = {
@@ -126,12 +141,13 @@ export default class _Table extends Component {
             rows={rows}
             columns={this.getColumns()}
             rootComponent={GridRoot}
-            getRowId={r => r.id}
           >
+            <SortingState defaultSorting={[{ columnName: 'name', direction: 'desc' }]} />
+            <IntegratedSorting />
+
             {columnReordering && <DragDropProvider />}
-            {rowSelection && (
-              <SelectionState onSelectionChange={onSelectionChange} />
-            )}
+
+            {rowSelection && <SelectionState onSelectionChange={onSelectionChange} />}
             {rowSelection && <IntegratedSelection />}
 
             <SearchState value={filterValue} />
@@ -139,7 +155,11 @@ export default class _Table extends Component {
 
             {virtual ? <VirtualTable height="auto" cellComponent={TableCells} /> : <Table />}            
 
-            {showHeader && <TableHeaderRow cellComponent={HeaderCells} />}
+            {showHeader && 
+              <TableHeaderRow 
+                showSortingControls 
+                sortLabelComponent={SortLabel}
+              />}
 
             <RowActionsFormatterProvider
               for={['__actions']}

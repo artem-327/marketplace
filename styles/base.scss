@@ -38,8 +38,16 @@ body {
   font-size: 70%;
 }
 
-i.icon:not(.dropdown):not(.times) {
-  font-family: 'thin-icons' !important;
+i.icon {
+  &:not(.dropdown), 
+  &:not(.sort), 
+  &:not(.times) {
+    font-family: 'thin-icons' !important;
+  }
+}
+
+i.icon.thick {
+  font-family: 'icons' !important;
 }
 
 .ui.grid.data-grid {
