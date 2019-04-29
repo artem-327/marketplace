@@ -24,10 +24,16 @@ const MainContainer = styled(Container)`
 `
 const ContentContainer = styled(Container)`
   padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+`
+const FlexContainer = styled.div`
   position: fixed;
   top: 49px; right: 0; bottom: 0; left: 0;
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
 `
 const LogoImage = styled(Image)`
   margin: 9px 10px 4px 0;
@@ -64,11 +70,13 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange' }) => 
 
 
     </TopMenu>
-    <ErrorMessage />
-
-    <ContentContainer fluid className='page-wrapper flex stretched'>
-      {children}
-    </ContentContainer>
+    
+    <FlexContainer>
+      <ErrorMessage />
+      <ContentContainer fluid className='page-wrapper flex stretched'>
+        {children}
+      </ContentContainer>
+    </FlexContainer>
 
   </MainContainer>
 )
