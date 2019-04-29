@@ -58,7 +58,25 @@ const formValidationEdit = Yup.object().shape({
 })
 
 const formValidationNew = Yup.object().shape({
-  name: Yup.string().min(2, 'Name should has at least 2 characters').required(),
+  //primaryBranchHasProvinces: boolean(),
+  //mailingBranchHasProvinces: boolean(),
+
+  name: Yup.string().min(2, 'Name should has at least 2 characters').required('Name should has at least 2 characters'),
+  primaryBranch: Yup.object().shape({
+
+    address: Yup.object().shape({
+      country: Yup.number().required(),
+      province: Yup.string().when('primaryBranchHasProvinces', {
+        is: true,
+        then: Yup.number().required()
+      }),
+
+    }),
+
+  }),
+
+
+
   //nacdMember: Yup.bool().required(),
   //phone: Yup.string().min(9, 'Enter valid phone number').required(),
   //website: Yup.string().required(),
@@ -85,7 +103,6 @@ const removeEmpty = (obj) =>
 
 class AddNewPopupCasProducts extends React.Component {
   state = {
-    initialState: {...initialFormValues},
     primaryBranchHasProvinces: false,
     mailingBranchHasProvinces: false
   }
@@ -95,38 +112,26 @@ class AddNewPopupCasProducts extends React.Component {
   }
 
   handlePrimaryBranchCountry = (e, d) => {
+    console.log('!!!!!!!!!!!! handlePrimaryBranchCountry');
+    console.log('!!!!!!!!!!!! handlePrimaryBranchCountry - d', d);
+
     let country = this.props.countries.find(obj => obj.id == d.value);
     if (country.hasProvinces) {
-      //! ! tady smazat primaryBranch.address.province
-      this.setState({
-        //...this.state,
-        initialState: {
-          ...this.state.initialState,
-          primaryBranch: {
-            ...this.state.initialState.primaryBranch,
-            address: {
-              ...this.state.initialState.primaryBranch.address,
-              province: ''}}}});
       this.props.getPrimaryBranchProvinces(country.id)
-    }
-    else {
-      //! ! tady smazat primaryBranch.address.province
     }
     this.setState({primaryBranchHasProvinces: country.hasProvinces})
   }
 
   handleMailingBranchCountry = (e, d) => {
+
+    console.log('!!!!!!!!!!!! handleMailingBranchCountry');
+    console.log('!!!!!!!!!!!! handleMailingBranchCountry - d', d);
     let country = this.props.countries.find(obj => obj.id == d.value);
     if (country.hasProvinces) {
-      //! ! tady smazat mailingBranch.address.province
       this.props.getMailingBranchProvinces(country.id)
-    }
-    else {
-      //! ! tady smazat mailingBranch.address.province
     }
     this.setState({mailingBranchHasProvinces: country.hasProvinces})
   }
-
 
 
   render() {
@@ -144,6 +149,8 @@ class AddNewPopupCasProducts extends React.Component {
 
     const {
       initialState,
+      primaryBranchHasProvinces,
+      mailingBranchHasProvinces
     } = this.state
 
     return (
@@ -152,8 +159,9 @@ class AddNewPopupCasProducts extends React.Component {
         <Modal.Content>
           <Form
             enableReinitialize
-            initialValues={{...initialState, ...popupValues}}
-            validationSchema={popupValues ? formValidationNew : formValidationEdit}
+            initialValues={{...initialFormValues, ...popupValues}}
+            context={{ primaryBranchHasProvinces }}
+            validationSchema={popupValues ? formValidationEdit : formValidationNew}
             onReset={closePopup}
             onSubmit={async (values, actions) => {
               if (popupValues) {
@@ -205,7 +213,8 @@ class AddNewPopupCasProducts extends React.Component {
               <FormGroup widths="equal">
                 <Dropdown label="Zip" name="primaryBranch.address.zip" inputProps={{search: true}} options={zipCodes} />
                 <Dropdown label="Country" name="primaryBranch.address.country" options={countriesDropDown}
-                          inputProps={{search: true, onChange:  this.handlePrimaryBranchCountry}} />
+                          inputProps={{search: true, onChange:  (e, d) => {
+                              setFieldValue('primaryBranch.address.province', ''); this.handlePrimaryBranchCountry(e, d)}}} />
                 <Dropdown label="Province" name="primaryBranch.address.province" options={primaryBranchProvinces}
                           inputProps={{search: true, disabled: !this.state.primaryBranchHasProvinces}} />
               </FormGroup>
@@ -230,7 +239,8 @@ class AddNewPopupCasProducts extends React.Component {
               <FormGroup widths="equal">
                 <Dropdown label="Zip" name="mailingBranch.address.zip" inputProps={{search: true}} options={zipCodes} />
                 <Dropdown label="Country" name="mailingBranch.address.country" options={countriesDropDown}
-                          inputProps={{search: true, onChange:  this.handleMailingBranchCountry}} />
+                          inputProps={{search: true, onChange:  (e, d) => {
+                            setFieldValue('mailingBranch.address.province', ''); this.handleMailingBranchCountry(e, d)}}} />
                 <Dropdown label="Province" name="mailingBranch.address.province" options={mailingBranchProvinces}
                           inputProps={{search: true, disabled: !this.state.mailingBranchHasProvinces}} />
               </FormGroup>
