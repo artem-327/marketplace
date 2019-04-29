@@ -9,8 +9,27 @@ body {
   font-family: 'HelveticaNeueLTPro';
 }
 
-.bootstrapiso .table-responsive {
-  overflow-x: inherit !important;
+.flex {
+  display: flex !important;
+  flex-direction: column;
+  &.column { flex-direction: column; }
+  &.row { flex-direction: row; }
+  &.stretched {
+    flex: 1 auto;
+  }
+
+  &.stretched-all {
+    flex: 1 auto;
+    .ui.container, .ui.segment, .ui.grid  {
+      display: flex !important;
+      flex: 1 auto;
+      flex-direction: column;
+    }
+  }
+}
+
+.bootstrapiso .table-responsive td.actions {
+  overflow: inherit !important;
 }
 
 .ui.menu .item > i.chevron.icon {
@@ -20,8 +39,16 @@ body {
   font-size: 70%;
 }
 
-i.icon:not(.dropdown):not(.times) {
-  font-family: 'thin-icons' !important;
+i.icon {
+  &:not(.dropdown), 
+  &:not(.sort), 
+  &:not(.times) {
+    font-family: 'thin-icons' !important;
+  }
+}
+
+i.icon.thick {
+  font-family: 'icons' !important;
 }
 
 .product-details {

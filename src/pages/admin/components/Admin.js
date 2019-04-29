@@ -67,7 +67,7 @@ class Admin extends Component {
       <>
         {currentAddForm && addForms[currentTab]}
         {currentEditForm && editForms[currentTab]}
-        {<div style={{marginTop: '5px'}}>{tables[currentTab]}</div> || <p>This page is still under construction</p>}
+        {tables[currentTab]|| <p>This page is still under construction</p>}
       </>
     )
   }
@@ -76,14 +76,14 @@ class Admin extends Component {
     if (!!this.props.auth.identity && !this.props.auth.identity.isAdmin) return "Access denied!"
 
     return (
-      <Container fluid>
+      <Container fluid className="flex stretched">
         <TablesHandlers />
-        <Grid columns='equal'>
+        <Grid columns='equal' className="flex stretched">
           <Grid.Row>
             <Grid.Column width={3}>
               <Tabs />
             </Grid.Column>
-            <Grid.Column key={this.props.currentTab}>
+            <Grid.Column key={this.props.currentTab} style={{marginTop: '5px'}} className="flex stretched"> 
               {this.renderContent()}
             </Grid.Column>
           </Grid.Row>
