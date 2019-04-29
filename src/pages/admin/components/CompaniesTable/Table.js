@@ -54,15 +54,14 @@ const mapStateToProps = ({admin}) => {
       primaryBranchAddress: c.primaryBranch && c.primaryBranch.address ?
         c.primaryBranch.address.streetAddress + ', ' +
         c.primaryBranch.address.city + ', ' +
-        (c.primaryBranch.address.province ? c.primaryBranch.address.province + ', ' : '') +
-        c.primaryBranch.address.country
+        (c.primaryBranch.address.province ? c.primaryBranch.address.province.name + ', ' : '') +
+        c.primaryBranch.address.country.name
         : '',
-      primaryContact: c.primaryMerchant ?
-        c.primaryMerchant.firstname + ', ' +
-        c.primaryMerchant.lastname
+      primaryContact: c.primaryUser ?
+        c.primaryUser.name
         : '',
-      contactEmail: c.primaryMerchant ?
-        c.primaryMerchant.email
+      contactEmail: c.primaryUser ?
+        c.primaryUser.email
         : '',
     }))
   }

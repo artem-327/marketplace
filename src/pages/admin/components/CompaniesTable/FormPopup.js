@@ -45,11 +45,9 @@ const initialFormValues = {
     contactPhone: '',
     warehouse: true
   },
-  primaryMerchant: {
+  primaryUser: {
     email: '',
-    firstname: '',
-    lastname: '',
-    middlename: '',
+    name: '',
   }
 }
 
@@ -58,17 +56,23 @@ const formValidationEdit = Yup.object().shape({
 })
 
 const formValidationNew = Yup.object().shape({
-  //primaryBranchHasProvinces: boolean(),
+  primaryBranchHasProvinces: Yup.boolean(),
   //mailingBranchHasProvinces: boolean(),
 
-  name: Yup.string().min(2, 'Name should has at least 2 characters').required('Name should has at least 2 characters'),
+  name: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
   primaryBranch: Yup.object().shape({
-
+    name: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+    contactEmail: Yup.string().email().required('Enter valid e-mail address'),
+    contactName: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+    contactPhone: Yup.string().required('Enter phone number'),
     address: Yup.object().shape({
+      city: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+      streetAddress: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+      zip: Yup.string().required('Enter zip code'),
       country: Yup.number().required(),
       province: Yup.string().when('primaryBranchHasProvinces', {
         is: true,
-        then: Yup.number().required()
+        then: Yup.number().required(),
       }),
 
     }),
@@ -99,6 +103,7 @@ const removeEmpty = (obj) =>
   Object.entries(obj).forEach(([key, val]) => {
     if (val && typeof val === 'object') removeEmpty(val)
     else if (val == null || val === '') delete obj[key]
+    //! ! not working correctly
   })
 
 class AddNewPopupCasProducts extends React.Component {
@@ -112,9 +117,6 @@ class AddNewPopupCasProducts extends React.Component {
   }
 
   handlePrimaryBranchCountry = (e, d) => {
-    console.log('!!!!!!!!!!!! handlePrimaryBranchCountry');
-    console.log('!!!!!!!!!!!! handlePrimaryBranchCountry - d', d);
-
     let country = this.props.countries.find(obj => obj.id == d.value);
     if (country.hasProvinces) {
       this.props.getPrimaryBranchProvinces(country.id)
@@ -123,9 +125,6 @@ class AddNewPopupCasProducts extends React.Component {
   }
 
   handleMailingBranchCountry = (e, d) => {
-
-    console.log('!!!!!!!!!!!! handleMailingBranchCountry');
-    console.log('!!!!!!!!!!!! handleMailingBranchCountry - d', d);
     let country = this.props.countries.find(obj => obj.id == d.value);
     if (country.hasProvinces) {
       this.props.getMailingBranchProvinces(country.id)
@@ -172,7 +171,7 @@ class AddNewPopupCasProducts extends React.Component {
                 console.log('!!!!!!! create company !! 1', values);//! !
                 removeEmpty(values);
                 console.log('!!!!!!! create company !! 2', values);//! !
-                //! !await createCompany(values)
+                await createCompany(values)
               }
 
               actions.setSubmitting(false)
@@ -245,14 +244,10 @@ class AddNewPopupCasProducts extends React.Component {
                           inputProps={{search: true, disabled: !this.state.mailingBranchHasProvinces}} />
               </FormGroup>
               <Divider />
-              <h4>Primary Merchant</h4>
+              <h4>Primary User</h4>
               <FormGroup widths="equal">
-                <Input label="Email" name="primaryMerchant.email" />
-              </FormGroup>
-              <FormGroup widths="equal">
-                <Input label="First Name" name="primaryMerchant.firstname" />
-                <Input label="Middle Name" name="primaryMerchant.middlename" />
-                <Input label="Last Name" name="primaryMerchant.lastname" />
+                <Input label="Email" name="primaryUser.email" />
+                <Input label="Name" name="primaryUser.name" />
               </FormGroup>
             </>}
 
