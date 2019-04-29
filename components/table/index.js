@@ -26,25 +26,21 @@ import {
   DropdownFormatterProvider
 } from './providers'
 
-const GridRoot = props => <Grid.Root {...props} />
-const TableCells = props => <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions':''} />
 const GlobalTableOverrideStyle = createGlobalStyle`
   .dx-g-bs4-table {
     margin-bottom: 0 !important;
   }
 `
-const GridRoot = props => <Grid.Root {...props} style={{ height: '100%' }} />
 
-const SortingIcon = ({ direction }) => (
-  <Icon className="thick" name={direction === 'asc' ? 'sort up' : 'sort down'} />
-)
+const TableCells = props => <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions':''} />
+const GridRoot = props => <Grid.Root {...props} style={{ height: '100%' }} />
 
 const SortLabel = ({ onSort, children, direction }) => (
   <span
     onClick={onSort}
   >
     {children}
-    {(direction && <SortingIcon direction={direction} />)}
+    {(direction && <Icon className="thick" name={direction === 'asc' ? 'sort up' : 'sort down'} />)}
   </span>
 )
 

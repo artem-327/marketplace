@@ -50,7 +50,6 @@ class Settings extends Component {
   render() {
     return (
       <Container fluid className="flex stretched">
-        <Toast />
         <TablesHandlers />
         <Grid columns="equal" className="flex stretched">
           <Grid.Row>
