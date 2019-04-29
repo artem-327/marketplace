@@ -9,12 +9,15 @@ import {
   IntegratedSelection,
   SelectionState,
   SortingState,
-  IntegratedSorting
+  IntegratedSorting,
+  GroupingState,
+  IntegratedGrouping
 } from '@devexpress/dx-react-grid'
 import {
   Grid,
   Table,
   TableHeaderRow,
+  TableGroupRow,
   DragDropProvider,
   TableColumnReordering,
   VirtualTable
@@ -32,6 +35,7 @@ const GlobalTableOverrideStyle = createGlobalStyle`
   }
 `
 
+// const TableGroupRow = props => <TableGroupRow {...props} />
 const TableCells = props => <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions':''} />
 const GridRoot = props => <Grid.Root {...props} style={{ height: '100%' }} />
 
@@ -60,6 +64,9 @@ export default class _Table extends Component {
     selectByRowClick: pt.bool,
     showHeader: pt.bool,
     loading: pt.bool,
+    virtual: pt.bool,
+    sorting: pt.bool,
+    groupBy: pt.array,
     onSelectionChange: pt.func
   }
 
@@ -71,6 +78,7 @@ export default class _Table extends Component {
     showHeader: true,
     loading: false,
     virtual: true,
+    sorting: true,
     onSelectionChange: () => {}
   }
 
@@ -99,6 +107,8 @@ export default class _Table extends Component {
       onSelectionChange,
       loading,
       virtual,
+      sorting,
+      groupBy,
       ...restProps
     } = this.props
     return (
@@ -110,8 +120,11 @@ export default class _Table extends Component {
             columns={this.getColumns()}
             rootComponent={GridRoot}
           >
-            <SortingState defaultSorting={[{ columnName: 'name', direction: 'desc' }]} />
-            <IntegratedSorting />
+            {sorting && <SortingState defaultSorting={[]} />}
+            {sorting && <IntegratedSorting />}
+
+            {groupBy && <GroupingState grouping={groupBy.map(g => ({columnName: g}))} />}
+            {groupBy && <IntegratedGrouping />}
 
             {columnReordering && <DragDropProvider />}
 
@@ -128,7 +141,6 @@ export default class _Table extends Component {
                 showSortingControls 
                 sortLabelComponent={SortLabel}
               />}
-
             <RowActionsFormatterProvider
               for={['__actions']}
               actions={rowActions}
@@ -146,6 +158,10 @@ export default class _Table extends Component {
             <DropdownFormatterProvider
               for={columns.filter(c => c.options).map(c => c.name)}
             />
+            {groupBy && <TableGroupRow 
+              iconComponent={({expanded}) => <Icon name={expanded ? 'chevron down':'chevron right'} />} 
+            />}
+            
           </Grid>
         </div>
       </Segment>
