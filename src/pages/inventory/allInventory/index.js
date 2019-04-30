@@ -7,23 +7,27 @@ import { resetFilterTags } from "../../../modules/filter"
 import { resetForm } from '../../../utils/functions'
 import { getMerchant } from '../../../modules/merchants'
 import { getOffice } from '../../../modules/companies'
-import { getProductOffer, getOrderDetail } from '../../../modules/cart'
+import { getProductOffer, getOrderDetail, sidebarChanged } from '../../../modules/cart'
 
-const mapStateToProps = store => ({
-  productOffers: store.productOffers.allProductOffers,
-  shippingQuotes: store.dataTables.allInventoryTable && store.dataTables.allInventoryTable.rowsOpns.some((po) => {
-    return po.rows.some((row) => {
-      return row.selected
-    })
-  }),
-  isFetching: store.productOffers.isFetching,
-  identity: store.auth.identity,
-  merchantDetail: store.merchants.merchantDetail,
-  officeDetail: store.companies.office,
-  productOffersIsFetching: store.productOffers.productOffersIsFetching,
-  productOffersTable: store.dataTables.allInventoryTable,
+const mapStateToProps = store => {
+  
+  return ({
+    productOffers: store.productOffers.allProductOffers,
+    shippingQuotes: store.dataTables.allInventoryTable && store.dataTables.allInventoryTable.rowsOpns.some((po) => {
+      return po.rows.some((row) => {
+        return row.selected
+      })
+    }),
+    isFetching: store.productOffers.isFetching,
+    identity: store.auth.identity,
+    merchantDetail: store.merchants.merchantDetail,
+    officeDetail: store.companies.office,
+    productOffersIsFetching: store.productOffers.productOffersIsFetching,
+    productOffersTable: store.dataTables.allInventoryTable,
+    sidebar: store.cart.sidebar
 
-})
+  })
+}
 
 const mapDispatchToProps = dispatch => (
   bindActionCreators({
@@ -36,7 +40,8 @@ const mapDispatchToProps = dispatch => (
     resetForm,
     deleteProductOffersList,
     getProductOffer,
-    getOrderDetail
+    getOrderDetail,
+    sidebarChanged
   }, dispatch)
 )
 
