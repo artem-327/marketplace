@@ -41,5 +41,4 @@
 // }
 
 import store from './src/store'
-//TEST
 export default store

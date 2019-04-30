@@ -45,6 +45,26 @@ export async function getHazardClasses() {
   return data
 }
 
+export async function getDataRequest(config, values) {
+  const {data} = await api.get(config.api.get.apiCall)
+  return data
+}
+
+export async function postNewRequest(config, values) {
+  const {data} = await api.post(config.api.post.apiCall, values)
+  return data
+}
+
+export async function deleteItem(config, id) {
+  const {data} = await api.delete(config.api.delete.apiCall + id)
+  return data
+}
+
+export async function putEditedDataRequest(config, values, id) {
+  const {data} = await api.put(config.api.put.apiCall + id, values)
+  return data
+}
+
 export async function getPackagingGroups() {
   const {data} = await api.get("/prodex/api/packaging-groups")
   return data

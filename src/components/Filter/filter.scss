@@ -3,16 +3,18 @@
 $font-family: 'Cabin', sans-serif;
 
 .filter {
+  display: flex;
+  flex-direction: column;
   font-family: "Cabin", sans-serif;
   background-color: #fbfbfb;
-  position: fixed;
+  // position: fixed;
   width: 500px;
-  right: 0;
+  // right: 0;
   top: 105px !important;
-  bottom: 0;
-  overflow: auto !important;
+  padding-bottom: 105px;
+  // bottom: 0;
+  // overflow: auto !important;
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
-  padding: 10px 10px 125px;
   z-index: 4;
   text-align: left;
   .error {

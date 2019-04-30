@@ -1,10 +1,9 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { Dropdown, Popup, Button } from 'semantic-ui-react'
+import { Dropdown, Icon } from 'semantic-ui-react'
 
 export function rowActionsCellFormatter({ column: { actions }, row }) {
   return (
-    <Dropdown icon="ellipsis vertical large">
+    <Dropdown icon="" trigger={<Icon name="ellipsis vertical" size="large" />}>
       <Dropdown.Menu>
         {actions.map((a, i) => (
           <Dropdown.Item

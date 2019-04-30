@@ -49,15 +49,16 @@ class Settings extends Component {
 
   render() {
     return (
-      <Container fluid>
-        <Toast />
+      <Container fluid className="flex stretched">
         <TablesHandlers />
-        <Grid columns="equal">
+        <Grid columns="equal" className="flex stretched">
           <Grid.Row>
             <Grid.Column width={3}>
               <Tabs />
             </Grid.Column>
-            <Grid.Column>{this.renderContent()}</Grid.Column>
+            <Grid.Column className="flex stretched">
+              {this.renderContent()}
+            </Grid.Column>
           </Grid.Row>
         </Grid>
       </Container>

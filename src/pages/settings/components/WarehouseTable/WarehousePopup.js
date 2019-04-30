@@ -59,7 +59,6 @@ class WarehousePopup extends React.Component {
 
   getInitialFormValues = () => {
     const { popupValues } = this.props
-
     const [address, city] =
       popupValues && popupValues.address
         ? popupValues.address.split(',')
@@ -72,7 +71,7 @@ class WarehousePopup extends React.Component {
       email = '',
       zip = ''
     } = popupValues || {}
-    
+
     return {
       name,
       contactName,
@@ -88,12 +87,15 @@ class WarehousePopup extends React.Component {
 
   render() {
     const { closePopup, popupValues, country, currentTab } = this.props
-    const title = popupValues ? 'Edit' : 'Add'
+    const title = popupValues ? 'Edit ' : 'Add'
+
+    const name = currentTab === 'Branches' ? 'Branch Name' : 'Warehouse Name'
+    const modalTitle = currentTab === 'Branches' ? 'Branch' : 'Warehouses'
 
     return (
       <Modal open centered={false}>
         <Modal.Header>
-          {`${title} `} {currentTab}
+          {`${title} `} {modalTitle}
         </Modal.Header>
         <Modal.Content>
           <Form
@@ -103,11 +105,11 @@ class WarehousePopup extends React.Component {
             onSubmit={this.submitHandler}
           >
             <FormGroup widths="equal">
-              <Input type="text" label="Warehouse Name" name="name" />
+              <Input type="text" label={name} name="name" />
               <Input type="text" label="Contact Name" name="contactName" />
             </FormGroup>
             <FormGroup widths="equal">
-              <Input type="text" label="Address" name="address" />
+              <Input type="text" label="Street Address" name="address" />
               <Input type="text" label="City" name="city" />
             </FormGroup>
             <FormGroup widths="equal">

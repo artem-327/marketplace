@@ -206,6 +206,9 @@ export default function reducer(state = initialState, action) {
         name: warehouse.name,
         address:
           warehouse.address.streetAddress + ', ' + warehouse.address.city,
+        streetAddress: warehouse.address.streetAddress,
+        city: warehouse.address.city,
+        countryName: warehouse.address.country.name,
         countryId: warehouse.address.country.id,
         zip: warehouse.address.zip.zip,
         zipID: warehouse.address.zip.id,
@@ -242,6 +245,9 @@ export default function reducer(state = initialState, action) {
         return {
           name: branch.name,
           address: branch.address.streetAddress + ', ' + branch.address.city,
+          streetAddress: branch.address.streetAddress,
+          city: branch.address.city,
+          countryName: branch.address.country.name,
           countryId: branch.address.country.id,
           zip: branch.address.zip.zip,
           zipID: branch.address.zip.id,

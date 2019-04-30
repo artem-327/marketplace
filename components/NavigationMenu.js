@@ -7,7 +7,7 @@ import {withAuth} from '~/hocs'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   <Link prefetch href={to}>
-    <Menu.Item as="a" icon="chevron down" active={pathname === to}>{children}</Menu.Item>
+    <Menu.Item as="a" active={pathname === to}>{children}</Menu.Item>
   </Link>
 ))
 

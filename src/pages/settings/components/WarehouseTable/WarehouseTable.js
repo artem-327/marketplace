@@ -15,7 +15,10 @@ class WarehouseTable extends Component {
   state = {
     columns: [
       { name: 'name', title: 'Warehouse Name' },
-      { name: 'address', title: 'Address' },
+      { name: 'streetAddress', title: 'Street Address' },
+      { name: 'city', title: 'City' },
+      { name: 'zip', title: 'State' }, //waiting state from api
+      { name: 'countryName', title: 'Country' },
       { name: 'contactName', title: 'Contact Name' },
       { name: 'phone', title: 'Phone' },
       { name: 'email', title: 'E-mail' }
@@ -62,6 +65,22 @@ class WarehouseTable extends Component {
     this.state.tab != nextProps.currentTab ? this.handlerLoadPage() : null
   }
 
+  branchChecker() {
+    if (this.state.tab === 'Branches') {
+      const columns = this.state.columns
+      return columns.map(item => {
+        let obj = {}
+        if (item.title === 'Warehouse Name') {
+          obj['name'] = 'name'
+          obj['title'] = 'Branch Name'
+          return obj
+        }
+        return item
+      })
+    }
+    return this.state.columns
+  }
+
   render() {
     const {
       filterValue,
@@ -72,8 +91,6 @@ class WarehouseTable extends Component {
       confirmMessage,
       handleOpenConfirmPopup
     } = this.props
-
-    const { columns } = this.state
 
     return (
       <React.Fragment>
@@ -86,7 +103,7 @@ class WarehouseTable extends Component {
         />
         <ProdexGrid
           filterValue={filterValue}
-          columns={columns}
+          columns={this.branchChecker()}
           loading={loading}
           rows={this.handlerChangeRows()}
           style={{ marginTop: '5px' }}
