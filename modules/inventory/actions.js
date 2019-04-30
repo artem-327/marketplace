@@ -121,6 +121,13 @@ export function getProductGrades() {
   }
 }
 
+export function getMyProductOffers() {
+  return {
+    type: AT.INVENTORY_GET_MY_PRODUCT_OFFERS,
+    payload: api.getMyProductOffers()
+  }
+}
+
 export function getProductOffer(productOfferId) {
   return {
     type: AT.INVENTORY_GET_PRODUCT_OFFER,
@@ -240,7 +247,7 @@ export function uploadDocuments(isLot, productOfferId, fileIds) {
       }).catch(e => {
         // TODO: solve errors
         reject()
-      });
-    }).then(loop.bind(null, j+1));
+      })
+    }).then(loop.bind(null, j+1))
   })(0)
 }

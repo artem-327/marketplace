@@ -10,6 +10,7 @@ export const initialState = {
     searchedManufacturersLoading: false,
     searchedOrigins: [],
     searchedOriginsLoading: false,
+    myProductOffers: [],
     searchedProducts: [],
     searchedProductsLoading: false,
     warehousesList: []
@@ -85,6 +86,14 @@ export default function reducer(state = initialState, action) {
               value: action.payload.data.origin.id,
               text: action.payload.data.origin.name
             }]: []
+          }
+        }
+
+        case AT.INVENTORY_GET_MY_PRODUCT_OFFERS_FULFILLED: {
+          let {data} = action.payload
+          return {
+            ...state,
+            myProductOffers: action.payload.data
           }
         }
 
