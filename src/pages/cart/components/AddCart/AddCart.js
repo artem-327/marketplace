@@ -41,8 +41,8 @@ export default class AddCart extends Component {
   editOrder = async () => {
     const { postOrderEdit, } = this.props
     let { quantity, pricing } = this.props.sidebar
-   
-    
+
+
     // TODO, wrong id??
     const orderpayload = {
       id: this.props.order.id,
@@ -119,8 +119,6 @@ export default class AddCart extends Component {
     )
 
     let canProceed = !warning && pricing
-
-    console.log(pricing)
 
     return (
       <Segment basic>
@@ -259,15 +257,20 @@ export default class AddCart extends Component {
           <GridRow>
             <GridColumn computer={6}>Price:</GridColumn>
             <GridColumn computer={10}>
-              <FormattedNumber
-                style='currency'
-                currency={offer.pricing.price.currency.code}
-                value={pricing && pricing.price} />/{packagingUnit.nameAbbreviation}</GridColumn>
+              {
+                pricing ? <><FormattedNumber
+                  style='currency'
+                  currency={offer.pricing.price.currency.code}
+                  value={pricing && pricing.price} /> / {packagingUnit.nameAbbreviation}</> : null
+              }
+
+
+            </GridColumn>
           </GridRow>
           <Divider />
           <GridRow>
             <GridColumn computer={6}>Subtotal:</GridColumn>
-            <GridColumn computer={10}>{totalPrice && totalPrice > 0 ?
+            <GridColumn computer={10}>{totalPrice ?
               <FormattedNumber style='currency' currency={offer.pricing.price.currency.code} value={totalPrice} />
               : null}
             </GridColumn>
