@@ -161,26 +161,6 @@ export default function reducer(state = initialState, action) {
           }
         }
 
-        case AT.INVENTORY_SET_FILE_ID: {
-          if (action.payload.data.fileType === 'Spec Sheet') {
-            state.fileIds.push(
-              action.payload.data.fileId
-            )
-          } else {
-            state.lotFiles.push(
-              {
-                id: action.payload.data.fileId,
-                name: action.payload.data.fileName,
-                lotId: 0
-              }
-            )
-          }
-
-          return {
-            ...state
-          }
-        }
-
         default: {
           return state
         }

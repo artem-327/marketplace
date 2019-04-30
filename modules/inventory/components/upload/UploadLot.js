@@ -54,7 +54,7 @@ class UploadLot extends Component {
     }
 
     onPreviewDrop = (files) => {
-        let {loadFile, addAttachment, type, fileMaxSize, setFileIds} = this.props
+        let {loadFile, addAttachment, type, fileMaxSize} = this.props
         let {onDropRejected, onUploadSuccess, onUploadFail} = this
         let attachments = []
 

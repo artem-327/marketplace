@@ -803,7 +803,28 @@ export default class AddInventoryForm extends Component {
                                             </TableCell>
                                             <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].cost`} /></FormField></TableCell>
                                             <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].costUom`} /></FormField></TableCell>
-                                            <TableCell width={3}>&nbsp;</TableCell>
+                                            <TableCell width={3}>
+                                              <UploadLot {...this.props}
+                                                         attachments={values.costs[index].attachments}
+                                                         name={`costs[${index}].attachments`}
+                                                         type='Cost Attachment'
+                                                         lot={false}
+                                                         fileMaxSize={20}
+                                                         onChange={(files) => setFieldValue(
+                                                           `costs[${index}].attachments[${values.costs[index].attachments && values.costs[index].attachments.length ? values.costs[index].attachments.length : 0}]`,
+                                                           {
+                                                             id: files.id,
+                                                             name: files.name
+                                                           }
+                                                         )}
+                                                         emptyContent={(
+                                                           <FormattedMessage
+                                                             id='addInventory.clickUpload'
+                                                             defaultMessage={'Click to upload'}
+                                                           />
+                                                         )}
+                                              />
+                                            </TableCell>
                                             <TableCell width={1}><Icon name='trash alternate outline' size='large' onClick={() => arrayHelpers.remove(index)} /></TableCell>
                                           </Table.Row>
                                         )) : ''

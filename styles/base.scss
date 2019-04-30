@@ -46,6 +46,22 @@ i.icon.thick {
   font-family: 'icons' !important;
 }
 
+.product-details {
+
+  > div {
+    height: 100%;
+    padding-bottom: 6.5rem !important;
+  }
+
+  .segment-fixed {
+    position: fixed;
+    bottom: 2rem;
+    width: calc((100% - (2 * 1.2857143rem)) * 0.3125 * 0.75 - 2rem);
+    margin-left: -1px;
+    margin-right: -1px;
+  }
+}
+
 .ui.grid.data-grid {
   font-size: 1.2857143rem;
 

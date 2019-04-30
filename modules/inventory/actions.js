@@ -226,15 +226,6 @@ export function searchProducts(text) {
   }
 }
 
-export function setFileIds(fileId, fileType) {
-  return {
-    type: AT.INVENTORY_SET_FILE_ID,
-    payload: {
-      data: {fileId, fileType}
-    }
-  }
-}
-
 export function uploadDocuments(isLot, productOfferId, fileIds) {
   let files = []
   (function loop(j) {
