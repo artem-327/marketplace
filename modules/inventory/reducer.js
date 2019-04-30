@@ -13,7 +13,8 @@ export const initialState = {
     myProductOffers: [],
     searchedProducts: [],
     searchedProductsLoading: false,
-    warehousesList: []
+    warehousesList: [],
+    loading: false,
 }
 
 export default function reducer(state = initialState, action) {
@@ -89,10 +90,17 @@ export default function reducer(state = initialState, action) {
           }
         }
 
+        case AT.INVENTORY_GET_MY_PRODUCT_OFFERS_PENDING: {
+          return { ...state,
+            loading: true
+          }
+        }
+
         case AT.INVENTORY_GET_MY_PRODUCT_OFFERS_FULFILLED: {
           let {data} = action.payload
           return {
             ...state,
+            loading: false,
             myProductOffers: action.payload.data
           }
         }

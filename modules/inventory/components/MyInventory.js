@@ -7,19 +7,19 @@ import ProdexGrid from '~/components/table'
 export default class MyInventory extends Component {
   state = {
     columns: [
-      { name: 'selection', title: ' ' },
       { name: 'productName', title: 'Product Name' },
       { name: 'productNumber', title: 'Product Number' },
       { name: 'warehouse', title: 'Warehouse' },
-      { name: 'available', title: 'Available' },
+      { name: 'available', title: 'Available', width: 80 },
       { name: 'packaging', title: 'Packaging' },
       { name: 'pkgAmount', title: 'Pkg. Size' },
       { name: 'quantity', title: 'Quantity' },
       { name: 'cost', title: 'Cost' },
       { name: 'fobPrice', title: 'FOB Price' },
       { name: 'manufacturer', title: 'MFR.' },
-      { name: 'broadcast', title: 'Broadcast' }
-    ]
+      { name: 'broadcast', title: 'Broadcast', width: 120 }
+    ],
+    selectedRows: []
   }
 
   componentDidMount() {
@@ -28,10 +28,11 @@ export default class MyInventory extends Component {
 
   render() {
     const {
-      rows
+      rows,
+      loading
     } = this.props
-    const { columns } = this.state
-    let number = 0 // TODO: selected rows
+    const { columns, selectedRows } = this.state
+    
 
     return (
       <>
@@ -43,12 +44,12 @@ export default class MyInventory extends Component {
                                   defaultMessage='MY INVENTORY' />
               </Header>
             </Menu.Item>
-            {number ? (
+            {selectedRows.length > 0 ? (
               <Menu.Item>
                 <Header as='h3' size='small' color='grey'>
                   <FormattedMessage id='myInventory.smallHeader'
-                                    defaultMessage={number + ' products offerings selected'}
-                                    values={{number: number}} />
+                                    defaultMessage={selectedRows.length + ' products offerings selected'}
+                                    values={{number: selectedRows.length}} />
                 </Header>
               </Menu.Item>
             ) : ''}
@@ -61,9 +62,33 @@ export default class MyInventory extends Component {
           </Menu>
         </Container>
         <ProdexGrid
+          loading={loading}
           columns={columns}
           rows={rows}
+          rowSelection
+          groupBy={['productNumber']}
+          onSelectionChange={selectedRows => this.setState({selectedRows})}
+          rowActions={[
+            { text: 'Edit listing', callback: (row) => {} },
+            { text: 'Custom broadcast', callback: (row) => {} },
+            { text: 'Delete listing', callback: (row) => {} }
+          ]}
         />
+
+        {/* <Filter
+          chemicalName
+          productAgeFilter
+          date
+          assay
+          quantity
+          price
+          package
+          condition
+          productGrade
+          form
+          filterFunc={(filter) => { this.props.fetchMyProductOffers({ ...filter }) }}
+          {...this.props}
+        /> */}
       </>
     )
   }

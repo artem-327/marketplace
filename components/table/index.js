@@ -4,6 +4,7 @@ import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css'
 import styled, { createGlobalStyle } from 'styled-components'
 import { Segment, Icon, Dropdown, Modal } from 'semantic-ui-react'
 import { Form, Checkbox, Button } from 'formik-semantic-ui'
+import _ from 'lodash'
 
 import {
   SearchState,
@@ -36,6 +37,12 @@ const GlobalTableOverrideStyle = createGlobalStyle`
   .dx-g-bs4-table {
     margin-bottom: 0 !important;
   }
+  .bootstrapiso .table td {
+    padding: .5rem;
+  }
+  .group-row {
+    background: #EEE;
+  }
 `
 
 const SettingButton = styled(Icon)`
@@ -61,7 +68,7 @@ const ColumnsSettingModal = ({columns, hiddenColumnNames, onChange, open}) => (
           actions.setSubmitting(false)
         }}
       >
-        {columns.map(c => <Checkbox name={c.name} label={c.title} />)}
+        {columns.map(c => <Checkbox key={c.name} name={c.name} label={c.title} />)}
         <Button.Submit fluid>Save</Button.Submit>
       </Form>
     </Modal.Content>
@@ -106,24 +113,30 @@ export default class _Table extends Component {
   static defaultProps = {
     columnReordering: true,
     rowSelection: false,
-    selectByRowClick: true,
+    selectByRowClick: false,
     showSelectAll: true,
     showHeader: true,
     loading: false,
     virtual: true,
     sorting: true,
+    groupBy: [],
     onSelectionChange: () => { }
   }
 
-  state = {
-    columnExtensions: [
-      { columnName: '__actions', width: 45 },
-    ],
-    hiddenColumnNames: []
-  }
 
   constructor(props) {
     super(props)
+
+    this.state = {
+      hiddenColumnNames: [],
+      expandedGroups: []
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.groupBy && prevProps.loading) this.setState({
+      expandedGroups: Object.keys(_.groupBy(this.props.rows, this.props.groupBy.join('')))
+    })
   }
 
   getColumns = () => {
@@ -135,6 +148,13 @@ export default class _Table extends Component {
         ...columns,
       ]
       : columns
+  }
+
+  getColumnsExtension = () => {
+    return this.getColumns().map(c => ({
+      columnName: c.name,
+      width: c.width || undefined
+    }))
   }
 
   render() {
@@ -156,7 +176,8 @@ export default class _Table extends Component {
       ...restProps
     } = this.props
 
-    const { columnExtensions, hiddenColumnNames, columnSettingOpen } = this.state
+    const { hiddenColumnNames, columnSettingOpen, expandedGroups } = this.state
+    const grouping = groupBy.map(g => ({ columnName: g }))
 
     return (
       <Segment basic loading={loading} {...restProps} className="flex stretched">
@@ -180,7 +201,13 @@ export default class _Table extends Component {
             {sorting && <SortingState defaultSorting={[]} />}
             {sorting && <IntegratedSorting />}
 
-            {groupBy && <GroupingState grouping={groupBy.map(g => ({ columnName: g }))} />}
+            {groupBy && 
+              <GroupingState 
+                grouping={grouping} 
+                expandedGroups={expandedGroups}
+                onExpandedGroupsChange={(expandedGroups => this.setState({expandedGroups}))}
+              />
+            }
             {groupBy && <IntegratedGrouping />}
 
             {columnReordering && <DragDropProvider />}
@@ -192,8 +219,8 @@ export default class _Table extends Component {
             <IntegratedFiltering />
 
             {virtual
-              ? <VirtualTable columnExtensions={columnExtensions} height="auto" cellComponent={TableCells} />
-              : <Table columnExtensions={columnExtensions} />}
+              ? <VirtualTable columnExtensions={this.getColumnsExtension()} height="auto" cellComponent={TableCells} />
+              : <Table columnExtensions={this.getColumnsExtension()} />}
 
             {showHeader &&
               <TableHeaderRow
@@ -221,9 +248,15 @@ export default class _Table extends Component {
             <DropdownFormatterProvider
               for={columns.filter(c => c.options).map(c => c.name)}
             />
-            {groupBy && <TableGroupRow
-              iconComponent={({ expanded }) => <Icon name={expanded ? 'chevron down' : 'chevron right'} />}
-            />}
+            {groupBy && 
+              <TableGroupRow
+                indentColumnWidth={1}
+                rowComponent={({row, ...props}) => (
+                  <TableGroupRow.Row className="group-row" {...props} />
+                )}
+                iconComponent={({ expanded }) => <Icon name={expanded ? 'chevron down' : 'chevron right'} />}
+              />
+            }
 
           </Grid>
         </div>
