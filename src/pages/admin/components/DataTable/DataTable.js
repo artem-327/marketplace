@@ -7,7 +7,7 @@ import { Confirm } from "semantic-ui-react"
 
 class DataTable extends Component {
   componentDidMount() {
-    this.props.getDataRequest(this.props.config.api)
+    this.props.getDataRequest(this.props.config)
   }
 
   render() {

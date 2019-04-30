@@ -16,9 +16,12 @@ export function closeEditPopup() {
 
 export function deleteItem(config, id) {
 	if (typeof config.api.delete !== 'undefined') {
-		return {
-			type: config.api.delete.typeRequest,
-			payload: id
+		return async dispatch => {
+			await dispatch({
+				type: config.api.delete.typeRequest,
+				payload: api.deleteItem(config, id)
+			})
+			dispatch(getDataRequest(config))
 		}
 	}
 }
@@ -41,24 +44,32 @@ export function closeConfirmPopup() {
 	}
 }
 
-export function getDataRequest(api, values = null) {
+export function getDataRequest(config, values = null) {
 	return {
-		type: api.get.typeRequest,
-		payload: values
+		type: config.api.get.typeRequest,
+		payload: api.getDataRequest(config, values),
 	}
 }
 
 export function postNewRequest(config, values) {
-	return {
-		type: config.api.post.typeRequest,
-		payload: values
+	return async dispatch => {
+		await dispatch({
+			type: config.api.post.typeRequest,
+			payload: api.postNewRequest(config, values),
+		})
+		dispatch(closePopup())
+		dispatch(getDataRequest(config))
 	}
 }
 
 export function putEditedDataRequest(config, id, values) {
-	return {
-		type: config.api.put.typeRequest,
-		payload: { values, id }
+	return async dispatch => {
+		await dispatch({
+			type: config.api.put.typeRequest,
+			payload: api.putEditedDataRequest(config, values, id),
+		})
+		dispatch(closePopup())
+		dispatch(getDataRequest(config))
 	}
 }
 

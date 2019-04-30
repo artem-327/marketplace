@@ -11,15 +11,29 @@ import ErrorMessage from './message/ErrorMessage'
 
 const TopMenu = styled(Menu)`
   background-color: #33373e !important;
+  position: fixed;
+  height: 49px;
+  top: 0; right: 0; bottom: 0; left: 0;
 `
 const TopMenuContainer = styled(Container)`
   padding: 0 29px;
 `
 const MainContainer = styled(Container)`
-  padding: 49px 0 0;
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
 `
 const ContentContainer = styled(Container)`
   padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+`
+const FlexContainer = styled.div`
+  position: fixed;
+  top: 49px; right: 0; bottom: 0; left: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
 `
 const LogoImage = styled(Image)`
   margin: 9px 10px 4px 0;
@@ -56,11 +70,13 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange' }) => 
 
 
     </TopMenu>
-    <ErrorMessage />
-
-    <ContentContainer fluid className='page-wrapper'>
-      {children}
-    </ContentContainer>
+    
+    <FlexContainer>
+      <ErrorMessage />
+      <ContentContainer fluid className='page-wrapper flex stretched'>
+        {children}
+      </ContentContainer>
+    </FlexContainer>
 
   </MainContainer>
 )

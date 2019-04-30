@@ -31,7 +31,7 @@ export default class ErrorMessage extends Component {
         if (error.response)
           errorMessage = error.response.data ? error.response.data : `Request failed with status code: ${error.response.status}`
         else if (error.clientMessage)
-          errorMessage = process.env.NODE_ENV !== 'production' ? `${error.clientMessage} | ${error.exceptionMessage}` : error.clientMessage
+          errorMessage = process.env.NODE_ENV !== 'production' ? `${error.clientMessage} ${error.exceptionMessage}` : error.clientMessage
 
         self.onError(errorMessage)
 
@@ -75,10 +75,11 @@ export default class ErrorMessage extends Component {
 
     return (
       <MessageContainer fluid>
-        <Message
+        <Message icon size="small"
           onDismiss={() => this.setState({ display: false })}
           {...this.props.messageProps}
-          {...this.state.error} />
+          {...this.state.error} 
+        />
       </MessageContainer>
     )
   }
@@ -90,7 +91,7 @@ ErrorMessage.propTypes = {
 
 ErrorMessage.defaultProps = {
   messageProps: {
-    size: 'large',
+    size: '',
     contentAsHeader: false,
     error: true,
     icon: 'warning',

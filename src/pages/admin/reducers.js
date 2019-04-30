@@ -44,7 +44,7 @@ export const initialState = {
 
 export default function reducer(state = initialState, action) {
   const {payload} = action
-  
+
   switch (action.type) {
 
     case AT.ADMIN_OPEN_POPUP: {
@@ -230,8 +230,13 @@ export default function reducer(state = initialState, action) {
 
                     return {
                       ...state,
+                      loading: false,
                       [config[groupName].api.get.dataName]: rows
                     }
+                  }
+                } else if (config[groupName].api.get.typeRequest + '_PENDING' === action.type) {
+                  return { ...state,
+                    loading: true
                   }
                 }
                 break

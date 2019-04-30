@@ -46,7 +46,7 @@ export const config = {
       get: {
         dataName: 'unitsOfMeasureRows',
         typeRequest: 'ADMIN_GET_UNITS_OF_MEASURE_DATA',
-        typeSuccess: 'ADMIN_GET_UNITS_OF_MEASURE_DATA_SUCCESS',
+        typeSuccess: 'ADMIN_GET_UNITS_OF_MEASURE_DATA_FULFILLED',
         apiCall: '/prodex/api/units',
       },
       post: {
@@ -81,7 +81,7 @@ export const config = {
       get: {
         dataName: 'unitsOfPackagingRows',
         typeRequest: 'ADMIN_GET_UNITS_OF_PACKAGING_DATA',
-        typeSuccess: 'ADMIN_GET_UNITS_OF_PACKAGING_DATA_SUCCESS',
+        typeSuccess: 'ADMIN_GET_UNITS_OF_PACKAGING_DATA_FULFILLED',
         apiCall: '/prodex/api/packaging-types',
         /*
         retFcnProcess: (state, action, config) => {
@@ -128,7 +128,7 @@ export const config = {
       get: {
         dataName: 'manufacturersRows',
         typeRequest: 'ADMIN_GET_MANUFACTURERS_DATA',
-        typeSuccess: 'ADMIN_GET_MANUFACTURERS_DATA_SUCCESS',
+        typeSuccess: 'ADMIN_GET_MANUFACTURERS_DATA_FULFILLED',
         apiCall: '/prodex/api/manufacturers',
       },
       post: {
@@ -161,7 +161,7 @@ export const config = {
       get: {
         dataName: 'gradesRows',
         typeRequest: 'ADMIN_GET_GRADES_DATA',
-        typeSuccess: 'ADMIN_GET_GRADES_DATA_SUCCESS',
+        typeSuccess: 'ADMIN_GET_GRADES_DATA_FULFILLED',
         apiCall: '/prodex/api/product-grades',
       },
       post: {
@@ -194,7 +194,7 @@ export const config = {
       get: {
         dataName: 'formsRows',
         typeRequest: 'ADMIN_GET_FORMS_DATA',
-        typeSuccess: 'ADMIN_GET_FORMS_DATA_SUCCESS',
+        typeSuccess: 'ADMIN_GET_FORMS_DATA_FULFILLED',
         apiCall: '/prodex/api/product-forms',
       },
       post: {
@@ -227,7 +227,7 @@ export const config = {
       get: {
         dataName: 'conditionsRows',
         typeRequest: 'ADMIN_GET_CONDITIONS_DATA',
-        typeSuccess: 'ADMIN_GET_CONDITIONS_DATA_SUCCESS',
+        typeSuccess: 'ADMIN_GET_CONDITIONS_DATA_FULFILLED',
         apiCall: '/prodex/api/product-conditions',
       },
       post: {
