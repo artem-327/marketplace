@@ -61,6 +61,29 @@ const initValues = {
   validityDate: ""
 }
 
+val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
+  return this.test('unique', message, function (value) {
+    if (!value || !value[propertyName]) {
+      return true
+    }
+
+    const { path } = this
+    const options = [...this.parent]
+    const currentIndex = options.indexOf(value)
+
+    const subOptions = options.slice(0, currentIndex)
+
+    if (subOptions.some((option) => option[propertyName] === value[propertyName])) {
+      throw this.createError({
+        path: `${path}.${propertyName}`,
+        message,
+      })
+    }
+
+    return true
+  })
+})
+
 const validationScheme = val.object().shape({
   inStock: val.bool().required("required"),
   product: val.string().required("required"),
@@ -68,7 +91,7 @@ const validationScheme = val.object().shape({
   doesExpire: val.bool(),
   pkgAmount: val.number().nullable().required("Is required"),
   validityDate: val.string().matches(/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, { message: 'not valid date' }),
-  lots: val.array().of(val.object().shape({
+  lots: val.array().of(val.object().uniqueProperty('lotNumber', 'LOT number has to be unique').shape({
     lotNumber: val.string().nullable().required("required"),
     pkgAmount: val.number().nullable().moreThan(0, "Must be greater than 0").required("required"),
     manufacturedDate: val.string().nullable().matches(/^([0-9]{4}\-[0-9]{2}\-[0-9]{2})?$/, { message: 'not valid date' }),
