@@ -56,9 +56,6 @@ const formValidationEdit = Yup.object().shape({
 })
 
 const formValidationNew = Yup.object().shape({
-  primaryBranchHasProvinces: Yup.boolean(),
-  //mailingBranchHasProvinces: boolean(),
-
   name: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
   primaryBranch: Yup.object().shape({
     name: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
@@ -69,17 +66,12 @@ const formValidationNew = Yup.object().shape({
       city: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
       streetAddress: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
       zip: Yup.string().required('Enter zip code'),
-      country: Yup.number().required(),
-      province: Yup.string().when('primaryBranchHasProvinces', {
-        is: true,
-        then: Yup.number().required(),
-      }),
-
+      country: Yup.number().required()
     }),
 
+
+
   }),
-
-
 
   //nacdMember: Yup.bool().required(),
   //phone: Yup.string().min(9, 'Enter valid phone number').required(),
@@ -101,7 +93,10 @@ const formValidationNew = Yup.object().shape({
 
 const removeEmpty = (obj) =>
   Object.entries(obj).forEach(([key, val]) => {
-    if (val && typeof val === 'object') removeEmpty(val)
+    if (val && typeof val === 'object') {
+      removeEmpty(val)
+      if (Object.entries(val).length === 0) delete obj[key]
+    }
     else if (val == null || val === '') delete obj[key]
     //! ! not working correctly
   })
@@ -158,20 +153,26 @@ class AddNewPopupCasProducts extends React.Component {
         <Modal.Content>
           <Form
             enableReinitialize
-            initialValues={{...initialFormValues, ...popupValues}}
-            context={{ primaryBranchHasProvinces }}
+            initialValues={popupValues ? popupValues : initialFormValues}
             validationSchema={popupValues ? formValidationEdit : formValidationNew}
             onReset={closePopup}
             onSubmit={async (values, actions) => {
               if (popupValues) {
-                let {primaryBranch, ...newValues} = values
+                let newValues = {
+                  "nacdMember": values.nacdMember,
+                  "name": values.name,
+                  "phone": values.phone,
+                  "website": values.website
+                }
+                removeEmpty(values);
                 await updateCompany(popupValues.id, newValues)
               } 
               else {
-                console.log('!!!!!!! create company !! 1', values);//! !
+                console.log('!!!!!!! create company !! Add 1', values);//! !
                 removeEmpty(values);
-                console.log('!!!!!!! create company !! 2', values);//! !
-                await createCompany(values)
+                console.log('!!!!!!! create company !! Add 2', values);//! !
+
+                //await createCompany(values)
               }
 
               actions.setSubmitting(false)
