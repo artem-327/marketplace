@@ -7,6 +7,7 @@ import File from "~/src/pages/inventory/addInventory/components/Upload/component
 import ReactDropzone from "react-dropzone";
 import {FormattedMessage} from 'react-intl';
 import {TOO_LARGE_FILE, UPLOAD_FILE_FAILED} from '~/src/modules/errors.js'
+import { FieldArray } from "formik"
 
 class UploadLot extends Component {
     constructor(props) {
@@ -22,24 +23,17 @@ class UploadLot extends Component {
       })
     }
 
-    removeFile = (index) => {
-        let {files} = this.state
-      console.log('XXXX', this.state.files[index])
-        let attachmentId = this.state.files[index].id
+    removeFile = (file) => {
         let poId = this.props.edit
 
         // delete attachment from database
-        if (this.state.files[index].attachment) {
-          this.props.removeAttachmentLink(this.props.lot ? true : false, this.props.lot ? this.props.lot.id : poId, attachmentId).then(() => {
-            this.props.removeAttachment(attachmentId)
+        if (file.linked) {
+          this.props.removeAttachmentLink(this.props.lot ? true : false, this.props.lot ? this.props.lot.id : poId, file.id).then(() => {
+            this.props.removeAttachment(file.id)
           })
         } else {
-          this.props.removeAttachment(attachmentId)
+          this.props.removeAttachment(file.id)
         }
-
-        files.splice(index, 1)
-
-        this.setState({files})
     }
 
     onDropRejected = (blobs) => {
@@ -52,9 +46,7 @@ class UploadLot extends Component {
     }
 
     onUploadSuccess = (files) => {
-        this.setState({
-          files
-        })
+        this.props.onChange(files)
     }
 
     onUploadFail = (fileName) => {
@@ -76,17 +68,13 @@ class UploadLot extends Component {
             }
         }
 
-        let filesState = this.state.files;
-
         // upload new files as temporary attachments
         (function loop(j) {
             if (j < files.length) new Promise((resolve, reject) => {
                 loadFile(files[j]).then(file => {
                     addAttachment(file.value, type).then((aId) => {
-                        filesState = filesState.concat([aId.value.data])
 
-                        onUploadSuccess(filesState)
-                        setFileIds(aId.value.data)
+                        onUploadSuccess(aId.value.data)
 
                         resolve()
                     }).catch(e => {
@@ -102,45 +90,38 @@ class UploadLot extends Component {
     };
 
     render() {
-        let files = this.state.files.map((file, index) => (
-            <File key={file.id} onRemove={() => this.removeFile(index)} className="file lot" name={file.name} index={index} />));
-        let hasFile = this.state.files.length !== 0;
+        let {attachments} = this.props
+        let hasFile = this.props.attachments && this.props.attachments.length !== 0;
         return (
             <div className={"uploadLot " + (hasFile ? ' has-file' : '')}>
                 {this.props.header}
                 {hasFile ?
                     <React.Fragment>
-                        <ReactDropzone className="dropzoneLot" activeClassName="active" onDrop={this.onPreviewDrop} onDropRejected={this.onDropRejected}>
-                          <label>
-                            <FormattedMessage
-                              id='addInventory.dragDrop'
-                              defaultMessage={'Drag and drop ' + this.props.type + ' file here'}
-                              values={{docType: this.props.type}}
-                            />
-                            <br />
-                            <FormattedMessage
-                              id='addInventory.dragDropOr'
-                              defaultMessage={'or select from computer'}
-                            />
-                          </label>
-                        </ReactDropzone>
-                        <span className="file-space">{files}</span>
+                      {this.props.uploadedContent ? (
+                          <ReactDropzone className="dropzoneLot" activeClassName="active" onDrop={this.onPreviewDrop} onDropRejected={this.onDropRejected}>
+                            {this.props.uploadedContent}
+                          </ReactDropzone>
+                        ) : ''}
+                      <span className="file-space">
+                        <FieldArray name={this.props.name}
+                                    render={arrayHelpers => (
+                          <>
+                            {attachments && attachments.length ? attachments.map((file, index) => (
+                                <File key={file.id} onRemove={() => {
+                                  console.log(file)
+                                  this.removeFile(file)
+                                  console.log(index)
+                                  arrayHelpers.remove(index)
+                                }} className="file lot" name={file.name} index={index} />
+                              )) : ''}
+                          </>
+                        )} />
+                      </span>
                     </React.Fragment>
                     :
                     <ReactDropzone className="dropzoneLot" activeClassName="active" onDrop={this.onPreviewDrop}>
                       <div>
-                        <label>
-                          <FormattedMessage
-                            id='addInventory.dragDrop'
-                            defaultMessage={'Drag and drop ' + this.props.type + ' file here'}
-                            values={{docType: this.props.type}}
-                          />
-                          <br />
-                          <FormattedMessage
-                            id='addInventory.dragDropOr'
-                            defaultMessage={'or select from computer'}
-                          />
-                        </label>
+                        {this.props.emptyContent}
                       </div>
                     </ReactDropzone>
                 }

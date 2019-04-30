@@ -40,6 +40,10 @@ const ResponsiveColumn = styled(GridColumn)`
 const initValues = {
   doesExpire: false,
   inStock: true,
+  lots: [{
+    lotNumber: '1',
+    pkgAmount: null
+  }],
   minimumRequirement: true,
   minimum: 1,
   multipleLots: false,
@@ -53,6 +57,7 @@ const initValues = {
   product: "",
   processingTimeDays: 1,
   splits: 1,
+  touchedLot: false,
   validityDate: ""
 }
 
@@ -83,6 +88,7 @@ const validationScheme = val.object().shape({
       })
     }))
   }),
+  touchedLot: val.bool(),
   warehouse: val.number().required('required')
 })
 
@@ -307,13 +313,27 @@ export default class AddInventoryForm extends Component {
             initialState: {
               assayMax: response.value.data.assayMax,
               assayMin: response.value.data.assayMin,
+              attachments: response.value.data.attachments && response.value.data.attachments.length ? response.value.data.attachments.map(att => {
+                return {
+                  id: att.id,
+                  name: att.name,
+                  linked: true
+                }
+              }) : [],
               doesExpire: !!response.value.data.lots[0].expirationDate,
               externalNotes: response.value.data.externalNotes,
               lots: response.value.data.lots.map(lot => {
                 return {
                   ...lot,
                   expirationDate: lot.expirationDate ? lot.expirationDate.substring(0, 10) : '',
-                  manufacturedDate: lot.manufacturedDate ? lot.manufacturedDate.substring(0, 10) : ''
+                  manufacturedDate: lot.manufacturedDate ? lot.manufacturedDate.substring(0, 10) : '',
+                  attachments: lot.attachments && lot.attachments.length ? lot.attachments.map(att => {
+                    return {
+                      id: att.id,
+                      name: att.name,
+                      linked: true
+                    }
+                  }) : []
                 }
               }),
               internalNotes: response.value.data.internalNotes,
@@ -331,7 +351,7 @@ export default class AddInventoryForm extends Component {
               product: response.value.data.product,
               productCondition: response.value.data.productCondition ? response.value.data.productCondition.id : null,
               productForm: response.value.data.productForm ? response.value.data.productForm.id : null,
-              productGrade: response.value.data.productGrades ? response.value.data.productGrades[0].id : null,
+              productGrade: response.value.data.productGrades && response.value.data.productGrades.length ? response.value.data.productGrades[0].id : null,
               splits: response.value.data.splits,
               tradeName: response.value.data.tradeName,
               validityDate: response.value.data.lots[0].expirationDate ? response.value.data.lots[0].expirationDate.substring(0, 10) : '', // TODO: check all lots and get one date (nearest or farthest date?)
@@ -386,11 +406,6 @@ export default class AddInventoryForm extends Component {
           initialValues={{ ...initValues, ...initialState }}
           validationSchema={validationScheme}
           onSubmit={(values, actions) => {
-            if (this.props.fileIds.length) {
-              values.attachments = this.props.fileIds.map(fi => {
-                return fi.id
-              })
-            }
             addProductOffer(values, this.props.edit)
               .then((productOffer) => {
                 //Router.push('/inventory/my') xxx
@@ -415,7 +430,11 @@ export default class AddInventoryForm extends Component {
               </Modal>
               <Tab className='inventory' menu={{ secondary: true, pointing: true }} panes={[
                 {
-                  menuItem: 'PRODUCT OFFER',
+                  menuItem: (
+                    <Menu.Item key='productOffer'>
+                      PRODUCT OFFER
+                    </Menu.Item>
+                  ),
                   render: () => (
                     <Tab.Pane>
                       <Grid divided style={{ marginTop: '2rem' }}>
@@ -475,7 +494,7 @@ export default class AddInventoryForm extends Component {
                           <Header as='h3'>How many packages are available?</Header>
                           <FormGroup>
                             <FormField width={4}>
-                              <Input label="Total Packages" inputProps={{ type: 'number' }} name="pkgAmount" />
+                              <Input label="Total Packages" inputProps={{ type: 'number'}} name="pkgAmount" />
                             </FormField>
                           </FormGroup>
 
@@ -527,17 +546,46 @@ export default class AddInventoryForm extends Component {
 
                               <Header as='h3'>Upload Spec Sheet</Header>
                               <UploadLot {...this.props}
-                                         control={UploadLot}
-                                         name='documents'
+                                         attachments={values.attachments}
+                                         name='attachments'
                                          type='Spec Sheet'
                                          fileMaxSize={20}
                                          onChange={(files) => setFieldValue(
-                                           "documents",
-                                           files
+                                           `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
+                                           {
+                                             id: files.id,
+                                             name: files.name
+                                           }
                                          )}
-                              >
-                                Drag and drop spec sheet file here or <a>select</a> from computer
-                              </UploadLot>
+                                         emptyContent={(
+                                           <label>
+                                             <FormattedMessage
+                                               id='addInventory.dragDrop'
+                                               defaultMessage={'Drag and drop ' + this.props.type + ' file here'}
+                                               values={{docType: this.props.type}}
+                                             />
+                                             <br />
+                                             <FormattedMessage
+                                               id='addInventory.dragDropOr'
+                                               defaultMessage={'or select from computer'}
+                                             />
+                                           </label>
+                                         )}
+                                         uploadedContent={(
+                                           <label>
+                                             <FormattedMessage
+                                               id='addInventory.dragDrop'
+                                               defaultMessage={'Drag and drop ' + this.props.type + ' file here'}
+                                               values={{docType: this.props.type}}
+                                             />
+                                             <br />
+                                             <FormattedMessage
+                                               id='addInventory.dragDropOr'
+                                               defaultMessage={'or select from computer'}
+                                             />
+                                           </label>
+                                         )}
+                              />
 
                             </GridColumn>
                           </Grid>
@@ -551,7 +599,11 @@ export default class AddInventoryForm extends Component {
                   )
                 },
                 {
-                  menuItem: 'OPTIONAL PRODUCT INFO',
+                  menuItem: (
+                    <Menu.Item key='productOffer' onClick={() => { if (values.lots[0].pkgAmount === null) setFieldValue('lots[0].pkgAmount', values.pkgAmount)}}>
+                      OPTIONAL PRODUCT INFO
+                    </Menu.Item>
+                  ),
                   render: () => (
                     <Tab.Pane>
                       <Grid style={{marginTop: '2rem'}}>
@@ -637,63 +689,60 @@ export default class AddInventoryForm extends Component {
                             name="lots"
                             render={arrayHelpers => (
                               <>
-                                <FormGroup inline>
-                                  <Radio label="No" value={false} name="multipleLots" inputProps={{onClick: (event, data = {data, values, arrayHelpers}) => {
-                                      if (values.lots) {
-                                        for (let i = values.lots.length; i >= 0; i--) {
-                                          arrayHelpers.remove(i)
-                                        }
-                                      }
-                                    }}} />
-                                  <Radio label="Yes" value={true} name="multipleLots" inputProps={{onClick: (event, data = {data, values, arrayHelpers}) => {
-                                      if (!values.lots || !values.lots.length) {
-                                        arrayHelpers.push({
-                                          lotNumber: null,
-                                          pkgAmount: null,
-                                          manufacturedDate: '',
-                                          expirationDate: ''
-                                        })
-                                      }
-                                    }}} />
-                                </FormGroup>
-
-                                {values.multipleLots ? (
-                                  <>
-                                    <Message attached='top' className='header-table-fields'>
-                                      <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{marginTop: '-0.5em'}} onClick={() => arrayHelpers.push({lotNumber: null, pkgAmount: null, manufacturedDate: '', expirationDate: ''})} />
-                                      Lot Details
-                                    </Message>
-                                    <Table attached='bottom' className='table-fields'>
-                                      <Table.Header>
-                                        <Table.Row>
-                                          <TableHeaderCell title='What is the lot number?'>Lot #</TableHeaderCell>
-                                          <TableHeaderCell title='How many packages in this lot?'>Total</TableHeaderCell>
-                                          <TableHeaderCell>Available</TableHeaderCell>
-                                          <TableHeaderCell>Allocated</TableHeaderCell>
-                                          <TableHeaderCell title='What is the MFG?'>MFG Date</TableHeaderCell>
-                                          <TableHeaderCell title='What is the expiration?'>Expiration Date</TableHeaderCell>
-                                          <TableHeaderCell>C of A</TableHeaderCell>
-                                          <TableHeaderCell>&nbsp;</TableHeaderCell>
-                                        </Table.Row>
-                                      </Table.Header>
-                                      <Table.Body>
-                                        {values.lots && values.lots.length ? values.lots.map((lot, index) => (
-                                          <Table.Row key={index}>
-                                            <TableCell><Input name={`lots[${index}].lotNumber`} /></TableCell>
-                                            <TableCell><Input name={`lots[${index}].pkgAmount`} /></TableCell>
-                                            <TableCell>0</TableCell>
-                                            <TableCell>0</TableCell>
-                                            <TableCell><DateInput name={`lots[${index}].manufacturedDate`} /></TableCell>
-                                            <TableCell><DateInput name={`lots[${index}].expirationDate`} /></TableCell>
-                                            <TableCell></TableCell>
-                                            <TableCell><Icon name='trash alternate outline' size='large' onClick={() => arrayHelpers.remove(index)} /></TableCell>
-                                          </Table.Row>
-                                        )) : ''
-                                        }
-                                      </Table.Body>
-                                    </Table>
-                                  </>
-                                ) : ''}
+                                <Message attached='top' className='header-table-fields'>
+                                  <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{marginTop: '-0.5em'}} onClick={() => arrayHelpers.push({lotNumber: null, pkgAmount: null, manufacturedDate: '', expirationDate: ''})} />
+                                  Lot Details
+                                </Message>
+                                <Table attached='bottom' className='table-fields'>
+                                  <Table.Header>
+                                    <Table.Row>
+                                      <TableHeaderCell title='What is the lot number?'>Lot #</TableHeaderCell>
+                                      <TableHeaderCell title='How many packages in this lot?'>Total</TableHeaderCell>
+                                      <TableHeaderCell>Available</TableHeaderCell>
+                                      <TableHeaderCell>Allocated</TableHeaderCell>
+                                      <TableHeaderCell title='What is the MFG?'>MFG Date</TableHeaderCell>
+                                      <TableHeaderCell title='What is the expiration?'>Expiration Date</TableHeaderCell>
+                                      <TableHeaderCell>C of A</TableHeaderCell>
+                                      <TableHeaderCell>&nbsp;</TableHeaderCell>
+                                    </Table.Row>
+                                  </Table.Header>
+                                  <Table.Body>
+                                    {values.lots && values.lots.length ? values.lots.map((lot, index) => (
+                                      <Table.Row key={index}>
+                                        <TableCell><Input name={`lots[${index}].lotNumber`} inputProps={{onClick: () => setFieldValue('touchedLot', true)}} /></TableCell>
+                                        <TableCell><Input name={`lots[${index}].pkgAmount`} inputProps={{onClick: () => setFieldValue('touchedLot', true)}} /></TableCell>
+                                        <TableCell>0</TableCell>
+                                        <TableCell>0</TableCell>
+                                        <TableCell><DateInput name={`lots[${index}].manufacturedDate`} /></TableCell>
+                                        <TableCell><DateInput name={`lots[${index}].expirationDate`} /></TableCell>
+                                        <TableCell>
+                                          <UploadLot {...this.props}
+                                                     attachments={values.lots[index].attachments}
+                                                     name={`lots[${index}].attachments`}
+                                                     type='Lot Attachment'
+                                                     lot={true}
+                                                     fileMaxSize={20}
+                                                     onChange={(files) => setFieldValue(
+                                                       `lots[${index}].attachments[${values.lots[index].attachments && values.lots[index].attachments.length ? values.lots[index].attachments.length : 0}]`,
+                                                       {
+                                                         id: files.id,
+                                                         name: files.name
+                                                       }
+                                                     )}
+                                                     emptyContent={(
+                                                       <FormattedMessage
+                                                         id='addInventory.clickUpload'
+                                                         defaultMessage={'Click to upload'}
+                                                       />
+                                                     )}
+                                          />
+                                        </TableCell>
+                                        <TableCell><Icon name='trash alternate outline' size='large' onClick={() => arrayHelpers.remove(index)} /></TableCell>
+                                      </Table.Row>
+                                    )) : ''
+                                    }
+                                  </Table.Body>
+                                </Table>
                               </>
                             )}
                           />

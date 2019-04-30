@@ -5,6 +5,7 @@ export const initialState = {
     listConditions: [],
     listForms: [],
     listGrades: [],
+    lotFiles: [],
     poCreated: false,
     searchedManufacturers: [],
     searchedManufacturersLoading: false,
@@ -161,9 +162,19 @@ export default function reducer(state = initialState, action) {
         }
 
         case AT.INVENTORY_SET_FILE_ID: {
-          state.fileIds.push(
-            action.payload.data
-          )
+          if (action.payload.data.fileType === 'Spec Sheet') {
+            state.fileIds.push(
+              action.payload.data.fileId
+            )
+          } else {
+            state.lotFiles.push(
+              {
+                id: action.payload.data.fileId,
+                name: action.payload.data.fileName,
+                lotId: 0
+              }
+            )
+          }
 
           return {
             ...state
