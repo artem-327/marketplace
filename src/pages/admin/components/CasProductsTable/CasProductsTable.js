@@ -14,9 +14,9 @@ import {
 class CasProductsTable extends Component {
   componentDidMount() {
     this.props.getCasProductByFilter(this.props.casListDataRequest)
-    this.props.getUnNumbersDataRequest();
-    this.props.getHazardClassesDataRequest();
-    this.props.getPackagingGroupsDataRequest();
+    this.props.getUnNumbersDataRequest()
+    this.props.getHazardClassesDataRequest()
+    this.props.getPackagingGroupsDataRequest()
   }
 
   render() {
