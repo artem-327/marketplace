@@ -46,6 +46,22 @@ i.icon.thick {
   font-family: 'icons' !important;
 }
 
+.product-details {
+
+  > div {
+    height: 100%;
+    padding-bottom: 6.5rem !important;
+  }
+
+  .segment-fixed {
+    position: fixed;
+    bottom: 2rem;
+    width: calc((100% - (2 * 1.2857143rem)) * 0.3125 * 0.75 - 2rem);
+    margin-left: -1px;
+    margin-right: -1px;
+  }
+}
+
 .ui.grid.data-grid {
   font-size: 1.2857143rem;
 
@@ -186,5 +202,145 @@ h1.ui.header {
 
   &.small {
     font-size: 1.142857em;
+  }
+}
+
+div.inventory {
+  position: fixed;
+  //top: 7.21428571em;
+  top: 7.2857143em;
+  left: 0;
+  right: 0;
+  bottom: 2.2857143rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-left: 2.2857143rem;
+  padding-right: 2.2857143rem;
+
+  .ui.secondary.pointing.menu:not(.vertical) {
+    border-bottom: 1px solid #d8d8d8;
+    box-shadow: 0 0 0 0 transparent;
+
+    .item {
+      margin-bottom: 0;
+    }
+
+    .item.active {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+
+  > .ui.bottom {
+    margin-left: 0;
+    margin-right: 0;
+    border: 0 none;
+    padding-left: 0;
+    padding-right: 0;
+    background: transparent;
+  }
+}
+
+.ui.attached.message.header-table-fields {
+  max-width: calc(100% + 2px);
+  border: 1px solid #ccc;
+  padding-left: 0.78571429em;
+  padding-right: 0.78571429em;
+  box-shadow: 0 0 0 0 transparent;
+
+  button {
+    margin-right: -0.28571429em;
+  }
+}
+
+table.ui.table.table-fields {
+  width: calc(100% + 2px);
+  border-collapse: collapse;
+
+  thead tr th {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    background: transparent;
+  }
+
+  tbody tr td {
+    height: 2.85714286em;
+    border-width: 0 1px 1px;
+    border-style: solid;
+    border-color: #ccc;
+    padding: 0.67857143em 0.78571429em;
+    vertical-align: middle;
+
+    input {
+      width: calc(100% + 1.57142858em);
+      max-width: calc(100% + 1.57142858em);
+      height: calc(2.85714286em - 1px);
+      margin: -0.60714286em -0.78571429em;
+      border: 0 none;
+      padding: 0.60714286em 0.78571429em;
+    }
+
+    div.ui.selection.dropdown {
+      display: inline-block;
+      width: calc(100% + 1.57142858em);
+      height: calc(2.85714286em - 1px);
+      margin: -0.60714286em -0.78571429em;
+      border: 0 none;
+      padding-top: 0.60714286em;
+      padding-bottom: 0.60714286em;
+      line-height: 1.57142857;
+    }
+
+    .error.field {
+
+      .ui.input {
+        vertical-align: top;
+      }
+
+      input {
+        padding-top: 0.2142857em;
+        padding-bottom: 1em;
+      }
+
+      > .field {
+        margin-bottom: 0;
+      }
+    }
+
+    .sui-error-message {
+      position: absolute;
+      margin: -10px 0 0;
+      font-size: 0.7142857rem;
+    }
+
+    .uploadLot {
+      padding: 0;
+      background: transparent none;
+      text-align: center;
+      font-size: inherit;
+      color: inherit;
+
+      .dropzoneLot {
+        border: 0 none;
+        padding: 0;
+        font-weight: normal;
+        line-height: inherit;
+      }
+
+      .file-space {
+        display: block;
+        padding-top: 0;
+
+        .file.lot {
+          display: block;
+          padding: 0;
+          font-size: inherit;
+          line-height: inherit;
+
+          i.times.circle {
+            font-size: 1.2em;
+          }
+        }
+      }
+    }
   }
 }

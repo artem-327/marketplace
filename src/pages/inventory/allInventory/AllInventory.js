@@ -10,22 +10,8 @@ import { FormattedMessage } from 'react-intl'
 import { Menu, Header, Container, Sidebar } from "semantic-ui-react"
 import AddCart from '../../cart/components/AddCart'
 
-const initialCartState = {
-  pricing: null,
-  quantity: 1,
-  warning: null
-}
 
 export default class AllInventory extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      sidebarOpen: false,
-      id: null,
-      ...initialCartState
-    }
-  }
   componentDidMount() {
     this.props.fetchAllProductOffers()
   }
@@ -36,14 +22,14 @@ export default class AllInventory extends Component {
     this.props.resetForm('forms.filter')
   }
 
-  tableRowClicked = (id) => {
-    let { sidebarOpen } = this.state
-    const { getProductOffer } = this.props
+  tableRowClicked = (clickedId) => {
+    const { getProductOffer, sidebarChanged } = this.props
+    let { isOpen, id } = this.props.sidebar
+    getProductOffer(clickedId)
 
-    if (this.state.id !== id && this.state.id) this.setState({ sidebarOpen: true, id, ...initialCartState })
-    else this.setState({ sidebarOpen: !sidebarOpen, id, ...initialCartState })
+    if (id !== clickedId && id) sidebarChanged({ isOpen: true, id: clickedId, quantity: 1 })
+    else sidebarChanged({ isOpen: !isOpen, id: clickedId, quantity: 1 })
 
-    getProductOffer(id)
   }
 
   render() {
@@ -92,14 +78,7 @@ export default class AllInventory extends Component {
           {...this.props}
         />
         {content}
-        <AddCart
-          hideSidebar={() => this.setState({ sidebarOpen: false })}
-          visible={this.state.sidebarOpen}
-          id={this.state.id}
-          pricing={this.state.pricing}
-          warning={this.state.warning}
-          quantity={this.state.quantity}
-          valueChanged={(...values) => this.setState(...values)} />
+        <AddCart />
 
       </div>
     )

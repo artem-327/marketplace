@@ -1,294 +1,316 @@
 import './AddCart.scss'
-import { getUnit } from '../../../../utils/functions'
 import file from '../../../../images/file.svg'
 import { checkToken } from '../../../../utils/auth'
 
+import styled from 'styled-components'
 import React, { Component } from 'react'
-import { object, func, number, string } from 'prop-types'
+import { object, func } from 'prop-types'
 import { Sidebar, Button, Header, Grid, GridRow, GridColumn, Loader, Dimmer, Dropdown, Input, Divider, Segment } from 'semantic-ui-react'
 import Router from 'next/router'
+import { FormattedNumber } from 'react-intl'
+
+
+const CapitalizedColumn = styled(GridColumn)`
+  text-transform: capitalize;
+`
+
+const FlexContent = styled(Segment)`
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 0px !important;
+`
+
+const RelaxedSegment = styled(Segment)`
+  padding-top: 0px;
+  margin: 0 !important;
+`
 
 export default class AddCart extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      warning: null
-    }
-  }
   componentDidMount() {
     if (this.props.isEdit) this.props.getOrderDetail(this.props.orderId)
     this.props.getProductOffer(this.props.id)
   }
 
+
   createOrder = async () => {
 
     if (checkToken(this.props)) return
+    const { postNewOrder } = this.props
+    let { offer } = this.props
+    let { quantity } = this.props.sidebar
 
-    const { postNewOrder, quantity, offer } = this.props
-
-    const offerpayload = {
+    let offerpayload = {
       productOffer: offer.id,
       quantity
     }
 
     await postNewOrder(offerpayload)
-
+    this.props.sidebarChanged({ isOpen: false })
     Router.push('/cart')
   }
 
   editOrder = async () => {
-    const { postOrderEdit, offer, quantity, pricing, orderId, hideSidebar } = this.props
+    const { postOrderEdit, } = this.props
+    let { quantity, pricing } = this.props.sidebar
+
 
     // TODO, wrong id??
     const orderpayload = {
-      id: orderId,
+      id: this.props.order.id,
       quantity,
       selectedOfferPrice: pricing
     }
 
     await postOrderEdit(orderpayload)
-    hideSidebar()
+    this.props.sidebarChanged({ isOpen: false })
+
     Router.push('/cart')
   }
 
   handleQuantity = e => {
-    const { minimum, splits, pkgAmount } = this.props.offer
-    const value = parseInt(e.target.value, 10)
+    let { minimum, splits, pkgAmount } = this.props.offer
+    let quantity = parseInt(e.target.value, 10)
     let warning = null
 
-    if (value < minimum || !value) {
+    if (quantity < minimum || !quantity) {
       warning = `minimum is ${minimum}`
-    } else if (value > pkgAmount) {
+    } else if (quantity > pkgAmount) {
       warning = `maximum is ${pkgAmount}`
-    } else if (!(value % parseInt(splits, 10) === 0 || value === parseInt(minimum, 10))) {
+    } else if (!(quantity % parseInt(splits, 10) === 0 || quantity === parseInt(minimum, 10))) {
       warning = `split is ${splits}`
     }
 
-    this.setState({ warning })
-    this.props.valueChanged({ quantity: value, warning })
+    this.props.sidebarChanged({ warning, quantity })
   }
 
-
-
   getCartMarkup = () => {
-    const { offer, order, isEdit, quantity, pricing, warning } = this.props
-    const { pkgAmount } = offer
+    let { offer, order, isEdit } = this.props
+    let { quantity, pricing, warning } = this.props.sidebar
 
-    const location = `${offer.warehouse.address.city}, ${offer.warehouse.address.country.name}`
-    const unit = offer.product.packagingUnit
-    const size = offer.product.packagingSize
-    const unitName = `${getUnit(unit.name)}`
-    const packageSize = `${size} ${unitName}`
-    const availableProducts = `${pkgAmount} pck / ${(pkgAmount * size).formatNumber()} ${unitName}`
+    let { pkgAmount } = offer
 
-    const totalPrice = (quantity && pricing) ? pricing.price * quantity * size : null
-    const { tiers } = offer.pricing
+    let location = offer.warehouse.address
+    let { packagingUnit, packagingSize, packagingType } = offer.product
+
+
+    let totalPrice = (quantity && pricing) ? pricing.price * quantity * packagingSize : null
+    let { tiers } = offer.pricing
 
     var dropdownOptions = []
-
+    let currencyCode = offer.pricing.price.currency.code
 
     if (tiers.length > 0) {
       tiers.forEach((tier, i) => {
-        const quantityTo = (i + 1) >= tiers.length ? pkgAmount : (tier.quantityFrom > tiers[i + 1].quantityFrom ? tier.quantityFrom : tiers[i + 1].quantityFrom - 1)
-        let key = `${tier.quantityFrom} - ${quantityTo} pck / $${tier.price}`
+        let quantityTo = (i + 1) >= tiers.length ? pkgAmount : (tier.quantityFrom > tiers[i + 1].quantityFrom ? tier.quantityFrom : tiers[i + 1].quantityFrom - 1)
+
+
+        let text = <>
+          <FormattedNumber value={tier.quantityFrom} /> - <FormattedNumber value={quantityTo} />
+          {` ${packagingType.name}`} <FormattedNumber style='currency' value={tier.price} currency={currencyCode} />
+        </>
         dropdownOptions.push({
-          key,
-          value: { quantityFrom: tier.quantityFrom, quantityTo: quantityTo, price: tier.price },
-          text: key
+          key: i,
+          value: { quantityFrom: tier.quantityFrom, price: tier.price },
+          text
         })
       })
-    } else {
+    }
+    else {
       let value = offer.pricing.price.amount
+
       dropdownOptions.push({
-        key: value,
-        value: { price: value },
-        text: value
+        key: 0,
+        value: { quantityFrom: 0, price: value },
+        text: <><FormattedNumber value={value} style='currency' currency={currencyCode} /></>
       })
     }
 
-    const attachments = offer.attachments.map(att => {
-      return <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
-    })
+    let attachments = offer.attachments.map(att =>
+      <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
+    )
 
-
-    let canProceed = (!warning && !this.state.warning) && pricing
-
-
+    let canProceed = !warning && pricing
 
     return (
-      <Segment basic>
-        <Grid verticalAlign='middle'>
-          <GridRow className='action' columns={1}>
-            <GridColumn>
-              <Header>1. Product Information</Header>
-            </GridColumn>
-          </GridRow>
+      <>
+        <FlexContent basic>
+          <Grid verticalAlign='middle'>
+            <GridRow className='action' columns={1}>
+              <GridColumn>
+                <Header>1. Product Information</Header>
+              </GridColumn>
+            </GridRow>
 
-          <GridRow columns={1}>
-            <GridColumn>
-              <b>{offer.product.casProduct.casIndexName}</b>
-            </GridColumn>
-          </GridRow>
+            <GridRow columns={1}>
+              <GridColumn>
+                <Header as='h4'>{offer.product.casProduct.casIndexName}</Header>
+              </GridColumn>
+            </GridRow>
 
-          <GridRow columns={2}>
-            <GridColumn>
-              Merchant:
+            <GridRow>
+              <GridColumn computer={6}>
+                Merchant:
           </GridColumn>
-            <GridColumn>
-              {offer.merchant.company.name}
-            </GridColumn>
-          </GridRow>
+              <GridColumn computer={10}>
+                {offer.merchant.company.name ? offer.merchant.company.name : 'Anonymous'}
+              </GridColumn>
+            </GridRow>
 
 
-          <GridRow columns={2}>
-            <GridColumn>
-              Location:
+            <GridRow>
+              <GridColumn computer={6}>
+                Location:
+           </GridColumn>
+              <GridColumn computer={10}>
+                {location.province ? location.province.name : location.city}, {location.country.name}
+              </GridColumn>
+            </GridRow>
+
+            <GridRow>
+              <GridColumn computer={6}>
+                Available Product:
+          </GridColumn>
+              <GridColumn computer={10}>
+                <FormattedNumber value={pkgAmount} /> {packagingType.name} / <FormattedNumber value={pkgAmount * packagingSize} /> {packagingUnit.nameAbbreviation}
+              </GridColumn>
+
+            </GridRow>
+
+            <GridRow>
+              <GridColumn computer={6}>
+                Form:
          </GridColumn>
-            <GridColumn>
-              {location}
-            </GridColumn>
-          </GridRow>
+              <GridColumn computer={10}>
+                {offer.productForm.name}
+              </GridColumn>
+            </GridRow>
 
-          <GridRow columns={2}>
-            <GridColumn>
-              Available Product:
-          </GridColumn>
-            <GridColumn>
-              {availableProducts}
-            </GridColumn>
-
-          </GridRow>
-
-          <GridRow columns={2}>
-            <GridColumn>
-              Form:
-         </GridColumn>
-            <GridColumn>
-              {offer.productForm.name}
-            </GridColumn>
-          </GridRow>
-
-          <GridRow columns={2}>
-            <GridColumn>
-              Packaging:
+            <GridRow>
+              <GridColumn computer={6}>
+                Packaging:
           </GridColumn>
 
-            <GridColumn>
-              {offer.product.packagingType.name}
-            </GridColumn>
-          </GridRow>
+              <CapitalizedColumn company={10}>
+              <FormattedNumber value={packagingSize} /> {packagingUnit.nameAbbreviation} {offer.product.packagingType.name}
+              </CapitalizedColumn>
+            </GridRow>
 
-          <GridRow columns={2}>
-            <GridColumn>
-              Package Size:
+            {/* <GridRow>
+              <GridColumn computer={6}>
+                Attachments:
           </GridColumn>
 
-            <GridColumn>
-              {packageSize}
-            </GridColumn>
-          </GridRow>
+              <GridColumn computer={10}>
+                {attachments}
+              </GridColumn>
+            </GridRow> */}
 
-          <GridRow columns={2}>
-            <GridColumn>
-              Attachments:
+            <GridRow className='action'>
+              <GridColumn>
+                <Header>2. Purchase Info</Header>
+              </GridColumn>
+            </GridRow>
+
+
+            <GridRow>
+              <GridColumn>
+                Select Quantity
           </GridColumn>
+            </GridRow>
 
-            <GridColumn>
-              {attachments}
-            </GridColumn>
-          </GridRow>
+            <GridRow>
+              <GridColumn>
+                <Input error={warning} value={this.props.sidebar.quantity} onChange={this.handleQuantity} type='number' />
+              </GridColumn>
+            </GridRow>
 
-          <GridRow className='action'>
-            <GridColumn>
-              <Header>2. Purchase Info</Header>
-            </GridColumn>
-          </GridRow>
-
-          <GridRow>
-            <GridColumn>
-              Select Price Level
+            <GridRow>
+              <GridColumn>
+                Select Pricing Level
           </GridColumn>
-          </GridRow>
+            </GridRow>
 
-          <GridRow>
-            <GridColumn>
-              <Dropdown
-                // error={!pricing}
-                placeholder='Select Price Level'
-                value={pricing}
-                onChange={(e, data) => this.props.valueChanged({ pricing: data.value })}
-                selection
-                options={dropdownOptions}
-              />
-            </GridColumn>
-          </GridRow>
+            <GridRow>
+              <GridColumn>
+                <Dropdown
+                  placeholder='Select Price Level'
+                  value={this.props.sidebar.pricing}
+                  disabled
+                  selection
+                  options={dropdownOptions}
+                />
+              </GridColumn>
+            </GridRow>
 
-          <GridRow>
-            <GridColumn>
-              Select Quantity
-          </GridColumn>
-          </GridRow>
+            <GridRow className='action'>
+              <GridColumn>
+                <Header>3. Summary</Header>
+              </GridColumn>
+            </GridRow>
 
-          <GridRow>
-            <GridColumn>
-              <Input error={warning} value={quantity} onChange={this.handleQuantity} type='number' />
-            </GridColumn>
-          </GridRow>
+            <GridRow>
+              <GridColumn computer={6}>Total Quantity:</GridColumn>
+              <GridColumn computer={10}>
+                {(quantity && !warning && <> <FormattedNumber value={quantity} /> {`${packagingType.name}`} </>)
+                  || (isEdit && <> <FormattedNumber value={order.quantity} /> {`${packagingType.name}`} </>)}
+              </GridColumn>
+            </GridRow>
 
-
-          <GridRow className='action'>
-            <GridColumn>
-              <Header>3. Summary</Header>
-            </GridColumn>
-          </GridRow>
-
-          <GridRow columns={2}>
-            <GridColumn>Total Quantity:</GridColumn>
-            <GridColumn>
-              {(quantity && !warning && `${quantity} pck`) || (isEdit && `${order.quantity} pck`)}
-            </GridColumn>
-          </GridRow>
-
-          <GridRow columns={2}>
-            <GridColumn>Price/LB:</GridColumn>
-            <GridColumn>{offer.pricing.price.currency.symbol}{offer.pricing.price.amount}</GridColumn>
-          </GridRow>
-          <Divider />
-          <GridRow columns={2}>
-            <GridColumn>Subtotal:</GridColumn>
-            <GridColumn>{totalPrice && totalPrice > 0 ? `$${totalPrice}` : null}</GridColumn>
-          </GridRow>
+            <GridRow>
+              <GridColumn computer={6}>Price:</GridColumn>
+              <GridColumn computer={10}>
+                {
+                  pricing ? <><FormattedNumber
+                    style='currency'
+                    currency={offer.pricing.price.currency.code}
+                    value={pricing && pricing.price} /> / {packagingUnit.nameAbbreviation}</> : null
+                }
 
 
-          <GridRow className='action' columns={2}>
-            <GridColumn>
-              <Button fluid floated='right' onClick={this.props.hideSidebar}>Cancel</Button>
-            </GridColumn>
+              </GridColumn>
+            </GridRow>
+            <Divider />
+            <GridRow>
+              <GridColumn computer={6}>Subtotal:</GridColumn>
+              <GridColumn computer={10}>{totalPrice ?
+                <FormattedNumber style='currency' currency={offer.pricing.price.currency.code} value={totalPrice} />
+                : null}
+              </GridColumn>
+            </GridRow>
+          </Grid >
+        </FlexContent >
 
-            <GridColumn>
-              {!isEdit
-                ? <Button disabled={!canProceed} fluid floated='right' primary onClick={this.createOrder}>
-                  Continue
+        <RelaxedSegment basic>
+          <Grid>
+            <GridRow className='action' columns={2}>
+              <GridColumn>
+                <Button fluid floated='right' onClick={() => this.props.sidebarChanged({ isOpen: false })}>Cancel</Button>
+              </GridColumn>
+
+              <GridColumn>
+                {!isEdit
+                  ? <Button disabled={!canProceed} fluid floated='right' primary onClick={this.createOrder}>
+                    Continue
               </Button>
-                : <Button disabled={!canProceed} fluid floated='right' primary onClick={this.editOrder}>
-                  Edit
+                  : <Button disabled={!canProceed} fluid floated='right' primary onClick={this.editOrder}>
+                    Edit
                 </Button>
-              }
-            </GridColumn>
-          </GridRow>
-
-        </Grid>
-      </Segment>
+                }
+              </GridColumn>
+            </GridRow>
+          </Grid>
+        </RelaxedSegment>
+      </>
     )
   }
 
   render() {
-    let { visible, isEdit, orderDetailIsFetching, offerDetailIsFetching } = this.props
-    const { hideSidebar } = this.props
+    let { sidebar, isEdit, orderDetailIsFetching, offerDetailIsFetching } = this.props
+    const { sidebarChanged } = this.props
+    let { isOpen } = sidebar
 
     return (
-      <Sidebar onHide={hideSidebar} width='very wide' className='cart-sidebar' direction='right' animation='scale down' visible={visible}>
+      <Sidebar onHide={() => sidebarChanged({ isOpen: false })} width='very wide' className='cart-sidebar flex' direction='right' animation='scale down' visible={isOpen}>
         {
           (offerDetailIsFetching || (isEdit && orderDetailIsFetching)) ? <Dimmer active inverted> <Loader size='large' /> </Dimmer>
             : this.getCartMarkup()
@@ -302,8 +324,8 @@ AddCart.propTypes = {
   offer: object,
   order: object,
   postNewOrder: func,
-  id: number,
-  quantity: number,
-  pricing: object,
-  warning: string
+  // id: number,
+  // quantity: number,
+  // pricing: object,
+  // warning: string
 }

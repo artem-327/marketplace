@@ -194,6 +194,7 @@
   "addInventory.totalPackages": "Total Packages",
   "addInventory.expirationDate": "Expiration Date",
   "addInventory.addedLots": "ADDED LOTS",
+  "addInventory.clickUpload": "Click to upload",
   "addInventory.dragDrop": "Drag and drop {docType} file here",
   "addInventory.dragDropOr": "or select from computer",
   "addInventory.setPriceAndRules": "SET PRICE & RULES",

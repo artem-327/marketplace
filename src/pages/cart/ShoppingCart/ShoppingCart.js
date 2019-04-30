@@ -14,19 +14,10 @@ import { Container, Menu, Header, Button, Icon } from 'semantic-ui-react'
 import Router from 'next/router'
 
 export default class ShoppingCart extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      modalOpen: false,
-      sidebarOpen: false,
-      id: null,
-      orderId: null,
-      quantity: 1,
-      warning: null,
-      pricing: null
-    }
+  state = {
+    modalOpen: false
   }
+  
   componentDidMount() {
     this.props.getCart()
   }
@@ -42,9 +33,13 @@ export default class ShoppingCart extends Component {
   }
 
   editCart = (cartItem) => {
-    let { productOffer, quantity, id } = cartItem
-    this.setState({ quantity, orderId: id, id: productOffer.id, sidebarOpen: true })
+    let { id, quantity } = cartItem
+
+    this.props.getOrderDetail(id)
+    this.props.getProductOffer(cartItem.productOffer.id)
+    this.props.sidebarChanged({ isOpen: true, id, quantity })
   }
+
 
   renderSummary() {
     const { totalPrice } = this.props.cart
@@ -93,12 +88,13 @@ export default class ShoppingCart extends Component {
   }
 
   render() {
-    const { cart, deleteCart, history, cartIsFetching } = this.props
+    const { cart, deleteCart, history, cartIsFetching, sidebarChanged } = this.props
     if (cartIsFetching) return <Spinner />
     const itemContent = cart.cartItems && cart.cartItems.map(cartItem => {
       return (
         <ItemCartBody
           editCart={this.editCart}
+          sidebarChanged={sidebarChanged}
           history={history}
           location={this.props.location}
           key={cartItem.id}
@@ -149,7 +145,7 @@ export default class ShoppingCart extends Component {
                 handleContinue={this.handleContinueShopping}
                 open={this.state.modalOpen}
                 trigger={
-                  <Button size='large' basic fluid color='blue' onClick={() => this.setState({ modalOpen: !this.state.open })}>
+                  <Button size='large' basic fluid color='blue' onClick={() => this.props.sidebarChanged({ isOpen: !this.props.sidebar.isOpen })}>
                     <FormattedMessage
                       id='cart.keepShopping'
                       defaultMessage='Keep Shopping'
@@ -157,18 +153,8 @@ export default class ShoppingCart extends Component {
                   </Button>
                 } />
             </div>
-            {!this.state.id || !this.state.orderId ?
-              null
-              : <AddCart
-                hideSidebar={() => this.setState({ sidebarOpen: false })}
-                visible={this.state.sidebarOpen}
-                isEdit={true}
-                orderId={this.state.orderId}
-                id={this.state.id}
-                pricing={this.state.pricing}
-                warning={this.state.warning}
-                quantity={this.state.quantity}
-                valueChanged={(...values) => this.setState(...values)} />}
+            {this.props.sidebar && this.props.sidebar.id ? <AddCart isEdit={true} /> : null}
+
           </div>
         </div>
       </div>

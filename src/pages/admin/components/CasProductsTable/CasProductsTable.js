@@ -14,9 +14,9 @@ import {
 class CasProductsTable extends Component {
   componentDidMount() {
     this.props.getCasProductByFilter(this.props.casListDataRequest)
-    this.props.getUnNumbersDataRequest();
-    this.props.getHazardClassesDataRequest();
-    this.props.getPackagingGroupsDataRequest();
+    this.props.getUnNumbersDataRequest()
+    this.props.getHazardClassesDataRequest()
+    this.props.getPackagingGroupsDataRequest()
   }
 
   render() {
@@ -40,6 +40,7 @@ class CasProductsTable extends Component {
           filterValue={filterValue}
           loading={loading}
           columns={columns}
+          groupBy={['packagingGroup']}
           rows={rows}
           rowActions={[
             {text: 'Edit', callback: (row) => openEditCasPopup(row)},
