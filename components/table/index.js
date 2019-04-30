@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import pt from 'prop-types'
 import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css'
-import {createGlobalStyle} from 'styled-components'
-import { Segment, Icon } from 'semantic-ui-react'
+import styled, { createGlobalStyle } from 'styled-components'
+import { Segment, Icon, Dropdown, Modal } from 'semantic-ui-react'
+import { Form, Checkbox, Button } from 'formik-semantic-ui'
+
 import {
   SearchState,
   IntegratedFiltering,
@@ -11,7 +13,8 @@ import {
   SortingState,
   IntegratedSorting,
   GroupingState,
-  IntegratedGrouping
+  IntegratedGrouping,
+  TableColumnVisibility
 } from '@devexpress/dx-react-grid'
 import {
   Grid,
@@ -35,8 +38,38 @@ const GlobalTableOverrideStyle = createGlobalStyle`
   }
 `
 
+const SettingButton = styled(Icon)`
+  position: absolute !important;
+  cursor: pointer !important;
+  top: 24px;
+  right: 34px;
+  z-index: 601;
+`
+const ColumnsSetting = ({onClick}) => (
+  <SettingButton onClick={onClick} name="setting" />
+)
+const ColumnsSettingModal = ({columns, hiddenColumnNames, onChange, open}) => (
+  <Modal open={open} centered={false} size="tiny" style={{width: 300}}>
+    <Modal.Content>
+      <Form
+        initialValues={columns.reduce((acc,c) => {acc[c.name] = hiddenColumnNames.indexOf(c.name) === -1; return acc}, {})}
+        onSubmit={(values, actions) => {
+          onChange(columns.reduce((acc, c) => {
+            !values[c.name] && acc.push(c.name)
+            return acc
+          }, []))
+          actions.setSubmitting(false)
+        }}
+      >
+        {columns.map(c => <Checkbox name={c.name} label={c.title} />)}
+        <Button.Submit fluid>Save</Button.Submit>
+      </Form>
+    </Modal.Content>
+  </Modal>
+)
+
 // const TableGroupRow = props => <TableGroupRow {...props} />
-const TableCells = props => <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions':''} />
+const TableCells = props => <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions' : ''} />
 const GridRoot = props => <Grid.Root {...props} style={{ height: '100%' }} />
 
 const SortLabel = ({ onSort, children, direction }) => (
@@ -79,7 +112,18 @@ export default class _Table extends Component {
     loading: false,
     virtual: true,
     sorting: true,
-    onSelectionChange: () => {}
+    onSelectionChange: () => { }
+  }
+
+  state = {
+    columnExtensions: [
+      { columnName: '__actions', width: 45 },
+    ],
+    hiddenColumnNames: []
+  }
+
+  constructor(props) {
+    super(props)
   }
 
   getColumns = () => {
@@ -87,9 +131,9 @@ export default class _Table extends Component {
 
     return rowActions
       ? [
-          { name: '__actions', title: ' ', width: 45, actions: rowActions },
-          ...columns
-        ]
+        { name: '__actions', title: ' ', width: 45, actions: rowActions },
+        ...columns,
+      ]
       : columns
   }
 
@@ -111,10 +155,23 @@ export default class _Table extends Component {
       groupBy,
       ...restProps
     } = this.props
+
+    const { columnExtensions, hiddenColumnNames, columnSettingOpen } = this.state
+
     return (
       <Segment basic loading={loading} {...restProps} className="flex stretched">
         <GlobalTableOverrideStyle />
-        <div className="bootstrapiso flex stretched" style={{flex: '1 300px'}}>
+        <div className="bootstrapiso flex stretched" style={{ flex: '1 300px' }}>
+          <ColumnsSetting  
+            onClick={() => this.setState({columnSettingOpen: !columnSettingOpen})} />
+          <ColumnsSettingModal 
+            columns={columns} 
+            open={columnSettingOpen}
+            hiddenColumnNames={hiddenColumnNames} 
+            onChange={(hiddenColumnNames) => {
+              this.setState({hiddenColumnNames, columnSettingOpen: false})
+            }}
+          />
           <Grid
             rows={rows}
             columns={this.getColumns()}
@@ -123,7 +180,7 @@ export default class _Table extends Component {
             {sorting && <SortingState defaultSorting={[]} />}
             {sorting && <IntegratedSorting />}
 
-            {groupBy && <GroupingState grouping={groupBy.map(g => ({columnName: g}))} />}
+            {groupBy && <GroupingState grouping={groupBy.map(g => ({ columnName: g }))} />}
             {groupBy && <IntegratedGrouping />}
 
             {columnReordering && <DragDropProvider />}
@@ -134,11 +191,13 @@ export default class _Table extends Component {
             <SearchState value={filterValue} />
             <IntegratedFiltering />
 
-            {virtual ? <VirtualTable height="auto" cellComponent={TableCells} /> : <Table />}            
+            {virtual
+              ? <VirtualTable columnExtensions={columnExtensions} height="auto" cellComponent={TableCells} />
+              : <Table columnExtensions={columnExtensions} />}
 
-            {showHeader && 
-              <TableHeaderRow 
-                showSortingControls 
+            {showHeader &&
+              <TableHeaderRow
+                showSortingControls
                 sortLabelComponent={SortLabel}
               />}
             <RowActionsFormatterProvider
@@ -146,8 +205,12 @@ export default class _Table extends Component {
               actions={rowActions}
             />
 
+            <TableColumnVisibility hiddenColumnNames={hiddenColumnNames} />
+
             {columnReordering && (
-              <TableColumnReordering defaultOrder={columns.map(c => c.name)} />
+              <TableColumnReordering
+                defaultOrder={columns.map(c => c.name)}
+              />
             )}
             {rowSelection && (
               <TableSelection
@@ -158,10 +221,10 @@ export default class _Table extends Component {
             <DropdownFormatterProvider
               for={columns.filter(c => c.options).map(c => c.name)}
             />
-            {groupBy && <TableGroupRow 
-              iconComponent={({expanded}) => <Icon name={expanded ? 'chevron down':'chevron right'} />} 
+            {groupBy && <TableGroupRow
+              iconComponent={({ expanded }) => <Icon name={expanded ? 'chevron down' : 'chevron right'} />}
             />}
-            
+
           </Grid>
         </div>
       </Segment>
