@@ -4,6 +4,8 @@
 
 
 .cart-sidebar {
+  display: flex;
+  flex-direction: column;
   background-color: #fbfbfb;
   top: 105px !important;
   padding-bottom: 105px;
@@ -20,6 +22,13 @@
   }
 
   .row {
+   &:not(.action) {
+     padding-top: 0px !important;
+   }
+    font-size: 1rem !important;
+  }
+
+  .row {
     .column:nth-child(2) {
       font-weight: bolder;
     }
@@ -27,7 +36,16 @@
  
   .action {
     background-color: #ededed;
+    &:not(:last-child) {
+      margin-bottom: 20px;
+    }
   }
+
+  .header {
+    font-size: 18px !important;
+    
+  }
+
 }
 
 
