@@ -17,11 +17,12 @@ const CapitalizedColumn = styled(GridColumn)`
 const FlexContent = styled(Segment)`
   flex: 1;
   overflow-y: auto;
+  margin-bottom: 0px !important;
 `
 
 const RelaxedSegment = styled(Segment)`
   padding-top: 0px;
-  margin: 0;
+  margin: 0 !important;
 `
 
 export default class AddCart extends Component {
@@ -142,7 +143,7 @@ export default class AddCart extends Component {
 
             <GridRow columns={1}>
               <GridColumn>
-                <b>{offer.product.casProduct.casIndexName}</b>
+                <Header as='h4'>{offer.product.casProduct.casIndexName}</Header>
               </GridColumn>
             </GridRow>
 
@@ -190,21 +191,11 @@ export default class AddCart extends Component {
           </GridColumn>
 
               <CapitalizedColumn company={10}>
-                {offer.product.packagingType.name}
+              <FormattedNumber value={packagingSize} /> {packagingUnit.nameAbbreviation} {offer.product.packagingType.name}
               </CapitalizedColumn>
             </GridRow>
 
-            <GridRow>
-              <GridColumn computer={6}>
-                Package Size:
-          </GridColumn>
-
-              <GridColumn computer={10}>
-                <FormattedNumber value={packagingSize} /> {packagingUnit.nameAbbreviation}
-              </GridColumn>
-            </GridRow>
-
-            <GridRow>
+            {/* <GridRow>
               <GridColumn computer={6}>
                 Attachments:
           </GridColumn>
@@ -212,7 +203,7 @@ export default class AddCart extends Component {
               <GridColumn computer={10}>
                 {attachments}
               </GridColumn>
-            </GridRow>
+            </GridRow> */}
 
             <GridRow className='action'>
               <GridColumn>

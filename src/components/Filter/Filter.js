@@ -19,7 +19,7 @@ const FlexContent = styled.div`
 
 const RelaxedSegment = styled(Segment)`
   padding-top: 0px;
-  margin: 0;
+  margin: 0 !important;
 `
 
 const GrayRow = styled(GridRow)`
