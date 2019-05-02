@@ -4,15 +4,17 @@ import './ProductOffers.scss'
 import DataTable from "../../../../components/DataTable"
 import BroadcastRule from "./BroadcastRule"
 import AddBroadcast from "../../../../pages/inventory/myInventory/components/broadcast"
-import ToggleBroadcast from "./ToggleBroadcast"
-import { DATE_FORMAT } from "../../../../utils/constants"
-import moment from "moment"
-import { getUnit } from "../../../../utils/functions"
+
 import confirm from '../../../../components/Confirmable/confirm'
 import { checkToken } from "../../../../utils/auth"
 import { Checkbox } from "semantic-ui-react"
 
 class ProductOffers extends Component {
+  
+  state = {
+    id: null,
+    open: false
+  }
 
   groupProductOffers(productOffers) {
     return productOffers.reduce((carry, offer) => {
@@ -22,7 +24,7 @@ class ProductOffers extends Component {
   }
 
   openBroadcast = (id) => {
-    this.props.addPopup(<AddBroadcast id={id} />)
+    this.setState({ id, open: true }, console.log('state', this.state))
   }
 
   render() {
@@ -107,36 +109,43 @@ class ProductOffers extends Component {
       { name: 'Broadcast', align: 'a-center' }
     ]
 
-    const dataTable = <DataTable
-      id="myInventoryTable"
-      selectableRows
-      sortFunc={(nameColumn) => console.log(nameColumn)}
-      headerInit={headerInit}
-      contextMenu={[
-        { action: (id) => { if (checkToken(this.props)) return; Router.push(`/inventory/edit/${id}`) }, label: 'editListing', },
-        { action: (id) => { if (checkToken(this.props)) return; this.openBroadcast(id) }, label: 'customBroadcast' },
-        {
-          action: (id) => {
-            if (checkToken(this.props)) return
-            confirm('Remove Listing', 'Are you sure you want to remove listings from Your Inventory?')
-              .then(() => {
-                this.props.deleteProductOffer(id, () => this.props.fetchMyProductOffers({}))
-              })
-          }, label: 'Delete Listing'
-        }
-      ]}
-      rows={rows}
-      rowComponent={<BroadcastRule
-        submitRules={this.props.submitRules}
-        addPopup={this.props.addPopup}
-        removePopup={this.props.removePopup}
-        getProductOffers={this.props.fetchMyProductOffers}
-        targetGroups={this.props.targetGroups}
-        selections={this.props.selections}
-        setFilter={(type) => this.props.setFilter(type)}
-        currentSelected={this.props.currentSelected}
-        setActiveBroadcastButton={active => this.props.setActiveBroadcastButton(active)} />}
-    />
+    const dataTable =
+      <><DataTable
+        id="myInventoryTable"
+        selectableRows
+        sortFunc={(nameColumn) => console.log(nameColumn)}
+        headerInit={headerInit}
+        contextMenu={[
+          { action: (id) => { if (checkToken(this.props)) return; Router.push(`/inventory/edit/${id}`) }, label: 'editListing', },
+          { action: (id) => { if (checkToken(this.props)) return; this.openBroadcast(id) }, label: 'customBroadcast' },
+          {
+            action: (id) => {
+              if (checkToken(this.props)) return
+              confirm('Remove Listing', 'Are you sure you want to remove listings from Your Inventory?')
+                .then(() => {
+                  this.props.deleteProductOffer(id, () => this.props.fetchMyProductOffers({}))
+                })
+            }, label: 'Delete Listing'
+          }
+        ]}
+        rows={rows}
+        rowComponent={
+          <BroadcastRule
+            submitRules={this.props.submitRules}
+            addPopup={this.props.addPopup}
+            removePopup={this.props.removePopup}
+            getProductOffers={this.props.fetchMyProductOffers}
+            targetGroups={this.props.targetGroups}
+            selections={this.props.selections}
+            setFilter={(type) => this.props.setFilter(type)}
+            currentSelected={this.props.currentSelected}
+            setActiveBroadcastButton={active => this.props.setActiveBroadcastButton(active)} />}
+      />
+        {this.state.open ? <AddBroadcast open={this.state.open} id={this.state.id} closeModal={() => this.setState({ open: false })} /> : null}
+
+      </>
+
+
 
     return (dataTable)
   }

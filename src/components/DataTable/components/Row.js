@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import CheckboxControlled from '../../Checkbox/CheckboxControlled';
-import ThreeDots from '../../ThreeDots/ThreeDots';
-import classnames from 'classnames';
+
 import ThreeDotsMenu from '../../ThreeDots/ThreeDotsMenu';
 import AddCart from '../../../pages/cart/components/AddCart';
 import { checkToken } from "../../../utils/auth";
