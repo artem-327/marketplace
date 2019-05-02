@@ -132,10 +132,10 @@ export function getMeasureTypesDataRequest() {
 	}
 }
 
-export function getUnNumbersDataRequest() {
+export function getAllUnNumbersDataRequest() {
 	return {
 		type: AT.ADMIN_GET_UN_NUMBERS,
-		payload: api.getUnNumbers()
+		payload: api.getAllUnNumbers()
 	}
 }
 

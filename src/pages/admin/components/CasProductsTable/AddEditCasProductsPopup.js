@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { Modal, FormGroup, Header, Dropdown as SDropdown, FormField } from 'semantic-ui-react'
 
-import { closeAddPopup, postNewCasProductRequest, updateCasProductRequest } from '../../actions'
+import { closeAddPopup, postNewCasProductRequest, updateCasProductRequest, getUnNumbersByString } from '../../actions'
 import { Form, Input, Button, Dropdown, Field  } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
@@ -25,23 +25,11 @@ const formValidation = Yup.object().shape({
 class AddEditCasProductsPopup extends React.Component {
 
   state = {
-    unNumbers: [],
-    unNumbersReduced: [],
     packagingGroups: [],
     hazardClasses: []
   }
 
   initCollections = () => {
-    const unNumbers = this.props.unNumbers.map(d => {
-      return {
-        key: d.id,
-        text: d.unNumberCode,
-        value: d.id,
-        dataSearch: d.unNumberCode + ' ' + d.description,
-        content: <Header content={d.unNumberCode} subheader={d.description} />,
-      }
-    })
-
     const packagingGroups = this.props.packagingGroups.map(d => {
       return {
         key: d.id,
@@ -62,20 +50,17 @@ class AddEditCasProductsPopup extends React.Component {
 
 
     this.setState({
-      unNumbers,
       packagingGroups,
       hazardClasses
     })
   }
 
-  filterUnNumbers = (list, query) => {
-    const unNumbersReduced = this.state.unNumbers.filter(({dataSearch}) => dataSearch.indexOf(query) > 1).map(({dataSearch, ...item}) => item)
-    setTimeout(() => this.setState({unNumbersReduced}), 1)
-    return unNumbersReduced
-  }
-
   componentWillMount() {
     this.initCollections()
+  }
+
+  handleUnNumbers = (e, d) => {
+    this.props.getUnNumbersByString(d.searchQuery)
   }
 
   render() {
@@ -85,11 +70,11 @@ class AddEditCasProductsPopup extends React.Component {
       popupValues,
       config,
       postNewCasProductRequest,
-      updateCasProductRequest
+      updateCasProductRequest,
+      unNumbersFiltered
     } = this.props
 
     const {
-      unNumbers,
       hazardClasses,
       packagingGroups
     } = this.state
@@ -131,15 +116,16 @@ class AddEditCasProductsPopup extends React.Component {
                 <FormGroup widths="equal">
                   <Dropdown
                     name="unNumber"
-                    fast
+                    //fast
                     label={config.display.columns[3].title}
-                    options={this.state.unNumbersReduced}
+                    options={unNumbersFiltered}
                     inputProps={{
                       selection: true,
-                      search: this.filterUnNumbers,
-                      placeholder: 'Search for UN Number (type at least 3 characters)',
-                      minCharacters: 3,
-                      clearable: true
+                      //search: this.handleUnNumbers,
+                      search: true,
+                      placeholder: 'Search for UN Number',
+                      clearable: true,
+                      onSearchChange: (e, d) => this.handleUnNumbers(e, d)
                     }}
                   />
                 </FormGroup>
@@ -186,7 +172,21 @@ const mapDispatchToProps = {
   closeAddPopup,
   postNewCasProductRequest,
   updateCasProductRequest,
+  getUnNumbersByString,
 };
+
+const transformUnNumbers = (unNumbersFiltered) => {
+  const unNumbers = unNumbersFiltered.map(d => {
+    return {
+      key: d.id,
+      text: d.unNumberCode,
+      value: d.id,
+      dataSearch: d.unNumberCode + ' ' + d.description,
+      content: <Header content={d.unNumberCode} subheader={d.description} />,
+    }
+  })
+  return unNumbers;
+}
 
 const mapStateToProps = state => {
   let cfg = state.admin.config[state.admin.currentTab]
@@ -194,9 +194,9 @@ const mapStateToProps = state => {
     config: cfg,
     currentTab: state.admin.currentTab,
     packagingGroups: state.admin.packagingGroups,
-    unNumbers: state.admin.unNumbers,
     hazardClasses: state.admin.hazardClasses,
     popupValues: state.admin.popupValues,
+    unNumbersFiltered: transformUnNumbers(state.admin.unNumbersFiltered),
   }
 }
 

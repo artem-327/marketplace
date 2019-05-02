@@ -6,7 +6,7 @@ import {
   getCasProductByFilter,
   openEditCasPopup,
   casDeleteItem,
-  getUnNumbersDataRequest,
+  //! !getAllUnNumbersDataRequest,
   getHazardClassesDataRequest, getPackagingGroupsDataRequest
 } from '../../actions'
 
@@ -14,7 +14,7 @@ import {
 class CasProductsTable extends Component {
   componentDidMount() {
     this.props.getCasProductByFilter(this.props.casListDataRequest)
-    this.props.getUnNumbersDataRequest()
+    //! !this.props.getAllUnNumbersDataRequest()
     this.props.getHazardClassesDataRequest()
     this.props.getPackagingGroupsDataRequest()
   }
@@ -56,7 +56,7 @@ const mapDispatchToProps = {
   getCasProductByFilter,
   openEditCasPopup,
   casDeleteItem,
-  getUnNumbersDataRequest,
+  //! !getAllUnNumbersDataRequest,
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
 }
