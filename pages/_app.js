@@ -3,7 +3,7 @@ import React from 'react'
 import withRedux from 'next-redux-wrapper'
 import { makeStore } from '../src/store-next'
 import { Provider } from 'react-redux'
-import { IntlProvider } from 'react-intl'
+import { IntlProvider, FormattedNumber } from 'react-intl'
 import EN from '../localization/en.json'
 import NProgress from 'nprogress'
 import Router from 'next/router'
@@ -30,6 +30,10 @@ class ProdexApp extends App {
       </Container>
     )
   }
+}
+
+FormattedNumber.defaultProps = {
+  minimumFractionDigits: 3
 }
 
 export default withRedux(makeStore)(ProdexApp)

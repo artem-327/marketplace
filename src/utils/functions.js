@@ -98,13 +98,27 @@ export function getAbbreviation(word) {
 }
 
 
-export function getPricing(tiers, quantity) {
-  let sortedTiers = tiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
+export function getPricing(offerDetail, quantity) {
+  if (offerDetail.pricing) {
+    let tiers = offerDetail.pricing.tiers.length > 0 ? offerDetail.pricing.tiers : offerDetail.pricing.price.amount
+    
+    if (tiers instanceof Array) {
 
-  for (let i = sortedTiers.length - 1; i >= 0; i--) {
-    let { quantityFrom } = sortedTiers[i]
-    if (quantity >= quantityFrom) {
-      return sortedTiers[i]
+      let sortedTiers = tiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
+
+      for (let i = sortedTiers.length - 1; i >= 0; i--) {
+        let { quantityFrom } = sortedTiers[i]
+   
+        if (quantity >= quantityFrom) {
+          try {
+            delete sortedTiers[i].id
+          } finally {
+            return sortedTiers[i]
+          }
+        }
+      }
     }
+
+    return { quantityFrom: 0, price: tiers }
   }
 }

@@ -1,20 +1,18 @@
 import React, { Component } from 'react'
 import { object, func } from 'prop-types'
-import AddCart from '../AddCart'
-import { getUnit } from '../../../../utils/functions'
 import confirm from '../../../../components/Confirmable/confirm'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { checkToken } from '../../../../utils/auth'
 import { Button } from 'semantic-ui-react'
 
 export default class ItemCartBody extends Component {
   render() {
-    const { cartItem, deleteCart } = this.props
-    const { productOffer } = cartItem
-    const unit = productOffer.product.packagingUnit
-    const size = productOffer.product.packagingSize
-    const unitName = `${getUnit(unit.name)}${size > 1 && 's'}`
-    const location = `${productOffer.warehouse.address.city}, ${productOffer.warehouse.address.city.name}`
+    let { cartItem, deleteCart } = this.props
+    let { productOffer } = cartItem
+
+    let unitName = productOffer.product.packagingUnit.nameAbbreviation
+    let location = productOffer.warehouse.address
+    location = `${location.province ? location.province.name : location.city}, ${location.country.name}`
 
     return (
       <div className='item-cart'>
@@ -34,53 +32,52 @@ export default class ItemCartBody extends Component {
               <FormattedMessage
                 id='cart.location'
                 defaultMessage={'Location: ' + location}
-                values={{ location: location }}
+                values={{ location }}
               />
             </div>
             <div>
-              <FormattedMessage
+              <span>Price per {unitName}: </span>
+              <FormattedNumber
                 id='cart.pricePer'
-                defaultMessage={`Price per ${'Lb'}: $${productOffer.pricing.price.amount}`}
-                values={{ unit: 'Lb', price: productOffer.pricing.price.amount }}
+                value={cartItem.pricing.price}
               />
             </div>
             <div>
-              <FormattedMessage
+              <span>Total Weight: </span>
+              <FormattedNumber
                 id='cart.totalWeight'
-                defaultMessage={`Total Weight: ${cartItem.quantity * productOffer.product.packagingSize} ${unitName}`}
-                values={{ weight: cartItem.quantity * productOffer.product.packagingSize, unit: unitName }}
-              />
+                value={cartItem.quantity * productOffer.product.packagingSize}
+              /> {unitName}
             </div>
           </div>
           <div className='item-cart-body-section'>
             <div>
               <FormattedMessage
                 id='cart.origin'
-                defaultMessage={`Origin: ${productOffer.origin.name}`}
+                defaultMessage={`Origin: ${productOffer.origin.name} `}
                 values={{ origin: productOffer.origin.name }}
               />
             </div>
             <div>
               <FormattedMessage
                 id='cart.assay'
-                defaultMessage={`Assay: ${productOffer.assayMin || ''} - ${productOffer.assayMax || ''}`}
-                values={{ first: productOffer.origin.name || '', second: productOffer.assayMax || '' }}
+                defaultMessage={`Assay: ${productOffer.assayMin || ''} - ${productOffer.assayMax || ''} `}
+                values={{ first: productOffer.assayMin, second: productOffer.assayMax }}
               />
             </div>
             <div>
               <FormattedMessage
                 id='cart.condition'
-                defaultMessage={`Condition: ${productOffer.productCondition.name}`}
+                defaultMessage={`Condition: ${productOffer.productCondition.name} `}
                 values={{ condition: productOffer.productCondition.name }}
               />
             </div>
             <div>
               <FormattedMessage
                 id='cart.form'
-                defaultMessage={`Form ${productOffer.productForm.name}`}
+                defaultMessage={`Form ${productOffer.productForm.name} `}
                 values={{ form: productOffer.productForm.name }}
               />
-              Form: {productOffer.productForm.name}
             </div>
           </div>
         </div>

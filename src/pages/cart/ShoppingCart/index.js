@@ -3,10 +3,18 @@ import { bindActionCreators } from 'redux'
 import ShoppingCart from './ShoppingCart'
 import { getCart, deleteCart, sidebarChanged, getOrderDetail, getProductOffer } from '../../../modules/cart'
 import { addPopup, removePopup } from '../../../modules/popup'
+import { getPricing } from '../../../utils/functions'
 
 function mapStateToProps(store) {
+  let { cart } = store.cart
+  if (cart.cartItems) {
+    cart.cartItems.forEach(item => {
+      item.pricing = getPricing(item.productOffer, item.quantity)
+    })
+  }
+
   return {
-    cart: store.cart.cart,
+    cart,
     identity: store.auth.identity,
     sidebar: store.cart.sidebar,
     cartIsFetching: store.cart.cartIsFetching
