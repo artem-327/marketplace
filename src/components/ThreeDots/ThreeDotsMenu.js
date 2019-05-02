@@ -17,6 +17,7 @@ class ThreeDotsMenu extends Component {
         return <span className="submenu-links">{links}</span>;
     };
     render () {
+        console.log('links', this.props.links)
         return this.props.isOpen ? <ul className="three-dots-menu">{this.renderLinks()}</ul> : null
     }
 
