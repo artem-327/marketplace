@@ -5,6 +5,7 @@ export const initialState = {
     listConditions: [],
     listForms: [],
     listGrades: [],
+    lotFiles: [],
     poCreated: false,
     searchedManufacturers: [],
     searchedManufacturersLoading: false,
@@ -157,16 +158,6 @@ export default function reducer(state = initialState, action) {
             ...state,
             searchedProducts: action.payload.data,
             searchedProductsLoading: false
-          }
-        }
-
-        case AT.INVENTORY_SET_FILE_ID: {
-          state.fileIds.push(
-            action.payload.data
-          )
-
-          return {
-            ...state
           }
         }
 

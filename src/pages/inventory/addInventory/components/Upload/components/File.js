@@ -9,7 +9,7 @@ class File extends Component {
         return (
             <React.Fragment>
             <span key={this.props.index} className={this.props.className}>
-                <Icon name='times circle outline' size='big' onClick={()=>this.props.onRemove()} />
+                <Icon name='times circle outline' size='big' onClick={() => this.props.onRemove()} />
                 {this.props.name}
             </span>
             </React.Fragment>
