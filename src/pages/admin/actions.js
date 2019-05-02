@@ -174,10 +174,16 @@ export function openEditCasPopup(value) {
 		hazardClasses: value.hazardClassesId,
 		id: value.id,
 		packagingGroup: value.packagingGroupId,
-		unNumber: value.unNumberId,
+		unNumberId: value.unNumberId,
+		unNumberCode: value.unNumberCode,
+		unNumberDescription: value.unNumberDescription,
 	}
 	console.log('xxxxxxxxxxx openEditCasPopup - data - ', data);
 	return async dispatch => {
+		await dispatch({ // Save UN number data to global props (not needed to call get UN Numbers api)
+			type: AT.ADMIN_GET_UN_NUMBERS_FULFILLED,
+			payload: [{id: data.unNumberId, unNumberCode: data.unNumberCode, unNumberDescription: data.unNumberDescription}]
+		})
 		dispatch(openPopup(data))
 	}
 }

@@ -11,7 +11,7 @@ const initialFormValues = {
   'casIndexName':   '',
   'casNumber':      '',
   'chemicalName':   '',
-  'unNumber':       '',
+  'unNumberId':     '',
   'hazardClasses':  [],
   'packagingGroup': '',
 }
@@ -86,7 +86,7 @@ class AddEditCasProductsPopup extends React.Component {
           <Form
             enableReinitialize
             initialValues={{...initialFormValues, ...popupValues}}
-            // validationSchema={formValidation}
+            validationSchema={formValidation}
             validateOnBlur={false}
             validateOnChange={false}
             onReset={closeAddPopup}
@@ -95,7 +95,7 @@ class AddEditCasProductsPopup extends React.Component {
                 casIndexName: values.casIndexName,
                 casNumber: values.casNumber,
                 chemicalName: values.chemicalName,
-                ...(values.unNumber !== '' && { unNumber: values.unNumber }),
+                ...(values.unNumberId !== '' && { unNumber: values.unNumberId }),
                 ...(values.packagingGroup !== '' && { packagingGroup: values.packagingGroup }),
                 ...(values.hazardClasses.length && { hazardClasses: values.hazardClasses }),
               }
@@ -115,7 +115,7 @@ class AddEditCasProductsPopup extends React.Component {
                 </FormGroup>
                 <FormGroup widths="equal">
                   <Dropdown
-                    name="unNumber"
+                    name="unNumberId"
                     //fast
                     label={config.display.columns[3].title}
                     options={unNumbersFiltered}
@@ -123,7 +123,7 @@ class AddEditCasProductsPopup extends React.Component {
                       selection: true,
                       //search: this.handleUnNumbers,
                       search: true,
-                      placeholder: 'Search for UN Number',
+                      placeholder: 'Search for UN Number...',
                       clearable: true,
                       onSearchChange: (e, d) => this.handleUnNumbers(e, d)
                     }}
