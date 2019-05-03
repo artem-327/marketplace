@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { Modal, Icon, Step } from 'semantic-ui-react'
 import { closeImportPopup } from '../../actions'
-import { Form, Button, ButtonBase } from 'formik-semantic-ui'
+import { Form, Button } from 'formik-semantic-ui'
 
 import Upload from './Steps/UploadCSV'
 import Map from './Steps/Map'

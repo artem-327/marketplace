@@ -279,6 +279,15 @@ function* postNewProductWorker({ payload }) {
   }
 }
 
+function* postUploadCSVFile({ payload }) {
+  try {
+    const data = yield call(api.uploadCSVFile, payload)
+    yield put({ type: AT.POST_UPLOAD_CSV_FILE_SUCCESS, data })
+  } catch (e) {
+    yield console.log('error:', e)
+  }
+}
+
 function* putWarehouseWorker({ payload, id }) {
   try {
     const dataBody = {
@@ -485,6 +494,7 @@ export default function* settingsSaga() {
   yield takeEvery(AT.POST_NEW_CREDIT_CARD_REQUEST, postNewCreditCardWorker)
   yield takeEvery(AT.POST_NEW_BANK_ACCOUNT_REQUEST, postNewBankAccountWorker)
   yield takeEvery(AT.POST_NEW_PRODUCT_REQUEST, postNewProductWorker)
+  yield takeEvery(AT.POST_UPLOAD_CSV_FILE, postUploadCSVFile)
 
   yield takeEvery(AT.HANDLE_SUBMIT_USER_EDIT_POPUP, putUserWorker)
 

@@ -1,23 +1,72 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import styled from 'styled-components'
 
 import Dropzone from 'react-dropzone'
-import { Grid, Icon, GridRow, GridColumn } from 'semantic-ui-react'
+import { Grid, Dropdown, Icon } from 'semantic-ui-react'
+
+import { uploadCSVFile } from '../../../actions'
 
 class UploadCSV extends Component {
   state = {
-    uploadedFile: null
+    uploadedFile: null,
+    hasError: false
   }
 
   render() {
-    const { uploadedFile } = this.state
-    console.log(uploadedFile)
+    const { csvFileId } = this.props
+    const { uploadedFile, hasError } = this.state
+
+    console.log(csvFileId)
+
+    const StyledDropzone = styled(Dropzone)`
+      display: flex;
+      border: 3px dashed #2599d5;
+      width: 300px;
+      height: 300px;
+      cursor: pointer;
+      &:hover {
+        border: 3px dashed #2599d5;
+        background-color: #eef7fc;
+      }
+      ${uploadedFile &&
+        `
+        border: 3px dashed #4cd137;
+        background-color: #f1fcef;
+      `}
+      ${hasError &&
+        `
+        border: 3px dashed #f44336;
+        background-color: #ffebee;
+      `}
+    `
+
     return (
       <Grid centered padded>
-        <Dropzone onDrop={this.onDrop} accept="text/csv" multiple="false">
-          Drag and drop or browse computer to upload your .csv file
-          {uploadedFile && uploadedFile.name}
-        </Dropzone>
+        <Grid.Row>
+          <StyledDropzone
+            onDrop={this.onDrop}
+            accept="text/csv"
+            multiple={false}
+          >
+            <Grid>
+              <Grid.Row verticalAlign="middle">
+                <Grid.Column>
+                  Drag and drop or browse computer to upload your .csv file
+                </Grid.Column>
+              </Grid.Row>
+              {uploadedFile && (
+                <Grid.Row verticalAlign="top">
+                  <Grid.Column>{uploadedFile.name}</Grid.Column>
+                </Grid.Row>
+              )}
+            </Grid>
+          </StyledDropzone>
+        </Grid.Row>
+        {/* <Grid.Row>Select Mapping Type</Grid.Row>
+        <Grid.Row>
+          <Dropdown placeholder="Selected Type" selection />
+        </Grid.Row> */}
       </Grid>
     )
   }
@@ -25,13 +74,23 @@ class UploadCSV extends Component {
   onDrop = acceptedFiles => {
     console.log(acceptedFiles)
     this.setState({ uploadedFile: acceptedFiles[0] })
+    if (acceptedFiles.length !== 0) {
+      this.props.uploadCSVFile(acceptedFiles[0])
+      this.setState({ uploadedFile: acceptedFiles[0], hasError: false })
+    } else {
+      this.setState({ uploadedFile: null, hasError: true })
+    }
   }
 }
 
-const mapDispatchToProps = {}
+const mapDispatchToProps = {
+  uploadCSVFile
+}
 
 const mapStateToProps = state => {
-  return {}
+  return {
+    csvFileId: state.settings.fileCSVId
+  }
 }
 
 export default connect(

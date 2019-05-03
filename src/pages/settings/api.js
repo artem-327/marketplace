@@ -35,7 +35,18 @@ export default {
   postNewBankAccount: body =>
     api.post('/prodex/api/payments/bank-accounts/add', body),
   postNewProduct: body => api.post('/prodex/api/products', body),
-
+  uploadCSVFile: body => {
+    console.log('formData', body)
+    const formData = new FormData()
+    formData.append('file', body)
+    return api
+      .post('/prodex/api/imports/temporary-files', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      .then(response => response.data)
+  },
   putWarehouse: (branchId, body) =>
     api.put(`/prodex/api/branches/${branchId}`, body),
   // putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),

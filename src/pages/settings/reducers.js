@@ -43,6 +43,7 @@ export const initialState = {
   deleteRowByid: null,
   filterValue: '',
   editPopupSearchProducts: [],
+  fileCSVId: null,
   loading: false
 }
 
@@ -443,6 +444,14 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentAddForm: state.currentTab
+      }
+    }
+
+    case AT.POST_UPLOAD_CSV_FILE_SUCCESS: {
+      console.log('reducers', action.data)
+      return {
+        ...state,
+        fileCSVId: action.data.id
       }
     }
 

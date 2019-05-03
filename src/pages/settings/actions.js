@@ -253,3 +253,11 @@ export function deleteBankAccount(accountId) {
     payload: accountId
   }
 }
+
+export function uploadCSVFile(payload) {
+  console.log('action', payload)
+  return {
+    type: AT.POST_UPLOAD_CSV_FILE,
+    payload: payload
+  }
+}
