@@ -2,9 +2,20 @@ import React, {Component} from 'react'
 import CollapsiblePanel from '../../../components/CollapsiblePanel'
 import '../../../pages/inventory/addInventory/AddInventory.scss'
 import Spinner from "../../../components/Spinner/Spinner"
-import { Grid, Segment, Accordion, Table, List, Label, Button, Icon, Divider } from 'semantic-ui-react'
+import { Grid, Segment, Accordion, Table, List, Label, Button, Icon, Divider, Header } from 'semantic-ui-react'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from "styled-components";
+
+const AccordionTitle = styled(Accordion.Title)`
+  text-transform: uppercase;
+  font-size: 1.14285714rem !important;
+  line-height: 1.5;
+  
+  i.chevron {
+   margin-right: 1rem;
+   vertical-align: top;
+  }
+`
 
 const GridData = styled(Grid)`
   padding-top: 1em !important;
@@ -57,6 +68,17 @@ class Detail extends Component {
         }
     }
 
+    downloadOrder = async () => {
+      let pdf = await this.props.downloadPdf(this.props.order.id)
+
+      const element = document.createElement("a")
+      const file = new Blob([pdf.value.data], {type: 'text/plain'})
+      element.href = URL.createObjectURL(file)
+      element.download = `order-${this.props.order.id}.pdf`
+      document.body.appendChild(element) // Required for this to work in FireFox
+      element.click()
+    }
+
     handleClick = (e, titleProps) => {
         const {index} = titleProps
         const {activeIndexes} = this.state
@@ -78,7 +100,8 @@ class Detail extends Component {
                 <Grid verticalAlign='middle' columns='equal'>
                     <Grid.Column width={6}>
                         <div className='header-top clean left detail-align'>
-                            <h1 className='header inv-header'>{ordersType} Order {isDetailFetching ? '' : '# '+order.id}</h1>
+                            <h1 className='header inv-header' style={{marginBottom: '0.5rem', textTransform: 'uppercase', fontSize: '1.14285714em', fontWeight: '500'}}>{ordersType} Order {isDetailFetching ? '' : '# '+order.id}</h1>
+                            <a onClick={() => this.downloadOrder()} style={{fontSize: '1.14285714em', cursor: 'pointer'}}><Icon name='download' style={{verticalAlign: 'top'}} color='blue' /> Download Sales Order</a>
                         </div>
                     </Grid.Column>
                     <Grid.Column>
@@ -128,8 +151,8 @@ class Detail extends Component {
                             <Segment color='blue'>
                                 <Grid verticalAlign='middle' columns='equal'>
                                     <Grid.Column width={13}>
-                                        <h3>Action Required</h3>
-                                        <p>This order is in pending status. Please select &quot;accept&quot; to move forward with the order. If you press &quot;reject&quot; the order will be cancelled. </p>
+                                        <Header as='h3' style={{margin: '0 0 0.3571429rem'}}>Action Required</Header>
+                                        This order is in pending status. Please select &quot;accept&quot; to move forward with the order. If you press &quot;reject&quot; the order will be cancelled.
                                     </Grid.Column>
                                     <Grid.Column>
                                         <Grid verticalAlign='middle' columns='equal'>
@@ -148,10 +171,10 @@ class Detail extends Component {
                         <Divider hidden />
 
                         <Accordion defaultActiveIndex={[0,1]} styled fluid>
-                            <Accordion.Title active={activeIndexes[0]} index={0} onClick={this.handleClick}>
+                            <AccordionTitle active={activeIndexes[0]} index={0} onClick={this.handleClick}>
                                 <Icon name={'chevron ' + (activeIndexes[0] ? 'down' : 'up')}  size='large' color={activeIndexes[0] ? 'blue' : 'black'}/>
                                 Order Info
-                            </Accordion.Title>
+                            </AccordionTitle>
                             <Accordion.Content active={activeIndexes[0]}>
                                 <Grid divided='horizontally'>
                                     <Grid.Row columns={2}>
@@ -185,10 +208,10 @@ class Detail extends Component {
                                 </Grid>
                             </Accordion.Content>
 
-                            <Accordion.Title active={activeIndexes[1]} index={1} onClick={this.handleClick}>
+                            <AccordionTitle active={activeIndexes[1]} index={1} onClick={this.handleClick}>
                                 <Icon name={'chevron ' + (activeIndexes[1] ? 'down' : 'up')}  size='large' color={activeIndexes[1] ? 'blue' : 'black'}/>
                                 Product Info
-                            </Accordion.Title>
+                            </AccordionTitle>
                             <Accordion.Content active={activeIndexes[1]}>
                                 <Grid divided='horizontally'>
                                     <Grid.Row columns={2}>
@@ -313,10 +336,10 @@ class Detail extends Component {
                                 </Grid>
                             </Accordion.Content>
 
-                            <Accordion.Title active={activeIndexes[2]} index={2} onClick={this.handleClick}>
+                            <AccordionTitle active={activeIndexes[2]} index={2} onClick={this.handleClick}>
                                 <Icon name={'chevron ' + (activeIndexes[2] ? 'down' : 'up')}  size='large' color={activeIndexes[2] ? 'blue' : 'black'}/>
                                 Pick Up Info
-                            </Accordion.Title>
+                            </AccordionTitle>
                             <Accordion.Content active={activeIndexes[2]}>
                                 <Grid divided='horizontally'>
                                     <Grid.Row columns={2}>
@@ -340,10 +363,10 @@ class Detail extends Component {
                                 </Grid>
                             </Accordion.Content>
 
-                            <Accordion.Title active={activeIndexes[3]} index={3} onClick={this.handleClick}>
+                            <AccordionTitle active={activeIndexes[3]} index={3} onClick={this.handleClick}>
                                 <Icon name={'chevron ' + (activeIndexes[3] ? 'down' : 'up')}  size='large' color={activeIndexes[3] ? 'blue' : 'black'}/>
                                 Shipping
-                            </Accordion.Title>
+                            </AccordionTitle>
                             <Accordion.Content active={activeIndexes[3]}>
                                 <Grid divided='horizontally'>
                                     <Grid.Row columns={2}>
@@ -381,10 +404,10 @@ class Detail extends Component {
                                 </Grid>
                             </Accordion.Content>
 
-                            <Accordion.Title active={activeIndexes[4]} index={4} onClick={this.handleClick}>
+                            <AccordionTitle active={activeIndexes[4]} index={4} onClick={this.handleClick}>
                                 <Icon name={'chevron ' + (activeIndexes[4] ? 'down' : 'up')}  size='large' color={activeIndexes[4] ? 'blue' : 'black'}/>
                                 Payment / Customer
-                            </Accordion.Title>
+                            </AccordionTitle>
                             <Accordion.Content active={activeIndexes[4]}>
                                 <Grid divided='horizontally'>
                                     <Grid.Row columns={2}>
