@@ -30,7 +30,7 @@ export async function getAllUnNumbers() {
   return data
 }
 
-export async function getUnNumbersByString(value) {   //! ! test
+export async function getUnNumbersByString(value) {
   const {data} = await api.get(`/prodex/api/un-numbers/search?search=${value}`)
   return data
 }

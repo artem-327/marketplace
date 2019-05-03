@@ -24,10 +24,9 @@ class CasProductsTable extends Component {
       rows,
       filterValue,
       currentTab,
-      openEditPopup,
       openEditCasPopup,
       casDeleteItem,
-      deleteItem,
+      reloadFilter
     } = this.props
 
     const { columns } = config.display
@@ -35,14 +34,14 @@ class CasProductsTable extends Component {
     return (
       <React.Fragment>
         <ProdexTable
-          filterValue={filterValue}
+          //filterValue={filterValue}
           loading={loading}
           columns={columns}
           groupBy={['packagingGroup']}
           rows={rows}
           rowActions={[
             {text: 'Edit', callback: (row) => openEditCasPopup(row)},
-            {text: 'Delete', callback: (row) => casDeleteItem(row.id)}
+            {text: 'Delete', callback: (row) => casDeleteItem(row.id, reloadFilter)}
           ]}
         />
       </React.Fragment>
@@ -71,7 +70,6 @@ const mapStateToProps = state => {
     filterValue: state.admin.filterValue,
     currentTab: state.admin.currentTab,
     casListDataRequest: state.admin.casListDataRequest,
-    //rows: state.admin.casProductsRows,
     loading: state.admin.loading,
     rows: state.admin.casProductsRows.map(d => {
       return {
@@ -88,7 +86,12 @@ const mapStateToProps = state => {
         packagingGroupId: !!d.packagingGroup ? d.packagingGroup.id : '',
         hazardClassesId: !!d.hazardClasses ? (d.hazardClasses.map(a => a.id)) : [],
       }
-    })
+    }),
+    // reloadFilter is used to reload CAS Product list after Edit / Add new CAS Product
+    reloadFilter: {props: {
+        currentTab: state.admin.currentTab,
+        casListDataRequest: state.admin.casListDataRequest},
+      value: state.admin.filterValue},
   }
 }
 

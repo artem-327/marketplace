@@ -71,7 +71,8 @@ class AddEditCasProductsPopup extends React.Component {
       config,
       postNewCasProductRequest,
       updateCasProductRequest,
-      unNumbersFiltered
+      unNumbersFiltered,
+      reloadFilter
     } = this.props
 
     const {
@@ -99,9 +100,8 @@ class AddEditCasProductsPopup extends React.Component {
                 ...(values.packagingGroup !== '' && { packagingGroup: values.packagingGroup }),
                 ...(values.hazardClasses.length && { hazardClasses: values.hazardClasses }),
               }
-              console.log('xxxxxxxxxxx AddEditCasProductsPopup - submit data - ', data);
-              if (popupValues) updateCasProductRequest(popupValues.id, data)
-              else postNewCasProductRequest(data)
+              if (popupValues) updateCasProductRequest(popupValues.id, data, reloadFilter)
+              else postNewCasProductRequest(data, reloadFilter)
             }}
           >
             {(props) => { return (
@@ -116,12 +116,10 @@ class AddEditCasProductsPopup extends React.Component {
                 <FormGroup widths="equal">
                   <Dropdown
                     name="unNumberId"
-                    //fast
                     label={config.display.columns[3].title}
                     options={unNumbersFiltered}
                     inputProps={{
                       selection: true,
-                      //search: this.handleUnNumbers,
                       search: true,
                       placeholder: 'Search for UN Number...',
                       clearable: true,
@@ -196,6 +194,11 @@ const mapStateToProps = state => {
     packagingGroups: state.admin.packagingGroups,
     hazardClasses: state.admin.hazardClasses,
     popupValues: state.admin.popupValues,
+    // reloadFilter is used to reload CAS Product list after Edit / Add new CAS Product
+    reloadFilter: {props: {
+        currentTab: state.admin.currentTab,
+        casListDataRequest: state.admin.casListDataRequest},
+      value: state.admin.filterValue},
     unNumbersFiltered: transformUnNumbers(state.admin.unNumbersFiltered),
   }
 }
