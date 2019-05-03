@@ -16,7 +16,7 @@ export default {
       .get('/prodex/api/payments/bank-accounts')
       .then(response => response.data),
   getProductsCatalog: () =>
-    api.get('/prodex/api/products').then(response => response.data),
+    api.get('/prodex/api/products/search').then(response => response.data),
   getProductTypes: () =>
     api.get('/prodex/api/packaging-types').then(response => response.data),
   getUnitsType: () => api.get('/prodex/api/units'),

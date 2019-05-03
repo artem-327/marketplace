@@ -40,7 +40,6 @@ class ProductCatalogTable extends Component {
     } = this.props
 
     const { columns } = this.state
-    console.log('rows', rows)
 
     return (
       <React.Fragment>

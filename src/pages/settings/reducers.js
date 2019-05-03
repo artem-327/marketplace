@@ -34,6 +34,7 @@ export const initialState = {
   // currentTab: "Product catalog",
   currentTab: 'Users',
   isOpenPopup: false,
+  isOpenImportPopup: false,
   currentEditForm: null,
   currentAddForm: null,
   confirmMessage: null,
@@ -59,6 +60,20 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenPopup: false,
         popupValues: null
+      }
+    }
+    case AT.OPEN_IMPORT_POPUP: {
+      return {
+        ...state,
+        isOpenImportPopup: true
+        //popupValues: action.payload
+      }
+    }
+    case AT.CLOSE_IMPORT_POPUP: {
+      return {
+        ...state,
+        isOpenImportPopup: false
+        //popupValues: null
       }
     }
     case AT.OPEN_ROLES_POPUP: {

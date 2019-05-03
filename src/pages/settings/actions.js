@@ -13,6 +13,19 @@ export function closePopup(rows = null) {
   }
 }
 
+export function openImportPopup() {
+  return {
+    type: AT.OPEN_IMPORT_POPUP
+    //payload: rows
+  }
+}
+export function closeImportPopup() {
+  return {
+    type: AT.CLOSE_IMPORT_POPUP
+    //payload: rows
+  }
+}
+
 export function openEditPopup(rows) {
   return {
     type: AT.OPEN_EDIT_POPUP,
