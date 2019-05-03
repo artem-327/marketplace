@@ -15,7 +15,7 @@ export const initialState = {
   measureTypes: [],
   hazardClasses: [],
   packagingGroups: [],
-  unNumbers: [],
+  unNumbersFiltered: [],
   companiesRows: [],
   countries: [],
   countriesDropDown: [],
@@ -190,7 +190,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_GET_UN_NUMBERS_FULFILLED: {
       return {
         ...state,
-        unNumbers: action.payload
+        unNumbersFiltered: action.payload
       }
     }
 

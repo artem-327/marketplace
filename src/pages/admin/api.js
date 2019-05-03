@@ -25,13 +25,13 @@ export async function deleteCasProduct(id) {
   return
 }
 
-export async function getUnNumbers() {
+export async function getAllUnNumbers() {
   const {data} = await api.get("/prodex/api/un-numbers")
   return data
 }
 
-export async function getUnNumbersByString(value) {   // ! !
-  const {data} = await api.post("/prodex/api/un-numbers/filtered", value)
+export async function getUnNumbersByString(value) {   //! ! test
+  const {data} = await api.get(`/prodex/api/un-numbers/search?search=${value}`)
   return data
 }
 

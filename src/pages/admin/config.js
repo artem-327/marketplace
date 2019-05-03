@@ -7,7 +7,7 @@ export const config = {
         { name: 'casIndexName', title: 'Index Name' },
         { name: 'casNumber', title: 'CAS Number' },
         { name: 'chemicalName', title: 'Chemical Name' },
-        { name: 'unNumber', title: 'UN Number' },
+        { name: 'unNumberCode', title: 'UN Number' },
         { name: 'packagingGroup', title: 'Packaging Group' },
         { name: 'hazardClasses', title: 'Hazard Classes' },
       ],

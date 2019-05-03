@@ -6,7 +6,6 @@ import {
   getCasProductByFilter,
   openEditCasPopup,
   casDeleteItem,
-  getUnNumbersDataRequest,
   getHazardClassesDataRequest, getPackagingGroupsDataRequest
 } from '../../actions'
 
@@ -14,7 +13,6 @@ import {
 class CasProductsTable extends Component {
   componentDidMount() {
     this.props.getCasProductByFilter(this.props.casListDataRequest)
-    this.props.getUnNumbersDataRequest()
     this.props.getHazardClassesDataRequest()
     this.props.getPackagingGroupsDataRequest()
   }
@@ -56,7 +54,6 @@ const mapDispatchToProps = {
   getCasProductByFilter,
   openEditCasPopup,
   casDeleteItem,
-  getUnNumbersDataRequest,
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
 }
@@ -83,11 +80,12 @@ const mapStateToProps = state => {
         casNumber: d.casNumber,
         chemicalName: d.chemicalName,
         packagingGroup: !!d.packagingGroup ? d.packagingGroup.groupCode : '',
-        unNumber: !!d.unNumber ? d.unNumber.unNumberCode : '',
+        unNumberCode: !!d.unNumber ? d.unNumber.unNumberCode : '',
+        unNumberId: !!d.unNumber ? d.unNumber.id : '',
+        unNumberDescription: !!d.unNumber ? d.unNumber.description : '',
         hazardClasses: transformHazardClasses(d.hazardClasses),
         // Prepare initial values for editing form
         packagingGroupId: !!d.packagingGroup ? d.packagingGroup.id : '',
-        unNumberId: !!d.unNumber ? d.unNumber.id : '',
         hazardClassesId: !!d.hazardClasses ? (d.hazardClasses.map(a => a.id)) : [],
       }
     })
