@@ -67,16 +67,14 @@ class Orders extends Component {
                   </Menu.Menu>
                 </Menu>
                 <Header as='h1' size='medium'>{(activeStatus ? activeStatus.toUpperCase() : 'ALL') + ' ' + ordersType.toUpperCase() + ' ORDERS'}</Header>
-                {false ? '' : (
-                  <Filter orderId
-                          orderDate
-                          customer
-                          product
-                          orderStatus={{filterValue: activeStatus}}
-                          filterFunc={(inputs) => this.props.loadData(endpointType, inputs)}
-                          {...this.props}
-                  />
-                )}
+                <Filter orderId
+                        orderDate
+                        customer
+                        product
+                        orderStatus={{filterValue: activeStatus}}
+                        filterFunc={(inputs) => this.props.loadData(endpointType, inputs)}
+                        {...this.props}
+                />
                 <Divider hidden />
                 {isFetching ? <Spinner /> :
                     <div id="datatable-wrapper" className="data-table-wr orders">

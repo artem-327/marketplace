@@ -12,5 +12,6 @@ export default {
     getOrder: (endpointType, orderId) => api.get(`/prodex/api/${endpointType}-orders/${orderId}`),
     update: (orderId, model) => api.put(`/prodex/api/orders/${orderId}`, model),
     confirm: (orderId) => api.patch(`/prodex/api/sale-orders/${orderId}/confirm`),
-    reject: (orderId) => api.patch(`/prodex/api/sale-orders/${orderId}/reject`)
+    reject: (orderId) => api.patch(`/prodex/api/sale-orders/${orderId}/reject`),
+    downloadPdf: (orderId) => api.get(`/prodex/api/sale-orders/${orderId}/download-pdf`)
 }
