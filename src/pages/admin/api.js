@@ -5,8 +5,13 @@ export async function getCasProductByFilter(value) {
   return data
 }
 
+export async function getAlternativeProductNames(value) {
+  const {data} = await api.get(`/prodex/api/product-names?productId=${value}`)
+  return data
+}
+
 export async function getCasProductByString(value) {
-  const {data} = await api.get(`/prodex/api/cas-products?search=${value}`)
+  const {data} = await api.get(`/prodex/api/product-names?productId=${value}`)
   return data
 }
 
