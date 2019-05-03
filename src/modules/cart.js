@@ -32,7 +32,7 @@ export const initialState = {
   sidebar: {
     isOpen: false,
     pricing: null,
-    quantity: 1,
+    quantity: null,
     warning: null
   }
 };
@@ -49,6 +49,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         orderDetail: action.payload,
+        sidebar: { ...state.sidebar, quantity: action.payload.quantity },
         orderDetailIsFetching: false
       }
     }
@@ -72,6 +73,7 @@ export default function reducer(state = initialState, action) {
       }
     }
     case PAYMENTS_FETCH_SUCCEEDED: {
+
       return {
         ...state,
         payments: action.payload,
@@ -85,9 +87,12 @@ export default function reducer(state = initialState, action) {
       }
     }
     case OFFER_FETCH_SUCCEEDED: {
+      let { payload } = action
+
       return {
         ...state,
-        offerDetail: action.payload,
+        offerDetail: payload,
+        sidebar: { ...state.sidebar, quantity: !payload.isEdit ? payload.minimum : state.sidebar.quantity },
         offerDetailIsFetching: false
       }
     }
@@ -133,9 +138,9 @@ export default function reducer(state = initialState, action) {
   }
 }
 
-export function getProductOffer(id) {
+export function getProductOffer(id, isEdit = false) {
   return {
-    type: OFFER_FETCH_REQUESTED, payload: { id }
+    type: OFFER_FETCH_REQUESTED, payload: { id, isEdit }
   }
 }
 
