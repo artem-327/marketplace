@@ -36,7 +36,7 @@ export default class ShoppingCart extends Component {
     let { id, quantity } = cartItem
 
     this.props.getOrderDetail(id)
-    this.props.getProductOffer(cartItem.productOffer.id)
+    this.props.getProductOffer(cartItem.productOffer.id, true)
     this.props.sidebarChanged({ isOpen: true, id, quantity })
   }
 

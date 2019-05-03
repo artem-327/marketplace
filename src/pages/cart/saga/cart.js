@@ -17,7 +17,7 @@ import {
 function* getProductOffer(action) {
     try {
         const offerDetail = yield call(Api.getProductOffer, action.payload.id);
-        yield put({type: OFFER_FETCH_SUCCEEDED, payload: offerDetail});
+        yield put({type: OFFER_FETCH_SUCCEEDED, payload: {...offerDetail, isEdit: action.payload.isEdit } });
     } catch (e) {
         yield put({type: OFFER_FETCH_FAILED, message: e.message});
     }

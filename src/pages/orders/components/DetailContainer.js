@@ -28,16 +28,21 @@ function prepareDetail(data) {
         returnStatus: OrdersHelper.getReturnStatus(data.returnStatus),
         productName: (typeof data.orderItems[0].name !== 'undefined' ? data.orderItems[0].name : 'N/A'),
         productCode: data.orderItems[0].casNumber,
-        packaging: data.orderItems[0].packaging.packagingType.name,
-        size: data.orderItems[0].packaging.size,
+        packaging: data.orderItems[0].packagingType,
+        size: data.orderItems[0].packagingSize,
         totalPkg: data.orderItems[0].amount,
-        quantityOrdered: data.orderItems[0].amount * data.orderItems[0].packaging.size,
-        unit: data.orderItems[0].packaging.unit.name,
+        quantityOrdered: data.orderItems[0].amount * data.orderItems[0].packagingSize,
+        unit: data.orderItems[0].packagingUnit,
+        unitPrice: "$" + data.orderItems[0].price.formatMoney(2),
+        unitCost: "$" + parseInt(0).formatMoney(2),
         amount: "$" + data.totalPrice.formatMoney(2),
         feesPercent: 0,
+        feesAmount: "$" + parseInt(data.totalPrice * (0 / 100)).formatMoney(2),
         total: "$" + data.totalPrice.formatMoney(2),
+        pickUpAddress: data.sellerCompanyAddressStreet + ', ' + data.sellerCompanyAddressCity + ', ' + data.sellerCompanyAddressZip + ', ' + data.sellerCompanyAddressCountry,
         carrier: data.shippingMethod,
-        shipTo: ''
+        shipTo: data.buyerCompanyName,
+        shipToAddress: data.buyerCompanyAddressStreet + ', ' + data.buyerCompanyAddressCity + ', ' + data.buyerCompanyAddressZip + ', ' + data.buyerCompanyAddressCountry
     }
 }
 
