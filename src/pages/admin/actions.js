@@ -81,26 +81,27 @@ export function handleActiveTab(tab) {
 }
 
 export function handleFiltersValue(props, value) {
-	switch (props.currentTab) {
-		case 'CAS Products': {
-			if (value.length < 3) {
-				return {
-					type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
-					payload: api.getCasProductByFilter(props.casListDataRequest)
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_HANDLE_FILTERS_VALUE,
+			payload: value
+		})
+		switch (props.currentTab) {
+			case 'CAS Products': {
+				if (value.length < 3) {
+					await dispatch({
+						type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
+						payload: api.getCasProductByFilter(props.casListDataRequest)
+					})
+				} else {
+					await dispatch({
+						type: AT.ADMIN_GET_CAS_PRODUCT_BY_STRING,
+						payload: api.getCasProductByString(value)
+					})
 				}
 			}
-			else {
-				return {
-					type: AT.ADMIN_GET_CAS_PRODUCT_BY_STRING,
-					payload: api.getCasProductByString(value)
-				}
-			}
+			break;
 		}
-		default:
-			return {
-				type: AT.ADMIN_HANDLE_FILTERS_VALUE,
-				payload: value
-			}
 	}
 }
 
@@ -146,23 +147,27 @@ export function getUnNumbersByString(value) {
 	}
 }
 
-export function postNewCasProductRequest(values) {
+export function postNewCasProductRequest(values, reloadFilter) {
 	return async dispatch => {
 		await dispatch({
 			type: AT.ADMIN_POST_NEW_CAS_PRODUCT,
 			payload: api.postNewCasProduct(values)
 		})
 		dispatch(closePopup())
+		// Reload CAS Product list using filters
+		dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
 	}
 }
 
-export function updateCasProductRequest(id, values) {
+export function updateCasProductRequest(id, values, reloadFilter) {
 	return async dispatch => {
 		await dispatch({
 			type: AT.ADMIN_UPDATE_CAS_PRODUCT,
 			payload: api.updateCasProduct(id, values)
 		})
 		dispatch(closePopup())
+		// Reload CAS Product list using filters
+		dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
 	}
 }
 
@@ -178,7 +183,6 @@ export function openEditCasPopup(value) {
 		unNumberCode: value.unNumberCode,
 		unNumberDescription: value.unNumberDescription,
 	}
-	console.log('xxxxxxxxxxx openEditCasPopup - data - ', data);
 	return async dispatch => {
 		await dispatch({ // Save UN number data to global props (not needed to call get UN Numbers api)
 			type: AT.ADMIN_GET_UN_NUMBERS_FULFILLED,
@@ -188,10 +192,14 @@ export function openEditCasPopup(value) {
 	}
 }
 
-export function casDeleteItem(value) {
-	return {
-		type: AT.ADMIN_DELETE_CAS_PRODUCT,
-		payload: api.deleteCasProduct(value)
+export function casDeleteItem(value, reloadFilter) {
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_DELETE_CAS_PRODUCT,
+			payload: api.deleteCasProduct(value)
+		})
+		// Reload CAS Product list using filters
+		dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
 	}
 }
 
