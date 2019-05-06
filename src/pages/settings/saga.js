@@ -178,6 +178,15 @@ function* getProductsWithRequiredParamWorker({ payload }) {
   } catch (e) {}
 }
 
+function* getStoredCSV({ payload }) {
+  try {
+    const data = yield call(api.getStoredCSV, payload)
+    yield put({ type: AT.GET_STORED_CSV_SUCCESS, data })
+  } catch (e) {
+    yield console.log('error:', e)
+  }
+}
+
 function* postNewUserWorker({ payload }) {
   try {
     const dataBody = {
@@ -427,6 +436,10 @@ function* deleteBankAccountWorker({ payload }) {
   }
 }
 
+function* closeImportPopup({}) {
+  yield put({ type: AT.CLOSE_IMPORT_POPUP_SUCCESS })
+}
+
 function* deleteConfirmPopup({}) {
   const {
     settings: { deleteRowByid, currentTab }
@@ -488,6 +501,7 @@ export default function* settingsSaga() {
     AT.GET_PRODUCTS_WITH_REQUIRED_PARAM,
     getProductsWithRequiredParamWorker
   )
+  yield takeEvery(AT.GET_STORED_CSV, getStoredCSV)
 
   yield takeEvery(AT.POST_NEW_USER_REQUEST, postNewUserWorker)
   yield takeEvery(AT.POST_NEW_WAREHOUSE_REQUEST, postNewWarehouseWorker)
@@ -509,4 +523,6 @@ export default function* settingsSaga() {
 
   // yield takeEvery(AT.OPEN_ROLES_POPUP, openRolesPopup)
   // yield takeEvery(AT.CLOSE_ROLES_POPUP, closeRolesPopup)
+
+  yield takeEvery(AT.CLOSE_IMPORT_POPUP, closeImportPopup)
 }

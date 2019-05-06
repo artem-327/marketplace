@@ -189,6 +189,13 @@ export function getProductsWithRequiredParam(payload) {
   }
 }
 
+export function getStoredCSV(id) {
+  return {
+    type: AT.GET_STORED_CSV,
+    payload: id
+  }
+}
+
 export function postNewUserRequest(userData) {
   return {
     type: AT.POST_NEW_USER_REQUEST,

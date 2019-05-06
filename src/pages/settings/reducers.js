@@ -44,6 +44,7 @@ export const initialState = {
   filterValue: '',
   editPopupSearchProducts: [],
   fileCSVId: null,
+  CSV: null,
   loading: false
 }
 
@@ -440,6 +441,17 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.GET_STORED_CSV_SUCCESS: {
+      const CSV = {
+        headerCSV: action.data.lines[0].columns,
+        bodyCSV: action.data.lines.slice(1)
+      }
+      return {
+        ...state,
+        CSV
+      }
+    }
+
     case AT.POST_NEW_WAREHOUSE_POPUP: {
       return {
         ...state,
@@ -448,10 +460,16 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.POST_UPLOAD_CSV_FILE_SUCCESS: {
-      console.log('reducers', action.data)
       return {
         ...state,
         fileCSVId: action.data.id
+      }
+    }
+
+    case AT.CLOSE_IMPORT_POPUP_SUCCESS: {
+      return {
+        ...state,
+        fileCSVId: null
       }
     }
 

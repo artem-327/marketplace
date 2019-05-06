@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import Dropzone from 'react-dropzone'
-import { Grid, Dropdown, Icon } from 'semantic-ui-react'
+import { Grid, Dropdown, Label } from 'semantic-ui-react'
 
 import { uploadCSVFile } from '../../../actions'
 
@@ -14,10 +14,7 @@ class UploadCSV extends Component {
   }
 
   render() {
-    const { csvFileId } = this.props
     const { uploadedFile, hasError } = this.state
-
-    console.log(csvFileId)
 
     const StyledDropzone = styled(Dropzone)`
       display: flex;
@@ -60,6 +57,13 @@ class UploadCSV extends Component {
                   <Grid.Column>{uploadedFile.name}</Grid.Column>
                 </Grid.Row>
               )}
+              {hasError && (
+                <Grid.Row verticalAlign="top">
+                  <Grid.Column>
+                    <p style={{ color: 'red' }}>Invalid type file</p>
+                  </Grid.Column>
+                </Grid.Row>
+              )}
             </Grid>
           </StyledDropzone>
         </Grid.Row>
@@ -88,9 +92,7 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = state => {
-  return {
-    csvFileId: state.settings.fileCSVId
-  }
+  return {}
 }
 
 export default connect(

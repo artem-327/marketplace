@@ -28,6 +28,11 @@ export default {
     api.get('/prodex/api/countries').then(response => response.data),
   getCurrencies: () =>
     api.get('/prodex/api/currencies').then(response => response.data),
+  getStoredCSV: body => {
+    return api
+      .get(`/prodex/api/imports/read-stored-csv?temporaryFileId=${body}`)
+      .then(response => response.data)
+  },
 
   postNewUser: body => api.post('/prodex/api/users', body),
   postNewWarehouse: body => api.post('/prodex/api/branches/', body),
@@ -36,7 +41,6 @@ export default {
     api.post('/prodex/api/payments/bank-accounts/add', body),
   postNewProduct: body => api.post('/prodex/api/products', body),
   uploadCSVFile: body => {
-    console.log('formData', body)
     const formData = new FormData()
     formData.append('file', body)
     return api

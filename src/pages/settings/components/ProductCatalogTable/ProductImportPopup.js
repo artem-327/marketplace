@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { Modal, Icon, Step } from 'semantic-ui-react'
-import { closeImportPopup } from '../../actions'
+import { closeImportPopup, getStoredCSV } from '../../actions'
 import { Form, Button } from 'formik-semantic-ui'
 
 import Upload from './Steps/UploadCSV'
@@ -23,7 +23,7 @@ class ProductImportPopup extends Component {
   }
 
   render() {
-    const { closeImportPopup } = this.props
+    const { closeImportPopup, csvFileId } = this.props
 
     const { currentStep, isFinishUpload, isFinishMap } = this.state
 
@@ -60,7 +60,11 @@ class ProductImportPopup extends Component {
               {currentStep === 'preview' ? (
                 <Button.Submit>Save</Button.Submit>
               ) : (
-                <Button primary onClick={this.submitHandler}>
+                <Button
+                  primary
+                  onClick={this.submitHandler}
+                  disabled={!csvFileId}
+                >
                   Next
                 </Button>
               )}
@@ -77,6 +81,7 @@ class ProductImportPopup extends Component {
     switch (currentStep) {
       case 'upload':
         this.setState({ currentStep: 'map', isFinishUpload: true })
+        this.props.getStoredCSV(this.props.csvFileId)
         break
       case 'map':
         this.setState({ currentStep: 'preview', isFinishMap: true })
@@ -86,11 +91,14 @@ class ProductImportPopup extends Component {
 }
 
 const mapDispatchToProps = {
-  closeImportPopup
+  closeImportPopup,
+  getStoredCSV
 }
 
 const mapStateToProps = state => {
-  return {}
+  return {
+    csvFileId: state.settings.fileCSVId
+  }
 }
 
 export default connect(
