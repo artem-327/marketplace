@@ -198,8 +198,8 @@ class Detail extends Component {
                                                 <GridDataColumn width={12}>{order.buyerRejectionDate}</GridDataColumn>
                                                 {ordersType === 'Purchase' ? (
                                                     <>
-                                                        <GridDataColumn width={4}>Created By</GridDataColumn>
-                                                        <GridDataColumn width={12}></GridDataColumn>
+                                                      <GridDataColumn width={4}><strong>Created By</strong></GridDataColumn>
+                                                      <GridDataColumn width={12}>{order.createdBy}</GridDataColumn>
                                                     </>
                                                 ) : ''}
                                             </GridData>
@@ -218,7 +218,7 @@ class Detail extends Component {
                                         <Grid.Column>
                                             <GridData columns={2}>
                                                 <GridDataColumn width={4}><strong>Chemical Name</strong></GridDataColumn>
-                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.chemicalName}</GridDataColumn>
                                                 <GridDataColumn width={4}><strong>Product Name</strong></GridDataColumn>
                                                 <GridDataColumn width={12}>{order.productName}</GridDataColumn>
                                                 <GridDataColumn width={4}><strong>Product Number</strong></GridDataColumn>
@@ -282,7 +282,7 @@ class Detail extends Component {
                                                             <Table.Footer>
                                                                 <Table.Row>
                                                                     <Table.HeaderCell><strong>Gross Profit</strong></Table.HeaderCell>
-                                                                    <Table.HeaderCell textAlign='right'><strong></strong></Table.HeaderCell>
+                                                                    <Table.HeaderCell textAlign='right'><strong>{order.grossProfit}</strong></Table.HeaderCell>
                                                                 </Table.Row>
                                                             </Table.Footer>
                                                         </Table>
@@ -302,23 +302,23 @@ class Detail extends Component {
                                                                 </Table.Row>
                                                                 <Table.Row>
                                                                     <Table.Cell><strong>Subtotal</strong></Table.Cell>
-                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                    <Table.Cell textAlign='right'>{order.subtotal}</Table.Cell>
                                                                 </Table.Row>
                                                                 <Table.Row>
                                                                     <Table.Cell><strong>Freight</strong></Table.Cell>
-                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                    <Table.Cell textAlign='right'>{order.freight}</Table.Cell>
                                                                 </Table.Row>
                                                                 <Table.Row>
                                                                     <Table.Cell><strong>Other</strong></Table.Cell>
-                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                    <Table.Cell textAlign='right'>{order.other}</Table.Cell>
                                                                 </Table.Row>
                                                                 <Table.Row>
                                                                     <Table.Cell><strong>Delivery Cost</strong></Table.Cell>
-                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                    <Table.Cell textAlign='right'>{order.deliveryCost}</Table.Cell>
                                                                 </Table.Row>
                                                                 <Table.Row>
                                                                     <Table.Cell><strong>Delivery Total</strong></Table.Cell>
-                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                    <Table.Cell textAlign='right'>{order.deliveryTotal}</Table.Cell>
                                                                 </Table.Row>
                                                             </Table.Body>
                                                             <Table.Footer>
@@ -379,13 +379,13 @@ class Detail extends Component {
                                                 <GridDataColumn width={4}><strong>Ship To Address</strong></GridDataColumn>
                                                 <GridDataColumn width={12}>{order.shipToAddress}</GridDataColumn>
                                                 <GridDataColumn width={4}><strong>Ship Date</strong></GridDataColumn>
-                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.shipDate}</GridDataColumn>
                                                 <GridDataColumn width={4}><strong>Delivery Date</strong></GridDataColumn>
-                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.deliveryDate}</GridDataColumn>
                                                 <GridDataColumn width={4}><strong>Return Ship Date</strong></GridDataColumn>
-                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.returnShipDate}</GridDataColumn>
                                                 <GridDataColumn width={4}><strong>Return Delivery Date</strong></GridDataColumn>
-                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.returnDeliveryDate}</GridDataColumn>
                                             </GridData>
                                         </Grid.Column>
                                         <Grid.Column>
@@ -414,15 +414,15 @@ class Detail extends Component {
                                         <Grid.Column>
                                             <GridData columns={2}>
                                                 <GridDataColumn width={4}><strong>Payment Status</strong></GridDataColumn>
-                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.paymentStatus}</GridDataColumn>
                                                 <GridDataColumn width={4}><strong>Payment Send Date</strong></GridDataColumn>
-                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.paymentSendDate}</GridDataColumn>
                                                 <GridDataColumn width={4}><strong>Payment Initiation Date</strong></GridDataColumn>
-                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.paymentInitiationDate}</GridDataColumn>
                                                 <GridDataColumn width={4}><strong>Payment Received Date</strong></GridDataColumn>
-                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.paymentReceivedDate}</GridDataColumn>
                                                 <GridDataColumn width={4}><strong>Refund Date</strong></GridDataColumn>
-                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.refundDate}</GridDataColumn>
                                                 <GridDataColumn width={4}><strong>Terms</strong></GridDataColumn>
                                                 <GridDataColumn width={12}></GridDataColumn>
                                             </GridData>
@@ -430,13 +430,13 @@ class Detail extends Component {
                                         <Grid.Column>
                                             <GridData columns={2}>
                                                 <GridDataColumn width={4}><strong>Vendor Name</strong></GridDataColumn>
-                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.vendorName}</GridDataColumn>
                                                 <GridDataColumn width={4}><strong>Vendor Address</strong></GridDataColumn>
-                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.vendorAddress}</GridDataColumn>
                                                 <GridDataColumn width={4}><strong>Vendor Phone</strong></GridDataColumn>
-                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.vendorPhone}</GridDataColumn>
                                                 <GridDataColumn width={4}><strong>Vendor E-Mail</strong></GridDataColumn>
-                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.vendorEmail}</GridDataColumn>
                                                 <GridDataColumn width={4}><strong>Vendor Contact</strong></GridDataColumn>
                                                 <GridDataColumn width={12}></GridDataColumn>
                                             </GridData>

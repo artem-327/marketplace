@@ -446,3 +446,20 @@ table.ui.table.table-fields {
     }
   }
 }
+
+table.order-total.ui[class*="very basic"]:not(.sortable):not(.striped) {
+  min-width: 35%;
+
+  tr {
+
+    th:first-child,
+    td:first-child {
+      padding-left: 0.5em;
+    }
+
+    th:last-child,
+    td:last-child {
+      padding-right: 0.5em;
+    }
+  }
+}
