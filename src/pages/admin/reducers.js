@@ -12,7 +12,7 @@ export const initialState = {
   formsRows: [],
   conditionsRows: [],
   casProductsRows: [],
-  alternativeCasProductNamesRows: [],
+  altCasNamesRows: [],
   measureTypes: [],
   hazardClasses: [],
   packagingGroups: [],
@@ -183,9 +183,10 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.ADMIN_GET_ALTERNATIVE_CAS_PRODUCT_NAMES_FULFILLED: {
+      console.log('!!!!!!!! Alternative names: ', action.payload);
       return {
         ...state,
-        alternativeCasProductNamesRows: action.payload,
+        altCasNamesRows: action.payload,
         loading: false
       }
     }

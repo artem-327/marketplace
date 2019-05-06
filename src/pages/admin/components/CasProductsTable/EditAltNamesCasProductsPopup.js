@@ -1,13 +1,23 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { Modal, FormGroup, Header, Dropdown as SDropdown, FormField } from 'semantic-ui-react'
+import {
+  Modal,
+  Table, TableCell, TableHeaderCell,
+  FormGroup,
+  Header,
+  Dropdown as SDropdown,
+  FormField,
+  Message,
+  Icon,
+} from 'semantic-ui-react'
+import { FieldArray } from 'formik'
 
 import {
   closeEditPopup,
   getAlternativeProductNames,
 } from '../../actions'
-import { Form, Input, Button, Dropdown, Field  } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown, Field } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 const initialFormValues = {
@@ -15,13 +25,14 @@ const initialFormValues = {
 }
 
 const formValidation = Yup.object().shape({
-  casIndexName: Yup.string().min(3, "Too short").required("Required"),
+  //casIndexName: Yup.string().min(3, "Too short").required("Required"),
 })
 
 class EditAltNamesCasProductsPopup extends React.Component {
   componentDidMount() {
-    console.log('!!!!!!!!! props', this.props.popupValues.data.id)
+
     this.props.getAlternativeProductNames(this.props.popupValues.data.id)
+
   }
 
   render() {
@@ -29,6 +40,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
       closeEditPopup,
       currentTab,
       popupValues,
+      altCasNamesRows,
       config,
     } = this.props
 
@@ -50,19 +62,49 @@ class EditAltNamesCasProductsPopup extends React.Component {
               //updateCasProductRequest(popupValues.id, data, reloadFilter)
             }}
           >
-            {(props) => { return (
-              <>
-                <FormGroup widths="equal">
-                  <Input type='text' label={config.display.columns[0].title} name="casIndexName" />
-                </FormGroup>
+            <FieldArray name="casAlternativeNames"
+                        render={arrayHelpers => (
 
-                <div style={{ textAlign: 'right' }}>
-                  <Button.Reset>Cancel</Button.Reset>
-                  <Button.Submit>Save</Button.Submit>
-                </div>
-              </>
-            )}}
+                <>
+                  <Message attached='top' className='header-table-fields'>
+                    <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{marginTop: '-0.5em'}} />
+                    {`CAS Product Name: ${popupValues.data.casIndexName}`}
+                  </Message>
 
+                  <Table attached='bottom' className='table-fields'>
+                    <Table.Header>
+                      <Table.Row>
+                        <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
+                        <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
+                        <TableHeaderCell>Alternative Name</TableHeaderCell>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                      {altCasNamesRows && altCasNamesRows.length ? altCasNamesRows.map((alternativeName, index) => (
+                        <Table.Row key={index}>
+                          <TableCell width={1}><Icon name='trash alternate outline' size='large' /></TableCell>
+                          <TableCell width={1}><Icon name='save outline' size='large' /></TableCell>
+                          <TableCell width={8}>
+                            <FormField>
+                              <Input name={`casAlternativeNames.alternativeName`}
+
+                              />
+                            </FormField>
+                          </TableCell>
+
+
+
+                        </Table.Row>
+                      )) : ''
+                      }
+                    </Table.Body>
+                  </Table>
+                </>
+              )}
+            />
+            <div style={{ textAlign: 'right' }}>
+              <Button.Reset>Done</Button.Reset>
+            </div>
           </Form>
         </Modal.Content>
       </Modal>
@@ -81,6 +123,7 @@ const mapStateToProps = state => {
     config: cfg,
     currentTab: state.admin.currentTab,
     popupValues: state.admin.popupValues,
+    altCasNamesRows: state.admin.altCasNamesRows,
   }
 }
 
