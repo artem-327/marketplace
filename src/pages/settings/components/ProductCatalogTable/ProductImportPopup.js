@@ -22,9 +22,12 @@ class ProductImportPopup extends Component {
     isFinishMap: false
   }
 
+  componentDidUpdate() {
+    this.props.csvFileId && this.props.getStoredCSV(this.props.csvFileId)
+  }
+
   render() {
     const { closeImportPopup, csvFileId } = this.props
-
     const { currentStep, isFinishUpload, isFinishMap } = this.state
 
     return (
@@ -81,7 +84,6 @@ class ProductImportPopup extends Component {
     switch (currentStep) {
       case 'upload':
         this.setState({ currentStep: 'map', isFinishUpload: true })
-        this.props.getStoredCSV(this.props.csvFileId)
         break
       case 'map':
         this.setState({ currentStep: 'preview', isFinishMap: true })
