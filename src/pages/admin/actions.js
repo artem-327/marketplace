@@ -112,6 +112,13 @@ export function getCasProductByFilter(value) {
 	}
 }
 
+export function getAlternativeProductNames(value) {
+	return {
+		type: AT.ADMIN_GET_ALTERNATIVE_CAS_PRODUCT_NAMES,
+		payload: api.getAlternativeProductNames(value)
+	}
+}
+
 export function getHazardClassesDataRequest() {
 	return {
 		type: AT.ADMIN_GET_HAZARD_CLASSES,
@@ -189,6 +196,17 @@ export function openEditCasPopup(value) {
 			payload: [{id: data.unNumberId, unNumberCode: data.unNumberCode, unNumberDescription: data.unNumberDescription}]
 		})
 		dispatch(openPopup(data))
+	}
+}
+
+export function openEditAltNamesCasPopup(value) {
+	const data = {
+		casIndexName: value.casIndexName,
+		id: value.id,
+	}
+	return {
+		type: AT.ADMIN_OPEN_EDIT_2_POPUP,
+		payload: { data }
 	}
 }
 

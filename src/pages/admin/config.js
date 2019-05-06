@@ -1,6 +1,7 @@
 export const config = {
   'CAS Products': {
     addEditText: 'CAS Product',
+    addEditText2: 'CAS Product Alternative Names',
     searchText: 'Search cas product by name or number ...',
     display: {
       columns: [

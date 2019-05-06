@@ -5,6 +5,7 @@ import ProdexTable from '~/components/table'
 import {
   getCasProductByFilter,
   openEditCasPopup,
+  openEditAltNamesCasPopup,
   casDeleteItem,
   getHazardClassesDataRequest, getPackagingGroupsDataRequest
 } from '../../actions'
@@ -25,6 +26,7 @@ class CasProductsTable extends Component {
       filterValue,
       currentTab,
       openEditCasPopup,
+      openEditAltNamesCasPopup,
       casDeleteItem,
       reloadFilter
     } = this.props
@@ -41,6 +43,7 @@ class CasProductsTable extends Component {
           rows={rows}
           rowActions={[
             {text: 'Edit', callback: (row) => openEditCasPopup(row)},
+            {text: 'Edit Alternative Names', callback: (row) => openEditAltNamesCasPopup(row)},
             {text: 'Delete', callback: (row) => casDeleteItem(row.id, reloadFilter)}
           ]}
         />
@@ -52,6 +55,7 @@ class CasProductsTable extends Component {
 const mapDispatchToProps = {
   getCasProductByFilter,
   openEditCasPopup,
+  openEditAltNamesCasPopup,
   casDeleteItem,
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
