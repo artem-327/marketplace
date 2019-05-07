@@ -130,7 +130,7 @@ export const config = {
         dataName: 'manufacturersRows',
         typeRequest: 'ADMIN_GET_MANUFACTURERS_DATA',
         typeSuccess: 'ADMIN_GET_MANUFACTURERS_DATA_FULFILLED',
-        apiCall: '/prodex/api/manufacturers',
+        apiCall: '/prodex/api/manufacturers/search',
       },
       post: {
         typeRequest: 'ADMIN_POST_MANUFACTURERS_DATA',
@@ -138,11 +138,11 @@ export const config = {
       },
       put: {
         typeRequest: 'ADMIN_PUT_MANUFACTURERS_DATA',
-        apiCall: '/prodex/api/manufacturers/',
+        apiCall: '/prodex/api/manufacturers/id/',
       },
       delete: {
         typeRequest: 'ADMIN_DELETE_MANUFACTURERS_DATA',
-        apiCall: '/prodex/api/manufacturers/',
+        apiCall: '/prodex/api/manufacturers/id/',
       },
     },
   },

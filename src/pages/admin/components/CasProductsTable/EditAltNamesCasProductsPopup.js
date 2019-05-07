@@ -21,18 +21,33 @@ import { Form, Input, Button, Dropdown, Field } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 const initialFormValues = {
-  'casIndexName':   '',
+  casAlternativeNames: [{}]
 }
+
+
 
 const formValidation = Yup.object().shape({
   //casIndexName: Yup.string().min(3, "Too short").required("Required"),
 })
 
 class EditAltNamesCasProductsPopup extends React.Component {
-  componentDidMount() {
+  state = {
+    initialState: {
+      casAlternativeNames: []
+    }
+  }
 
-    this.props.getAlternativeProductNames(this.props.popupValues.data.id)
+  //componentDidMount() {
+  componentDidMount = async () => {
+    await this.props.getAlternativeProductNames(this.props.popupValues.data.id)
+    console.log('!!!!!!!!!!!!!! componentDidMount - props.altCasNamesRows - ', this.props.altCasNamesRows);
 
+    this.setState({
+      ...this.state.initialState,
+      initialState: {
+        casAlternativeNames: this.props.altCasNamesRows
+      }
+    })
   }
 
   render() {
@@ -44,13 +59,19 @@ class EditAltNamesCasProductsPopup extends React.Component {
       config,
     } = this.props
 
+    const {
+      initialState
+    } = this.state
+
+
     return (
       <Modal open centered={false}>
         <Modal.Header>Edit {config.addEditText2}</Modal.Header>
         <Modal.Content>
           <Form
             enableReinitialize
-            initialValues={{...initialFormValues, ...popupValues}}
+            initialValues={{...initialFormValues, ...initialState}}
+            //initialValues={{...initialFormValues}}
             validationSchema={formValidation}
             validateOnBlur={false}
             validateOnChange={false}
@@ -62,49 +83,53 @@ class EditAltNamesCasProductsPopup extends React.Component {
               //updateCasProductRequest(popupValues.id, data, reloadFilter)
             }}
           >
-            <FieldArray name="casAlternativeNames"
-                        render={arrayHelpers => (
+            {({ values, errors, setFieldValue }) => (
+              <>
+                <FieldArray name="casAlternativeNames"
+                            render={arrayHelpers => (
 
-                <>
-                  <Message attached='top' className='header-table-fields'>
-                    <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{marginTop: '-0.5em'}} />
-                    {`CAS Product Name: ${popupValues.data.casIndexName}`}
-                  </Message>
+                    <>
+                      <Message attached='top' className='header-table-fields'>
+                        <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{marginTop: '-0.5em'}} />
+                        {`CAS Product Name: ${popupValues.data.casIndexName}`}
+                      </Message>
 
-                  <Table attached='bottom' className='table-fields'>
-                    <Table.Header>
-                      <Table.Row>
-                        <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
-                        <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
-                        <TableHeaderCell>Alternative Name</TableHeaderCell>
-                      </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                      {altCasNamesRows && altCasNamesRows.length ? altCasNamesRows.map((alternativeName, index) => (
-                        <Table.Row key={index}>
-                          <TableCell width={1}><Icon name='trash alternate outline' size='large' /></TableCell>
-                          <TableCell width={1}><Icon name='save outline' size='large' /></TableCell>
-                          <TableCell width={8}>
-                            <FormField>
-                              <Input name={`casAlternativeNames.alternativeName`}
+                      <Table attached='bottom' className='table-fields'>
+                        <Table.Header>
+                          <Table.Row>
+                            <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
+                            <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
+                            <TableHeaderCell>Alternative Name</TableHeaderCell>
+                          </Table.Row>
+                        </Table.Header>
+                        <Table.Body>
+                          {console.log('!!!!!!! values ', values)}
+                          {values && values.casAlternativeNames.length ? values.casAlternativeNames.map((val, index) => (
+                            <Table.Row key={index}>
+                              <TableCell width={1}><Icon name='trash alternate outline' size='large' /></TableCell>
+                              <TableCell width={1}><Icon name='save outline' size='large' /></TableCell>
+                              <TableCell width={16}>
+                                <FormField>
+                                  <Input name={`casAlternativeNames[${index}].alternativeName`}
+                                  />
+                                </FormField>
+                              </TableCell>
 
-                              />
-                            </FormField>
-                          </TableCell>
 
 
-
-                        </Table.Row>
-                      )) : ''
-                      }
-                    </Table.Body>
-                  </Table>
-                </>
+                            </Table.Row>
+                          )) : ''
+                          }
+                        </Table.Body>
+                      </Table>
+                    </>
+                  )}
+                />
+                <div style={{ textAlign: 'right' }}>
+                  <Button.Reset>Done</Button.Reset>
+                </div>
+              </>
               )}
-            />
-            <div style={{ textAlign: 'right' }}>
-              <Button.Reset>Done</Button.Reset>
-            </div>
           </Form>
         </Modal.Content>
       </Modal>

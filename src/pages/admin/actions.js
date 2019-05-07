@@ -262,12 +262,14 @@ export function getCompanies() {
 	}
 }
 
+/*
 export function getCompany(id) {
 	return {
 		type: AT.ADMIN_GET_COMPANY,
 		payload: api.getCompany(id)
 	}
 }
+*/
 
 export function deleteCompany(id) {
 	return async dispatch => {
