@@ -72,9 +72,11 @@ class Detail extends Component {
       let pdf = await this.props.downloadPdf(this.props.order.id)
 
       const element = document.createElement("a")
-      const file = new Blob([pdf.value.data], {type: 'text/plain'})
-      element.href = URL.createObjectURL(file)
-      element.download = `order-${this.props.order.id}.pdf`
+      const file = new Blob([pdf.value.data], {type: 'application/pdf'})
+      let fileURL = URL.createObjectURL(file)
+
+      element.href = fileURL
+      element.download = `${this.props.router.query.type}-order-${this.props.order.id}.pdf`
       document.body.appendChild(element) // Required for this to work in FireFox
       element.click()
     }

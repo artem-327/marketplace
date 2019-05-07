@@ -52,7 +52,7 @@ class Orders extends Component {
         let ordersType = query.type.charAt(0).toUpperCase() + query.type.slice(1)
 
         return (
-            <div id="page">
+            <div id="page" className='flex stretched'>
                 <Menu pointing secondary horizontal>
                   <Menu.Item name='ALL' onClick={() => this.loadData(endpointType, {...this.props.filterData, status: 'All'})} active={!activeStatus || activeStatus === 'All'} />
                   <Menu.Item name='PENDING' onClick={() => this.loadData(endpointType, {...this.props.filterData, status: 'Pending'})} active={activeStatus === 'Pending'} />
@@ -75,7 +75,6 @@ class Orders extends Component {
                         filterFunc={(inputs) => this.props.loadData(endpointType, inputs)}
                         {...this.props}
                 />
-                <Divider hidden />
                 {isFetching ? <Spinner /> :
                     <div id="datatable-wrapper" className="data-table-wr orders">
                         <PerfectScrollbar onScrollY={this.handleScrollY} onScrollX={this.handleScrollX}>
