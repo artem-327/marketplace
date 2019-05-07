@@ -45,6 +45,8 @@ export const initialState = {
   editPopupSearchProducts: [],
   fileCSVId: null,
   CSV: null,
+  mappedHeaders: null,
+  dataHeaderCSV: null,
   loading: false
 }
 
@@ -452,6 +454,20 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.CHANGE_HEADERS_CSV: {
+      return {
+        ...state,
+        mappedHeaders: action.payload
+      }
+    }
+
+    case AT.DATA_HEADER_CSV: {
+      return {
+        ...state,
+        dataHeaderCSV: action.payload
+      }
+    }
+
     case AT.POST_NEW_WAREHOUSE_POPUP: {
       return {
         ...state,
@@ -466,10 +482,17 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.POST_CSV_IMPORT_PRODUCTS_SUCCESS: {
+      return {
+        ...state
+      }
+    }
+
     case AT.CLOSE_IMPORT_POPUP_SUCCESS: {
       return {
         ...state,
-        fileCSVId: null
+        fileCSVId: null,
+        mappedHeaders: null
       }
     }
 

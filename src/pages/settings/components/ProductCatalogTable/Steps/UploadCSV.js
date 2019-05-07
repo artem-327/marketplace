@@ -7,6 +7,31 @@ import { Grid, Dropdown, Label } from 'semantic-ui-react'
 
 import { uploadCSVFile } from '../../../actions'
 
+const StyledDropzone = styled(Dropzone)`
+  display: flex;
+  border: 3px dashed #2599d5;
+  width: 300px;
+  height: 300px;
+  cursor: pointer;
+  &:hover {
+    border: 3px dashed #2599d5;
+    background-color: #eef7fc;
+  }
+  ${props =>
+    props.uploaded &&
+    `
+        border: 3px dashed #4cd137;
+        background-color: #f1fcef;
+      `}
+  ${props =>
+    props.error
+      ? `
+        border: 3px dashed #f44336;
+        background-color: #ffebee;
+      `
+      : undefined}
+`
+
 class UploadCSV extends Component {
   state = {
     uploadedFile: null,
@@ -16,28 +41,6 @@ class UploadCSV extends Component {
   render() {
     const { uploadedFile, hasError } = this.state
 
-    const StyledDropzone = styled(Dropzone)`
-      display: flex;
-      border: 3px dashed #2599d5;
-      width: 300px;
-      height: 300px;
-      cursor: pointer;
-      &:hover {
-        border: 3px dashed #2599d5;
-        background-color: #eef7fc;
-      }
-      ${uploadedFile &&
-        `
-        border: 3px dashed #4cd137;
-        background-color: #f1fcef;
-      `}
-      ${hasError &&
-        `
-        border: 3px dashed #f44336;
-        background-color: #ffebee;
-      `}
-    `
-
     return (
       <Grid centered padded>
         <Grid.Row>
@@ -45,6 +48,8 @@ class UploadCSV extends Component {
             onDrop={this.onDrop}
             accept="text/csv"
             multiple={false}
+            uploaded={uploadedFile}
+            error={hasError}
           >
             <Grid>
               <Grid.Row verticalAlign="middle">
@@ -67,10 +72,6 @@ class UploadCSV extends Component {
             </Grid>
           </StyledDropzone>
         </Grid.Row>
-        {/* <Grid.Row>Select Mapping Type</Grid.Row>
-        <Grid.Row>
-          <Dropdown placeholder="Selected Type" selection />
-        </Grid.Row> */}
       </Grid>
     )
   }

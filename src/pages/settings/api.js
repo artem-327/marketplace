@@ -40,6 +40,12 @@ export default {
   postNewBankAccount: body =>
     api.post('/prodex/api/payments/bank-accounts/add', body),
   postNewProduct: body => api.post('/prodex/api/products', body),
+  postImportProductCSV: (body, id) => {
+    api.post(
+      `/prodex/api/imports/csv-import-products?temporaryFileId=${id}`,
+      body
+    )
+  },
   uploadCSVFile: body => {
     const formData = new FormData()
     formData.append('file', body)

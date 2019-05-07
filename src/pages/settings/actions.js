@@ -62,6 +62,20 @@ export function closeAddPopup() {
     payload: null
   }
 }
+export function changeHeadersCSV(payload) {
+  return {
+    type: AT.CHANGE_HEADERS_CSV,
+    payload
+  }
+}
+
+export function dataHeaderCSV(payload) {
+  return {
+    type: AT.DATA_HEADER_CSV,
+    payload
+  }
+}
+
 export function handleOpenConfirmPopup(payload) {
   return {
     type: AT.OPEN_CONFIRM_POPUP,
@@ -262,9 +276,16 @@ export function deleteBankAccount(accountId) {
 }
 
 export function uploadCSVFile(payload) {
-  console.log('action', payload)
   return {
     type: AT.POST_UPLOAD_CSV_FILE,
     payload: payload
+  }
+}
+
+export function postImportProductCSV(payload, id) {
+  return {
+    type: AT.POST_CSV_IMPORT_PRODUCTS,
+    payload,
+    id
   }
 }

@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 
 import { Table, Dropdown } from 'semantic-ui-react'
 
+import { changeHeadersCSV } from '../../../actions'
+
 const mapping = [
   { text: 'CAS Number', value: 'CAS Number' },
   { text: 'Packaging Minimum', value: 'Packaging Minimum' },
@@ -24,7 +26,7 @@ class Map extends Component {
 
   render() {
     const { CSV } = this.props
-    console.log(this.state.newHeaders)
+    console.log('props', this.props.mappedHeader)
     return (
       <Table celled padded textAlign="center">
         <Table.Header>
@@ -52,7 +54,7 @@ class Map extends Component {
                 <Table.Cell>
                   <Dropdown
                     placeholder="Select Column"
-                    columnNumber={lineHeader.columnNumber}
+                    column_number={lineHeader.columnNumber}
                     selection
                     clearable
                     options={mapping}
@@ -67,25 +69,29 @@ class Map extends Component {
     )
   }
 
-  selectMapping = (e, { columnNumber, value }) => {
-    console.log('csv header:', columnNumber, 'map:', value)
-    this.state.newHeaders.map(line => {
-      if (columnNumber === line.columnNumber) {
+  selectMapping = (e, { column_number, value }) => {
+    console.log('csv header:', column_number, 'map:', value)
+    const newHeaders = this.state.newHeaders.map(line => {
+      if (column_number === line.columnNumber) {
         line['header'] = value
         return line
       }
       return line
     })
-    console.log(this.state.newHeaders)
+    this.setState({ newHeaders })
+    this.props.changeHeadersCSV(newHeaders)
   }
 }
 
-const mapDispatchToProps = {}
+const mapDispatchToProps = {
+  changeHeadersCSV
+}
 
 const mapStateToProps = state => {
   return {
     csvFileId: state.settings.fileCSVId,
-    CSV: state.settings.CSV
+    CSV: state.settings.CSV,
+    mappedHeader: state.settings.mappedHeaders
   }
 }
 
