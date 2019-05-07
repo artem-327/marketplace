@@ -7,18 +7,28 @@ import * as AT from './action-types'
  */
 function* getOrders(action) {
     try {
-        yield put({type: AT.ORDERS_FETCH_REQUESTED})
+      yield put({type: AT.ORDERS_FETCH_REQUESTED})
 
-        const data = yield call(Api.getAll, action.payload.endpointType, {
-            ...action.payload.filter,
-            status: !action.payload.filter || action.payload.filter.status === 'All' ? '' : action.payload.filter.status
-        })
+      let data = []
+      if (action.payload.filter) {
+        let filters = {
+          filters: [{
+            operator: 'EQUALS',
+            path: 'Order.id',
+            value: action.payload.filter.orderId,
+            //status: !action.payload.filter || action.payload.filter.status === 'All' ? '' : action.payload.filter.status
+          }]
+        }
+        data = yield call(Api.filteredAll, action.payload.endpointType, filters)
+      } else {
+        data = yield call(Api.getAll, action.payload.endpointType)
+      }
 
-        data.dataType = action.payload.endpointType
-        data.statusFilter = !action.payload.filter ? 'All' : action.payload.filter.status
-        yield put({type: AT.ORDERS_FETCH_SUCCESS, payload: data})
+      data.dataType = action.payload.endpointType
+      data.statusFilter = !action.payload.filter ? 'All' : action.payload.filter.status
+      yield put({type: AT.ORDERS_FETCH_SUCCESS, payload: data})
     } catch (error) {
-        yield put({type: AT.ORDERS_FETCH_FAILURE})
+      yield put({type: AT.ORDERS_FETCH_FAILURE})
     }
 }
 

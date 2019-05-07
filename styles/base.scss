@@ -173,6 +173,10 @@ div.page-wrapper {
   font-size: 0.92857143em;
 }
 
+.ui.error.message .content p {
+  line-height: 1.5;
+}
+
 #page.scrolling {
   height: 100%;
 
@@ -204,11 +208,10 @@ div.page-wrapper {
 }
 
 #page > .data-table-wr.orders {
-  position: absolute;
-  top: 119px;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: relative;
+  left: -2.2857143em;
+  right: -2.2857143em;
+  width: calc(100% + 2 * 2.2857143em);
   padding: 0 2.2857143em;
 
   .scrollbar-container {
