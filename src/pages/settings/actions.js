@@ -289,3 +289,8 @@ export function postImportProductCSV(payload, id) {
     id
   }
 }
+export function clearDataOfCSV() {
+  return {
+    type: AT.CLEAR_DATA_OF_CSV
+  }
+}

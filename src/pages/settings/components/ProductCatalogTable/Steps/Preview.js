@@ -5,10 +5,19 @@ import { Table } from 'semantic-ui-react'
 
 import { dataHeaderCSV } from '../../../actions'
 
+const MAP = {
+  'CAS Number': 'casNumberMapper',
+  'Packaging Minimum': 'packagingMinimumMapper',
+  'Packaging Size': 'packagingSizeMapper',
+  'Packaging Splits': 'packagingSplitsMapper',
+  'Packaging Type': 'packagingTypeNameMapper',
+  Unit: 'packagingUnitNameMaper',
+  'Product Name': 'productNameMapper'
+}
+
 class Preview extends Component {
   state = {
-    filteredHeader: null,
-    data: null
+    filteredHeader: null
   }
 
   componentDidMount() {
@@ -18,36 +27,23 @@ class Preview extends Component {
         return column.header
       })
 
-    const data = filteredHeader.reduce(
-      (prev, next) => {
-        if (next.header === 'CAS Number') {
-          prev['casNumberMapper'] = next.content
-        } else if (next.header === 'Packaging Minimum') {
-          prev['packagingMinimumMapper'] = next.content
-        } else if (next.header === 'Packaging Size') {
-          prev['packagingSizeMapper'] = next.content
-        } else if (next.header === 'Packaging Splits') {
-          prev['packagingSplitsMapper'] = next.content
-        } else if (next.header === 'Packaging Type') {
-          prev['packagingTypeNameMapper'] = next.content
-        } else if (next.header === 'Unit') {
-          prev['packagingUnitNameMaper'] = next.content
-        } else if (next.header === 'Product Name') {
-          prev['productNameMapper'] = next.content
-        }
-        return prev
-      },
-      { headerLine: true }
-    )
-    this.setState({ filteredHeader, data })
+    const data =
+      filteredHeader &&
+      filteredHeader.reduce(
+        (prev, next) => {
+          const key = MAP[next.header]
+          prev[key] = next.content
+          return prev
+        },
+        { headerLine: true }
+      )
+    this.setState({ filteredHeader })
     data && this.props.dataHeaderCSV(data)
   }
 
   render() {
     const { CSV } = this.props
-    const { filteredHeader, data } = this.state
-
-    console.log(data)
+    const { filteredHeader } = this.state
 
     return (
       <Table celled padded textAlign="center">
@@ -62,15 +58,17 @@ class Preview extends Component {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {CSV.bodyCSV.map(row => (
-            <Table.Row>
+          {CSV.bodyCSV.map((row, i) => (
+            <Table.Row key={i}>
               {row.columns.map(cell => {
                 return (
                   filteredHeader &&
                   filteredHeader.map(
                     header =>
                       header.columnNumber === cell.columnNumber && (
-                        <Table.Cell>{cell.content}</Table.Cell>
+                        <Table.Cell key={cell.columnNumber}>
+                          {cell.content}
+                        </Table.Cell>
                       )
                   )
                 )

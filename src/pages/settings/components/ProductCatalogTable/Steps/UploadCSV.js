@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import Dropzone from 'react-dropzone'
-import { Grid, Dropdown, Label } from 'semantic-ui-react'
+import { Grid } from 'semantic-ui-react'
 
 import { uploadCSVFile } from '../../../actions'
 
@@ -49,7 +49,7 @@ class UploadCSV extends Component {
             accept="text/csv"
             multiple={false}
             uploaded={uploadedFile}
-            error={hasError}
+            error={hasError ? 'true' : undefined}
           >
             <Grid>
               <Grid.Row verticalAlign="middle">

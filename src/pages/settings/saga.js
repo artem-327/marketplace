@@ -447,6 +447,7 @@ function* deleteBankAccountWorker({ payload }) {
 
 function* closeImportPopup({}) {
   yield put({ type: AT.CLOSE_IMPORT_POPUP_SUCCESS })
+  yield put({ type: AT.GET_PRODUCTS_CATALOG_DATA })
 }
 
 function* deleteConfirmPopup({}) {

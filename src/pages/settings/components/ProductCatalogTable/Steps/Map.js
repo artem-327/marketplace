@@ -26,7 +26,7 @@ class Map extends Component {
 
   render() {
     const { CSV } = this.props
-    console.log('props', this.props.mappedHeader)
+
     return (
       <Table celled padded textAlign="center">
         <Table.Header>
@@ -70,7 +70,6 @@ class Map extends Component {
   }
 
   selectMapping = (e, { column_number, value }) => {
-    console.log('csv header:', column_number, 'map:', value)
     const newHeaders = this.state.newHeaders.map(line => {
       if (column_number === line.columnNumber) {
         line['header'] = value

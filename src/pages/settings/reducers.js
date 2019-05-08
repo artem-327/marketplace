@@ -484,7 +484,8 @@ export default function reducer(state = initialState, action) {
 
     case AT.POST_CSV_IMPORT_PRODUCTS_SUCCESS: {
       return {
-        ...state
+        ...state,
+        csvImportError: action.data
       }
     }
 
@@ -492,7 +493,17 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         fileCSVId: null,
-        mappedHeaders: null
+        mappedHeaders: null,
+        dataHeaderCSV: null
+      }
+    }
+
+    case AT.CLEAR_DATA_OF_CSV: {
+      return {
+        ...state,
+        fileCSVId: null,
+        mappedHeaders: null,
+        dataHeaderCSV: null
       }
     }
 
