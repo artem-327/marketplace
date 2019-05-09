@@ -100,7 +100,7 @@
   "filter.orderFrom": "From",
   "filter.orderTo": "To",
   "filter.customer": "Customer",
-  "filter.customerName": "Name",
+  "filter.customerName": "Company Name",
   "filter.product": "Product/CAS",
   "filter.productName": "Name/Code",
   "filter.orderStatus": "Order Status",

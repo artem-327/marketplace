@@ -11,7 +11,8 @@ const initialState = {
     isRejectFetching: false,
     reloadPage: false,
     selectedIndex: -1,
-    statusFilter: null
+    statusFilter: null,
+    searchedCompanies: []
 }
 
 export default function(state = initialState, action) {
@@ -96,6 +97,11 @@ export default function(state = initialState, action) {
         case AT.ORDER_DOWNLOAD_PDF_FULFILLED:
             return {
                 ...state
+            }
+        case AT.ORDERS_SEARCH_COMPANY_FULFILLED:
+            return {
+                ...state,
+                searchedCompanies: action.payload.data
             }
         default:
             return state
