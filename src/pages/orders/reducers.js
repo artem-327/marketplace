@@ -93,6 +93,10 @@ export default function(state = initialState, action) {
                 isRejectFetching: false,
                 reloadPage: false
             }
+        case AT.ORDER_DOWNLOAD_PDF_FULFILLED:
+            return {
+                ...state
+            }
         default:
             return state
     }

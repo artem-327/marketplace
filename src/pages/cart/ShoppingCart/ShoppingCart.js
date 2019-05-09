@@ -36,7 +36,7 @@ export default class ShoppingCart extends Component {
     let { id, quantity } = cartItem
 
     this.props.getOrderDetail(id)
-    this.props.getProductOffer(cartItem.productOffer.id)
+    this.props.getProductOffer(cartItem.productOffer.id, true)
     this.props.sidebarChanged({ isOpen: true, id, quantity })
   }
 
@@ -45,6 +45,7 @@ export default class ShoppingCart extends Component {
     const { totalPrice } = this.props.cart
     const { symbol } = this.props.identity.preferredCurrency
 
+    
     return (
       <table>
         <tbody>
@@ -89,9 +90,11 @@ export default class ShoppingCart extends Component {
 
   render() {
     const { cart, deleteCart, history, cartIsFetching, sidebarChanged } = this.props
+
     if (cartIsFetching) return <Spinner />
     const itemContent = cart.cartItems && cart.cartItems.map(cartItem => {
       return (
+        <>
         <ItemCartBody
           editCart={this.editCart}
           sidebarChanged={sidebarChanged}
@@ -100,7 +103,9 @@ export default class ShoppingCart extends Component {
           key={cartItem.id}
           cartItem={cartItem}
           deleteCart={deleteCart}
-        />)
+        />
+        </>
+        )
     })
     const itemsNumber = cart.cartItems ? cart.cartItems.length : 0
     const headerTitle = <FormattedMessage id='cart.shoppingCartHeader' defaultMessage={`Items (${itemsNumber})`} values={{ number: itemsNumber }} />

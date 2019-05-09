@@ -102,6 +102,7 @@ class MyInventory extends Component {
         broadcastActive={this.state.brActive}
         offerBroadcast={this.props.offerBroadcast}
         {...this.props} />
+        
     const number = getSelectedDataTable(this.props.productOffersTable)
     return (
       <div className='my-inventory'>

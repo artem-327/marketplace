@@ -2,7 +2,37 @@ import React, {Component} from 'react'
 import CollapsiblePanel from '../../../components/CollapsiblePanel'
 import '../../../pages/inventory/addInventory/AddInventory.scss'
 import Spinner from "../../../components/Spinner/Spinner"
-import { Grid, Segment, Accordion, Table, List, Label, Button, Icon, Divider } from 'semantic-ui-react'
+import { Grid, Segment, Accordion, Table, List, Label, Button, Icon, Divider, Header } from 'semantic-ui-react'
+import PerfectScrollbar from 'react-perfect-scrollbar'
+import styled from "styled-components";
+
+const AccordionTitle = styled(Accordion.Title)`
+  text-transform: uppercase;
+  font-size: 1.14285714rem !important;
+  line-height: 1.5;
+  
+  i.chevron {
+   margin-right: 1rem;
+   vertical-align: top;
+  }
+`
+
+const GridData = styled(Grid)`
+  padding-top: 1em !important;
+  padding-bottom: 1em !important;
+`
+
+const GridDataColumn = styled(Grid.Column)`
+  padding-top: 0.75em !important;
+  padding-bottom: 0.75em !important;
+  font-size: 1.14285714rem;
+  line-height: 1.125;
+  
+  strong {
+    padding-left: 0.4375em;
+    padding-right: 0.4375em;
+  }
+`
 
 class Detail extends Component {
     state = { activeIndexes: [
@@ -38,6 +68,19 @@ class Detail extends Component {
         }
     }
 
+    downloadOrder = async () => {
+      let pdf = await this.props.downloadPdf(this.props.order.id)
+
+      const element = document.createElement("a")
+      const file = new Blob([pdf.value.data], {type: 'application/pdf'})
+      let fileURL = URL.createObjectURL(file)
+
+      element.href = fileURL
+      element.download = `${this.props.router.query.type}-order-${this.props.order.id}.pdf`
+      document.body.appendChild(element) // Required for this to work in FireFox
+      element.click()
+    }
+
     handleClick = (e, titleProps) => {
         const {index} = titleProps
         const {activeIndexes} = this.state
@@ -53,12 +96,14 @@ class Detail extends Component {
         let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
 
         return (
-            <div id="page">
+            <div id="page" className='scrolling'>
+              <PerfectScrollbar>
                 <Divider hidden />
                 <Grid verticalAlign='middle' columns='equal'>
                     <Grid.Column width={6}>
                         <div className='header-top clean left detail-align'>
-                            <h1 className='header inv-header'>{ordersType} Order {isDetailFetching ? '' : '# '+order.id}</h1>
+                            <h1 className='header inv-header' style={{marginBottom: '0.5rem', textTransform: 'uppercase', fontSize: '1.14285714em', fontWeight: '500'}}>{ordersType} Order {isDetailFetching ? '' : '# '+order.id}</h1>
+                            <a onClick={() => this.downloadOrder()} style={{fontSize: '1.14285714em', cursor: 'pointer'}}><Icon name='download' style={{verticalAlign: 'top'}} color='blue' /> Download Sales Order</a>
                         </div>
                     </Grid.Column>
                     <Grid.Column>
@@ -66,37 +111,37 @@ class Detail extends Component {
                             <List.Item>
                                 <List.Content>
                                     <List.Header as='label'>Order Status</List.Header>
-                                    <List.Description as='span'><Label color='red'>{order.orderStatus}</Label></List.Description>
+                                    <List.Description as='span'><Label circular empty color={order.orderStatus === 'Declined' || order.orderStatus === 'Rejected' ? 'red' : (order.orderStatus === 'Confirmed' ? 'green' : false)}></Label> {order.orderStatus}</List.Description>
                                 </List.Content>
                             </List.Item>
                             <List.Item>
                                 <List.Content>
                                     <List.Header as='label'>Shipping Status</List.Header>
-                                    <List.Description as='span'>{order.shippingStatus}</List.Description>
+                                    <List.Description as='span'><Label circular empty color={order.shippingStatus !== 'N/A' ? 'blue' : false}></Label> {order.shippingStatus}</List.Description>
                                 </List.Content>
                             </List.Item>
                             <List.Item>
                                 <List.Content>
                                     <List.Header as='label'>Review Status</List.Header>
-                                    <List.Description as='span'>{order.reviewStatus}</List.Description>
+                                    <List.Description as='span'><Label circular empty color={order.reviewStatus !== 'N/A' ? 'blue' : false}></Label> {order.reviewStatus}</List.Description>
                                 </List.Content>
                             </List.Item>
                             <List.Item>
                                 <List.Content>
                                     <List.Header as='label'>Credit Status</List.Header>
-                                    <List.Description as='span'>{order.creditStatus}</List.Description>
+                                    <List.Description as='span'><Label circular empty color={order.creditStatus !== 'N/A' ? 'blue' : false}></Label> {order.creditStatus}</List.Description>
                                 </List.Content>
                             </List.Item>
                             <List.Item>
                                 <List.Content>
                                     <List.Header as='label'>Return Status</List.Header>
-                                    <List.Description as='span'>{order.returnStatus}</List.Description>
+                                    <List.Description as='span'><Label circular empty color={order.returnStatus !== 'N/A' ? 'blue' : false}></Label> {order.returnStatus}</List.Description>
                                 </List.Content>
                             </List.Item>
                             <List.Item>
                                 <List.Content>
                                     <List.Header as='label'>Payment Status</List.Header>
-                                    <List.Description as='span'>{order.paymentStatus}</List.Description>
+                                    <List.Description as='span'><Label circular empty color={order.paymentStatus !== 'N/A' ? 'blue' : false}></Label> {order.paymentStatus}</List.Description>
                                 </List.Content>
                             </List.Item>
                         </List>
@@ -108,8 +153,8 @@ class Detail extends Component {
                             <Segment color='blue'>
                                 <Grid verticalAlign='middle' columns='equal'>
                                     <Grid.Column width={13}>
-                                        <h3>Action Required</h3>
-                                        <p>This order is in pending status. Please select &quot;accept&quot; to move forward with the order. If you press &quot;reject&quot; the order will be cancelled. </p>
+                                        <Header as='h3' style={{margin: '0 0 0.3571429rem'}}>Action Required</Header>
+                                        This order is in pending status. Please select &quot;accept&quot; to move forward with the order. If you press &quot;reject&quot; the order will be cancelled.
                                     </Grid.Column>
                                     <Grid.Column>
                                         <Grid verticalAlign='middle' columns='equal'>
@@ -128,76 +173,76 @@ class Detail extends Component {
                         <Divider hidden />
 
                         <Accordion defaultActiveIndex={[0,1]} styled fluid>
-                            <Accordion.Title active={activeIndexes[0]} index={0} onClick={this.handleClick}>
+                            <AccordionTitle active={activeIndexes[0]} index={0} onClick={this.handleClick}>
                                 <Icon name={'chevron ' + (activeIndexes[0] ? 'down' : 'up')}  size='large' color={activeIndexes[0] ? 'blue' : 'black'}/>
                                 Order Info
-                            </Accordion.Title>
+                            </AccordionTitle>
                             <Accordion.Content active={activeIndexes[0]}>
                                 <Grid divided='horizontally'>
                                     <Grid.Row columns={2}>
                                         <Grid.Column>
-                                            <dl className='data-list'>
-                                                <dt><strong>{ordersType} Order</strong></dt>
-                                                <dd>{order.id}</dd>
-                                                <dt><strong>{ordersType.charAt(0)}O Date</strong></dt>
-                                                <dd>{order.orderDate}</dd>
-                                                <dt><strong>{ordersType.charAt(0)}O Confirmation Date</strong></dt>
-                                                <dd>{order.confirmationDate}</dd>
-                                                <dt><strong>Order Acceptance Date</strong></dt>
-                                                <dd>{order.acceptanceDate}</dd>
-                                            </dl>
+                                            <GridData columns={2}>
+                                                <GridDataColumn width={4}><strong>{ordersType} Order</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.id}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>{ordersType.charAt(0)}O Date</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.orderDate}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>{ordersType.charAt(0)}O Confirmation Date</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.confirmationDate}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Order Acceptance Date</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.acceptanceDate}</GridDataColumn>
+                                            </GridData>
                                         </Grid.Column>
                                         <Grid.Column>
-                                            <dl className='data-list'>
-                                                <dt><strong>Seller Rejection Date</strong></dt>
-                                                <dd>{order.sellerRejectionDate}</dd>
-                                                <dt><strong>Buyer Rejection Date</strong></dt>
-                                                <dd>{order.buyerRejectionDate}</dd>
+                                            <GridData columns={2}>
+                                                <GridDataColumn width={4}><strong>Seller Rejection Date</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.sellerRejectionDate}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Buyer Rejection Date</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.buyerRejectionDate}</GridDataColumn>
                                                 {ordersType === 'Purchase' ? (
                                                     <>
-                                                        <dt>Created By</dt>
-                                                        <dd></dd>
+                                                      <GridDataColumn width={4}><strong>Created By</strong></GridDataColumn>
+                                                      <GridDataColumn width={12}>{order.createdBy}</GridDataColumn>
                                                     </>
                                                 ) : ''}
-                                            </dl>
+                                            </GridData>
                                         </Grid.Column>
                                     </Grid.Row>
                                 </Grid>
                             </Accordion.Content>
 
-                            <Accordion.Title active={activeIndexes[1]} index={1} onClick={this.handleClick}>
+                            <AccordionTitle active={activeIndexes[1]} index={1} onClick={this.handleClick}>
                                 <Icon name={'chevron ' + (activeIndexes[1] ? 'down' : 'up')}  size='large' color={activeIndexes[1] ? 'blue' : 'black'}/>
                                 Product Info
-                            </Accordion.Title>
+                            </AccordionTitle>
                             <Accordion.Content active={activeIndexes[1]}>
                                 <Grid divided='horizontally'>
                                     <Grid.Row columns={2}>
                                         <Grid.Column>
-                                            <dl className='data-list'>
-                                                <dt><strong>Chemical Name</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Product Name</strong></dt>
-                                                <dd>{order.productName}</dd>
-                                                <dt><strong>Product Number</strong></dt>
-                                                <dd>{order.productCode}</dd>
-                                                <dt><strong>Packaging</strong></dt>
-                                                <dd>{order.size}#{order.packaging}</dd>
-                                                <dt><strong>Total PKG</strong></dt>
-                                                <dd>{order.totalPkg}</dd>
-                                                <dt><strong>Quantity Ordered</strong></dt>
-                                                <dd>{order.quantityOrdered}</dd>
-                                                <dt><strong>Unit</strong></dt>
-                                                <dd>{order.unit}</dd>
-                                                <dt><strong>Unit Price</strong></dt>
-                                                <dd></dd>
+                                            <GridData columns={2}>
+                                                <GridDataColumn width={4}><strong>Chemical Name</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.chemicalName}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Product Name</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.productName}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Product Number</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.productCode}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Packaging</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.size}#{order.packaging}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Total PKG</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.totalPkg}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Quantity Ordered</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.quantityOrdered}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Unit</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.unit}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Unit Price</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.unitPrice}</GridDataColumn>
 
                                                 {ordersType === 'Sales' ? (
                                                     <>
-                                                        <dt><strong>Unit Cost</strong></dt>
-                                                        <dd></dd>
+                                                        <GridDataColumn width={4}><strong>Unit Cost</strong></GridDataColumn>
+                                                        <GridDataColumn width={12}>{order.unitCost}</GridDataColumn>
                                                     </>
                                                 ) : ''}
-                                            </dl>
+                                            </GridData>
                                         </Grid.Column>
                                         <Grid.Column>
                                             <div className='left'>
@@ -216,7 +261,7 @@ class Detail extends Component {
                                                                 </Table.Row>
                                                                 <Table.Row>
                                                                     <Table.Cell><strong>Echo Fees ({order.feesPercent}%)</strong></Table.Cell>
-                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                    <Table.Cell textAlign='right'>{order.feesAmount}</Table.Cell>
                                                                 </Table.Row>
                                                             </Table.Body>
                                                             <Table.Footer>
@@ -239,7 +284,7 @@ class Detail extends Component {
                                                             <Table.Footer>
                                                                 <Table.Row>
                                                                     <Table.HeaderCell><strong>Gross Profit</strong></Table.HeaderCell>
-                                                                    <Table.HeaderCell textAlign='right'><strong></strong></Table.HeaderCell>
+                                                                    <Table.HeaderCell textAlign='right'><strong>{order.grossProfit}</strong></Table.HeaderCell>
                                                                 </Table.Row>
                                                             </Table.Footer>
                                                         </Table>
@@ -259,23 +304,23 @@ class Detail extends Component {
                                                                 </Table.Row>
                                                                 <Table.Row>
                                                                     <Table.Cell><strong>Subtotal</strong></Table.Cell>
-                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                    <Table.Cell textAlign='right'>{order.subtotal}</Table.Cell>
                                                                 </Table.Row>
                                                                 <Table.Row>
                                                                     <Table.Cell><strong>Freight</strong></Table.Cell>
-                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                    <Table.Cell textAlign='right'>{order.freight}</Table.Cell>
                                                                 </Table.Row>
                                                                 <Table.Row>
                                                                     <Table.Cell><strong>Other</strong></Table.Cell>
-                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                    <Table.Cell textAlign='right'>{order.other}</Table.Cell>
                                                                 </Table.Row>
                                                                 <Table.Row>
                                                                     <Table.Cell><strong>Delivery Cost</strong></Table.Cell>
-                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                    <Table.Cell textAlign='right'>{order.deliveryCost}</Table.Cell>
                                                                 </Table.Row>
                                                                 <Table.Row>
                                                                     <Table.Cell><strong>Delivery Total</strong></Table.Cell>
-                                                                    <Table.Cell textAlign='right'></Table.Cell>
+                                                                    <Table.Cell textAlign='right'>{order.deliveryTotal}</Table.Cell>
                                                                 </Table.Row>
                                                             </Table.Body>
                                                             <Table.Footer>
@@ -293,110 +338,110 @@ class Detail extends Component {
                                 </Grid>
                             </Accordion.Content>
 
-                            <Accordion.Title active={activeIndexes[2]} index={2} onClick={this.handleClick}>
+                            <AccordionTitle active={activeIndexes[2]} index={2} onClick={this.handleClick}>
                                 <Icon name={'chevron ' + (activeIndexes[2] ? 'down' : 'up')}  size='large' color={activeIndexes[2] ? 'blue' : 'black'}/>
                                 Pick Up Info
-                            </Accordion.Title>
+                            </AccordionTitle>
                             <Accordion.Content active={activeIndexes[2]}>
                                 <Grid divided='horizontally'>
                                     <Grid.Row columns={2}>
                                         <Grid.Column>
-                                            <dl className='data-list'>
-                                                <dt><strong>Pick-Up Address</strong></dt>
-                                                <dd></dd>
-                                            </dl>
+                                            <GridData columns={2}>
+                                                <GridDataColumn width={4}><strong>Pick-Up Address</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.pickUpAddress}</GridDataColumn>
+                                            </GridData>
                                         </Grid.Column>
                                         <Grid.Column>
-                                            <dl className='data-list'>
-                                                <dt><strong>Shipping Contact</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Contact Number</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Contact E-Mail</strong></dt>
-                                                <dd></dd>
-                                            </dl>
+                                            <GridData columns={2}>
+                                                <GridDataColumn width={4}><strong>Shipping Contact</strong></GridDataColumn>
+                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Contact Number</strong></GridDataColumn>
+                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Contact E-Mail</strong></GridDataColumn>
+                                                <GridDataColumn width={12}></GridDataColumn>
+                                            </GridData>
                                         </Grid.Column>
                                     </Grid.Row>
                                 </Grid>
                             </Accordion.Content>
 
-                            <Accordion.Title active={activeIndexes[3]} index={3} onClick={this.handleClick}>
+                            <AccordionTitle active={activeIndexes[3]} index={3} onClick={this.handleClick}>
                                 <Icon name={'chevron ' + (activeIndexes[3] ? 'down' : 'up')}  size='large' color={activeIndexes[3] ? 'blue' : 'black'}/>
                                 Shipping
-                            </Accordion.Title>
+                            </AccordionTitle>
                             <Accordion.Content active={activeIndexes[3]}>
                                 <Grid divided='horizontally'>
                                     <Grid.Row columns={2}>
                                         <Grid.Column>
-                                            <dl className='data-list'>
-                                                <dt><strong>Shipping Status</strong></dt>
-                                                <dd>{order.shippingStatus}</dd>
-                                                <dt><strong>Ship To</strong></dt>
-                                                <dd>{order.shipTo}</dd>
-                                                <dt><strong>Ship To Address</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Ship Date</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Delivery Date</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Return Ship Date</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Return Delivery Date</strong></dt>
-                                                <dd></dd>
-                                            </dl>
+                                            <GridData columns={2}>
+                                                <GridDataColumn width={4}><strong>Shipping Status</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.shippingStatus}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Ship To</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.shipTo}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Ship To Address</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.shipToAddress}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Ship Date</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.shipDate}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Delivery Date</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.deliveryDate}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Return Ship Date</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.returnShipDate}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Return Delivery Date</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.returnDeliveryDate}</GridDataColumn>
+                                            </GridData>
                                         </Grid.Column>
                                         <Grid.Column>
-                                            <dl className='data-list'>
-                                                <dt><strong>Carrier</strong></dt>
-                                                <dd>{order.carrier}</dd>
-                                                <dt><strong>Service</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Pro Number</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Incoterms</strong></dt>
-                                                <dd></dd>
-                                            </dl>
+                                            <GridData columns={2}>
+                                                <GridDataColumn width={4}><strong>Carrier</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.carrier}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Service</strong></GridDataColumn>
+                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Pro Number</strong></GridDataColumn>
+                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Incoterms</strong></GridDataColumn>
+                                                <GridDataColumn width={12}></GridDataColumn>
+                                            </GridData>
                                         </Grid.Column>
                                     </Grid.Row>
                                 </Grid>
                             </Accordion.Content>
 
-                            <Accordion.Title active={activeIndexes[4]} index={4} onClick={this.handleClick}>
+                            <AccordionTitle active={activeIndexes[4]} index={4} onClick={this.handleClick}>
                                 <Icon name={'chevron ' + (activeIndexes[4] ? 'down' : 'up')}  size='large' color={activeIndexes[4] ? 'blue' : 'black'}/>
                                 Payment / Customer
-                            </Accordion.Title>
+                            </AccordionTitle>
                             <Accordion.Content active={activeIndexes[4]}>
                                 <Grid divided='horizontally'>
                                     <Grid.Row columns={2}>
                                         <Grid.Column>
-                                            <dl className='data-list'>
-                                                <dt><strong>Payment Status</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Payment Send Date</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Payment Initiation Date</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Payment Received Date</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Refund Date</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Terms</strong></dt>
-                                                <dd></dd>
-                                            </dl>
+                                            <GridData columns={2}>
+                                                <GridDataColumn width={4}><strong>Payment Status</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.paymentStatus}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Payment Send Date</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.paymentSendDate}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Payment Initiation Date</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.paymentInitiationDate}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Payment Received Date</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.paymentReceivedDate}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Refund Date</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.refundDate}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Terms</strong></GridDataColumn>
+                                                <GridDataColumn width={12}></GridDataColumn>
+                                            </GridData>
                                         </Grid.Column>
                                         <Grid.Column>
-                                            <dl className='data-list'>
-                                                <dt><strong>Vendor Name</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Vendor Address</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Vendor Phone</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Vendor E-Mail</strong></dt>
-                                                <dd></dd>
-                                                <dt><strong>Vendor Contact</strong></dt>
-                                                <dd></dd>
-                                            </dl>
+                                            <GridData columns={2}>
+                                                <GridDataColumn width={4}><strong>Vendor Name</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.vendorName}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Vendor Address</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.vendorAddress}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Vendor Phone</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.vendorPhone}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Vendor E-Mail</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.vendorEmail}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>Vendor Contact</strong></GridDataColumn>
+                                                <GridDataColumn width={12}></GridDataColumn>
+                                            </GridData>
                                         </Grid.Column>
                                     </Grid.Row>
                                 </Grid>
@@ -404,6 +449,7 @@ class Detail extends Component {
                         </Accordion>
                     </>
                 )}
+              </PerfectScrollbar>
             </div>
         )
     }

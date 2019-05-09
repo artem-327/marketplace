@@ -55,40 +55,54 @@ const formValidationEdit = Yup.object().shape({
   name: Yup.string().min(2, 'Name should has at least 2 characters').required()
 })
 
-const formValidationNew = Yup.object().shape({
-  name: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-  primaryBranch: Yup.object().shape({
+const formValidationNew = Yup.lazy(values => {
+  let primaryUserRequired = values.primaryUser.email !== '' || values.primaryUser.name !== ''
+  let mailingBranchRequired = values.mailingBranch.name !== '' || values.mailingBranch.contactEmail !== '' ||
+    values.mailingBranch.contactName !== '' || values.mailingBranch.contactPhone !== '' ||
+    values.mailingBranch.address.streetAddress !== '' || values.mailingBranch.address.city !== '' ||
+    values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''
+
+  let validation = Yup.object().shape({
     name: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-    contactEmail: Yup.string().email().required('Enter valid e-mail address'),
-    contactName: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-    contactPhone: Yup.string().required('Enter phone number'),
-    address: Yup.object().shape({
-      city: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-      streetAddress: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-      zip: Yup.string().required('Enter zip code'),
-      country: Yup.number().required()
+
+    mailingBranch: Yup.lazy(() => {
+      if (mailingBranchRequired) return Yup.object().shape({
+        name: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+        contactEmail: Yup.string().email('Enter valid e-mail address').required('Enter e-mail address'),
+        contactName: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+        contactPhone: Yup.string().required('Enter phone number'),
+        address: Yup.object().shape({
+          city: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+          streetAddress: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+          zip: Yup.string().required('Enter zip code'),
+          country: Yup.number().required()
+        })
+      })
+      return Yup.mixed().notRequired();
     }),
 
+    primaryBranch: Yup.object().shape({
+      name: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+      contactEmail: Yup.string().email('Enter valid e-mail address').required('Enter e-mail address'),
+      contactName: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+      contactPhone: Yup.string().required('Enter phone number'),
+      address: Yup.object().shape({
+        city: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+        streetAddress: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+        zip: Yup.string().required('Enter zip code'),
+        country: Yup.number().required()
+      })
+    }),
+    primaryUser: Yup.lazy(() => {
+      if (primaryUserRequired) return Yup.object().shape({
+        email: Yup.string().email('Enter valid e-mail address').required('Enter e-mail address'),
+        name: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+      })
+      return Yup.mixed().notRequired();
+    }),
+  })
 
-
-  }),
-
-  //nacdMember: Yup.bool().required(),
-  //phone: Yup.string().min(9, 'Enter valid phone number').required(),
-  //website: Yup.string().required(),
-  // primaryBranch: Yup.object().shape({
-  //   name: Yup.string().required(),
-  //   address: Yup.object().shape({
-  //     city: Yup.string().required(),
-  //     country: Yup.number().required(),
-  //     streetAddress: Yup.string().required(),
-  //     zip: Yup.string().required()
-  //   }),
-  //   contactEmail: Yup.string().email().required(),
-  //   contactName: Yup.string().required(),
-  //   contactPhone: Yup.string().required(),
-  //   warehouse: Yup.bool().required()
-  // })
+  return validation
 })
 
 const removeEmpty = (obj) =>
@@ -98,7 +112,6 @@ const removeEmpty = (obj) =>
       if (Object.entries(val).length === 0) delete obj[key]
     }
     else if (val == null || val === '') delete obj[key]
-    //! ! not working correctly
   })
 
 class AddNewPopupCasProducts extends React.Component {
@@ -164,15 +177,17 @@ class AddNewPopupCasProducts extends React.Component {
                   "phone": values.phone,
                   "website": values.website
                 }
-                removeEmpty(values);
                 await updateCompany(popupValues.id, newValues)
               } 
               else {
-                console.log('!!!!!!! create company !! Add 1', values);//! !
-                removeEmpty(values);
-                console.log('!!!!!!! create company !! Add 2', values);//! !
+                if (!(values.mailingBranch.name !== '' || values.mailingBranch.contactEmail !== '' ||
+                  values.mailingBranch.contactName !== '' || values.mailingBranch.contactPhone !== '' ||
+                  values.mailingBranch.address.streetAddress !== '' || values.mailingBranch.address.city !== '' ||
+                  values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''))
+                  delete values['mailingBranch']
 
-                //await createCompany(values)
+                removeEmpty(values)
+                await createCompany(values)
               }
 
               actions.setSubmitting(false)
@@ -181,11 +196,11 @@ class AddNewPopupCasProducts extends React.Component {
             {({ values, errors, setFieldValue }) => (
               <>
             <FormGroup widths="equal">
-              <Input label="Company name" name="name" />
+              <Input label="Company Name" name="name" />
             </FormGroup>
             <FormGroup widths="equal">
-              <Input label="Phone Number" name="phone" />
-              <Input label="Web" name="website" />
+              <Input label="Phone" name="phone" />
+              <Input label="Website URL" name="website" />
             </FormGroup>
             <FormGroup widths="equal">
               <Checkbox label="NACD Member" name="nacdMember" />
@@ -193,7 +208,7 @@ class AddNewPopupCasProducts extends React.Component {
             
             {!popupValues && <>
               <Divider />
-              <h4>Primary Branch</h4>
+              <h4>Primary Branch (Billing Address)</h4>
               <FormGroup widths="equal">
                 <Input label="Name" name="primaryBranch.name" />
               </FormGroup>
@@ -207,7 +222,7 @@ class AddNewPopupCasProducts extends React.Component {
               </FormGroup>
               <h5>Address</h5>
               <FormGroup widths="equal">
-                <Input label="Street" name="primaryBranch.address.streetAddress" />
+                <Input label="Street Address" name="primaryBranch.address.streetAddress" />
                 <Input label="City" name="primaryBranch.address.city" />
               </FormGroup>
               <FormGroup widths="equal">
@@ -219,7 +234,7 @@ class AddNewPopupCasProducts extends React.Component {
                           inputProps={{search: true, disabled: !this.state.primaryBranchHasProvinces}} />
               </FormGroup>
               <Divider />
-              <h4>Mailing Branch</h4>
+              <h4>Mailing Branch (optional)</h4>
               <FormGroup widths="equal">
                 <Input label="Name" name="mailingBranch.name" />
               </FormGroup>
@@ -233,7 +248,7 @@ class AddNewPopupCasProducts extends React.Component {
               </FormGroup>
               <h5>Address</h5>
               <FormGroup widths="equal">
-                <Input label="Street" name="mailingBranch.address.streetAddress" />
+                <Input label="Street Address" name="mailingBranch.address.streetAddress" />
                 <Input label="City" name="mailingBranch.address.city" />
               </FormGroup>
               <FormGroup widths="equal">
@@ -256,7 +271,6 @@ class AddNewPopupCasProducts extends React.Component {
               <Button.Reset>Cancel</Button.Reset>
               <Button.Submit>Save</Button.Submit>
             </div>
-            <JSONPretty data={values} />
             </>)}
           </Form>
         </Modal.Content>

@@ -12,6 +12,7 @@ import AddNewUnitOfMeasurePopup from './UnitOfMeasureTable/AddNewUnitOfMeasurePo
 import AddNewUnitOfPackagingPopup from './UnitOfPackagingTable/AddNewUnitOfPackagingPopup'
 import AddNewPopup1Parameter from './DataTable/AddNewPopup1Parameter'
 import AddEditCasProductsPopup from './CasProductsTable/AddEditCasProductsPopup'
+import EditAltNamesCasProductsPopup from './CasProductsTable/EditAltNamesCasProductsPopup'
 
 import EditUnitOfMeasurePopup from './UnitOfMeasureTable/EditUnitOfMeasurePopup'
 import EditUnitOfPackagingPopup from './UnitOfPackagingTable/EditUnitOfPackagingPopup'
@@ -43,6 +44,10 @@ const editForms = {
   'Companies': <CompaniesForm />
 }
 
+const edit2Forms = {
+  'CAS Products': <EditAltNamesCasProductsPopup />,
+}
+
 const addForms = {
   'Units of Measure': <AddNewUnitOfMeasurePopup />,
   'Units of Packaging': <AddNewUnitOfPackagingPopup />,
@@ -59,6 +64,7 @@ class Admin extends Component {
   renderContent = () => {
     const {
       currentEditForm,
+      currentEdit2Form,
       currentAddForm,
       currentTab,
     } = this.props
@@ -67,6 +73,7 @@ class Admin extends Component {
       <>
         {currentAddForm && addForms[currentTab]}
         {currentEditForm && editForms[currentTab]}
+        {currentEdit2Form && edit2Forms[currentTab]}
         {tables[currentTab]|| <p>This page is still under construction</p>}
       </>
     )

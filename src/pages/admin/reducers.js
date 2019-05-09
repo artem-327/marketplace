@@ -12,10 +12,11 @@ export const initialState = {
   formsRows: [],
   conditionsRows: [],
   casProductsRows: [],
+  altCasNamesRows: [],
   measureTypes: [],
   hazardClasses: [],
   packagingGroups: [],
-  unNumbers: [],
+  unNumbersFiltered: [],
   companiesRows: [],
   countries: [],
   countriesDropDown: [],
@@ -35,6 +36,7 @@ export const initialState = {
   currentTab: 'Companies',
   casListDataRequest: { pageSize: 50, pageStart: 0 },
   currentEditForm: null,
+  currentEdit2Form: null,
   currentAddForm: null,
   confirmMessage: null,
   filterValue: '',
@@ -57,7 +59,8 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_CLOSE_POPUP: {
       return { ...state,
         currentAddForm: null,
-        currentEditForm: null
+        currentEditForm: null,
+        currentEdit2Form: null
       }
     }
 
@@ -72,7 +75,8 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentAddForm: null,
-        currentEditForm: null
+        currentEditForm: null,
+        currentEdit2Form: null
       }
     }
 
@@ -84,10 +88,21 @@ export default function reducer(state = initialState, action) {
         popupValues: action.payload
       }
     }
+
+    case AT.ADMIN_OPEN_EDIT_2_POPUP: {
+      return {
+        ...state,
+        currentEdit2Form: state.currentTab,
+        editPopupBoolean: state.editPopupBoolean === false ? true : false,
+        popupValues: action.payload
+      }
+    }
+
     case AT.ADMIN_CLOSE_EDIT_POPUP: {
       return {
         ...state,
-        currentEditForm: null
+        currentEditForm: null,
+        currentEdit2Form: null
       }
     }
 
@@ -137,7 +152,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         currentTab: action.payload.tab,
         currentAddForm: null,
-        currentEditForm: null
+        currentEditForm: null,
+        currentEdit2Form: null
       }
     }
 
@@ -148,6 +164,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_GET_ALTERNATIVE_CAS_PRODUCT_NAMES_PENDING:
     case AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER_PENDING:
     case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_PENDING: {
       return {
@@ -161,6 +178,15 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         casProductsRows: action.payload,
+        loading: false
+      }
+    }
+
+    case AT.ADMIN_GET_ALTERNATIVE_CAS_PRODUCT_NAMES_FULFILLED: {
+      console.log('!!!!!!!! Alternative names: ', action.payload);
+      return {
+        ...state,
+        altCasNamesRows: action.payload,
         loading: false
       }
     }
@@ -190,7 +216,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_GET_UN_NUMBERS_FULFILLED: {
       return {
         ...state,
-        unNumbers: action.payload
+        unNumbersFiltered: action.payload
       }
     }
 

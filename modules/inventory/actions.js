@@ -13,7 +13,9 @@ export function addProductOffer(values, poId = false) {
   let params = {
     assayMin: values.assayMin ? parseFloat(values.assayMin) : null,
     assayMax: values.assayMax ? parseFloat(values.assayMax) : null,
-    attachments: values.attachments ? values.attachments : null,
+    attachments: values.attachments && values.attachments.length ? values.attachments.map(att => {
+      return att.id
+    }) : null,
     externalNotes: values.externalNotes ? values.externalNotes : null,
     inStock: !!values.inStock,
     internalNotes: values.internalNotes ? values.internalNotes : null,
@@ -21,7 +23,10 @@ export function addProductOffer(values, poId = false) {
       return {
         ...lot,
         expirationDate: lot.expirationDate ? lot.expirationDate + "T00:00:00Z" : null,
-        manufacturedDate: lot.manufacturedDate ? lot.manufacturedDate + "T00:00:00Z" : null
+        manufacturedDate: lot.manufacturedDate ? lot.manufacturedDate + "T00:00:00Z" : null,
+        attachments: lot.attachments && lot.attachments.length ? lot.attachments.map(att => {
+          return att.id
+        }) : null
       }
     }) : null,
     manufacturer: values.manufacturer ? values.manufacturer : null,
@@ -224,15 +229,6 @@ export function searchProducts(text) {
           key: p.casProduct ? p.casProduct.id : ''
         })) : []
       }
-    }
-  }
-}
-
-export function setFileIds(fileId) {
-  return {
-    type: AT.INVENTORY_SET_FILE_ID,
-    payload: {
-      data: fileId
     }
   }
 }

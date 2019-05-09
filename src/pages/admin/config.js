@@ -1,13 +1,14 @@
 export const config = {
   'CAS Products': {
     addEditText: 'CAS Product',
-    searchText: 'Search cas product by name ... TBD',
+    addEditText2: 'CAS Product Alternative Names',
+    searchText: 'Search cas product by name or number ...',
     display: {
       columns: [
         { name: 'casIndexName', title: 'Index Name' },
         { name: 'casNumber', title: 'CAS Number' },
         { name: 'chemicalName', title: 'Chemical Name' },
-        { name: 'unNumber', title: 'UN Number' },
+        { name: 'unNumberCode', title: 'UN Number' },
         { name: 'packagingGroup', title: 'Packaging Group' },
         { name: 'hazardClasses', title: 'Hazard Classes' },
       ],
@@ -129,7 +130,7 @@ export const config = {
         dataName: 'manufacturersRows',
         typeRequest: 'ADMIN_GET_MANUFACTURERS_DATA',
         typeSuccess: 'ADMIN_GET_MANUFACTURERS_DATA_FULFILLED',
-        apiCall: '/prodex/api/manufacturers',
+        apiCall: '/prodex/api/manufacturers/search',
       },
       post: {
         typeRequest: 'ADMIN_POST_MANUFACTURERS_DATA',
@@ -137,11 +138,11 @@ export const config = {
       },
       put: {
         typeRequest: 'ADMIN_PUT_MANUFACTURERS_DATA',
-        apiCall: '/prodex/api/manufacturers/',
+        apiCall: '/prodex/api/manufacturers/id/',
       },
       delete: {
         typeRequest: 'ADMIN_DELETE_MANUFACTURERS_DATA',
-        apiCall: '/prodex/api/manufacturers/',
+        apiCall: '/prodex/api/manufacturers/id/',
       },
     },
   },

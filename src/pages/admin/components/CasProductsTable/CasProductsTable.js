@@ -5,8 +5,8 @@ import ProdexTable from '~/components/table'
 import {
   getCasProductByFilter,
   openEditCasPopup,
+  openEditAltNamesCasPopup,
   casDeleteItem,
-  getUnNumbersDataRequest,
   getHazardClassesDataRequest, getPackagingGroupsDataRequest
 } from '../../actions'
 
@@ -14,7 +14,6 @@ import {
 class CasProductsTable extends Component {
   componentDidMount() {
     this.props.getCasProductByFilter(this.props.casListDataRequest)
-    this.props.getUnNumbersDataRequest()
     this.props.getHazardClassesDataRequest()
     this.props.getPackagingGroupsDataRequest()
   }
@@ -26,10 +25,10 @@ class CasProductsTable extends Component {
       rows,
       filterValue,
       currentTab,
-      openEditPopup,
       openEditCasPopup,
+      openEditAltNamesCasPopup,
       casDeleteItem,
-      deleteItem,
+      reloadFilter
     } = this.props
 
     const { columns } = config.display
@@ -37,14 +36,15 @@ class CasProductsTable extends Component {
     return (
       <React.Fragment>
         <ProdexTable
-          filterValue={filterValue}
+          //filterValue={filterValue}
           loading={loading}
           columns={columns}
           groupBy={['packagingGroup']}
           rows={rows}
           rowActions={[
             {text: 'Edit', callback: (row) => openEditCasPopup(row)},
-            {text: 'Delete', callback: (row) => casDeleteItem(row.id)}
+            {text: 'Edit Alternative Names', callback: (row) => openEditAltNamesCasPopup(row)},
+            {text: 'Delete', callback: (row) => casDeleteItem(row.id, reloadFilter)}
           ]}
         />
       </React.Fragment>
@@ -55,8 +55,8 @@ class CasProductsTable extends Component {
 const mapDispatchToProps = {
   getCasProductByFilter,
   openEditCasPopup,
+  openEditAltNamesCasPopup,
   casDeleteItem,
-  getUnNumbersDataRequest,
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
 }
@@ -74,7 +74,6 @@ const mapStateToProps = state => {
     filterValue: state.admin.filterValue,
     currentTab: state.admin.currentTab,
     casListDataRequest: state.admin.casListDataRequest,
-    //rows: state.admin.casProductsRows,
     loading: state.admin.loading,
     rows: state.admin.casProductsRows.map(d => {
       return {
@@ -83,14 +82,20 @@ const mapStateToProps = state => {
         casNumber: d.casNumber,
         chemicalName: d.chemicalName,
         packagingGroup: !!d.packagingGroup ? d.packagingGroup.groupCode : '',
-        unNumber: !!d.unNumber ? d.unNumber.unNumberCode : '',
+        unNumberCode: !!d.unNumber ? d.unNumber.unNumberCode : '',
+        unNumberId: !!d.unNumber ? d.unNumber.id : '',
+        unNumberDescription: !!d.unNumber ? d.unNumber.description : '',
         hazardClasses: transformHazardClasses(d.hazardClasses),
         // Prepare initial values for editing form
         packagingGroupId: !!d.packagingGroup ? d.packagingGroup.id : '',
-        unNumberId: !!d.unNumber ? d.unNumber.id : '',
         hazardClassesId: !!d.hazardClasses ? (d.hazardClasses.map(a => a.id)) : [],
       }
-    })
+    }),
+    // reloadFilter is used to reload CAS Product list after Edit / Add new CAS Product
+    reloadFilter: {props: {
+        currentTab: state.admin.currentTab,
+        casListDataRequest: state.admin.casListDataRequest},
+      value: state.admin.filterValue},
   }
 }
 

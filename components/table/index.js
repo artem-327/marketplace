@@ -248,15 +248,18 @@ export default class _Table extends Component {
             <DropdownFormatterProvider
               for={columns.filter(c => c.options).map(c => c.name)}
             />
-            {groupBy && 
-              <TableGroupRow
-                indentColumnWidth={1}
-                rowComponent={({row, ...props}) => (
-                  <TableGroupRow.Row className="group-row" {...props} />
-                )}
-                iconComponent={({ expanded }) => <Icon name={expanded ? 'chevron down' : 'chevron right'} />}
-              />
-            }
+            {groupBy && <TableGroupRow
+              iconComponent={({ expanded }) => <Icon name={expanded ? 'chevron down' : 'chevron right'} />}
+              contentComponent={props => (
+                
+                <TableGroupRow.Content {...props} />
+              )}
+              rowComponent={({children, row, tableRow, ...restProps}) => (
+                <tr className="group-row" {...restProps}>
+                  {children}
+                </tr>
+              )}
+            />}
 
           </Grid>
         </div>

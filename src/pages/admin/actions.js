@@ -81,26 +81,27 @@ export function handleActiveTab(tab) {
 }
 
 export function handleFiltersValue(props, value) {
-	switch (props.currentTab) {
-		case 'CAS Products': {
-			if (value.length < 3) {
-				return {
-					type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
-					payload: api.getCasProductByFilter(props.casListDataRequest)
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_HANDLE_FILTERS_VALUE,
+			payload: value
+		})
+		switch (props.currentTab) {
+			case 'CAS Products': {
+				if (value.length < 3) {
+					await dispatch({
+						type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
+						payload: api.getCasProductByFilter(props.casListDataRequest)
+					})
+				} else {
+					await dispatch({
+						type: AT.ADMIN_GET_CAS_PRODUCT_BY_STRING,
+						payload: api.getCasProductByString(value)
+					})
 				}
 			}
-			else {
-				return {
-					type: AT.ADMIN_GET_CAS_PRODUCT_BY_STRING,
-					payload: api.getCasProductByString(value)
-				}
-			}
+			break;
 		}
-		default:
-			return {
-				type: AT.ADMIN_HANDLE_FILTERS_VALUE,
-				payload: value
-			}
 	}
 }
 
@@ -108,6 +109,13 @@ export function getCasProductByFilter(value) {
 	return {
 		type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
 		payload: api.getCasProductByFilter(value)
+	}
+}
+
+export function getAlternativeProductNames(value) {
+	return {
+		type: AT.ADMIN_GET_ALTERNATIVE_CAS_PRODUCT_NAMES,
+		payload: api.getAlternativeProductNames(value)
 	}
 }
 
@@ -132,10 +140,10 @@ export function getMeasureTypesDataRequest() {
 	}
 }
 
-export function getUnNumbersDataRequest() {
+export function getAllUnNumbersDataRequest() {
 	return {
 		type: AT.ADMIN_GET_UN_NUMBERS,
-		payload: api.getUnNumbers()
+		payload: api.getAllUnNumbers()
 	}
 }
 
@@ -146,23 +154,27 @@ export function getUnNumbersByString(value) {
 	}
 }
 
-export function postNewCasProductRequest(values) {
+export function postNewCasProductRequest(values, reloadFilter) {
 	return async dispatch => {
 		await dispatch({
 			type: AT.ADMIN_POST_NEW_CAS_PRODUCT,
 			payload: api.postNewCasProduct(values)
 		})
 		dispatch(closePopup())
+		// Reload CAS Product list using filters
+		dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
 	}
 }
 
-export function updateCasProductRequest(id, values) {
+export function updateCasProductRequest(id, values, reloadFilter) {
 	return async dispatch => {
 		await dispatch({
 			type: AT.ADMIN_UPDATE_CAS_PRODUCT,
 			payload: api.updateCasProduct(id, values)
 		})
 		dispatch(closePopup())
+		// Reload CAS Product list using filters
+		dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
 	}
 }
 
@@ -174,18 +186,38 @@ export function openEditCasPopup(value) {
 		hazardClasses: value.hazardClassesId,
 		id: value.id,
 		packagingGroup: value.packagingGroupId,
-		unNumber: value.unNumberId,
+		unNumberId: value.unNumberId,
+		unNumberCode: value.unNumberCode,
+		unNumberDescription: value.unNumberDescription,
 	}
-	console.log('xxxxxxxxxxx openEditCasPopup - data - ', data);
 	return async dispatch => {
+		await dispatch({ // Save UN number data to global props (not needed to call get UN Numbers api)
+			type: AT.ADMIN_GET_UN_NUMBERS_FULFILLED,
+			payload: [{id: data.unNumberId, unNumberCode: data.unNumberCode, unNumberDescription: data.unNumberDescription}]
+		})
 		dispatch(openPopup(data))
 	}
 }
 
-export function casDeleteItem(value) {
+export function openEditAltNamesCasPopup(value) {
+	const data = {
+		casIndexName: value.casIndexName,
+		id: value.id,
+	}
 	return {
-		type: AT.ADMIN_DELETE_CAS_PRODUCT,
-		payload: api.deleteCasProduct(value)
+		type: AT.ADMIN_OPEN_EDIT_2_POPUP,
+		payload: { data }
+	}
+}
+
+export function casDeleteItem(value, reloadFilter) {
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_DELETE_CAS_PRODUCT,
+			payload: api.deleteCasProduct(value)
+		})
+		// Reload CAS Product list using filters
+		dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
 	}
 }
 
@@ -230,12 +262,14 @@ export function getCompanies() {
 	}
 }
 
+/*
 export function getCompany(id) {
 	return {
 		type: AT.ADMIN_GET_COMPANY,
 		payload: api.getCompany(id)
 	}
 }
+*/
 
 export function deleteCompany(id) {
 	return async dispatch => {

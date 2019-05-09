@@ -19,7 +19,7 @@ const FlexContent = styled.div`
 
 const RelaxedSegment = styled(Segment)`
   padding-top: 0px;
-  margin: 0;
+  margin: 0 !important;
 `
 
 const GrayRow = styled(GridRow)`
@@ -427,7 +427,7 @@ class Filter extends Component {
         <Sidebar
           onHide={(event) => {
             // If we clicked on filter icon, prevent duplicate calls of action toggleFilter
-            if (!event.target.className.includes('submenu-filter')) {
+            if (event !== null && !event.target.className.includes('submenu-filter')) {
               this.props.toggleFilter(false)
             }
           }}
@@ -451,6 +451,7 @@ class Filter extends Component {
             </div>
             {this.state.filterSwitch ?
               <Form
+                id="filter-form"
                 model="forms.filter"
                 onSubmit={(val) => this.handleSubmit(val)}>
 
@@ -518,9 +519,13 @@ class Filter extends Component {
 
                 <GridColumn>
                   <Button primary
-                    fluid
-                    floated='right'
-                    size='large'>
+                          fluid
+                          floated='right'
+                          size='large'
+                          onClick={(e) => {
+                            document.getElementById('filter-form').submit()
+                          }}
+                  >
                     <FormattedMessage
                       id='global.apply'
                       defaultMessage='Apply'

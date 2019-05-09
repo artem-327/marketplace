@@ -11,7 +11,7 @@ function transformToRows(data, type) {
         id: i.id,
         globalStatus: i.globalStatus,
         date: moment(i.orderDate).format('MM/DD/YYYY'),
-        customerName: (type === 'sales' ? i.buyer.name : i.seller.company.name),
+        customerName: (type === 'sales' ? i.buyerCompanyName : i.sellerCompanyName),
         productName: (typeof i.orderItems[0].name !== 'undefined' ? i.orderItems[0].name : 'N/A'),
         orderStatus: OrdersHelper.getOrderStatus(i.orderStatus),
         shippingStatus: OrdersHelper.getShippingStatus(i.shippingStatus),

@@ -1,15 +1,35 @@
 import React, { Component, lazy, Suspense } from "react";
 import PropTypes from "prop-types";
 import { Form, actions } from "react-redux-form";
-import Dropdown from "../../../../../components/Dropdown/Dropdown";
+// import Dropdown from "../../../../../components/Dropdown/Dropdown";
 import PopupComponent from "../../../../../components/PopUp/PopupComponent";
-import Button from "../../../../../components/Button/Button";
+// import Button from "../../../../../components/Button/Button";
 import Spinner from '../../../../../components/Spinner/Spinner'
 import InputControlled from '../../../../../components/InputControlled/InputControlled'
 import "./AddBroadcast.scss";
-import {FormattedMessage} from 'react-intl';
-const RootBroadcastField = lazy(() => import('./RootBroadcastField'));
-const BroadcastingNumbers = lazy(() => import('./BroadcastingNumbers'));
+import { FormattedMessage } from 'react-intl';
+import { Modal, Grid, GridColumn, GridRow, Dropdown, Segment, Button, Input, Divider } from "semantic-ui-react"
+const RootBroadcastField = lazy(() => import('./RootBroadcastField'))
+const BroadcastingNumbers = lazy(() => import('./BroadcastingNumbers'))
+
+import styled from 'styled-components'
+
+
+
+const MenuRow = styled(GridRow)`
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  border-bottom: 1px solid #d4d4d5;
+`
+
+const CustomSegment = styled(Segment)`
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+`
+
+const BottomPaddedRow = styled(GridRow)`
+  padding-bottom: 15px !important;
+`
 
 class AddBroadcast extends Component {
   state = {
@@ -170,7 +190,7 @@ class AddBroadcast extends Component {
 
   componentDidMount() {
     const { dispatch, id } = this.props
-      new Promise((resolve) => {
+    new Promise((resolve) => {
       dispatch(actions.change("forms.brcRules", {}))
       this.props.getBroadcast(id, resolve)
     }).then(() => {
@@ -178,7 +198,7 @@ class AddBroadcast extends Component {
     })
   }
 
-  convertDataForPost = async() => {
+  convertDataForPost = async () => {
     const regions = this.props.broadcastData.elements
     const states = regions.map(i => i.elements)
     const flattenStates = states.flat()
@@ -193,10 +213,10 @@ class AddBroadcast extends Component {
     if (storedRoot[1].priceUnit === "%") root.priceMultiplier = storedRoot[1].priceValue
     const regionsPost = await Object.values(storedRegions).map(i => {
       const region = {
-      anonymous: i.anonymous !== true ? 0 : i.anonymousePartly ? 2 : 1,
-      broadcast: i.broadcast !== true ? 0 : i.broadcastPartly ? 2 : 1,
-      id: i.id,
-      type: 'region'
+        anonymous: i.anonymous !== true ? 0 : i.anonymousePartly ? 2 : 1,
+        broadcast: i.broadcast !== true ? 0 : i.broadcastPartly ? 2 : 1,
+        id: i.id,
+        type: 'region'
       }
       if (i.priceUnit === "$") region.priceAddition = i.priceValue
       if (i.priceUnit === "%") region.priceMultiplier = i.priceValue
@@ -204,48 +224,48 @@ class AddBroadcast extends Component {
       //STATES
       const parentRegion = regions.find(region => region.id === i.id)
       const statesOfThisRegion = Object.values(storedStates).filter(obj => parentRegion["elements"].find(obj2 => obj.id === obj2.id))
-      region.elements =  statesOfThisRegion.map(i => {
+      region.elements = statesOfThisRegion.map(i => {
         const state = {
-        anonymous: i.anonymous !== true ? 0 : i.anonymousePartly ? 2 : 1,
-        broadcast: i.broadcast !== true ? 0 : i.broadcastPartly ? 2 : 1,
-        id: i.id,
-        type: 'state'
+          anonymous: i.anonymous !== true ? 0 : i.anonymousePartly ? 2 : 1,
+          broadcast: i.broadcast !== true ? 0 : i.broadcastPartly ? 2 : 1,
+          id: i.id,
+          type: 'state'
         }
         if (i.priceUnit === "$") state.priceAddition = i.priceValue
         if (i.priceUnit === "%") state.priceMultiplier = i.priceValue
 
         const parentState = flattenStates.find(state => state.id === i.id)
-        const companiesOfThisState =  Object.values(storedCompanies).filter(obj => parentState["elements"].find(obj2 => obj.id === obj2.id))
+        const companiesOfThisState = Object.values(storedCompanies).filter(obj => parentState["elements"].find(obj2 => obj.id === obj2.id))
         //COMPANIES
         state.elements = companiesOfThisState.map(i => {
           const company = {
-          anonymous: i.anonymous !== true ? 0 : i.anonymousePartly ? 2 : 1,
-          broadcast: i.broadcast !== true ? 0 : i.broadcastPartly ? 2 : 1,
-          id: i.id,
-          type: 'company'
+            anonymous: i.anonymous !== true ? 0 : i.anonymousePartly ? 2 : 1,
+            broadcast: i.broadcast !== true ? 0 : i.broadcastPartly ? 2 : 1,
+            id: i.id,
+            type: 'company'
           }
           if (i.priceUnit === "$") company.priceAddition = i.priceValue
           if (i.priceUnit === "%") company.priceMultiplier = i.priceValue
 
           const parentStatesOffices = parentState.elements.map(i => i.elements)
           const officesOfThisState = Object.values(storedOffices).filter(obj => parentStatesOffices.flat().find(obj2 => obj.id === obj2.id))
-          
+
           //OFFICES
           company.elements = officesOfThisState.map(i => {
             const office = {
-            anonymous: i.anonymous !== true ? 0 : i.anonymousePartly ? 2 : 1,
-            broadcast: i.broadcast !== true ? 0 : i.broadcastPartly ? 2 : 1,
-            id: i.id,
-            type: 'branch'
+              anonymous: i.anonymous !== true ? 0 : i.anonymousePartly ? 2 : 1,
+              broadcast: i.broadcast !== true ? 0 : i.broadcastPartly ? 2 : 1,
+              id: i.id,
+              type: 'branch'
             }
             if (i.priceUnit === "$") office.priceAddition = i.priceValue
             if (i.priceUnit === "%") office.priceMultiplier = i.priceValue
-            
+
             return office
-            })
-            return company
           })
-        return state     
+          return company
+        })
+        return state
       })
       return region;
     })
@@ -774,7 +794,8 @@ class AddBroadcast extends Component {
 
   handleContinue = () => {
     this.convertDataForPost()
-    this.props.removePopup();
+    this.props.closeModal()
+    // this.props.removePopup();
   };
 
   switchToList = () => {
@@ -788,13 +809,14 @@ class AddBroadcast extends Component {
   render() {
     const {
       removePopup, dispatch, broadcastData, broadcastIsFetching,
-      storedRoot, storedRegions, storedStates, storedOffices, storedCompanies
+      storedRoot, storedRegions, storedStates, storedOffices, storedCompanies,
+      open
     } = this.props;
     const { isClientList, categoryFilter, regionsExpanded, companiesExpanded, statesExpanded, filterInput, filteredRegions, filteredStates, filteredCompanies, filteredOffices } = this.state;
     if (broadcastIsFetching) return <Spinner /> //shame
     const categoryFilterOptions = [
-      { name: "All Regions", id: "allregions" },
-      { name: "All Companies", id: "allcompanies" },
+      { name: "All Regions", id: "allregions", text: 'All Regions', value: 'allregions' },
+      { name: "All Companies", id: "allcompanies", text: 'All Companies', value: 'allcompanies' },
     ];
     const templatesOptions = [] //TODO
 
@@ -810,13 +832,173 @@ class AddBroadcast extends Component {
         {/*Save As Template*/}
         {/*</Button>*/}
         <Button color="blue" onClick={this.handleContinue}>
-            <FormattedMessage
-                id='global.apply'
-                defaultMessage='Apply'
-            />
+          <FormattedMessage
+            id='global.apply'
+            defaultMessage='Apply'
+          />
         </Button>
       </>
     )
+
+    return (
+      <Modal open={true}>
+        <Modal.Header>Broadcast control</Modal.Header>
+        <Modal.Content className='add-broadcast'>
+          <Grid celled>
+            <GridColumn computer={6}>
+              <Grid columns={1}>
+                <MenuRow>
+                  <GridColumn>
+                    <div className="add-broadcast">
+                      <div className="broadcast-nav">
+                        <div className={isClientList ? "active" : ""} onClick={this.switchToList}>
+                          Client List
+                      </div>
+                        <div
+                          className={!isClientList ? "active" : ""}
+                          onClick={this.switchToPrice}>
+                          Price List
+                      </div>
+                      </div>
+                    </div>
+                  </GridColumn>
+                </MenuRow>
+
+                <GridRow>
+                  <GridColumn>
+                    <Suspense fallback={<Spinner />}>
+                      <CustomSegment secondary icon={true}>
+                        <BroadcastingNumbers storedOffices={storedOffices} convertObjectToArray={this.convertObjectToArray} />
+                      </CustomSegment>
+                    </Suspense>
+                  </GridColumn>
+                </GridRow>
+
+                <GridRow>
+                  <GridColumn>
+                    <label>Category Filter</label>
+                  </GridColumn>
+                  <GridColumn>
+                    <Dropdown
+                      fluid
+                      options={categoryFilterOptions}
+                      placeholder='All Regions'
+                      onChange={(e, { value }) => this.setState({ categoryFilter: value })}
+                      selection
+                    />
+                  </GridColumn>
+                </GridRow>
+
+
+                <GridRow>
+                  <GridColumn>
+                    <Input
+                      fluid
+                      value={this.state.filterInput}
+                      iconPosition='left'
+                      icon={{ name: 'search', circular: true, link: true }}
+                      onChange={e => this.onChangeHandler(e)}
+                      name="filterInput"
+                      placeholder="Search Company or Region"
+                    />
+                  </GridColumn>
+                </GridRow>
+                <Divider />
+
+                <GridRow>
+                  <GridColumn>
+                    <label>Templates: ({templatesOptions.length})</label>
+                  </GridColumn>
+                  <GridColumn>
+                    <Dropdown
+                      style={templatesOptions.length === 0 ? { cursor: 'not-allowed' } : null}
+                      selection
+                      fluid
+                      options={[]}
+                      disabled={templatesOptions.length === 0} placeholder='Select Template' />
+                  </GridColumn>
+                </GridRow>
+
+              </Grid>
+
+            </GridColumn>
+
+            <GridColumn computer={10}>
+              <GridRow>
+                <GridColumn>
+
+                  {isClientList
+                    ? <div className="broadcast-filter-nav client-list">
+                      <div className="field-name">{categoryFilter === "allregions" ? "Region" : "Company"}</div>
+                      <div className="list-rules">
+                        <div>Include</div>
+                        <div>Anonymous</div>
+                      </div>
+                    </div>
+                    : <div className="broadcast-filter-nav price-list">
+                      <div className="field-name">Name</div>
+                      <div>Mark-up/down</div>
+                    </div>
+                  }
+                </GridColumn>
+              </GridRow>
+
+              <BottomPaddedRow>
+                <GridColumn>
+
+                  <div className="broadcast-main">
+                    <Form model="forms.brcRules" onSubmit={v => console.log(v)}>
+                      <Suspense fallback={<Spinner />}>
+                        <RootBroadcastField
+                          name="Root"
+                          type="root"
+                          rootData={broadcastData}
+                          categoryFilter={categoryFilter}
+                          dispatch={dispatch}
+                          isClientList={isClientList}
+                          handleExpanded={this.handleExpanded}
+                          regionsExpanded={regionsExpanded}
+                          statesExpanded={statesExpanded}
+                          companiesExpanded={companiesExpanded}
+                          handleRuleClick={this.handleRuleClick}
+                          storedRoot={storedRoot}
+                          storedRegions={this.convertObjectToArray(storedRegions)}
+                          storedStates={this.convertObjectToArray(storedStates)}
+                          storedCompanies={this.convertObjectToArray(storedCompanies)}
+                          filterInput={filterInput}
+                          filteredRegions={filteredRegions}
+                          filteredStates={filteredStates}
+                          filteredCompanies={filteredCompanies}
+                          filteredOffices={filteredOffices}
+                        />
+                      </Suspense>
+                    </Form>
+                  </div>
+                </GridColumn>
+              </BottomPaddedRow>
+            </GridColumn>
+          </Grid>
+        </Modal.Content>
+
+        <Modal.Actions>
+          <Button onClick={() => this.props.closeModal()}>
+            <FormattedMessage
+              id='global.cancel'
+              defaultMessage='Cancel'
+            />
+          </Button>
+
+          <Button primary onClick={this.handleContinue}>
+            <FormattedMessage
+              id='global.apply'
+              defaultMessage='Apply'
+            />
+          </Button>
+
+        </Modal.Actions>
+      </Modal>
+    )
+
 
 
     return (
