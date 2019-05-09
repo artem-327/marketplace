@@ -16,6 +16,9 @@ import { FieldArray } from 'formik'
 import {
   closeEditPopup,
   getAlternativeProductNames,
+  postNewProductName,
+  updateProductName,
+  deleteProductName,
 } from '../../actions'
 import { Form, Input, Button, Dropdown, Field } from 'formik-semantic-ui'
 import * as Yup from 'yup'
@@ -40,14 +43,39 @@ class EditAltNamesCasProductsPopup extends React.Component {
   //componentDidMount() {
   componentDidMount = async () => {
     await this.props.getAlternativeProductNames(this.props.popupValues.data.id)
-    console.log('!!!!!!!!!!!!!! componentDidMount - props.altCasNamesRows - ', this.props.altCasNamesRows);
-
     this.setState({
       ...this.state.initialState,
       initialState: {
         casAlternativeNames: this.props.altCasNamesRows
       }
     })
+  }
+
+  handleAddName = (arrayHelpers) => {
+    arrayHelpers.insert(0, {id: null, alternativeName: ''})
+  }
+
+  handleDeleteName = (arrayHelpers, val, index) => {
+    if (val.id === null) {
+      arrayHelpers.remove(index)
+    }
+    else {
+      this.props.deleteProductName(val.id)
+      arrayHelpers.remove(index)
+    }
+  }
+
+  handleSaveName = (productId, val, index) => {
+    if (val.alternativeName.length < 3) return
+    if (val.id === null) {  // Create new name
+      let value = {casProduct: productId, alternativeName: val.alternativeName}
+      this.props.postNewProductName(value)
+
+    }
+    else {                  // Update name
+      let value = {alternativeName: val.alternativeName}
+      this.props.updateProductName(val.id, value)
+    }
   }
 
   render() {
@@ -71,17 +99,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
           <Form
             enableReinitialize
             initialValues={{...initialFormValues, ...initialState}}
-            //initialValues={{...initialFormValues}}
-            validationSchema={formValidation}
-            validateOnBlur={false}
-            validateOnChange={false}
             onReset={closeEditPopup}
-            onSubmit={(values, actions) => {
-              const data = {
-                casIndexName: values.casIndexName,
-              }
-              //updateCasProductRequest(popupValues.id, data, reloadFilter)
-            }}
           >
             {({ values, errors, setFieldValue }) => (
               <>
@@ -90,7 +108,8 @@ class EditAltNamesCasProductsPopup extends React.Component {
 
                     <>
                       <Message attached='top' className='header-table-fields'>
-                        <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{marginTop: '-0.5em'}} />
+                        <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{marginTop: '-0.5em'}}
+                                onClick={() => this.handleAddName(arrayHelpers)}/>
                         {`CAS Product Name: ${popupValues.data.casIndexName}`}
                       </Message>
 
@@ -103,11 +122,19 @@ class EditAltNamesCasProductsPopup extends React.Component {
                           </Table.Row>
                         </Table.Header>
                         <Table.Body>
-                          {console.log('!!!!!!! values ', values)}
                           {values && values.casAlternativeNames.length ? values.casAlternativeNames.map((val, index) => (
                             <Table.Row key={index}>
-                              <TableCell width={1}><Icon name='trash alternate outline' size='large' /></TableCell>
-                              <TableCell width={1}><Icon name='save outline' size='large' /></TableCell>
+                              <TableCell width={1}><Icon name='trash alternate outline' size='large'
+                                                         onClick={() => this.handleDeleteName(arrayHelpers, val, index)} /></TableCell>
+                              <TableCell width={1}><Icon name='save outline' size='large'
+                                                         onClick={() => this.handleSaveName(popupValues.data.id, val, index)}
+                                                         color={val.alternativeName.length >= 3 ? 'green' : 'red'}
+                                // ! ! Add validation checks for single line:
+                                // ! !    - duplicate names
+                                // ! !    - touched/untouched
+                                // ! ! Add validation checks for form:
+                                // ! ! Touched (will clear after save)
+                              /></TableCell>
                               <TableCell width={16}>
                                 <FormField>
                                   <Input name={`casAlternativeNames[${index}].alternativeName`}
@@ -140,6 +167,9 @@ class EditAltNamesCasProductsPopup extends React.Component {
 const mapDispatchToProps = {
   closeEditPopup,
   getAlternativeProductNames,
+  postNewProductName,
+  updateProductName,
+  deleteProductName,
 }
 
 const mapStateToProps = state => {

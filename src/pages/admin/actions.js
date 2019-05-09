@@ -178,6 +178,24 @@ export function updateCasProductRequest(id, values, reloadFilter) {
 	}
 }
 
+export function postNewProductName(value) {
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_POST_NEW_PRODUCT_NAME,
+			payload: api.postNewProductName(value)
+		})
+	}
+}
+
+export function updateProductName(id, value) {
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_UPDATE_PRODUCT_NAME,
+			payload: api.updateProductName(id, value)
+		})
+	}
+}
+
 export function openEditCasPopup(value) {
 	const data = {
 		casIndexName: value.casIndexName,
@@ -270,6 +288,16 @@ export function getCompany(id) {
 	}
 }
 */
+
+
+export function deleteProductName(id) {
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_DELETE_PRODUCT_NAME,
+			payload: api.deleteProductName(id)
+		})
+	}
+}
 
 export function deleteCompany(id) {
 	return async dispatch => {

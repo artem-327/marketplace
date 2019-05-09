@@ -10,6 +10,15 @@ export async function getAlternativeProductNames(value) {
   return data
 }
 
+
+
+
+
+
+
+
+
+
 export async function getCasProductByString(value, limit=100) {
   const {data} = await api.get(`/prodex/api/cas-products/search?limit=${limit}&pattern=${value}`)
   return data
@@ -27,7 +36,6 @@ export async function updateCasProduct(id, value) {
 
 export async function deleteCasProduct(id) {
   await api.delete(`/prodex/api/cas-products/id/${id}`)
-  return
 }
 
 export async function getAllUnNumbers() {
@@ -94,7 +102,7 @@ export async function getMailingBranchProvinces(id, limit=1000) {
   return data
 }
 
-export async function getCompanies(limit=1000) {
+export async function getCompanies(limit=30) {
   const {data} = await api.get(`/prodex/api/companies/search/all-info?limit=${limit}`)
   return data
 }
@@ -119,10 +127,21 @@ export async function updateCompany(id, formData) {
 
 export async function deleteCompany(id) {
   await api.delete(`/prodex/api/companies/id/${id}`)
-  return
 }
 
+export async function postNewProductName(value) {
+  const {data} = await api.post('/prodex/api/product-names', value)
+  return data
+}
 
+export async function updateProductName(id, value) {
+  const {data} = await api.put(`/prodex/api/product-names/${id}`, value)
+  return data
+}
+
+export async function deleteProductName(id) {
+  await api.delete(`/prodex/api/product-names/${id}`)
+}
 
 
 
