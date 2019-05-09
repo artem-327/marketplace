@@ -170,6 +170,17 @@ $font-family: 'Cabin', sans-serif;
       p {
         margin-bottom: 23px;
       }
+      .comboBox {
+        width: 380px;
+        height: 34px;
+        margin-bottom: 20px;
+
+        input {
+          padding-left: 8px;
+          padding-right: 8px;
+          font-size: 12px;
+        }
+      }
     }
     .input-checkbox {
       margin: 0 25px 14px 10px;

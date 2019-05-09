@@ -52,7 +52,7 @@ class Orders extends Component {
         let ordersType = query.type.charAt(0).toUpperCase() + query.type.slice(1)
 
         return (
-            <div id="page" className='flex stretched'>
+            <div id="page" className='flex stretched scrolling'>
                 <Menu pointing secondary horizontal>
                   <Menu.Item name='ALL' onClick={() => this.loadData(endpointType, {...this.props.filterData, status: 'All'})} active={!activeStatus || activeStatus === 'All'} />
                   <Menu.Item name='PENDING' onClick={() => this.loadData(endpointType, {...this.props.filterData, status: 'Pending'})} active={activeStatus === 'Pending'} />

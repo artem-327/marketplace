@@ -86,7 +86,10 @@ class Filter extends Component {
             {
               label: 'customerName',
               model: '.customer',
-              type: 'text'
+              type: 'search',
+              placeholder: '',
+              search: this.props.searchCompany,
+              data: this.props.searchedCompanies
             }
           ]} />
         <FilterGroup className="filterGroup"
