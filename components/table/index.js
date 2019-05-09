@@ -223,6 +223,15 @@ export default class _Table extends Component {
             />
             {groupBy && <TableGroupRow
               iconComponent={({ expanded }) => <Icon name={expanded ? 'chevron down' : 'chevron right'} />}
+              contentComponent={props => (
+                
+                <TableGroupRow.Content {...props} />
+              )}
+              rowComponent={({children, row, tableRow, ...restProps}) => (
+                <tr className="group-row" {...restProps}>
+                  {children}
+                </tr>
+              )}
             />}
 
           </Grid>
