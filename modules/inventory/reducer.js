@@ -70,6 +70,7 @@ export default function reducer(state = initialState, action) {
 
         case AT.INVENTORY_GET_PRODUCT_OFFER_FULFILLED: {
           let {data} = action.payload
+          
           return {
             ...state,
             ...action.payload.data,
@@ -87,7 +88,54 @@ export default function reducer(state = initialState, action) {
               key: action.payload.data.origin.id,
               value: action.payload.data.origin.id,
               text: action.payload.data.origin.name
-            }]: []
+            }]: [],
+            initialState: {
+              assayMax: data.assayMax,
+              assayMin: data.assayMin,
+              attachments: data.attachments && data.attachments.length ? data.attachments.map(att => {
+                return {
+                  id: att.id,
+                  name: att.name,
+                  linked: true
+                }
+              }) : [],
+              doesExpire: !!data.lots[0].expirationDate,
+              externalNotes: data.externalNotes,
+              lots: data.lots.map(lot => {
+                return {
+                  ...lot,
+                  expirationDate: lot.expirationDate ? lot.expirationDate.substring(0, 10) : '',
+                  manufacturedDate: lot.manufacturedDate ? lot.manufacturedDate.substring(0, 10) : '',
+                  attachments: lot.attachments && lot.attachments.length ? lot.attachments.map(att => {
+                    return {
+                      id: att.id,
+                      name: att.name,
+                      linked: true
+                    }
+                  }) : []
+                }
+              }),
+              internalNotes: data.internalNotes,
+              manufacturer: data.manufacturer ? data.manufacturer.id : null,
+              minimum: data.minimum,
+              multipleLots: true,
+              origin: data.origin ? data.origin.id : null,
+              pkgAmount: data.pkgAmount,
+              priceTiers: data.pricing.tiers.length,
+              pricing: {
+                ...data.pricing,
+                price: data.pricing.price.amount
+              },
+              processingTimeDays: 1,
+              product: data.product,
+              productCondition: data.productCondition ? data.productCondition.id : null,
+              productForm: data.productForm ? data.productForm.id : null,
+              productGrade: data.productGrades && data.productGrades.length ? data.productGrades[0].id : null,
+              splits: data.splits,
+              tradeName: data.tradeName,
+              validityDate: data.lots[0].expirationDate ? data.lots[0].expirationDate.substring(0, 10) : '', // TODO: check all lots and get one date (nearest or farthest date?)
+              warehouse: data.warehouse.id
+            }
           }
         }
 

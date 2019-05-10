@@ -322,69 +322,10 @@ export default class AddInventoryForm extends Component {
     await this.props.resetForm()
   }
 
-  componentDidMount = async () => {
-    await this.props.getProductConditions()
-    await this.props.getProductForms()
-    await this.props.getProductGrades()
-    await this.props.getWarehouses()
-    if (this.props.edit) {
-      this.props.getProductOffer(this.props.edit).then(async (response) => {
-        // need to prepare searchedProducts before filling form data
-        await this.props.fillProduct(response.value.data.product)
-        
-        setTimeout(() => {
-          this.setState({
-            initialState: {
-              assayMax: response.value.data.assayMax,
-              assayMin: response.value.data.assayMin,
-              attachments: response.value.data.attachments && response.value.data.attachments.length ? response.value.data.attachments.map(att => {
-                return {
-                  id: att.id,
-                  name: att.name,
-                  linked: true
-                }
-              }) : [],
-              doesExpire: !!response.value.data.lots[0].expirationDate,
-              externalNotes: response.value.data.externalNotes,
-              lots: response.value.data.lots.map(lot => {
-                return {
-                  ...lot,
-                  expirationDate: lot.expirationDate ? lot.expirationDate.substring(0, 10) : '',
-                  manufacturedDate: lot.manufacturedDate ? lot.manufacturedDate.substring(0, 10) : '',
-                  attachments: lot.attachments && lot.attachments.length ? lot.attachments.map(att => {
-                    return {
-                      id: att.id,
-                      name: att.name,
-                      linked: true
-                    }
-                  }) : []
-                }
-              }),
-              internalNotes: response.value.data.internalNotes,
-              manufacturer: response.value.data.manufacturer ? response.value.data.manufacturer.id : null,
-              minimum: response.value.data.minimum,
-              multipleLots: true,
-              origin: response.value.data.origin ? response.value.data.origin.id : null,
-              pkgAmount: response.value.data.pkgAmount,
-              priceTiers: response.value.data.pricing.tiers.length,
-              pricing: {
-                ...response.value.data.pricing,
-                price: response.value.data.pricing.price.amount
-              },
-              processingTimeDays: 1,
-              product: response.value.data.product,
-              productCondition: response.value.data.productCondition ? response.value.data.productCondition.id : null,
-              productForm: response.value.data.productForm ? response.value.data.productForm.id : null,
-              productGrade: response.value.data.productGrades && response.value.data.productGrades.length ? response.value.data.productGrades[0].id : null,
-              splits: response.value.data.splits,
-              tradeName: response.value.data.tradeName,
-              validityDate: response.value.data.lots[0].expirationDate ? response.value.data.lots[0].expirationDate.substring(0, 10) : '', // TODO: check all lots and get one date (nearest or farthest date?)
-              warehouse: response.value.data.warehouse.id
-            }
-          })
-        }, 500)
-      })
-    }
+  componentDidMount = () => {
+    const {initProductOfferEdit, edit} = this.props
+    
+    initProductOfferEdit(edit)
   }
 
   render() {
@@ -403,12 +344,13 @@ export default class AddInventoryForm extends Component {
       searchedProductsLoading,
       warehousesList,
       addProductOffer,
+      initialState,
       editProductOffer,
       uploadDocuments
     } = this.props
 
     const {
-      initialState,
+      //initialState,
       activeIndex
     } = this.state
 

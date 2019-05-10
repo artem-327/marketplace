@@ -1,6 +1,19 @@
 import * as AT from './action-types'
 import * as api from './api'
 
+export function initProductOfferEdit(id) {
+  alert('INIT')
+  return dispatch => {
+    
+      dispatch(getProductConditions())
+      dispatch(getProductForms())
+      dispatch(getProductGrades())
+      dispatch(getWarehouses())
+
+      if (id) dispatch(getProductOffer(id))
+  }
+}
+
 export function addAttachment(attachment, type) {
   return {
     type: AT.INVENTORY_ADD_ATTACHMENT,
