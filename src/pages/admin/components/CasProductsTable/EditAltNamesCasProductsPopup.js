@@ -28,10 +28,25 @@ const initialFormValues = {
 }
 
 
-
 const formValidation = Yup.object().shape({
   //casIndexName: Yup.string().min(3, "Too short").required("Required"),
 })
+
+const nameValidation = (index, val, vals) => {
+  if (val.length >= 3) {
+    // length is ok, check if name already exists
+    if (vals.find((o, i) => o.alternativeName === val && i !== index)) {
+      // name already exists
+      return {color: 'red', description: 'Duplicated name!', canSave: false}
+    }
+    else {
+      return {color: 'green', description: 'Click to save', canSave: true}
+    }
+  }
+  else {  //too short string
+    return {color: 'red', description: 'Name too short!', canSave: false}
+  }
+}
 
 class EditAltNamesCasProductsPopup extends React.Component {
   state = {
@@ -40,27 +55,32 @@ class EditAltNamesCasProductsPopup extends React.Component {
     }
   }
 
-  //componentDidMount() {
   componentDidMount = async () => {
     await this.props.getAlternativeProductNames(this.props.popupValues.data.id)
     this.setState({
       ...this.state.initialState,
       initialState: {
-        casAlternativeNames: this.props.altCasNamesRows
+        casAlternativeNames: this.props.altCasNamesRows.map(d => {
+          return {
+            ...d,
+            color: 'grey',
+            description: '',
+            canSave: false,
+          }})
       }
     })
   }
 
   handleAddName = (arrayHelpers) => {
-    arrayHelpers.insert(0, {id: null, alternativeName: ''})
+    arrayHelpers.insert(0, {id: null, alternativeName: '', color: 'grey', description: '', canSave: false})
   }
 
-  handleDeleteName = (arrayHelpers, val, index) => {
+  handleDeleteName = (productId, arrayHelpers, val, index) => {
     if (val.id === null) {
       arrayHelpers.remove(index)
     }
     else {
-      this.props.deleteProductName(val.id)
+      this.props.deleteProductName(productId, val.id)
       arrayHelpers.remove(index)
     }
   }
@@ -69,12 +89,11 @@ class EditAltNamesCasProductsPopup extends React.Component {
     if (val.alternativeName.length < 3) return
     if (val.id === null) {  // Create new name
       let value = {casProduct: productId, alternativeName: val.alternativeName}
-      this.props.postNewProductName(value)
-
+      this.props.postNewProductName(productId, value)
     }
     else {                  // Update name
       let value = {alternativeName: val.alternativeName}
-      this.props.updateProductName(val.id, value)
+      this.props.updateProductName(productId, val.id, value)
     }
   }
 
@@ -91,7 +110,6 @@ class EditAltNamesCasProductsPopup extends React.Component {
       initialState
     } = this.state
 
-
     return (
       <Modal open centered={false}>
         <Modal.Header>Edit {config.addEditText2}</Modal.Header>
@@ -99,6 +117,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
           <Form
             enableReinitialize
             initialValues={{...initialFormValues, ...initialState}}
+            validationSchema={formValidation}
             onReset={closeEditPopup}
           >
             {({ values, errors, setFieldValue }) => (
@@ -122,28 +141,34 @@ class EditAltNamesCasProductsPopup extends React.Component {
                           </Table.Row>
                         </Table.Header>
                         <Table.Body>
-                          {values && values.casAlternativeNames.length ? values.casAlternativeNames.map((val, index) => (
+                          {values && values.casAlternativeNames.length ? values.casAlternativeNames.map((val, index, vals) => (
                             <Table.Row key={index}>
                               <TableCell width={1}><Icon name='trash alternate outline' size='large'
-                                                         onClick={() => this.handleDeleteName(arrayHelpers, val, index)} /></TableCell>
+                                                         onClick={() => this.handleDeleteName(popupValues.data.id, arrayHelpers, val, index)} /></TableCell>
                               <TableCell width={1}><Icon name='save outline' size='large'
-                                                         onClick={() => this.handleSaveName(popupValues.data.id, val, index)}
-                                                         color={val.alternativeName.length >= 3 ? 'green' : 'red'}
-                                // ! ! Add validation checks for single line:
-                                // ! !    - duplicate names
-                                // ! !    - touched/untouched
-                                // ! ! Add validation checks for form:
-                                // ! ! Touched (will clear after save)
+                                                         onClick={() => {if (val.canSave === true) {
+                                                           this.handleSaveName(popupValues.data.id, val, index)
+                                                           setFieldValue(`casAlternativeNames[${index}].color`, 'grey')
+                                                           setFieldValue(`casAlternativeNames[${index}].description`, '')
+                                                           setFieldValue(`casAlternativeNames[${index}].canSave`, false)
+                                                         }}}
+                                                         color={val.color}
+                                                         title={val.description}
                               /></TableCell>
                               <TableCell width={16}>
                                 <FormField>
                                   <Input name={`casAlternativeNames[${index}].alternativeName`}
+                                         inputProps={{
+                                           onChange: (e, d) => {
+                                             const {color, description, canSave} = nameValidation(index, d.value, vals)
+                                             setFieldValue(`casAlternativeNames[${index}].color`, color)
+                                             setFieldValue(`casAlternativeNames[${index}].description`, description)
+                                             setFieldValue(`casAlternativeNames[${index}].canSave`, canSave)
+                                           }
+                                         }}
                                   />
                                 </FormField>
                               </TableCell>
-
-
-
                             </Table.Row>
                           )) : ''
                           }
@@ -153,7 +178,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
                   )}
                 />
                 <div style={{ textAlign: 'right' }}>
-                  <Button.Reset>Done</Button.Reset>
+                  <Button.Reset>Close</Button.Reset>
                 </div>
               </>
               )}

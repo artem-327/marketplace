@@ -10,15 +10,6 @@ export async function getAlternativeProductNames(value) {
   return data
 }
 
-
-
-
-
-
-
-
-
-
 export async function getCasProductByString(value, limit=100) {
   const {data} = await api.get(`/prodex/api/cas-products/search?limit=${limit}&pattern=${value}`)
   return data

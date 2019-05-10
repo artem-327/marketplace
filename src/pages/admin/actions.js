@@ -178,21 +178,23 @@ export function updateCasProductRequest(id, values, reloadFilter) {
 	}
 }
 
-export function postNewProductName(value) {
+export function postNewProductName(productId, value) {
 	return async dispatch => {
 		await dispatch({
 			type: AT.ADMIN_POST_NEW_PRODUCT_NAME,
 			payload: api.postNewProductName(value)
 		})
+		dispatch(getAlternativeProductNames(productId))
 	}
 }
 
-export function updateProductName(id, value) {
+export function updateProductName(productId, id, value) {
 	return async dispatch => {
 		await dispatch({
 			type: AT.ADMIN_UPDATE_PRODUCT_NAME,
 			payload: api.updateProductName(id, value)
 		})
+		dispatch(getAlternativeProductNames(productId))
 	}
 }
 
@@ -290,12 +292,13 @@ export function getCompany(id) {
 */
 
 
-export function deleteProductName(id) {
+export function deleteProductName(productId, id) {
 	return async dispatch => {
 		await dispatch({
 			type: AT.ADMIN_DELETE_PRODUCT_NAME,
 			payload: api.deleteProductName(id)
 		})
+		dispatch(getAlternativeProductNames(productId))
 	}
 }
 
