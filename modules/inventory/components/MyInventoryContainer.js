@@ -12,8 +12,10 @@ function mapStateToProps(store) {
       
       return {
         productName: po.product.productName,
-        productNumber: po.product.casProduct ? po.product.casProduct.casNumber : '',
+        productNumber: po.product.casProduct ? po.product.casProduct.casNumber : 'Unmapped',
+        chemicalName: po.product.casProduct ? po.product.casProduct.chemicalName : po.product.productName,
         warehouse: po.warehouse.warehouseName,
+        productId: po.product.casProduct ? po.product.casProduct.id : 0,
         available: po.pkgAmount.formatNumber(),
         packaging: po.product.packagingType && po.product.packagingType.name ? po.product.packagingType.name : 'N/A',
         pkgAmount: qtyPart ? `${po.product.packagingSize} ${qtyPart}` : 'N/A',

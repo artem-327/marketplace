@@ -5,6 +5,7 @@ import styled, { createGlobalStyle } from 'styled-components'
 import { Segment, Icon, Dropdown, Modal } from 'semantic-ui-react'
 import { Form, Checkbox, Button } from 'formik-semantic-ui'
 import _ from 'lodash'
+import GroupCell from './GroupCell'
 
 import {
   SearchState,
@@ -14,8 +15,9 @@ import {
   SortingState,
   IntegratedSorting,
   GroupingState,
+  CustomGrouping,
   IntegratedGrouping,
-  TableColumnVisibility
+  TableColumnVisibility,
 } from '@devexpress/dx-react-grid'
 import {
   Grid,
@@ -41,15 +43,20 @@ const GlobalTableOverrideStyle = createGlobalStyle`
     padding: .5rem;
   }
   .group-row {
+    position: relative;
     background: #EEE;
+    .right {
+      position: absolute;
+      right: 40px;
+    }
   }
 `
 
 const SettingButton = styled(Icon)`
   position: absolute !important;
   cursor: pointer !important;
-  top: 24px;
-  right: 34px;
+  top: 13px;
+  right: 16px;
   z-index: 601;
 `
 const ColumnsSetting = ({onClick}) => (
@@ -107,7 +114,9 @@ export default class _Table extends Component {
     virtual: pt.bool,
     sorting: pt.bool,
     groupBy: pt.array,
-    onSelectionChange: pt.func
+    onSelectionChange: pt.func,
+    renderGroupLabel: pt.func,
+    getChildGroups: pt.func,
   }
 
   static defaultProps = {
@@ -134,8 +143,16 @@ export default class _Table extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.groupBy && prevProps.loading) this.setState({
-      expandedGroups: Object.keys(_.groupBy(this.props.rows, this.props.groupBy.join('')))
+    prevProps.loading && this.expandGroups()
+  }
+
+  expandGroups = () => {
+    const {groupBy, getChildGroups, rows} = this.props
+
+    if (groupBy) this.setState({
+      expandedGroups: getChildGroups 
+        ? getChildGroups(rows).map(r => r.key)
+        : Object.keys(_.groupBy(rows, groupBy.join('|')))
     })
   }
 
@@ -173,6 +190,8 @@ export default class _Table extends Component {
       virtual,
       sorting,
       groupBy,
+      renderGroupLabel,
+      getChildGroups,
       ...restProps
     } = this.props
 
@@ -180,7 +199,7 @@ export default class _Table extends Component {
     const grouping = groupBy.map(g => ({ columnName: g }))
 
     return (
-      <Segment basic loading={loading} {...restProps} className="flex stretched">
+      <Segment basic loading={loading} {...restProps} className="flex stretched" style={{padding: 0}}>
         <GlobalTableOverrideStyle />
         <div className="bootstrapiso flex stretched" style={{ flex: '1 300px' }}>
           <ColumnsSetting  
@@ -208,7 +227,13 @@ export default class _Table extends Component {
                 onExpandedGroupsChange={(expandedGroups => this.setState({expandedGroups}))}
               />
             }
-            {groupBy && <IntegratedGrouping />}
+            {groupBy &&
+              getChildGroups 
+              ? <CustomGrouping 
+                  getChildGroups={getChildGroups}
+                />
+              : <IntegratedGrouping />
+            }
 
             {columnReordering && <DragDropProvider />}
 
@@ -249,10 +274,20 @@ export default class _Table extends Component {
               for={columns.filter(c => c.options).map(c => c.name)}
             />
             {groupBy && <TableGroupRow
-              iconComponent={({ expanded }) => <Icon name={expanded ? 'chevron down' : 'chevron right'} />}
-              contentComponent={props => (
-                
-                <TableGroupRow.Content {...props} />
+              indentColumnWidth={1}
+              iconComponent={({ expanded }) => <Icon style={{float:'right'}} name={expanded ? 'chevron down' : 'chevron up'} />}
+              contentComponent={({column, row, children, ...restProps}) => (
+                renderGroupLabel 
+                ? renderGroupLabel({column, row})
+                : ( 
+                  <span {...restProps}>
+                    <strong>{column.title || column.name}:{' '}</strong>
+                    {children || String(row.value)}
+                  </span>
+                )
+              )}
+              cellComponent={props => (
+                <GroupCell {...props} />
               )}
               rowComponent={({children, row, tableRow, ...restProps}) => (
                 <tr className="group-row" {...restProps}>

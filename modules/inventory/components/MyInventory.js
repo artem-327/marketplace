@@ -67,6 +67,23 @@ export default class MyInventory extends Component {
           rows={rows}
           rowSelection
           groupBy={['productNumber']}
+          getChildGroups={rows => 
+            _(rows)
+              .groupBy('productName')
+              .map(v => ({
+                key: `${v[0].productName}_${v[0].productNumber}_${v.length}`,
+                childRows: v
+              }))
+              .value()
+          }
+          renderGroupLabel={({row: {value}}) => {
+            const [name, number, count] = value.split('_')
+            return (
+              <span>
+                <span style={{color: '#2599d5'}}>{number}</span>&nbsp;&nbsp; {name} <span className="right">Product offerings: {count}</span>
+              </span>
+            )
+          }}
           onSelectionChange={selectedRows => this.setState({selectedRows})}
           rowActions={[
             { text: 'Edit listing', callback: (row) => {} },
