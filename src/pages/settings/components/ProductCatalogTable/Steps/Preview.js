@@ -1,49 +1,50 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { Component } from "react";
+import { connect } from "react-redux";
 
-import { Table } from 'semantic-ui-react'
+import { Table } from "semantic-ui-react";
 
-import { dataHeaderCSV } from '../../../actions'
+import { dataHeaderCSV } from "../../../actions";
 
 const MAP = {
-  'CAS Number': 'casNumberMapper',
-  'Packaging Minimum': 'packagingMinimumMapper',
-  'Packaging Size': 'packagingSizeMapper',
-  'Packaging Splits': 'packagingSplitsMapper',
-  'Packaging Type': 'packagingTypeNameMapper',
-  Unit: 'packagingUnitNameMaper',
-  'Product Name': 'productNameMapper'
-}
+  "CAS Number": "casNumberMapper",
+  "Packaging Minimum": "packagingMinimumMapper",
+  "Packaging Size": "packagingSizeMapper",
+  "Packaging Splits": "packagingSplitsMapper",
+  "Packaging Type": "packagingTypeNameMapper",
+  Unit: "packagingUnitNameMaper",
+  "Product Name": "productNameMapper"
+};
 
 class Preview extends Component {
-  state = {
-    filteredHeader: null
+  constructor(props) {
+    const filteredHeader =
+      props.mappedHeader &&
+      props.mappedHeader.filter(column => {
+        return column.header;
+      });
+    super(props);
+    this.state = {
+      filteredHeader: filteredHeader || null
+    };
   }
 
   componentDidMount() {
-    const filteredHeader =
-      this.props.mappedHeader &&
-      this.props.mappedHeader.filter(column => {
-        return column.header
-      })
-
     const data =
-      filteredHeader &&
-      filteredHeader.reduce(
+      this.state.filteredHeader &&
+      this.state.filteredHeader.reduce(
         (prev, next) => {
-          const key = MAP[next.header]
-          prev[key] = next.content
-          return prev
+          const key = MAP[next.header];
+          prev[key] = next.content;
+          return prev;
         },
         { headerLine: true }
-      )
-    this.setState({ filteredHeader })
-    data && this.props.dataHeaderCSV(data)
+      );
+    data && this.props.dataHeaderCSV(data);
   }
 
   render() {
-    const { CSV } = this.props
-    const { filteredHeader } = this.state
+    const { CSV } = this.props;
+    const { filteredHeader } = this.state;
 
     return (
       <Table celled padded textAlign="center">
@@ -71,28 +72,28 @@ class Preview extends Component {
                         </Table.Cell>
                       )
                   )
-                )
+                );
               })}
             </Table.Row>
           ))}
         </Table.Body>
       </Table>
-    )
+    );
   }
 }
 
 const mapDispatchToProps = {
   dataHeaderCSV
-}
+};
 
 const mapStateToProps = state => {
   return {
     mappedHeader: state.settings.mappedHeaders,
     CSV: state.settings.CSV
-  }
-}
+  };
+};
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Preview)
+)(Preview);

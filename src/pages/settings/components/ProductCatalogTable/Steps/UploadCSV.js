@@ -1,11 +1,11 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import styled from 'styled-components'
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import styled from "styled-components";
 
-import Dropzone from 'react-dropzone'
-import { Grid } from 'semantic-ui-react'
+import Dropzone from "react-dropzone";
+import { Grid } from "semantic-ui-react";
 
-import { uploadCSVFile } from '../../../actions'
+import { uploadCSVFile } from "../../../actions";
 
 const StyledDropzone = styled(Dropzone)`
   display: flex;
@@ -30,16 +30,16 @@ const StyledDropzone = styled(Dropzone)`
         background-color: #ffebee;
       `
       : undefined}
-`
+`;
 
 class UploadCSV extends Component {
   state = {
     uploadedFile: null,
     hasError: false
-  }
+  };
 
   render() {
-    const { uploadedFile, hasError } = this.state
+    const { uploadedFile, hasError } = this.state;
 
     return (
       <Grid centered padded>
@@ -49,7 +49,7 @@ class UploadCSV extends Component {
             accept="text/csv"
             multiple={false}
             uploaded={uploadedFile}
-            error={hasError ? 'true' : undefined}
+            error={hasError ? "true" : undefined}
           >
             <Grid>
               <Grid.Row verticalAlign="middle">
@@ -65,7 +65,7 @@ class UploadCSV extends Component {
               {hasError && (
                 <Grid.Row verticalAlign="top">
                   <Grid.Column>
-                    <p style={{ color: 'red' }}>Invalid type file</p>
+                    <p style={{ color: "red" }}>Invalid type file</p>
                   </Grid.Column>
                 </Grid.Row>
               )}
@@ -73,30 +73,25 @@ class UploadCSV extends Component {
           </StyledDropzone>
         </Grid.Row>
       </Grid>
-    )
+    );
   }
 
   onDrop = acceptedFiles => {
-    console.log(acceptedFiles)
-    this.setState({ uploadedFile: acceptedFiles[0] })
+    console.log(acceptedFiles);
     if (acceptedFiles.length !== 0) {
-      this.props.uploadCSVFile(acceptedFiles[0])
-      this.setState({ uploadedFile: acceptedFiles[0], hasError: false })
+      this.props.uploadCSVFile(acceptedFiles[0]);
+      this.setState({ uploadedFile: acceptedFiles[0], hasError: false });
     } else {
-      this.setState({ uploadedFile: null, hasError: true })
+      this.setState({ uploadedFile: null, hasError: true });
     }
-  }
+  };
 }
 
 const mapDispatchToProps = {
   uploadCSVFile
-}
-
-const mapStateToProps = state => {
-  return {}
-}
+};
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
-)(UploadCSV)
+)(UploadCSV);

@@ -1,31 +1,33 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { Component } from "react";
+import { connect } from "react-redux";
 
-import { Table, Dropdown } from 'semantic-ui-react'
+import { Table, Dropdown } from "semantic-ui-react";
 
-import { changeHeadersCSV } from '../../../actions'
+import { changeHeadersCSV } from "../../../actions";
 
 const mapping = [
-  { text: 'CAS Number', value: 'CAS Number' },
-  { text: 'Packaging Minimum', value: 'Packaging Minimum' },
-  { text: 'Packaging Size', value: 'Packaging Size' },
-  { text: 'Packaging Splits', value: 'Packaging Splits' },
-  { text: 'Packaging Type', value: 'Packaging Type' },
-  { text: 'Unit', value: 'Unit' },
-  { text: 'Product Name', value: 'Product Name' }
-]
+  { text: "CAS Number", value: "CAS Number" },
+  { text: "Packaging Minimum", value: "Packaging Minimum" },
+  { text: "Packaging Size", value: "Packaging Size" },
+  { text: "Packaging Splits", value: "Packaging Splits" },
+  { text: "Packaging Type", value: "Packaging Type" },
+  { text: "Unit", value: "Unit" },
+  { text: "Product Name", value: "Product Name" }
+];
 
 class Map extends Component {
   state = {
     newHeaders: null
-  }
+  };
 
   componentDidMount() {
-    this.setState({ newHeaders: this.props.CSV.headerCSV })
+    this.setState({ newHeaders: this.props.CSV.headerCSV });
   }
 
   render() {
-    const { CSV } = this.props
+    const { CSV } = this.props;
+
+    console.log(this.state.newHeaders);
 
     return (
       <Table celled padded textAlign="center">
@@ -46,9 +48,9 @@ class Map extends Component {
                     return line.columns.map(lineBody => {
                       return (
                         lineHeader.columnNumber === lineBody.columnNumber &&
-                        lineBody.content + ' '
-                      )
-                    })
+                        lineBody.content + " "
+                      );
+                    });
                   })}
                 </Table.Cell>
                 <Table.Cell>
@@ -66,35 +68,37 @@ class Map extends Component {
           </Table.Body>
         )}
       </Table>
-    )
+    );
   }
 
   selectMapping = (e, { column_number, value }) => {
-    const newHeaders = this.state.newHeaders.map(line => {
+    const mappedHeader = this.props.mappedHeader
+      ? this.props.mappedHeader
+      : [...this.state.newHeaders];
+    const newHeaders = mappedHeader.map(line => {
       if (column_number === line.columnNumber) {
-        line['header'] = value
-        return line
+        line["header"] = value;
+        return line;
       }
-      return line
-    })
-    this.setState({ newHeaders })
-    this.props.changeHeadersCSV(newHeaders)
-  }
+      return line;
+    });
+    this.props.changeHeadersCSV(newHeaders);
+  };
 }
 
 const mapDispatchToProps = {
   changeHeadersCSV
-}
+};
 
 const mapStateToProps = state => {
   return {
     csvFileId: state.settings.fileCSVId,
     CSV: state.settings.CSV,
     mappedHeader: state.settings.mappedHeaders
-  }
-}
+  };
+};
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Map)
+)(Map);
