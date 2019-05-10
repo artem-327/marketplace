@@ -105,7 +105,7 @@ class MyInventory extends Component {
         
     const number = getSelectedDataTable(this.props.productOffersTable)
     return (
-      <div className='my-inventory'>
+      <div id='page' className='my-inventory flex stretched scrolling'>
         <div className='header-top'>
           <Container fluid>
             <Menu secondary>

@@ -88,6 +88,17 @@
   }
 }
 
+.flex.stretched > .data-table-wr {
+  position: relative;
+  left: -2.2857143em;
+  right: -2.2857143em;
+  width: calc(100% + 2 * 2.2857143em);
+  height: 1px;
+  flex-shrink: 100;
+  flex-grow: 100;
+  padding: 0 2.2857143em;
+}
+
 .data-table {
   border-collapse:separate;
   border-spacing: 0;
