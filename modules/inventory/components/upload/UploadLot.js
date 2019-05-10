@@ -108,9 +108,7 @@ class UploadLot extends Component {
                           <>
                             {attachments && attachments.length ? attachments.map((file, index) => (
                                 <File key={file.id} onRemove={() => {
-                                  console.log(file)
                                   this.removeFile(file)
-                                  console.log(index)
                                   arrayHelpers.remove(index)
                                 }} className="file lot" name={file.name} index={index} />
                               )) : ''}

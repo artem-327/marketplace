@@ -23,7 +23,6 @@ export default function reducer(state = initialState, action) {
       }
     }
     case SHIPPINGQUOTES_FETCH_SUCCEEDED: {
-      console.log(action)
       return {
         ...state,
         shippingQuotes: action.payload,
