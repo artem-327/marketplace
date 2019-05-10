@@ -12,16 +12,28 @@ function* getOrders(action) {
       let data = []
       if (action.payload.filter) {
         let filters = {
-          filters: [{
+          filters: []
+        }
+
+        if (action.payload.filter.orderId) {
+          filters.filters.push({
             operator: 'EQUALS',
             path: 'Order.id',
             value: action.payload.filter.orderId,
             //status: !action.payload.filter || action.payload.filter.status === 'All' ? '' : action.payload.filter.status
-          }]
+          })
         }
-        data = yield call(Api.filteredAll, action.payload.endpointType, filters)
+        if (action.payload.filter.customer) {
+          filters.filters.push({
+            operator: 'EQUALS',
+            path: 'Order.buyerCompanyName',
+            value: action.payload.filter.customer,
+            //status: !action.payload.filter || action.payload.filter.status === 'All' ? '' : action.payload.filter.status
+          })
+        }
+        data = yield call(Api.getAll, action.payload.endpointType, filters)
       } else {
-        data = yield call(Api.getAll, action.payload.endpointType)
+        data = yield call(Api.getAll, action.payload.endpointType, {})
       }
 
       data.dataType = action.payload.endpointType

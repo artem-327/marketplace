@@ -7,6 +7,7 @@ import DropdownRedux from '../../Dropdown/DropdownRedux'
 import RadioRedux from '../../Radio/RadioRedux'
 import DatepickerRedux from '../../Datepicker/DatepickerRedux'
 import ComboBoxRedux from '../../ComboBox/ComboBoxRedux'
+import RemoteComboBoxRedux from '../../ComboBox/RemoteComboBoxRedux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Icon, Input, Checkbox } from 'semantic-ui-react';
 
@@ -114,6 +115,27 @@ class FilterGroup extends Component {
                     limit={input.limit}
                     placeholder='Select Condition'
                     items={input.data}
+                  />
+                </div>
+              )
+            }
+            case 'search': {
+              return (
+                <div key={index} className='filter-input-dropdown'>
+                  <label
+                    className='input-label'
+                    htmlFor={input.model}>
+                    <FormattedMessage
+                      id={'filter.' + input.label.split(' ').join('')}
+                      defaultMessage={input.label + '1'}
+                    />
+                  </label>
+                  <RemoteComboBoxRedux
+                    dispatch={this.props.dispatch}
+                    model={input.model}
+                    placeholder={input.placeholder}
+                    items={input.data}
+                    api={(text) => text.length > 2 && input.search(text)}
                   />
                 </div>
               )

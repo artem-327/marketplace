@@ -212,6 +212,9 @@ div.page-wrapper {
   left: -2.2857143em;
   right: -2.2857143em;
   width: calc(100% + 2 * 2.2857143em);
+  height: 1px; // should be enlarged due to flex
+  flex-shrink: 100;
+  flex-grow: 100;
   padding: 0 2.2857143em;
 
   .scrollbar-container {

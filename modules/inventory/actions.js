@@ -23,6 +23,13 @@ export function addAttachment(attachment, type) {
 
 export function addProductOffer(values, poId = false) {
 
+  if (values.lots.length === 0) {
+    values.lots = [{
+      lotNumber: '1',
+      pkgAmount: parseInt(values.pkgAmount)
+    }]
+  }
+
   let params = {
     assayMin: values.assayMin ? parseFloat(values.assayMin) : null,
     assayMax: values.assayMax ? parseFloat(values.assayMax) : null,
