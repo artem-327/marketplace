@@ -28,8 +28,16 @@ export function getProductGrades() {
   return api.get(`/prodex/api/product-grades/`)
 }
 
+export async function getMyProductOffers() {
+    return api.get(`/prodex/api/product-offers/own/all/`)
+}
+
 export async function getProductOffer(poId) {
   return api.get(`/prodex/api/product-offers/${poId}`)
+}
+
+export async function deleteProductOffer(poId) {
+  return api.delete(`/prodex/api/product-offers/${poId}`)
 }
 
 export async function getWarehouses() {
@@ -59,7 +67,7 @@ export function removeAttachmentLink(isLot, itemId, aId) {
 }
 
 export async function searchManufacturers(text) {
-  const response = await api.get(`/prodex/api/manufacturers?search=${text}`)
+  const response = await api.get(`/prodex/api/manufacturers/search?search=${text}`)
   return response
 }
 

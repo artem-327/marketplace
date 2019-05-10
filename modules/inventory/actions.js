@@ -1,6 +1,21 @@
 import * as AT from './action-types'
 import * as api from './api'
 
+export function initProductOfferEdit(id) {
+
+  return dispatch => {
+    
+      dispatch(getProductConditions())
+      dispatch(getProductForms())
+      dispatch(getProductGrades())
+      dispatch(getWarehouses())
+
+      if (id) {
+        dispatch(getProductOffer(id))
+      }
+  }
+}
+
 export function addAttachment(attachment, type) {
   return {
     type: AT.INVENTORY_ADD_ATTACHMENT,
@@ -9,6 +24,13 @@ export function addAttachment(attachment, type) {
 }
 
 export function addProductOffer(values, poId = false) {
+
+  if (values.lots.length === 0) {
+    values.lots = [{
+      lotNumber: '1',
+      pkgAmount: parseInt(values.pkgAmount)
+    }]
+  }
 
   let params = {
     assayMin: values.assayMin ? parseFloat(values.assayMin) : null,
@@ -126,10 +148,38 @@ export function getProductGrades() {
   }
 }
 
+export function getMyProductOffers() {
+  return {
+    type: AT.INVENTORY_GET_MY_PRODUCT_OFFERS,
+    payload: api.getMyProductOffers()
+  }
+}
+
 export function getProductOffer(productOfferId) {
   return {
     type: AT.INVENTORY_GET_PRODUCT_OFFER,
-    payload: api.getProductOffer(productOfferId)
+    async payload() {
+      const {data} = await api.getProductOffer(productOfferId)
+
+      return {
+        data: {
+          ...data,
+          searchedProducts: [{
+            text: data.product.casProduct.casIndexName,
+            value: data.product,
+            key: data.product.casProduct.id
+          }],
+          searchedProductsLoading: false
+        }
+      }
+    }
+  }
+}
+
+export function deleteProductOffer(productOfferId) {
+  return async dispatch => {
+    await api.deleteProductOffer(productOfferId)
+    dispatch(getMyProductOffers())
   }
 }
 
@@ -236,7 +286,7 @@ export function uploadDocuments(isLot, productOfferId, fileIds) {
       }).catch(e => {
         // TODO: solve errors
         reject()
-      });
-    }).then(loop.bind(null, j+1));
+      })
+    }).then(loop.bind(null, j+1))
   })(0)
 }

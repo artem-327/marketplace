@@ -59,6 +59,7 @@ i.icon.thick {
     width: calc((100% - (2 * 1.2857143rem)) * 0.3125 * 0.75 - 2rem);
     margin-left: -1px;
     margin-right: -1px;
+    box-shadow: 0 2.5em 0 0 #fff;
   }
 }
 
@@ -307,13 +308,17 @@ h1.ui.header {
   }
 }
 
+form.inventory {
+  height: 100%;
+}
+
 div.inventory {
-  position: fixed;
-  //top: 7.21428571em;
-  top: 7.2857143em;
-  left: 0;
-  right: 0;
+  position: relative;
+  top: 0;
+  left: -2.2857143rem;
+  right: -2.2857143rem;
   bottom: 2.2857143rem;
+  width: calc(100% + 2 * 2.2857143rem);
   overflow-x: hidden;
   overflow-y: auto;
   padding-left: 2.2857143rem;
@@ -333,6 +338,8 @@ div.inventory {
   }
 
   > .ui.bottom {
+    overflow-x: hidden;
+    overflow-y: auto;
     margin-left: 0;
     margin-right: 0;
     border: 0 none;

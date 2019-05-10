@@ -38,7 +38,7 @@ export default class AllInventory extends Component {
       : <ProductOffers onRowClick={this.tableRowClicked} {...this.props} />
 
     return (
-      <div>
+      <div id='page' className='all-inventory flex stretched scrolling'>
 
         <Container fluid>
           <Menu secondary>

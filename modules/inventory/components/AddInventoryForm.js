@@ -40,10 +40,7 @@ const ResponsiveColumn = styled(GridColumn)`
 const initValues = {
   doesExpire: false,
   inStock: true,
-  lots: [{
-    lotNumber: '1',
-    pkgAmount: null
-  }],
+  lots: [],
   minimumRequirement: true,
   minimum: 1,
   multipleLots: false,
@@ -58,7 +55,8 @@ const initValues = {
   processingTimeDays: 1,
   splits: 1,
   touchedLot: false,
-  validityDate: ""
+  validityDate: "",
+  warehouse: 0
 }
 
 val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
@@ -89,7 +87,7 @@ const validationScheme = val.object().shape({
   product: val.string().required("required"),
   processingTimeDays: val.number().required("required"),
   doesExpire: val.bool(),
-  pkgAmount: val.number().nullable().required("Is required"),
+  pkgAmount: val.number().nullable().moreThan(0, 'Amount has to be greater than 0').required("required"),
   validityDate: val.string().matches(/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, { message: 'not valid date' }),
   lots: val.array().of(val.object().uniqueProperty('lotNumber', 'LOT number has to be unique').shape({
     lotNumber: val.string().nullable().required("required"),
@@ -106,13 +104,13 @@ const validationScheme = val.object().shape({
   pricing: val.object().shape({
     tiers: val.array().of(val.object().shape({
       quantityFrom: val.number().nullable().moreThan(0, "Must be greater than 0").required("Minimum quantity must be set"),
-      price: val.number().nullable().moreThan(0, "Must be greater than 0").required("Price must be set").test("maxdec", "There can be maximally 3 decimal places.", val => {
+      price: val.number().nullable().moreThan(0, "Must be greater than 0").required("required").test("maxdec", "There can be maximally 3 decimal places.", val => {
         return !val || val.toString().indexOf('.') === -1 || val.toString().split(".")[1].length <= 3
       })
     }))
   }),
   touchedLot: val.bool(),
-  warehouse: val.number().required('required')
+  warehouse: val.number().moreThan(0, "required").required('required')
 })
 
 export default class AddInventoryForm extends Component {
@@ -121,7 +119,8 @@ export default class AddInventoryForm extends Component {
     initialState: {
 
     },
-    activeIndex: 0
+    activeIndex: 0,
+    activeTab: 0
   }
 
   accClick = (e, titleProps) => {
@@ -172,6 +171,21 @@ export default class AddInventoryForm extends Component {
     }
 
     return priceTiers
+  }
+
+  switchTab = (newTab, values, setFieldValue) => {
+    let lotAmount = values.lots.length === 0 ? parseInt(values.pkgAmount) : 0
+    if (newTab === 1 && lotAmount > 0) {
+      setFieldValue('lots[0].lotNumber', '1')
+      setFieldValue('lots[0].pkgAmount', lotAmount)
+      this.setState({
+        activeTab: newTab
+      })
+    } else {
+      this.setState({
+        activeTab: newTab
+      })
+    }
   }
 
   renderPricingTiers = (count) => {
@@ -299,7 +313,10 @@ export default class AddInventoryForm extends Component {
                   <Button fluid size='big' floated='left'>Discard</Button>
                 </ResponsiveColumn>
                 <GridColumn computer={10} mobile={16}>
-                  <Button.Submit fluid size='big' floated='right' style={{ paddingLeft: '1em', paddingRight: '1em' }}>Add Product Offer</Button.Submit>
+                  <Button.Submit fluid size='big' floated='right' style={{ paddingLeft: '1em', paddingRight: '1em' }}>
+                    <FormattedMessage id={this.props.edit ? 'addInventory.editButton' : 'addInventory.addButton'}
+                                      defaultMessage={this.props.edit ? 'Edit Product Offer' : 'Add Product Offer'} />
+                  </Button.Submit>
                 </GridColumn>
               </GridRow>
             </Grid>
@@ -322,68 +339,10 @@ export default class AddInventoryForm extends Component {
     await this.props.resetForm()
   }
 
-  componentDidMount = async () => {
-    await this.props.getProductConditions()
-    await this.props.getProductForms()
-    await this.props.getProductGrades()
-    await this.props.getWarehouses()
-    if (this.props.edit) {
-      this.props.getProductOffer(this.props.edit).then(async (response) => {
-        // need to prepare searchedProducts before filling form data
-        await this.props.fillProduct(response.value.data.product)
-        setTimeout(() => {
-          this.setState({
-            initialState: {
-              assayMax: response.value.data.assayMax,
-              assayMin: response.value.data.assayMin,
-              attachments: response.value.data.attachments && response.value.data.attachments.length ? response.value.data.attachments.map(att => {
-                return {
-                  id: att.id,
-                  name: att.name,
-                  linked: true
-                }
-              }) : [],
-              doesExpire: !!response.value.data.lots[0].expirationDate,
-              externalNotes: response.value.data.externalNotes,
-              lots: response.value.data.lots.map(lot => {
-                return {
-                  ...lot,
-                  expirationDate: lot.expirationDate ? lot.expirationDate.substring(0, 10) : '',
-                  manufacturedDate: lot.manufacturedDate ? lot.manufacturedDate.substring(0, 10) : '',
-                  attachments: lot.attachments && lot.attachments.length ? lot.attachments.map(att => {
-                    return {
-                      id: att.id,
-                      name: att.name,
-                      linked: true
-                    }
-                  }) : []
-                }
-              }),
-              internalNotes: response.value.data.internalNotes,
-              manufacturer: response.value.data.manufacturer ? response.value.data.manufacturer.id : null,
-              minimum: response.value.data.minimum,
-              multipleLots: true,
-              origin: response.value.data.origin ? response.value.data.origin.id : null,
-              pkgAmount: response.value.data.pkgAmount,
-              priceTiers: response.value.data.pricing.tiers.length,
-              pricing: {
-                ...response.value.data.pricing,
-                price: response.value.data.pricing.price.amount
-              },
-              processingTimeDays: 1,
-              product: response.value.data.product,
-              productCondition: response.value.data.productCondition ? response.value.data.productCondition.id : null,
-              productForm: response.value.data.productForm ? response.value.data.productForm.id : null,
-              productGrade: response.value.data.productGrades && response.value.data.productGrades.length ? response.value.data.productGrades[0].id : null,
-              splits: response.value.data.splits,
-              tradeName: response.value.data.tradeName,
-              validityDate: response.value.data.lots[0].expirationDate ? response.value.data.lots[0].expirationDate.substring(0, 10) : '', // TODO: check all lots and get one date (nearest or farthest date?)
-              warehouse: response.value.data.warehouse.id
-            }
-          })
-        }, 500)
-      })
-    }
+  componentDidMount = () => {
+    const {initProductOfferEdit, edit} = this.props
+    
+    initProductOfferEdit(edit)
   }
 
   render() {
@@ -402,22 +361,23 @@ export default class AddInventoryForm extends Component {
       searchedProductsLoading,
       warehousesList,
       addProductOffer,
+      initialState,
       editProductOffer,
       uploadDocuments
     } = this.props
 
     const {
-      initialState,
+      //initialState,
       activeIndex
     } = this.state
 
     return (
-      <>
+      <div id='page' className='flex stretched'>
         <div className='header-top'>
           <Menu secondary>
             <Menu.Item header>
               <Header as='h1' size='medium'>
-                <FormattedMessage id='myInventory.myInventory'
+                <FormattedMessage id={this.props.edit ? 'addInventory.editInventory' : 'addInventory.addInventory'}
                                   defaultMessage={this.props.edit ? 'EDIT INVENTORY' : 'ADD INVENTORY'} />
               </Header>
             </Menu.Item>
@@ -436,30 +396,57 @@ export default class AddInventoryForm extends Component {
               .finally(() => {
                 actions.setSubmitting(false)
                 actions.resetForm(initValues)
+                /*if (this.props.edit) {
+                  this.goToList()
+                }*/
               })
           }}
+          className='inventory'
         >
-          {({ values, errors, setFieldValue }) => (
+          {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => (
             <>
               <Modal open={this.props.poCreated} closeOnDimmerClick={false} size='tiny'>
-                <Modal.Header>Product Offer was created</Modal.Header>
-                <Modal.Content>
-                  What now?
-                </Modal.Content>
+                <Modal.Header>
+                  <FormattedMessage id={this.props.edit ? 'addInventory.editDone' : 'addInventory.addDone'}
+                                    defaultMessage={this.props.edit ? 'Product Offer was edited' : 'Product Offer was created'} />
+                </Modal.Header>
+                {this.props.edit ? '' : (
+                  <Modal.Content>
+                    <FormattedMessage id={'addInventory.whatNow'}
+                                      defaultMessage={'What now?'} />
+                  </Modal.Content>
+                )}
                 <Modal.Actions>
-                  <Button icon='add' labelPosition='right' content='Add another one' onClick={this.resetForm} />
+                  {this.props.edit ? '' : (
+                    <Button icon='add' labelPosition='right' content='Add another one' onClick={this.resetForm} />
+                  )}
                   <Button primary icon='checkmark' labelPosition='right' content='Go to My Inventory' onClick={this.goToList} />
                 </Modal.Actions>
               </Modal>
-              <Tab className='inventory' menu={{ secondary: true, pointing: true }} panes={[
+              <Tab className='inventory flex stretched' menu={{ secondary: true, pointing: true }} renderActiveOnly={false} activeIndex={this.state.activeTab} style={{height: '100%'}} panes={[
                 {
                   menuItem: (
-                    <Menu.Item key='productOffer'>
+                    <Menu.Item key='productOffer'onClick={() => {
+                      validateForm()
+                        .then(r => {
+                          // stop when errors found
+                          if (Object.keys(r).length) {
+                            submitForm() // show errors
+                            return false
+                          }
+
+                          // if validation is correct - switch tabs
+                          this.switchTab(0, values, setFieldValue)
+                        })
+                        .catch(e => {
+                          console.log('CATCH', e)
+                        })
+                    }}>
                       PRODUCT OFFER
                     </Menu.Item>
                   ),
-                  render: () => (
-                    <Tab.Pane>
+                  pane: (
+                    <Tab.Pane style={{height: '1px', flexGrow: '10', flexShrink: '10'}}>
                       <Grid divided style={{ marginTop: '2rem' }}>
                         <Grid.Column width={5}>
                           <Header as='h3'>What product do you want to list?</Header>
@@ -510,7 +497,10 @@ export default class AddInventoryForm extends Component {
                           <Header as='h3'>Where will this product ship from?</Header>
                           <FormGroup>
                             <FormField width={10}>
-                              <Dropdown label="Warehouse" name="warehouse" options={warehousesList} />
+                              <Dropdown label="Warehouse" name="warehouse" options={warehousesList} inputProps={{
+                                selection: true,
+                                value: 0
+                              }} />
                             </FormField>
                           </FormGroup>
 
@@ -623,12 +613,27 @@ export default class AddInventoryForm extends Component {
                 },
                 {
                   menuItem: (
-                    <Menu.Item key='productOffer' onClick={() => { if (values.lots[0].pkgAmount === null) setFieldValue('lots[0].pkgAmount', values.pkgAmount)}}>
+                    <Menu.Item key='productOptional' onClick={() => {
+                      validateForm()
+                        .then(r => {
+                          // stop when errors found
+                          if (Object.keys(r).length) {
+                            submitForm() // show errors
+                            return false
+                          }
+
+                          // if validation is correct - switch tabs
+                          this.switchTab(1, values, setFieldValue)
+                        })
+                        .catch(e => {
+                          console.log('CATCH', e)
+                        })
+                    }}>
                       OPTIONAL PRODUCT INFO
                     </Menu.Item>
                   ),
-                  render: () => (
-                    <Tab.Pane>
+                  pane: (
+                    <Tab.Pane style={{height: '1px', flexGrow: '10', flexShrink: '10'}}>
                       <Grid style={{marginTop: '2rem'}}>
                         <GridColumn width={11}>
                           <Grid columns={3} centered>
@@ -873,7 +878,7 @@ export default class AddInventoryForm extends Component {
             </>
           )}
         </Form>
-      </>
+      </div>
     )
   }
 }
