@@ -94,7 +94,7 @@ export default function reducer(state = initialState, action) {
             ...state,
             warehousesList: action.payload.data.map((warehouse) => {
               return {
-                ...warehouse,
+                key: warehouse.id,
                 text: warehouse.name,
                 value: warehouse.id
               }

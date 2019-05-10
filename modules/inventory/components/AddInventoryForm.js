@@ -40,10 +40,7 @@ const ResponsiveColumn = styled(GridColumn)`
 const initValues = {
   doesExpire: false,
   inStock: true,
-  lots: [{
-    lotNumber: '1',
-    pkgAmount: null
-  }],
+  lots: [],
   minimumRequirement: true,
   minimum: 1,
   multipleLots: false,
@@ -58,7 +55,8 @@ const initValues = {
   processingTimeDays: 1,
   splits: 1,
   touchedLot: false,
-  validityDate: ""
+  validityDate: "",
+  warehouse: 0
 }
 
 val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
@@ -89,7 +87,7 @@ const validationScheme = val.object().shape({
   product: val.string().required("required"),
   processingTimeDays: val.number().required("required"),
   doesExpire: val.bool(),
-  pkgAmount: val.number().nullable().required("Is required"),
+  pkgAmount: val.number().nullable().moreThan(0, 'Amount has to be greater than 0').required("required"),
   validityDate: val.string().matches(/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, { message: 'not valid date' }),
   lots: val.array().of(val.object().uniqueProperty('lotNumber', 'LOT number has to be unique').shape({
     lotNumber: val.string().nullable().required("required"),
@@ -106,13 +104,13 @@ const validationScheme = val.object().shape({
   pricing: val.object().shape({
     tiers: val.array().of(val.object().shape({
       quantityFrom: val.number().nullable().moreThan(0, "Must be greater than 0").required("Minimum quantity must be set"),
-      price: val.number().nullable().moreThan(0, "Must be greater than 0").required("Price must be set").test("maxdec", "There can be maximally 3 decimal places.", val => {
+      price: val.number().nullable().moreThan(0, "Must be greater than 0").required("required").test("maxdec", "There can be maximally 3 decimal places.", val => {
         return !val || val.toString().indexOf('.') === -1 || val.toString().split(".")[1].length <= 3
       })
     }))
   }),
   touchedLot: val.bool(),
-  warehouse: val.number().required('required')
+  warehouse: val.number().moreThan(0, "required").required('required')
 })
 
 export default class AddInventoryForm extends Component {
@@ -121,7 +119,8 @@ export default class AddInventoryForm extends Component {
     initialState: {
 
     },
-    activeIndex: 0
+    activeIndex: 0,
+    activeTab: 0
   }
 
   accClick = (e, titleProps) => {
@@ -172,6 +171,29 @@ export default class AddInventoryForm extends Component {
     }
 
     return priceTiers
+  }
+
+  switchTab = (newTab, values) => {
+    let lotAmount = values.lots.length === 0 ? parseInt(values.pkgAmount) : 0
+    if (newTab === 1 && lotAmount > 0) {
+      this.setState({
+        activeTab: newTab,
+        initialState: {
+          ...values,
+          lots: [{
+            lotNumber: '1',
+            pkgAmount: lotAmount
+          }]
+        }
+      })
+    } else {
+      this.setState({
+        activeTab: newTab,
+        initialState: {
+          ...values
+        }
+      })
+    }
   }
 
   renderPricingTiers = (count) => {
@@ -417,7 +439,7 @@ export default class AddInventoryForm extends Component {
           <Menu secondary>
             <Menu.Item header>
               <Header as='h1' size='medium'>
-                <FormattedMessage id='myInventory.myInventory'
+                <FormattedMessage id={this.props.edit ? 'addInventory.editInventory' : 'addInventory.addInventory'}
                                   defaultMessage={this.props.edit ? 'EDIT INVENTORY' : 'ADD INVENTORY'} />
               </Header>
             </Menu.Item>
@@ -439,7 +461,7 @@ export default class AddInventoryForm extends Component {
               })
           }}
         >
-          {({ values, errors, setFieldValue }) => (
+          {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => (
             <>
               <Modal open={this.props.poCreated} closeOnDimmerClick={false} size='tiny'>
                 <Modal.Header>Product Offer was created</Modal.Header>
@@ -451,14 +473,29 @@ export default class AddInventoryForm extends Component {
                   <Button primary icon='checkmark' labelPosition='right' content='Go to My Inventory' onClick={this.goToList} />
                 </Modal.Actions>
               </Modal>
-              <Tab className='inventory' menu={{ secondary: true, pointing: true }} panes={[
+              <Tab className='inventory' menu={{ secondary: true, pointing: true }} renderActiveOnly={false} activeIndex={this.state.activeTab} panes={[
                 {
                   menuItem: (
-                    <Menu.Item key='productOffer'>
+                    <Menu.Item key='productOffer'onClick={() => {
+                      validateForm()
+                        .then(r => {
+                          // stop when errors found
+                          if (Object.keys(r).length) {
+                            submitForm() // show errors
+                            return false
+                          }
+
+                          // if validation is correct - switch tabs
+                          this.switchTab(0, values)
+                        })
+                        .catch(e => {
+                          console.log('CATCH', e)
+                        })
+                    }}>
                       PRODUCT OFFER
                     </Menu.Item>
                   ),
-                  render: () => (
+                  pane: (
                     <Tab.Pane>
                       <Grid divided style={{ marginTop: '2rem' }}>
                         <Grid.Column width={5}>
@@ -510,7 +547,10 @@ export default class AddInventoryForm extends Component {
                           <Header as='h3'>Where will this product ship from?</Header>
                           <FormGroup>
                             <FormField width={10}>
-                              <Dropdown label="Warehouse" name="warehouse" options={warehousesList} />
+                              <Dropdown label="Warehouse" name="warehouse" options={warehousesList} inputProps={{
+                                selection: true,
+                                value: 0
+                              }} />
                             </FormField>
                           </FormGroup>
 
@@ -623,11 +663,26 @@ export default class AddInventoryForm extends Component {
                 },
                 {
                   menuItem: (
-                    <Menu.Item key='productOffer' onClick={() => { if (values.lots[0].pkgAmount === null) setFieldValue('lots[0].pkgAmount', values.pkgAmount)}}>
+                    <Menu.Item key='productOptional' onClick={() => {
+                      validateForm()
+                        .then(r => {
+                          // stop when errors found
+                          if (Object.keys(r).length) {
+                            submitForm() // show errors
+                            return false
+                          }
+
+                          // if validation is correct - switch tabs
+                          this.switchTab(1, values)
+                        })
+                        .catch(e => {
+                          console.log('CATCH', e)
+                        })
+                    }}>
                       OPTIONAL PRODUCT INFO
                     </Menu.Item>
                   ),
-                  render: () => (
+                  pane: (
                     <Tab.Pane>
                       <Grid style={{marginTop: '2rem'}}>
                         <GridColumn width={11}>
