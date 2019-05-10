@@ -2,7 +2,7 @@ import * as AT from './action-types'
 import * as api from './api'
 
 export function initProductOfferEdit(id) {
-  alert('INIT')
+
   return dispatch => {
     
       dispatch(getProductConditions())
@@ -10,7 +10,9 @@ export function initProductOfferEdit(id) {
       dispatch(getProductGrades())
       dispatch(getWarehouses())
 
-      if (id) dispatch(getProductOffer(id))
+      if (id) {
+        dispatch(getProductOffer(id))
+      }
   }
 }
 
@@ -156,7 +158,21 @@ export function getMyProductOffers() {
 export function getProductOffer(productOfferId) {
   return {
     type: AT.INVENTORY_GET_PRODUCT_OFFER,
-    payload: api.getProductOffer(productOfferId)
+    async payload() {
+      const {data} = await api.getProductOffer(productOfferId)
+
+      return {
+        data: {
+          ...data,
+          searchedProducts: [{
+            text: data.product.casProduct.casIndexName,
+            value: data.product,
+            key: data.product.casProduct.id
+          }],
+          searchedProductsLoading: false
+        }
+      }
+    }
   }
 }
 

@@ -89,6 +89,7 @@ export default function reducer(state = initialState, action) {
               value: action.payload.data.origin.id,
               text: action.payload.data.origin.name
             }]: [],
+            
             initialState: {
               assayMax: data.assayMax,
               assayMin: data.assayMin,
@@ -159,7 +160,7 @@ export default function reducer(state = initialState, action) {
             ...state,
             warehousesList: action.payload.data.map((warehouse) => {
               return {
-                key: warehouse.id,
+                ...warehouse,
                 text: warehouse.name,
                 value: warehouse.id
               }
