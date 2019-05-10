@@ -176,6 +176,13 @@ export function getProductOffer(productOfferId) {
   }
 }
 
+export function deleteProductOffer(productOfferId) {
+  return async dispatch => {
+    await api.deleteProductOffer(productOfferId)
+    dispatch(getMyProductOffers())
+  }
+}
+
 export function getWarehouses() {
   return {
     type: AT.INVENTORY_GET_WAREHOUSES,

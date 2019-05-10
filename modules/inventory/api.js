@@ -36,6 +36,10 @@ export async function getProductOffer(poId) {
   return api.get(`/prodex/api/product-offers/${poId}`)
 }
 
+export async function deleteProductOffer(poId) {
+  return api.delete(`/prodex/api/product-offers/${poId}`)
+}
+
 export async function getWarehouses() {
   const response = await api.get(`/prodex/api/branches/warehouses/`)
   return response

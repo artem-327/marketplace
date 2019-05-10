@@ -89,7 +89,7 @@ export default class MyInventory extends Component {
           rowActions={[
             { text: 'Edit listing', callback: (row) => Router.push(`/inventory/edit/${row.id}`) },
             { text: 'Custom broadcast', callback: (row) => {} },
-            { text: 'Delete listing', callback: (row) => {} }
+            { text: 'Delete listing', callback: (row) => { this.props.deleteProductOffer(row.id)} }
           ]}
         />
 
