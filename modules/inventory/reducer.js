@@ -29,6 +29,13 @@ export default function reducer(state = initialState, action) {
           }
         }
 
+        case AT.INVENTORY_EDIT_PRODUCT_OFFER_FULFILLED: {
+          return {
+            ...state,
+            poCreated: true
+          }
+        }
+
         case AT.INVENTORY_GET_PRODUCT_CONDITIONS_FULFILLED: {
           return {
             ...state,

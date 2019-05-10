@@ -173,25 +173,17 @@ export default class AddInventoryForm extends Component {
     return priceTiers
   }
 
-  switchTab = (newTab, values) => {
+  switchTab = (newTab, values, setFieldValue) => {
     let lotAmount = values.lots.length === 0 ? parseInt(values.pkgAmount) : 0
     if (newTab === 1 && lotAmount > 0) {
+      setFieldValue('lots[0].lotNumber', '1')
+      setFieldValue('lots[0].pkgAmount', lotAmount)
       this.setState({
-        activeTab: newTab,
-        initialState: {
-          ...values,
-          lots: [{
-            lotNumber: '1',
-            pkgAmount: lotAmount
-          }]
-        }
+        activeTab: newTab
       })
     } else {
       this.setState({
-        activeTab: newTab,
-        initialState: {
-          ...values
-        }
+        activeTab: newTab
       })
     }
   }
@@ -321,7 +313,10 @@ export default class AddInventoryForm extends Component {
                   <Button fluid size='big' floated='left'>Discard</Button>
                 </ResponsiveColumn>
                 <GridColumn computer={10} mobile={16}>
-                  <Button.Submit fluid size='big' floated='right' style={{ paddingLeft: '1em', paddingRight: '1em' }}>Add Product Offer</Button.Submit>
+                  <Button.Submit fluid size='big' floated='right' style={{ paddingLeft: '1em', paddingRight: '1em' }}>
+                    <FormattedMessage id={this.props.edit ? 'addInventory.editButton' : 'addInventory.addButton'}
+                                      defaultMessage={this.props.edit ? 'Edit Product Offer' : 'Add Product Offer'} />
+                  </Button.Submit>
                 </GridColumn>
               </GridRow>
             </Grid>
@@ -377,7 +372,7 @@ export default class AddInventoryForm extends Component {
     } = this.state
 
     return (
-      <>
+      <div id='page' className='flex stretched'>
         <div className='header-top'>
           <Menu secondary>
             <Menu.Item header>
@@ -401,22 +396,34 @@ export default class AddInventoryForm extends Component {
               .finally(() => {
                 actions.setSubmitting(false)
                 actions.resetForm(initValues)
+                /*if (this.props.edit) {
+                  this.goToList()
+                }*/
               })
           }}
+          className='inventory'
         >
           {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => (
             <>
               <Modal open={this.props.poCreated} closeOnDimmerClick={false} size='tiny'>
-                <Modal.Header>Product Offer was created</Modal.Header>
-                <Modal.Content>
-                  What now?
-                </Modal.Content>
+                <Modal.Header>
+                  <FormattedMessage id={this.props.edit ? 'addInventory.editDone' : 'addInventory.addDone'}
+                                    defaultMessage={this.props.edit ? 'Product Offer was edited' : 'Product Offer was created'} />
+                </Modal.Header>
+                {this.props.edit ? '' : (
+                  <Modal.Content>
+                    <FormattedMessage id={'addInventory.whatNow'}
+                                      defaultMessage={'What now?'} />
+                  </Modal.Content>
+                )}
                 <Modal.Actions>
-                  <Button icon='add' labelPosition='right' content='Add another one' onClick={this.resetForm} />
+                  {this.props.edit ? '' : (
+                    <Button icon='add' labelPosition='right' content='Add another one' onClick={this.resetForm} />
+                  )}
                   <Button primary icon='checkmark' labelPosition='right' content='Go to My Inventory' onClick={this.goToList} />
                 </Modal.Actions>
               </Modal>
-              <Tab className='inventory' menu={{ secondary: true, pointing: true }} renderActiveOnly={false} activeIndex={this.state.activeTab} panes={[
+              <Tab className='inventory flex stretched' menu={{ secondary: true, pointing: true }} renderActiveOnly={false} activeIndex={this.state.activeTab} style={{height: '100%'}} panes={[
                 {
                   menuItem: (
                     <Menu.Item key='productOffer'onClick={() => {
@@ -429,7 +436,7 @@ export default class AddInventoryForm extends Component {
                           }
 
                           // if validation is correct - switch tabs
-                          this.switchTab(0, values)
+                          this.switchTab(0, values, setFieldValue)
                         })
                         .catch(e => {
                           console.log('CATCH', e)
@@ -439,7 +446,7 @@ export default class AddInventoryForm extends Component {
                     </Menu.Item>
                   ),
                   pane: (
-                    <Tab.Pane>
+                    <Tab.Pane style={{height: '1px', flexGrow: '10', flexShrink: '10'}}>
                       <Grid divided style={{ marginTop: '2rem' }}>
                         <Grid.Column width={5}>
                           <Header as='h3'>What product do you want to list?</Header>
@@ -616,7 +623,7 @@ export default class AddInventoryForm extends Component {
                           }
 
                           // if validation is correct - switch tabs
-                          this.switchTab(1, values)
+                          this.switchTab(1, values, setFieldValue)
                         })
                         .catch(e => {
                           console.log('CATCH', e)
@@ -626,7 +633,7 @@ export default class AddInventoryForm extends Component {
                     </Menu.Item>
                   ),
                   pane: (
-                    <Tab.Pane>
+                    <Tab.Pane style={{height: '1px', flexGrow: '10', flexShrink: '10'}}>
                       <Grid style={{marginTop: '2rem'}}>
                         <GridColumn width={11}>
                           <Grid columns={3} centered>
@@ -871,7 +878,7 @@ export default class AddInventoryForm extends Component {
             </>
           )}
         </Form>
-      </>
+      </div>
     )
   }
 }

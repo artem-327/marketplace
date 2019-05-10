@@ -67,7 +67,7 @@ export function removeAttachmentLink(isLot, itemId, aId) {
 }
 
 export async function searchManufacturers(text) {
-  const response = await api.get(`/prodex/api/manufacturers?search=${text}`)
+  const response = await api.get(`/prodex/api/manufacturers/search?search=${text}`)
   return response
 }
 
