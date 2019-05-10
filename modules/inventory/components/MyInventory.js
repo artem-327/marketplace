@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { Container, Menu, Header } from "semantic-ui-react"
 import SubMenu from '~/src/components/SubMenu'
 import {FormattedMessage} from 'react-intl'
+import Router from 'next/router'
 import ProdexGrid from '~/components/table'
 
 export default class MyInventory extends Component {
@@ -86,7 +87,7 @@ export default class MyInventory extends Component {
           }}
           onSelectionChange={selectedRows => this.setState({selectedRows})}
           rowActions={[
-            { text: 'Edit listing', callback: (row) => {} },
+            { text: 'Edit listing', callback: (row) => Router.push(`/inventory/edit/${row.id}`) },
             { text: 'Custom broadcast', callback: (row) => {} },
             { text: 'Delete listing', callback: (row) => {} }
           ]}

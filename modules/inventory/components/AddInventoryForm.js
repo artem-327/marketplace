@@ -331,6 +331,7 @@ export default class AddInventoryForm extends Component {
       this.props.getProductOffer(this.props.edit).then(async (response) => {
         // need to prepare searchedProducts before filling form data
         await this.props.fillProduct(response.value.data.product)
+        
         setTimeout(() => {
           this.setState({
             initialState: {

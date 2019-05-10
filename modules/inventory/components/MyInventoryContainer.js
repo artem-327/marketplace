@@ -11,6 +11,7 @@ function mapStateToProps(store) {
       const qtyPart = `${po.product.packagingUnit ? po.product.packagingUnit.nameAbbreviation : ''}`
       
       return {
+        id: po.id,
         productName: po.product.productName,
         productNumber: po.product.casProduct ? po.product.casProduct.casNumber : 'Unmapped',
         chemicalName: po.product.casProduct ? po.product.casProduct.chemicalName : po.product.productName,
