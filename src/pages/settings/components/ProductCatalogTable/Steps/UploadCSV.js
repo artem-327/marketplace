@@ -77,7 +77,6 @@ class UploadCSV extends Component {
   }
 
   onDrop = acceptedFiles => {
-    console.log(acceptedFiles);
     if (acceptedFiles.length !== 0) {
       this.props.uploadCSVFile(acceptedFiles[0]);
       this.setState({ uploadedFile: acceptedFiles[0], hasError: false });

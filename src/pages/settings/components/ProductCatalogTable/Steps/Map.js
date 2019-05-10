@@ -27,8 +27,6 @@ class Map extends Component {
   render() {
     const { CSV } = this.props;
 
-    console.log(this.state.newHeaders);
-
     return (
       <Table celled padded textAlign="center">
         <Table.Header>
