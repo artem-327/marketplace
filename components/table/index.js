@@ -26,7 +26,8 @@ import {
   TableGroupRow,
   DragDropProvider,
   TableColumnReordering,
-  VirtualTable
+  VirtualTable,
+  TableColumnResizing
 } from '@devexpress/dx-react-grid-bootstrap4'
 import { TableSelection } from '~/components/dx-grid-semantic-ui/plugins'
 
@@ -96,6 +97,7 @@ const SortLabel = ({ onSort, children, direction }) => (
 )
 
 export default class _Table extends Component {
+  
   static propTypes = {
     columns: pt.arrayOf(
       pt.shape({
@@ -117,6 +119,7 @@ export default class _Table extends Component {
     onSelectionChange: pt.func,
     renderGroupLabel: pt.func,
     getChildGroups: pt.func,
+    tableName: pt.string
   }
 
   static defaultProps = {
@@ -132,14 +135,19 @@ export default class _Table extends Component {
     onSelectionChange: () => { }
   }
 
-
   constructor(props) {
     super(props)
 
     this.state = {
       hiddenColumnNames: [],
-      expandedGroups: []
+      expandedGroups: [],
+      columnsSettings: {
+        widths: this.getColumnsExtension()
+      }
     }
+  }
+  componentDidMount() {
+    this.loadColumnsSettings()
   }
 
   componentDidUpdate(prevProps) {
@@ -168,10 +176,33 @@ export default class _Table extends Component {
   }
 
   getColumnsExtension = () => {
-    return this.getColumns().map(c => ({
+    const columns = this.getColumns()
+    return columns.map(c => ({
       columnName: c.name,
-      width: c.width || undefined
+      width: c.width || (1280/columns.length)
     }))
+  }
+
+  loadColumnsSettings = () => {
+    const {tableName} = this.props
+
+    if (tableName) {
+      localStorage[tableName] && this.setState({
+        columnsSettings: JSON.parse(localStorage[tableName])
+      })
+    }
+  }
+  handleColumnsSettings = (data) => {
+    const {tableName} = this.props
+
+    this.setState(state => ({
+      columnsSettings: {
+        ...state.columnsSettings,
+        ...data
+      }
+    }), () => { 
+      tableName && (localStorage[tableName] = JSON.stringify(this.state.columnsSettings))
+    })
   }
 
   render() {
@@ -192,10 +223,11 @@ export default class _Table extends Component {
       groupBy,
       renderGroupLabel,
       getChildGroups,
+      tableName,
       ...restProps
     } = this.props
 
-    const { hiddenColumnNames, columnSettingOpen, expandedGroups } = this.state
+    const { hiddenColumnNames, columnSettingOpen, expandedGroups, columnsSettings } = this.state
     const grouping = groupBy.map(g => ({ columnName: g }))
 
     return (
@@ -207,8 +239,9 @@ export default class _Table extends Component {
           <ColumnsSettingModal 
             columns={columns} 
             open={columnSettingOpen}
-            hiddenColumnNames={hiddenColumnNames} 
+            hiddenColumnNames={columnsSettings.hiddenColumnNames || []} 
             onChange={(hiddenColumnNames) => {
+              this.handleColumnsSettings({hiddenColumnNames})
               this.setState({hiddenColumnNames, columnSettingOpen: false})
             }}
           />
@@ -217,7 +250,12 @@ export default class _Table extends Component {
             columns={this.getColumns()}
             rootComponent={GridRoot}
           >
-            {sorting && <SortingState defaultSorting={[]} />}
+            {sorting && 
+              <SortingState 
+                sorting={columnsSettings.sorting}
+                onSortingChange={sorting => this.handleColumnsSettings({sorting})} 
+              />
+            }
             {sorting && <IntegratedSorting />}
 
             {groupBy && 
@@ -236,7 +274,7 @@ export default class _Table extends Component {
             }
 
             {columnReordering && <DragDropProvider />}
-
+            
             {rowSelection && <SelectionState onSelectionChange={onSelectionChange} />}
             {rowSelection && <IntegratedSelection />}
 
@@ -246,6 +284,12 @@ export default class _Table extends Component {
             {virtual
               ? <VirtualTable columnExtensions={this.getColumnsExtension()} height="auto" cellComponent={TableCells} />
               : <Table columnExtensions={this.getColumnsExtension()} />}
+
+            <TableColumnResizing 
+              onColumnWidthsChange={widths => this.handleColumnsSettings({widths})}
+              columnWidths={columnsSettings.widths}
+              // defaultColumnWidths={this.getColumnsExtension()} 
+            />
 
             {showHeader &&
               <TableHeaderRow
@@ -257,13 +301,16 @@ export default class _Table extends Component {
               actions={rowActions}
             />
 
-            <TableColumnVisibility hiddenColumnNames={hiddenColumnNames} />
+            <TableColumnVisibility hiddenColumnNames={columnsSettings.hiddenColumnNames} />
 
             {columnReordering && (
               <TableColumnReordering
-                defaultOrder={columns.map(c => c.name)}
+                onOrderChange={order => this.handleColumnsSettings({order})}
+                order={columnsSettings.order}
+                // defaultOrder={columns.map(c => c.name)}
               />
             )}
+
             {rowSelection && (
               <TableSelection
                 showSelectAll={showSelectAll}

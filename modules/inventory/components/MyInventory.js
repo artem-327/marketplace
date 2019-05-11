@@ -8,16 +8,16 @@ import ProdexGrid from '~/components/table'
 export default class MyInventory extends Component {
   state = {
     columns: [
-      { name: 'productName', title: 'Product Name' },
+      { name: 'productName', title: 'Product Name', width: 250 },
       { name: 'productNumber', title: 'Product Number' },
-      { name: 'warehouse', title: 'Warehouse' },
+      { name: 'warehouse', title: 'Warehouse', width: 180 },
       { name: 'available', title: 'Available', width: 80 },
       { name: 'packaging', title: 'Packaging' },
       { name: 'pkgAmount', title: 'Pkg. Size' },
       { name: 'quantity', title: 'Quantity' },
       { name: 'cost', title: 'Cost' },
       { name: 'fobPrice', title: 'FOB Price' },
-      { name: 'manufacturer', title: 'MFR.' },
+      { name: 'manufacturer', title: 'MFR.', width: 220 },
       { name: 'broadcast', title: 'Broadcast', width: 120 }
     ],
     selectedRows: []
@@ -63,6 +63,7 @@ export default class MyInventory extends Component {
           </Menu>
         </Container>
         <ProdexGrid
+          tableName="my_inventory_grid"
           loading={loading}
           columns={columns}
           rows={rows}
