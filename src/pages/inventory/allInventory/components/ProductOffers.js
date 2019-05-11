@@ -74,30 +74,28 @@ class ProductOffers extends Component {
       }
     })
     return (
-      <div className="App ">
-        <DataTable id="allInventoryTable"
-          selectableRows
-          onRowClick={this.props.onRowClick}
-          sortFunc={(nameColumn) => console.log(nameColumn)}
-          headerInit={[
-            { name: 'Merchant' },
-            { name: 'Available' },
-            { name: 'Packaging' },
-            { name: 'Quantity' },
-            { name: 'FOBPrice' },
-            { name: 'TradeName' },
-            { name: 'MFR.' },
-            { name: 'Origin' },
-            { name: 'Expiration' },
-            { name: 'Assay' },
-            { name: 'Condition' },
-            { name: 'Form' },
-            { name: 'Location' }]}
-          rows={rows}
-          history={this.props.history}
-          location={this.props.location}
-        />
-      </div>
+      <DataTable id="allInventoryTable"
+        selectableRows
+        onRowClick={this.props.onRowClick}
+        sortFunc={(nameColumn) => console.log(nameColumn)}
+        headerInit={[
+          { name: 'Merchant' },
+          { name: 'Available' },
+          { name: 'Packaging' },
+          { name: 'Quantity' },
+          { name: 'FOBPrice' },
+          { name: 'TradeName' },
+          { name: 'MFR.' },
+          { name: 'Origin' },
+          { name: 'Expiration' },
+          { name: 'Assay' },
+          { name: 'Condition' },
+          { name: 'Form' },
+          { name: 'Location' }]}
+        rows={rows}
+        history={this.props.history}
+        location={this.props.location}
+      />
     )
   }
 }
