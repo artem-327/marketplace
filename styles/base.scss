@@ -346,6 +346,18 @@ div.inventory {
     padding-left: 0;
     padding-right: 0;
     background: transparent;
+
+    .ui.table.attached {
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    .ui.message.attached {
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+    }
   }
 }
 
