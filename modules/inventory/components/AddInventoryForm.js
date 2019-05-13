@@ -38,6 +38,7 @@ const ResponsiveColumn = styled(GridColumn)`
 `
 
 const initValues = {
+  costs: [],
   doesExpire: false,
   inStock: true,
   lots: [],
@@ -83,6 +84,13 @@ val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
 })
 
 const validationScheme = val.object().shape({
+  costs: val.array().of(val.object().shape({
+    description: val.string(),
+    lot: val.number().moreThan(-1, 'Lot has to be selected').required("required"),
+    cost: val.number().nullable().moreThan(0, "Must be greater than 0").required("required").test("maxdec", "There can be maximally 3 decimal places.", val => {
+      return !val || val.toString().indexOf('.') === -1 || val.toString().split(".")[1].length <= 3
+    })
+  })),
   inStock: val.bool().required("required"),
   product: val.string().required("required"),
   processingTimeDays: val.number().required("required"),
@@ -333,6 +341,43 @@ export default class AddInventoryForm extends Component {
   goToList = () => {
     this.resetForm()
     Router.push('/inventory/my')
+  }
+
+  modifyCosts = (setFieldValue, values) => {
+    if (!values.costs.length)
+      return true
+
+    for (let i = 0; i < values.costs.length; i++) {
+      console.log(parseInt(values.costs[i].lot))
+      setFieldValue(`costs[${i}].costUom`, +(parseFloat(values.costs[i].cost) * (parseInt(values.costs[i].lot) > 0 ? parseFloat(values.lots[parseInt(values.costs[i].lot) - 1].pkgAmount) : (parseInt(values.costs[i].lot) < 0 ? 0 : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3)))
+    }
+  }
+
+  removeLot = (lotHelpers, setFieldValue, values, lotIndex) => {
+    if (values.costs.length) {
+      for (let i = 0; i < values.costs.length; i++) {
+        // unset all cost rows if they are using only removed lot
+        if (parseInt(values.costs[i].lot - 1) === lotIndex) {
+          values.costs[i].lot = -1
+          setFieldValue(`costs[${i}].lot`, -1)
+        }
+        // if used lot has higher index then it has to be moved down as one lot will be completely removed
+        if (parseInt(values.costs[i].lot - 1) > lotIndex) {
+          values.costs[i].lot = parseInt(values.costs[i].lot) - 1
+          setFieldValue(`costs[${i}].lot`, parseInt(values.costs[i].lot))
+        }
+      }
+    }
+
+    // remove lot row
+    lotHelpers.remove(lotIndex)
+    values.lots = values.lots.filter((lot, index) => {
+      return index !== lotIndex
+    })
+    console.log('X', values)
+
+    // modify costs
+    this.modifyCosts(setFieldValue, values)
   }
 
   componentWillMount = async () => {
@@ -738,7 +783,17 @@ export default class AddInventoryForm extends Component {
                                     {values.lots && values.lots.length ? values.lots.map((lot, index) => (
                                       <Table.Row key={index}>
                                         <TableCell><Input name={`lots[${index}].lotNumber`} inputProps={{onClick: () => setFieldValue('touchedLot', true)}} /></TableCell>
-                                        <TableCell><Input name={`lots[${index}].pkgAmount`} inputProps={{onClick: () => setFieldValue('touchedLot', true)}} /></TableCell>
+                                        <TableCell><Input name={`lots[${index}].pkgAmount`} inputProps={{
+                                          onClick: () => setFieldValue('touchedLot', true),
+                                          onChange: (e, data) => this.modifyCosts(setFieldValue, {
+                                            costs: values.costs,
+                                            lots: values.lots.map((bLot, bIndex) => {
+                                              return {
+                                                pkgAmount: bIndex === index ? data.value : bLot.pkgAmount
+                                              }
+                                            })
+                                          })
+                                        }} /></TableCell>
                                         <TableCell>0</TableCell>
                                         <TableCell>0</TableCell>
                                         <TableCell><DateInput name={`lots[${index}].manufacturedDate`} /></TableCell>
@@ -765,7 +820,7 @@ export default class AddInventoryForm extends Component {
                                                      )}
                                           />
                                         </TableCell>
-                                        <TableCell><Icon name='trash alternate outline' size='large' onClick={() => arrayHelpers.remove(index)} /></TableCell>
+                                        <TableCell><Icon name='trash alternate outline' size='large' onClick={() => this.removeLot(arrayHelpers, setFieldValue, { costs: values.costs, lots: values.lots }, index)} /></TableCell>
                                       </Table.Row>
                                     )) : ''
                                     }
@@ -807,7 +862,7 @@ export default class AddInventoryForm extends Component {
                                         </Table.Row>
                                       </Table.Header>
                                       <Table.Body>
-                                        {values.costs && values.costs.length ? values.costs.map((lot, index) => (
+                                        {values.costs && values.costs.length ? values.costs.map((costRow, index) => (
                                           <Table.Row key={index}>
                                             <TableCell width={4}><FormField width={16}><Input name={`costs[${index}].description`} /></FormField></TableCell>
                                             <TableCell width={2}>
@@ -822,15 +877,18 @@ export default class AddInventoryForm extends Component {
                                                       return {
                                                         key: index + 1,
                                                         text: lot.lotNumber,
-                                                        value: lot.lotNumber
+                                                        value: index + 1
                                                       }
                                                     }) : [])
                                                   }
+                                                  inputProps={{
+                                                    onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(values.costs[index].cost) * (parseInt(data.value) ? parseFloat(values.lots[parseInt(data.value) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3))
+                                                  }}
                                                 />
                                               </FormField>
                                             </TableCell>
-                                            <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].cost`} /></FormField></TableCell>
-                                            <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].costUom`} /></FormField></TableCell>
+                                            <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].cost`} inputProps={{ type: 'number', step: '1', value: null, min: 0, onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(data.value) * (parseInt(values.costs[index].lot) ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3))}} /></FormField></TableCell>
+                                            <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].costUom`} disabled={true} inputProps={{ type: 'text', step: '0.01', value: null, min: 0 }} /></FormField></TableCell>
                                             <TableCell width={3}>
                                               <UploadLot {...this.props}
                                                          attachments={values.costs[index].attachments}

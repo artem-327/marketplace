@@ -38,6 +38,14 @@ export function addProductOffer(values, poId = false) {
     attachments: values.attachments && values.attachments.length ? values.attachments.map(att => {
       return att.id
     }) : null,
+    costRecords: values.costs ? values.costs.map(cost => {
+      return {
+        attachment: null,
+        description: cost.description,
+        lot: cost.lot === 0 ? 0 : values.lots[cost.lot - 1].lotNumber,
+        value: parseInt(cost.cost)
+      }
+    }) : null,
     externalNotes: values.externalNotes ? values.externalNotes : null,
     inStock: !!values.inStock,
     internalNotes: values.internalNotes ? values.internalNotes : null,
