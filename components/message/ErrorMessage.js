@@ -75,7 +75,7 @@ export default class ErrorMessage extends Component {
 
     return (
       <MessageContainer fluid>
-        <Message icon size="small"
+        <Message icon
           onDismiss={() => this.setState({ display: false })}
           {...this.props.messageProps}
           {...this.state.error} 
@@ -91,7 +91,7 @@ ErrorMessage.propTypes = {
 
 ErrorMessage.defaultProps = {
   messageProps: {
-    size: '',
+    size: 'small',
     contentAsHeader: false,
     error: true,
     icon: 'warning',

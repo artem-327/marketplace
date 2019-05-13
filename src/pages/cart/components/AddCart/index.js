@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import AddCart from './AddCart';
-import { getProductOffer, postNewOrder, postOrderEdit, getOrderDetail, sidebarChanged } from "../../../../modules/cart"
+import { getProductOffer, postNewOrder, postOrderEdit, sidebarChanged, updateCartItem, addCartItem } from "../../../../modules/cart"
 import { removePopup } from "../../../../modules/popup"
 import { getPricing } from '../../../../utils/functions'
 
@@ -18,7 +18,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ getProductOffer, getOrderDetail, postOrderEdit, postNewOrder, removePopup, sidebarChanged }, dispatch)
+    return bindActionCreators({ getProductOffer, postOrderEdit, postNewOrder, removePopup, sidebarChanged, updateCartItem, addCartItem }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddCart);
