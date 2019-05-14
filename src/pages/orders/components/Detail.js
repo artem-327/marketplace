@@ -69,7 +69,8 @@ class Detail extends Component {
     }
 
     downloadOrder = async () => {
-      let pdf = await this.props.downloadPdf(this.props.order.id)
+      let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
+      let pdf = await this.props.downloadPdf(endpointType, this.props.order.id)
 
       const element = document.createElement("a")
       const file = new Blob([pdf.value.data], {type: 'application/pdf'})
@@ -103,7 +104,7 @@ class Detail extends Component {
                     <Grid.Column width={6}>
                         <div className='header-top clean left detail-align'>
                             <h1 className='header inv-header' style={{marginBottom: '0.5rem', textTransform: 'uppercase', fontSize: '1.14285714em', fontWeight: '500'}}>{ordersType} Order {isDetailFetching ? '' : '# '+order.id}</h1>
-                            <a onClick={() => this.downloadOrder()} style={{fontSize: '1.14285714em', cursor: 'pointer'}}><Icon name='download' style={{verticalAlign: 'top'}} color='blue' /> Download Sales Order</a>
+                            <a onClick={() => this.downloadOrder()} style={{fontSize: '1.14285714em', cursor: 'pointer'}}><Icon name='download' style={{verticalAlign: 'top'}} color='blue' /> Download {order.orderType} Order</a>
                         </div>
                     </Grid.Column>
                     <Grid.Column>
@@ -408,7 +409,7 @@ class Detail extends Component {
 
                             <AccordionTitle active={activeIndexes[4]} index={4} onClick={this.handleClick}>
                                 <Icon name={'chevron ' + (activeIndexes[4] ? 'down' : 'up')}  size='large' color={activeIndexes[4] ? 'blue' : 'black'}/>
-                                Payment / Customer
+                                Payment / {order.paymentType}
                             </AccordionTitle>
                             <Accordion.Content active={activeIndexes[4]}>
                                 <Grid divided='horizontally'>
@@ -431,16 +432,16 @@ class Detail extends Component {
                                         </Grid.Column>
                                         <Grid.Column>
                                             <GridData columns={2}>
-                                                <GridDataColumn width={4}><strong>Vendor Name</strong></GridDataColumn>
-                                                <GridDataColumn width={12}>{order.vendorName}</GridDataColumn>
-                                                <GridDataColumn width={4}><strong>Vendor Address</strong></GridDataColumn>
-                                                <GridDataColumn width={12}>{order.vendorAddress}</GridDataColumn>
-                                                <GridDataColumn width={4}><strong>Vendor Phone</strong></GridDataColumn>
-                                                <GridDataColumn width={12}>{order.vendorPhone}</GridDataColumn>
-                                                <GridDataColumn width={4}><strong>Vendor E-Mail</strong></GridDataColumn>
-                                                <GridDataColumn width={12}>{order.vendorEmail}</GridDataColumn>
-                                                <GridDataColumn width={4}><strong>Vendor Contact</strong></GridDataColumn>
-                                                <GridDataColumn width={12}></GridDataColumn>
+                                                <GridDataColumn width={4}><strong>{order.paymentType} Name</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.paymentName}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>{order.paymentType} Address</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.paymentAddress}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>{order.paymentType} Phone</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.paymentPhone}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>{order.paymentType} E-Mail</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.paymentEmail}</GridDataColumn>
+                                                <GridDataColumn width={4}><strong>{order.paymentType} Contact</strong></GridDataColumn>
+                                                <GridDataColumn width={12}>{order.paymentContact}</GridDataColumn>
                                             </GridData>
                                         </Grid.Column>
                                     </Grid.Row>
