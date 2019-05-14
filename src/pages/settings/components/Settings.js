@@ -62,7 +62,7 @@ class Settings extends Component {
             <Grid.Column width={3}>
               <Tabs />
             </Grid.Column>
-            <Grid.Column className="flex stretched" style={{marginTop: '6px'}}>
+            <Grid.Column className="flex stretched" style={{marginTop: '7px'}}>
               {this.renderContent()}
             </Grid.Column>
           </Grid.Row>
