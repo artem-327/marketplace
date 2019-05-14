@@ -142,7 +142,8 @@ export default class _Table extends Component {
       hiddenColumnNames: [],
       expandedGroups: [],
       columnsSettings: {
-        widths: this.getColumnsExtension()
+        widths: this.getColumnsExtension(),
+        order: this.getColumns().map(c => c.name)
       }
     }
   }
