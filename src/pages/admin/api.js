@@ -10,7 +10,7 @@ export async function getAlternativeProductNames(value) {
   return data
 }
 
-export async function getCasProductByString(value, limit=100) {
+export async function getCasProductByString(value, limit=30) {
   const {data} = await api.get(`/prodex/api/cas-products/search?limit=${limit}&pattern=${value}`)
   return data
 }
@@ -34,7 +34,7 @@ export async function getAllUnNumbers() {
   return data
 }
 
-export async function getUnNumbersByString(value, limit=100) {
+export async function getUnNumbersByString(value, limit=30) {
   const {data} = await api.get(`/prodex/api/un-numbers/search?limit=${limit}&pattern=${value}`)
   return data
 }
@@ -83,12 +83,12 @@ export async function getZipCodes() { // TODO Refactor to use limit and search (
   return data
 }
 
-export async function getPrimaryBranchProvinces(id, limit=1000) {
+export async function getPrimaryBranchProvinces(id, limit=30) {
   const {data} = await api.get(`/prodex/api/provinces/search?countryId=${id}&limit=${limit}`)
   return data
 }
 
-export async function getMailingBranchProvinces(id, limit=1000) {
+export async function getMailingBranchProvinces(id, limit=30) {
   const {data} = await api.get(`/prodex/api/provinces/search?countryId=${id}&limit=${limit}`)
   return data
 }

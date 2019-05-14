@@ -34,6 +34,7 @@ export const initialState = {
   // currentTab: "Product catalog",
   currentTab: 'Users',
   isOpenPopup: false,
+  isOpenImportPopup: false,
   currentEditForm: null,
   currentAddForm: null,
   confirmMessage: null,
@@ -42,6 +43,10 @@ export const initialState = {
   deleteRowByid: null,
   filterValue: '',
   editPopupSearchProducts: [],
+  fileCSVId: null,
+  CSV: null,
+  mappedHeaders: null,
+  dataHeaderCSV: null,
   loading: false
 }
 
@@ -59,6 +64,20 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenPopup: false,
         popupValues: null
+      }
+    }
+    case AT.OPEN_IMPORT_POPUP: {
+      return {
+        ...state,
+        isOpenImportPopup: true
+        //popupValues: action.payload
+      }
+    }
+    case AT.CLOSE_IMPORT_POPUP: {
+      return {
+        ...state,
+        isOpenImportPopup: false
+        //popupValues: null
       }
     }
     case AT.OPEN_ROLES_POPUP: {
@@ -424,10 +443,67 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.GET_STORED_CSV_SUCCESS: {
+      const CSV = {
+        headerCSV: action.data.lines[0].columns,
+        bodyCSV: action.data.lines.slice(1)
+      }
+      return {
+        ...state,
+        CSV
+      }
+    }
+
+    case AT.CHANGE_HEADERS_CSV: {
+      return {
+        ...state,
+        mappedHeaders: action.payload
+      }
+    }
+
+    case AT.DATA_HEADER_CSV: {
+      return {
+        ...state,
+        dataHeaderCSV: action.payload
+      }
+    }
+
     case AT.POST_NEW_WAREHOUSE_POPUP: {
       return {
         ...state,
         currentAddForm: state.currentTab
+      }
+    }
+
+    case AT.POST_UPLOAD_CSV_FILE_SUCCESS: {
+      return {
+        ...state,
+        fileCSVId: action.data.id
+      }
+    }
+
+    case AT.POST_CSV_IMPORT_PRODUCTS_SUCCESS: {
+      return {
+        ...state,
+        csvImportError: action.data
+      }
+    }
+
+    case AT.CLOSE_IMPORT_POPUP_SUCCESS: {
+      return {
+        ...state,
+        fileCSVId: null,
+        mappedHeaders: null,
+        dataHeaderCSV: null
+      }
+    }
+
+    case AT.CLEAR_DATA_OF_CSV: {
+      return {
+        ...state,
+        fileCSVId: null,
+        mappedHeaders: null,
+        dataHeaderCSV: null
       }
     }
 

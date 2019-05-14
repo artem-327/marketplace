@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { Header, Menu, Button, Input, Dropdown } from 'semantic-ui-react'
 
-import { openPopup, handleFiltersValue } from '../actions'
+import { openPopup, handleFiltersValue, openImportPopup } from '../actions'
 import unitedStates from '../../../components/unitedStates'
 
 const textsTable = {
@@ -80,7 +80,12 @@ class TablesHandlers extends Component {
   }
 
   render() {
-    const { handleFiltersValue, currentTab, openPopup } = this.props
+    const {
+      handleFiltersValue,
+      currentTab,
+      openPopup,
+      openImportPopup
+    } = this.props
 
     const { filterFieldCurrentValue } = this.state
 
@@ -106,6 +111,16 @@ class TablesHandlers extends Component {
             <Button size="large" primary onClick={() => openPopup()}>
               Add {this.currentTabTitle(currentTab)}
             </Button>
+            {currentTab === 'Product catalog' && (
+              <Button
+                size="large"
+                style={{ marginLeft: 10 }}
+                primary
+                onClick={() => openImportPopup()}
+              >
+                Import {this.currentTabTitle(currentTab)}
+              </Button>
+            )}
           </Menu.Item>
         </Menu.Menu>
       </Menu>
@@ -121,7 +136,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   openPopup,
-  handleFiltersValue
+  handleFiltersValue,
+  openImportPopup
 }
 
 export default connect(

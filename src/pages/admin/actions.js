@@ -184,7 +184,7 @@ export function postNewProductName(productId, value) {
 			type: AT.ADMIN_POST_NEW_PRODUCT_NAME,
 			payload: api.postNewProductName(value)
 		})
-		dispatch(getAlternativeProductNames(productId))
+		await dispatch(getAlternativeProductNames(productId))
 	}
 }
 
@@ -194,7 +194,7 @@ export function updateProductName(productId, id, value) {
 			type: AT.ADMIN_UPDATE_PRODUCT_NAME,
 			payload: api.updateProductName(id, value)
 		})
-		dispatch(getAlternativeProductNames(productId))
+		await dispatch(getAlternativeProductNames(productId))
 	}
 }
 
@@ -298,7 +298,7 @@ export function deleteProductName(productId, id) {
 			type: AT.ADMIN_DELETE_PRODUCT_NAME,
 			payload: api.deleteProductName(id)
 		})
-		dispatch(getAlternativeProductNames(productId))
+		await dispatch(getAlternativeProductNames(productId))
 	}
 }
 

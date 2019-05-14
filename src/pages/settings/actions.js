@@ -13,6 +13,19 @@ export function closePopup(rows = null) {
   }
 }
 
+export function openImportPopup() {
+  return {
+    type: AT.OPEN_IMPORT_POPUP
+    //payload: rows
+  }
+}
+export function closeImportPopup() {
+  return {
+    type: AT.CLOSE_IMPORT_POPUP
+    //payload: rows
+  }
+}
+
 export function openEditPopup(rows) {
   return {
     type: AT.OPEN_EDIT_POPUP,
@@ -49,6 +62,20 @@ export function closeAddPopup() {
     payload: null
   }
 }
+export function changeHeadersCSV(payload) {
+  return {
+    type: AT.CHANGE_HEADERS_CSV,
+    payload
+  }
+}
+
+export function dataHeaderCSV(payload) {
+  return {
+    type: AT.DATA_HEADER_CSV,
+    payload
+  }
+}
+
 export function handleOpenConfirmPopup(payload) {
   return {
     type: AT.OPEN_CONFIRM_POPUP,
@@ -176,6 +203,13 @@ export function getProductsWithRequiredParam(payload) {
   }
 }
 
+export function getStoredCSV(id) {
+  return {
+    type: AT.GET_STORED_CSV,
+    payload: id
+  }
+}
+
 export function postNewUserRequest(userData) {
   return {
     type: AT.POST_NEW_USER_REQUEST,
@@ -238,5 +272,25 @@ export function deleteBankAccount(accountId) {
   return {
     type: AT.DELETE_BANK_ACCOUNT,
     payload: accountId
+  }
+}
+
+export function uploadCSVFile(payload) {
+  return {
+    type: AT.POST_UPLOAD_CSV_FILE,
+    payload: payload
+  }
+}
+
+export function postImportProductCSV(payload, id) {
+  return {
+    type: AT.POST_CSV_IMPORT_PRODUCTS,
+    payload,
+    id
+  }
+}
+export function clearDataOfCSV() {
+  return {
+    type: AT.CLEAR_DATA_OF_CSV
   }
 }

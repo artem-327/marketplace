@@ -151,18 +151,24 @@ export default class _Table extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    prevProps.loading && this.expandGroups()
+    // expand groups after data was loaded when grouping is set
+    prevProps.loading && this.props.groupBy.length > 0 && this.expandGroups()
   }
 
   expandGroups = () => {
     const {groupBy, getChildGroups, rows} = this.props
 
-    if (groupBy) this.setState({
+    if (groupBy.length > 0) this.setState({
       expandedGroups: getChildGroups 
         ? getChildGroups(rows).map(r => r.key)
         : Object.keys(_.groupBy(rows, groupBy.join('|')))
     })
   }
+
+  handleExpandedGroupsChange = expandedGroups => {
+    this.setState({expandedGroups})
+  }
+
 
   getColumns = () => {
     const { rowActions, columns } = this.props
@@ -262,7 +268,7 @@ export default class _Table extends Component {
               <GroupingState 
                 grouping={grouping} 
                 expandedGroups={expandedGroups}
-                onExpandedGroupsChange={(expandedGroups => this.setState({expandedGroups}))}
+                onExpandedGroupsChange={this.handleExpandedGroupsChange}
               />
             }
             {groupBy &&

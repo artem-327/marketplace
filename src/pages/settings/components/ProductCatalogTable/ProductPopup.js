@@ -4,7 +4,7 @@ import filter from 'lodash/filter'
 import escapeRegExp from 'lodash/escapeRegExp'
 import debounce from 'lodash/debounce'
 
-import { Modal, FormGroup, Search, Label } from 'semantic-ui-react'
+import { Modal, FormGroup, FormField, Search, Label } from 'semantic-ui-react'
 
 import {
   closePopup,
@@ -125,19 +125,20 @@ class ProductPopup extends React.Component {
             onReset={closePopup}
             onSubmit={this.handlerSubmit}
           >
-            <FormGroup widths="equal" className="customFormGroup">
-              <label>CAS Number / Product Search</label>
-              <Search
-                className="customSearch"
-                loading={isLoading}
-                onResultSelect={this.handleResultSelect}
-                onSearchChange={debounce(this.handleSearchChange, 500, {
-                  leading: true
-                })}
-                results={results}
-                value={value}
-                resultRenderer={resultRenderer}
-              />
+            <FormGroup widths="equal">
+              <FormField>
+                <label>CAS Number / Product Search</label>
+                <Search
+                  loading={isLoading}
+                  onResultSelect={this.handleResultSelect}
+                  onSearchChange={debounce(this.handleSearchChange, 500, {
+                    leading: true
+                  })}
+                  results={results}
+                  value={value}
+                  resultRenderer={resultRenderer}
+                />
+              </FormField>
             </FormGroup>
             <FormGroup widths="equal">
               <Input type="text" label="Product Name" name="productName" />

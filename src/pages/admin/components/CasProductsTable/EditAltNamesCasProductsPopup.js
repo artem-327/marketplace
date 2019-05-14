@@ -27,11 +27,6 @@ const initialFormValues = {
   casAlternativeNames: [{}]
 }
 
-
-const formValidation = Yup.object().shape({
-  //casIndexName: Yup.string().min(3, "Too short").required("Required"),
-})
-
 const nameValidation = (index, val, vals) => {
   if (val.length >= 3) {
     // length is ok, check if name already exists
@@ -57,6 +52,10 @@ class EditAltNamesCasProductsPopup extends React.Component {
 
   componentDidMount = async () => {
     await this.props.getAlternativeProductNames(this.props.popupValues.data.id)
+    this.processFetchedData()
+  }
+
+  processFetchedData = () => {
     this.setState({
       ...this.state.initialState,
       initialState: {
@@ -75,26 +74,28 @@ class EditAltNamesCasProductsPopup extends React.Component {
     arrayHelpers.insert(0, {id: null, alternativeName: '', color: 'grey', description: '', canSave: false})
   }
 
-  handleDeleteName = (productId, arrayHelpers, val, index) => {
+  handleDeleteName = async (productId, arrayHelpers, val, index) => {
     if (val.id === null) {
       arrayHelpers.remove(index)
     }
     else {
-      this.props.deleteProductName(productId, val.id)
-      arrayHelpers.remove(index)
+      await this.props.deleteProductName(productId, val.id)
+      await this.processFetchedData()
+      //! ! arrayHelpers.remove(index)
     }
   }
 
-  handleSaveName = (productId, val, index) => {
+  handleSaveName = async (productId, val, index) => {
     if (val.alternativeName.length < 3) return
     if (val.id === null) {  // Create new name
       let value = {casProduct: productId, alternativeName: val.alternativeName}
-      this.props.postNewProductName(productId, value)
+      await this.props.postNewProductName(productId, value)
     }
     else {                  // Update name
       let value = {alternativeName: val.alternativeName}
-      this.props.updateProductName(productId, val.id, value)
+      await this.props.updateProductName(productId, val.id, value)
     }
+    await this.processFetchedData()
   }
 
   render() {
@@ -104,6 +105,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
       popupValues,
       altCasNamesRows,
       config,
+      loading,
     } = this.props
 
     const {
@@ -117,7 +119,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
           <Form
             enableReinitialize
             initialValues={{...initialFormValues, ...initialState}}
-            validationSchema={formValidation}
+            loading={loading}
             onReset={closeEditPopup}
           >
             {({ values, errors, setFieldValue }) => (
@@ -204,6 +206,7 @@ const mapStateToProps = state => {
     currentTab: state.admin.currentTab,
     popupValues: state.admin.popupValues,
     altCasNamesRows: state.admin.altCasNamesRows,
+    loading: state.admin.loading,
   }
 }
 
