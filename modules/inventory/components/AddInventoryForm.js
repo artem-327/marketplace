@@ -47,11 +47,9 @@ const initValues = {
   multipleLots: false,
   pkgAmount: 0,
   priceTiers: 1,
-  pricing: {
-    tiers: [
-      { price: null, quantityFrom: 1 }
-    ]
-  },
+  pricingTiers: [
+    { price: null, quantityFrom: 1 }
+  ],
   product: "",
   processingTimeDays: 1,
   splits: 1,
@@ -109,14 +107,12 @@ const validationScheme = val.object().shape({
   splits: val.number().nullable().moreThan(0, "Must be greater than 0"),
   origin: val.number().nullable().moreThan(0, 'Origin value is invalid'),
   priceTiers: val.number(),
-  pricing: val.object().shape({
-    tiers: val.array().of(val.object().shape({
-      quantityFrom: val.number().nullable().moreThan(0, "Must be greater than 0").required("Minimum quantity must be set"),
-      price: val.number().nullable().moreThan(0, "Must be greater than 0").required("required").test("maxdec", "There can be maximally 3 decimal places.", val => {
-        return !val || val.toString().indexOf('.') === -1 || val.toString().split(".")[1].length <= 3
-      })
-    }))
-  }),
+  pricingTiers: val.array().of(val.object().shape({
+    quantityFrom: val.number().nullable().moreThan(0, "Must be greater than 0").required("Minimum quantity must be set"),
+    price: val.number().nullable().moreThan(0, "Must be greater than 0").required("required").test("maxdec", "There can be maximally 3 decimal places.", val => {
+      return !val || val.toString().indexOf('.') === -1 || val.toString().split(".")[1].length <= 3
+    })
+  })),
   touchedLot: val.bool(),
   warehouse: val.number().moreThan(0, "required").required('required')
 })
@@ -204,11 +200,11 @@ export default class AddInventoryForm extends Component {
         <Grid.Row key={i}>
           <Grid.Column width={2}>
             {i ? (
-              <Label name={`pricing.tiers[${i}].level`}>{i + 1}</Label>
+              <Label name={`pricingTiers[${i}].level`}>{i + 1}</Label>
             ) : (
                 <div className='field'>
                   <label>Level</label>
-                  <Label name={`pricing.tiers[${i}].level`}>{i + 1}</Label>
+                  <Label name={`pricingTiers[${i}].level`}>{i + 1}</Label>
                 </div>
               )}
           </Grid.Column>
@@ -221,10 +217,10 @@ export default class AddInventoryForm extends Component {
           <Grid.Column width={10}>
             <FormGroup widths='equal'>
               <FormField width={8}>
-                <Input name={`pricing.tiers[${i}].quantityFrom`} label={i ? '' : "Minimum OQ"} inputProps={{ type: 'number', readOnly: i === 0, value: null }} />
+                <Input name={`pricingTiers[${i}].quantityFrom`} label={i ? '' : "Minimum OQ"} inputProps={{ type: 'number', readOnly: i === 0, value: null }} />
               </FormField>
               <Form.Field width={8}>
-                <Input name={`pricing.tiers[${i}].price`} label={i ? '' : "FOB Price"} inputProps={{ type: 'number', step: '0.001', value: null }} />
+                <Input name={`pricingTiers[${i}].price`} label={i ? '' : "FOB Price"} inputProps={{ type: 'number', step: '0.001', value: null }} />
               </Form.Field>
             </FormGroup>
           </Grid.Column>
@@ -584,9 +580,9 @@ export default class AddInventoryForm extends Component {
                                     options={this.getPriceTiers(10)}
                                     inputProps={{
                                       onChange: (e, { value }) => setFieldValue(
-                                        "pricing.tiers",
+                                        "pricingTiers",
                                         [
-                                          ...values.pricing.tiers.slice(0, value),
+                                          ...values.pricingTiers.slice(0, value),
                                           ...[...new Array((value - values.priceTiers) > 0 ? value - values.priceTiers : 0)].map(t => ({price: '0', quantityFrom: '0'}))
                                         ]
                                       )

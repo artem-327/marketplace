@@ -38,6 +38,7 @@ export function addProductOffer(values, poId = false) {
     attachments: values.attachments && values.attachments.length ? values.attachments.map(att => {
       return att.id
     }) : null,
+    cost: values.pricing && values.pricing.cost ? parseInt(values.pricing.cost) : null,
     costRecords: values.costs ? values.costs.map(cost => {
       return {
         attachment: null,
@@ -62,16 +63,13 @@ export function addProductOffer(values, poId = false) {
     manufacturer: values.manufacturer ? values.manufacturer : null,
     origin: values.origin ? values.origin : null,
     pkgAmount: parseInt(values.pkgAmount),
-    pricing: {
-      cost: values.pricing.cost ? parseInt(values.pricing.cost) : null,
-      price: values.pricing.price ? parseInt(values.pricing.price) : parseInt(values.pricing.tiers[0].price),
-      tiers: values.pricing.tiers.map((tier, index) => {
-        return {
-          price: parseInt(tier.price),
-          quantityFrom: parseInt(!index ? values.minimum : tier.quantityFrom)
-        }
-      })
-    },
+    price: values.pricing && values.pricing.price ? parseInt(values.pricing.price) : parseInt(values.pricingTiers[0].price),
+    pricingTiers: values.pricingTiers.map((tier, index) => {
+      return {
+        price: parseInt(tier.price),
+        quantityFrom: parseInt(!index ? values.minimum : tier.quantityFrom)
+      }
+    }),
     processingTimeDays: parseInt(values.processingTimeDays),
     product: parseInt(values.product.id),
     productCode: values.productCode ? values.productCode : null,
