@@ -13,6 +13,7 @@ import EditProductPopup from './ProductCatalogTable/ProductPopup'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
 import BankAccountsPopup from './BankAccountsTable/BankAccountsPopup'
 import TablesHandlers from './TablesHandlers'
+import ProductImportPopup from './ProductCatalogTable/ProductImportPopup'
 import Toast from '../../../../components/toast'
 
 import { Container, Grid } from 'semantic-ui-react'
@@ -35,13 +36,18 @@ const popupForm = {
   'Credit cards': <CreditCardsPopup />
 }
 
+const importForm = {
+  'Product catalog': <ProductImportPopup />
+}
+
 class Settings extends Component {
   renderContent = () => {
-    const { currentTab, isOpenPopup } = this.props
+    const { currentTab, isOpenPopup, isOpenImportPopup } = this.props
 
     return (
       <>
         {isOpenPopup && popupForm[currentTab]}
+        {isOpenImportPopup && importForm[currentTab]}
         {tables[currentTab] || <p>This page is still under construction</p>}
       </>
     )

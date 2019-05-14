@@ -16,7 +16,7 @@ export default {
       .get('/prodex/api/payments/bank-accounts')
       .then(response => response.data),
   getProductsCatalog: () =>
-    api.get('/prodex/api/products').then(response => response.data),
+    api.get('/prodex/api/products/search').then(response => response.data),
   getProductTypes: () =>
     api.get('/prodex/api/packaging-types').then(response => response.data),
   getUnitsType: () => api.get('/prodex/api/units'),
@@ -28,6 +28,11 @@ export default {
     api.get('/prodex/api/countries').then(response => response.data),
   getCurrencies: () =>
     api.get('/prodex/api/currencies').then(response => response.data),
+  getStoredCSV: body => {
+    return api
+      .get(`/prodex/api/imports/read-stored-csv?temporaryFileId=${body}`)
+      .then(response => response.data)
+  },
 
   postNewUser: body => api.post('/prodex/api/users', body),
   postNewWarehouse: body => api.post('/prodex/api/branches/', body),
@@ -35,7 +40,25 @@ export default {
   postNewBankAccount: body =>
     api.post('/prodex/api/payments/bank-accounts/add', body),
   postNewProduct: body => api.post('/prodex/api/products', body),
-
+  postImportProductCSV: (body, id) => {
+    return api
+      .post(
+        `/prodex/api/imports/csv-import-products?temporaryFileId=${id}`,
+        body
+      )
+      .then(response => response.data)
+  },
+  uploadCSVFile: body => {
+    const formData = new FormData()
+    formData.append('file', body)
+    return api
+      .post('/prodex/api/imports/temporary-files', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      .then(response => response.data)
+  },
   putWarehouse: (branchId, body) =>
     api.put(`/prodex/api/branches/${branchId}`, body),
   // putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
