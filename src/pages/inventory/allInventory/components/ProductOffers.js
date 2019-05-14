@@ -40,15 +40,15 @@ class ProductOffers extends Component {
         </>,
         rows: product.productOffers.map((offer) => {
           const unit = offer.product.packagingUnit ? offer.product.packagingUnit.nameAbbreviation : ''
-          const price = offer.pricing.tiers.length > 1 ?
-            "$" + offer.pricing.tiers[offer.pricing.tiers.length - 1].price.formatMoney(3) + ' - ' + "$" + offer.pricing.tiers[0].price.formatMoney(3)
-            : "$" + offer.pricing.price.amount.formatMoney(3)
+          const price = offer.pricingTiers.length > 1 ?
+            "$" + offer.pricingTiers[offer.pricingTiers.length - 1].price.formatMoney(3) + ' - ' + "$" + offer.pricingTiers[0].price.formatMoney(3)
+            : "$" + offer.pricing.price.formatMoney(3)
           const packageSize = offer.product.packagingSize
           const packageUnit = offer.product.packagingType ? offer.product.packagingType.name : ''
           //const countryException = ["USA", "Canada"]
           //const countryName = offer.warehouse.address.province.country ? offer.warehouse.address.province.country.name : null
 
-          const location = (this.props.identity.id === offer.merchant.id || this.props.identity.homeBranch.id === offer.merchant.id)
+          const location = (this.props.identity.id === offer.owner.id || this.props.identity.homeBranch.id === offer.owner.id)
             ? `${offer.warehouse.address.city}, ${offer.warehouse.address.country.name}`
             : `${offer.warehouse.address.country.name}` + (typeof offer.warehouse.address.country !== 'undefined' ? `, ${offer.warehouse.address.country.name}` : ``)
 
