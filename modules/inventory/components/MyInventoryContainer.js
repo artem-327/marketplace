@@ -27,7 +27,7 @@ function mapStateToProps(store) {
             + ' - ' + "$" + po.pricing.tiers[0].price.formatMoney(3))
           : po.pricing.price ? ("$" + po.pricing.price.amount.formatMoney(3)) : 'N/A',
         manufacturer: po.manufacturer && po.manufacturer.name ? po.manufacturer.name : 'N/A',
-        broadcast: <Checkbox toggle checked={po.broadcasted} />
+        broadcasted: po.broadcasted
       }
     })
   }

@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Container, Menu, Header } from "semantic-ui-react"
+import { Container, Menu, Header, Checkbox } from "semantic-ui-react"
 import SubMenu from '~/src/components/SubMenu'
 import {FormattedMessage} from 'react-intl'
 import Router from 'next/router'
@@ -27,13 +27,25 @@ export default class MyInventory extends Component {
     this.props.getMyProductOffers()
   }
 
+  getRows = () => {
+    const {rows} = this.props
+
+    return rows.map(r => ({
+      ...r,
+      broadcast: (
+        <div style={{float: 'right'}}>
+          <Checkbox toggle checked={r.broadcasted} onChange={() => alert('Changed:'+r.productName)} />
+        </div>
+      )
+    }))
+  }
+
   render() {
     const {
-      rows,
       loading
     } = this.props
     const { columns, selectedRows } = this.state
-    
+    const rows = this.getRows()
 
     return (
       <>
