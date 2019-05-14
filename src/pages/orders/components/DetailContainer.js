@@ -9,7 +9,7 @@ function actionRequired(data) {
     return (data.orderStatus === 1)
 }
 
-function prepareDetail(data) {
+function prepareDetail(data, type) {
     if (typeof data.id === 'undefined')
         return {}
 
@@ -32,6 +32,7 @@ function prepareDetail(data) {
       id: data.id,
       orderDate: moment(data.orderDate).format('MMM Do, YYYY h:mm:ss A'),
       orderStatus: OrdersHelper.getOrderStatus(data.orderStatus),
+      orderType: type === 'sales' ? 'Sales' : 'Purchase',
       other: '$0.00',
       packaging: data.orderItems[0].packagingType,
       paymentInitiationDate: (typeof data.paymentInitiationDate !== 'undefined' ? moment(data.paymentInitiationDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A'),
@@ -59,10 +60,13 @@ function prepareDetail(data) {
       unit: data.orderItems[0].packagingUnit,
       unitCost: "$" + parseInt(0).formatMoney(2),
       unitPrice: "$" + data.orderItems[0].price.formatMoney(2),
-      vendorAddress: data.sellerCompanyAddressStreet + ', ' + data.sellerCompanyAddressCity + ', ' + data.sellerCompanyAddressZip + ' ' + data.sellerCompanyAddressCountry,
-      vendorEmail: data.sellerCompanyContactEmail,
-      vendorName: data.sellerCompanyName,
-      vendorPhone: data.sellerCompanyContactPhone
+      // Vendor or Customer
+      paymentType: type === 'sales' ? 'Customer' : 'Vendor',
+      paymentAddress: type === 'sales' ? data.buyerCompanyAddressStreet + ', ' + data.buyerCompanyAddressCity + ', ' + data.buyerCompanyAddressZip + ' ' + data.buyerCompanyAddressCountry : data.sellerCompanyAddressStreet + ', ' + data.sellerCompanyAddressCity + ', ' + data.sellerCompanyAddressZip + ' ' + data.sellerCompanyAddressCountry,
+      paymentEmail: type === 'sales' ? data.buyerCompanyContactEmail : data.sellerCompanyContactEmail,
+      paymentName: type === 'sales' ? data.buyerCompanyName : data.sellerCompanyName,
+      paymentPhone: type === 'sales' ? data.buyerCompanyContactPhone : data.sellerCompanyContactPhone,
+      paymentContact: type === 'sales' ? data.buyerCompanyContactName : data.sellerCompanyContactName
     }
 }
 
@@ -74,7 +78,7 @@ function mapStateToProps(state, ownProps) {
     }
 
     return {
-        order: prepareDetail(orders.detail),
+        order: prepareDetail(orders.detail, ownProps.router.query.type),
         action: actionRequired(orders.detail),
         reloadPage: orders.reloadPage
     }
