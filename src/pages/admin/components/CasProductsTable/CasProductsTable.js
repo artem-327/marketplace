@@ -39,7 +39,6 @@ class CasProductsTable extends Component {
           //filterValue={filterValue}
           loading={loading}
           columns={columns}
-          groupBy={['packagingGroup']}
           rows={rows}
           rowActions={[
             {text: 'Edit', callback: (row) => openEditCasPopup(row)},
