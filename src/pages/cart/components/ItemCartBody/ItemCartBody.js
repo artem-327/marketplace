@@ -11,8 +11,6 @@ export default class ItemCartBody extends Component {
     let { productOffer } = cartItem
 
     let unitName = productOffer.product.packagingUnit.nameAbbreviation
-    let location = productOffer.warehouse.address
-    location = `${location.province ? location.province.name : location.city}, ${location.country.name}`
 
     return (
       <div className='item-cart'>
@@ -22,17 +20,17 @@ export default class ItemCartBody extends Component {
               {productOffer.product.casProduct.casIndexName}
             </div>
             <div>
-              <FormattedMessage
+              {/* <FormattedMessage
                 id='cart.merchant.email'
-                defaultMessage={'Merchant: ' + productOffer.merchant.email}
-                values={{ merchant: productOffer.merchant.email }}
-              />
+                defaultMessage={'Merchant: ' + productOffer.merchant ? productOffer.merchant.email : productOffer.warehouse.address.contactEmail}
+                values={{ merchant: productOffer.merchant ? productOffer.merchant.company.name : productOffer.warehouse.address.contactEmail }}
+              /> */}
             </div>
             <div>
               <FormattedMessage
                 id='cart.location'
                 defaultMessage={'Location: ' + location}
-                values={{ location }}
+                values={{ location: cartItem.locationStr }}
               />
             </div>
             <div>
