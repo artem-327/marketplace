@@ -1,19 +1,19 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { Component } from "react"
+import { connect } from "react-redux"
 
-import { Grid, Button } from "semantic-ui-react";
+import { Grid, Button } from "semantic-ui-react"
 
-import styled from "styled-components";
+import styled from "styled-components"
 
-import { closeImportPopup } from "../../../actions";
+import { closeImportPopup } from "../../../actions"
 
 const StyledButton = styled(Button)`
   width: 200px;
-`;
+`
 
 class ConfirmationPage extends Component {
   render() {
-    const { csvImportError } = this.props;
+    const { csvImportError } = this.props
 
     return (
       <Grid centered padded>
@@ -42,21 +42,21 @@ class ConfirmationPage extends Component {
           </StyledButton>
         </Grid.Row>
       </Grid>
-    );
+    )
   }
 }
 
 const mapDispatchToProps = {
   closeImportPopup
-};
+}
 
 const mapStateToProps = state => {
   return {
     csvImportError: state.settings.csvImportError
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ConfirmationPage);
+)(ConfirmationPage)

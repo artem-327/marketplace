@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { Component } from "react"
+import { connect } from "react-redux"
 
-import { Table, Dropdown } from "semantic-ui-react";
+import { Table, Dropdown } from "semantic-ui-react"
 
-import { changeHeadersCSV } from "../../../actions";
+import { changeHeadersCSV } from "../../../actions"
 
 const mapping = [
   { text: "CAS Number", value: "CAS Number" },
@@ -13,19 +13,19 @@ const mapping = [
   { text: "Packaging Type", value: "Packaging Type" },
   { text: "Unit", value: "Unit" },
   { text: "Product Name", value: "Product Name" }
-];
+]
 
 class Map extends Component {
   state = {
     newHeaders: null
-  };
+  }
 
   componentDidMount() {
-    this.setState({ newHeaders: this.props.CSV.headerCSV });
+    this.setState({ newHeaders: this.props.CSV.headerCSV })
   }
 
   render() {
-    const { CSV } = this.props;
+    const { CSV } = this.props
 
     return (
       <Table celled padded textAlign="center">
@@ -47,8 +47,8 @@ class Map extends Component {
                       return (
                         lineHeader.columnNumber === lineBody.columnNumber &&
                         lineBody.content + " "
-                      );
-                    });
+                      )
+                    })
                   })}
                 </Table.Cell>
                 <Table.Cell>
@@ -66,37 +66,37 @@ class Map extends Component {
           </Table.Body>
         )}
       </Table>
-    );
+    )
   }
 
   selectMapping = (e, { column_number, value }) => {
     const mappedHeader = this.props.mappedHeader
       ? this.props.mappedHeader
-      : [...this.state.newHeaders];
+      : [...this.state.newHeaders]
     const newHeaders = mappedHeader.map(line => {
       if (column_number === line.columnNumber) {
-        line["header"] = value;
-        return line;
+        line["header"] = value
+        return line
       }
-      return line;
-    });
-    this.props.changeHeadersCSV(newHeaders);
-  };
+      return line
+    })
+    this.props.changeHeadersCSV(newHeaders)
+  }
 }
 
 const mapDispatchToProps = {
   changeHeadersCSV
-};
+}
 
 const mapStateToProps = state => {
   return {
     csvFileId: state.settings.fileCSVId,
     CSV: state.settings.CSV,
     mappedHeader: state.settings.mappedHeaders
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Map);
+)(Map)
