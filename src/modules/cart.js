@@ -12,7 +12,11 @@ import {
   DELIVERYADDRESS_EDIT_REQUESTED,
   SHIPPING_QUOTES_FETCH_SUCCEEDED,
   SHIPPING_QUOTES_FETCH_REQUESTED,
-  SIDEBAR_CHANGED, SHIPPING_QUOTE_SELECTED, ADD_CART_ITEM_REQUESTED, UPDATE_CART_ITEM_REQUESTED, DELETE_CART_ITEM_REQUESTED, GET_CART_ITEM_REQUESTED, UPDATE_CART_ITEM_SUCCEEDED, ADD_CART_ITEM_SUCCEEDED
+  SIDEBAR_CHANGED, SHIPPING_QUOTE_SELECTED,
+  ADD_CART_ITEM_REQUESTED, UPDATE_CART_ITEM_REQUESTED,
+  DELETE_CART_ITEM_REQUESTED, GET_CART_ITEM_REQUESTED,
+  UPDATE_CART_ITEM_SUCCEEDED, ADD_CART_ITEM_SUCCEEDED,
+  DELIVERYADDRESS_CREATE_SUCCEEDED, SHIPPING_CHANGED, DELIVERYADDRESS_EDIT_SUCCEEDED, DELIVERYADDRESS_EDIT_FAILED
 } from "../constants/cart"
 import Api from "~/src/api/cart"
 import { getLocationString, getPricing } from "../utils/functions"
@@ -31,14 +35,24 @@ export const initialState = {
   offerDetailIsFetching: true,
   selectedAddressId: null,
   selectedCardId: null,
+  // todo remove shippingQuotes, keep them in shipping obj only
   shippingQuotes: [],
   sidebar: {
     isOpen: false,
     pricing: null,
     quantity: null,
     warning: null
+  },
+  shipping: {
+    selectedAddress: null,
+    selectedPayment: {},
+    isShippingEdit: false,
+    isNewAddress: true,
+    savedShippingPreferences: true,
+    shippingQuotes: [],
+    selectedShippingQuote: null
   }
-};
+}
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -70,12 +84,54 @@ export default function reducer(state = initialState, action) {
         isFetching: false
       }
     }
+    case DELIVERYADDRESS_CREATE_REQUESTED: {
+      return {
+        ...state,
+        isFetching: true
+      }
+    }
+
+    case DELIVERYADDRESS_CREATE_SUCCEEDED: {
+      return {
+        ...state,
+        isFetching: false,
+        deliveryAddresses: state.deliveryAddresses.concat(action.payload),
+        shipping: { ...state.shipping, selectedAddress: action.payload, isShippingEdit: false }
+      }
+
+    }
     case DELIVERYADDRESS_CREATE_FAILED: {
       return {
         ...state,
         isFetching: false
       }
     }
+
+    case DELIVERYADDRESS_EDIT_REQUESTED: {
+      return {
+        ...state,
+        isFetching: true
+      }
+    }
+
+    case DELIVERYADDRESS_EDIT_SUCCEEDED: {
+      return {
+        ...state,
+        isFetching: false,
+        deliveryAddresses: Object.assign([],
+          state.deliveryAddresses,
+          { [state.deliveryAddresses.findIndex((value) => value.id === action.payload.id)]: action.payload }),
+        shipping: { ...state.shipping, selectedAddress: action.payload, isShippingEdit: false }
+      }
+    }
+
+    case DELIVERYADDRESS_EDIT_FAILED: {
+      return {
+        ...state,
+        isFetching: false
+      }
+    }
+
     case PAYMENTS_FETCH_REQUESTED: {
       return {
         ...state,
@@ -196,6 +252,12 @@ export default function reducer(state = initialState, action) {
         sidebar: { ...state.cart.sidebar, isOpen: false }
       }
     }
+    case SHIPPING_CHANGED: {
+      return {
+        ...state,
+        shipping: { ...state.shipping, ...action.payload }
+      }
+    }
     default: {
       return state
     }
@@ -225,7 +287,7 @@ export function deleteCart(id) {
 }
 
 export function postNewDeliveryAddress(address) {
-  return { type: DELIVERYADDRESS_CREATE_REQUESTED, payload: { address } }
+  return { type: DELIVERYADDRESS_CREATE_REQUESTED, payload: address }
 }
 
 // export function getOrderDetail(id) {
@@ -240,8 +302,8 @@ export function postNewDeliveryAddress(address) {
 //   return { type: ORDER_EDIT_REQUESTED, payload: { order } }
 // }
 
-export function putDeliveryAddressEdit(address) {
-  return { type: DELIVERYADDRESS_EDIT_REQUESTED, payload: { address } }
+export function updateDeliveryAddress(address) {
+  return { type: DELIVERYADDRESS_EDIT_REQUESTED, payload: address }
 }
 
 export function getShippingQuotes(countryId, zip) {
@@ -270,5 +332,10 @@ export function deleteCartItem(payload) {
 
 export function getCartItem(payload) {
   return { type: GET_CART_ITEM_REQUESTED, payload }
+}
+
+export function shippingChanged(values) {
+  console.log('shipping changed', values)
+  return { type: SHIPPING_CHANGED, payload: values }
 }
 

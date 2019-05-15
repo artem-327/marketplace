@@ -40,18 +40,20 @@ class ProductOffers extends Component {
         </>,
         rows: product.productOffers.map((offer) => {
           const unit = offer.product.packagingUnit ? offer.product.packagingUnit.nameAbbreviation : ''
-          const price = offer.pricing.tiers.length > 1 ?
-            "$" + offer.pricing.tiers[offer.pricing.tiers.length - 1].price.formatMoney(3) + ' - ' + "$" + offer.pricing.tiers[0].price.formatMoney(3)
-            : "$" + offer.pricing.price.amount.formatMoney(3)
+          // const price = offer.pricing.tiers.length > 1 ?
+          // "$" + offer.pricing.tiers[offer.pricing.tiers.length - 1].price.formatMoney(3) + ' - ' + "$" + offer.pricing.tiers[0].price.formatMoney(3)
+          // : "$" + offer.pricing.price.amount.formatMoney(3)
+          let price = 5
           const packageSize = offer.product.packagingSize
           const packageUnit = offer.product.packagingType ? offer.product.packagingType.name : ''
           //const countryException = ["USA", "Canada"]
           //const countryName = offer.warehouse.address.province.country ? offer.warehouse.address.province.country.name : null
 
-          const location = (this.props.identity.id === offer.merchant.id || this.props.identity.homeBranch.id === offer.merchant.id)
-            ? `${offer.warehouse.address.city}, ${offer.warehouse.address.country.name}`
-            : `${offer.warehouse.address.country.name}` + (typeof offer.warehouse.address.country !== 'undefined' ? `, ${offer.warehouse.address.country.name}` : ``)
+          // const location = (this.props.identity.id === offer.merchant.id || this.props.identity.homeBranch.id === offer.merchant.id)
+          // ? `${offer.warehouse.address.city}, ${offer.warehouse.address.country.name}`
+          // : `${offer.warehouse.address.country.name}` + (typeof offer.warehouse.address.country !== 'undefined' ? `, ${offer.warehouse.address.country.name}` : ``)
 
+          let location = 'a'
           return {
             id: offer.id,
             data: [

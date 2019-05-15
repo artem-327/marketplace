@@ -5,273 +5,381 @@ import "./ShippingEdit.scss"
 
 import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { Formik, ErrorMessage } from 'formik'
-import { Container, Form, Segment, Grid, GridRow, GridColumn, Input, Button, Radio, Divider, Header } from 'semantic-ui-react'
-import * as Yup from 'yup'
+import styled from 'styled-components'
 
-import ShippingAddress from './ShippingAddress'
+import { Container, Segment, Grid, GridRow, GridColumn, Radio, Divider, Header, FormGroup } from 'semantic-ui-react'
+import { Form, Input, Dropdown, Button } from 'formik-semantic-ui'
+import * as Yup from 'yup'
+import { PHONE_REGEXP } from '../../../../utils/constants';
+
+const BottomMargedGrid = styled(Grid)`
+  margin-bottom: 1rem !important;
+`
+
+const initialValues = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  phoneNumber: '',
+  address: {
+    zip: {
+      zip: ''
+    },
+    city: '',
+    streetAddress: '',
+    province: {
+      name: ''
+    }
+  },
+}
+
+const validationSchema = Yup.object().shape({
+  firstName: Yup.string(<FormattedMessage id='validation.invalidString' />).required(<FormattedMessage id='validation.required' />),
+  lastName: Yup.string(<FormattedMessage id='validation.invalidString' />).required(<FormattedMessage id='validation.required' />),
+  email: Yup.string().email(<FormattedMessage id='validation.invalidEmail' />).required(<FormattedMessage id='validation.required' />),
+  phoneNumber: Yup.string().matches(PHONE_REGEXP, <FormattedMessage id='validation.phoneNumber' />),
+  address: Yup.object().shape({
+    zip: Yup.object().shape({ zip: Yup.string().required(<FormattedMessage id='validation.required' />) }),
+    city: Yup.string(<FormattedMessage id='validation.invalidString' />).required(<FormattedMessage id='validation.required' />),
+    streetAddress: Yup.string(<FormattedMessage id='validation.invalidString' />).required(<FormattedMessage id='validation.required' />),
+    province: Yup.object().shape({
+      name: Yup.string().when('$hasProvinces', {
+        is: false, then: (s) => {
+          console.log('hmmm?', s)
+          s.required(<FormattedMessage id='validation.required' />)
+        }
+      })
+    })
+  })
+})
+
 
 class ShippingEdit extends Component {
-  
-  newAddressMarkup = (handleChange) => {
+
+  state = {
+    stateId: null,
+    hasProvinces: false,
+    selectedProvince: null
+  }
+
+  componentDidMount() {
+    let { selectedAddress, getStates } = this.props
+    getStates()
+    if (selectedAddress) {
+      let { id, hasProvinces } = selectedAddress.address.country
+      this.handleStateChange({ id, hasProvinces })
+    }
+  }
+
+
+  handleStateChange = ({ id, hasProvinces }) => {
+    if (this.state.stateId !== id) {
+      this.setState({ stateId: id, hasProvinces, selectedProvince: null })
+
+      if (hasProvinces) {
+        this.props.getProvinces(id)
+      }
+    }
+  }
+
+  newAddressMarkup = () => {
     const { formatMessage } = this.props.intl
+    let { location } = this.props
 
     return (
-     <>
+      <>
+        <FormGroup>
+          <Input
+            fieldProps={{ width: 6 }}
+            label={
+              <label>
+                {formatMessage({
+                  id: 'global.firstName',
+                  defaultMessage: 'First Name'
+                })}
+              </label>
+            }
+            name='firstName' />
 
-          <GridRow>
-            <GridColumn computer={6}>
-              <Form.Field>
-                <label>
-                  {formatMessage({
-                    id: 'global.firstName',
-                    defaultMessage: 'First Name'
-                  })}
-                </label>
-                <Input onChange={handleChange} id='firstName' />
-              </Form.Field>
+          <Input
+            fieldProps={{ width: 6 }}
+            label={
+              <label>
+                {formatMessage({
+                  id: 'global.lastName',
+                  defaultMessage: 'Last Name'
+                })}
+              </label>
+            }
+            name='lastName' />
+        </FormGroup>
+        <FormGroup>
+          <Input
+            fieldProps={{ width: 8 }}
+            label={
+              <label>
+                {formatMessage({
+                  id: 'global.address',
+                  defaultMessage: 'Address'
+                })}
+              </label>
+            }
+            name='address.streetAddress' />
 
-            </GridColumn>
+          <Input
+            fieldProps={{ width: 4 }}
+            label={
+              <label>
+                {formatMessage({
+                  id: 'global.zip',
+                  defaultMessage: 'Postal Code'
+                })}
+              </label>
+            }
+            name='address.zip.zip' />
 
-            <GridColumn computer={6}>
-              <Form.Field>
-                <label>
-                  {formatMessage({
-                    id: 'global.lastName',
-                    defaultMessage: 'Last Name'
-                  })}
-                </label>
-                <Input onChange={handleChange} id='lastName' />
-              </Form.Field>
-            </GridColumn>
-          </GridRow>
+        </FormGroup>
 
-          <GridRow>
-            <GridColumn computer={12}>
+        <FormGroup>
+          <Input
+            fieldProps={{ width: 4 }}
+            label={
+              <label>
+                {formatMessage({
+                  id: 'global.city',
+                  defaultMessage: 'City'
+                })}
+              </label>
+            }
+            name='address.city' />
 
-              <Form.Field>
-                <label>
-                  {formatMessage({
-                    id: 'global.address',
-                    defaultMessage: 'Address'
-                  })}
-                </label>
-                <Input onChange={handleChange} id='address.streetAddress' />
-              </Form.Field>
+          <Dropdown
+            fieldProps={{ width: 4 }}
+            inputProps={{
+              onChange: (e, { value }) => this.handleStateChange(value)
+            }}
+            options={location.states.map((state) => ({
+              text: state.name,
+              key: state.id,
+              value: state
+            }))}
+            id='address.country'
+            name='address.country'
+            loading={location.statesAreFetching} selection fluid
+            label={
+              <label>
+                {formatMessage({
+                  id: 'global.state',
+                  defaultMessage: 'State'
+                })}
+              </label>
+            } />
+          <Dropdown
 
-            </GridColumn>
-          </GridRow>
+            fieldProps={{ width: 4 }}
+            inputProps={{
+              disabled: !this.state.hasProvinces,
+              onChange: (e, { value }) => this.setState({ selectedProvince: value }),
+              value: this.state.selectedProvince,
+              loading: location.provincesAreFetching
+            }}
+            options={location.provinces.map((province) => ({
+              text: province.name,
+              key: province.id,
+              value: province
+            }))}
+            id='address.province'
+            name='address.province'
+            selection fluid
+            label={
+              <label>
+                {formatMessage({
+                  id: 'global.province',
+                  defaultMessage: 'Province'
+                })}
+              </label>
+            } />
 
-          <GridRow>
-            <GridColumn computer={4}>
-              <Form.Field>
-                <label>
-                  {formatMessage({
-                    id: 'global.city',
-                    defaultMessage: 'City'
-                  })}
-                </label>
-                <Input onChange={handleChange} id='address.city' />
-              </Form.Field>
-            </GridColumn>
+        </FormGroup>
 
-            <GridColumn computer={4}>
-              <Form.Field>
+        <FormGroup>
+          <Input
+            fieldProps={{ width: 6 }}
+            label={
+              <label>
+                {formatMessage({
+                  id: 'global.email',
+                  defaultMessage: 'E-mail Address'
+                })}
+              </label>
+            }
+            name='email' />
 
-                <label>
-                  {formatMessage({
-                    id: 'global.state',
-                    defaultMessage: 'State'
-                  })}
-                </label>
-                <Input onChange={handleChange} id='address.state' />
-              </Form.Field>
-            </GridColumn>
+          <Input
+            fieldProps={{ width: 6 }}
+            label={
+              <label>
+                {formatMessage({
+                  id: 'global.phoneNumber',
+                  defaultMessage: 'Phone Number'
+                })}
+              </label>
+            }
+            name='phoneNumber' />
 
-            <GridColumn computer={4}>
-              <Form.Field>
-                <label>
-                  {formatMessage({
-                    id: 'global.zip',
-                    defaultMessage: 'Postal Code'
-                  })}
-                </label>
-                <Input onChange={handleChange} id='address.zip' />
-              </Form.Field>
-            </GridColumn>
-          </GridRow>
-
-          <GridRow>
-            <GridColumn computer={8}>
-              <Form.Field>
-                <label>
-                  {formatMessage({
-                    id: 'global.email',
-                    defaultMessage: 'E-mail Address'
-                  })}
-                </label>
-                <Input onChange={handleChange} id='email' />
-              </Form.Field>
-            </GridColumn>
-
-            <GridColumn computer={4}>
-              <Form.Field>
-                <label>
-                  {formatMessage({
-                    id: 'global.phoneNumber',
-                    defaultMessage: 'Phone Number'
-                  })}
-                </label>
-                <Input onChange={handleChange} id='phoneNumber' />
-              </Form.Field>
-            </GridColumn>
-          </GridRow>
-       </>
+        </FormGroup>
+      </>
     )
   }
 
 
+  handleSubmit = (values) => {
+    let { address, email, firstName, lastName, phoneNumber } = values
+    let { isNewAddress, postNewDeliveryAddress, updateDeliveryAddress } = this.props
+
+    let payload = {
+      address: {
+        city: address.city,
+        country: address.country.id,
+        province: address.province.id,
+        streetAddress: address.streetAddress,
+        zip: address.zip.zip
+      },
+      email, firstName, lastName, phoneNumber,
+    }
+
+
+    if (!isNewAddress) postNewDeliveryAddress(payload)
+    else updateDeliveryAddress({
+      ...payload,
+      id: this.props.selectedAddress.id
+    })
+
+  }
+
+
   render() {
-    let { toggleRadio, isNewAddress, handleIsEdit, selectedAddress, savedShippingPreferences, postNewDeliveryAddress, putDeliveryAddressEdit, intl } = this.props
+    let { isNewAddress, shippingChanged, selectedAddress, savedShippingPreferences, intl } = this.props
 
     const { formatMessage } = intl
 
+    // validationSchema.isValid('hi', { context: { hasProvinces: this.state.hasProvinces } })
+
     return (
       <Segment>
-      <Grid className='bottom-padded'>
-        <GridRow  className='header'>
-          <GridColumn>
-            <Header as='h2'>
-              <FormattedMessage
-                id='cart.1shipping'
-                defaultMessage='1. Shipping'
-              />
-            </Header>
+        <BottomMargedGrid className='bottom-padded'>
+          <GridRow className='header'>
+            <GridColumn>
+              <Header as='h2'>
+                <FormattedMessage
+                  id='cart.1shipping'
+                  defaultMessage='1. Shipping'
+                />
+              </Header>
 
-          </GridColumn>
-        </GridRow>
-      <Formik
+            </GridColumn>
+          </GridRow>
+        </BottomMargedGrid>
 
-        //  initialValues={{
-        //   email: '',
-
+        <Form
+          loading={true}
+          enableReinitialize
+          initialValues={selectedAddress ? { ...selectedAddress } : initialValues}
+          validationSchema={validationSchema}
         // TODO Yup validation
         // }}
         // validationSchema={Yup.object().shape({
+        //   address: Yup.object().shape({
+        //     city: Yup.string().required(),
+        //     country: Yup.object().shape({ id: Yup.number().required() }),
+
+        //   }),
         //   email: Yup.string()
         //     .email('Neplatný email')
         //     .required('Povinné pole'),
         // })}
-        onSubmit={(values, { setSubmitting }) => {
-          // TODO, not working
-          if (isNewAddress) postNewDeliveryAddress(values)
-          else putDeliveryAddressEdit(values)
-        }}>
+        >
 
-        {props => {
-          const { values, handleChange, errors, isSubmitting, handleSubmit } = props
+          {props => {
+            let { values } = props
 
-          return (
+            return (
+              <Container>
+                <FormGroup>
+                  <Form.Field width={6}>
+                    <Radio
+                      onChange={() => shippingChanged({ isNewAddress: true })}
+                      checked={isNewAddress}
+                      disabled={!selectedAddress}
+                      label={formatMessage({
+                        id: 'global.savedAddress'
+                      })} />
+                  </Form.Field>
 
-            <Container fluid>
-              <Form onSubmit={handleSubmit} loading={this.props.isFetching}>
-                <Grid padded>
-                  <GridRow>
-                    <GridColumn computer={6}>
-                      <Form.Field>
-                        <Radio
-                          onChange={() => toggleRadio()}
-                          checked={isNewAddress} label={formatMessage({
-                            id: 'global.savedAddress'
-                          })} />
-                      </Form.Field>
-                    </GridColumn>
-                    <GridColumn computer={6}>
-                      <Form.Field>
-                        <Radio
-                          onChange={() => toggleRadio()}
-                          checked={!isNewAddress} label={formatMessage({
-                            id: 'global.addNewAddress'
-                          })} />
-                      </Form.Field>
-                    </GridColumn>
+                  <Form.Field width={6}>
+                    <Radio
+                      onChange={() => shippingChanged({ isNewAddress: false })}
+                      checked={!isNewAddress}
+                      label={formatMessage({
+                        id: 'global.addNewAddress'
+                      })} />
+                  </Form.Field>
+                </FormGroup>
+                {this.newAddressMarkup()}
 
-                  </GridRow>
-
-                  {isNewAddress ? <ShippingAddress selectedAddress={this.props.selectedAddress} /> : this.newAddressMarkup(handleChange)}
+                <Divider />
+                <Grid>
                   {/* <GridRow>
-                    <GridColumn computer={3}>
-                      <Form.Field error={!!errors.email}>
-                        <Input onChange={handleChange} id='email' />
-                        <ErrorMessage name='email' />
-                      </Form.Field>
-                    </GridColumn>
-                    <GridColumn computer={2}>
-                      <Button positive fluid type='submit'>OK</Button>
-                    </GridColumn>
-                  </GridRow> */}
-
-
-                  <Divider />
-                  <GridRow>
                     <GridColumn computer={6}>
-                      <Radio checked={savedShippingPreferences} onChange={() => toggleRadio('savedShippingPreferences')} label={formatMessage({
+                      <Radio checked={savedShippingPreferences} onChange={() => shippingChanged({ savedShippingPreferences: true })} label={formatMessage({
                         id: 'global.savedShippingPreferences'
                       })
                       } />
                     </GridColumn>
 
                     <GridColumn computer={6}>
-                      <Radio checked={!savedShippingPreferences} onChange={() => toggleRadio('savedShippingPreferences')} label={formatMessage({
+                      <Radio checked={!savedShippingPreferences} onChange={() => shippingChanged({ savedShippingPreferences: false })} label={formatMessage({
                         id: 'global.newShippingType'
                       })} />
                     </GridColumn>
-                  </GridRow>
-
+                  </GridRow> */}
                   <GridRow>
-
-                    <GridColumn floated='right' computer={6}>
-                      <Grid columns={2}>
-                        <GridRow>
-
-                          <GridColumn>
-                            <Button fluid onClick={() => handleIsEdit(false)}>
-                              <FormattedMessage
-                                id='global.cancel'
-                                defaultMessage='Cancel'
-                              />
-                            </Button>
-                          </GridColumn>
-
-                          <GridColumn>
-                            <Button primary fluid type='submit'>
-                              <FormattedMessage
-                                id={`global.${isNewAddress ? 'save' : 'edit'}`}
-                                defaultMessage={isNewAddress ? 'Save' : 'Edit'}
-                              />
-                            </Button>
-
-                          </GridColumn>
-                        </GridRow>
+                    <GridColumn>
+                      <Grid>
+                        <GridColumn floated='right' computer={4}>
+                          <Button fieldProps={{ width: 4 }} onClick={() => shippingChanged({ isShippingEdit: false })} fluid >
+                            <FormattedMessage
+                              id='global.cancel'
+                              defaultMessage='Cancel'
+                            />
+                          </Button>
+                        </GridColumn>
+                        <GridColumn computer={4}>
+                          <Button loading={this.props.isFetching} onClick={() => this.handleSubmit(values)} primary fluid type='submit'>
+                            <FormattedMessage
+                              id={`global.${isNewAddress ? 'edit' : 'addNew'}`}
+                              defaultMessage={isNewAddress ? 'Edit' : 'Add New'}
+                            />
+                          </Button>
+                        </GridColumn>
                       </Grid>
                     </GridColumn>
-
                   </GridRow>
                 </Grid>
-              </Form>
-
-            </Container>
-          )
-        }}
-
-      </Formik>
-      </Grid>
+                <pre>
+                  {JSON.stringify(props, null, 2)}
+                </pre>
+              </Container>
+            )
+          }}
+        </Form>
       </Segment>
+
     )
   }
 }
 
-// const ShippingEdit = ({ toggleRadio, isNewAddress, handleIsEdit, selectedAddress, postNewDeliveryAddress, putDeliveryAddressEdit, intl }) => {
+// const ShippingEdit = ({toggleRadio, isNewAddress, handleIsEdit, selectedAddress, postNewDeliveryAddress, updateDeliveryAddress, intl }) => {
 //   const radioOptions = [
 //     {
 //       value: "isEdit",
@@ -308,7 +416,7 @@ class ShippingEdit extends Component {
 //           onSubmit={values =>
 //             isNewAddress === "isNew" ?
 //               postNewDeliveryAddress(values)
-//               : putDeliveryAddressEdit({ id: selectedAddress.id, ...values })
+//               : updateDeliveryAddress({ id: selectedAddress.id, ...values })
 //           }
 //           className="shipping-edit">
 //           <FormInput
@@ -404,8 +512,3 @@ class ShippingEdit extends Component {
 // }
 
 export default injectIntl(ShippingEdit)
-
-ShippingEdit.propTypes = {
-  toggleRadio: PropTypes.func,
-  handleIsEdit: PropTypes.func,
-};

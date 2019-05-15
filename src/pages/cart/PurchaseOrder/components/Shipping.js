@@ -8,7 +8,7 @@ import ShippingAddress from './ShippingAddress'
 
 class Shipping extends Component {
   render() {
-    let { deliveryAddresses, dispatch, getAddress, selectedAddress, toggleRadio, intl } = this.props
+    let { deliveryAddresses, getAddress, selectedAddress, intl } = this.props
 
     let dropdownOptions = deliveryAddresses.map(i => ({
       text: `${i.address.streetAddress}, ${i.address.city}`,
@@ -18,6 +18,7 @@ class Shipping extends Component {
 
     const { formatMessage } = intl
 
+    
     return (
       <Segment>
         <Grid className='bottom-padded'>
@@ -35,7 +36,7 @@ class Shipping extends Component {
             <GridColumn floated='right'>
               <span
                 className="headerAddtext"
-                onClick={() => this.props.handleIsEdit(true)}>
+                onClick={() => this.props.shippingChanged({ isShippingEdit: true, isNewAddress: !!selectedAddress })}>
                 <FormattedMessage
                   id='global.edit'
                   defaultMessage='Edit'
@@ -50,6 +51,7 @@ class Shipping extends Component {
                 selection
                 options={dropdownOptions}
                 onChange={(e, { value }) => getAddress(value)}
+                value={selectedAddress ? selectedAddress.id : null}
                 placeholder={formatMessage({
                   id: 'global.selectLocation',
                   defaultMessage: 'Select Location'

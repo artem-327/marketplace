@@ -16,15 +16,19 @@ export default class Summary extends Component {
 
     if (cartItems.length === 0) return null
 
-    let subtotal = 0
+    let subtotal = 0, totalWeight = 0
     for (let i = 0; i < cartItems.length; i++) {
       subtotal += (cartItems[i].quantity * cartItems[i].productOffer.product.packagingSize * cartItems[i].pricing.price)
+      totalWeight += cartItems[i].productOffer.product.packagingSize * cartItems[i].quantity
     }
 
     let shipping = cart.selectedShipping ? cart.selectedShipping.quote.estimatedPrice : 0
     let { pricing } = cartItems[0].productOffer
     let currency = pricing.price && pricing.price.currency ? pricing.price.currency.code : 'USD'
 
+    let pricePerUnit = (totalPrice + shipping) / totalWeight
+
+    
     return (
       <Segment>
         <Grid className='bottom-padded darker-gray' verticalAlign='middle'>
@@ -89,6 +93,25 @@ export default class Summary extends Component {
                     style='currency'
                     currency={currency}
                     value={subtotal}
+                  />
+
+                </GridColumn>
+              </RelaxedRow>
+
+
+              <RelaxedRow columns={2}>
+                <GridColumn>
+                  <FormattedMessage
+                    id='global.pricePer'
+                    values={{ unit: cartItems[0].productOffer.product.packagingUnit.nameAbbreviation }}
+                  />
+                </GridColumn>
+
+                <GridColumn>
+                  <FormattedNumber
+                    style='currency'
+                    currency={currency}
+                    value={pricePerUnit}
                   />
 
                 </GridColumn>

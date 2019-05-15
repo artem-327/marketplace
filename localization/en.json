@@ -11,6 +11,7 @@
   "global.phoneNumber": "Phone Number",
   "global.postalCode": "Postal Code",
   "global.state": "State",
+  "global.province": "Province",
   "global.city": "City",
   "global.middleName": "Middle Name",
   "global.firstName": "First Name",
@@ -281,5 +282,9 @@
   "order.deleteBody": "You are about to delete last item of order. Doing so will redirect you to Shopping cart. Do you wish to continue?",
   "cart.shoppingCartHeader": "Items ({number})",
   "notFound": "... think we are lost, sir !",
-  "cart.keepShopping": "Keep Shopping"
+  "cart.keepShopping": "Keep Shopping",
+  "validation.required": "Required",
+  "validation.invalidEmail": "Invalid e-mail address",
+  "validation.phoneNumber": "Enter valid phone number",
+  "validation.invalidString": "Invalid value"
 }

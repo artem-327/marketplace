@@ -8,7 +8,6 @@ import { FormattedMessage } from 'react-intl'
 export default class ShippingAddress extends Component {
   getAddress = () => {
     let { selectedAddress } = this.props
-    console.log('selected', selectedAddress)
     return (
       selectedAddress["phone number"] &&
       <>
@@ -30,40 +29,40 @@ export default class ShippingAddress extends Component {
     let { selectedAddress, addressOnly, header } = this.props
 
     return (
-      !!Object.keys(selectedAddress).length > 0 &&
-      <>
-        <RelaxedRow>
-          <GridColumn>
-            <Header as='h3'>
-              <FormattedMessage
-                {...header}
-              />
-            </Header>
-          </GridColumn>
-        </RelaxedRow>
-
-        {selectedAddress["firstName"] && selectedAddress["lastName"] &&
+      selectedAddress && (
+        <>
           <RelaxedRow>
             <GridColumn>
-              {selectedAddress["firstName"]} {selectedAddress["lastName"]}
+              <Header as='h3'>
+                <FormattedMessage
+                  {...header}
+                />
+              </Header>
             </GridColumn>
-          </RelaxedRow>}
+          </RelaxedRow>
 
-        <RelaxedRow>
-          <GridColumn>
-            {selectedAddress.address.streetAddress}
-          </GridColumn>
-        </RelaxedRow>
+          {selectedAddress["firstName"] && selectedAddress["lastName"] &&
+            <RelaxedRow>
+              <GridColumn>
+                {selectedAddress["firstName"]} {selectedAddress["lastName"]}
+              </GridColumn>
+            </RelaxedRow>}
 
-        <RelaxedRow>
-          <GridColumn>
-            {selectedAddress.address.city}, {selectedAddress.address.province.name}, {selectedAddress.address.zip.zip}
-          </GridColumn>
-        </RelaxedRow>
+          <RelaxedRow>
+            <GridColumn>
+              {selectedAddress.address.streetAddress}
+            </GridColumn>
+          </RelaxedRow>
 
-        {!addressOnly && this.getAddress()}
+          <RelaxedRow>
+            <GridColumn>
+              {selectedAddress.address.city}{selectedAddress.address.province && `, ${selectedAddress.address.province.name}`}, {selectedAddress.address.zip.zip}
+            </GridColumn>
+          </RelaxedRow>
 
-      </>
+          {!addressOnly && this.getAddress()}
+        </>
+      )
     )
   }
 }

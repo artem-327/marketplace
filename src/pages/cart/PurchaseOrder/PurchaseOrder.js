@@ -27,64 +27,47 @@ const RelaxedGrid = styled(Grid)`
 
 
 class PurchaseOrder extends Component {
-  //TODO: maybe move internal state to redux? decide it later
-  state = {
-    selectedAddress: {},
-    selectedPayment: {},
-    isShippingEdit: false,
-    isNewAddress: true,
-    savedShippingPreferences: true,
-    shippingQuotes: [],
-    selectedShippingQuote: null
-  }
-
-  constructor(props) {
-    super(props);
-    this.deleteCart = this.deleteCart.bind(this);
-  }
-
   componentDidMount() {
     this.props.getCart()
     this.props.getDeliveryAddresses()
     this.props.getPayments()
   }
 
-  handleIsEdit = (value) => {
-    this.setState({ isShippingEdit: value });
+  // handleIsEdit = (value) => {
 
-    // value === "isNew"
-    //   ? this.props.dispatch(actions.reset('forms.shippingEdit'))
-    //   : this.props.dispatch(actions.merge('forms.shippingEdit', {
-    //     firstName: selectedAddress["first name"],
-    //     lastName: selectedAddress["last name"],
-    //     address: {
-    //       streetAddress: selectedAddress.address.streetAddress,
-    //       city: selectedAddress.address.city,
-    //       province: selectedAddress.address.province.name
-    //     },
-    //     zipCode: selectedAddress.address.zip.zip,
-    //     email: selectedAddress.email,
-    //     phoneNumber: selectedAddress["phone number"]
-    //   }));
-  }
+  //   value === "isNew"
+  //     ? this.props.dispatch(actions.reset('forms.shippingEdit'))
+  //     : this.props.dispatch(actions.merge('forms.shippingEdit', {
+  //       firstName: selectedAddress["first name"],
+  //       lastName: selectedAddress["last name"],
+  //       address: {
+  //         streetAddress: selectedAddress.address.streetAddress,
+  //         city: selectedAddress.address.city,
+  //         province: selectedAddress.address.province.name
+  //       },
+  //       zipCode: selectedAddress.address.zip.zip,
+  //       email: selectedAddress.email,
+  //       phoneNumber: selectedAddress["phone number"]
+  //     }));
+  // }
 
   handleQuoteSelect = (index) => {
-    // Redux, cause it should change prize 
     let { shippingQuoteSelected, shippingQuotes } = this.props
     shippingQuoteSelected({ index, quote: shippingQuotes[index] })
   }
 
   getAddress = (selectedAddressId) => {
-    const { deliveryAddresses } = this.props;
-    const selectedAddress = deliveryAddresses.find(i => i.id === selectedAddressId);
-    this.setState({ selectedAddress });
-    this.getShippingQuotes(selectedAddress);
+    let { deliveryAddresses } = this.props;
+    let selectedAddress = deliveryAddresses.find(i => i.id === selectedAddressId)
+
+    this.props.shippingChanged({ selectedAddress })
+    this.getShippingQuotes(selectedAddress)
   }
 
   getPayment = (selectedPaymentId) => {
-    const { payments } = this.props;
-    const selectedPayment = payments.find(i => i.id === selectedPaymentId);
-    this.setState({ selectedPayment });
+    const { payments } = this.props
+    const selectedPayment = payments.find(i => i.id === selectedPaymentId)
+    this.props.shippingChanged({ selectedPayment })
   }
 
   getShippingQuotes = (selectedAddress) => {
@@ -92,16 +75,15 @@ class PurchaseOrder extends Component {
     this.props.getShippingQuotes(1, selectedAddress.address.zip.zip);
   }
 
-  toggleRadio = (name = 'isNewAddress') => {
-    this.setState(prevState => ({
-      [name]: !prevState[name]
-    }))
-  }
+  // toggleRadio = (name = 'isNewAddress') => {
+  //   this.setState(prevState => ({
+  //     [name]: !prevState[name]
+  //   }))
+  // }
 
-  deleteCart(id) {
+  deleteCart = (id) => {
     if (checkToken(this.props)) return
     let { cart } = this.props
-
 
     let { formatMessage } = this.props.intl
 
@@ -129,9 +111,10 @@ class PurchaseOrder extends Component {
   }
 
   render() {
-    const { cart, deliveryAddresses, payments, dispatch, deleteCart, cartIsFetching, postNewDeliveryAddress, putDeliveryAddressEdit, shippingQuotes } = this.props;
-    if (cartIsFetching) return <Spinner />
+    const { dispatch, postNewDeliveryAddress, updateDeliveryAddress } = this.props
+    let { cart, deliveryAddresses, payments, cartIsFetching, shippingQuotes, shipping } = this.props
 
+    if (cartIsFetching) return <Spinner />
 
     return (
       <div className="app-inner-main">
@@ -162,25 +145,27 @@ class PurchaseOrder extends Component {
 
           <GridColumn computer={9}>
 
-            {this.state.isShippingEdit ?
+            {shipping.isShippingEdit ?
               <ShippingEdit
-                savedShippingPreferences={this.state.savedShippingPreferences}
-                toggleRadio={(name) => this.toggleRadio(name)}
-                selectedAddress={this.state.selectedAddress}
-                isNewAddress={this.state.isNewAddress}
-                handleIsEdit={this.handleIsEdit}
+                savedShippingPreferences={shipping.savedShippingPreferences}
+                selectedAddress={shipping.selectedAddress}
+                isNewAddress={shipping.isNewAddress}
+                shippingChanged={this.props.shippingChanged}
                 postNewDeliveryAddress={postNewDeliveryAddress}
-                putDeliveryAddressEdit={putDeliveryAddressEdit}
+                updateDeliveryAddress={updateDeliveryAddress}
+                getStates={this.props.getStates}
+                getProvinces={this.props.getProvinces}
+                location={this.props.location}
+                isFetching={this.props.isFetching}
               />
               :
               <>
                 <Shipping
                   deliveryAddresses={deliveryAddresses}
                   dispatch={dispatch}
-                  handleIsEdit={this.handleIsEdit}
-                  toggleRadio={(name) => this.toggleRadio(name)}
+                  shippingChanged={this.props.shippingChanged}
                   getAddress={this.getAddress}
-                  selectedAddress={this.state.selectedAddress}
+                  selectedAddress={shipping.selectedAddress}
                 />
               </>
             }
@@ -206,7 +191,7 @@ class PurchaseOrder extends Component {
                   currency={{ code: 'USD' }}
                   selectedShippingQuote={this.props.cart.selectedShipping}
                   handleQuoteSelect={this.handleQuoteSelect}
-                  selectedAddress={this.state.selectedAddress}
+                  selectedAddress={shipping.selectedAddress}
                   shippingQuotes={shippingQuotes}
                   shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
                 />
@@ -230,8 +215,8 @@ class PurchaseOrder extends Component {
 
                 <Payment
                   dispatch={dispatch}
-                  selectedAddress={this.state.selectedAddress}
-                  selectedPayment={this.state.selectedPayment}
+                  selectedAddress={shipping.selectedAddress}
+                  selectedPayment={shipping.selectedPayment}
                   payments={payments}
                   getPayment={this.getPayment}
                 />

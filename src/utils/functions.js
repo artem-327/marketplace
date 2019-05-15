@@ -100,7 +100,7 @@ export function getAbbreviation(word) {
 
 export function getPricing(offerDetail, quantity) {
   if (offerDetail.pricing) {
-    let tiers = offerDetail.pricing.tiers.length > 0 ? offerDetail.pricing.tiers : offerDetail.pricing.price.amount
+    let tiers = offerDetail.pricingTiers.length > 0 ? offerDetail.pricingTiers : offerDetail.pricing.price
 
     if (tiers instanceof Array) {
 

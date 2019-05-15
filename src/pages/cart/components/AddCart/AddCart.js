@@ -72,21 +72,20 @@ export default class AddCart extends Component {
     let { offer, order, isEdit } = this.props
     let { quantity, pricing, warning } = this.props.sidebar
 
-    let { pkgAmount } = offer
+    let { pkgAmount, pricingTiers } = offer
 
 
     let { packagingUnit, packagingSize, packagingType } = offer.product
 
-
     let totalPrice = (quantity && pricing) ? pricing.price * quantity * packagingSize : null
-    let { tiers } = offer.pricing
+
 
     var dropdownOptions = []
     let currencyCode = 'USD'
 
-    if (tiers.length > 0) {
-      tiers.forEach((tier, i) => {
-        let quantityTo = (i + 1) >= tiers.length ? pkgAmount : (tier.quantityFrom > tiers[i + 1].quantityFrom ? tier.quantityFrom : tiers[i + 1].quantityFrom - 1)
+    if (pricingTiers.length > 0) {
+      pricingTiers.forEach((tier, i) => {
+        let quantityTo = (i + 1) >= pricingTiers.length ? pkgAmount : (tier.quantityFrom > pricingTiers[i + 1].quantityFrom ? tier.quantityFrom : pricingTiers[i + 1].quantityFrom - 1)
 
 
         let text = <>

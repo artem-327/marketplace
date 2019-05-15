@@ -4,36 +4,43 @@ import PurchaseOrder from './PurchaseOrder'
 import {
   getCart, getDeliveryAddresses,
   deleteCart, getPayments,
-  postNewDeliveryAddress, putDeliveryAddressEdit,
+  postNewDeliveryAddress, updateDeliveryAddress,
   getShippingQuotes, shippingQuoteSelected,
   addCartItem, updateCartItem,
-  deleteCartItem, getCartItem
+  deleteCartItem, getCartItem,
+  shippingChanged
 } from '../../../modules/cart'
 
-import { fetchProvinces } from '../../../modules/location'
+
+import { getStates, getProvinces } from '../../../modules/location'
 
 function mapStateToProps(store) {
+  
   return {
-    cart: store.cart.cart,
-    deliveryAddresses: store.cart.deliveryAddresses,
-    cartIsFetching: store.cart.cartIsFetching,
+    ...store.cart,
+    // cart: store.cart.cart,
+    // deliveryAddresses: store.cart.deliveryAddresses,
+    // cartIsFetching: store.cart.cartIsFetching,
+    // payments: store.cart.payments,
+    // shippingQuotes: store.cart.shippingQuotes,
+    // shippingQuotesAreFetching: store.cart.shippingQuotesAreFetching,
+    // isFetching: store.cart.isFetching,
     selectedAddressId: store.forms.cart.selectedAddressId,
     selectedCardId: store.forms.cart.selectedCardId,
-    payments: store.cart.payments,
-    shippingQuotes: store.cart.shippingQuotes,
-    shippingQuotesAreFetching: store.cart.shippingQuotesAreFetching
+    location: store.location
   }
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    getCart, fetchProvinces,
-    getDeliveryAddresses, putDeliveryAddressEdit,
+    getCart,
+    getDeliveryAddresses, updateDeliveryAddress,
     getPayments, deleteCart,
     postNewDeliveryAddress, getShippingQuotes,
     shippingQuoteSelected, addCartItem,
     updateCartItem, deleteCartItem,
-    getCartItem
+    getCartItem, getStates, getProvinces, 
+    shippingChanged,
   }, dispatch)
 }
 
