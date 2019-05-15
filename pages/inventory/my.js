@@ -1,6 +1,6 @@
 import securePage from '~/hocs/securePage'
 import Layout from 'components/Layout'
-import MyInventory from "./my/index"
+import {MyInventory} from '~/modules/inventory/my'
 
 export default securePage(() => (
   <Layout title="My Inventory">

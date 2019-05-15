@@ -27,6 +27,7 @@ const ContentContainer = styled(Container)`
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+  overflow: auto;
 `
 const FlexContainer = styled.div`
   position: fixed;

@@ -38,6 +38,7 @@ const ResponsiveColumn = styled(GridColumn)`
 `
 
 const initValues = {
+  additionalType: 'Unspecified',
   costs: [],
   doesExpire: false,
   inStock: true,
@@ -54,6 +55,7 @@ const initValues = {
   processingTimeDays: 1,
   splits: 1,
   touchedLot: false,
+  trackSubCosts: true,
   validityDate: "",
   warehouse: 0
 }
@@ -344,7 +346,6 @@ export default class AddInventoryForm extends Component {
       return true
 
     for (let i = 0; i < values.costs.length; i++) {
-      console.log(parseInt(values.costs[i].lot))
       setFieldValue(`costs[${i}].costUom`, +(parseFloat(values.costs[i].cost) * (parseInt(values.costs[i].lot) > 0 ? parseFloat(values.lots[parseInt(values.costs[i].lot) - 1].pkgAmount) : (parseInt(values.costs[i].lot) < 0 ? 0 : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3)))
     }
   }
@@ -830,7 +831,7 @@ export default class AddInventoryForm extends Component {
                           <Grid>
                             <GridColumn width={4}>
                               <FormField width={12}>
-                                <Input name='costUom' label='Cost/UOM' inputProps={{ type: 'number', step: '0.01', value: null, min: 0 }} />
+                                <Input name='cost' label='Cost/UOM' inputProps={{ type: 'number', step: '0.01', value: null, min: 0 }} />
                               </FormField>
                               <FormField>
                                 <label>Track Sub-Costs</label>
@@ -843,7 +844,7 @@ export default class AddInventoryForm extends Component {
                                           render={arrayHelpers => (
                                   <>
                                     <Message attached='top' className='header-table-fields'>
-                                      <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{marginTop: '-0.5em'}} onClick={() => arrayHelpers.push({description: '', lot: 0, cost: null, costUom: null})} />
+                                      <Button type='button' icon='plus' color='blue' size='small' disabled={!values.trackSubCosts} floated='right' style={{marginTop: '-0.5em'}} onClick={() => arrayHelpers.push({description: '', lot: 0, cost: null, costUom: null})} />
                                       Sub-Cost Breakdown
                                     </Message>
                                     <Table attached='bottom' className='table-fields'>
@@ -860,7 +861,7 @@ export default class AddInventoryForm extends Component {
                                       <Table.Body>
                                         {values.costs && values.costs.length ? values.costs.map((costRow, index) => (
                                           <Table.Row key={index}>
-                                            <TableCell width={4}><FormField width={16}><Input name={`costs[${index}].description`} /></FormField></TableCell>
+                                            <TableCell width={4}><FormField width={16}><Input inputProps={{disabled: !values.trackSubCosts}} name={`costs[${index}].description`} /></FormField></TableCell>
                                             <TableCell width={2}>
                                               <FormField width={16}>
                                                 <Dropdown
@@ -878,13 +879,14 @@ export default class AddInventoryForm extends Component {
                                                     }) : [])
                                                   }
                                                   inputProps={{
-                                                    onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(values.costs[index].cost) * (parseInt(data.value) ? parseFloat(values.lots[parseInt(data.value) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3))
+                                                    onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(values.costs[index].cost) * (parseInt(data.value) ? parseFloat(values.lots[parseInt(data.value) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3)),
+                                                    disabled: !values.trackSubCosts
                                                   }}
                                                 />
                                               </FormField>
                                             </TableCell>
-                                            <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].cost`} inputProps={{ type: 'number', step: '1', value: null, min: 0, onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(data.value) * (parseInt(values.costs[index].lot) ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3))}} /></FormField></TableCell>
-                                            <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].costUom`} disabled={true} inputProps={{ type: 'text', step: '0.01', value: null, min: 0 }} /></FormField></TableCell>
+                                            <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].cost`} inputProps={{ type: 'number', step: '1', value: null, min: 0, disabled: !values.trackSubCosts, onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(data.value) * (parseInt(values.costs[index].lot) ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3))}} /></FormField></TableCell>
+                                            <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].costUom`} inputProps={{ type: 'text', step: '0.01', value: null, min: 0, disabled: true }} /></FormField></TableCell>
                                             <TableCell width={3}>
                                               <UploadLot {...this.props}
                                                          attachments={values.costs[index].attachments}
@@ -892,6 +894,7 @@ export default class AddInventoryForm extends Component {
                                                          type='Cost Attachment'
                                                          lot={false}
                                                          fileMaxSize={20}
+                                                         disabled={!values.trackSubCosts}
                                                          onChange={(files) => setFieldValue(
                                                            `costs[${index}].attachments[${values.costs[index].attachments && values.costs[index].attachments.length ? values.costs[index].attachments.length : 0}]`,
                                                            {
@@ -907,7 +910,7 @@ export default class AddInventoryForm extends Component {
                                                          )}
                                               />
                                             </TableCell>
-                                            <TableCell width={1}><Icon name='trash alternate outline' size='large' onClick={() => arrayHelpers.remove(index)} /></TableCell>
+                                            <TableCell width={1}><Icon name='trash alternate outline' size='large' disabled={!values.trackSubCosts} onClick={() => arrayHelpers.remove(index)} /></TableCell>
                                           </Table.Row>
                                         )) : ''
                                         }
@@ -916,6 +919,72 @@ export default class AddInventoryForm extends Component {
                                   </>
                                 )}
                               />
+                            </GridColumn>
+                          </Grid>
+
+                          <Header as='h3'>ADDITIONAL DOCUMENTS</Header>
+                          <Grid>
+                            <GridColumn width={10}>
+                              <UploadLot {...this.props}
+                                         attachments={values.additional}
+                                         name='additional'
+                                         type={values.additionalType}
+                                         unspecifiedTypes={['Unspecified']}
+                                         fileMaxSize={20}
+                                         onChange={(files) => setFieldValue(
+                                           `additional[${values.additional && values.additional.length ? values.additional.length : 0}]`,
+                                           {
+                                             id: files.id,
+                                             name: files.name
+                                           }
+                                         )}
+                                         emptyContent={(
+                                           <label>
+                                             <FormattedMessage
+                                               id='addInventory.dragDropAdditional'
+                                               defaultMessage={'Drop additional documents here'}
+                                             />
+                                             <br />
+                                             <FormattedMessage
+                                               id='addInventory.dragDropOr'
+                                               defaultMessage={'or select from computer'}
+                                             />
+                                           </label>
+                                         )}
+                                         uploadedContent={(
+                                           <label>
+                                             <FormattedMessage
+                                               id='addInventory.dragDropAdditional'
+                                               defaultMessage={'Drop additional documents here'}
+                                             />
+                                             <br />
+                                             <FormattedMessage
+                                               id='addInventory.dragDropOr'
+                                               defaultMessage={'or select from computer'}
+                                             />
+                                           </label>
+                                         )}
+                              />
+                            </GridColumn>
+                            <GridColumn width={5}>
+                              <FormField width={16}>
+                                <Dropdown
+                                  name={`additionalType`}
+                                  options={[{
+                                      key: 0,
+                                      text: 'Select Type',
+                                      value: 'Unspecified'
+                                    }, {
+                                      key: 1,
+                                      text: 'B/L',
+                                      value: 'B/L'
+                                    }, {
+                                      key: 1,
+                                      text: 'SDS',
+                                      value: 'SDS'
+                                  }]}
+                                />
+                              </FormField>
                             </GridColumn>
                           </Grid>
 

@@ -7,7 +7,7 @@ import { resetFilterTags } from "../../../modules/filter"
 import { resetForm } from '../../../utils/functions'
 import { getMerchant } from '../../../modules/merchants'
 import { getOffice } from '../../../modules/companies'
-import { getProductOffer, getOrderDetail, sidebarChanged } from '../../../modules/cart'
+import { getProductOffer, sidebarChanged } from '../../../modules/cart'
 
 const mapStateToProps = store => {
   
@@ -40,7 +40,6 @@ const mapDispatchToProps = dispatch => (
     resetForm,
     deleteProductOffersList,
     getProductOffer,
-    getOrderDetail,
     sidebarChanged
   }, dispatch)
 )

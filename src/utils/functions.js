@@ -100,15 +100,15 @@ export function getAbbreviation(word) {
 
 export function getPricing(offerDetail, quantity) {
   if (offerDetail.pricing) {
-    let tiers = offerDetail.pricing.tiers.length > 0 ? offerDetail.pricing.tiers : offerDetail.pricing.price.amount
-    
+    let tiers = offerDetail.pricingTiers.length > 0 ? offerDetail.pricingTiers : offerDetail.pricing.price
+
     if (tiers instanceof Array) {
 
       let sortedTiers = tiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
 
       for (let i = sortedTiers.length - 1; i >= 0; i--) {
         let { quantityFrom } = sortedTiers[i]
-   
+
         if (quantity >= quantityFrom) {
           try {
             delete sortedTiers[i].id
@@ -121,4 +121,10 @@ export function getPricing(offerDetail, quantity) {
 
     return { quantityFrom: 0, price: tiers }
   }
+}
+
+export function getLocationString(productOffer) {
+  let location = productOffer.warehouse.address
+  
+  return `${location.province ? location.province.name : location.city}, ${location.country.name}`
 }

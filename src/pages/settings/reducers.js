@@ -1,5 +1,5 @@
-import * as AT from './action-types'
-import get from 'lodash/get'
+import * as AT from "./action-types"
+import get from "lodash/get"
 
 export const initialState = {
   editPopupBoolean: false,
@@ -19,20 +19,20 @@ export const initialState = {
   country: [],
   currency: [],
   tabsNames: [
-    { name: 'Users', id: 1 },
-    { name: 'Branches', id: 2 },
-    { name: 'Warehouses', id: 3 },
-    { name: 'Product catalog', id: 4 },
-    { name: 'Global Broadcast', id: 5 },
+    { name: "Users", id: 1 },
+    { name: "Branches", id: 2 },
+    { name: "Warehouses", id: 3 },
+    { name: "Product catalog", id: 4 },
+    { name: "Global Broadcast", id: 5 },
     //{ name: "Client list", id: 6 }, // removed #29771
-    { name: 'Credit cards', id: 7 },
-    { name: 'Bank accounts', id: 8 }
+    { name: "Credit cards", id: 7 },
+    { name: "Bank accounts", id: 8 }
     //{ name: "Tax manager", id: 9 }, // removed #29771
     //{ name: "Terms", id: 10 }, // removed #29771
     //{ name: "Website Controls", id: 11 } // removed #29771
   ],
   // currentTab: "Product catalog",
-  currentTab: 'Users',
+  currentTab: "Users",
   isOpenPopup: false,
   isOpenImportPopup: false,
   currentEditForm: null,
@@ -41,7 +41,7 @@ export const initialState = {
   toast: { message: null, isSuccess: null },
   deleteUserById: null,
   deleteRowByid: null,
-  filterValue: '',
+  filterValue: "",
   editPopupSearchProducts: [],
   fileCSVId: null,
   CSV: null,
@@ -184,9 +184,9 @@ export default function reducer(state = initialState, action) {
     case AT.GET_USERS_DATA_SUCCESS: {
       const usersRows = action.payload.map(user => {
         return {
-          checkbox: ' ',
-          userName: user.firstname + ' ' + user.lastname,
-          title: 'title',
+          checkbox: " ",
+          userName: user.firstname + " " + user.lastname,
+          title: "title",
           email: user.email,
           phone: user.homeBranch.contactPhone,
           homeBranchId: user.homeBranch.id,
@@ -196,7 +196,7 @@ export default function reducer(state = initialState, action) {
               : null
             : null,
           homeBranch: user.homeBranch.name,
-          permissions: user.roles ? user.roles.name : '',
+          permissions: user.roles ? user.roles.name : "",
           middleName: user.middlename,
           id: user.id,
           allUserRoles: user.roles
@@ -224,7 +224,7 @@ export default function reducer(state = initialState, action) {
       const warehousesRows = action.payload.warehouses.map(warehouse => ({
         name: warehouse.name,
         address:
-          warehouse.address.streetAddress + ', ' + warehouse.address.city,
+          warehouse.address.streetAddress + ", " + warehouse.address.city,
         streetAddress: warehouse.address.streetAddress,
         city: warehouse.address.city,
         countryName: warehouse.address.country.name,
@@ -241,8 +241,8 @@ export default function reducer(state = initialState, action) {
 
       warehousesRows.forEach(element => {
         for (let key in element) {
-          if (element[key] === 'unknown') {
-            element[key] = ''
+          if (element[key] === "unknown") {
+            element[key] = ""
           }
         }
       })
@@ -263,7 +263,7 @@ export default function reducer(state = initialState, action) {
       const branchesRows = action.payload.branches.map(branch => {
         return {
           name: branch.name,
-          address: branch.address.streetAddress + ', ' + branch.address.city,
+          address: branch.address.streetAddress + ", " + branch.address.city,
           streetAddress: branch.address.streetAddress,
           city: branch.address.city,
           countryName: branch.address.country.name,
@@ -281,8 +281,8 @@ export default function reducer(state = initialState, action) {
 
       branchesRows.forEach(element => {
         for (let key in element) {
-          if (element[key] === 'unknown') {
-            element[key] = ''
+          if (element[key] === "unknown") {
+            element[key] = ""
           }
         }
       })
@@ -321,7 +321,7 @@ export default function reducer(state = initialState, action) {
           expirationMonth: card.expMonth,
           expirationYear: card.expYear,
           last4: `**** **** **** ${card.last4}`,
-          expMonthYear: card.expMonth + ' / ' + card.expYear
+          expMonthYear: card.expMonth + " / " + card.expYear
         }
       })
 
@@ -432,7 +432,7 @@ export default function reducer(state = initialState, action) {
           productId: item.product.id,
           packagingType:
             item.packaging.packagingType === undefined
-              ? ''
+              ? ""
               : item.packaging.packagingType.name,
           packagingSize: item.packaging.size
         }
@@ -494,7 +494,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         fileCSVId: null,
         mappedHeaders: null,
-        dataHeaderCSV: null
+        dataHeaderCSV: null,
+        isOpenImportPopup: false
       }
     }
 
