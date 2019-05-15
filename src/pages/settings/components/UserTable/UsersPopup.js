@@ -14,12 +14,12 @@ import { Form, Input, Button, Dropdown, Checkbox } from "formik-semantic-ui"
 import * as Yup from "yup"
 
 const formValidation = Yup.object().shape({
-  firstName: Yup.string()
+  name: Yup.string()
     .min(3, "Too short")
     .required("Required"),
-  lastName: Yup.string()
-    .min(3, "Too short")
-    .required("Required"),
+  // lastName: Yup.string()
+  //   .min(3, "Too short")
+  //   .required("Required"),
   email: Yup.string()
     .email("Invalid email")
     .required("Emails is required")
@@ -111,8 +111,8 @@ class UsersPopup extends React.Component {
             ) : (
               <div>
                 <FormGroup widths="equal">
-                  <Input type="text" label="First Name" name="firstName" />
-                  <Input type="text" label="Last Name" name="lastName" />
+                  <Input type="text" label="Name" name="name" />
+                  {/* <Input type="text" label="Last Name" name="lastName" /> */}
                 </FormGroup>
                 <FormGroup widths="equal">
                   <Input type="text" label="Middle Name" name="middleName" />
