@@ -450,6 +450,10 @@ function* closeImportPopup({}) {
   yield put({ type: AT.GET_PRODUCTS_CATALOG_DATA })
 }
 
+function* closeImportPopupCancel({}) {
+  yield put({ type: AT.CLOSE_IMPORT_POPUP_SUCCESS })
+}
+
 function* deleteConfirmPopup({}) {
   const {
     settings: { deleteRowByid, currentTab }
@@ -536,4 +540,5 @@ export default function* settingsSaga() {
   // yield takeEvery(AT.CLOSE_ROLES_POPUP, closeRolesPopup)
 
   yield takeEvery(AT.CLOSE_IMPORT_POPUP, closeImportPopup)
+  yield takeEvery(AT.CLOSE_IMPORT_POPUP_CANCEL, closeImportPopupCancel)
 }

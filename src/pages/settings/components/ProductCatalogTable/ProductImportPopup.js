@@ -15,7 +15,8 @@ import {
   closeImportPopup,
   getStoredCSV,
   postImportProductCSV,
-  clearDataOfCSV
+  clearDataOfCSV,
+  closeImportPopupCancel
 } from "../../actions"
 
 import Upload from "./Steps/UploadCSV"
@@ -60,7 +61,7 @@ class ProductImportPopup extends Component {
   }
 
   render() {
-    const { closeImportPopup, csvFileId } = this.props
+    const { closeImportPopup, csvFileId, closeImportPopupCancel } = this.props
     const {
       currentStep,
       isFinishUpload,
@@ -70,29 +71,7 @@ class ProductImportPopup extends Component {
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>
-          <Grid>
-            <Grid.Row columns={2}>
-              <Grid.Column>.CSV Mapping</Grid.Column>
-              <Grid.Column>
-                {currentStep !== "confirmation" && (
-                  <div style={{ textAlign: "right" }}>
-                    <Button basic onClick={closeImportPopup}>
-                      Cancel
-                    </Button>
-                    <Button
-                      primary
-                      onClick={this.submitHandler}
-                      disabled={!csvFileId}
-                    >
-                      {`${currentStep === "preview" ? "Save" : "Next"}`}
-                    </Button>
-                  </div>
-                )}
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Modal.Header>
+        <Modal.Header>.CSV Mapping</Modal.Header>
         <StyledModal>
           <Step.Group widths={3}>
             <Step active={currentStep === "upload"} completed={isFinishUpload}>
@@ -121,6 +100,22 @@ class ProductImportPopup extends Component {
           </Step.Group>
           {this.steps[currentStep]}
         </StyledModal>
+        <Modal.Actions>
+          {currentStep !== "confirmation" && (
+            <div style={{ textAlign: "right" }}>
+              <Button basic onClick={closeImportPopupCancel}>
+                Cancel
+              </Button>
+              <Button
+                primary
+                onClick={this.submitHandler}
+                disabled={!csvFileId}
+              >
+                {`${currentStep === "preview" ? "Save" : "Next"}`}
+              </Button>
+            </div>
+          )}
+        </Modal.Actions>
       </Modal>
     )
   }
@@ -148,7 +143,8 @@ const mapDispatchToProps = {
   closeImportPopup,
   getStoredCSV,
   postImportProductCSV,
-  clearDataOfCSV
+  clearDataOfCSV,
+  closeImportPopupCancel
 }
 
 const mapStateToProps = state => {

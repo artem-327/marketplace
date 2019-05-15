@@ -58,7 +58,7 @@ class UploadCSV extends Component {
           >
             <StyledSegment placeholder>
               <Header icon>
-                <Icon name="file outline" />
+                <Icon name="file-csv" />
                 Drag and drop or browse computer to upload your .csv file
               </Header>
               <Segment.Inline>
@@ -66,25 +66,6 @@ class UploadCSV extends Component {
                 {hasError && <p style={{ color: "red" }}>Invalid type file</p>}
               </Segment.Inline>
             </StyledSegment>
-            {/* <Grid>
-              <Grid.Row verticalAlign="middle">
-                <Grid.Column>
-                  Drag and drop or browse computer to upload your .csv file
-                </Grid.Column>
-              </Grid.Row>
-              {uploadedFile && (
-                <Grid.Row verticalAlign="top">
-                  <Grid.Column>{uploadedFile.name}</Grid.Column>
-                </Grid.Row>
-              )}
-              {hasError && (
-                <Grid.Row verticalAlign="top">
-                  <Grid.Column>
-                    <p style={{ color: "red" }}>Invalid type file</p>
-                  </Grid.Column>
-                </Grid.Row>
-              )}
-            </Grid> */}
           </StyledDropzone>
         </Grid.Row>
       </Grid>
