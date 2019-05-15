@@ -1,7 +1,7 @@
-import React from 'react'
-import { connect } from 'react-redux'
+import React from "react"
+import { connect } from "react-redux"
 
-import { Modal, FormGroup, Item } from 'semantic-ui-react'
+import { Modal, FormGroup, Item } from "semantic-ui-react"
 
 import {
   closePopup,
@@ -9,20 +9,20 @@ import {
   handlerSubmitUserEditPopup,
   postNewUserRequest,
   putNewUserRoleRequest
-} from '../../actions'
-import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui'
-import * as Yup from 'yup'
+} from "../../actions"
+import { Form, Input, Button, Dropdown, Checkbox } from "formik-semantic-ui"
+import * as Yup from "yup"
 
 const formValidation = Yup.object().shape({
   firstName: Yup.string()
-    .min(3, 'Too short')
-    .required('Required'),
+    .min(3, "Too short")
+    .required("Required"),
   lastName: Yup.string()
-    .min(3, 'Too short')
-    .required('Required'),
+    .min(3, "Too short")
+    .required("Required"),
   email: Yup.string()
-    .email('Invalid email')
-    .required('Emails is required')
+    .email("Invalid email")
+    .required("Emails is required")
 })
 
 class UsersPopup extends React.Component {
@@ -45,7 +45,7 @@ class UsersPopup extends React.Component {
   addNewRole(values) {
     const newRoles = []
     for (let key in values) {
-      const id = Number(key.split('checkBoxId_')[1])
+      const id = Number(key.split("checkBoxId_")[1])
       if (values[`checkBoxId_${id}`]) {
         id && newRoles.push(id)
       }
@@ -66,13 +66,13 @@ class UsersPopup extends React.Component {
 
     const [firstName, lastName] =
       popupValues && popupValues.userName
-        ? popupValues.userName.split(' ')
-        : ['', '']
+        ? popupValues.userName.split(" ")
+        : ["", ""]
     const {
-      middleName = '',
-      email = '',
-      homeBranchId = '',
-      preferredCurrency = ''
+      middleName = "",
+      email = "",
+      homeBranchId = "",
+      preferredCurrency = ""
     } = popupValues || {}
     const initialFormValues = {
       firstName,
@@ -82,18 +82,18 @@ class UsersPopup extends React.Component {
       homeBranchId,
       preferredCurrency
     }
-    this.props.roles.forEach(item => {
-      let flag = this.props.popupValues.allUserRoles.some(
-        role => role.id === item.id
-      )
-      initialFormValues[`checkBoxId_${item.id}`] = flag
-    })
-    const title = popupValues ? 'Edit' : 'Add'
+    // this.props.roles.forEach(item => {
+    //   let flag = this.props.popupValues.allUserRoles.some(
+    //     role => role.id === item.id
+    //   )
+    //   initialFormValues[`checkBoxId_${item.id}`] = flag
+    // })
+    const title = popupValues ? "Edit" : "Add"
 
     return (
-      <Modal open centered={false} size={userEditRoles ? 'mini' : null}>
+      <Modal open centered={false} size={userEditRoles ? "mini" : null}>
         <Modal.Header>
-          {title + (userEditRoles ? ' Role' : ' User')}
+          {title + (userEditRoles ? " Role" : " User")}
         </Modal.Header>
         <Modal.Content>
           <Form
@@ -127,7 +127,7 @@ class UsersPopup extends React.Component {
                 </FormGroup>
               </div>
             )}
-            <div style={{ textAlign: 'right' }}>
+            <div style={{ textAlign: "right" }}>
               <Button.Reset
                 onClick={userEditRoles ? closeRolesPopup : closePopup}
               >
@@ -151,6 +151,7 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = state => {
+  console.warn(state.settings)
   return {
     popupValues: state.settings.popupValues,
     branchesAll: state.settings.branchesAll,

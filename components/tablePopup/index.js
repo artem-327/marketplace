@@ -1,8 +1,8 @@
 //MAIN COMPONENTS
-import React from 'react'
-import { Popup } from 'semantic-ui-react'
+import React from "react"
+import { Popup } from "semantic-ui-react"
 //STYLES
-import './style.scss'
+import "./style.scss"
 
 export const TablePopUp = props => {
   const opts = props.row.allUserRoles
@@ -15,7 +15,7 @@ export const TablePopUp = props => {
       {Roles}
       {opts.length > 2 ? (
         <Popup
-          trigger={<span>+ X more</span>}
+          trigger={<span>{`+ ${opts.length - 2}`}</span>}
           className="popup-custom"
           content={PopUpStr}
         />
