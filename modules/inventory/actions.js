@@ -37,7 +37,9 @@ export function addProductOffer(values, poId = false) {
     assayMax: values.assayMax ? parseFloat(values.assayMax) : null,
     attachments: values.attachments && values.attachments.length ? values.attachments.map(att => {
       return att.id
-    }) : null,
+    }).concat(values.additional && values.additional.length ? values.additional.map(add => {
+      return add.id
+    }) : []) : null,
     cost: values.cost ? parseInt(values.cost) : null,
     costRecords: values.trackSubCosts && values.costs ? values.costs.map(cost => {
       return {

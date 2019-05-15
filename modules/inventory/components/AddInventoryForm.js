@@ -38,6 +38,7 @@ const ResponsiveColumn = styled(GridColumn)`
 `
 
 const initValues = {
+  additionalType: 'Unspecified',
   costs: [],
   doesExpire: false,
   inStock: true,
@@ -927,10 +928,11 @@ export default class AddInventoryForm extends Component {
                               <UploadLot {...this.props}
                                          attachments={values.additional}
                                          name='additional'
-                                         type='Additional'
+                                         type={values.additionalType}
+                                         unspecifiedTypes={['Unspecified']}
                                          fileMaxSize={20}
                                          onChange={(files) => setFieldValue(
-                                           `attachments[${values.additional && values.additional.length ? values.additional.length : 0}]`,
+                                           `additional[${values.additional && values.additional.length ? values.additional.length : 0}]`,
                                            {
                                              id: files.id,
                                              name: files.name
@@ -974,13 +976,13 @@ export default class AddInventoryForm extends Component {
                                       value: 'Unspecified'
                                     }, {
                                       key: 1,
-                                      text: 'XXX',
-                                      value: 'XXX'
-                                    }]}
-                                  inputProps={{
-                                    onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(values.costs[index].cost) * (parseInt(data.value) ? parseFloat(values.lots[parseInt(data.value) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3)),
-                                    disabled: !values.trackSubCosts
-                                  }}
+                                      text: 'B/L',
+                                      value: 'B/L'
+                                    }, {
+                                      key: 1,
+                                      text: 'SDS',
+                                      value: 'SDS'
+                                  }]}
                                 />
                               </FormField>
                             </GridColumn>

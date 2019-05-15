@@ -77,6 +77,22 @@ export default function reducer(state = initialState, action) {
 
         case AT.INVENTORY_GET_PRODUCT_OFFER_FULFILLED: {
           let {data} = action.payload
+
+          let filteredAttachments = data.attachments.reduce(function(filtered, att) {
+            if (att.type === 'Spec Sheet') {
+              var returnedAtt = {id: att.id, name: att.name, linked: true}
+              filtered.push(returnedAtt)
+            }
+            return filtered
+          }, [])
+
+          let filteredAdditional = data.attachments.reduce(function(filtered, att) {
+            if (att.type !== 'Spec Sheet') {
+              var returnedAtt = {id: att.id, name: att.name, linked: true}
+              filtered.push(returnedAtt)
+            }
+            return filtered
+          }, [])
           
           return {
             ...state,
@@ -98,15 +114,10 @@ export default function reducer(state = initialState, action) {
             }]: [],
             
             initialState: {
+              additional: filteredAdditional,
               assayMax: data.assayMax,
               assayMin: data.assayMin,
-              attachments: data.attachments && data.attachments.length ? data.attachments.map(att => {
-                return {
-                  id: att.id,
-                  name: att.name,
-                  linked: true
-                }
-              }) : [],
+              attachments: filteredAttachments,
               doesExpire: !!data.lots[0].expirationDate,
               externalNotes: data.externalNotes,
               lots: data.lots.map(lot => {
