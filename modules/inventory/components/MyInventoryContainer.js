@@ -21,11 +21,11 @@ function mapStateToProps(store) {
         packaging: po.product.packagingType && po.product.packagingType.name ? po.product.packagingType.name : 'N/A',
         pkgAmount: qtyPart ? `${po.product.packagingSize} ${qtyPart}` : 'N/A',
         quantity: qtyPart ? `${(parseInt(po.pkgAmount, 10) * parseInt(po.product.packagingSize, 10)).formatNumber()} ${qtyPart}` : 'N/A',
-        // cost: po.pricing.cost ? "$" + po.pricing.cost.amount.formatMoney(3) : 'N/A',
-        // fobPrice: po.pricing.tiers.length > 1 ?
-        //   ("$" + po.pricing.tiers[po.pricing.tiers.length - 1].price.formatMoney(3)
-        //     + ' - ' + "$" + po.pricing.tiers[0].price.formatMoney(3))
-        //   : po.pricing.price ? ("$" + po.pricing.price.amount.formatMoney(3)) : 'N/A',
+        cost: po.pricing.cost ? "$" + po.pricing.cost.formatMoney(3) : 'N/A',
+        fobPrice: po.pricingTiers.length > 1 ?
+          ("$" + po.pricingTiers[po.pricingTiers.length - 1].price.formatMoney(3)
+            + ' - ' + "$" + po.pricingTiers[0].price.formatMoney(3))
+          : po.pricing.price ? ("$" + po.pricing.price.formatMoney(3)) : 'N/A',
         manufacturer: po.manufacturer && po.manufacturer.name ? po.manufacturer.name : 'N/A',
         broadcasted: po.broadcasted
       }

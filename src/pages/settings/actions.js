@@ -1,4 +1,4 @@
-import * as AT from './action-types'
+import * as AT from "./action-types"
 
 export function openPopup(rows = null) {
   return {
@@ -22,7 +22,12 @@ export function openImportPopup() {
 export function closeImportPopup() {
   return {
     type: AT.CLOSE_IMPORT_POPUP
-    //payload: rows
+  }
+}
+
+export function closeImportPopupCancel() {
+  return {
+    type: AT.CLOSE_IMPORT_POPUP_CANCEL
   }
 }
 
