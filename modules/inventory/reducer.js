@@ -129,11 +129,11 @@ export default function reducer(state = initialState, action) {
               multipleLots: true,
               origin: data.origin ? data.origin.id : null,
               pkgAmount: data.pkgAmount,
-              priceTiers: data.pricing.tiers.length,
+              priceTiers: data.pricingTiers.length,
               pricing: {
-                ...data.pricing,
-                price: data.pricing.price.amount
+                price: data.pricing.price
               },
+              pricingTiers: data.pricingTiers,
               processingTimeDays: 1,
               product: data.product,
               productCondition: data.productCondition ? data.productCondition.id : null,

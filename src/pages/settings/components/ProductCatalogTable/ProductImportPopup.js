@@ -1,25 +1,33 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import styled from "styled-components";
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import styled from "styled-components"
 
-import { Modal, Icon, Step, ModalContent, Grid } from "semantic-ui-react";
+import {
+  Modal,
+  Icon,
+  Step,
+  ModalContent,
+  Grid,
+  Button
+} from "semantic-ui-react"
+
 import {
   closeImportPopup,
   getStoredCSV,
   postImportProductCSV,
-  clearDataOfCSV
-} from "../../actions";
-import { Form, Button } from "formik-semantic-ui";
+  clearDataOfCSV,
+  closeImportPopupCancel
+} from "../../actions"
 
-import Upload from "./Steps/UploadCSV";
-import Map from "./Steps/Map";
-import Preview from "./Steps/Preview";
-import ConfirmationPage from "./Steps/ConfirmationPage";
+import Upload from "./Steps/UploadCSV"
+import Map from "./Steps/Map"
+import Preview from "./Steps/Preview"
+import ConfirmationPage from "./Steps/ConfirmationPage"
 
 const StyledModal = styled(ModalContent)`
   height: 500px;
   overflow: auto;
-`;
+`
 
 class ProductImportPopup extends Component {
   state = {
@@ -27,11 +35,11 @@ class ProductImportPopup extends Component {
     isFinishUpload: false,
     isFinishMap: false,
     isFinishPreview: false
-  };
+  }
 
   componentDidUpdate(prevProps) {
     if (this.props.csvFileId !== prevProps.csvFileId && this.props.csvFileId) {
-      this.props.getStoredCSV(this.props.csvFileId);
+      this.props.getStoredCSV(this.props.csvFileId)
     }
   }
 
@@ -41,51 +49,29 @@ class ProductImportPopup extends Component {
       isFinishUpload: false,
       isFinishMap: false,
       isFinishPreview: false
-    });
-    this.props.clearDataOfCSV();
-  };
+    })
+    this.props.clearDataOfCSV()
+  }
 
   steps = {
     upload: <Upload />,
     map: <Map />,
     preview: <Preview />,
     confirmation: <ConfirmationPage toUpload={this.toUpload} />
-  };
+  }
 
   render() {
-    const { closeImportPopup, csvFileId } = this.props;
+    const { closeImportPopup, csvFileId, closeImportPopupCancel } = this.props
     const {
       currentStep,
       isFinishUpload,
       isFinishMap,
       isFinishPreview
-    } = this.state;
+    } = this.state
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>
-          <Grid>
-            <Grid.Row columns={2}>
-              <Grid.Column>.CSV Mapping</Grid.Column>
-              <Grid.Column>
-                <Form onReset={closeImportPopup}>
-                  {currentStep !== "confirmation" && (
-                    <div style={{ textAlign: "right" }}>
-                      <Button.Reset>Cancel</Button.Reset>
-                      <Button
-                        primary
-                        onClick={this.submitHandler}
-                        disabled={!csvFileId}
-                      >
-                        {`${currentStep === "preview" ? "Save" : "Next"}`}
-                      </Button>
-                    </div>
-                  )}
-                </Form>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Modal.Header>
+        <Modal.Header>.CSV Mapping</Modal.Header>
         <StyledModal>
           <Step.Group widths={3}>
             <Step active={currentStep === "upload"} completed={isFinishUpload}>
@@ -114,44 +100,61 @@ class ProductImportPopup extends Component {
           </Step.Group>
           {this.steps[currentStep]}
         </StyledModal>
+        <Modal.Actions>
+          {currentStep !== "confirmation" && (
+            <div style={{ textAlign: "right" }}>
+              <Button basic onClick={closeImportPopupCancel}>
+                Cancel
+              </Button>
+              <Button
+                primary
+                onClick={this.submitHandler}
+                disabled={!csvFileId}
+              >
+                {`${currentStep === "preview" ? "Save" : "Next"}`}
+              </Button>
+            </div>
+          )}
+        </Modal.Actions>
       </Modal>
-    );
+    )
   }
 
   submitHandler = () => {
-    const { mappedDataHeaderCSV, csvFileId } = this.props;
-    const { currentStep } = this.state;
+    const { mappedDataHeaderCSV, csvFileId } = this.props
+    const { currentStep } = this.state
 
     switch (currentStep) {
       case "upload":
-        this.setState({ currentStep: "map", isFinishUpload: true });
-        break;
+        this.setState({ currentStep: "map", isFinishUpload: true })
+        break
       case "map":
-        this.setState({ currentStep: "preview", isFinishMap: true });
-        break;
+        this.setState({ currentStep: "preview", isFinishMap: true })
+        break
       case "preview":
-        this.props.postImportProductCSV(mappedDataHeaderCSV, csvFileId);
-        this.setState({ currentStep: "confirmation", isFinishPreview: true });
-        break;
+        this.props.postImportProductCSV(mappedDataHeaderCSV, csvFileId)
+        this.setState({ currentStep: "confirmation", isFinishPreview: true })
+        break
     }
-  };
+  }
 }
 
 const mapDispatchToProps = {
   closeImportPopup,
   getStoredCSV,
   postImportProductCSV,
-  clearDataOfCSV
-};
+  clearDataOfCSV,
+  closeImportPopupCancel
+}
 
 const mapStateToProps = state => {
   return {
     csvFileId: state.settings.fileCSVId,
     mappedDataHeaderCSV: state.settings.dataHeaderCSV
-  };
-};
+  }
+}
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProductImportPopup);
+)(ProductImportPopup)
