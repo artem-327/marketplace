@@ -1,38 +1,55 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux'
 import * as Actions from '../actions'
-import {Modal, Segment, Accordion, Checkbox} from 'semantic-ui-react'
+import {Modal, Segment, Grid, Checkbox, GridColumn} from 'semantic-ui-react'
 import {connect as fconnect, getIn, setIn} from 'formik'
 import {Form, Button} from 'formik-semantic-ui'
-
-const setDown = (value) => {
-
-}
+import styled from 'styled-components'
 
 const RuleItem = fconnect(({elements, name, model, formik: {values, setFieldValue}}) => {
   const value = getIn(values, `${model}.broadcast`)
-  
+
   return (
-    <ul>
-      <Checkbox 
-        label={name || 'Global'} 
+    <>
+    <RuleRow depth={model ? model.split('.').length : 1}>
+      <span>{name || 'By region'}</span>
+
+      <RuleToggle
         indeterminate={value === 2} 
         checked={value === 1}
+        toggle
         onChange={(e,{checked}) => { 
-          let path = model.split('.')
-          if (checked) {
-            while(path.length > 1) {
-              setFieldValue(`${path.join('.')}.broadcast`, 2)
-              console.log(path.join('.'), getIn(values, `${path.join('.')}.broadcast`))
-              path.pop()
-            }
-          }
-          console.log(model.split('.'))
+          // if (checked) {
+          //   let path = model.split('.')
+          //   while(path.length > 1) {
+          //     setFieldValue(`${path.join('.')}.broadcast`, 2)
+          //     console.log(path.join('.'), getIn(values, `${path.join('.')}.broadcast`))
+          //     path.pop()
+          //   }
+          // }
           setFieldValue(`${model}.broadcast`, checked ? 1 : 0)
         }} 
       />
-      {elements.map((r,i) => <RuleItem key={i} model={`${model}.elements[${i}]`} {...r} />)}
-    </ul>
+
+      <RuleCheckbox 
+        indeterminate={value === 2} 
+        checked={value === 1}
+        onChange={(e,{checked}) => { 
+          // if (checked) {
+          //   let path = model.split('.')
+          //   while(path.length > 1) {
+          //     setFieldValue(`${path.join('.')}.broadcast`, 2)
+          //     console.log(path.join('.'), getIn(values, `${path.join('.')}.broadcast`))
+          //     path.pop()
+          //   }
+          // }
+          setFieldValue(`${model}.broadcast`, checked ? 1 : 0)
+        }} 
+      />
+      
+    </RuleRow>
+    {elements.map((r,i) => <RuleItem key={i} model={`${model}.elements[${i}]`} {...r} />)}
+    </>
   )
 })
 
@@ -44,7 +61,7 @@ class Broadcast extends Component {
     return (
       <Modal open={open} onClose={closeBroadcast} centered={false}>
         <Modal.Header>Broadcast center</Modal.Header>
-        <Modal.Content>
+        <Modal.Content scrolling>
           <Form 
             initialValues={data}
             onSubmit={(values, actions) => {
@@ -52,10 +69,18 @@ class Broadcast extends Component {
               actions.setSubmitting(false)
             }}
             render={({values}) => (
-              <Segment basic loading={loading} style={{minHeight: '400px'}}>
-                <Button.Submit>Save</Button.Submit>
-                {data && <RuleItem {...data} />}
-              </Segment>
+              <Grid>
+                <Grid.Row divided>
+                  <Grid.Column width={6}>
+                  </Grid.Column>
+                  <Grid.Column width={10}>
+                    <RulesRoot>
+                      {data && <RuleItem {...data} />}
+                    </RulesRoot>
+                  </Grid.Column>
+                </Grid.Row>
+                
+              </Grid>
             )} 
           />
         </Modal.Content>
@@ -65,3 +90,29 @@ class Broadcast extends Component {
 }
 
 export default connect(state => state.broadcast, Actions)(Broadcast)
+
+const RulesRoot = styled.div`
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+`
+const RuleRow = styled.div`
+  position: relative;
+  flex: 0 0 45px;
+  line-height: 45px;
+  border-bottom: 1px solid #e7e7e7;
+  padding-left: ${({depth}) => (depth*25)-25}px;
+`
+const RuleToggle = styled(Checkbox)`
+  position: absolute !important;
+  right: 100px;
+  top: 14px;
+`
+const RuleCheckbox = styled(Checkbox)`
+  position: absolute !important;
+  right: 30px;
+  top: 14px;
+`
+const RulesHeader = styled(RuleRow)`
+  font-weight: bold;
+`
