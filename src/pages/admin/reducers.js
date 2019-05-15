@@ -169,6 +169,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_DELETE_PRODUCT_NAME_PENDING:
     case AT.ADMIN_GET_ALTERNATIVE_CAS_PRODUCT_NAMES_PENDING:
     case AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER_PENDING:
+    case AT.ADMIN_GET_MANUFACTURERS_BY_STRING_PENDING:
     case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_PENDING: {
       return {
         ...state,
@@ -181,6 +182,14 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         casProductsRows: action.payload,
+        loading: false
+      }
+    }
+
+    case AT.ADMIN_GET_MANUFACTURERS_BY_STRING_FULFILLED: {
+      return {
+        ...state,
+        manufacturersRows: action.payload,
         loading: false
       }
     }

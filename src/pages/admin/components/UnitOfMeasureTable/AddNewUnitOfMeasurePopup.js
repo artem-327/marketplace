@@ -14,8 +14,8 @@ const initialFormValues = {
 }
 
 const formValidation = Yup.object().shape({
-    val0: Yup.string().min(1, "Too short").required("Required"),
-    val1: Yup.string().min(1, "Too short").required("Required"),
+    val0: Yup.string().trim().min(1, "Too short").required("Required"),
+    val1: Yup.string().trim().min(1, "Too short").required("Required"),
     val2: Yup.number().required("Required")
 })
 
@@ -39,8 +39,8 @@ class AddNewUnitOfMeasurePopup extends React.Component {
                             onReset={closeAddPopup}
                             onSubmit={(values, actions) => {
                                 let data = {
-                                    [config.edit[0].name]: values.val0,
-                                    [config.edit[1].name]: values.val1,
+                                    [config.edit[0].name]: values.val0.trim(),
+                                    [config.edit[1].name]: values.val1.trim(),
                                     [config.edit[2].name]: values.val2,
                                 }
                                 postNewRequest(config, data)
