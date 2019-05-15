@@ -58,7 +58,7 @@ class UploadCSV extends Component {
           >
             <StyledSegment placeholder>
               <Header icon>
-                <Icon name="file-csv" />
+                <Icon name="file csv" />
                 Drag and drop or browse computer to upload your .csv file
               </Header>
               <Segment.Inline>
