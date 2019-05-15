@@ -8,8 +8,8 @@ class File extends Component {
     render () {
         return (
             <React.Fragment>
-            <span key={this.props.index} className={this.props.className}>
-                <Icon name='times circle outline' size='big' onClick={() => this.props.onRemove()} />
+            <span key={this.props.index} className={this.props.className} style={{opacity: this.props.disabled ? '0.45' : '1'}}>
+                <Icon name='times circle outline' size='big' disabled={this.props.disabled === true} onClick={() => this.props.onRemove()} />
                 {this.props.name}
             </span>
             </React.Fragment>

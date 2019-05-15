@@ -90,12 +90,27 @@ class UploadLot extends Component {
     };
 
     render() {
-        let {attachments} = this.props
+        let {attachments, disabled} = this.props
         let hasFile = this.props.attachments && this.props.attachments.length !== 0;
         return (
             <div className={"uploadLot " + (hasFile ? ' has-file' : '')}>
                 {this.props.header}
-                {hasFile ?
+                {disabled ? (
+                  <span className="file-space">
+                    <FieldArray name={this.props.name}
+                                render={arrayHelpers => (
+                                  <>
+                                    {attachments && attachments.length ? attachments.map((file, index) => (
+                                      <File key={file.id} onRemove={() => {
+                                        this.removeFile(file)
+                                        arrayHelpers.remove(index)
+                                      }} disabled={true} className="file lot" name={file.name} index={index} />
+                                    )) : ''}
+                                  </>
+                                )}
+                    />
+                  </span>
+                ) : (hasFile ?
                     <React.Fragment>
                       {this.props.uploadedContent ? (
                           <ReactDropzone className="dropzoneLot" activeClassName="active" onDrop={this.onPreviewDrop} onDropRejected={this.onDropRejected}>
@@ -122,7 +137,7 @@ class UploadLot extends Component {
                         {this.props.emptyContent}
                       </div>
                     </ReactDropzone>
-                }
+                )}
             </div>
         )
     }

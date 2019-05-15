@@ -38,8 +38,8 @@ export function addProductOffer(values, poId = false) {
     attachments: values.attachments && values.attachments.length ? values.attachments.map(att => {
       return att.id
     }) : null,
-    cost: values.pricing && values.pricing.cost ? parseInt(values.pricing.cost) : null,
-    costRecords: values.costs ? values.costs.map(cost => {
+    cost: values.cost ? parseInt(values.cost) : null,
+    costRecords: values.trackSubCosts && values.costs ? values.costs.map(cost => {
       return {
         attachment: null,
         description: cost.description,
