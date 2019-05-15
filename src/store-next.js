@@ -53,6 +53,7 @@ import ordersReducers from './pages/orders/reducers'
 import ordersSaga from './pages/orders/saga'
 
 import auth from '~/modules/auth/reducer'
+import broadcast from '~/modules/broadcast/reducer'
 
 const reducer = combineReducers({
   auth,
@@ -95,6 +96,7 @@ const reducer = combineReducers({
     }
   }, 'forms'),
   settings,
+  broadcast,
 })
 
 const logger = createLogger({
