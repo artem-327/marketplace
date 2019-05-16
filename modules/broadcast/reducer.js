@@ -1,5 +1,5 @@
 import typeToReducer from 'type-to-reducer'
-import {openBroadcast, closeBroadcast} from './actions'
+import {openBroadcast, closeBroadcast, updateLocalRules} from './actions'
 
 const initialState = {
   open: false,
@@ -18,6 +18,12 @@ export default typeToReducer({
   [openBroadcast.fulfilled]: (state, {payload}) => {
     return {...state,
       loading: false,
+      data: payload
+    }
+  },
+
+  [updateLocalRules]: (state, {payload}) => {
+    return {...state,
       data: payload
     }
   },
