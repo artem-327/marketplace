@@ -26,7 +26,8 @@ export const initialState = {
     { name: "Global Broadcast", id: 5 },
     //{ name: "Client list", id: 6 }, // removed #29771
     { name: "Credit cards", id: 7 },
-    { name: "Bank accounts", id: 8 }
+    { name: "Bank accounts", id: 8 },
+    { name: "Import Maps", id: 9 }
     //{ name: "Tax manager", id: 9 }, // removed #29771
     //{ name: "Terms", id: 10 }, // removed #29771
     //{ name: "Website Controls", id: 11 } // removed #29771
@@ -483,6 +484,13 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.POST_CSV_IMPORT_PRODUCTS_SUCCESS: {
+      return {
+        ...state,
+        csvImportError: action.data
+      }
+    }
+
+    case AT.POST_CSV_IMPORT_PRODUCTS_OFFER_SUCCESS: {
       return {
         ...state,
         csvImportError: action.data

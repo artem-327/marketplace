@@ -1,45 +1,49 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { Component } from "react"
+import { connect } from "react-redux"
 
-import { Header, Menu, Button, Input, Dropdown } from 'semantic-ui-react'
+import { Header, Menu, Button, Input, Dropdown } from "semantic-ui-react"
 
-import { openPopup, handleFiltersValue, openImportPopup } from '../actions'
-import unitedStates from '../../../components/unitedStates'
+import { openPopup, handleFiltersValue, openImportPopup } from "../actions"
+import unitedStates from "../../../components/unitedStates"
 
 const textsTable = {
   Users: {
-    BtnAddText: 'Add User',
-    SearchText: 'Search user by name, title or branch ...'
+    BtnAddText: "Add User",
+    SearchText: "Search user by name, title or branch ..."
   },
   Branches: {
-    BtnAddText: 'Add Branch',
-    SearchText: 'Search branch by name, address or contact ...'
+    BtnAddText: "Add Branch",
+    SearchText: "Search branch by name, address or contact ..."
   },
   Warehouses: {
-    BtnAddText: 'Add Warehouse',
-    SearchText: 'Search warehouse by name, address or contact ...'
+    BtnAddText: "Add Warehouse",
+    SearchText: "Search warehouse by name, address or contact ..."
   },
-  'Product catalog': {
-    BtnAddText: 'Add Product Catalog',
-    SearchText: 'Search product catalog by name, number ...'
+  "Product catalog": {
+    BtnAddText: "Add Product Catalog",
+    SearchText: "Search product catalog by name, number ..."
   },
-  'Global Broadcast': {
-    BtnAddText: 'Add Global Broadcast',
-    SearchText: 'Search global broadcast by name ...'
+  "Global Broadcast": {
+    BtnAddText: "Add Global Broadcast",
+    SearchText: "Search global broadcast by name ..."
   },
-  'Credit cards': {
-    BtnAddText: 'Add Credit Card',
-    SearchText: 'Search credit card ...'
+  "Credit cards": {
+    BtnAddText: "Add Credit Card",
+    SearchText: "Search credit card ..."
   },
-  'Bank accounts': {
-    BtnAddText: 'Add Bank Account',
-    SearchText: 'Search bank account ...'
+  "Bank accounts": {
+    BtnAddText: "Add Bank Account",
+    SearchText: "Search bank account ..."
+  },
+  "Import Maps": {
+    BtnAddText: "Add map",
+    SearchText: "Search map ..."
   }
 }
 
 class TablesHandlers extends Component {
   state = {
-    filterFieldCurrentValue: 'None'
+    filterFieldCurrentValue: "None"
   }
 
   handleChangeSelectField = (event, value) => {
@@ -56,23 +60,23 @@ class TablesHandlers extends Component {
 
   currentTabTitle = currentTab => {
     switch (currentTab) {
-      case 'Users':
-        return 'User'
+      case "Users":
+        return "User"
         break
-      case 'Branches':
-        return 'Branch'
+      case "Branches":
+        return "Branch"
         break
-      case 'Warehouses':
-        return 'Warehouse'
+      case "Warehouses":
+        return "Warehouse"
         break
-      case 'Product catalog':
-        return 'Product'
+      case "Product catalog":
+        return "Product"
         break
-      case 'Credit cards':
-        return 'Credit card'
+      case "Credit cards":
+        return "Credit card"
         break
-      case 'Bank accounts':
-        return 'Bank account'
+      case "Bank accounts":
+        return "Bank account"
         break
       default:
         null
@@ -111,7 +115,7 @@ class TablesHandlers extends Component {
             <Button size="large" primary onClick={() => openPopup()}>
               Add {this.currentTabTitle(currentTab)}
             </Button>
-            {currentTab === 'Product catalog' && (
+            {currentTab === "Product catalog" && (
               <Button
                 size="large"
                 style={{ marginLeft: 10 }}

@@ -5,7 +5,7 @@ import { Table } from "semantic-ui-react"
 
 import { dataHeaderCSV } from "../../../actions"
 
-const MAP = {
+const mapProduct = {
   "CAS Number": "casNumberMapper",
   "Packaging Minimum": "packagingMinimumMapper",
   "Packaging Size": "packagingSizeMapper",
@@ -13,6 +13,37 @@ const MAP = {
   "Packaging Type": "packagingTypeNameMapper",
   Unit: "packagingUnitNameMaper",
   "Product Name": "productNameMapper"
+}
+
+const mapProductOffer = {
+  "Assay Max": "assayMaxMapper",
+  "Assay Min": "assayMinMapper",
+  "CAS Product Number": "casProductNumberMapper",
+  "Expiration Date": "expirationDateMapper",
+  "External Notes": "externalNotesMapper",
+  "Hazard Class": "hazardClassMapper",
+  "Internal Notes": "internalNotesMapper",
+  "Lot Manufactured Date": "lotManufacturedDateMapper",
+  "Lot Number": "lotNumberMapper",
+  "Lot Pkg Amount": "lotPkgAmountMapper",
+  "Manufacturer Name": "manufacturerNameMapper",
+  "Origin Name": "originNameMapper",
+  "Packaging Group": "packagingGroupMapper",
+  "Packaging Minimum": "packagingMinimumMapper",
+  "Packaging Size": "packagingSizeMapper",
+  "Packaging Splits": "packagingSplitsMapper",
+  "Packaging Type Name": "packagingTypeNameMapper",
+  "Packaging Unit Name": "packagingUnitNameMapper",
+  "Pricing Cost": "pricingCostMapper",
+  "Pricing Price": "pricingPriceMapper",
+  "Product Code": "productCodeMapper",
+  "Product Condition Name": "productConditionNameMapper",
+  "Product Form Name": "productFormNameMapper",
+  "Product Grade Name": "productGradeNameMapper",
+  "Product Name": "productNameMapper",
+  "Trade Name": "tradeNameMapper",
+  "UN Number": "unNumberMapper",
+  "Warehouse Name": "warehouseNameMapper"
 }
 
 class Preview extends Component {
@@ -29,15 +60,21 @@ class Preview extends Component {
   }
 
   componentDidMount() {
+    const Name = this.props.productOffer && "test"
+    let key
     const data =
       this.state.filteredHeader &&
       this.state.filteredHeader.reduce(
         (prev, next) => {
-          const key = MAP[next.header]
+          if (this.props.productOffer) {
+            key = mapProductOffer[next.header]
+          } else {
+            key = mapProduct[next.header]
+          }
           prev[key] = next.content
           return prev
         },
-        { headerLine: true }
+        { headerLine: true, mapName: Name }
       )
     data && this.props.dataHeaderCSV(data)
   }

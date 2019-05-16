@@ -294,6 +294,15 @@ export function postImportProductCSV(payload, id) {
     id
   }
 }
+
+export function postImportProductOfferCSV(payload, id) {
+  return {
+    type: AT.POST_CSV_IMPORT_PRODUCTS_OFFER,
+    payload,
+    id
+  }
+}
+
 export function clearDataOfCSV() {
   return {
     type: AT.CLEAR_DATA_OF_CSV

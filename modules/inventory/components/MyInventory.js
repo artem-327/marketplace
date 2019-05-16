@@ -93,7 +93,7 @@ export default class MyInventory extends Component {
             </Menu.Menu>
           </Menu>
         </Container>
-        {this.props.isOpenImportPopup && <ProductImportPopup />}
+        {this.props.isOpenImportPopup && <ProductImportPopup productOffer />}
         <ProdexGrid
           tableName="my_inventory_grid"
           loading={loading}
