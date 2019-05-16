@@ -93,7 +93,7 @@ class UploadLot extends Component {
                 <div>Selected files were not uploaded</div>
               </div>
             ), {
-              appearance: 'warning',
+              appearance: 'info',
               autoDismiss: true,
             })
             files = []
@@ -132,7 +132,7 @@ class UploadLot extends Component {
     }
 
     render() {
-        let {attachments, disabled, filesLimit} = this.props
+        let {attachments, disabled, filesLimit, toastManager} = this.props
         let hasFile = this.props.attachments && this.props.attachments.length !== 0
 
         const limitMsg = (

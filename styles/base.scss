@@ -53,18 +53,26 @@ i.icon.thick {
     padding-bottom: 6.5rem !important;
   }
 
+  .ui.attached.segment {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   .segment-fixed {
     position: fixed;
     bottom: 2rem;
-    width: calc((100% - (2 * 1.2857143rem)) * 0.3125 * 0.75 - 2rem);
-    margin-left: -1px;
-    margin-right: -1px;
+    width: calc((100% - (2 * 1.2857143rem)) * 0.3125 * 0.75 - 2rem - 2px);
+    margin-left: 0;
+    margin-right: 0;
     box-shadow: 0 2.5em 0 0 #fff;
   }
 }
 
 .ui.grid.data-grid {
-  font-size: 1.2857143rem;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.142857rem;
 
   > .column {
     height: 2em;
@@ -308,6 +316,15 @@ h1.ui.header {
   }
 }
 
+h3.ui.header {
+  font-size: 1.142857em;
+}
+
+.ui.form .field > label {
+  font-size: 1.142857em;
+  font-weight: 400;
+}
+
 form.inventory {
   height: 100%;
 }
@@ -348,13 +365,12 @@ div.inventory {
     background: transparent;
 
     .ui.table.attached {
-      width: 100%;
+      width: 100.075%; // hack for 1 not completed pixel
       margin-left: 0;
       margin-right: 0;
     }
 
     .ui.message.attached {
-      width: 100%;
       margin-left: 0;
       margin-right: 0;
     }
@@ -368,7 +384,7 @@ div.inventory {
 }
 
 .ui.attached.message.header-table-fields {
-  max-width: calc(100% + 2px);
+  //max-width: calc(100% + 2px);
   border: 1px solid #ccc;
   padding-left: 0.78571429em;
   padding-right: 0.78571429em;
