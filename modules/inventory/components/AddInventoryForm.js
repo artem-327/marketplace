@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button, TextArea } from 'formik-semantic-ui'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl'
 import { Modal, Icon, Segment, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab } from 'semantic-ui-react'
 import styled from 'styled-components'
 import * as val from 'yup'
@@ -9,6 +9,7 @@ import { DateInput } from '~/components/custom-formik'
 import UploadLot from './upload/UploadLot'
 import { FieldArray } from "formik"
 import ProdexGrid from '~/components/table'
+import {ToastProvider, ToastConsumer} from 'react-toast-notifications'
 
 // debug purposes only
 import JSONPretty from 'react-json-pretty'
@@ -371,7 +372,6 @@ export default class AddInventoryForm extends Component {
     values.lots = values.lots.filter((lot, index) => {
       return index !== lotIndex
     })
-    console.log('X', values)
 
     // modify costs
     this.modifyCosts(setFieldValue, values)
@@ -414,6 +414,7 @@ export default class AddInventoryForm extends Component {
     } = this.state
 
     return (
+      <ToastProvider>
       <div id='page' className='flex stretched'>
         <div className='header-top'>
           <Menu secondary>
@@ -801,6 +802,7 @@ export default class AddInventoryForm extends Component {
                                                      name={`lots[${index}].attachments`}
                                                      type='Lot Attachment'
                                                      lot={true}
+                                                     filesLimit={1}
                                                      fileMaxSize={20}
                                                      onChange={(files) => setFieldValue(
                                                        `lots[${index}].attachments[${values.lots[index].attachments && values.lots[index].attachments.length ? values.lots[index].attachments.length : 0}]`,
@@ -829,179 +831,181 @@ export default class AddInventoryForm extends Component {
 
                           <Header as='h3'>PRODUCT COST</Header>
                           <Grid>
-                            <GridColumn width={4}>
-                              <FormField width={12}>
-                                <Input name='cost' label='Cost/UOM' inputProps={{ type: 'number', step: '0.01', value: null, min: 0 }} />
-                              </FormField>
-                              <FormField>
-                                <label>Track Sub-Costs</label>
-                                <Radio label="Yes" value={true} name="trackSubCosts" />
-                                <Radio label="No" value={false} name="trackSubCosts" />
-                              </FormField>
-                            </GridColumn>
-                            <GridColumn width={12}>
-                              <FieldArray name="costs"
-                                          render={arrayHelpers => (
-                                  <>
-                                    <Message attached='top' className='header-table-fields'>
-                                      <Button type='button' icon='plus' color='blue' size='small' disabled={!values.trackSubCosts} floated='right' style={{marginTop: '-0.5em'}} onClick={() => arrayHelpers.push({description: '', lot: 0, cost: null, costUom: null})} />
-                                      Sub-Cost Breakdown
-                                    </Message>
-                                    <Table attached='bottom' className='table-fields'>
-                                      <Table.Header>
-                                        <Table.Row>
-                                          <TableHeaderCell width={4}>Description</TableHeaderCell>
-                                          <TableHeaderCell width={2}>Lot</TableHeaderCell>
-                                          <TableHeaderCell width={3}>Cost</TableHeaderCell>
-                                          <TableHeaderCell width={3}>Cost/UOM</TableHeaderCell>
-                                          <TableHeaderCell width={3}>Attachment</TableHeaderCell>
-                                          <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
-                                        </Table.Row>
-                                      </Table.Header>
-                                      <Table.Body>
-                                        {values.costs && values.costs.length ? values.costs.map((costRow, index) => (
-                                          <Table.Row key={index}>
-                                            <TableCell width={4}><FormField width={16}><Input inputProps={{disabled: !values.trackSubCosts}} name={`costs[${index}].description`} /></FormField></TableCell>
-                                            <TableCell width={2}>
-                                              <FormField width={16}>
-                                                <Dropdown
-                                                  name={`costs[${index}].lot`}
-                                                  options={[{
-                                                      key: 0,
-                                                      text: 'All',
-                                                      value: 0
-                                                    }].concat(values.lots && values.lots.length ? values.lots.map((lot, index) => {
-                                                      return {
-                                                        key: index + 1,
-                                                        text: lot.lotNumber,
-                                                        value: index + 1
-                                                      }
-                                                    }) : [])
-                                                  }
-                                                  inputProps={{
-                                                    onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(values.costs[index].cost) * (parseInt(data.value) ? parseFloat(values.lots[parseInt(data.value) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3)),
-                                                    disabled: !values.trackSubCosts
-                                                  }}
-                                                />
-                                              </FormField>
-                                            </TableCell>
-                                            <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].cost`} inputProps={{ type: 'number', step: '1', value: null, min: 0, disabled: !values.trackSubCosts, onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(data.value) * (parseInt(values.costs[index].lot) ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3))}} /></FormField></TableCell>
-                                            <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].costUom`} inputProps={{ type: 'text', step: '0.01', value: null, min: 0, disabled: true }} /></FormField></TableCell>
-                                            <TableCell width={3}>
-                                              <UploadLot {...this.props}
-                                                         attachments={values.costs[index].attachments}
-                                                         name={`costs[${index}].attachments`}
-                                                         type='Cost Attachment'
-                                                         lot={false}
-                                                         fileMaxSize={20}
-                                                         disabled={!values.trackSubCosts}
-                                                         onChange={(files) => setFieldValue(
-                                                           `costs[${index}].attachments[${values.costs[index].attachments && values.costs[index].attachments.length ? values.costs[index].attachments.length : 0}]`,
-                                                           {
-                                                             id: files.id,
-                                                             name: files.name
-                                                           }
-                                                         )}
-                                                         emptyContent={(
-                                                           <FormattedMessage
-                                                             id='addInventory.clickUpload'
-                                                             defaultMessage={'Click to upload'}
-                                                           />
-                                                         )}
-                                              />
-                                            </TableCell>
-                                            <TableCell width={1}><Icon name='trash alternate outline' size='large' disabled={!values.trackSubCosts} onClick={() => arrayHelpers.remove(index)} /></TableCell>
+                              <GridColumn width={4}>
+                                <FormField width={12}>
+                                  <Input name='cost' label='Cost/UOM' inputProps={{ type: 'number', step: '0.01', value: null, min: 0 }} />
+                                </FormField>
+                                <FormField>
+                                  <label>Track Sub-Costs</label>
+                                  <Radio label="Yes" value={true} name="trackSubCosts" />
+                                  <Radio label="No" value={false} name="trackSubCosts" />
+                                </FormField>
+                              </GridColumn>
+                              <GridColumn width={12}>
+                                <FieldArray name="costs"
+                                            render={arrayHelpers => (
+                                    <>
+                                      <Message attached='top' className='header-table-fields'>
+                                        <Button type='button' icon='plus' color='blue' size='small' disabled={!values.trackSubCosts} floated='right' style={{marginTop: '-0.5em'}} onClick={() => arrayHelpers.push({description: '', lot: 0, cost: null, costUom: null})} />
+                                        Sub-Cost Breakdown
+                                      </Message>
+                                      <Table attached='bottom' className='table-fields'>
+                                        <Table.Header>
+                                          <Table.Row>
+                                            <TableHeaderCell width={4}>Description</TableHeaderCell>
+                                            <TableHeaderCell width={2}>Lot</TableHeaderCell>
+                                            <TableHeaderCell width={3}>Cost</TableHeaderCell>
+                                            <TableHeaderCell width={3}>Cost/UOM</TableHeaderCell>
+                                            <TableHeaderCell width={3}>Attachment</TableHeaderCell>
+                                            <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
                                           </Table.Row>
-                                        )) : ''
-                                        }
-                                      </Table.Body>
-                                    </Table>
-                                  </>
-                                )}
-                              />
-                            </GridColumn>
-                          </Grid>
-
-                          <Header as='h3'>ADDITIONAL DOCUMENTS</Header>
-                          <Grid>
-                            <GridColumn width={10}>
-                              <UploadLot {...this.props}
-                                         attachments={values.additional}
-                                         name='additional'
-                                         type={values.additionalType}
-                                         unspecifiedTypes={['Unspecified']}
-                                         fileMaxSize={20}
-                                         onChange={(files) => setFieldValue(
-                                           `additional[${values.additional && values.additional.length ? values.additional.length : 0}]`,
-                                           {
-                                             id: files.id,
-                                             name: files.name
-                                           }
-                                         )}
-                                         emptyContent={(
-                                           <label>
-                                             <FormattedMessage
-                                               id='addInventory.dragDropAdditional'
-                                               defaultMessage={'Drop additional documents here'}
-                                             />
-                                             <br />
-                                             <FormattedMessage
-                                               id='addInventory.dragDropOr'
-                                               defaultMessage={'or select from computer'}
-                                             />
-                                           </label>
-                                         )}
-                                         uploadedContent={(
-                                           <label>
-                                             <FormattedMessage
-                                               id='addInventory.dragDropAdditional'
-                                               defaultMessage={'Drop additional documents here'}
-                                             />
-                                             <br />
-                                             <FormattedMessage
-                                               id='addInventory.dragDropOr'
-                                               defaultMessage={'or select from computer'}
-                                             />
-                                           </label>
-                                         )}
-                              />
-                            </GridColumn>
-                            <GridColumn width={5}>
-                              <FormField width={16}>
-                                <Dropdown
-                                  name={`additionalType`}
-                                  options={[{
-                                      key: 0,
-                                      text: 'Select Type',
-                                      value: 'Unspecified'
-                                    }, {
-                                      key: 1,
-                                      text: 'B/L',
-                                      value: 'B/L'
-                                    }, {
-                                      key: 1,
-                                      text: 'SDS',
-                                      value: 'SDS'
-                                  }]}
+                                        </Table.Header>
+                                        <Table.Body>
+                                          {values.costs && values.costs.length ? values.costs.map((costRow, index) => (
+                                            <Table.Row key={index}>
+                                              <TableCell width={4}><FormField width={16}><Input inputProps={{disabled: !values.trackSubCosts}} name={`costs[${index}].description`} /></FormField></TableCell>
+                                              <TableCell width={2}>
+                                                <FormField width={16}>
+                                                  <Dropdown
+                                                    name={`costs[${index}].lot`}
+                                                    options={[{
+                                                        key: 0,
+                                                        text: 'All',
+                                                        value: 0
+                                                      }].concat(values.lots && values.lots.length ? values.lots.map((lot, index) => {
+                                                        return {
+                                                          key: index + 1,
+                                                          text: lot.lotNumber,
+                                                          value: index + 1
+                                                        }
+                                                      }) : [])
+                                                    }
+                                                    inputProps={{
+                                                      onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(values.costs[index].cost) * (parseInt(data.value) ? parseFloat(values.lots[parseInt(data.value) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3)),
+                                                      disabled: !values.trackSubCosts
+                                                    }}
+                                                  />
+                                                </FormField>
+                                              </TableCell>
+                                              <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].cost`} inputProps={{ type: 'number', step: '1', value: null, min: 0, disabled: !values.trackSubCosts, onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(data.value) * (parseInt(values.costs[index].lot) ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3))}} /></FormField></TableCell>
+                                              <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].costUom`} inputProps={{ type: 'text', step: '0.01', value: null, min: 0, disabled: true }} /></FormField></TableCell>
+                                              <TableCell width={3}>
+                                                <UploadLot {...this.props}
+                                                           attachments={values.costs[index].attachments}
+                                                           name={`costs[${index}].attachments`}
+                                                           type='Cost Attachment'
+                                                           lot={false}
+                                                           filesLimit={1}
+                                                           fileMaxSize={20}
+                                                           disabled={!values.trackSubCosts}
+                                                           onChange={(files) => setFieldValue(
+                                                             `costs[${index}].attachments[${values.costs[index].attachments && values.costs[index].attachments.length ? values.costs[index].attachments.length : 0}]`,
+                                                             {
+                                                               id: files.id,
+                                                               name: files.name
+                                                             }
+                                                           )}
+                                                           emptyContent={(
+                                                             <FormattedMessage
+                                                               id='addInventory.clickUpload'
+                                                               defaultMessage={'Click to upload'}
+                                                             />
+                                                           )}
+                                                />
+                                              </TableCell>
+                                              <TableCell width={1}><Icon name='trash alternate outline' size='large' disabled={!values.trackSubCosts} onClick={() => arrayHelpers.remove(index)} /></TableCell>
+                                            </Table.Row>
+                                          )) : ''
+                                          }
+                                        </Table.Body>
+                                      </Table>
+                                    </>
+                                  )}
                                 />
-                              </FormField>
-                            </GridColumn>
-                          </Grid>
+                              </GridColumn>
+                            </Grid>
 
-                        </GridColumn>
+                            <Header as='h3'>ADDITIONAL DOCUMENTS</Header>
+                            <Grid>
+                              <GridColumn width={10}>
+                                <UploadLot {...this.props}
+                                           attachments={values.additional}
+                                           name='additional'
+                                           type={values.additionalType}
+                                           unspecifiedTypes={['Unspecified']}
+                                           fileMaxSize={20}
+                                           onChange={(files) => setFieldValue(
+                                             `additional[${values.additional && values.additional.length ? values.additional.length : 0}]`,
+                                             {
+                                               id: files.id,
+                                               name: files.name
+                                             }
+                                           )}
+                                           emptyContent={(
+                                             <label>
+                                               <FormattedMessage
+                                                 id='addInventory.dragDropAdditional'
+                                                 defaultMessage={'Drop additional documents here'}
+                                               />
+                                               <br />
+                                               <FormattedMessage
+                                                 id='addInventory.dragDropOr'
+                                                 defaultMessage={'or select from computer'}
+                                               />
+                                             </label>
+                                           )}
+                                           uploadedContent={(
+                                             <label>
+                                               <FormattedMessage
+                                                 id='addInventory.dragDropAdditional'
+                                                 defaultMessage={'Drop additional documents here'}
+                                               />
+                                               <br />
+                                               <FormattedMessage
+                                                 id='addInventory.dragDropOr'
+                                                 defaultMessage={'or select from computer'}
+                                               />
+                                             </label>
+                                           )}
+                                />
+                              </GridColumn>
+                              <GridColumn width={5}>
+                                <FormField width={16}>
+                                  <Dropdown
+                                    name={`additionalType`}
+                                    options={[{
+                                        key: 0,
+                                        text: 'Select Type',
+                                        value: 'Unspecified'
+                                      }, {
+                                        key: 1,
+                                        text: 'B/L',
+                                        value: 'B/L'
+                                      }, {
+                                        key: 1,
+                                        text: 'SDS',
+                                        value: 'SDS'
+                                    }]}
+                                  />
+                                </FormField>
+                              </GridColumn>
+                            </Grid>
 
-                        <GridColumn width={5}>
-                          {this.renderProductDetails(values)}
-                        </GridColumn>
-                      </Grid>
-                    </Tab.Pane>
-                  )
-                }
-              ]} />
-            </>
-          )}
-        </Form>
-      </div>
+                          </GridColumn>
+
+                          <GridColumn width={5}>
+                            {this.renderProductDetails(values)}
+                          </GridColumn>
+                        </Grid>
+                      </Tab.Pane>
+                    )
+                  }
+                ]} />
+              </>
+            )}
+          </Form>
+        </div>
+      </ToastProvider>
     )
   }
 }
