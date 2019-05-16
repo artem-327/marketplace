@@ -301,9 +301,6 @@ export default class ShippingEdit extends Component {
                     </GridColumn>
                   </GridRow>
                 </Grid>
-                <pre>
-                  {JSON.stringify(props, null, 2)}
-                </pre>
               </Container>
             )
           }}
