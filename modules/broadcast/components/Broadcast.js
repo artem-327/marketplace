@@ -7,7 +7,6 @@ import {Form, Button} from 'formik-semantic-ui'
 import styled from 'styled-components'
 import TreeModel from 'tree-model'
 
-
 const RuleItem = ({onChange, onRowClick, node}) => {
   
   const handleChange = (propertyName, e) => {
@@ -90,7 +89,7 @@ class Broadcast extends Component {
     const {updateLocalRules, treeData} = this.props
     node.model.expanded = !node.model.expanded
     if (!node.model.expanded) node.all(n => n.model.expanded = false)
-    
+
     updateLocalRules(treeData.model)
   }
 
@@ -113,7 +112,7 @@ class Broadcast extends Component {
                   </Grid.Column>
                   <Grid.Column width={10} stretched>
                     <RulesRoot>
-                      {treeData && <RuleItem node={treeData} onRowClick={this.handleRowClick} onChange={this.handleChange} />}
+                      {treeData && treeData.children.map(n => <RuleItem node={n} onRowClick={this.handleRowClick} onChange={this.handleChange} />)}
                     </RulesRoot>
                   </Grid.Column>
                 </Grid.Row>
@@ -129,7 +128,9 @@ class Broadcast extends Component {
 
 export default connect(({broadcast: {data, ...rest}}) => {
   return {
-    treeData: data ? new TreeModel({childrenPropertyName: 'elements'}).parse(data) : null,
+    treeData: data 
+      ? new TreeModel({childrenPropertyName: 'elements'}).parse(data) 
+      : null,
     ...rest,
   }
 }, Actions)(formikConnect(Broadcast))
@@ -149,12 +150,13 @@ const RuleRow = styled.div`
 `
 const RulesRoot = styled.div`
   display: flex;
-  flex: 1 0 auto;
+  flex: 1 0 300px;
   flex-direction: column;
   overflow: auto;
 `
 const RulesHeader = styled(RuleRow)`
   font-weight: bold;
+  flex: 0 0 45px;
 `
 const RulesContent = styled.div`
   flex: 1 1 300px;
