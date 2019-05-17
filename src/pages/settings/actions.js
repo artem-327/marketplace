@@ -1,5 +1,5 @@
 import * as AT from "./action-types"
-import api from "./api"
+import * as api from './api'
 
 export function openPopup(rows = null) {
   return {
@@ -305,5 +305,12 @@ export function searchCasProduct(pattern) {
   return {
     type: AT.SEARCH_CAS_PRODUCT,
     payload: api.searchCasProduct(pattern)
+  }
+}
+
+export function getDeliveryAddressesRequest(value='a') {
+  return {
+    type: AT.SETTINGS_GET_DELIVERY_ADDRESSES,
+    payload: api.getDeliveryAddressesRequest(value)
   }
 }
