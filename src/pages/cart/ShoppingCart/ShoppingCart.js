@@ -2,22 +2,30 @@ import './ShoppingCart.scss'
 
 import React, { Component } from 'react'
 import { func, array, object } from 'prop-types'
-import SummaryTable from '../components/SummaryTable/SummaryTable'
+
 import ItemCartBody from '../components/ItemCartBody/ItemCartBody'
 import AddCart from '../components/AddCart'
-
+import Summary from '~/components/summary/Summary'
 import KeepShoppingPopup from '../components/KeepShoppingPopup/KeepShoppingPopup'
 import Spinner from '../../../components/Spinner/Spinner'
+
+import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 import { checkToken } from '../../../utils/auth'
 import { Container, Menu, Header, Button, Icon } from 'semantic-ui-react'
 import Router from 'next/router'
 
+
+const MargedButton = styled(Button)`
+  margin: 14px 0px 14px 0px !important;
+`
+
+
 export default class ShoppingCart extends Component {
   state = {
     modalOpen: false
   }
-  
+
   componentDidMount() {
     this.props.getCart()
   }
@@ -34,78 +42,29 @@ export default class ShoppingCart extends Component {
 
   editCart = (cartItem) => {
     let { id, quantity } = cartItem
-
-    this.props.getOrderDetail(id)
     this.props.getProductOffer(cartItem.productOffer.id, true)
     this.props.sidebarChanged({ isOpen: true, id, quantity })
   }
 
-
-  renderSummary() {
-    const { totalPrice } = this.props.cart
-    const { symbol } = this.props.identity.preferredCurrency
-
-    
-    return (
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              <FormattedMessage
-                id='cart.subtotal'
-                defaultMessage='Subtotal'
-              />
-            </td>
-            <td>{symbol}{totalPrice.formatMoney(3)}</td>
-          </tr>
-          <tr>
-            <td>
-              <FormattedMessage
-                id='cart.estimatedShipping'
-                defaultMessage='Estimated Shipping'
-              />
-            </td>
-            <td></td>
-          </tr>{/* TODO: change the fake price */}
-          <tr>
-            <td>
-              <FormattedMessage
-                id='cart.estimatedTax'
-                defaultMessage='Estimated Tax'
-              />
-            </td><td></td></tr>{/* TODO: change the fake price */}
-          <tr className='total'>
-            <td>
-              <FormattedMessage
-                id='cart.total'
-                defaultMessage='Total'
-              />
-            </td>
-            <td>{symbol}{totalPrice.formatMoney(3)}</td>
-          </tr>
-        </tbody>
-      </table>
-    )
-  }
-
   render() {
     const { cart, deleteCart, history, cartIsFetching, sidebarChanged } = this.props
+    let { cartItems, totalPrice } = cart
 
     if (cartIsFetching) return <Spinner />
     const itemContent = cart.cartItems && cart.cartItems.map(cartItem => {
       return (
         <>
-        <ItemCartBody
-          editCart={this.editCart}
-          sidebarChanged={sidebarChanged}
-          history={history}
-          location={this.props.location}
-          key={cartItem.id}
-          cartItem={cartItem}
-          deleteCart={deleteCart}
-        />
+          <ItemCartBody
+            editCart={this.editCart}
+            sidebarChanged={sidebarChanged}
+            history={history}
+            location={this.props.location}
+            key={cartItem.id}
+            cartItem={cartItem}
+            deleteCart={deleteCart}
+          />
         </>
-        )
+      )
     })
     const itemsNumber = cart.cartItems ? cart.cartItems.length : 0
     const headerTitle = <FormattedMessage id='cart.shoppingCartHeader' defaultMessage={`Items (${itemsNumber})`} values={{ number: itemsNumber }} />
@@ -140,10 +99,18 @@ export default class ShoppingCart extends Component {
               <header><h2>{headerTitle}</h2></header>
               {itemContent}
             </div>
-            <div className='shopping-cart-summary'>
-              <SummaryTable title='Summary' hasButton={itemsNumber ? true : false} handleContinue={this.handleContinue}>
-                {this.renderSummary()}
-              </SummaryTable>
+            <div>
+
+              <Summary cart={this.props.cart} totalPrice={totalPrice} />
+
+              {cartItems.length > 0 ?
+                <MargedButton fluid primary onClick={this.handleContinue}>
+                  <FormattedMessage
+                    id='global.continue'
+                    defaultMessage='Continue'
+                  />
+                </MargedButton>
+                : null}
 
               <KeepShoppingPopup
                 handleClose={() => this.setState({ modalOpen: false })}

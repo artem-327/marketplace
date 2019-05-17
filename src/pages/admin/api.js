@@ -1,5 +1,12 @@
 import api from '~/api'
 
+/*
+https://test.echoexchange.net/prodex/api/dev/swagger-diff?oldAppVersion=0.8.3&newAppVersion=0.8.4
+
+BE version 0.8.5.
+
+ */
+
 export async function getCasProductByFilter(value) {
   const {data} = await api.post("/prodex/api/cas-products/datagrid", value)
   return data
@@ -12,6 +19,11 @@ export async function getAlternativeProductNames(value) {
 
 export async function getCasProductByString(value, limit=30) {
   const {data} = await api.get(`/prodex/api/cas-products/search?limit=${limit}&pattern=${value}`)
+  return data
+}
+
+export async function getManufacturersByString(value, limit=30) {
+  const {data} = await api.get(`/prodex/api/manufacturers/search?limit=${limit}&search=${value}`)
   return data
 }
 

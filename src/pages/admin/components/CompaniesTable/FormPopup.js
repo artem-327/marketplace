@@ -52,29 +52,29 @@ const initialFormValues = {
 }
 
 const formValidationEdit = Yup.object().shape({
-  name: Yup.string().min(2, 'Name should has at least 2 characters').required()
+  name: Yup.string().trim().min(2, 'Name should has at least 2 characters').required()
 })
 
 const formValidationNew = Yup.lazy(values => {
   let primaryUserRequired = values.primaryUser.email !== '' || values.primaryUser.name !== ''
-  let mailingBranchRequired = values.mailingBranch.name !== '' || values.mailingBranch.contactEmail !== '' ||
-    values.mailingBranch.contactName !== '' || values.mailingBranch.contactPhone !== '' ||
-    values.mailingBranch.address.streetAddress !== '' || values.mailingBranch.address.city !== '' ||
+  let mailingBranchRequired = values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
+    values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
+    values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
     values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''
 
   let validation = Yup.object().shape({
-    name: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+    name: Yup.string().trim().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
 
     mailingBranch: Yup.lazy(() => {
       if (mailingBranchRequired) return Yup.object().shape({
-        name: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-        contactEmail: Yup.string().email('Enter valid e-mail address').required('Enter e-mail address'),
-        contactName: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-        contactPhone: Yup.string().required('Enter phone number'),
+        name: Yup.string().trim().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+        contactEmail: Yup.string().trim().email('Enter valid e-mail address').required('Enter e-mail address'),
+        contactName: Yup.string().trim().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+        contactPhone: Yup.string().trim().required('Enter phone number'),
         address: Yup.object().shape({
-          city: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-          streetAddress: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-          zip: Yup.string().required('Enter zip code'),
+          city: Yup.string().trim().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+          streetAddress: Yup.string().trim().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+          zip: Yup.string().trim().required('Enter zip code'),
           country: Yup.number().required()
         })
       })
@@ -82,21 +82,21 @@ const formValidationNew = Yup.lazy(values => {
     }),
 
     primaryBranch: Yup.object().shape({
-      name: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-      contactEmail: Yup.string().email('Enter valid e-mail address').required('Enter e-mail address'),
-      contactName: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-      contactPhone: Yup.string().required('Enter phone number'),
+      name: Yup.string().trim().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+      contactEmail: Yup.string().trim().email('Enter valid e-mail address').required('Enter e-mail address'),
+      contactName: Yup.string().trim().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+      contactPhone: Yup.string().trim().required('Enter phone number'),
       address: Yup.object().shape({
-        city: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-        streetAddress: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-        zip: Yup.string().required('Enter zip code'),
+        city: Yup.string().trim().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+        streetAddress: Yup.string().trim().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+        zip: Yup.string().trim().required('Enter zip code'),
         country: Yup.number().required()
       })
     }),
     primaryUser: Yup.lazy(() => {
       if (primaryUserRequired) return Yup.object().shape({
-        email: Yup.string().email('Enter valid e-mail address').required('Enter e-mail address'),
-        name: Yup.string().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+        email: Yup.string().trim().email('Enter valid e-mail address').required('Enter e-mail address'),
+        name: Yup.string().trim().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
       })
       return Yup.mixed().notRequired();
     }),
@@ -111,7 +111,13 @@ const removeEmpty = (obj) =>
       removeEmpty(val)
       if (Object.entries(val).length === 0) delete obj[key]
     }
-    else if (val == null || val === '') delete obj[key]
+    else {
+      if (val == null) delete obj[key]
+      else if (typeof val === 'string') {
+        if (val.trim() === '') delete obj[key]
+        else obj[key] = val.trim()
+      }
+    }
   })
 
 
@@ -175,16 +181,16 @@ class AddNewPopupCasProducts extends React.Component {
               if (popupValues) {
                 let newValues = {
                   "nacdMember": values.nacdMember,
-                  "name": values.name,
-                  "phone": values.phone,
-                  "website": values.website
+                  "name": values.name.trim(),
+                  "phone": values.phone.trim(),
+                  "website": values.website.trim()
                 }
                 await updateCompany(popupValues.id, newValues)
               } 
               else {
-                if (!(values.mailingBranch.name !== '' || values.mailingBranch.contactEmail !== '' ||
-                  values.mailingBranch.contactName !== '' || values.mailingBranch.contactPhone !== '' ||
-                  values.mailingBranch.address.streetAddress !== '' || values.mailingBranch.address.city !== '' ||
+                if (values.mailingBranch && !(values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
+                  values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
+                  values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
                   values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''))
                   delete values['mailingBranch']
 

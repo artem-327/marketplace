@@ -3,18 +3,25 @@ import {
   CART_FETCH_REQUESTED_FULFILLED, CART_FETCH_REQUESTED,
   PAYMENTS_FETCH_REQUESTED, PAYMENTS_FETCH_SUCCEEDED,
   DELIVERYADDRESSES_FETCH_SUCCEEDED, DELIVERYADDRESSES_FETCH_REQUESTED,
-  PRODUCTFROMCART_REMOVE_REQUESTED,
+  PRODUCTFROMCART_REMOVE_REQUESTED, PRODUCTFROMCART_REMOVE_SUCCEEDED,
   CARTITEM_CREATE_REQUESTED,
   DELIVERYADDRESS_CREATE_REQUESTED,
+  DELIVERYADDRESS_CREATE_FAILED,
   ORDERDETAIL_FETCH_REQUESTED, ORDERDETAIL_FETCH_SUCCEEDED,
   ORDER_EDIT_REQUESTED,
   DELIVERYADDRESS_EDIT_REQUESTED,
   SHIPPING_QUOTES_FETCH_SUCCEEDED,
   SHIPPING_QUOTES_FETCH_REQUESTED,
-  SIDEBAR_CHANGED
-} from "../constants/cart";
+  SIDEBAR_CHANGED, SHIPPING_QUOTE_SELECTED,
+  ADD_CART_ITEM_REQUESTED, UPDATE_CART_ITEM_REQUESTED,
+  DELETE_CART_ITEM_REQUESTED, GET_CART_ITEM_REQUESTED,
+  UPDATE_CART_ITEM_SUCCEEDED, ADD_CART_ITEM_SUCCEEDED,
+  DELIVERYADDRESS_CREATE_SUCCEEDED, SHIPPING_CHANGED, DELIVERYADDRESS_EDIT_SUCCEEDED, DELIVERYADDRESS_EDIT_FAILED
+} from "../constants/cart"
 import Api from "~/src/api/cart"
-import { getPricing } from "../utils/functions";
+import { getLocationString, getPricing } from "../utils/functions"
+import { DEFAULT_CURRENCY } from "../utils/constants";
+
 
 export const initialState = {
   offerDetail: {},
@@ -28,14 +35,24 @@ export const initialState = {
   offerDetailIsFetching: true,
   selectedAddressId: null,
   selectedCardId: null,
+  // todo remove shippingQuotes, keep them in shipping obj only
   shippingQuotes: [],
   sidebar: {
     isOpen: false,
     pricing: null,
     quantity: null,
     warning: null
+  },
+  shipping: {
+    selectedAddress: null,
+    selectedPayment: {},
+    isShippingEdit: false,
+    isNewAddress: true,
+    savedShippingPreferences: true,
+    shippingQuotes: [],
+    selectedShippingQuote: null
   }
-};
+}
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -48,9 +65,10 @@ export default function reducer(state = initialState, action) {
     case ORDERDETAIL_FETCH_SUCCEEDED: {
       return {
         ...state,
-        orderDetail: action.payload,
+        orderDetail: { ...action.payload, locationStr: getLocationString(action.payload.productOffer) },
         sidebar: { ...state.sidebar, quantity: action.payload.quantity },
         orderDetailIsFetching: false
+
       }
     }
     case DELIVERYADDRESSES_FETCH_REQUESTED: {
@@ -66,6 +84,54 @@ export default function reducer(state = initialState, action) {
         isFetching: false
       }
     }
+    case DELIVERYADDRESS_CREATE_REQUESTED: {
+      return {
+        ...state,
+        isFetching: true
+      }
+    }
+
+    case DELIVERYADDRESS_CREATE_SUCCEEDED: {
+      return {
+        ...state,
+        isFetching: false,
+        deliveryAddresses: state.deliveryAddresses.concat(action.payload),
+        shipping: { ...state.shipping, selectedAddress: action.payload, isShippingEdit: false }
+      }
+
+    }
+    case DELIVERYADDRESS_CREATE_FAILED: {
+      return {
+        ...state,
+        isFetching: false
+      }
+    }
+
+    case DELIVERYADDRESS_EDIT_REQUESTED: {
+      return {
+        ...state,
+        isFetching: true
+      }
+    }
+
+    case DELIVERYADDRESS_EDIT_SUCCEEDED: {
+      return {
+        ...state,
+        isFetching: false,
+        deliveryAddresses: Object.assign([],
+          state.deliveryAddresses,
+          { [state.deliveryAddresses.findIndex((value) => value.id === action.payload.id)]: action.payload }),
+        shipping: { ...state.shipping, selectedAddress: action.payload, isShippingEdit: false }
+      }
+    }
+
+    case DELIVERYADDRESS_EDIT_FAILED: {
+      return {
+        ...state,
+        isFetching: false
+      }
+    }
+
     case PAYMENTS_FETCH_REQUESTED: {
       return {
         ...state,
@@ -103,9 +169,18 @@ export default function reducer(state = initialState, action) {
       }
     }
     case CART_FETCH_REQUESTED_FULFILLED: {
+      let { payload } = action
+      if (payload.cartItems) {
+        let { cartItems } = payload
+        cartItems.forEach(item => {
+          item.locationStr = getLocationString(item.productOffer)
+          item.pricing = getPricing(item.productOffer, item.quantity)
+        })
+      }
+
       return {
         ...state,
-        cart: action.payload,
+        cart: payload,
         cartIsFetching: false
       }
     }
@@ -114,10 +189,12 @@ export default function reducer(state = initialState, action) {
         ...state,
         country: action.country,
         zip: action.zip,
-        shippingQuotesAreFetching: true
+        shippingQuotesAreFetching: true,
+        cart: { ...state.cart, selectedShipping: null }
       }
     }
     case SHIPPING_QUOTES_FETCH_SUCCEEDED: {
+
       return {
         ...state,
         shippingQuotes: action.payload,
@@ -132,6 +209,55 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case SHIPPING_QUOTE_SELECTED: {
+      return {
+        ...state,
+        cart: { ...state.cart, selectedShipping: action.payload }
+      }
+    }
+
+    case PRODUCTFROMCART_REMOVE_REQUESTED: {
+      return {
+        ...state,
+        cartIsFetching: true
+      }
+    }
+
+    case PRODUCTFROMCART_REMOVE_SUCCEEDED: {
+      return {
+        ...state,
+        cartIsFetching: false
+      }
+    }
+
+    case UPDATE_CART_ITEM_REQUESTED: {
+      return {
+        ...state,
+        offerDetailIsFetching: true
+      }
+    }
+
+    case UPDATE_CART_ITEM_SUCCEEDED: {
+      return {
+        ...state,
+        cart: { ...state.cart, ...action.payload },
+        sidebar: { ...state.cart.sidebar, isOpen: false },
+        offerDetailIsFetching: false
+      }
+    }
+
+    case ADD_CART_ITEM_SUCCEEDED: {
+      return {
+        ...state,
+        sidebar: { ...state.cart.sidebar, isOpen: false }
+      }
+    }
+    case SHIPPING_CHANGED: {
+      return {
+        ...state,
+        shipping: { ...state.shipping, ...action.payload }
+      }
+    }
     default: {
       return state
     }
@@ -160,24 +286,24 @@ export function deleteCart(id) {
   return { type: PRODUCTFROMCART_REMOVE_REQUESTED, payload: { id } }
 }
 
-export function postNewOrder(product) {
-  return { type: CARTITEM_CREATE_REQUESTED, payload: { product } }
-}
-
 export function postNewDeliveryAddress(address) {
-  return { type: DELIVERYADDRESS_CREATE_REQUESTED, payload: { address } }
+  return { type: DELIVERYADDRESS_CREATE_REQUESTED, payload: address }
 }
 
-export function getOrderDetail(id) {
-  return { type: ORDERDETAIL_FETCH_REQUESTED, payload: { id } }
-}
+// export function getOrderDetail(id) {
+//   return { type: ORDERDETAIL_FETCH_REQUESTED, payload: { id } }
+// }
 
-export function postOrderEdit(order) {
-  return { type: ORDER_EDIT_REQUESTED, payload: { order } }
-}
+// export function postNewOrder(product) {
+//   return { type: CARTITEM_CREATE_REQUESTED, payload: { product } }
+// }
 
-export function putDeliveryAddressEdit(address) {
-  return { type: DELIVERYADDRESS_EDIT_REQUESTED, payload: { address } }
+// export function postOrderEdit(order) {
+//   return { type: ORDER_EDIT_REQUESTED, payload: { order } }
+// }
+
+export function updateDeliveryAddress(address) {
+  return { type: DELIVERYADDRESS_EDIT_REQUESTED, payload: address }
 }
 
 export function getShippingQuotes(countryId, zip) {
@@ -187,3 +313,29 @@ export function getShippingQuotes(countryId, zip) {
 export function sidebarChanged(payload) {
   return { type: SIDEBAR_CHANGED, payload }
 }
+
+export function shippingQuoteSelected(payload) {
+  return { type: SHIPPING_QUOTE_SELECTED, payload }
+}
+
+export function addCartItem(payload) {
+  return { type: ADD_CART_ITEM_REQUESTED, payload }
+}
+
+export function updateCartItem(payload) {
+  return { type: UPDATE_CART_ITEM_REQUESTED, payload }
+}
+
+export function deleteCartItem(payload) {
+  return { type: DELETE_CART_ITEM_REQUESTED, payload }
+}
+
+export function getCartItem(payload) {
+  return { type: GET_CART_ITEM_REQUESTED, payload }
+}
+
+export function shippingChanged(values) {
+  console.log('shipping changed', values)
+  return { type: SHIPPING_CHANGED, payload: values }
+}
+

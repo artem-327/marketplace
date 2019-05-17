@@ -32,7 +32,7 @@ const nameValidation = (index, val, vals) => {
     // length is ok, check if name already exists
     if (vals.find((o, i) => o.alternativeName === val && i !== index)) {
       // name already exists
-      return {color: 'red', description: 'Duplicated name!', canSave: false}
+      return {color: 'red', description: 'Duplicate name!', canSave: false}
     }
     else {
       return {color: 'green', description: 'Click to save', canSave: true}
@@ -81,18 +81,18 @@ class EditAltNamesCasProductsPopup extends React.Component {
     else {
       await this.props.deleteProductName(productId, val.id)
       await this.processFetchedData()
-      //! ! arrayHelpers.remove(index)
     }
   }
 
   handleSaveName = async (productId, val, index) => {
-    if (val.alternativeName.length < 3) return
+    let name = val.alternativeName.trim()
+    if (name.length < 3) return
     if (val.id === null) {  // Create new name
-      let value = {casProduct: productId, alternativeName: val.alternativeName}
+      let value = {casProduct: productId, alternativeName: name}
       await this.props.postNewProductName(productId, value)
     }
     else {                  // Update name
-      let value = {alternativeName: val.alternativeName}
+      let value = {alternativeName: name}
       await this.props.updateProductName(productId, val.id, value)
     }
     await this.processFetchedData()
@@ -162,7 +162,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
                                   <Input name={`casAlternativeNames[${index}].alternativeName`}
                                          inputProps={{
                                            onChange: (e, d) => {
-                                             const {color, description, canSave} = nameValidation(index, d.value, vals)
+                                             const {color, description, canSave} = nameValidation(index, d.value.trim(), vals)
                                              setFieldValue(`casAlternativeNames[${index}].color`, color)
                                              setFieldValue(`casAlternativeNames[${index}].description`, description)
                                              setFieldValue(`casAlternativeNames[${index}].canSave`, canSave)

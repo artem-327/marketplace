@@ -27,44 +27,29 @@ const RelaxedSegment = styled(Segment)`
 
 export default class AddCart extends Component {
   componentDidMount() {
-    this.props.getProductOffer(this.props.id, this.props.isEdit)
-    if (this.props.isEdit) this.props.getOrderDetail(this.props.orderId)
+    // this.props.getProductOffer(this.props.id, this.props.isEdit)
+    // if (this.props.isEdit) this.props.getOrderDetail(this.props.orderId)
   }
 
 
   createOrder = async () => {
 
     if (checkToken(this.props)) return
-    const { postNewOrder } = this.props
-    let { offer } = this.props
-    let { quantity } = this.props.sidebar
+    const { addCartItem } = this.props
+    let { sidebar } = this.props
+    let { quantity, id } = sidebar
 
-    let offerpayload = {
-      productOffer: offer.id,
-      quantity
-    }
-
-    await postNewOrder(offerpayload)
-    this.props.sidebarChanged({ isOpen: false })
+    await addCartItem({ productOffer: id, quantity })
     Router.push('/cart')
   }
 
   editOrder = async () => {
-    const { postOrderEdit, } = this.props
-    let { quantity, pricing } = this.props.sidebar
+    const { updateCartItem } = this.props
+    let { sidebar } = this.props
+    let { quantity } = sidebar
 
 
-    // TODO, wrong id??
-    const orderpayload = {
-      id: this.props.order.id,
-      quantity,
-      selectedOfferPrice: pricing
-    }
-
-    await postOrderEdit(orderpayload)
-    this.props.sidebarChanged({ isOpen: false })
-
-    Router.push('/cart')
+    await updateCartItem({ cartItemId: sidebar.id, quantity })
   }
 
   handleQuantity = e => {
@@ -87,21 +72,20 @@ export default class AddCart extends Component {
     let { offer, order, isEdit } = this.props
     let { quantity, pricing, warning } = this.props.sidebar
 
-    let { pkgAmount } = offer
+    let { pkgAmount, pricingTiers } = offer
 
-    let location = offer.warehouse.address
+
     let { packagingUnit, packagingSize, packagingType } = offer.product
 
-
     let totalPrice = (quantity && pricing) ? pricing.price * quantity * packagingSize : null
-    let { tiers } = offer.pricing
+
 
     var dropdownOptions = []
-    let currencyCode = offer.pricing.price.currency.code
+    let currencyCode = 'USD'
 
-    if (tiers.length > 0) {
-      tiers.forEach((tier, i) => {
-        let quantityTo = (i + 1) >= tiers.length ? pkgAmount : (tier.quantityFrom > tiers[i + 1].quantityFrom ? tier.quantityFrom : tiers[i + 1].quantityFrom - 1)
+    if (pricingTiers.length > 0) {
+      pricingTiers.forEach((tier, i) => {
+        let quantityTo = (i + 1) >= pricingTiers.length ? pkgAmount : (tier.quantityFrom > pricingTiers[i + 1].quantityFrom ? tier.quantityFrom : pricingTiers[i + 1].quantityFrom - 1)
 
 
         let text = <>
@@ -152,7 +136,7 @@ export default class AddCart extends Component {
                 Merchant:
           </GridColumn>
               <GridColumn computer={10}>
-                {offer.merchant.company.name ? offer.merchant.company.name : 'Anonymous'}
+                {offer.merchant && offer.merchant.company.name ? offer.merchant.company.name : 'Anonymous'}
               </GridColumn>
             </GridRow>
 
@@ -162,7 +146,7 @@ export default class AddCart extends Component {
                 Location:
            </GridColumn>
               <GridColumn computer={10}>
-                {location.province ? location.province.name : location.city}, {location.country.name}
+                {order.locationStr}
               </GridColumn>
             </GridRow>
 
@@ -262,7 +246,7 @@ export default class AddCart extends Component {
                 {
                   pricing && !isNaN(pricing.price) ? <><FormattedNumber
                     style='currency'
-                    currency={offer.pricing.price.currency.code}
+                    currency={currencyCode}
                     value={pricing && pricing.price} /> / {packagingUnit.nameAbbreviation}</> : null
                 }
 
@@ -273,7 +257,7 @@ export default class AddCart extends Component {
             <GridRow>
               <GridColumn computer={6}>Subtotal:</GridColumn>
               <GridColumn computer={10}>{totalPrice ?
-                <FormattedNumber style='currency' currency={offer.pricing.price.currency.code} value={totalPrice} />
+                <FormattedNumber style='currency' currency={currencyCode} value={totalPrice} />
                 : null}
               </GridColumn>
             </GridRow>
@@ -312,7 +296,7 @@ export default class AddCart extends Component {
     return (
       <Sidebar onHide={() => sidebarChanged({ isOpen: false })} width='very wide' className='cart-sidebar flex' direction='right' animation='scale down' visible={isOpen}>
         {
-          (offerDetailIsFetching || (isEdit && orderDetailIsFetching)) ? <Dimmer active inverted> <Loader size='large' /> </Dimmer>
+          (offerDetailIsFetching) ? <Dimmer active inverted> <Loader size='large' /> </Dimmer>
             : this.getCartMarkup()
         }
       </Sidebar>

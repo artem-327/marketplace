@@ -17,9 +17,9 @@ const initialFormValues = {
 }
 
 const formValidation = Yup.object().shape({
-  casIndexName: Yup.string().min(3, "Too short").required("Required"),
-  casNumber: Yup.string().min(3, "Too short").required("Required"),
-  chemicalName: Yup.string().min(3, "Too short").required("Required"),
+  casIndexName: Yup.string().trim().min(3, "Too short").required("Required"),
+  casNumber: Yup.string().trim().min(3, "Too short").required("Required"),
+  chemicalName: Yup.string().trim().min(3, "Too short").required("Required"),
 })
 
 class AddEditCasProductsPopup extends React.Component {
@@ -93,9 +93,9 @@ class AddEditCasProductsPopup extends React.Component {
             onReset={closeAddPopup}
             onSubmit={(values, actions) => {
               const data = {
-                casIndexName: values.casIndexName,
-                casNumber: values.casNumber,
-                chemicalName: values.chemicalName,
+                casIndexName: values.casIndexName.trim(),
+                casNumber: values.casNumber.trim(),
+                chemicalName: values.chemicalName.trim(),
                 ...(values.unNumberId !== '' && { unNumber: values.unNumberId }),
                 ...(values.packagingGroup !== '' && { packagingGroup: values.packagingGroup }),
                 ...(values.hazardClasses.length && { hazardClasses: values.hazardClasses }),

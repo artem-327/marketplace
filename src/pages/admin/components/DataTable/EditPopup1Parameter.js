@@ -8,7 +8,7 @@ import { Form, Input, Button } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 const formValidation = Yup.object().shape({
-    val0: Yup.string().min(1, "Too short").required("Required"),
+    val0: Yup.string().trim().min(1, "Too short").required("Required"),
 })
 
 class EditPopup1Parameter extends React.Component {
@@ -38,7 +38,7 @@ class EditPopup1Parameter extends React.Component {
                         onReset={closeEditPopup}
                         onSubmit={(values, actions) => {
                             let data = {
-                                [config.edit[0].name]: values.val0,
+                                [config.edit[0].name]: values.val0.trim()
                             }
 
                             putEditedDataRequest(config, id, data)

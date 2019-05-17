@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Confirm } from 'semantic-ui-react'
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import { Confirm } from "semantic-ui-react"
 
-import ProdexGrid from '~/components/table'
-import { TablePopUp } from '~/components/tablePopup'
+import ProdexGrid from "~/components/table"
+import { TablePopUp } from "~/components/tablePopup"
 
 import {
   getUsersDataRequest,
@@ -12,20 +12,17 @@ import {
   closeConfirmPopup,
   deleteConfirmation,
   openRolesPopup
-} from '../../actions'
+} from "../../actions"
 
 class UsersTable extends Component {
   state = {
     columns: [
-      { name: 'userName', title: 'User' },
-      { name: 'title', title: 'Job Title' },
-      { name: 'email', title: 'E-mail' },
-      { name: 'phone', title: 'Phone' },
-      { name: 'homeBranch', title: 'Home Branch' },
-      {
-        name: 'allUserRoles',
-        title: 'Roles'
-      }
+      { name: "userName", title: "User" },
+      { name: "title", title: "Job Title" },
+      { name: "email", title: "E-mail" },
+      { name: "phone", title: "Phone" },
+      { name: "homeBranch", title: "Home Branch" },
+      { name: "allUserRoles", title: "Roles", width: 200 }
     ]
   }
 
@@ -65,14 +62,11 @@ class UsersTable extends Component {
             allUserRoles: <TablePopUp row={r} />
           }))}
           loading={loading}
-          style={{ marginTop: '5px' }}
+          style={{ marginTop: "5px" }}
           rowActions={[
-            { text: 'Edit', callback: row => openPopup(row) },
-            {
-              text: 'Edit Roles',
-              callback: row => openRolesPopup(row)
-            },
-            { text: 'Delete', callback: row => handleOpenConfirmPopup(row.id) }
+            { text: "Edit", callback: row => openPopup(row) },
+            { text: "Edit Roles", callback: row => openRolesPopup(row) },
+            { text: "Delete", callback: row => handleOpenConfirmPopup(row.id) }
           ]}
         />
       </React.Fragment>
@@ -94,8 +88,8 @@ const mapStateToProps = state => {
     rows: state.settings.usersRows,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
-    loading: state.settings.loading
-    // roles: state.settings.roles
+    loading: state.settings.loading,
+    roles: state.settings.roles
   }
 }
 

@@ -101,6 +101,13 @@ export function handleFiltersValue(props, value) {
 				}
 			}
 			break;
+			case 'Manufacturers': {
+				await dispatch({
+					type: AT.ADMIN_GET_MANUFACTURERS_BY_STRING,
+					payload: api.getManufacturersByString(value)
+				})
+			}
+			break;
 		}
 	}
 }
