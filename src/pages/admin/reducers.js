@@ -39,6 +39,7 @@ export const initialState = {
   currentEdit2Form: null,
   currentAddForm: null,
   confirmMessage: null,
+  deleteRowById: null,
   filterValue: '',
   loading: false,
   config: config,
@@ -106,6 +107,33 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_OPEN_CONFIRM_POPUP: {
+      console.log('!!!!!!!!!!!!!!!!! reducers - config', action.payload);
+      return {
+        ...state,
+        confirmMessage: true,
+        deleteRowById: action.payload,
+      }
+    }
+
+
+    case AT.ADMIN_DELETE_UNITS_OF_MEASURE_DATA_FULFILLED:
+    case AT.ADMIN_DELETE_UNITS_OF_PACKAGING_DATA_FULFILLED:
+    case AT.ADMIN_DELETE_MANUFACTURERS_DATA_FULFILLED:
+    case AT.ADMIN_DELETE_GRADES_DATA_FULFILLED:
+    case AT.ADMIN_DELETE_FORMS_DATA_FULFILLED:
+    case AT.ADMIN_DELETE_CONDITIONS_DATA_FULFILLED:
+    case AT.ADMIN_CLOSE_CONFIRM_POPUP: {
+      return {
+        ...state,
+        deleteRowById: null,
+        confirmMessage: null
+      }
+    }
+
+
+
+
     case AT.ADMIN_GET_COUNTRIES_FULFILLED: {
       return {...state,
         countries: payload.countries,
@@ -164,6 +192,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_GET_COMPANIES_PENDING:
     case AT.ADMIN_POST_NEW_PRODUCT_NAME_PENDING:
     case AT.ADMIN_UPDATE_PRODUCT_NAME_PENDING:
     case AT.ADMIN_DELETE_PRODUCT_NAME_PENDING:
@@ -231,12 +260,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_GET_COMPANIES_PENDING: {
-      return { ...state,
-        loading: true
-      }
-    }
-
     case AT.ADMIN_GET_COMPANIES_FULFILLED: {
       return { ...state,
         loading: false,
@@ -244,6 +267,13 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_POST_NEW_PRODUCT_NAME_REJECTED:
+    case AT.ADMIN_UPDATE_PRODUCT_NAME_REJECTED:
+    case AT.ADMIN_DELETE_PRODUCT_NAME_REJECTED:
+    case AT.ADMIN_GET_ALTERNATIVE_CAS_PRODUCT_NAMES_REJECTED:
+    case AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER_REJECTED:
+    case AT.ADMIN_GET_MANUFACTURERS_BY_STRING_REJECTED:
+    case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_REJECTED:
     case AT.ADMIN_GET_COMPANIES_REJECTED: {
       return { ...state,
         loading: false

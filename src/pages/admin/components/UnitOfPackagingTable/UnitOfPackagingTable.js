@@ -32,7 +32,7 @@ class UnitOfPackagingTable extends Component {
           columns={columns}
           rows={rows}
           rowActions={[
-            { text: 'Edit', callback: (row) => openEditPopup(config, row) },
+            { text: 'Edit', callback: (row) => openEditPopup(row) },
             { text: 'Delete', callback: (row) => deleteItem(config, row.id) }
           ]}
         />

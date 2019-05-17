@@ -1,4 +1,5 @@
 import * as AT from "./action-types"
+import * as api from './api'
 
 export function openPopup(rows = null) {
   return {
@@ -299,3 +300,13 @@ export function clearDataOfCSV() {
     type: AT.CLEAR_DATA_OF_CSV
   }
 }
+
+export function getDeliveryAddressesRequest(value='a') {
+  return {
+    type: AT.SETTINGS_GET_DELIVERY_ADDRESSES,
+    payload: api.getDeliveryAddressesRequest(value)
+  }
+}
+
+
+

@@ -16,6 +16,7 @@ export const initialState = {
   productsCatalogRows: [],
   productsPackagingType: null,
   productsUnitsType: [],
+  deliveryAddressesRows: [],
   country: [],
   currency: [],
   tabsNames: [
@@ -26,10 +27,12 @@ export const initialState = {
     { name: "Global Broadcast", id: 5 },
     //{ name: "Client list", id: 6 }, // removed #29771
     { name: "Credit cards", id: 7 },
-    { name: "Bank accounts", id: 8 }
+    { name: "Bank accounts", id: 8 },
     //{ name: "Tax manager", id: 9 }, // removed #29771
     //{ name: "Terms", id: 10 }, // removed #29771
     //{ name: "Website Controls", id: 11 } // removed #29771
+    { name: "Delivery addresses", id: 12 }
+
   ],
   // currentTab: "Product catalog",
   currentTab: "Users",
@@ -505,6 +508,14 @@ export default function reducer(state = initialState, action) {
         fileCSVId: null,
         mappedHeaders: null,
         dataHeaderCSV: null
+      }
+    }
+
+    case AT.SETTINGS_GET_DELIVERY_ADDRESSES_FULFILLED: {
+      return {
+        ...state,
+        deliveryAddressesRows: action.payload,
+        loading: false
       }
     }
 

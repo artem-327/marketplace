@@ -1,7 +1,7 @@
 import * as AT from './action-types'
 import * as api from './api'
 
-export function openEditPopup(config, editedData) {
+export function openEditPopup(editedData) {
 	return {
 		type: AT.ADMIN_OPEN_EDIT_POPUP,
 		payload: editedData
@@ -14,7 +14,7 @@ export function closeEditPopup() {
 	}
 }
 
-export function deleteItem(config, id) {
+export function deleteItem(config, id) {//! ! to be deleted
 	if (typeof config.api.delete !== 'undefined') {
 		return async dispatch => {
 			await dispatch({
@@ -35,6 +35,40 @@ export function openAddPopup(currentTab) {
 export function closeAddPopup() {
 	return {
 		type: AT.ADMIN_CLOSE_ADD_POPUP,
+	}
+}
+
+export function handleOpenConfirmPopup(id) {
+	return {
+		type: AT.ADMIN_OPEN_CONFIRM_POPUP,
+		payload: id
+	}
+}
+
+export function deleteConfirmation(id, config=null) {
+	console.log('############## deleteConfirmation - ', config);
+	console.log('############## deleteConfirmation - ', id);
+
+	if (config != null) {
+		if (typeof config.api.delete !== 'undefined') {
+			return async dispatch => {
+				await dispatch({
+					type: config.api.delete.typeRequest,
+					payload: api.deleteItem(config, id)
+				})
+				dispatch(getDataRequest(config))
+			}
+		}
+	}
+	else {
+		return {
+			type: AT.ADMIN_DELETE_CONFIRM_POPUP
+		}
+	}
+}
+export function confirmationSuccess() {
+	return {
+		type: AT.ADMIN_CONFIRM_SUCCESS
 	}
 }
 

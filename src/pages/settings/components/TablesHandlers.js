@@ -34,6 +34,10 @@ const textsTable = {
   'Bank accounts': {
     BtnAddText: 'Add Bank Account',
     SearchText: 'Search bank account ...'
+  },
+  'Delivery addresses': {
+    BtnAddText: 'Add Delivery Address',
+    SearchText: 'Search delivery address ...'
   }
 }
 
@@ -73,6 +77,9 @@ class TablesHandlers extends Component {
         break
       case 'Bank accounts':
         return 'Bank account'
+        break
+      case 'Delivery addresses':
+        return 'Delivery addresses'
         break
       default:
         null

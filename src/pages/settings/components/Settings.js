@@ -14,6 +14,9 @@ import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
 import BankAccountsPopup from './BankAccountsTable/BankAccountsPopup'
 import TablesHandlers from './TablesHandlers'
 import ProductImportPopup from './ProductCatalogTable/ProductImportPopup'
+import DeliveryAddressesTable from './DeliveryAddressesTable/DeliveryAddressesTable'
+import DeliveryAddressesPopup from './DeliveryAddressesTable/DeliveryAddressesPopup'
+
 import Toast from '../../../../components/toast'
 
 import { Container, Grid } from 'semantic-ui-react'
@@ -24,7 +27,8 @@ const tables = {
   Warehouses: <WarehouseTable />,
   'Product catalog': <ProductCatalogTable />,
   'Bank accounts': <BankAccountsTable />,
-  'Credit cards': <CreditCardsTable />
+  'Credit cards': <CreditCardsTable />,
+  'Delivery addresses': <DeliveryAddressesTable />
 }
 
 const popupForm = {
@@ -33,7 +37,8 @@ const popupForm = {
   Warehouses: <EditWarehousePopup />,
   'Product catalog': <EditProductPopup />,
   'Bank accounts': <BankAccountsPopup />,
-  'Credit cards': <CreditCardsPopup />
+  'Credit cards': <CreditCardsPopup />,
+  'Delivery addresses': <DeliveryAddressesPopup />
 }
 
 const importForm = {
