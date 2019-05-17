@@ -22,10 +22,7 @@ class UsersTable extends Component {
       { name: "email", title: "E-mail" },
       { name: "phone", title: "Phone" },
       { name: "homeBranch", title: "Home Branch" },
-      {
-        name: "allUserRoles",
-        title: "Roles"
-      }
+      { name: "allUserRoles", title: "Roles", width: 200 }
     ]
   }
 
@@ -68,10 +65,7 @@ class UsersTable extends Component {
           style={{ marginTop: "5px" }}
           rowActions={[
             { text: "Edit", callback: row => openPopup(row) },
-            {
-              text: "Edit Roles",
-              callback: row => openRolesPopup(row)
-            },
+            { text: "Edit Roles", callback: row => openRolesPopup(row) },
             { text: "Delete", callback: row => handleOpenConfirmPopup(row.id) }
           ]}
         />
