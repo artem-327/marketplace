@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import * as Actions from '../actions'
-import { Modal, Segment, Grid, Icon, Button, Form, Input, Dropdown, Dimmer, Loader } from 'semantic-ui-react'
+import { Modal, Segment, Grid, Icon, Button, Form, Input, Dropdown, Dimmer, Loader, Checkbox } from 'semantic-ui-react'
 import TreeModel from 'tree-model'
 import { Rule } from './Broadcast.style'
 
@@ -43,21 +43,27 @@ const RuleItem = ({ onChange, onRowClick, node }) => {
   return (
     <>
       <Rule.Row depth={node.getPath().length} type={type} onClick={() => type !== 'root' && onRowClick(node)}>
-        {node.hasChildren() && type !== 'root' && <Icon name={`chevron ${node.model.expanded ? 'down' : 'right'}`} />}
-        <span>{name || 'By region'}</span>
+        <Rule.RowContent>
+          {node.hasChildren() && type !== 'root' && <Icon name={`chevron ${node.model.expanded ? 'down' : 'right'}`} />}
+          <span>{name || 'By region'}</span>
+        </Rule.RowContent>
 
-        <Rule.Toggle
-          toggle
-          indeterminate={broadcast === 2}
-          checked={broadcast === 1}
-          onClick={(e) => handleChange('broadcast', e)}
-        />
+        <Rule.Toggle>
+          <Checkbox
+            toggle
+            indeterminate={broadcast === 2}
+            checked={broadcast === 1}
+            onClick={(e) => handleChange('broadcast', e)}
+          />
+        </Rule.Toggle>
 
-        <Rule.Checkbox
-          indeterminate={anonymous === 2}
-          checked={anonymous === 1}
-          onClick={(e) => handleChange('anonymous', e)}
-        />
+        <Rule.Checkbox>
+          <Checkbox
+            indeterminate={anonymous === 2}
+            checked={anonymous === 1}
+            onClick={(e) => handleChange('anonymous', e)}
+          />
+        </Rule.Checkbox>
 
       </Rule.Row>
 
@@ -153,7 +159,17 @@ class Broadcast extends Component {
               </Grid.Column>
               <Grid.Column width={10} stretched>
                 <Rule.Root>
-                  <Rule.Header>Region select</Rule.Header>
+                  <Rule.Header>
+                    <Rule.RowContent>
+                      Region select
+                    </Rule.RowContent>
+                    <Rule.Toggle>
+                      Include
+                    </Rule.Toggle>
+                    <Rule.Checkbox>
+                      Anomymous
+                    </Rule.Checkbox>
+                  </Rule.Header>
                   <Rule.Content>
                   {treeData && [treeData].map(n => <RuleItem node={n} onRowClick={this.handleRowClick} onChange={this.handleChange} />)}
                   {loading && <Dimmer active inverted><Loader active /></Dimmer>}

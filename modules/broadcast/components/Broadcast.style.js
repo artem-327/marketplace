@@ -1,4 +1,3 @@
-import * as SUI from 'semantic-ui-react'
 import styled from 'styled-components'
 
 const COLORS = {
@@ -37,31 +36,38 @@ const Root = styled.div`
   flex-direction: column;
 `
 const Header = styled(Row)`
-  font-weight: bold;
+  /* font-weight: bold; */
   flex: 0 0 45px;
-  padding: 5px;
+  padding: 5px 15px 5px 5px;
   display: flex;
 `
 const Content = styled.div`
   display: flex;
   flex: 1 0 300px;
   flex-direction: column;
-  overflow: auto;
+  overflow-y: scroll;
 `
-const Toggle = styled(SUI.Checkbox)`
-  position: absolute !important;
-  left: 75%;
-  top: 14px;
-  
+
+const RowContent = styled.div`
+  flex: 1 1 300px;
 `
-const Checkbox = styled(SUI.Checkbox)`
-  position: absolute !important;
-  left: 90%;
-  top: 14px;
+
+const Toggle = styled.div`
+  flex: 0 0 110px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+const Checkbox = styled.div`
+  flex: 0 0 110px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 export const Rule = {
   Row,
+  RowContent,
   Root,
   Content,
   Header,
