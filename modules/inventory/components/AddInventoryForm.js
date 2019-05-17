@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button, TextArea } from 'formik-semantic-ui'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl'
 import { Modal, Icon, Segment, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab } from 'semantic-ui-react'
 import styled from 'styled-components'
 import * as val from 'yup'
@@ -95,7 +95,7 @@ const validationScheme = val.object().shape({
   product: val.string().required("required"),
   processingTimeDays: val.number().required("required"),
   doesExpire: val.bool(),
-  pkgAmount: val.number().nullable().moreThan(0, 'Amount has to be greater than 0').required("required"),
+  pkgAmount: val.number().typeError('must be number').nullable().moreThan(0, 'Amount has to be greater than 0').required("required"),
   validityDate: val.string().matches(/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, { message: 'not valid date' }),
   lots: val.array().of(val.object().uniqueProperty('lotNumber', 'LOT number has to be unique').shape({
     lotNumber: val.string().nullable().required("required"),
@@ -110,8 +110,8 @@ const validationScheme = val.object().shape({
   origin: val.number().nullable().moreThan(0, 'Origin value is invalid'),
   priceTiers: val.number(),
   pricingTiers: val.array().of(val.object().shape({
-    quantityFrom: val.number().nullable().moreThan(0, "Must be greater than 0").required("Minimum quantity must be set"),
-    price: val.number().nullable().moreThan(0, "Must be greater than 0").required("required").test("maxdec", "There can be maximally 3 decimal places.", val => {
+    quantityFrom: val.number().typeError('must be number').nullable().moreThan(0, "Must be greater than 0").required("Minimum quantity must be set"),
+    price: val.number().typeError('must be number').nullable().moreThan(0, "Must be greater than 0").required("required").test("maxdec", "There can be maximally 3 decimal places.", val => {
       return !val || val.toString().indexOf('.') === -1 || val.toString().split(".")[1].length <= 3
     })
   })),
@@ -119,7 +119,7 @@ const validationScheme = val.object().shape({
   warehouse: val.number().moreThan(0, "required").required('required')
 })
 
-export default class AddInventoryForm extends Component {
+class AddInventoryForm extends Component {
 
   state = {
     initialState: {
@@ -237,10 +237,12 @@ export default class AddInventoryForm extends Component {
     )
   }
 
-  renderProductDetails = (values) => {
+  renderProductDetails = (values, validateForm) => {
     const {
       activeIndex
     } = this.state
+
+    const {toastManager} = this.props
 
     return (
       <Grid className='product-details' centered>
@@ -319,7 +321,30 @@ export default class AddInventoryForm extends Component {
                   <Button fluid size='big' floated='left'>Discard</Button>
                 </ResponsiveColumn>
                 <GridColumn computer={10} mobile={16}>
-                  <Button.Submit fluid size='big' floated='right' style={{ paddingLeft: '1em', paddingRight: '1em' }}>
+                  <Button.Submit fluid
+                                 size='big'
+                                 floated='right'
+                                 onClick={(e, data={data, validateForm}) => {
+                                   validateForm()
+                                     .then(r => {
+                                       // stop when errors found
+                                       if (Object.keys(r).length) {
+                                         toastManager.add((
+                                           <div>
+                                             <strong>Form is invalid</strong>
+                                             <div>There are errors on current tab. Please, fix them before submit.</div>
+                                           </div>
+                                         ), {
+                                           appearance: 'error',
+                                           autoDismiss: true
+                                         })
+                                       }
+                                     }).catch(e => {
+                                       console.log('CATCH', e)
+                                     })
+                                 }}
+                                 style={{ paddingLeft: '1em', paddingRight: '1em' }}
+                  >
                     <FormattedMessage id={this.props.edit ? 'addInventory.editButton' : 'addInventory.addButton'}
                                       defaultMessage={this.props.edit ? 'Edit Product Offer' : 'Add Product Offer'} />
                   </Button.Submit>
@@ -371,7 +396,6 @@ export default class AddInventoryForm extends Component {
     values.lots = values.lots.filter((lot, index) => {
       return index !== lotIndex
     })
-    console.log('X', values)
 
     // modify costs
     this.modifyCosts(setFieldValue, values)
@@ -468,7 +492,7 @@ export default class AddInventoryForm extends Component {
               <Tab className='inventory flex stretched' menu={{ secondary: true, pointing: true }} renderActiveOnly={false} activeIndex={this.state.activeTab} style={{height: '100%'}} panes={[
                 {
                   menuItem: (
-                    <Menu.Item key='productOffer'onClick={() => {
+                    <Menu.Item key='productOffer' onClick={() => {
                       validateForm()
                         .then(r => {
                           // stop when errors found
@@ -647,7 +671,7 @@ export default class AddInventoryForm extends Component {
                         </GridColumn>
 
                         <GridColumn width={5}>
-                          {this.renderProductDetails(values)}
+                          {this.renderProductDetails(values, validateForm)}
                         </GridColumn>
                       </Grid>
                     </Tab.Pane>
@@ -801,6 +825,7 @@ export default class AddInventoryForm extends Component {
                                                      name={`lots[${index}].attachments`}
                                                      type='Lot Attachment'
                                                      lot={true}
+                                                     filesLimit={1}
                                                      fileMaxSize={20}
                                                      onChange={(files) => setFieldValue(
                                                        `lots[${index}].attachments[${values.lots[index].attachments && values.lots[index].attachments.length ? values.lots[index].attachments.length : 0}]`,
@@ -893,6 +918,7 @@ export default class AddInventoryForm extends Component {
                                                          name={`costs[${index}].attachments`}
                                                          type='Cost Attachment'
                                                          lot={false}
+                                                         filesLimit={1}
                                                          fileMaxSize={20}
                                                          disabled={!values.trackSubCosts}
                                                          onChange={(files) => setFieldValue(
@@ -991,7 +1017,7 @@ export default class AddInventoryForm extends Component {
                         </GridColumn>
 
                         <GridColumn width={5}>
-                          {this.renderProductDetails(values)}
+                          {this.renderProductDetails(values, validateForm)}
                         </GridColumn>
                       </Grid>
                     </Tab.Pane>
@@ -1005,3 +1031,5 @@ export default class AddInventoryForm extends Component {
     )
   }
 }
+
+export default AddInventoryForm

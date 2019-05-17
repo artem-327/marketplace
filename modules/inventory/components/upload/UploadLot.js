@@ -1,14 +1,15 @@
-import React, {Component} from 'react';
+import React, {Component} from 'react'
 import './uploadLot.scss'
-import upload from '~/src/images/upload/upload.png';
-import uploaded from '~/src/images/upload/uploaded.png';
-import PropTypes from "prop-types";
-import File from "~/src/pages/inventory/addInventory/components/Upload/components/File";
-import ReactDropzone from "react-dropzone";
-import {FormattedMessage} from 'react-intl';
+import upload from '~/src/images/upload/upload.png'
+import uploaded from '~/src/images/upload/uploaded.png'
+import PropTypes from "prop-types"
+import File from "~/src/pages/inventory/addInventory/components/Upload/components/File"
+import ReactDropzone from "react-dropzone"
+import {FormattedMessage} from 'react-intl'
 import {TOO_LARGE_FILE, UPLOAD_FILE_FAILED} from '~/src/modules/errors.js'
 import { FieldArray } from "formik"
 import confirm from '~/src/components/Confirmable/confirm'
+import {withToastManager} from 'react-toast-notifications'
 
 class UploadLot extends Component {
     constructor(props) {
@@ -38,10 +39,18 @@ class UploadLot extends Component {
     }
 
     onDropRejected = (blobs) => {
-        let {fileMaxSize} = this.props
+        let {fileMaxSize, toastManager} = this.props
         blobs.forEach(function(blob) {
             if (blob.size > (fileMaxSize * 1024 * 1024)) {
-                this.props.errorTooLarge(blob.name, fileMaxSize)
+              toastManager.add((
+                <div>
+                  <strong>Too large file</strong>
+                  <div>File "{blob.name}" is larger than maximal allowed size: {fileMaxSize} MB</div>
+                </div>
+              ), {
+                appearance: 'error',
+                autoDismiss: true,
+              })
             }
         })
     }
@@ -51,11 +60,24 @@ class UploadLot extends Component {
     }
 
     onUploadFail = (fileName) => {
-        this.props.errorUploadFail(fileName)
+      let {fileMaxSize, toastManager} = this.props
+      blobs.forEach(function(blob) {
+        if (blob.size > (fileMaxSize * 1024 * 1024)) {
+          toastManager.add((
+            <div>
+              <strong>File not uploaded</strong>
+              <div>File "{blob.name}" was not uploaded due to error</div>
+            </div>
+          ), {
+            appearance: 'error',
+            autoDismiss: true,
+          })
+        }
+      })
     }
 
     onPreviewDrop = async (files) => {
-        let {loadFile, addAttachment, type, fileMaxSize, unspecifiedTypes} = this.props
+        let {loadFile, addAttachment, type, fileMaxSize, unspecifiedTypes, toastManager} = this.props
         let {onDropRejected, onUploadSuccess, onUploadFail} = this
 
         if (typeof unspecifiedTypes === 'undefined')
@@ -65,6 +87,15 @@ class UploadLot extends Component {
             // continue uploading files
           }, (result) => {
             // remove all files
+            toastManager.add((
+              <div>
+                <strong>Canceled</strong>
+                <div>Selected files were not uploaded</div>
+              </div>
+            ), {
+              appearance: 'info',
+              autoDismiss: true,
+            })
             files = []
           })
         }
@@ -72,10 +103,10 @@ class UploadLot extends Component {
         // add new files to attachments and save indexes of own files
         for (let i = 0; i < files.length; i++) {
             if (files[i].size > fileMaxSize * 1024 * 1024) {
-                // remove file
-                onDropRejected([files[i]])
-                files.splice(i, 1)
-                i--
+              // remove file
+              onDropRejected([files[i]])
+              files.splice(i, 1)
+              i--
             }
         }
 
@@ -98,11 +129,18 @@ class UploadLot extends Component {
                 });
             }).then(loop.bind(null, j+1));
         })(0)
-    };
+    }
 
     render() {
-        let {attachments, disabled} = this.props
-        let hasFile = this.props.attachments && this.props.attachments.length !== 0;
+        let {attachments, disabled, filesLimit, toastManager} = this.props
+        let hasFile = this.props.attachments && this.props.attachments.length !== 0
+
+        const limitMsg = (
+          <div>
+            <strong>File limit exceeded</strong>
+            <div>You can't upload more than {filesLimit} documents</div>
+          </div>
+        );
 
         return (
             <div className={"uploadLot " + (hasFile ? ' has-file' : '')}>
@@ -125,7 +163,26 @@ class UploadLot extends Component {
                 ) : (hasFile ?
                     <React.Fragment>
                       {this.props.uploadedContent ? (
-                          <ReactDropzone className="dropzoneLot" activeClassName="active" onDrop={this.onPreviewDrop} onDropRejected={this.onDropRejected}>
+                          <ReactDropzone className="dropzoneLot"
+                                         activeClassName="active"
+                                         onDrop={acceptedFiles => {
+                                           if (acceptedFiles.length) {
+                                             if (!filesLimit || acceptedFiles.length <= filesLimit) {
+                                               this.onPreviewDrop(acceptedFiles)
+                                             } else {
+                                               toastManager.add(limitMsg, {
+                                                 appearance: 'error',
+                                                 autoDismiss: true,
+                                               })
+
+                                               return
+                                             }
+                                           } else {
+                                             return
+                                           }
+                                         }}
+                                         onDropRejected={this.onDropRejected}
+                          >
                             {this.props.uploadedContent}
                           </ReactDropzone>
                         ) : ''}
@@ -144,7 +201,25 @@ class UploadLot extends Component {
                       </span>
                     </React.Fragment>
                     :
-                    <ReactDropzone className="dropzoneLot" activeClassName="active" onDrop={this.onPreviewDrop}>
+                    <ReactDropzone className="dropzoneLot"
+                                   activeClassName="active"
+                                   onDrop={acceptedFiles => {
+                                       if (acceptedFiles.length) {
+                                         if (!filesLimit || acceptedFiles.length <= filesLimit) {
+                                           this.onPreviewDrop(acceptedFiles)
+                                         } else {
+                                           toastManager.add(limitMsg, {
+                                             appearance: 'error',
+                                             autoDismiss: true,
+                                           })
+
+                                           return
+                                         }
+                                       } else {
+                                         return
+                                       }
+                                   }}
+                    >
                       <div>
                         {this.props.emptyContent}
                       </div>
@@ -164,4 +239,4 @@ UploadLot.propTypes = {
     uploadedClass: PropTypes.string
 };
 
-export default UploadLot;
+export default withToastManager(UploadLot)

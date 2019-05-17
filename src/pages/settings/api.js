@@ -65,11 +65,12 @@ export default {
   patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body),
   patchUserRole: (id, body) =>
     api.patch(`/prodex/api/users/id/${id}/add-roles`, body),
-  putProduct: (id, body) => api.put(`/prodex/api/products/${id}`, body),
+  putProduct: (id, body) => api.put(`/prodex/api/products/id/${id}`, body),
+  searchCasProduct: (pattern) => api.get(`/prodex/api/cas-products/search?limit=5&pattern=${pattern}`),
 
   deleteUser: userId => api.delete(`/prodex/api/users/id/${userId}`),
   deleteWarehouse: branchId => api.delete(`/prodex/api/branches/${branchId}`),
-  deleteProduct: branchId => api.delete(`/prodex/api/products/${branchId}`),
+  deleteProduct: branchId => api.delete(`/prodex/api/products/id/${branchId}`),
   deleteCreditCard: cardId =>
     api.delete(`/prodex/api/payments/cards/${cardId}`),
   deleteBankAccount: bankAccountId =>

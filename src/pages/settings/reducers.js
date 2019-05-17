@@ -50,12 +50,14 @@ export const initialState = {
   CSV: null,
   mappedHeaders: null,
   dataHeaderCSV: null,
-  loading: false
+  loading: false,
+  searchedCasProducts: []
 }
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case AT.OPEN_POPUP: {
+      console.log("action.payload", action.payload)
       return {
         ...state,
         isOpenPopup: true,
@@ -188,7 +190,7 @@ export default function reducer(state = initialState, action) {
       const usersRows = action.payload.map(user => {
         return {
           checkbox: " ",
-          userName: user.firstname + " " + user.lastname,
+          userName: user.name,
           title: "title",
           email: user.email,
           phone: user.homeBranch.contactPhone,
@@ -508,6 +510,13 @@ export default function reducer(state = initialState, action) {
         fileCSVId: null,
         mappedHeaders: null,
         dataHeaderCSV: null
+      }
+    }
+
+    case AT.SEARCH_CAS_PRODUCT_FULFILLED: {
+      return {
+        ...state,
+        searchedCasProducts: action.payload.data
       }
     }
 

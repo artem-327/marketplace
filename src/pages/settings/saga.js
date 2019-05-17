@@ -191,8 +191,9 @@ function* postNewUserWorker({ payload }) {
   try {
     const dataBody = {
       email: payload.email,
-      firstname: payload.firstName,
-      lastname: payload.lastName,
+      name: payload.name,
+      //firstname: payload.firstName,
+      //lastname: payload.lastName,
       middlename: payload.middleName,
       homeBranch: payload.homeBranchId,
       password: "123"
@@ -402,13 +403,13 @@ function* putProductEditPopup({ payload }) {
   try {
     const id = payload.id
     const updateProduct = {
-      casProduct: payload.casProduct,
+      casProduct: payload.casProduct.id,
       packagingSize: payload.packagingSize,
       packagingType: payload.packageID,
       productCode: payload.productNumber,
       productName: payload.productName,
       packagingUnit: payload.unitID,
-      unNumber: payload.unNumber
+      unNumber: payload.casProduct.unNumber ? payload.casProduct.unNumber : null
     }
     yield call(api.putProduct, id, updateProduct)
     yield put({ type: AT.GET_WAREHOUSES_DATA })

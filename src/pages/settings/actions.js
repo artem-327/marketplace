@@ -1,5 +1,5 @@
 import * as AT from "./action-types"
-import * as api from './api'
+import api from "./api"
 
 export function openPopup(rows = null) {
   return {
@@ -301,12 +301,9 @@ export function clearDataOfCSV() {
   }
 }
 
-export function getDeliveryAddressesRequest(value='a') {
+export function searchCasProduct(pattern) {
   return {
-    type: AT.SETTINGS_GET_DELIVERY_ADDRESSES,
-    payload: api.getDeliveryAddressesRequest(value)
+    type: AT.SEARCH_CAS_PRODUCT,
+    payload: api.searchCasProduct(pattern)
   }
 }
-
-
-

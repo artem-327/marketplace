@@ -9,7 +9,8 @@ import { Modal, FormGroup, FormField, Search, Label } from 'semantic-ui-react'
 import {
   closePopup,
   handleSubmitProductEditPopup,
-  handleSubmitProductEddPopup
+  handleSubmitProductEddPopup,
+  searchCasProduct
 } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
@@ -27,9 +28,6 @@ const formValidation = Yup.object().shape({
     .required('Required')
 })
 
-const resultRenderer = ({ casProduct, id }) => (
-  <Label content={casProduct} key={id} />
-)
 class ProductPopup extends React.Component {
   componentWillMount() {
     this.resetComponent()
@@ -69,10 +67,12 @@ class ProductPopup extends React.Component {
   }
 
   handleResultSelect = (e, { result }) =>
-    this.setState({ value: result.casProduct })
+    this.setState({value: result})
 
   handleSearchChange = (e, { value }) => {
     this.setState({ isLoading: true, value })
+
+    this.props.searchCasProduct(value)
 
     setTimeout(() => {
       const re = new RegExp(escapeRegExp(this.state.value), 'i')
@@ -110,14 +110,15 @@ class ProductPopup extends React.Component {
       closePopup,
       packagingType,
       productsUnitsType,
-      popupValues
+      popupValues,
+      searchedCasProducts
     } = this.props
     const { isLoading, results, value } = this.state
     const title = popupValues ? 'Edit' : 'Add'
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>{title} product catalog</Modal.Header>
+        <Modal.Header>{title} Product</Modal.Header>
         <Modal.Content>
           <Form
             initialValues={this.getInitialFormValues()}
@@ -134,9 +135,15 @@ class ProductPopup extends React.Component {
                   onSearchChange={debounce(this.handleSearchChange, 500, {
                     leading: true
                   })}
-                  results={results}
-                  value={value}
-                  resultRenderer={resultRenderer}
+                  results={searchedCasProducts.map(item => {
+                    return {
+                      id: item.id,
+                      title: item.casNumber,
+                      description: item.casIndexName,
+                      unNumber: item.unNumber ? item.unNumber.id : 0
+                    }
+                  })}
+                  defaultValue={value.title ? value.title : value}
                 />
               </FormField>
             </FormGroup>
@@ -173,14 +180,16 @@ class ProductPopup extends React.Component {
 const mapDispatchToProps = {
   closePopup,
   handleSubmitProductEditPopup,
-  handleSubmitProductEddPopup
+  handleSubmitProductEddPopup,
+  searchCasProduct
 }
 const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues,
     productsCatalogRows: state.settings.productsCatalogRows,
     packagingType: state.settings.productsPackagingType,
-    productsUnitsType: state.settings.productsUnitsType
+    productsUnitsType: state.settings.productsUnitsType,
+    searchedCasProducts: state.settings.searchedCasProducts
   }
 }
 
