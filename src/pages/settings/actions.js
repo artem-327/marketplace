@@ -1,4 +1,5 @@
 import * as AT from "./action-types"
+import api from "./api"
 
 export function openPopup(rows = null) {
   return {
@@ -297,5 +298,12 @@ export function postImportProductCSV(payload, id) {
 export function clearDataOfCSV() {
   return {
     type: AT.CLEAR_DATA_OF_CSV
+  }
+}
+
+export function searchCasProduct(pattern) {
+  return {
+    type: AT.SEARCH_CAS_PRODUCT,
+    payload: api.searchCasProduct(pattern)
   }
 }

@@ -47,7 +47,8 @@ export const initialState = {
   CSV: null,
   mappedHeaders: null,
   dataHeaderCSV: null,
-  loading: false
+  loading: false,
+  searchedCasProducts: []
 }
 
 export default function reducer(state = initialState, action) {
@@ -505,6 +506,13 @@ export default function reducer(state = initialState, action) {
         fileCSVId: null,
         mappedHeaders: null,
         dataHeaderCSV: null
+      }
+    }
+
+    case AT.SEARCH_CAS_PRODUCT_FULFILLED: {
+      return {
+        ...state,
+        searchedCasProducts: action.payload.data
       }
     }
 
