@@ -64,20 +64,15 @@ class UsersPopup extends React.Component {
       roles
     } = this.props
 
-    const [firstName, lastName] =
-      popupValues && popupValues.userName
-        ? popupValues.userName.split(" ")
-        : ["", ""]
     const {
-      middleName = "",
+      userName = "",
       email = "",
       homeBranchId = "",
       preferredCurrency = ""
     } = popupValues || {}
+
     const initialFormValues = {
-      firstName,
-      lastName,
-      middleName,
+      userName,
       email,
       homeBranchId,
       preferredCurrency
@@ -109,13 +104,9 @@ class UsersPopup extends React.Component {
                 </FormGroup>
               ))
             ) : (
-              <div>
+              <>
                 <FormGroup widths="equal">
-                  <Input type="text" label="Name" name="name" />
-                  {/* <Input type="text" label="Last Name" name="lastName" /> */}
-                </FormGroup>
-                <FormGroup widths="equal">
-                  <Input type="text" label="Middle Name" name="middleName" />
+                  <Input type="text" label="Name" name="userName" />
                   <Input type="text" label="Email" name="email" />
                 </FormGroup>
                 <FormGroup widths="equal">
@@ -125,7 +116,7 @@ class UsersPopup extends React.Component {
                     options={branchesAll}
                   />
                 </FormGroup>
-              </div>
+              </>
             )}
             <div style={{ textAlign: "right" }}>
               <Button.Reset
