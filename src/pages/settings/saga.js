@@ -191,8 +191,9 @@ function* postNewUserWorker({ payload }) {
   try {
     const dataBody = {
       email: payload.email,
-      firstname: payload.firstName,
-      lastname: payload.lastName,
+      name: payload.name,
+      //firstname: payload.firstName,
+      //lastname: payload.lastName,
       middlename: payload.middleName,
       homeBranch: payload.homeBranchId,
       password: "123"
