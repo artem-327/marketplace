@@ -1,18 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import _ from 'lodash'
 import * as Actions from '../actions'
-import { Modal, Segment, Grid, Icon, FormField, FormGroup } from 'semantic-ui-react'
-import { connect as formikConnect, getIn, setNestedObjectValues } from 'formik'
-import { Form, Button, Input, Dropdown } from 'formik-semantic-ui'
+import { Modal, Segment, Grid, Icon, Button, Form, Input, Dropdown } from 'semantic-ui-react'
 import TreeModel from 'tree-model'
-
 import { RuleRow, RuleToggle, RulesRoot, RuleCheckbox, RulesHeader } from './Broadcast.style'
 
 const filterTree = (tree, filter, category) => {
-  let _t = new TreeModel({ childrenPropertyName: 'elements' }).parse(tree.model)
-  _t.all(n => n.model.type === category).forEach(n => delete n.parent)
-  
-  return _t.all(n => n.model.type === category)
 
   // if (filter === '') {
   //   tree.all().forEach(n => {
@@ -42,17 +36,18 @@ const RuleItem = ({ onChange, onRowClick, node }) => {
     onChange(node, { [propertyName]: newValue })
   }
 
-  const { model: { name, id, broadcast, anonymous, expanded, hidden } } = node
+  const { model: { name, id, broadcast, anonymous, expanded, hidden, type } } = node
 
   if (hidden) return null
 
   return (
     <>
-      <RuleRow depth={node.getPath().length} onClick={() => onRowClick(node)}>
-        {node.hasChildren() && <Icon name={`chevron ${node.model.expanded ? 'down' : 'right'}`} />}
-        <span>{name || 'By region'} [{id}]</span>
+      <RuleRow depth={node.getPath().length} type={type} onClick={() => type !== 'root' && onRowClick(node)}>
+        {node.hasChildren() && type !== 'root' && <Icon name={`chevron ${node.model.expanded ? 'down' : 'right'}`} />}
+        <span>{name || 'By region'}</span>
 
         <RuleToggle
+          toggle
           indeterminate={broadcast === 2}
           checked={broadcast === 1}
           onClick={(e) => handleChange('broadcast', e)}
@@ -66,7 +61,7 @@ const RuleItem = ({ onChange, onRowClick, node }) => {
 
       </RuleRow>
 
-      {expanded && node.children.map((n, i) => <RuleItem key={i} node={n} onRowClick={onRowClick} onChange={onChange} />)}
+      {(expanded || type === 'root') && node.children.map((n, i) => <RuleItem key={i} node={n} onRowClick={onRowClick} onChange={onChange} />)}
     </>
   )
 }
@@ -119,8 +114,8 @@ class Broadcast extends Component {
     updateLocalRules(treeData.model)
   }
 
-  handleFilterChange = () => {
-
+  handleFilterChange = (e, {name, value}) => {
+    console.log(name, value)
   }
 
   render() {
@@ -129,41 +124,44 @@ class Broadcast extends Component {
     return (
       <Modal open={open} onClose={closeBroadcast} centered={false}>
         <Modal.Header>Broadcast center</Modal.Header>
-        <Modal.Content scrolling style={{ minHeight: '80vh' }} className="flex stretched">
-          <Form
-            className="flex stretched"
-            initialValues={{
-              filter: '',
-              category: 'region'
-            }}
-            onSubmit={(values, actions) => {
-              actions.setSubmitting(false)
-            }}
-            render={({ values }) => (
-              <Grid className="flex stretched">
-                <Grid.Row divided className="flex stretched">
-                  <Grid.Column width={6}>
-                    <div>
-                      <Dropdown label="Category filter" name="category" 
+        <Modal.Content scrolling style={{ minHeight: '70vh' }} className="flex stretched">
+          <Grid className="flex stretched">
+            <Grid.Row divided className="flex stretched">
+              <Grid.Column width={6}>
+                <div>
+                  <Form>
+                    <Form.Field>
+                      <label>Category filter</label>
+                      <Dropdown
+                        selection
+                        name="category"
+                        defaultValue='region'
+                        onChange={this.handleFilterChange}
                         options={[
-                          {key: 'region', text: 'All Regions', value: 'region'},
-                          {key: 'company', text: 'All Companies', value: 'company'},
-                        ]} 
+                          { key: 'region', text: 'All Regions', value: 'region' },
+                          { key: 'company', text: 'All Companies', value: 'company' },
+                        ]}
                       />
-                      <Input label="Filter" name="filter" />
-                    </div>
-                  </Grid.Column>
-                  <Grid.Column width={10} stretched>
-                    <RulesRoot>
-                      {treeData && filterTree(treeData, values.filter, values.category).map(n => <RuleItem node={n} onRowClick={this.handleRowClick} onChange={this.handleChange} />)}
-                    </RulesRoot>
-                  </Grid.Column>
-                </Grid.Row>
+                    </Form.Field>
+                    <Form.Field>
+                      <label>Filter</label>
+                      <Input name="filter" onChange={_.debounce(this.handleFilterChange, 300)} />
+                    </Form.Field>
 
-              </Grid>
-            )}
-          />
+                  </Form>
+                </div>
+              </Grid.Column>
+              <Grid.Column width={10} stretched>
+                <RulesRoot>
+                  {treeData && [treeData].map(n => <RuleItem node={n} onRowClick={this.handleRowClick} onChange={this.handleChange} />)}
+                </RulesRoot>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
         </Modal.Content>
+        <Modal.Actions>
+          <Button primary>Save</Button>
+        </Modal.Actions>
       </Modal>
     )
   }
@@ -176,5 +174,5 @@ export default connect(({ broadcast: { data, ...rest } }) => {
       : null,
     ...rest,
   }
-}, Actions)(formikConnect(Broadcast))
+}, Actions)(Broadcast)
 

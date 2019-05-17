@@ -40,8 +40,10 @@ const GlobalTableOverrideStyle = createGlobalStyle`
   .dx-g-bs4-table {
     margin-bottom: 0 !important;
   }
-  .bootstrapiso .table td {
-    padding: .5rem;
+  .bootstrapiso .table {
+    td,th {
+      padding: .5rem;
+    }
   }
   .group-row {
     position: relative;

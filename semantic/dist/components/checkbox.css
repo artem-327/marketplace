@@ -655,7 +655,6 @@
   height: 14px;
   margin: 2px;
   border: 1px solid #979797;
-  background: #fff;
   -webkit-box-shadow: 0 0 0 0 transparent;
           box-shadow: 0 0 0 0 transparent;
 }
@@ -665,6 +664,15 @@
 .ui.toggle.checkbox input:focus:checked ~ label:before {
   border: 1px solid #979797;
   background: #4cd136 !important;
+}
+.ui.toggle.checkbox input:not([type=radio]):indeterminate ~ .box:before,
+.ui.toggle.checkbox input:not([type=radio]):indeterminate ~ label:before {
+  border: 1px solid #979797;
+  background: #CA6E28 !important;
+}
+.ui.toggle.checkbox input:not([type=radio]):indeterminate ~ .box:after,
+.ui.toggle.checkbox input:not([type=radio]):indeterminate ~ label:after {
+  left: 1.14285714rem;
 }
 .ui.toggle.checkbox input:checked ~ .box:after,
 .ui.toggle.checkbox input:checked ~ label:after {
