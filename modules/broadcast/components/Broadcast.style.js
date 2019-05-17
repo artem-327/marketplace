@@ -1,4 +1,4 @@
-import {Checkbox} from 'semantic-ui-react'
+import * as SUI from 'semantic-ui-react'
 import styled from 'styled-components'
 
 const COLORS = {
@@ -15,8 +15,9 @@ const FONT_WEIGHT = {
   company: 'normal'
 }
 
-export const RuleRow = styled.div`
+const Row = styled.div`
   position: relative;
+  display: flex;
   flex: 0 0 45px;
   line-height: 45px;
   border-bottom: 1px solid #e7e7e7;
@@ -30,28 +31,40 @@ export const RuleRow = styled.div`
   }
 `
 
-export const RulesRoot = styled.div`
+const Root = styled.div`
+  display: flex;
+  flex: 1 0 300px;
+  flex-direction: column;
+`
+const Header = styled(Row)`
+  font-weight: bold;
+  flex: 0 0 45px;
+  padding: 5px;
+  display: flex;
+`
+const Content = styled.div`
   display: flex;
   flex: 1 0 300px;
   flex-direction: column;
   overflow: auto;
 `
-export const RulesHeader = styled(RuleRow)`
-  font-weight: bold;
-  flex: 0 0 45px;
-`
-export const RulesContent = styled.div`
-  flex: 1 1 300px;
-  display: flex;
-  flex-direction: column;
-`
-export const RuleToggle = styled(Checkbox)`
+const Toggle = styled(SUI.Checkbox)`
   position: absolute !important;
-  right: 100px;
+  left: 75%;
+  top: 14px;
+  
+`
+const Checkbox = styled(SUI.Checkbox)`
+  position: absolute !important;
+  left: 90%;
   top: 14px;
 `
-export const RuleCheckbox = styled(Checkbox)`
-  position: absolute !important;
-  right: 30px;
-  top: 14px;
-`
+
+export const Rule = {
+  Row,
+  Root,
+  Content,
+  Header,
+  Checkbox,
+  Toggle
+}
