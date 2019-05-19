@@ -6,7 +6,6 @@ import ProdexTable from '~/components/table'
 import {
   getDataRequest,
   openEditPopup,
-  //! !deleteItem, deleteItem(config, row.id)
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation,
@@ -25,7 +24,6 @@ class DataTable extends Component {
       filterValue,
       currentTab,
       openEditPopup,
-      deleteItem,
       confirmMessage,
       handleOpenConfirmPopup,
       closeConfirmPopup,
@@ -62,7 +60,6 @@ class DataTable extends Component {
 const mapDispatchToProps = {
   getDataRequest,
   openEditPopup,
-  //! !deleteItem
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation
@@ -70,7 +67,6 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   let cfg = state.admin.config[state.admin.currentTab]
-  console.log('@@@@@@@@@@@@@@@@@@@@@ state.admin - ', state.admin);
   return {
     config: cfg,
     rows: state.admin[cfg.api.get.dataName],

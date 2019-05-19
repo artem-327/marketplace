@@ -1,5 +1,6 @@
 import React, {Component} from "react"
 import {connect} from "react-redux"
+import { Confirm } from 'semantic-ui-react'
 import { Label } from 'semantic-ui-react'
 import ProdexTable from '~/components/table'
 import {
@@ -7,7 +8,11 @@ import {
   openEditCasPopup,
   openEditAltNamesCasPopup,
   casDeleteItem,
-  getHazardClassesDataRequest, getPackagingGroupsDataRequest
+  handleOpenConfirmPopup,
+  closeConfirmPopup,
+  deleteConfirmation,
+  getHazardClassesDataRequest,
+  getPackagingGroupsDataRequest
 } from '../../actions'
 
 
@@ -28,13 +33,25 @@ class CasProductsTable extends Component {
       openEditCasPopup,
       openEditAltNamesCasPopup,
       casDeleteItem,
-      reloadFilter
+      reloadFilter,
+      confirmMessage,
+      handleOpenConfirmPopup,
+      closeConfirmPopup,
+      deleteConfirmation,
+      deleteRowById
     } = this.props
 
     const { columns } = config.display
 
     return (
       <React.Fragment>
+        <Confirm
+            size="tiny"
+            content="Do you really want to delete item?"
+            open={confirmMessage}
+            onCancel={closeConfirmPopup}
+            onConfirm={() => casDeleteItem(deleteRowById, reloadFilter)}
+        />
         <ProdexTable
           //filterValue={filterValue}
           loading={loading}
@@ -43,7 +60,7 @@ class CasProductsTable extends Component {
           rowActions={[
             {text: 'Edit', callback: (row) => openEditCasPopup(row)},
             {text: 'Edit Alternative Names', callback: (row) => openEditAltNamesCasPopup(row)},
-            {text: 'Delete', callback: (row) => casDeleteItem(row.id, reloadFilter)}
+            {text: 'Delete', callback: (row) => handleOpenConfirmPopup(row.id)}
           ]}
         />
       </React.Fragment>
@@ -56,6 +73,9 @@ const mapDispatchToProps = {
   openEditCasPopup,
   openEditAltNamesCasPopup,
   casDeleteItem,
+  handleOpenConfirmPopup,
+  closeConfirmPopup,
+  deleteConfirmation,
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
 }
@@ -95,6 +115,8 @@ const mapStateToProps = state => {
         currentTab: state.admin.currentTab,
         casListDataRequest: state.admin.casListDataRequest},
       value: state.admin.filterValue},
+    confirmMessage: state.admin.confirmMessage,
+    deleteRowById: state.admin.deleteRowById,
   }
 }
 

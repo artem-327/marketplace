@@ -1,7 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Confirm } from 'semantic-ui-react'
 import ProdexTable from '~/components/table'
-import { getCompanies, openEditCompany, deleteCompany } from '../../actions'
+import {
+  getCompanies,
+  openEditCompany,
+  deleteCompany,
+  handleOpenConfirmPopup,
+  closeConfirmPopup,
+  deleteConfirmation,
+} from '../../actions'
 
 class CompaniesTable extends Component {
 
@@ -17,11 +25,23 @@ class CompaniesTable extends Component {
       currentTab,
       loading,
       openEditCompany,
-      deleteCompany,
+      confirmMessage,
+      handleOpenConfirmPopup,
+      closeConfirmPopup,
+      deleteConfirmation,
+      deleteRowById,
+      deleteCompany
     } = this.props
 
     return (
       <React.Fragment>
+        <Confirm
+            size="tiny"
+            content="Do you really want to delete item?"
+            open={confirmMessage}
+            onCancel={closeConfirmPopup}
+            onConfirm={() => deleteCompany(deleteRowById)}
+        />
         <ProdexTable
           columns={columns}
           rows={rows}
@@ -29,7 +49,7 @@ class CompaniesTable extends Component {
           filterValue={filterValue}
           rowActions={[
             { text: 'Edit', callback: (row) => openEditCompany(row.id, row) },
-            { text: 'Delete', callback: (row) => confirm('Do you really want to delete?') && deleteCompany(row.id)}
+            { text: 'Delete', callback: (row) => handleOpenConfirmPopup(row.id)}
           ]}
         />
       </React.Fragment>
@@ -39,6 +59,9 @@ class CompaniesTable extends Component {
 
 const mapDispatchToProps = {
   getCompanies,
+  handleOpenConfirmPopup,
+  closeConfirmPopup,
+  deleteConfirmation,
   deleteCompany,
   openEditCompany
 }
@@ -63,7 +86,9 @@ const mapStateToProps = ({admin}) => {
       contactEmail: c.primaryUser ?
         c.primaryUser.email
         : '',
-    }))
+    })),
+    confirmMessage: admin.confirmMessage,
+    deleteRowById: admin.deleteRowById,
   }
 }
 

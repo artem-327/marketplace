@@ -74,10 +74,9 @@ export default {
   deleteCreditCard: cardId =>
     api.delete(`/prodex/api/payments/cards/${cardId}`),
   deleteBankAccount: bankAccountId =>
-    api.delete(`/prodex/api/payments/bank-accounts/${bankAccountId}`)
-}
+    api.delete(`/prodex/api/payments/bank-accounts/${bankAccountId}`),
 
-export async function getDeliveryAddressesRequest(value, limit=30) {
-  const {data} = await api.get(`/prodex/api/delivery-addresses/search?limit=${limit}&pattern=${value}`)
-  return data
+  getDeliveryAddressesRequest: async (value, limit=30) => {
+    return await api.get(`/prodex/api/delivery-addresses/search?limit=${limit}&pattern=${value}`)
+        .then(response => response.data)},
 }

@@ -108,7 +108,6 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.ADMIN_OPEN_CONFIRM_POPUP: {
-      console.log('!!!!!!!!!!!!!!!!! reducers - config', action.payload);
       return {
         ...state,
         confirmMessage: true,
@@ -116,7 +115,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-
+    case AT.ADMIN_DELETE_COMPANIES_FULFILLED:
+    case AT.ADMIN_DELETE_CAS_PRODUCT_FULFILLED:
     case AT.ADMIN_DELETE_UNITS_OF_MEASURE_DATA_FULFILLED:
     case AT.ADMIN_DELETE_UNITS_OF_PACKAGING_DATA_FULFILLED:
     case AT.ADMIN_DELETE_MANUFACTURERS_DATA_FULFILLED:

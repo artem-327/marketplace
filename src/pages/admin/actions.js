@@ -14,18 +14,6 @@ export function closeEditPopup() {
 	}
 }
 
-export function deleteItem(config, id) {//! ! to be deleted
-	if (typeof config.api.delete !== 'undefined') {
-		return async dispatch => {
-			await dispatch({
-				type: config.api.delete.typeRequest,
-				payload: api.deleteItem(config, id)
-			})
-			dispatch(getDataRequest(config))
-		}
-	}
-}
-
 export function openAddPopup(currentTab) {
 	return {
 		type: AT.ADMIN_OPEN_ADD_POPUP,
@@ -46,9 +34,6 @@ export function handleOpenConfirmPopup(id) {
 }
 
 export function deleteConfirmation(id, config=null) {
-	console.log('############## deleteConfirmation - ', config);
-	console.log('############## deleteConfirmation - ', id);
-
 	if (config != null) {
 		if (typeof config.api.delete !== 'undefined') {
 			return async dispatch => {

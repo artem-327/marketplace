@@ -1,5 +1,5 @@
 import * as AT from "./action-types"
-import * as api from './api'
+import api from "./api"
 
 export function openPopup(rows = null) {
   return {
