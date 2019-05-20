@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button, TextArea } from 'formik-semantic-ui'
 import { FormattedMessage } from 'react-intl'
-import { Modal, Icon, Segment, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab } from 'semantic-ui-react'
+import { Modal, Icon, Segment, Dimmer, Loader, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab } from 'semantic-ui-react'
 import styled from 'styled-components'
 import * as val from 'yup'
 import { DateInput } from '~/components/custom-formik'
@@ -318,7 +318,8 @@ class AddInventoryForm extends Component {
             <Grid verticalAlign='middle'>
               <GridRow>
                 <ResponsiveColumn computer={6} mobile={16}>
-                  <Button fluid size='big' floated='left'>Discard</Button>
+                  <Button fluid size='big' floated='left' onClick={() => this.goToList()}>
+                    <FormattedMessage id='addInventory.cancel' defaultMessage='Cancel'/></Button>
                 </ResponsiveColumn>
                 <GridColumn computer={10} mobile={16}>
                   <Button.Submit fluid
@@ -346,7 +347,7 @@ class AddInventoryForm extends Component {
                                  style={{ paddingLeft: '1em', paddingRight: '1em' }}
                   >
                     <FormattedMessage id={this.props.edit ? 'addInventory.editButton' : 'addInventory.addButton'}
-                                      defaultMessage={this.props.edit ? 'Edit Product Offer' : 'Add Product Offer'} />
+                                      defaultMessage={this.props.edit ? 'Save Product Offer' : 'Add Product Offer'} />
                   </Button.Submit>
                 </GridColumn>
               </GridRow>
@@ -358,7 +359,7 @@ class AddInventoryForm extends Component {
   }
 
   resetForm = () => {
-    this.props.resetForm()
+    this.props.resetForm(initValues)
   }
 
   goToList = () => {
@@ -429,7 +430,8 @@ class AddInventoryForm extends Component {
       addProductOffer,
       initialState,
       editProductOffer,
-      uploadDocuments
+      uploadDocuments,
+      loading
     } = this.props
 
     const {
@@ -439,6 +441,11 @@ class AddInventoryForm extends Component {
 
     return (
       <div id='page' className='flex stretched'>
+        <Dimmer active={loading} inverted>
+          <Loader inverted>
+            <FormattedMessage id='global.loading' defaultMessage='Loading' />
+          </Loader>
+        </Dimmer>
         <div className='header-top'>
           <Menu secondary>
             <Menu.Item header>
@@ -455,16 +462,13 @@ class AddInventoryForm extends Component {
           initialValues={{ ...initValues, ...initialState }}
           validationSchema={validationScheme}
           onSubmit={(values, actions) => {
+            actions.setSubmitting(false)
             addProductOffer(values, this.props.edit)
               .then((productOffer) => {
                 //Router.push('/inventory/my') xxx
               })
               .finally(() => {
-                actions.setSubmitting(false)
-                actions.resetForm(initValues)
-                /*if (this.props.edit) {
-                  this.goToList()
-                }*/
+                actions.resetForm()
               })
           }}
           className='inventory'
@@ -531,7 +535,6 @@ class AddInventoryForm extends Component {
                                   selection: true,
                                   clearable: true,
                                   loading: searchedProductsLoading,
-                                  onChange: (e, v) => { console.log(v) },
                                   onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchProducts(searchQuery)
                                 }}
                               />

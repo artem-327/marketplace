@@ -156,10 +156,31 @@ export function getProductGrades() {
   }
 }
 
-export function getMyProductOffers() {
+export function getMyProductOffers(filters = {}) {
+  let filtersReady = {
+    filters: Object.keys(filters).reduce((filtered, option) => {
+      switch(option) {
+        case 'qntylb':
+          filtered.push({
+            operator: 'GREATER_THAN_OR_EQUAL_TO',
+            path: 'ProductOffer.quantity',
+            values: [filters[option]]
+          })
+          break
+        case 'qntyup':
+          filtered.push({
+            operator: 'LESS_THAN_OR_EQUAL_TO',
+            path: 'ProductOffer.quantity',
+            values: [filters[option]]
+          })
+          break
+      }
+      return filtered
+    }, [])
+  }
   return {
     type: AT.INVENTORY_GET_MY_PRODUCT_OFFERS,
-    payload: api.getMyProductOffers()
+    payload: api.getMyProductOffers(filtersReady)
   }
 }
 
@@ -226,10 +247,14 @@ export function removeAttachment(aId) {
   }
 }
 
-export function resetForm() {
+export function resetForm(initValues) {
   return {
     type: AT.INVENTORY_RESET_FORM,
-    payload: {}
+    payload: {
+      data: {
+        ...initValues
+      }
+    }
   }
 }
 

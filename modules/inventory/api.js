@@ -28,8 +28,8 @@ export function getProductGrades() {
   return api.get(`/prodex/api/product-grades/`)
 }
 
-export async function getMyProductOffers() {
-    return api.get(`/prodex/api/product-offers/own/all/`)
+export async function getMyProductOffers(filter) {
+    return api.post(`/prodex/api/product-offers/own/datagrid/`, filter)
 }
 
 export async function getProductOffer(poId) {

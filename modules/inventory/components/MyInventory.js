@@ -4,6 +4,7 @@ import SubMenu from '~/src/components/SubMenu'
 import {FormattedMessage} from 'react-intl'
 import Router from 'next/router'
 import ProdexGrid from '~/components/table'
+import Filter from '~/src/components/Filter'
 
 export default class MyInventory extends Component {
   state = {
@@ -81,7 +82,7 @@ export default class MyInventory extends Component {
           rows={rows}
           rowSelection
           groupBy={['productNumber']}
-          getChildGroups={rows => 
+          getChildGroups={rows =>
             _(rows)
               .groupBy('productName')
               .map(v => ({
@@ -105,8 +106,7 @@ export default class MyInventory extends Component {
             { text: 'Delete listing', callback: (row) => { this.props.deleteProductOffer(row.id)} }
           ]}
         />
-
-        {/* <Filter
+        <Filter
           chemicalName
           productAgeFilter
           date
@@ -117,9 +117,9 @@ export default class MyInventory extends Component {
           condition
           productGrade
           form
-          filterFunc={(filter) => { this.props.fetchMyProductOffers({ ...filter }) }}
+          filterFunc={(filter) => { this.props.getMyProductOffers({ ...filter }) }}
           {...this.props}
-        /> */}
+        />
       </>
     )
   }
