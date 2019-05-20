@@ -1,10 +1,14 @@
 import typeToReducer from 'type-to-reducer'
-import {openBroadcast, closeBroadcast, updateLocalRules} from './actions'
+import {openBroadcast, closeBroadcast, updateLocalRules, updateFilter} from './actions'
 
 const initialState = {
   open: false,
   loading: false,
-  data: null
+  data: null,
+  filter: {
+    search: '',
+    category: 'region'
+  }
 }
 
 export default typeToReducer({
@@ -34,5 +38,11 @@ export default typeToReducer({
       data: null,
       loading: false  
     }
-  }
+  },
+
+  [updateFilter]: (state, {payload}) => ({
+    ...state,
+    filter: payload
+  })
+
 }, initialState)

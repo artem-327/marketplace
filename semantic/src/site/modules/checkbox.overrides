@@ -42,7 +42,7 @@
 .ui.toggle.checkbox input:not([type=radio]):indeterminate ~ .box:before, 
 .ui.toggle.checkbox input:not([type=radio]):indeterminate ~ label:before {
   border: 1px solid #979797;
-  background: #CA6E28 !important;
+  background: #f1c40f !important;
 }
 .ui.toggle.checkbox input:not([type=radio]):indeterminate ~ .box:after, 
 .ui.toggle.checkbox input:not([type=radio]):indeterminate ~ label:after {
