@@ -46,10 +46,6 @@ const GlobalTableOverrideStyle = createGlobalStyle`
   .group-row {
     position: relative;
     background: #EEE;
-    .right {
-      position: absolute;
-      right: 40px;
-    }
   }
 `
 
@@ -153,14 +149,14 @@ export default class _Table extends Component {
 
   componentDidUpdate(prevProps) {
     // expand groups after data was loaded when grouping is set
-    prevProps.loading && this.props.groupBy.length > 0 && this.expandGroups()
+    prevProps.loading != this.props.loading && prevProps.loading && this.props.groupBy.length > 0 && this.expandGroups()
   }
 
   expandGroups = () => {
     const {groupBy, getChildGroups, rows} = this.props
 
     if (groupBy.length > 0) this.setState({
-      expandedGroups: getChildGroups 
+      expandedGroups: getChildGroups
         ? getChildGroups(rows).map(r => r.key)
         : Object.keys(_.groupBy(rows, groupBy.join('|')))
     })
@@ -329,7 +325,7 @@ export default class _Table extends Component {
             />
             {groupBy && <TableGroupRow
               indentColumnWidth={1}
-              iconComponent={({ expanded }) => <Icon style={{float:'right'}} name={expanded ? 'chevron down' : 'chevron up'} />}
+              iconComponent={({ expanded }) => <Icon style={{float:'right'}} size='large' color='blue' name={expanded ? 'chevron down' : 'chevron up'} />}
               contentComponent={({column, row, children, ...restProps}) => (
                 renderGroupLabel 
                 ? renderGroupLabel({column, row})
