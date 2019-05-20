@@ -76,7 +76,16 @@ export default {
   deleteBankAccount: bankAccountId =>
     api.delete(`/prodex/api/payments/bank-accounts/${bankAccountId}`),
 
-  getDeliveryAddressesRequest: async (value, limit=30) => {
+  getDeliveryAddressesByStringRequest: async (value, limit=30) => {
     return await api.get(`/prodex/api/delivery-addresses/search?limit=${limit}&pattern=${value}`)
         .then(response => response.data)},
+  getDeliveryAddressesByFilterRequest: async (value) => {
+    return await api.post('/prodex/api/delivery-addresses/datagrid', value)
+      .then(response => response.data)},
+  deleteDeliveryAddresses: async (id) => {
+    await api.delete(`/prodex/api/delivery-addresses/id/${id}`)},
+  getCountries: async () => {return await api.get('/prodex/api/countries')
+    .then(response => response.data)},
+  getProvinces: async (id, limit=30) => {return await api.get(`/prodex/api/provinces/search?countryId=${id}&limit=${limit}`)
+    .then(response => response.data)},
 }

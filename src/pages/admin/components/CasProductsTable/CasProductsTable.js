@@ -10,7 +10,6 @@ import {
   casDeleteItem,
   handleOpenConfirmPopup,
   closeConfirmPopup,
-  deleteConfirmation,
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest
 } from '../../actions'
@@ -37,7 +36,6 @@ class CasProductsTable extends Component {
       confirmMessage,
       handleOpenConfirmPopup,
       closeConfirmPopup,
-      deleteConfirmation,
       deleteRowById
     } = this.props
 
@@ -75,7 +73,6 @@ const mapDispatchToProps = {
   casDeleteItem,
   handleOpenConfirmPopup,
   closeConfirmPopup,
-  deleteConfirmation,
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
 }

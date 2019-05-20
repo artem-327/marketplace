@@ -8,7 +8,6 @@ import {
   deleteCompany,
   handleOpenConfirmPopup,
   closeConfirmPopup,
-  deleteConfirmation,
 } from '../../actions'
 
 class CompaniesTable extends Component {
@@ -28,7 +27,6 @@ class CompaniesTable extends Component {
       confirmMessage,
       handleOpenConfirmPopup,
       closeConfirmPopup,
-      deleteConfirmation,
       deleteRowById,
       deleteCompany
     } = this.props
@@ -61,7 +59,6 @@ const mapDispatchToProps = {
   getCompanies,
   handleOpenConfirmPopup,
   closeConfirmPopup,
-  deleteConfirmation,
   deleteCompany,
   openEditCompany
 }

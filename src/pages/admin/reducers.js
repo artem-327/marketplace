@@ -34,7 +34,7 @@ export const initialState = {
   ],
 
   currentTab: 'Companies',
-  casListDataRequest: { pageSize: 50, pageStart: 0 },
+  casListDataRequest: { pageSize: 50, pageNumber: 0 },
   currentEditForm: null,
   currentEdit2Form: null,
   currentAddForm: null,

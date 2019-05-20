@@ -107,7 +107,7 @@ export function handleFiltersValue(props, value) {
 		})
 		switch (props.currentTab) {
 			case 'CAS Products': {
-				if (value.length < 3) {
+				if (value.trim().length < 3) {
 					await dispatch({
 						type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
 						payload: api.getCasProductByFilter(props.casListDataRequest)

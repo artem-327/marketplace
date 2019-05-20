@@ -111,7 +111,7 @@ class TablesHandlers extends Component {
               size="large"
               icon="search"
               placeholder={textsTable[currentTab].SearchText}
-              onChange={e => handleFiltersValue(e.target.value)}
+              onChange={e => handleFiltersValue(this.props, e.target.value)}
             />
           </Menu.Item>
           <Menu.Item>
@@ -137,7 +137,8 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentTab: state.settings.currentTab
+    currentTab: state.settings.currentTab,
+    deliveryAddressesFilter: state.settings.deliveryAddressesFilter
   }
 }
 

@@ -1,9 +1,9 @@
 import api from '~/api'
 
 /*
-https://test.echoexchange.net/prodex/api/dev/swagger-diff?oldAppVersion=0.8.3&newAppVersion=0.8.4
+https://test.echoexchange.net/prodex/api/dev/swagger-diff?oldAppVersion=0.8.6&newAppVersion=0.8.6
 
-BE version 0.8.5.
+BE version 0.8.7.
 
  */
 

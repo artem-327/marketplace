@@ -6,27 +6,26 @@ import ProdexGrid from '~/components/table'
 import { TablePopUp } from '~/components/tablePopup'
 
 import {
-  getDeliveryAddressesRequest,
+  getDeliveryAddressesByFilterRequest,
   openPopup,
   handleOpenConfirmPopup,
   closeConfirmPopup,
-  deleteConfirmation,
-  openRolesPopup
+  deleteDeliveryAddressesItem
 } from '../../actions'
 
 class DeliveryAddressesTable extends Component {
   state = {
     columns: [
-      { name: 'address.streetAddress', title: 'Street Name' },
-      { name: 'address.city', title: 'City' },
-      { name: 'address.province.name', title: 'Province' },
-      { name: 'address.country.name', title: 'Country' },
-      { name: 'address.zip.zip', title: 'ZIP Code' },
+      { name: 'streetAddress', title: 'Street Name' },
+      { name: 'city', title: 'City' },
+      { name: 'province', title: 'Province' },
+      { name: 'country', title: 'Country' },
+      { name: 'zip', title: 'ZIP Code' },
     ]
   }
 
   componentDidMount() {
-    this.props.getDeliveryAddressesRequest()
+    this.props.getDeliveryAddressesByFilterRequest(this.props.deliveryAddressesFilter)
   }
 
   render() {
@@ -35,10 +34,12 @@ class DeliveryAddressesTable extends Component {
       filterValue,
       loading,
       openPopup,
+      reloadFilter,
       confirmMessage,
       handleOpenConfirmPopup,
       closeConfirmPopup,
-      deleteConfirmation
+      deleteDeliveryAddressesItem,
+      deleteRowByid
     } = this.props
 
     const { columns } = this.state
@@ -50,7 +51,7 @@ class DeliveryAddressesTable extends Component {
           content="Do you really want to delete delivery address?"
           open={confirmMessage}
           onCancel={closeConfirmPopup}
-          onConfirm={deleteConfirmation}
+          onConfirm={() => deleteDeliveryAddressesItem(deleteRowByid, reloadFilter)}
         />
         <ProdexGrid
           filterValue={filterValue}
@@ -59,7 +60,7 @@ class DeliveryAddressesTable extends Component {
           loading={loading}
           style={{ marginTop: '5px' }}
           rowActions={[
-            { text: 'Edit', callback: row => openPopup(row) },
+            { text: 'Edit', callback: row => openPopup(row.data) },
             { text: 'Delete', callback: row => handleOpenConfirmPopup(row.id) }
           ]}
         />
@@ -69,20 +70,35 @@ class DeliveryAddressesTable extends Component {
 }
 
 const mapDispatchToProps = {
-  getDeliveryAddressesRequest,
+  getDeliveryAddressesByFilterRequest,
   openPopup,
   handleOpenConfirmPopup,
   closeConfirmPopup,
-  deleteConfirmation
+  deleteDeliveryAddressesItem
 }
 
 const mapStateToProps = state => {
   return {
-    rows: state.settings.deliveryAddressesRows,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
-    loading: state.settings.loading
-
+    deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
+    loading: state.settings.loading,
+    rows: state.settings.deliveryAddressesRows.map( d=> {
+      return {
+        data: d,   // all row data, used for edit popup
+        streetAddress: d.address.streetAddress,
+        city: d.address.city,
+        province: !!d.address.province ? d.address.province.name : '',
+        country: d.address.country.name,
+        zip: d.address.zip.zip,
+      }
+    }),
+    deleteRowByid: state.settings.deleteRowByid,
+    // reloadFilter is used to reload CAS Product list after Edit / Add new CAS Product
+    reloadFilter: {props: {
+        currentTab: state.settings.currentTab,
+        casListDataRequest: state.settings.deliveryAddressesFilter},
+      value: state.settings.filterValue},
   }
 }
 

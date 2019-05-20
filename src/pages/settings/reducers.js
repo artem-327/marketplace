@@ -17,6 +17,10 @@ export const initialState = {
   productsPackagingType: null,
   productsUnitsType: [],
   deliveryAddressesRows: [],
+  countries: [],
+  provinces: [],
+  countriesDropDown: [],
+  provincesDropDown: [],
   country: [],
   currency: [],
   tabsNames: [
@@ -51,10 +55,13 @@ export const initialState = {
   mappedHeaders: null,
   dataHeaderCSV: null,
   loading: false,
-  searchedCasProducts: []
+  searchedCasProducts: [],
+  deliveryAddressesFilter: { pageSize: 50, pageNumber: 0 },
 }
 
 export default function reducer(state = initialState, action) {
+  const {payload} = action
+
   switch (action.type) {
     case AT.OPEN_POPUP: {
       console.log("action.payload", action.payload)
@@ -136,6 +143,7 @@ export default function reducer(state = initialState, action) {
         toast: { message: null, isSuccess: null }
       }
     }
+    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_FULFILLED:
     case AT.CLOSE_CONFIRM_POPUP: {
       return {
         ...state,
@@ -520,13 +528,58 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.SETTINGS_GET_DELIVERY_ADDRESSES_FULFILLED: {
+    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_PENDING:
+    case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING_PENDING:
+    case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER_FULFILLED:
+    case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING_FULFILLED: {
       return {
         ...state,
         deliveryAddressesRows: action.payload,
         loading: false
       }
     }
+
+    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_REJECTED:
+    case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING_REJECTED:
+    case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.SETTINGS_GET_COUNTRIES_FULFILLED: {
+      return {
+        ...state,
+        countries: payload,
+        countriesDropDown: payload.map(c => ({
+          text: c.name,
+          value: c.id,
+          key: c.id,
+        }))
+      }
+    }
+
+    case AT.SETTINGS_GET_PROVINCES_FULFILLED: {
+      return {
+        ...state,
+        provinces: payload,
+        provincesDropDown: payload.map(d => ({
+          text: d.name,
+          value: d.id,
+          key: d.id
+        }))
+      }
+    }
+
+
 
     default: {
       return state

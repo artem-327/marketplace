@@ -116,10 +116,20 @@ export function handleActiveTab(tab) {
   }
 }
 
-export function handleFiltersValue(value) {
-  return {
-    type: AT.HANDLE_FILTERS_VALUE,
-    payload: value
+export function handleFiltersValue(props, value) {
+  return async dispatch => {
+    switch (props.currentTab) {
+      case "Delivery addresses":
+        if (value.trim().length) await dispatch(getDeliveryAddressesByStringRequest(value))
+        else await dispatch(getDeliveryAddressesByFilterRequest(props.deliveryAddressesFilter))
+        break;
+
+      default:
+        dispatch({
+          type: AT.HANDLE_FILTERS_VALUE,
+          payload: value
+        })
+    }
   }
 }
 
@@ -308,9 +318,46 @@ export function searchCasProduct(pattern) {
   }
 }
 
-export function getDeliveryAddressesRequest(value='a') {
+export function getDeliveryAddressesByStringRequest(value) {
   return {
-    type: AT.SETTINGS_GET_DELIVERY_ADDRESSES,
-    payload: api.getDeliveryAddressesRequest(value)
+    type: AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING,
+    payload: api.getDeliveryAddressesByStringRequest(value)
   }
 }
+
+export function getDeliveryAddressesByFilterRequest(value) {
+  return {
+    type: AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER,
+    payload: api.getDeliveryAddressesByFilterRequest(value)
+  }
+}
+
+export function deleteDeliveryAddressesItem(value, reloadFilter) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.SETTINGS_DELETE_DELIVERY_ADDRESSES,
+      payload: api.deleteDeliveryAddresses(value)
+    })
+    // Reload CAS Delivery Addresses list using filters
+    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
+  }
+}
+
+export function getCountries() {
+  return {
+    type: AT.SETTINGS_GET_COUNTRIES,
+    payload: api.getCountries()
+  }
+}
+
+export function getProvinces(id) {
+  return {
+    type: AT.SETTINGS_GET_PROVINCES,
+    payload: api.getProvinces(id)
+  }
+}
+
+
+
+
+
