@@ -25,9 +25,10 @@ export function closeImportPopup() {
   }
 }
 
-export function closeImportPopupCancel() {
+export function closeImportPopupCancel(payload) {
   return {
-    type: AT.CLOSE_IMPORT_POPUP_CANCEL
+    type: AT.CLOSE_IMPORT_POPUP_CANCEL,
+    payload
   }
 }
 

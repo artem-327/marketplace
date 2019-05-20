@@ -81,5 +81,8 @@ export default {
   deleteCreditCard: cardId =>
     api.delete(`/prodex/api/payments/cards/${cardId}`),
   deleteBankAccount: bankAccountId =>
-    api.delete(`/prodex/api/payments/bank-accounts/${bankAccountId}`)
+    api.delete(`/prodex/api/payments/bank-accounts/${bankAccountId}`),
+  deleteTemporaryFile: temporaryFileId => {
+    api.delete(`/prodex/api/imports/temporary-files/${temporaryFileId}`)
+  }
 }

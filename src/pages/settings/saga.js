@@ -459,7 +459,10 @@ function* closeImportPopup({}) {
   yield put({ type: AT.GET_PRODUCTS_CATALOG_DATA })
 }
 
-function* closeImportPopupCancel({}) {
+function* closeImportPopupCancel({ payload }) {
+  if (payload) {
+    yield call(api.deleteTemporaryFile, payload)
+  }
   yield put({ type: AT.CLOSE_IMPORT_POPUP_SUCCESS })
 }
 
