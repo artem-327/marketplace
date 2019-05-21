@@ -74,10 +74,11 @@ export default class CartItemSummary extends Component {
               </GridColumn>
 
               <GridColumn floated='right'>
-                <FormattedNumber
-                  id='cart.packs'
+                <FormattedUnit
+                  unit={productOffer.product.packagingType.name}
+                  separator=' '
                   value={item.quantity}
-                /> {productOffer.product.packagingType.name}
+                /> 
               </GridColumn>
             </RelaxedRow>
 
