@@ -217,6 +217,7 @@ class PurchaseOrder extends Component {
 
 
             <CartItemSummary
+              currency={currency}
               cartItems={cart.cartItems}
               deleteCart={this.deleteCart}
             />

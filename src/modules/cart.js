@@ -4,11 +4,9 @@ import {
   PAYMENTS_FETCH_REQUESTED, PAYMENTS_FETCH_SUCCEEDED,
   DELIVERYADDRESSES_FETCH_SUCCEEDED, DELIVERYADDRESSES_FETCH_REQUESTED,
   PRODUCTFROMCART_REMOVE_REQUESTED, PRODUCTFROMCART_REMOVE_SUCCEEDED,
-  CARTITEM_CREATE_REQUESTED,
   DELIVERYADDRESS_CREATE_REQUESTED,
   DELIVERYADDRESS_CREATE_FAILED,
   ORDERDETAIL_FETCH_REQUESTED, ORDERDETAIL_FETCH_SUCCEEDED,
-  ORDER_EDIT_REQUESTED,
   DELIVERYADDRESS_EDIT_REQUESTED,
   SHIPPING_QUOTES_FETCH_SUCCEEDED,
   SHIPPING_QUOTES_FETCH_REQUESTED,
@@ -20,12 +18,11 @@ import {
 } from "../constants/cart"
 import Api from "~/src/api/cart"
 import { getLocationString, getPricing } from "../utils/functions"
-import { DEFAULT_CURRENCY } from "../utils/constants";
 
 
 export const initialState = {
-  offerDetail: {},
-  orderDetail: {},
+  offerDetail: null,
+  orderDetail: null,
   cart: {},
   deliveryAddresses: [],
   payments: [],

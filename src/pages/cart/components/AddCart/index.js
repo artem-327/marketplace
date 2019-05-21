@@ -4,14 +4,15 @@ import AddCart from './AddCart';
 import { postNewOrder, postOrderEdit, sidebarChanged } from "../../../../modules/cart"
 import { getProductOffer, addCartItem, updateCartItem } from '~/modules/purchase-order/actions'
 import { removePopup } from "../../../../modules/popup"
-import { getPricing } from '../../../../utils/functions'
+import { getPricing, getLocationString } from '../../../../utils/functions'
 
 
 
 function mapStateToProps(store) {
     let pricing = getPricing(store.cart.offerDetail, store.cart.sidebar.quantity)
+    console.log('store', store)
     return {
-        offer: store.cart.offerDetail,
+        offer: { ...store.cart.offerDetail, locationStr: store.cart.offerDetail ? getLocationString(store.cart.offerDetail) : '' },
         order: store.cart.orderDetail,
         sidebar: { ...store.cart.sidebar, pricing },
         offerDetailIsFetching: store.cart.offerDetailIsFetching,
