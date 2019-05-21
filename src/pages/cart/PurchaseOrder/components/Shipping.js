@@ -1,14 +1,26 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { injectIntl, FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { Grid, Segment, GridRow, GridColumn, Dropdown, Divider, Header } from 'semantic-ui-react'
+import { Grid, Segment, GridRow, GridColumn, Dropdown, Divider, Header, Button } from 'semantic-ui-react'
 import ShippingAddress from './ShippingAddress'
 
 
 class Shipping extends Component {
+  state = {
+    otherAddresses: true
+  }
+
+
+  handleToggleChange = (otherAddresses) => {
+    if (otherAddresses !== this.state.otherAddresses) {
+      this.setState({ otherAddresses })
+    }
+  }
+
   render() {
     let { deliveryAddresses, getAddress, selectedAddress, intl } = this.props
+    let { formatMessage } = intl
 
     let dropdownOptions = deliveryAddresses.map(i => ({
       text: `${i.address.streetAddress}, ${i.address.city}`,
@@ -16,9 +28,6 @@ class Shipping extends Component {
       key: i.id
     }))
 
-    const { formatMessage } = intl
-
-    
     return (
       <Segment>
         <Grid className='bottom-padded'>
@@ -32,16 +41,28 @@ class Shipping extends Component {
               </Header>
 
             </GridColumn>
-
-            <GridColumn floated='right'>
-              <span
-                className="headerAddtext"
-                onClick={() => this.props.shippingChanged({ isShippingEdit: true, isNewAddress: !!selectedAddress })}>
-                <FormattedMessage
-                  id='global.edit'
-                  defaultMessage='Edit'
-                />
-              </span>
+            {
+              this.state.otherAddresses && (
+                <GridColumn floated='right'>
+                  <span
+                    className='headerAddtext'
+                    onClick={() => this.props.shippingChanged({ isShippingEdit: true, isNewAddress: !!selectedAddress })}>
+                    <FormattedMessage
+                      id='global.edit'
+                      defaultMessage='Edit'
+                    />
+                  </span>
+                </GridColumn>
+              )
+            }
+          </GridRow>
+          <GridRow>
+            <GridColumn textAlign='center' computer={8}>
+              <Button.Group>
+                <Button onClick={() => this.handleToggleChange(true)} active={this.state.otherAddresses}><FormattedMessage id='cart.addresses' defaultMessage='Addresses' /></Button>
+                <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
+                <Button onClick={() => this.handleToggleChange(false)} active={!this.state.otherAddresses}><FormattedMessage id='cart.branches' defaultMessage='Branches' /></Button>
+              </Button.Group>
             </GridColumn>
           </GridRow>
           <GridRow>
@@ -52,20 +73,17 @@ class Shipping extends Component {
                 options={dropdownOptions}
                 onChange={(e, { value }) => getAddress(value)}
                 value={selectedAddress ? selectedAddress.id : null}
-                placeholder={formatMessage({
-                  id: 'global.selectLocation',
-                  defaultMessage: 'Select Location'
-                })}
+                placeholder={<FormattedMessage id='global.selectLocation' defaultMessage='Select Location' />}
               />
             </GridColumn>
           </GridRow>
-          <Divider />
+          {selectedAddress && <Divider />}
+
           <ShippingAddress selectedAddress={selectedAddress} />
         </Grid>
       </Segment>
 
     )
-
   }
 }
 
@@ -126,7 +144,7 @@ class Shipping extends Component {
 //   )
 // };
 
-export default injectIntl(Shipping);
+export default injectIntl(Shipping)
 
 Shipping.propTypes = {
   deliveryAddresses: PropTypes.array,

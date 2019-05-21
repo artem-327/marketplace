@@ -335,7 +335,6 @@ export function getCartItem(payload) {
 }
 
 export function shippingChanged(values) {
-  console.log('shipping changed', values)
   return { type: SHIPPING_CHANGED, payload: values }
 }
 

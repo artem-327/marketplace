@@ -61,7 +61,7 @@ class Row extends Component {
     const isAllInventory = tableType === "allInventoryTable"
     return (
       <React.Fragment>
-        <tr className={isAllInventory ? "isAllInventory" : ""} onClick={isAllInventory ? () => this.props.onRowClick(this.props.id, this.props.history) : () => { }}>
+        <tr className={isAllInventory ? "isAllInventory" : ""}>
           {this.props.selectable ? (
             <td className="data-table-select">
               <Checkbox checked={this.props.rowOpns.selected}
@@ -70,13 +70,17 @@ class Row extends Component {
                 rowindex={this.props.rowOpns.index}
                 disabling={isAllInventory}
                 otherschecked={this.props.othersChecked}
-                onChange={(event, data) => this.props.selectFunc({
-                  groupId: data.groupid,
-                  rowId: data.rowindex,
-                  checked: data.checked,
-                  othersChecked: data.otherschecked,
-                  disabling: data.disabling
-                })
+                onChange={
+                  (event, data) => {
+                    console.log('onChane!')
+                    this.props.selectFunc({
+                      groupId: data.groupid,
+                      rowId: data.rowindex,
+                      checked: data.checked,
+                      othersChecked: data.otherschecked,
+                      disabling: data.disabling
+                    })
+                  }
                 }
               />
             </td>
@@ -125,6 +129,7 @@ class Row extends Component {
 
             return (
               <td
+                onClick={isAllInventory ? () => this.props.onRowClick(this.props.id, this.props.history) : () => { }}
                 key={index}
                 title={cellName && cellName.length > 14 ? cell : ''}
                 className={cellAlign}>
