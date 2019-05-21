@@ -16,6 +16,10 @@ export function addProductOffer(values) {
   return api.post(`/prodex/api/product-offers/`, values)
 }
 
+export function findProducts(search) {
+  return api.get(`/prodex/api/products/search?search=${search}`)
+}
+
 export function getProductConditions() {
   return api.get(`/prodex/api/product-conditions/`)
 }

@@ -337,10 +337,10 @@ class Filter extends Component {
     if (checkToken(this.props)) return
 
     let filter = Object.assign({}, inputs,
-      { pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key) },
-      { cndt: Object.entries(inputs.cndt || {}).filter(([key, value]) => value).map(([key]) => key) },
-      { grade: Object.entries(inputs.grade || {}).filter(([key, value]) => value).map(([key]) => key) },
-      { frm: Object.entries(inputs.frm || {}).filter(([key, value]) => value).map(([key]) => key) })
+      { pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
+      { cndt: Object.entries(inputs.cndt || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
+      { grade: Object.entries(inputs.grade || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
+      { frm: Object.entries(inputs.frm || {}).filter(([key, value]) => value === 'true').map(([key]) => key) })
 
     let params = filterNonEmptyAttributes(filter)
     this.props.filterFunc(params)
@@ -392,8 +392,8 @@ class Filter extends Component {
     let inputs = this.props.filterData
     let filter = Object.assign({}, inputs,
       { containers: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key) },
-      { conditions: Object.entries(inputs.cndt || {}).filter(([key, value]) => value).map(([key]) => key) },
-      { forms: Object.entries(inputs.frm || {}).filter(([key, value]) => value).map(([key]) => key) },
+      { conditions: Object.entries(inputs.cndt || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
+      { forms: Object.entries(inputs.frm || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
       { filterName: this.state.filterName },
       { quantityFrom: (inputs.qntylb || "") },
       { quantityTo: (inputs.qntyub || "") },

@@ -14,7 +14,7 @@ class Datepicker extends React.Component {
     }
 
     handleChange(date) {
-        this.props.onChange(moment(date).format('YYYY-MM-DD'))
+        this.props.onChange(date && date != '' ? moment(date).format('YYYY-MM-DD') : '')
     }
 
     render () {

@@ -28,6 +28,22 @@ export default class MyInventory extends Component {
     this.props.getMyProductOffers()
   }
 
+  filterInventory = async (filter) => {
+    let productIds = []
+    if (filter.search) {
+      let foundProducts = await this.props.findProducts(filter.search)
+      foundProducts.value.data.reduce((filteredProducts, product) => {
+        if (product.casProduct.chemicalName === filter.search || product.casProduct.casNumber === filter.search)
+          productIds.push(product.id)
+      }, [])
+
+      if (productIds.length) {
+        filter = {...filter, product: productIds}
+      }
+    }
+    this.props.getMyProductOffers(filter)
+  }
+
   getRows = () => {
     const {rows} = this.props
 
@@ -117,7 +133,7 @@ export default class MyInventory extends Component {
           condition
           productGrade
           form
-          filterFunc={(filter) => { this.props.getMyProductOffers({ ...filter }) }}
+          filterFunc={(filter) => { this.filterInventory({...filter}) }}
           {...this.props}
         />
       </>
