@@ -22,7 +22,7 @@ import popup from './modules/popup'
 import filter, { initialState as filterInit } from './modules/filter'
 import packageTypes from './modules/packageTypes'
 import brcRules, { initialState as broadcastInit } from "./modules/broadcast"
-import cart, { initialState as cartInit } from "./modules/cart"
+// import cart, { initialState as cartInit } from "./modules/cart"
 import merchants, { initialState as merchantsInit } from "./modules/merchants"
 import products, { initialState as productsInit } from './modules/products'
 import location from './modules/location'
@@ -46,8 +46,8 @@ import settingsSaga from "./pages/settings/saga"
 
 // Simple Add/Edit Inventory
 import simpleAdd from  '~/modules/inventory/reducer'
-import shiping from '~/modules/shiping/reducer'
-
+import shiping from '~/modules/shipping/reducer'
+import cart, { initialState as cartInit } from '~/modules/purchase-order/reducer'
 // Orders
 import ordersReducers from './pages/orders/reducers'
 import ordersSaga from './pages/orders/saga'

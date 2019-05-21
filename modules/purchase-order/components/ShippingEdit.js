@@ -1,16 +1,13 @@
 import React, { Component } from 'react'
-// import PropTypes from 'prop-types'
-import "./ShippingEdit.scss"
-
-
-import { FormattedMessage } from 'react-intl'
-
-import styled from 'styled-components'
-
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { Container, Segment, Grid, GridRow, GridColumn, Radio, Divider, Header, FormGroup } from 'semantic-ui-react'
 import { Form, Input, Dropdown, Button } from 'formik-semantic-ui'
+import { bool, func, object } from 'prop-types'
+
 import * as Yup from 'yup'
-import { PHONE_REGEXP } from '../../../../utils/constants';
+import styled from 'styled-components'
+
+import { PHONE_REGEXP } from '../../../src/utils/constants'
 
 const BottomMargedGrid = styled(Grid)`
   margin-bottom: 1rem !important;
@@ -27,14 +24,12 @@ const initialValues = {
     },
     city: '',
     streetAddress: '',
-    province: {
-      name: ''
-    },
+    province: '',
     country: ''
   },
 }
 
-export default class ShippingEdit extends Component {
+class ShippingEdit extends Component {
 
   state = {
     stateId: null,
@@ -45,10 +40,10 @@ export default class ShippingEdit extends Component {
   validationSchema = (opts = {}) => {
 
     let defaultOpts = {
-      invalidString: <FormattedMessage id='validation.invalidString' />,
-      invalidEmail: <FormattedMessage id='validation.invalidEmail' />,
-      requiredMessage: <FormattedMessage id='validation.required' />,
-      invalidPhoneNumber: <FormattedMessage id='validation.phoneNumber' />
+      invalidString: <FormattedMessage id='validation.invalidString' defaultMessage='Invalid value' />,
+      invalidEmail: <FormattedMessage id='validation.invalidEmail' defaultMessage='Invalid e-mail address' />,
+      requiredMessage: <FormattedMessage id='validation.required' defaultMessage='Required' />,
+      invalidPhoneNumber: <FormattedMessage id='validation.phoneNumber' defaultMessage='Enter valid phone number' />
     }
 
     let newOpts = { ...defaultOpts, ...opts }
@@ -67,7 +62,7 @@ export default class ShippingEdit extends Component {
           country: Yup.string(invalidString).required(requiredMessage),
           streetAddress: Yup.string(invalidString).required(requiredMessage),
           province: Yup.lazy(() => this.state.hasProvinces ?
-            Yup.object().shape({ name: Yup.string(invalidString).required(requiredMessage) }) :
+            Yup.string(invalidString).required(requiredMessage) :
             Yup.mixed().notRequired())
         })
       })
@@ -95,9 +90,8 @@ export default class ShippingEdit extends Component {
     }
   }
 
-  newAddressMarkup = (props) => {
-    let { location } = this.props
-    let { errors, setFieldValue } = props
+  newAddressMarkup = ({ errors, setFieldValue }) => {
+    let { provinces, states, statesAreFetching, provincesAreFetching } = this.props
 
     return (
       <>
@@ -135,18 +129,18 @@ export default class ShippingEdit extends Component {
             inputProps={{
               onChange: (e, { value }) => {
                 this.handleStateChange(value)
-                setFieldValue('address.province.name', '')
+                setFieldValue('address.province', '')
               },
               error: !!(errors.address && errors.address.country)
             }}
-            options={location.states.map((state) => ({
+            options={states.map((state) => ({
               text: state.name,
               key: state.id,
               value: state
             }))}
             id='address.country'
             name='address.country'
-            loading={location.statesAreFetching} selection fluid
+            loading={statesAreFetching} selection fluid
             label={<FormattedMessage id='global.state' defaultMessage='State' />}
           />
 
@@ -154,10 +148,10 @@ export default class ShippingEdit extends Component {
             inputProps={{
               disabled: !this.state.hasProvinces,
               onChange: (e, { value }) => this.setState({ selectedProvince: value }),
-              loading: location.provincesAreFetching,
+              loading: provincesAreFetching,
               error: !!(this.state.hasProvinces && errors.address && errors.address.province)
             }}
-            options={location.provinces.map((province) => ({
+            options={provinces.map((province) => ({
               text: province.name,
               key: province.id,
               value: { id: province.id, name: province.name, abbreviation: province.abbreviation || '' }
@@ -193,7 +187,7 @@ export default class ShippingEdit extends Component {
       address: {
         city: address.city,
         country: address.country.id,
-        province: address.province.id,
+        province: address.province && address.province.id,
         streetAddress: address.streetAddress,
         zip: address.zip.zip
       },
@@ -211,8 +205,9 @@ export default class ShippingEdit extends Component {
 
 
   render() {
-    let { isNewAddress, shippingChanged, selectedAddress, savedShippingPreferences } = this.props
-    console.log({ selectedAddress })
+    let { isNewAddress, shippingChanged, selectedAddress, savedShippingPreferences, intl } = this.props
+    const { formatMessage } = intl
+
     return (
       <Segment>
         <BottomMargedGrid>
@@ -231,7 +226,6 @@ export default class ShippingEdit extends Component {
 
         <Form
           onSubmit={this.handleSubmit}
-          loading={true}
           enableReinitialize
           initialValues={selectedAddress ? { ...selectedAddress } : initialValues}
           validationSchema={this.validationSchema}>
@@ -245,7 +239,7 @@ export default class ShippingEdit extends Component {
                       onChange={() => shippingChanged({ isNewAddress: true })}
                       checked={isNewAddress}
                       disabled={!selectedAddress}
-                      label={<label><FormattedMessage id='global.savedAddress' defaultMessage='Saved Address' /> </label>}
+                      label={formatMessage({ id: 'global.savedAddress', defaultMessage: 'Saved Address' })}
                     />
                   </Form.Field>
 
@@ -253,7 +247,7 @@ export default class ShippingEdit extends Component {
                     <Radio
                       onChange={() => shippingChanged({ isNewAddress: false })}
                       checked={!isNewAddress}
-                      label={<label><FormattedMessage id='global.addNewAddress' defaultMessage='Add New' /> </label>}
+                      label={formatMessage({ id: 'global.addNewAddress', defaultMessage: 'Add New' })}
                     />
                   </Form.Field>
                 </FormGroup>
@@ -308,134 +302,17 @@ export default class ShippingEdit extends Component {
   }
 }
 
-// const ShippingEdit = ({toggleRadio, isNewAddress, handleIsEdit, selectedAddress, postNewDeliveryAddress, updateDeliveryAddress, intl }) => {
-//   const radioOptions = [
-//     {
-//       value: "isEdit",
-//       label: 'Saved Address'
-//     },
-//     {
-//       value: "isNew",
-//       label: 'Add New Address'
-//     }
-//   ];
-//   const { formatMessage } = intl;
-//   return (
-//     <div className="shopping-cart-items">
-//       <header>
-//         <h1>
-//           <FormattedMessage
-//             id='cart.1shipping'
-//             defaultMessage='1. Shipping'
-//           />
-//         </h1>
-//       </header>
-//       <div className="purchase-order-section">
-//         <Radio onChange={value => handleIsEdit(value)}
-//           name='isNewAddress'
-//           className='br-config-radio'
-//           opns={radioOptions}
-//           checked={isNewAddress}
-//           disabled={!Object.keys(selectedAddress).length}
-//         />
-//         {/* TODO: send id instead of string to province - waiting for backend endpoint */}
-//         {/* TODO: which fields are required? */}
-//         <Form
-//           model="forms.shippingEdit"
-//           onSubmit={values =>
-//             isNewAddress === "isNew" ?
-//               postNewDeliveryAddress(values)
-//               : updateDeliveryAddress({ id: selectedAddress.id, ...values })
-//           }
-//           className="shipping-edit">
-//           <FormInput
-//             name=".firstName"
-//             label={formatMessage({
-//               id: 'global.firstName',
-//               defaultMessage: 'First Name'
-//             })}
-//           />
-//           <FormInput
-//             name=".lastName"
-//             label={formatMessage({
-//               id: 'global.lastName',
-//               defaultMessage: 'Last Name'
-//             })}
-//           />
-//           <FormInput
-//             name=".address.streetAddress"
-//             label={formatMessage({
-//               id: 'global.address',
-//               defaultMessage: 'Address'
-//             })}
-//           />
-//           <FormInput
-//             name=".address.city"
-//             label={formatMessage({
-//               id: 'global.city',
-//               defaultMessage: 'City'
-//             })}
-//           />
-//           <FormInput
-//             name=".address.province"
-//             label={formatMessage({
-//               id: 'global.state',
-//               defaultMessage: 'State'
-//             })}
-//           />
-//           <FormInput
-//             name=".zipCode"
-//             label={formatMessage({
-//               id: 'global.postalCode',
-//               defaultMessage: 'Postal Code'
-//             })}
-//           />
-//           <FormInput
-//             name=".email"
-//             label={formatMessage({
-//               id: 'global.email',
-//               defaultMessage: 'E-mail'
-//             })}
-//           />
-//           <FormInput
-//             name=".phoneNumber"
-//             label={formatMessage({
-//               id: 'global.phoneNumber',
-//               defaultMessage: 'Phone Number'
-//             })}
-//           />
-//           <footer className="popup-footer">
-//             <Button
-//               color="grey"
-//               onClick={toggleRadio}>
-//               <FormattedMessage
-//                 id='global.cancel'
-//                 defaultMessage='Cancel'
-//               />
-//             </Button>
-//             {
-//               isNewAddress === "isNew"
-//               &&
-//               <Button color="blue">
-//                 <FormattedMessage
-//                   id='global.save'
-//                   defaultMessage='Save'
-//                 />
-//               </Button>
-//             }
-//             {
-//               isNewAddress !== "isNew"
-//               &&
-//               <Button color="blue">
-//                 <FormattedMessage
-//                   id='global.edit'
-//                   defaultMessage='Edit'
-//                 />
-//               </Button>
-//             }
-//           </footer>
-//         </Form>
-//       </div>
-//     </div>
-//   )
-// }
+ShippingEdit.propTypes = {
+  isNewAddress: bool,
+  shippingChanged: func,
+  selectedAddress: object,
+  savedShippingPreferences: bool
+}
+
+ShippingEdit.defaultProps = {
+  isNewAddress: false,
+  selectedAddress: null,
+  savedShippingPreferences: false
+}
+
+export default injectIntl(ShippingEdit)

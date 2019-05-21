@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import NumberFormat from 'react-number-format'
 import moment from 'moment/moment'
+import { bool, objectOf, func } from 'prop-types'
 
-import { Modal, Button, Segment, Grid, Divider, FormGroup, FormField, Table, Checkbox } from 'semantic-ui-react'
+import { Modal, Button, Segment, Divider, FormGroup, FormField, Table, Checkbox } from 'semantic-ui-react'
 import { Form, Button as FButton, Input, Dropdown } from 'formik-semantic-ui'
+
+
 
 const initialValues = {
   destination: {
@@ -13,10 +16,10 @@ const initialValues = {
   }
 }
 
-class ShipingQuotes extends Component {
+export default class ShippingQuotes extends Component {
 
   componentDidMount() {
-    const {initShipingForm} = this.props
+    const { initShipingForm } = this.props
 
     initShipingForm()
   }
@@ -26,14 +29,14 @@ class ShipingQuotes extends Component {
   }
 
   getShipingQuotes(inputs) {
-    const {selectedRows, getShipingQuotes} = this.props
-    let params = {}
-    
-    params.productOfferIds = selectedRows
-    params.destinationZIP = inputs.destination.zip
-    params.destinationCountry = 1
-    params.quantity = parseInt(inputs.destination.quantity)
-    params.maxTransitDays = inputs.destination.maxTransit
+    const { selectedRows, getShipingQuotes } = this.props
+    const params = {
+      productOfferIds: selectedRows,
+      destinationZIP: inputs.destination.zip,
+      destinationCountry: 1,
+      quantity: parseInt(inputs.destination.quantity),
+      maxTransitDays: inputs.destination.maxTransit
+    }
 
     getShipingQuotes(params)
   }
@@ -54,14 +57,14 @@ class ShipingQuotes extends Component {
           this.getShipingQuotes(values)
         }}
       >
-        <FormGroup widths="equal">
+        <FormGroup widths='equal'>
 
-          <Input name="destination.quantity" type="number" label="Shipping Quantity" />
-          <Dropdown name="destination.zip" label="Zip Code" inputProps={{search: true}} options={zipCodes} />
+          <Input name='destination.quantity' type='number' label='Shipping Quantity' />
+          <Dropdown name='destination.zip' label='Zip Code' inputProps={{ search: true }} options={zipCodes} />
 
           <Dropdown
-            name="destination.maxTransit"
-            label="Max Transit Time"
+            name='destination.maxTransit'
+            label='Max Transit Time'
             options={[
               { value: 0, text: 'No limit' },
               { value: 2, text: '2 days' },
@@ -73,7 +76,7 @@ class ShipingQuotes extends Component {
           />
           <FormField>
             <label>&nbsp;</label>
-            <Button type="submit" fluid loading={loading}>Calculate</Button>
+            <Button type='submit' fluid loading={loading}>Calculate</Button>
           </FormField>
         </FormGroup>
 
@@ -89,7 +92,7 @@ class ShipingQuotes extends Component {
 
     return (
       <Segment basic style={{ padding: 0 }} loading={loading}>
-        <Table basic="very">
+        <Table basic='very'>
           <Table.Header>
             <Table.HeaderCell></Table.HeaderCell>
             <Table.HeaderCell>Vendor</Table.HeaderCell>
@@ -138,7 +141,7 @@ class ShipingQuotes extends Component {
                     decimalSeparator={'.'}
                     decimalScale={2}
                     fixedDecimalScale={true} /></Table.Cell>
-                  <Table.Cell className="a-right"><NumberFormat
+                  <Table.Cell className='a-right'><NumberFormat
                     value={sQuote.shipmentRate.estimatedPrice}
                     displayType={'text'}
                     prefix={'$'}
@@ -156,14 +159,16 @@ class ShipingQuotes extends Component {
   }
 
   render() {
+    const { closeModal } = this.props.modalProps
+
     return (
-      <Modal open centered={false}>
+      <Modal onClose={closeModal} {...this.props.modalProps}>
         <Modal.Header>Shiping Quote</Modal.Header>
         <Modal.Content>
           {this.renderForm()}
         </Modal.Content>
         <Modal.Actions>
-          <Button onClick={this.props.removePopup}>
+          <Button onClick={closeModal}>
             Close
           </Button>
           <Button primary onClick={this.createOrder}>
@@ -175,4 +180,17 @@ class ShipingQuotes extends Component {
   }
 }
 
-export default ShipingQuotes
+ShippingQuotes.propTypes = {
+  modalProps: objectOf({
+    open: bool,
+    centered: bool,
+    closeModal: func
+  })
+}
+
+ShippingQuotes.defaultProps = {
+  modalProps: {
+    open: false,
+    centered: false
+  }
+}
