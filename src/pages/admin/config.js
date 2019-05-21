@@ -29,7 +29,7 @@ export const config = {
   },
 
   'Units of Measure': {
-    addEditText: 'Unit Of Measure',
+    addEditText: 'Unit of Measure',
     searchText: 'Search unit of measure by name or measure type',
     display: {
       columns: [
@@ -66,7 +66,7 @@ export const config = {
   },
 
   'Units of Packaging': {
-    addEditText: 'Unit Of Packaging',
+    addEditText: 'Unit of Packaging',
     searchText: 'Search unit of packaging by name or measure type',
     display: {
       columns: [
@@ -95,6 +95,7 @@ export const config = {
           })
           return {
             ...state,
+            loading: false,
             [config.api.get.dataName]: rows
           }
         },*/
@@ -131,6 +132,20 @@ export const config = {
         typeRequest: 'ADMIN_GET_MANUFACTURERS_DATA',
         typeSuccess: 'ADMIN_GET_MANUFACTURERS_DATA_FULFILLED',
         apiCall: '/prodex/api/manufacturers/search',
+        retFcnProcess: (state, action, config) => { // Order alphabetically by name
+          const rows = action.payload.sort(function(a, b){
+            let x = a.name.toLowerCase();
+            let y = b.name.toLowerCase();
+            if (x < y) {return -1;}
+            if (x > y) {return 1;}
+            return 0;
+          })
+          return {
+            ...state,
+            loading: false,
+            [config.api.get.dataName]: rows
+          }
+        },
       },
       post: {
         typeRequest: 'ADMIN_POST_MANUFACTURERS_DATA',

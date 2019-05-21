@@ -118,17 +118,16 @@ export function handleActiveTab(tab) {
 
 export function handleFiltersValue(props, value) {
   return async dispatch => {
+    dispatch({
+      type: AT.HANDLE_FILTERS_VALUE,
+      payload: value
+    })
     switch (props.currentTab) {
       case "Delivery addresses":
         if (value.trim().length) await dispatch(getDeliveryAddressesByStringRequest(value))
         else await dispatch(getDeliveryAddressesByFilterRequest(props.deliveryAddressesFilter))
         break;
 
-      default:
-        dispatch({
-          type: AT.HANDLE_FILTERS_VALUE,
-          payload: value
-        })
     }
   }
 }
@@ -332,14 +331,35 @@ export function getDeliveryAddressesByFilterRequest(value) {
   }
 }
 
+export function updateDeliveryAddresses(id, value, reloadFilter) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES,
+      payload: api.updateDeliveryAddresses(id, value)
+    })
+    dispatch(closePopup())
+    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
+  }
+}
+
+export function createDeliveryAddress(value, reloadFilter) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS,
+      payload: api.createDeliveryAddress(value)
+    })
+    dispatch(closePopup())
+    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
+  }
+}
+
 export function deleteDeliveryAddressesItem(value, reloadFilter) {
   return async dispatch => {
     await dispatch({
       type: AT.SETTINGS_DELETE_DELIVERY_ADDRESSES,
       payload: api.deleteDeliveryAddresses(value)
     })
-    // Reload CAS Delivery Addresses list using filters
-    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
+    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
   }
 }
 

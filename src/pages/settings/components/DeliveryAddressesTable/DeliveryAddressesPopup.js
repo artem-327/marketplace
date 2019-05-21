@@ -5,7 +5,7 @@ import {Modal, FormGroup, Item, Divider} from 'semantic-ui-react'
 import {
   closePopup,
   updateDeliveryAddresses,
-  createDeliveryAddresses,
+  createDeliveryAddress,
   getCountries,
   getProvinces,
 } from '../../actions'
@@ -41,8 +41,8 @@ const formValidation = Yup.object().shape({
     .min(3, 'Too short')
     .required('Required'),
   address: Yup.object().shape({
-    city: Yup.string().trim().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-    streetAddress: Yup.string().trim().min(2, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+    city: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Enter at least 2 characters'),
+    streetAddress: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Enter at least 2 characters'),
     zip: Yup.string().trim().required('Enter zip code'),
     country: Yup.number().required()
   })
@@ -50,16 +50,16 @@ const formValidation = Yup.object().shape({
 
 class DeliveryAddressesPopup extends React.Component {
   state = {
-    hasProvinces: true,
+    hasProvinces: this.props.hasProvinces,
   }
 
   componentDidMount() {
     this.props.getCountries()
-    this.props.popupValues && this.props.getProvinces(this.props.popupValues.address.country) //! ! check country hasProvinces? Or add to BE?
+    this.props.popupValues && this.props.hasProvinces && this.props.getProvinces(this.props.popupValues.address.country)
   }
 
   handleCountry = (e, d) => {
-    let country = this.props.countries.find(obj => obj.id == d.value);
+    let country = this.props.countries.find(obj => obj.id === d.value);
     if (country.hasProvinces) {
       this.props.getProvinces(country.id)
     }
@@ -70,10 +70,12 @@ class DeliveryAddressesPopup extends React.Component {
     const {
       closePopup,
       popupValues,
+      rowId,
       updateDeliveryAddresses,
-      createDeliveryAddresses,
+      createDeliveryAddress,
       countriesDropDown,
-      provincesDropDown
+      provincesDropDown,
+      reloadFilter
     } = this.props
 
     const {
@@ -91,19 +93,9 @@ class DeliveryAddressesPopup extends React.Component {
             validationSchema={formValidation}
             onReset={closePopup}
             onSubmit={async (values, actions) => {
-              if (popupValues) {
-                let newValues = {
-                  "nacdMember": values.nacdMember,
-                  "name": values.name.trim(),
-                  "phone": values.phone.trim(),
-                  "website": values.website.trim()
-                }
-                //await updateCompany(popupValues.id, newValues)
-              }
-              else {
-                //removeEmpty(values)
-                //await createCompany(values)
-              }
+              if (values.address.province === '') delete values.address['province']
+              if (popupValues) await updateDeliveryAddresses(rowId, values, reloadFilter)
+              else await createDeliveryAddress(values, reloadFilter)
 
               actions.setSubmitting(false)
             }}
@@ -112,26 +104,26 @@ class DeliveryAddressesPopup extends React.Component {
               <>
                 <h4>User Contact</h4>
                 <FormGroup widths="equal">
-                  <Input label="First Name" name="firstName" />
-                  <Input label="Last Name" name="lastName" />
+                  <Input type="text" label="First Name" name="firstName" />
+                  <Input type="text" label="Last Name" name="lastName" />
                 </FormGroup>
                 <FormGroup widths="equal">
-                  <Input label="Contact Email" name="email" />
-                  <Input label="Contact Phone" name="phoneNumber" />
+                  <Input type="text" label="Contact Email" name="email" />
+                  <Input type="text" label="Contact Phone" name="phoneNumber" />
                 </FormGroup>
                 <Divider />
                 <h4>Address</h4>
                 <FormGroup widths="equal">
-                  <Input label="Street Address" name="address.streetAddress" />
-                  <Input label="City" name="address.city" />
+                  <Input type="text" label="Street Address" name="address.streetAddress" />
+                  <Input type="text" label="City" name="address.city" />
                 </FormGroup>
                 <FormGroup widths="equal">
-                  <Input label="Zip" name="address.zip" />
+                  <Input type="text" label="Zip" name="address.zip" />
                   <Dropdown label="Country" name="address.country" options={countriesDropDown}
                             inputProps={{search: true, onChange:  (e, d) => {
                                 setFieldValue('address.province', ''); this.handleCountry(e, d)}}} />
                   <Dropdown label="Province" name="address.province" options={provincesDropDown}
-                            inputProps={{search: true, disabled: !this.state.hasProvinces}} />
+                            inputProps={{search: true, disabled: !this.state.hasProvinces, clearable: true}} />
                 </FormGroup>
                 <div style={{ textAlign: 'right' }}>
                   <Button.Reset>Cancel</Button.Reset>
@@ -148,7 +140,7 @@ class DeliveryAddressesPopup extends React.Component {
 const mapDispatchToProps = {
   closePopup,
   updateDeliveryAddresses,
-  createDeliveryAddresses,
+  createDeliveryAddress,
   getCountries,
   getProvinces,
 }
@@ -156,21 +148,27 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   const popupValues = state.settings.popupValues
   return {
+    rowId: popupValues ? popupValues.id : null,
+    hasProvinces: popupValues ? popupValues.address.country.hasProvinces : false,
     popupValues: popupValues ? {
-        firstName: popupValues.firstName,
-        lastName: popupValues.lastName,
-        email: popupValues.email,
-        phoneNumber: popupValues.phoneNumber,
-        address: {
-          city: popupValues.address.city,
-          country: popupValues.address.country.id,
-          province: !!popupValues.address.province ? popupValues.address.province.id : '',
-          streetAddress: popupValues.address.streetAddress,
-          zip: popupValues.address.zip.zip
+      firstName: popupValues.firstName,
+      lastName: popupValues.lastName,
+      email: popupValues.email,
+      phoneNumber: popupValues.phoneNumber,
+      address: {
+        city: popupValues.address.city,
+        country: popupValues.address.country.id,
+        province: !!popupValues.address.province ? popupValues.address.province.id : '',
+        streetAddress: popupValues.address.streetAddress,
+        zip: popupValues.address.zip.zip
     }} : null,
     countriesDropDown: state.settings.countriesDropDown,
     provincesDropDown: state.settings.provincesDropDown,
     countries: state.settings.countries,
+    reloadFilter: {props: {
+        currentTab: state.settings.currentTab,
+        deliveryAddressesFilter: state.settings.deliveryAddressesFilter},
+      value: state.settings.filterValue},
   }
 }
 

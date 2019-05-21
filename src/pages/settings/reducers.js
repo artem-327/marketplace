@@ -528,12 +528,22 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES_PENDING:
+    case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_PENDING:
     case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_PENDING:
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING_PENDING:
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER_PENDING: {
       return {
         ...state,
         loading: true
+      }
+    }
+
+    case AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES_FULFILLED:
+    case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_FULFILLED: {
+      return {
+        ...state,
+        loading: false
       }
     }
 
@@ -546,6 +556,8 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES_REJECTED:
+    case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_REJECTED:
     case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_REJECTED:
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING_REJECTED:
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER_REJECTED: {

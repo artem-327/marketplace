@@ -86,6 +86,7 @@ const mapStateToProps = state => {
     rows: state.settings.deliveryAddressesRows.map( d=> {
       return {
         data: d,   // all row data, used for edit popup
+        id: d.id,
         streetAddress: d.address.streetAddress,
         city: d.address.city,
         province: !!d.address.province ? d.address.province.name : '',
@@ -94,10 +95,10 @@ const mapStateToProps = state => {
       }
     }),
     deleteRowByid: state.settings.deleteRowByid,
-    // reloadFilter is used to reload CAS Product list after Edit / Add new CAS Product
+    // reloadFilter is used to reload Delivery addresses list after Edit / Add new Delivery address
     reloadFilter: {props: {
         currentTab: state.settings.currentTab,
-        casListDataRequest: state.settings.deliveryAddressesFilter},
+        deliveryAddressesFilter: state.settings.deliveryAddressesFilter},
       value: state.settings.filterValue},
   }
 }
