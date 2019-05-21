@@ -204,11 +204,11 @@ class AddNewPopupCasProducts extends React.Component {
             {({ values, errors, setFieldValue }) => (
               <>
             <FormGroup widths="equal">
-              <Input label="Company Name" name="name" />
+              <Input type="text" label="Company Name" name="name" />
             </FormGroup>
             <FormGroup widths="equal">
-              <Input label="Phone" name="phone" />
-              <Input label="Website URL" name="website" />
+              <Input type="text" label="Phone" name="phone" />
+              <Input type="text" label="Website URL" name="website" />
             </FormGroup>
             <FormGroup widths="equal">
               <Checkbox label="NACD Member" name="nacdMember" />
@@ -218,20 +218,20 @@ class AddNewPopupCasProducts extends React.Component {
               <Divider />
               <h4>Primary Branch (Billing Address)</h4>
               <FormGroup widths="equal">
-                <Input label="Name" name="primaryBranch.name" />
+                <Input type="text" label="Name" name="primaryBranch.name" />
               </FormGroup>
               <FormGroup widths="equal">
-                <Input label="Contact Email" name="primaryBranch.contactEmail" />
-                <Input label="Contact Name" name="primaryBranch.contactName" />
-                <Input label="Contact Phone" name="primaryBranch.contactPhone" />
+                <Input type="text" label="Contact Email" name="primaryBranch.contactEmail" />
+                <Input type="text" label="Contact Name" name="primaryBranch.contactName" />
+                <Input type="text" label="Contact Phone" name="primaryBranch.contactPhone" />
               </FormGroup>
               <FormGroup widths="equal">
                 <Checkbox label="Warehouse" name="primaryBranch.warehouse" />
               </FormGroup>
               <h5>Address</h5>
               <FormGroup widths="equal">
-                <Input label="Street Address" name="primaryBranch.address.streetAddress" />
-                <Input label="City" name="primaryBranch.address.city" />
+                <Input type="text" label="Street Address" name="primaryBranch.address.streetAddress" />
+                <Input type="text" label="City" name="primaryBranch.address.city" />
               </FormGroup>
               <FormGroup widths="equal">
                 <Dropdown label="Zip" name="primaryBranch.address.zip" inputProps={{search: true}} options={zipCodes} />
@@ -239,25 +239,25 @@ class AddNewPopupCasProducts extends React.Component {
                           inputProps={{search: true, onChange:  (e, d) => {
                               setFieldValue('primaryBranch.address.province', ''); this.handlePrimaryBranchCountry(e, d)}}} />
                 <Dropdown label="Province" name="primaryBranch.address.province" options={primaryBranchProvinces}
-                          inputProps={{search: true, disabled: !this.state.primaryBranchHasProvinces}} />
+                          inputProps={{search: true, disabled: !this.state.primaryBranchHasProvinces, clearable: true}} />
               </FormGroup>
               <Divider />
               <h4>Mailing Branch (optional)</h4>
               <FormGroup widths="equal">
-                <Input label="Name" name="mailingBranch.name" />
+                <Input type="text" label="Name" name="mailingBranch.name" />
               </FormGroup>
               <FormGroup widths="equal">
-                <Input label="Contact Email" name="mailingBranch.contactEmail" />
-                <Input label="Contact Name" name="mailingBranch.contactName" />
-                <Input label="Contact Phone" name="mailingBranch.contactPhone" />
+                <Input type="text" label="Contact Email" name="mailingBranch.contactEmail" />
+                <Input type="text" label="Contact Name" name="mailingBranch.contactName" />
+                <Input type="text" label="Contact Phone" name="mailingBranch.contactPhone" />
               </FormGroup>
               <FormGroup widths="equal">
                 <Checkbox label="Warehouse" name="mailingBranch.warehouse" />
               </FormGroup>
               <h5>Address</h5>
               <FormGroup widths="equal">
-                <Input label="Street Address" name="mailingBranch.address.streetAddress" />
-                <Input label="City" name="mailingBranch.address.city" />
+                <Input type="text" label="Street Address" name="mailingBranch.address.streetAddress" />
+                <Input type="text" label="City" name="mailingBranch.address.city" />
               </FormGroup>
               <FormGroup widths="equal">
                 <Dropdown label="Zip" name="mailingBranch.address.zip" inputProps={{search: true}} options={zipCodes} />
@@ -265,13 +265,13 @@ class AddNewPopupCasProducts extends React.Component {
                           inputProps={{search: true, onChange:  (e, d) => {
                             setFieldValue('mailingBranch.address.province', ''); this.handleMailingBranchCountry(e, d)}}} />
                 <Dropdown label="Province" name="mailingBranch.address.province" options={mailingBranchProvinces}
-                          inputProps={{search: true, disabled: !this.state.mailingBranchHasProvinces}} />
+                          inputProps={{search: true, disabled: !this.state.mailingBranchHasProvinces, clearable: true}} />
               </FormGroup>
               <Divider />
               <h4>Primary User</h4>
               <FormGroup widths="equal">
-                <Input label="Email" name="primaryUser.email" />
-                <Input label="Name" name="primaryUser.name" />
+                <Input type="text" label="Email" name="primaryUser.email" />
+                <Input type="text" label="Name" name="primaryUser.name" />
               </FormGroup>
             </>}
 
