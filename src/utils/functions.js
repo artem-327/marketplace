@@ -130,5 +130,5 @@ export function getLocationString(productOffer) {
     return ''
   }
 
-  return `${location.province ? location.province.name : location.city}, ${location.country.name}`
+  return `${location.city}, ${location.province ? `${location.province.abbreviation},` : ''} ${location.country.name}`
 }
