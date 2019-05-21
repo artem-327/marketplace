@@ -7,10 +7,11 @@ import { resetFilterTags } from "../../../modules/filter"
 import { resetForm } from '../../../utils/functions'
 import { getMerchant } from '../../../modules/merchants'
 import { getOffice } from '../../../modules/companies'
-import { getProductOffer, sidebarChanged } from '../../../modules/cart'
+import { sidebarChanged } from '../../../modules/cart'
+import { getProductOffer } from '~/modules/purchase-order/actions'
 
 const mapStateToProps = store => {
-  
+
   return ({
     productOffers: store.productOffers.allProductOffers,
     shippingQuotes: store.dataTables.allInventoryTable && store.dataTables.allInventoryTable.rowsOpns.some((po) => {

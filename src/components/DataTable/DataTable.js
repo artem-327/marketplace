@@ -64,6 +64,8 @@ class DataTable extends Component {
       console.error("DataTable error, rowsOpns don't belong to rows, TODO::15");
       return <h4>DataTable Error</h4>;
     }
+
+    console.log('dataTable props', this.props)
     return (
       <div id="datatable-wrapper" className="data-table-wr">
         <PerfectScrollbar onScrollY={this.handleScrollY} onScrollX={this.handleScrollX}>

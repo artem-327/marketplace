@@ -1,25 +1,24 @@
 import React, { Component } from 'react'
 import PropTypes from "prop-types"
-import { actions } from 'react-redux-form'
 
-import Shipping from "./components/Shipping"
-import ShippingEdit from "./components/ShippingEdit"
-import ShippingQuote from "./components/ShippingQuote"
-import Payment from "./components/Payment"
-import { Container, Menu, Header, Button, Icon, Grid, GridColumn, GridRow, Segment } from "semantic-ui-react"
+
+import Shipping from "./Shipping"
+import ShippingEdit from './ShippingEdit'
+import ShippingQuote from "./ShippingQuote"
+import Payment from './Payment'
+import { Container, Menu, Header, Button, Icon, Grid, GridColumn, GridRow, Segment } from 'semantic-ui-react'
 import styled from 'styled-components'
-import Spinner from '../../../components/Spinner/Spinner'
-import "./PurchaseOrder.scss"
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { checkToken } from "../../../utils/auth"
 import Router from 'next/router'
 
 import CartItemSummary from '~/components/summary/CartItemSummary'
 import Summary from '~/components/summary/Summary'
 
-import confirm from '../../../components/Confirmable/confirm'
+import Spinner from '../../../src/components/Spinner/Spinner'
+import confirm from '~/src/components/Confirmable/confirm'
+import { checkToken } from '../../../src/utils/auth'
 
-import './PurchaseOrder.scss'
+import '../styles/PurchaseOrder.scss'
 
 
 const RelaxedGrid = styled(Grid)`
@@ -29,29 +28,14 @@ const RelaxedGrid = styled(Grid)`
 
 
 class PurchaseOrder extends Component {
+  state = {
+    otherAddresses: true
+  }
   componentDidMount() {
     this.props.getCart()
     this.props.getDeliveryAddresses()
     this.props.getPayments()
   }
-
-  // handleIsEdit = (value) => {
-
-  //   value === "isNew"
-  //     ? this.props.dispatch(actions.reset('forms.shippingEdit'))
-  //     : this.props.dispatch(actions.merge('forms.shippingEdit', {
-  //       firstName: selectedAddress["first name"],
-  //       lastName: selectedAddress["last name"],
-  //       address: {
-  //         streetAddress: selectedAddress.address.streetAddress,
-  //         city: selectedAddress.address.city,
-  //         province: selectedAddress.address.province.name
-  //       },
-  //       zipCode: selectedAddress.address.zip.zip,
-  //       email: selectedAddress.email,
-  //       phoneNumber: selectedAddress["phone number"]
-  //     }));
-  // }
 
   handleQuoteSelect = (index) => {
     let { shippingQuoteSelected, shippingQuotes } = this.props
@@ -59,8 +43,9 @@ class PurchaseOrder extends Component {
   }
 
   getAddress = (selectedAddressId) => {
-    let { deliveryAddresses } = this.props
-    let selectedAddress = deliveryAddresses.find(i => i.id === selectedAddressId)
+    let { deliveryAddresses, branches } = this.props
+    let addresses = this.state.otherAddresses ? deliveryAddresses : branches
+    let selectedAddress = addresses.find(i => i.id === selectedAddressId)
 
     this.props.shippingChanged({ selectedAddress })
     this.getShippingQuotes(selectedAddress)
@@ -73,15 +58,17 @@ class PurchaseOrder extends Component {
   }
 
   getShippingQuotes = (selectedAddress) => {
-    // TODO:: 'USA' to ID and variable
-    this.props.getShippingQuotes(1, selectedAddress.address.zip.zip);
+    let { address } = selectedAddress
+
+    this.props.getShippingQuotes(address.country.id, address.zip.zip);
   }
 
-  // toggleRadio = (name = 'isNewAddress') => {
-  //   this.setState(prevState => ({
-  //     [name]: !prevState[name]
-  //   }))
-  // }
+
+  handleToggleChange = (otherAddresses) => {
+    return new Promise((resolve) => {
+      this.setState({ otherAddresses }, resolve)
+    })
+  }
 
   deleteCart = (id) => {
     if (checkToken(this.props)) return
@@ -116,7 +103,10 @@ class PurchaseOrder extends Component {
     const { dispatch, postNewDeliveryAddress, updateDeliveryAddress } = this.props
     let { cart, deliveryAddresses, payments, cartIsFetching, shippingQuotes, shipping } = this.props
 
+
     if (cartIsFetching) return <Spinner />
+
+    let currency = cart.cartItems[0].productOffer.price.currency.code
 
     return (
       <div className="app-inner-main">
@@ -125,8 +115,7 @@ class PurchaseOrder extends Component {
             <Menu secondary>
               <Menu.Item header>
                 <Header as='h1' size='medium'>
-                  <FormattedMessage id='cart.purchaseOrder'
-                    defaultMessage='PURCHASE ORDER' />
+                  <FormattedMessage id='cart.purchaseOrder' defaultMessage='PURCHASE ORDER' />
                 </Header>
               </Menu.Item>
 
@@ -134,8 +123,7 @@ class PurchaseOrder extends Component {
                 <Menu.Item>
                   <Button icon basic labelPosition='left' onClick={() => Router.push('/cart')}>
                     <Icon name='chevron left' />
-                    <FormattedMessage id='cart.backToShoppingCart'
-                      defaultMessage='Back to Shopping Cart' />
+                    <FormattedMessage id='cart.backToShoppingCart' defaultMessage='Back to Shopping Cart' />
                   </Button>
                 </Menu.Item>
               </Menu.Menu>
@@ -157,40 +145,40 @@ class PurchaseOrder extends Component {
                 updateDeliveryAddress={updateDeliveryAddress}
                 getStates={this.props.getStates}
                 getProvinces={this.props.getProvinces}
-                location={this.props.location}
+                states={this.props.states}
+                provinces={this.props.provinces}
                 isFetching={this.props.isFetching}
               />
               :
               <>
                 <Shipping
+                  otherAddresses={this.state.otherAddresses}
                   deliveryAddresses={deliveryAddresses}
                   dispatch={dispatch}
                   shippingChanged={this.props.shippingChanged}
                   getAddress={this.getAddress}
                   selectedAddress={shipping.selectedAddress}
+                  getBranches={this.props.getBranches}
+                  branchesAreFetching={this.props.branchesAreFetching}
+                  branches={this.props.branches}
+                  handleToggleChange={this.handleToggleChange}
+                  shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
                 />
               </>
             }
-
-
-
 
             <Segment>
               <Grid className='bottom-padded'>
                 <GridRow className='header'>
                   <GridColumn>
                     <Header as='h2'>
-                      <FormattedMessage
-                        id='cart.2freightSelection'
-                        defaultMessage='2. Freight Selection'
-                      />
+                      <FormattedMessage id='cart.2freightSelection' defaultMessage='2. Freight Selection' />
                     </Header>
                   </GridColumn>
                 </GridRow>
 
                 <ShippingQuote
-                  //TODO, change when backend provides this info
-                  currency={{ code: 'USD' }}
+                  currency={currency}
                   selectedShippingQuote={this.props.cart.selectedShipping}
                   handleQuoteSelect={this.handleQuoteSelect}
                   selectedAddress={shipping.selectedAddress}
@@ -207,10 +195,7 @@ class PurchaseOrder extends Component {
                 <GridRow className='header'>
                   <GridColumn>
                     <Header as='h2'>
-                      <FormattedMessage
-                        id='cart.3payment'
-                        defaultMessage='3. Payment'
-                      />
+                      <FormattedMessage id='cart.3payment' defaultMessage='3. Payment' />
                     </Header>
                   </GridColumn>
                 </GridRow>
@@ -232,6 +217,7 @@ class PurchaseOrder extends Component {
 
 
             <CartItemSummary
+              currency={currency}
               cartItems={cart.cartItems}
               deleteCart={this.deleteCart}
             />
@@ -241,9 +227,7 @@ class PurchaseOrder extends Component {
                 <GridRow centered>
                   <GridColumn>
                     <Button fluid primary onClick={this.handleContinue}>
-                      <FormattedMessage
-                        id='cart.placeOrder'
-                        defaultMessage='Place Order1' />
+                      <FormattedMessage id='cart.placeOrder' defaultMessage='Place Order1' />
                     </Button>
                   </GridColumn>
                 </GridRow>
@@ -254,8 +238,6 @@ class PurchaseOrder extends Component {
             />
 
           </GridColumn>
-
-
         </RelaxedGrid>
 
       </div>
