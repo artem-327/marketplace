@@ -32,8 +32,10 @@ body {
 }
 
 .bootstrapiso .table-responsive {
+  width: calc(100% + 2.2857143em);
+  margin-right: -2.2857143em;
   border: 0 none;
-  box-shadow: 0 0 0 1px #ddd;
+  padding-right: 2.2857143em;
 }
 
 .bootstrapiso .table-responsive table {
@@ -46,6 +48,8 @@ body {
 
 .bootstrapiso .table-responsive .group-row td {
   position: relative;
+  border-left: 1px solid #dedede;
+  border-right: 1px solid #dedede;
   padding-right: 3em;
 
   span.right {

@@ -95,13 +95,13 @@ export async function getCountries() {
 //   return data
 // }
 
-export async function getPrimaryBranchProvinces(id, limit=30) {
-  const {data} = await api.get(`/prodex/api/provinces/search?countryId=${id}&limit=${limit}`)
+export async function getPrimaryBranchProvinces(id) {//! ! will be added BE endpoint
+  const {data} = await api.get(`/prodex/api/provinces/search?countryId=${id}`)
   return data
 }
 
-export async function getMailingBranchProvinces(id, limit=30) {
-  const {data} = await api.get(`/prodex/api/provinces/search?countryId=${id}&limit=${limit}`)
+export async function getMailingBranchProvinces(id) {//! ! will be added BE endpoint
+  const {data} = await api.get(`/prodex/api/provinces/search?countryId=${id}`)
   return data
 }
 

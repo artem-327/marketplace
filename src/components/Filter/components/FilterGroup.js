@@ -57,10 +57,10 @@ class FilterGroup extends Component {
                     <label>
                       <FormattedMessage
                         id={'filter.' + input.label.split(' ').join('')}
-                        defaultMessage={input.label + '1'}
+                        defaultMessage={input.label}
                       />
                     </label>
-                  } component={Checkbox} model={input.model} id={input.model} />
+                  } component={Checkbox} model={input.model} id={input.model} value={false} onChange={(e) => {e.target.value = e.target.checked ? true : false}} />
                 </div>
               )
             }

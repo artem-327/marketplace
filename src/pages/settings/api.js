@@ -86,6 +86,12 @@ export default {
     await api.delete(`/prodex/api/delivery-addresses/id/${id}`)},
   getCountries: async () => {return await api.get('/prodex/api/countries')
     .then(response => response.data)},
-  getProvinces: async (id, limit=30) => {return await api.get(`/prodex/api/provinces/search?countryId=${id}&limit=${limit}`)
+  //! ! will be added new BE endpoint
+  getProvinces: async (id) => {return await api.get(`/prodex/api/provinces/search?countryId=${id}`)
     .then(response => response.data)},
+  createDeliveryAddress: async (value) => {
+    return await api.post('/prodex/api/delivery-addresses', value)},
+  updateDeliveryAddresses: async (id, value) => {
+    return await api.put(`/prodex/api/delivery-addresses/id/${id}`, value)},
+
 }
