@@ -317,6 +317,13 @@ export function searchCasProduct(pattern) {
   }
 }
 
+export function searchUnNumber(pattern) {
+  return {
+    type: AT.SEARCH_UN_NUMBER,
+    payload: api.searchUnNumber(pattern)
+  }
+}
+
 export function getDeliveryAddressesByStringRequest(value) {
   return {
     type: AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING,

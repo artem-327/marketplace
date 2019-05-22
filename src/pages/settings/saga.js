@@ -154,13 +154,17 @@ function* getProductCatalogWorker() {
     const productCatalog = yield call(api.getProductsCatalog)
     const productPacTypes = yield call(api.getProductTypes)
     const units = yield call(api.getUnitsType)
+    const hazardClasses = yield call(api.getHazardClasses)
+    const packagingGroups = yield call(api.getPackagingGroups)
 
     yield put({
       type: AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS,
       payload: {
         products: productCatalog,
         productsTypes: productPacTypes,
-        units: units.data
+        units: units.data,
+        hazardClasses: hazardClasses.data,
+        packagingGroups: packagingGroups.data
       }
     })
   } catch (e) {
@@ -273,12 +277,20 @@ function* postNewBankAccountWorker({ payload }) {
 function* postNewProductWorker({ payload }) {
   try {
     const productData = {
-      casProduct: payload.casProduct,
+      casProduct: payload.casProduct ? payload.casProduct.id : null,
+      description: payload.description,
+      freightClass: payload.freightClass ? payload.freightClass : null,
+      hazardClasses: payload.hazardClass ? [payload.hazardClass] : null,
+      hazardous: payload.hazardous,
+      nmfcNumber: parseInt(payload.nmfcNumber),
       packagingSize: payload.packagingSize,
       packagingType: payload.packageID,
       packagingUnit: payload.unitID,
+      packagingGroup: payload.packagingGroup ? payload.packagingGroup : null,
       productCode: payload.productNumber,
-      productName: payload.productName
+      productName: payload.productName,
+      stackable: payload.stackable,
+      unNumber: payload.unNumber ? payload.unNumber : null
     }
     yield call(api.postNewProduct, productData)
     yield put({ type: AT.GET_WAREHOUSES_DATA })
@@ -404,12 +416,19 @@ function* putProductEditPopup({ payload }) {
     const id = payload.id
     const updateProduct = {
       casProduct: payload.casProduct.id,
+      description: payload.description,
+      freightClass: payload.freightClass ? payload.freightClass : null,
+      hazardClasses: payload.hazardClass ? [payload.hazardClass] : null,
+      hazardous: payload.hazardous,
+      nmfcNumber: parseInt(payload.nmfcNumber),
       packagingSize: payload.packagingSize,
       packagingType: payload.packageID,
+      packagingGroup: payload.packagingGroup ? payload.packagingGroup : null,
       productCode: payload.productNumber,
       productName: payload.productName,
       packagingUnit: payload.unitID,
-      unNumber: payload.casProduct.unNumber ? payload.casProduct.unNumber : null
+      stackable: payload.stackable,
+      unNumber: payload.unNumber ? payload.unNumber : null
     }
     yield call(api.putProduct, id, updateProduct)
     yield put({ type: AT.GET_WAREHOUSES_DATA })
