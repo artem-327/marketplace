@@ -141,11 +141,6 @@ export default function reducer(state = initialState, action) {
           text: c.name,
           value: c.id,
           key: c.id,
-        })),
-        zipCodes: payload.zipCodes.map(z => ({
-          text: z.zip,
-          value: z.zip,
-          key: z.id
         }))
       }
     }

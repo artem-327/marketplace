@@ -4,9 +4,10 @@ import { connect } from 'react-redux'
 import { Modal, FormGroup, Divider } from 'semantic-ui-react'
 
 import { closePopup, updateCompany, createCompany, getCountries, getPrimaryBranchProvinces, getMailingBranchProvinces } from '../../actions'
+import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
 import { Form, Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
-
+import { ZipDropdown } from '~/modules/zip-dropdown'
 // debug purposes only
 import JSONPretty from 'react-json-pretty'
 
@@ -137,7 +138,7 @@ class AddNewPopupCasProducts extends React.Component {
     if (country.hasProvinces) {
       this.props.getPrimaryBranchProvinces(country.id)
     }
-    this.setState({primaryBranchHasProvinces: country.hasProvinces})
+    this.setState({ primaryBranchHasProvinces: country.hasProvinces })
   }
 
   handleMailingBranchCountry = (e, d) => {
@@ -145,7 +146,7 @@ class AddNewPopupCasProducts extends React.Component {
     if (country.hasProvinces) {
       this.props.getMailingBranchProvinces(country.id)
     }
-    this.setState({mailingBranchHasProvinces: country.hasProvinces})
+    this.setState({ mailingBranchHasProvinces: country.hasProvinces })
   }
 
 
@@ -158,7 +159,6 @@ class AddNewPopupCasProducts extends React.Component {
       countriesDropDown,
       primaryBranchProvinces,
       mailingBranchProvinces,
-      zipCodes,
       config,
     } = this.props
 
@@ -170,14 +170,16 @@ class AddNewPopupCasProducts extends React.Component {
 
     return (
       <Modal open centered={false} size="small">
-        <Modal.Header>{popupValues ? ('Edit') : ('Add')} { config.addEditText }</Modal.Header>
+        <Modal.Header>{popupValues ? ('Edit') : ('Add')} {config.addEditText}</Modal.Header>
         <Modal.Content>
+
           <Form
             enableReinitialize
             initialValues={popupValues ? popupValues : initialFormValues}
             validationSchema={popupValues ? formValidationEdit : formValidationNew}
             onReset={closePopup}
             onSubmit={async (values, actions) => {
+
               if (popupValues) {
                 let newValues = {
                   "nacdMember": values.nacdMember,
@@ -186,7 +188,7 @@ class AddNewPopupCasProducts extends React.Component {
                   "website": values.website.trim()
                 }
                 await updateCompany(popupValues.id, newValues)
-              } 
+              }
               else {
                 if (values.mailingBranch && !(values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
                   values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
@@ -203,83 +205,89 @@ class AddNewPopupCasProducts extends React.Component {
           >
             {({ values, errors, setFieldValue }) => (
               <>
-            <FormGroup widths="equal">
-              <Input label="Company Name" name="name" />
-            </FormGroup>
-            <FormGroup widths="equal">
-              <Input label="Phone" name="phone" />
-              <Input label="Website URL" name="website" />
-            </FormGroup>
-            <FormGroup widths="equal">
-              <Checkbox label="NACD Member" name="nacdMember" />
-            </FormGroup>
-            
-            {!popupValues && <>
-              <Divider />
-              <h4>Primary Branch (Billing Address)</h4>
-              <FormGroup widths="equal">
-                <Input label="Name" name="primaryBranch.name" />
-              </FormGroup>
-              <FormGroup widths="equal">
-                <Input label="Contact Email" name="primaryBranch.contactEmail" />
-                <Input label="Contact Name" name="primaryBranch.contactName" />
-                <Input label="Contact Phone" name="primaryBranch.contactPhone" />
-              </FormGroup>
-              <FormGroup widths="equal">
-                <Checkbox label="Warehouse" name="primaryBranch.warehouse" />
-              </FormGroup>
-              <h5>Address</h5>
-              <FormGroup widths="equal">
-                <Input label="Street Address" name="primaryBranch.address.streetAddress" />
-                <Input label="City" name="primaryBranch.address.city" />
-              </FormGroup>
-              <FormGroup widths="equal">
-                <Dropdown label="Zip" name="primaryBranch.address.zip" inputProps={{search: true}} options={zipCodes} />
-                <Dropdown label="Country" name="primaryBranch.address.country" options={countriesDropDown}
-                          inputProps={{search: true, onChange:  (e, d) => {
-                              setFieldValue('primaryBranch.address.province', ''); this.handlePrimaryBranchCountry(e, d)}}} />
-                <Dropdown label="Province" name="primaryBranch.address.province" options={primaryBranchProvinces}
-                          inputProps={{search: true, disabled: !this.state.primaryBranchHasProvinces}} />
-              </FormGroup>
-              <Divider />
-              <h4>Mailing Branch (optional)</h4>
-              <FormGroup widths="equal">
-                <Input label="Name" name="mailingBranch.name" />
-              </FormGroup>
-              <FormGroup widths="equal">
-                <Input label="Contact Email" name="mailingBranch.contactEmail" />
-                <Input label="Contact Name" name="mailingBranch.contactName" />
-                <Input label="Contact Phone" name="mailingBranch.contactPhone" />
-              </FormGroup>
-              <FormGroup widths="equal">
-                <Checkbox label="Warehouse" name="mailingBranch.warehouse" />
-              </FormGroup>
-              <h5>Address</h5>
-              <FormGroup widths="equal">
-                <Input label="Street Address" name="mailingBranch.address.streetAddress" />
-                <Input label="City" name="mailingBranch.address.city" />
-              </FormGroup>
-              <FormGroup widths="equal">
-                <Dropdown label="Zip" name="mailingBranch.address.zip" inputProps={{search: true}} options={zipCodes} />
-                <Dropdown label="Country" name="mailingBranch.address.country" options={countriesDropDown}
-                          inputProps={{search: true, onChange:  (e, d) => {
-                            setFieldValue('mailingBranch.address.province', ''); this.handleMailingBranchCountry(e, d)}}} />
-                <Dropdown label="Province" name="mailingBranch.address.province" options={mailingBranchProvinces}
-                          inputProps={{search: true, disabled: !this.state.mailingBranchHasProvinces}} />
-              </FormGroup>
-              <Divider />
-              <h4>Primary User</h4>
-              <FormGroup widths="equal">
-                <Input label="Email" name="primaryUser.email" />
-                <Input label="Name" name="primaryUser.name" />
-              </FormGroup>
-            </>}
+                <FormGroup widths="equal">
+                  <Input label="Company Name" name="name" />
+                </FormGroup>
+                <FormGroup widths="equal">
+                  <Input label="Phone" name="phone" />
+                  <Input label="Website URL" name="website" />
+                </FormGroup>
+                <FormGroup widths="equal">
+                  <Checkbox label="NACD Member" name="nacdMember" />
+                </FormGroup>
 
-            <div style={{ textAlign: 'right' }}>
-              <Button.Reset>Cancel</Button.Reset>
-              <Button.Submit>Save</Button.Submit>
-            </div>
-            </>)}
+                {!popupValues && <>
+                  <Divider />
+                  <h4>Primary Branch (Billing Address)</h4>
+                  <FormGroup widths="equal">
+                    <Input label="Name" name="primaryBranch.name" />
+                  </FormGroup>
+                  <FormGroup widths="equal">
+                    <Input label="Contact Email" name="primaryBranch.contactEmail" />
+                    <Input label="Contact Name" name="primaryBranch.contactName" />
+                    <Input label="Contact Phone" name="primaryBranch.contactPhone" />
+                  </FormGroup>
+                  <FormGroup widths="equal">
+                    <Checkbox label="Warehouse" name="primaryBranch.warehouse" />
+                  </FormGroup>
+                  <h5>Address</h5>
+                  <FormGroup widths="equal">
+                    <Input label="Street Address" name="primaryBranch.address.streetAddress" />
+                    <Input label="City" name="primaryBranch.address.city" />
+                  </FormGroup>
+                  <FormGroup widths="equal">
+                    <ZipDropdown countryId={values.primaryBranch.address.country} name='primaryBranch.address.zip' />
+                    <Dropdown label="Country" name="primaryBranch.address.country" options={countriesDropDown}
+                      inputProps={{
+                        search: true, onChange: (e, d) => {
+                          setFieldValue('primaryBranch.address.province', ''); this.handlePrimaryBranchCountry(e, d)
+                        }
+                      }} />
+                    <Dropdown label="Province" name="primaryBranch.address.province" options={primaryBranchProvinces}
+                      inputProps={{ search: true, disabled: !this.state.primaryBranchHasProvinces }} />
+                  </FormGroup>
+                  <Divider />
+                  <h4>Mailing Branch (optional)</h4>
+                  <FormGroup widths="equal">
+                    <Input label="Name" name="mailingBranch.name" />
+                  </FormGroup>
+                  <FormGroup widths="equal">
+                    <Input label="Contact Email" name="mailingBranch.contactEmail" />
+                    <Input label="Contact Name" name="mailingBranch.contactName" />
+                    <Input label="Contact Phone" name="mailingBranch.contactPhone" />
+                  </FormGroup>
+                  <FormGroup widths="equal">
+                    <Checkbox label="Warehouse" name="mailingBranch.warehouse" />
+                  </FormGroup>
+                  <h5>Address</h5>
+                  <FormGroup widths="equal">
+                    <Input label="Street Address" name="mailingBranch.address.streetAddress" />
+                    <Input label="City" name="mailingBranch.address.city" />
+                  </FormGroup>
+                  <FormGroup widths="equal">
+                    <ZipDropdown countryId={values.mailingBranch.address.country} name="mailingBranch.address.zip" />
+                    <Dropdown label="Country" name="mailingBranch.address.country" options={countriesDropDown}
+                      inputProps={{
+                        search: true, onChange: (e, d) => {
+                          setFieldValue('mailingBranch.address.province', ''); this.handleMailingBranchCountry(e, d)
+                        }
+                      }} />
+                    <Dropdown label="Province" name="mailingBranch.address.province" options={mailingBranchProvinces}
+                      inputProps={{ search: true, disabled: !this.state.mailingBranchHasProvinces }} />
+                  </FormGroup>
+                  <Divider />
+                  <h4>Primary User</h4>
+                  <FormGroup widths="equal">
+                    <Input label="Email" name="primaryUser.email" />
+                    <Input label="Name" name="primaryUser.name" />
+                  </FormGroup>
+                </>}
+
+                <div style={{ textAlign: 'right' }}>
+                  <Button.Reset>Cancel</Button.Reset>
+                  <Button.Submit>Save</Button.Submit>
+                </div>
+              </>)}
           </Form>
         </Modal.Content>
       </Modal>
@@ -293,12 +301,15 @@ const mapDispatchToProps = {
   createCompany,
   getCountries,
   getPrimaryBranchProvinces,
-  getMailingBranchProvinces
+  getMailingBranchProvinces,
+  addZip,
+  getZipCodes
 }
 
-const mapStateToProps = ({admin}) => {
+const mapStateToProps = ({ admin, zip }) => {
   return {
     ...admin,
+    zip,
     config: admin.config[admin.currentTab]
   }
 }
