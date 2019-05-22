@@ -33,7 +33,7 @@ export function handleOpenConfirmPopup(id) {
 	}
 }
 
-export function deleteConfirmation(id, config=null) {
+export function deleteConfirmation(id, config = null) {
 	if (config != null) {
 		if (typeof config.api.delete !== 'undefined') {
 			return async dispatch => {
@@ -119,14 +119,14 @@ export function handleFiltersValue(props, value) {
 					})
 				}
 			}
-			break;
+				break;
 			case 'Manufacturers': {
 				await dispatch({
 					type: AT.ADMIN_GET_MANUFACTURERS_BY_STRING,
 					payload: api.getManufacturersByString(value)
 				})
 			}
-			break;
+				break;
 		}
 	}
 }
@@ -239,7 +239,7 @@ export function openEditCasPopup(value) {
 	return async dispatch => {
 		await dispatch({ // Save UN number data to global props (not needed to call get UN Numbers api)
 			type: AT.ADMIN_GET_UN_NUMBERS_FULFILLED,
-			payload: [{id: data.unNumberId, unNumberCode: data.unNumberCode, unNumberDescription: data.unNumberDescription}]
+			payload: [{ id: data.unNumberId, unNumberCode: data.unNumberCode, unNumberDescription: data.unNumberDescription }]
 		})
 		dispatch(openPopup(data))
 	}
@@ -273,15 +273,9 @@ export function getCountries() {
 		admin.countries.length === 0 && dispatch({
 			type: AT.ADMIN_GET_COUNTRIES,
 			async payload() {
-				const [countries, zipCodes] = await Promise.all([
-					api.getCountries(),
-					api.getZipCodes()
-				])
+				const countries = await api.getCountries()
 
-				return {
-					countries,
-					zipCodes
-				}
+				return { countries }
 			}
 		})
 	}

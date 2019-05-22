@@ -5,8 +5,8 @@ import promise from 'redux-promise-middleware'
 import { combineReducers, compose } from 'redux'
 import { combineForms } from 'react-redux-form'
 import createSagaMiddleware from 'redux-saga'
-import {loadState, saveState} from '~/utils/storePersist'
-import {throttle} from 'lodash'
+import { loadState, saveState } from '~/utils/storePersist'
+import { throttle } from 'lodash'
 
 // import jwtDecode from 'jwt-decode'
 // import moment from "moment"
@@ -45,14 +45,18 @@ import shippingQuotesSaga from "./saga/shippingQuotes"
 import settingsSaga from "./pages/settings/saga"
 
 // Simple Add/Edit Inventory
-import simpleAdd from  '~/modules/inventory/reducer'
+import simpleAdd from '~/modules/inventory/reducer'
 import shiping from '~/modules/shipping/reducer'
 import cart, { initialState as cartInit } from '~/modules/purchase-order/reducer'
 // Orders
 import ordersReducers from './pages/orders/reducers'
 import ordersSaga from './pages/orders/saga'
 
+import zip from '~/modules/zip-dropdown/reducer'
+
 import auth from '~/modules/auth/reducer'
+
+
 
 const reducer = combineReducers({
   auth,
@@ -76,6 +80,7 @@ const reducer = combineReducers({
   saveFilterItem,
   simpleAdd,
   orders: ordersReducers,
+  zip,
   forms: combineForms({
     filter: filterInit.data,
     brcRules: broadcastInit.broadcastData,
@@ -117,7 +122,7 @@ const logger = createLogger({
 
 const composeEnhancers =
   typeof window === 'object' &&
-  window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?   
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
       // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
     }) : compose
@@ -130,13 +135,13 @@ export const makeStore = (preloadedState) => {
   const middleware = composeEnhancers(applyMiddleware(thunk, promise(), sagaMiddleware, logger))
   // const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 
-  const {auth} = loadState() || {}
-  let store = createStore(reducer, {auth}, middleware)
+  const { auth } = loadState() || {}
+  let store = createStore(reducer, { auth }, middleware)
   // let store = createStore(reducer, middleware)
 
   store.subscribe(throttle(() => {
-    const {auth} = store.getState()
-    saveState({auth})
+    const { auth } = store.getState()
+    saveState({ auth })
   }, 1000))
 
   sagaMiddleware.run(companiesSaga)

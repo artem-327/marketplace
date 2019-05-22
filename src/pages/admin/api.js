@@ -90,10 +90,10 @@ export async function getCountries() {
   const {data} = await api.get('/prodex/api/countries')
   return data
 }
-export async function getZipCodes() { // TODO Refactor to use limit and search (and countryId?)
-  const {data} = await api.get('/prodex/api/zip-codes')
-  return data
-}
+// export async function getZipCodes() { // TODO Refactor to use limit and search (and countryId?)
+//   const {data} = await api.get('/prodex/api/zip-codes')
+//   return data
+// }
 
 export async function getPrimaryBranchProvinces(id) {//! ! will be added BE endpoint
   const {data} = await api.get(`/prodex/api/provinces/search?countryId=${id}`)
