@@ -39,9 +39,9 @@ class Orders extends Component {
       return this.props.rows.map(row => {
         return {
           ...row,
-          bl: <i className="list unknown"></i>,
-          sds: <i className="list positive"></i>,
-          cofA: <i className="list negative"></i>
+          bl: <i className="list unknown"></i>, // unknown / positive / negative
+          sds: <i className="list unknown"></i>,
+          cofA: <i className="list unknown"></i>
         }
       })
     }
