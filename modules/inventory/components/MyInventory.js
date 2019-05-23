@@ -6,7 +6,7 @@ import Router from 'next/router'
 import ProdexGrid from '~/components/table'
 import Filter from '~/src/components/Filter'
 
-const PAGE_SIZE = 10
+const PAGE_SIZE = 50
 
 export default class MyInventory extends Component {
   state = {
