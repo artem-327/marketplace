@@ -187,12 +187,34 @@ export default class _Table extends Component {
   }
 
   loadColumnsSettings = () => {
-    const {tableName} = this.props
+    const {tableName, columns, rowActions} = this.props
 
-    if (tableName) {
-      localStorage[tableName] && this.setState({
-        columnsSettings: JSON.parse(localStorage[tableName])
-      })
+    // get column names from current table settings
+    let colNames = columns.map(column => {
+      return column.name
+    })
+    if (rowActions)
+      colNames.push('__actions')
+
+    if (tableName && localStorage[tableName]) {
+      // if saved table settings exists then compare it with current settings
+      let savedSettings = JSON.parse(localStorage[tableName])
+      let invalidItems = (savedSettings.order.length === colNames.length) ? savedSettings.order.filter(col => {
+        if (colNames.indexOf(col) > -1) {
+          return false
+        } else {
+          return true
+        }
+      }) : true
+
+      // if number of columns is different or any column uses different name then remove saved settings
+      if (invalidItems === true || invalidItems.length)
+        localStorage.removeItem(tableName)
+      else
+        this.setState({
+          columnsSettings: JSON.parse(localStorage[tableName])
+        })
+
     }
   }
   handleColumnsSettings = (data) => {

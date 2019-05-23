@@ -439,18 +439,20 @@ class Filter extends Component {
 
           <FlexContent>
             <div className="filter-switch">
-              <Button attached="left" onClick={() => this.switchFilter(true)} primary={this.state.filterSwitch}>
+              <Button attached={this.props.savingFilters ? 'left' : ''} onClick={() => this.switchFilter(true)} primary={this.state.filterSwitch}>
                 <FormattedMessage
                   id='filter.setFilters'
                   defaultMessage='SET FILTERS'
                 />
               </Button>
-              <Button attached="right" onClick={() => this.switchFilter(false)} primary={!this.state.filterSwitch}>
-                <FormattedMessage
-                  id='filter.savedFilter'
-                  defaultMessage='SAVED FILTERS'
-                />
-              </Button>
+              {this.props.savingFilters ? (
+                <Button attached="right" onClick={() => this.switchFilter(false)} primary={!this.state.filterSwitch}>
+                  <FormattedMessage
+                    id='filter.savedFilter'
+                    defaultMessage='SAVED FILTERS'
+                  />
+                </Button>
+              ) : ''}
             </div>
             {this.state.filterSwitch ?
               <Form
@@ -462,34 +464,36 @@ class Filter extends Component {
 
 
                   {this.getContent()}
-                  <div className="save-filter">
-                    <div className="header">
-                      <FormattedMessage
-                        id='filter.saveFilter'
-                        defaultMessage='Save Filter'
-                      />
-                    </div>
-                    <div className='filter-input-text'>
-                      <label className="input-label">
+                  {this.props.savingFilters ? (
+                    <div className="save-filter">
+                      <div className="header">
                         <FormattedMessage
-                          id='filter.enterFilterName'
-                          defaultMessage='Enter Filter Name'
+                          id='filter.saveFilter'
+                          defaultMessage='Save Filter'
                         />
-                      </label>
-                      <React.Fragment>
-                        <input
-                          type="text"
-                          onChange={(e) => this.changeFilterName(e)}
-                          placeholder={this.props.intl.formatMessage({
-                            id: 'filter.setFilterName',
-                            defaultMessage: 'Set Filter Name'
-                          })}
-                          className="input"
-                          value={this.state.filterName} />
-                        {saveFilter}
-                      </React.Fragment>
+                      </div>
+                      <div className='filter-input-text'>
+                        <label className="input-label">
+                          <FormattedMessage
+                            id='filter.enterFilterName'
+                            defaultMessage='Enter Filter Name'
+                          />
+                        </label>
+                        <React.Fragment>
+                          <input
+                            type="text"
+                            onChange={(e) => this.changeFilterName(e)}
+                            placeholder={this.props.intl.formatMessage({
+                              id: 'filter.setFilterName',
+                              defaultMessage: 'Set Filter Name'
+                            })}
+                            className="input"
+                            value={this.state.filterName} />
+                          {saveFilter}
+                        </React.Fragment>
+                      </div>
                     </div>
-                  </div>
+                  ) : ''}
                 </Accordion>
               </Form>
               :
