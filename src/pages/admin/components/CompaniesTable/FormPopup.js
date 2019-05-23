@@ -10,6 +10,7 @@ import * as Yup from 'yup'
 import { ZipDropdown } from '~/modules/zip-dropdown'
 // debug purposes only
 import JSONPretty from 'react-json-pretty'
+import { FormattedMessage } from 'react-intl';
 
 const initialFormValues = {
   name: '',
@@ -216,6 +217,13 @@ class AddNewPopupCasProducts extends React.Component {
                   <Checkbox label="NACD Member" name="nacdMember" />
                 </FormGroup>
 
+                <Divider />
+                <h4>Primary User</h4>
+                <FormGroup widths="equal">
+                  <Input type="text" label="Name" name="primaryUser.name" />
+                  <Input type="text" label="Email" name="primaryUser.email" />
+                </FormGroup>
+
                 {!popupValues && <>
                   <Divider />
                   <h4>Primary Branch (Billing Address)</h4>
@@ -243,7 +251,7 @@ class AddNewPopupCasProducts extends React.Component {
                           setFieldValue('primaryBranch.address.province', ''); this.handlePrimaryBranchCountry(e, d)
                         }
                       }} />
-                    <Dropdown label="Province" name="primaryBranch.address.province" options={primaryBranchProvinces}
+                    <Dropdown label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />} name="primaryBranch.address.province" options={primaryBranchProvinces}
                       inputProps={{ search: true, disabled: !this.state.primaryBranchHasProvinces, clearable: true }} />
                   </FormGroup>
                   <Divider />
@@ -272,14 +280,8 @@ class AddNewPopupCasProducts extends React.Component {
                           setFieldValue('mailingBranch.address.province', ''); this.handleMailingBranchCountry(e, d)
                         }
                       }} />
-                    <Dropdown label="Province" name="mailingBranch.address.province" options={mailingBranchProvinces}
+                    <Dropdown label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />} name="mailingBranch.address.province" options={mailingBranchProvinces}
                       inputProps={{ search: true, disabled: !this.state.mailingBranchHasProvinces, clearable: true }} />
-                  </FormGroup>
-                  <Divider />
-                  <h4>Primary User</h4>
-                  <FormGroup widths="equal">
-                    <Input type="text" label="Email" name="primaryUser.email" />
-                    <Input type="text" label="Name" name="primaryUser.name" />
                   </FormGroup>
                 </>}
 

@@ -284,14 +284,14 @@ export function getCountries() {
 export function getPrimaryBranchProvinces(id) {
 	return {
 		type: AT.ADMIN_GET_PRIMARY_BRANCH_PROVINCES,
-		payload: api.getPrimaryBranchProvinces(id)
+		payload: api.getProvinces(id)
 	}
 }
 
 export function getMailingBranchProvinces(id) {
 	return {
 		type: AT.ADMIN_GET_MAILING_BRANCH_PROVINCES,
-		payload: api.getMailingBranchProvinces(id)
+		payload: api.getProvinces(id)
 	}
 }
 

@@ -12,6 +12,7 @@
   "global.postalCode": "Postal Code",
   "global.state": "State",
   "global.province": "Province",
+  "global.stateProvince": "State/Province",
   "global.city": "City",
   "global.middleName": "Middle Name",
   "global.firstName": "First Name",
