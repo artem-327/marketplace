@@ -236,7 +236,7 @@ class AddNewPopupCasProducts extends React.Component {
                     <Input type="text" label="City" name="primaryBranch.address.city" />
                   </FormGroup>
                   <FormGroup widths="equal">
-                    <Dropdown label="Zip" name="primaryBranch.address.zip" inputProps={{ search: true }} options={zipCodes} />
+                    <ZipDropdown name='primaryBranch.address.zip' countryId={values.primaryBranch.address.country} />
                     <Dropdown label="Country" name="primaryBranch.address.country" options={countriesDropDown}
                       inputProps={{
                         search: true, onChange: (e, d) => {
@@ -265,7 +265,7 @@ class AddNewPopupCasProducts extends React.Component {
                     <Input type="text" label="City" name="mailingBranch.address.city" />
                   </FormGroup>
                   <FormGroup widths="equal">
-                    <Dropdown label="Zip" name="mailingBranch.address.zip" inputProps={{ search: true }} options={zipCodes} />
+                    <ZipDropdown label='Zip' name='mailingBranch.address.zip' countryId={values.mailingBranch.address.country} />
                     <Dropdown label="Country" name="mailingBranch.address.country" options={countriesDropDown}
                       inputProps={{
                         search: true, onChange: (e, d) => {
