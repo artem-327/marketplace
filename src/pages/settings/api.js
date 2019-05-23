@@ -33,7 +33,11 @@ export default {
       .get(`/prodex/api/imports/read-stored-csv?temporaryFileId=${body}`)
       .then(response => response.data)
   },
-
+  getCSVMapProductOffer: () => {
+    return api
+      .get("/prodex/api/imports/product-offer-maps")
+      .then(response => response.data)
+  },
   postNewUser: body => api.post("/prodex/api/users", body),
   postNewWarehouse: body => api.post("/prodex/api/branches/", body),
   postNewCreditCard: body => api.post("/prodex/api/payments/cards/add", body),
@@ -56,6 +60,8 @@ export default {
       )
       .then(response => response.data)
   },
+  postCSVMapProductOffer: data =>
+    api.post("/prodex/api/imports/product-offer-maps", data),
   uploadCSVFile: body => {
     const formData = new FormData()
     formData.append("file", body)

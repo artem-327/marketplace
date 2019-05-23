@@ -3,7 +3,7 @@ import { connect } from "react-redux"
 
 import { Table } from "semantic-ui-react"
 
-import { dataHeaderCSV } from "../../../actions"
+import { dataHeaderCSV, postCSVMapProductOffer } from "../../../actions"
 
 const mapProduct = {
   "CAS Number": "casNumberMapper",
@@ -60,7 +60,6 @@ class Preview extends Component {
   }
 
   componentDidMount() {
-    const Name = this.props.productOffer && "test"
     let key
     const data =
       this.state.filteredHeader &&
@@ -74,9 +73,18 @@ class Preview extends Component {
           prev[key] = next.content
           return prev
         },
-        { headerLine: true, mapName: Name }
+        {
+          headerLine: true,
+          mapName: this.props.mapName || "Uno"
+        }
       )
     data && this.props.dataHeaderCSV(data)
+    this.props.isSaveMapCSV &&
+      data &&
+      this.props.postCSVMapProductOffer({
+        ...data,
+        mapName: this.props.mapName
+      })
   }
 
   render() {
@@ -120,13 +128,16 @@ class Preview extends Component {
 }
 
 const mapDispatchToProps = {
-  dataHeaderCSV
+  dataHeaderCSV,
+  postCSVMapProductOffer
 }
 
 const mapStateToProps = state => {
   return {
     mappedHeader: state.settings.mappedHeaders,
-    CSV: state.settings.CSV
+    CSV: state.settings.CSV,
+    isSaveMapCSV: state.settings.isSaveMapCSV,
+    mapName: state.settings.mapName
   }
 }
 

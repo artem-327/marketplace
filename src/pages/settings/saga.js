@@ -187,6 +187,15 @@ function* getStoredCSV({ payload }) {
   }
 }
 
+function* getCSVMapProductOffer() {
+  try {
+    const data = yield call(api.getCSVMapProductOffer)
+    yield put({ type: AT.GET_CSV_MAP_PRODUCT_OFFER_SUCCESS, data })
+  } catch (e) {
+    yield console.log("error:", e)
+  }
+}
+
 function* postNewUserWorker({ payload }) {
   try {
     const dataBody = {
@@ -310,6 +319,14 @@ function* postImportProductOfferCSV({ payload, id }) {
   try {
     const data = yield call(api.postImportProductOfferCSV, payload, id)
     yield put({ type: AT.POST_CSV_IMPORT_PRODUCTS_OFFER_SUCCESS, data })
+  } catch (e) {
+    yield console.log("error:", e)
+  }
+}
+
+function* postCSVMapProductOffer({ payload }) {
+  try {
+    yield call(api.postCSVMapProductOffer, payload)
   } catch (e) {
     yield console.log("error:", e)
   }
@@ -528,6 +545,7 @@ export default function* settingsSaga() {
     getProductsWithRequiredParamWorker
   )
   yield takeEvery(AT.GET_STORED_CSV, getStoredCSV)
+  yield takeEvery(AT.GET_CSV_MAP_PRODUCT_OFFER, getCSVMapProductOffer)
 
   yield takeEvery(AT.POST_NEW_USER_REQUEST, postNewUserWorker)
   yield takeEvery(AT.POST_NEW_WAREHOUSE_REQUEST, postNewWarehouseWorker)
@@ -537,6 +555,7 @@ export default function* settingsSaga() {
   yield takeEvery(AT.POST_UPLOAD_CSV_FILE, postUploadCSVFile)
   yield takeEvery(AT.POST_CSV_IMPORT_PRODUCTS, postImportProductCSV)
   yield takeEvery(AT.POST_CSV_IMPORT_PRODUCTS_OFFER, postImportProductOfferCSV)
+  yield takeEvery(AT.POST_CSV_MAP_PRODUCT_OFFER, postCSVMapProductOffer)
 
   yield takeEvery(AT.HANDLE_SUBMIT_USER_EDIT_POPUP, putUserWorker)
 

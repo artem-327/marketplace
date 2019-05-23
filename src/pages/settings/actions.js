@@ -32,6 +32,19 @@ export function closeImportPopupCancel(payload) {
   }
 }
 
+export function handleSaveMapCSV() {
+  return {
+    type: AT.SAVE_MAP_CSV
+  }
+}
+
+export function handleChangeMapCSVName(payload) {
+  return {
+    type: AT.CHANGE_MAP_CSV_NAME,
+    payload
+  }
+}
+
 export function openEditPopup(rows) {
   return {
     type: AT.OPEN_EDIT_POPUP,
@@ -213,6 +226,19 @@ export function getStoredCSV(id) {
   return {
     type: AT.GET_STORED_CSV,
     payload: id
+  }
+}
+
+export function getCSVMapProductOffer() {
+  return {
+    type: AT.GET_CSV_MAP_PRODUCT_OFFER
+  }
+}
+
+export function postCSVMapProductOffer(payload) {
+  return {
+    type: AT.POST_CSV_MAP_PRODUCT_OFFER,
+    payload
   }
 }
 
