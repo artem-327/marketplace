@@ -15,11 +15,11 @@ export default {
     api
       .get('/prodex/api/payments/bank-accounts')
       .then(response => response.data),
-  getProductsCatalog: () =>
-    api.get('/prodex/api/products/search').then(response => response.data),
-  getProductTypes: () =>
-    api.get('/prodex/api/packaging-types').then(response => response.data),
-  getUnitsType: () => api.get('/prodex/api/units'),
+  getProductsCatalog: async () => {return await
+    api.get('/prodex/api/products/search').then(response => response.data)},
+  getProductTypes: async () => {return await
+    api.get('/prodex/api/packaging-types').then(response => response.data)},
+  getUnitsType: async () => {return await api.get('/prodex/api/units')},
   getProductsWithRequiredParamPar: char =>
     api
       .get(`/prodex/api/product-templates?search=${char}`)
@@ -39,7 +39,7 @@ export default {
   postNewCreditCard: body => api.post('/prodex/api/payments/cards/add', body),
   postNewBankAccount: body =>
     api.post('/prodex/api/payments/bank-accounts/add', body),
-  postNewProduct: body => api.post('/prodex/api/products', body),
+  postNewProduct: async body => {return await api.post('/prodex/api/products', body)},
   postImportProductCSV: (body, id) => {
     return api
       .post(
@@ -86,7 +86,7 @@ export default {
     await api.delete(`/prodex/api/delivery-addresses/id/${id}`)},
   getCountries: async () => {return await api.get('/prodex/api/countries')
     .then(response => response.data)},
-  //! ! will be added new BE endpoint
+  //! ! will be added new BE endpoint 'get /api/provinces - Returns all provinces'
   getProvinces: async (id) => {return await api.get(`/prodex/api/provinces/search?countryId=${id}`)
     .then(response => response.data)},
   createDeliveryAddress: async (value) => {

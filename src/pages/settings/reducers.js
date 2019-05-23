@@ -30,7 +30,7 @@ export const initialState = {
     { name: "Product catalog", id: 4 },
     { name: "Global Broadcast", id: 5 },
     //{ name: "Client list", id: 6 }, // removed #29771
-    { name: "Credit cards", id: 7 },
+    //{ name: "Credit cards", id: 7 }, // currently hidden #30294 ()
     { name: "Bank accounts", id: 8 },
     //{ name: "Tax manager", id: 9 }, // removed #29771
     //{ name: "Terms", id: 10 }, // removed #29771
@@ -49,6 +49,7 @@ export const initialState = {
   deleteUserById: null,
   deleteRowByid: null,
   filterValue: "",
+  productCatalogUnmappedValue: false,
   editPopupSearchProducts: [],
   fileCSVId: null,
   CSV: null,
@@ -64,7 +65,6 @@ export default function reducer(state = initialState, action) {
 
   switch (action.type) {
     case AT.OPEN_POPUP: {
-      console.log("action.payload", action.payload)
       return {
         ...state,
         isOpenPopup: true,
@@ -187,6 +187,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         filterValue: action.payload
+      }
+    }
+
+    case AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE: {
+      return {
+        ...state,
+        productCatalogUnmappedValue: action.payload
       }
     }
 
@@ -381,7 +388,8 @@ export default function reducer(state = initialState, action) {
       return { ...state, loading: true }
     }
 
-    case AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS: {
+    case AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS:
+    case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_FULFILLED: {
       const rows = action.payload.products.map(product => {
         return {
           id: product.id,

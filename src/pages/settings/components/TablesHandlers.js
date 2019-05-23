@@ -1,42 +1,42 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { Header, Menu, Button, Input, Dropdown } from 'semantic-ui-react'
+import { Header, Menu, Button, Checkbox, Input, Dropdown } from 'semantic-ui-react'
 
-import { openPopup, handleFiltersValue, openImportPopup } from '../actions'
+import { openPopup, handleFiltersValue, openImportPopup, handleProductCatalogUnmappedValue } from '../actions'
 import unitedStates from '../../../components/unitedStates'
 
 const textsTable = {
   Users: {
-    BtnAddText: 'Add User',
+    BtnAddText: 'User',
     SearchText: 'Search user by name, title or branch ...'
   },
   Branches: {
-    BtnAddText: 'Add Branch',
+    BtnAddText: 'Branch',
     SearchText: 'Search branch by name, address or contact ...'
   },
   Warehouses: {
-    BtnAddText: 'Add Warehouse',
+    BtnAddText: 'Warehouse',
     SearchText: 'Search warehouse by name, address or contact ...'
   },
   'Product catalog': {
-    BtnAddText: 'Add Product Catalog',
+    BtnAddText: 'Product',
     SearchText: 'Search product catalog by name, number ...'
   },
   'Global Broadcast': {
-    BtnAddText: 'Add Global Broadcast',
+    BtnAddText: 'Global broadcast',
     SearchText: 'Search global broadcast by name ...'
   },
   'Credit cards': {
-    BtnAddText: 'Add Credit Card',
+    BtnAddText: 'Credit card',
     SearchText: 'Search credit card ...'
   },
   'Bank accounts': {
-    BtnAddText: 'Add Bank Account',
+    BtnAddText: 'Bank account',
     SearchText: 'Search bank account ...'
   },
   'Delivery addresses': {
-    BtnAddText: 'Add Delivery Address',
+    BtnAddText: 'Delivery address',
     SearchText: 'Search delivery address ...'
   }
 }
@@ -58,40 +58,13 @@ class TablesHandlers extends Component {
     })
   }
 
-  currentTabTitle = currentTab => {
-    switch (currentTab) {
-      case 'Users':
-        return 'User'
-        break
-      case 'Branches':
-        return 'Branch'
-        break
-      case 'Warehouses':
-        return 'Warehouse'
-        break
-      case 'Product catalog':
-        return 'Product'
-        break
-      case 'Credit cards':
-        return 'Credit card'
-        break
-      case 'Bank accounts':
-        return 'Bank account'
-        break
-      case 'Delivery addresses':
-        return 'Delivery addresses'
-        break
-      default:
-        null
-    }
-  }
-
   render() {
     const {
       handleFiltersValue,
       currentTab,
       openPopup,
-      openImportPopup
+      openImportPopup,
+      handleProductCatalogUnmappedValue
     } = this.props
 
     const { filterFieldCurrentValue } = this.state
@@ -115,8 +88,19 @@ class TablesHandlers extends Component {
             />
           </Menu.Item>
           <Menu.Item>
-            <Button size="large" primary onClick={() => openPopup()}>
-              Add {this.currentTabTitle(currentTab)}
+            {currentTab === 'Product catalog' && (
+              <Checkbox
+                label='Unmapped only'
+                onChange={(e, { checked }) => handleProductCatalogUnmappedValue(checked)}
+              />
+            )}
+            <Button
+              size="large"
+              style={{ marginLeft: 10 }}
+              primary
+              onClick={() => openPopup()}
+            >
+              Add {textsTable[currentTab].BtnAddText}
             </Button>
             {currentTab === 'Product catalog' && (
               <Button
@@ -125,7 +109,7 @@ class TablesHandlers extends Component {
                 primary
                 onClick={() => openImportPopup()}
               >
-                Import {this.currentTabTitle(currentTab)}
+                Import {textsTable[currentTab].BtnAddText}
               </Button>
             )}
           </Menu.Item>
@@ -145,7 +129,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   openPopup,
   handleFiltersValue,
-  openImportPopup
+  openImportPopup,
+  handleProductCatalogUnmappedValue
 }
 
 export default connect(

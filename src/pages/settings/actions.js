@@ -132,6 +132,16 @@ export function handleFiltersValue(props, value) {
   }
 }
 
+export function handleProductCatalogUnmappedValue(checked) {
+  return async dispatch => {
+    dispatch({
+      type: AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE,
+      payload: checked
+    })}
+
+
+}
+
 export function handleSubmitEditPopup(warehouseData, branchId) {
   return {
     type: AT.SUBMIT_EDIT_POPUP_HANDLER,
@@ -200,8 +210,23 @@ export function getCreditCardsDataRequest() {
 }
 
 export function getProductsCatalogRequest() {
-  return {
-    type: AT.GET_PRODUCTS_CATALOG_DATA
+  return (dispatch) => {
+    dispatch({
+      type: AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA,
+      async payload() {
+        const [productCatalog, productPacTypes, units] = await Promise.all([
+          api.getProductsCatalog(),
+          api.getProductTypes(),
+          api.getUnitsType(),
+        ])
+
+        return {
+          products: productCatalog,
+          productsTypes: productPacTypes,
+          units: units.data
+        }
+      }
+    })
   }
 }
 
@@ -254,7 +279,24 @@ export function putNewUserRoleRequest(roles, id) {
   }
 }
 
-export function handleSubmitProductEddPopup(inputsValue, id) {
+export function handleSubmitProductEddPopup(inputsValue) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.SETTINGS_POST_NEW_PRODUCT_REQUEST,
+      payload: api.postNewProduct({
+        casProduct: inputsValue.casProduct,
+        packagingSize: inputsValue.packagingSize,
+        packagingType: inputsValue.packageID,
+        packagingUnit: inputsValue.unitID,
+        productCode: inputsValue.productNumber,
+        productName: inputsValue.productName
+      })
+    })
+    dispatch(closePopup())
+    //! !dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
+  }
+
+
   return {
     type: AT.POST_NEW_PRODUCT_REQUEST,
     payload: inputsValue

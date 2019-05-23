@@ -149,7 +149,7 @@ function* getBankAccountsDataWorker() {
   }
 }
 
-function* getProductCatalogWorker() {
+function* getProductCatalogWorker() { // ! ! delete
   try {
     const productCatalog = yield call(api.getProductsCatalog)
     const productPacTypes = yield call(api.getProductTypes)
@@ -270,7 +270,7 @@ function* postNewBankAccountWorker({ payload }) {
   }
 }
 
-function* postNewProductWorker({ payload }) {
+function* postNewProductWorker({ payload }) {// ! ! delete
   try {
     const productData = {
       casProduct: payload.casProduct,
