@@ -79,6 +79,7 @@
     "yup": "^0.27.0"
   },
   "scripts": {
+    "cypress:open": "cypress open",
     "dev": "node server.js",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
@@ -88,15 +89,16 @@
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "babel-plugin-styled-components": "^1.10.0",
+    "cypress": "^3.3.0",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-react": "^7.12.4",
-    "gulp": "^3.0.0",
-    "react-intl": "^2.8.0",
-    "semantic-ui": "^2.4.2",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
-    "preact": "latest"
+    "eslint-plugin-react": "^7.12.4",
+    "gulp": "^3.0.0",
+    "preact": "latest",
+    "react-intl": "^2.8.0",
+    "semantic-ui": "^2.4.2"
   },
   "browserslist": [
     ">0.2%",
