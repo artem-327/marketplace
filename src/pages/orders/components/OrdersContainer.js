@@ -12,7 +12,7 @@ function transformToRows(data, type) {
         globalStatus: i.globalStatus,
         date: moment(i.orderDate).format('MM/DD/YYYY'),
         customerName: (type === 'sales' ? i.buyerCompanyName : i.sellerCompanyName),
-        productName: (typeof i.orderItems[0].name !== 'undefined' ? i.orderItems[0].name : 'N/A'),
+        productName: (typeof i.orderItems[0].productName !== 'undefined' ? i.orderItems[0].productName : 'N/A'),
         orderStatus: OrdersHelper.getOrderStatus(i.orderStatus),
         shippingStatus: OrdersHelper.getShippingStatus(i.shippingStatus),
         reviewStatus: OrdersHelper.getReviewStatus(i.reviewStatus),
@@ -21,7 +21,6 @@ function transformToRows(data, type) {
         bl: '',
         sds: '',
         cofA: '',
-        total: '',
         orderTotal: "$" + i.totalPrice.formatMoney(2)
     }))
 }

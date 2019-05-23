@@ -134,6 +134,7 @@ export default class MyInventory extends Component {
           productGrade
           form
           filterFunc={(filter) => { this.filterInventory({...filter}) }}
+          savingFilters={true}
           {...this.props}
         />
       </>

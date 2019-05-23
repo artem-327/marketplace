@@ -5,16 +5,45 @@ import Filter from '../../../components/Filter'
 import SubMenu from '../../../components/SubMenu'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { Grid, Menu, Header, Table, Divider } from 'semantic-ui-react'
+import ProdexGrid from '~/components/table'
 
 class Orders extends Component {
+    state = {
+        columns: [
+            { name: 'id', title: 'Order ID', width: 120 },
+            { name: 'globalStatus', title: 'Status', width: 120 },
+            { name: 'date', title: 'Order Date', width: 120 },
+            { name: 'customerName', title: 'Vendor', width: 120 },
+            { name: 'productName', title: 'Product Name', width: 160 },
+            { name: 'orderStatus', title: 'Order', width: 120 },
+            { name: 'shippingStatus', title: 'Shipping', width: 120 },
+            { name: 'reviewStatus', title: 'Review', width: 120 },
+            { name: 'creditStatus', title: 'Credit', width: 120 },
+            { name: 'paymentStatus', title: 'Payment', width: 120 },
+            { name: 'bl', title: 'B/L', width: 80 },
+            { name: 'sds', title: 'SDS', width: 80 },
+            { name: 'cofA', title: 'C of A', width: 80 },
+            { name: 'orderTotal', title: 'Order Total', width: 160 }
+        ]
+    }
 
     componentDidMount() {
         this.props.loadData(this.props.endpointType)
     }
 
     loadData(endpointType, filterData) {
-        //this.props.filterData = filterData
         this.props.loadData(endpointType, filterData)
+    }
+
+    getRows = () => {
+      return this.props.rows.map(row => {
+        return {
+          ...row,
+          bl: <i className="list unknown"></i>, // unknown / positive / negative
+          sds: <i className="list unknown"></i>,
+          cofA: <i className="list unknown"></i>
+        }
+      })
     }
 
     handleScrollY() {
@@ -48,6 +77,7 @@ class Orders extends Component {
     render() {
         const {endpointType, match, rows, isFetching, activeStatus, router} = this.props
         const {status} = this.props.filterData
+        const {columns} = this.state
         const query = router ? router.query : match.params
         let ordersType = query.type.charAt(0).toUpperCase() + query.type.slice(1)
 
@@ -73,51 +103,19 @@ class Orders extends Component {
                         product
                         orderStatus={{filterValue: activeStatus}}
                         filterFunc={(inputs) => this.props.loadData(endpointType, inputs)}
+                        savingFilters={false}
                         {...this.props}
                 />
                 {isFetching ? <Spinner /> :
                     <div id="datatable-wrapper" className="data-table-wr orders">
                         <PerfectScrollbar onScrollY={this.handleScrollY} onScrollX={this.handleScrollX}>
-                            <Table singleLine compact selectable basic='very'>
-                                <Table.Header className='data-table-header'>
-                                    <Table.Row>
-                                      <Table.HeaderCell>{this.renderFixHeader('Order ID')}</Table.HeaderCell>
-                                      <Table.HeaderCell>{this.renderFixHeader('Status')}</Table.HeaderCell>
-                                      <Table.HeaderCell>{this.renderFixHeader('Order Date')}</Table.HeaderCell>
-                                      <Table.HeaderCell>{ordersType === 'Sales' ? this.renderFixHeader('Customer') : this.renderFixHeader('Vendor')}</Table.HeaderCell>
-                                      <Table.HeaderCell>{this.renderFixHeader('Product Name')}</Table.HeaderCell>
-                                      <Table.HeaderCell>{this.renderFixHeader('Order')}</Table.HeaderCell>
-                                      <Table.HeaderCell>{this.renderFixHeader('Shipping')}</Table.HeaderCell>
-                                      <Table.HeaderCell>{this.renderFixHeader('Review')}</Table.HeaderCell>
-                                      <Table.HeaderCell>{this.renderFixHeader('Credit')}</Table.HeaderCell>
-                                      <Table.HeaderCell>{this.renderFixHeader('Payment')}</Table.HeaderCell>
-                                      <Table.HeaderCell textAlign='center'>{this.renderFixHeader('B/L')}</Table.HeaderCell>
-                                      <Table.HeaderCell textAlign='center'>{this.renderFixHeader('SDS')}</Table.HeaderCell>
-                                      <Table.HeaderCell textAlign='center'>{this.renderFixHeader('CofA')}</Table.HeaderCell>
-                                      <Table.HeaderCell textAlign='right'>{this.renderFixHeader('Order Total')}</Table.HeaderCell>
-                                    </Table.Row>
-                                </Table.Header>
-                                <Table.Body>
-                                    {rows.map(r => (
-                                        <Table.Row key={r.id} onClick={() => {router.push(`/orders/${ordersType.toLowerCase()}/${r.id}`)}}>
-                                            <Table.Cell>{r.id}</Table.Cell>
-                                            <Table.Cell>{r.globalStatus}</Table.Cell>
-                                            <Table.Cell>{r.date}</Table.Cell>
-                                            <Table.Cell>{r.customerName}</Table.Cell>
-                                            <Table.Cell>{r.productName}</Table.Cell>
-                                            <Table.Cell>{r.orderStatus}</Table.Cell>
-                                            <Table.Cell>{r.shippingStatus}</Table.Cell>
-                                            <Table.Cell>{r.reviewStatus}</Table.Cell>
-                                            <Table.Cell>{r.creditStatus}</Table.Cell>
-                                            <Table.Cell>{r.paymentStatus}</Table.Cell>
-                                            <Table.Cell textAlign='center'><i className="list unknown"></i></Table.Cell>
-                                            <Table.Cell textAlign='center'><i className="list positive"></i></Table.Cell>
-                                            <Table.Cell textAlign='center'><i className="list negative"></i></Table.Cell>
-                                            <Table.Cell textAlign='right'>{r.orderTotal}</Table.Cell>
-                                        </Table.Row>
-                                    ))}
-                                </Table.Body>
-                            </Table>
+                            <ProdexGrid tableName="orders_grid"
+                                        columns={columns}
+                                        rows={this.getRows()}
+                                        rowActions={[
+                                          { text: 'Detail', callback: (row) => router.push(`/orders/${ordersType.toLowerCase()}/${row.id}`) }
+                                        ]}
+                            />
                         </PerfectScrollbar>
                     </div>
                 }

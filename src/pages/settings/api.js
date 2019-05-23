@@ -20,6 +20,8 @@ export default {
   getProductTypes: async () => {return await
     api.get('/prodex/api/packaging-types').then(response => response.data)},
   getUnitsType: async () => {return await api.get('/prodex/api/units')},
+  getHazardClasses: () => api.get('/prodex/api/hazard-classes'),
+  getPackagingGroups: () => api.get('/prodex/api/packaging-groups'),
   getProductsWithRequiredParamPar: char =>
     api
       .get(`/prodex/api/product-templates?search=${char}`)
@@ -67,6 +69,7 @@ export default {
     api.patch(`/prodex/api/users/id/${id}/add-roles`, body),
   putProduct: (id, body) => api.put(`/prodex/api/products/id/${id}`, body),
   searchCasProduct: (pattern) => api.get(`/prodex/api/cas-products/search?limit=5&pattern=${pattern}`),
+  searchUnNumber: (pattern) => api.get(`/prodex/api/un-numbers/search?limit=5&pattern=${pattern}`),
 
   deleteUser: userId => api.delete(`/prodex/api/users/id/${userId}`),
   deleteWarehouse: branchId => api.delete(`/prodex/api/branches/${branchId}`),
