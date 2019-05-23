@@ -14,10 +14,22 @@ import {
   getPackagingGroupsDataRequest
 } from '../../actions'
 
+const PAGE_SIZE = 50
 
 class CasProductsTable extends Component {
+
+  getNextPage = (pageNumber) => {
+    const {getCasProductByFilter, casListDataRequest} = this.props
+
+    getCasProductByFilter({
+      ...casListDataRequest,
+      pageNumber
+    })
+  }
+
   componentDidMount() {
-    this.props.getCasProductByFilter(this.props.casListDataRequest)
+    this.getNextPage(0)
+    
     this.props.getHazardClassesDataRequest()
     this.props.getPackagingGroupsDataRequest()
   }
@@ -54,6 +66,8 @@ class CasProductsTable extends Component {
           //filterValue={filterValue}
           loading={loading}
           columns={columns}
+          pageSize={PAGE_SIZE}
+          getNextPage={this.getNextPage}
           rows={rows}
           rowActions={[
             {text: 'Edit', callback: (row) => openEditCasPopup(row)},
