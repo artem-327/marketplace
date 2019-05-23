@@ -21,11 +21,12 @@ export default class MyInventory extends Component {
       { name: 'manufacturer', title: 'MFR.', width: 220 },
       { name: 'broadcast', title: 'Broadcast', width: 120 }
     ],
-    selectedRows: []
+    selectedRows: [],
+    pageNumber: 1,
   }
 
   componentDidMount() {
-    this.props.getMyProductOffers()
+    this.props.getMyProductOffers(20, this.state.pageNumber)
   }
 
   filterInventory = async (filter) => {
@@ -41,7 +42,7 @@ export default class MyInventory extends Component {
         filter = {...filter, product: productIds}
       }
     }
-    this.props.getMyProductOffers(filter)
+    this.props.getMyProductOffers(filter, 10, this.state.pageNumber)
   }
 
   getRows = () => {
