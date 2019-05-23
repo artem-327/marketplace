@@ -7,10 +7,18 @@ export default class ZipDropdown extends Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      value: null
+    }
+
     this.debouncedRef = debounce(this.debouncedCallback, 250)
   }
   handleAddition = (e, data) => {
-    let { onAddition } = this.props
+    let { onAddition, addZip } = this.props
+    
+    addZip(data.value)
+    this.handleChange(e, data)
+    
 
     onAddition(e, data)
   }
@@ -26,6 +34,8 @@ export default class ZipDropdown extends Component {
     this.props.getZipCodes(params)
 
   }
+
+  handleChange = (e, { value }) => this.setState({ value })
 
 
   render() {
@@ -53,6 +63,7 @@ export default class ZipDropdown extends Component {
           },
           loading,
           selection,
+          value: this.state.value,
           search,
           allowAdditions,
           onAddItem: this.handleAddition,
@@ -75,7 +86,7 @@ ZipDropdown.propTypes = {
   onAddition: func,
   handleChange: func,
   onSearchChange: func,
-  countryId: number
+  countryId: string
 }
 
 ZipDropdown.defaultProps = {
