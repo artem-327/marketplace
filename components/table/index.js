@@ -117,7 +117,7 @@ export default class _Table extends Component {
     renderGroupLabel: pt.func,
     getChildGroups: pt.func,
     tableName: pt.string,
-    onScrollEnd: pt.func
+    getNextPage: pt.func
   }
 
   static defaultProps = {
@@ -131,7 +131,7 @@ export default class _Table extends Component {
     sorting: true,
     groupBy: [],
     onSelectionChange: () => { },
-    onScrollEnd: () => { }
+    getNextPage: () => { }
   }
 
   constructor(props) {
@@ -145,13 +145,27 @@ export default class _Table extends Component {
       columnsSettings: {
         widths: this.getColumnsExtension(),
         order: this.getColumns().map(c => c.name)
-      }
+      },
+      lastPageNumber: 0,
+      allLoaded: false
     }
   }
 
   handleScroll = ({ target }) => {
-    if (target.offsetHeight + target.scrollTop === target.scrollHeight - 150) {
-      this.props.onScrollEnd()
+    const { getNextPage } = this.props
+    const { allLoaded, lastPageNumber } = this.state
+
+    if (target.offsetHeight + target.scrollTop === target.scrollHeight) {
+      if (!allLoaded) {
+        this.setState({ lastPageNumber: lastPageNumber + 1 })
+        getNextPage(lastPageNumber + 1)
+      }
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.rows.length < this.props.pageSize * this.state.lastPageNumber) {
+      this.setState({ allLoaded: true })
     }
   }
 
