@@ -76,7 +76,6 @@ class Map extends Component {
     const optionMaps =
       this.props.maps &&
       this.props.maps.map(map => ({
-        ...map,
         text: map.mapName,
         value: map.id
       }))
