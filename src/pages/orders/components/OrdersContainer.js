@@ -44,7 +44,7 @@ function mapStateToProps(state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(Actions, dispatch)
+    return bindActionCreators({...Actions, dispatch}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Orders)

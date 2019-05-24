@@ -106,7 +106,7 @@ class Filter extends Component {
             }
           ]} />
         <FilterGroup className="filterGroup"
-          header='orderStatus'
+          header='status'
           isVisible={!!this.props.orderStatus}
           data={this.props.filterData}
           isOpen={this.props.filterGroupStatus.orderStatus}
@@ -118,14 +118,14 @@ class Filter extends Component {
               model: '.status',
               type: 'dropdown',
               data: [
-                { id: 'All', name: 'All' },
-                { id: 'Pending', name: 'Pending' },
-                { id: 'In Transit', name: 'In Transit' },
-                { id: 'Review', name: 'Review' },
-                { id: 'Credit', name: 'Credit' },
-                { id: 'Completed', name: 'Completed' },
-                { id: 'Returned', name: 'Returned' },
-                { id: 'Declined', name: 'Declined' }
+                { key: 0, text: 'All', value: 'All' },
+                { key: 1, text: 'Pending', value: 'Pending' },
+                { key: 2, text: 'In Transit', value: 'In Transit' },
+                { key: 3, text: 'Review', value: 'Review' },
+                { key: 4, text: 'Credit', value: 'Credit' },
+                { key: 5, text: 'Completed', value: 'Completed' },
+                { key: 6, text: 'Returned', value: 'Returned' },
+                { key: 7, text: 'Declined', value: 'Declined' }
               ],
               filterValue: this.props.orderStatus && this.props.orderStatus.filterValue ? this.props.orderStatus.filterValue : null
             }

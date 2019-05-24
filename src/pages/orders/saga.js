@@ -19,7 +19,7 @@ function* getOrders(action) {
           filters.filters.push({
             operator: 'EQUALS',
             path: 'Order.id',
-            value: action.payload.filter.orderId,
+            values: [action.payload.filter.orderId],
             //status: !action.payload.filter || action.payload.filter.status === 'All' ? '' : action.payload.filter.status
           })
         }
@@ -27,8 +27,28 @@ function* getOrders(action) {
           filters.filters.push({
             operator: 'EQUALS',
             path: 'Order.buyerCompanyName',
-            value: action.payload.filter.customer,
+            values: [action.payload.filter.customer],
             //status: !action.payload.filter || action.payload.filter.status === 'All' ? '' : action.payload.filter.status
+          })
+        }
+        // TODO: when prepared filtered path for products in orders - finish following filter
+        /*if (action.payload.filter.product) {
+          let products = yield call(Api.searchProducts, action.payload.filter.product)
+          console.log('PRODUCTS', products)
+          filters.filters.push({
+            operator: 'EQUALS',
+            path: 'OrderItem.id',
+            values: products.data.map(item => {
+              return item.id
+            }),
+            //status: !action.payload.filter || action.payload.filter.status === 'All' ? '' : action.payload.filter.status
+          })
+        }*/
+        if (action.payload.filter.status && action.payload.filter.status !== 'All') {
+          filters.filters.push({
+            operator: 'EQUALS',
+            path: 'Order.globalStatus',
+            values: [action.payload.filter.status]
           })
         }
         data = yield call(Api.getAll, action.payload.endpointType, filters)
