@@ -1,13 +1,14 @@
 /**
  * Created by ARTIO on 23.5.2019.
  */
-context("Login",() => {
+context("Login and logout",() => {
+    const testedDomain = "http://test.echoexchange.net";
     it('Bad credentials',() => {
         cy.server();
         //This is the post call we are interested in capturing
         cy.route('POST', '/prodex/oauth/token').as('login');
 
-        cy.visit("http://test.echoexchange.net");
+        cy.visit(testedDomain);
         cy.url().should("include","login");
         cy.get("input[name=username]")
             .type("admin@example.com")
@@ -31,12 +32,13 @@ context("Login",() => {
         })
     });
 
-    it('Admin login',() => {
+    it('Admin login and logout',() => {
         cy.server();
         //This is the post call we are interested in capturing
         cy.route('POST', '/prodex/oauth/token').as('login');
+        cy.route('POST', '/auth/logout').as('logout');
 
-        cy.visit("http://test.echoexchange.net");
+        cy.visit(testedDomain);
         cy.url().should("include","login");
         cy.get("input[name=username]")
             .type("admin@example.com")
@@ -50,22 +52,66 @@ context("Login",() => {
 
         //Assert on XHR
         cy.get('@login').then(function (xhr) {
-            /*
-            access_token: "f9845907-4f5a-4ee3-9d77-d14bdbe8e579"
-             expires_in: 57609
-             refresh_token: "cd27711d-6605-4a2c-a0c6-939ecdf55e93"
-             scope: "read write"
-             token_type: "bearer"
-             */
             expect(xhr.status).to.eq(200);
             expect(xhr.requestHeaders).to.have.property('Content-Type');
             expect(xhr.method).to.eq('POST');
+            expect(xhr.url).to.contain("oauth/token");
             expect(xhr.responseBody).to.have.property('access_token');
             expect(xhr.responseBody).to.have.property('expires_in');
             expect(xhr.responseBody).to.have.property('refresh_token');
             expect(xhr.responseBody).to.have.property('scope');
             expect(xhr.responseBody).to.have.property('token_type');
-            cy.url().should("include","/admin");
-        })
+            expect(xhr.responseBody.token_type).to.eq("bearer");
+        });
+
+        cy.url().should("include","/admin");
+        cy.wait(200);
+        cy.get(".right.menu .user.circle").click("center");
+        cy.get(".right.menu .item.dropdown").should("have.class","visible");
+        cy.get(".right.menu .item.dropdown").contains("Logout").click("center");
+        cy.url().should("include","/login");
+        cy.visit(testedDomain+"/admin");
+        cy.url().should("include","/login");
+    });
+
+    it('Normal user login and logout',() => {
+        cy.server();
+        //This is the post call we are interested in capturing
+        cy.route('POST', '/prodex/oauth/token').as('login');
+        cy.route('POST', '/auth/logout').as('logout');
+
+        cy.visit(testedDomain);
+        cy.url().should("include","login");
+        cy.get("input[name=username]")
+            .type("user1@example.com")
+            .should("have.value","user1@example.com");
+        cy.get("input[name=password]")
+            .type("echopass123")
+            .should("have.value","echopass123");
+        cy.get("button[type=submit]").click();
+
+        cy.wait('@login');
+
+        //Assert on XHR
+        cy.get('@login').then(function (xhr) {
+            expect(xhr.status).to.eq(200);
+            expect(xhr.requestHeaders).to.have.property('Content-Type');
+            expect(xhr.method).to.eq('POST');
+            expect(xhr.url).to.contain("oauth/token");
+            expect(xhr.responseBody).to.have.property('access_token');
+            expect(xhr.responseBody).to.have.property('expires_in');
+            expect(xhr.responseBody).to.have.property('refresh_token');
+            expect(xhr.responseBody).to.have.property('scope');
+            expect(xhr.responseBody).to.have.property('token_type');
+            expect(xhr.responseBody.token_type).to.eq("bearer");
+        });
+
+        cy.wait(200);
+        cy.get(".right.menu .user.circle").click("center");
+        cy.get(".right.menu .item.dropdown").should("have.class","visible");
+        cy.get(".right.menu .item.dropdown").contains("Logout").click("center");
+        cy.url().should("include","/login");
+        cy.visit(testedDomain+"/dashboard");
+        cy.url().should("include","/login");
     });
 });
