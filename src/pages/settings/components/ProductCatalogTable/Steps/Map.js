@@ -14,7 +14,8 @@ import {
   changeHeadersCSV,
   handleSaveMapCSV,
   handleChangeMapCSVName,
-  getCSVMapProductOffer
+  getCSVMapProductOffer,
+  selectSavedMap
 } from "../../../actions"
 
 const mappingProduct = [
@@ -72,7 +73,13 @@ class Map extends Component {
   render() {
     const { CSV } = this.props
 
-    console.log(this.props.maps)
+    const optionMaps =
+      this.props.maps &&
+      this.props.maps.map(map => ({
+        ...map,
+        text: map.mapName,
+        value: map.id
+      }))
 
     return (
       <React.Fragment>
@@ -80,7 +87,13 @@ class Map extends Component {
           <Grid centered padded>
             <Grid.Row verticalAlign="middle" columns={3}>
               <Grid.Column textAlign="center">
-                <Select placeholder="Select your saved map" />
+                <Select
+                  placeholder="Select your saved map"
+                  options={optionMaps}
+                  clearable
+                  //disabled={!optionMaps}
+                  onChange={this.selectSavedMap}
+                />
               </Grid.Column>
               <Grid.Column textAlign="center">
                 <Input placeholder="Map Name" onChange={this.inputMapName} />
@@ -125,6 +138,7 @@ class Map extends Component {
                           ? mappingProductOffer
                           : mappingProduct
                       }
+                      disabled={!!this.props.selectedSavedMap}
                       onChange={this.selectMapping}
                     />
                   </Table.Cell>
@@ -135,6 +149,14 @@ class Map extends Component {
         </Table>
       </React.Fragment>
     )
+  }
+
+  selectSavedMap = (e, { value }) => {
+    const selectedMap = this.props.maps.filter(map => {
+      return map.id === value
+    })
+    console.log(selectedMap)
+    this.props.selectSavedMap(selectedMap[0])
   }
 
   inputMapName = e => {
@@ -164,7 +186,8 @@ const mapDispatchToProps = {
   changeHeadersCSV,
   handleSaveMapCSV,
   handleChangeMapCSVName,
-  getCSVMapProductOffer
+  getCSVMapProductOffer,
+  selectSavedMap
 }
 
 const mapStateToProps = state => {
@@ -172,7 +195,8 @@ const mapStateToProps = state => {
     csvFileId: state.settings.fileCSVId,
     CSV: state.settings.CSV,
     mappedHeader: state.settings.mappedHeaders,
-    maps: state.settings.maps
+    maps: state.settings.maps,
+    selectedSavedMap: state.settings.selectedSavedMap
   }
 }
 

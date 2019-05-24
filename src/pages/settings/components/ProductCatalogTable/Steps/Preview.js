@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import { Table } from "semantic-ui-react"
 
 import { dataHeaderCSV, postCSVMapProductOffer } from "../../../actions"
+import _invert from "lodash/invert"
 
 const mapProduct = {
   "CAS Number": "casNumberMapper",
@@ -46,45 +47,71 @@ const mapProductOffer = {
   "Warehouse Name": "warehouseNameMapper"
 }
 
+const invertedMapProductOffer = _invert(mapProductOffer)
+
 class Preview extends Component {
   constructor(props) {
+    const invertedSelectedSavedMap = _invert(props.selectedSavedMap)
+
     const filteredHeader =
       props.mappedHeader &&
       props.mappedHeader.filter(column => {
         return column.header
       })
+    const filteredHeaderMap = props.selectedSavedMap && creatingFilteredHeader()
+
+    function creatingFilteredHeader() {
+      const mappedHeader = props.CSV.headerCSV.reduce((prev, curr) => {
+        const key = curr.content
+        const valSelected = invertedSelectedSavedMap[key]
+        const valProduct = valSelected
+          ? invertedMapProductOffer[valSelected]
+          : null
+        if (valProduct) {
+          prev.push({ ...curr, header: valProduct })
+        }
+        return prev
+      }, [])
+      return mappedHeader
+    }
+
     super(props)
     this.state = {
-      filteredHeader: filteredHeader || null
+      filteredHeader: filteredHeader || filteredHeaderMap || null
     }
   }
 
   componentDidMount() {
     let key
-    const data =
-      this.state.filteredHeader &&
-      this.state.filteredHeader.reduce(
-        (prev, next) => {
-          if (this.props.productOffer) {
-            key = mapProductOffer[next.header]
-          } else {
-            key = mapProduct[next.header]
+    if (this.props.selectedSavedMap) {
+      this.props.productOffer &&
+        this.props.dataHeaderCSV(this.props.selectedSavedMap)
+    } else {
+      const data =
+        this.state.filteredHeader &&
+        this.state.filteredHeader.reduce(
+          (prev, next) => {
+            if (this.props.productOffer) {
+              key = mapProductOffer[next.header]
+            } else {
+              key = mapProduct[next.header]
+            }
+            prev[key] = next.content
+            return prev
+          },
+          {
+            headerLine: true,
+            mapName: this.props.mapName || "Uno"
           }
-          prev[key] = next.content
-          return prev
-        },
-        {
-          headerLine: true,
-          mapName: this.props.mapName || "Uno"
-        }
-      )
-    data && this.props.dataHeaderCSV(data)
-    this.props.isSaveMapCSV &&
-      data &&
-      this.props.postCSVMapProductOffer({
-        ...data,
-        mapName: this.props.mapName
-      })
+        )
+      data && this.props.dataHeaderCSV(data)
+      this.props.isSaveMapCSV &&
+        data &&
+        this.props.postCSVMapProductOffer({
+          ...data,
+          mapName: this.props.mapName
+        })
+    }
   }
 
   render() {
@@ -137,7 +164,8 @@ const mapStateToProps = state => {
     mappedHeader: state.settings.mappedHeaders,
     CSV: state.settings.CSV,
     isSaveMapCSV: state.settings.isSaveMapCSV,
-    mapName: state.settings.mapName
+    mapName: state.settings.mapName,
+    selectedSavedMap: state.settings.selectedSavedMap
   }
 }
 

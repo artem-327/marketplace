@@ -129,6 +129,13 @@ export function handleActiveTab(tab) {
   }
 }
 
+export function selectSavedMap(payload) {
+  return {
+    type: AT.SELECT_SAVED_MAP,
+    payload
+  }
+}
+
 export function handleFiltersValue(value) {
   return {
     type: AT.HANDLE_FILTERS_VALUE,

@@ -51,7 +51,8 @@ export const initialState = {
   loading: false,
   isSaveMapCSV: false,
   mapName: null,
-  maps: null
+  maps: null,
+  selectedSavedMap: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -479,6 +480,13 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SELECT_SAVED_MAP: {
+      return {
+        ...state,
+        selectedSavedMap: action.payload
+      }
+    }
+
     case AT.CHANGE_HEADERS_CSV: {
       return {
         ...state,
@@ -529,7 +537,8 @@ export default function reducer(state = initialState, action) {
         dataHeaderCSV: null,
         isOpenImportPopup: false,
         isSaveMapCSV: false,
-        mapName: null
+        mapName: null,
+        selectedSavedMap: null
       }
     }
 
@@ -540,7 +549,8 @@ export default function reducer(state = initialState, action) {
         mappedHeaders: null,
         dataHeaderCSV: null,
         isSaveMapCSV: false,
-        mapName: null
+        mapName: null,
+        selectedSavedMap: null
       }
     }
 
