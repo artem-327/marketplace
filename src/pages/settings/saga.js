@@ -274,7 +274,7 @@ function* postNewBankAccountWorker({ payload }) {
   }
 }
 
-function* postNewProductWorker({ payload }) {// ! ! delete
+function* postNewProductWorker({ payload }) {// ! ! delete ! !
   try {
     const productData = {
       casProduct: payload.casProduct ? payload.casProduct.id : null,
@@ -411,7 +411,7 @@ function* putWarehouseEditPopup({ payload, id }) {
   }
 }
 
-function* putProductEditPopup({ payload }) {
+function* putProductEditPopup({ payload }) { // Delete
   try {
     const id = payload.id
     const updateProduct = {

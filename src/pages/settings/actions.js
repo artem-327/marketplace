@@ -126,20 +126,23 @@ export function handleFiltersValue(props, value) {
       case "Delivery addresses":
         if (value.trim().length) await dispatch(getDeliveryAddressesByStringRequest(value))
         else await dispatch(getDeliveryAddressesByFilterRequest(props.deliveryAddressesFilter))
-        break;
-
+        break
+    case "Product catalog":
+      if (value.trim().length > 2) await dispatch(getProductsCatalogRequest({body: value, unmapped: props.productCatalogUnmappedValue}))
+      else await dispatch(getProductsCatalogRequest({body: props.productsFilter, unmapped: props.productCatalogUnmappedValue}))
+      break
     }
   }
 }
 
-export function handleProductCatalogUnmappedValue(checked) {
+export function handleProductCatalogUnmappedValue(checked, props) {
   return async dispatch => {
     dispatch({
       type: AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE,
       payload: checked
-    })}
-
-
+    })
+    dispatch(handleFiltersValue({...props, productCatalogUnmappedValue: checked}, props.filterValue))
+  }
 }
 
 export function handleSubmitEditPopup(warehouseData, branchId) {
@@ -158,12 +161,37 @@ export function handlerSubmitWarehouseEditPopup(warehouseData, id) {
   }
 }
 
-export function handleSubmitProductEditPopup(productData, id) {
+export function handleSubmitProductEditPopup(productData, id, reloadFilter) {//! !
+  console.log('!!!!! ', productData);
+  return async dispatch => {
+    await dispatch({
+      type: AT.SETTINGS_UPDATE_PRODUCT_CATALOG,
+      payload: api.updateProduct(id,{
+        casProduct: productData.casProduct.id,
+        description: productData.description,
+        freightClass: productData.freightClass ? productData.freightClass : null,
+        hazardClasses: productData.hazardClass ? [productData.hazardClass] : null,
+        hazardous: productData.hazardous,
+        nmfcNumber: parseInt(productData.nmfcNumber),
+        packagingSize: productData.packagingSize,
+        packagingType: productData.packageID,
+        packagingGroup: productData.packagingGroup ? productData.packagingGroup : null,
+        productCode: productData.productNumber,
+        productName: productData.productName,
+        packagingUnit: productData.unitID,
+        stackable: productData.stackable,
+        unNumber: productData.unNumber ? productData.unNumber : null
+      })
+    })
+    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
+    dispatch(closePopup())
+  }
+  /* // ! !
   return {
     type: AT.PUT_PRODUCT_EDIT_POPUP,
     payload: productData,
     id
-  }
+  }*/
 }
 
 export function handleAddNewWarehousePopup() {
@@ -209,21 +237,24 @@ export function getCreditCardsDataRequest() {
   }
 }
 
-export function getProductsCatalogRequest() {
+export function getProductsCatalogRequest(data) {//! !
   return (dispatch) => {
     dispatch({
       type: AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA,
       async payload() {
-        const [productCatalog, productPacTypes, units] = await Promise.all([
-          api.getProductsCatalog(),
+        const [productCatalog, productPacTypes, units, hazardClasses, packagingGroups] = await Promise.all([
+          typeof data.body === 'object' ? api.getProductsCatalogByFilter(data) :  api.getProductsCatalogByString(data),
           api.getProductTypes(),
           api.getUnitsType(),
+          api.getHazardClasses(),
+          api.getPackagingGroups()
         ])
-
         return {
           products: productCatalog,
           productsTypes: productPacTypes,
-          units: units.data
+          units: units.data,
+          hazardClasses: hazardClasses.data,
+          packagingGroups: packagingGroups.data
         }
       }
     })
@@ -279,27 +310,29 @@ export function putNewUserRoleRequest(roles, id) {
   }
 }
 
-export function handleSubmitProductEddPopup(inputsValue) {
+export function handleSubmitProductAddPopup(inputsValue, reloadFilter) {//! !
   return async dispatch => {
     await dispatch({
       type: AT.SETTINGS_POST_NEW_PRODUCT_REQUEST,
       payload: api.postNewProduct({
-        casProduct: inputsValue.casProduct,
+        casProduct: inputsValue.casProduct ? inputsValue.casProduct.id : null,
+        description: inputsValue.description,
+        freightClass: inputsValue.freightClass ? inputsValue.freightClass : null,
+        hazardClasses: inputsValue.hazardClass ? [inputsValue.hazardClass] : null,
+        hazardous: inputsValue.hazardous,
+        nmfcNumber: parseInt(inputsValue.nmfcNumber),
         packagingSize: inputsValue.packagingSize,
         packagingType: inputsValue.packageID,
         packagingUnit: inputsValue.unitID,
+        packagingGroup: inputsValue.packagingGroup ? inputsValue.packagingGroup : null,
         productCode: inputsValue.productNumber,
-        productName: inputsValue.productName
+        productName: inputsValue.productName,
+        stackable: inputsValue.stackable,
+        unNumber: inputsValue.unNumber ? inputsValue.unNumber : null
       })
     })
+    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
     dispatch(closePopup())
-    //! !dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
-  }
-
-
-  return {
-    type: AT.POST_NEW_PRODUCT_REQUEST,
-    payload: inputsValue
   }
 }
 

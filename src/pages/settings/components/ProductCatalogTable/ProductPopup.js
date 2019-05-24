@@ -9,7 +9,7 @@ import { Modal, FormGroup, FormField, Search, Label } from 'semantic-ui-react'
 import {
   closePopup,
   handleSubmitProductEditPopup,
-  handleSubmitProductEddPopup,
+  handleSubmitProductAddPopup,
   searchCasProduct,
   searchUnNumber
 } from '../../actions'
@@ -40,20 +40,19 @@ class ProductPopup extends React.Component {
   }
 
   handlerSubmit = (values, actions) => {
-    const { popupValues } = this.props
+    const { popupValues, reloadFilter } = this.props
     if (popupValues) {
       this.props.handleSubmitProductEditPopup({
         ...values,
         casProduct: this.state.value ? this.state.value : popupValues.casProduct,
         unNumber: this.state.unNumber ? this.state.unNumber.id : popupValues.unNumber.id,
-        id: popupValues.id
-      })
+      }, popupValues.id, reloadFilter)
     } else {
-      this.props.handleSubmitProductEddPopup({
+      this.props.handleSubmitProductAddPopup({
         ...values,
         casProduct: this.state.value,
         unNumber: this.state.unNumber ? this.state.unNumber.id : null
-      })
+      }, reloadFilter)
     }
     actions.setSubmitting(false)
   }
@@ -292,7 +291,7 @@ class ProductPopup extends React.Component {
 const mapDispatchToProps = {
   closePopup,
   handleSubmitProductEditPopup,
-  handleSubmitProductEddPopup,
+  handleSubmitProductAddPopup,
   searchCasProduct,
   searchUnNumber
 }
@@ -306,7 +305,12 @@ const mapStateToProps = state => {
     hazardClasses: state.settings.productsHazardClasses,
     packagingGroups: state.settings.productsPackagingGroups,
     searchedCasProducts: state.settings.searchedCasProducts,
-    searchedUnNumbers: state.settings.searchedUnNumbers
+    searchedUnNumbers: state.settings.searchedUnNumbers,
+    reloadFilter: {props: {
+        currentTab: state.settings.currentTab,
+        productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
+        productsFilter: state.settings.productsFilter},
+      value: state.settings.filterValue},
   }
 }
 

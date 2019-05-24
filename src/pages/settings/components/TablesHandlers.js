@@ -64,7 +64,8 @@ class TablesHandlers extends Component {
       currentTab,
       openPopup,
       openImportPopup,
-      handleProductCatalogUnmappedValue
+      handleProductCatalogUnmappedValue,
+      productCatalogUnmappedValue
     } = this.props
 
     const { filterFieldCurrentValue } = this.state
@@ -91,7 +92,8 @@ class TablesHandlers extends Component {
             {currentTab === 'Product catalog' && (
               <Checkbox
                 label='Unmapped only'
-                onChange={(e, { checked }) => handleProductCatalogUnmappedValue(checked)}
+                defaultChecked={productCatalogUnmappedValue}
+                onChange={(e, { checked }) => handleProductCatalogUnmappedValue(checked, this.props)}
               />
             )}
             <Button
@@ -122,7 +124,10 @@ class TablesHandlers extends Component {
 const mapStateToProps = state => {
   return {
     currentTab: state.settings.currentTab,
-    deliveryAddressesFilter: state.settings.deliveryAddressesFilter
+    productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
+    deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
+    productsFilter: state.settings.productsFilter,
+    filterValue: state.settings.filterValue,
   }
 }
 

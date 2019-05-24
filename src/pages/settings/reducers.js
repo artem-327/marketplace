@@ -62,6 +62,7 @@ export const initialState = {
   searchedCasProducts: [],
   searchedUnNumbers: [],
   deliveryAddressesFilter: { pageSize: 50, pageNumber: 0 },
+  productsFilter: { pageSize: 50, pageNumber: 0 },
 }
 
 export default function reducer(state = initialState, action) {
@@ -577,6 +578,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_PENDING:
     case AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES_PENDING:
     case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_PENDING:
     case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_PENDING:
@@ -605,6 +607,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_REJECTED:
     case AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES_REJECTED:
     case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_REJECTED:
     case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_REJECTED:

@@ -15,13 +15,16 @@ export default {
     api
       .get('/prodex/api/payments/bank-accounts')
       .then(response => response.data),
-  getProductsCatalog: async () => {return await
-    api.get('/prodex/api/products/search').then(response => response.data)},
+  getProductsCatalogByString: async (data, limit=30) => {return await
+    api.get(`/prodex/api/products/search?limit=${limit}&onlyMapped=${data.unmapped}&search=${data.body}`).then(response => response.data)},
+  getProductsCatalogByFilter: async (data) => {return await
+    api.post(`/prodex/api/products/datagrid?unmappedOnly=${data.unmapped}`, data.body).then(response => response.data)},
+
   getProductTypes: async () => {return await
     api.get('/prodex/api/packaging-types').then(response => response.data)},
   getUnitsType: async () => {return await api.get('/prodex/api/units')},
-  getHazardClasses: () => api.get('/prodex/api/hazard-classes'),
-  getPackagingGroups: () => api.get('/prodex/api/packaging-groups'),
+  getHazardClasses: async () => {return await api.get('/prodex/api/hazard-classes')},
+  getPackagingGroups: async () => {return await api.get('/prodex/api/packaging-groups')},
   getProductsWithRequiredParamPar: char =>
     api
       .get(`/prodex/api/product-templates?search=${char}`)
@@ -42,6 +45,11 @@ export default {
   postNewBankAccount: body =>
     api.post('/prodex/api/payments/bank-accounts/add', body),
   postNewProduct: async body => {return await api.post('/prodex/api/products', body)},
+  updateProduct: async (id, body) => {
+    console.log('!!!!! id', id);
+    console.log('!!!!! body', body);
+    await api.put(`/prodex/api/products/id/${id}`, body)},
+
   postImportProductCSV: (body, id) => {
     return api
       .post(
@@ -67,7 +75,7 @@ export default {
   patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body),
   patchUserRole: (id, body) =>
     api.patch(`/prodex/api/users/id/${id}/add-roles`, body),
-  putProduct: (id, body) => api.put(`/prodex/api/products/id/${id}`, body),
+  putProduct: (id, body) => api.put(`/prodex/api/products/id/${id}`, body), //! ! delete
   searchCasProduct: (pattern) => api.get(`/prodex/api/cas-products/search?limit=5&pattern=${pattern}`),
   searchUnNumber: (pattern) => api.get(`/prodex/api/un-numbers/search?limit=5&pattern=${pattern}`),
 
@@ -89,8 +97,7 @@ export default {
     await api.delete(`/prodex/api/delivery-addresses/id/${id}`)},
   getCountries: async () => {return await api.get('/prodex/api/countries')
     .then(response => response.data)},
-  //! ! will be added new BE endpoint 'get /api/provinces - Returns all provinces'
-  getProvinces: async (id) => {return await api.get(`/prodex/api/provinces/search?countryId=${id}`)
+  getProvinces: async (id) => {return await api.get(`/prodex/api/provinces/country/${id}`)
     .then(response => response.data)},
   createDeliveryAddress: async (value) => {
     return await api.post('/prodex/api/delivery-addresses', value)},

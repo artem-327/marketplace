@@ -24,7 +24,7 @@ class ProductCatalogTable extends Component {
   }
 
   componentDidMount() {
-    this.props.getProductsCatalogRequest()
+    this.props.getProductsCatalogRequest({body: this.props.productsFilter, unmapped: this.props.productCatalogUnmappedValue})
   }
 
   render() {
@@ -82,7 +82,14 @@ const mapStateToProps = state => {
     rows: state.settings.productsCatalogRows,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
-    loading: state.settings.loading
+    productsFilter: state.settings.productsFilter,
+    loading: state.settings.loading,
+    deleteRowByid: state.settings.deleteRowByid,
+    reloadFilter: {props: {
+        currentTab: state.settings.currentTab,
+        productsFilter: state.settings.productsFilter},
+      value: state.settings.filterValue},
+    productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue
   }
 }
 
