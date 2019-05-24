@@ -23,6 +23,20 @@ function* getOrders(action) {
             //status: !action.payload.filter || action.payload.filter.status === 'All' ? '' : action.payload.filter.status
           })
         }
+        if (action.payload.filter.orderFrom) {
+          filters.filters.push({
+            operator: 'GREATER_THAN_OR_EQUAL_TO',
+            path: 'Order.createdAt',
+            values: [action.payload.filter.orderFrom+'T00:00:00Z']
+          })
+        }
+        if (action.payload.filter.orderTo) {
+          filters.filters.push({
+            operator: 'LESS_THAN_OR_EQUAL_TO',
+            path: 'Order.createdAt',
+            values: [action.payload.filter.orderTo+'T23:59:59Z']
+          })
+        }
         if (action.payload.filter.customer) {
           filters.filters.push({
             operator: 'EQUALS',

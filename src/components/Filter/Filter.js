@@ -65,6 +65,7 @@ class Filter extends Component {
           isOpen={this.props.filterGroupStatus.orderDate}
           onOpen={(value) => { this.props.toggleFilterGroup('orderDate', value) }}
           split
+          dispatch={this.props.dispatch}
           inputs={[
             {
               label: 'orderFrom',
