@@ -2,13 +2,12 @@
  * Created by ARTIO on 23.5.2019.
  */
 context("Login and logout",() => {
-    const testedDomain = "http://test.echoexchange.net";
     it('Bad credentials',() => {
         cy.server();
         //This is the post call we are interested in capturing
         cy.route('POST', '/prodex/oauth/token').as('login');
 
-        cy.visit(testedDomain);
+        cy.visit("");
         cy.url().should("include","login");
         cy.get("input[name=username]")
             .type("admin@example.com")
@@ -38,7 +37,7 @@ context("Login and logout",() => {
         cy.route('POST', '/prodex/oauth/token').as('login');
         cy.route('POST', '/auth/logout').as('logout');
 
-        cy.visit(testedDomain);
+        cy.visit("");
         cy.url().should("include","login");
         cy.get("input[name=username]")
             .type("admin@example.com")
@@ -70,7 +69,7 @@ context("Login and logout",() => {
         cy.get(".right.menu .item.dropdown").should("have.class","visible");
         cy.get(".right.menu .item.dropdown").contains("Logout").click("center");
         cy.url().should("include","/login");
-        cy.visit(testedDomain+"/admin");
+        cy.visit("admin");
         cy.url().should("include","/login");
     });
 
@@ -80,7 +79,7 @@ context("Login and logout",() => {
         cy.route('POST', '/prodex/oauth/token').as('login');
         cy.route('POST', '/auth/logout').as('logout');
 
-        cy.visit(testedDomain);
+        cy.visit("");
         cy.url().should("include","login");
         cy.get("input[name=username]")
             .type("user1@example.com")
@@ -111,7 +110,7 @@ context("Login and logout",() => {
         cy.get(".right.menu .item.dropdown").should("have.class","visible");
         cy.get(".right.menu .item.dropdown").contains("Logout").click("center");
         cy.url().should("include","/login");
-        cy.visit(testedDomain+"/dashboard");
+        cy.visit("dashboard");
         cy.url().should("include","/login");
     });
 });
