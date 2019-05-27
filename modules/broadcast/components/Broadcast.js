@@ -2,34 +2,12 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import * as Actions from '../actions'
-import { Modal, Segment, Grid, Icon, Button, Form, Input, Dropdown, Dimmer, Loader, Checkbox, Message } from 'semantic-ui-react'
+import { Modal, Segment, Grid, Icon, Button, Form, Input, Radio, Dropdown, Dimmer, Loader, Checkbox, Message, Menu } from 'semantic-ui-react'
 import TreeModel from 'tree-model'
 import { Rule } from './Broadcast.style'
 
-const filterTree = (tree, filter, category) => {
-  if (filter === '') {
-    tree.all().forEach(n => {
-      n.model.hidden = false
-      n.model.expanded = false
-    })
-  }
-  else {
-    tree.all(n => n.model.type === category && n.model.name.toLowerCase().indexOf(filter.toLowerCase()) === -1).forEach(n => n.model.hidden = true)
-    tree.all(n => !n.first(n => !n.model.hidden)).forEach(n => n.model.hidden = true)
-    tree.all().forEach(n => n.model.expanded = true)
-  }
-
-  return tree
-}
-
-const prepareTree = (tree, category) => {
-  let tmpTree = new TreeModel().parse(tree)
-
-
-}
-
 const RuleItem = (props) => {
-  const { onChange, onRowClick, item } = props
+  const { onChange, onRowClick, item, mode} = props
 
   const handleChange = (propertyName, e) => {
     e.preventDefault()
@@ -42,7 +20,38 @@ const RuleItem = (props) => {
     onChange(item.node, { [propertyName]: newValue })
   }
 
+  
+
   const { model: { id, broadcast, anonymous, expanded, hidden, type } } = item.node
+  
+  const controls = {
+    'client': <>
+      <Rule.Toggle>
+        <Checkbox
+          toggle
+          indeterminate={broadcast === 2}
+          checked={broadcast === 1}
+          onClick={(e) => handleChange('broadcast', e)}
+        />
+      </Rule.Toggle>
+      {/* <Rule.Checkbox>
+          <Checkbox
+            indeterminate={anonymous === 2}
+            checked={anonymous === 1}
+            onClick={(e) => handleChange('anonymous', e)}
+          />
+        </Rule.Checkbox> */}
+    </>,
+    'price': <>
+      <Rule.Toggle style={{paddingRight: '10px'}}>
+        <Input size='small' style={{padding: '5px', width: '80px'}} />
+        <div style={{display: 'flex', flexDirection: 'column'}}>
+          <Radio name="type" label='%' />
+          <Radio  name="type" label='$' />
+        </div>
+      </Rule.Toggle> 
+    </>
+  }
 
   if (hidden) return null
 
@@ -54,31 +63,30 @@ const RuleItem = (props) => {
           <span>{item.name}</span>
         </Rule.RowContent>
 
-        <Rule.Toggle>
-          <Checkbox
-            toggle
-            indeterminate={broadcast === 2}
-            checked={broadcast === 1}
-            onClick={(e) => handleChange('broadcast', e)}
-          />
-        </Rule.Toggle>
-
-        {/* <Rule.Checkbox>
-          <Checkbox
-            indeterminate={anonymous === 2}
-            checked={anonymous === 1}
-            onClick={(e) => handleChange('anonymous', e)}
-          />
-        </Rule.Checkbox> */}
+        {controls[mode]}
 
       </Rule.Row>
 
-      {(expanded || type === 'root') && item.children.map((i, idx) => <RuleItem key={idx} item={i} onRowClick={onRowClick} onChange={onChange} />)}
+      {(expanded || type === 'root') && item.children.map((i, idx) => <RuleItem key={idx} mode={mode} item={i} onRowClick={onRowClick} onChange={onChange} />)}
     </>
   )
 }
 
 class Broadcast extends Component {
+
+  state = {
+    filterSearch: ''
+  }
+
+  constructor(props) {
+    super(props)
+
+    this.handleFilterChange = _.debounce(this.handleFilterChange, 300)
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({filterSearch: props.filter.search})
+  }
 
   updateTreeSelection = (node, values) => {
     const update = (node, values) => {
@@ -126,6 +134,12 @@ class Broadcast extends Component {
     updateLocalRules(treeData.model)
   }
 
+  handleSearchChange = (e, {name, value}) => {
+    this.setState({filterSearch: value})
+
+    this.handleFilterChange(e, {name, value})
+  }
+
   handleFilterChange = (e, { name, value }) => {
     const {updateFilter, updateLocalRules, filter, treeData} = this.props
 
@@ -149,12 +163,19 @@ class Broadcast extends Component {
 
     const searchFn = (n => {
       var found = false
-      n.model.name.toLowerCase().split(' ').forEach(s => { 
+      const name = n.model.name.toLowerCase()
+
+      if (name.startsWith(fs)) {
+        return true
+      }
+
+      name.split(' ').forEach(s => { 
         if (s.startsWith(fs)) { found = true; return }
       })
 
       return found
     })
+
     const searchParentFn = (n => n.first(i => i.model.type !== 'company' && searchFn(i)))
 
     const presets = {
@@ -188,7 +209,7 @@ class Broadcast extends Component {
         type: treeData.model.type,
         node: treeData,
         depth: 1,
-        children: treeData.all(n => n.model.type === 'branch').map(n1 => ({
+        children: treeData.all(n => n.model.type === 'company').map(n1 => ({
           name: n1.model.name,
           type: n1.model.type,
           node: n1,
@@ -209,7 +230,7 @@ class Broadcast extends Component {
   }
 
   render() {
-    const { open, loading, treeData, filter, closeBroadcast } = this.props
+    const { open, loading, treeData, filter, closeBroadcast, saveRules, id, mode, switchMode } = this.props
     const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'branch' && n.model.broadcast === 1).length}/${treeData.all(n => n.model.type === 'branch').length}`
     
     return (
@@ -219,6 +240,12 @@ class Broadcast extends Component {
           <Grid className="flex stretched">
             <Grid.Row divided className="flex stretched">
               <Grid.Column width={6}>
+                <div style={{flex: '0 0', padding: '0 0 15px 0'}}>
+                  <Button.Group widths={2}>
+                    <Button onClick={() => switchMode('client')} active={mode === 'client'} basic={mode !== 'client'} color="blue">Client list</Button>
+                    <Button onClick={() => switchMode('price')} basic={mode !== 'price'} active={mode ==='price'} color="blue">Price list</Button>
+                  </Button.Group>
+                </div>
                 <div>
                   <Message info size='large' style={{ padding: '6px 15px' }}>
                     <Icon name='info circle' />
@@ -240,7 +267,7 @@ class Broadcast extends Component {
                     </Form.Field>
                     <Form.Field>
                       <label>Filter</label>
-                      <Input name="search" onChange={_.debounce(this.handleFilterChange, 300)} />
+                      <Input name="search" icon='search' iconPosition='left' value={this.state.filterSearch} onChange={this.handleSearchChange} />
                     </Form.Field>
                   </Form>
                 </div>
@@ -252,7 +279,7 @@ class Broadcast extends Component {
                       Region select
                     </Rule.RowContent>
                     <Rule.Toggle>
-                      Include
+                      {mode === "client" ? "Include" : "Mark-up/down"}
                     </Rule.Toggle>
                     {/* <Rule.Checkbox>
                       Anomymous
@@ -260,7 +287,7 @@ class Broadcast extends Component {
                   </Rule.Header>
                   <Rule.Content>
                     {treeData && [this.getFilteredTree()].map(i => (
-                      <RuleItem item={i} onRowClick={this.handleRowClick} onChange={this.handleChange} />)
+                      <RuleItem item={i} mode={mode} onRowClick={this.handleRowClick} onChange={this.handleChange} />)
                     )}
                     {loading && <Dimmer active inverted><Loader active /></Dimmer>}
                   </Rule.Content>
@@ -270,7 +297,7 @@ class Broadcast extends Component {
           </Grid>
         </Modal.Content>
         <Modal.Actions>
-          <Button primary>Save</Button>
+          <Button primary onClick={() => saveRules(id, treeData.model)}>Save</Button>
         </Modal.Actions>
       </Modal>
     )
