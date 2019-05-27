@@ -53,6 +53,7 @@ import ordersReducers from './pages/orders/reducers'
 import ordersSaga from './pages/orders/saga'
 
 import zip from '~/modules/zip-dropdown/reducer'
+import businessTypes from '~/modules/company-form/reducer'
 
 import auth from '~/modules/auth/reducer'
 
@@ -61,6 +62,7 @@ import auth from '~/modules/auth/reducer'
 const reducer = combineReducers({
   auth,
   admin,
+  businessTypes,
   identity,
   brcRules,
   companies,

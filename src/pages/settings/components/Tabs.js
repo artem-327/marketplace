@@ -15,8 +15,8 @@ function Tabs(props) {
         <Menu.Item 
           name={tab.name.toUpperCase()}
           key={tab.id}
-          onClick={() => handleActiveTab(tab.name)}
-          active={currentTab === tab.name}
+          onClick={() => handleActiveTab(tab)}
+          active={currentTab.name === tab.name}
         />
       ))}      
     </Menu>

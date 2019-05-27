@@ -9,6 +9,9 @@
   "global.selectLocation": "Select Location",
   "global.cancel": "Cancel",
   "global.phoneNumber": "Phone Number",
+  "global.phone": "Phone",
+  "global.websiteUrl": "Website URL",
+  "global.nacdNumber": "NACD Member",
   "global.postalCode": "Postal Code",
   "global.state": "State",
   "global.province": "Province",
@@ -32,6 +35,12 @@
   "global.day": "{count} {one { Day } other { Days }",
   "global.loading": "Loading",
   "global.or": "or",
+  "company.legalCompanyName": "Legal Company Name",
+  "company.dba": "Doing Business As",
+  "company.businessType": "Business Type",
+  "company.cin": "CIN",
+  "company.tinEin": "TIN",
+  "company.duns": "DUNS Number",
   "login.username": "Username",
   "login.password": "Password",
   "login.login": "LOG IN",
@@ -302,5 +311,6 @@
   "validation.required": "Required",
   "validation.invalidEmail": "Invalid e-mail address",
   "validation.phoneNumber": "Enter valid phone number",
-  "validation.invalidString": "Invalid value"
+  "validation.invalidString": "Invalid value",
+  "validation.minLength": "Field should have at least {min} characters"
 }
