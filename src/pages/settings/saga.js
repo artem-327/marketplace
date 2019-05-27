@@ -527,41 +527,43 @@ function* deleteConfirmPopup({}) {
 }
 
 export default function* settingsSaga() {
+
   //yield takeEvery(AT.SUBMIT_EDIT_POPUP_HANDLER, putWarehouseWorker)
   //yield takeEvery(AT.GET_USERS_DATA, getUsersDataWorker)
   //yield takeEvery(AT.GET_WAREHOUSES_DATA, getWarehousesDataWorker)
-  yield takeEvery(AT.GET_BRANCHES_DATA, getBranchesDataWorker)
-  yield takeEvery(AT.GET_CREDIT_CARDS_DATA, getCreditCardsDataWorker)
-  yield takeEvery(AT.GET_BANK_ACCOUNTS_DATA, getBankAccountsDataWorker)
+  //yield takeEvery(AT.GET_BRANCHES_DATA, getBranchesDataWorker)
+  //yield takeEvery(AT.GET_CREDIT_CARDS_DATA, getCreditCardsDataWorker)
+  //yield takeEvery(AT.GET_BANK_ACCOUNTS_DATA, getBankAccountsDataWorker)
   //yield takeEvery(AT.GET_PRODUCTS_CATALOG_DATA, getProductCatalogWorker)
-  yield takeEvery(
-    AT.GET_PRODUCTS_WITH_REQUIRED_PARAM,
-    getProductsWithRequiredParamWorker
-  )
-  yield takeEvery(AT.GET_STORED_CSV, getStoredCSV)
+  //yield takeEvery(
+  //  AT.GET_PRODUCTS_WITH_REQUIRED_PARAM,
+  //  getProductsWithRequiredParamWorker
+  //)
+  //yield takeEvery(AT.GET_STORED_CSV, getStoredCSV)
 
-  yield takeEvery(AT.POST_NEW_USER_REQUEST, postNewUserWorker)
-  yield takeEvery(AT.POST_NEW_WAREHOUSE_REQUEST, postNewWarehouseWorker)
-  yield takeEvery(AT.POST_NEW_CREDIT_CARD_REQUEST, postNewCreditCardWorker)
-  yield takeEvery(AT.POST_NEW_BANK_ACCOUNT_REQUEST, postNewBankAccountWorker)
-  yield takeEvery(AT.POST_NEW_PRODUCT_REQUEST, postNewProductWorker)
-  yield takeEvery(AT.POST_UPLOAD_CSV_FILE, postUploadCSVFile)
+  //yield takeEvery(AT.POST_NEW_USER_REQUEST, postNewUserWorker)
+  //yield takeEvery(AT.POST_NEW_WAREHOUSE_REQUEST, postNewWarehouseWorker)
+  //yield takeEvery(AT.POST_NEW_CREDIT_CARD_REQUEST, postNewCreditCardWorker)
+  //yield takeEvery(AT.POST_NEW_BANK_ACCOUNT_REQUEST, postNewBankAccountWorker)
+  //yield takeEvery(AT.POST_NEW_PRODUCT_REQUEST, postNewProductWorker)
+  //yield takeEvery(AT.POST_UPLOAD_CSV_FILE, postUploadCSVFile)
   //yield takeEvery(AT.POST_CSV_IMPORT_PRODUCTS, postImportProductCSV)// ! !
 
-  yield takeEvery(AT.HANDLE_SUBMIT_USER_EDIT_POPUP, putUserWorker)
+  //yield takeEvery(AT.HANDLE_SUBMIT_USER_EDIT_POPUP, putUserWorker)
 
-  yield takeEvery(AT.PUT_NEW_USER_ROLES_REQUEST, putNewUserRolesWorker)
+  //yield takeEvery(AT.PUT_NEW_USER_ROLES_REQUEST, putNewUserRolesWorker)
   //yield takeEvery(AT.PUT_WAREHOUSE_EDIT_POPUP, putWarehouseEditPopup)
-  yield takeEvery(AT.PUT_PRODUCT_EDIT_POPUP, putProductEditPopup)
-  yield takeEvery(AT.PUT_BANK_ACCOUNT_EDIT_POPUP, putBankAccountEditPopup)
+  //yield takeEvery(AT.PUT_PRODUCT_EDIT_POPUP, putProductEditPopup)
+  //yield takeEvery(AT.PUT_BANK_ACCOUNT_EDIT_POPUP, putBankAccountEditPopup)
 
-  yield takeEvery(AT.DELETE_CREDIT_CARD, deleteCreditCardWorker)
-  yield takeEvery(AT.DELETE_BANK_ACCOUNT, deleteBankAccountWorker)
-  yield takeEvery(AT.DELETE_CONFIRM_POPUP, deleteConfirmPopup)
+  //yield takeEvery(AT.DELETE_CREDIT_CARD, deleteCreditCardWorker)
+  //yield takeEvery(AT.DELETE_BANK_ACCOUNT, deleteBankAccountWorker)
+  //yield takeEvery(AT.DELETE_CONFIRM_POPUP, deleteConfirmPopup)
 
   // yield takeEvery(AT.OPEN_ROLES_POPUP, openRolesPopup)
   // yield takeEvery(AT.CLOSE_ROLES_POPUP, closeRolesPopup)
 
   //yield takeEvery(AT.SETTINGS_CLOSE_IMPORT_POPUP, closeImportPopup)
   //yield takeEvery(AT.CLOSE_IMPORT_POPUP_CANCEL, closeImportPopupCancel)
+
 }

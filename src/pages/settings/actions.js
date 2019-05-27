@@ -1,3 +1,4 @@
+import { select } from "redux-saga/effects" // ! !
 import * as AT from "./action-types"
 import api from "./api"
 
@@ -105,9 +106,51 @@ export function handleOpenConfirmPopup(payload) {
     payload
   }
 }
-export function deleteConfirmation() { // ! ! TODO
-  return {
-    type: AT.DELETE_CONFIRM_POPUP
+export function deleteConfirmation() {
+  const {
+    settings: { deleteRowByid, currentTab }
+  } = select()
+  let toast = {}
+  return async dispatch => {
+    switch (currentTab) {
+      case "Users":
+        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteUser(deleteRowByid)})
+        toast = { message: "User delete success", isSuccess: true }
+        dispatch(getUsersDataRequest())
+        break
+      case "Branches":
+        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteWarehouse(deleteRowByid)})
+        toast = { message: "Branch delete success", isSuccess: true }
+        dispatch(getBranchesDataRequest())
+        break
+      case "Warehouses":
+        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteWarehouse(deleteRowByid)})
+        toast = { message: "Warehouse delete success", isSuccess: true }
+        dispatch(getWarehousesDataRequest())
+        break
+      case "Product catalog":
+        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteProduct(deleteRowByid)})
+        toast = { message: "Product delete success", isSuccess: true }
+        //! ! TODO - filter - dispatch(getProductsCatalogRequest())
+        break
+      case "Credit cards":
+        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteCreditCard(deleteRowByid)})
+        toast = { message: "Credit cards delete success", isSuccess: true }
+        dispatch(getCreditCardsDataRequest())
+        break
+      case "Bank accounts":
+        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteBankAccount(deleteRowByid)})
+        toast = { message: "Bank account delete success", isSuccess: true }
+        dispatch(getBankAccountsDataRequest())
+        break
+      default:
+        break
+    }
+    dispatch(confirmationSuccess())
+    dispatch({
+      type: AT.OPEN_TOAST,
+      payload: toast
+    })
   }
 }
 export function confirmationSuccess() {
@@ -276,9 +319,6 @@ export function getUsersDataRequest() {
   }
 }
 
-
-Tady ! ! ! ! !
-
 export function openRolesPopup(row) {
   return {
     type: AT.OPEN_ROLES_POPUP,
@@ -314,14 +354,56 @@ export function getWarehousesDataRequest() {
 }
 
 export function getBranchesDataRequest() {
-  return {
-    type: AT.GET_BRANCHES_DATA
+  return (dispatch) => {
+    dispatch({
+      type: AT.GET_BRANCHES_DATA,
+      async payload() {
+        const [branches, country] = await Promise.all([
+          api.getBranches(),
+          api.getCountry(),
+        ])
+        const newCountryFormat = country.map(country => {
+          return {
+            text: country.name,
+            value: country.id
+          }
+        })
+        return { branches, newCountryFormat }
+      }
+    })
   }
 }
 
 export function getCreditCardsDataRequest() {
+  const creditCardsData = [ // TODO - temporary fake function
+    {
+      id: "3",
+      cardNumber: "15",
+      last4: "7891",
+      expMonth: 8,
+      expYear: 21,
+      cvcCheck: "123"
+    },
+    {
+      id: "2",
+      cardNumber: "75",
+      last4: "4569",
+      expMonth: 5,
+      expYear: 19,
+      cvcCheck: "951"
+    },
+    {
+      id: "8",
+      cardNumber: "9849",
+      last4: "123",
+      expMonth: 5,
+      expYear: 21,
+      cvcCheck: "753"
+    }
+  ]
   return {
-    type: AT.GET_CREDIT_CARDS_DATA
+    type: AT.GET_CREDIT_CARDS_DATA_FULFILLED,
+    payload: creditCardsData
   }
 }
 
@@ -350,15 +432,37 @@ export function getProductsCatalogRequest(data) {//! !
 }
 
 export function getBankAccountsDataRequest() {
-  return {
-    type: AT.GET_BANK_ACCOUNTS_DATA
+  return (dispatch) => {
+    dispatch({
+      type: AT.GET_BANK_ACCOUNTS_DATA,
+      async payload() {
+        const [bankAccountsData, country, currency] = await Promise.all([
+          api.getBankAccountsData(),
+          api.getCountry(),
+          api.getCurrencies(),
+        ])
+        const newCountryFormat = country.map(country => {
+          return {
+            text: country.name,
+            value: country.id
+          }
+        })
+        const newCurrencyFormat = currency.map(currency => {
+          return {
+            text: currency.code,
+            value: currency.id
+          }
+        })
+        return { bankAccountsData, newCountryFormat, newCurrencyFormat }
+      }
+    })
   }
 }
 
 export function getProductsWithRequiredParam(payload) {
   return {
     type: AT.GET_PRODUCTS_WITH_REQUIRED_PARAM,
-    payload
+    payload: api.getProductsWithRequiredParamPar(payload)
   }
 }
 
@@ -369,32 +473,78 @@ export function getStoredCSV(data) {
   }
 }
 
-export function postNewUserRequest(userData) {
-  return {
-    type: AT.POST_NEW_USER_REQUEST,
-    payload: userData
+export function postNewUserRequest(payload) {
+  return async dispatch => {
+    const dataBody = {
+      email: payload.email,
+      name: payload.name,
+      //firstname: payload.firstName,
+      //lastname: payload.lastName,
+      middlename: payload.middleName,
+      homeBranch: payload.homeBranchId,
+      password: "123"
+    }
+    console.log('!!!!!!!!!! new user x');
+    await dispatch({
+      type: AT.POST_NEW_USER_REQUEST,
+      payload: api.postNewUser(dataBody)
+    })
+    dispatch(getUsersDataRequest())
+    dispatch(closePopup())
   }
 }
 
-export function postNewWarehouseRequest(warehouseData) {
-  return {
-    type: AT.POST_NEW_WAREHOUSE_REQUEST,
-    payload: warehouseData
+export function postNewWarehouseRequest(payload) {
+  return async dispatch => {
+    const currentUser = await api.getCurrentUser()
+    const dataBody = {
+      address: {
+        city: payload.city,
+        country: payload.country,
+        streetAddress: payload.address,
+        zip: payload.zip
+      },
+      company: currentUser.company.id,
+      contactEmail: payload.email,
+      contactName: payload.contactName,
+      contactPhone: payload.phone,
+      warehouse: payload.tab ? false : true,
+      name: payload.name
+    }
+    await dispatch({
+      type: AT.POST_NEW_WAREHOUSE_REQUEST,
+      payload: api.postNewWarehouse(dataBody)
+    })
+    if (payload.tab) { // ! ! ???
+      dispatch(getBranchesDataRequest())
+    } else {
+      dispatch(getWarehousesDataRequest())
+    }
+    dispatch(closePopup())
   }
 }
 
-export function postNewCreditCardRequest(creditCardData) {
+export function postNewCreditCardRequest(payload) {
+  const dataBody = {
+    cardNumber: payload.cardNumber,
+    cvc: Number(payload.cvc),
+    expirationMonth: Number(payload.expirationMonth),
+    expirationYear: Number(payload.expirationYear)
+  }
   return {
     type: AT.POST_NEW_CREDIT_CARD_REQUEST,
-    payload: creditCardData
+    payload: api.postNewCreditCard(dataBody)
   }
 }
 
-export function putNewUserRoleRequest(roles, id) {
-  return {
-    type: AT.PUT_NEW_USER_ROLES_REQUEST,
-    payload: roles,
-    id
+export function putNewUserRoleRequest(payload, id) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.PUT_NEW_USER_ROLES_REQUEST,
+      payload: api.patchUserRole(id, payload)
+    })
+    dispatch(getUsersDataRequest())
+    dispatch(closePopup())
   }
 }
 
@@ -424,15 +574,27 @@ export function handleSubmitProductAddPopup(inputsValue, reloadFilter) {//! !
   }
 }
 
-export function postNewBankAccountRequest(bankAccountData) {
-  return {
-    type: AT.POST_NEW_BANK_ACCOUNT_REQUEST,
-    payload: bankAccountData
+export function postNewBankAccountRequest(payload) {
+  return async dispatch => {
+    const dataBody = {
+      accountHolderName: payload.accountHolderName,
+      accountHolderType: payload.accountHolderType,
+      accountNumber: payload.account,
+      country: payload.country,
+      currency: payload.currency,
+      routingNumber: payload.routingNumber
+    }
+    await dispatch({
+      type: AT.POST_NEW_BANK_ACCOUNT_REQUEST,
+      payload: api.postNewBankAccount(dataBody)
+    })
+    dispatch(closePopup())
+    // TODO: Add Bank Accounts reload
   }
 }
 
 export function putBankAccountRequest(account, id) {
-  return {
+  return {  // ! ! missing in saga
     type: AT.PUT_BANK_ACCOUNT_EDIT_POPUP,
     payload: account,
     id
@@ -440,14 +602,14 @@ export function putBankAccountRequest(account, id) {
 }
 
 export function deleteCreditCard(cardId) {
-  return {
+  return {  // ! ! saga calls api.deleteWarehouse ???
     type: AT.DELETE_CREDIT_CARD,
     payload: cardId
   }
 }
 
 export function deleteBankAccount(accountId) {
-  return {
+  return {  // ! ! saga calls api.deleteWarehouse ???
     type: AT.DELETE_BANK_ACCOUNT,
     payload: accountId
   }
@@ -456,7 +618,7 @@ export function deleteBankAccount(accountId) {
 export function uploadCSVFile(payload) {
   return {
     type: AT.POST_UPLOAD_CSV_FILE,
-    payload: payload
+    payload: api.uploadCSVFile(payload)
   }
 }
 

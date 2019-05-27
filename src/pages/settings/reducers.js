@@ -280,7 +280,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_BRANCHES_DATA: {
+    case AT.GET_BRANCHES_DATA: {  // ! ! pending
       return { ...state, loading: true }
     }
 
@@ -333,7 +333,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_CREDIT_CARDS_DATA: {
+    case AT.GET_CREDIT_CARDS_DATA: {  // ! ! pending
       return { ...state, loading: true }
     }
 
@@ -357,7 +357,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_BANK_ACCOUNTS_DATA: {
+    case AT.GET_BANK_ACCOUNTS_DATA: { // ! ! pending
       return { ...state, loading: true }
     }
 

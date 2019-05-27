@@ -27,6 +27,7 @@ const formValidation = Yup.object().shape({
 
 class UsersPopup extends React.Component {
   submitHandler = (values, actions) => {
+    console.log('!!!!!!!!!! new user 1');
     if (this.props.userEditRoles) {
       this.props.putNewUserRoleRequest(
         this.addNewRole(values),
