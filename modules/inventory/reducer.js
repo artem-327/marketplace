@@ -193,7 +193,10 @@ export default function reducer(state = initialState, action) {
           return {
             ...state,
             loading: false,
-            myProductOffers: action.payload.data
+            myProductOffers: [
+              ...state.myProductOffers,
+              ...action.payload.data
+            ]
           }
         }
 

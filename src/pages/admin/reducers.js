@@ -205,7 +205,10 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_FULFILLED: {
       return {
         ...state,
-        casProductsRows: action.payload,
+        casProductsRows: [
+          ...state.casProductsRows,
+          ...action.payload
+        ],
         loading: false
       }
     }
@@ -258,7 +261,10 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_GET_COMPANIES_FULFILLED: {
       return { ...state,
         loading: false,
-        companiesRows: action.payload
+        companiesRows: [
+          ...state.companiesRows,
+          ...action.payload
+        ]
       }
     }
 

@@ -99,6 +99,7 @@ export default class AllInventory extends Component {
           package
           productGrade
           filterFunc={(inputs) => this.props.fetchAllProductOffers(inputs)}
+          savingFilters={true}
           {...this.props}
         />
         {content}

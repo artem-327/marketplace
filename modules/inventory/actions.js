@@ -163,7 +163,7 @@ export function getProductGrades() {
   }
 }
 
-export function getMyProductOffers(filters = {}) {
+export function getMyProductOffers(filters = {}, pageSize = 50, pageNumber = 0) {
   let filtersReady = {
     filters: Object.keys(filters).reduce((filtered, option) => {
       switch(option) {
@@ -272,7 +272,11 @@ export function getMyProductOffers(filters = {}) {
 
   return {
     type: AT.INVENTORY_GET_MY_PRODUCT_OFFERS,
-    payload: api.getMyProductOffers(filtersReady)
+    payload: api.getMyProductOffers({
+      ...filtersReady,
+      pageSize,
+      pageNumber
+    })
   }
 }
 

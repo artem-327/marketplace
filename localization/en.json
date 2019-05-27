@@ -121,6 +121,7 @@
   "filter.customerName": "Company Name",
   "filter.product": "Product/CAS",
   "filter.productName": "Name/Code",
+  "filter.status": "Status",
   "filter.orderStatus": "Order Status",
   "filter.quantity": "Quantity",
   "filter.price": "Price",
