@@ -116,7 +116,7 @@ export async function createCompany(formData) {
 
 export async function updateCompany(id, formData) {
   //const {data} = await api.put(`/prodex/api/companies/${id}`, formData)
-  const { data } = await api.patch(`/prodex/api/companies/admin/id/${id}`, formData)
+  const { data } = await api.patch(`/prodex/api/companies/id/${id}`, formData)
   return data
 }
 
