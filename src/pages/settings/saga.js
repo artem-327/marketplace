@@ -11,7 +11,7 @@ function* getUsersDataWorker() {
 
     yield put({ type: AT.GET_ALL_BRANCHES_DATA, payload: branches })
     yield put({ type: AT.GET_ROLES_DATA, payload: roles })
-    yield put({ type: AT.GET_USERS_DATA_SUCCESS, payload: users })
+    yield put({ type: AT.GET_USERS_DATA_FULFILLED, payload: users })
   } catch (e) {
     yield console.log("error:", e)
   }
@@ -182,7 +182,7 @@ function* getProductsWithRequiredParamWorker({ payload }) {
   } catch (e) {}
 }
 
-function* getStoredCSV({ payload }) {
+function* getStoredCSV({ payload }) {// ! ! delete
   try {
     const data = yield call(api.getStoredCSV, payload)
     yield put({ type: AT.GET_STORED_CSV_SUCCESS, data })
@@ -310,16 +310,16 @@ function* postUploadCSVFile({ payload }) {
   }
 }
 
-function* postImportProductCSV({ payload, id }) {
+function* postImportProductCSV({ payload, id }) {// ! ! delete
   try {
     const data = yield call(api.postImportProductCSV, payload, id)
-    yield put({ type: AT.POST_CSV_IMPORT_PRODUCTS_SUCCESS, data })
+    yield put({ type: AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_FULFILLED, data })
   } catch (e) {
     yield console.log("error:", e)
   }
 }
 
-function* putWarehouseWorker({ payload, id }) {
+function* putWarehouseWorker({ payload, id }) {// ! !delete
   try {
     const dataBody = {
       accessorials: [0],
@@ -358,6 +358,9 @@ function* putUserWorker({ payload, id }) {
     }
 
     yield call(api.patchUser, id, updateUser)
+
+
+
     yield put({ type: AT.GET_USERS_DATA })
   } catch (e) {
     console.log("error", e)
@@ -382,7 +385,7 @@ function* putNewUserRolesWorker({ payload, id }) {
   }
 }
 
-function* putWarehouseEditPopup({ payload, id }) {
+function* putWarehouseEditPopup({ payload, id }) {// ! ! delete
   try {
     const dataBody = {
       address: {
@@ -466,12 +469,12 @@ function* deleteBankAccountWorker({ payload }) {
 }
 
 function* closeImportPopup({}) {
-  yield put({ type: AT.CLOSE_IMPORT_POPUP_SUCCESS })
+  yield put({ type: AT.SETTINGS_CLOSE_IMPORT_POPUP_SUCCESS })
   yield put({ type: AT.GET_PRODUCTS_CATALOG_DATA })
 }
 
-function* closeImportPopupCancel({}) {
-  yield put({ type: AT.CLOSE_IMPORT_POPUP_SUCCESS })
+function* closeImportPopupCancel({}) {  // ! ! delete
+  yield put({ type: AT.SETTINGS_CLOSE_IMPORT_POPUP_SUCCESS })
 }
 
 function* deleteConfirmPopup({}) {
@@ -524,13 +527,13 @@ function* deleteConfirmPopup({}) {
 }
 
 export default function* settingsSaga() {
-  yield takeEvery(AT.SUBMIT_EDIT_POPUP_HANDLER, putWarehouseWorker)
-  yield takeEvery(AT.GET_USERS_DATA, getUsersDataWorker)
-  yield takeEvery(AT.GET_WAREHOUSES_DATA, getWarehousesDataWorker)
+  //yield takeEvery(AT.SUBMIT_EDIT_POPUP_HANDLER, putWarehouseWorker)
+  //yield takeEvery(AT.GET_USERS_DATA, getUsersDataWorker)
+  //yield takeEvery(AT.GET_WAREHOUSES_DATA, getWarehousesDataWorker)
   yield takeEvery(AT.GET_BRANCHES_DATA, getBranchesDataWorker)
   yield takeEvery(AT.GET_CREDIT_CARDS_DATA, getCreditCardsDataWorker)
   yield takeEvery(AT.GET_BANK_ACCOUNTS_DATA, getBankAccountsDataWorker)
-  yield takeEvery(AT.GET_PRODUCTS_CATALOG_DATA, getProductCatalogWorker)
+  //yield takeEvery(AT.GET_PRODUCTS_CATALOG_DATA, getProductCatalogWorker)
   yield takeEvery(
     AT.GET_PRODUCTS_WITH_REQUIRED_PARAM,
     getProductsWithRequiredParamWorker
@@ -543,12 +546,12 @@ export default function* settingsSaga() {
   yield takeEvery(AT.POST_NEW_BANK_ACCOUNT_REQUEST, postNewBankAccountWorker)
   yield takeEvery(AT.POST_NEW_PRODUCT_REQUEST, postNewProductWorker)
   yield takeEvery(AT.POST_UPLOAD_CSV_FILE, postUploadCSVFile)
-  yield takeEvery(AT.POST_CSV_IMPORT_PRODUCTS, postImportProductCSV)
+  //yield takeEvery(AT.POST_CSV_IMPORT_PRODUCTS, postImportProductCSV)// ! !
 
   yield takeEvery(AT.HANDLE_SUBMIT_USER_EDIT_POPUP, putUserWorker)
 
   yield takeEvery(AT.PUT_NEW_USER_ROLES_REQUEST, putNewUserRolesWorker)
-  yield takeEvery(AT.PUT_WAREHOUSE_EDIT_POPUP, putWarehouseEditPopup)
+  //yield takeEvery(AT.PUT_WAREHOUSE_EDIT_POPUP, putWarehouseEditPopup)
   yield takeEvery(AT.PUT_PRODUCT_EDIT_POPUP, putProductEditPopup)
   yield takeEvery(AT.PUT_BANK_ACCOUNT_EDIT_POPUP, putBankAccountEditPopup)
 
@@ -559,6 +562,6 @@ export default function* settingsSaga() {
   // yield takeEvery(AT.OPEN_ROLES_POPUP, openRolesPopup)
   // yield takeEvery(AT.CLOSE_ROLES_POPUP, closeRolesPopup)
 
-  yield takeEvery(AT.CLOSE_IMPORT_POPUP, closeImportPopup)
-  yield takeEvery(AT.CLOSE_IMPORT_POPUP_CANCEL, closeImportPopupCancel)
+  //yield takeEvery(AT.SETTINGS_CLOSE_IMPORT_POPUP, closeImportPopup)
+  //yield takeEvery(AT.CLOSE_IMPORT_POPUP_CANCEL, closeImportPopupCancel)
 }

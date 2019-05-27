@@ -90,7 +90,7 @@ export default function reducer(state = initialState, action) {
         //popupValues: action.payload
       }
     }
-    case AT.CLOSE_IMPORT_POPUP: {
+    case AT.SETTINGS_CLOSE_IMPORT_POPUP: {
       return {
         ...state,
         isOpenImportPopup: false
@@ -156,7 +156,7 @@ export default function reducer(state = initialState, action) {
         confirmMessage: null
       }
     }
-    case AT.CONFIRM_SUCCESS: {
+    case AT.CONFIRM_FULFILLED: {
       return {
         ...state,
         deleteRowByid: null,
@@ -202,11 +202,11 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_USERS_DATA: {
+    case AT.GET_USERS_DATA: {// ! ! vsude zmenit na pending
       return { ...state, loading: true }
     }
 
-    case AT.GET_USERS_DATA_SUCCESS: {
+    case AT.GET_USERS_DATA_FULFILLED: {
       const usersRows = action.payload.map(user => {
         return {
           checkbox: " ",
@@ -241,11 +241,11 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_WAREHOUSES_DATA: {
+    case AT.GET_WAREHOUSES_DATA: {// ! ! pending
       return { ...state, loading: true }
     }
 
-    case AT.GET_WAREHOUSES_DATA_SUCCESS: {
+    case AT.GET_WAREHOUSES_DATA_FULFILLED: {
       const warehousesRows = action.payload.warehouses.map(warehouse => ({
         name: warehouse.name,
         address:
@@ -284,7 +284,7 @@ export default function reducer(state = initialState, action) {
       return { ...state, loading: true }
     }
 
-    case AT.GET_BRANCHES_DATA_SUCCESS: {
+    case AT.GET_BRANCHES_DATA_FULFILLED: {
       const branchesRows = action.payload.branches.map(branch => {
         return {
           name: branch.name,
@@ -337,7 +337,7 @@ export default function reducer(state = initialState, action) {
       return { ...state, loading: true }
     }
 
-    case AT.GET_CREDIT_CARDS_DATA_SUCCESS: {
+    case AT.GET_CREDIT_CARDS_DATA_FULFILLED: {
       const rows = action.payload.map(card => {
         return {
           id: card.id,
@@ -361,7 +361,7 @@ export default function reducer(state = initialState, action) {
       return { ...state, loading: true }
     }
 
-    case AT.GET_BANK_ACCOUNTS_DATA_SUCCESS: {
+    case AT.GET_BANK_ACCOUNTS_DATA_FULFILLED: {
       const {
         bankAccountsData,
         newCountryFormat,
@@ -389,11 +389,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_PRODUCTS_CATALOG_DATA: {
-      return { ...state, loading: true }
-    }
-
-    case AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS:
+    case AT.GET_PRODUCTS_CATALOG_DATA_FULFILLED:
     case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_FULFILLED: {
       const rows = action.payload.products.map(product => {
         return {
@@ -479,7 +475,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_PRODUCTS_WITH_REQUIRED_PARAM_SUCCESS: {
+    case AT.GET_PRODUCTS_WITH_REQUIRED_PARAM_FULFILLED: {
       const editPopupSearchProducts = action.payload.map(item => {
         return {
           id: item.id,
@@ -499,7 +495,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_STORED_CSV_SUCCESS: {
+    case AT.SETTINGS_GET_STORED_CSV_FULFILLED: {
       const CSV = {
         headerCSV: action.data.lines[0].columns,
         bodyCSV: action.data.lines.slice(1)
@@ -531,21 +527,21 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.POST_UPLOAD_CSV_FILE_SUCCESS: {
+    case AT.POST_UPLOAD_CSV_FILE_FULFILLED: {
       return {
         ...state,
         fileCSVId: action.data.id
       }
     }
 
-    case AT.POST_CSV_IMPORT_PRODUCTS_SUCCESS: {
+    case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_FULFILLED: {
       return {
         ...state,
         csvImportError: action.data
       }
     }
 
-    case AT.CLOSE_IMPORT_POPUP_SUCCESS: {
+    case AT.SETTINGS_CLOSE_IMPORT_POPUP_FULFILLED: {
       return {
         ...state,
         fileCSVId: null,
@@ -555,7 +551,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.CLEAR_DATA_OF_CSV: {
+    case AT.SETTINGS_CLEAR_DATA_OF_CSV: {
       return {
         ...state,
         fileCSVId: null,

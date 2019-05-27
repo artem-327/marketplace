@@ -20,15 +20,21 @@ export function openImportPopup() {
     //payload: rows
   }
 }
-export function closeImportPopup() {
-  return {
-    type: AT.CLOSE_IMPORT_POPUP
+export function closeImportPopup(reloadFilter) {// ! !
+  return async dispatch => {
+    dispatch({
+      type: AT.SETTINGS_CLOSE_IMPORT_POPUP,
+    })
+    dispatch({
+      type: AT.SETTINGS_CLOSE_IMPORT_POPUP_FULFILLED,
+    })
+    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
   }
 }
 
-export function closeImportPopupCancel() {
+export function closeImportPopupCancel() {//! !
   return {
-    type: AT.CLOSE_IMPORT_POPUP_CANCEL
+    type: AT.SETTINGS_CLOSE_IMPORT_POPUP_FULFILLED
   }
 }
 
@@ -38,11 +44,22 @@ export function openEditPopup(rows) {
     payload: rows
   }
 }
-export function handlerSubmitUserEditPopup(value, id) {
-  return {
-    type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
-    payload: value,
-    id
+export function handlerSubmitUserEditPopup(payload, id) {
+  return async dispatch => {
+    const updateUser = {
+      firstname: payload.firstName,
+      lastname: payload.lastName,
+      middlename: payload.middleName,
+      email: payload.email,
+      homeBranchId: payload.homeBranchId,
+      preferredCurrency: payload.preferredCurrency
+    }
+    await dispatch({
+      type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
+      payload: api.patchUser(id, updateUser)
+    })
+    dispatch(getUsersDataRequest())
+    dispatch(closePopup())
   }
 }
 export function handleEditPopup(rows) {
@@ -88,14 +105,14 @@ export function handleOpenConfirmPopup(payload) {
     payload
   }
 }
-export function deleteConfirmation() {
+export function deleteConfirmation() { // ! ! TODO
   return {
     type: AT.DELETE_CONFIRM_POPUP
   }
 }
 export function confirmationSuccess() {
   return {
-    type: AT.CONFIRM_SUCCESS
+    type: AT.CONFIRM_FULFILLED
   }
 }
 export function closeConfirmPopup() {
@@ -145,24 +162,65 @@ export function handleProductCatalogUnmappedValue(checked, props) {
   }
 }
 
-export function handleSubmitEditPopup(warehouseData, branchId) {
-  return {
-    type: AT.SUBMIT_EDIT_POPUP_HANDLER,
-    payload: warehouseData,
-    id: branchId
+export function handleSubmitEditPopup(payload, id) { // ! ! to be deleted?
+  return async dispatch => {
+    const dataBody = {
+      accessorials: [0],
+      address: {
+        city: payload.address,
+        streetAddress: payload.city,
+        province: 44,
+        zip: payload.zip
+      },
+      company: 3,
+      contact: {
+        email: payload.email,
+        name: payload.contactName,
+        phone: payload.phone
+      },
+      warehouse: true,
+      name: payload.name
+    }
+    await dispatch({
+      type: AT.SUBMIT_EDIT_POPUP_HANDLER,
+      payload: api.putWarehouse(id, dataBody)
+    })
+    //! ! reload warehouses list
+
+    dispatch(closePopup())
   }
 }
 
-export function handlerSubmitWarehouseEditPopup(warehouseData, id) {
-  return {
-    type: AT.PUT_WAREHOUSE_EDIT_POPUP,
-    payload: warehouseData,
-    id
+export function handlerSubmitWarehouseEditPopup(payload, id) {
+  return async dispatch => {
+    const dataBody = {
+      address: {
+        city: payload.city,
+        country: payload.country,
+        streetAddress: payload.address,
+        zip: payload.zip
+      },
+      company: 3,
+      contactEmail: payload.email,
+      contactName: payload.contactName,
+      contactPhone: payload.phone,
+      warehouse: payload.tab ? false : true,
+      name: payload.name
+    }
+    await dispatch({
+      type: AT.PUT_WAREHOUSE_EDIT_POPUP,
+      payload: api.putWarehouse(id, dataBody)
+    })
+    if (payload.tab) { // ! ! ???
+      dispatch(getBranchesDataRequest())
+    } else {
+      dispatch(getWarehousesDataRequest())
+    }
+    dispatch(closePopup())
   }
 }
 
 export function handleSubmitProductEditPopup(productData, id, reloadFilter) {//! !
-  console.log('!!!!! ', productData);
   return async dispatch => {
     await dispatch({
       type: AT.SETTINGS_UPDATE_PRODUCT_CATALOG,
@@ -186,12 +244,6 @@ export function handleSubmitProductEditPopup(productData, id, reloadFilter) {//!
     dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
     dispatch(closePopup())
   }
-  /* // ! !
-  return {
-    type: AT.PUT_PRODUCT_EDIT_POPUP,
-    payload: productData,
-    id
-  }*/
 }
 
 export function handleAddNewWarehousePopup() {
@@ -201,10 +253,31 @@ export function handleAddNewWarehousePopup() {
 }
 
 export function getUsersDataRequest() {
-  return {
-    type: AT.GET_USERS_DATA
+  return (dispatch) => {
+    dispatch({
+      type: AT.GET_USERS_DATA,
+      async payload() {
+        const [users, branches, roles] = await Promise.all([
+          api.getUsers(),
+          api.getBranches(),
+          api.getRoles(),
+        ])
+        dispatch({
+          type: AT.GET_ALL_BRANCHES_DATA,
+          payload: branches
+        })
+        dispatch({
+          type: AT.GET_ROLES_DATA,
+          payload: roles
+        })
+        return users
+      }
+    })
   }
 }
+
+
+Tady ! ! ! ! !
 
 export function openRolesPopup(row) {
   return {
@@ -220,8 +293,23 @@ export function closeRolesPopup() {
 }
 
 export function getWarehousesDataRequest() {
-  return {
-    type: AT.GET_WAREHOUSES_DATA
+  return (dispatch) => {
+    dispatch({
+      type: AT.GET_WAREHOUSES_DATA,
+      async payload() {
+        const [warehouses, country] = await Promise.all([
+          api.getWarehouses(),
+          api.getCountry(),
+        ])
+        const newCountryFormat = country.map(country => {
+          return {
+            text: country.name,
+            value: country.id
+          }
+        })
+        return { warehouses, newCountryFormat }
+      }
+    })
   }
 }
 
@@ -274,10 +362,10 @@ export function getProductsWithRequiredParam(payload) {
   }
 }
 
-export function getStoredCSV(id) {
+export function getStoredCSV(data) {
   return {
-    type: AT.GET_STORED_CSV,
-    payload: id
+    type: AT.SETTINGS_GET_STORED_CSV,
+    payload: api.getStoredCSV(data)
   }
 }
 
@@ -373,15 +461,15 @@ export function uploadCSVFile(payload) {
 }
 
 export function postImportProductCSV(payload, id) {
-  return {
-    type: AT.POST_CSV_IMPORT_PRODUCTS,
-    payload,
-    id
-  }
+    return {
+      type: AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS,
+      payload: api.postImportProductCSV(payload, id)
+    }
 }
+
 export function clearDataOfCSV() {
   return {
-    type: AT.CLEAR_DATA_OF_CSV
+    type: AT.SETTINGS_CLEAR_DATA_OF_CSV
   }
 }
 

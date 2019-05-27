@@ -13,7 +13,7 @@ const StyledButton = styled(Button)`
 
 class ConfirmationPage extends Component {
   render() {
-    const { csvImportError } = this.props
+    const { csvImportError, reloadFilter } = this.props
 
     return (
       <Grid centered padded>
@@ -32,7 +32,7 @@ class ConfirmationPage extends Component {
           ))}
 
         <Grid.Row>
-          <StyledButton basic primary onClick={this.props.closeImportPopup}>
+          <StyledButton basic primary onClick={this.props.closeImportPopup(reloadFilter)}>
             View Products
           </StyledButton>
         </Grid.Row>
@@ -52,7 +52,12 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-    csvImportError: state.settings.csvImportError
+    csvImportError: state.settings.csvImportError,
+    reloadFilter: {props: {
+        currentTab: state.settings.currentTab,
+        productsFilter: state.settings.productsFilter},
+      value: state.settings.filterValue},
+    productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue
   }
 }
 

@@ -46,8 +46,6 @@ export default {
     api.post('/prodex/api/payments/bank-accounts/add', body),
   postNewProduct: async body => {return await api.post('/prodex/api/products', body)},
   updateProduct: async (id, body) => {
-    console.log('!!!!! id', id);
-    console.log('!!!!! body', body);
     await api.put(`/prodex/api/products/id/${id}`, body)},
 
   postImportProductCSV: (body, id) => {
