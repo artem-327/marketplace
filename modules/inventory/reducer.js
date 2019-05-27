@@ -200,6 +200,19 @@ export default function reducer(state = initialState, action) {
           }
         }
 
+        case AT.INVENTORY_DELETE_PRODUCT_OFFER_PENDING: {
+          return { ...state,
+            loading: true
+          }
+        }
+
+        case AT.INVENTORY_DELETE_PRODUCT_OFFER_FULFILLED: {
+          return { ...state,
+            loading: false,
+            myProductOffers: state.myProductOffers.filter(p => p.id !== action.payload)
+          }
+        }
+
         case AT.INVENTORY_GET_WAREHOUSES_FULFILLED: {
           return {
             ...state,

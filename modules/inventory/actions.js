@@ -303,8 +303,14 @@ export function getProductOffer(productOfferId) {
 
 export function deleteProductOffer(productOfferId) {
   return async dispatch => {
-    await api.deleteProductOffer(productOfferId)
-    dispatch(getMyProductOffers())
+    dispatch({
+      type: AT.INVENTORY_DELETE_PRODUCT_OFFER,
+      async payload(){
+        await api.deleteProductOffer(productOfferId)
+        return productOfferId
+      } 
+    })
+    // dispatch(getMyProductOffers())
   }
 }
 
