@@ -12,6 +12,7 @@ export const initialState = {
     searchedOrigins: [],
     searchedOriginsLoading: false,
     myProductOffers: [],
+    myProductOffersPageLoaded: -1,
     searchedProducts: [],
     searchedProductsLoading: false,
     warehousesList: [],
@@ -189,14 +190,15 @@ export default function reducer(state = initialState, action) {
         }
 
         case AT.INVENTORY_GET_MY_PRODUCT_OFFERS_FULFILLED: {
-          let {data} = action.payload
+          let {data, pageNumber} = action.payload
           return {
             ...state,
             loading: false,
             myProductOffers: [
               ...state.myProductOffers,
-              ...action.payload.data
-            ]
+              ...(pageNumber > state.myProductOffersPageLoaded ? data : [])
+            ],
+            myProductOffersPageLoaded: pageNumber
           }
         }
 
