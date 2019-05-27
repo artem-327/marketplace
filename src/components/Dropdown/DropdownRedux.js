@@ -6,10 +6,11 @@ import { Control } from 'react-redux-form';
 
 class DropdownRedux extends Component {
 
-    handleChange(value) {
-        const { model, dispatch } = this.props;
-        dispatch(actions.change(model, value));
-        if (this.props.onChange) this.props.onChange(value);
+    handleChange = (e, { name, value }) => {
+        e.preventDefault()
+        const { model, dispatch } = this.props
+        // dispatch is prepared only for filters
+        dispatch(actions.change('forms.filter'+model, e.target.innerText))
     }
 
     render() {
@@ -18,7 +19,8 @@ class DropdownRedux extends Component {
             component={Dropdown}
             redux
             validators={this.props.validators}
-            // onChange={value => this.handleChange(value)}
+            onChange={this.handleChange}
+            updateOn={[]} // handle onChange manually as redux is not able to get value from semantic Dropdown
             {...this.props}
         />
 

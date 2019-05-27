@@ -29,7 +29,7 @@
   }
 
   .row {
-    .column:nth-child(2) {
+    .column:nth-child(2):not(.purchase-info) {
       font-weight: bolder;
     }
   }

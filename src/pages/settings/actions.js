@@ -1,4 +1,5 @@
 import * as AT from "./action-types"
+import api from "./api"
 
 export function openPopup(rows = null) {
   return {
@@ -115,10 +116,19 @@ export function handleActiveTab(tab) {
   }
 }
 
-export function handleFiltersValue(value) {
-  return {
-    type: AT.HANDLE_FILTERS_VALUE,
-    payload: value
+export function handleFiltersValue(props, value) {
+  return async dispatch => {
+    dispatch({
+      type: AT.HANDLE_FILTERS_VALUE,
+      payload: value
+    })
+    switch (props.currentTab) {
+      case "Delivery addresses":
+        if (value.trim().length) await dispatch(getDeliveryAddressesByStringRequest(value))
+        else await dispatch(getDeliveryAddressesByFilterRequest(props.deliveryAddressesFilter))
+        break;
+
+    }
   }
 }
 
@@ -299,3 +309,82 @@ export function clearDataOfCSV() {
     type: AT.CLEAR_DATA_OF_CSV
   }
 }
+
+export function searchCasProduct(pattern) {
+  return {
+    type: AT.SEARCH_CAS_PRODUCT,
+    payload: api.searchCasProduct(pattern)
+  }
+}
+
+export function searchUnNumber(pattern) {
+  return {
+    type: AT.SEARCH_UN_NUMBER,
+    payload: api.searchUnNumber(pattern)
+  }
+}
+
+export function getDeliveryAddressesByStringRequest(value) {
+  return {
+    type: AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING,
+    payload: api.getDeliveryAddressesByStringRequest(value)
+  }
+}
+
+export function getDeliveryAddressesByFilterRequest(value) {
+  return {
+    type: AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER,
+    payload: api.getDeliveryAddressesByFilterRequest(value)
+  }
+}
+
+export function updateDeliveryAddresses(id, value, reloadFilter) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES,
+      payload: api.updateDeliveryAddresses(id, value)
+    })
+    dispatch(closePopup())
+    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
+  }
+}
+
+export function createDeliveryAddress(value, reloadFilter) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS,
+      payload: api.createDeliveryAddress(value)
+    })
+    dispatch(closePopup())
+    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
+  }
+}
+
+export function deleteDeliveryAddressesItem(value, reloadFilter) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.SETTINGS_DELETE_DELIVERY_ADDRESSES,
+      payload: api.deleteDeliveryAddresses(value)
+    })
+    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
+  }
+}
+
+export function getCountries() {
+  return {
+    type: AT.SETTINGS_GET_COUNTRIES,
+    payload: api.getCountries()
+  }
+}
+
+export function getProvinces(id) {
+  return {
+    type: AT.SETTINGS_GET_PROVINCES,
+    payload: api.getProvinces(id)
+  }
+}
+
+
+
+
+

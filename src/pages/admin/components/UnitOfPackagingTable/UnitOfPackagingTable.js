@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Confirm } from 'semantic-ui-react'
 //import ProdexGrid from '~/components/table'
 import ProdexTable from '~/components/table'
-import { getDataRequest, openEditPopup, deleteItem, getMeasureTypesDataRequest } from '../../actions'
-import { Confirm } from "semantic-ui-react"
+import {
+  getDataRequest,
+  openEditPopup,
+  handleOpenConfirmPopup,
+  closeConfirmPopup,
+  deleteConfirmation,
+  getMeasureTypesDataRequest
+} from '../../actions'
 
 class UnitOfPackagingTable extends Component {
   componentDidMount() {
@@ -19,21 +26,32 @@ class UnitOfPackagingTable extends Component {
       filterValue,
       currentTab,
       openEditPopup,
-      deleteItem,
+      confirmMessage,
+      handleOpenConfirmPopup,
+      closeConfirmPopup,
+      deleteConfirmation,
+      deleteRowById
     } = this.props
 
     const { columns } = this.props.config.display
 
     return (
       <React.Fragment>
+        <Confirm
+            size="tiny"
+            content="Do you really want to delete item?"
+            open={confirmMessage}
+            onCancel={closeConfirmPopup}
+            onConfirm={() => deleteConfirmation(deleteRowById, config)}
+        />
         <ProdexTable
           filterValue={filterValue}
           loading={loading}
           columns={columns}
           rows={rows}
           rowActions={[
-            { text: 'Edit', callback: (row) => openEditPopup(config, row) },
-            { text: 'Delete', callback: (row) => deleteItem(config, row.id) }
+            { text: 'Edit', callback: (row) => openEditPopup(row) },
+            { text: 'Delete', callback: (row) => handleOpenConfirmPopup(row.id) }
           ]}
         />
       </React.Fragment>
@@ -44,7 +62,9 @@ class UnitOfPackagingTable extends Component {
 const mapDispatchToProps = {
   getDataRequest,
   openEditPopup,
-  deleteItem,
+  handleOpenConfirmPopup,
+  closeConfirmPopup,
+  deleteConfirmation,
   getMeasureTypesDataRequest
 }
 
@@ -64,6 +84,8 @@ const mapStateToProps = state => {
     filterValue: state.admin.filterValue,
     currentTab: state.admin.currentTab,
     loading: state.admin.loading,
+    confirmMessage: state.admin.confirmMessage,
+    deleteRowById: state.admin.deleteRowById,
   }
 }
 

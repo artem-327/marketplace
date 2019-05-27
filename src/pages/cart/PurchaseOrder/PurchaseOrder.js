@@ -6,7 +6,7 @@ import Shipping from "./components/Shipping"
 import ShippingEdit from "./components/ShippingEdit"
 import ShippingQuote from "./components/ShippingQuote"
 import Payment from "./components/Payment"
-import { Container, Menu, Header, Button, Icon, Grid, GridColumn, GridRow, Segment, Divider } from "semantic-ui-react"
+import { Container, Menu, Header, Button, Icon, Grid, GridColumn, GridRow, Segment } from "semantic-ui-react"
 import styled from 'styled-components'
 import Spinner from '../../../components/Spinner/Spinner'
 import "./PurchaseOrder.scss"
@@ -17,7 +17,9 @@ import Router from 'next/router'
 import CartItemSummary from '~/components/summary/CartItemSummary'
 import Summary from '~/components/summary/Summary'
 
-import confirm from '../../../components/Confirmable/confirm';
+import confirm from '../../../components/Confirmable/confirm'
+
+import './PurchaseOrder.scss'
 
 
 const RelaxedGrid = styled(Grid)`
@@ -57,7 +59,7 @@ class PurchaseOrder extends Component {
   }
 
   getAddress = (selectedAddressId) => {
-    let { deliveryAddresses } = this.props;
+    let { deliveryAddresses } = this.props
     let selectedAddress = deliveryAddresses.find(i => i.id === selectedAddressId)
 
     this.props.shippingChanged({ selectedAddress })
@@ -130,10 +132,10 @@ class PurchaseOrder extends Component {
 
               <Menu.Menu position='right'>
                 <Menu.Item>
-                  <Button icon basic labelPosition='left' onClick={() => { Router.push('/marketplace/all') }}>
+                  <Button icon basic labelPosition='left' onClick={() => Router.push('/cart')}>
                     <Icon name='chevron left' />
-                    <FormattedMessage id='cart.backToProductOfferings'
-                      defaultMessage='Back to Product Offerings' />
+                    <FormattedMessage id='cart.backToShoppingCart'
+                      defaultMessage='Back to Shopping Cart' />
                   </Button>
                 </Menu.Item>
               </Menu.Menu>
@@ -143,7 +145,7 @@ class PurchaseOrder extends Component {
 
         <RelaxedGrid centered className='purchase-order'>
 
-          <GridColumn computer={9}>
+          <GridColumn computer={8}>
 
             {shipping.isShippingEdit ?
               <ShippingEdit
@@ -201,7 +203,7 @@ class PurchaseOrder extends Component {
 
 
             <Segment>
-              <Grid className='bottom-bottom-padded'>
+              <Grid className='bottom-padded'>
                 <GridRow className='header'>
                   <GridColumn>
                     <Header as='h2'>

@@ -34,11 +34,12 @@ export const initialState = {
   ],
 
   currentTab: 'Companies',
-  casListDataRequest: { pageSize: 50, pageStart: 0 },
+  casListDataRequest: { pageSize: 50, pageNumber: 0 },
   currentEditForm: null,
   currentEdit2Form: null,
   currentAddForm: null,
   confirmMessage: null,
+  deleteRowById: null,
   filterValue: '',
   loading: false,
   config: config,
@@ -106,6 +107,33 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_OPEN_CONFIRM_POPUP: {
+      return {
+        ...state,
+        confirmMessage: true,
+        deleteRowById: action.payload,
+      }
+    }
+
+    case AT.ADMIN_DELETE_COMPANIES_FULFILLED:
+    case AT.ADMIN_DELETE_CAS_PRODUCT_FULFILLED:
+    case AT.ADMIN_DELETE_UNITS_OF_MEASURE_DATA_FULFILLED:
+    case AT.ADMIN_DELETE_UNITS_OF_PACKAGING_DATA_FULFILLED:
+    case AT.ADMIN_DELETE_MANUFACTURERS_DATA_FULFILLED:
+    case AT.ADMIN_DELETE_GRADES_DATA_FULFILLED:
+    case AT.ADMIN_DELETE_FORMS_DATA_FULFILLED:
+    case AT.ADMIN_DELETE_CONDITIONS_DATA_FULFILLED:
+    case AT.ADMIN_CLOSE_CONFIRM_POPUP: {
+      return {
+        ...state,
+        deleteRowById: null,
+        confirmMessage: null
+      }
+    }
+
+
+
+
     case AT.ADMIN_GET_COUNTRIES_FULFILLED: {
       return {...state,
         countries: payload.countries,
@@ -113,11 +141,6 @@ export default function reducer(state = initialState, action) {
           text: c.name,
           value: c.id,
           key: c.id,
-        })),
-        zipCodes: payload.zipCodes.map(z => ({
-          text: z.zip,
-          value: z.zip,
-          key: z.id
         }))
       }
     }
@@ -164,6 +187,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_GET_COMPANIES_PENDING:
     case AT.ADMIN_POST_NEW_PRODUCT_NAME_PENDING:
     case AT.ADMIN_UPDATE_PRODUCT_NAME_PENDING:
     case AT.ADMIN_DELETE_PRODUCT_NAME_PENDING:
@@ -181,7 +205,10 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_FULFILLED: {
       return {
         ...state,
-        casProductsRows: action.payload,
+        casProductsRows: [
+          ...state.casProductsRows,
+          ...action.payload
+        ],
         loading: false
       }
     }
@@ -231,19 +258,23 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_GET_COMPANIES_PENDING: {
-      return { ...state,
-        loading: true
-      }
-    }
-
     case AT.ADMIN_GET_COMPANIES_FULFILLED: {
       return { ...state,
         loading: false,
-        companiesRows: action.payload
+        companiesRows: [
+          ...state.companiesRows,
+          ...action.payload
+        ]
       }
     }
 
+    case AT.ADMIN_POST_NEW_PRODUCT_NAME_REJECTED:
+    case AT.ADMIN_UPDATE_PRODUCT_NAME_REJECTED:
+    case AT.ADMIN_DELETE_PRODUCT_NAME_REJECTED:
+    case AT.ADMIN_GET_ALTERNATIVE_CAS_PRODUCT_NAMES_REJECTED:
+    case AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER_REJECTED:
+    case AT.ADMIN_GET_MANUFACTURERS_BY_STRING_REJECTED:
+    case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_REJECTED:
     case AT.ADMIN_GET_COMPANIES_REJECTED: {
       return { ...state,
         loading: false

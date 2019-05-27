@@ -2,17 +2,18 @@ import React, { Component } from 'react'
 import { array, string, func } from 'prop-types'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { Grid, GridRow, GridColumn, Header, Divider, Segment } from 'semantic-ui-react'
+
 import './styles.scss'
 import { RelaxedRow, HeaderTextRow } from './styledComponents'
+import { FormattedUnit } from '~/components/formatted-messages'
 
 export default class CartItemSummary extends Component {
 
   renderItem = ({ item, lastChild }) => {
     let { productOffer } = item
-    let { deleteCart } = this.props
+    let { deleteCart, currency } = this.props
+
     
-    //TODO Change when backend provides this info
-    let currency = 'USD'
     return (
       <>
         <GridColumn computer={16}>
@@ -44,7 +45,7 @@ export default class CartItemSummary extends Component {
               </GridColumn>
 
               <GridColumn floated='right'>
-                {productOffer.merchant && productOffer.merchant.company.name}
+                {productOffer.owner && productOffer.owner.company.name}
               </GridColumn>
             </RelaxedRow>
 
@@ -73,10 +74,11 @@ export default class CartItemSummary extends Component {
               </GridColumn>
 
               <GridColumn floated='right'>
-                <FormattedNumber
-                  id='cart.packs'
+                <FormattedUnit
+                  unit={productOffer.product.packagingType.name}
+                  separator=' '
                   value={item.quantity}
-                /> {productOffer.product.packagingType.name}
+                /> 
               </GridColumn>
             </RelaxedRow>
 
@@ -91,10 +93,11 @@ export default class CartItemSummary extends Component {
               </GridColumn>
 
               <GridColumn floated='right'>
-                <FormattedNumber
-                  id='cart.packs'
+                <FormattedUnit
+                  separator=''
+                  unit={productOffer.product.packagingUnit.nameAbbreviation}
                   value={item.quantity * productOffer.product.packagingSize}
-                /> {productOffer.product.packagingUnit.nameAbbreviation}
+                />
               </GridColumn>
             </RelaxedRow>
 
@@ -171,9 +174,11 @@ export default class CartItemSummary extends Component {
 CartItemSummary.propTypes = {
   cartItems: array,
   deleteCart: func,
-  header: string
+  header: string,
+  currency: string
 }
 
 CartItemSummary.defaultProps = {
-  header: 'YOUR ORDER'
+  header: 'YOUR ORDER',
+  currency: 'USD'
 }

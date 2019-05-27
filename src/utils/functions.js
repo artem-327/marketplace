@@ -124,7 +124,11 @@ export function getPricing(offerDetail, quantity) {
 }
 
 export function getLocationString(productOffer) {
-  let location = productOffer.warehouse.address
-  
-  return `${location.province ? location.province.name : location.city}, ${location.country.name}`
+  try {
+    var location = productOffer.warehouse.address
+  } catch (e) {
+    return ''
+  }
+
+  return `${location.city}, ${location.province ? `${location.province.abbreviation},` : ''} ${location.country.name}`
 }

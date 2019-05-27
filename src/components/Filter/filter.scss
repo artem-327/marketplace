@@ -165,8 +165,12 @@ $font-family: 'Cabin', sans-serif;
     }
     .filter-input-dropdown {
       height: auto;
-      margin-left: 12px;
-      width: 380px;
+      margin-bottom: 15px;
+
+      label, div.dropdown, div.comboBox {
+        width: 380px;
+        margin-left: 12px;
+      }
       p {
         margin-bottom: 23px;
       }

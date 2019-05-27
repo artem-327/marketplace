@@ -34,6 +34,10 @@ const textsTable = {
   'Bank accounts': {
     BtnAddText: 'Add Bank Account',
     SearchText: 'Search bank account ...'
+  },
+  'Delivery addresses': {
+    BtnAddText: 'Add Delivery Address',
+    SearchText: 'Search delivery address ...'
   }
 }
 
@@ -74,6 +78,9 @@ class TablesHandlers extends Component {
       case 'Bank accounts':
         return 'Bank account'
         break
+      case 'Delivery addresses':
+        return 'Delivery addresses'
+        break
       default:
         null
     }
@@ -104,7 +111,7 @@ class TablesHandlers extends Component {
               size="large"
               icon="search"
               placeholder={textsTable[currentTab].SearchText}
-              onChange={e => handleFiltersValue(e.target.value)}
+              onChange={e => handleFiltersValue(this.props, e.target.value)}
             />
           </Menu.Item>
           <Menu.Item>
@@ -130,7 +137,8 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentTab: state.settings.currentTab
+    currentTab: state.settings.currentTab,
+    deliveryAddressesFilter: state.settings.deliveryAddressesFilter
   }
 }
 

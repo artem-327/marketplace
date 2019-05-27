@@ -1,7 +1,7 @@
 import * as AT from './action-types'
 import * as api from './api'
 
-export function openEditPopup(config, editedData) {
+export function openEditPopup(editedData) {
 	return {
 		type: AT.ADMIN_OPEN_EDIT_POPUP,
 		payload: editedData
@@ -14,18 +14,6 @@ export function closeEditPopup() {
 	}
 }
 
-export function deleteItem(config, id) {
-	if (typeof config.api.delete !== 'undefined') {
-		return async dispatch => {
-			await dispatch({
-				type: config.api.delete.typeRequest,
-				payload: api.deleteItem(config, id)
-			})
-			dispatch(getDataRequest(config))
-		}
-	}
-}
-
 export function openAddPopup(currentTab) {
 	return {
 		type: AT.ADMIN_OPEN_ADD_POPUP,
@@ -35,6 +23,37 @@ export function openAddPopup(currentTab) {
 export function closeAddPopup() {
 	return {
 		type: AT.ADMIN_CLOSE_ADD_POPUP,
+	}
+}
+
+export function handleOpenConfirmPopup(id) {
+	return {
+		type: AT.ADMIN_OPEN_CONFIRM_POPUP,
+		payload: id
+	}
+}
+
+export function deleteConfirmation(id, config = null) {
+	if (config != null) {
+		if (typeof config.api.delete !== 'undefined') {
+			return async dispatch => {
+				await dispatch({
+					type: config.api.delete.typeRequest,
+					payload: api.deleteItem(config, id)
+				})
+				dispatch(getDataRequest(config))
+			}
+		}
+	}
+	else {
+		return {
+			type: AT.ADMIN_DELETE_CONFIRM_POPUP
+		}
+	}
+}
+export function confirmationSuccess() {
+	return {
+		type: AT.ADMIN_CONFIRM_SUCCESS
 	}
 }
 
@@ -88,7 +107,7 @@ export function handleFiltersValue(props, value) {
 		})
 		switch (props.currentTab) {
 			case 'CAS Products': {
-				if (value.length < 3) {
+				if (value.trim().length < 3) {
 					await dispatch({
 						type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
 						payload: api.getCasProductByFilter(props.casListDataRequest)
@@ -100,14 +119,14 @@ export function handleFiltersValue(props, value) {
 					})
 				}
 			}
-			break;
+				break
 			case 'Manufacturers': {
 				await dispatch({
 					type: AT.ADMIN_GET_MANUFACTURERS_BY_STRING,
 					payload: api.getManufacturersByString(value)
 				})
 			}
-			break;
+				break
 		}
 	}
 }
@@ -220,7 +239,7 @@ export function openEditCasPopup(value) {
 	return async dispatch => {
 		await dispatch({ // Save UN number data to global props (not needed to call get UN Numbers api)
 			type: AT.ADMIN_GET_UN_NUMBERS_FULFILLED,
-			payload: [{id: data.unNumberId, unNumberCode: data.unNumberCode, unNumberDescription: data.unNumberDescription}]
+			payload: [{ id: data.unNumberId, unNumberCode: data.unNumberCode, unNumberDescription: data.unNumberDescription }]
 		})
 		dispatch(openPopup(data))
 	}
@@ -254,15 +273,9 @@ export function getCountries() {
 		admin.countries.length === 0 && dispatch({
 			type: AT.ADMIN_GET_COUNTRIES,
 			async payload() {
-				const [countries, zipCodes] = await Promise.all([
-					api.getCountries(),
-					api.getZipCodes()
-				])
+				const countries = await api.getCountries()
 
-				return {
-					countries,
-					zipCodes
-				}
+				return { countries }
 			}
 		})
 	}
@@ -271,21 +284,21 @@ export function getCountries() {
 export function getPrimaryBranchProvinces(id) {
 	return {
 		type: AT.ADMIN_GET_PRIMARY_BRANCH_PROVINCES,
-		payload: api.getPrimaryBranchProvinces(id)
+		payload: api.getProvinces(id)
 	}
 }
 
 export function getMailingBranchProvinces(id) {
 	return {
 		type: AT.ADMIN_GET_MAILING_BRANCH_PROVINCES,
-		payload: api.getMailingBranchProvinces(id)
+		payload: api.getProvinces(id)
 	}
 }
 
-export function getCompanies() {
+export function getCompanies(params) {
 	return {
 		type: AT.ADMIN_GET_COMPANIES,
-		payload: api.getCompanies()
+		payload: api.getCompanies(params)
 	}
 }
 

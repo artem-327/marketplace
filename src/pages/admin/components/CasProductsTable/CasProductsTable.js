@@ -1,5 +1,6 @@
 import React, {Component} from "react"
 import {connect} from "react-redux"
+import { Confirm } from 'semantic-ui-react'
 import { Label } from 'semantic-ui-react'
 import ProdexTable from '~/components/table'
 import {
@@ -7,13 +8,28 @@ import {
   openEditCasPopup,
   openEditAltNamesCasPopup,
   casDeleteItem,
-  getHazardClassesDataRequest, getPackagingGroupsDataRequest
+  handleOpenConfirmPopup,
+  closeConfirmPopup,
+  getHazardClassesDataRequest,
+  getPackagingGroupsDataRequest
 } from '../../actions'
 
+const PAGE_SIZE = 50
 
 class CasProductsTable extends Component {
+
+  getNextPage = (pageNumber) => {
+    const {getCasProductByFilter, casListDataRequest} = this.props
+
+    getCasProductByFilter({
+      ...casListDataRequest,
+      pageNumber
+    })
+  }
+
   componentDidMount() {
-    this.props.getCasProductByFilter(this.props.casListDataRequest)
+    this.getNextPage(0)
+    
     this.props.getHazardClassesDataRequest()
     this.props.getPackagingGroupsDataRequest()
   }
@@ -28,22 +44,35 @@ class CasProductsTable extends Component {
       openEditCasPopup,
       openEditAltNamesCasPopup,
       casDeleteItem,
-      reloadFilter
+      reloadFilter,
+      confirmMessage,
+      handleOpenConfirmPopup,
+      closeConfirmPopup,
+      deleteRowById
     } = this.props
 
     const { columns } = config.display
 
     return (
       <React.Fragment>
+        <Confirm
+            size="tiny"
+            content="Do you really want to delete item?"
+            open={confirmMessage}
+            onCancel={closeConfirmPopup}
+            onConfirm={() => casDeleteItem(deleteRowById, reloadFilter)}
+        />
         <ProdexTable
           //filterValue={filterValue}
           loading={loading}
           columns={columns}
+          pageSize={PAGE_SIZE}
+          getNextPage={this.getNextPage}
           rows={rows}
           rowActions={[
             {text: 'Edit', callback: (row) => openEditCasPopup(row)},
             {text: 'Edit Alternative Names', callback: (row) => openEditAltNamesCasPopup(row)},
-            {text: 'Delete', callback: (row) => casDeleteItem(row.id, reloadFilter)}
+            {text: 'Delete', callback: (row) => handleOpenConfirmPopup(row.id)}
           ]}
         />
       </React.Fragment>
@@ -56,6 +85,8 @@ const mapDispatchToProps = {
   openEditCasPopup,
   openEditAltNamesCasPopup,
   casDeleteItem,
+  handleOpenConfirmPopup,
+  closeConfirmPopup,
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
 }
@@ -95,6 +126,8 @@ const mapStateToProps = state => {
         currentTab: state.admin.currentTab,
         casListDataRequest: state.admin.casListDataRequest},
       value: state.admin.filterValue},
+    confirmMessage: state.admin.confirmMessage,
+    deleteRowById: state.admin.deleteRowById,
   }
 }
 

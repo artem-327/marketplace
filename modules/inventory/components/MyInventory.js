@@ -5,6 +5,9 @@ import {FormattedMessage} from 'react-intl'
 import Router from 'next/router'
 import ProdexGrid from '~/components/table'
 import {Broadcast} from '~/modules/broadcast'
+import Filter from '~/src/components/Filter'
+
+const PAGE_SIZE = 50
 
 export default class MyInventory extends Component {
   state = {
@@ -21,11 +24,32 @@ export default class MyInventory extends Component {
       { name: 'manufacturer', title: 'MFR.', width: 220 },
       { name: 'broadcast', title: 'Broadcast', width: 120 }
     ],
-    selectedRows: []
+    selectedRows: [],
+    pageNumber: 0,
   }
 
   componentDidMount() {
-    this.props.getMyProductOffers()
+    this.getNextPage()
+  }
+
+  getNextPage = (pageNumber) => {
+    this.props.getMyProductOffers({}, PAGE_SIZE, pageNumber)
+  }
+
+  filterInventory = async (filter) => {
+    let productIds = []
+    if (filter.search) {
+      let foundProducts = await this.props.findProducts(filter.search)
+      foundProducts.value.data.reduce((filteredProducts, product) => {
+        if (product.casProduct.chemicalName === filter.search || product.casProduct.casNumber === filter.search)
+          productIds.push(product.id)
+      }, [])
+
+      if (productIds.length) {
+        filter = {...filter, product: productIds}
+      }
+    }
+    this.props.getMyProductOffers(filter, PAGE_SIZE)
   }
 
   getRows = () => {
@@ -82,8 +106,10 @@ export default class MyInventory extends Component {
           columns={columns}
           rows={rows}
           rowSelection
+          getNextPage={this.getNextPage}
+          pageSize={PAGE_SIZE}
           groupBy={['productNumber']}
-          getChildGroups={rows => 
+          getChildGroups={rows =>
             _(rows)
               .groupBy('productName')
               .map(v => ({
@@ -108,7 +134,7 @@ export default class MyInventory extends Component {
           ]}
         />
         <Broadcast />
-        {/* <Filter
+        <Filter
           chemicalName
           productAgeFilter
           date
@@ -119,9 +145,10 @@ export default class MyInventory extends Component {
           condition
           productGrade
           form
-          filterFunc={(filter) => { this.props.fetchMyProductOffers({ ...filter }) }}
+          filterFunc={(filter) => { this.filterInventory({...filter}) }}
+          savingFilters={true}
           {...this.props}
-        /> */}
+        />
       </>
     )
   }

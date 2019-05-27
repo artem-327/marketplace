@@ -8,6 +8,7 @@ import { object, func } from 'prop-types'
 import { Sidebar, Button, Header, Grid, GridRow, GridColumn, Loader, Dimmer, Dropdown, Input, Divider, Segment } from 'semantic-ui-react'
 import Router from 'next/router'
 import { FormattedNumber } from 'react-intl'
+import { FormattedUnit } from '~/components/formatted-messages'
 
 
 const CapitalizedColumn = styled(GridColumn)`
@@ -81,7 +82,7 @@ export default class AddCart extends Component {
 
 
     var dropdownOptions = []
-    let currencyCode = 'USD'
+    let currencyCode = offer.price.currency.code || 'USD'
 
     if (pricingTiers.length > 0) {
       pricingTiers.forEach((tier, i) => {
@@ -89,8 +90,8 @@ export default class AddCart extends Component {
 
 
         let text = <>
-          <FormattedNumber value={tier.quantityFrom} /> - <FormattedNumber value={quantityTo} />
-          {` ${packagingType.name}`} <FormattedNumber style='currency' value={tier.price} currency={currencyCode} />
+          <FormattedUnit unit='' separator=' - ' value={tier.quantityFrom} /><FormattedUnit unit='' value={quantityTo} />
+          <FormattedNumber style='currency' value={tier.price} currency={currencyCode} />
         </>
         dropdownOptions.push({
           key: i,
@@ -100,14 +101,16 @@ export default class AddCart extends Component {
       })
     }
     else {
-      let value = offer.pricing.price.amount
+      let value = offer.pricing.price
 
       dropdownOptions.push({
         key: 0,
         value: { quantityFrom: 0, price: value },
-        text: <><FormattedNumber value={value} style='currency' currency={currencyCode} /></>
+        text: <><FormattedNumber minimumFractionDigits={0} value={value} style='currency' currency={currencyCode} /></>
       })
     }
+
+
 
     let attachments = offer.attachments.map(att =>
       <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
@@ -136,7 +139,7 @@ export default class AddCart extends Component {
                 Merchant:
           </GridColumn>
               <GridColumn computer={10}>
-                {offer.merchant && offer.merchant.company.name ? offer.merchant.company.name : 'Anonymous'}
+                {offer.owner && offer.owner.company.name ? offer.owner.company.name : 'Anonymous'}
               </GridColumn>
             </GridRow>
 
@@ -146,7 +149,7 @@ export default class AddCart extends Component {
                 Location:
            </GridColumn>
               <GridColumn computer={10}>
-                {order.locationStr}
+                {offer.locationStr}
               </GridColumn>
             </GridRow>
 
@@ -155,7 +158,7 @@ export default class AddCart extends Component {
                 Available Product:
           </GridColumn>
               <GridColumn computer={10}>
-                <FormattedNumber value={pkgAmount} /> {packagingType.name} / <FormattedNumber value={pkgAmount * packagingSize} /> {packagingUnit.nameAbbreviation}
+                <FormattedNumber minimumFractionDigits={0} value={pkgAmount} /> {packagingType.name} / <FormattedUnit unit={packagingUnit.nameAbbreviation} separator={' '} value={pkgAmount * packagingSize} />
               </GridColumn>
 
             </GridRow>
@@ -174,9 +177,9 @@ export default class AddCart extends Component {
                 Packaging:
           </GridColumn>
 
-              <CapitalizedColumn company={10}>
-                <FormattedNumber value={packagingSize} /> {packagingUnit.nameAbbreviation} {offer.product.packagingType.name}
-              </CapitalizedColumn>
+              <GridColumn company={10}>
+                <FormattedUnit unit={packagingUnit.nameAbbreviation} separator={' '} value={packagingSize} />  {offer.product.packagingType.name}
+              </GridColumn>
             </GridRow>
 
             {/* <GridRow>
@@ -196,30 +199,24 @@ export default class AddCart extends Component {
             </GridRow>
 
 
-            <GridRow>
+            <GridRow columns={2}>
               <GridColumn>
                 Select Quantity
-          </GridColumn>
-            </GridRow>
+              </GridColumn>
 
-            <GridRow>
-              <GridColumn>
-                <Input min={offer.minimum} error={warning} value={this.props.sidebar.quantity} onChange={this.handleQuantity} type='number' />
+              <GridColumn className='purchase-info'>
+                Select Pricing Level
               </GridColumn>
             </GridRow>
 
-            <GridRow>
+            <GridRow stretched columns={2}>
               <GridColumn>
-                Select Pricing Level
-          </GridColumn>
-            </GridRow>
-
-            <GridRow>
-              <GridColumn>
+                <Input min={offer.minimum} error={warning} value={this.props.sidebar.quantity} onChange={this.handleQuantity} type='number' />
+              </GridColumn>
+              <GridColumn className='purchase-info'>
                 <Dropdown
                   placeholder='Select Price Level'
                   value={this.props.sidebar.pricing}
-                  disabled
                   selection
                   options={dropdownOptions}
                 />
@@ -235,8 +232,8 @@ export default class AddCart extends Component {
             <GridRow>
               <GridColumn computer={6}>Total Quantity:</GridColumn>
               <GridColumn computer={10}>
-                {(quantity && quantity > 0 ? <> <FormattedNumber value={quantity} /> {`${packagingType.name}`} </> : null)
-                  || (isEdit && <> <FormattedNumber value={order.quantity} /> {`${packagingType.name}`} </>)}
+                {(quantity && quantity > 0 ? <> <FormattedNumber minimumFractionDigits={0} value={quantity} /> {`${packagingType.name}`} </> : null)
+                  || (isEdit && <> <FormattedNumber minimumFractionDigits={0} value={order.quantity} /> {`${packagingType.name}`} </>)}
               </GridColumn>
             </GridRow>
 

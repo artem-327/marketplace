@@ -9,9 +9,11 @@ import { Modal, FormGroup, FormField, Search, Label } from 'semantic-ui-react'
 import {
   closePopup,
   handleSubmitProductEditPopup,
-  handleSubmitProductEddPopup
+  handleSubmitProductEddPopup,
+  searchCasProduct,
+  searchUnNumber
 } from '../../actions'
-import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown, TextArea, Checkbox } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 import './styles.scss'
 
@@ -24,12 +26,14 @@ const formValidation = Yup.object().shape({
     .required('Required'),
   packagingSize: Yup.string()
     .min(1, 'Too short')
-    .required('Required')
+    .required('Required'),
+  nmfcNumber: Yup.number().typeError('must be number').test("digit5", "There has to be 5 digit numbers.", val => {
+    return !val || val.toString().length === 5
+  }),
+  hazardClass: Yup.number(),
+  packagingGroup: Yup.number()
 })
 
-const resultRenderer = ({ casProduct, id }) => (
-  <Label content={casProduct} key={id} />
-)
 class ProductPopup extends React.Component {
   componentWillMount() {
     this.resetComponent()
@@ -40,14 +44,15 @@ class ProductPopup extends React.Component {
     if (popupValues) {
       this.props.handleSubmitProductEditPopup({
         ...values,
-        casProduct: this.state.value,
-        unNumber: popupValues.unNumber,
+        casProduct: this.state.value ? this.state.value : popupValues.casProduct,
+        unNumber: this.state.unNumber ? this.state.unNumber.id : popupValues.unNumber.id,
         id: popupValues.id
       })
     } else {
       this.props.handleSubmitProductEddPopup({
         ...values,
-        casProduct: this.state.value
+        casProduct: this.state.value,
+        unNumber: this.state.unNumber ? this.state.unNumber.id : null
       })
     }
     actions.setSubmitting(false)
@@ -63,16 +68,20 @@ class ProductPopup extends React.Component {
     const { popupValues } = this.props
     this.setState({
       isLoading: false,
+      isUnLoading: false,
       results: [],
-      value: (popupValues && popupValues.casProduct) || ''
+      value: (popupValues && popupValues.casProduct) || '',
+      unNumber: ''
     })
   }
 
   handleResultSelect = (e, { result }) =>
-    this.setState({ value: result.casProduct })
+    this.setState({value: result})
 
   handleSearchChange = (e, { value }) => {
     this.setState({ isLoading: true, value })
+
+    this.props.searchCasProduct(value)
 
     setTimeout(() => {
       const re = new RegExp(escapeRegExp(this.state.value), 'i')
@@ -85,22 +94,62 @@ class ProductPopup extends React.Component {
     }, 300)
   }
 
+  handleSearchUnNumber = (e, { value }) => {
+    this.setState({ isUnLoading: true, unNumber: value })
+
+    this.props.searchUnNumber(value)
+
+    setTimeout(() => {
+      const re = new RegExp(escapeRegExp(this.state.unNumber), 'i')
+      const isMatch = result => re.test(result.unNumberCode)
+
+      this.setState({
+        isUnLoading: false,
+        unNumbers: filter(this.handleUnNumber(), isMatch)
+      })
+    }, 300)
+  }
+
+  handleUnNumber = () => {
+    return this.props.searchedUnNumbers.map(unNumber => ({
+      unNumberCode: unNumber.unNumberCode
+    }))
+  }
+
+  handleUnNumberSelect = (e, { result }) => {
+    this.setState({unNumber: result})
+  }
+
   getInitialFormValues = () => {
     const { popupValues } = this.props
     const {
       casProduct = '',
+      description = '',
+      freightClass = '',
+      hazardClass = '',
+      hazardous = false,
+      nmfcNumber = '',
       productName = '',
       productNumber = '',
       packagingSize = '',
+      packagingGroup = '',
       packageID = '',
+      stackable = false,
       unitID = ''
     } = popupValues || {}
     return {
       casProduct,
+      description,
+      freightClass,
+      hazardClass,
+      hazardous,
+      nmfcNumber,
       productName,
       productNumber,
       packagingSize,
+      packagingGroup,
       packageID,
+      stackable,
       unitID
     }
   }
@@ -110,14 +159,21 @@ class ProductPopup extends React.Component {
       closePopup,
       packagingType,
       productsUnitsType,
-      popupValues
+      popupValues,
+      freightClasses,
+      hazardClasses,
+      packagingGroups
     } = this.props
-    const { isLoading, results, value } = this.state
+    const { isLoading, isUnLoading, results, value } = this.state
     const title = popupValues ? 'Edit' : 'Add'
+    const casProduct = popupValues && popupValues.casProduct ? popupValues.casProduct : null
+    const unNumber = popupValues && popupValues.unNumber ? popupValues.unNumber : null
+    const searchedCasProducts = this.props.searchedCasProducts && this.props.searchedCasProducts.length ? this.props.searchedCasProducts : (casProduct ? [casProduct] : [])
+    const searchedUnNumbers = this.props.searchedUnNumbers && this.props.searchedUnNumbers.length ? this.props.searchedUnNumbers : (unNumber ? [unNumber] : [])
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>{title} product catalog</Modal.Header>
+        <Modal.Header>{title} Product</Modal.Header>
         <Modal.Content>
           <Form
             initialValues={this.getInitialFormValues()}
@@ -134,9 +190,15 @@ class ProductPopup extends React.Component {
                   onSearchChange={debounce(this.handleSearchChange, 500, {
                     leading: true
                   })}
-                  results={results}
-                  value={value}
-                  resultRenderer={resultRenderer}
+                  results={searchedCasProducts.map(item => {
+                    return {
+                      id: item.id,
+                      title: item.casNumber,
+                      description: item.casIndexName,
+                      unNumber: item.unNumber ? item.unNumber.id : 0
+                    }
+                  })}
+                  defaultValue={casProduct && casProduct.casNumber ? casProduct.casNumber : null}
                 />
               </FormField>
             </FormGroup>
@@ -145,19 +207,76 @@ class ProductPopup extends React.Component {
               <Input type="text" label="Product Number" name="productNumber" />
             </FormGroup>
             <FormGroup widths="equal">
-              <Dropdown
-                label="Packaging Type"
-                name="packageID"
-                options={packagingType}
-              />
               <Input type="text" label="Packaging Size" name="packagingSize" />
-            </FormGroup>
-            <FormGroup widths="equal">
               <Dropdown
                 label="Units"
                 name="unitID"
                 options={productsUnitsType}
               />
+              <Dropdown
+                label="Packaging Type"
+                name="packageID"
+                options={packagingType}
+              />
+            </FormGroup>
+            <FormGroup widths='equal'>
+              <FormField>
+                <label>UN Number</label>
+                <Search loading={isUnLoading}
+                        onResultSelect={this.handleUnNumberSelect}
+                        onSearchChange={debounce(this.handleSearchUnNumber, 500, {
+                          leading: true
+                        })}
+                        results={searchedUnNumbers.map(item => {
+                          return {
+                            id: item.id,
+                            title: item.unNumberCode,
+                            description: item.description
+                          }
+                        })}
+                        defaultValue={unNumber && unNumber.unNumberCode ? unNumber.unNumberCode : null}
+                />
+              </FormField>
+              <FormField>
+                <Input type="number"
+                       label="NMFC Code"
+                       name="nmfcNumber"
+                />
+              </FormField>
+            </FormGroup>
+            <FormGroup widths='equal'>
+              <Dropdown label='Freight Class'
+                        name='freightClass'
+                        options={freightClasses}
+              />
+              <Dropdown label='Hazard Class'
+                        name='hazardClass'
+                        options={hazardClasses}
+              />
+              <Dropdown label='Packaging Group'
+                        name='packagingGroup'
+                        options={packagingGroups}
+              />
+            </FormGroup>
+            <FormGroup widths='equal'>
+              <FormField>
+                <Checkbox toggle
+                          label='Stackable'
+                          name='stackable'
+                />
+              </FormField>
+              <FormField>
+                <Checkbox toggle
+                          label='Hazardous'
+                          name='hazardous'
+                />
+              </FormField>
+              <FormField>
+                <label>Description</label>
+                <TextArea rows='3'
+                          name='description'
+                />
+              </FormField>
             </FormGroup>
             <div style={{ textAlign: 'right' }}>
               <Button.Reset onClick={closePopup}>Cancel</Button.Reset>
@@ -173,14 +292,21 @@ class ProductPopup extends React.Component {
 const mapDispatchToProps = {
   closePopup,
   handleSubmitProductEditPopup,
-  handleSubmitProductEddPopup
+  handleSubmitProductEddPopup,
+  searchCasProduct,
+  searchUnNumber
 }
 const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues,
     productsCatalogRows: state.settings.productsCatalogRows,
     packagingType: state.settings.productsPackagingType,
-    productsUnitsType: state.settings.productsUnitsType
+    productsUnitsType: state.settings.productsUnitsType,
+    freightClasses: state.settings.productsFreightClasses,
+    hazardClasses: state.settings.productsHazardClasses,
+    packagingGroups: state.settings.productsPackagingGroups,
+    searchedCasProducts: state.settings.searchedCasProducts,
+    searchedUnNumbers: state.settings.searchedUnNumbers
   }
 }
 

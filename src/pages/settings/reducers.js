@@ -16,6 +16,14 @@ export const initialState = {
   productsCatalogRows: [],
   productsPackagingType: null,
   productsUnitsType: [],
+  productsFreightClasses: [],
+  productsHazardClasses: [],
+  productsPackagingGroups: [],
+  deliveryAddressesRows: [],
+  countries: [],
+  provinces: [],
+  countriesDropDown: [],
+  provincesDropDown: [],
   country: [],
   currency: [],
   tabsNames: [
@@ -26,10 +34,12 @@ export const initialState = {
     { name: "Global Broadcast", id: 5 },
     //{ name: "Client list", id: 6 }, // removed #29771
     { name: "Credit cards", id: 7 },
-    { name: "Bank accounts", id: 8 }
+    { name: "Bank accounts", id: 8 },
     //{ name: "Tax manager", id: 9 }, // removed #29771
     //{ name: "Terms", id: 10 }, // removed #29771
     //{ name: "Website Controls", id: 11 } // removed #29771
+    { name: "Delivery addresses", id: 12 }
+
   ],
   // currentTab: "Product catalog",
   currentTab: "Users",
@@ -47,13 +57,17 @@ export const initialState = {
   CSV: null,
   mappedHeaders: null,
   dataHeaderCSV: null,
-  loading: false
+  loading: false,
+  searchedCasProducts: [],
+  searchedUnNumbers: [],
+  deliveryAddressesFilter: { pageSize: 50, pageNumber: 0 },
 }
 
 export default function reducer(state = initialState, action) {
+  const {payload} = action
+
   switch (action.type) {
     case AT.OPEN_POPUP: {
-      console.log("action.payload", action.payload)
       return {
         ...state,
         isOpenPopup: true,
@@ -132,6 +146,7 @@ export default function reducer(state = initialState, action) {
         toast: { message: null, isSuccess: null }
       }
     }
+    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_FULFILLED:
     case AT.CLOSE_CONFIRM_POPUP: {
       return {
         ...state,
@@ -373,6 +388,7 @@ export default function reducer(state = initialState, action) {
       const rows = action.payload.products.map(product => {
         return {
           id: product.id,
+          description: product.description ? product.description : '',
           productName: product.productName,
           productNumber: product.productCode,
           casName: product.casProduct
@@ -380,25 +396,28 @@ export default function reducer(state = initialState, action) {
               ? product.casProduct.casIndexName
               : null
             : null,
-          casProduct: product.casProduct
+          casNumber: product.casProduct
             ? product.casProduct.casNumber
               ? product.casProduct.casNumber
               : null
             : null,
+          casProduct: product.casProduct ? product.casProduct : null,
           packagingType: product.packagingType
             ? product.packagingType.name
             : null,
           packageID: product.packagingType ? product.packagingType.id : null,
           packagingSize: product.packagingSize,
+          packagingGroup: product.packagingGroup ? product.packagingGroup.id : null,
           unit: product.packagingUnit
             ? product.packagingUnit.nameAbbreviation
             : null,
           unitID: product.packagingUnit ? product.packagingUnit.id : null,
-          unNumber: product.unNumber
-            ? product.unNumber.id
-              ? product.unNumber.id
-              : 0
-            : 0
+          freightClass: product.freightClass ? product.freightClass : null,
+          hazardous: product.hazardous,
+          hazardClass: product.hazardClasses && product.hazardClasses.length ? product.hazardClasses[0].id : null,
+          nmfcNumber: product.nmfcNumber ? product.nmfcNumber : null,
+          stackable: product.stackable,
+          unNumber: product.unNumber ? product.unNumber : null
         }
       })
       const packagingType = action.payload.productsTypes.map((type, id) => {
@@ -415,12 +434,38 @@ export default function reducer(state = initialState, action) {
           value: type.id
         }
       })
+      // TODO: Freight Classes - should be used same array as anywhere else
+      const fClassArray = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500]
+      const freightClasses = fClassArray.map(fClass => {
+        return {
+          key: fClass,
+          text: fClass,
+          value: fClass
+        }
+      })
+      const hazardClasses = action.payload.hazardClasses.map((hClass, id) => {
+        return {
+          key: id,
+          text: hClass.classCode + ': ' + hClass.description,
+          value: hClass.id
+        }
+      })
+      const packagingGroups = action.payload.packagingGroups.map((pGroup, id) => {
+        return {
+          key: id,
+          text: pGroup.groupCode + ': ' + pGroup.description,
+          value: pGroup.id
+        }
+      })
       return {
         ...state,
         loading: false,
         productsCatalogRows: rows,
         productsPackagingType: packagingType,
-        productsUnitsType: packagingUnitsType
+        productsUnitsType: packagingUnitsType,
+        productsHazardClasses: hazardClasses,
+        productsFreightClasses: freightClasses,
+        productsPackagingGroups: packagingGroups
       }
     }
 
@@ -508,6 +553,85 @@ export default function reducer(state = initialState, action) {
         dataHeaderCSV: null
       }
     }
+
+    case AT.SEARCH_CAS_PRODUCT_FULFILLED: {
+      return {
+        ...state,
+        searchedCasProducts: action.payload.data
+      }
+    }
+
+    case AT.SEARCH_UN_NUMBER_FULFILLED: {
+      return {
+        ...state,
+        searchedUnNumbers: action.payload.data
+      }
+    }
+
+    case AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES_PENDING:
+    case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_PENDING:
+    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_PENDING:
+    case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING_PENDING:
+    case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES_FULFILLED:
+    case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_FULFILLED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER_FULFILLED:
+    case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING_FULFILLED: {
+      return {
+        ...state,
+        deliveryAddressesRows: action.payload,
+        loading: false
+      }
+    }
+
+    case AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES_REJECTED:
+    case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_REJECTED:
+    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_REJECTED:
+    case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING_REJECTED:
+    case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.SETTINGS_GET_COUNTRIES_FULFILLED: {
+      return {
+        ...state,
+        countries: payload,
+        countriesDropDown: payload.map(c => ({
+          text: c.name,
+          value: c.id,
+          key: c.id,
+        }))
+      }
+    }
+
+    case AT.SETTINGS_GET_PROVINCES_FULFILLED: {
+      return {
+        ...state,
+        provinces: payload,
+        provincesDropDown: payload.map(d => ({
+          text: d.name,
+          value: d.id,
+          key: d.id
+        }))
+      }
+    }
+
+
 
     default: {
       return state

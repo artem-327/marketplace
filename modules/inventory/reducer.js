@@ -22,17 +22,33 @@ export default function reducer(state = initialState, action) {
     const {type, payload} = action
 
     switch (type) {
+        case AT.INVENTORY_ADD_PRODUCT_OFFER_PENDING: {
+          return {
+            ...state,
+            loading: true
+          }
+        }
+
         case AT.INVENTORY_ADD_PRODUCT_OFFER_FULFILLED: {
           return {
             ...state,
-            poCreated: true
+            poCreated: true,
+            loading: false
+          }
+        }
+
+        case AT.INVENTORY_EDIT_PRODUCT_OFFER_PENDING: {
+          return {
+            ...state,
+            loading: true
           }
         }
 
         case AT.INVENTORY_EDIT_PRODUCT_OFFER_FULFILLED: {
           return {
             ...state,
-            poCreated: true
+            poCreated: true,
+            loading: false
           }
         }
 
@@ -75,6 +91,13 @@ export default function reducer(state = initialState, action) {
           }
         }
 
+        case AT.INVENTORY_GET_PRODUCT_OFFER_PENDING: {
+          return {
+            ...state,
+            loading: true
+          }
+        }
+
         case AT.INVENTORY_GET_PRODUCT_OFFER_FULFILLED: {
           let {data} = action.payload
 
@@ -97,6 +120,7 @@ export default function reducer(state = initialState, action) {
           return {
             ...state,
             ...action.payload.data,
+            loading: false,
             fileIds: action.payload.data.attachments.map(att => {
               att.attachment = true
               return att
@@ -169,7 +193,10 @@ export default function reducer(state = initialState, action) {
           return {
             ...state,
             loading: false,
-            myProductOffers: action.payload.data
+            myProductOffers: [
+              ...state.myProductOffers,
+              ...action.payload.data
+            ]
           }
         }
 
@@ -188,7 +215,18 @@ export default function reducer(state = initialState, action) {
 
         case AT.INVENTORY_RESET_FORM: {
           return {
-            ...initialState
+            ...initialState,
+            listConditions: state.listConditions,
+            listForms: state.listForms,
+            listGrades: state.listGrades,
+            warehousesList: state.warehousesList,
+            initialState: {
+              ...action.payload.data,
+              pricingTiers: [{
+                quantityFrom: 1,
+                price: ''
+              }]
+            }
           }
         }
 

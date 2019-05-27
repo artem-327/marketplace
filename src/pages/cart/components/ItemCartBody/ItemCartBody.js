@@ -4,6 +4,7 @@ import confirm from '../../../../components/Confirmable/confirm'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { checkToken } from '../../../../utils/auth'
 import { Button } from 'semantic-ui-react'
+import { FormattedUnit } from '~/components/formatted-messages'
 
 export default class ItemCartBody extends Component {
   render() {
@@ -37,15 +38,17 @@ export default class ItemCartBody extends Component {
               <span>Price per {unitName}: </span>
               <FormattedNumber
                 id='cart.pricePer'
+                style='currency'
+                currency={cartItem.productOffer.price.currency.code}
                 value={cartItem.pricing.price}
               />
             </div>
             <div>
               <span>Total Weight: </span>
-              <FormattedNumber
-                id='cart.totalWeight'
+              <FormattedUnit
                 value={cartItem.quantity * productOffer.product.packagingSize}
-              /> {unitName}
+                unit={unitName} separator=''
+              />
             </div>
           </div>
           <div className='item-cart-body-section'>

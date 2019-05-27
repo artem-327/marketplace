@@ -1,12 +1,28 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Confirm } from 'semantic-ui-react'
 import ProdexTable from '~/components/table'
-import { getCompanies, openEditCompany, deleteCompany } from '../../actions'
+import {
+  getCompanies,
+  openEditCompany,
+  deleteCompany,
+  handleOpenConfirmPopup,
+  closeConfirmPopup,
+} from '../../actions'
+
+const PAGE_SIZE = 50
 
 class CompaniesTable extends Component {
 
+  getNextPage = (pageNumber) => {
+    this.props.getCompanies({
+      pageNumber,
+      pageSize: PAGE_SIZE
+    })
+  }
+
   componentDidMount() {
-    this.props.getCompanies()
+    this.getNextPage(0)
   }
 
   render() {
@@ -17,19 +33,32 @@ class CompaniesTable extends Component {
       currentTab,
       loading,
       openEditCompany,
-      deleteCompany,
+      confirmMessage,
+      handleOpenConfirmPopup,
+      closeConfirmPopup,
+      deleteRowById,
+      deleteCompany
     } = this.props
 
     return (
       <React.Fragment>
+        <Confirm
+            size="tiny"
+            content="Do you really want to delete item?"
+            open={confirmMessage}
+            onCancel={closeConfirmPopup}
+            onConfirm={() => deleteCompany(deleteRowById)}
+        />
         <ProdexTable
           columns={columns}
           rows={rows}
+          pageSize={PAGE_SIZE}
+          getNextPage={this.getNextPage}
           loading={loading}
           filterValue={filterValue}
           rowActions={[
             { text: 'Edit', callback: (row) => openEditCompany(row.id, row) },
-            { text: 'Delete', callback: (row) => confirm('Do you really want to delete?') && deleteCompany(row.id)}
+            { text: 'Delete', callback: (row) => handleOpenConfirmPopup(row.id)}
           ]}
         />
       </React.Fragment>
@@ -39,6 +68,8 @@ class CompaniesTable extends Component {
 
 const mapDispatchToProps = {
   getCompanies,
+  handleOpenConfirmPopup,
+  closeConfirmPopup,
   deleteCompany,
   openEditCompany
 }
@@ -63,7 +94,9 @@ const mapStateToProps = ({admin}) => {
       contactEmail: c.primaryUser ?
         c.primaryUser.email
         : '',
-    }))
+    })),
+    confirmMessage: admin.confirmMessage,
+    deleteRowById: admin.deleteRowById,
   }
 }
 

@@ -1,9 +1,11 @@
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import ShoppingCart from './ShoppingCart'
-import { getCart, deleteCart, sidebarChanged, getProductOffer } from '../../../modules/cart'
+import { sidebarChanged } from '../../../modules/cart'
 import { addPopup, removePopup } from '../../../modules/popup'
 import { getPricing, getLocationString } from '../../../utils/functions'
+import { getCart, getProductOffer, deleteCart, deleteCartItem } from '~/modules/purchase-order/actions'
+
 
 function mapStateToProps(store) {
   let { cart } = store.cart

@@ -1,0 +1,55 @@
+@import "~/src/styles/main.scss";
+@import "~/src/styles/fonts.scss";
+
+.grid {
+  &.light-gray {
+    background-color: #fafafa;
+  }
+
+  &.darker-gray {
+    background-color: #e7e7e7;
+  }
+}
+
+.headerAddtext {
+    color: $blue-color;
+    cursor: pointer;
+    display: block;
+    float: right;
+    text-transform: none;
+    font-weight: 500;
+}
+
+.cart-item-summary {
+  font-size: 18px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: normal;
+  letter-spacing: 0.2px;
+  color: #4e5157;
+
+  .row {
+    .column:nth-child(2) {
+      text-align: right;
+    }
+  }
+}
+
+
+.purchase-order {
+  .grid {
+    .row.header {
+      background-color: #e7e7e7 !important;
+      .ui.header {
+        font-size: 18px !important;
+      } 
+    }
+
+    &.bottom-padded {
+      .row:last-child {
+        padding-bottom: 25px !important;
+      }
+    }
+  }
+}

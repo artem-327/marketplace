@@ -20,6 +20,8 @@ export default {
   getProductTypes: () =>
     api.get('/prodex/api/packaging-types').then(response => response.data),
   getUnitsType: () => api.get('/prodex/api/units'),
+  getHazardClasses: () => api.get('/prodex/api/hazard-classes'),
+  getPackagingGroups: () => api.get('/prodex/api/packaging-groups'),
   getProductsWithRequiredParamPar: char =>
     api
       .get(`/prodex/api/product-templates?search=${char}`)
@@ -65,13 +67,34 @@ export default {
   patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body),
   patchUserRole: (id, body) =>
     api.patch(`/prodex/api/users/id/${id}/add-roles`, body),
-  putProduct: (id, body) => api.put(`/prodex/api/products/${id}`, body),
+  putProduct: (id, body) => api.put(`/prodex/api/products/id/${id}`, body),
+  searchCasProduct: (pattern) => api.get(`/prodex/api/cas-products/search?limit=5&pattern=${pattern}`),
+  searchUnNumber: (pattern) => api.get(`/prodex/api/un-numbers/search?limit=5&pattern=${pattern}`),
 
   deleteUser: userId => api.delete(`/prodex/api/users/id/${userId}`),
   deleteWarehouse: branchId => api.delete(`/prodex/api/branches/${branchId}`),
-  deleteProduct: branchId => api.delete(`/prodex/api/products/${branchId}`),
+  deleteProduct: branchId => api.delete(`/prodex/api/products/id/${branchId}`),
   deleteCreditCard: cardId =>
     api.delete(`/prodex/api/payments/cards/${cardId}`),
   deleteBankAccount: bankAccountId =>
-    api.delete(`/prodex/api/payments/bank-accounts/${bankAccountId}`)
+    api.delete(`/prodex/api/payments/bank-accounts/${bankAccountId}`),
+
+  getDeliveryAddressesByStringRequest: async (value, limit=30) => {
+    return await api.get(`/prodex/api/delivery-addresses/search?limit=${limit}&pattern=${value}`)
+        .then(response => response.data)},
+  getDeliveryAddressesByFilterRequest: async (value) => {
+    return await api.post('/prodex/api/delivery-addresses/datagrid', value)
+      .then(response => response.data)},
+  deleteDeliveryAddresses: async (id) => {
+    await api.delete(`/prodex/api/delivery-addresses/id/${id}`)},
+  getCountries: async () => {return await api.get('/prodex/api/countries')
+    .then(response => response.data)},
+  //! ! will be added new BE endpoint
+  getProvinces: async (id) => {return await api.get(`/prodex/api/provinces/search?countryId=${id}`)
+    .then(response => response.data)},
+  createDeliveryAddress: async (value) => {
+    return await api.post('/prodex/api/delivery-addresses', value)},
+  updateDeliveryAddresses: async (id, value) => {
+    return await api.put(`/prodex/api/delivery-addresses/id/${id}`, value)},
+
 }

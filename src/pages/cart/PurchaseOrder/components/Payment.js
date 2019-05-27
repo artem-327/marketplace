@@ -1,7 +1,4 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import DropdownRedux from '../../../../components/Dropdown/DropdownRedux'
-import { required } from '../../../../utils/validation'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Dropdown, GridRow, GridColumn, Divider } from 'semantic-ui-react';
 import ShippingAddress from './ShippingAddress';
