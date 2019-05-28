@@ -60,29 +60,15 @@ class TablesHandlers extends Component {
 
   currentTabTitle = currentTab => {
     switch (currentTab) {
-      case 'Users':
-        return 'User'
-        break
-      case 'Branches':
-        return 'Branch'
-        break
-      case 'Warehouses':
-        return 'Warehouse'
-        break
-      case 'Product catalog':
-        return 'Product'
-        break
-      case 'Credit cards':
-        return 'Credit card'
-        break
-      case 'Bank accounts':
-        return 'Bank account'
-        break
-      case 'Delivery addresses':
-        return 'Delivery addresses'
-        break
-      default:
-        null
+      case 'Users': return 'User'
+      case 'Branches': return 'Branch'
+      case 'Warehouses': return 'Warehouse'
+      case 'Product catalog': return 'Product'
+      case 'Global Broadcast': return 'Broadcast'
+      case 'Credit cards': return 'Credit card'
+      case 'Bank accounts': return 'Bank account'
+      case 'Delivery addresses': return 'Delivery addresses'
+      default: null
     }
   }
 
@@ -100,36 +86,36 @@ class TablesHandlers extends Component {
       <Menu secondary>
         <Menu.Item header>
           <Header as="h1" size="medium">
-            {currentTab}
+            {currentTab.name}
           </Header>
         </Menu.Item>
-
-        <Menu.Menu position="right">
-          <Menu.Item>
-            <Input
-              style={{ width: 340 }}
-              size="large"
-              icon="search"
-              placeholder={textsTable[currentTab].SearchText}
-              onChange={e => handleFiltersValue(this.props, e.target.value)}
-            />
-          </Menu.Item>
-          <Menu.Item>
-            <Button size="large" primary onClick={() => openPopup()}>
-              Add {this.currentTabTitle(currentTab)}
-            </Button>
-            {currentTab === 'Product catalog' && (
-              <Button
+        {!currentTab.hideHandler &&
+          <Menu.Menu position="right">
+            <Menu.Item>
+              <Input
+                style={{ width: 340 }}
                 size="large"
-                style={{ marginLeft: 10 }}
-                primary
-                onClick={() => openImportPopup()}
-              >
-                Import {this.currentTabTitle(currentTab)}
+                icon="search"
+                placeholder={textsTable[currentTab.name].SearchText}
+                onChange={e => handleFiltersValue(this.props, e.target.value)}
+              />
+            </Menu.Item>
+            <Menu.Item>
+              <Button size="large" primary onClick={() => openPopup()}>
+                Add {this.currentTabTitle(currentTab.name)}
               </Button>
-            )}
-          </Menu.Item>
-        </Menu.Menu>
+              {currentTab.name === 'Product catalog' && (
+                <Button
+                  size="large"
+                  style={{ marginLeft: 10 }}
+                  primary
+                  onClick={() => openImportPopup()}>
+                  Import {this.currentTabTitle(currentTab.name)}
+                </Button>
+              )}
+            </Menu.Item>
+          </Menu.Menu>
+        }
       </Menu>
     )
   }

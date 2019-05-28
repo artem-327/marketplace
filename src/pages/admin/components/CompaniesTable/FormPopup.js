@@ -10,7 +10,10 @@ import * as Yup from 'yup'
 import { ZipDropdown } from '~/modules/zip-dropdown'
 // debug purposes only
 import JSONPretty from 'react-json-pretty'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl'
+import { validationSchema } from '~/modules/company-form/constants'
+
+import { CompanyForm } from '~/modules/company-form/'
 
 const initialFormValues = {
   name: '',
@@ -52,10 +55,6 @@ const initialFormValues = {
     name: '',
   }
 }
-
-const formValidationEdit = Yup.object().shape({
-  name: Yup.string().trim().min(2, 'Name should has at least 2 characters').required()
-})
 
 const formValidationNew = Yup.lazy(values => {
   let primaryUserRequired = values.primaryUser.email !== '' || values.primaryUser.name !== ''
@@ -177,17 +176,18 @@ class AddNewPopupCasProducts extends React.Component {
           <Form
             enableReinitialize
             initialValues={popupValues ? popupValues : initialFormValues}
-            validationSchema={popupValues ? formValidationEdit : formValidationNew}
+            validationSchema={popupValues ? validationSchema : formValidationNew}
             onReset={closePopup}
             onSubmit={async (values, actions) => {
-
               if (popupValues) {
-                let newValues = {
-                  "nacdMember": values.nacdMember,
-                  "name": values.name.trim(),
-                  "phone": values.phone.trim(),
-                  "website": values.website.trim()
-                }
+                let newValues = {}
+
+                Object.keys(values)
+                  .forEach(key => {
+                    if (typeof values[key] === 'string') newValues[key] = values[key].trim()
+                    else newValues[key] = values[key]
+                  })
+
                 await updateCompany(popupValues.id, newValues)
               }
               else {
@@ -206,23 +206,18 @@ class AddNewPopupCasProducts extends React.Component {
           >
             {({ values, errors, setFieldValue }) => (
               <>
-                <FormGroup widths="equal">
-                  <Input type="text" label="Company Name" name="name" />
-                </FormGroup>
-                <FormGroup widths="equal">
-                  <Input type="text" label="Phone" name="phone" />
-                  <Input type="text" label="Website URL" name="website" />
-                </FormGroup>
-                <FormGroup widths="equal">
-                  <Checkbox label="NACD Member" name="nacdMember" />
-                </FormGroup>
+                <CompanyForm />
+                {!popupValues && (
+                  <>
+                    <Divider />
+                    <h4>Primary User</h4>
+                    <FormGroup widths="equal">
+                      <Input type="text" label="Name" name="primaryUser.name" />
+                      <Input type="text" label="Email" name="primaryUser.email" />
+                    </FormGroup> 
+                  </>
+                )}
 
-                <Divider />
-                <h4>Primary User</h4>
-                <FormGroup widths="equal">
-                  <Input type="text" label="Name" name="primaryUser.name" />
-                  <Input type="text" label="Email" name="primaryUser.email" />
-                </FormGroup>
 
                 {!popupValues && <>
                   <Divider />

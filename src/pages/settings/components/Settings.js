@@ -1,5 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Form, Button } from 'formik-semantic-ui'
+import { Container, Grid, GridColumn, FormGroup, Segment } from 'semantic-ui-react'
+import styled from 'styled-components'
+import { FormattedMessage } from 'react-intl'
 
 import Tabs from './Tabs'
 import UsersTable from './UserTable/UsersTable'
@@ -16,45 +20,95 @@ import TablesHandlers from './TablesHandlers'
 import ProductImportPopup from './ProductCatalogTable/ProductImportPopup'
 import DeliveryAddressesTable from './DeliveryAddressesTable/DeliveryAddressesTable'
 import DeliveryAddressesPopup from './DeliveryAddressesTable/DeliveryAddressesPopup'
+import { CompanyForm } from '~/modules/company-form/'
+import { companyDetailsTab } from '../contants'
 import Router from 'next/router'
 
-import Toast from '../../../../components/toast'
+import { addTab } from '../actions'
+import { updateCompany } from '~/src/pages/admin/actions'
+import { validationSchema } from '~/modules/company-form/constants'
 
-import { Container, Grid } from 'semantic-ui-react'
 
-const tables = {
-  Users: <UsersTable />,
-  Branches: <WarehouseTable />,
-  Warehouses: <WarehouseTable />,
-  'Product catalog': <ProductCatalogTable />,
-  'Bank accounts': <BankAccountsTable />,
-  'Credit cards': <CreditCardsTable />,
-  'Delivery addresses': <DeliveryAddressesTable />
-}
+// import Toast from '../../../../components/toast'
 
-const popupForm = {
-  Users: <EditUsersPopup />,
-  Branches: <EditWarehousePopup />,
-  Warehouses: <EditWarehousePopup />,
-  'Product catalog': <EditProductPopup />,
-  'Bank accounts': <BankAccountsPopup />,
-  'Credit cards': <CreditCardsPopup />,
-  'Delivery addresses': <DeliveryAddressesPopup />
-}
 
-const importForm = {
-  'Product catalog': <ProductImportPopup />
-}
+const TopMargedGrid = styled(Grid)`
+  margin-top: 1rem !important;
+`
+
+
 
 class Settings extends Component {
+  componentDidMount() {
+    let { isCompanyAdmin, addTab } = this.props
+    if (isCompanyAdmin) addTab(companyDetailsTab)
+  }
+
+  companyDetails = () => {
+    return (
+      <TopMargedGrid relaxed='very' centered>
+        <GridColumn computer={12}>
+          <Form
+            initialValues={this.props.company}
+            validationSchema={validationSchema}
+            onSubmit={async (values, { setSubmitting }) => {
+              try {
+                await this.props.updateCompany(values.id, values)
+              } catch (ignored) { }
+
+              setSubmitting(false)
+            }}
+          >
+            {({ values, errors, setFieldValue }) => {
+              return (
+                <Segment basic>
+                  <CompanyForm />
+                  <Grid>
+                    <GridColumn floated='right' computer={4}>
+                      <Button.Submit fluid><FormattedMessage id='global.save' /></Button.Submit>
+                    </GridColumn>
+                  </Grid>
+                </Segment>
+              )
+            }}
+          </Form>
+        </GridColumn>
+      </TopMargedGrid >
+    )
+  }
+
   renderContent = () => {
-    const { currentTab, isOpenPopup, isOpenImportPopup, type } = this.props
+    let { currentTab, isOpenPopup, isOpenImportPopup, type } = this.props
+    const tables = {
+      Users: <UsersTable />,
+      Branches: <WarehouseTable />,
+      Warehouses: <WarehouseTable />,
+      'Product catalog': <ProductCatalogTable />,
+      'Bank accounts': <BankAccountsTable />,
+      'Credit cards': <CreditCardsTable />,
+      'Delivery addresses': <DeliveryAddressesTable />,
+      'Company Details': this.companyDetails()
+    }
+
+    const popupForm = {
+      Users: <EditUsersPopup />,
+      Branches: <EditWarehousePopup />,
+      Warehouses: <EditWarehousePopup />,
+      'Product catalog': <EditProductPopup />,
+      'Bank accounts': <BankAccountsPopup />,
+      'Credit cards': <CreditCardsPopup />,
+      'Delivery addresses': <DeliveryAddressesPopup />
+    }
+
+    const importForm = {
+      'Product catalog': <ProductImportPopup />
+    }
 
     return (
       <>
-        {isOpenPopup && popupForm[currentTab]}
-        {isOpenImportPopup && importForm[currentTab]}
-        {tables[type ? 'Product catalog' : currentTab] || <p>This page is still under construction</p>}
+        {isOpenPopup && popupForm[currentTab.name]}
+        {isOpenImportPopup && importForm[currentTab.name]}
+        {tables[type ? 'Product catalog' : currentTab.name] || <p>This page is still under construction</p>}
       </>
     )
   }
@@ -66,9 +120,9 @@ class Settings extends Component {
         <Grid columns="equal" className="flex stretched">
           <Grid.Row>
             <Grid.Column width={3}>
-              <Tabs type='products' />
+              <Tabs isCompanyAdmin={this.props.isCompanyAdmin} type='products' />
             </Grid.Column>
-            <Grid.Column className="flex stretched" style={{marginTop: '7px'}}>
+            <Grid.Column className="flex stretched" style={{ marginTop: '7px' }}>
               {this.renderContent()}
             </Grid.Column>
           </Grid.Row>
@@ -78,14 +132,14 @@ class Settings extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    ...state.settings,
-    type: Router && Router.router ? Router.router.query.type : false
-  }
-}
+const mapStateToProps = ({ settings, auth }) => ({
+  ...settings,
+  isCompanyAdmin: auth.identity ? auth.identity.isCompanyAdmin : false,
+  company: auth.identity ? auth.identity.company : null,
+  type: Router && Router.router ? Router.router.query.type : false
+})
 
 export default connect(
   mapStateToProps,
-  null
+  { addTab, updateCompany }
 )(Settings)
