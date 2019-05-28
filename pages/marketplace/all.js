@@ -1,9 +1,9 @@
 import securePage from '~/hocs/securePage'
 import Layout from 'components/Layout'
-import AllInventory from "~/src/pages/inventory/allInventory"
+import {Marketplace} from '~/modules/marketplace'
 
 export default securePage(() => (
-  <Layout title="Add Inventory">
-    <AllInventory />
+  <Layout title="Marketplace">
+    <Marketplace />
   </Layout>
 ))

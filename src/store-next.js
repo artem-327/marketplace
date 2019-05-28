@@ -46,6 +46,7 @@ import settingsSaga from "./pages/settings/saga"
 
 // Simple Add/Edit Inventory
 import simpleAdd from '~/modules/inventory/reducer'
+import marketplace from '~/modules/marketplace/reducer'
 import shiping from '~/modules/shipping/reducer'
 import cart, { initialState as cartInit } from '~/modules/purchase-order/reducer'
 // Orders
@@ -81,6 +82,7 @@ const reducer = combineReducers({
   dataTables,
   saveFilterItem,
   simpleAdd,
+  marketplace,
   orders: ordersReducers,
   zip,
   forms: combineForms({
