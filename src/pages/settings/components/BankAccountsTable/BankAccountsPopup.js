@@ -16,14 +16,14 @@ class BankAccountsPopup extends React.Component {
       this.props.putBankAccountRequest(
         {
           ...values,
-          tab: this.props.currentTab === 'Bank accounts' ? 'bank' : null
+          tab: this.props.currentTab.name === 'Bank accounts' ? 'bank' : null
         },
         this.props.popupValues.branchId
       )
     } else {
       this.props.postNewBankAccountRequest({
         ...values,
-        tab: this.props.currentTab === 'Bank accounts' ? 'bank' : null
+        tab: this.props.currentTab.name === 'Bank accounts' ? 'bank' : null
       })
     }
     actions.setSubmitting(false)
@@ -60,7 +60,7 @@ class BankAccountsPopup extends React.Component {
     return (
       <Modal open centered={false}>
         <Modal.Header>
-          {`${title} `} {currentTab}
+          {`${title} `} {currentTab.name}
         </Modal.Header>
         <Modal.Content>
           <Form

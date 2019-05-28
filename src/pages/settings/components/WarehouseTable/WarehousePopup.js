@@ -44,14 +44,14 @@ class WarehousePopup extends React.Component {
       this.props.handlerSubmitWarehouseEditPopup(
         {
           ...values,
-          tab: this.props.currentTab === 'Branches' ? 'branches' : null
+          tab: this.props.currentTab.name === 'Branches' ? 'branches' : null
         },
         this.props.popupValues.branchId
       )
     } else {
       this.props.postNewWarehouseRequest({
         ...values,
-        tab: this.props.currentTab === 'Branches' ? 'branches' : null
+        tab: this.props.currentTab.name === 'Branches' ? 'branches' : null
       })
     }
     actions.setSubmitting(false)
@@ -89,8 +89,8 @@ class WarehousePopup extends React.Component {
     const { closePopup, popupValues, country, currentTab } = this.props
     const title = popupValues ? 'Edit ' : 'Add'
 
-    const name = currentTab === 'Branches' ? 'Branch Name' : 'Warehouse Name'
-    const modalTitle = currentTab === 'Branches' ? 'Branch' : 'Warehouses'
+    const name = currentTab.name === 'Branches' ? 'Branch Name' : 'Warehouse Name'
+    const modalTitle = currentTab.name === 'Branches' ? 'Branch' : 'Warehouses'
 
     return (
       <Modal open centered={false}>

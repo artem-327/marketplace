@@ -4,7 +4,7 @@ export const defaultTabs = [
   { name: "Warehouses", id: 3 },
   { name: "Product catalog", id: 4 },
   { name: "Global Broadcast", id: 5 },
-  { name: "Credit cards", id: 7 },
+  //{ name: "Credit cards", id: 7 },
   { name: "Bank accounts", id: 8 },
   { name: "Delivery addresses", id: 12 }
 ]

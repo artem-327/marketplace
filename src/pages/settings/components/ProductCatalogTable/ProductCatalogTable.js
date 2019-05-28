@@ -6,7 +6,7 @@ import {
   openPopup,
   getProductsCatalogRequest,
   handleOpenConfirmPopup,
-  closePopup,
+  closeConfirmPopup,
   deleteConfirmation
 } from '../../actions'
 
@@ -34,11 +34,12 @@ class ProductCatalogTable extends Component {
       confirmMessage,
       openPopup,
       handleOpenConfirmPopup,
-      closePopup,
+      closeConfirmPopup,
       deleteConfirmation,
       loading,
       deleteRowById,
-      currentTab
+      currentTab,
+      reloadFilter
     } = this.props
 
     const { columns } = this.state
@@ -49,8 +50,8 @@ class ProductCatalogTable extends Component {
           size="tiny"
           content="Do you really want to delete this product?"
           open={confirmMessage}
-          onCancel={closePopup}
-          onConfirm={() => deleteConfirmation(deleteRowById, currentTab)}
+          onCancel={closeConfirmPopup}
+          onConfirm={() => deleteConfirmation(deleteRowById, currentTab, reloadFilter)}
         />
         <ProdexTable
           rows={rows}
@@ -75,13 +76,14 @@ const mapDispatchToProps = {
   openPopup,
   getProductsCatalogRequest,
   handleOpenConfirmPopup,
-  closePopup,
+  closeConfirmPopup,
   deleteConfirmation
 }
 
 const mapStateToProps = state => {
   return {
     rows: state.settings.productsCatalogRows,
+    currentTab: state.settings.currentTab,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
@@ -89,6 +91,7 @@ const mapStateToProps = state => {
     loading: state.settings.loading,
     reloadFilter: {props: {
         currentTab: state.settings.currentTab,
+        productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
         productsFilter: state.settings.productsFilter},
       value: state.settings.filterValue},
     productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue

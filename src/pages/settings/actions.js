@@ -105,10 +105,10 @@ export function handleOpenConfirmPopup(payload) {
     payload
   }
 }
-export function deleteConfirmation(deleteRowById, currentTab) {
+export function deleteConfirmation(deleteRowById, currentTab, reloadFilter=null) {
   let toast = {}
   return async dispatch => {
-    switch (currentTab) {
+    switch (currentTab.name) {
       case "Users":
         await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteUser(deleteRowById)})
         toast = { message: "User delete success", isSuccess: true }
@@ -127,7 +127,7 @@ export function deleteConfirmation(deleteRowById, currentTab) {
       case "Product catalog":
         await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteProduct(deleteRowById)})
         toast = { message: "Product delete success", isSuccess: true }
-        //! ! TODO - filter - dispatch(getProductsCatalogRequest())
+        dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
         break
       case "Credit cards":
         await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteCreditCard(deleteRowById)})
@@ -178,7 +178,7 @@ export function handleFiltersValue(props, value) {
       type: AT.HANDLE_FILTERS_VALUE,
       payload: value
     })
-    switch (props.currentTab) {
+    switch (props.currentTab.name) {
       case "Delivery addresses":
         if (value.trim().length) await dispatch(getDeliveryAddressesByStringRequest(value))
         else await dispatch(getDeliveryAddressesByFilterRequest(props.deliveryAddressesFilter))

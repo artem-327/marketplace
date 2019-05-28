@@ -5,7 +5,7 @@ import { Confirm } from 'semantic-ui-react'
 import {
   getCreditCardsDataRequest,
   handleOpenConfirmPopup,
-  closePopup,
+  closeConfirmPopup,
   deleteConfirmation
 } from '../../actions'
 
@@ -27,7 +27,7 @@ class ProductCatalogTable extends Component {
       filterValue,
       confirmMessage,
       handleOpenConfirmPopup,
-      closePopup,
+      closeConfirmPopup,
       deleteConfirmation,
       deleteRowById,
       currentTab
@@ -41,7 +41,7 @@ class ProductCatalogTable extends Component {
           size="tiny"
           content="Do you really want to delete this Credit Card?"
           open={confirmMessage}
-          onCancel={closePopup}
+          onCancel={closeConfirmPopup}
           onConfirm={() => deleteConfirmation(deleteRowById, currentTab)}
         />
         <ProdexTable
@@ -63,7 +63,7 @@ class ProductCatalogTable extends Component {
 const mapDispatchToProps = {
   getCreditCardsDataRequest,
   handleOpenConfirmPopup,
-  closePopup,
+  closeConfirmPopup,
   deleteConfirmation
 }
 

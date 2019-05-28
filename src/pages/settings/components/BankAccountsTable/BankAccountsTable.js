@@ -6,7 +6,7 @@ import {
   openPopup,
   getBankAccountsDataRequest,
   handleOpenConfirmPopup,
-  closePopup,
+  closeConfirmPopup,
   deleteConfirmation
 } from '../../actions'
 
@@ -30,7 +30,7 @@ class ProductCatalogTable extends Component {
       confirmMessage,
       openPopup,
       handleOpenConfirmPopup,
-      closePopup,
+      closeConfirmPopup,
       deleteConfirmation,
       deleteRowById,
       currentTab
@@ -44,7 +44,7 @@ class ProductCatalogTable extends Component {
           size="tiny"
           content="Do you really want to delete this Bank Account?"
           open={confirmMessage}
-          onCancel={closePopup}
+          onCancel={closeConfirmPopup}
           onConfirm={() => deleteConfirmation(deleteRowById, currentTab)}
         />
         <ProdexTable
@@ -68,7 +68,7 @@ const mapDispatchToProps = {
   openPopup,
   getBankAccountsDataRequest,
   handleOpenConfirmPopup,
-  closePopup,
+  closeConfirmPopup,
   deleteConfirmation
 }
 

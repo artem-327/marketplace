@@ -39,7 +39,7 @@ class CreditCardsPopup extends React.Component {
     return (
       <Modal open centered={false}>
         <Modal.Header>
-          {`${title} `} {currentTab}
+          {`${title} `} {currentTab.name}
         </Modal.Header>
         <Modal.Content>
           <Form
