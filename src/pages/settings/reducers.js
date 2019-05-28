@@ -27,22 +27,6 @@ export const initialState = {
   country: [],
   currency: [],
   tabsNames: defaultTabs,
-  //  [
-  //   { name: "Users", id: 1, type: 'users' },
-  //   { name: "Branches", id: 2, type: 'branches' },
-  //   { name: "Warehouses", id: 3, type: 'warehouses' },
-  //   { name: "Product catalog", id: 4, type: 'products' },
-  //   { name: "Global Broadcast", id: 5 },
-  //   //{ name: "Client list", id: 6 }, // removed #29771
-  //   { name: "Credit cards", id: 7 },
-  //   { name: "Bank accounts", id: 8, type: 'bank-accounts' },
-  //   //{ name: "Tax manager", id: 9 }, // removed #29771
-  //   //{ name: "Terms", id: 10 }, // removed #29771
-  //   //{ name: "Website Controls", id: 11 } // removed #29771
-  //   { name: "Delivery addresses", id: 12, type: 'delivery-addresses' }
-  // ],
-  // currentTab: "Product catalog",
-  currentTab: defaultTabs[0],
   isOpenPopup: false,
   isOpenImportPopup: false,
   currentEditForm: null,
@@ -177,14 +161,14 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.HANDLE_ACTIVE_TAB: {
+    /*case AT.HANDLE_ACTIVE_TAB: {
       return {
         ...state,
         currentTab: action.payload.tab,
         currentAddForm: null,
         currentEditForm: null
       }
-    }
+    }*/
 
     case AT.HANDLE_FILTERS_VALUE: {
       return {

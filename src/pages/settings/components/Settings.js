@@ -79,48 +79,51 @@ class Settings extends Component {
 
   renderContent = () => {
     let { currentTab, isOpenPopup, isOpenImportPopup, type } = this.props
+
     const tables = {
-      Users: <UsersTable />,
-      Branches: <WarehouseTable />,
-      Warehouses: <WarehouseTable />,
-      'Product catalog': <ProductCatalogTable />,
-      'Bank accounts': <BankAccountsTable />,
-      'Credit cards': <CreditCardsTable />,
-      'Delivery addresses': <DeliveryAddressesTable />,
-      'Company Details': this.companyDetails()
+      users: <UsersTable />,
+      branches: <WarehouseTable />,
+      warehouses: <WarehouseTable />,
+      products: <ProductCatalogTable />,
+      'bank-accounts': <BankAccountsTable />,
+      'credit-cards': <CreditCardsTable />,
+      'delivery-addresses': <DeliveryAddressesTable />,
+      'company-details': this.companyDetails()
     }
 
     const popupForm = {
-      Users: <EditUsersPopup />,
-      Branches: <EditWarehousePopup />,
-      Warehouses: <EditWarehousePopup />,
-      'Product catalog': <EditProductPopup />,
-      'Bank accounts': <BankAccountsPopup />,
-      'Credit cards': <CreditCardsPopup />,
-      'Delivery addresses': <DeliveryAddressesPopup />
+      users: <EditUsersPopup />,
+      branches: <EditWarehousePopup />,
+      warehouses: <EditWarehousePopup />,
+      products: <EditProductPopup />,
+      'bank-accounts': <BankAccountsPopup />,
+      'credit-cards': <CreditCardsPopup />,
+      'delivery-addresses': <DeliveryAddressesPopup />
     }
 
     const importForm = {
-      'Product catalog': <ProductImportPopup />
+      products: <ProductImportPopup />
     }
 
     return (
       <>
-        {isOpenPopup && popupForm[currentTab.name]}
-        {isOpenImportPopup && importForm[currentTab.name]}
-        {tables[type ? 'Product catalog' : currentTab.name] || <p>This page is still under construction</p>}
+        {isOpenPopup && popupForm[currentTab.type]}
+        {isOpenImportPopup && importForm[currentTab.type]}
+        {tables[currentTab.type] || <p>This page is still under construction</p>}
       </>
     )
   }
 
   render() {
+    const {currentTab} = this.props
+
     return (
       <Container fluid className="flex stretched">
         <TablesHandlers />
         <Grid columns="equal" className="flex stretched">
           <Grid.Row>
             <Grid.Column width={3}>
-              <Tabs isCompanyAdmin={this.props.isCompanyAdmin} type='products' />
+              <Tabs isCompanyAdmin={this.props.isCompanyAdmin} />
             </Grid.Column>
             <Grid.Column className="flex stretched" style={{ marginTop: '7px' }}>
               {this.renderContent()}
@@ -136,7 +139,7 @@ const mapStateToProps = ({ settings, auth }) => ({
   ...settings,
   isCompanyAdmin: auth.identity ? auth.identity.isCompanyAdmin : false,
   company: auth.identity ? auth.identity.company : null,
-  type: Router && Router.router ? Router.router.query.type : false
+  currentTab: Router && Router.router ? settings.tabsNames.find(tab => tab.type === Router.router.query.type) : settings.tabsNames[0]
 })
 
 export default connect(

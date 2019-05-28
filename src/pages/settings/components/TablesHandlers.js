@@ -5,37 +5,38 @@ import { Header, Menu, Button, Input, Dropdown } from 'semantic-ui-react'
 
 import { openPopup, handleFiltersValue, openImportPopup } from '../actions'
 import unitedStates from '../../../components/unitedStates'
+import Router from "next/router"
 
 const textsTable = {
-  Users: {
+  users: {
     BtnAddText: 'Add User',
     SearchText: 'Search user by name, title or branch ...'
   },
-  Branches: {
+  branches: {
     BtnAddText: 'Add Branch',
     SearchText: 'Search branch by name, address or contact ...'
   },
-  Warehouses: {
+  warehouses: {
     BtnAddText: 'Add Warehouse',
     SearchText: 'Search warehouse by name, address or contact ...'
   },
-  'Product catalog': {
+  products: {
     BtnAddText: 'Add Product Catalog',
     SearchText: 'Search product catalog by name, number ...'
   },
-  'Global Broadcast': {
+  'global-broadcast': {
     BtnAddText: 'Add Global Broadcast',
     SearchText: 'Search global broadcast by name ...'
   },
-  'Credit cards': {
+  'credit-cards': {
     BtnAddText: 'Add Credit Card',
     SearchText: 'Search credit card ...'
   },
-  'Bank accounts': {
+  'bank-accounts': {
     BtnAddText: 'Add Bank Account',
     SearchText: 'Search bank account ...'
   },
-  'Delivery addresses': {
+  'delivery-addresses': {
     BtnAddText: 'Add Delivery Address',
     SearchText: 'Search delivery address ...'
   }
@@ -96,7 +97,7 @@ class TablesHandlers extends Component {
                 style={{ width: 340 }}
                 size="large"
                 icon="search"
-                placeholder={textsTable[currentTab.name].SearchText}
+                placeholder={textsTable[currentTab.type].SearchText}
                 onChange={e => handleFiltersValue(this.props, e.target.value)}
               />
             </Menu.Item>
@@ -104,7 +105,7 @@ class TablesHandlers extends Component {
               <Button size="large" primary onClick={() => openPopup()}>
                 Add {this.currentTabTitle(currentTab.name)}
               </Button>
-              {currentTab.name === 'Product catalog' && (
+              {currentTab.type === 'products' && (
                 <Button
                   size="large"
                   style={{ marginLeft: 10 }}
@@ -123,8 +124,8 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentTab: state.settings.currentTab,
-    deliveryAddressesFilter: state.settings.deliveryAddressesFilter
+    deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
+    currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0]
   }
 }
 
