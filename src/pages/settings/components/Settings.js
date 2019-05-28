@@ -16,6 +16,7 @@ import TablesHandlers from './TablesHandlers'
 import ProductImportPopup from './ProductCatalogTable/ProductImportPopup'
 import DeliveryAddressesTable from './DeliveryAddressesTable/DeliveryAddressesTable'
 import DeliveryAddressesPopup from './DeliveryAddressesTable/DeliveryAddressesPopup'
+import Router from 'next/router'
 
 import Toast from '../../../../components/toast'
 
@@ -47,13 +48,13 @@ const importForm = {
 
 class Settings extends Component {
   renderContent = () => {
-    const { currentTab, isOpenPopup, isOpenImportPopup } = this.props
+    const { currentTab, isOpenPopup, isOpenImportPopup, type } = this.props
 
     return (
       <>
         {isOpenPopup && popupForm[currentTab]}
         {isOpenImportPopup && importForm[currentTab]}
-        {tables[currentTab] || <p>This page is still under construction</p>}
+        {tables[type ? 'Product catalog' : currentTab] || <p>This page is still under construction</p>}
       </>
     )
   }
@@ -65,7 +66,7 @@ class Settings extends Component {
         <Grid columns="equal" className="flex stretched">
           <Grid.Row>
             <Grid.Column width={3}>
-              <Tabs />
+              <Tabs type='products' />
             </Grid.Column>
             <Grid.Column className="flex stretched" style={{marginTop: '7px'}}>
               {this.renderContent()}
@@ -77,7 +78,12 @@ class Settings extends Component {
   }
 }
 
-const mapStateToProps = ({ settings }) => settings
+function mapStateToProps(state) {
+  return {
+    ...state.settings,
+    type: Router && Router.router ? Router.router.query.type : false
+  }
+}
 
 export default connect(
   mapStateToProps,

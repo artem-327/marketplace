@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Container, Menu, Header, Checkbox } from "semantic-ui-react"
+import { Container, Menu, Header, Checkbox, Icon } from "semantic-ui-react"
 import SubMenu from '~/src/components/SubMenu'
 import {FormattedMessage} from 'react-intl'
 import Router from 'next/router'
@@ -58,7 +58,11 @@ export default class MyInventory extends Component {
       ...r,
       broadcast: (
         <div style={{float: 'right'}}>
-          <Checkbox toggle checked={r.broadcasted} onChange={() => alert('Changed:'+r.productName)} />
+          {r.status !== 'Unmapped' ? (
+            <Checkbox toggle checked={r.status === 'Broadcasting'} disabled={r.status === 'Incomplete'} onChange={() => alert('Changed:'+r.productName)} />
+          ) : (
+            <Icon name='unlink' title='Product not mapped, click to map it.' onClick={() => Router.push(`/settings/products/edit/${r.product.id}`)} />
+          )}
         </div>
       )
     }))

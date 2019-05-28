@@ -7,8 +7,8 @@ import { handleActiveTab } from '../actions'
 import {Menu} from 'semantic-ui-react'
 
 function Tabs(props) {
-  const { tabsNames, handleActiveTab, currentTab } = props
-  
+  const { tabsNames, handleActiveTab, currentTab, type } = props
+
   return (					
     <Menu pointing secondary vertical fluid>
       {tabsNames.map((tab,i) => (
@@ -16,7 +16,7 @@ function Tabs(props) {
           name={tab.name.toUpperCase()}
           key={tab.id}
           onClick={() => handleActiveTab(tab.name)}
-          active={currentTab === tab.name}
+          active={type ? type === tab.type : currentTab === tab.name}
         />
       ))}      
     </Menu>

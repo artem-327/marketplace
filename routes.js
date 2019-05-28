@@ -4,3 +4,4 @@ routes
   .add('orders', '/orders/:type')
   .add('orders/detail', '/orders/:type/:id')
   .add('inventory/edit', '/inventory/:type/:id')
+  .add('settings', '/settings/:type/:action/:id')
