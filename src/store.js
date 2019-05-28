@@ -39,7 +39,6 @@ import locationsSaga from "./saga/locations"
 import broadcastSaga from "./saga/broadcast"
 import productOffersSaga from "./saga/productOffers"
 import shippingQuotesSaga from "./saga/shippingQuotes"
-import settingsSaga from "./pages/settings/saga"
 
 // Orders
 import ordersReducers from './pages/orders/reducers'
@@ -121,4 +120,3 @@ sagaMiddleware.run(broadcastSaga)
 sagaMiddleware.run(productOffersSaga)
 sagaMiddleware.run(shippingQuotesSaga)
 sagaMiddleware.run(ordersSaga)
-sagaMiddleware.run(settingsSaga)

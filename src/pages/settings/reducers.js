@@ -50,7 +50,7 @@ export const initialState = {
   confirmMessage: null,
   toast: { message: null, isSuccess: null },
   deleteUserById: null,
-  deleteRowByid: null,
+  deleteRowById: null,
   filterValue: "",
   productCatalogUnmappedValue: false,
   editPopupSearchProducts: [],
@@ -133,7 +133,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         confirmMessage: true,
-        deleteRowByid: action.payload
+        deleteRowById: action.payload
       }
     }
     case AT.OPEN_TOAST: {
@@ -152,14 +152,14 @@ export default function reducer(state = initialState, action) {
     case AT.CLOSE_CONFIRM_POPUP: {
       return {
         ...state,
-        deleteRowByid: null,
+        deleteRowById: null,
         confirmMessage: null
       }
     }
     case AT.CONFIRM_FULFILLED: {
       return {
         ...state,
-        deleteRowByid: null,
+        deleteRowById: null,
         confirmMessage: null
       }
     }
@@ -389,7 +389,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_PRODUCTS_CATALOG_DATA_FULFILLED:
     case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_FULFILLED: {
       const rows = action.payload.products.map(product => {
         return {

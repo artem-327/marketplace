@@ -89,7 +89,9 @@ class WarehouseTable extends Component {
       closeConfirmPopup,
       deleteConfirmation,
       confirmMessage,
-      handleOpenConfirmPopup
+      handleOpenConfirmPopup,
+      deleteRowById,
+      currentTab
     } = this.props
 
     return (
@@ -99,7 +101,7 @@ class WarehouseTable extends Component {
           content="Do you really want to delete warehouse?"
           open={confirmMessage}
           onCancel={closeConfirmPopup}
-          onConfirm={deleteConfirmation}
+          onConfirm={() => deleteConfirmation(deleteRowById, currentTab)}
         />
         <ProdexGrid
           filterValue={filterValue}
@@ -134,6 +136,7 @@ const mapStateToProps = state => {
     addNewWarehousePopup: state.settings.addNewWarehousePopup,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
+    deleteRowById: state.settings.deleteRowById,
     currentTab: state.settings.currentTab,
     loading: state.settings.loading
   }

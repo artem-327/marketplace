@@ -36,7 +36,9 @@ class ProductCatalogTable extends Component {
       handleOpenConfirmPopup,
       closePopup,
       deleteConfirmation,
-      loading
+      loading,
+      deleteRowById,
+      currentTab
     } = this.props
 
     const { columns } = this.state
@@ -48,7 +50,7 @@ class ProductCatalogTable extends Component {
           content="Do you really want to delete this product?"
           open={confirmMessage}
           onCancel={closePopup}
-          onConfirm={deleteConfirmation}
+          onConfirm={() => deleteConfirmation(deleteRowById, currentTab)}
         />
         <ProdexTable
           rows={rows}
@@ -82,9 +84,9 @@ const mapStateToProps = state => {
     rows: state.settings.productsCatalogRows,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
+    deleteRowById: state.settings.deleteRowById,
     productsFilter: state.settings.productsFilter,
     loading: state.settings.loading,
-    deleteRowByid: state.settings.deleteRowByid,
     reloadFilter: {props: {
         currentTab: state.settings.currentTab,
         productsFilter: state.settings.productsFilter},

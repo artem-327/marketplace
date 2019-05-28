@@ -39,7 +39,7 @@ class DeliveryAddressesTable extends Component {
       handleOpenConfirmPopup,
       closeConfirmPopup,
       deleteDeliveryAddressesItem,
-      deleteRowByid
+      deleteRowById
     } = this.props
 
     const { columns } = this.state
@@ -51,7 +51,7 @@ class DeliveryAddressesTable extends Component {
           content="Do you really want to delete delivery address?"
           open={confirmMessage}
           onCancel={closeConfirmPopup}
-          onConfirm={() => deleteDeliveryAddressesItem(deleteRowByid, reloadFilter)}
+          onConfirm={() => deleteDeliveryAddressesItem(deleteRowById, reloadFilter)}
         />
         <ProdexGrid
           filterValue={filterValue}
@@ -81,6 +81,7 @@ const mapStateToProps = state => {
   return {
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
+    deleteRowById: state.settings.deleteRowById,
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
     loading: state.settings.loading,
     rows: state.settings.deliveryAddressesRows.map( d=> {
@@ -94,7 +95,6 @@ const mapStateToProps = state => {
         zip: d.address.zip.zip,
       }
     }),
-    deleteRowByid: state.settings.deleteRowByid,
     // reloadFilter is used to reload Delivery addresses list after Edit / Add new Delivery address
     reloadFilter: {props: {
         currentTab: state.settings.currentTab,

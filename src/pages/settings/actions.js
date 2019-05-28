@@ -1,4 +1,3 @@
-import { select } from "redux-saga/effects" // ! !
 import * as AT from "./action-types"
 import api from "./api"
 
@@ -21,7 +20,7 @@ export function openImportPopup() {
     //payload: rows
   }
 }
-export function closeImportPopup(reloadFilter) {// ! !
+export function closeImportPopup(reloadFilter) {
   return async dispatch => {
     dispatch({
       type: AT.SETTINGS_CLOSE_IMPORT_POPUP,
@@ -33,7 +32,7 @@ export function closeImportPopup(reloadFilter) {// ! !
   }
 }
 
-export function closeImportPopupCancel() {//! !
+export function closeImportPopupCancel() {
   return {
     type: AT.SETTINGS_CLOSE_IMPORT_POPUP_FULFILLED
   }
@@ -106,40 +105,37 @@ export function handleOpenConfirmPopup(payload) {
     payload
   }
 }
-export function deleteConfirmation() {
-  const {
-    settings: { deleteRowByid, currentTab }
-  } = select()
+export function deleteConfirmation(deleteRowById, currentTab) {
   let toast = {}
   return async dispatch => {
     switch (currentTab) {
       case "Users":
-        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteUser(deleteRowByid)})
+        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteUser(deleteRowById)})
         toast = { message: "User delete success", isSuccess: true }
         dispatch(getUsersDataRequest())
         break
       case "Branches":
-        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteWarehouse(deleteRowByid)})
+        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteWarehouse(deleteRowById)})
         toast = { message: "Branch delete success", isSuccess: true }
         dispatch(getBranchesDataRequest())
         break
       case "Warehouses":
-        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteWarehouse(deleteRowByid)})
+        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteWarehouse(deleteRowById)})
         toast = { message: "Warehouse delete success", isSuccess: true }
         dispatch(getWarehousesDataRequest())
         break
       case "Product catalog":
-        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteProduct(deleteRowByid)})
+        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteProduct(deleteRowById)})
         toast = { message: "Product delete success", isSuccess: true }
         //! ! TODO - filter - dispatch(getProductsCatalogRequest())
         break
       case "Credit cards":
-        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteCreditCard(deleteRowByid)})
+        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteCreditCard(deleteRowById)})
         toast = { message: "Credit cards delete success", isSuccess: true }
         dispatch(getCreditCardsDataRequest())
         break
       case "Bank accounts":
-        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteBankAccount(deleteRowByid)})
+        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteBankAccount(deleteRowById)})
         toast = { message: "Bank account delete success", isSuccess: true }
         dispatch(getBankAccountsDataRequest())
         break
@@ -205,35 +201,6 @@ export function handleProductCatalogUnmappedValue(checked, props) {
   }
 }
 
-export function handleSubmitEditPopup(payload, id) { // ! ! to be deleted?
-  return async dispatch => {
-    const dataBody = {
-      accessorials: [0],
-      address: {
-        city: payload.address,
-        streetAddress: payload.city,
-        province: 44,
-        zip: payload.zip
-      },
-      company: 3,
-      contact: {
-        email: payload.email,
-        name: payload.contactName,
-        phone: payload.phone
-      },
-      warehouse: true,
-      name: payload.name
-    }
-    await dispatch({
-      type: AT.SUBMIT_EDIT_POPUP_HANDLER,
-      payload: api.putWarehouse(id, dataBody)
-    })
-    //! ! reload warehouses list
-
-    dispatch(closePopup())
-  }
-}
-
 export function handlerSubmitWarehouseEditPopup(payload, id) {
   return async dispatch => {
     const dataBody = {
@@ -263,7 +230,7 @@ export function handlerSubmitWarehouseEditPopup(payload, id) {
   }
 }
 
-export function handleSubmitProductEditPopup(productData, id, reloadFilter) {//! !
+export function handleSubmitProductEditPopup(productData, id, reloadFilter) {
   return async dispatch => {
     await dispatch({
       type: AT.SETTINGS_UPDATE_PRODUCT_CATALOG,
@@ -407,7 +374,7 @@ export function getCreditCardsDataRequest() {
   }
 }
 
-export function getProductsCatalogRequest(data) {//! !
+export function getProductsCatalogRequest(data) {
   return (dispatch) => {
     dispatch({
       type: AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA,
@@ -548,7 +515,7 @@ export function putNewUserRoleRequest(payload, id) {
   }
 }
 
-export function handleSubmitProductAddPopup(inputsValue, reloadFilter) {//! !
+export function handleSubmitProductAddPopup(inputsValue, reloadFilter) {
   return async dispatch => {
     await dispatch({
       type: AT.SETTINGS_POST_NEW_PRODUCT_REQUEST,

@@ -40,7 +40,9 @@ class UsersTable extends Component {
       confirmMessage,
       handleOpenConfirmPopup,
       closeConfirmPopup,
-      deleteConfirmation
+      deleteConfirmation,
+      deleteRowById,
+      currentTab
     } = this.props
 
     const { columns } = this.state
@@ -52,7 +54,7 @@ class UsersTable extends Component {
           content="Do you really want to delete user?"
           open={confirmMessage}
           onCancel={closeConfirmPopup}
-          onConfirm={deleteConfirmation}
+          onConfirm={() => deleteConfirmation(deleteRowById, currentTab)}
         />
         <ProdexGrid
           filterValue={filterValue}
@@ -88,6 +90,8 @@ const mapStateToProps = state => {
     rows: state.settings.usersRows,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
+    deleteRowById: state.settings.deleteRowById,
+    currentTab: state.settings.currentTab,
     loading: state.settings.loading,
     roles: state.settings.roles
   }
