@@ -37,13 +37,13 @@ class WarehouseTable extends Component {
       getBranchesDataRequest
     } = this.props
 
-    if (currentTab === 'Warehouses') {
+    if (currentTab.name === 'Warehouses') {
       getWarehousesDataRequest()
       this.setState({
         tab: 'Warehouses'
       })
     }
-    if (currentTab === 'Branches') {
+    else if (currentTab.name === 'Branches') {
       getBranchesDataRequest()
       this.setState({
         tab: 'Branches'
@@ -53,21 +53,22 @@ class WarehouseTable extends Component {
 
   handlerChangeRows() {
     const { currentTab, rowsWarehouses, rowsBranches } = this.props
-    if (currentTab === 'Warehouses') {
+    if (currentTab.name === 'Warehouses') {
       return rowsWarehouses
     }
-    if (currentTab === 'Branches') {
+    else if (currentTab.name === 'Branches') {
       return rowsBranches.filter(branch => branch.warehouse == false)
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    this.state.tab != nextProps.currentTab ? this.handlerLoadPage() : null
+    this.state.tab != nextProps.currentTab.name ? this.handlerLoadPage() : null
   }
 
   branchChecker() {
     if (this.state.tab === 'Branches') {
-      const columns = this.state.columns
+      let { columns } = this.state
+      console.log({ columns })
       return columns.map(item => {
         let obj = {}
         if (item.title === 'Warehouse Name') {

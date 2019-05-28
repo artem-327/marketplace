@@ -1,16 +1,20 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { Modal, FormGroup, Divider } from 'semantic-ui-react'
+import { Form, Modal, FormGroup, Divider, Accordion, Icon, Segment } from 'semantic-ui-react'
 
+import { Formik } from 'formik'
 import { closePopup, updateCompany, createCompany, getCountries, getPrimaryBranchProvinces, getMailingBranchProvinces } from '../../actions'
 import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
-import { Form, Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui'
+import { Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 import { ZipDropdown } from '~/modules/zip-dropdown'
 // debug purposes only
 import JSONPretty from 'react-json-pretty'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl'
+import { validationSchema } from '~/modules/company-form/constants'
+
+import { CompanyForm } from '~/modules/company-form/'
 
 const initialFormValues = {
   name: '',
@@ -52,10 +56,6 @@ const initialFormValues = {
     name: '',
   }
 }
-
-const formValidationEdit = Yup.object().shape({
-  name: Yup.string().trim().min(2, 'Name should has at least 2 characters').required()
-})
 
 const formValidationNew = Yup.lazy(values => {
   let primaryUserRequired = values.primaryUser.email !== '' || values.primaryUser.name !== ''
@@ -127,7 +127,12 @@ const removeEmpty = (obj) =>
 class AddNewPopupCasProducts extends React.Component {
   state = {
     primaryBranchHasProvinces: false,
-    mailingBranchHasProvinces: false
+    mailingBranchHasProvinces: false,
+    accordionActive: {
+      companyAdmin: true,
+      billingAddress: true,
+      mailingAddress: false
+    }
   }
 
   componentDidMount() {
@@ -150,6 +155,12 @@ class AddNewPopupCasProducts extends React.Component {
     this.setState({ mailingBranchHasProvinces: country.hasProvinces })
   }
 
+  handleAccordionChange = (e, { name }) => {
+    let { accordionActive } = this.state
+    accordionActive[name] = !accordionActive[name]
+    this.setState({ accordionActive })
+  }
+
 
   render() {
     const {
@@ -161,138 +172,170 @@ class AddNewPopupCasProducts extends React.Component {
       primaryBranchProvinces,
       mailingBranchProvinces,
       config,
+      intl
     } = this.props
 
-    const {
-      initialState,
-      primaryBranchHasProvinces,
-      mailingBranchHasProvinces
-    } = this.state
+    let { accordionActive } = this.state
+
+    const { formatMessage } = intl
+    // const {
+    //   initialState,
+    //   primaryBranchHasProvinces,
+    //   mailingBranchHasProvinces
+    // } = this.state
 
     return (
-      <Modal open centered={false} size="small">
-        <Modal.Header>{popupValues ? ('Edit') : ('Add')} {config.addEditText}</Modal.Header>
-        <Modal.Content>
+      <Formik
+        enableReinitialize
+        initialValues={popupValues ? popupValues : initialFormValues}
+        validationSchema={popupValues ? validationSchema : formValidationNew}
+        onSubmit={async (values, actions) => {
+          if (popupValues) {
+            let newValues = {}
 
-          <Form
-            enableReinitialize
-            initialValues={popupValues ? popupValues : initialFormValues}
-            validationSchema={popupValues ? formValidationEdit : formValidationNew}
-            onReset={closePopup}
-            onSubmit={async (values, actions) => {
+            Object.keys(values)
+              .forEach(key => {
+                if (typeof values[key] === 'string') newValues[key] = values[key].trim()
+                else newValues[key] = values[key]
+              })
 
-              if (popupValues) {
-                let newValues = {
-                  "nacdMember": values.nacdMember,
-                  "name": values.name.trim(),
-                  "phone": values.phone.trim(),
-                  "website": values.website.trim()
-                }
-                await updateCompany(popupValues.id, newValues)
-              }
-              else {
-                if (values.mailingBranch && !(values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
-                  values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
-                  values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
-                  values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''))
-                  delete values['mailingBranch']
+            await updateCompany(popupValues.id, newValues)
+          }
+          else {
+            if (values.mailingBranch && !(values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
+              values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
+              values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
+              values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''))
+              delete values['mailingBranch']
 
-                removeEmpty(values)
-                await createCompany(values)
-              }
+            removeEmpty(values)
+            await createCompany(values)
+          }
 
-              actions.setSubmitting(false)
-            }}
-          >
-            {({ values, errors, setFieldValue }) => (
-              <>
-                <FormGroup widths="equal">
-                  <Input type="text" label="Company Name" name="name" />
-                </FormGroup>
-                <FormGroup widths="equal">
-                  <Input type="text" label="Phone" name="phone" />
-                  <Input type="text" label="Website URL" name="website" />
-                </FormGroup>
-                <FormGroup widths="equal">
-                  <Checkbox label="NACD Member" name="nacdMember" />
-                </FormGroup>
+          actions.setSubmitting(false)
+        }}
+        onReset={closePopup}
+        render={props => {
+          let { setFieldValue, values, isSubmitting } = props
+          return (
+            <Modal open centered={false} size='small'>
+              <Modal.Header><FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} /> {config.addEditText}</Modal.Header>
+              <Segment basic>
+                <Form loading={isSubmitting}>
+                  <Accordion exclusive={false}>
+                    <Modal.Content>
+                      <CompanyForm />
+                      {!popupValues && (
+                        <>
+                          <Divider />
+                          <Accordion.Title active={accordionActive.companyAdmin} onClick={this.handleAccordionChange} name='companyAdmin'>
+                            <h4>
+                              <Icon color={accordionActive.companyAdmin && 'blue'} name={accordionActive.companyAdmin ? 'chevron up' : 'chevron down'} />
+                              <FormattedMessage id='global.companyAdmin' defaultMessage='Company Admin (Primary User)' />
+                            </h4>
+                          </Accordion.Title>
+                          <Accordion.Content active={accordionActive.companyAdmin}>
+                            <FormGroup widths='equal'>
+                              <Input label={<FormattedMessage id='global.name' defaultMessage='Name' />} name='primaryUser.name' />
+                              <Input label={<FormattedMessage id='global.email' defaultMessage='Email' />} name='primaryUser.email' />
+                            </FormGroup>
+                            <FormGroup widths='equal'>
+                              <Input label={<FormattedMessage id='global.jobTitle' defaultMessage='Job Title' />} name='primaryUser.jobTitle' />
+                              <Input label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='primaryUser.phone' />
+                            </FormGroup>
+                          </Accordion.Content>
+                        </>
+                      )}
 
-                <Divider />
-                <h4>Primary User</h4>
-                <FormGroup widths="equal">
-                  <Input type="text" label="Name" name="primaryUser.name" />
-                  <Input type="text" label="Email" name="primaryUser.email" />
-                </FormGroup>
 
-                {!popupValues && <>
-                  <Divider />
-                  <h4>Primary Branch (Billing Address)</h4>
-                  <FormGroup widths="equal">
-                    <Input type="text" label="Name" name="primaryBranch.name" />
-                  </FormGroup>
-                  <FormGroup widths="equal">
-                    <Input type="text" label="Contact Email" name="primaryBranch.contactEmail" />
-                    <Input type="text" label="Contact Name" name="primaryBranch.contactName" />
-                    <Input type="text" label="Contact Phone" name="primaryBranch.contactPhone" />
-                  </FormGroup>
-                  <FormGroup widths="equal">
-                    <Checkbox label="Warehouse" name="primaryBranch.warehouse" />
-                  </FormGroup>
-                  <h5>Address</h5>
-                  <FormGroup widths="equal">
-                    <Input type="text" label="Street Address" name="primaryBranch.address.streetAddress" />
-                    <Input type="text" label="City" name="primaryBranch.address.city" />
-                  </FormGroup>
-                  <FormGroup widths="equal">
-                    <ZipDropdown name='primaryBranch.address.zip' countryId={values.primaryBranch.address.country} />
-                    <Dropdown label="Country" name="primaryBranch.address.country" options={countriesDropDown}
-                      inputProps={{
-                        search: true, onChange: (e, d) => {
-                          setFieldValue('primaryBranch.address.province', ''); this.handlePrimaryBranchCountry(e, d)
-                        }
-                      }} />
-                    <Dropdown label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />} name="primaryBranch.address.province" options={primaryBranchProvinces}
-                      inputProps={{ search: true, disabled: !this.state.primaryBranchHasProvinces, clearable: true }} />
-                  </FormGroup>
-                  <Divider />
-                  <h4>Mailing Branch (optional)</h4>
-                  <FormGroup widths="equal">
-                    <Input type="text" label="Name" name="mailingBranch.name" />
-                  </FormGroup>
-                  <FormGroup widths="equal">
-                    <Input type="text" label="Contact Email" name="mailingBranch.contactEmail" />
-                    <Input type="text" label="Contact Name" name="mailingBranch.contactName" />
-                    <Input type="text" label="Contact Phone" name="mailingBranch.contactPhone" />
-                  </FormGroup>
-                  <FormGroup widths="equal">
-                    <Checkbox label="Warehouse" name="mailingBranch.warehouse" />
-                  </FormGroup>
-                  <h5>Address</h5>
-                  <FormGroup widths="equal">
-                    <Input type="text" label="Street Address" name="mailingBranch.address.streetAddress" />
-                    <Input type="text" label="City" name="mailingBranch.address.city" />
-                  </FormGroup>
-                  <FormGroup widths="equal">
-                    <ZipDropdown label='Zip' name='mailingBranch.address.zip' countryId={values.mailingBranch.address.country} />
-                    <Dropdown label="Country" name="mailingBranch.address.country" options={countriesDropDown}
-                      inputProps={{
-                        search: true, onChange: (e, d) => {
-                          setFieldValue('mailingBranch.address.province', ''); this.handleMailingBranchCountry(e, d)
-                        }
-                      }} />
-                    <Dropdown label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />} name="mailingBranch.address.province" options={mailingBranchProvinces}
-                      inputProps={{ search: true, disabled: !this.state.mailingBranchHasProvinces, clearable: true }} />
-                  </FormGroup>
-                </>}
+                      {!popupValues && <>
+                        <Divider />
+                        <Accordion.Title active={accordionActive.billingAddress} onClick={this.handleAccordionChange} name='billingAddress'>
+                          <h4>
+                            <Icon color={accordionActive.billingAddress && 'blue'} name={accordionActive.billingAddress ? 'chevron up' : 'chevron down'} />
+                            <FormattedMessage id='global.primaryBranch' defaultMessage='Primary Branch (Billing Address)' />
+                          </h4>
+                        </Accordion.Title>
+                        <Accordion.Content active={accordionActive.billingAddress}>
+                          <FormGroup widths='equal'>
+                            <Input label={<FormattedMessage id='global.name' defaultMessage='Name' />} name='primaryBranch.name' />
+                          </FormGroup>
+                          <FormGroup widths='equal'>
+                            <Input label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />} name='primaryBranch.contactEmail' />
+                            <Input label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='primaryBranch.contactName' />
+                            <Input label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />} name='primaryBranch.contactPhone' />
+                          </FormGroup>
+                          <FormGroup widths='equal'>
+                            <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='primaryBranch.warehouse' />
+                          </FormGroup>
+                          <h5><FormattedMessage id='global.address' defaultMessage='Address' /></h5>
+                          <FormGroup widths='equal'>
+                            <Input label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />} name='primaryBranch.address.streetAddress' />
+                            <Input label={<FormattedMessage id='global.city' defaultMessage='City' />} name='primaryBranch.address.city' />
+                          </FormGroup>
+                          <FormGroup widths='equal'>
+                            <ZipDropdown name='primaryBranch.address.zip' countryId={values.primaryBranch.address.country} />
+                            <Dropdown label={<FormattedMessage id='global.country' defaultMessage='Country' />} name='primaryBranch.address.country' options={countriesDropDown}
+                              inputProps={{
+                                search: true, onChange: (e, d) => {
+                                  setFieldValue('primaryBranch.address.province', ''); this.handlePrimaryBranchCountry(e, d)
+                                }
+                              }} />
+                            <Dropdown label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />} name='primaryBranch.address.province' options={primaryBranchProvinces}
+                              inputProps={{ search: true, disabled: !this.state.primaryBranchHasProvinces, clearable: true }} />
+                          </FormGroup>
+                        </Accordion.Content>
+                        <Divider />
 
-                <div style={{ textAlign: 'right' }}>
-                  <Button.Reset>Cancel</Button.Reset>
-                  <Button.Submit>Save</Button.Submit>
-                </div>
-              </>)}
-          </Form>
-        </Modal.Content>
-      </Modal>
+                        <Accordion.Title active={accordionActive.mailingAddress} onClick={this.handleAccordionChange} name='mailingAddress'>
+                          <h4>
+                            <Icon color={accordionActive.mailingAddress && 'blue'} name={accordionActive.mailingAddress ? 'chevron up' : 'chevron down'} />
+                            <FormattedMessage id='global.mailingBranch' defaultMessage='Mailing Branch (optional)' />
+                          </h4>
+                        </Accordion.Title>
+                        <Accordion.Content active={accordionActive.mailingAddress}>
+                          <FormGroup widths='equal'>
+                            <Input label={<FormattedMessage id='global.name' defaultMessage='Name' />} name='mailingBranch.name' />
+                          </FormGroup>
+                          <FormGroup widths='equal'>
+                            <Input label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact Email' />} name='mailingBranch.contactEmail' />
+                            <Input label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='mailingBranch.contactName' />
+                            <Input label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />} name='mailingBranch.contactPhone' />
+                          </FormGroup>
+                          <FormGroup widths='equal'>
+                            <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='mailingBranch.warehouse' />
+                          </FormGroup>
+                          <h5><FormattedMessage id='global.address' defaultMessage='Address' /></h5>
+                          <FormGroup widths='equal'>
+                            <Input label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />} name='mailingBranch.address.streetAddress' />
+                            <Input label={<FormattedMessage id='global.city' defaultMessage='City' />} name='mailingBranch.address.city' />
+                          </FormGroup>
+                          <FormGroup widths='equal'>
+                            <ZipDropdown name='mailingBranch.address.zip' countryId={values.mailingBranch && values.mailingBranch.address.country} />
+                            <Dropdown label={<FormattedMessage id='global.country' defaultMessage='Country' />} name='mailingBranch.address.country' options={countriesDropDown}
+                              inputProps={{
+                                search: true, onChange: (e, d) => {
+                                  setFieldValue('mailingBranch.address.province', ''); this.handleMailingBranchCountry(e, d)
+                                }
+                              }} />
+                            <Dropdown label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />} name='mailingBranch.address.province' options={mailingBranchProvinces}
+                              inputProps={{ search: true, disabled: !this.state.mailingBranchHasProvinces, clearable: true }} />
+                          </FormGroup>
+                        </Accordion.Content>
+                      </>}
+                    </Modal.Content>
+                  </Accordion>
+
+                </Form>
+              </Segment>
+              <Modal.Actions>
+                <Button.Reset onClick={props.handleReset}><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
+                <Button.Submit onClick={props.handleSubmit}><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
+              </Modal.Actions>
+            </Modal>
+          )
+        }}>
+      </Formik>
     )
   }
 }
@@ -316,4 +359,4 @@ const mapStateToProps = ({ admin, zip }) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddNewPopupCasProducts)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddNewPopupCasProducts))

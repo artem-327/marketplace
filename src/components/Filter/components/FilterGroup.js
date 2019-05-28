@@ -88,12 +88,18 @@ class FilterGroup extends Component {
             case 'dropdown': {
               return (
                 <div key={index} className='filter-input-dropdown'>
-                  <label className='input-label' htmlFor={input.model}>{input.label}</label>
+                  <label className='input-label' htmlFor={input.model}>
+                    <FormattedMessage
+                      id={'filter.' + input.label.split(' ').join('')}
+                      defaultMessage={input.label}
+                    />
+                  </label>
                   <DropdownRedux
+                    clearable={true}
+                    selection={true}
                     dispatch={this.props.dispatch}
                     model={input.model}
-                    opns={input.data}
-                    currentValue={input.filterValue}
+                    options={input.data}
                   />
                 </div>
               )

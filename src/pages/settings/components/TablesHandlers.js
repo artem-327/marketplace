@@ -74,22 +74,22 @@ class TablesHandlers extends Component {
       <Menu secondary>
         <Menu.Item header>
           <Header as="h1" size="medium">
-            {currentTab}
+            {currentTab.name}
           </Header>
         </Menu.Item>
-
+        {!currentTab.hideHandler &&
         <Menu.Menu position="right">
           <Menu.Item>
             <Input
               style={{ width: 340 }}
               size="large"
               icon="search"
-              placeholder={textsTable[currentTab].SearchText}
+              placeholder={textsTable[currentTab.name].SearchText}
               onChange={e => handleFiltersValue(this.props, e.target.value)}
             />
           </Menu.Item>
           <Menu.Item>
-            {currentTab === 'Product catalog' && (
+            {currentTab.name === 'Product catalog' && (
               <Checkbox
                 label='Unmapped only'
                 defaultChecked={productCatalogUnmappedValue}
@@ -102,20 +102,21 @@ class TablesHandlers extends Component {
               primary
               onClick={() => openPopup()}
             >
-              Add {textsTable[currentTab].BtnAddText}
+              Add {textsTable[currentTab.name].BtnAddText}
             </Button>
-            {currentTab === 'Product catalog' && (
+            {currentTab.name === 'Product catalog' && (
               <Button
                 size="large"
                 style={{ marginLeft: 10 }}
                 primary
                 onClick={() => openImportPopup()}
               >
-                Import {textsTable[currentTab].BtnAddText}
+                Import {textsTable[currentTab.name].BtnAddText}
               </Button>
             )}
           </Menu.Item>
         </Menu.Menu>
+        }
       </Menu>
     )
   }

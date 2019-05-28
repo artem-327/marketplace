@@ -10,10 +10,19 @@ import {
   closeConfirmPopup,
 } from '../../actions'
 
+const PAGE_SIZE = 50
+
 class CompaniesTable extends Component {
 
+  getNextPage = (pageNumber) => {
+    this.props.getCompanies({
+      pageNumber,
+      pageSize: PAGE_SIZE
+    })
+  }
+
   componentDidMount() {
-    this.props.getCompanies()
+    this.getNextPage(0)
   }
 
   render() {
@@ -43,6 +52,8 @@ class CompaniesTable extends Component {
         <ProdexTable
           columns={columns}
           rows={rows}
+          pageSize={PAGE_SIZE}
+          getNextPage={this.getNextPage}
           loading={loading}
           filterValue={filterValue}
           rowActions={[

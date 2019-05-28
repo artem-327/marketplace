@@ -6,6 +6,8 @@ import Router from 'next/router'
 import ProdexGrid from '~/components/table'
 import Filter from '~/src/components/Filter'
 
+const PAGE_SIZE = 50
+
 export default class MyInventory extends Component {
   state = {
     columns: [
@@ -21,11 +23,16 @@ export default class MyInventory extends Component {
       { name: 'manufacturer', title: 'MFR.', width: 220 },
       { name: 'broadcast', title: 'Broadcast', width: 120 }
     ],
-    selectedRows: []
+    selectedRows: [],
+    pageNumber: 0,
   }
 
   componentDidMount() {
-    this.props.getMyProductOffers()
+    this.getNextPage()
+  }
+
+  getNextPage = (pageNumber) => {
+    this.props.getMyProductOffers({}, PAGE_SIZE, pageNumber)
   }
 
   filterInventory = async (filter) => {
@@ -41,7 +48,7 @@ export default class MyInventory extends Component {
         filter = {...filter, product: productIds}
       }
     }
-    this.props.getMyProductOffers(filter)
+    this.props.getMyProductOffers(filter, PAGE_SIZE)
   }
 
   getRows = () => {
@@ -97,6 +104,8 @@ export default class MyInventory extends Component {
           columns={columns}
           rows={rows}
           rowSelection
+          getNextPage={this.getNextPage}
+          pageSize={PAGE_SIZE}
           groupBy={['productNumber']}
           getChildGroups={rows =>
             _(rows)

@@ -676,7 +676,4 @@ export function getProvinces(id) {
   }
 }
 
-
-
-
-
+export const addTab = (payload) => ({ type: AT.ADD_TAB, payload })

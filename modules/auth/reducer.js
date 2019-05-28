@@ -1,4 +1,5 @@
 import * as AT from './action-types'
+import { ROLES_ENUM } from '../../src/utils/constants';
 const ROLE_GUEST = 'ROLE_GUEST'
 
 export const initialState = {
@@ -11,8 +12,8 @@ export const initialState = {
 }
 
 export default function reducer(state = initialState, action) {
-  const {loginForm} = state
-  const {type, payload} = action
+  const { loginForm } = state
+  const { type, payload } = action
 
   switch (type) {
 
@@ -21,28 +22,40 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.LOGIN_PENDING: {
-      return { ...state, 
-        loginForm: { ...loginForm,
+      return {
+        ...state,
+        loginForm: {
+          ...loginForm,
           isLoading: true,
           message: null
         }
       }
     }
     case AT.LOGIN_REJECTED: {
-      return { ...state, 
-        loginForm: { ...loginForm,
+      return {
+        ...state,
+        loginForm: {
+          ...loginForm,
           isLoading: false,
           message: payload.error_description
         }
       }
     }
     case AT.LOGIN_FULFILLED: {
-      return { ...state,
+      let accessRights = {}
+
+      ROLES_ENUM.forEach(role => {
+        accessRights[role.propertyName] = !!payload.identity.roles.find((el) => el.id === role.id)
+      })
+
+      return {
+        ...state,
         identity: {
           ...payload.identity,
-          isAdmin: payload.identity.roles.map(r => r.id).indexOf(1) > -1
-        }, 
-        loginForm: { ...loginForm,
+          ...accessRights
+        },
+        loginForm: {
+          ...loginForm,
           //isLoading: false,
           isLogged: true
         },
@@ -53,9 +66,10 @@ export default function reducer(state = initialState, action) {
       return initialState
     }
 
-    
+
     case AT.GET_VERSION_FULFILLED: {
-      return { ...state, 
+      return {
+        ...state,
         version: payload
       }
     }

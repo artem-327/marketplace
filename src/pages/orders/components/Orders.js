@@ -6,6 +6,7 @@ import SubMenu from '../../../components/SubMenu'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import { Grid, Menu, Header, Table, Divider } from 'semantic-ui-react'
 import ProdexGrid from '~/components/table'
+import { actions } from 'react-redux-form'
 
 class Orders extends Component {
     state = {
@@ -32,6 +33,7 @@ class Orders extends Component {
     }
 
     loadData(endpointType, filterData) {
+        this.props.dispatch(actions.change('forms.filter.status', filterData.status))
         this.props.loadData(endpointType, filterData)
     }
 

@@ -119,14 +119,14 @@ export function handleFiltersValue(props, value) {
 					})
 				}
 			}
-				break;
+				break
 			case 'Manufacturers': {
 				await dispatch({
 					type: AT.ADMIN_GET_MANUFACTURERS_BY_STRING,
 					payload: api.getManufacturersByString(value)
 				})
 			}
-				break;
+				break
 		}
 	}
 }
@@ -295,10 +295,10 @@ export function getMailingBranchProvinces(id) {
 	}
 }
 
-export function getCompanies() {
+export function getCompanies(params) {
 	return {
 		type: AT.ADMIN_GET_COMPANIES,
-		payload: api.getCompanies()
+		payload: api.getCompanies(params)
 	}
 }
 

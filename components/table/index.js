@@ -18,6 +18,7 @@ import {
   CustomGrouping,
   IntegratedGrouping,
   TableColumnVisibility,
+  VirtualTableState
 } from '@devexpress/dx-react-grid'
 import {
   Grid,
@@ -56,14 +57,14 @@ const SettingButton = styled(Icon)`
   right: 16px;
   z-index: 601;
 `
-const ColumnsSetting = ({onClick}) => (
+const ColumnsSetting = ({ onClick }) => (
   <SettingButton onClick={onClick} name="setting" />
 )
-const ColumnsSettingModal = ({columns, hiddenColumnNames, onChange, open}) => (
-  <Modal open={open} centered={false} size="tiny" style={{width: 300}}>
+const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, open }) => (
+  <Modal open={open} centered={false} size="tiny" style={{ width: 300 }}>
     <Modal.Content>
       <Form
-        initialValues={columns.reduce((acc,c) => {acc[c.name] = hiddenColumnNames.indexOf(c.name) === -1; return acc}, {})}
+        initialValues={columns.reduce((acc, c) => { acc[c.name] = hiddenColumnNames.indexOf(c.name) === -1; return acc }, {})}
         onSubmit={(values, actions) => {
           onChange(columns.reduce((acc, c) => {
             !values[c.name] && acc.push(c.name)
@@ -93,7 +94,7 @@ const SortLabel = ({ onSort, children, direction }) => (
 )
 
 export default class _Table extends Component {
-  
+
   static propTypes = {
     columns: pt.arrayOf(
       pt.shape({
@@ -115,7 +116,8 @@ export default class _Table extends Component {
     onSelectionChange: pt.func,
     renderGroupLabel: pt.func,
     getChildGroups: pt.func,
-    tableName: pt.string
+    tableName: pt.string,
+    getNextPage: pt.func
   }
 
   static defaultProps = {
@@ -128,11 +130,14 @@ export default class _Table extends Component {
     virtual: true,
     sorting: true,
     groupBy: [],
-    onSelectionChange: () => { }
+    onSelectionChange: () => { },
+    getNextPage: () => { }
   }
 
   constructor(props) {
     super(props)
+
+    this.handleScroll = _.debounce(this.handleScroll, 100)
 
     this.state = {
       hiddenColumnNames: [],
@@ -140,11 +145,35 @@ export default class _Table extends Component {
       columnsSettings: {
         widths: this.getColumnsExtension(),
         order: this.getColumns().map(c => c.name)
+      },
+      lastPageNumber: 0,
+      allLoaded: false
+    }
+  }
+
+  handleScroll = ({ target }) => {
+    const { getNextPage } = this.props
+    const { allLoaded, lastPageNumber } = this.state
+
+    if (target.offsetHeight + target.scrollTop === target.scrollHeight) {
+      if (!allLoaded) {
+        this.setState({ lastPageNumber: lastPageNumber + 1 })
+        getNextPage(lastPageNumber + 1)
       }
     }
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.rows.length < this.props.pageSize * this.state.lastPageNumber) {
+      this.setState({ allLoaded: true })
+    }
+  }
+
   componentDidMount() {
     this.loadColumnsSettings()
+
+    let table = this.gridWrapper.querySelector('.table-responsive')
+    table.addEventListener('scroll', this.handleScroll)
   }
 
   componentDidUpdate(prevProps) {
@@ -153,7 +182,7 @@ export default class _Table extends Component {
   }
 
   expandGroups = () => {
-    const {groupBy, getChildGroups, rows} = this.props
+    const { groupBy, getChildGroups, rows } = this.props
 
     if (groupBy.length > 0) this.setState({
       expandedGroups: getChildGroups
@@ -163,7 +192,7 @@ export default class _Table extends Component {
   }
 
   handleExpandedGroupsChange = expandedGroups => {
-    this.setState({expandedGroups})
+    this.setState({ expandedGroups })
   }
 
 
@@ -182,7 +211,7 @@ export default class _Table extends Component {
     const columns = this.getColumns()
     return columns.map(c => ({
       columnName: c.name,
-      width: c.width || (1280/columns.length)
+      width: c.width || (1280 / columns.length)
     }))
   }
 
@@ -218,14 +247,14 @@ export default class _Table extends Component {
     }
   }
   handleColumnsSettings = (data) => {
-    const {tableName} = this.props
+    const { tableName } = this.props
 
     this.setState(state => ({
       columnsSettings: {
         ...state.columnsSettings,
         ...data
       }
-    }), () => { 
+    }), () => {
       tableName && (localStorage[tableName] = JSON.stringify(this.state.columnsSettings))
     })
   }
@@ -256,18 +285,18 @@ export default class _Table extends Component {
     const grouping = groupBy.map(g => ({ columnName: g }))
 
     return (
-      <Segment basic loading={loading} {...restProps} className="flex stretched" style={{padding: 0}}>
+      <Segment basic loading={loading} {...restProps} className="flex stretched" style={{ padding: 0 }}>
         <GlobalTableOverrideStyle />
-        <div className="bootstrapiso flex stretched" style={{ flex: '1 300px' }}>
-          <ColumnsSetting  
-            onClick={() => this.setState({columnSettingOpen: !columnSettingOpen})} />
-          <ColumnsSettingModal 
-            columns={columns} 
+        <div className="bootstrapiso flex stretched" style={{ flex: '1 300px' }} ref={c => c && (this.gridWrapper = c)}>
+          <ColumnsSetting
+            onClick={() => this.setState({ columnSettingOpen: !columnSettingOpen })} />
+          <ColumnsSettingModal
+            columns={columns}
             open={columnSettingOpen}
-            hiddenColumnNames={columnsSettings.hiddenColumnNames || []} 
+            hiddenColumnNames={columnsSettings.hiddenColumnNames || []}
             onChange={(hiddenColumnNames) => {
-              this.handleColumnsSettings({hiddenColumnNames})
-              this.setState({hiddenColumnNames, columnSettingOpen: false})
+              this.handleColumnsSettings({ hiddenColumnNames })
+              this.setState({ hiddenColumnNames, columnSettingOpen: false })
             }}
           />
           <Grid
@@ -275,31 +304,31 @@ export default class _Table extends Component {
             columns={this.getColumns()}
             rootComponent={GridRoot}
           >
-            {sorting && 
-              <SortingState 
+            {sorting &&
+              <SortingState
                 sorting={columnsSettings.sorting}
-                onSortingChange={sorting => this.handleColumnsSettings({sorting})} 
+                onSortingChange={sorting => this.handleColumnsSettings({ sorting })}
               />
             }
             {sorting && <IntegratedSorting />}
 
-            {groupBy && 
-              <GroupingState 
-                grouping={grouping} 
+            {groupBy &&
+              <GroupingState
+                grouping={grouping}
                 expandedGroups={expandedGroups}
                 onExpandedGroupsChange={this.handleExpandedGroupsChange}
               />
             }
             {groupBy &&
-              getChildGroups 
-              ? <CustomGrouping 
-                  getChildGroups={getChildGroups}
-                />
+              getChildGroups
+              ? <CustomGrouping
+                getChildGroups={getChildGroups}
+              />
               : <IntegratedGrouping />
             }
 
             {columnReordering && <DragDropProvider />}
-            
+
             {rowSelection && <SelectionState onSelectionChange={onSelectionChange} />}
             {rowSelection && <IntegratedSelection />}
 
@@ -310,10 +339,10 @@ export default class _Table extends Component {
               ? <VirtualTable columnExtensions={this.getColumnsExtension()} height="auto" cellComponent={TableCells} />
               : <Table columnExtensions={this.getColumnsExtension()} />}
 
-            <TableColumnResizing 
-              onColumnWidthsChange={widths => this.handleColumnsSettings({widths})}
+            <TableColumnResizing
+              onColumnWidthsChange={widths => this.handleColumnsSettings({ widths })}
               columnWidths={columnsSettings.widths}
-              // defaultColumnWidths={this.getColumnsExtension()} 
+            // defaultColumnWidths={this.getColumnsExtension()} 
             />
 
             {showHeader &&
@@ -330,9 +359,9 @@ export default class _Table extends Component {
 
             {columnReordering && (
               <TableColumnReordering
-                onOrderChange={order => this.handleColumnsSettings({order})}
+                onOrderChange={order => this.handleColumnsSettings({ order })}
                 order={columnsSettings.order}
-                // defaultOrder={columns.map(c => c.name)}
+              // defaultOrder={columns.map(c => c.name)}
               />
             )}
 
@@ -347,21 +376,21 @@ export default class _Table extends Component {
             />
             {groupBy && <TableGroupRow
               indentColumnWidth={1}
-              iconComponent={({ expanded }) => <Icon style={{float:'right'}} size='large' color='blue' name={expanded ? 'chevron down' : 'chevron up'} />}
-              contentComponent={({column, row, children, ...restProps}) => (
-                renderGroupLabel 
-                ? renderGroupLabel({column, row})
-                : ( 
-                  <span {...restProps}>
-                    <strong>{column.title || column.name}:{' '}</strong>
-                    {children || String(row.value)}
-                  </span>
-                )
+              iconComponent={({ expanded }) => <Icon style={{ float: 'right' }} size='large' color='blue' name={expanded ? 'chevron down' : 'chevron up'} />}
+              contentComponent={({ column, row, children, ...restProps }) => (
+                renderGroupLabel
+                  ? renderGroupLabel({ column, row })
+                  : (
+                    <span {...restProps}>
+                      <strong>{column.title || column.name}:{' '}</strong>
+                      {children || String(row.value)}
+                    </span>
+                  )
               )}
               cellComponent={props => (
                 <GroupCell {...props} />
               )}
-              rowComponent={({children, row, tableRow, ...restProps}) => (
+              rowComponent={({ children, row, tableRow, ...restProps }) => (
                 <tr className="group-row" {...restProps}>
                   {children}
                 </tr>

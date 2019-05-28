@@ -1,5 +1,6 @@
 import * as AT from "./action-types"
-import get from "lodash/get"
+import get from "lodash/get"  // ! ! ??
+import { defaultTabs } from "./contants"
 
 export const initialState = {
   editPopupBoolean: false,
@@ -26,23 +27,23 @@ export const initialState = {
   provincesDropDown: [],
   country: [],
   currency: [],
-  tabsNames: [
-    { name: "Users", id: 1 },
-    { name: "Branches", id: 2 },
-    { name: "Warehouses", id: 3 },
-    { name: "Product catalog", id: 4 },
-    { name: "Global Broadcast", id: 5 },
-    //{ name: "Client list", id: 6 }, // removed #29771
-    //{ name: "Credit cards", id: 7 }, // currently hidden #30294 ()
-    { name: "Bank accounts", id: 8 },
-    //{ name: "Tax manager", id: 9 }, // removed #29771
-    //{ name: "Terms", id: 10 }, // removed #29771
-    //{ name: "Website Controls", id: 11 } // removed #29771
-    { name: "Delivery addresses", id: 12 }
-
-  ],
+  tabsNames: defaultTabs,
+  //  [
+  //   { name: "Users", id: 1 },
+  //   { name: "Branches", id: 2 },
+  //   { name: "Warehouses", id: 3 },
+  //   { name: "Product catalog", id: 4 },
+  //   { name: "Global Broadcast", id: 5 },
+  //   //{ name: "Client list", id: 6 }, // removed #29771
+  //   { name: "Credit cards", id: 7 },
+  //   { name: "Bank accounts", id: 8 },
+  //   //{ name: "Tax manager", id: 9 }, // removed #29771
+  //   //{ name: "Terms", id: 10 }, // removed #29771
+  //   //{ name: "Website Controls", id: 11 } // removed #29771
+  //   { name: "Delivery addresses", id: 12 }
+  // ],
   // currentTab: "Product catalog",
-  currentTab: "Users",
+  currentTab: defaultTabs[0],
   isOpenPopup: false,
   isOpenImportPopup: false,
   currentEditForm: null,
@@ -66,7 +67,7 @@ export const initialState = {
 }
 
 export default function reducer(state = initialState, action) {
-  const {payload} = action
+  const { payload } = action
 
   switch (action.type) {
     case AT.OPEN_POPUP: {
@@ -635,6 +636,17 @@ export default function reducer(state = initialState, action) {
           value: d.id,
           key: d.id
         }))
+      }
+    }
+
+    case AT.ADD_TAB: {
+      var tabsNames = state.tabsNames
+      if (!state.tabsNames.find((el) => el.id === payload.id)) {
+        var tabsNames = state.tabsNames.concat(payload)
+      }
+      return {
+        ...state,
+        tabsNames: tabsNames
       }
     }
 
