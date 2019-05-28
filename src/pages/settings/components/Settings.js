@@ -78,7 +78,7 @@ class Settings extends Component {
   }
 
   renderContent = () => {
-    let { currentTab, isOpenPopup, isOpenImportPopup, type } = this.props
+    let { action, actionId, currentTab, isOpenPopup, isOpenImportPopup } = this.props
 
     const tables = {
       users: <UsersTable />,

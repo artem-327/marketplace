@@ -6,7 +6,8 @@ export const defaultTabs = [
   { name: "Global Broadcast", id: 5, type: 'global-broadcast' },
   { name: "Credit Cards", id: 7, type: 'credit-cards' },
   { name: "Bank Accounts", id: 8, type: 'bank-accounts' },
-  { name: "Delivery Addresses", id: 12, type: 'delivery-addresses' }
+  { name: "Delivery Addresses", id: 12, type: 'delivery-addresses' },
+  { name: "Company Details", id: 13, type: 'company-details' }
 ]
 
 export const companyDetailsTab = { name: 'Company Details', id: 13, hideHandler: true }

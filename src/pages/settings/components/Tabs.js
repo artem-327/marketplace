@@ -16,7 +16,7 @@ function Tabs(props) {
         <Menu.Item 
           name={tab.name.toUpperCase()}
           key={tab.id}
-          onClick={() => Router.push('/settings/'+tab.type)/*handleActiveTab(tab)*/}
+          onClick={() => Router.push('/settings/'+tab.type)}
           active={currentTab.type === tab.type}
         />
       ))}      

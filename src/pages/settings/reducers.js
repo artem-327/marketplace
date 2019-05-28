@@ -42,6 +42,7 @@ export const initialState = {
   mappedHeaders: null,
   dataHeaderCSV: null,
   loading: false,
+  loaded: false,
   searchedCasProducts: [],
   searchedUnNumbers: [],
   deliveryAddressesFilter: { pageSize: 50, pageNumber: 0 },
@@ -54,6 +55,7 @@ export default function reducer(state = initialState, action) {
     case AT.OPEN_POPUP: {
       return {
         ...state,
+        loaded: false,
         isOpenPopup: true,
         popupValues: action.payload
       }
@@ -444,6 +446,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
+        loaded: true,
         productsCatalogRows: rows,
         productsPackagingType: packagingType,
         productsUnitsType: packagingUnitsType,
