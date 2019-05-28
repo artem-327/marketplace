@@ -1,15 +1,15 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import Router from 'next/router'
 import MyInventory from './MyInventory'
 import * as Actions from '../actions'
-import { Checkbox } from "semantic-ui-react"
+import { openBroadcast } from '~/modules/broadcast/actions'
 
 function mapStateToProps(store) {
   return {
     loading: store.simpleAdd.loading,
     rows: store.simpleAdd.myProductOffers.map(po => {
       const qtyPart = `${po.product.packagingUnit ? po.product.packagingUnit.nameAbbreviation : ''}`
-      
+
       return {
         id: po.id,
         productName: po.product.productName,
@@ -33,4 +33,4 @@ function mapStateToProps(store) {
   }
 }
 
-export default connect(mapStateToProps, Actions)(MyInventory)
+export default connect(mapStateToProps, { ...Actions, openBroadcast })(MyInventory)
