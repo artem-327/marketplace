@@ -4,6 +4,7 @@ import SubMenu from '~/src/components/SubMenu'
 import {FormattedMessage} from 'react-intl'
 import Router from 'next/router'
 import ProdexGrid from '~/components/table'
+import {Broadcast} from '~/modules/broadcast'
 import Filter from '~/src/components/Filter'
 
 const PAGE_SIZE = 50
@@ -66,7 +67,8 @@ export default class MyInventory extends Component {
 
   render() {
     const {
-      loading
+      loading,
+      openBroadcast
     } = this.props
     const { columns, selectedRows } = this.state
     const rows = this.getRows()
@@ -127,10 +129,11 @@ export default class MyInventory extends Component {
           onSelectionChange={selectedRows => this.setState({selectedRows})}
           rowActions={[
             { text: 'Edit listing', callback: (row) => Router.push(`/inventory/edit/${row.id}`) },
-            { text: 'Custom broadcast', callback: (row) => {} },
+            { text: 'Custom broadcast', callback: (row) => {openBroadcast(row.id)} },
             { text: 'Delete listing', callback: (row) => { this.props.deleteProductOffer(row.id)} }
           ]}
         />
+        <Broadcast />
         <Filter
           chemicalName
           productAgeFilter

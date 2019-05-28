@@ -56,6 +56,7 @@ import zip from '~/modules/zip-dropdown/reducer'
 import businessTypes from '~/modules/company-form/reducer'
 
 import auth from '~/modules/auth/reducer'
+import broadcast from '~/modules/broadcast/reducer'
 
 
 
@@ -102,6 +103,7 @@ const reducer = combineReducers({
     }
   }, 'forms'),
   settings,
+  broadcast,
 })
 
 const logger = createLogger({

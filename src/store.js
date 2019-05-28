@@ -45,6 +45,8 @@ import settingsSaga from "./pages/settings/saga"
 import ordersReducers from './pages/orders/reducers'
 import ordersSaga from './pages/orders/saga'
 
+import broadcast from '~/modules/broadcast/reducer'
+
 const reducer = combineReducers({
     admin,
     identity,
@@ -82,7 +84,8 @@ const reducer = combineReducers({
             newProduct: {}
         }
     }, 'forms'),
-    settings
+    settings,
+    broadcast
 })
 
 const logger = createLogger({
