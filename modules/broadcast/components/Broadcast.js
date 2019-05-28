@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import pt from 'prop-types'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import * as Actions from '../actions'
@@ -6,8 +7,98 @@ import { Modal, Segment, Grid, Icon, Button, Form, Input, Radio, Dropdown, Dimme
 import TreeModel from 'tree-model'
 import { Rule } from './Broadcast.style'
 
+class PriceControl extends Component {
+
+  static propTypes = {
+    disabled: pt.bool
+  }
+
+  defaultProps = {
+    disabled: false
+  }
+
+  state = {
+    value: '',
+    type: ''
+  }
+
+  
+
+  constructor(props) {
+    super(props)
+
+    this.onChange = _.debounce(props.onChange, 300)
+  }
+
+  componentWillMount() {
+    const { node: { model } } = this.props
+    this.setState({
+      type: model.priceAddition > 0 ? 'addition' : model.priceMultiplier > 0 ? 'multiplier' : '',
+      value: model.priceAddition > 0 ? model.priceAddition : model.priceMultiplier > 0 ? model.priceMultiplier : ''
+    })
+  }
+
+  componentWillReceiveProps({ node: { model } }) {
+    // console.log('receive props:', model)
+
+    this.setState({
+      //type: model.priceAddition > 0 ? 'addition' : model.priceMultiplier > 0 ? 'multiplier' : '',
+      value: model.priceAddition > 0 ? model.priceAddition : model.priceMultiplier > 0 ? model.priceMultiplier : ''
+    })
+  }
+
+  handleChange = (e, { name, value }) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    const { node: { model }, node, disabled } = this.props
+
+    this.setState({ [name]: value }, () => {
+      const { value, type } = this.state
+
+      if (type === 'addition') {
+        model.priceAddition = value ? parseInt(value, 10) : 0
+        model.priceMultiplier = 0
+        
+        this.onChange(node, { priceAddition: TreeModel.priceAddition })
+      } else if (type === 'multiplier') {
+        model.priceMultiplier = value ? parseInt(value, 10) : 0
+        model.priceAddition = 0
+        
+        this.onChange(node, { priceMultiplier: model.priceMultiplier })
+      }
+    })
+
+    return false
+  }
+
+  render() {
+    const { node: { model }, disabled } = this.props
+    const { type, value } = this.state
+
+    return (
+      <Rule.Toggle style={{ paddingRight: '10px' }}>
+        <Input 
+          disabled={disabled}
+          name="value" 
+          type="number" 
+          value={value} 
+          onClick={e => {e.preventDefault(); e.stopPropagation()}}
+          onChange={this.handleChange} 
+          size='small' 
+          style={{ padding: '5px', width: '80px' }} 
+        />
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <Radio disabled={disabled} label='%' checked={type === 'multiplier'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'multiplier' })} />
+          <Radio disabled={disabled} label='$' checked={type === 'addition'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'addition' })} />
+        </div>
+      </Rule.Toggle>
+    )
+  }
+
+}
 const RuleItem = (props) => {
-  const { onChange, onRowClick, item, mode} = props
+  const { onChange, onPriceChange, onRowClick, item, mode } = props
 
   const handleChange = (propertyName, e) => {
     e.preventDefault()
@@ -20,10 +111,8 @@ const RuleItem = (props) => {
     onChange(item.node, { [propertyName]: newValue })
   }
 
-  
-
   const { model: { id, broadcast, anonymous, expanded, hidden, type } } = item.node
-  
+
   const controls = {
     'client': <>
       <Rule.Toggle>
@@ -34,6 +123,7 @@ const RuleItem = (props) => {
           onClick={(e) => handleChange('broadcast', e)}
         />
       </Rule.Toggle>
+      <PriceControl disabled={broadcast !== 1} node={item.node} onChange={onPriceChange} />
       {/* <Rule.Checkbox>
           <Checkbox
             indeterminate={anonymous === 2}
@@ -42,15 +132,7 @@ const RuleItem = (props) => {
           />
         </Rule.Checkbox> */}
     </>,
-    'price': <>
-      <Rule.Toggle style={{paddingRight: '10px'}}>
-        <Input size='small' style={{padding: '5px', width: '80px'}} />
-        <div style={{display: 'flex', flexDirection: 'column'}}>
-          <Radio name="type" label='%' />
-          <Radio  name="type" label='$' />
-        </div>
-      </Rule.Toggle> 
-    </>
+    'price': <PriceControl node={item.node} onChange={onPriceChange} />
   }
 
   if (hidden) return null
@@ -67,7 +149,7 @@ const RuleItem = (props) => {
 
       </Rule.Row>
 
-      {(expanded || type === 'root') && item.children.map((i, idx) => <RuleItem key={idx} mode={mode} item={i} onRowClick={onRowClick} onChange={onChange} />)}
+      {(expanded || type === 'root') && item.children.map((i, idx) => <RuleItem key={idx} mode={mode} item={i} onRowClick={onRowClick} onPriceChange={onPriceChange} onChange={onChange} />)}
     </>
   )
 }
@@ -85,7 +167,7 @@ class Broadcast extends Component {
   }
 
   componentWillReceiveProps(props) {
-    this.setState({filterSearch: props.filter.search})
+    this.setState({ filterSearch: props.filter.search })
   }
 
   updateTreeSelection = (node, values) => {
@@ -118,6 +200,12 @@ class Broadcast extends Component {
     update(node, values)
   }
 
+  handlePriceChange = () => {
+    const { updateLocalRules, treeData } = this.props
+
+    updateLocalRules(treeData.model)
+  }
+
   handleChange = (node, values) => {
     const { updateLocalRules, treeData } = this.props
 
@@ -134,14 +222,14 @@ class Broadcast extends Component {
     updateLocalRules(treeData.model)
   }
 
-  handleSearchChange = (e, {name, value}) => {
-    this.setState({filterSearch: value})
+  handleSearchChange = (e, { name, value }) => {
+    this.setState({ filterSearch: value })
 
-    this.handleFilterChange(e, {name, value})
+    this.handleFilterChange(e, { name, value })
   }
 
   handleFilterChange = (e, { name, value }) => {
-    const {updateFilter, updateLocalRules, filter, treeData} = this.props
+    const { updateFilter, updateLocalRules, filter, treeData } = this.props
 
     if (name === 'search' && value.length > 0) {
       treeData.all().forEach(n => n.model.expanded = true)
@@ -158,7 +246,7 @@ class Broadcast extends Component {
 
   getFilteredTree = () => {
     const { treeData, filter } = this.props
-    
+
     const fs = filter.search.toLowerCase()
 
     const searchFn = (n => {
@@ -169,7 +257,7 @@ class Broadcast extends Component {
         return true
       }
 
-      name.split(' ').forEach(s => { 
+      name.split(' ').forEach(s => {
         if (s.startsWith(fs)) { found = true; return }
       })
 
@@ -224,7 +312,7 @@ class Broadcast extends Component {
         }))
       })
     }
-    
+
 
     return presets[filter.category]()
   }
@@ -232,7 +320,7 @@ class Broadcast extends Component {
   render() {
     const { open, loading, treeData, filter, closeBroadcast, saveRules, id, mode, switchMode } = this.props
     const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'branch' && n.model.broadcast === 1).length}/${treeData.all(n => n.model.type === 'branch').length}`
-    
+
     return (
       <Modal open={open} onClose={closeBroadcast} centered={false}>
         <Modal.Header>Broadcast center</Modal.Header>
@@ -240,12 +328,12 @@ class Broadcast extends Component {
           <Grid className="flex stretched">
             <Grid.Row divided className="flex stretched">
               <Grid.Column width={6}>
-                <div style={{flex: '0 0', padding: '0 0 15px 0'}}>
+                {/* <div style={{ flex: '0 0', padding: '0 0 15px 0' }}>
                   <Button.Group widths={2}>
                     <Button onClick={() => switchMode('client')} active={mode === 'client'} basic={mode !== 'client'} color="blue">Client list</Button>
-                    <Button onClick={() => switchMode('price')} basic={mode !== 'price'} active={mode ==='price'} color="blue">Price list</Button>
+                    <Button onClick={() => switchMode('price')} basic={mode !== 'price'} active={mode === 'price'} color="blue">Price list</Button>
                   </Button.Group>
-                </div>
+                </div> */}
                 <div>
                   <Message info size='large' style={{ padding: '6px 15px' }}>
                     <Icon name='info circle' />
@@ -279,16 +367,28 @@ class Broadcast extends Component {
                       Region select
                     </Rule.RowContent>
                     <Rule.Toggle>
-                      {mode === "client" ? "Include" : "Mark-up/down"}
+                      Include
                     </Rule.Toggle>
+                    <Rule.Toggle style={{marginRight: '20px'}}>
+                      Mark-up/down
+                    </Rule.Toggle>
+                    {/* <Rule.Toggle>
+                      {mode === "client" ? "Include" : "Mark-up/down"}
+                    </Rule.Toggle> */}
                     {/* <Rule.Checkbox>
                       Anomymous
                     </Rule.Checkbox> */}
                   </Rule.Header>
                   <Rule.Content>
                     {treeData && [this.getFilteredTree()].map(i => (
-                      <RuleItem item={i} mode={mode} onRowClick={this.handleRowClick} onChange={this.handleChange} />)
-                    )}
+                      <RuleItem
+                        item={i}
+                        mode={mode}
+                        onRowClick={this.handleRowClick}
+                        onPriceChange={this.handlePriceChange}
+                        onChange={this.handleChange}
+                      />
+                    ))}
                     {loading && <Dimmer active inverted><Loader active /></Dimmer>}
                   </Rule.Content>
                 </Rule.Root>
