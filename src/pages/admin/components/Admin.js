@@ -30,7 +30,8 @@ const tables = {
   'Forms': <DataTable />,
   'Conditions': <DataTable />,
   'CAS Products': <CasProductsTable />,
-  'Companies': <CompaniesTable />
+  'Companies': <CompaniesTable />,
+  'Document Types': <DataTable />,
 }
 
 const editForms = {
@@ -41,7 +42,8 @@ const editForms = {
   'Forms': <EditPopup1Parameter />,
   'Conditions': <EditPopup1Parameter />,
   'CAS Products': <AddEditCasProductsPopup />,
-  'Companies': <CompaniesForm />
+  'Companies': <CompaniesForm />,
+  'Document Types': <EditPopup1Parameter />,
 }
 
 const edit2Forms = {
@@ -56,7 +58,8 @@ const addForms = {
   'Forms': <AddNewPopup1Parameter />,
   'Conditions': <AddNewPopup1Parameter />,
   'CAS Products': <AddEditCasProductsPopup />,
-  'Companies': <CompaniesForm />
+  'Companies': <CompaniesForm />,
+  'Document Types': <AddNewPopup1Parameter />,
 }
 
 class Admin extends Component {

@@ -13,6 +13,7 @@ export const initialState = {
   conditionsRows: [],
   casProductsRows: [],
   altCasNamesRows: [],
+  documentTypesRows: [],
   measureTypes: [],
   hazardClasses: [],
   packagingGroups: [],
@@ -31,6 +32,7 @@ export const initialState = {
     { name: 'Grades', id: 4 },
     { name: 'Forms', id: 5 },
     { name: 'Conditions', id: 6 },
+    { name: 'Document Types', id: 9 },
   ],
 
   currentTab: 'Companies',
@@ -115,6 +117,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_DELETE_DOCUMENT_TYPES_DATA_FULFILLED:
     case AT.ADMIN_DELETE_COMPANIES_FULFILLED:
     case AT.ADMIN_DELETE_CAS_PRODUCT_FULFILLED:
     case AT.ADMIN_DELETE_UNITS_OF_MEASURE_DATA_FULFILLED:
