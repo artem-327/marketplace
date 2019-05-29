@@ -109,12 +109,12 @@ export function closeToast() {
   }
 }
 
-export function handleActiveTab(tab) {
+/*export function handleActiveTab(tab) {
   return {
     type: AT.HANDLE_ACTIVE_TAB,
     payload: { tab }
   }
-}
+}*/
 
 export function handleFiltersValue(props, value) {
   return async dispatch => {

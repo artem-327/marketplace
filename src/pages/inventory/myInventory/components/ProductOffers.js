@@ -109,14 +109,14 @@ class ProductOffers extends Component {
       { name: 'Broadcast', align: 'a-center' }
     ]
 
-    const dataTable =
-      <><DataTable
+    const dataTable = <>
+      <DataTable
         id="myInventoryTable"
         selectableRows
         sortFunc={(nameColumn) => console.log(nameColumn)}
         headerInit={headerInit}
         contextMenu={[
-          { action: (id) => { if (checkToken(this.props)) return; Router.push(`/inventory/edit/${id}`) }, label: 'editListing', },
+          { action: (id) => { if (checkToken(this.props)) return; Router.push(`/inventory/edit?id=${id}`) }, label: 'editListing', },
           { action: (id) => { if (checkToken(this.props)) return; this.openBroadcast(id) }, label: 'customBroadcast' },
           {
             action: (id) => {
@@ -139,13 +139,13 @@ class ProductOffers extends Component {
             selections={this.props.selections}
             setFilter={(type) => this.props.setFilter(type)}
             currentSelected={this.props.currentSelected}
-            setActiveBroadcastButton={active => this.props.setActiveBroadcastButton(active)} />}
-      />
+            setActiveBroadcastButton={active => this.props.setActiveBroadcastButton(active)} 
+          />
+        }
+        />
         {this.state.open ? <AddBroadcast open={this.state.open} id={this.state.id} closeModal={() => this.setState({ open: false })} /> : null}
 
       </>
-
-
 
     return (dataTable)
   }
