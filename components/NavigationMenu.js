@@ -37,8 +37,8 @@ class Navigation extends Component {
         </DropdownItem>
         <DropdownItem text="Orders">
           <Dropdown.Menu>
-            <Dropdown.Item as={MenuLink} to="/orders/sales">Sales Orders</Dropdown.Item>
-            <Dropdown.Item as={MenuLink} to="/orders/purchase">Purchase Orders</Dropdown.Item>
+            <Dropdown.Item as={MenuLink} to="/orders?type=sales">Sales Orders</Dropdown.Item>
+            <Dropdown.Item as={MenuLink} to="/orders?type=purchase">Purchase Orders</Dropdown.Item>
           </Dropdown.Menu>
         </DropdownItem>
         <MenuLink to='/settings'>Settings</MenuLink>

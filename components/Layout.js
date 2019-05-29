@@ -23,11 +23,10 @@ const MainContainer = styled(Container)`
   top: 0; right: 0; bottom: 0; left: 0;
 `
 const ContentContainer = styled(Container)`
-  padding: 0 20px;
+  /* padding: 0 20px; */
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  overflow: auto;
 `
 const FlexContainer = styled.div`
   position: fixed;

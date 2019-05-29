@@ -6,7 +6,7 @@ import {ToastProvider} from 'react-toast-notifications'
 export default securePage(() => (
   <Layout title="Add Inventory">
     <ToastProvider autoDismissTimeout={10 * 1000}>
-      <AddInventory />
+      <AddInventory type='add' />
     </ToastProvider>
   </Layout>
 ))

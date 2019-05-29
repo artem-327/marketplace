@@ -1,17 +1,18 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import Router from 'next/router'
 import MyInventory from './MyInventory'
 import * as Actions from '../actions'
-import { Checkbox } from "semantic-ui-react"
+import { openBroadcast } from '~/modules/broadcast/actions'
 
 function mapStateToProps(store) {
   return {
     loading: store.simpleAdd.loading,
     rows: store.simpleAdd.myProductOffers.map(po => {
       const qtyPart = `${po.product.packagingUnit ? po.product.packagingUnit.nameAbbreviation : ''}`
-      
+
       return {
         id: po.id,
+        product: po.product,
         productName: po.product.productName,
         productNumber: po.product.casProduct ? po.product.casProduct.casNumber : 'Unmapped',
         chemicalName: po.product.casProduct ? po.product.casProduct.chemicalName : po.product.productName,
@@ -27,10 +28,11 @@ function mapStateToProps(store) {
             + ' - ' + "$" + po.pricingTiers[0].price.formatMoney(3))
           : po.pricing.price ? ("$" + po.pricing.price.formatMoney(3)) : 'N/A',
         manufacturer: po.manufacturer && po.manufacturer.name ? po.manufacturer.name : 'N/A',
-        broadcasted: po.broadcasted
+        broadcasted: po.broadcasted,
+        status: po.status // new broadcasted
       }
     })
   }
 }
 
-export default connect(mapStateToProps, Actions)(MyInventory)
+export default connect(mapStateToProps, { ...Actions, openBroadcast })(MyInventory)
