@@ -103,20 +103,16 @@ const mapStateToProps = state => {
     deleteRowById: state.settings.deleteRowById,
     productsFilter: state.settings.productsFilter,
     loading: state.settings.loading,
-      loaded: state.settings.loaded,
-      action: Router && Router.router ? Router.router.query.action : false,
-      actionId: Router && Router.router ? Router.router.query.id : false,
-      currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0]
-
-      reloadFilter: {props: {
-        currentTab: state.settings.currentTab,
-        productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
-        productsFilter: state.settings.productsFilter},
-      value: state.settings.filterValue},
+    loaded: state.settings.loaded,
+    action: Router && Router.router ? Router.router.query.action : false,
+    actionId: Router && Router.router ? Router.router.query.id : false,
+    currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+    reloadFilter: {props: {
+      currentTab: state.settings.currentTab,
+      productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
+      productsFilter: state.settings.productsFilter},
+    value: state.settings.filterValue},
     productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
-
-
-
   }
 }
 

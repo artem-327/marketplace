@@ -28,6 +28,7 @@ export const initialState = {
   country: [],
   currency: [],
   tabsNames: defaultTabs,
+  currentTab: defaultTabs[0],
   isOpenPopup: false,
   isOpenImportPopup: false,
   currentEditForm: null,
