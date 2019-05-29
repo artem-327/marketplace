@@ -1,7 +1,5 @@
 import api from '~/api'
 
-import {transformRequestOptions} from "../../utils/functions";
-
 export default {
   getAll: (endpointType, filter = {}) => api.post(`/prodex/api/${endpointType}-orders/datagrid`, {
     ...filter,
