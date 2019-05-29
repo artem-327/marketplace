@@ -4,6 +4,7 @@ import {FormattedMessage} from 'react-intl'
 import SubMenu from '~/src/components/SubMenu'
 import Filter from '~/src/components/Filter'
 import ProdexGrid from '~/components/table'
+import AddCart from '~/src/pages/cart/components/AddCart'
 
 const PAGE_SIZE = 50
 
@@ -62,6 +63,16 @@ export default class Marketplace extends Component {
     }))
   }
 
+  tableRowClicked = (clickedId) => {
+    const { getProductOffer, sidebarChanged } = this.props
+    let { isOpen, id } = this.props.sidebar
+    getProductOffer(clickedId)
+
+    if (id !== clickedId && id) sidebarChanged({ isOpen: true, id: clickedId, quantity: 1 })
+    else sidebarChanged({ isOpen: !isOpen, id: clickedId, quantity: 1 })
+
+  }
+
   render() {
     const {
       loading
@@ -114,6 +125,9 @@ export default class Marketplace extends Component {
             )
           }}
           onSelectionChange={selectedRows => this.setState({selectedRows})}
+          rowActions={[
+            { text: 'Buy Product Offer', callback: (row) => this.tableRowClicked(row.id) }
+          ]}
         />
         <Filter
           chemicalName
@@ -130,6 +144,7 @@ export default class Marketplace extends Component {
           savingFilters={true}
           {...this.props}
         />
+        <AddCart />
       </>
     )
   }

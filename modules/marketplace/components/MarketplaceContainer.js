@@ -1,6 +1,8 @@
 import {connect} from 'react-redux'
 import Marketplace from './Marketplace'
 import * as Actions from '../actions'
+import { sidebarChanged } from '~/src/modules/cart'
+import { getProductOffer } from '~/modules/purchase-order/actions'
 import moment from "moment/moment"
 
 function mapStateToProps(store) {
@@ -32,8 +34,9 @@ function mapStateToProps(store) {
           ? `${po.warehouse.address.city}, ${po.warehouse.address.country.name}`
           : `${po.warehouse.address.country.name}` + (typeof po.warehouse.address.country !== 'undefined' ? `, ${po.warehouse.address.country.name}` : ``)
       }
-    })
+    }),
+    sidebar: store.cart.sidebar
   }
 }
 
-export default connect(mapStateToProps, Actions)(Marketplace)
+export default connect(mapStateToProps, {...Actions, sidebarChanged, getProductOffer})(Marketplace)

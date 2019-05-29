@@ -35,7 +35,6 @@ export default class AllInventory extends Component {
 
     if (id !== clickedId && id) sidebarChanged({ isOpen: true, id: clickedId, quantity: 1 })
     else sidebarChanged({ isOpen: !isOpen, id: clickedId, quantity: 1 })
-
   }
 
   render() {
