@@ -8,6 +8,10 @@ import _ from 'lodash'
 import GroupCell from './GroupCell'
 
 import {
+  Template, TemplateConnector
+} from '@devexpress/dx-react-core';
+
+import {
   SearchState,
   IntegratedFiltering,
   IntegratedSelection,
@@ -75,7 +79,7 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, open }) => 
           actions.setSubmitting(false)
         }}
       >
-        {columns.map(c => <Checkbox key={c.name} name={c.name} label={c.title} />)}
+        {columns.map(c => <Checkbox key={c.name} disabled={c.disabled} name={c.name} label={c.title} />)}
         <Button.Submit fluid>Save</Button.Submit>
       </Form>
     </Modal.Content>
@@ -94,6 +98,22 @@ const SortLabel = ({ onSort, children, direction }) => (
     {(direction && <Icon className="thick" name={direction === 'asc' ? 'sort up' : 'sort down'} />)}
   </span>
 )
+
+const Row = ({ tableRow, selected, onToggle, onClick, ...restProps }) => {
+  const rowAction = (row) => {
+    console.log('ROW ACTION', tableRow.row.id)
+
+    onClick(tableRow.row)
+  }
+  return (
+    <Table.Row
+      {...restProps}
+      className={selected ? 'table-info' : ''}
+      style={{ color: 'green' }}
+      onClick={rowAction}
+    />
+  )
+}
 
 export default class _Table extends Component {
 
@@ -142,9 +162,9 @@ export default class _Table extends Component {
     this.handleScroll = _.debounce(this.handleScroll, 100)
 
     this.state = {
-      hiddenColumnNames: [],
       expandedGroups: [],
       columnsSettings: {
+        hiddenColumnNames: this.getColumns().filter(c => c.disabled).map(c => c.name),
         widths: this.getColumnsExtension(),
         order: this.getColumns().map(c => c.name)
       },
@@ -218,7 +238,7 @@ export default class _Table extends Component {
   }
 
   loadColumnsSettings = () => {
-    const {tableName, columns, rowActions} = this.props
+    const { tableName, columns, rowActions } = this.props
 
     // get column names from current table settings
     let colNames = columns.map(column => {
@@ -245,7 +265,6 @@ export default class _Table extends Component {
         this.setState({
           columnsSettings: JSON.parse(localStorage[tableName])
         })
-
     }
   }
   handleColumnsSettings = (data) => {
@@ -261,12 +280,19 @@ export default class _Table extends Component {
     })
   }
 
+  rowAction = (row) => {
+    const {rowActions} = this.props
+    if (rowActions)
+      rowActions[0].callback(row)
+  }
+
   render() {
     const {
       rows,
       columns,
       filterValue,
       columnReordering,
+      rowClick,
       rowSelection,
       selectByRowClick,
       showSelectAll,
@@ -283,8 +309,14 @@ export default class _Table extends Component {
       ...restProps
     } = this.props
 
-    const { hiddenColumnNames, columnSettingOpen, expandedGroups, columnsSettings } = this.state
+    const { columnSettingOpen, expandedGroups, columnsSettings } = this.state
     const grouping = groupBy.map(g => ({ columnName: g }))
+    const columnsFiltered = this.getColumns().filter(c => !c.disabled)
+    
+    const hiddenColumns = [
+      ...this.getColumns().filter(c => c.disabled).map(c => c.name),
+      ...(columnsSettings.hiddenColumnNames || [])
+    ]
 
     return (
       <Segment basic loading={loading} {...restProps} className="flex stretched" style={{ padding: 0 }}>
@@ -293,12 +325,12 @@ export default class _Table extends Component {
           <ColumnsSetting
             onClick={() => this.setState({ columnSettingOpen: !columnSettingOpen })} />
           <ColumnsSettingModal
-            columns={columns}
+            columns={columnsFiltered}
             open={columnSettingOpen}
             hiddenColumnNames={columnsSettings.hiddenColumnNames || []}
             onChange={(hiddenColumnNames) => {
               this.handleColumnsSettings({ hiddenColumnNames })
-              this.setState({ hiddenColumnNames, columnSettingOpen: false })
+              this.setState({ columnSettingOpen: false })
             }}
           />
           <Grid
@@ -357,7 +389,9 @@ export default class _Table extends Component {
               actions={rowActions}
             />
 
-            <TableColumnVisibility hiddenColumnNames={columnsSettings.hiddenColumnNames} />
+            <TableColumnVisibility
+              hiddenColumnNames={hiddenColumns}
+            />
 
             {columnReordering && (
               <TableColumnReordering
@@ -367,6 +401,9 @@ export default class _Table extends Component {
               />
             )}
 
+            {rowClick && (
+              <Table rowComponent={Row} />
+            )}
             {rowSelection && (
               <TableSelection
                 showSelectAll={showSelectAll}
@@ -398,6 +435,25 @@ export default class _Table extends Component {
                 </tr>
               )}
             />}
+
+            {rowClick && (
+              <Template
+                name="tableRow"
+                predicate={({ tableRow }) => tableRow.type === Table.ROW_TYPE}>
+                {params => (
+                  <TemplateConnector>
+                    {({ selection }, { toggleSelection }) => (
+                      <Row
+                        {...params}
+                        selected={selection.findIndex((i) => i === params.tableRow.rowId) > -1}
+                        onToggle={() => toggleSelection({ rowIds: [params.tableRow.rowId] })}
+                        onClick={(row) => this.rowAction(row)}
+                      />
+                    )}
+                  </TemplateConnector>
+                )}
+              </Template>
+            )}
 
           </Grid>
         </div>

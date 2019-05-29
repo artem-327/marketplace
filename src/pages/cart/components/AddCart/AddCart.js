@@ -291,7 +291,7 @@ export default class AddCart extends Component {
     let { isOpen } = sidebar
 
     return (
-      <Sidebar onHide={() => sidebarChanged({ isOpen: false })} width='very wide' className='cart-sidebar flex' direction='right' animation='scale down' visible={isOpen}>
+      <Sidebar onHide={() => sidebarChanged({ isOpen: false })} width='very wide' className='cart-sidebar flex' direction='right' animation='scale down' visible={isOpen} style={{zIndex: 601}}>
         {
           (offerDetailIsFetching) ? <Dimmer active inverted> <Loader size='large' /> </Dimmer>
             : this.getCartMarkup()

@@ -17,6 +17,7 @@ import users from '~/src/modules/users'
 
 import companies from '~/src/modules/companies'
 import productOffers, { initialState as addProductsInit } from '~/src/modules/productOffers'
+import marketplace from '~/modules/marketplace/reducer'
 import shippingQuotes, { initialState as shippingQuotesInit } from '~/src/modules/shippingQuotes'
 import popup from '~/src/modules/popup'
 import filter, { initialState as filterInit } from '~/src/modules/filter'
@@ -81,6 +82,7 @@ const reducer = combineReducers({
   dataTables,
   saveFilterItem,
   simpleAdd,
+  marketplace,
   messages,
   orders: ordersReducers,
   zip,
