@@ -57,6 +57,8 @@ import businessTypes from '~/modules/company-form/reducer'
 
 import auth from '~/modules/auth/reducer'
 
+import messages from '~/modules/messages/reducer'
+
 
 
 const reducer = combineReducers({
@@ -78,6 +80,7 @@ const reducer = combineReducers({
   merchants,
   filter,
   errors,
+  messages,
   dataTables,
   saveFilterItem,
   simpleAdd,

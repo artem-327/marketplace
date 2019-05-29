@@ -4,10 +4,10 @@ import { withRouter } from 'next/router'
 import { Container, Menu, Image, Dropdown } from 'semantic-ui-react'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/inventory.png'
-import ErrorsHandler from '~/src/utils/errorsHandler'
+// import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
 import PopUp from '~/src/components/PopUp'
-import ErrorMessage from './message/ErrorMessage'
+import { Messages } from '~/modules/messages'
 
 const TopMenu = styled(Menu)`
   background-color: #33373e !important;
@@ -71,9 +71,11 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange' }) => 
 
 
     </TopMenu>
-    
+
     <FlexContainer>
-      <ErrorMessage />
+      <Container fluid className='page-wrapper'>
+        <Messages />
+      </Container>
       <ContentContainer fluid className='page-wrapper flex stretched'>
         {children}
       </ContentContainer>
