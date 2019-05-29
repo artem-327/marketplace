@@ -285,7 +285,7 @@ export const config = {
       },
       put: {
         typeRequest: 'ADMIN_PUT_DOCUMENT_TYPES_DATA',
-        apiCall: '/prodex/api/document-types/',
+        apiCall: '/prodex/api/document-types/id/',
       },
       delete: {
         typeRequest: 'ADMIN_DELETE_DOCUMENT_TYPES_DATA',
