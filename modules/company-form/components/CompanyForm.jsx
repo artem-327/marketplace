@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FormGroup } from 'semantic-ui-react'
+import { FormGroup, Popup } from 'semantic-ui-react'
 import { Input, Checkbox, Dropdown } from 'formik-semantic-ui'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
@@ -13,7 +13,6 @@ class CompanyForm extends Component {
     let { intl, loading, data } = this.props
 
     const { formatMessage } = intl
-
 
     return (
       <>
@@ -37,12 +36,23 @@ class CompanyForm extends Component {
               loading,
             }}
             label={<FormattedMessage id='company.businessType' defaultMessage='Business Type' />}
-            name='businessType' />
+            name='businessType.id' />
         </FormGroup>
 
         <FormGroup widths='equal'>
-          <Input label={<FormattedMessage id='company.cin' defaultMessage='Company Identification Number' />} name='cin' />
-          <Input label={<FormattedMessage id='company.tinEin' defaultMessage='Tax Identification Number' />} name='tin' />
+          <Input label={
+            <Popup
+              content={<FormattedMessage id='company.tooltip.orEin' defaultMessage='or Employer Identification Number' />}
+              trigger={<label><FormattedMessage id='company.tin' defaultMessage='Tax Identification Number' /></label>} />
+          }
+            name='tin' />
+            
+          <Input label={
+            <Popup
+              content={<FormattedMessage id='company.tooltip.notRequiredIfSame' defaultMessage='blabla' />}
+              trigger={<label><FormattedMessage id='company.cin' defaultMessage='Company Identification Number' /></label>} />
+          }
+            name='cin' />
           <Input label={<FormattedMessage id='company.duns' defaultMessage='DUNS Number' />} name='dunsNumber' />
         </FormGroup>
 

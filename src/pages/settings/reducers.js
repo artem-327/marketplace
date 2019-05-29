@@ -634,7 +634,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADD_TAB: {
       var tabsNames = state.tabsNames
       if (!state.tabsNames.find((el) => el.id === payload.id)) {
-        var tabsNames = state.tabsNames.concat(payload)
+        var tabsNames = [].concat(payload, state.tabsNames)
       }
       return {
         ...state,

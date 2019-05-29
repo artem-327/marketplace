@@ -1,5 +1,8 @@
 import * as AT from './action-types'
 import * as api from './api'
+import { updateIdentity } from '~/modules/auth/actions'
+import { addMessage } from '~/modules/messages/actions'
+import { themes, responses } from '~/modules/messages/constants'
 
 export function openEditPopup(editedData) {
 	return {
@@ -347,11 +350,14 @@ export function createCompany(formData) {
 
 export function updateCompany(id, formData) {
 	return async dispatch => {
-		await dispatch({
+		let response = await api.updateCompany(id, formData)
+		dispatch({
 			type: AT.ADMIN_UPDATE_COMPANY,
-			payload: api.updateCompany(id, formData)
+			response
 		})
 
+		dispatch(addMessage({ theme: themes.SUCCESS, content: responses.SUCCESS }))
+		dispatch(updateIdentity(response))
 		dispatch(closePopup())
 		dispatch(getCompanies())
 	}

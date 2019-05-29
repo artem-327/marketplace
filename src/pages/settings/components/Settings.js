@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, Button } from 'formik-semantic-ui'
-import { Container, Grid, GridColumn, FormGroup, Segment } from 'semantic-ui-react'
+import { Container, Grid, GridColumn, Segment } from 'semantic-ui-react'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 
@@ -52,7 +52,7 @@ class Settings extends Component {
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
               try {
-                await this.props.updateCompany(values.id, values)
+                await this.props.updateCompany(values.id, { ...values, businessType: values.businessType.id })
               } catch (ignored) { }
 
               setSubmitting(false)
@@ -79,6 +79,7 @@ class Settings extends Component {
   renderContent = () => {
     let { currentTab, isOpenPopup, isOpenImportPopup } = this.props
     const tables = {
+      'Company Details': this.companyDetails(),
       Users: <UsersTable />,
       Branches: <WarehouseTable />,
       Warehouses: <WarehouseTable />,
@@ -86,7 +87,6 @@ class Settings extends Component {
       'Bank accounts': <BankAccountsTable />,
       'Credit cards': <CreditCardsTable />,
       'Delivery addresses': <DeliveryAddressesTable />,
-      'Company Details': this.companyDetails()
     }
 
     const popupForm = {

@@ -46,19 +46,21 @@ export const initialState = {
 }
 
 export default function reducer(state = initialState, action) {
-  const {payload} = action
+  const { payload } = action
 
   switch (action.type) {
 
     case AT.ADMIN_OPEN_POPUP: {
-      return { ...state,
+      return {
+        ...state,
         [payload.data ? 'currentEditForm' : 'currentAddForm']: state.currentTab,
         popupValues: payload.data
       }
     }
 
     case AT.ADMIN_CLOSE_POPUP: {
-      return { ...state,
+      return {
+        ...state,
         currentAddForm: null,
         currentEditForm: null,
         currentEdit2Form: null
@@ -135,7 +137,8 @@ export default function reducer(state = initialState, action) {
 
 
     case AT.ADMIN_GET_COUNTRIES_FULFILLED: {
-      return {...state,
+      return {
+        ...state,
         countries: payload.countries,
         countriesDropDown: payload.countries.map(c => ({
           text: c.name,
@@ -187,6 +190,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    
     case AT.ADMIN_GET_COMPANIES_PENDING:
     case AT.ADMIN_POST_NEW_PRODUCT_NAME_PENDING:
     case AT.ADMIN_UPDATE_PRODUCT_NAME_PENDING:
@@ -259,7 +263,8 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.ADMIN_GET_COMPANIES_FULFILLED: {
-      return { ...state,
+      return {
+        ...state,
         loading: false,
         companiesRows: [
           ...state.companiesRows,
@@ -267,6 +272,8 @@ export default function reducer(state = initialState, action) {
         ]
       }
     }
+
+    
 
     case AT.ADMIN_POST_NEW_PRODUCT_NAME_REJECTED:
     case AT.ADMIN_UPDATE_PRODUCT_NAME_REJECTED:
@@ -276,7 +283,8 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_GET_MANUFACTURERS_BY_STRING_REJECTED:
     case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_REJECTED:
     case AT.ADMIN_GET_COMPANIES_REJECTED: {
-      return { ...state,
+      return {
+        ...state,
         loading: false
       }
     }
@@ -303,7 +311,8 @@ export default function reducer(state = initialState, action) {
                     }
                   }
                 } else if (config[groupName].api.get.typeRequest + '_PENDING' === action.type) {
-                  return { ...state,
+                  return {
+                    ...state,
                     loading: true
                   }
                 }

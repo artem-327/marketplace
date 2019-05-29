@@ -73,3 +73,6 @@ export function logout(isAutologout) {
 //     })
 //   }
 // }
+
+
+export const updateIdentity = (payload) => ({ type: AT.UPDATE_IDENTITY, payload })
