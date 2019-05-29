@@ -48,14 +48,16 @@ import simpleAdd from '~/modules/inventory/reducer'
 import shiping from '~/modules/shipping/reducer'
 import cart, { initialState as cartInit } from '~/modules/purchase-order/reducer'
 // Orders
-import ordersReducers from '~/src/pages/orders/reducers'
-import ordersSaga from '~/src/pages/orders/saga'
+import ordersReducers from '~/modules/orders/reducers'
+import ordersSaga from '~/modules/orders/saga'
 
 import zip from '~/modules/zip-dropdown/reducer'
 import businessTypes from '~/modules/company-form/reducer'
 
 import auth from '~/modules/auth/reducer'
 import broadcast from '~/modules/broadcast/reducer'
+
+import messages from '~/modules/messages/reducer'
 
 const reducer = combineReducers({
   auth,
@@ -79,6 +81,7 @@ const reducer = combineReducers({
   dataTables,
   saveFilterItem,
   simpleAdd,
+  messages,
   orders: ordersReducers,
   zip,
   forms: combineForms({
