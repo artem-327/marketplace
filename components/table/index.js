@@ -8,6 +8,10 @@ import _ from 'lodash'
 import GroupCell from './GroupCell'
 
 import {
+  Template, TemplateConnector
+} from '@devexpress/dx-react-core';
+
+import {
   SearchState,
   IntegratedFiltering,
   IntegratedSelection,
@@ -94,6 +98,22 @@ const SortLabel = ({ onSort, children, direction }) => (
     {(direction && <Icon className="thick" name={direction === 'asc' ? 'sort up' : 'sort down'} />)}
   </span>
 )
+
+const Row = ({ tableRow, selected, onToggle, onClick, ...restProps }) => {
+  const rowAction = (row) => {
+    console.log('ROW ACTION', tableRow.row.id)
+
+    onClick(tableRow.row)
+  }
+  return (
+    <Table.Row
+      {...restProps}
+      className={selected ? 'table-info' : ''}
+      style={{ color: 'green' }}
+      onClick={rowAction}
+    />
+  )
+}
 
 export default class _Table extends Component {
 
@@ -260,12 +280,19 @@ export default class _Table extends Component {
     })
   }
 
+  rowAction = (row) => {
+    const {rowActions} = this.props
+    if (rowActions)
+      rowActions[0].callback(row)
+  }
+
   render() {
     const {
       rows,
       columns,
       filterValue,
       columnReordering,
+      rowClick,
       rowSelection,
       selectByRowClick,
       showSelectAll,
@@ -374,6 +401,9 @@ export default class _Table extends Component {
               />
             )}
 
+            {rowClick && (
+              <Table rowComponent={Row} />
+            )}
             {rowSelection && (
               <TableSelection
                 showSelectAll={showSelectAll}
@@ -405,6 +435,25 @@ export default class _Table extends Component {
                 </tr>
               )}
             />}
+
+            {rowClick && (
+              <Template
+                name="tableRow"
+                predicate={({ tableRow }) => tableRow.type === Table.ROW_TYPE}>
+                {params => (
+                  <TemplateConnector>
+                    {({ selection }, { toggleSelection }) => (
+                      <Row
+                        {...params}
+                        selected={selection.findIndex((i) => i === params.tableRow.rowId) > -1}
+                        onToggle={() => toggleSelection({ rowIds: [params.tableRow.rowId] })}
+                        onClick={(row) => this.rowAction(row)}
+                      />
+                    )}
+                  </TemplateConnector>
+                )}
+              </Template>
+            )}
 
           </Grid>
         </div>
