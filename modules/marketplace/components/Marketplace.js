@@ -9,6 +9,8 @@ const PAGE_SIZE = 50
 export default class Marketplace extends Component {
   state = {
     columns: [
+      { name: 'productName', disabled: true},
+      { name: 'productNumber', disabled: true},
       { name: 'merchant', title: 'Merchant', width: 250 },
       { name: 'available', title: 'Available', width: 80 },
       { name: 'packaging', title: 'Packaging', width: 140 },
@@ -70,8 +72,8 @@ export default class Marketplace extends Component {
           rowSelection
           getNextPage={this.getNextPage}
           pageSize={PAGE_SIZE}
-          //groupBy={['productNumber']}
-          /*getChildGroups={rows =>
+          groupBy={['productNumber']}
+          getChildGroups={rows =>
             _(rows)
               .groupBy('productName')
               .map(v => ({
@@ -79,16 +81,15 @@ export default class Marketplace extends Component {
                 childRows: v
               }))
               .value()
-          }*/
-          /*renderGroupLabel={({row: {value}}) => {
-            console.log('VALUE', value)
+          }
+          renderGroupLabel={({row: {value}}) => {
             const [name, number, count] = value.split('_')
             return (
               <span>
                 <span style={{color: '#2599d5'}}>{number}</span>&nbsp;&nbsp; {name} <span className="right">Product offerings: {count}</span>
               </span>
             )
-          }}*/
+          }}
           onSelectionChange={selectedRows => this.setState({selectedRows})}
         />
       </>
