@@ -2,8 +2,8 @@ import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import Detail from './Detail'
 import * as Actions from '../actions'
-import * as OrdersHelper from "../../../helpers/Orders"
-import moment from "moment/moment";
+import * as OrdersHelper from "~/src/helpers/Orders"
+import moment from "moment/moment"
 
 function actionRequired(data) {
     return (data.orderStatus === 1)

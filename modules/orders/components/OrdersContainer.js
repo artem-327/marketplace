@@ -1,9 +1,9 @@
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import Orders from './Orders'
-import * as OrdersHelper from '../../../helpers/Orders'
+import * as OrdersHelper from '~/src/helpers/Orders'
 import * as Actions from '../actions'
-import {formatMoney} from "../../../utils/functions";
+import {formatMoney} from '~/src/utils/functions'
 import moment from "moment/moment"
 
 function transformToRows(data, type) {

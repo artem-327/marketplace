@@ -1,7 +1,7 @@
 import App, { Container } from 'next/app'
 import React from 'react'
 import withRedux from 'next-redux-wrapper'
-import { makeStore } from '../src/store-next'
+import { makeStore } from '~/store'
 import { Provider } from 'react-redux'
 import { IntlProvider, FormattedNumber } from 'react-intl'
 import EN from '../localization/en.json'

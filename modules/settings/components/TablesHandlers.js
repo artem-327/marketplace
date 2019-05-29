@@ -1,11 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-
 import { Header, Menu, Button, Checkbox, Input, Dropdown } from 'semantic-ui-react'
-
 import { openPopup, handleFiltersValue, openImportPopup, handleProductCatalogUnmappedValue } from '../actions'
-import unitedStates from '../../../components/unitedStates'
-import Router from "next/router"
 
 const textsTable = {
   'users': {

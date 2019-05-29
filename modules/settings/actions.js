@@ -451,7 +451,7 @@ export function postNewUserRequest(payload) {
       homeBranch: payload.homeBranchId,
       password: "123"
     }
-    console.log('!!!!!!!!!! new user x');
+    console.log('!!!!!!!!!! new user x')
     await dispatch({
       type: AT.POST_NEW_USER_REQUEST,
       payload: api.postNewUser(dataBody)

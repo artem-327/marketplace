@@ -44,11 +44,11 @@ export default class AllInventory extends Component {
       : <ProductOffers onRowClick={this.tableRowClicked} {...this.props} />
     const selectedRows = getSelectedRowsDataTable(this.props.productOffersTable)
 
-    
+
     return (
       <div id='page' className='all-inventory flex stretched scrolling'>
 
-        <Container fluid>
+        <Container fluid style={{ padding: '0 32px' }}>
 
           <ShippingQuotes
             modalProps={{
@@ -102,7 +102,10 @@ export default class AllInventory extends Component {
           savingFilters={true}
           {...this.props}
         />
-        {content}
+        <Container fluid style={{ padding: '20px 32px 10px 32px' }}>
+          {content}
+        </Container>
+
         <AddCart />
 
       </div>

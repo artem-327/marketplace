@@ -118,8 +118,10 @@ class Settings extends Component {
     
     return (
       <Container fluid className="flex stretched">
-        <TablesHandlers currentTab={currentTab} />
-        <Grid columns="equal" className="flex stretched">
+        <Container fluid style={{padding: '0 32px'}}>
+          <TablesHandlers currentTab={currentTab} />
+        </Container>
+        <Grid columns="equal" className="flex stretched" style={{padding: '0 32px'}}>
           <Grid.Row>
             <Grid.Column width={3}>
               <Tabs currentTab={currentTab} isCompanyAdmin={this.props.isCompanyAdmin} />

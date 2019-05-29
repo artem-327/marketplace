@@ -87,8 +87,10 @@ class Admin extends Component {
 
     return (
       <Container fluid className="flex stretched">
-        <TablesHandlers />
-        <Grid columns='equal' className="flex stretched">
+        <Container fluid style={{padding: '0 32px'}}>
+          <TablesHandlers />
+        </Container>
+        <Grid columns='equal' className="flex stretched" style={{padding: '0 32px'}}>
           <Grid.Row>
             <Grid.Column width={3}>
               <Tabs />

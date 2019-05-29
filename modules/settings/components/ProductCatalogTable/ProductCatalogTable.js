@@ -9,7 +9,7 @@ import {
   closeConfirmPopup,
   deleteConfirmation
 } from '../../actions'
-import Router from "next/router";
+import Router from "next/router"
 
 class ProductCatalogTable extends Component {
   state = {

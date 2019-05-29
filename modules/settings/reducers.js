@@ -1,5 +1,4 @@
 import * as AT from "./action-types"
-import get from "lodash/get"  // ! ! ??
 import { defaultTabs } from "./contants"
 
 export const initialState = {

@@ -440,13 +440,13 @@ class AddInventoryForm extends Component {
     } = this.state
 
     return (
-      <div id='page' className='flex stretched'>
+      <div id="page" className='flex stretched'>
         <Dimmer active={loading} inverted>
           <Loader inverted>
             <FormattedMessage id='global.loading' defaultMessage='Loading' />
           </Loader>
         </Dimmer>
-        <div className='header-top'>
+        <div className='header-top' style={{padding: '0 32px'}}>
           <Menu secondary>
             <Menu.Item header>
               <Header as='h1' size='medium'>
@@ -471,7 +471,8 @@ class AddInventoryForm extends Component {
                 actions.resetForm()
               })
           }}
-          className='inventory'
+          className='inventory flex'
+          style={{padding: '20px'}}
         >
           {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => (
             <>
@@ -493,6 +494,7 @@ class AddInventoryForm extends Component {
                   <Button primary icon='checkmark' labelPosition='right' content='Go to My Inventory' onClick={this.goToList} />
                 </Modal.Actions>
               </Modal>
+              <div className="flex stretched" style={{padding: '0 32px'}}>
               <Tab className='inventory flex stretched' menu={{ secondary: true, pointing: true }} renderActiveOnly={false} activeIndex={this.state.activeTab} style={{height: '100%'}} panes={[
                 {
                   menuItem: (
@@ -1027,6 +1029,7 @@ class AddInventoryForm extends Component {
                   )
                 }
               ]} />
+              </div>
             </>
           )}
         </Form>
