@@ -104,7 +104,7 @@ export default function reducer(state = initialState, action) {
     case AT.OPEN_EDIT_POPUP: {
       return {
         ...state,
-        currentForm: state.currentTab.name, // ! ! ???
+        currentForm: state.currentTab, // ! ! ???
         editPopupBoolean: state.editPopupBoolean === false ? true : false,
         popupValues: action.payload
       }
@@ -155,7 +155,7 @@ export default function reducer(state = initialState, action) {
     case AT.OPEN_ADD_POPUP: {
       return {
         ...state,
-        currentForm: state.currentTab.name, // ! ! ?????
+        currentForm: state.currentTab,
         popupValues: action.payload
       }
     }
@@ -511,7 +511,7 @@ export default function reducer(state = initialState, action) {
     case AT.POST_NEW_WAREHOUSE_POPUP: {
       return {
         ...state,
-        currentAddForm: state.currentTab.name   // ! ! ???
+        currentAddForm: state.currentTab
       }
     }
 

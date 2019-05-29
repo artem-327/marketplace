@@ -8,35 +8,35 @@ import unitedStates from '../../../components/unitedStates'
 import Router from "next/router"
 
 const textsTable = {
-  Users: {
+  'users': {
     BtnAddText: 'User',
     SearchText: 'Search user by name, title or branch ...'
   },
-  Branches: {
+  'branches': {
     BtnAddText: 'Branch',
     SearchText: 'Search branch by name, address or contact ...'
   },
-  Warehouses: {
+  'warehouses': {
     BtnAddText: 'Warehouse',
     SearchText: 'Search warehouse by name, address or contact ...'
   },
-  'Product catalog': {
+  'products': {
     BtnAddText: 'Product',
     SearchText: 'Search product catalog by name, number ...'
   },
-  'Global Broadcast': {
+  'global-broadcast': {
     BtnAddText: 'Global broadcast',
     SearchText: 'Search global broadcast by name ...'
   },
-  'Credit cards': {
+  'credit-cards': {
     BtnAddText: 'Credit card',
     SearchText: 'Search credit card ...'
   },
-  'Bank accounts': {
+  'bank-accounts': {
     BtnAddText: 'Bank account',
     SearchText: 'Search bank account ...'
   },
-  'Delivery addresses': {
+  'delivery-addresses': {
     BtnAddText: 'Delivery address',
     SearchText: 'Search delivery address ...'
   }
@@ -85,12 +85,12 @@ class TablesHandlers extends Component {
               style={{ width: 340 }}
               size="large"
               icon="search"
-              placeholder={textsTable[currentTab.name].SearchText}
+              placeholder={textsTable[currentTab.type].SearchText}
               onChange={e => handleFiltersValue(this.props, e.target.value)}
             />
           </Menu.Item>
           <Menu.Item>
-            {currentTab.name === 'Product catalog' && (
+            {currentTab.type === 'products' && (
               <Checkbox
                 label='Unmapped only'
                 defaultChecked={productCatalogUnmappedValue}
@@ -103,16 +103,16 @@ class TablesHandlers extends Component {
               primary
               onClick={() => openPopup()}
             >
-              Add {textsTable[currentTab.name].BtnAddText}
+              Add {textsTable[currentTab.type].BtnAddText}
             </Button>
-            {currentTab.name === 'Product catalog' && (
+            {currentTab.type === 'products' && (
               <Button
                 size="large"
                 style={{ marginLeft: 10 }}
                 primary
                 onClick={() => openImportPopup()}
               >
-                Import {textsTable[currentTab.name].BtnAddText}
+                Import {textsTable[currentTab.type].BtnAddText}
               </Button>
             )}
           </Menu.Item>
