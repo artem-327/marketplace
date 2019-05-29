@@ -38,36 +38,36 @@ class WarehouseTable extends Component {
       getBranchesDataRequest
     } = this.props
 
-    if (currentTab.name === 'Warehouses') {
+    if (currentTab.type === 'warehouses') {
       getWarehousesDataRequest()
       this.setState({
-        tab: 'Warehouses'
+        tab: 'warehouses'
       })
     }
-    else if (currentTab.name === 'Branches') {
+    else if (currentTab.type === 'branches') {
       getBranchesDataRequest()
       this.setState({
-        tab: 'Branches'
+        tab: 'branches'
       })
     }
   }
 
   handlerChangeRows() {
     const { currentTab, rowsWarehouses, rowsBranches } = this.props
-    if (currentTab.name === 'Warehouses') {
+    if (currentTab.type === 'warehouses') {
       return rowsWarehouses
     }
-    else if (currentTab.name === 'Branches') {
+    else if (currentTab.type === 'branches') {
       return rowsBranches.filter(branch => branch.warehouse == false)
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    this.state.tab != nextProps.currentTab.name ? this.handlerLoadPage() : null
+    this.state.tab != nextProps.currentTab.type ? this.handlerLoadPage() : null
   }
 
   branchChecker() {
-    if (this.state.tab === 'Branches') {
+    if (this.state.tab === 'branches') {
       let { columns } = this.state
       console.log({ columns })
       return columns.map(item => {
@@ -139,8 +139,8 @@ const mapStateToProps = state => {
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
-      deleteRowById: state.settings.deleteRowById,
-      loading: state.settings.loading
+    deleteRowById: state.settings.deleteRowById,
+    loading: state.settings.loading
   }
 }
 

@@ -16,14 +16,14 @@ class BankAccountsPopup extends React.Component {
       this.props.putBankAccountRequest(
         {
           ...values,
-          tab: this.props.currentTab.name === 'Bank accounts' ? 'bank' : null
+          tab: this.props.currentTab.type === 'bank-accounts' ? 'bank' : null
         },
         this.props.popupValues.branchId
       )
     } else {
       this.props.postNewBankAccountRequest({
         ...values,
-        tab: this.props.currentTab.name === 'Bank accounts' ? 'bank' : null
+        tab: this.props.currentTab.type === 'bank-accounts' ? 'bank' : null
       })
     }
     actions.setSubmitting(false)

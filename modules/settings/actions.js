@@ -47,12 +47,10 @@ export function openEditPopup(rows) {
 export function handlerSubmitUserEditPopup(payload, id) {
   return async dispatch => {
     const updateUser = {
-      firstname: payload.firstName,
-      lastname: payload.lastName,
-      middlename: payload.middleName,
+      name: payload.name,
       email: payload.email,
       homeBranchId: payload.homeBranchId,
-      preferredCurrency: payload.preferredCurrency
+      //preferredCurrency: payload.preferredCurrency
     }
     await dispatch({
       type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
@@ -108,33 +106,33 @@ export function handleOpenConfirmPopup(payload) {
 export function deleteConfirmation(deleteRowById, currentTab, reloadFilter=null) {
   let toast = {}
   return async dispatch => {
-    switch (currentTab.name) {
-      case "Users":
+    switch (currentTab.type) {
+      case "users":
         await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteUser(deleteRowById)})
         toast = { message: "User delete success", isSuccess: true }
         dispatch(getUsersDataRequest())
         break
-      case "Branches":
+      case "branches":
         await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteWarehouse(deleteRowById)})
         toast = { message: "Branch delete success", isSuccess: true }
         dispatch(getBranchesDataRequest())
         break
-      case "Warehouses":
+      case "warehouses":
         await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteWarehouse(deleteRowById)})
         toast = { message: "Warehouse delete success", isSuccess: true }
         dispatch(getWarehousesDataRequest())
         break
-      case "Product catalog":
+      case "products":
         await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteProduct(deleteRowById)})
         toast = { message: "Product delete success", isSuccess: true }
         dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
         break
-      case "Credit cards":
+      case "credit-cards":
         await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteCreditCard(deleteRowById)})
         toast = { message: "Credit cards delete success", isSuccess: true }
         dispatch(getCreditCardsDataRequest())
         break
-      case "Bank accounts":
+      case "bank-accounts":
         await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteBankAccount(deleteRowById)})
         toast = { message: "Bank account delete success", isSuccess: true }
         dispatch(getBankAccountsDataRequest())
@@ -178,12 +176,12 @@ export function handleFiltersValue(props, value) {
       type: AT.HANDLE_FILTERS_VALUE,
       payload: value
     })
-    switch (props.currentTab.name) {
-      case "Delivery addresses":
+    switch (props.currentTab.type) {
+      case "delivery-addresses":
         if (value.trim().length) await dispatch(getDeliveryAddressesByStringRequest(value))
         else await dispatch(getDeliveryAddressesByFilterRequest(props.deliveryAddressesFilter))
         break
-    case "Product catalog":
+    case "products":
       if (value.trim().length > 2) await dispatch(getProductsCatalogRequest({body: value, unmapped: props.productCatalogUnmappedValue}))
       else await dispatch(getProductsCatalogRequest({body: props.productsFilter, unmapped: props.productCatalogUnmappedValue}))
       break
@@ -445,9 +443,6 @@ export function postNewUserRequest(payload) {
     const dataBody = {
       email: payload.email,
       name: payload.name,
-      //firstname: payload.firstName,
-      //lastname: payload.lastName,
-      middlename: payload.middleName,
       homeBranch: payload.homeBranchId,
       password: "123"
     }

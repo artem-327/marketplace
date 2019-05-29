@@ -290,7 +290,6 @@ export default function reducer(state = initialState, action) {
           warehouse: branch.warehouse
         }
       })
-
       branchesRows.forEach(element => {
         for (let key in element) {
           if (element[key] === "unknown") {
