@@ -28,17 +28,16 @@ import { addTab } from '../actions'
 import { updateCompany } from '~/src/pages/admin/actions'
 import { validationSchema } from '~/modules/company-form/constants'
 
-
 // import Toast from '../../../../components/toast'
-
 
 const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
 `
 
-
-
 class Settings extends Component {
+
+  state = { t: 0 }
+
   componentDidMount() {
     let { isCompanyAdmin, addTab } = this.props
     if (isCompanyAdmin) addTab(companyDetailsTab)
@@ -81,10 +80,10 @@ class Settings extends Component {
     let { action, actionId, currentTab, isOpenPopup, isOpenImportPopup } = this.props
 
     const tables = {
-      users: <UsersTable />,
-      branches: <WarehouseTable />,
-      warehouses: <WarehouseTable />,
-      products: <ProductCatalogTable />,
+      'users': <UsersTable />,
+      'branches': <WarehouseTable />,
+      'warehouses': <WarehouseTable />,
+      'products': <ProductCatalogTable />,
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
       'delivery-addresses': <DeliveryAddressesTable />,
@@ -92,10 +91,10 @@ class Settings extends Component {
     }
 
     const popupForm = {
-      users: <EditUsersPopup />,
-      branches: <EditWarehousePopup />,
-      warehouses: <EditWarehousePopup />,
-      products: <EditProductPopup />,
+      'users': <EditUsersPopup />,
+      'branches': <EditWarehousePopup />,
+      'warehouses': <EditWarehousePopup />,
+      'products': <EditProductPopup />,
       'bank-accounts': <BankAccountsPopup />,
       'credit-cards': <CreditCardsPopup />,
       'delivery-addresses': <DeliveryAddressesPopup />
@@ -116,16 +115,16 @@ class Settings extends Component {
 
   render() {
     const {currentTab} = this.props
-
+    
     return (
       <Container fluid className="flex stretched">
-        <TablesHandlers />
+        <TablesHandlers currentTab={currentTab} />
         <Grid columns="equal" className="flex stretched">
           <Grid.Row>
             <Grid.Column width={3}>
-              <Tabs isCompanyAdmin={this.props.isCompanyAdmin} />
+              <Tabs currentTab={currentTab} isCompanyAdmin={this.props.isCompanyAdmin} />
             </Grid.Column>
-            <Grid.Column className="flex stretched" style={{ marginTop: '7px' }}>
+            <Grid.Column className="flex stretched" style={{ marginTop: '7px' }} t={this.state.t}>
               {this.renderContent()}
             </Grid.Column>
           </Grid.Row>
@@ -135,12 +134,15 @@ class Settings extends Component {
   }
 }
 
-const mapStateToProps = ({ settings, auth }) => ({
-  ...settings,
-  isCompanyAdmin: auth.identity ? auth.identity.isCompanyAdmin : false,
-  company: auth.identity ? auth.identity.company : null,
-  currentTab: Router && Router.router ? settings.tabsNames.find(tab => tab.type === Router.router.query.type) : settings.tabsNames[0]
-})
+const mapStateToProps = ({ settings, auth }) => {
+  Router && Router.router && console.log('Router:', Router.router.query)
+  return {
+    ...settings,
+    isCompanyAdmin: auth.identity ? auth.identity.isCompanyAdmin : false,
+    company: auth.identity ? auth.identity.company : null,
+    currentTab: Router && Router.router ? settings.tabsNames.find(tab => tab.type === Router.router.query.type) || settings.tabsNames[0] : settings.tabsNames[0]
+  }
+}
 
 export default connect(
   mapStateToProps,

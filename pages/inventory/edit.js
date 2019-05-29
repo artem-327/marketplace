@@ -4,6 +4,6 @@ import {AddInventory} from '~/modules/inventory'
 
 export default securePage(() => (
   <Layout title="Edit Inventory">
-    <AddInventory />
+    <AddInventory type='edit' />
   </Layout>
 ))

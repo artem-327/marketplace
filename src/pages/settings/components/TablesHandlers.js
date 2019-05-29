@@ -125,7 +125,6 @@ class TablesHandlers extends Component {
 const mapStateToProps = state => {
   return {
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
-    currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0]
   }
 }
 

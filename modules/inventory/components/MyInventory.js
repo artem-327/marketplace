@@ -61,7 +61,7 @@ export default class MyInventory extends Component {
           {r.status !== 'Unmapped' ? (
             <Checkbox toggle checked={r.status === 'Broadcasting'} disabled={r.status === 'Incomplete'} onChange={() => alert('Changed:'+r.productName)} />
           ) : (
-            <Icon name='unlink' title='Product not mapped, click to map it.' onClick={() => Router.push(`/settings/products/edit/${r.product.id}`)} />
+            <Icon name='unlink' title='Product not mapped, click to map it.' onClick={() => Router.push({pathname: '/settings/', query: {type: 'products', action: 'edit', id: r.product.id}})} />
           )}
         </div>
       )
@@ -130,7 +130,7 @@ export default class MyInventory extends Component {
           }}
           onSelectionChange={selectedRows => this.setState({selectedRows})}
           rowActions={[
-            { text: 'Edit listing', callback: (row) => Router.push(`/inventory/edit/${row.id}`) },
+            { text: 'Edit listing', callback: (row) => Router.push({pathname: '/inventory/edit', query: {id: row.id} }) },
             { text: 'Custom broadcast', callback: (row) => {} },
             { text: 'Delete listing', callback: (row) => { this.props.deleteProductOffer(row.id)} }
           ]}
