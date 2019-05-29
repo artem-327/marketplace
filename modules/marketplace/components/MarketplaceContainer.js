@@ -1,10 +1,11 @@
 import {connect} from 'react-redux'
 import Marketplace from './Marketplace'
 import * as Actions from '../actions'
-import moment from "moment/moment";
+import moment from "moment/moment"
 
 function mapStateToProps(store) {
   return {
+    ...store.marketplace,
     rows: store.marketplace.broadcastedProductOffers.map(po => {
       const qtyPart = `${po.product.packagingUnit ? po.product.packagingUnit.nameAbbreviation : ''}`
 

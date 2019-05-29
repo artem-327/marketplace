@@ -75,7 +75,7 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, open }) => 
           actions.setSubmitting(false)
         }}
       >
-        {columns.map(c => <Checkbox key={c.name} name={c.name} label={c.title} />)}
+        {columns.map(c => <Checkbox key={c.name} disabled={c.disabled} name={c.name} label={c.title} />)}
         <Button.Submit fluid>Save</Button.Submit>
       </Form>
     </Modal.Content>
@@ -142,9 +142,9 @@ export default class _Table extends Component {
     this.handleScroll = _.debounce(this.handleScroll, 100)
 
     this.state = {
-      hiddenColumnNames: [],
       expandedGroups: [],
       columnsSettings: {
+        hiddenColumnNames: this.getColumns().filter(c => c.disabled).map(c => c.name),
         widths: this.getColumnsExtension(),
         order: this.getColumns().map(c => c.name)
       },
@@ -218,7 +218,7 @@ export default class _Table extends Component {
   }
 
   loadColumnsSettings = () => {
-    const {tableName, columns, rowActions} = this.props
+    const { tableName, columns, rowActions } = this.props
 
     // get column names from current table settings
     let colNames = columns.map(column => {
@@ -245,7 +245,6 @@ export default class _Table extends Component {
         this.setState({
           columnsSettings: JSON.parse(localStorage[tableName])
         })
-
     }
   }
   handleColumnsSettings = (data) => {
@@ -283,8 +282,14 @@ export default class _Table extends Component {
       ...restProps
     } = this.props
 
-    const { hiddenColumnNames, columnSettingOpen, expandedGroups, columnsSettings } = this.state
+    const { columnSettingOpen, expandedGroups, columnsSettings } = this.state
     const grouping = groupBy.map(g => ({ columnName: g }))
+    const columnsFiltered = this.getColumns().filter(c => !c.disabled)
+    
+    const hiddenColumns = [
+      ...this.getColumns().filter(c => c.disabled).map(c => c.name),
+      ...(columnsSettings.hiddenColumnNames || [])
+    ]
 
     return (
       <Segment basic loading={loading} {...restProps} className="flex stretched" style={{ padding: 0 }}>
@@ -293,12 +298,12 @@ export default class _Table extends Component {
           <ColumnsSetting
             onClick={() => this.setState({ columnSettingOpen: !columnSettingOpen })} />
           <ColumnsSettingModal
-            columns={columns}
+            columns={columnsFiltered}
             open={columnSettingOpen}
             hiddenColumnNames={columnsSettings.hiddenColumnNames || []}
             onChange={(hiddenColumnNames) => {
               this.handleColumnsSettings({ hiddenColumnNames })
-              this.setState({ hiddenColumnNames, columnSettingOpen: false })
+              this.setState({ columnSettingOpen: false })
             }}
           />
           <Grid
@@ -357,7 +362,9 @@ export default class _Table extends Component {
               actions={rowActions}
             />
 
-            <TableColumnVisibility hiddenColumnNames={columnsSettings.hiddenColumnNames} />
+            <TableColumnVisibility
+              hiddenColumnNames={hiddenColumns}
+            />
 
             {columnReordering && (
               <TableColumnReordering
