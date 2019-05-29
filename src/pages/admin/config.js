@@ -260,4 +260,37 @@ export const config = {
       },
     },
   },
+
+  'Document Types': {
+    addEditText: 'Document Type',
+    searchText: 'Search document type by name',
+    display: {
+      columns: [
+        { name: 'name', title: 'Name' },
+      ],
+    },
+    edit: [
+      { name: 'name', title: 'Name', type: 'text', required: true },
+    ],
+    api: {
+      get: {
+        dataName: 'documentTypesRows',
+        typeRequest: 'ADMIN_GET_DOCUMENT_TYPES_DATA',
+        typeSuccess: 'ADMIN_GET_DOCUMENT_TYPES_DATA_FULFILLED',
+        apiCall: '/prodex/api/document-types',
+      },
+      post: {
+        typeRequest: 'ADMIN_POST_DOCUMENT_TYPES_DATA',
+        apiCall: '/prodex/api/document-types',
+      },
+      put: {
+        typeRequest: 'ADMIN_PUT_DOCUMENT_TYPES_DATA',
+        apiCall: '/prodex/api/document-types/id/',
+      },
+      delete: {
+        typeRequest: 'ADMIN_DELETE_DOCUMENT_TYPES_DATA',
+        apiCall: '/prodex/api/document-types/id/',
+      },
+    },
+  },
 }
