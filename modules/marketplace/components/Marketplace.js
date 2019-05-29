@@ -82,7 +82,7 @@ export default class Marketplace extends Component {
 
     return (
       <>
-        <Container fluid>
+        <Container fluid style={{ padding: '0 32px' }}>
           <Menu secondary>
             <Menu.Item header>
               <Header as='h1' size='medium'>
@@ -98,37 +98,39 @@ export default class Marketplace extends Component {
             </Menu.Menu>
           </Menu>
         </Container>
-        <ProdexGrid
-          tableName="marketplace_grid"
-          loading={loading}
-          columns={columns}
-          rows={rows}
-          rowSelection
-          getNextPage={this.getNextPage}
-          pageSize={PAGE_SIZE}
-          groupBy={['productNumber']}
-          getChildGroups={rows =>
-            _(rows)
-              .groupBy('productName')
-              .map(v => ({
-                key: `${v[0].productName}_${v[0].productNumber}_${v.length}`,
-                childRows: v
-              }))
-              .value()
-          }
-          renderGroupLabel={({row: {value}}) => {
-            const [name, number, count] = value.split('_')
-            return (
-              <span>
-                <span style={{color: '#2599d5'}}>{number}</span>&nbsp;&nbsp; {name} <span className="right">Product offerings: {count}</span>
-              </span>
-            )
-          }}
-          onSelectionChange={selectedRows => this.setState({selectedRows})}
-          rowActions={[
-            { text: 'Buy Product Offer', callback: (row) => this.tableRowClicked(row.id) }
-          ]}
-        />
+        <div class="flex stretched" style={{ padding: '10px 32px' }}>
+          <ProdexGrid
+            tableName="marketplace_grid"
+            loading={loading}
+            columns={columns}
+            rows={rows}
+            rowSelection
+            getNextPage={this.getNextPage}
+            pageSize={PAGE_SIZE}
+            groupBy={['productNumber']}
+            getChildGroups={rows =>
+              _(rows)
+                .groupBy('productName')
+                .map(v => ({
+                  key: `${v[0].productName}_${v[0].productNumber}_${v.length}`,
+                  childRows: v
+                }))
+                .value()
+            }
+            renderGroupLabel={({row: {value}}) => {
+              const [name, number, count] = value.split('_')
+              return (
+                <span>
+                  <span style={{color: '#2599d5'}}>{number}</span>&nbsp;&nbsp; {name} <span className="right">Product offerings: {count}</span>
+                </span>
+              )
+            }}
+            onSelectionChange={selectedRows => this.setState({selectedRows})}
+            rowActions={[
+              { text: 'Buy Product Offer', callback: (row) => this.tableRowClicked(row.id) }
+            ]}
+          />
+        </div>
         <Filter
           chemicalName
           productAgeFilter
