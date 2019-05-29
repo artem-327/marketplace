@@ -12,6 +12,7 @@ function mapStateToProps(store) {
 
       return {
         id: po.id,
+        product: po.product,
         productName: po.product.productName,
         productNumber: po.product.casProduct ? po.product.casProduct.casNumber : 'Unmapped',
         chemicalName: po.product.casProduct ? po.product.casProduct.chemicalName : po.product.productName,
@@ -27,7 +28,8 @@ function mapStateToProps(store) {
             + ' - ' + "$" + po.pricingTiers[0].price.formatMoney(3))
           : po.pricing.price ? ("$" + po.pricing.price.formatMoney(3)) : 'N/A',
         manufacturer: po.manufacturer && po.manufacturer.name ? po.manufacturer.name : 'N/A',
-        broadcasted: po.broadcasted
+        broadcasted: po.broadcasted,
+        status: po.status // new broadcasted
       }
     })
   }

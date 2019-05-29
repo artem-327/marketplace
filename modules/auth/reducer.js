@@ -74,6 +74,23 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.UPDATE_IDENTITY: {
+      let { branches, primaryBranch, ...rest } = action.payload
+      
+      return {
+        ...state,
+        identity: {
+          ...state.identity,
+          branches,
+          primaryBranch,
+          company: {
+            ...state.identity.company,
+            ...rest
+          }
+        }
+      }
+    }
+
     default: {
       return state
     }

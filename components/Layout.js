@@ -4,10 +4,10 @@ import { withRouter } from 'next/router'
 import { Container, Menu, Image, Dropdown } from 'semantic-ui-react'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/inventory.png'
-import ErrorsHandler from '~/src/utils/errorsHandler'
+// import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
 import PopUp from '~/src/components/PopUp'
-import ErrorMessage from './message/ErrorMessage'
+import { Messages } from '~/modules/messages'
 
 const TopMenu = styled(Menu)`
   background-color: #33373e !important;
@@ -23,11 +23,10 @@ const MainContainer = styled(Container)`
   top: 0; right: 0; bottom: 0; left: 0;
 `
 const ContentContainer = styled(Container)`
-  padding: 0 20px;
+  /* padding: 0 20px; */
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  overflow: auto;
 `
 const FlexContainer = styled.div`
   position: fixed;
@@ -71,9 +70,11 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange' }) => 
 
 
     </TopMenu>
-    
+
     <FlexContainer>
-      <ErrorMessage />
+      <Container fluid className='page-wrapper'>
+        <Messages />
+      </Container>
       <ContentContainer fluid className='page-wrapper flex stretched'>
         {children}
       </ContentContainer>
