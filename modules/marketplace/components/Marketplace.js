@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { Container, Menu, Header, Checkbox } from "semantic-ui-react"
 import {FormattedMessage} from 'react-intl'
 import SubMenu from '~/src/components/SubMenu'
+import Filter from '~/src/components/Filter'
 import ProdexGrid from '~/components/table'
 
 const PAGE_SIZE = 50
@@ -29,6 +30,22 @@ export default class Marketplace extends Component {
 
   componentDidMount() {
     this.getNextPage()
+  }
+
+  filterInventory = async (filter) => {
+    let productIds = []
+    if (filter.search) {
+      let foundProducts = await this.props.findProducts(filter.search)
+      foundProducts.value.data.reduce((filteredProducts, product) => {
+        if (product.casProduct.chemicalName === filter.search || product.casProduct.casNumber === filter.search)
+          productIds.push(product.id)
+      }, [])
+
+      if (productIds.length) {
+        filter = {...filter, product: productIds}
+      }
+    }
+    this.props.getBroadcastedProductOffers(filter, PAGE_SIZE)
   }
 
   getNextPage = (pageNumber) => {
@@ -60,6 +77,12 @@ export default class Marketplace extends Component {
                                   defaultMessage='MARKETPLACE' />
               </Header>
             </Menu.Item>
+
+            <Menu.Menu position='right'>
+              <Menu.Item>
+                <SubMenu/>
+              </Menu.Item>
+            </Menu.Menu>
           </Menu>
         </Container>
         <ProdexGrid
@@ -90,6 +113,21 @@ export default class Marketplace extends Component {
             )
           }}*/
           onSelectionChange={selectedRows => this.setState({selectedRows})}
+        />
+        <Filter
+          chemicalName
+          productAgeFilter
+          date
+          assay
+          quantity
+          price
+          package
+          condition
+          productGrade
+          form
+          filterFunc={(filter) => { this.filterInventory({...filter}) }}
+          savingFilters={true}
+          {...this.props}
         />
       </>
     )

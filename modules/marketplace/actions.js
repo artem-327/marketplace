@@ -1,6 +1,13 @@
 import * as AT from './action-types'
 import * as api from './api'
 
+export function findProducts(search) {
+  return {
+    type: AT.MARKETPLACE_FIND_PRODUCTS,
+    payload: api.findProducts(search)
+  }
+}
+
 export function getBroadcastedProductOffers(filters = {}, pageSize = 50, pageNumber = 0) {
   let filtersReady = {
     filters: Object.keys(filters).reduce((filtered, option) => {
