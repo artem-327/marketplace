@@ -109,17 +109,14 @@ class Orders extends Component {
           {...this.props}
         />
         {isFetching ? <Spinner /> :
-          <div id="datatable-wrapper" className="data-table-wr orders">
-            <PerfectScrollbar onScrollY={this.handleScrollY} onScrollX={this.handleScrollX}>
-              <ProdexGrid tableName="orders_grid"
-                columns={columns}
-                rows={this.getRows()}
-                rowActions={[
-                  { text: 'Detail', callback: (row) => router.push(`/orders?type=${ordersType.toLowerCase()}&id=${row.id}`) }
-                ]}
-              />
-            </PerfectScrollbar>
-          </div>
+
+          <ProdexGrid tableName="orders_grid"
+            columns={columns}
+            rows={this.getRows()}
+            rowActions={[
+              { text: 'Detail', callback: (row) => router.push(`/orders?type=${ordersType.toLowerCase()}&id=${row.id}`) }
+            ]}
+          />
         }
       </div>
     )
