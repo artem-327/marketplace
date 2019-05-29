@@ -29,7 +29,7 @@ import location from '~/src/modules/location'
 import errors from "~/src/modules/errors"
 import dataTables from "~/src/modules/dataTables"
 import settings from '~/modules/settings/reducers'
-import admin from '~/src/pages/admin/reducers'
+import admin from '~/modules/admin/reducers'
 
 import { show as saveFilterItem } from '~/src/components/Filter/components/SavedFilters/reducers/SaveFilterItem.reducers'
 import companiesSaga from "~/src/saga/companies"

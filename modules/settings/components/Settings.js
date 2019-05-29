@@ -25,7 +25,7 @@ import { companyDetailsTab } from '../contants'
 import Router from 'next/router'
 
 import { addTab } from '../actions'
-import { updateCompany } from '~/src/pages/admin/actions'
+import { updateCompany } from '~/modules/admin/actions'
 import { validationSchema } from '~/modules/company-form/constants'
 
 // import Toast from '../../../../components/toast'

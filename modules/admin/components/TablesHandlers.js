@@ -5,7 +5,6 @@ import { config } from '../config'
 import { Header, Menu, Button, Input, Dropdown } from 'semantic-ui-react'
 
 import { openPopup, handleFiltersValue } from '../actions'
-import unitedStates from '../../../components/unitedStates'
 
 class TablesHandlers extends Component {
   state = {
