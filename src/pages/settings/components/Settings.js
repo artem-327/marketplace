@@ -22,22 +22,22 @@ import DeliveryAddressesTable from './DeliveryAddressesTable/DeliveryAddressesTa
 import DeliveryAddressesPopup from './DeliveryAddressesTable/DeliveryAddressesPopup'
 import { CompanyForm } from '~/modules/company-form/'
 import { companyDetailsTab } from '../contants'
+import Router from 'next/router'
 
 import { addTab } from '../actions'
 import { updateCompany } from '~/src/pages/admin/actions'
 import { validationSchema } from '~/modules/company-form/constants'
 
-
 // import Toast from '../../../../components/toast'
-
 
 const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
 `
 
-
-
 class Settings extends Component {
+
+  state = { t: 0 }
+
   componentDidMount() {
     let { isCompanyAdmin, addTab } = this.props
     if (isCompanyAdmin) addTab(companyDetailsTab)
@@ -77,51 +77,54 @@ class Settings extends Component {
   }
 
   renderContent = () => {
-    let { currentTab, isOpenPopup, isOpenImportPopup } = this.props
+    let { action, actionId, currentTab, isOpenPopup, isOpenImportPopup } = this.props
+
     const tables = {
-      Users: <UsersTable />,
-      Branches: <WarehouseTable />,
-      Warehouses: <WarehouseTable />,
-      'Product catalog': <ProductCatalogTable />,
-      'Bank accounts': <BankAccountsTable />,
-      'Credit cards': <CreditCardsTable />,
-      'Delivery addresses': <DeliveryAddressesTable />,
-      'Company Details': this.companyDetails()
+      'users': <UsersTable />,
+      'branches': <WarehouseTable />,
+      'warehouses': <WarehouseTable />,
+      'products': <ProductCatalogTable />,
+      'bank-accounts': <BankAccountsTable />,
+      'credit-cards': <CreditCardsTable />,
+      'delivery-addresses': <DeliveryAddressesTable />,
+      'company-details': this.companyDetails()
     }
 
     const popupForm = {
-      Users: <EditUsersPopup />,
-      Branches: <EditWarehousePopup />,
-      Warehouses: <EditWarehousePopup />,
-      'Product catalog': <EditProductPopup />,
-      'Bank accounts': <BankAccountsPopup />,
-      'Credit cards': <CreditCardsPopup />,
-      'Delivery addresses': <DeliveryAddressesPopup />
+      'users': <EditUsersPopup />,
+      'branches': <EditWarehousePopup />,
+      'warehouses': <EditWarehousePopup />,
+      'products': <EditProductPopup />,
+      'bank-accounts': <BankAccountsPopup />,
+      'credit-cards': <CreditCardsPopup />,
+      'delivery-addresses': <DeliveryAddressesPopup />
     }
 
     const importForm = {
-      'Product catalog': <ProductImportPopup />
+      products: <ProductImportPopup />
     }
 
     return (
       <>
-        {isOpenPopup && popupForm[currentTab.name]}
-        {isOpenImportPopup && importForm[currentTab.name]}
-        {tables[currentTab.name] || <p>This page is still under construction</p>}
+        {isOpenPopup && popupForm[currentTab.type]}
+        {isOpenImportPopup && importForm[currentTab.type]}
+        {tables[currentTab.type] || <p>This page is still under construction</p>}
       </>
     )
   }
 
   render() {
+    const {currentTab} = this.props
+    
     return (
       <Container fluid className="flex stretched">
-        <TablesHandlers />
+        <TablesHandlers currentTab={currentTab} />
         <Grid columns="equal" className="flex stretched">
           <Grid.Row>
             <Grid.Column width={3}>
-              <Tabs isCompanyAdmin={this.props.isCompanyAdmin} />
+              <Tabs currentTab={currentTab} isCompanyAdmin={this.props.isCompanyAdmin} />
             </Grid.Column>
-            <Grid.Column className="flex stretched" style={{ marginTop: '7px' }}>
+            <Grid.Column className="flex stretched" style={{ marginTop: '7px' }} t={this.state.t}>
               {this.renderContent()}
             </Grid.Column>
           </Grid.Row>
@@ -131,11 +134,15 @@ class Settings extends Component {
   }
 }
 
-const mapStateToProps = ({ settings, auth }) => ({
-  ...settings,
-  isCompanyAdmin: auth.identity ? auth.identity.isCompanyAdmin : false,
-  company: auth.identity ? auth.identity.company : null
-})
+const mapStateToProps = ({ settings, auth }) => {
+  Router && Router.router && console.log('Router:', Router.router.query)
+  return {
+    ...settings,
+    isCompanyAdmin: auth.identity ? auth.identity.isCompanyAdmin : false,
+    company: auth.identity ? auth.identity.company : null,
+    currentTab: Router && Router.router ? settings.tabsNames.find(tab => tab.type === Router.router.query.type) || settings.tabsNames[0] : settings.tabsNames[0]
+  }
+}
 
 export default connect(
   mapStateToProps,

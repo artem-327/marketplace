@@ -6,22 +6,33 @@ import { Provider } from 'react-redux'
 import { IntlProvider, FormattedNumber } from 'react-intl'
 import EN from '../localization/en.json'
 import NProgress from 'nprogress'
-import Router from 'next/router'
+import Router, {withRouter} from 'next/router'
 
 import '~/semantic/dist/semantic.css'
 import '~/styles/base.scss'
 import 'nprogress/nprogress.css'
+import shortid from 'shortid'
 
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
 Router.events.on('routeChangeError', () => NProgress.done())
 
 class ProdexApp extends App {
+
+  state = {
+    key: shortid.generate()
+  }
+
+  componentDidMount() {
+    Router.events.on('routeChangeComplete', () => this.setState({key: shortid.generate()}))
+  }
+
+
   render() {
     const { Component, pageProps, store } = this.props
 
     return (
-      <Container>
+      <Container key={this.state.key}>
         <IntlProvider locale="en" messages={EN}>
           <Provider store={store}>
             <Component {...pageProps} />
@@ -36,4 +47,4 @@ FormattedNumber.defaultProps = {
   minimumFractionDigits: 3
 }
 
-export default withRedux(makeStore)(ProdexApp)
+export default withRouter(withRedux(makeStore)(ProdexApp))

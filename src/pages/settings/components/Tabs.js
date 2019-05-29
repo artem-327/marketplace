@@ -1,24 +1,22 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
-
-import { handleActiveTab } from '../actions'
-
-import {Menu} from 'semantic-ui-react'
+import Router, { withRouter } from 'next/router'
+import Link from 'next/link'
+import { Menu } from 'semantic-ui-react'
 
 function Tabs(props) {
-  const { tabsNames, handleActiveTab, currentTab } = props
-  
-  return (					
+  const { tabsNames, currentTab, router } = props
+
+  return (
     <Menu pointing secondary vertical fluid>
-      {tabsNames.map((tab,i) => (
-        <Menu.Item 
-          name={tab.name.toUpperCase()}
-          key={tab.id}
-          onClick={() => handleActiveTab(tab)}
-          active={currentTab.name === tab.name}
-        />
-      ))}      
+      {tabsNames.map((tab, i) => (
+        <Link href={`/settings?type=${tab.type}`} key={i}>
+          <Menu.Item
+            name={tab.name.toUpperCase()}
+            active={currentTab.type === tab.type}
+          />
+        </Link>
+      ))}
     </Menu>
   )
 }
@@ -27,14 +25,13 @@ function Tabs(props) {
 const mapStateToProps = state => {
   return {
     tabsNames: state.settings.tabsNames,
-    currentTab: state.settings.currentTab,
     editPopupBoolean: state.settings.editPopupBoolean,
-    addNewWarehousePopup: state.settings.addNewWarehousePopup
+    addNewWarehousePopup: state.settings.addNewWarehousePopup,
   }
 }
 
-const mapDispatchToProps = {   
-  handleActiveTab
+const mapDispatchToProps = {
+
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Tabs)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Tabs))

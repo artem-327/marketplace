@@ -7,7 +7,7 @@ import {withToastManager} from 'react-toast-notifications'
 function mapStateToProps(store) {
     return {
         ...store.simpleAdd,
-        edit: (Router.router && Router.router.query.type === 'edit' ? Router.router.query.id : false)
+        edit: (Router.router && Router.router.query.id || false)
     }
 }
 

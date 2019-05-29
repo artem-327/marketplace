@@ -5,6 +5,7 @@ import { Header, Menu, Button, Checkbox, Input, Dropdown } from 'semantic-ui-rea
 
 import { openPopup, handleFiltersValue, openImportPopup, handleProductCatalogUnmappedValue } from '../actions'
 import unitedStates from '../../../components/unitedStates'
+import Router from "next/router"
 
 const textsTable = {
   Users: {

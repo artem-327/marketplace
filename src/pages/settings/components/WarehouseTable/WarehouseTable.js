@@ -10,6 +10,7 @@ import {
   deleteConfirmation,
   handleOpenConfirmPopup
 } from '../../actions'
+import Router from "next/router"
 
 class WarehouseTable extends Component {
   state = {
@@ -137,9 +138,9 @@ const mapStateToProps = state => {
     addNewWarehousePopup: state.settings.addNewWarehousePopup,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
-    deleteRowById: state.settings.deleteRowById,
-    currentTab: state.settings.currentTab,
-    loading: state.settings.loading
+    currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+      deleteRowById: state.settings.deleteRowById,
+      loading: state.settings.loading
   }
 }
 

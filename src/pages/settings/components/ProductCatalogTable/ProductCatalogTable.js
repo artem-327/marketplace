@@ -9,6 +9,7 @@ import {
   closeConfirmPopup,
   deleteConfirmation
 } from '../../actions'
+import Router from "next/router";
 
 class ProductCatalogTable extends Component {
   state = {
@@ -25,6 +26,20 @@ class ProductCatalogTable extends Component {
 
   componentDidMount() {
     this.props.getProductsCatalogRequest({body: this.props.productsFilter, unmapped: this.props.productCatalogUnmappedValue})
+  }
+
+  componentDidUpdate() {
+    const {action, actionId, currentTab, loaded, openPopup, rows} = this.props
+
+    if (action === 'edit' && actionId && loaded) {
+      if (currentTab.type === 'products') {
+        const editRow = rows.find(function(product) {
+          return product.id === parseInt(actionId)
+        })
+
+        openPopup(editRow)
+      }
+    }
   }
 
   render() {
@@ -83,18 +98,25 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     rows: state.settings.productsCatalogRows,
-    currentTab: state.settings.currentTab,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
     productsFilter: state.settings.productsFilter,
     loading: state.settings.loading,
-    reloadFilter: {props: {
+      loaded: state.settings.loaded,
+      action: Router && Router.router ? Router.router.query.action : false,
+      actionId: Router && Router.router ? Router.router.query.id : false,
+      currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0]
+
+      reloadFilter: {props: {
         currentTab: state.settings.currentTab,
         productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
         productsFilter: state.settings.productsFilter},
       value: state.settings.filterValue},
-    productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue
+    productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
+
+
+
   }
 }
 
