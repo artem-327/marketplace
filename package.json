@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/core": "^7.3.4",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@devexpress/dx-grid-core": "1.11.0",
     "@devexpress/dx-react-core": "^1.11.0",
     "@devexpress/dx-react-grid": "^1.11.0",
@@ -36,7 +37,7 @@
     "less-loader": "^4.1.0",
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
-    "next": "^8.1.1-canary.39",
+    "next": "^8.1.0",
     "next-redux-wrapper": "^2.0.0",
     "next-routes": "^1.4.2",
     "next.js": "^1.0.3",
