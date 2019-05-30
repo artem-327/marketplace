@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Container, Menu, Header, Checkbox, Icon } from "semantic-ui-react"
+import { Container, Menu, Header, Checkbox, Icon, Popup } from "semantic-ui-react"
 import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage } from 'react-intl'
 import Router from 'next/router'
@@ -25,7 +25,7 @@ export default class MyInventory extends Component {
       { name: 'broadcast', title: 'Broadcast', width: 120 }
     ],
     selectedRows: [],
-    pageNumber: 0,
+    pageNumber: 0
   }
 
   componentDidMount() {
@@ -55,18 +55,45 @@ export default class MyInventory extends Component {
   getRows = () => {
     const { rows } = this.props
 
-    return rows.map(r => ({
-      ...r,
-      broadcast: (
-        <div style={{ float: 'right' }}>
-          {r.status !== 'Unmapped' ? (
-            <Checkbox toggle checked={r.status === 'Broadcasting'} disabled={r.status === 'Incomplete'} onChange={() => alert('Changed:' + r.productName)} />
-          ) : (
-              <Icon name='unlink' title='Product not mapped, click to map it.' onClick={() => Router.push({ pathname: '/settings/', query: { type: 'products', action: 'edit', id: r.product.id } })} />
+    let title = ''
+
+    return rows.map(r => {
+      switch (r.status) {
+        case 'Broadcasting':
+          title = 'Broadcasting now, switch off to stop broadcasting.'
+          break
+        case 'Not broadcasting':
+          title = 'Not Broadcasting now, switch on to start broadcasting.'
+          break
+        case 'Incomplete':
+          title = 'Incomplete, please enter all required values first.'
+          break
+        case 'Unmapped':
+          title = 'Unmapped, please make sure related Product is mapped first.'
+          break
+        default:
+          title = ''
+      }
+
+      return {
+        ...r,
+        broadcast: (
+          <div style={{ float: 'right' }}>
+            {r.status !== 'Unmapped' ? (
+              <Popup id={r.id}
+                     trigger={<Checkbox toggle defaultChecked={r.status === 'Broadcasting'} disabled={r.status === 'Incomplete'} onChange={(e, data) => this.props.patchBroadcast(data.checked, r.id)} />}
+                     content={title}
+              />
+            ) : (
+              <Popup id={r.id}
+                     trigger={<Icon name='unlink' title='Product not mapped, click to map it.' onClick={() => Router.push({ pathname: '/settings/', query: { type: 'products', action: 'edit', id: r.product.id } })} title={title} />}
+                     content={title}
+              />
             )}
-        </div>
-      )
-    }))
+          </div>
+        )
+      }
+    })
   }
 
   render() {

@@ -194,7 +194,9 @@ export default function reducer(state = initialState, action) {
           return {
             ...state,
             loading: false,
-            myProductOffers: [
+            myProductOffers: pageNumber === 0 ? [
+              ...data
+            ] : [
               ...state.myProductOffers,
               ...(pageNumber > state.myProductOffersPageLoaded ? data : [])
             ],
@@ -295,6 +297,22 @@ export default function reducer(state = initialState, action) {
             ...state,
             searchedProducts: action.payload.data,
             searchedProductsLoading: false
+          }
+        }
+
+        case AT.INVENTORY_PATCH_BROADCAST_FULFILLED: {
+          return {
+            ...state,
+            myProductOffers: state.myProductOffers.map(po => {
+              if (po.id === action.payload.productOfferId) {
+                return {
+                  ...po,
+                  status: action.payload.broadcasted ? 'Broadcasting' : 'Not broadcasting'
+                }
+              } else {
+                return po
+              }
+            })
           }
         }
 

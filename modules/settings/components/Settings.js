@@ -126,7 +126,7 @@ class Settings extends Component {
             <Grid.Column width={3}>
               <Tabs currentTab={currentTab} isCompanyAdmin={this.props.isCompanyAdmin} />
             </Grid.Column>
-            <Grid.Column className="flex stretched" style={{ marginTop: '7px' }} t={this.state.t}>
+            <Grid.Column className="flex stretched" style={{ marginTop: '10px' }} t={this.state.t}>
               {this.renderContent()}
             </Grid.Column>
           </Grid.Row>

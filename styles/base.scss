@@ -15,6 +15,7 @@ body {
   &.row { flex-direction: row; }
   &.stretched {
     flex: 1 auto;
+    min-height: 0px;
   }
 
   &.stretched-all {
@@ -559,6 +560,11 @@ table.order-total.ui[class*="very basic"]:not(.sortable):not(.striped) {
   height: 14px;
   border: 1px solid #979797;
   background-color: #e7e7e7;
+}
+
+.ui.toggle.checkbox input:focus ~ .box:before,
+.ui.toggle.checkbox input:focus ~ label:before {
+  border: 1px solid #979797;
 }
 
 .ui.toggle.checkbox input:checked ~ .box:after,
