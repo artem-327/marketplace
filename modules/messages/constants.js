@@ -7,6 +7,7 @@ export const MessageContainer = styled(Container)`
   > .message {
     margin-top: 0.5em !important;
     margin-bottom: 0.5em !important;
+    font-size: 14px !important;
     &:last-child {
       margin-bottom: 0em !important;
     }
