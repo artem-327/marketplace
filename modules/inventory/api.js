@@ -62,6 +62,10 @@ export function loadFile(attachment) {
   }).then(r => new File([r.data], attachment.name, {type: attachment.type}))
 }
 
+export function patchBroadcast(broadcasted, productOfferId) {
+  return api.patch(`/prodex/api/product-offers/${productOfferId}/broadcast?broadcasted=${!!broadcasted}`)
+}
+
 export function removeAttachment(aId) {
   return api.delete('/prodex/api/attachments/'+aId)
 }

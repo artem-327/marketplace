@@ -342,6 +342,20 @@ export function loadFile(attachment) {
   }
 }
 
+export function patchBroadcast(broadcasted, productOfferId) {
+  return {
+    type: AT.INVENTORY_PATCH_BROADCAST,
+    async payload() {
+      const response = await api.patchBroadcast(broadcasted, productOfferId)
+
+      return {
+        broadcasted: response.status === 200 ? broadcasted : !broadcasted,
+        productOfferId
+      }
+    }
+  }
+}
+
 export function removeAttachmentLink(isLot, itemId, aId) {
   return {
     type: AT.INVENTORY_REMOVE_ATTACHMENT_LINK,
