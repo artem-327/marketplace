@@ -89,8 +89,9 @@ class Orders extends Component {
               columns={columns}
               rows={this.getRows()}
               rowActions={[
-                { text: 'Detail', callback: (row) => router.push(`/orders?type=${ordersType.toLowerCase()}&id=${row.id}`) }
+                { text: 'Detail', callback: (row) => router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`) }
               ]}
+              onRowClick={(row) => router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`)}
             />
           }
         </Container>
