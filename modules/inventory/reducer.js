@@ -194,7 +194,9 @@ export default function reducer(state = initialState, action) {
           return {
             ...state,
             loading: false,
-            myProductOffers: [
+            myProductOffers: pageNumber === 0 ? [
+              ...data
+            ] : [
               ...state.myProductOffers,
               ...(pageNumber > state.myProductOffersPageLoaded ? data : [])
             ],

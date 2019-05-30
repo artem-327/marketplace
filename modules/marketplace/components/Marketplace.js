@@ -1,6 +1,7 @@
 import React, { Component } from "react"
-import { Container, Menu, Header, Checkbox } from "semantic-ui-react"
+import { Container, Menu, Header, Button } from "semantic-ui-react"
 import {FormattedMessage} from 'react-intl'
+import {ShippingQuotes} from '~/modules/shipping'
 import SubMenu from '~/src/components/SubMenu'
 import Filter from '~/src/components/Filter'
 import ProdexGrid from '~/components/table'
@@ -29,6 +30,7 @@ export default class Marketplace extends Component {
     ],
     selectedRows: [],
     pageNumber: 0,
+    open: false
   }
 
   componentDidMount() {
@@ -83,6 +85,17 @@ export default class Marketplace extends Component {
     return (
       <>
         <Container fluid style={{ padding: '0 32px' }}>
+
+          <ShippingQuotes
+            modalProps={{
+              open: this.state.open,
+              closeModal: () => this.setState({ open: false })
+            }}
+            selectedRows={selectedRows}
+            removePopup={this.props.removePopup}
+            {...this.props}
+          />
+
           <Menu secondary>
             <Menu.Item header>
               <Header as='h1' size='medium'>
@@ -94,6 +107,12 @@ export default class Marketplace extends Component {
             </Menu.Item>
 
             <Menu.Menu position='right'>
+              {selectedRows.length === 0 ? null :
+                <Button primary onClick={() => this.setState({ open: true })}>
+                  <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote' />
+                </Button>
+
+              }
               <Menu.Item>
                 <SubMenu/>
               </Menu.Item>
