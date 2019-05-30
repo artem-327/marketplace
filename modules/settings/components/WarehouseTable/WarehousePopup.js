@@ -12,28 +12,28 @@ import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 const formValidation = Yup.object().shape({
-  name: Yup.string()
+  name: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
-  contactName: Yup.string()
+  contactName: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
-  phone: Yup.string()
+  phone: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
-  city: Yup.string()
+  city: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
-  address: Yup.string()
+  address: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
-  email: Yup.string()
+  email: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
-  zip: Yup.string()
+  zip: Yup.string().trim()
     .min(1, 'Too short')
     .required('Required'),
-  country: Yup.string()
+  country: Yup.string().trim()
     .min(1, 'Too short')
     .required('Required')
 })

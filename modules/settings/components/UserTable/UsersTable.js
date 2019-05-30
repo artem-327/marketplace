@@ -17,7 +17,7 @@ import {
 class UsersTable extends Component {
   state = {
     columns: [
-      { name: "userName", title: "User" },
+      { name: "name", title: "User" },
       { name: "title", title: "Job Title" },
       { name: "email", title: "E-mail" },
       { name: "phone", title: "Phone" },

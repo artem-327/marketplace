@@ -18,13 +18,13 @@ import * as Yup from 'yup'
 import './styles.scss'
 
 const formValidation = Yup.object().shape({
-  productName: Yup.string()
+  productName: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
-  productNumber: Yup.string()
+  productNumber: Yup.string().trim()
     .min(1, 'Too short')
     .required('Required'),
-  packagingSize: Yup.string()
+  packagingSize: Yup.string().trim().trim()
     .min(1, 'Too short')
     .required('Required'),
   nmfcNumber: Yup.number().typeError('must be number').test("digit5", "There has to be 5 digit numbers.", val => {

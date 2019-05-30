@@ -1,6 +1,21 @@
 import * as AT from "./action-types"
 import api from "./api"
 
+const removeEmpty = (obj) =>
+  Object.entries(obj).forEach(([key, val]) => {
+    if (val && typeof val === 'object') {
+      removeEmpty(val)
+      if (Object.entries(val).length === 0) delete obj[key]
+    }
+    else {
+      if (val == null) delete obj[key]
+      else if (typeof val === 'string') {
+        if (val.trim() === '') delete obj[key]
+        else obj[key] = val.trim()
+      }
+    }
+  })
+
 export function openPopup(rows = null) {
   return {
     type: AT.OPEN_POPUP,
@@ -52,6 +67,8 @@ export function handlerSubmitUserEditPopup(payload, id) {
       homeBranchId: payload.homeBranchId,
       //preferredCurrency: payload.preferredCurrency
     }
+    removeEmpty(updateUser)
+    console.log('!!!!!!!!!! new user x', updateUser);
     await dispatch({
       type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
       payload: api.patchUser(id, updateUser)
@@ -444,9 +461,12 @@ export function postNewUserRequest(payload) {
       email: payload.email,
       name: payload.name,
       homeBranch: payload.homeBranchId,
-      password: "123"
+      password: payload.password,
+      jobTitle: payload.title,
+      phone: payload.phone,
     }
-    console.log('!!!!!!!!!! new user x')
+    removeEmpty(dataBody)
+    console.log('!!!!!!!!!! new user x', dataBody);
     await dispatch({
       type: AT.POST_NEW_USER_REQUEST,
       payload: api.postNewUser(dataBody)
