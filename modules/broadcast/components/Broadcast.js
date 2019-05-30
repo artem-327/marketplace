@@ -3,7 +3,7 @@ import pt from 'prop-types'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import * as Actions from '../actions'
-import { Modal, Segment, Grid, Icon, Button, Form, Input, Radio, Dropdown, Dimmer, Loader, Checkbox, Message, Menu } from 'semantic-ui-react'
+import { Modal, Grid, Icon, Button, Form, Input, Dropdown, Dimmer, Loader, Message, Menu } from 'semantic-ui-react'
 import TreeModel from 'tree-model'
 import { Rule } from './Broadcast.style'
 import RuleItem from './RuleItem'
@@ -252,6 +252,7 @@ class Broadcast extends Component {
           </Grid>
         </Modal.Content>
         <Modal.Actions>
+          <Button onClick={() => closeBroadcast()}>Cancel</Button>
           <Button primary onClick={() => saveRules(id, treeData.model)}>Save</Button>
         </Modal.Actions>
       </Modal>
