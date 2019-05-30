@@ -86,8 +86,10 @@ export default class Marketplace extends Component {
           <Menu secondary>
             <Menu.Item header>
               <Header as='h1' size='medium'>
-                <FormattedMessage id='allInventory.marketplace'
-                                  defaultMessage='MARKETPLACE' />
+                <FormattedMessage 
+                  id='allInventory.marketplace'
+                  defaultMessage='MARKETPLACE' 
+                />
               </Header>
             </Menu.Item>
 
@@ -126,6 +128,7 @@ export default class Marketplace extends Component {
               )
             }}
             onSelectionChange={selectedRows => this.setState({selectedRows})}
+            onRowClick={(row) => this.tableRowClicked(row.id)}
             rowActions={[
               { text: 'Buy Product Offer', callback: (row) => this.tableRowClicked(row.id) }
             ]}

@@ -121,7 +121,6 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentTab: state.settings.currentTab,
     productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
     productsFilter: state.settings.productsFilter,

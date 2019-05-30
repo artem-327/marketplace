@@ -9,7 +9,7 @@ import GroupCell from './GroupCell'
 
 import {
   Template, TemplateConnector
-} from '@devexpress/dx-react-core';
+} from '@devexpress/dx-react-core'
 
 import {
   SearchState,
@@ -101,15 +101,11 @@ const SortLabel = ({ onSort, children, direction }) => (
 
 const Row = ({ tableRow, selected, onToggle, onClick, ...restProps }) => {
   const rowAction = (row) => {
-    console.log('ROW ACTION', tableRow.row.id)
-
-    onClick(tableRow.row)
+    onClick && onClick(tableRow.row)
   }
   return (
     <Table.Row
       {...restProps}
-      className={selected ? 'table-info' : ''}
-      style={{ color: 'green' }}
       onClick={rowAction}
     />
   )
@@ -139,7 +135,8 @@ export default class _Table extends Component {
     renderGroupLabel: pt.func,
     getChildGroups: pt.func,
     tableName: pt.string,
-    getNextPage: pt.func
+    getNextPage: pt.func,
+    onRowClick: pt.func
   }
 
   static defaultProps = {
@@ -292,7 +289,7 @@ export default class _Table extends Component {
       columns,
       filterValue,
       columnReordering,
-      rowClick,
+      onRowClick,
       rowSelection,
       selectByRowClick,
       showSelectAll,
@@ -370,13 +367,17 @@ export default class _Table extends Component {
             <IntegratedFiltering />
 
             {virtual
-              ? <VirtualTable columnExtensions={this.getColumnsExtension()} height="auto" cellComponent={TableCells} />
+              ? <VirtualTable 
+                  columnExtensions={this.getColumnsExtension()} 
+                  height="auto" 
+                  cellComponent={TableCells} 
+                  rowComponent={props => <Row onClick={onRowClick} {...props} />}
+                />
               : <Table columnExtensions={this.getColumnsExtension()} />}
 
             <TableColumnResizing
               onColumnWidthsChange={widths => this.handleColumnsSettings({ widths })}
               columnWidths={columnsSettings.widths}
-            // defaultColumnWidths={this.getColumnsExtension()} 
             />
 
             {showHeader &&
@@ -401,9 +402,6 @@ export default class _Table extends Component {
               />
             )}
 
-            {rowClick && (
-              <Table rowComponent={Row} />
-            )}
             {rowSelection && (
               <TableSelection
                 showSelectAll={showSelectAll}
@@ -435,25 +433,6 @@ export default class _Table extends Component {
                 </tr>
               )}
             />}
-
-            {rowClick && (
-              <Template
-                name="tableRow"
-                predicate={({ tableRow }) => tableRow.type === Table.ROW_TYPE}>
-                {params => (
-                  <TemplateConnector>
-                    {({ selection }, { toggleSelection }) => (
-                      <Row
-                        {...params}
-                        selected={selection.findIndex((i) => i === params.tableRow.rowId) > -1}
-                        onToggle={() => toggleSelection({ rowIds: [params.tableRow.rowId] })}
-                        onClick={(row) => this.rowAction(row)}
-                      />
-                    )}
-                  </TemplateConnector>
-                )}
-              </Template>
-            )}
 
           </Grid>
         </div>

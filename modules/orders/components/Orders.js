@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import Spinner from "~/src/components/Spinner/Spinner"
 import Filter from '~/src/components/Filter'
 import SubMenu from '~/src/components/SubMenu'
-import { Menu, Header, Container } from 'semantic-ui-react'
+import { Menu, Header, Container, Icon } from 'semantic-ui-react'
 import ProdexGrid from '~/components/table'
 import { actions } from 'react-redux-form'
 
@@ -40,9 +40,9 @@ class Orders extends Component {
     return this.props.rows.map(row => {
       return {
         ...row,
-        bl: <i className="list unknown"></i>, // unknown / positive / negative
-        sds: <i className="list unknown"></i>,
-        cofA: <i className="list unknown"></i>
+        bl: <Icon name="file" />, // unknown / positive / negative
+        sds: <Icon name="file" />,
+        cofA: <Icon name="file" />
       }
     })
   }
