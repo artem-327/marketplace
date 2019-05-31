@@ -1,22 +1,23 @@
 import * as AT from './action-types'
 
 export const initialState = {
-    fileIds: [],
-    listConditions: [],
-    listForms: [],
-    listGrades: [],
-    lotFiles: [],
-    poCreated: false,
-    searchedManufacturers: [],
-    searchedManufacturersLoading: false,
-    searchedOrigins: [],
-    searchedOriginsLoading: false,
-    myProductOffers: [],
-    myProductOffersPageLoaded: -1,
-    searchedProducts: [],
-    searchedProductsLoading: false,
-    warehousesList: [],
-    loading: false,
+  fileIds: [],
+  listDocumentTypes: [],
+  listConditions: [],
+  listForms: [],
+  listGrades: [],
+  lotFiles: [],
+  poCreated: false,
+  searchedManufacturers: [],
+  searchedManufacturersLoading: false,
+  searchedOrigins: [],
+  searchedOriginsLoading: false,
+  myProductOffers: [],
+  myProductOffersPageLoaded: -1,
+  searchedProducts: [],
+  searchedProductsLoading: false,
+  warehousesList: [],
+  loading: false,
 }
 
 export default function reducer(state = initialState, action) {
@@ -216,6 +217,19 @@ export default function reducer(state = initialState, action) {
             myProductOffers: state.myProductOffers.filter(p => p.id !== action.payload)
           }
         }
+
+      case AT.INVENTORY_GET_DOCUMENT_TYPES_FULFILLED: {
+        return {
+          ...state,
+          listDocumentTypes: action.payload.data.map((docType) => {
+            return {
+              key: docType.id,
+              text: docType.name,
+              value: docType.id
+            }
+          })
+        }
+      }
 
         case AT.INVENTORY_GET_WAREHOUSES_FULFILLED: {
           return {

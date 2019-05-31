@@ -414,6 +414,7 @@ class AddInventoryForm extends Component {
 
   render() {
     const {
+      listDocumentTypes,
       listConditions,
       listForms,
       listGrades,
@@ -589,15 +590,15 @@ class AddInventoryForm extends Component {
 
                               <Header as="h3">Is there any order minimum requirement?</Header>
                               <FormGroup>
-                                <Radio label="No" value={false} name="minimumRequirement" />
+                                <Radio label="No" value={false} name="minimumRequirement" inputProps={{ onClick: () => setFieldValue('minimum', 1) }} />
                                 <Radio label="Yes" value={true} name="minimumRequirement" />
                               </FormGroup>
                               <FormGroup>
                                 <FormField width={5}>
-                                  <Input label="Minimum OQ" name="minimum" inputProps={{ type: 'number', disabled: !values.minimumRequirement }} />
+                                  <Input label="Minimum OQ" name="minimum" inputProps={{ type: 'number', onChange: (e, data) => data.value > 1 ? setFieldValue('minimumRequirement', true) : void(0) }} />
                                 </FormField>
                                 <FormField width={5}>
-                                  <Input label="Splits" name="splits" inputProps={{ type: 'number', disabled: !values.minimumRequirement }} />
+                                  <Input label="Splits" name="splits" inputProps={{ type: 'number' }} />
                                 </FormField>
                               </FormGroup>
 
@@ -632,7 +633,7 @@ class AddInventoryForm extends Component {
                               <UploadLot {...this.props}
                                          attachments={values.attachments}
                                          name='attachments'
-                                         type='Spec Sheet'
+                                         type={2}
                                          fileMaxSize={20}
                                          onChange={(files) => setFieldValue(
                                            `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
@@ -828,7 +829,7 @@ class AddInventoryForm extends Component {
                                           <UploadLot {...this.props}
                                                      attachments={values.lots[index].attachments}
                                                      name={`lots[${index}].attachments`}
-                                                     type='Lot Attachment'
+                                                     type={1}
                                                      lot={true}
                                                      filesLimit={1}
                                                      fileMaxSize={20}
@@ -865,8 +866,14 @@ class AddInventoryForm extends Component {
                               </FormField>
                               <FormField>
                                 <label>Track Sub-Costs</label>
-                                <Radio label="Yes" value={true} name="trackSubCosts" />
-                                <Radio label="No" value={false} name="trackSubCosts" />
+                                <FormGroup>
+                                  <FormField width={5}>
+                                    <Radio label="Yes" value={true} name="trackSubCosts" />
+                                  </FormField>
+                                  <FormField width={5}>
+                                    <Radio label="No" value={false} name="trackSubCosts" />
+                                  </FormField>
+                                </FormGroup>
                               </FormField>
                             </GridColumn>
                             <GridColumn width={12}>
@@ -921,7 +928,7 @@ class AddInventoryForm extends Component {
                                               <UploadLot {...this.props}
                                                          attachments={values.costs[index].attachments}
                                                          name={`costs[${index}].attachments`}
-                                                         type='Cost Attachment'
+                                                         type={3}
                                                          lot={false}
                                                          filesLimit={1}
                                                          fileMaxSize={20}
@@ -1001,19 +1008,7 @@ class AddInventoryForm extends Component {
                               <FormField width={16}>
                                 <Dropdown
                                   name={`additionalType`}
-                                  options={[{
-                                      key: 0,
-                                      text: 'Select Type',
-                                      value: 'Unspecified'
-                                    }, {
-                                      key: 1,
-                                      text: 'B/L',
-                                      value: 'B/L'
-                                    }, {
-                                      key: 1,
-                                      text: 'SDS',
-                                      value: 'SDS'
-                                  }]}
+                                  options={listDocumentTypes}
                                 />
                               </FormField>
                             </GridColumn>

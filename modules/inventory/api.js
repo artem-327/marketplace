@@ -20,6 +20,10 @@ export function findProducts(search) {
   return api.get(`/prodex/api/products/search?search=${search}`)
 }
 
+export function getDocumentTypes() {
+  return api.get(`/prodex/api/document-types/`)
+}
+
 export function getProductConditions() {
   return api.get(`/prodex/api/product-conditions/`)
 }
@@ -80,7 +84,7 @@ export async function searchManufacturers(text) {
 }
 
 export async function searchOrigins(text) {
-  const response = await api.get(`/prodex/api/countries/search?search=${text}`)
+  const response = await api.get(`/prodex/api/countries/search?pattern=${text}`)
   return response
 }
 
