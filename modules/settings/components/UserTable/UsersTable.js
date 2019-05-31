@@ -59,10 +59,7 @@ class UsersTable extends Component {
         <ProdexGrid
           filterValue={filterValue}
           columns={columns}
-          rows={rows.map(r => ({
-            ...r,
-            allUserRoles: <TablePopUp row={r} />
-          }))}
+          rows={rows}
           loading={loading}
           style={{ marginTop: "5px" }}
           rowActions={[
@@ -86,8 +83,14 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = state => {
+  console.log('!!!!!!!!!! state.settings.usersRows', state.settings.usersRows);
   return {
-    rows: state.settings.usersRows,
+    rows: state.settings.usersRows.map(r => ({
+      ...r,
+      allUserRoles: r.allUserRoles.map(rol => (
+        rol.name
+      )).join(", "),
+    })),
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
