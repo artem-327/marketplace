@@ -103,7 +103,6 @@ export function getPricing(offerDetail, quantity) {
     let tiers = offerDetail.pricingTiers.length > 0 ? offerDetail.pricingTiers : offerDetail.pricing.price
 
     if (tiers instanceof Array) {
-
       let sortedTiers = tiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
 
       for (let i = sortedTiers.length - 1; i >= 0; i--) {
@@ -117,9 +116,11 @@ export function getPricing(offerDetail, quantity) {
           }
         }
       }
+
+      return  { quantityFrom: offerDetail.minimum, price: offerDetail.price.amount }
     }
 
-    return { quantityFrom: 0, price: tiers }
+    return { quantityFrom: offerDetail.minimum, price: tiers }
   }
 }
 

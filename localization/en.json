@@ -329,5 +329,8 @@
   "validation.invalidString": "Invalid value",
   "validation.minLength": "Field should have at least {min} characters",
   "validation.zipCode": "Enter zip code",
-  "validation.enterPhoneNumber": "Enter phone number"
+  "validation.enterPhoneNumber": "Enter phone number",
+  "validation.minimum": "Minimum is {min}",
+  "validation.maximum": "Maximum is {max}",
+  "validation.multiplyOfSplit": "Must be multiply of split ({split})"
 }
