@@ -156,7 +156,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         primaryBranchProvinces: payload.map(d => ({
           text: d.name,
-          value: d.id,
+          value: { id: d.id, name: d.name, abbreviation: d.abbreviation || '' },
           key: d.id
         }))
       }
@@ -167,7 +167,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         mailingBranchProvinces: payload.map(d => ({
           text: d.name,
-          value: d.id,
+          value: { id: d.id, name: d.name, abbreviation: d.abbreviation || '' },
           key: d.id
         }))
       }

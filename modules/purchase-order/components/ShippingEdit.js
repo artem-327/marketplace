@@ -7,6 +7,7 @@ import { bool, func, object } from 'prop-types'
 import * as Yup from 'yup'
 import styled from 'styled-components'
 
+import { provinceObjectRequired } from '~/constants/yupValidation'
 import { PHONE_REGEXP } from '../../../src/utils/constants'
 
 const BottomMargedGrid = styled(Grid)`
@@ -34,7 +35,8 @@ class ShippingEdit extends Component {
   state = {
     stateId: null,
     hasProvinces: false,
-    selectedProvince: null
+    selectedProvince: null,
+    provinceValidation: Yup.mixed().notRequired()
   }
 
   validationSchema = (opts = {}) => {
@@ -61,9 +63,7 @@ class ShippingEdit extends Component {
           city: Yup.string(invalidString).required(requiredMessage),
           country: Yup.string(invalidString).required(requiredMessage),
           streetAddress: Yup.string(invalidString).required(requiredMessage),
-          province: Yup.lazy(() => this.state.hasProvinces ?
-            Yup.string(invalidString).required(requiredMessage) :
-            Yup.mixed().notRequired())
+          province: this.state.provinceValidation
         })
       })
     )
@@ -75,14 +75,14 @@ class ShippingEdit extends Component {
     if (selectedAddress) {
       let { id, hasProvinces } = selectedAddress.address.country
 
-      this.handleStateChange({ id, hasProvinces })
+      this.handleStateChange({ id, hasProvinces, provinceValidation: provinceObjectRequired(hasProvinces) })
     }
   }
 
 
   handleStateChange = ({ id, hasProvinces, selectedProvince = null }) => {
     if (this.state.stateId !== id) {
-      this.setState({ stateId: id, hasProvinces, selectedProvince })
+      this.setState({ stateId: id, hasProvinces, selectedProvince, provinceValidation: provinceObjectRequired(hasProvinces) })
 
       if (hasProvinces) {
         this.props.getProvinces(id)
@@ -131,7 +131,8 @@ class ShippingEdit extends Component {
                 this.handleStateChange(value)
                 setFieldValue('address.province', '')
               },
-              error: !!(errors.address && errors.address.country)
+              error: !!(errors.address && errors.address.country),
+              search: true
             }}
             options={states.map((state) => ({
               text: state.name,
@@ -149,7 +150,8 @@ class ShippingEdit extends Component {
               disabled: !this.state.hasProvinces,
               onChange: (e, { value }) => this.setState({ selectedProvince: value }),
               loading: provincesAreFetching,
-              error: !!(this.state.hasProvinces && errors.address && errors.address.province)
+              error: !!(this.state.hasProvinces && errors.address && errors.address.province),
+              search: true
             }}
             options={provinces.map((province) => ({
               text: province.name,
