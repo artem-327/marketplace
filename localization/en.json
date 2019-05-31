@@ -327,5 +327,7 @@
   "validation.invalidEmail": "Invalid e-mail address",
   "validation.phoneNumber": "Enter valid phone number",
   "validation.invalidString": "Invalid value",
-  "validation.minLength": "Field should have at least {min} characters"
+  "validation.minLength": "Field should have at least {min} characters",
+  "validation.zipCode": "Enter zip code",
+  "validation.enterPhoneNumber": "Enter phone number"
 }

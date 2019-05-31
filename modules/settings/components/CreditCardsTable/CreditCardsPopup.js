@@ -12,7 +12,7 @@ import { Form, Input, Button } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
 const formValidation = Yup.object().shape({
-  cardNumber: Yup.string()
+  cardNumber: Yup.string().trim()
     .min(16, 'Too short')
     .required('Required')
 })
