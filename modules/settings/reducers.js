@@ -196,22 +196,24 @@ export default function reducer(state = initialState, action) {
     case AT.GET_USERS_DATA_FULFILLED: {
       const usersRows = action.payload.map(user => {
         return {
-          checkbox: " ",
-          userName: user.name,
-          title: "title",
+          //checkbox: " ",
+          name: user.name,
+          title: user.jobTitle || '',
           email: user.email,
-          phone: user.homeBranch.contactPhone,
+          //phone: user.homeBranch.contactPhone || '',
+          phone: user.phone || '',
           homeBranchId: user.homeBranch.id,
-          preferredCurrency: user.preferredCurrency
+          /*preferredCurrency: user.preferredCurrency
             ? user.preferredCurrency.code
               ? user.preferredCurrency.code
               : null
             : null,
+            */
+          preferredCurrency: (user.preferredCurrency || {}).code || 0,
           homeBranch: user.homeBranch.name,
-          permissions: user.roles ? user.roles.name : "",
-          middleName: user.middlename,
+          permissions: user.roles ? user.roles.name : "", // ! ! array?
           id: user.id,
-          allUserRoles: user.roles
+          allUserRoles: user.roles || []
         }
       })
       return {

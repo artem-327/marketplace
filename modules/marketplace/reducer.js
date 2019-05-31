@@ -34,7 +34,9 @@ export default function reducer(state = initialState, action) {
           return {
             ...state,
             loading: false,
-            broadcastedProductOffers: [
+            broadcastedProductOffers: pageNumber === 0 ? [
+              ...data
+            ] : [
               ...state.broadcastedProductOffers,
               ...(pageNumber > state.broadcastedProductOffersPageLoaded ? data : [])
             ],
