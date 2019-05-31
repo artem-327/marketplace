@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button, TextArea } from 'formik-semantic-ui'
 import { FormattedMessage } from 'react-intl'
-import { Modal, Icon, Segment, Dimmer, Loader, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab } from 'semantic-ui-react'
+import { Modal, Icon, Segment, Dimmer, Loader, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab, Popup } from 'semantic-ui-react'
 import styled from 'styled-components'
 import * as val from 'yup'
 import { DateInput } from '~/components/custom-formik'
@@ -293,7 +293,7 @@ class AddInventoryForm extends Component {
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingGroup ? values.product.packagingGroup.groupCode : ''}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}>Hazaardous Class</GridColumn>
-                  <GridColumn computer={8} mobile={16}><Label.Group color='blue'>{values.product && values.product.hazardClasses ? values.product.hazardClasses.map(hClass => { return (<Label title={hClass.description}>{hClass.classCode}</Label>) }) : ''}</Label.Group></GridColumn>
+                  <GridColumn computer={8} mobile={16}><Label.Group color='blue'>{values.product && values.product.hazardClasses ? values.product.hazardClasses.map(hClass => { return (<Popup content={hClass.description} trigger={<Label>{hClass.classCode}</Label>} />) }) : ''}</Label.Group></GridColumn>
 
                   <GridColumn computer={8} mobile={16}>Stackable</GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? values.product.stackable : ''}</GridColumn>
@@ -795,12 +795,12 @@ class AddInventoryForm extends Component {
                                 <Table attached='bottom' className='table-fields'>
                                   <Table.Header>
                                     <Table.Row>
-                                      <TableHeaderCell title='What is the lot number?'>Lot #</TableHeaderCell>
-                                      <TableHeaderCell title='How many packages in this lot?'>Total</TableHeaderCell>
+                                      <Popup content={'What is the lot number?'} trigger={<TableHeaderCell>Lot #</TableHeaderCell>} />
+                                      <Popup content={'How many packages in this lot?'} trigger={<TableHeaderCell>Total</TableHeaderCell>} />
                                       <TableHeaderCell>Available</TableHeaderCell>
                                       <TableHeaderCell>Allocated</TableHeaderCell>
-                                      <TableHeaderCell title='What is the MFG?'>MFG Date</TableHeaderCell>
-                                      <TableHeaderCell title='What is the expiration?'>Expiration Date</TableHeaderCell>
+                                      <Popup content={'What is the MFG?'} trigger={<TableHeaderCell>MFG Date</TableHeaderCell>} />
+                                      <Popup content={'What is the expiration?'} trigger={<TableHeaderCell>Expiration Date</TableHeaderCell>} />
                                       <TableHeaderCell>C of A</TableHeaderCell>
                                       <TableHeaderCell>&nbsp;</TableHeaderCell>
                                     </Table.Row>
