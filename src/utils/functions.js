@@ -117,7 +117,7 @@ export function getPricing(offerDetail, quantity) {
         }
       }
 
-      return  { quantityFrom: offerDetail.minimum, price: offerDetail.price.amount }
+      return { quantityFrom: offerDetail.minimum, price: offerDetail.price.amount }
     }
 
     return { quantityFrom: offerDetail.minimum, price: tiers }
@@ -132,4 +132,16 @@ export function getLocationString(productOffer) {
   }
 
   return `${location.city}, ${location.province ? `${location.province.abbreviation},` : ''} ${location.country.name}`
+}
+
+export function addFirstTier(productOffer) {
+  let { pricingTiers, minimum, price } = productOffer
+
+  let sortedTiers = pricingTiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
+
+  if (minimum < sortedTiers[0].quantityFrom)
+    return { ...productOffer, pricingTiers: [{ quantityFrom: minimum, price: price.amount }].concat(sortedTiers) }
+
+  return productOffer
+
 }
