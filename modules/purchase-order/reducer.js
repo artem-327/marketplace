@@ -1,6 +1,6 @@
 import * as AT from "./action-types"
 
-import { getLocationString, getPricing } from "~/src/utils/functions"
+import { getLocationString, getPricing, addFirstTier } from "~/src/utils/functions"
 
 
 
@@ -164,7 +164,7 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
-        offerDetail: payload.productOffer,
+        offerDetail: addFirstTier(payload.productOffer),
         sidebar: { ...state.sidebar, quantity: !payload.isEdit ? payload.productOffer.minimum : state.sidebar.quantity },
         offerDetailIsFetching: false
       }
@@ -186,6 +186,7 @@ export default function reducer(state = initialState, action) {
         cartItems.forEach(item => {
           item.locationStr = getLocationString(item.productOffer)
           item.pricing = getPricing(item.productOffer, item.quantity)
+          item.productOffer = addFirstTier(item.productOffer)
         })
       }
 

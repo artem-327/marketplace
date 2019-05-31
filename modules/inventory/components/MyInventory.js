@@ -86,7 +86,7 @@ export default class MyInventory extends Component {
               />
             ) : (
               <Popup id={r.id}
-                     trigger={<Icon name='unlink' title='Product not mapped, click to map it.' onClick={() => Router.push({ pathname: '/settings/', query: { type: 'products', action: 'edit', id: r.product.id } })} title={title} />}
+                     trigger={<Icon name='unlink' onClick={() => Router.push({ pathname: '/settings/', query: { type: 'products', action: 'edit', id: r.product.id } })} />}
                      content={title}
               />
             )}

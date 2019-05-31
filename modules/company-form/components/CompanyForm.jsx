@@ -18,14 +18,14 @@ class CompanyForm extends Component {
       <>
         <FormGroup widths='equal'>
           <Input label={<FormattedMessage id='company.legalCompanyName' defaultMessage='Legal Company Name' />} name='name' />
+          <Input label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='phone' />
         </FormGroup>
         <FormGroup widths='equal'>
-          <Input label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='phone' />
           <Input label={<FormattedMessage id='global.websiteUrl' defaultMessage='Website URL' />} name='website' />
+          <Input label={<FormattedMessage id='company.dba' defaultMessage='Doing Business As' />} name='dba' />
         </FormGroup>
 
         <FormGroup widths='equal'>
-          <Input label={<FormattedMessage id='company.dba' defaultMessage='Doing Business As' />} name='dba' />
           <Dropdown
             options={data.map((type) => ({
               text: type.name,
@@ -37,24 +37,25 @@ class CompanyForm extends Component {
             }}
             label={<FormattedMessage id='company.businessType' defaultMessage='Business Type' />}
             name='businessType.id' />
-        </FormGroup>
-
-        <FormGroup widths='equal'>
           <Input label={
             <Popup
               content={<FormattedMessage id='company.tooltip.orEin' defaultMessage='or Employer Identification Number' />}
               trigger={<label><FormattedMessage id='company.tin' defaultMessage='Tax Identification Number' /></label>} />
           }
             name='tin' />
-            
+
+        </FormGroup>
+
+        <FormGroup widths='equal'>
           <Input label={
             <Popup
-              content={<FormattedMessage id='company.tooltip.notRequiredIfSame' defaultMessage='blabla' />}
+              content={<FormattedMessage id='company.tooltip.notRequiredIfSame' defaultMessage='Not required unless different from TIN' />}
               trigger={<label><FormattedMessage id='company.cin' defaultMessage='Company Identification Number' /></label>} />
           }
             name='cin' />
           <Input label={<FormattedMessage id='company.duns' defaultMessage='DUNS Number' />} name='dunsNumber' />
         </FormGroup>
+
 
         <FormGroup widths='equal'>
           <Checkbox label={formatMessage({ id: 'global.nacdNumber', defaultMessage: 'NACD Number' })} name='nacdMember' />
