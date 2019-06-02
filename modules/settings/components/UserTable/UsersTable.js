@@ -13,6 +13,7 @@ import {
   deleteConfirmation,
   openRolesPopup
 } from "../../actions"
+import Router from "next/router"
 
 class UsersTable extends Component {
   state = {
@@ -94,7 +95,7 @@ const mapStateToProps = state => {
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
-    currentTab: state.settings.currentTab,
+    currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
     loading: state.settings.loading,
     roles: state.settings.roles
   }

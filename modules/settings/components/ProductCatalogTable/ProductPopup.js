@@ -16,6 +16,7 @@ import {
 import { Form, Input, Button, Dropdown, TextArea, Checkbox } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 import './styles.scss'
+import Router from "next/router"
 
 const formValidation = Yup.object().shape({
   productName: Yup.string().trim()
@@ -307,7 +308,7 @@ const mapStateToProps = state => {
     searchedCasProducts: state.settings.searchedCasProducts,
     searchedUnNumbers: state.settings.searchedUnNumbers,
     reloadFilter: {props: {
-        currentTab: state.settings.currentTab,
+        currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
         productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
         productsFilter: state.settings.productsFilter},
       value: state.settings.filterValue},
