@@ -177,6 +177,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   console.warn(state.settings)
+  console.log('!!!!!!!!!! state.settings.roles', state.settings.roles);
+  console.log('!!!!!!!!!! state.settings.popupValues', state.settings.popupValues);
   return {
     popupValues: state.settings.popupValues,
     branchesAll: state.settings.branchesAll,
