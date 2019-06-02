@@ -104,7 +104,7 @@ export default function reducer(state = initialState, action) {
           let {data} = action.payload
 
           let filteredAttachments = data.attachments.reduce(function(filtered, att) {
-            if (att.type === 'Spec Sheet') {
+            if (att.documentType.id === 2) {
               var returnedAtt = {id: att.id, name: att.name, linked: true}
               filtered.push(returnedAtt)
             }
@@ -112,7 +112,7 @@ export default function reducer(state = initialState, action) {
           }, [])
 
           let filteredAdditional = data.attachments.reduce(function(filtered, att) {
-            if (att.type !== 'Spec Sheet') {
+            if (att.documentType.id !== 2) {
               var returnedAtt = {id: att.id, name: att.name, linked: true}
               filtered.push(returnedAtt)
             }
