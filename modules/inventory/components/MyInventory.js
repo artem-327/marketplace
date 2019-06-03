@@ -164,6 +164,7 @@ export default class MyInventory extends Component {
               { text: 'Custom broadcast', callback: (row) => { openBroadcast(row.id) } },
               { text: 'Delete listing', callback: (row) => { this.props.deleteProductOffer(row.id) } }
             ]}
+            onRowClick={(row) => Router.push({ pathname: '/inventory/edit', query: { id: row.id }})}
           />
         </div>
         <Broadcast />
