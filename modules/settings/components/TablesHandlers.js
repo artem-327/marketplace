@@ -18,6 +18,7 @@ const textsTable = {
   },
   'products': {
     BtnAddText: 'Product',
+    BtnImportText: 'Products',
     SearchText: 'Search product catalog by name, number ...'
   },
   'global-broadcast': {
@@ -33,7 +34,7 @@ const textsTable = {
     SearchText: 'Search bank account ...'
   },
   'delivery-addresses': {
-    BtnAddText: 'Delivery address',
+    BtnAddText: 'Delivery Address',
     SearchText: 'Search delivery address ...'
   }
 }
@@ -108,7 +109,7 @@ class TablesHandlers extends Component {
                 primary
                 onClick={() => openImportPopup()}
               >
-                Import {textsTable[currentTab.type].BtnAddText}
+                Import {textsTable[currentTab.type].BtnImportText}
               </Button>
             )}
           </Menu.Item>

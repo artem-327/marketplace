@@ -10,6 +10,7 @@ import {
 } from '../../actions'
 import { Form, Input, Button } from 'formik-semantic-ui'
 import * as Yup from 'yup'
+import Router from "next/router"
 
 const formValidation = Yup.object().shape({
   cardNumber: Yup.string().trim()
@@ -83,7 +84,7 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues,
-    currentTab: state.settings.currentTab
+    currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
   }
 }
 

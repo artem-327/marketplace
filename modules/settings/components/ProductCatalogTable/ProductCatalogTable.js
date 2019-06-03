@@ -108,7 +108,7 @@ const mapStateToProps = state => {
     actionId: Router && Router.router ? Router.router.query.id : false,
     currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
     reloadFilter: {props: {
-      currentTab: state.settings.currentTab,
+      currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
       productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
       productsFilter: state.settings.productsFilter},
     value: state.settings.filterValue},
