@@ -4,6 +4,7 @@ import Spinner from "~/src/components/Spinner/Spinner"
 import Filter from '~/src/components/Filter'
 import SubMenu from '~/src/components/SubMenu'
 import { Menu, Header, Container, Icon } from 'semantic-ui-react'
+import styled from "styled-components"
 import ProdexGrid from '~/components/table'
 import { actions } from 'react-redux-form'
 
@@ -40,9 +41,9 @@ class Orders extends Component {
     return this.props.rows.map(row => {
       return {
         ...row,
-        bl: <Icon name="file" />, // unknown / positive / negative
-        sds: <Icon name="file" />,
-        cofA: <Icon name="file" />
+        bl: <Icon name="file" className='unknown' />, // unknown / positive / negative
+        sds: <Icon name="file" className='unknown' />,
+        cofA: <Icon name="file" className='unknown' />
       }
     })
   }

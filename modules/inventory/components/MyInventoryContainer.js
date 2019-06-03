@@ -7,6 +7,7 @@ import { openBroadcast } from '~/modules/broadcast/actions'
 function mapStateToProps(store) {
   return {
     loading: store.simpleAdd.loading,
+    searchedProducts: store.simpleAdd.searchedProducts,
     rows: store.simpleAdd.myProductOffers.map(po => {
       const qtyPart = `${po.product.packagingUnit ? po.product.packagingUnit.nameAbbreviation : ''}`
 

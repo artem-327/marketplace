@@ -435,7 +435,10 @@ export function searchProducts(text) {
         data: response.data ? response.data.map(p => ({
           text: p.casProduct ? p.casProduct.casIndexName : p.productName + ' (Unmapped)',
           value: p,
-          key: p.casProduct ? p.casProduct.id : ''
+          key: p.casProduct ? p.casProduct.id : '',
+          id: p ? p.id : '',
+          name: p.productName + (p.productCode ? ' (' + p.productCode + ')' : ''),
+          casName: p.casProduct ? p.casProduct.casIndexName + ' (' + p.casProduct.casNumber + ')' : ''
         })) : []
       }
     }
