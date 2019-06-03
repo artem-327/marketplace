@@ -89,7 +89,7 @@ export async function searchOrigins(text) {
 }
 
 export async function searchProducts(text) {
-  const response = await api.get(`/prodex/api/products/search?search=${text}`)
+  const response = await api.get(`/prodex/api/products/search?search=${text}&onlyMapped=false`)
   return response
 }
 

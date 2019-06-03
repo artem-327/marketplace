@@ -182,6 +182,13 @@ export default class MyInventory extends Component {
           filterFunc={(filter) => { this.filterInventory({ ...filter }) }}
           savingFilters={true}
           {...this.props}
+          searchedProducts={this.props.searchedProducts.map(prod => {
+            return {
+              key: prod.key,
+              id: prod.id,
+              name: <Header content={prod.name} subheader={prod.casName} style={{margin: 0, fontSize: '1em'}} />
+            }
+          })}
         />
       </>
     )

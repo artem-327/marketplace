@@ -294,6 +294,7 @@ export default function reducer(state = initialState, action) {
         case AT.INVENTORY_SEARCH_PRODUCTS_PENDING: {
           return {
             ...state,
+            searchedProducts: [],
             searchedProductsLoading: true
           }
         }
