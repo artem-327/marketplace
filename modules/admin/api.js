@@ -99,7 +99,6 @@ export const getProvinces = (id) => api.get(`/prodex/api/provinces/search?countr
 
 export async function getCompanies(params) {
   const { data } = await api.post(`/prodex/api/companies/datagrid`, {
-    filters: [],
     ...params
   })
   return data
