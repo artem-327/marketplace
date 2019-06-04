@@ -243,6 +243,9 @@ export default function reducer(state = initialState, action) {
         city: warehouse.address.city,
         countryName: warehouse.address.country.name,
         countryId: warehouse.address.country.id,
+        hasProvinces: warehouse.address.country.hasProvinces,
+        provinceName: warehouse.address.province ? warehouse.address.province.name : '',
+        provinceId: warehouse.address.province ? warehouse.address.province.id : '',
         zip: warehouse.address.zip.zip,
         zipID: warehouse.address.zip.id,
         contactName: warehouse.contactName,
@@ -265,7 +268,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         warehousesRows: warehousesRows,
-        country: action.payload.newCountryFormat
+        country: action.payload.newCountryFormat,
+        countries: action.payload.country
       }
     }
 
@@ -282,6 +286,9 @@ export default function reducer(state = initialState, action) {
           city: branch.address.city,
           countryName: branch.address.country.name,
           countryId: branch.address.country.id,
+          hasProvinces: branch.address.country.hasProvinces,
+          provinceName: branch.address.province ? branch.address.province.name : '',
+          provinceId: branch.address.province ? branch.address.province.id : '',
           zip: branch.address.zip.zip,
           zipID: branch.address.zip.id,
           contactName: branch.contactName,
@@ -304,7 +311,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         branchesRows: branchesRows,
-        country: action.payload.newCountryFormat
+        country: action.payload.newCountryFormat,
+        countries: action.payload.country
       }
     }
 
@@ -407,7 +415,9 @@ export default function reducer(state = initialState, action) {
           unitID: product.packagingUnit ? product.packagingUnit.id : null,
           freightClass: product.freightClass ? product.freightClass : null,
           hazardous: product.hazardous,
-          hazardClass: product.hazardClasses && product.hazardClasses.length ? product.hazardClasses[0].id : null,
+          hazardClass: product.hazardClasses && product.hazardClasses.length ? product.hazardClasses.map(d => (
+              d.id
+            )) : null,
           nmfcNumber: product.nmfcNumber ? product.nmfcNumber : null,
           stackable: product.stackable,
           unNumber: product.unNumber ? product.unNumber : null

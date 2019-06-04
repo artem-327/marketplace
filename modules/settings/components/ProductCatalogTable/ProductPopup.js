@@ -19,20 +19,28 @@ import './styles.scss'
 import Router from "next/router"
 
 const formValidation = Yup.object().shape({
-  productName: Yup.string().trim()
+  /*productName: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
   productNumber: Yup.string().trim()
     .min(1, 'Too short')
     .required('Required'),
-  packagingSize: Yup.string().trim().trim()
-    .min(1, 'Too short')
-    .required('Required'),
+  */
+  packagingSize: Yup.number()
+    .typeError('must be number')
+    .required(),
+  unitID: Yup.number()
+    .typeError('Required')
+    .required(),
+  packageID: Yup.number()
+    .typeError('Required')
+    .required(),
   nmfcNumber: Yup.number().typeError('must be number').test("digit5", "There has to be 5 digit numbers.", val => {
-    return !val || val.toString().length === 5
+    return !val || val.toString().length === 5    // ! ! nejak divne to funguje
   }),
-  hazardClass: Yup.number(),
-  packagingGroup: Yup.number()
+
+  //hazardClass: Yup.number(),
+  //packagingGroup: Yup.number()
 })
 
 class ProductPopup extends React.Component {
@@ -46,7 +54,8 @@ class ProductPopup extends React.Component {
       this.props.handleSubmitProductEditPopup({
         ...values,
         casProduct: this.state.value ? this.state.value : popupValues.casProduct,
-        unNumber: this.state.unNumber ? this.state.unNumber.id : popupValues.unNumber.id,
+        unNumber: this.state.unNumber ? this.state.unNumber.id :
+            popupValues.unNumber ? popupValues.unNumber.id : null,
       }, popupValues.id, reloadFilter)
     } else {
       this.props.handleSubmitProductAddPopup({
@@ -71,7 +80,7 @@ class ProductPopup extends React.Component {
       isUnLoading: false,
       results: [],
       value: (popupValues && popupValues.casProduct) || '',
-      unNumber: ''
+      unNumber: null
     })
   }
 
@@ -126,7 +135,7 @@ class ProductPopup extends React.Component {
       casProduct = '',
       description = '',
       freightClass = '',
-      hazardClass = '',
+      hazardClass = [],
       hazardous = false,
       nmfcNumber = '',
       productName = '',
@@ -252,6 +261,12 @@ class ProductPopup extends React.Component {
               <Dropdown label='Hazard Class'
                         name='hazardClass'
                         options={hazardClasses}
+                        inputProps={{
+                          multiple: true,
+                          selection: true,
+                          search: true,
+                          clearable: true
+                        }}
               />
               <Dropdown label='Packaging Group'
                         name='packagingGroup'

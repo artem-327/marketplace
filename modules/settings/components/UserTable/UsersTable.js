@@ -84,7 +84,6 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = state => {
-  console.log('!!!!!!!!!! state.settings.usersRows', state.settings.usersRows);
   return {
     rows: state.settings.usersRows.map(r => ({
       ...r,

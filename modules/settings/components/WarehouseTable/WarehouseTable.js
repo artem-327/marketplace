@@ -58,7 +58,7 @@ class WarehouseTable extends Component {
       return rowsWarehouses
     }
     else if (currentTab.type === 'branches') {
-      return rowsBranches.filter(branch => branch.warehouse == false)
+      return rowsBranches.filter(branch => branch.warehouse === false)
     }
   }
 

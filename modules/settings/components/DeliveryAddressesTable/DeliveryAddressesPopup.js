@@ -28,7 +28,7 @@ const initialFormValues = {
   }
 }
 
-const formValidation = Yup.object().shape({
+const formValidation = hasProvinces => Yup.object().shape({
   firstName: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
@@ -45,7 +45,8 @@ const formValidation = Yup.object().shape({
     city: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Enter at least 2 characters'),
     streetAddress: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Enter at least 2 characters'),
     zip: Yup.string().trim().required('Enter zip code'),
-    country: Yup.number().required()
+    country: Yup.number().required(),
+    province: hasProvinces && Yup.number('').required('Province is required')
   })
 })
 
@@ -91,7 +92,7 @@ class DeliveryAddressesPopup extends React.Component {
           <Form
             enableReinitialize
             initialValues={popupValues ? popupValues : initialFormValues}
-            validationSchema={formValidation}
+            validationSchema={formValidation(hasProvinces)}
             onReset={closePopup}
             onSubmit={async (values, actions) => {
               if (values.address.province === '') delete values.address['province']
@@ -123,7 +124,7 @@ class DeliveryAddressesPopup extends React.Component {
                             inputProps={{search: true, onChange:  (e, d) => {
                                 setFieldValue('address.province', ''); this.handleCountry(e, d)}}} />
                   <Dropdown label="Province" name="address.province" options={provincesDropDown}
-                            inputProps={{search: true, disabled: !this.state.hasProvinces, clearable: true}} />
+                            inputProps={{search: true, disabled: !this.state.hasProvinces}} />
                 </FormGroup>
                 <div style={{ textAlign: 'right' }}>
                   <Button.Reset>Cancel</Button.Reset>
