@@ -19,13 +19,12 @@ import './styles.scss'
 import Router from "next/router"
 
 const formValidation = Yup.object().shape({
-  /*productName: Yup.string().trim()
+  productName: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
   productNumber: Yup.string().trim()
     .min(1, 'Too short')
     .required('Required'),
-  */
   packagingSize: Yup.number()
     .typeError('must be number')
     .required(),
