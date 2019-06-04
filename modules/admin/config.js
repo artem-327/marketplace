@@ -5,12 +5,12 @@ export const config = {
     searchText: 'Search cas product by name or number ...',
     display: {
       columns: [
-        { name: 'casIndexName', title: 'Index Name' },
-        { name: 'casNumber', title: 'CAS Number' },
-        { name: 'chemicalName', title: 'Chemical Name' },
-        { name: 'unNumberCode', title: 'UN Number' },
-        { name: 'packagingGroup', title: 'Packaging Group' },
-        { name: 'hazardClasses', title: 'Hazard Classes' },
+        { name: 'casIndexName', title: 'Index Name', width: 375 },
+        { name: 'casNumber', title: 'CAS Number', width: 150 },
+        { name: 'chemicalName', title: 'Chemical Name', width: 375 },
+        { name: 'unNumberCode', title: 'UN Number', width: 150 },
+        { name: 'packagingGroup', title: 'Packaging Group', width: 150 },
+        { name: 'hazardClasses', title: 'Hazard Classes', width: 150 },
       ],
     },
   },

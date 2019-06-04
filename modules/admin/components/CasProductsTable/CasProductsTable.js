@@ -18,10 +18,24 @@ const PAGE_SIZE = 50
 class CasProductsTable extends Component {
 
   getNextPage = (pageNumber) => {
-    const {getCasProductByFilter, casListDataRequest} = this.props
+    const {getCasProductByFilter, casListDataRequest, filterCasIds} = this.props
+
+    let filter = {}
+    if (filterCasIds && filterCasIds.length) {
+      filter = {
+        filters: [{
+          operator: "EQUALS",
+          path: "CasProduct.id",
+          values: filterCasIds.map(casId => {
+            return casId
+          })
+        }]
+      }
+    }
 
     getCasProductByFilter({
       ...casListDataRequest,
+      ...filter,
       pageNumber
     })
   }
@@ -62,7 +76,6 @@ class CasProductsTable extends Component {
             onConfirm={() => casDeleteItem(deleteRowById, reloadFilter)}
         />
         <ProdexTable
-          //filterValue={filterValue}
           loading={loading}
           columns={columns}
           pageSize={PAGE_SIZE}
@@ -100,6 +113,7 @@ const mapStateToProps = state => {
   let cfg = state.admin.config[state.admin.currentTab]
   return {
     config: cfg,
+    filterCasIds: state.admin.filterCasIds,
     filterValue: state.admin.filterValue,
     currentTab: state.admin.currentTab,
     casListDataRequest: state.admin.casListDataRequest,
