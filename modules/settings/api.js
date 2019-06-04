@@ -2,7 +2,7 @@ import api from '~/api'
 
 export default {
   getUsers: () => api.get('/prodex/api/users').then(response => response.data),
-  getRoles: () => api.get('/prodex/api/roles').then(response => response.data),
+  getRoles: () => api.get('/prodex/api/roles?includeSuperAdmin=true').then(response => response.data),
   getCurrentUser: () =>
     api.get('/prodex/api/users/me').then(response => response.data),
   getWarehouses: () =>

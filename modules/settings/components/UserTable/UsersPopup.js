@@ -84,7 +84,8 @@ class UsersPopup extends React.Component {
       branchesAll,
       userEditRoles,
       closeRolesPopup,
-      roles
+      roles,
+      userRoles
     } = this.props
 
     const {
@@ -128,7 +129,11 @@ class UsersPopup extends React.Component {
             {userEditRoles ? (
               roles.map((role, i) => (
                 <FormGroup key={i}>
-                  <Checkbox label={role.name} name={`checkBoxId_${role.id}`} />
+                  <Checkbox
+                      label={role.name}
+                      name={`checkBoxId_${role.id}`}
+                      inputProps={{defaultChecked: userRoles.includes(role.id)}}
+                  />
                 </FormGroup>
               ))
             ) : (
@@ -177,10 +182,11 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   console.warn(state.settings)
-  console.log('!!!!!!!!!! state.settings.roles', state.settings.roles);
-  console.log('!!!!!!!!!! state.settings.popupValues', state.settings.popupValues);
   return {
     popupValues: state.settings.popupValues,
+    userRoles: state.settings.popupValues.allUserRoles.map(r => (
+        r.id
+    )),
     branchesAll: state.settings.branchesAll,
     roles: state.settings.roles,
     userEditRoles: state.settings.userEditRoles

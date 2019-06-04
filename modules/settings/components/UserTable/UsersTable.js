@@ -23,7 +23,7 @@ class UsersTable extends Component {
       { name: "email", title: "E-mail" },
       { name: "phone", title: "Phone" },
       { name: "homeBranch", title: "Home Branch" },
-      { name: "allUserRoles", title: "Roles", width: 200 }
+      { name: "userRoles", title: "Roles", width: 200 }
     ]
   }
 
@@ -88,7 +88,7 @@ const mapStateToProps = state => {
   return {
     rows: state.settings.usersRows.map(r => ({
       ...r,
-      allUserRoles: r.allUserRoles.map(rol => (
+      userRoles: r.allUserRoles.map(rol => (
         rol.name
       )).join(", "),
     })),
