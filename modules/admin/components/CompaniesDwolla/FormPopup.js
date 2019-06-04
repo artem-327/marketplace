@@ -148,7 +148,6 @@ class AddNewPopupCasProducts extends React.Component {
 
             closeRegisterDwollaAccount()
             postDwollaAccount(values)
-
             actions.setSubmitting(false)
         }}
         onReset={closeRegisterDwollaAccount}

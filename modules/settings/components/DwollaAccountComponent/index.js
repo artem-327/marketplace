@@ -79,8 +79,6 @@ const formValidation = Yup.object().shape({
 class BankAccountsPopup extends React.Component {
     state = {
       hasProvinces: this.props.hasProvinces,
-        // primaryBranchHasProvinces: false,
-        // mailingBranchHasProvinces: false,
       accordionActive: {
           controllerAddress: false
       }
@@ -138,7 +136,6 @@ class BankAccountsPopup extends React.Component {
               values.beneficialOwner.status = 'status'
               values.beneficialOwner.id = '50'
 
-              console.log("values, actions", values, actions)    
               closeDwollaPopup()
               postDwollaAccount(values)
 
