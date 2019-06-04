@@ -10,6 +10,7 @@ import {
   FormField,
   Message,
   Icon,
+  Popup
 } from 'semantic-ui-react'
 import { FieldArray } from 'formik'
 
@@ -147,16 +148,29 @@ class EditAltNamesCasProductsPopup extends React.Component {
                             <Table.Row key={index}>
                               <TableCell width={1}><Icon name='trash alternate outline' size='large'
                                                          onClick={() => this.handleDeleteName(popupValues.data.id, arrayHelpers, val, index)} /></TableCell>
-                              <TableCell width={1}><Icon name='save outline' size='large'
-                                                         onClick={() => {if (val.canSave === true) {
-                                                           this.handleSaveName(popupValues.data.id, val, index)
-                                                           setFieldValue(`casAlternativeNames[${index}].color`, 'grey')
-                                                           setFieldValue(`casAlternativeNames[${index}].description`, '')
-                                                           setFieldValue(`casAlternativeNames[${index}].canSave`, false)
-                                                         }}}
-                                                         color={val.color}
-                                                         title={val.description}
-                              /></TableCell>
+                              <TableCell width={1}>{val.description ? (
+                                <Popup content={val.description}
+                                       trigger={<Icon name='save outline'
+                                                      size='large'
+                                                      onClick={() => {if (val.canSave === true) {
+                                                        this.handleSaveName(popupValues.data.id, val, index)
+                                                        setFieldValue(`casAlternativeNames[${index}].color`, 'grey')
+                                                        setFieldValue(`casAlternativeNames[${index}].description`, '')
+                                                        setFieldValue(`casAlternativeNames[${index}].canSave`, false)
+                                                      }}}
+                                                      color={val.color} />}
+                                />
+                              ) : (
+                                <Icon name='save outline'
+                                      size='large'
+                                      onClick={() => {if (val.canSave === true) {
+                                        this.handleSaveName(popupValues.data.id, val, index)
+                                        setFieldValue(`casAlternativeNames[${index}].color`, 'grey')
+                                        setFieldValue(`casAlternativeNames[${index}].description`, '')
+                                        setFieldValue(`casAlternativeNames[${index}].canSave`, false)
+                                      }}}
+                                      color={val.color} />
+                              )}</TableCell>
                               <TableCell width={16}>
                                 <FormField>
                                   <Input name={`casAlternativeNames[${index}].alternativeName`}

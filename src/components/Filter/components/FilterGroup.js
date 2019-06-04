@@ -269,7 +269,7 @@ class FilterGroup extends Component {
           className='header'
           onClick={() => this.props.onOpen(!this.state.isOpen)}>
           <div className='dropdown-icon'>
-            <Icon name={isOpen ? 'chevron up' : 'chevron down'} color={isOpen ? 'blue' : 'black'} />
+            <Icon name={isOpen ? 'chevron down' : 'chevron up'} color={isOpen ? 'blue' : 'black'} />
           </div>
           <FormattedMessage
             id={'filter.' + this.props.header}

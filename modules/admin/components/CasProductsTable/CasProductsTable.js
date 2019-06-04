@@ -1,7 +1,6 @@
 import React, {Component} from "react"
 import {connect} from "react-redux"
-import { Confirm } from 'semantic-ui-react'
-import { Label } from 'semantic-ui-react'
+import { Confirm, Popup, Label } from 'semantic-ui-react'
 import ProdexTable from '~/components/table'
 import {
   getCasProductByFilter,
@@ -93,7 +92,7 @@ const mapDispatchToProps = {
 
 const transformHazardClasses = classes => (
   <Label.Group color='blue'>
-    {classes.map((b,i) => <Label size='tiny' key={i} title={b.description}>{b.classCode}</Label>)}
+    {classes.map((b,i) => <Popup content={b.description} trigger={<Label size='tiny' key={i}>{b.classCode}</Label>} />)}
   </Label.Group>
 )
 

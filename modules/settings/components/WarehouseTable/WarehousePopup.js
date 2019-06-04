@@ -10,30 +10,31 @@ import {
 } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
+import Router from "next/router"
 
 const formValidation = Yup.object().shape({
-  name: Yup.string()
+  name: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
-  contactName: Yup.string()
+  contactName: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
-  phone: Yup.string()
+  phone: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
-  city: Yup.string()
+  city: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
-  address: Yup.string()
+  address: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
-  email: Yup.string()
+  email: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
-  zip: Yup.string()
+  zip: Yup.string().trim()
     .min(1, 'Too short')
     .required('Required'),
-  country: Yup.string()
+  country: Yup.string().trim()
     .min(1, 'Too short')
     .required('Required')
 })
@@ -90,7 +91,7 @@ class WarehousePopup extends React.Component {
     const title = popupValues ? 'Edit ' : 'Add'
 
     const name = currentTab.type === 'branches' ? 'Branch Name' : 'Warehouse Name'
-    const modalTitle = currentTab.type === 'branches' ? 'Branch' : 'Warehouses'
+    const modalTitle = currentTab.type === 'branches' ? 'Branch' : 'Warehouse'
 
     return (
       <Modal open centered={false}>
@@ -140,7 +141,7 @@ const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues,
     country: state.settings.country,
-    currentTab: state.settings.currentTab
+    currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
   }
 }
 

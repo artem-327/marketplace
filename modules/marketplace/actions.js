@@ -131,3 +131,21 @@ export function getBroadcastedProductOffers(filters = {}, pageSize = 50, pageNum
     }
   }
 }
+
+export function searchProducts(text) {
+  return {
+    type: AT.MARKETPLACE_SEARCH_PRODUCTS,
+    async payload() {
+      const response = await api.searchProducts(text)
+
+      return {
+        data: response.data ? response.data.map(p => ({
+          key: p.casProduct ? p.casProduct.id : '',
+          id: p ? p.id : '',
+          name: p.productName + (p.productCode ? ' (' + p.productCode + ')' : ''),
+          casName: p.casProduct ? p.casProduct.casIndexName + ' (' + p.casProduct.casNumber + ')' : ''
+        })) : []
+      }
+    }
+  }
+}
