@@ -170,18 +170,6 @@ export default class _Table extends Component {
     }
   }
 
-  handleScroll = ({ target }) => {
-    const { getNextPage } = this.props
-    const { allLoaded, lastPageNumber } = this.state
-
-    if (target.offsetHeight + target.scrollTop === target.scrollHeight) {
-      if (!allLoaded) {
-        this.setState({ lastPageNumber: lastPageNumber + 1 })
-        getNextPage(lastPageNumber + 1)
-      }
-    }
-  }
-
   componentWillReceiveProps(nextProps) {
     if (nextProps.rows.length < this.props.pageSize * this.state.lastPageNumber) {
       this.setState({ allLoaded: true })
@@ -200,6 +188,18 @@ export default class _Table extends Component {
     prevProps.loading != this.props.loading && prevProps.loading && this.props.groupBy.length > 0 && this.expandGroups()
   }
 
+  handleScroll = ({ target }) => {
+    const { getNextPage } = this.props
+    const { allLoaded, lastPageNumber } = this.state
+
+    if (target.offsetHeight + target.scrollTop === target.scrollHeight) {
+      if (!allLoaded) {
+        this.setState({ lastPageNumber: lastPageNumber + 1 })
+        getNextPage(lastPageNumber + 1)
+      }
+    }
+  }
+
   expandGroups = () => {
     const { groupBy, getChildGroups, rows } = this.props
 
@@ -214,6 +214,15 @@ export default class _Table extends Component {
     this.setState({ expandedGroups })
   }
 
+  handleSelectionChange = (selection) => {
+    const { onSelectionChange, groupBy } = thos.props
+    
+    // if (groupBy.length > 0) {
+    //   this.
+    // }
+
+    onSelectionChange(selection)
+  }
 
   getColumns = () => {
     const { rowActions, columns } = this.props
@@ -264,6 +273,7 @@ export default class _Table extends Component {
         })
     }
   }
+
   handleColumnsSettings = (data) => {
     const { tableName } = this.props
 
@@ -360,7 +370,7 @@ export default class _Table extends Component {
 
             {columnReordering && <DragDropProvider />}
 
-            {rowSelection && <SelectionState onSelectionChange={onSelectionChange} />}
+            {rowSelection && <SelectionState onSelectionChange={this.handleSelectionChange} />}
             {rowSelection && <IntegratedSelection />}
 
             <SearchState value={filterValue} />
