@@ -21,6 +21,7 @@ import EditPopup1Parameter from './DataTable/EditPopup1Parameter'
 import CasProductsTable from './CasProductsTable/CasProductsTable'
 import CompaniesTable from './CompaniesTable/Table'
 import CompaniesForm from './CompaniesTable/FormPopup'
+import CompaniesDwollaForm from './CompaniesDwolla/FormPopup'
 
 const tables = {
   'Units of Measure': <UnitOfMeasureTable />,
@@ -62,6 +63,10 @@ const addForms = {
   'Document Types': <AddNewPopup1Parameter />,
 }
 
+const addDwollaForms = {
+  'Companies': <CompaniesDwollaForm />
+}
+
 class Admin extends Component {
 
   renderContent = () => {
@@ -70,6 +75,7 @@ class Admin extends Component {
       currentEdit2Form,
       currentAddForm,
       currentTab,
+      currentAddDwolla
     } = this.props
 
     return (
@@ -77,6 +83,7 @@ class Admin extends Component {
         {currentAddForm && addForms[currentTab]}
         {currentEditForm && editForms[currentTab]}
         {currentEdit2Form && edit2Forms[currentTab]}
+        {currentAddDwolla && addDwollaForms[currentTab]}
         {tables[currentTab]|| <p>This page is still under construction</p>}
       </>
     )

@@ -60,7 +60,7 @@ class BankAccountsPopup extends React.Component {
     return (
       <Modal open centered={false}>
         <Modal.Header>
-          {`${title} `} {currentTab.name}
+          {`${title} `} Bank Account
         </Modal.Header>
         <Modal.Content>
           <Form

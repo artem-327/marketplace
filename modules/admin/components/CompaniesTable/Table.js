@@ -8,6 +8,7 @@ import {
   deleteCompany,
   handleOpenConfirmPopup,
   closeConfirmPopup,
+  openRegisterDwollaAccount,
 } from '../../actions'
 
 const PAGE_SIZE = 50
@@ -37,7 +38,8 @@ class CompaniesTable extends Component {
       handleOpenConfirmPopup,
       closeConfirmPopup,
       deleteRowById,
-      deleteCompany
+      deleteCompany,
+      openRegisterDwollaAccount
     } = this.props
 
     return (
@@ -58,7 +60,8 @@ class CompaniesTable extends Component {
           filterValue={filterValue}
           rowActions={[
             { text: 'Edit', callback: (row) => openEditCompany(row.id, row) },
-            { text: 'Delete', callback: (row) => handleOpenConfirmPopup(row.id)}
+            { text: 'Delete', callback: (row) => handleOpenConfirmPopup(row.id)},
+            { text: 'Register Dwolla Account', callback: (row) => openRegisterDwollaAccount(row.id)}
           ]}
         />
       </React.Fragment>
@@ -71,7 +74,8 @@ const mapDispatchToProps = {
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteCompany,
-  openEditCompany
+  openEditCompany,
+  openRegisterDwollaAccount
 }
 
 const mapStateToProps = ({admin}) => {

@@ -82,7 +82,6 @@ class DeliveryAddressesPopup extends React.Component {
       hasProvinces,
     } = this.state
 
-
     return (
       <Modal open centered={false} size="small">
         <Modal.Header>{popupValues ? ('Edit') : ('Add')} Delivery Address</Modal.Header>
@@ -92,11 +91,10 @@ class DeliveryAddressesPopup extends React.Component {
             initialValues={popupValues ? popupValues : initialFormValues}
             validationSchema={formValidation}
             onReset={closePopup}
-            onSubmit={async (values, actions) => {
+            onSubmit={async (values, actions) => { 
               if (values.address.province === '') delete values.address['province']
               if (popupValues) await updateDeliveryAddresses(rowId, values, reloadFilter)
               else await createDeliveryAddress(values, reloadFilter)
-
               actions.setSubmitting(false)
             }}
           >
