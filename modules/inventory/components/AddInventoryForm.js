@@ -590,12 +590,20 @@ class AddInventoryForm extends Component {
 
                               <Header as="h3">Is there any order minimum requirement?</Header>
                               <FormGroup>
-                                <Radio label="No" value={false} name="minimumRequirement" inputProps={{ onClick: () => setFieldValue('minimum', 1) }} />
+                                <Radio label="No" value={false} name="minimumRequirement" inputProps={{ onClick: () => {
+                                  setFieldValue('minimum', 1)
+                                  setFieldValue('pricingTiers[0].quantityFrom', 1)
+                                }}} />
                                 <Radio label="Yes" value={true} name="minimumRequirement" />
                               </FormGroup>
                               <FormGroup>
                                 <FormField width={5}>
-                                  <Input label="Minimum OQ" name="minimum" inputProps={{ type: 'number', onChange: (e, data) => data.value > 1 ? setFieldValue('minimumRequirement', true) : void(0) }} />
+                                  <Input label="Minimum OQ" name="minimum" inputProps={{ type: 'number', onChange: (e, data) => {
+                                    if (data.value > 1) {
+                                      setFieldValue('minimumRequirement', true)
+                                      setFieldValue('pricingTiers[0].quantityFrom', data.value)
+                                    }
+                                  }}} />
                                 </FormField>
                                 <FormField width={5}>
                                   <Input label="Splits" name="splits" inputProps={{ type: 'number' }} />
