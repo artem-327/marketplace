@@ -6,6 +6,7 @@ import { Grid, Button } from "semantic-ui-react"
 import styled from "styled-components"
 
 import { closeImportPopup } from "../../../actions"
+import Router from "next/dist/client/router";
 
 const StyledButton = styled(Button)`
   width: 200px;
@@ -54,7 +55,7 @@ const mapStateToProps = state => {
   return {
     csvImportError: state.settings.csvImportError,
     reloadFilter: {props: {
-        currentTab: state.settings.currentTab,
+        currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
         productsFilter: state.settings.productsFilter},
       value: state.settings.filterValue},
     productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue

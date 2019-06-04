@@ -86,7 +86,7 @@ export default class MyInventory extends Component {
               />
             ) : (
               <Popup id={r.id}
-                     trigger={<Icon name='unlink' title='Product not mapped, click to map it.' onClick={() => Router.push({ pathname: '/settings/', query: { type: 'products', action: 'edit', id: r.product.id } })} title={title} />}
+                     trigger={<Icon name='unlink' onClick={() => Router.push({ pathname: '/settings/', query: { type: 'products', action: 'edit', id: r.product.id } })} />}
                      content={title}
               />
             )}
@@ -164,6 +164,7 @@ export default class MyInventory extends Component {
               { text: 'Custom broadcast', callback: (row) => { openBroadcast(row.id) } },
               { text: 'Delete listing', callback: (row) => { this.props.deleteProductOffer(row.id) } }
             ]}
+            onRowClick={(row) => Router.push({ pathname: '/inventory/edit', query: { id: row.id }})}
           />
         </div>
         <Broadcast />
@@ -181,6 +182,13 @@ export default class MyInventory extends Component {
           filterFunc={(filter) => { this.filterInventory({ ...filter }) }}
           savingFilters={true}
           {...this.props}
+          searchedProducts={this.props.searchedProducts.map(prod => {
+            return {
+              key: prod.key,
+              id: prod.id,
+              name: <Header content={prod.name} subheader={prod.casName} style={{margin: 0, fontSize: '1em'}} />
+            }
+          })}
         />
       </>
     )

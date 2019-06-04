@@ -10,7 +10,8 @@ import styled from 'styled-components'
 import { Container, Segment, Grid, GridRow, GridColumn, Radio, Divider, Header, FormGroup } from 'semantic-ui-react'
 import { Form, Input, Dropdown, Button } from 'formik-semantic-ui'
 import * as Yup from 'yup'
-import { PHONE_REGEXP } from '../../../../utils/constants';
+import { PHONE_REGEXP } from '../../../../utils/constants'
+import { errorMessages, provinceObjectRequired } from '~/constants/yupValidation'
 
 const BottomMargedGrid = styled(Grid)`
   margin-bottom: 1rem !important;
@@ -44,12 +45,7 @@ export default class ShippingEdit extends Component {
 
   validationSchema = (opts = {}) => {
 
-    let defaultOpts = {
-      invalidString: <FormattedMessage id='validation.invalidString' />,
-      invalidEmail: <FormattedMessage id='validation.invalidEmail' />,
-      requiredMessage: <FormattedMessage id='validation.required' />,
-      invalidPhoneNumber: <FormattedMessage id='validation.phoneNumber' />
-    }
+    let defaultOpts = errorMessages
 
     let newOpts = { ...defaultOpts, ...opts }
 
@@ -66,9 +62,7 @@ export default class ShippingEdit extends Component {
           city: Yup.string(invalidString).required(requiredMessage),
           country: Yup.string(invalidString).required(requiredMessage),
           streetAddress: Yup.string(invalidString).required(requiredMessage),
-          province: Yup.lazy(() => this.state.hasProvinces ?
-            Yup.object().shape({ name: Yup.string(invalidString).required(requiredMessage) }) :
-            Yup.mixed().notRequired())
+          province: provinceObjectRequired(this.state.hasProvinces)
         })
       })
     )
@@ -97,8 +91,7 @@ export default class ShippingEdit extends Component {
 
   newAddressMarkup = (props) => {
     let { location } = this.props
-    let { errors, setFieldValue } = props
-
+    let { errors, setFieldValue, values } = props
     return (
       <>
         <FormGroup>
@@ -137,6 +130,7 @@ export default class ShippingEdit extends Component {
                 this.handleStateChange(value)
                 setFieldValue('address.province.name', '')
               },
+              search: true,
               error: !!(errors.address && errors.address.country)
             }}
             options={location.states.map((state) => ({
@@ -155,7 +149,8 @@ export default class ShippingEdit extends Component {
               disabled: !this.state.hasProvinces,
               onChange: (e, { value }) => this.setState({ selectedProvince: value }),
               loading: location.provincesAreFetching,
-              error: !!(this.state.hasProvinces && errors.address && errors.address.province)
+              error: !!(this.state.hasProvinces && errors.address && errors.address.province),
+              search: true
             }}
             options={location.provinces.map((province) => ({
               text: province.name,
@@ -212,7 +207,7 @@ export default class ShippingEdit extends Component {
 
   render() {
     let { isNewAddress, shippingChanged, selectedAddress, savedShippingPreferences } = this.props
-    console.log({ selectedAddress })
+
     return (
       <Segment>
         <BottomMargedGrid>

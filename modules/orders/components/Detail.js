@@ -101,7 +101,7 @@ class Detail extends Component {
       <div id="page" className='scrolling'>
         <PerfectScrollbar>
           <Divider hidden />
-          <Grid verticalAlign='middle' columns='equal'>
+          <Grid verticalAlign='middle' columns='equal' style={{ padding: '0 32px' }}>
             <Grid.Column width={6}>
               <div className='header-top clean left detail-align'>
                 <h1 className='header inv-header' style={{ marginBottom: '0.5rem', textTransform: 'uppercase', fontSize: '1.14285714em', fontWeight: '500' }}>{ordersType} Order {isDetailFetching ? '' : '# ' + order.id}</h1>
@@ -152,7 +152,7 @@ class Detail extends Component {
           {isDetailFetching ? <Spinner /> : (
             <>
               {action && (ordersType === 'Sales') ? /* This action is not prepared for Purchase Orders yet! */ (
-                <Segment color='blue'>
+                <Segment color='blue' style={{ marginLeft: '32px', marginRight: '32px' }}>
                   <Grid verticalAlign='middle' columns='equal'>
                     <Grid.Column width={13}>
                       <Header as='h3' style={{ margin: '0 0 0.3571429rem' }}>Action Required</Header>
@@ -174,7 +174,7 @@ class Detail extends Component {
 
               <Divider hidden />
 
-              <Accordion defaultActiveIndex={[0, 1]} styled fluid>
+              <Accordion defaultActiveIndex={[0, 1]} styled fluid style={{ width: 'calc(100% - 64px)', margin: '0 32px' }}>
                 <AccordionTitle active={activeIndexes[0]} index={0} onClick={this.handleClick}>
                   <Icon name={'chevron ' + (activeIndexes[0] ? 'down' : 'up')} size='large' color={activeIndexes[0] ? 'blue' : 'black'} />
                   Order Info

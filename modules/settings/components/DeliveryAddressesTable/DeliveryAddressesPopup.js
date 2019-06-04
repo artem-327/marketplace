@@ -12,6 +12,7 @@ import {
 
 import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui'
 import * as Yup from 'yup'
+import Router from "next/router"
 
 const initialFormValues = {
   'firstName':    '',
@@ -111,7 +112,6 @@ class DeliveryAddressesPopup extends React.Component {
                   <Input type="text" label="Contact Email" name="email" />
                   <Input type="text" label="Contact Phone" name="phoneNumber" />
                 </FormGroup>
-                <Divider />
                 <h4>Address</h4>
                 <FormGroup widths="equal">
                   <Input type="text" label="Street Address" name="address.streetAddress" />
@@ -166,7 +166,7 @@ const mapStateToProps = state => {
     provincesDropDown: state.settings.provincesDropDown,
     countries: state.settings.countries,
     reloadFilter: {props: {
-        currentTab: state.settings.currentTab,
+        currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
         deliveryAddressesFilter: state.settings.deliveryAddressesFilter},
       value: state.settings.filterValue},
   }

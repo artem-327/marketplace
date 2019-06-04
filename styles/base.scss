@@ -116,7 +116,7 @@ i.icon.thick {
   font-size: 1.142857rem;
 
   > .column {
-    height: 2em;
+    min-height: 2em;
     padding-top: .111111em;
     padding-bottom: .111111em;
     line-height: 1.777778em;
@@ -582,4 +582,29 @@ table.order-total.ui[class*="very basic"]:not(.sortable):not(.striped) {
 .ui.toggle.checkbox input[disabled] ~ label:after {
   border-color: #e74c3c;
   background-color: rgba(231, 76, 60, 0.2);
+}
+
+i.file {
+  &.unknown,
+  &.positive,
+  &.negative {
+    width: 18px;
+    height: 20px;
+    margin: 0;
+    background-size: contain;
+
+    &:before {
+      content: "" !important;
+    }
+  }
+
+  &.unknown {
+    background-image: url("../images/attachment-unknown.png");
+  }
+  &.positive {
+    background-image: url("../images/attachment-positive.png");
+  }
+  &.negative {
+    background-image: url("../images/attachment-negative.png");
+  }
 }
