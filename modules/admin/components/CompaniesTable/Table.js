@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Confirm } from 'semantic-ui-react'
+import {injectIntl} from 'react-intl'
+
 import ProdexTable from '~/components/table'
+import confirm from '~/src/components/Confirmable/confirm'
+
+
 import {
   getCompanies,
   openEditCompany,
@@ -30,25 +34,21 @@ class CompaniesTable extends Component {
       columns,
       rows,
       filterValue,
-      currentTab,
       loading,
       openEditCompany,
-      confirmMessage,
-      handleOpenConfirmPopup,
-      closeConfirmPopup,
-      deleteRowById,
-      deleteCompany
+      intl,
+      deleteCompany,
+      // handleOpenConfirmPopup,
+      // currentTab,
+      // confirmMessage,
+      // closeConfirmPopup,
+      // deleteRowById,
     } = this.props
+
+    const { formatMessage } = intl
 
     return (
       <React.Fragment>
-        <Confirm
-            size="tiny"
-            content="Do you really want to delete item?"
-            open={confirmMessage}
-            onCancel={closeConfirmPopup}
-            onConfirm={() => deleteCompany(deleteRowById)}
-        />
         <ProdexTable
           columns={columns}
           rows={rows}
@@ -58,7 +58,11 @@ class CompaniesTable extends Component {
           filterValue={filterValue}
           rowActions={[
             { text: 'Edit', callback: (row) => openEditCompany(row.id, row) },
-            { text: 'Delete', callback: (row) => handleOpenConfirmPopup(row.id)}
+            { text: 'Delete', callback: (row) => confirm(
+                formatMessage({id: 'confirm.deleteCompany', defaultMessage: 'Delete Company?'}),
+                formatMessage({id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` }, { item: row.name })
+              ).then(() => deleteCompany(row.id))
+            }
           ]}
         />
       </React.Fragment>
@@ -71,7 +75,8 @@ const mapDispatchToProps = {
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteCompany,
-  openEditCompany
+  openEditCompany,
+  deleteCompany
 }
 
 const mapStateToProps = ({admin}) => {
@@ -100,4 +105,4 @@ const mapStateToProps = ({admin}) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CompaniesTable)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(CompaniesTable))

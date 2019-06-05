@@ -135,7 +135,31 @@ export default function reducer(state = initialState, action) {
         toast: { message: null, isSuccess: null }
       }
     }
-    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_FULFILLED:
+    /* DELETE DELIVERY ADDRESS */
+
+    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        deliveryAddressesRows: state.deliveryAddressesRows.filter((address) => address.id !== payload)
+      }
+    }
+
+    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+
     case AT.CLOSE_CONFIRM_POPUP: {
       return {
         ...state,
@@ -565,7 +589,7 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_PENDING:
     case AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES_PENDING:
     case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_PENDING:
-    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_PENDING:
+
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING_PENDING:
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER_PENDING: {
       return {
@@ -594,7 +618,6 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_REJECTED:
     case AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES_REJECTED:
     case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_REJECTED:
-    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_REJECTED:
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING_REJECTED:
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER_REJECTED: {
       return {
@@ -638,6 +661,111 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    /* DELETE PRODUCT */
+
+    case AT.DELETE_PRODUCT_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+
+    case AT.DELETE_PRODUCT_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        productsCatalogRows: state.productsCatalogRows.filter((el) => el.id !== payload)
+      }
+    }
+
+    case AT.DELETE_PRODUCT_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    /* DELETE USER */
+
+    case AT.DELETE_USER_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.DELETE_USER_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        usersRows: state.usersRows.filter((user) => user.id !== payload)
+      }
+    }
+
+    case AT.DELETE_USER_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    /* DELETE BANK ACCOUNT */
+
+    case AT.DELETE_BANK_ACCOUNT_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.DELETE_BANK_ACCOUNT_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        bankAccountsRows: state.bankAccountsRows.filter((account) => account.id !== payload)
+      }
+    }
+
+    case AT.DELETE_BANK_ACCOUNT_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    /* DELETE BRANCH */
+
+    case AT.DELETE_BRANCH_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.DELETE_BRANCH_FULFILLED: {
+      let property = state.currentTab.type === 'warehouses' ? 'warehousesRows' : 'branchesRows'
+
+      return {
+        ...state,
+        loading: false,
+        [property]: state[property].filter((warehouse) => warehouse.id !== payload)
+      }
+    }
+
+    case AT.DELETE_BRANCH_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.TAB_CHANGED: {
+      return {
+        ...state,
+        currentTab: payload
+      }
+    }
 
 
     default: {

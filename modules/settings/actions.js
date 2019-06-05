@@ -120,50 +120,62 @@ export function handleOpenConfirmPopup(payload) {
     payload
   }
 }
-export function deleteConfirmation(deleteRowById, currentTab, reloadFilter=null) {
-  let toast = {}
-  return async dispatch => {
-    switch (currentTab.type) {
-      case "users":
-        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteUser(deleteRowById)})
-        toast = { message: "User delete success", isSuccess: true }
-        dispatch(getUsersDataRequest())
-        break
-      case "branches":
-        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteWarehouse(deleteRowById)})
-        toast = { message: "Branch delete success", isSuccess: true }
-        dispatch(getBranchesDataRequest())
-        break
-      case "warehouses":
-        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteWarehouse(deleteRowById)})
-        toast = { message: "Warehouse delete success", isSuccess: true }
-        dispatch(getWarehousesDataRequest())
-        break
-      case "products":
-        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteProduct(deleteRowById)})
-        toast = { message: "Product delete success", isSuccess: true }
-        dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
-        break
-      case "credit-cards":
-        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteCreditCard(deleteRowById)})
-        toast = { message: "Credit cards delete success", isSuccess: true }
-        dispatch(getCreditCardsDataRequest())
-        break
-      case "bank-accounts":
-        await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteBankAccount(deleteRowById)})
-        toast = { message: "Bank account delete success", isSuccess: true }
-        dispatch(getBankAccountsDataRequest())
-        break
-      default:
-        break
-    }
-    dispatch(confirmationSuccess())
-    dispatch({
-      type: AT.OPEN_TOAST,
-      payload: toast
-    })
-  }
-}
+
+export const deleteUser = (id) => ({ type: AT.DELETE_USER, payload: api.deleteUser(id) })
+
+export const deleteBranch = (id) => ({ type: AT.DELETE_BRANCH, payload: api.deleteWarehouse(id) })
+
+export const deleteProduct = (id) => ({ type: AT.DELETE_PRODUCT, payload: api.deleteProduct(id) })
+
+export const deleteBankAccount = (id) => ({ type: AT.DELETE_BANK_ACCOUNT, payload: api.deleteBankAccount(id) })
+
+export const deleteDeliveryAddress = (id) => ({ type: AT.SETTINGS_DELETE_DELIVERY_ADDRESSES, payload: api.deleteDeliveryAddress(id) })
+
+// export function deleteConfirmation(deleteRowById, currentTab, reloadFilter=null) {
+//   let toast = {}
+//   return async dispatch => {
+//     switch (currentTab.type) {
+//       case "users":
+//         await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteUser(deleteRowById)})
+//         toast = { message: "User delete success", isSuccess: true }
+//         dispatch(getUsersDataRequest())
+//         break
+//       case "branches":
+//         await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteWarehouse(deleteRowById)})
+//         toast = { message: "Branch delete success", isSuccess: true }
+//         dispatch(getBranchesDataRequest())
+//         break
+//       case "warehouses":
+//         await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteWarehouse(deleteRowById)})
+//         toast = { message: "Warehouse delete success", isSuccess: true }
+//         dispatch(getWarehousesDataRequest())
+//         break
+//       case "products":
+//         await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteProduct(deleteRowById)})
+//         toast = { message: "Product delete success", isSuccess: true }
+//         dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
+//         break
+//       case "credit-cards":
+//         await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteCreditCard(deleteRowById)})
+//         toast = { message: "Credit cards delete success", isSuccess: true }
+//         dispatch(getCreditCardsDataRequest())
+//         break
+//       case "bank-accounts":
+//         await dispatch({ type: AT.DELETE_CONFIRM_POPUP, payload: api.deleteBankAccount(deleteRowById)})
+//         toast = { message: "Bank account delete success", isSuccess: true }
+//         dispatch(getBankAccountsDataRequest())
+//         break
+//       default:
+//         break
+//     }
+//     dispatch(confirmationSuccess())
+//     dispatch({
+//       type: AT.OPEN_TOAST,
+//       payload: toast
+//     })
+//   }
+// }
+
 export function confirmationSuccess() {
   return {
     type: AT.CONFIRM_FULFILLED
@@ -198,10 +210,10 @@ export function handleFiltersValue(props, value) {
         if (value.trim().length) await dispatch(getDeliveryAddressesByStringRequest(value))
         else await dispatch(getDeliveryAddressesByFilterRequest(props.deliveryAddressesFilter))
         break
-    case "products":
-      if (value.trim().length > 2) await dispatch(getProductsCatalogRequest({body: value, unmapped: props.productCatalogUnmappedValue}))
-      else await dispatch(getProductsCatalogRequest({body: props.productsFilter, unmapped: props.productCatalogUnmappedValue}))
-      break
+      case "products":
+        if (value.trim().length > 2) await dispatch(getProductsCatalogRequest({ body: value, unmapped: props.productCatalogUnmappedValue }))
+        else await dispatch(getProductsCatalogRequest({ body: props.productsFilter, unmapped: props.productCatalogUnmappedValue }))
+        break
     }
   }
 }
@@ -212,7 +224,7 @@ export function handleProductCatalogUnmappedValue(checked, props) {
       type: AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE,
       payload: checked
     })
-    dispatch(handleFiltersValue({...props, productCatalogUnmappedValue: checked}, props.filterValue))
+    dispatch(handleFiltersValue({ ...props, productCatalogUnmappedValue: checked }, props.filterValue))
   }
 }
 
@@ -249,7 +261,7 @@ export function handleSubmitProductEditPopup(productData, id, reloadFilter) {
   return async dispatch => {
     await dispatch({
       type: AT.SETTINGS_UPDATE_PRODUCT_CATALOG,
-      payload: api.updateProduct(id,{
+      payload: api.updateProduct(id, {
         casProduct: productData.casProduct.id,
         description: productData.description,
         freightClass: productData.freightClass ? productData.freightClass : null,
@@ -395,7 +407,7 @@ export function getProductsCatalogRequest(data) {
       type: AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA,
       async payload() {
         const [productCatalog, productPacTypes, units, hazardClasses, packagingGroups] = await Promise.all([
-          typeof data.body === 'object' ? api.getProductsCatalogByFilter(data) :  api.getProductsCatalogByString(data),
+          typeof data.body === 'object' ? api.getProductsCatalogByFilter(data) : api.getProductsCatalogByString(data),
           api.getProductTypes(),
           api.getUnitsType(),
           api.getHazardClasses(),
@@ -590,12 +602,12 @@ export function deleteCreditCard(cardId) {
   }
 }
 
-export function deleteBankAccount(accountId) {
-  return {  // ! ! saga calls api.deleteWarehouse ???
-    type: AT.DELETE_BANK_ACCOUNT,
-    payload: accountId
-  }
-}
+// export function deleteBankAccount(accountId) {
+//   return {  // ! ! saga calls api.deleteWarehouse ???
+//     type: AT.DELETE_BANK_ACCOUNT,
+//     payload: accountId
+//   }
+// }
 
 export function uploadCSVFile(payload) {
   return {
@@ -605,10 +617,10 @@ export function uploadCSVFile(payload) {
 }
 
 export function postImportProductCSV(payload, id) {
-    return {
-      type: AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS,
-      payload: api.postImportProductCSV(payload, id)
-    }
+  return {
+    type: AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS,
+    payload: api.postImportProductCSV(payload, id)
+  }
 }
 
 export function clearDataOfCSV() {
@@ -667,15 +679,15 @@ export function createDeliveryAddress(value, reloadFilter) {
   }
 }
 
-export function deleteDeliveryAddressesItem(value, reloadFilter) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.SETTINGS_DELETE_DELIVERY_ADDRESSES,
-      payload: api.deleteDeliveryAddresses(value)
-    })
-    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
-  }
-}
+// export function deleteDeliveryAddressesItem(value, reloadFilter) {
+//   return async dispatch => {
+//     await dispatch({
+//       type: AT.SETTINGS_DELETE_DELIVERY_ADDRESSES,
+//       payload: api.deleteDeliveryAddresses(value)
+//     })
+//     dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
+//   }
+// }
 
 export function getCountries() {
   return {
@@ -692,3 +704,5 @@ export function getProvinces(id) {
 }
 
 export const addTab = (payload) => ({ type: AT.ADD_TAB, payload })
+
+export const tabChanged = (tab) => ({ type: AT.TAB_CHANGED, payload: tab })

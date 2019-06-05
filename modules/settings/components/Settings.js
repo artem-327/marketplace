@@ -24,7 +24,7 @@ import { CompanyForm } from '~/modules/company-form/'
 import { companyDetailsTab } from '../contants'
 import Router from 'next/router'
 
-import { addTab } from '../actions'
+import { addTab, tabChanged } from '../actions'
 import { updateCompany } from '~/modules/admin/actions'
 import { validationSchema } from '~/modules/company-form/constants'
 
@@ -35,12 +35,12 @@ const TopMargedGrid = styled(Grid)`
 `
 
 class Settings extends Component {
-
-  state = { t: 0 }
-
   componentDidMount() {
-    let { isCompanyAdmin, addTab } = this.props
+    let { isCompanyAdmin, addTab, tabsNames, tabChanged, currentTab } = this.props
     if (isCompanyAdmin) addTab(companyDetailsTab)
+    let queryTab = Router && Router.router ? tabsNames.find(tab => tab.type === Router.router.query.type) || companyDetailsTab || tabsNames[0] : tabsNames[0]
+
+    if (!queryTab.type !== currentTab.type) tabChanged(queryTab)
   }
 
   companyDetails = () => {
@@ -114,19 +114,19 @@ class Settings extends Component {
   }
 
   render() {
-    const {currentTab} = this.props
-    
+    const { currentTab } = this.props
+
     return (
       <Container fluid className="flex stretched">
-        <Container fluid style={{padding: '0 32px'}}>
+        <Container fluid style={{ padding: '0 32px' }}>
           <TablesHandlers currentTab={currentTab} />
         </Container>
-        <Grid columns="equal" className="flex stretched" style={{padding: '0 32px'}}>
+        <Grid columns="equal" className="flex stretched" style={{ padding: '0 32px' }}>
           <Grid.Row>
             <Grid.Column width={3}>
               <Tabs currentTab={currentTab} isCompanyAdmin={this.props.isCompanyAdmin} />
             </Grid.Column>
-            <Grid.Column className="flex stretched" style={{ marginTop: '10px' }} t={this.state.t}>
+            <Grid.Column className="flex stretched" style={{ marginTop: '10px' }}>
               {this.renderContent()}
             </Grid.Column>
           </Grid.Row>
@@ -137,16 +137,15 @@ class Settings extends Component {
 }
 
 const mapStateToProps = ({ settings, auth }) => {
-  Router && Router.router && console.log('Router:', Router.router.query)
+
   return {
     ...settings,
     isCompanyAdmin: auth.identity ? auth.identity.isCompanyAdmin : false,
     company: auth.identity ? auth.identity.company : null,
-    currentTab: Router && Router.router ? settings.tabsNames.find(tab => tab.type === Router.router.query.type) || settings.tabsNames[0] : settings.tabsNames[0]
   }
 }
 
 export default connect(
   mapStateToProps,
-  { addTab, updateCompany }
+  { addTab, updateCompany, tabChanged }
 )(Settings)

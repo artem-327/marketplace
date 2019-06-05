@@ -22,26 +22,19 @@ class DataTable extends Component {
       loading,
       rows,
       filterValue,
-      currentTab,
       openEditPopup,
-      confirmMessage,
-      handleOpenConfirmPopup,
-      closeConfirmPopup,
       deleteConfirmation,
-      deleteRowById
+      // currentTab,
+      // confirmMessage,
+      // handleOpenConfirmPopup,
+      // closeConfirmPopup,
+      // deleteRowById
     } = this.props
 
     const { columns } = this.props.config.display
 
     return (
       <React.Fragment>
-        <Confirm
-          size="tiny"
-          content="Do you really want to delete item?"
-          open={confirmMessage}
-          onCancel={closeConfirmPopup}
-          onConfirm={() => deleteConfirmation(deleteRowById, config)}
-        />
         <ProdexTable
           filterValue={filterValue}
           loading={loading}
@@ -49,7 +42,7 @@ class DataTable extends Component {
           rows={rows}
           rowActions={[
             { text: 'Edit', callback: (row) => openEditPopup(row) },
-            { text: 'Delete', callback: (row) => handleOpenConfirmPopup(row.id) }
+            { text: 'Delete', callback: (row) => deleteConfirmation(row.id, config) }
           ]}
         />
       </React.Fragment>

@@ -1,15 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
-import { Confirm } from 'semantic-ui-react'
+
 import {
   openPopup,
   getProductsCatalogRequest,
   handleOpenConfirmPopup,
   closeConfirmPopup,
-  deleteConfirmation
+  deleteProduct
 } from '../../actions'
 import Router from "next/router"
+
+import confirm from '~/src/components/Confirmable/confirm'
+import { injectIntl } from 'react-intl'
 
 class ProductCatalogTable extends Component {
   state = {
@@ -25,15 +28,15 @@ class ProductCatalogTable extends Component {
   }
 
   componentDidMount() {
-    this.props.getProductsCatalogRequest({body: this.props.productsFilter, unmapped: this.props.productCatalogUnmappedValue})
+    this.props.getProductsCatalogRequest({ body: this.props.productsFilter, unmapped: this.props.productCatalogUnmappedValue })
   }
 
   componentDidUpdate() {
-    const {action, actionId, currentTab, loaded, openPopup, rows} = this.props
+    const { action, actionId, currentTab, loaded, openPopup, rows } = this.props
 
     if (action === 'edit' && actionId && loaded) {
       if (currentTab.type === 'products') {
-        const editRow = rows.find(function(product) {
+        const editRow = rows.find(function (product) {
           return product.id === parseInt(actionId)
         })
 
@@ -46,28 +49,23 @@ class ProductCatalogTable extends Component {
     const {
       rows,
       filterValue,
-      confirmMessage,
       openPopup,
-      handleOpenConfirmPopup,
-      closeConfirmPopup,
-      deleteConfirmation,
+      deleteProduct,
       loading,
-      deleteRowById,
-      currentTab,
-      reloadFilter
+      intl,
+      // confirmMessage,
+      // handleOpenConfirmPopup,
+      // closeConfirmPopup,
+      // deleteRowById,
+      // currentTab,
+      // reloadFilter
     } = this.props
 
-    const { columns } = this.state
+    let { columns } = this.state
+    const { formatMessage } = intl
 
     return (
       <React.Fragment>
-        <Confirm
-          size="tiny"
-          content="Do you really want to delete this product?"
-          open={confirmMessage}
-          onCancel={closeConfirmPopup}
-          onConfirm={() => deleteConfirmation(deleteRowById, currentTab, reloadFilter)}
-        />
         <ProdexTable
           rows={rows}
           columns={columns}
@@ -78,7 +76,13 @@ class ProductCatalogTable extends Component {
             { text: 'Edit', callback: row => openPopup(row) },
             {
               text: 'Delete',
-              callback: row => handleOpenConfirmPopup(row.id)
+              callback: row =>
+                confirm(
+                  formatMessage({ id: 'confirm.deleteProductCatalog', defaultMessage: 'Delete Product Catalog!' }),
+                  formatMessage(
+                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.productName}!?` },
+                    { item: row.productName })
+                ).then(() => deleteProduct(row.id))
             }
           ]}
         />
@@ -92,7 +96,7 @@ const mapDispatchToProps = {
   getProductsCatalogRequest,
   handleOpenConfirmPopup,
   closeConfirmPopup,
-  deleteConfirmation
+  deleteProduct
 }
 
 const mapStateToProps = state => {
@@ -107,11 +111,14 @@ const mapStateToProps = state => {
     action: Router && Router.router ? Router.router.query.action : false,
     actionId: Router && Router.router ? Router.router.query.id : false,
     currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
-    reloadFilter: {props: {
-      currentTab: state.settings.currentTab,
-      productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
-      productsFilter: state.settings.productsFilter},
-    value: state.settings.filterValue},
+    reloadFilter: {
+      props: {
+        currentTab: state.settings.currentTab,
+        productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
+        productsFilter: state.settings.productsFilter
+      },
+      value: state.settings.filterValue
+    },
     productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
   }
 }
@@ -119,4 +126,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProductCatalogTable)
+)(injectIntl(ProductCatalogTable))

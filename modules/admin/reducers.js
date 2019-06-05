@@ -120,7 +120,6 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.ADMIN_DELETE_DOCUMENT_TYPES_DATA_FULFILLED:
-    case AT.ADMIN_DELETE_COMPANIES_FULFILLED:
     case AT.ADMIN_DELETE_CAS_PRODUCT_FULFILLED:
     case AT.ADMIN_DELETE_UNITS_OF_MEASURE_DATA_FULFILLED:
     case AT.ADMIN_DELETE_UNITS_OF_PACKAGING_DATA_FULFILLED:
@@ -136,6 +135,29 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    /* DELETE COMPANY */
+
+    case AT.ADMIN_DELETE_COMPANIES_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.ADMIN_DELETE_COMPANIES_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        companiesRows: state.companiesRows.filter((company) => company.id !== payload)
+      }
+    }
+
+    case AT.ADMIN_DELETE_COMPANIES_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
 
 
 
@@ -193,7 +215,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    
+
     case AT.ADMIN_GET_COMPANIES_PENDING:
     case AT.ADMIN_POST_NEW_PRODUCT_NAME_PENDING:
     case AT.ADMIN_UPDATE_PRODUCT_NAME_PENDING:
@@ -213,7 +235,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         casProductsRows: [
-          ...state.casProductsRows,
+          // ...state.casProductsRows,
           ...action.payload
         ],
         loading: false
@@ -270,13 +292,13 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         companiesRows: [
-          ...state.companiesRows,
+          // ...state.companiesRows,
           ...action.payload
         ]
       }
     }
 
-    
+
 
     case AT.ADMIN_POST_NEW_PRODUCT_NAME_REJECTED:
     case AT.ADMIN_UPDATE_PRODUCT_NAME_REJECTED:
@@ -291,6 +313,81 @@ export default function reducer(state = initialState, action) {
         loading: false
       }
     }
+
+    /* CAS DELETE PRODUCT */
+
+    case AT.ADMIN_CAS_DELETE_PRODUCT_PENDING: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.ADMIN_CAS_DELETE_PRODUCT_FULFILLED: {
+      return {
+        ...state,
+        casProductsRows: state.casProductsRows.filter((row) => row.id !== payload),
+        loading: false
+      }
+    }
+
+    case AT.ADMIN_CAS_DELETE_PRODUCT_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    /* DELETE UNIT */
+
+    case AT.ADMIN_DELETE_UNIT_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.ADMIN_DELETE_UNIT_FULFILLED: {
+      return {
+        ...state,
+        unitsOfMeasureRows: state.unitsOfMeasureRows.filter((el) => el.id !== payload),
+        loading: false
+      }
+    }
+
+    case AT.ADMIN_DELETE_UNIT_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    /* DELETE UNIT OF PACKAGING */
+
+    case AT.ADMIN_DELETE_UNIT_OF_PACKAGING_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.ADMIN_DELETE_UNIT_OF_PACKAGING_FULFILLED: {
+      return {
+        ...state,
+        unitsOfPackagingRows: state.unitsOfPackagingRows.filter((el) => el.id !== payload),
+        loading: false
+      }
+    }
+
+    case AT.ADMIN_DELETE_UNIT_OF_PACKAGING_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+
+
 
     default: {
       for (let groupName in config) {
@@ -324,6 +421,7 @@ export default function reducer(state = initialState, action) {
           }
         }
       }
+
       return state
     }
   }

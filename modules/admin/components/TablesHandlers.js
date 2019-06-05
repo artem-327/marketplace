@@ -1,14 +1,20 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { config } from '../config'
+import { debounce } from 'lodash'
 
 import { Header, Menu, Button, Input, Dropdown } from 'semantic-ui-react'
 
 import { openPopup, handleFiltersValue } from '../actions'
 
 class TablesHandlers extends Component {
-  state = {
-    filterFieldCurrentValue: 'None'
+  constructor(props) {
+    super(props)
+    this.state = {
+      filterFieldCurrentValue: 'None'
+    }
+
+    this.debouncedOnChange = debounce(this.handleChange, 250)
   }
 
   handleChangeSelectField = (event, value) => {
@@ -23,17 +29,19 @@ class TablesHandlers extends Component {
     })
   }
 
+  handleChange = (e, { value }) => {
+    this.props.handleFiltersValue(this.props, value)
+  }
+
   render() {
     const {
-      handleFiltersValue,
       currentTab,
       openPopup,
     } = this.props
 
-    const {
-      filterFieldCurrentValue
-    } = this.state
 
+    if (currentTab === 'Manufactures' || currentTab === 'CAS Products') var onChange = this.debouncedOnChange
+    else var onChange = this.handleChange
 
     return (
       <Menu secondary>
@@ -44,7 +52,7 @@ class TablesHandlers extends Component {
         <Menu.Menu position='right'>
           <Menu.Item>
             <Input style={{ width: 340 }} size="large" icon='search' placeholder={config[currentTab].searchText}
-              onChange={e => handleFiltersValue(this.props, e.target.value)} />
+              onChange={onChange} />
           </Menu.Item>
           <Menu.Item>
             <Button size="large" primary onClick={() => openPopup()}>

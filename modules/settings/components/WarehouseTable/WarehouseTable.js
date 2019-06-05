@@ -1,16 +1,19 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexGrid from '~/components/table'
-import { Confirm } from 'semantic-ui-react'
+import { injectIntl } from 'react-intl'
 import {
   getWarehousesDataRequest,
   getBranchesDataRequest,
   openPopup,
   closeConfirmPopup,
   deleteConfirmation,
-  handleOpenConfirmPopup
+  handleOpenConfirmPopup,
+  deleteBranch
 } from '../../actions'
 import Router from "next/router"
+
+import confirm from '~/src/components/Confirmable/confirm'
 
 class WarehouseTable extends Component {
   state = {
@@ -88,23 +91,25 @@ class WarehouseTable extends Component {
       filterValue,
       loading,
       openPopup,
-      closeConfirmPopup,
-      deleteConfirmation,
-      confirmMessage,
-      handleOpenConfirmPopup,
-      deleteRowById,
-      currentTab
+      deleteBranch,
+      intl,
+      currentTab,
+      // closeConfirmPopup,
+      // deleteConfirmation,
+      // confirmMessage,
+      // handleOpenConfirmPopup,
+      // deleteRowById,
+      // currentTab
     } = this.props
+
+    let message = currentTab.type === 'branches'
+      ? { id: 'confirm.deleteBranch', defaultMessage: 'Delete Branch' }
+      : { id: 'confirm.deleteWarehouse', defaultMessage: 'Delete Warehouse' }
+
+    const { formatMessage } = intl
 
     return (
       <React.Fragment>
-        <Confirm
-          size="tiny"
-          content="Do you really want to delete warehouse?"
-          open={confirmMessage}
-          onCancel={closeConfirmPopup}
-          onConfirm={() => deleteConfirmation(deleteRowById, currentTab)}
-        />
         <ProdexGrid
           filterValue={filterValue}
           columns={this.branchChecker()}
@@ -113,7 +118,15 @@ class WarehouseTable extends Component {
           style={{ marginTop: '5px' }}
           rowActions={[
             { text: 'Edit', callback: row => openPopup(row) },
-            { text: 'Delete', callback: row => handleOpenConfirmPopup(row.id) }
+            {
+              text: 'Delete', callback: row =>
+                confirm(
+                  formatMessage({ ...message }),
+                  formatMessage(
+                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}! ? ` },
+                    { item: row.name })
+                ).then(() => deleteBranch(row.id))
+            }
           ]}
         />
       </React.Fragment>
@@ -127,7 +140,8 @@ const mapDispatchToProps = {
   openPopup,
   closeConfirmPopup,
   deleteConfirmation,
-  handleOpenConfirmPopup
+  handleOpenConfirmPopup,
+  deleteBranch
 }
 
 const mapStateToProps = state => {
@@ -147,4 +161,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(WarehouseTable)
+)(injectIntl(WarehouseTable))

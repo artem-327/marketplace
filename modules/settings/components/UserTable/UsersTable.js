@@ -1,16 +1,17 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { Confirm } from "semantic-ui-react"
+import { injectIntl } from 'react-intl'
 
 import ProdexGrid from "~/components/table"
 import { TablePopUp } from "~/components/tablePopup"
+import confirm from '~/src/components/Confirmable/confirm'
 
 import {
   getUsersDataRequest,
   openPopup,
   handleOpenConfirmPopup,
   closeConfirmPopup,
-  deleteConfirmation,
+  deleteUser,
   openRolesPopup
 } from "../../actions"
 
@@ -37,25 +38,20 @@ class UsersTable extends Component {
       loading,
       openPopup,
       openRolesPopup,
-      confirmMessage,
-      handleOpenConfirmPopup,
-      closeConfirmPopup,
-      deleteConfirmation,
-      deleteRowById,
-      currentTab
+      intl,
+      deleteUser,
+      // confirmMessage,
+      // handleOpenConfirmPopup,
+      // closeConfirmPopup,
+      // deleteRowById,
+      // currentTab
     } = this.props
 
-    const { columns } = this.state
+    let { columns } = this.state
+    const { formatMessage } = intl
 
     return (
       <React.Fragment>
-        <Confirm
-          size="tiny"
-          content="Do you really want to delete user?"
-          open={confirmMessage}
-          onCancel={closeConfirmPopup}
-          onConfirm={() => deleteConfirmation(deleteRowById, currentTab)}
-        />
         <ProdexGrid
           filterValue={filterValue}
           columns={columns}
@@ -68,7 +64,12 @@ class UsersTable extends Component {
           rowActions={[
             { text: "Edit", callback: row => openPopup(row) },
             { text: "Edit Roles", callback: row => openRolesPopup(row) },
-            { text: "Delete", callback: row => handleOpenConfirmPopup(row.id) }
+            {
+              text: "Delete", callback: row => confirm(
+                formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete user' }),
+                formatMessage({ id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` }, { item: row.name })
+              ).then(() => deleteUser(row.id))
+            }
           ]}
         />
       </React.Fragment>
@@ -82,7 +83,7 @@ const mapDispatchToProps = {
   openRolesPopup,
   handleOpenConfirmPopup,
   closeConfirmPopup,
-  deleteConfirmation
+  deleteUser
 }
 
 const mapStateToProps = state => {
@@ -100,4 +101,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(UsersTable)
+)(injectIntl(UsersTable))

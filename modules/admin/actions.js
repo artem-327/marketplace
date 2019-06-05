@@ -29,12 +29,12 @@ export function closeAddPopup() {
 	}
 }
 
-export function handleOpenConfirmPopup(id) {
-	return {
-		type: AT.ADMIN_OPEN_CONFIRM_POPUP,
-		payload: id
-	}
-}
+// export function handleOpenConfirmPopup(id) {
+// 	return {
+// 		type: AT.ADMIN_OPEN_CONFIRM_POPUP,
+// 		payload: id
+// 	}
+// }
 
 export function deleteConfirmation(id, config = null) {
 	if (config != null) {
@@ -103,24 +103,26 @@ export function handleActiveTab(tab) {
 }
 
 export function handleFiltersValue(props, value) {
+
 	return async dispatch => {
 		await dispatch({
 			type: AT.ADMIN_HANDLE_FILTERS_VALUE,
 			payload: value
 		})
+
 		switch (props.currentTab) {
 			case 'CAS Products': {
-				if (value.trim().length < 3) {
-					await dispatch({
-						type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
-						payload: api.getCasProductByFilter(props.casListDataRequest)
-					})
-				} else {
-					await dispatch({
-						type: AT.ADMIN_GET_CAS_PRODUCT_BY_STRING,
-						payload: api.getCasProductByString(value)
-					})
-				}
+				// if (value.trim().length < 3) {
+				// 	await dispatch({
+				// 		type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
+				// 		payload: api.getCasProductByFilter(value, props.casListDataRequest)
+				// 	})
+				// } else {
+				await dispatch({
+					type: AT.ADMIN_GET_CAS_PRODUCT_BY_STRING,
+					payload: api.getCasProductByString(value)
+				})
+				// }
 			}
 				break
 			case 'Manufacturers': {
@@ -259,16 +261,16 @@ export function openEditAltNamesCasPopup(value) {
 	}
 }
 
-export function casDeleteItem(value, reloadFilter) {
-	return async dispatch => {
-		await dispatch({
-			type: AT.ADMIN_DELETE_CAS_PRODUCT,
-			payload: api.deleteCasProduct(value)
-		})
-		// Reload CAS Product list using filters
-		dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
-	}
-}
+// export function casDeleteItem(value, reloadFilter) {
+// 	return async dispatch => {
+// 		await dispatch({
+// 			type: AT.ADMIN_DELETE_CAS_PRODUCT,
+// 			payload: api.deleteCasProduct(value)
+// 		})
+// 		// Reload CAS Product list using filters
+// 		// dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
+// 	}
+// }
 
 export function getCountries() {
 	return (dispatch, getState) => {
@@ -325,16 +327,7 @@ export function deleteProductName(productId, id) {
 	}
 }
 
-export function deleteCompany(id) {
-	return async dispatch => {
-		await dispatch({
-			type: AT.ADMIN_DELETE_COMPANIES,
-			payload: api.deleteCompany(id)
-		})
-
-		dispatch(getCompanies())
-	}
-}
+export const deleteCompany = id => ({ type: AT.ADMIN_DELETE_COMPANIES, payload: api.deleteCompany(id) })
 
 export function createCompany(formData) {
 	return async dispatch => {
@@ -383,3 +376,9 @@ export function closePopup() {
 		type: AT.ADMIN_CLOSE_POPUP
 	}
 }
+
+export const deleteCasProduct = id => ({ type: AT.ADMIN_CAS_DELETE_PRODUCT, payload: api.deleteCasProduct(id) })
+
+export const deleteUnit = id => ({ type: AT.ADMIN_DELETE_UNIT, payload: api.deleteUnit(id) })
+
+export const deleteUnitOfPackaging = id => ({ type: AT.ADMIN_DELETE_UNIT_OF_PACKAGING, payload: api.deleteUnitOfPackaging(id) })
