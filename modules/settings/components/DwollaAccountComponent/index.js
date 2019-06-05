@@ -107,7 +107,8 @@ class BankAccountsPopup extends React.Component {
       closeDwollaPopup,
       countriesDropDown,
       provincesDropDown,
-      postDwollaAccount
+      postDwollaAccount,
+      auth
     } = this.props
     const { accordionActive } = this.state
 
@@ -125,16 +126,19 @@ class BankAccountsPopup extends React.Component {
             onSubmit={(values, actions) => {
               values.beneficialOwner.address.country += ''
               values.beneficialOwner.passport.country += ''
-              values.beneficialOwner.passport.stateProvinceRegion += ''
+              values.beneficialOwner.address.stateProvinceRegion += ''
               if(values.controller && values.controller.address && values.controller.address.country){
                 values.controller.address.country += ''
               }
               if(values.controller && values.controller.passport && values.controller.passport.country){
                 values.controller.passport.country += ''
               }
+              if(values.controller && values.controller.address && values.controller.address.stateProvinceRegion){
+                values.controller.address.stateProvinceRegion += ''
+              }
 
               values.beneficialOwner.status = 'status'
-              values.beneficialOwner.id = '50'
+              values.beneficialOwner.id = auth.identity.id +''
 
               closeDwollaPopup()
               postDwollaAccount(values)
@@ -235,6 +239,7 @@ const mapDispatchToProps = {
 }
 const mapStateToProps = state => {
   return {
+    auth: state.auth,
     hasProvinces: state.settings.hasProvinces,
     provincesDropDown: state.settings.provincesDropDown,
     popupValues: state.settings.popupValues,

@@ -142,6 +142,9 @@ class AddNewPopupCasProducts extends React.Component {
             if(values.controller && values.controller.passport && values.controller.passport.country){
               values.controller.passport.country += ''
             }
+            if(values.controller && values.controller.address && values.controller.address.stateProvinceRegion){
+              values.controller.address.stateProvinceRegion += ''
+            }
 
             values.beneficialOwner.status = 'status'
             values.beneficialOwner.id = auth.identity.id +''
