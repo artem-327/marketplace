@@ -59,17 +59,17 @@ class MyInventory extends Component {
     let title = ''
 
     return rows.map(r => {
-      switch (r.status) {
-        case 'Broadcasting':
+      switch (r.status.toLowerCase()) {
+        case 'broadcasting':
           title = 'Broadcasting now, switch off to stop broadcasting.'
           break
-        case 'Not broadcasting':
+        case 'not broadcasting':
           title = 'Not Broadcasting now, switch on to start broadcasting.'
           break
-        case 'Incomplete':
+        case 'incomplete':
           title = 'Incomplete, please enter all required values first.'
           break
-        case 'Unmapped':
+        case 'unmapped':
           title = 'Unmapped, please make sure related Product is mapped first.'
           break
         default:
@@ -80,17 +80,18 @@ class MyInventory extends Component {
         ...r,
         broadcast: (
           <div style={{ float: 'right' }}>
-            {r.status !== 'Unmapped' ? (
-              <Popup id={r.id}
-                trigger={<Checkbox toggle defaultChecked={r.status === 'Broadcasting'} disabled={r.status === 'Incomplete'} onChange={(e, data) => this.props.patchBroadcast(data.checked, r.id)} />}
-                content={title}
-              />
-            ) : (
-                <Popup id={r.id}
-                  trigger={<Icon name='unlink' onClick={() => Router.push({ pathname: '/settings/', query: { type: 'products', action: 'edit', id: r.product.id } })} />}
-                  content={title}
-                />
-              )}
+            <Popup id={r.id}
+              trigger={
+                <Checkbox toggle={true}
+                          defaultChecked={r.status.toLowerCase() === 'broadcasting'}
+                          disabled={r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'}
+                          onChange={(e, data) => {
+                            e.preventDefault()
+                            this.props.patchBroadcast(data.checked, r.id)
+                          }} />
+              }
+              content={title}
+            />
           </div>
         )
       }
@@ -176,7 +177,11 @@ class MyInventory extends Component {
                 }
               }
             ]}
-            onRowClick={(row) => Router.push({ pathname: '/inventory/edit', query: { id: row.id }})}
+            onRowClick={(e, row) => {
+              if (e.target.tagName === 'TD') {
+                Router.push({pathname: '/inventory/edit', query: {id: row.id}})
+              }
+            }}
           />
         </div>
         <Broadcast />

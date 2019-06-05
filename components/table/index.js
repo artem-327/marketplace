@@ -100,8 +100,8 @@ const SortLabel = ({ onSort, children, direction }) => (
 )
 
 const Row = ({ tableRow, selected, onToggle, onClick, ...restProps }) => {
-  const rowAction = (row) => {
-    onClick && onClick(tableRow.row)
+  const rowAction = (e, row) => {
+    onClick && onClick(e, tableRow.row)
   }
   return (
     <Table.Row
