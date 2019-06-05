@@ -184,7 +184,7 @@ const mapStateToProps = state => {
   console.warn(state.settings)
   return {
     popupValues: state.settings.popupValues,
-    userRoles: state.settings.popupValues.allUserRoles.map(r => (
+    userRoles: state.settings.popupValues && state.settings.popupValues.allUserRoles.map(r => (
         r.id
     )),
     branchesAll: state.settings.branchesAll,

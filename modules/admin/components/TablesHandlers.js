@@ -1,16 +1,20 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { config } from '../config'
+import { debounce } from 'lodash'
 
 import { Header, Menu, Button, Input, Dropdown } from 'semantic-ui-react'
 
 import { openPopup, handleFiltersValue } from '../actions'
 
 class TablesHandlers extends Component {
-  state = {
-    filterValueKey: 0,
-    filterTimeout: null,
-    filterFieldCurrentValue: 'None'
+  constructor(props) {
+    super(props)
+    this.state = {
+      filterFieldCurrentValue: 'None'
+    }
+
+    this.debouncedOnChange = debounce(this.handleChange, 250)
   }
 
   componentDidUpdate(prevProps) {
@@ -34,31 +38,19 @@ class TablesHandlers extends Component {
     })
   }
 
-  handleFiltersValueWithTimeout = (value) => {
-    let { props } = this
-
-    if (this.state.filterTimeout)
-      clearTimeout(this.state.filterTimeout)
-
-    this.setState({
-      filterTimeout: setTimeout(() => {
-        props.handleFiltersValue(props, value)
-      }, 1000)
-    })
+  handleChange = (e, { value }) => {
+    this.props.handleFiltersValue(this.props, value)
   }
 
   render() {
     const {
-      handleFiltersValue,
       currentTab,
       openPopup
     } = this.props
 
-    const {
-      filterValueKey,
-      filterFieldCurrentValue
-    } = this.state
 
+    if (currentTab === 'Manufactures' || currentTab === 'CAS Products') var onChange = this.debouncedOnChange
+    else var onChange = this.handleChange
 
     return (
       <Menu secondary>
@@ -68,12 +60,8 @@ class TablesHandlers extends Component {
 
         <Menu.Menu position='right'>
           <Menu.Item>
-            <Input key={filterValueKey}
-                   style={{ width: 340 }}
-                   size="large"
-                   icon='search'
-                   placeholder={config[currentTab].searchText}
-                   onChange={e => this.handleFiltersValueWithTimeout(e.target.value)} />
+            <Input style={{ width: 340 }} size="large" icon='search' placeholder={config[currentTab].searchText}
+              onChange={onChange} />
           </Menu.Item>
           <Menu.Item>
             <Button size="large" primary onClick={() => openPopup()}>

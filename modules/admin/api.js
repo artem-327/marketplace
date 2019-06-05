@@ -37,9 +37,7 @@ export async function updateCasProduct(id, value) {
   return data
 }
 
-export async function deleteCasProduct(id) {
-  await api.delete(`/prodex/api/cas-products/id/${id}`)
-}
+export const deleteCasProduct = id => api.delete(`/prodex/api/cas-products/id/${id}`).then(() => id)
 
 export async function getAllUnNumbers() {
   const { data } = await api.get("/prodex/api/un-numbers")
@@ -122,9 +120,7 @@ export async function updateCompany(id, formData) {
   return data
 }
 
-export async function deleteCompany(id) {
-  await api.delete(`/prodex/api/companies/id/${id}`)
-}
+export const deleteCompany = (id) => api.delete(`/prodex/api/companies/id/${id}`).then(() => id)
 
 export async function postNewProductName(value) {
   const { data } = await api.post('/prodex/api/product-names', value)
@@ -140,8 +136,9 @@ export async function deleteProductName(id) {
   await api.delete(`/prodex/api/product-names/${id}`)
 }
 
+export const deleteUnit = id => api.delete(`/prodex/api/units/${id}`).then(() => id)
 
-
+export const deleteUnitOfPackaging = id => api.delete(`/prodex/api/packaging-types/${id}`).then(() => id)
 
 
 

@@ -1,6 +1,6 @@
 import React, {Component} from "react"
 import {connect} from "react-redux"
-import { Confirm, Popup, Label } from 'semantic-ui-react'
+import { Popup, Label } from 'semantic-ui-react'
 import ProdexTable from '~/components/table'
 import {
   getCasProductByFilter,
@@ -10,8 +10,10 @@ import {
   handleOpenConfirmPopup,
   closeConfirmPopup,
   getHazardClassesDataRequest,
-  getPackagingGroupsDataRequest
+  getPackagingGroupsDataRequest,
+  deleteCasProduct
 } from '../../actions'
+
 
 const PAGE_SIZE = 50
 
@@ -52,29 +54,23 @@ class CasProductsTable extends Component {
       config,
       loading,
       rows,
-      filterValue,
-      currentTab,
       openEditCasPopup,
       openEditAltNamesCasPopup,
-      casDeleteItem,
-      reloadFilter,
-      confirmMessage,
-      handleOpenConfirmPopup,
-      closeConfirmPopup,
-      deleteRowById
+      deleteCasProduct,
+      // handleOpenConfirmPopup,
+      // filterValue,
+      // currentTab,
+      // casDeleteItem,
+      // reloadFilter,
+      // confirmMessage,
+      // closeConfirmPopup,
+      // deleteRowById
     } = this.props
 
     const { columns } = config.display
 
     return (
       <React.Fragment>
-        <Confirm
-            size="tiny"
-            content="Do you really want to delete item?"
-            open={confirmMessage}
-            onCancel={closeConfirmPopup}
-            onConfirm={() => casDeleteItem(deleteRowById, reloadFilter)}
-        />
         <ProdexTable
           loading={loading}
           columns={columns}
@@ -84,7 +80,7 @@ class CasProductsTable extends Component {
           rowActions={[
             {text: 'Edit', callback: (row) => openEditCasPopup(row)},
             {text: 'Edit Alternative Names', callback: (row) => openEditAltNamesCasPopup(row)},
-            {text: 'Delete', callback: (row) => handleOpenConfirmPopup(row.id)}
+            {text: 'Delete', callback: (row) => deleteCasProduct(row.id)}
           ]}
         />
       </React.Fragment>
@@ -101,6 +97,7 @@ const mapDispatchToProps = {
   closeConfirmPopup,
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
+  deleteCasProduct
 }
 
 const transformHazardClasses = classes => (

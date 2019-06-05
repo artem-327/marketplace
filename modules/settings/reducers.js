@@ -135,7 +135,31 @@ export default function reducer(state = initialState, action) {
         toast: { message: null, isSuccess: null }
       }
     }
-    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_FULFILLED:
+    /* DELETE DELIVERY ADDRESS */
+
+    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        deliveryAddressesRows: state.deliveryAddressesRows.filter((address) => address.id !== payload)
+      }
+    }
+
+    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+
     case AT.CLOSE_CONFIRM_POPUP: {
       return {
         ...state,
@@ -243,6 +267,9 @@ export default function reducer(state = initialState, action) {
         city: warehouse.address.city,
         countryName: warehouse.address.country.name,
         countryId: warehouse.address.country.id,
+        hasProvinces: warehouse.address.country.hasProvinces,
+        provinceName: warehouse.address.province ? warehouse.address.province.name : '',
+        provinceId: warehouse.address.province ? warehouse.address.province.id : '',
         zip: warehouse.address.zip.zip,
         zipID: warehouse.address.zip.id,
         contactName: warehouse.contactName,
@@ -265,7 +292,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         warehousesRows: warehousesRows,
-        country: action.payload.newCountryFormat
+        country: action.payload.newCountryFormat,
+        countries: action.payload.country
       }
     }
 
@@ -282,6 +310,9 @@ export default function reducer(state = initialState, action) {
           city: branch.address.city,
           countryName: branch.address.country.name,
           countryId: branch.address.country.id,
+          hasProvinces: branch.address.country.hasProvinces,
+          provinceName: branch.address.province ? branch.address.province.name : '',
+          provinceId: branch.address.province ? branch.address.province.id : '',
           zip: branch.address.zip.zip,
           zipID: branch.address.zip.id,
           contactName: branch.contactName,
@@ -304,7 +335,8 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         branchesRows: branchesRows,
-        country: action.payload.newCountryFormat
+        country: action.payload.newCountryFormat,
+        countries: action.payload.country
       }
     }
 
@@ -407,7 +439,9 @@ export default function reducer(state = initialState, action) {
           unitID: product.packagingUnit ? product.packagingUnit.id : null,
           freightClass: product.freightClass ? product.freightClass : null,
           hazardous: product.hazardous,
-          hazardClass: product.hazardClasses && product.hazardClasses.length ? product.hazardClasses[0].id : null,
+          hazardClass: product.hazardClasses && product.hazardClasses.length ? product.hazardClasses.map(d => (
+              d.id
+            )) : null,
           nmfcNumber: product.nmfcNumber ? product.nmfcNumber : null,
           stackable: product.stackable,
           unNumber: product.unNumber ? product.unNumber : null
@@ -565,7 +599,7 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_PENDING:
     case AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES_PENDING:
     case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_PENDING:
-    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_PENDING:
+
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING_PENDING:
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER_PENDING: {
       return {
@@ -594,7 +628,6 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_REJECTED:
     case AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES_REJECTED:
     case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_REJECTED:
-    case AT.SETTINGS_DELETE_DELIVERY_ADDRESSES_REJECTED:
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING_REJECTED:
     case AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_FILTER_REJECTED: {
       return {
@@ -638,6 +671,111 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    /* DELETE PRODUCT */
+
+    case AT.DELETE_PRODUCT_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+
+    case AT.DELETE_PRODUCT_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        productsCatalogRows: state.productsCatalogRows.filter((el) => el.id !== payload)
+      }
+    }
+
+    case AT.DELETE_PRODUCT_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    /* DELETE USER */
+
+    case AT.DELETE_USER_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.DELETE_USER_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        usersRows: state.usersRows.filter((user) => user.id !== payload)
+      }
+    }
+
+    case AT.DELETE_USER_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    /* DELETE BANK ACCOUNT */
+
+    case AT.DELETE_BANK_ACCOUNT_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.DELETE_BANK_ACCOUNT_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        bankAccountsRows: state.bankAccountsRows.filter((account) => account.id !== payload)
+      }
+    }
+
+    case AT.DELETE_BANK_ACCOUNT_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    /* DELETE BRANCH */
+
+    case AT.DELETE_BRANCH_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.DELETE_BRANCH_FULFILLED: {
+      let property = state.currentTab.type === 'warehouses' ? 'warehousesRows' : 'branchesRows'
+
+      return {
+        ...state,
+        loading: false,
+        [property]: state[property].filter((warehouse) => warehouse.id !== payload)
+      }
+    }
+
+    case AT.DELETE_BRANCH_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    case AT.TAB_CHANGED: {
+      return {
+        ...state,
+        currentTab: payload
+      }
+    }
 
 
     default: {
