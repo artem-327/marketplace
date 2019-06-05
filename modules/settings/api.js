@@ -2,7 +2,7 @@ import api from '~/api'
 
 export default {
   getUsers: () => api.get('/prodex/api/users').then(response => response.data),
-  getRoles: () => api.get('/prodex/api/roles').then(response => response.data),
+  getRoles: () => api.get('/prodex/api/roles?includeSuperAdmin=true').then(response => response.data),
   getCurrentUser: () =>
     api.get('/prodex/api/users/me').then(response => response.data),
   getWarehouses: () =>
@@ -79,7 +79,7 @@ export default {
   // putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
   patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body),
   patchUserRole: (id, body) =>
-    api.patch(`/prodex/api/users/id/${id}/add-roles`, body),
+    api.put(`/prodex/api/users/id/${id}/roles`, body),
   putProduct: (id, body) => api.put(`/prodex/api/products/id/${id}`, body), //! ! delete
   searchCasProduct: (pattern) => api.get(`/prodex/api/cas-products/search?limit=5&pattern=${pattern}`),
   searchUnNumber: (pattern) => api.get(`/prodex/api/un-numbers/search?limit=5&pattern=${pattern}`),

@@ -14,6 +14,7 @@ import {
   deleteUser,
   openRolesPopup
 } from "../../actions"
+import Router from "next/router"
 
 class UsersTable extends Component {
   state = {
@@ -23,7 +24,7 @@ class UsersTable extends Component {
       { name: "email", title: "E-mail" },
       { name: "phone", title: "Phone" },
       { name: "homeBranch", title: "Home Branch" },
-      { name: "allUserRoles", title: "Roles", width: 200 }
+      { name: "userRoles", title: "Roles", width: 200 }
     ]
   }
 
@@ -55,10 +56,7 @@ class UsersTable extends Component {
         <ProdexGrid
           filterValue={filterValue}
           columns={columns}
-          rows={rows.map(r => ({
-            ...r,
-            allUserRoles: <TablePopUp row={r} />
-          }))}
+          rows={rows}
           loading={loading}
           style={{ marginTop: "5px" }}
           rowActions={[
@@ -88,11 +86,16 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-    rows: state.settings.usersRows,
+    rows: state.settings.usersRows.map(r => ({
+      ...r,
+      userRoles: r.allUserRoles.map(rol => (
+        rol.name
+      )).join(", "),
+    })),
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
-    currentTab: state.settings.currentTab,
+    currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
     loading: state.settings.loading,
     roles: state.settings.roles
   }

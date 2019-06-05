@@ -234,6 +234,7 @@ export function handlerSubmitWarehouseEditPopup(payload, id) {
       address: {
         city: payload.city,
         country: payload.country,
+        province: payload.province,
         streetAddress: payload.address,
         zip: payload.zip
       },
@@ -244,11 +245,12 @@ export function handlerSubmitWarehouseEditPopup(payload, id) {
       warehouse: payload.tab ? false : true,
       name: payload.name
     }
+    removeEmpty(dataBody)
     await dispatch({
       type: AT.PUT_WAREHOUSE_EDIT_POPUP,
       payload: api.putWarehouse(id, dataBody)
     })
-    if (payload.tab) { // ! ! ???
+    if (payload.tab) {
       dispatch(getBranchesDataRequest())
     } else {
       dispatch(getWarehousesDataRequest())
@@ -259,24 +261,26 @@ export function handlerSubmitWarehouseEditPopup(payload, id) {
 
 export function handleSubmitProductEditPopup(productData, id, reloadFilter) {
   return async dispatch => {
+    const data = {
+      casProduct: productData.casProduct ? productData.casProduct.id : null,
+      description: productData.description,
+      freightClass: productData.freightClass ? productData.freightClass : null,
+      hazardClasses: productData.hazardClass ? productData.hazardClass : null,
+      hazardous: productData.hazardous,
+      nmfcNumber: productData.nmfcNumber !== '' ? parseInt(productData.nmfcNumber) : null,
+      packagingSize: productData.packagingSize,
+      packagingType: productData.packageID,
+      packagingGroup: productData.packagingGroup ? productData.packagingGroup : null,
+      productCode: productData.productNumber,
+      productName: productData.productName,
+      packagingUnit: productData.unitID,
+      stackable: productData.stackable,
+      unNumber: productData.unNumber ? productData.unNumber : null
+    }
+    removeEmpty(data)
     await dispatch({
       type: AT.SETTINGS_UPDATE_PRODUCT_CATALOG,
-      payload: api.updateProduct(id, {
-        casProduct: productData.casProduct.id,
-        description: productData.description,
-        freightClass: productData.freightClass ? productData.freightClass : null,
-        hazardClasses: productData.hazardClass ? [productData.hazardClass] : null,
-        hazardous: productData.hazardous,
-        nmfcNumber: parseInt(productData.nmfcNumber),
-        packagingSize: productData.packagingSize,
-        packagingType: productData.packageID,
-        packagingGroup: productData.packagingGroup ? productData.packagingGroup : null,
-        productCode: productData.productNumber,
-        productName: productData.productName,
-        packagingUnit: productData.unitID,
-        stackable: productData.stackable,
-        unNumber: productData.unNumber ? productData.unNumber : null
-      })
+      payload: api.updateProduct(id, data)
     })
     dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
     dispatch(closePopup())
@@ -341,7 +345,7 @@ export function getWarehousesDataRequest() {
             value: country.id
           }
         })
-        return { warehouses, newCountryFormat }
+        return { warehouses, newCountryFormat, country }
       }
     })
   }
@@ -362,7 +366,7 @@ export function getBranchesDataRequest() {
             value: country.id
           }
         })
-        return { branches, newCountryFormat }
+        return { branches, newCountryFormat, country }
       }
     })
   }
@@ -495,6 +499,7 @@ export function postNewWarehouseRequest(payload) {
       address: {
         city: payload.city,
         country: payload.country,
+        province: payload.province,
         streetAddress: payload.address,
         zip: payload.zip
       },
@@ -505,11 +510,12 @@ export function postNewWarehouseRequest(payload) {
       warehouse: payload.tab ? false : true,
       name: payload.name
     }
+    removeEmpty(dataBody)
     await dispatch({
       type: AT.POST_NEW_WAREHOUSE_REQUEST,
       payload: api.postNewWarehouse(dataBody)
     })
-    if (payload.tab) { // ! ! ???
+    if (payload.tab) {
       dispatch(getBranchesDataRequest())
     } else {
       dispatch(getWarehousesDataRequest())
@@ -544,24 +550,26 @@ export function putNewUserRoleRequest(payload, id) {
 
 export function handleSubmitProductAddPopup(inputsValue, reloadFilter) {
   return async dispatch => {
+    const data = {
+      casProduct: inputsValue.casProduct ? inputsValue.casProduct.id : null,
+      description: inputsValue.description,
+      freightClass: inputsValue.freightClass ? inputsValue.freightClass : null,
+      hazardClasses: inputsValue.hazardClass ? inputsValue.hazardClass : null,
+      hazardous: inputsValue.hazardous,
+      nmfcNumber: inputsValue.nmfcNumber !== '' ? parseInt(inputsValue.nmfcNumber) : null,
+      packagingSize: inputsValue.packagingSize,
+      packagingType: inputsValue.packageID,
+      packagingUnit: inputsValue.unitID,
+      packagingGroup: inputsValue.packagingGroup ? inputsValue.packagingGroup : null,
+      productCode: inputsValue.productNumber,
+      productName: inputsValue.productName,
+      stackable: inputsValue.stackable,
+      unNumber: inputsValue.unNumber ? inputsValue.unNumber : null
+    }
+    removeEmpty(data)
     await dispatch({
       type: AT.SETTINGS_POST_NEW_PRODUCT_REQUEST,
-      payload: api.postNewProduct({
-        casProduct: inputsValue.casProduct ? inputsValue.casProduct.id : null,
-        description: inputsValue.description,
-        freightClass: inputsValue.freightClass ? inputsValue.freightClass : null,
-        hazardClasses: inputsValue.hazardClass ? [inputsValue.hazardClass] : null,
-        hazardous: inputsValue.hazardous,
-        nmfcNumber: parseInt(inputsValue.nmfcNumber),
-        packagingSize: inputsValue.packagingSize,
-        packagingType: inputsValue.packageID,
-        packagingUnit: inputsValue.unitID,
-        packagingGroup: inputsValue.packagingGroup ? inputsValue.packagingGroup : null,
-        productCode: inputsValue.productNumber,
-        productName: inputsValue.productName,
-        stackable: inputsValue.stackable,
-        unNumber: inputsValue.unNumber ? inputsValue.unNumber : null
-      })
+      payload: api.postNewProduct(data)
     })
     dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
     dispatch(closePopup())

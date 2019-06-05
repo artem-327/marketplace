@@ -12,6 +12,7 @@ import {
 
 import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui'
 import * as Yup from 'yup'
+import Router from "next/router"
 
 const initialFormValues = {
   'firstName':    '',
@@ -27,7 +28,7 @@ const initialFormValues = {
   }
 }
 
-const formValidation = Yup.object().shape({
+const formValidation = hasProvinces => Yup.object().shape({
   firstName: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
@@ -44,7 +45,8 @@ const formValidation = Yup.object().shape({
     city: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Enter at least 2 characters'),
     streetAddress: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Enter at least 2 characters'),
     zip: Yup.string().trim().required('Enter zip code'),
-    country: Yup.number().required()
+    country: Yup.number().required(),
+    province: hasProvinces && Yup.number('').required('Province is required')
   })
 })
 
@@ -90,7 +92,7 @@ class DeliveryAddressesPopup extends React.Component {
           <Form
             enableReinitialize
             initialValues={popupValues ? popupValues : initialFormValues}
-            validationSchema={formValidation}
+            validationSchema={formValidation(hasProvinces)}
             onReset={closePopup}
             onSubmit={async (values, actions) => {
               if (values.address.province === '') delete values.address['province']
@@ -111,7 +113,6 @@ class DeliveryAddressesPopup extends React.Component {
                   <Input type="text" label="Contact Email" name="email" />
                   <Input type="text" label="Contact Phone" name="phoneNumber" />
                 </FormGroup>
-                <Divider />
                 <h4>Address</h4>
                 <FormGroup widths="equal">
                   <Input type="text" label="Street Address" name="address.streetAddress" />
@@ -123,7 +124,7 @@ class DeliveryAddressesPopup extends React.Component {
                             inputProps={{search: true, onChange:  (e, d) => {
                                 setFieldValue('address.province', ''); this.handleCountry(e, d)}}} />
                   <Dropdown label="Province" name="address.province" options={provincesDropDown}
-                            inputProps={{search: true, disabled: !this.state.hasProvinces, clearable: true}} />
+                            inputProps={{search: true, disabled: !this.state.hasProvinces}} />
                 </FormGroup>
                 <div style={{ textAlign: 'right' }}>
                   <Button.Reset>Cancel</Button.Reset>
@@ -166,7 +167,7 @@ const mapStateToProps = state => {
     provincesDropDown: state.settings.provincesDropDown,
     countries: state.settings.countries,
     reloadFilter: {props: {
-        currentTab: state.settings.currentTab,
+        currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
         deliveryAddressesFilter: state.settings.deliveryAddressesFilter},
       value: state.settings.filterValue},
   }

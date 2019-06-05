@@ -17,6 +17,15 @@ class TablesHandlers extends Component {
     this.debouncedOnChange = debounce(this.handleChange, 250)
   }
 
+  componentDidUpdate(prevProps) {
+    let { filterValueKey } = this.state
+    if (prevProps.filterValue && this.props.filterValue === '') {
+      this.setState({
+        filterValueKey: ++filterValueKey
+      })
+    }
+  }
+
   handleChangeSelectField = (event, value) => {
     this.setState({
       filterFieldCurrentValue: value
@@ -36,7 +45,7 @@ class TablesHandlers extends Component {
   render() {
     const {
       currentTab,
-      openPopup,
+      openPopup
     } = this.props
 
 
@@ -68,7 +77,9 @@ class TablesHandlers extends Component {
 const mapStateToProps = state => {
   return {
     currentTab: state.admin.currentTab,
-    casListDataRequest: state.admin.casListDataRequest
+    casListDataRequest: state.admin.casListDataRequest,
+    companyListDataRequest: state.admin.companyListDataRequest,
+    filterValue: state.admin.filterValue
   }
 }
 

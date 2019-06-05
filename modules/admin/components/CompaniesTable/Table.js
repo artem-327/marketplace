@@ -19,9 +19,16 @@ const PAGE_SIZE = 50
 class CompaniesTable extends Component {
 
   getNextPage = (pageNumber) => {
+    const {companyListDataRequest, filterValue} = this.props
+
     this.props.getCompanies({
-      pageNumber,
-      pageSize: PAGE_SIZE
+      ...companyListDataRequest,
+      filters: filterValue && filterValue.length >= 3 ? [{
+        operator: "LIKE",
+        path: "Company.name",
+        values: ['%'+filterValue+'%']
+      }] : [],
+      pageNumber
     })
   }
 
@@ -55,7 +62,6 @@ class CompaniesTable extends Component {
           pageSize={PAGE_SIZE}
           getNextPage={this.getNextPage}
           loading={loading}
-          filterValue={filterValue}
           rowActions={[
             { text: 'Edit', callback: (row) => openEditCompany(row.id, row) },
             { text: 'Delete', callback: (row) => confirm(
@@ -82,6 +88,7 @@ const mapDispatchToProps = {
 const mapStateToProps = ({admin}) => {
   return {
     columns: admin.config[admin.currentTab].display.columns,
+    companyListDataRequest: admin.companyListDataRequest,
     filterValue: admin.filterValue,
     currentTab: admin.currentTab,
     loading: admin.loading,

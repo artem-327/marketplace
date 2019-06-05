@@ -105,6 +105,7 @@ export function handleActiveTab(tab) {
 export function handleFiltersValue(props, value) {
 
 	return async dispatch => {
+		// save filter value
 		await dispatch({
 			type: AT.ADMIN_HANDLE_FILTERS_VALUE,
 			payload: value
@@ -131,6 +132,18 @@ export function handleFiltersValue(props, value) {
 					payload: api.getManufacturersByString(value)
 				})
 			}
+			case 'Companies':
+				await dispatch({
+					type: AT.ADMIN_GET_COMPANIES,
+					payload: api.getCompanies({
+						...props.companyListDataRequest,
+						filters: [{
+							operator: "LIKE",
+							path: "Company.name",
+							values: ['%' + value + '%']
+						}]
+					})
+				})
 				break
 		}
 	}

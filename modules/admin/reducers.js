@@ -36,13 +36,15 @@ export const initialState = {
   ],
 
   currentTab: 'Companies',
-  casListDataRequest: { pageSize: 50, pageNumber: 0 },
+  casListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: "ASC", sortPath: "CasProduct.chemicalName" },
+  companyListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: "ASC", sortPath: "Company.name" },
   currentEditForm: null,
   currentEdit2Form: null,
   currentAddForm: null,
   confirmMessage: null,
   deleteRowById: null,
   filterValue: '',
+  filterCasIds: [],
   loading: false,
   config: config,
 }
@@ -204,14 +206,27 @@ export default function reducer(state = initialState, action) {
         currentTab: action.payload.tab,
         currentAddForm: null,
         currentEditForm: null,
-        currentEdit2Form: null
+        currentEdit2Form: null,
+        filterCasIds: [],
+        filterValue: ''
       }
     }
 
     case AT.ADMIN_HANDLE_FILTERS_VALUE: {
       return {
         ...state,
-        filterValue: action.payload
+        filterValue: action.payload,
+        casProductsRows: [],
+        companiesRows: []
+      }
+    }
+
+    case AT.ADMIN_HANDLE_CAS_FILTER_IDS: {
+      return {
+        ...state,
+        filterCasIds: action.payload.map(casProduct => {
+          return casProduct.id
+        })
       }
     }
 
