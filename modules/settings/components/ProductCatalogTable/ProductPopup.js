@@ -78,7 +78,7 @@ class ProductPopup extends React.Component {
   handleResultSelect = (e, { result }) =>
     this.setState({value: result})
 
-  handleSearchChange = (e, { value }) => {
+  handleSearchChange = debounce((e, { value }) => {
     this.setState({ isLoading: true, value })
 
     this.props.searchCasProduct(value)
@@ -92,9 +92,9 @@ class ProductPopup extends React.Component {
         results: filter(this.handleCasProduct(), isMatch)
       })
     }, 300)
-  }
+  }, 500)
 
-  handleSearchUnNumber = (e, { value }) => {
+  handleSearchUnNumber = debounce((e, { value }) => {
     this.setState({ isUnLoading: true, unNumber: value })
 
     this.props.searchUnNumber(value)
@@ -108,7 +108,7 @@ class ProductPopup extends React.Component {
         unNumbers: filter(this.handleUnNumber(), isMatch)
       })
     }, 300)
-  }
+  }, 500)
 
   handleUnNumber = () => {
     return this.props.searchedUnNumbers.map(unNumber => ({
@@ -182,14 +182,14 @@ class ProductPopup extends React.Component {
             onSubmit={this.handlerSubmit}
           >
             <FormGroup widths="equal">
+              <Input type="text" label="Product Name" name="productName" />
+              <Input type="text" label="Product Number" name="productNumber" />
               <FormField>
                 <label>CAS Number / Product Search</label>
                 <Search
                   loading={isLoading}
                   onResultSelect={this.handleResultSelect}
-                  onSearchChange={debounce(this.handleSearchChange, 500, {
-                    leading: true
-                  })}
+                  onSearchChange={this.handleSearchChange}
                   results={searchedCasProducts.map(item => {
                     return {
                       id: item.id,
@@ -202,14 +202,18 @@ class ProductPopup extends React.Component {
                 />
               </FormField>
             </FormGroup>
-            <FormGroup widths="equal">
-              <Input type="text" label="Product Name" name="productName" />
-              <Input type="text" label="Product Number" name="productNumber" />
+            <FormGroup>
+              <FormField width={16}>
+                <label>Description</label>
+                <TextArea rows='3'
+                          name='description'
+                />
+              </FormField>
             </FormGroup>
             <FormGroup widths="equal">
               <Input type="text" label="Packaging Size" name="packagingSize" />
               <Dropdown
-                label="Units"
+                label="Unit"
                 name="unitID"
                 options={productsUnitsType}
               />
@@ -219,14 +223,26 @@ class ProductPopup extends React.Component {
                 options={packagingType}
               />
             </FormGroup>
+            <FormGroup width='equal'>
+              <FormField>
+                <Checkbox toggle
+                          label='Stackable'
+                          name='stackable'
+                />
+              </FormField>
+              <FormField>
+                <Checkbox toggle
+                          label='Hazardous'
+                          name='hazardous'
+                />
+              </FormField>
+            </FormGroup>
             <FormGroup widths='equal'>
               <FormField>
                 <label>UN Number</label>
                 <Search loading={isUnLoading}
                         onResultSelect={this.handleUnNumberSelect}
-                        onSearchChange={debounce(this.handleSearchUnNumber, 500, {
-                          leading: true
-                        })}
+                        onSearchChange={this.handleSearchUnNumber}
                         results={searchedUnNumbers.map(item => {
                           return {
                             id: item.id,
@@ -243,40 +259,21 @@ class ProductPopup extends React.Component {
                        name="nmfcNumber"
                 />
               </FormField>
-            </FormGroup>
-            <FormGroup widths='equal'>
               <Dropdown label='Freight Class'
                         name='freightClass'
                         options={freightClasses}
               />
+            </FormGroup>
+            <FormGroup widths='equal'>
               <Dropdown label='Hazard Class'
                         name='hazardClass'
+                        inputProps={{ multiple: true }}
                         options={hazardClasses}
               />
               <Dropdown label='Packaging Group'
                         name='packagingGroup'
                         options={packagingGroups}
               />
-            </FormGroup>
-            <FormGroup widths='equal'>
-              <FormField>
-                <Checkbox toggle
-                          label='Stackable'
-                          name='stackable'
-                />
-              </FormField>
-              <FormField>
-                <Checkbox toggle
-                          label='Hazardous'
-                          name='hazardous'
-                />
-              </FormField>
-              <FormField>
-                <label>Description</label>
-                <TextArea rows='3'
-                          name='description'
-                />
-              </FormField>
             </FormGroup>
             <div style={{ textAlign: 'right' }}>
               <Button.Reset onClick={closePopup}>Cancel</Button.Reset>
