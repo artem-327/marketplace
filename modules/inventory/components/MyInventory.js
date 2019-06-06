@@ -87,7 +87,7 @@ class MyInventory extends Component {
                           disabled={r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'}
                           onChange={(e, data) => {
                             e.preventDefault()
-                            this.props.patchBroadcast(data.checked, r.id)
+                            this.props.patchBroadcast(data.checked, r.id, r.status)
                           }} />
               }
               content={title}
