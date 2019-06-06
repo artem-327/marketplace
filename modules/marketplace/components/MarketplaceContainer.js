@@ -4,6 +4,7 @@ import * as Actions from '../actions'
 import { sidebarChanged } from '~/src/modules/cart'
 import { getProductOffer } from '~/modules/purchase-order/actions'
 import moment from "moment/moment"
+import { getLocationString } from '~/src/utils/functions'
 
 function mapStateToProps(store) {
   return {
@@ -30,9 +31,7 @@ function mapStateToProps(store) {
         assay: po.assayMin + '/' + po.assayMax,
         condition: po.productCondition ? po.productCondition.name : '',
         form: po.productForm ? po.productForm.name : '',
-        location: (store.auth.identity.id === po.owner.id || store.auth.identity.homeBranch.id === po.owner.id)
-          ? `${po.warehouse.address.city}, ${po.warehouse.address.country.name}`
-          : `${po.warehouse.address.country.name}` + (typeof po.warehouse.address.country !== 'undefined' ? `, ${po.warehouse.address.country.name}` : ``)
+        location: getLocationString(po)
       }
     }),
     sidebar: store.cart.sidebar
