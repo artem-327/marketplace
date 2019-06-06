@@ -93,8 +93,10 @@ class Orders extends Component {
                 { text: 'Detail', callback: (row) => router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`) }
               ]}
               onRowClick={(e, row) => {
-                if (e.target.tagName === 'TD')
+                const targetTag = e.target.tagName.toLowerCase()
+                if (targetTag !== 'input' && targetTag !== 'label') {
                   router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`)
+                }
               }}
             />
           }

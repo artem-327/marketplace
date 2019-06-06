@@ -178,7 +178,8 @@ class MyInventory extends Component {
               }
             ]}
             onRowClick={(e, row) => {
-              if (e.target.tagName === 'TD') {
+              const targetTag = e.target.tagName.toLowerCase()
+              if (targetTag !== 'input' && targetTag !== 'label') {
                 Router.push({pathname: '/inventory/edit', query: {id: row.id}})
               }
             }}
