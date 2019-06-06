@@ -79,20 +79,15 @@ class UploadLot extends Component {
         if (typeof unspecifiedTypes === 'undefined')
           unspecifiedTypes = []
         if (unspecifiedTypes.indexOf(type) >= 0) {
-          await confirm('Unspecified Document Type', 'Do you really want to upload documents with unspecified type?').then((result) => {
-            // continue uploading files
-          }, (result) => {
-            // remove all files
-            toastManager.add((
-              <div>
-                <strong>Canceled</strong>
-                <div>Selected files were not uploaded</div>
-              </div>
-            ), {
-              appearance: 'info',
-              autoDismiss: true,
-            })
-            files = []
+          files = []
+          toastManager.add((
+            <div>
+              <strong>File(s) not uploaded</strong>
+              <div>You have to specify document type first</div>
+            </div>
+          ), {
+            appearance: 'error',
+            autoDismiss: true,
           })
         }
 

@@ -94,7 +94,7 @@ class Orders extends Component {
               ]}
               onRowClick={(e, row) => {
                 const targetTag = e.target.tagName.toLowerCase()
-                if (targetTag !== 'input' && targetTag !== 'label') {
+                if (targetTag !== 'input' && targetTag !== 'label' && targetTag !== 'i') {
                   router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`)
                 }
               }}
