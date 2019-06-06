@@ -7,8 +7,9 @@ import React, { Component } from 'react'
 import { object, func } from 'prop-types'
 import { Sidebar, Button, Header, Grid, GridRow, GridColumn, Loader, Dimmer, Dropdown, Input, Divider, Segment } from 'semantic-ui-react'
 import Router from 'next/router'
-import { FormattedNumber } from 'react-intl'
+import { FormattedNumber, FormattedMessage } from 'react-intl'
 import { FormattedUnit } from '~/components/formatted-messages'
+import { errorMessages } from '~/constants/yupValidation'
 
 
 const CapitalizedColumn = styled(GridColumn)`
@@ -24,6 +25,10 @@ const FlexContent = styled(Segment)`
 const RelaxedSegment = styled(Segment)`
   padding-top: 0px;
   margin: 0 !important;
+`
+
+const ErrorLabel = styled.label`
+  color: red;
 `
 
 export default class AddCart extends Component {
@@ -79,6 +84,7 @@ export default class AddCart extends Component {
     let { packagingUnit, packagingSize, packagingType } = offer.product
 
     let totalPrice = (quantity && pricing) ? pricing.price * quantity * packagingSize : null
+    let error = null
 
 
     var dropdownOptions = []
@@ -110,18 +116,39 @@ export default class AddCart extends Component {
       })
     }
 
+    if (isNaN(quantity))
+      error =
+        <ErrorLabel>
+          {errorMessages.requiredMessage}
+        </ErrorLabel>
+    else if (quantity < offer.minimum)
+      error =
+        <ErrorLabel>
+          <FormattedMessage id='validation.minimum' defaultMessage='Minimum is {min}' values={{ min: offer.minimum }} />
+        </ErrorLabel>
+    else if (quantity > pkgAmount)
+      error =
+        <ErrorLabel>
+          <FormattedMessage id='validation.maximum' defaultMessage='Maximum is {max}' values={{ max: pkgAmount }} />
+        </ErrorLabel>
+    else if (quantity % offer.splits !== 0)
+      error =
+        <ErrorLabel>
+          <FormattedMessage id='validation.multiplyOfSplit' defaultMessage='Must be multiply of split ({split})' values={{ split: offer.splits }} />
+        </ErrorLabel>
 
-
-    let attachments = offer.attachments.map(att =>
-      <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
-    )
+    // let attachments = offer.attachments.map(att =>
+    //   <div><img src={file} alt='File' className='fileicon'></img><p className='filedescription'>{att.fileName}</p></div>
+    // )
 
     let canProceed = !warning && pricing
+
+
 
     return (
       <>
         <FlexContent basic>
-          <Grid verticalAlign='middle'>
+          <Grid verticalAlign='top'>
             <GridRow className='action' columns={1}>
               <GridColumn>
                 <Header>1. Product Information</Header>
@@ -211,7 +238,12 @@ export default class AddCart extends Component {
 
             <GridRow stretched columns={2}>
               <GridColumn>
-                <Input min={offer.minimum} error={warning} value={this.props.sidebar.quantity} onChange={this.handleQuantity} type='number' />
+                <Input
+                  step={offer.splits}
+                  error={!!error}
+                  value={this.props.sidebar.quantity}
+                  onChange={this.handleQuantity} type='number' />
+                {error}
               </GridColumn>
               <GridColumn className='purchase-info'>
                 <Dropdown
@@ -291,7 +323,7 @@ export default class AddCart extends Component {
     let { isOpen } = sidebar
 
     return (
-      <Sidebar onHide={() => sidebarChanged({ isOpen: false })} width='very wide' className='cart-sidebar flex' direction='right' animation='scale down' visible={isOpen}>
+      <Sidebar onHide={() => sidebarChanged({ isOpen: false })} width='very wide' className='cart-sidebar flex' direction='right' animation='scale down' visible={isOpen} style={{ zIndex: 601 }}>
         {
           (offerDetailIsFetching) ? <Dimmer active inverted> <Loader size='large' /> </Dimmer>
             : this.getCartMarkup()

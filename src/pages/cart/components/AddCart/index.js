@@ -10,7 +10,6 @@ import { getPricing, getLocationString } from '../../../../utils/functions'
 
 function mapStateToProps(store) {
     let pricing = getPricing(store.cart.offerDetail, store.cart.sidebar.quantity)
-    console.log('store', store)
     return {
         offer: { ...store.cart.offerDetail, locationStr: store.cart.offerDetail ? getLocationString(store.cart.offerDetail) : '' },
         order: store.cart.orderDetail,

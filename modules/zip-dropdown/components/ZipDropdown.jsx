@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Dropdown } from 'formik-semantic-ui'
-import { bool, func, object, string, array, number } from 'prop-types'
+import { bool, func, object, string, array } from 'prop-types'
 import { debounce } from 'lodash'
+import { FormattedMessage } from 'react-intl'
 
 export default class ZipDropdown extends Component {
   constructor(props) {
@@ -15,10 +16,10 @@ export default class ZipDropdown extends Component {
   }
   handleAddition = (e, data) => {
     let { onAddition, addZip } = this.props
-    
+
     addZip(data.value)
     this.handleChange(e, data)
-    
+
 
     onAddition(e, data)
   }
@@ -97,5 +98,5 @@ ZipDropdown.defaultProps = {
   onAddition: (e, data) => { },
   handleChange: (e, data) => { },
   onSearchChange: (e, data) => { },
-  label: 'Zip'
+  label: <FormattedMessage id='global.zip' defaultMessage='Zip' />
 }

@@ -2,7 +2,7 @@ import React, { Component } from "react"
 import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button, TextArea } from 'formik-semantic-ui'
 import { FormattedMessage } from 'react-intl'
-import { Modal, Icon, Segment, Dimmer, Loader, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab } from 'semantic-ui-react'
+import { Modal, Icon, Segment, Dimmer, Loader, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab, Popup } from 'semantic-ui-react'
 import styled from 'styled-components'
 import * as val from 'yup'
 import { DateInput } from '~/components/custom-formik'
@@ -293,7 +293,7 @@ class AddInventoryForm extends Component {
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingGroup ? values.product.packagingGroup.groupCode : ''}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}>Hazaardous Class</GridColumn>
-                  <GridColumn computer={8} mobile={16}><Label.Group color='blue'>{values.product && values.product.hazardClasses ? values.product.hazardClasses.map(hClass => { return (<Label title={hClass.description}>{hClass.classCode}</Label>) }) : ''}</Label.Group></GridColumn>
+                  <GridColumn computer={8} mobile={16}><Label.Group color='blue'>{values.product && values.product.hazardClasses ? values.product.hazardClasses.map(hClass => { return (<Popup content={hClass.description} trigger={<Label>{hClass.classCode}</Label>} />) }) : ''}</Label.Group></GridColumn>
 
                   <GridColumn computer={8} mobile={16}>Stackable</GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? values.product.stackable : ''}</GridColumn>
@@ -414,6 +414,7 @@ class AddInventoryForm extends Component {
 
   render() {
     const {
+      listDocumentTypes,
       listConditions,
       listForms,
       listGrades,
@@ -440,13 +441,13 @@ class AddInventoryForm extends Component {
     } = this.state
 
     return (
-      <div id='page' className='flex stretched'>
+      <div id="page" className='flex stretched'>
         <Dimmer active={loading} inverted>
           <Loader inverted>
             <FormattedMessage id='global.loading' defaultMessage='Loading' />
           </Loader>
         </Dimmer>
-        <div className='header-top'>
+        <div className='header-top' style={{padding: '0 32px'}}>
           <Menu secondary>
             <Menu.Item header>
               <Header as='h1' size='medium'>
@@ -471,7 +472,8 @@ class AddInventoryForm extends Component {
                 actions.resetForm()
               })
           }}
-          className='inventory'
+          className='inventory flex'
+          style={{padding: '20px'}}
         >
           {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => (
             <>
@@ -493,6 +495,7 @@ class AddInventoryForm extends Component {
                   <Button primary icon='checkmark' labelPosition='right' content='Go to My Inventory' onClick={this.goToList} />
                 </Modal.Actions>
               </Modal>
+              <div className="flex stretched" style={{padding: '0 32px'}}>
               <Tab className='inventory flex stretched' menu={{ secondary: true, pointing: true }} renderActiveOnly={false} activeIndex={this.state.activeTab} style={{height: '100%'}} panes={[
                 {
                   menuItem: (
@@ -587,15 +590,23 @@ class AddInventoryForm extends Component {
 
                               <Header as="h3">Is there any order minimum requirement?</Header>
                               <FormGroup>
-                                <Radio label="No" value={false} name="minimumRequirement" />
+                                <Radio label="No" value={false} name="minimumRequirement" inputProps={{ onClick: () => {
+                                  setFieldValue('minimum', 1)
+                                  setFieldValue('pricingTiers[0].quantityFrom', 1)
+                                }}} />
                                 <Radio label="Yes" value={true} name="minimumRequirement" />
                               </FormGroup>
                               <FormGroup>
                                 <FormField width={5}>
-                                  <Input label="Minimum OQ" name="minimum" inputProps={{ type: 'number', disabled: !values.minimumRequirement }} />
+                                  <Input label="Minimum OQ" name="minimum" inputProps={{ type: 'number', onChange: (e, data) => {
+                                    if (data.value > 1) {
+                                      setFieldValue('minimumRequirement', true)
+                                      setFieldValue('pricingTiers[0].quantityFrom', data.value)
+                                    }
+                                  }}} />
                                 </FormField>
                                 <FormField width={5}>
-                                  <Input label="Splits" name="splits" inputProps={{ type: 'number', disabled: !values.minimumRequirement }} />
+                                  <Input label="Splits" name="splits" inputProps={{ type: 'number' }} />
                                 </FormField>
                               </FormGroup>
 
@@ -630,7 +641,7 @@ class AddInventoryForm extends Component {
                               <UploadLot {...this.props}
                                          attachments={values.attachments}
                                          name='attachments'
-                                         type='Spec Sheet'
+                                         type={2}
                                          fileMaxSize={20}
                                          onChange={(files) => setFieldValue(
                                            `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
@@ -793,12 +804,12 @@ class AddInventoryForm extends Component {
                                 <Table attached='bottom' className='table-fields'>
                                   <Table.Header>
                                     <Table.Row>
-                                      <TableHeaderCell title='What is the lot number?'>Lot #</TableHeaderCell>
-                                      <TableHeaderCell title='How many packages in this lot?'>Total</TableHeaderCell>
+                                      <Popup content={'What is the lot number?'} trigger={<TableHeaderCell>Lot #</TableHeaderCell>} />
+                                      <Popup content={'How many packages in this lot?'} trigger={<TableHeaderCell>Total</TableHeaderCell>} />
                                       <TableHeaderCell>Available</TableHeaderCell>
                                       <TableHeaderCell>Allocated</TableHeaderCell>
-                                      <TableHeaderCell title='What is the MFG?'>MFG Date</TableHeaderCell>
-                                      <TableHeaderCell title='What is the expiration?'>Expiration Date</TableHeaderCell>
+                                      <Popup content={'What is the MFG?'} trigger={<TableHeaderCell>MFG Date</TableHeaderCell>} />
+                                      <Popup content={'What is the expiration?'} trigger={<TableHeaderCell>Expiration Date</TableHeaderCell>} />
                                       <TableHeaderCell>C of A</TableHeaderCell>
                                       <TableHeaderCell>&nbsp;</TableHeaderCell>
                                     </Table.Row>
@@ -826,7 +837,7 @@ class AddInventoryForm extends Component {
                                           <UploadLot {...this.props}
                                                      attachments={values.lots[index].attachments}
                                                      name={`lots[${index}].attachments`}
-                                                     type='Lot Attachment'
+                                                     type={1}
                                                      lot={true}
                                                      filesLimit={1}
                                                      fileMaxSize={20}
@@ -863,8 +874,14 @@ class AddInventoryForm extends Component {
                               </FormField>
                               <FormField>
                                 <label>Track Sub-Costs</label>
-                                <Radio label="Yes" value={true} name="trackSubCosts" />
-                                <Radio label="No" value={false} name="trackSubCosts" />
+                                <FormGroup>
+                                  <FormField width={5}>
+                                    <Radio label="Yes" value={true} name="trackSubCosts" />
+                                  </FormField>
+                                  <FormField width={5}>
+                                    <Radio label="No" value={false} name="trackSubCosts" />
+                                  </FormField>
+                                </FormGroup>
                               </FormField>
                             </GridColumn>
                             <GridColumn width={12}>
@@ -919,7 +936,7 @@ class AddInventoryForm extends Component {
                                               <UploadLot {...this.props}
                                                          attachments={values.costs[index].attachments}
                                                          name={`costs[${index}].attachments`}
-                                                         type='Cost Attachment'
+                                                         type={3}
                                                          lot={false}
                                                          filesLimit={1}
                                                          fileMaxSize={20}
@@ -999,19 +1016,7 @@ class AddInventoryForm extends Component {
                               <FormField width={16}>
                                 <Dropdown
                                   name={`additionalType`}
-                                  options={[{
-                                      key: 0,
-                                      text: 'Select Type',
-                                      value: 'Unspecified'
-                                    }, {
-                                      key: 1,
-                                      text: 'B/L',
-                                      value: 'B/L'
-                                    }, {
-                                      key: 1,
-                                      text: 'SDS',
-                                      value: 'SDS'
-                                  }]}
+                                  options={listDocumentTypes}
                                 />
                               </FormField>
                             </GridColumn>
@@ -1027,6 +1032,7 @@ class AddInventoryForm extends Component {
                   )
                 }
               ]} />
+              </div>
             </>
           )}
         </Form>

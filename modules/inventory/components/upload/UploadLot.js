@@ -61,18 +61,14 @@ class UploadLot extends Component {
 
     onUploadFail = (fileName) => {
       let {fileMaxSize, toastManager} = this.props
-      blobs.forEach(function(blob) {
-        if (blob.size > (fileMaxSize * 1024 * 1024)) {
-          toastManager.add((
-            <div>
-              <strong>File not uploaded</strong>
-              <div>File "{blob.name}" was not uploaded due to error</div>
-            </div>
-          ), {
-            appearance: 'error',
-            autoDismiss: true,
-          })
-        }
+      toastManager.add((
+        <div>
+          <strong>File not uploaded</strong>
+          <div>File "{fileName}" was not uploaded due to error</div>
+        </div>
+      ), {
+        appearance: 'error',
+        autoDismiss: true,
       })
     }
 
@@ -114,7 +110,7 @@ class UploadLot extends Component {
         (function loop(j) {
             if (j < files.length) new Promise((resolve, reject) => {
                 loadFile(files[j]).then(file => {
-                    addAttachment(file.value, type).then((aId) => {
+                    addAttachment(file.value, parseInt(type)).then((aId) => {
 
                         onUploadSuccess(aId.value.data)
 

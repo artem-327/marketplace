@@ -216,7 +216,10 @@ class Filter extends Component {
             {
               label: 'ChemicalNameCAS',
               model: '.search',
-              type: 'text',
+              type: 'search',
+              placeholder: '',
+              search: this.props.searchProducts,
+              data: this.props.searchedProducts
             }
           ]} />
         <FilterGroup className="filterGroup"

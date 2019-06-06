@@ -8,6 +8,10 @@ import _ from 'lodash'
 import GroupCell from './GroupCell'
 
 import {
+  Template, TemplateConnector
+} from '@devexpress/dx-react-core'
+
+import {
   SearchState,
   IntegratedFiltering,
   IntegratedSelection,
@@ -41,8 +45,10 @@ const GlobalTableOverrideStyle = createGlobalStyle`
   .dx-g-bs4-table {
     margin-bottom: 0 !important;
   }
-  .bootstrapiso .table td {
-    padding: .5rem;
+  .bootstrapiso .table {
+    td,th {
+      padding: .5rem;
+    }
   }
   .group-row {
     position: relative;
@@ -73,7 +79,7 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, open }) => 
           actions.setSubmitting(false)
         }}
       >
-        {columns.map(c => <Checkbox key={c.name} name={c.name} label={c.title} />)}
+        {columns.map(c => <Checkbox key={c.name} disabled={c.disabled} name={c.name} label={c.title} />)}
         <Button.Submit fluid>Save</Button.Submit>
       </Form>
     </Modal.Content>
@@ -92,6 +98,18 @@ const SortLabel = ({ onSort, children, direction }) => (
     {(direction && <Icon className="thick" name={direction === 'asc' ? 'sort up' : 'sort down'} />)}
   </span>
 )
+
+const Row = ({ tableRow, selected, onToggle, onClick, ...restProps }) => {
+  const rowAction = (e, row) => {
+    onClick && onClick(e, tableRow.row)
+  }
+  return (
+    <Table.Row
+      {...restProps}
+      onClick={rowAction}
+    />
+  )
+}
 
 export default class _Table extends Component {
 
@@ -117,7 +135,8 @@ export default class _Table extends Component {
     renderGroupLabel: pt.func,
     getChildGroups: pt.func,
     tableName: pt.string,
-    getNextPage: pt.func
+    getNextPage: pt.func,
+    onRowClick: pt.func
   }
 
   static defaultProps = {
@@ -140,9 +159,9 @@ export default class _Table extends Component {
     this.handleScroll = _.debounce(this.handleScroll, 100)
 
     this.state = {
-      hiddenColumnNames: [],
       expandedGroups: [],
       columnsSettings: {
+        hiddenColumnNames: this.getColumns().filter(c => c.disabled).map(c => c.name),
         widths: this.getColumnsExtension(),
         order: this.getColumns().map(c => c.name)
       },
@@ -216,7 +235,7 @@ export default class _Table extends Component {
   }
 
   loadColumnsSettings = () => {
-    const {tableName, columns, rowActions} = this.props
+    const { tableName, columns, rowActions } = this.props
 
     // get column names from current table settings
     let colNames = columns.map(column => {
@@ -243,7 +262,6 @@ export default class _Table extends Component {
         this.setState({
           columnsSettings: JSON.parse(localStorage[tableName])
         })
-
     }
   }
   handleColumnsSettings = (data) => {
@@ -259,12 +277,19 @@ export default class _Table extends Component {
     })
   }
 
+  rowAction = (row) => {
+    const {rowActions} = this.props
+    if (rowActions)
+      rowActions[0].callback(row)
+  }
+
   render() {
     const {
       rows,
       columns,
       filterValue,
       columnReordering,
+      onRowClick,
       rowSelection,
       selectByRowClick,
       showSelectAll,
@@ -281,8 +306,14 @@ export default class _Table extends Component {
       ...restProps
     } = this.props
 
-    const { hiddenColumnNames, columnSettingOpen, expandedGroups, columnsSettings } = this.state
+    const { columnSettingOpen, expandedGroups, columnsSettings } = this.state
     const grouping = groupBy.map(g => ({ columnName: g }))
+    const columnsFiltered = this.getColumns().filter(c => !c.disabled)
+    
+    const hiddenColumns = [
+      ...this.getColumns().filter(c => c.disabled).map(c => c.name),
+      ...(columnsSettings.hiddenColumnNames || [])
+    ]
 
     return (
       <Segment basic loading={loading} {...restProps} className="flex stretched" style={{ padding: 0 }}>
@@ -291,12 +322,12 @@ export default class _Table extends Component {
           <ColumnsSetting
             onClick={() => this.setState({ columnSettingOpen: !columnSettingOpen })} />
           <ColumnsSettingModal
-            columns={columns}
+            columns={columnsFiltered}
             open={columnSettingOpen}
             hiddenColumnNames={columnsSettings.hiddenColumnNames || []}
             onChange={(hiddenColumnNames) => {
               this.handleColumnsSettings({ hiddenColumnNames })
-              this.setState({ hiddenColumnNames, columnSettingOpen: false })
+              this.setState({ columnSettingOpen: false })
             }}
           />
           <Grid
@@ -336,13 +367,17 @@ export default class _Table extends Component {
             <IntegratedFiltering />
 
             {virtual
-              ? <VirtualTable columnExtensions={this.getColumnsExtension()} height="auto" cellComponent={TableCells} />
+              ? <VirtualTable 
+                  columnExtensions={this.getColumnsExtension()} 
+                  height="auto" 
+                  cellComponent={TableCells} 
+                  rowComponent={props => <Row onClick={onRowClick} {...props} />}
+                />
               : <Table columnExtensions={this.getColumnsExtension()} />}
 
             <TableColumnResizing
               onColumnWidthsChange={widths => this.handleColumnsSettings({ widths })}
               columnWidths={columnsSettings.widths}
-            // defaultColumnWidths={this.getColumnsExtension()} 
             />
 
             {showHeader &&
@@ -355,7 +390,9 @@ export default class _Table extends Component {
               actions={rowActions}
             />
 
-            <TableColumnVisibility hiddenColumnNames={columnsSettings.hiddenColumnNames} />
+            <TableColumnVisibility
+              hiddenColumnNames={hiddenColumns}
+            />
 
             {columnReordering && (
               <TableColumnReordering
