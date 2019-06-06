@@ -4,7 +4,7 @@ $side-padding: 24px;
 .shopping-cart {
     display: grid;
     grid-template-columns: auto 1008px auto;
-    margin-top: 35px;
+    padding: 35px 32px;
 
     h1 {
         margin-bottom: 20px;
@@ -13,6 +13,8 @@ $side-padding: 24px;
         grid-column: 2 / 3;
     }
     .shopping-cart-body {
+        width: 80%;
+        margin: 0 auto;
         display: grid;
         grid-column: 2 / 3;
         grid-row: 2;

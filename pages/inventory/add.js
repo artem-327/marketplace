@@ -1,9 +1,12 @@
 import securePage from '../../hocs/securePage'
 import Layout from 'components/Layout'
-import AddInventory from "~/src/pages/inventory/addInventory"
+import {AddInventory} from '~/modules/inventory'
+import {ToastProvider} from 'react-toast-notifications'
 
 export default securePage(() => (
   <Layout title="Add Inventory">
-    <AddInventory />
+    <ToastProvider autoDismissTimeout={10 * 1000}>
+      <AddInventory type='add' />
+    </ToastProvider>
   </Layout>
 ))

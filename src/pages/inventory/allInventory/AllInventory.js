@@ -1,91 +1,133 @@
-import React, { Component } from 'react';
-import ProductOffers from "./components/ProductOffers";
-import Filter from '../../../components/Filter';
-import Spinner from '../../../components/Spinner/Spinner';
-import FilterTag from "../../../components/Filter/components/FilterTag";
-import SubMenu from '../../../components/SubMenu';
-import ShippingQuotes from './components/ShippingQuotes';
-import {getSelectedRowsDataTable} from "../../../utils/functions";
-import './allinventory.scss';
-import {FormattedMessage} from 'react-intl';
-import {checkToken} from "../../../utils/auth";
-import cn from "classnames"
-import {Menu, Header, Button} from "semantic-ui-react"
+import './allinventory.scss'
 
-class AllInventory extends Component {
+import React, { Component } from 'react'
+import ProductOffers from "./components/ProductOffers"
+import Filter from '../../../components/Filter'
+import Spinner from '../../../components/Spinner/Spinner'
+import FilterTag from "../../../components/Filter/components/FilterTag"
+import { ShippingQuotes } from '~/modules/shipping'
+import SubMenu from '../../../components/SubMenu'
+import { FormattedMessage } from 'react-intl'
+import { Menu, Header, Container, Sidebar, Button } from "semantic-ui-react"
+import AddCart from '../../cart/components/AddCart'
+import { getSelectedRowsDataTable } from '../../../utils/functions'
 
-    componentDidMount(){
-        this.props.fetchAllProductOffers();
-    }
 
-    componentWillUnmount(){
-        this.props.resetFilterTags();
-        this.props.deleteProductOffersList();
-        this.props.resetForm('forms.filter');
-    }
+export default class AllInventory extends Component {
+  state = {
+    open: false
+  }
 
-    openShippingQuote(){
-        if (checkToken(this.props)) return;
+  componentDidMount() {
+    this.props.fetchAllProductOffers()
+  }
 
-        const selectedRows = getSelectedRowsDataTable(this.props.productOffersTable);
-        this.props.addPopup(<ShippingQuotes
-                                selectedRows={selectedRows}
-                                className='shipping-quotes-popup'
-                                removePopup={this.props.removePopup}
-                                {...this.props}/>);
-    }
+  componentWillUnmount() {
+    this.props.resetFilterTags()
+    this.props.deleteProductOffersList()
+    this.props.resetForm('forms.filter')
+  }
 
-    render() {
-        const content = this.props.productOffersIsFetching 
-            ? <div><Spinner/></div> 
-            : <ProductOffers {...this.props}/>;
+  tableRowClicked = (clickedId) => {
+    const { getProductOffer, sidebarChanged } = this.props
+    let { isOpen, id } = this.props.sidebar
+    getProductOffer(clickedId)
 
-        return (
-            <div>
+    if (id !== clickedId && id) sidebarChanged({ isOpen: true, id: clickedId, quantity: 1 })
+    else sidebarChanged({ isOpen: !isOpen, id: clickedId, quantity: 1 })
+  }
 
-              <Menu secondary>
-                <Menu.Item header>
-                  <Header as='h1' size='medium'>
-                    <FormattedMessage
-                        id='allInventory.marketplace'
-                        defaultMessage='MARKETPLACE'
-                    />
-                  </Header>
-                </Menu.Item>
-                <Menu.Menu position='right'>
-                  <Menu.Item>
-                    <Button primary id='shippingQuotes' className={cn({hidden: !this.props.shippingQuotes})} onClick={() => this.openShippingQuote()}>
-                      <FormattedMessage
-                        id='allInventory.shippingQuote'
-                        defaultMessage='Shipping Quote'
-                      />
-                    </Button>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <FilterTag dispatch={this.props.dispatch} closeFunc={(filter) => {this.props.fetchAllProductOffers({...filter})}}/>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <SubMenu/>
-                  </Menu.Item>
-                </Menu.Menu>
-              </Menu>
-              <Filter
-                chemicalName
-                quantity
-                date
-                price
-                assay
-                condition
-                form
-                package
-                productGrade
-                filterFunc={(inputs) => this.props.fetchAllProductOffers(inputs)}
-                {...this.props}
-              />
-              {content}
-            </div>
-        )
-    }
+  render() {
+    const content = this.props.productOffersIsFetching
+      ? <div><Spinner /></div>
+      : <ProductOffers onRowClick={this.tableRowClicked} {...this.props} />
+    const selectedRows = getSelectedRowsDataTable(this.props.productOffersTable)
+
+
+    return (
+      <div id='page' className='all-inventory flex stretched scrolling'>
+
+        <Container fluid style={{ padding: '0 32px' }}>
+
+          <ShippingQuotes
+            modalProps={{
+              open: this.state.open,
+              closeModal: () => this.setState({ open: false })
+            }}
+            selectedRows={selectedRows}
+            removePopup={this.props.removePopup}
+            {...this.props}
+          />
+          <Menu secondary>
+            <Menu.Item header>
+              <Header as='h1' size='medium'>
+                <FormattedMessage id='allInventory.marketplace'
+                  defaultMessage='MARKETPLACE' />
+              </Header>
+            </Menu.Item>
+
+            <Menu.Menu position='right'>
+              {selectedRows.length === 0 ? null :
+                <Button primary onClick={() => this.setState({ open: true })}>
+                  <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote' />
+                </Button>
+
+              }
+              <Menu.Item>
+                <FilterTag
+                  dispatch={this.props.dispatch}
+                  closeFunc={(filter) => { this.props.fetchMyProductOffers({ ...filter }) }}
+                />
+              </Menu.Item>
+              <Menu.Item>
+                <SubMenu />
+              </Menu.Item>
+            </Menu.Menu>
+          </Menu>
+        </Container>
+
+
+        <Filter
+          chemicalName
+          quantity
+          date
+          price
+          assay
+          condition
+          form
+          package
+          productGrade
+          filterFunc={(inputs) => this.props.fetchAllProductOffers(inputs)}
+          savingFilters={true}
+          {...this.props}
+        />
+        <Container fluid style={{ padding: '20px 32px 10px 32px' }}>
+          {content}
+        </Container>
+
+        <AddCart />
+
+      </div>
+    )
+  }
 }
 
-export default AllInventory;
+
+
+
+
+
+
+
+
+  // openShippingQuote() {
+  //   if (checkToken(this.props)) return
+
+  //   const selectedRows = getSelectedRowsDataTable(this.props.productOffersTable)
+  //   this.props.addPopup(
+  //     <ShippingQuotes
+  //       selectedRows={selectedRows}
+  //       className='shipping-quotes-popup'
+  //       removePopup={this.props.removePopup}
+  //       {...this.props} />)
+  // }

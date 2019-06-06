@@ -8,6 +8,7 @@ class Rows extends Component {
       if (item.group)
         return (
           <GroupRow
+            onRowClick={this.props.onRowClick}
             key={index}
             disabled={item.group.disabled}
             rows={this.props.rows[item.index]}
@@ -27,6 +28,7 @@ class Rows extends Component {
         );
       return this.props.data[item.index].rows.map((row, index2) => {
         return <Row
+          onRowClick={this.props.onRowClick}
           data={row.data}
           rowOpns={this.props.rowsOpns[item.index].rows[index2]}
           rowComponent={this.props.rowComponent}
@@ -38,7 +40,7 @@ class Rows extends Component {
           id={item.id}
           selectFunc={this.props.selectFunc}
         />
-        });
+      });
     });
     return <tbody>{rows}</tbody>;
   }

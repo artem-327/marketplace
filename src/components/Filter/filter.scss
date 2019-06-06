@@ -3,25 +3,46 @@
 $font-family: 'Cabin', sans-serif;
 
 .filter {
+  display: flex;
+  flex-direction: column;
   font-family: "Cabin", sans-serif;
   background-color: #fbfbfb;
-  position: fixed;
+  // position: fixed;
   width: 500px;
-  right: 0;
-  top: 105px;
-  bottom: 0;
-  overflow-y: auto;
+  // right: 0;
+  top: 105px !important;
+  padding-bottom: 105px;
+  // bottom: 0;
+  // overflow: auto !important;
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
-  padding: 10px 10px 80px;
   z-index: 4;
   text-align: left;
+  .error {
+    padding: 5px;
+    color: red;
+  }
+  input {
+    width: 192px;
+    border-radius: 4px;
+    border: 1px solid #b0b0b0;
+    padding: 12px 9px;
+    font-size: .875rem!important;
+    line-height: 1.1429!important;
+  }
+
+  .input-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+
   .scrollbar-container {
     position: absolute;
-    top: 62px;
+    top: 72px;
     left: 0;
     right: 0;
     bottom: 80px;
-    overflow: hidden;
+    // overflow: hidden;
     padding: 0 25px 0 10px;
     >.ps__rail-y {
       position: absolute;
@@ -81,18 +102,26 @@ $font-family: 'Cabin', sans-serif;
     }
   }
   .header {
+    position: relative;
+    margin: 15px 0 10px 5px;
+    padding: 5px 15px 5px 40px;
+    font-size: 18px;
     font-weight: bold;
     cursor: pointer;
-    padding-left: 40px;
-    font-size: 18px;
-    margin-bottom: 10px;
-    position: relative;
   }
   .filter-group {
     border-bottom: 1px solid #f0f0f0;
+
+    &:after {
+      content: "";
+      clear: both;
+      display: block;
+    }
+
     &:nth-child(1) {
       margin-top: 0;
     }
+
     margin-top: 10px;
     .filter-input-text {
       label, input {
@@ -136,28 +165,29 @@ $font-family: 'Cabin', sans-serif;
     }
     .filter-input-dropdown {
       height: auto;
-      margin-left: 12px;
-      width: 380px;
+      margin-bottom: 15px;
+
+      label, div.dropdown, div.comboBox {
+        width: 380px;
+        margin-left: 12px;
+      }
       p {
         margin-bottom: 23px;
+      }
+      .comboBox {
+        width: 380px;
+        height: 34px;
+        margin-bottom: 20px;
+
+        input {
+          padding-left: 8px;
+          padding-right: 8px;
+          font-size: 12px;
+        }
       }
     }
     .input-checkbox {
       margin: 0 25px 14px 10px;
-      line-height: 20px;
-
-      label {
-        margin: 0;
-        vertical-align: top;
-        font-size: 14px;
-        color: #33373e;
-        line-height: 20px;
-
-        .checkmark {
-          margin: 0;
-          vertical-align: top;
-        }
-      }
     }
     .half {
       float: left;
@@ -237,6 +267,9 @@ $font-family: 'Cabin', sans-serif;
     left: 6px;
     position: absolute;
     color: #289ada;
+    i {
+      font-weight: bolder;
+    }
   }
   .save-filter {
     border-top: 1px solid #f0f0f0;
@@ -246,7 +279,7 @@ $font-family: 'Cabin', sans-serif;
       margin-left: 10px;
     }
     .header {
-      padding-left: 5px;
+      padding-left: 10px;
       cursor: auto;
     }
     .input {
@@ -257,7 +290,7 @@ $font-family: 'Cabin', sans-serif;
     .saveButton {
       transition: all .2s ease;
       display: inline-block;
-      width: 120px;
+      // width: 120px;
       min-height: 42px;
       margin-left: 20px;
       border: 1px solid #4cd136;
@@ -321,3 +354,29 @@ $font-family: 'Cabin', sans-serif;
 }
 
 
+.filter-fixed {
+  position: fixed;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.filter-inner-fixed {
+  position: fixed;
+  &.bottom {
+    bottom: 90px;
+  }
+
+  &.top {
+    top: 0px;
+  }
+}
+  
+  
+.filter-container-rel {
+  position: relative;
+  // overflow-y: auto;
+}
+
+p {
+  line-height: 400%;
+}

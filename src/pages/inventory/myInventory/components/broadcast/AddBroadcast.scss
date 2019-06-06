@@ -24,9 +24,9 @@
     }
 }
 .add-broadcast {
-    display: grid;
-    grid-template-columns: 40% auto;
-    grid-template-rows: auto auto;
+    // display: grid;
+    // grid-template-columns: 40% auto;
+    // grid-template-rows: auto auto;
     font-family: $helvetica-roman;
     font-weight: 400;
     .broadcast-filter-nav{
@@ -38,7 +38,7 @@
         grid-template-columns: auto 40%;
       }
       &.price-list {
-        grid-template-columns: auto 30%;
+        grid-template-columns: auto 20%;
       }
       .field-name {
         padding-top: 7px;
@@ -62,21 +62,23 @@
         }
         .broadcast-field{
             display: grid;
-            align-items: center;
+            // align-items: center;
             height: 46px;
-            border-top: 1px solid $beige-color;
-            border-collapse: collapse;
+            // border-top: 1px solid $beige-color;
+            // border-collapse: collapse;
             &.client-list {
               grid-template-columns: auto 40%;
             }
             &.price-list {
-              grid-template-columns: auto 30%;
+              grid-template-columns: auto 35% 10%;
             }
             .list-rules {
               display: grid;
               grid-template-columns: 1fr 1fr;
               justify-items: center;
-
+              .checkbox {
+                margin-top: 14px
+              }
               .switch-container {
                 width: 34px;
                 height: 18px;
@@ -103,33 +105,37 @@
               }
 
               label.input-checkbox {
-                margin: 3px 0;
+                // margin: 3px 0;
                 padding-left: 18px;
               }
             }
             .price-rules {
                 display: flex;
-                .price-value {
-                    width: 47%;
-                    margin: 8px 5px 8px 0;
-                }
+                
             }
+
+            .price-value {
+              // width: 47%;
+              height: 80%;
+              margin-top: 5px;
+              // margin: 8px 5px 8px 0;
+          }
             .price-units {
                 display: flex;
                 flex-flow: column;
                 padding: 6px 5px;
-                label {
-                    float: left;
-                    margin: 1px 0;
-                    padding: 0 18px 0 0;
-                    text-align: right;
+                // label {
+                //     float: left;
+                //     margin: 1px 0;
+                //     padding: 0 18px 0 0;
+                //     text-align: right;
 
-                    .radiomark {
-                        top: 0;
-                        left: auto;
-                        right: 0;
-                    }
-                }
+                //     .radiomark {
+                //         top: 0;
+                //         left: auto;
+                //         right: 0;
+                //     }
+                // }
                 p {
                     margin: 0;
                 }
@@ -227,7 +233,7 @@
         grid-column: 1;
         grid-row: 2;
         padding: 21px 20px;
-        border-right: 1px solid $beige-color;
+        // border-right: 1px solid $beige-color;
         .combo-results{
             top: 72px
         }
@@ -280,16 +286,16 @@
     }
 
     .broadcast-nav{
-        border-right: 1px solid $beige-color;
+        // border-right: 1px solid $beige-color;
         padding: 0 20px;
-        border-bottom: 1px solid $beige-color;
+        // border-bottom: 1px solid $beige-color;
         display: flex;
         align-items: flex-end;
         flex-wrap: wrap;
         div {
             height: calc(100% + 1px);
             margin-right: 6px;
-            margin-bottom: -1px;
+            // margin-bottom: -1px;
             border-bottom: 2px solid transparent;
             padding: 13px 15px 13px;
             white-space: nowrap;

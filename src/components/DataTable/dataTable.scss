@@ -1,20 +1,17 @@
 @import "../../styles/main.scss";
 
 .data-table-wr{
-  position: absolute;
-  top: 125px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  min-height: 180px;
+  margin-top: 10px;
+  // position: absolute;
+  // top: 125px;
+  // left: 0;
+  // right: 0;
+  // bottom: 0;
+  // width: 100%;
+  // min-height: 180px;
   overflow-x: auto;
   overflow-y: visible;
   padding: 0;
-
-  &.orders {
-    top: 193px;
-  }
 
   .scrollbar-container {
     position: relative;
@@ -85,17 +82,28 @@
 
     .data-table {
       margin: 0;
-      border: 29px solid transparent;
+      //border: 29px solid transparent;
       border-top: 0 none;
     }
   }
+}
+
+.flex.stretched > .data-table-wr {
+  position: relative;
+  left: -2.2857143em;
+  right: -2.2857143em;
+  width: calc(100% + 2 * 2.2857143em);
+  height: 1px;
+  flex-shrink: 100;
+  flex-grow: 100;
+  padding: 0 2.2857143em;
 }
 
 .data-table {
   border-collapse:separate;
   border-spacing: 0;
   width: 100%;
-  min-width: 1600px;
+  // min-width: 1600px;
 
   .three-dots-menu{
     z-index: 2;
