@@ -62,7 +62,8 @@ const formValidation = Yup.object().shape({
       address3: Yup.string().trim().min(3, 'Enter at least 2 characters'),
       city: Yup.string().trim().min(3, 'Enter at least 2 characters'),
       country: Yup.string(),
-      postalCode: Yup.string()
+      postalCode: Yup.string(),
+      stateProvinceRegion: Yup.string().trim(),
     }),
     dateOfBirth: Yup.string().trim().min(3, 'Too short'),
     firstName: Yup.string().trim().min(3, 'Too short'),
