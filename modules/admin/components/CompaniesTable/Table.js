@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Confirm } from 'semantic-ui-react'
+import {injectIntl} from 'react-intl'
+
 import ProdexTable from '~/components/table'
+import confirm from '~/src/components/Confirmable/confirm'
+
+
 import {
   getCompanies,
   openEditCompany,
@@ -16,9 +20,16 @@ const PAGE_SIZE = 50
 class CompaniesTable extends Component {
 
   getNextPage = (pageNumber) => {
+    const {companyListDataRequest, filterValue} = this.props
+
     this.props.getCompanies({
-      pageNumber,
-      pageSize: PAGE_SIZE
+      ...companyListDataRequest,
+      filters: filterValue && filterValue.length >= 3 ? [{
+        operator: "LIKE",
+        path: "Company.name",
+        values: ['%'+filterValue+'%']
+      }] : [],
+      pageNumber
     })
   }
 
@@ -31,36 +42,34 @@ class CompaniesTable extends Component {
       columns,
       rows,
       filterValue,
-      currentTab,
       loading,
       openEditCompany,
       confirmMessage,
       handleOpenConfirmPopup,
-      closeConfirmPopup,
-      deleteRowById,
+      // closeConfirmPopup,
+      // deleteRowById,
       deleteCompany,
-      openRegisterDwollaAccount
+      openRegisterDwollaAccount,
+      intl
     } = this.props
+
+    const { formatMessage } = intl
 
     return (
       <React.Fragment>
-        <Confirm
-            size="tiny"
-            content="Do you really want to delete item?"
-            open={confirmMessage}
-            onCancel={closeConfirmPopup}
-            onConfirm={() => deleteCompany(deleteRowById)}
-        />
         <ProdexTable
           columns={columns}
           rows={rows}
           pageSize={PAGE_SIZE}
           getNextPage={this.getNextPage}
           loading={loading}
-          filterValue={filterValue}
           rowActions={[
             { text: 'Edit', callback: (row) => openEditCompany(row.id, row) },
-            { text: 'Delete', callback: (row) => handleOpenConfirmPopup(row.id)},
+            { text: 'Delete', callback: (row) => confirm(
+                formatMessage({id: 'confirm.deleteCompany', defaultMessage: 'Delete Company?'}),
+                formatMessage({id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` }, { item: row.name })
+              ).then(() => deleteCompany(row.id))
+            },
             { text: 'Register Dwolla Account', callback: (row) => openRegisterDwollaAccount(row.id)}
           ]}
         />
@@ -81,6 +90,7 @@ const mapDispatchToProps = {
 const mapStateToProps = ({admin}) => {
   return {
     columns: admin.config[admin.currentTab].display.columns,
+    companyListDataRequest: admin.companyListDataRequest,
     filterValue: admin.filterValue,
     currentTab: admin.currentTab,
     loading: admin.loading,
@@ -104,4 +114,4 @@ const mapStateToProps = ({admin}) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CompaniesTable)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(CompaniesTable))

@@ -5,6 +5,7 @@ export function initProductOfferEdit(id) {
 
   return dispatch => {
 
+    dispatch(getDocumentTypes())
     dispatch(getProductConditions())
     dispatch(getProductForms())
     dispatch(getProductGrades())
@@ -63,6 +64,7 @@ export function addProductOffer(values, poId = false) {
       }
     }) : null,
     manufacturer: values.manufacturer ? values.manufacturer : null,
+    minimum: parseInt(values.minimum),
     origin: values.origin ? values.origin : null,
     pkgAmount: parseInt(values.pkgAmount),
     price: values.pricing && values.pricing.price ? parseInt(values.pricing.price) : parseInt(values.pricingTiers[0].price),
@@ -78,6 +80,7 @@ export function addProductOffer(values, poId = false) {
     productCondition: values.productCondition ? parseInt(values.productCondition) : null,
     productForm: values.productForm ? parseInt(values.productForm) : null,
     productGrades: values.productGrade ? [{ id: values.productGrade }] : null,
+    splits: parseInt(values.splits),
     tradeName: values.tradeName ? values.tradeName : null,
     validityDate: values.validityDate ? values.validityDate + "T00:00:00Z" : null,
     warehouse: parseInt(values.warehouse)
@@ -139,6 +142,13 @@ export function findProducts(search) {
   return {
     type: AT.INVENTORY_FIND_PRODUCTS,
     payload: api.findProducts(search)
+  }
+}
+
+export function getDocumentTypes() {
+  return {
+    type: AT.INVENTORY_GET_DOCUMENT_TYPES,
+    payload: api.getDocumentTypes()
   }
 }
 
@@ -342,6 +352,20 @@ export function loadFile(attachment) {
   }
 }
 
+export function patchBroadcast(broadcasted, productOfferId) {
+  return {
+    type: AT.INVENTORY_PATCH_BROADCAST,
+    async payload() {
+      const response = await api.patchBroadcast(broadcasted, productOfferId)
+
+      return {
+        broadcasted: response.status === 200 ? broadcasted : !broadcasted,
+        productOfferId
+      }
+    }
+  }
+}
+
 export function removeAttachmentLink(isLot, itemId, aId) {
   return {
     type: AT.INVENTORY_REMOVE_ATTACHMENT_LINK,
@@ -411,7 +435,10 @@ export function searchProducts(text) {
         data: response.data ? response.data.map(p => ({
           text: p.casProduct ? p.casProduct.casIndexName : p.productName + ' (Unmapped)',
           value: p,
-          key: p.casProduct ? p.casProduct.id : ''
+          key: p.casProduct ? p.casProduct.id : '',
+          id: p ? p.id : '',
+          name: p.productName + (p.productCode ? ' (' + p.productCode + ')' : ''),
+          casName: p.casProduct ? p.casProduct.casIndexName + ' (' + p.casProduct.casNumber + ')' : ''
         })) : []
       }
     }

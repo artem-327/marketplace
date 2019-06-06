@@ -9,6 +9,7 @@ export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async (id) => {
     id
   }
 })
+
 export const saveRules = createAsyncAction('BROADCAST_SAVE', async (id, rules) => {
   await api.saveRules(id, rules)
 })

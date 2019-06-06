@@ -8,6 +8,7 @@ import {
   closeConfirmPopup,
   deleteConfirmation
 } from '../../actions'
+import Router from "next/router"
 
 class ProductCatalogTable extends Component {
   state = {
@@ -73,7 +74,7 @@ const mapStateToProps = state => {
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
-    currentTab: state.settings.currentTab,
+    currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
   }
 }
 

@@ -20,6 +20,7 @@ const textsTable = {
   },
   'products': {
     BtnAddText: 'Product',
+    BtnImportText: 'Products',
     SearchText: 'Search product catalog by name, number ...'
   },
   'global-broadcast': {
@@ -35,7 +36,7 @@ const textsTable = {
     SearchText: 'Search bank account ...'
   },
   'delivery-addresses': {
-    BtnAddText: 'Delivery address',
+    BtnAddText: 'Delivery Address',
     SearchText: 'Search delivery address ...'
   }
 }
@@ -124,7 +125,7 @@ class TablesHandlers extends Component {
                 primary
                 onClick={() => openImportPopup()}
               >
-                Import {textsTable[currentTab.type].BtnAddText}
+                Import {textsTable[currentTab.type].BtnImportText}
               </Button>
             )}
           </Menu.Item>
@@ -142,6 +143,7 @@ const mapStateToProps = (state) => {
     dwollaAccount: company,
     isCompanyAdmin,
     currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) || state.settings.tabsNames[0] : state.settings.tabsNames[0],
+
     productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
     productsFilter: state.settings.productsFilter,

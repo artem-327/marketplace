@@ -93,7 +93,7 @@ export default class ShoppingCart extends Component {
             </Menu>
           </Container>
         </div>
-        <div className='shopping-cart flex stretched' style={{overflow: 'auto', justifyContent: 'center'}}>
+        <div className='shopping-cart flex stretched' style={{overflow: 'auto'}}>
           <div className='shopping-cart-body'>
             <div className='shopping-cart-items'>
               <header><h2>{headerTitle}</h2></header>

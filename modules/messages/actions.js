@@ -1,5 +1,4 @@
-import * as AT from './action-types'
+import {createAction} from 'redux-promise-middleware-actions'
 
-
-export const addMessage = (message) => ({ type: AT.ADD_MESSAGE, payload: message })
-export const removeMessage = (index) => ({ type: AT.REMOVE_MESSAGE, payload: index })
+export const addMessage = createAction('ADD_MESSAGE', (message) => message)
+export const removeMessage = createAction('REMOVE_MESSAGE', (index) => index)

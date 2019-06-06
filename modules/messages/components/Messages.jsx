@@ -8,7 +8,7 @@ import { MessageContainer, StyledMessage, CloseIcon, themes } from '../constants
 export default class Messages extends Component {
   componentDidMount() {
     let self = this
-    console.log('this interceptor', this.interceptor)
+    
     if (!this.interceptor) {
       this.interceptor = axios.interceptors.response.use(response => response, function (error) {
         var errorMessage = null

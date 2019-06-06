@@ -9,7 +9,8 @@ import {
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation,
-  getMeasureTypesDataRequest
+  getMeasureTypesDataRequest,
+  deleteUnit
 } from '../../actions'
 
 class UnitOfMeasureTable extends Component {
@@ -20,30 +21,24 @@ class UnitOfMeasureTable extends Component {
 
   render() {
     const {
-      config,
       loading,
       rows,
       filterValue,
-      currentTab,
       openEditPopup,
-      confirmMessage,
-      handleOpenConfirmPopup,
-      closeConfirmPopup,
-      deleteConfirmation,
-      deleteRowById
+      deleteUnit,
+      // handleOpenConfirmPopup,
+      // config,
+      // currentTab,
+      // confirmMessage,
+      // closeConfirmPopup,
+      // deleteConfirmation,
+      // deleteRowById
     } = this.props
 
     const { columns } = this.props.config.display
 
     return (
       <React.Fragment>
-        <Confirm
-            size="tiny"
-            content="Do you really want to delete item?"
-            open={confirmMessage}
-            onCancel={closeConfirmPopup}
-            onConfirm={() => deleteConfirmation(deleteRowById, config)}
-        />
         <ProdexTable
           filterValue={filterValue}
           loading={loading}
@@ -51,7 +46,7 @@ class UnitOfMeasureTable extends Component {
           rows={rows}
           rowActions={[
             { text: 'Edit', callback: (row) => openEditPopup(row) },
-            { text: 'Delete', callback: (row) => handleOpenConfirmPopup(row.id) }
+            { text: 'Delete', callback: (row) => deleteUnit(row.id) }
           ]}
         />
       </React.Fragment>
@@ -65,11 +60,13 @@ const mapDispatchToProps = {
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation,
-  getMeasureTypesDataRequest
+  getMeasureTypesDataRequest,
+  deleteUnit
 }
 
 const mapStateToProps = state => {
   let cfg = state.admin.config[state.admin.currentTab]
+  
   return {
     config: cfg,
     rows: state.admin[cfg.api.get.dataName].map( d => {

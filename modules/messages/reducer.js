@@ -1,26 +1,23 @@
-import * as AT from './action-types'
+import typeToReducer from 'type-to-reducer'
+import * as a from './actions'
 
 export const initialState = {
   messages: []
 }
 
-export default function reducer(state = initialState, action) {
-  let { type, payload } = action
+export default typeToReducer({
 
-  switch (type) {
-    case AT.ADD_MESSAGE: {
-      return {
-        ...state,
-        messages: state.messages.concat(payload)
-      }
-    }
+  [a.addMessage]: (state, {payload: message}) => ({
+    ...state,
+    messages: [
+      ...state.messages,
+      message
+    ]
+  }),
 
-    case AT.REMOVE_MESSAGE: {
-      return {
-        ...state,
-        messages: state.messages.filter((value, index) => index !== payload)
-      }
-    }
-    default: return state
-  }
-}
+  [a.removeMessage]: (state, {payload: index}) => ({
+    ...state,
+    messages: state.messages.filter((_,i) => i !== index)
+  })
+
+}, initialState)

@@ -9,6 +9,7 @@ import {
   postNewBankAccountRequest
 } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
+import Router from "next/router"
 
 class BankAccountsPopup extends React.Component {
   submitHandler = (values, actions) => {
@@ -109,7 +110,7 @@ const mapStateToProps = state => {
     popupValues: state.settings.popupValues,
     country: state.settings.country,
     currency: state.settings.currency,
-    currentTab: state.settings.currentTab
+    currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
   }
 }
 

@@ -1,15 +1,16 @@
 import React, { Component } from "react"
-import { Container, Menu, Header, Checkbox, Icon } from "semantic-ui-react"
+import { Container, Menu, Header, Checkbox, Icon, Popup } from "semantic-ui-react"
 import SubMenu from '~/src/components/SubMenu'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
 import ProdexGrid from '~/components/table'
 import { Broadcast } from '~/modules/broadcast'
 import Filter from '~/src/components/Filter'
+import confirm from '~/src/components/Confirmable/confirm'
 
 const PAGE_SIZE = 50
 
-export default class MyInventory extends Component {
+class MyInventory extends Component {
   state = {
     columns: [
       { name: 'productName', title: 'Product Name', width: 250 },
@@ -25,7 +26,7 @@ export default class MyInventory extends Component {
       { name: 'broadcast', title: 'Broadcast', width: 120 }
     ],
     selectedRows: [],
-    pageNumber: 0,
+    pageNumber: 0
   }
 
   componentDidMount() {
@@ -55,27 +56,57 @@ export default class MyInventory extends Component {
   getRows = () => {
     const { rows } = this.props
 
-    return rows.map(r => ({
-      ...r,
-      broadcast: (
-        <div style={{ float: 'right' }}>
-          {r.status !== 'Unmapped' ? (
-            <Checkbox toggle checked={r.status === 'Broadcasting'} disabled={r.status === 'Incomplete'} onChange={() => alert('Changed:' + r.productName)} />
-          ) : (
-              <Icon name='unlink' title='Product not mapped, click to map it.' onClick={() => Router.push({ pathname: '/settings/', query: { type: 'products', action: 'edit', id: r.product.id } })} />
-            )}
-        </div>
-      )
-    }))
+    let title = ''
+
+    return rows.map(r => {
+      switch (r.status.toLowerCase()) {
+        case 'broadcasting':
+          title = 'Broadcasting now, switch off to stop broadcasting.'
+          break
+        case 'not broadcasting':
+          title = 'Not Broadcasting now, switch on to start broadcasting.'
+          break
+        case 'incomplete':
+          title = 'Incomplete, please enter all required values first.'
+          break
+        case 'unmapped':
+          title = 'Unmapped, please make sure related Product is mapped first.'
+          break
+        default:
+          title = ''
+      }
+
+      return {
+        ...r,
+        broadcast: (
+          <div style={{ float: 'right' }}>
+            <Popup id={r.id}
+              trigger={
+                <Checkbox toggle={true}
+                          defaultChecked={r.status.toLowerCase() === 'broadcasting'}
+                          disabled={r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'}
+                          onChange={(e, data) => {
+                            e.preventDefault()
+                            this.props.patchBroadcast(data.checked, r.id)
+                          }} />
+              }
+              content={title}
+            />
+          </div>
+        )
+      }
+    })
   }
 
   render() {
     const {
       loading,
-      openBroadcast
+      openBroadcast,
+      intl
     } = this.props
     const { columns, selectedRows } = this.state
     const rows = this.getRows()
+    let { formatMessage } = intl
 
     return (
       <>
@@ -135,8 +166,22 @@ export default class MyInventory extends Component {
             rowActions={[
               { text: 'Edit listing', callback: (row) => Router.push({ pathname: '/inventory/edit', query: { id: row.id } }) },
               { text: 'Custom broadcast', callback: (row) => { openBroadcast(row.id) } },
-              { text: 'Delete listing', callback: (row) => { this.props.deleteProductOffer(row.id) } }
+              {
+                text: 'Delete listing', callback: (row) => {
+                  confirm(
+                    formatMessage({ id: 'confirm.deleteOfferHeader', defaultMessage: 'Delete Product Offer' }),
+                    formatMessage({ id: 'confirm.deleteItem', defaultMessage: `Do you really want to remove ${row.chemicalName}?` },
+                      { item: row.chemicalName }
+                    )
+                  ).then(() => this.props.deleteProductOffer(row.id))
+                }
+              }
             ]}
+            onRowClick={(e, row) => {
+              if (e.target.tagName === 'TD') {
+                Router.push({pathname: '/inventory/edit', query: {id: row.id}})
+              }
+            }}
           />
         </div>
         <Broadcast />
@@ -154,8 +199,18 @@ export default class MyInventory extends Component {
           filterFunc={(filter) => { this.filterInventory({ ...filter }) }}
           savingFilters={true}
           {...this.props}
+          searchedProducts={this.props.searchedProducts.map(prod => {
+            return {
+              key: prod.key,
+              id: prod.id,
+              name: <Header content={prod.name} subheader={prod.casName} style={{margin: 0, fontSize: '1em'}} />
+            }
+          })}
         />
       </>
     )
   }
 }
+
+
+export default injectIntl(MyInventory)
