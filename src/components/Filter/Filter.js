@@ -1,4 +1,4 @@
-import { Form } from 'react-redux-form'
+import { Form, Control } from 'react-redux-form'
 import './filter.scss'
 
 import FilterGroup from './components/FilterGroup'
@@ -10,7 +10,7 @@ import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { checkToken } from "../../utils/auth"
 
-import { Segment, Accordion, Button, Grid, Sidebar, GridRow, GridColumn } from 'semantic-ui-react'
+import { Segment, Accordion, Button, Grid, Sidebar, GridRow, GridColumn, Header, Input, Checkbox } from 'semantic-ui-react'
 
 const FlexContent = styled.div`
   flex: 1;
@@ -21,6 +21,12 @@ const RelaxedSegment = styled(Segment)`
   padding-top: 0px;
   margin: 0 !important;
 `
+
+const RelaxedRow = styled(GridRow)`
+  padding-bottom: 0px !important;
+  padding-top: 6px !important;
+`
+
 
 const GrayRow = styled(GridRow)`
   background-color: #ededed;
@@ -35,16 +41,85 @@ class Filter extends Component {
       saveFilter: false,
       filterSwitch: true,
       filterName: "",
-      loaded: false
+      loaded: false,
+      saving: false,
+      checkboxes: {
+        automaticallyApply: true,
+        notifications: false
+      }
     }
+  }
+
+
+  notificationsMarkup = () => {
+    let { intl } = this.props
+    let { formatMessage } = intl
+    return (
+      <>
+        <GridRow>
+          <GridColumn computer={7}>
+            <Checkbox
+              name='email'
+              checked={this.state.checkboxes.email}
+              onChange={this.handleCheckboxChange}
+              label={formatMessage({ id: 'filter.notifications.email', defaultMessage: 'Email Notifications:' })} />
+          </GridColumn>
+          {
+            this.state.checkboxes.email && (
+              <GridColumn computer={9}>
+                <Control
+                  fluid
+                  component={Input}
+                  type='text'
+                  model={'.email'}
+                  id={'.email'}
+                  placeholder={'Email'} />
+              </GridColumn>
+            )
+          }
+        </GridRow>
+
+        <GridRow>
+          <GridColumn computer={7}>
+            <Checkbox
+              name='phone'
+              checked={this.state.checkboxes.phone}
+              onChange={this.handleCheckboxChange}
+              label={formatMessage({ id: 'filter.notifications.mobile', defaultMessage: 'Mobile Notifications:' })} />
+          </GridColumn>
+          {
+            this.state.checkboxes.phone && (
+              <GridColumn computer={9}>
+                <Control
+                  fluid
+                  component={Input}
+                  type='text'
+                  model={'.phone'}
+                  id={'.phone'}
+                  placeholder={'Phone Number'} />
+              </GridColumn>
+            )
+          }
+        </GridRow>
+
+        <GridRow>
+          <GridColumn>
+            <Checkbox
+              name='system'
+              checked={this.state.checkboxes.system}
+              onChange={this.handleCheckboxChange}
+              label={formatMessage({ id: 'filter.notifications.system', defaultMessage: 'System Notifications:' })} />
+          </GridColumn>
+        </GridRow>
+
+      </>
+    )
   }
 
 
   getContent = () => {
     return (
       <div>
-
-
         <FilterGroup className="filterGroup"
           header='order'
           isVisible={!!this.props.orderId}
@@ -389,7 +464,14 @@ class Filter extends Component {
     this.setState({ filterSwitch: value })
   }
 
-  saveFilters() {
+  handleCheckboxChange = (e, { name }) => {
+    let { checkboxes } = this.state
+    checkboxes[name] = !checkboxes[name]
+    this.setState({ checkboxes })
+  }
+
+  saveFilters = () => {
+    this.setState({ saveFilter: false, saving: true })
     let inputs = this.props.filterData
     let filter = Object.assign({}, inputs,
       { containers: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key) },
@@ -402,172 +484,230 @@ class Filter extends Component {
       { priceTo: (inputs.prcub || "") },
       { chemicalName: (inputs.search || "") }
     )
-    this.props.saveSaveFilter(filter).then(() => this.setState({ saveFilter: true }))
+    this.props.saveSaveFilter(filter).finally(() => this.setState({ saveFilter: true, saving: false }))
   }
 
   render() {
     if (!this.state.loaded) return null
 
-    let saveFilter = this.state.saveFilter ?
-      <span
-        className="savedButton"
-        onClick={() => this.saveFilters()}>
-        <FormattedMessage
-          id='filter.saved'
-          defaultMessage='Saved'
-        />
-      </span>
-      :
-      <span
-        className="saveButton"
-        onClick={() => this.saveFilters()}>
-        <FormattedMessage
-          id='global.save'
-          defaultMessage='Save'
-        />
-      </span>
+    // let saveFilter = this.state.saveFilter ?
+    //   <span
+    //     className="savedButton"
+    //     onClick={() => this.saveFilters()}>
+    //     <FormattedMessage
+    //       id='filter.saved'
+    //       defaultMessage='Saved'
+    //     />
+    //   </span>
+    //   :
+    //   <span
+    //     className="saveButton"
+    //     onClick={() => this.saveFilters()}>
+    //     <FormattedMessage
+    //       id='global.save'
+    //       defaultMessage='Save'
+    //     />
+    //   </span>
+
+    let { intl } = this.props
+    let { formatMessage } = intl
 
     return (
-        <Sidebar
-          onHide={(event) => {
-            // If we clicked on filter icon, prevent duplicate calls of action toggleFilter
-            if (event !== null && !event.target.className.includes('submenu-filter')) {
-              this.props.toggleFilter(false)
-            }
-          }}
-          visible={this.state.isOpen} className='filter flex'
-          width='very wide' direction='right' animation='overlay'>
+      <Sidebar
+        onHide={(event) => {
+          // If we clicked on filter icon, prevent duplicate calls of action toggleFilter
+          if (event !== null && !event.target.className.includes('submenu-filter')) {
+            this.props.toggleFilter(false)
+          }
+        }}
+        visible={this.state.isOpen} className='filter flex'
+        width='very wide' direction='right' animation='overlay'>
 
-          <FlexContent>
-            <div className="filter-switch">
-              <Button attached={this.props.savingFilters ? 'left' : ''} onClick={() => this.switchFilter(true)} primary={this.state.filterSwitch}>
+        <FlexContent>
+          <div className="filter-switch">
+            <Button attached={this.props.savingFilters ? 'left' : ''} onClick={() => this.switchFilter(true)} primary={this.state.filterSwitch}>
+              <FormattedMessage
+                id='filter.setFilters'
+                defaultMessage='SET FILTERS'
+              />
+            </Button>
+            {this.props.savingFilters ? (
+              <Button attached="right" onClick={() => this.switchFilter(false)} primary={!this.state.filterSwitch}>
                 <FormattedMessage
-                  id='filter.setFilters'
-                  defaultMessage='SET FILTERS'
+                  id='filter.savedFilter'
+                  defaultMessage='SAVED FILTERS'
                 />
               </Button>
-              {this.props.savingFilters ? (
-                <Button attached="right" onClick={() => this.switchFilter(false)} primary={!this.state.filterSwitch}>
+            ) : ''}
+          </div>
+          {this.state.filterSwitch ?
+            <Form
+              id="filter-form"
+              model="forms.filter"
+              onSubmit={(val) => this.handleSubmit(val)}>
+
+              <Accordion>
+
+
+                {this.getContent()}
+                {this.props.savingFilters ? (
+                  <Segment basic>
+                    <Grid verticalAlign='middle'>
+                      <GridRow>
+                        <GridColumn>
+                          <Header><FormattedMessage id='filter.saveFilter' defaultMessage='Save Filter' /></Header>
+                        </GridColumn>
+                      </GridRow>
+
+                      <RelaxedRow>
+                        <GridColumn>
+                          <label> <FormattedMessage id='filter.enterFilterName' defaultMessage='Enter Filter Name' /></label>
+                        </GridColumn>
+                      </RelaxedRow>
+                      <GridRow>
+                        <GridColumn computer={12}>
+                          <Input
+                            size='large'
+                            fluid
+                            value={this.state.filterName}
+                            placeholder={formatMessage({ id: 'filter.setFilterName', defaultMessage: 'Set Filter Name' })}
+                            onChange={(e) => this.changeFilterName(e)} />
+                        </GridColumn>
+                        <GridColumn>
+                          <Button
+                            as='span'
+                            size='large'
+                            onClick={this.saveFilters}
+                            basic={!this.state.saveFilter}
+                            primary={this.state.saveFilter}
+                            positive={!this.state.saveFilter}
+                            loading={this.state.saving}>
+                            <FormattedMessage id={this.state.saveFilter ? 'filter.saved' : 'global.save'} />
+                          </Button>
+                        </GridColumn>
+                      </GridRow>
+                      <GridRow>
+                        <GridColumn>
+                          <Checkbox
+                            label={formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}
+                            onChange={this.handleCheckboxChange}
+                            name='automaticallyApply'
+                            checked={this.state.checkboxes.automaticallyApply} />
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow>
+                        <GridColumn>
+                          <Checkbox
+                            name='notifications'
+                            label={formatMessage({ id: 'filter.notifications', defaultMessage: 'Notifications' })}
+                            onChange={this.handleCheckboxChange}
+                            checked={this.state.checkboxes.notifications} />
+                        </GridColumn>
+                      </GridRow>
+
+                      {this.state.checkboxes.notifications && this.notificationsMarkup()}
+
+                    </Grid>
+                  </Segment>
+                  // <div className="save-filter">
+                  //   <div className="header">
+                  //     <FormattedMessage
+                  //       id='filter.saveFilter'
+                  //       defaultMessage='Save Filter'
+                  //     />
+                  //   </div>
+                  //   <div className='filter-input-text'>
+                  //     <label className="input-label">
+                  //       <FormattedMessage
+                  //         id='filter.enterFilterName'
+                  //         defaultMessage='Enter Filter Name'
+                  //       />
+                  //     </label>
+                  //     <React.Fragment>
+                  //       <input
+                  //         type="text"
+                  //         onChange={(e) => this.changeFilterName(e)}
+                  //         placeholder={this.props.intl.formatMessage({
+                  //           id: 'filter.setFilterName',
+                  //           defaultMessage: 'Set Filter Name'
+                  //         })}
+                  //         className="input"
+                  //         value={this.state.filterName} />
+                  //       {/* {saveFilter} */}
+
+                  //       <Button
+                  //         style={{ marginLeft: '20px' }}
+                  //         as='span'
+                  //         size='large'
+                  //         onClick={this.saveFilters}
+                  //         basic={!this.state.saveFilter}
+                  //         primary={this.state.saveFilter}
+                  //         positive={!this.state.saveFilter}
+                  //         loading={this.state.saving}>
+                  //         <FormattedMessage id={this.state.saveFilter ? 'filter.saved' : 'global.save'} />
+                  //       </Button>
+
+                  //     </React.Fragment>
+
+
+                  //   </div>
+
+                  // </div>
+                ) : null}
+              </Accordion>
+            </Form>
+            :
+            <SavedFilters
+              fetching={this.props.savedFiltersFetching}
+              fetchSavedFilters={this.props.fetchSavedFilters}
+              deleteSaveFilter={(id) => this.deleteSaveFilter(id)}
+              fillFilter={(inputs) => this.props.fillFilter(inputs)}
+              filterFunc={(inputs) => this.handleSubmit(inputs)}
+              saveFilters={this.props.saveFilters}
+            />
+          }
+        </FlexContent>
+
+        <RelaxedSegment basic>
+          <Grid>
+            <GrayRow columns={2}>
+              <GridColumn>
+                <Button
+                  fluid
+                  floated='right'
+                  size='large'
+                  color='grey'
+                  onClick={(e) => { this.handleReset(e) }}>
                   <FormattedMessage
-                    id='filter.savedFilter'
-                    defaultMessage='SAVED FILTERS'
+                    id='filter.clearFilter'
+                    defaultMessage='Clear Filter'
                   />
                 </Button>
-              ) : ''}
-            </div>
-            {this.state.filterSwitch ?
-              <Form
-                id="filter-form"
-                model="forms.filter"
-                onSubmit={(val) => this.handleSubmit(val)}>
+              </GridColumn>
 
-                <Accordion>
-
-
-                  {this.getContent()}
-                  {this.props.savingFilters ? (
-                    <div className="save-filter">
-                      <div className="header">
-                        <FormattedMessage
-                          id='filter.saveFilter'
-                          defaultMessage='Save Filter'
-                        />
-                      </div>
-                      <div className='filter-input-text'>
-                        <label className="input-label">
-                          <FormattedMessage
-                            id='filter.enterFilterName'
-                            defaultMessage='Enter Filter Name'
-                          />
-                        </label>
-                        <React.Fragment>
-                          <input
-                            type="text"
-                            onChange={(e) => this.changeFilterName(e)}
-                            placeholder={this.props.intl.formatMessage({
-                              id: 'filter.setFilterName',
-                              defaultMessage: 'Set Filter Name'
-                            })}
-                            className="input"
-                            value={this.state.filterName} />
-                          {saveFilter}
-                        </React.Fragment>
-                      </div>
-                    </div>
-                  ) : ''}
-                </Accordion>
-              </Form>
-              :
-              <SavedFilters
-                fetchSavedFilters={this.props.fetchSavedFilters}
-                deleteSaveFilter={(id) => this.deleteSaveFilter(id)}
-                fillFilter={(inputs) => this.props.fillFilter(inputs)}
-                filterFunc={(inputs) => this.handleSubmit(inputs)}
-                saveFilters={this.props.saveFilters}
-              />
-            }
-          </FlexContent>
-
-          <RelaxedSegment basic>
-            <Grid>
-              <GrayRow columns={2}>
-                <GridColumn>
-                  <Button
-                    fluid
-                    floated='right'
-                    size='large'
-                    color='grey'
-                    onClick={(e) => { this.handleReset(e) }}>
-                    <FormattedMessage
-                      id='filter.clearFilter'
-                      defaultMessage='Clear Filter'
-                    />
-                  </Button>
-                </GridColumn>
-
-                <GridColumn>
-                  <Button primary
-                          fluid
-                          floated='right'
-                          size='large'
-                          onClick={(e) => {
-                            document.getElementById('filter-form').submit()
-                          }}
-                  >
-                    <FormattedMessage
-                      id='global.apply'
-                      defaultMessage='Apply'
-                    />
-                  </Button>
-                </GridColumn>
-              </GrayRow>
-            </Grid>
+              <GridColumn>
+                <Button primary
+                  fluid
+                  floated='right'
+                  size='large'
+                  onClick={(e) => {
+                    document.getElementById('filter-form').submit()
+                  }}
+                >
+                  <FormattedMessage
+                    id='global.apply'
+                    defaultMessage='Apply'
+                  />
+                </Button>
+              </GridColumn>
+            </GrayRow>
+          </Grid>
 
 
-          </RelaxedSegment>
-          {/* <div className="filterBottom">
-          <Container textAlign='right' style={{ marginTop: '24px' }}>
-            <Button
-              size='large'
-              color='grey'
-              onClick={(e) => { this.handleReset(e) }}>
-              <FormattedMessage
-                id='filter.clearFilter'
-                defaultMessage='Clear Filter'
-              />
-            </Button>
-            <Button primary
-              size='large'>
-              <FormattedMessage
-                id='global.apply'
-                defaultMessage='Apply'
-              />
-            </Button>
-          </Container>
-        </div> */}
+        </RelaxedSegment>
+      </Sidebar>
 
-        </Sidebar>
-  
     )
   }
 }

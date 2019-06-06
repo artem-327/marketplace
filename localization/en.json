@@ -134,6 +134,7 @@
   "filter.productAge": "Product Age",
   "filter.chemicalSearch": "Chemical Search",
   "filter.location": "Location",
+  "filter.automaticallyApply": "Automatically Apply",
   "dataTable.ProductName": "Product Name",
   "dataTable.ProductNumber": "Product Number",
   "dataTable.Available": "Available",
