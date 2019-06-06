@@ -1,15 +1,16 @@
 import React, { Component } from "react"
 import { Container, Menu, Header, Checkbox, Icon, Popup } from "semantic-ui-react"
 import SubMenu from '~/src/components/SubMenu'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
 import ProdexGrid from '~/components/table'
 import { Broadcast } from '~/modules/broadcast'
 import Filter from '~/src/components/Filter'
+import confirm from '~/src/components/Confirmable/confirm'
 
 const PAGE_SIZE = 50
 
-export default class MyInventory extends Component {
+class MyInventory extends Component {
   state = {
     columns: [
       { name: 'productName', title: 'Product Name', width: 250 },
@@ -58,17 +59,17 @@ export default class MyInventory extends Component {
     let title = ''
 
     return rows.map(r => {
-      switch (r.status) {
-        case 'Broadcasting':
+      switch (r.status.toLowerCase()) {
+        case 'broadcasting':
           title = 'Broadcasting now, switch off to stop broadcasting.'
           break
-        case 'Not broadcasting':
+        case 'not broadcasting':
           title = 'Not Broadcasting now, switch on to start broadcasting.'
           break
-        case 'Incomplete':
+        case 'incomplete':
           title = 'Incomplete, please enter all required values first.'
           break
-        case 'Unmapped':
+        case 'unmapped':
           title = 'Unmapped, please make sure related Product is mapped first.'
           break
         default:
@@ -79,17 +80,18 @@ export default class MyInventory extends Component {
         ...r,
         broadcast: (
           <div style={{ float: 'right' }}>
-            {r.status !== 'Unmapped' ? (
-              <Popup id={r.id}
-                     trigger={<Checkbox toggle defaultChecked={r.status === 'Broadcasting'} disabled={r.status === 'Incomplete'} onChange={(e, data) => this.props.patchBroadcast(data.checked, r.id)} />}
-                     content={title}
-              />
-            ) : (
-              <Popup id={r.id}
-                     trigger={<Icon name='unlink' onClick={() => Router.push({ pathname: '/settings/', query: { type: 'products', action: 'edit', id: r.product.id } })} />}
-                     content={title}
-              />
-            )}
+            <Popup id={r.id}
+              trigger={
+                <Checkbox toggle={true}
+                          defaultChecked={r.status.toLowerCase() === 'broadcasting'}
+                          disabled={r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'}
+                          onChange={(e, data) => {
+                            e.preventDefault()
+                            this.props.patchBroadcast(data.checked, r.id)
+                          }} />
+              }
+              content={title}
+            />
           </div>
         )
       }
@@ -99,10 +101,12 @@ export default class MyInventory extends Component {
   render() {
     const {
       loading,
-      openBroadcast
+      openBroadcast,
+      intl
     } = this.props
     const { columns, selectedRows } = this.state
     const rows = this.getRows()
+    let { formatMessage } = intl
 
     return (
       <>
@@ -162,9 +166,23 @@ export default class MyInventory extends Component {
             rowActions={[
               { text: 'Edit listing', callback: (row) => Router.push({ pathname: '/inventory/edit', query: { id: row.id } }) },
               { text: 'Custom broadcast', callback: (row) => { openBroadcast(row.id) } },
-              { text: 'Delete listing', callback: (row) => { this.props.deleteProductOffer(row.id) } }
+              {
+                text: 'Delete listing', callback: (row) => {
+                  confirm(
+                    formatMessage({ id: 'confirm.deleteOfferHeader', defaultMessage: 'Delete Product Offer' }),
+                    formatMessage({ id: 'confirm.deleteItem', defaultMessage: `Do you really want to remove ${row.chemicalName}?` },
+                      { item: row.chemicalName }
+                    )
+                  ).then(() => this.props.deleteProductOffer(row.id))
+                }
+              }
             ]}
-            onRowClick={(row) => Router.push({ pathname: '/inventory/edit', query: { id: row.id }})}
+            onRowClick={(e, row) => {
+              const targetTag = e.target.tagName.toLowerCase()
+              if (targetTag !== 'input' && targetTag !== 'label') {
+                Router.push({pathname: '/inventory/edit', query: {id: row.id}})
+              }
+            }}
           />
         </div>
         <Broadcast />
@@ -194,3 +212,6 @@ export default class MyInventory extends Component {
     )
   }
 }
+
+
+export default injectIntl(MyInventory)

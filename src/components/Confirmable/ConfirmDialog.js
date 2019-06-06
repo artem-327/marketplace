@@ -5,14 +5,15 @@ import { confirmable } from 'react-confirm'
 import { Modal, Button } from 'semantic-ui-react'
 
 const ConfirmDialog = ({ show, proceed, dismiss, cancel, title, confirmation, options }) => {
+  let { cancelText, proceedText } = options
   return (
     <Modal closeIcon size='tiny' centered={false} open={show} onClose={dismiss}>
       <Modal.Header>{title}</Modal.Header>
       <Modal.Content>{confirmation}</Modal.Content>
 
       <Modal.Actions>
-        <Button onClick={cancel}>Cancel</Button>
-        <Button onClick={proceed} primary>Yes</Button>
+        <Button primary inverted onClick={cancel}>{cancelText}</Button>
+        <Button onClick={proceed} primary>{proceedText}</Button>
       </Modal.Actions>
     </Modal>
   )

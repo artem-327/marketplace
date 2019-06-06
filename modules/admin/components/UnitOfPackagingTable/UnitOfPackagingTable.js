@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Confirm } from 'semantic-ui-react'
-//import ProdexGrid from '~/components/table'
+
 import ProdexTable from '~/components/table'
 import {
   getDataRequest,
@@ -9,6 +8,7 @@ import {
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation,
+  deleteUnitOfPackaging,
   getMeasureTypesDataRequest
 } from '../../actions'
 
@@ -20,30 +20,24 @@ class UnitOfPackagingTable extends Component {
 
   render() {
     const {
-      config,
       loading,
       rows,
       filterValue,
-      currentTab,
       openEditPopup,
-      confirmMessage,
-      handleOpenConfirmPopup,
-      closeConfirmPopup,
-      deleteConfirmation,
-      deleteRowById
+      deleteUnitOfPackaging,
+      // handleOpenConfirmPopup,
+      // config,
+      // currentTab,
+      // confirmMessage,
+      // closeConfirmPopup,
+      // deleteConfirmation,
+      // deleteRowById
     } = this.props
 
     const { columns } = this.props.config.display
 
     return (
       <React.Fragment>
-        <Confirm
-            size="tiny"
-            content="Do you really want to delete item?"
-            open={confirmMessage}
-            onCancel={closeConfirmPopup}
-            onConfirm={() => deleteConfirmation(deleteRowById, config)}
-        />
         <ProdexTable
           filterValue={filterValue}
           loading={loading}
@@ -51,7 +45,7 @@ class UnitOfPackagingTable extends Component {
           rows={rows}
           rowActions={[
             { text: 'Edit', callback: (row) => openEditPopup(row) },
-            { text: 'Delete', callback: (row) => handleOpenConfirmPopup(row.id) }
+            { text: 'Delete', callback: (row) => deleteUnitOfPackaging(row.id) }
           ]}
         />
       </React.Fragment>
@@ -61,6 +55,7 @@ class UnitOfPackagingTable extends Component {
 
 const mapDispatchToProps = {
   getDataRequest,
+  deleteUnitOfPackaging,
   openEditPopup,
   handleOpenConfirmPopup,
   closeConfirmPopup,

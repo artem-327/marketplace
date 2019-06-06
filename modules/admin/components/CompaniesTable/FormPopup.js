@@ -209,6 +209,7 @@ class AddNewPopupCasProducts extends React.Component {
         initialValues={popupValues ? popupValues : initialFormValues}
         validationSchema={popupValues ? validationSchema : this.formValidationNew()}
         onSubmit={async (values, actions) => {
+
           if (popupValues) {
             let newValues = {}
 
@@ -236,6 +237,7 @@ class AddNewPopupCasProducts extends React.Component {
         onReset={closePopup}
         render={props => {
           let { setFieldValue, values, isSubmitting } = props
+
           return (
             <Modal open centered={false} size='small'>
               <Modal.Header><FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} /> {config.addEditText}</Modal.Header>

@@ -20,11 +20,12 @@ import TablesHandlers from './TablesHandlers'
 import ProductImportPopup from './ProductCatalogTable/ProductImportPopup'
 import DeliveryAddressesTable from './DeliveryAddressesTable/DeliveryAddressesTable'
 import DeliveryAddressesPopup from './DeliveryAddressesTable/DeliveryAddressesPopup'
+import DwollaAccount from './DwollaAccountComponent'
 import { CompanyForm } from '~/modules/company-form/'
 import { companyDetailsTab } from '../contants'
 import Router from 'next/router'
 
-import { addTab } from '../actions'
+import { addTab, tabChanged } from '../actions'
 import { updateCompany } from '~/modules/admin/actions'
 import { validationSchema } from '~/modules/company-form/constants'
 
@@ -35,12 +36,12 @@ const TopMargedGrid = styled(Grid)`
 `
 
 class Settings extends Component {
-
-  state = { t: 0 }
-
   componentDidMount() {
-    let { isCompanyAdmin, addTab } = this.props
+    let { isCompanyAdmin, addTab, tabsNames, tabChanged, currentTab } = this.props
     if (isCompanyAdmin) addTab(companyDetailsTab)
+    let queryTab = Router && Router.router ? tabsNames.find(tab => tab.type === Router.router.query.type) || companyDetailsTab || tabsNames[0] : tabsNames[0]
+
+    if (!queryTab.type !== currentTab.type) tabChanged(queryTab)
   }
 
   companyDetails = () => {
@@ -77,7 +78,7 @@ class Settings extends Component {
   }
 
   renderContent = () => {
-    let { action, actionId, currentTab, isOpenPopup, isOpenImportPopup } = this.props
+    let { action, actionId, currentTab, isOpenPopup, isOpenImportPopup, isDwollaOpenPopup } = this.props
 
     const tables = {
       'company-details': this.companyDetails(),
@@ -104,29 +105,34 @@ class Settings extends Component {
       products: <ProductImportPopup />
     }
 
+    const addDwollaForms = {
+      'bank-accounts': <DwollaAccount />
+    }
+
     return (
       <>
         {isOpenPopup && popupForm[currentTab.type]}
         {isOpenImportPopup && importForm[currentTab.type]}
+        {isDwollaOpenPopup && addDwollaForms[currentTab.type]}
         {tables[currentTab.type] || <p>This page is still under construction</p>}
       </>
     )
   }
 
   render() {
-    const {currentTab} = this.props
-    
+    const { currentTab } = this.props
+
     return (
       <Container fluid className="flex stretched">
-        <Container fluid style={{padding: '0 32px'}}>
+        <Container fluid style={{ padding: '0 32px' }}>
           <TablesHandlers currentTab={currentTab} />
         </Container>
-        <Grid columns="equal" className="flex stretched" style={{padding: '0 32px'}}>
+        <Grid columns="equal" className="flex stretched" style={{ padding: '0 32px' }}>
           <Grid.Row>
             <Grid.Column width={3}>
               <Tabs currentTab={currentTab} isCompanyAdmin={this.props.isCompanyAdmin} />
             </Grid.Column>
-            <Grid.Column className="flex stretched" style={{ marginTop: '10px' }} t={this.state.t}>
+            <Grid.Column className="flex stretched" style={{ marginTop: '10px' }}>
               {this.renderContent()}
             </Grid.Column>
           </Grid.Row>
@@ -137,16 +143,15 @@ class Settings extends Component {
 }
 
 const mapStateToProps = ({ settings, auth }) => {
-  Router && Router.router && console.log('Router:', Router.router.query)
+
   return {
     ...settings,
     isCompanyAdmin: auth.identity ? auth.identity.isCompanyAdmin : false,
     company: auth.identity ? auth.identity.company : null,
-    currentTab: Router && Router.router ? settings.tabsNames.find(tab => tab.type === Router.router.query.type) || settings.tabsNames[0] : settings.tabsNames[0]
   }
 }
 
 export default connect(
   mapStateToProps,
-  { addTab, updateCompany }
+  { addTab, updateCompany, tabChanged }
 )(Settings)

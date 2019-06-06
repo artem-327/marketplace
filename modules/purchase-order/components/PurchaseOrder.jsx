@@ -104,8 +104,8 @@ class PurchaseOrder extends Component {
     const { dispatch, postNewDeliveryAddress, updateDeliveryAddress } = this.props
     let { cart, deliveryAddresses, payments, cartIsFetching, shippingQuotes, shipping } = this.props
 
-
     if (cartIsFetching) return <Spinner />
+    if (cart.cartItems.length === 0) Router.push('/cart')
 
     let currency = cart.cartItems[0].productOffer.price.currency.code
 

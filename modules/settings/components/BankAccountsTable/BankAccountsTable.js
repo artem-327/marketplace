@@ -1,15 +1,20 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
-import { Confirm } from 'semantic-ui-react'
+
+import confirm from '~/src/components/Confirmable/confirm'
+
 import {
   openPopup,
   getBankAccountsDataRequest,
   handleOpenConfirmPopup,
   closeConfirmPopup,
-  deleteConfirmation
+  deleteConfirmation,
+  deleteBankAccount
 } from '../../actions'
 import Router from "next/router"
+
+import { injectIntl } from 'react-intl'
 
 class ProductCatalogTable extends Component {
   state = {
@@ -28,26 +33,22 @@ class ProductCatalogTable extends Component {
     const {
       rows,
       filterValue,
-      confirmMessage,
       openPopup,
-      handleOpenConfirmPopup,
-      closeConfirmPopup,
-      deleteConfirmation,
-      deleteRowById,
-      currentTab
+      deleteBankAccount,
+      intl,
+      // confirmMessage,
+      // handleOpenConfirmPopup,
+      // closeConfirmPopup,
+      // deleteConfirmation,
+      // deleteRowById,
+      // currentTab
     } = this.props
 
-    const { columns } = this.state
+    let { columns } = this.state
+    const { formatMessage } = intl
 
     return (
       <React.Fragment>
-        <Confirm
-          size="tiny"
-          content="Do you really want to delete this Bank Account?"
-          open={confirmMessage}
-          onCancel={closeConfirmPopup}
-          onConfirm={() => deleteConfirmation(deleteRowById, currentTab)}
-        />
         <ProdexTable
           rows={rows}
           columns={columns}
@@ -56,7 +57,12 @@ class ProductCatalogTable extends Component {
             { text: 'Edit', callback: row => openPopup(row) },
             {
               text: 'Delete',
-              callback: row => handleOpenConfirmPopup(row.id)
+              callback: row => confirm(
+                formatMessage({ id: 'confirm.deleteBankAccount', defaultMessage: 'Delete Bank Account' }),
+                formatMessage(
+                  { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` },
+                  { item: row.name })
+              ).then(() => deleteBankAccount(row.id))
             }
           ]}
         />
@@ -70,7 +76,7 @@ const mapDispatchToProps = {
   getBankAccountsDataRequest,
   handleOpenConfirmPopup,
   closeConfirmPopup,
-  deleteConfirmation
+  deleteBankAccount
 }
 
 const mapStateToProps = state => {
@@ -86,4 +92,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProductCatalogTable)
+)(injectIntl(ProductCatalogTable))
