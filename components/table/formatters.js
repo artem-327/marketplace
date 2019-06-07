@@ -5,7 +5,7 @@ export function rowActionsCellFormatter({ column: { actions }, row }) {
   return (
     <Dropdown icon="" trigger={<Icon name="ellipsis vertical" size="large" />}>
       <Dropdown.Menu>
-        {actions.map((a, i) => (
+        {actions.map((a, i) => 'hidden' in a && typeof a.hidden === 'function' && Boolean(a.hidden(row)) ? null : (
           <Dropdown.Item
             key={i}
             text={a.text}

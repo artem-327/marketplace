@@ -10,7 +10,9 @@ import {
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation,
-  deleteBankAccount
+  deleteBankAccount,
+  dwollaInitiateVerification,
+  dwollaFinalizeVerification
 } from '../../actions'
 import Router from "next/router"
 
@@ -35,17 +37,14 @@ class ProductCatalogTable extends Component {
       filterValue,
       openPopup,
       deleteBankAccount,
-      intl,
-      // confirmMessage,
-      // handleOpenConfirmPopup,
-      // closeConfirmPopup,
-      // deleteConfirmation,
-      // deleteRowById,
-      // currentTab
+      dwollaInitiateVerification,
+      dwollaFinalizeVerification,
+      intl
     } = this.props
 
     let { columns } = this.state
     const { formatMessage } = intl
+
 
     return (
       <React.Fragment>
@@ -63,7 +62,9 @@ class ProductCatalogTable extends Component {
                   { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` },
                   { item: row.name })
               ).then(() => deleteBankAccount(row.id))
-            }
+            },
+            { text: 'Initiate Verification', callback: row => dwollaInitiateVerification(row.id), hidden: row => row.status !== 'unverified'}, 
+            { text: 'Finalize Verification', callback: row => dwollaFinalizeVerification(row.id), hidden: row => row.status !== 'verification_in_process' }, 
           ]}
         />
       </React.Fragment>
@@ -76,7 +77,9 @@ const mapDispatchToProps = {
   getBankAccountsDataRequest,
   handleOpenConfirmPopup,
   closeConfirmPopup,
-  deleteBankAccount
+  deleteBankAccount,
+  dwollaInitiateVerification,
+  dwollaFinalizeVerification
 }
 
 const mapStateToProps = state => {

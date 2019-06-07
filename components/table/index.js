@@ -217,7 +217,7 @@ export default class _Table extends Component {
 
   getColumns = () => {
     const { rowActions, columns } = this.props
-
+    console.log("GET-COLUMNS", rowActions, columns)
     return rowActions
       ? [
         { name: '__actions', title: ' ', width: 45, actions: rowActions },
