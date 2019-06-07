@@ -5,8 +5,17 @@ context("Inventory",() => {
     beforeEach(() => {
         cy.login("user1@example.com","echopass123");
         cy.visit('/inventory/my');
-        cy.contains("tr","Fluorobenzylamine").each((element) => {
-           console.log(element.find("td[text=101]"));
+        cy.wait(200);
+        cy.get(".vertical.ellipsis").each(element => {
+            //delete testing values
+            if (element.parents("tr").first().text().indexOf("Fluorobenzylamine") > 0)
+            {
+                cy.wrap(element)
+                    .click()
+                    .then(() => cy.contains(".menu.visible span","Delete listing").click())
+                    .then(() => cy.contains("Yes").click());
+
+            }
         });
     });
     afterEach(() => {
