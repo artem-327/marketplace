@@ -12,7 +12,7 @@ axios.interceptors.request.use(function (config) {
   
   if (auth && !config.headers['Authorization']) config.headers['Authorization'] = 'Bearer ' + auth.access_token
 
-  return config;
+  return config
 }, function (error) {
   // Do something with request error
   return Promise.reject(error)

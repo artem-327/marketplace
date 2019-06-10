@@ -8,10 +8,6 @@ import _ from 'lodash'
 import GroupCell from './GroupCell'
 
 import {
-  Template, TemplateConnector
-} from '@devexpress/dx-react-core'
-
-import {
   SearchState,
   IntegratedFiltering,
   IntegratedSelection,
@@ -150,7 +146,7 @@ export default class _Table extends Component {
     sorting: true,
     groupBy: [],
     onSelectionChange: () => { },
-    getNextPage: () => { }
+    getNextPage: () => { },
   }
 
   constructor(props) {
@@ -215,11 +211,7 @@ export default class _Table extends Component {
   }
 
   handleSelectionChange = (selection) => {
-    const { onSelectionChange, groupBy } = thos.props
-    
-    // if (groupBy.length > 0) {
-    //   this.
-    // }
+    const { onSelectionChange } = thos.props
 
     onSelectionChange(selection)
   }
