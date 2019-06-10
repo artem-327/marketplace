@@ -4,7 +4,7 @@ import { Popup, Label } from 'semantic-ui-react'
 import ProdexTable from '~/components/table'
 import {
   getCasProductByFilter,
-  openEditCasPopup,
+  openPopup,
   openEditAltNamesCasPopup,
   casDeleteItem,
   handleOpenConfirmPopup,
@@ -54,7 +54,7 @@ class CasProductsTable extends Component {
       config,
       loading,
       rows,
-      openEditCasPopup,
+      openPopup,
       openEditAltNamesCasPopup,
       deleteCasProduct,
       // handleOpenConfirmPopup,
@@ -78,7 +78,7 @@ class CasProductsTable extends Component {
           getNextPage={this.getNextPage}
           rows={rows}
           rowActions={[
-            {text: 'Edit', callback: (row) => openEditCasPopup(row)},
+            {text: 'Edit', callback: (row) => openPopup(row)},
             {text: 'Edit Alternative Names', callback: (row) => openEditAltNamesCasPopup(row)},
             {text: 'Delete', callback: (row) => deleteCasProduct(row.id)}
           ]}
@@ -90,7 +90,7 @@ class CasProductsTable extends Component {
 
 const mapDispatchToProps = {
   getCasProductByFilter,
-  openEditCasPopup,
+  openPopup,
   openEditAltNamesCasPopup,
   casDeleteItem,
   handleOpenConfirmPopup,
@@ -124,7 +124,11 @@ const mapStateToProps = state => {
         packagingGroup: !!d.packagingGroup ? d.packagingGroup.groupCode : '',
         unNumberCode: !!d.unNumber ? d.unNumber.unNumberCode : '',
         unNumberId: !!d.unNumber ? d.unNumber.id : '',
-        unNumberDescription: !!d.unNumber ? d.unNumber.description : '',
+        unNumber: !!d.unNumber ? {
+          id: d.unNumber.id,
+          title: d.unNumber.unNumberCode,
+          description: d.unNumber.description
+        } : null,
         hazardClasses: transformHazardClasses(d.hazardClasses),
         // Prepare initial values for editing form
         packagingGroupId: !!d.packagingGroup ? d.packagingGroup.id : '',

@@ -1,11 +1,24 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 
-import { Table, Dropdown } from "semantic-ui-react"
+import {
+  Table,
+  Dropdown,
+  Grid,
+  Input,
+  Select,
+  Checkbox
+} from "semantic-ui-react"
 
-import { changeHeadersCSV } from "../../../actions"
+import {
+  changeHeadersCSV,
+  handleSaveMapCSV,
+  handleChangeMapCSVName,
+  getCSVMapProductOffer,
+  selectSavedMap
+} from "../../../actions"
 
-const mapping = [
+const mappingProduct = [
   { text: "CAS Number", value: "CAS Number" },
   { text: "Packaging Minimum", value: "Packaging Minimum" },
   { text: "Packaging Size", value: "Packaging Size" },
@@ -15,58 +28,142 @@ const mapping = [
   { text: "Product Name", value: "Product Name" }
 ]
 
+const mappingProductOffer = [
+  { text: "Assay Max", value: "Assay Max" },
+  { text: "Assay Min", value: "Assay Min" },
+  { text: "CAS Product Number", value: "CAS Product Number" },
+  { text: "Expiration Date", value: "Expiration Date" },
+  { text: "External Notes", value: "External Notes" },
+  { text: "Hazard Class", value: "Hazard Class" },
+  { text: "Internal Notes", value: "Internal Notes" },
+  { text: "Lot Manufactured Date", value: "Lot Manufactured Date" },
+  { text: "Lot Number", value: "Lot Number" },
+  { text: "Lot Pkg Amount", value: "Lot Pkg Amount" },
+  { text: "Manufacturer Name", value: "Manufacturer Name" },
+  { text: "Origin Name", value: "Origin Name" },
+  { text: "Packaging Group", value: "Packaging Group" },
+  { text: "Packaging Minimum", value: "Packaging Minimum" },
+  { text: "Packaging Size", value: "Packaging Size" },
+  { text: "Packaging Splits", value: "Packaging Splits" },
+  { text: "Packaging Type Name", value: "Packaging Type Name" },
+  { text: "Packaging Unit Name", value: "Packaging Unit Name" },
+  { text: "Pricing Cost", value: "Pricing Cost" },
+  { text: "Pricing Price", value: "Pricing Price" },
+  { text: "Product Code", value: "Product Code" },
+  { text: "Product Condition Name", value: "Product Condition Name" },
+  { text: "Product Form Name", value: "Product Form Name" },
+  { text: "Product Grade Name", value: "Product Grade Name" },
+  { text: "Product Name", value: "Product Name" },
+  { text: "Trade Name", value: "Trade Name" },
+  { text: "UN Number", value: "UN Number" },
+  { text: "Warehouse Name", value: "Warehouse Name" }
+]
+
 class Map extends Component {
   state = {
-    newHeaders: null
+    newHeaders: null,
+    isSavedMap: false
   }
 
   componentDidMount() {
+    this.props.getCSVMapProductOffer()
     this.setState({ newHeaders: this.props.CSV.headerCSV })
   }
 
   render() {
     const { CSV } = this.props
 
+    const optionMaps =
+      this.props.maps &&
+      this.props.maps.map(map => ({
+        text: map.mapName,
+        value: map.id
+      }))
+
     return (
-      <Table celled padded textAlign="center">
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>CSV Columns</Table.HeaderCell>
-            <Table.HeaderCell>CSV Preview</Table.HeaderCell>
-            <Table.HeaderCell>Mapping</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        {CSV && (
-          <Table.Body>
-            {CSV.headerCSV.map(lineHeader => (
-              <Table.Row key={lineHeader.columnNumber}>
-                <Table.Cell>{lineHeader.content}</Table.Cell>
-                <Table.Cell>
-                  {CSV.bodyCSV.map(line => {
-                    return line.columns.map(lineBody => {
-                      return (
-                        lineHeader.columnNumber === lineBody.columnNumber &&
-                        lineBody.content + " "
-                      )
-                    })
-                  })}
-                </Table.Cell>
-                <Table.Cell>
-                  <Dropdown
-                    placeholder="Select Column"
-                    column_number={lineHeader.columnNumber}
-                    selection
-                    clearable
-                    options={mapping}
-                    onChange={this.selectMapping}
-                  />
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
+      <React.Fragment>
+        {this.props.productOffer && (
+          <Grid centered padded>
+            <Grid.Row verticalAlign="middle" columns={3}>
+              <Grid.Column textAlign="center">
+                <Select
+                  placeholder="Select your saved map"
+                  options={optionMaps}
+                  clearable
+                  //disabled={!optionMaps}
+                  onChange={this.selectSavedMap}
+                />
+              </Grid.Column>
+              <Grid.Column textAlign="center">
+                <Input placeholder="Map Name" onChange={this.inputMapName} />
+              </Grid.Column>
+              <Grid.Column textAlign="center" verticalAlign="middle">
+                <Checkbox label="Save my map" onChange={this.checkboxChange} />
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
         )}
-      </Table>
+        <Table celled padded textAlign="center">
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>CSV Columns</Table.HeaderCell>
+              <Table.HeaderCell>CSV Preview</Table.HeaderCell>
+              <Table.HeaderCell>Mapping</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          {CSV && (
+            <Table.Body>
+              {CSV.headerCSV.map(lineHeader => (
+                <Table.Row key={lineHeader.columnNumber}>
+                  <Table.Cell>{lineHeader.content}</Table.Cell>
+                  <Table.Cell>
+                    {CSV.bodyCSV.map(line => {
+                      return line.columns.map(lineBody => {
+                        return (
+                          lineHeader.columnNumber === lineBody.columnNumber &&
+                          lineBody.content + " "
+                        )
+                      })
+                    })}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Dropdown
+                      placeholder="Select Column"
+                      column_number={lineHeader.columnNumber}
+                      selection
+                      clearable
+                      options={
+                        this.props.productOffer
+                          ? mappingProductOffer
+                          : mappingProduct
+                      }
+                      disabled={!!this.props.selectedSavedMap}
+                      onChange={this.selectMapping}
+                    />
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          )}
+        </Table>
+      </React.Fragment>
     )
+  }
+
+  selectSavedMap = (e, { value }) => {
+    const selectedMap = this.props.maps.filter(map => {
+      return map.id === value
+    })
+    console.log(selectedMap)
+    this.props.selectSavedMap(selectedMap[0])
+  }
+
+  inputMapName = e => {
+    this.props.handleChangeMapCSVName(e.target.value)
+  }
+
+  checkboxChange = () => {
+    this.props.handleSaveMapCSV()
   }
 
   selectMapping = (e, { column_number, value }) => {
@@ -85,14 +182,20 @@ class Map extends Component {
 }
 
 const mapDispatchToProps = {
-  changeHeadersCSV
+  changeHeadersCSV,
+  handleSaveMapCSV,
+  handleChangeMapCSVName,
+  getCSVMapProductOffer,
+  selectSavedMap
 }
 
 const mapStateToProps = state => {
   return {
     csvFileId: state.settings.fileCSVId,
     CSV: state.settings.CSV,
-    mappedHeader: state.settings.mappedHeaders
+    mappedHeader: state.settings.mappedHeaders,
+    maps: state.settings.maps,
+    selectedSavedMap: state.settings.selectedSavedMap
   }
 }
 

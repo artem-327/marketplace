@@ -249,24 +249,10 @@ export function updateProductName(productId, id, value) {
 	}
 }
 
-export function openEditCasPopup(value) {
-	const data = {
-		casIndexName: value.casIndexName,
-		casNumber: value.casNumber,
-		chemicalName: value.chemicalName,
-		hazardClasses: value.hazardClassesId,
-		id: value.id,
-		packagingGroup: value.packagingGroupId,
-		unNumberId: value.unNumberId,
-		unNumberCode: value.unNumberCode,
-		unNumberDescription: value.unNumberDescription,
-	}
-	return async dispatch => {
-		await dispatch({ // Save UN number data to global props (not needed to call get UN Numbers api)
-			type: AT.ADMIN_GET_UN_NUMBERS_FULFILLED,
-			payload: [{ id: data.unNumberId, unNumberCode: data.unNumberCode, unNumberDescription: data.unNumberDescription }]
-		})
-		dispatch(openPopup(data))
+export function openEditCasPopup(data) {	// ! ! TODO probably openPopup() may be used
+	return {
+		type: AT.ADMIN_OPEN_POPUP,
+		payload: { data }
 	}
 }
 

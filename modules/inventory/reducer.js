@@ -327,7 +327,7 @@ export default function reducer(state = initialState, action) {
               if (po.id === action.payload.productOfferId) {
                 return {
                   ...po,
-                  status: action.payload.broadcasted ? 'Broadcasting' : 'Not broadcasting'
+                  status: action.payload.broadcasted
                 }
               } else {
                 return po

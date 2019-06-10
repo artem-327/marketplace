@@ -277,6 +277,7 @@
   "addInventory.warehouseName": "Warehouse Name",
   "addInventory.savedWarehouse": "SAVED WAREHOUSE",
   "addInventory.newWarehouse": "NEW WAREHOUSE",
+  "addInventory.documentType": "Document Type",
   "administration": "ADMINISTRATION",
   "administration.newCompanyName": "New Company Name",
   "administration.companies": "Companies",

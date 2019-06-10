@@ -26,8 +26,10 @@ export const initialState = {
   provincesDropDown: [],
   country: [],
   currency: [],
+
   tabsNames: defaultTabs,
   currentTab: defaultTabs[0],
+
   isOpenPopup: false,
   isOpenImportPopup: false,
   isDwollaOpenPopup: false,
@@ -45,6 +47,10 @@ export const initialState = {
   mappedHeaders: null,
   dataHeaderCSV: null,
   loading: false,
+  isSaveMapCSV: false,
+  mapName: null,
+  maps: null,
+  selectedSavedMap: null,
   loaded: false,
   searchedCasProducts: [],
   searchedUnNumbers: [],
@@ -219,15 +225,29 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE: {
+    case AT.SAVE_MAP_CSV: {
       return {
         ...state,
-        productCatalogUnmappedValue: action.payload
+        isSaveMapCSV: !state.isSaveMapCSV
+      }
+    }
+
+    case AT.CHANGE_MAP_CSV_NAME: {
+      return {
+        ...state,
+        mapName: action.payload
       }
     }
 
     case AT.GET_USERS_DATA: {// ! ! vsude zmenit na pending
       return { ...state, loading: true }
+    }
+
+    case AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE: {
+      return {
+        ...state,
+        productCatalogUnmappedValue: action.payload
+      }
     }
 
     case AT.GET_USERS_DATA_FULFILLED: {
@@ -541,6 +561,20 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.GET_CSV_MAP_PRODUCT_OFFER_SUCCESS: {
+      return {
+        ...state,
+        maps: action.data
+      }
+    }
+
+    case AT.SELECT_SAVED_MAP: {
+      return {
+        ...state,
+        selectedSavedMap: action.payload
+      }
+    }
+
     case AT.CHANGE_HEADERS_CSV: {
       return {
         ...state,
@@ -582,7 +616,10 @@ export default function reducer(state = initialState, action) {
         fileCSVId: null,
         mappedHeaders: null,
         dataHeaderCSV: null,
-        isOpenImportPopup: false
+        isOpenImportPopup: false,
+        isSaveMapCSV: false,
+        mapName: null,
+        selectedSavedMap: null
       }
     }
 
@@ -591,7 +628,10 @@ export default function reducer(state = initialState, action) {
         ...state,
         fileCSVId: null,
         mappedHeaders: null,
-        dataHeaderCSV: null
+        dataHeaderCSV: null,
+        isSaveMapCSV: false,
+        mapName: null,
+        selectedSavedMap: null
       }
     }
 

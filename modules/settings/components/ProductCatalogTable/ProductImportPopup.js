@@ -2,21 +2,15 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
 
-import {
-  Modal,
-  Icon,
-  Step,
-  ModalContent,
-  Grid,
-  Button
-} from "semantic-ui-react"
+import { Modal, Icon, Step, ModalContent, Button } from "semantic-ui-react"
 
 import {
   closeImportPopup,
   getStoredCSV,
   postImportProductCSV,
   clearDataOfCSV,
-  closeImportPopupCancel
+  closeImportPopupCancel,
+  postImportProductOfferCSV
 } from "../../actions"
 
 import Upload from "./Steps/UploadCSV"
@@ -55,8 +49,14 @@ class ProductImportPopup extends Component {
 
   steps = {
     upload: <Upload />,
-    map: <Map />,
-    preview: <Preview />,
+    map: (
+      <Map productOffer={this.props.productOffer && this.props.productOffer} />
+    ),
+    preview: (
+      <Preview
+        productOffer={this.props.productOffer && this.props.productOffer}
+      />
+    ),
     confirmation: <ConfirmationPage toUpload={this.toUpload} />
   }
 
@@ -103,7 +103,7 @@ class ProductImportPopup extends Component {
         <Modal.Actions>
           {currentStep !== "confirmation" && (
             <div style={{ textAlign: "right" }}>
-              <Button basic onClick={closeImportPopupCancel}>
+              <Button basic onClick={() => closeImportPopupCancel(csvFileId)}>
                 Cancel
               </Button>
               <Button
@@ -132,7 +132,10 @@ class ProductImportPopup extends Component {
         this.setState({ currentStep: "preview", isFinishMap: true })
         break
       case "preview":
-        this.props.postImportProductCSV(mappedDataHeaderCSV, csvFileId)
+        this.props.productOffer
+          ? this.props.postImportProductOfferCSV(mappedDataHeaderCSV, csvFileId)
+          : this.props.postImportProductCSV(mappedDataHeaderCSV, csvFileId)
+
         this.setState({ currentStep: "confirmation", isFinishPreview: true })
         break
     }
@@ -144,7 +147,8 @@ const mapDispatchToProps = {
   getStoredCSV,
   postImportProductCSV,
   clearDataOfCSV,
-  closeImportPopupCancel
+  closeImportPopupCancel,
+  postImportProductOfferCSV
 }
 
 const mapStateToProps = state => {
