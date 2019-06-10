@@ -87,7 +87,7 @@ class MyInventory extends Component {
                           disabled={r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'}
                           onChange={(e, data) => {
                             e.preventDefault()
-                            this.props.patchBroadcast(data.checked, r.id)
+                            this.props.patchBroadcast(data.checked, r.id, r.status)
                           }} />
               }
               content={title}
@@ -178,7 +178,8 @@ class MyInventory extends Component {
               }
             ]}
             onRowClick={(e, row) => {
-              if (e.target.tagName === 'TD') {
+              const targetTag = e.target.tagName.toLowerCase()
+              if (targetTag !== 'input' && targetTag !== 'label') {
                 Router.push({pathname: '/inventory/edit', query: {id: row.id}})
               }
             }}

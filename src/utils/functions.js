@@ -139,7 +139,7 @@ export function addFirstTier(productOffer) {
 
   let sortedTiers = pricingTiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
 
-  if (minimum < sortedTiers[0].quantityFrom)
+  if (sortedTiers.length && minimum < sortedTiers[0].quantityFrom)
     return { ...productOffer, pricingTiers: [{ quantityFrom: minimum, price: price.amount }].concat(sortedTiers) }
 
   return productOffer

@@ -29,6 +29,17 @@ export function closePopup(rows = null) {
   }
 }
 
+export function openDwollaPopup(){
+  return {
+    type: AT.OPEN_DWOLLA_POPUP
+  }
+}
+export function closeDwollaPopup(){
+  return {
+    type: AT.CLOSE_DWOLLA_POPUP
+  }
+}
+
 export function openImportPopup() {
   return {
     type: AT.OPEN_IMPORT_POPUP
@@ -308,8 +319,8 @@ export function getUsersDataRequest() {
           payload: branches
         })
         dispatch({
-          type: AT.GET_ROLES_DATA,
-          payload: roles
+            type: AT.GET_ROLES_DATA,
+            payload: roles
         })
         return users
       }
@@ -628,6 +639,13 @@ export function postImportProductCSV(payload, id) {
   return {
     type: AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS,
     payload: api.postImportProductCSV(payload, id)
+  }
+}
+
+export function postDwollaAccount(payload){
+  return {
+    type: AT.SETTINGS_CREATE_DWOLLA_ACCOUNT,
+    payload: api.postNewDwollaAccount(payload)
   }
 }
 

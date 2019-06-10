@@ -84,6 +84,13 @@ export function postNewRequest(config, values) {
 	}
 }
 
+export function postDwollaAccount(payload){
+	return {
+	  type: AT.ADMIN_CREATE_DWOLLA_ACCOUNT,
+	  payload: api.postNewDwollaAccount(payload)
+	}
+}
+
 export function putEditedDataRequest(config, id, values) {
 	return async dispatch => {
 		await dispatch({
@@ -306,6 +313,13 @@ export function getCompanies(params) {
 	}
 }
 
+export function getCompany(params) {
+	return {
+		type: AT.ADMIN_GET_FULL_COMPANY,
+		payload: api.getCompany(params)
+	}
+}
+
 /*
 export function getCompany(id) {
 	return {
@@ -360,6 +374,25 @@ export function openEditCompany(id, formData) {
 		dispatch(openPopup(formData))
 		// const data = await api.getCompany(id)
 		// dispatch(openPopup(data))
+	}
+}
+
+export function openRegisterDwollaAccount(data) {
+	return async dispatch => {
+		dispatch(getCompany(data))
+		dispatch(registerDwollaAccount())
+	}
+}
+
+export function registerDwollaAccount() {
+	return {
+		type: AT.ADMIN_OPEN_REGISTER_DWOLLA_ACCOUNT_POPUP
+	}
+}
+
+export function closeRegisterDwollaAccount() {
+	return {
+		type: AT.ADMIN_CLOSE_REGISTER_DWOLLA_ACCOUNT_POPUP
 	}
 }
 

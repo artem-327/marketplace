@@ -352,14 +352,14 @@ export function loadFile(attachment) {
   }
 }
 
-export function patchBroadcast(broadcasted, productOfferId) {
+export function patchBroadcast(broadcasted, productOfferId, oldStatus) {
   return {
     type: AT.INVENTORY_PATCH_BROADCAST,
     async payload() {
       const response = await api.patchBroadcast(broadcasted, productOfferId)
 
       return {
-        broadcasted: response.status === 200 ? broadcasted : !broadcasted,
+        broadcasted: response.status === 200 ? response.data : oldStatus,
         productOfferId
       }
     }

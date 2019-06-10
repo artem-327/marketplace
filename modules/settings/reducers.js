@@ -30,6 +30,7 @@ export const initialState = {
   currentTab: defaultTabs[0],
   isOpenPopup: false,
   isOpenImportPopup: false,
+  isDwollaOpenPopup: false,
   currentEditForm: null,
   currentAddForm: null,
   confirmMessage: null,
@@ -68,6 +69,18 @@ export default function reducer(state = initialState, action) {
         ...state,
         isOpenPopup: false,
         popupValues: null
+      }
+    }
+    case AT.OPEN_DWOLLA_POPUP: {
+      return {
+        ...state,
+        isDwollaOpenPopup: true
+      }
+    }
+    case AT.CLOSE_DWOLLA_POPUP: {
+      return {
+        ...state,
+        isDwollaOpenPopup: false
       }
     }
     case AT.OPEN_IMPORT_POPUP: {

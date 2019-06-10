@@ -69,6 +69,11 @@ export async function postNewRequest(config, values) {
   return data
 }
 
+export async function postNewDwollaAccount(values) {
+  const { data } = await api.post('/prodex/api/payments/dwolla/register', values)
+  return data
+}
+
 export async function deleteItem(config, id) {
   const { data } = await api.delete(config.api.delete.apiCall + id)
   return data
@@ -97,6 +102,14 @@ export const getProvinces = (id) => api.get(`/prodex/api/provinces/search?countr
 
 export async function getCompanies(params) {
   const { data } = await api.post(`/prodex/api/companies/datagrid`, {
+    ...params
+  })
+  return data
+}
+
+export async function getCompany(params) {
+  const { data } = await api.get(`/prodex/api/companies/id/${params}`, {
+    filters: [],
     ...params
   })
   return data
