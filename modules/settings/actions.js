@@ -76,10 +76,12 @@ export function handlerSubmitUserEditPopup(payload, id) {
       name: payload.name,
       email: payload.email,
       homeBranchId: payload.homeBranchId,
-      //preferredCurrency: payload.preferredCurrency
+      jobTitle: payload.title,
+      phone: payload.phone,
+      preferredCurrency: payload.preferredCurrency
     }
     removeEmpty(updateUser)
-    console.log('!!!!!!!!!! new user x', updateUser);
+    console.log('!!!!!!!!!! edit user', updateUser);
     await dispatch({
       type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
       payload: api.patchUser(id, updateUser)
@@ -440,6 +442,13 @@ export function getProductsCatalogRequest(data) {
   }
 }
 
+export function getCurrencies() {
+  return {
+    type: AT.SETTINGS_GET_CURRENCIES,
+    payload: api.getCurrencies()
+  }
+}
+
 export function getBankAccountsDataRequest() {
   return (dispatch) => {
     dispatch({
@@ -491,9 +500,10 @@ export function postNewUserRequest(payload) {
       password: payload.password,
       jobTitle: payload.title,
       phone: payload.phone,
+      preferredCurrency: payload.preferredCurrency
     }
     removeEmpty(dataBody)
-    console.log('!!!!!!!!!! new user x', dataBody);
+    console.log('!!!!!!!!!! new user', dataBody);
     await dispatch({
       type: AT.POST_NEW_USER_REQUEST,
       payload: api.postNewUser(dataBody)

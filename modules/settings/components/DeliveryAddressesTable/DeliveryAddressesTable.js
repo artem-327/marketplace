@@ -11,7 +11,7 @@ import { injectIntl } from 'react-intl'
 import {
   getDeliveryAddressesByFilterRequest,
   deleteDeliveryAddress,
-  // openPopup,
+  openPopup,
   // handleOpenConfirmPopup,
   // closeConfirmPopup,
 } from '../../actions'
@@ -79,7 +79,8 @@ class DeliveryAddressesTable extends Component {
 
 const mapDispatchToProps = {
   getDeliveryAddressesByFilterRequest,
-  deleteDeliveryAddress
+  deleteDeliveryAddress,
+  openPopup
 }
 
 const mapStateToProps = state => {
