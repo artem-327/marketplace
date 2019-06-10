@@ -4,6 +4,7 @@ import confirm from '../../../../components/Confirmable/confirm'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
 import { checkToken } from '../../../../utils/auth'
 import { Button } from 'semantic-ui-react'
+import { FormattedUnit } from '~/components/formatted-messages'
 
 export default class ItemCartBody extends Component {
   render() {
@@ -11,8 +12,6 @@ export default class ItemCartBody extends Component {
     let { productOffer } = cartItem
 
     let unitName = productOffer.product.packagingUnit.nameAbbreviation
-    let location = productOffer.warehouse.address
-    location = `${location.province ? location.province.name : location.city}, ${location.country.name}`
 
     return (
       <div className='item-cart'>
@@ -22,32 +21,34 @@ export default class ItemCartBody extends Component {
               {productOffer.product.casProduct.casIndexName}
             </div>
             <div>
-              <FormattedMessage
+              {/* <FormattedMessage
                 id='cart.merchant.email'
-                defaultMessage={'Merchant: ' + productOffer.merchant.email}
-                values={{ merchant: productOffer.merchant.email }}
-              />
+                defaultMessage={'Merchant: ' + productOffer.merchant ? productOffer.merchant.email : productOffer.warehouse.address.contactEmail}
+                values={{ merchant: productOffer.merchant ? productOffer.merchant.company.name : productOffer.warehouse.address.contactEmail }}
+              /> */}
             </div>
             <div>
               <FormattedMessage
                 id='cart.location'
                 defaultMessage={'Location: ' + location}
-                values={{ location }}
+                values={{ location: cartItem.locationStr }}
               />
             </div>
             <div>
               <span>Price per {unitName}: </span>
               <FormattedNumber
                 id='cart.pricePer'
+                style='currency'
+                currency={cartItem.productOffer.price.currency.code}
                 value={cartItem.pricing.price}
               />
             </div>
             <div>
               <span>Total Weight: </span>
-              <FormattedNumber
-                id='cart.totalWeight'
+              <FormattedUnit
                 value={cartItem.quantity * productOffer.product.packagingSize}
-              /> {unitName}
+                unit={unitName} separator=''
+              />
             </div>
           </div>
           <div className='item-cart-body-section'>

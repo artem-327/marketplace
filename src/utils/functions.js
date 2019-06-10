@@ -100,15 +100,14 @@ export function getAbbreviation(word) {
 
 export function getPricing(offerDetail, quantity) {
   if (offerDetail.pricing) {
-    let tiers = offerDetail.pricing.tiers.length > 0 ? offerDetail.pricing.tiers : offerDetail.pricing.price.amount
-    
-    if (tiers instanceof Array) {
+    let tiers = offerDetail.pricingTiers.length > 0 ? offerDetail.pricingTiers : offerDetail.pricing.price
 
+    if (tiers instanceof Array) {
       let sortedTiers = tiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
 
       for (let i = sortedTiers.length - 1; i >= 0; i--) {
         let { quantityFrom } = sortedTiers[i]
-   
+
         if (quantity >= quantityFrom) {
           try {
             delete sortedTiers[i].id
@@ -117,8 +116,32 @@ export function getPricing(offerDetail, quantity) {
           }
         }
       }
+
+      return { quantityFrom: offerDetail.minimum, price: offerDetail.price.amount }
     }
 
-    return { quantityFrom: 0, price: tiers }
+    return { quantityFrom: offerDetail.minimum, price: tiers }
   }
+}
+
+export function getLocationString(productOffer) {
+  try {
+    var location = productOffer.warehouse.address
+  } catch (e) {
+    return ''
+  }
+
+  return `${location.city}, ${location.province ? `${location.province.abbreviation},` : ''} ${location.country.name}`
+}
+
+export function addFirstTier(productOffer) {
+  let { pricingTiers, minimum, price } = productOffer
+
+  let sortedTiers = pricingTiers.sort((a, b) => a.quantityFrom - b.quantityFrom)
+
+  if (sortedTiers.length && minimum < sortedTiers[0].quantityFrom)
+    return { ...productOffer, pricingTiers: [{ quantityFrom: minimum, price: price.amount }].concat(sortedTiers) }
+
+  return productOffer
+
 }

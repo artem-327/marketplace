@@ -1,17 +1,20 @@
 
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Layout from 'components/Layout'
 import securePage from '~/hocs/securePage'
-import SettingsPage from '~/src/pages/settings'
+import SettingsPage from '~/modules/settings'
+import {withRouter, Router} from 'next/router'
+
 class Index extends Component {
 
   render() {
+
     return (
       <Layout title="Settings">
-        <SettingsPage />
+        <SettingsPage type={this.props.router.query.type} />
       </Layout>
     )
   }
 }
 
-export default securePage(Index)
+export default withRouter(securePage(Index))

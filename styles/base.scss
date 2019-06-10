@@ -15,6 +15,7 @@ body {
   &.row { flex-direction: row; }
   &.stretched {
     flex: 1 auto;
+    min-height: 0px;
   }
 
   &.stretched-all {
@@ -27,8 +28,39 @@ body {
   }
 }
 
+.ui.overlay.sidebar {
+  z-index: 601;
+}
+
+.bootstrapiso .table-responsive {
+  width: calc(100% + 2.2857143em);
+  margin-right: -2.2857143em;
+  border: 0 none;
+  padding-right: 2.2857143em;
+}
+
+.bootstrapiso .table-responsive table {
+  border-width: 0;
+}
+
 .bootstrapiso .table-responsive td.actions {
   overflow: inherit !important;
+}
+
+.bootstrapiso .table-responsive .group-row td {
+  position: relative;
+  border-left: 1px solid #dedede;
+  border-right: 1px solid #dedede;
+  padding-right: 3em;
+
+  span.right {
+    float: right;
+  }
+
+  > i.chevron {
+    position: absolute;
+    right: 0.2em;
+  }
 }
 
 .ui.menu .item > i.chevron.icon {
@@ -38,7 +70,7 @@ body {
   font-size: 70%;
 }
 
-i.icon:not(.dropdown):not(.times):not(.sort) {
+i.icon:not(.dropdown):not(.times):not(.sort):not(.unlink) {
   font-family: 'thin-icons' !important;
 }
 
@@ -53,21 +85,38 @@ i.icon.thick {
     padding-bottom: 6.5rem !important;
   }
 
+  .ui.attached.segment {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   .segment-fixed {
     position: fixed;
     bottom: 2rem;
-    width: calc((100% - (2 * 1.2857143rem)) * 0.3125 * 0.75 - 2rem);
-    margin-left: -1px;
-    margin-right: -1px;
-    box-shadow: 0 2.5em 0 0 #fff;
+    width: calc((100% - (2 * 1.2857143rem)) * 0.3125 * 0.75 - 2rem - 2px);
+    margin-left: 0;
+    margin-right: 0;
+    box-shadow: 0 0 0 1px #fff, 0 2.5em 0 1px #fff;
+  }
+}
+
+@media (max-width: 1680px) {
+  .product-details {
+
+    .segment-fixed {
+      width: calc((100% - (2 * 1.2857143rem)) * 0.3125 - 2rem - 2px)
+    }
   }
 }
 
 .ui.grid.data-grid {
-  font-size: 1.2857143rem;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 1.142857rem;
 
   > .column {
-    height: 2em;
+    min-height: 2em;
     padding-top: .111111em;
     padding-bottom: .111111em;
     line-height: 1.777778em;
@@ -162,10 +211,10 @@ i.icon.thick {
   }
 }
 
-div.page-wrapper {
-  width: 100%;
-  padding: 0 2.2857143em;
-}
+// div.page-wrapper {
+//   width: 100%;
+//   padding: 0 2.2857143em;
+// }
 
 .sui-error-message {
   display: block;
@@ -308,6 +357,15 @@ h1.ui.header {
   }
 }
 
+h3.ui.header {
+  font-size: 1.142857em;
+}
+
+.ui.form .field > label {
+  font-size: 1.142857em;
+  font-weight: 400;
+}
+
 form.inventory {
   height: 100%;
 }
@@ -348,13 +406,12 @@ div.inventory {
     background: transparent;
 
     .ui.table.attached {
-      width: 100%;
+      width: 100.075%; // hack for 1 not completed pixel
       margin-left: 0;
       margin-right: 0;
     }
 
     .ui.message.attached {
-      width: 100%;
       margin-left: 0;
       margin-right: 0;
     }
@@ -368,7 +425,7 @@ div.inventory {
 }
 
 .ui.attached.message.header-table-fields {
-  max-width: calc(100% + 2px);
+  //max-width: calc(100% + 2px);
   border: 1px solid #ccc;
   padding-left: 0.78571429em;
   padding-right: 0.78571429em;
@@ -486,5 +543,70 @@ table.order-total.ui[class*="very basic"]:not(.sortable):not(.striped) {
     td:last-child {
       padding-right: 0.5em;
     }
+  }
+}
+
+.ui.toggle.checkbox.fitted .box:before,
+.ui.toggle.checkbox.fitted label:before {
+  border: 1px solid #979797;
+  border-radius: 12px;
+  background-color: #d8d8d8;
+}
+
+.ui.toggle.checkbox.fitted .box:after,
+.ui.toggle.checkbox.fitted label:after {
+  left: 0em;
+  width: 14px;
+  height: 14px;
+  border: 1px solid #979797;
+  background-color: #e7e7e7;
+}
+
+.ui.toggle.checkbox input:focus ~ .box:before,
+.ui.toggle.checkbox input:focus ~ label:before {
+  border: 1px solid #979797;
+}
+
+.ui.toggle.checkbox input:checked ~ .box:after,
+.ui.toggle.checkbox input:checked ~ label:after {
+  background-color: #ffffff;
+}
+
+.ui.toggle.checkbox input[disabled] ~ .box:before,
+.ui.toggle.checkbox input[disabled] ~ label:before {
+  border: solid 1px #e74c3c;
+  background-color: #e7e7e7;
+}
+
+.ui.toggle.checkbox input[disabled] ~ .box:after,
+.ui.toggle.checkbox input[disabled] ~ label:after {
+  border-color: #e74c3c;
+  background-color: rgba(231, 76, 60, 0.2);
+}
+
+i.file {
+  &.unknown,
+  &.positive,
+  &.negative {
+    width: 18px;
+    height: 20px;
+    margin: 0;
+    border-radius: 0;
+    background-color: transparent;
+    background-size: contain;
+
+    &:before {
+      content: "" !important;
+    }
+  }
+
+  &.unknown {
+    background-image: url("../images/attachment-unknown.png");
+  }
+  &.positive {
+    background-image: url("../images/attachment-positive.png");
+  }
+  &.negative {
+    background-image: url("../images/attachment-negative.png");
   }
 }

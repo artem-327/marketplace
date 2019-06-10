@@ -1,8 +1,8 @@
 import React, { Component } from "react"
 import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button, TextArea } from 'formik-semantic-ui'
-import { FormattedMessage } from 'react-intl';
-import { Modal, Icon, Segment, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
+import { Modal, Icon, Segment, Dimmer, Loader, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab, Popup } from 'semantic-ui-react'
 import styled from 'styled-components'
 import * as val from 'yup'
 import { DateInput } from '~/components/custom-formik'
@@ -38,6 +38,7 @@ const ResponsiveColumn = styled(GridColumn)`
 `
 
 const initValues = {
+  additionalType: 'Unspecified',
   costs: [],
   doesExpire: false,
   inStock: true,
@@ -54,6 +55,7 @@ const initValues = {
   processingTimeDays: 1,
   splits: 1,
   touchedLot: false,
+  trackSubCosts: true,
   validityDate: "",
   warehouse: 0
 }
@@ -93,7 +95,7 @@ const validationScheme = val.object().shape({
   product: val.string().required("required"),
   processingTimeDays: val.number().required("required"),
   doesExpire: val.bool(),
-  pkgAmount: val.number().nullable().moreThan(0, 'Amount has to be greater than 0').required("required"),
+  pkgAmount: val.number().typeError('must be number').nullable().moreThan(0, 'Amount has to be greater than 0').required("required"),
   validityDate: val.string().matches(/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, { message: 'not valid date' }),
   lots: val.array().of(val.object().uniqueProperty('lotNumber', 'LOT number has to be unique').shape({
     lotNumber: val.string().nullable().required("required"),
@@ -108,8 +110,8 @@ const validationScheme = val.object().shape({
   origin: val.number().nullable().moreThan(0, 'Origin value is invalid'),
   priceTiers: val.number(),
   pricingTiers: val.array().of(val.object().shape({
-    quantityFrom: val.number().nullable().moreThan(0, "Must be greater than 0").required("Minimum quantity must be set"),
-    price: val.number().nullable().moreThan(0, "Must be greater than 0").required("required").test("maxdec", "There can be maximally 3 decimal places.", val => {
+    quantityFrom: val.number().typeError('must be number').nullable().moreThan(0, "Must be greater than 0").required("Minimum quantity must be set"),
+    price: val.number().typeError('must be number').nullable().moreThan(0, "Must be greater than 0").required("required").test("maxdec", "There can be maximally 3 decimal places.", val => {
       return !val || val.toString().indexOf('.') === -1 || val.toString().split(".")[1].length <= 3
     })
   })),
@@ -117,7 +119,7 @@ const validationScheme = val.object().shape({
   warehouse: val.number().moreThan(0, "required").required('required')
 })
 
-export default class AddInventoryForm extends Component {
+class AddInventoryForm extends Component {
 
   state = {
     initialState: {
@@ -235,10 +237,12 @@ export default class AddInventoryForm extends Component {
     )
   }
 
-  renderProductDetails = (values) => {
+  renderProductDetails = (values, validateForm) => {
     const {
       activeIndex
     } = this.state
+
+    const {toastManager} = this.props
 
     return (
       <Grid className='product-details' centered>
@@ -289,7 +293,7 @@ export default class AddInventoryForm extends Component {
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingGroup ? values.product.packagingGroup.groupCode : ''}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}>Hazaardous Class</GridColumn>
-                  <GridColumn computer={8} mobile={16}><Label.Group color='blue'>{values.product && values.product.hazardClasses ? values.product.hazardClasses.map(hClass => { return (<Label title={hClass.description}>{hClass.classCode}</Label>) }) : ''}</Label.Group></GridColumn>
+                  <GridColumn computer={8} mobile={16}><Label.Group color='blue'>{values.product && values.product.hazardClasses ? values.product.hazardClasses.map(hClass => { return (<Popup content={hClass.description} trigger={<Label>{hClass.classCode}</Label>} />) }) : ''}</Label.Group></GridColumn>
 
                   <GridColumn computer={8} mobile={16}>Stackable</GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? values.product.stackable : ''}</GridColumn>
@@ -314,12 +318,36 @@ export default class AddInventoryForm extends Component {
             <Grid verticalAlign='middle'>
               <GridRow>
                 <ResponsiveColumn computer={6} mobile={16}>
-                  <Button fluid size='big' floated='left'>Discard</Button>
+                  <Button fluid size='big' floated='left' onClick={() => this.goToList()}>
+                    <FormattedMessage id='addInventory.cancel' defaultMessage='Cancel'/></Button>
                 </ResponsiveColumn>
                 <GridColumn computer={10} mobile={16}>
-                  <Button.Submit fluid size='big' floated='right' style={{ paddingLeft: '1em', paddingRight: '1em' }}>
+                  <Button.Submit fluid
+                                 size='big'
+                                 floated='right'
+                                 onClick={(e, data={data, validateForm}) => {
+                                   validateForm()
+                                     .then(r => {
+                                       // stop when errors found
+                                       if (Object.keys(r).length) {
+                                         toastManager.add((
+                                           <div>
+                                             <strong>Form is invalid</strong>
+                                             <div>There are errors on current tab. Please, fix them before submit.</div>
+                                           </div>
+                                         ), {
+                                           appearance: 'error',
+                                           autoDismiss: true
+                                         })
+                                       }
+                                     }).catch(e => {
+                                       console.log('CATCH', e)
+                                     })
+                                 }}
+                                 style={{ paddingLeft: '1em', paddingRight: '1em' }}
+                  >
                     <FormattedMessage id={this.props.edit ? 'addInventory.editButton' : 'addInventory.addButton'}
-                                      defaultMessage={this.props.edit ? 'Edit Product Offer' : 'Add Product Offer'} />
+                                      defaultMessage={this.props.edit ? 'Save Product Offer' : 'Add Product Offer'} />
                   </Button.Submit>
                 </GridColumn>
               </GridRow>
@@ -331,7 +359,7 @@ export default class AddInventoryForm extends Component {
   }
 
   resetForm = () => {
-    this.props.resetForm()
+    this.props.resetForm(initValues)
   }
 
   goToList = () => {
@@ -344,7 +372,6 @@ export default class AddInventoryForm extends Component {
       return true
 
     for (let i = 0; i < values.costs.length; i++) {
-      console.log(parseInt(values.costs[i].lot))
       setFieldValue(`costs[${i}].costUom`, +(parseFloat(values.costs[i].cost) * (parseInt(values.costs[i].lot) > 0 ? parseFloat(values.lots[parseInt(values.costs[i].lot) - 1].pkgAmount) : (parseInt(values.costs[i].lot) < 0 ? 0 : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3)))
     }
   }
@@ -370,7 +397,6 @@ export default class AddInventoryForm extends Component {
     values.lots = values.lots.filter((lot, index) => {
       return index !== lotIndex
     })
-    console.log('X', values)
 
     // modify costs
     this.modifyCosts(setFieldValue, values)
@@ -388,6 +414,7 @@ export default class AddInventoryForm extends Component {
 
   render() {
     const {
+      listDocumentTypes,
       listConditions,
       listForms,
       listGrades,
@@ -404,7 +431,8 @@ export default class AddInventoryForm extends Component {
       addProductOffer,
       initialState,
       editProductOffer,
-      uploadDocuments
+      uploadDocuments,
+      loading
     } = this.props
 
     const {
@@ -413,8 +441,13 @@ export default class AddInventoryForm extends Component {
     } = this.state
 
     return (
-      <div id='page' className='flex stretched'>
-        <div className='header-top'>
+      <div id="page" className='flex stretched'>
+        <Dimmer active={loading} inverted>
+          <Loader inverted>
+            <FormattedMessage id='global.loading' defaultMessage='Loading' />
+          </Loader>
+        </Dimmer>
+        <div className='header-top' style={{padding: '0 32px'}}>
           <Menu secondary>
             <Menu.Item header>
               <Header as='h1' size='medium'>
@@ -430,19 +463,17 @@ export default class AddInventoryForm extends Component {
           initialValues={{ ...initValues, ...initialState }}
           validationSchema={validationScheme}
           onSubmit={(values, actions) => {
+            actions.setSubmitting(false)
             addProductOffer(values, this.props.edit)
               .then((productOffer) => {
                 //Router.push('/inventory/my') xxx
               })
               .finally(() => {
-                actions.setSubmitting(false)
-                actions.resetForm(initValues)
-                /*if (this.props.edit) {
-                  this.goToList()
-                }*/
+                actions.resetForm()
               })
           }}
-          className='inventory'
+          className='inventory flex'
+          style={{padding: '20px'}}
         >
           {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => (
             <>
@@ -464,10 +495,11 @@ export default class AddInventoryForm extends Component {
                   <Button primary icon='checkmark' labelPosition='right' content='Go to My Inventory' onClick={this.goToList} />
                 </Modal.Actions>
               </Modal>
+              <div className="flex stretched" style={{padding: '0 32px'}}>
               <Tab className='inventory flex stretched' menu={{ secondary: true, pointing: true }} renderActiveOnly={false} activeIndex={this.state.activeTab} style={{height: '100%'}} panes={[
                 {
                   menuItem: (
-                    <Menu.Item key='productOffer'onClick={() => {
+                    <Menu.Item key='productOffer' onClick={() => {
                       validateForm()
                         .then(r => {
                           // stop when errors found
@@ -506,7 +538,6 @@ export default class AddInventoryForm extends Component {
                                   selection: true,
                                   clearable: true,
                                   loading: searchedProductsLoading,
-                                  onChange: (e, v) => { console.log(v) },
                                   onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchProducts(searchQuery)
                                 }}
                               />
@@ -559,15 +590,23 @@ export default class AddInventoryForm extends Component {
 
                               <Header as="h3">Is there any order minimum requirement?</Header>
                               <FormGroup>
-                                <Radio label="No" value={false} name="minimumRequirement" />
+                                <Radio label="No" value={false} name="minimumRequirement" inputProps={{ onClick: () => {
+                                  setFieldValue('minimum', 1)
+                                  setFieldValue('pricingTiers[0].quantityFrom', 1)
+                                }}} />
                                 <Radio label="Yes" value={true} name="minimumRequirement" />
                               </FormGroup>
                               <FormGroup>
                                 <FormField width={5}>
-                                  <Input label="Minimum OQ" name="minimum" inputProps={{ type: 'number', disabled: !values.minimumRequirement }} />
+                                  <Input label="Minimum OQ" name="minimum" inputProps={{ type: 'number', onChange: (e, data) => {
+                                    if (data.value > 1) {
+                                      setFieldValue('minimumRequirement', true)
+                                      setFieldValue('pricingTiers[0].quantityFrom', data.value)
+                                    }
+                                  }}} />
                                 </FormField>
                                 <FormField width={5}>
-                                  <Input label="Splits" name="splits" inputProps={{ type: 'number', disabled: !values.minimumRequirement }} />
+                                  <Input label="Splits" name="splits" inputProps={{ type: 'number' }} />
                                 </FormField>
                               </FormGroup>
 
@@ -602,7 +641,7 @@ export default class AddInventoryForm extends Component {
                               <UploadLot {...this.props}
                                          attachments={values.attachments}
                                          name='attachments'
-                                         type='Spec Sheet'
+                                         type={2}
                                          fileMaxSize={20}
                                          onChange={(files) => setFieldValue(
                                            `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
@@ -646,7 +685,7 @@ export default class AddInventoryForm extends Component {
                         </GridColumn>
 
                         <GridColumn width={5}>
-                          {this.renderProductDetails(values)}
+                          {this.renderProductDetails(values, validateForm)}
                         </GridColumn>
                       </Grid>
                     </Tab.Pane>
@@ -765,12 +804,12 @@ export default class AddInventoryForm extends Component {
                                 <Table attached='bottom' className='table-fields'>
                                   <Table.Header>
                                     <Table.Row>
-                                      <TableHeaderCell title='What is the lot number?'>Lot #</TableHeaderCell>
-                                      <TableHeaderCell title='How many packages in this lot?'>Total</TableHeaderCell>
+                                      <Popup content={'What is the lot number?'} trigger={<TableHeaderCell>Lot #</TableHeaderCell>} />
+                                      <Popup content={'How many packages in this lot?'} trigger={<TableHeaderCell>Total</TableHeaderCell>} />
                                       <TableHeaderCell>Available</TableHeaderCell>
                                       <TableHeaderCell>Allocated</TableHeaderCell>
-                                      <TableHeaderCell title='What is the MFG?'>MFG Date</TableHeaderCell>
-                                      <TableHeaderCell title='What is the expiration?'>Expiration Date</TableHeaderCell>
+                                      <Popup content={'What is the MFG?'} trigger={<TableHeaderCell>MFG Date</TableHeaderCell>} />
+                                      <Popup content={'What is the expiration?'} trigger={<TableHeaderCell>Expiration Date</TableHeaderCell>} />
                                       <TableHeaderCell>C of A</TableHeaderCell>
                                       <TableHeaderCell>&nbsp;</TableHeaderCell>
                                     </Table.Row>
@@ -798,8 +837,9 @@ export default class AddInventoryForm extends Component {
                                           <UploadLot {...this.props}
                                                      attachments={values.lots[index].attachments}
                                                      name={`lots[${index}].attachments`}
-                                                     type='Lot Attachment'
+                                                     type={1}
                                                      lot={true}
+                                                     filesLimit={1}
                                                      fileMaxSize={20}
                                                      onChange={(files) => setFieldValue(
                                                        `lots[${index}].attachments[${values.lots[index].attachments && values.lots[index].attachments.length ? values.lots[index].attachments.length : 0}]`,
@@ -830,12 +870,18 @@ export default class AddInventoryForm extends Component {
                           <Grid>
                             <GridColumn width={4}>
                               <FormField width={12}>
-                                <Input name='costUom' label='Cost/UOM' inputProps={{ type: 'number', step: '0.01', value: null, min: 0 }} />
+                                <Input name='cost' label='Cost/UOM' inputProps={{ type: 'number', step: '0.01', value: null, min: 0 }} />
                               </FormField>
                               <FormField>
                                 <label>Track Sub-Costs</label>
-                                <Radio label="Yes" value={true} name="trackSubCosts" />
-                                <Radio label="No" value={false} name="trackSubCosts" />
+                                <FormGroup>
+                                  <FormField width={5}>
+                                    <Radio label="Yes" value={true} name="trackSubCosts" />
+                                  </FormField>
+                                  <FormField width={5}>
+                                    <Radio label="No" value={false} name="trackSubCosts" />
+                                  </FormField>
+                                </FormGroup>
                               </FormField>
                             </GridColumn>
                             <GridColumn width={12}>
@@ -843,7 +889,7 @@ export default class AddInventoryForm extends Component {
                                           render={arrayHelpers => (
                                   <>
                                     <Message attached='top' className='header-table-fields'>
-                                      <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{marginTop: '-0.5em'}} onClick={() => arrayHelpers.push({description: '', lot: 0, cost: null, costUom: null})} />
+                                      <Button type='button' icon='plus' color='blue' size='small' disabled={!values.trackSubCosts} floated='right' style={{marginTop: '-0.5em'}} onClick={() => arrayHelpers.push({description: '', lot: 0, cost: null, costUom: null})} />
                                       Sub-Cost Breakdown
                                     </Message>
                                     <Table attached='bottom' className='table-fields'>
@@ -860,7 +906,7 @@ export default class AddInventoryForm extends Component {
                                       <Table.Body>
                                         {values.costs && values.costs.length ? values.costs.map((costRow, index) => (
                                           <Table.Row key={index}>
-                                            <TableCell width={4}><FormField width={16}><Input name={`costs[${index}].description`} /></FormField></TableCell>
+                                            <TableCell width={4}><FormField width={16}><Input inputProps={{disabled: !values.trackSubCosts}} name={`costs[${index}].description`} /></FormField></TableCell>
                                             <TableCell width={2}>
                                               <FormField width={16}>
                                                 <Dropdown
@@ -878,20 +924,23 @@ export default class AddInventoryForm extends Component {
                                                     }) : [])
                                                   }
                                                   inputProps={{
-                                                    onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(values.costs[index].cost) * (parseInt(data.value) ? parseFloat(values.lots[parseInt(data.value) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3))
+                                                    onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(values.costs[index].cost) * (parseInt(data.value) ? parseFloat(values.lots[parseInt(data.value) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3)),
+                                                    disabled: !values.trackSubCosts
                                                   }}
                                                 />
                                               </FormField>
                                             </TableCell>
-                                            <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].cost`} inputProps={{ type: 'number', step: '1', value: null, min: 0, onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(data.value) * (parseInt(values.costs[index].lot) ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3))}} /></FormField></TableCell>
-                                            <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].costUom`} disabled={true} inputProps={{ type: 'text', step: '0.01', value: null, min: 0 }} /></FormField></TableCell>
+                                            <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].cost`} inputProps={{ type: 'number', step: '1', value: null, min: 0, disabled: !values.trackSubCosts, onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(data.value) * (parseInt(values.costs[index].lot) ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3))}} /></FormField></TableCell>
+                                            <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].costUom`} inputProps={{ type: 'text', step: '0.01', value: null, min: 0, disabled: true }} /></FormField></TableCell>
                                             <TableCell width={3}>
                                               <UploadLot {...this.props}
                                                          attachments={values.costs[index].attachments}
                                                          name={`costs[${index}].attachments`}
-                                                         type='Cost Attachment'
+                                                         type={3}
                                                          lot={false}
+                                                         filesLimit={1}
                                                          fileMaxSize={20}
+                                                         disabled={!values.trackSubCosts}
                                                          onChange={(files) => setFieldValue(
                                                            `costs[${index}].attachments[${values.costs[index].attachments && values.costs[index].attachments.length ? values.costs[index].attachments.length : 0}]`,
                                                            {
@@ -907,7 +956,7 @@ export default class AddInventoryForm extends Component {
                                                          )}
                                               />
                                             </TableCell>
-                                            <TableCell width={1}><Icon name='trash alternate outline' size='large' onClick={() => arrayHelpers.remove(index)} /></TableCell>
+                                            <TableCell width={1}><Icon name='trash alternate outline' size='large' disabled={!values.trackSubCosts} onClick={() => arrayHelpers.remove(index)} /></TableCell>
                                           </Table.Row>
                                         )) : ''
                                         }
@@ -919,16 +968,77 @@ export default class AddInventoryForm extends Component {
                             </GridColumn>
                           </Grid>
 
+                          <Header as='h3'>ADDITIONAL DOCUMENTS</Header>
+                          <Grid>
+                            <GridColumn width={10}>
+                              <UploadLot {...this.props}
+                                         attachments={values.additional}
+                                         name='additional'
+                                         type={values.additionalType}
+                                         unspecifiedTypes={['Unspecified']}
+                                         fileMaxSize={20}
+                                         onChange={(files) => setFieldValue(
+                                           `additional[${values.additional && values.additional.length ? values.additional.length : 0}]`,
+                                           {
+                                             id: files.id,
+                                             name: files.name
+                                           }
+                                         )}
+                                         emptyContent={(
+                                           <label>
+                                             <FormattedMessage
+                                               id='addInventory.dragDropAdditional'
+                                               defaultMessage={'Drop additional documents here'}
+                                             />
+                                             <br />
+                                             <FormattedMessage
+                                               id='addInventory.dragDropOr'
+                                               defaultMessage={'or select from computer'}
+                                             />
+                                           </label>
+                                         )}
+                                         uploadedContent={(
+                                           <label>
+                                             <FormattedMessage
+                                               id='addInventory.dragDropAdditional'
+                                               defaultMessage={'Drop additional documents here'}
+                                             />
+                                             <br />
+                                             <FormattedMessage
+                                               id='addInventory.dragDropOr'
+                                               defaultMessage={'or select from computer'}
+                                             />
+                                           </label>
+                                         )}
+                              />
+                            </GridColumn>
+                            <GridColumn width={5}>
+                              <FormField width={16}>
+                                <label>
+                                  <FormattedMessage
+                                    id='addInventory.documentType'
+                                    defaultMessage={'Document Type'}
+                                  />
+                                </label>
+                                <Dropdown
+                                  name={`additionalType`}
+                                  options={listDocumentTypes}
+                                />
+                              </FormField>
+                            </GridColumn>
+                          </Grid>
+
                         </GridColumn>
 
                         <GridColumn width={5}>
-                          {this.renderProductDetails(values)}
+                          {this.renderProductDetails(values, validateForm)}
                         </GridColumn>
                       </Grid>
                     </Tab.Pane>
                   )
                 }
               ]} />
+              </div>
             </>
           )}
         </Form>
@@ -936,3 +1046,5 @@ export default class AddInventoryForm extends Component {
     )
   }
 }
+
+export default AddInventoryForm

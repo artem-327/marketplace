@@ -4,15 +4,16 @@ import * as api from './api'
 export function initProductOfferEdit(id) {
 
   return dispatch => {
-    
-      dispatch(getProductConditions())
-      dispatch(getProductForms())
-      dispatch(getProductGrades())
-      dispatch(getWarehouses())
 
-      if (id) {
-        dispatch(getProductOffer(id))
-      }
+    dispatch(getDocumentTypes())
+    dispatch(getProductConditions())
+    dispatch(getProductForms())
+    dispatch(getProductGrades())
+    dispatch(getWarehouses())
+
+    if (id) {
+      dispatch(getProductOffer(id))
+    }
   }
 }
 
@@ -37,9 +38,11 @@ export function addProductOffer(values, poId = false) {
     assayMax: values.assayMax ? parseFloat(values.assayMax) : null,
     attachments: values.attachments && values.attachments.length ? values.attachments.map(att => {
       return att.id
-    }) : null,
-    cost: values.pricing && values.pricing.cost ? parseInt(values.pricing.cost) : null,
-    costRecords: values.costs ? values.costs.map(cost => {
+    }).concat(values.additional && values.additional.length ? values.additional.map(add => {
+      return add.id
+    }) : []) : null,
+    cost: values.cost ? parseInt(values.cost) : null,
+    costRecords: values.trackSubCosts && values.costs ? values.costs.map(cost => {
       return {
         attachment: null,
         description: cost.description,
@@ -61,6 +64,7 @@ export function addProductOffer(values, poId = false) {
       }
     }) : null,
     manufacturer: values.manufacturer ? values.manufacturer : null,
+    minimum: parseInt(values.minimum),
     origin: values.origin ? values.origin : null,
     pkgAmount: parseInt(values.pkgAmount),
     price: values.pricing && values.pricing.price ? parseInt(values.pricing.price) : parseInt(values.pricingTiers[0].price),
@@ -75,7 +79,8 @@ export function addProductOffer(values, poId = false) {
     productCode: values.productCode ? values.productCode : null,
     productCondition: values.productCondition ? parseInt(values.productCondition) : null,
     productForm: values.productForm ? parseInt(values.productForm) : null,
-    productGrades: values.productGrade ? [{id: values.productGrade}] : null,
+    productGrades: values.productGrade ? [{ id: values.productGrade }] : null,
+    splits: parseInt(values.splits),
     tradeName: values.tradeName ? values.tradeName : null,
     validityDate: values.validityDate ? values.validityDate + "T00:00:00Z" : null,
     warehouse: parseInt(values.warehouse)
@@ -133,6 +138,20 @@ export function fillProduct(product) {
   }
 }
 
+export function findProducts(search) {
+  return {
+    type: AT.INVENTORY_FIND_PRODUCTS,
+    payload: api.findProducts(search)
+  }
+}
+
+export function getDocumentTypes() {
+  return {
+    type: AT.INVENTORY_GET_DOCUMENT_TYPES,
+    payload: api.getDocumentTypes()
+  }
+}
+
 export function getProductConditions() {
   return {
     type: AT.INVENTORY_GET_PRODUCT_CONDITIONS,
@@ -154,10 +173,127 @@ export function getProductGrades() {
   }
 }
 
-export function getMyProductOffers() {
+export function getMyProductOffers(filters = {}, pageSize = 50, pageNumber = 0) {
+  let filtersReady = {
+    filters: Object.keys(filters).reduce((filtered, option) => {
+      switch (option) {
+        case 'product':
+          filtered.push({
+            operator: 'EQUALS',
+            path: 'ProductOffer.product.id',
+            values: filters[option]
+          })
+          break
+        case 'qntylb':
+          filtered.push({
+            operator: 'GREATER_THAN_OR_EQUAL_TO',
+            path: 'ProductOffer.quantity',
+            values: [filters[option]]
+          })
+          break
+        case 'qntyub':
+          filtered.push({
+            operator: 'LESS_THAN_OR_EQUAL_TO',
+            path: 'ProductOffer.quantity',
+            values: [filters[option]]
+          })
+          break
+        case 'prclb':
+          filtered.push({
+            operator: 'GREATER_THAN_OR_EQUAL_TO',
+            path: 'ProductOffer.pricingPrice',
+            values: [filters[option]]
+          })
+          break
+        case 'prcub':
+          filtered.push({
+            operator: 'LESS_THAN_OR_EQUAL_TO',
+            path: 'ProductOffer.pricingPrice',
+            values: [filters[option]]
+          })
+          break
+        case 'pckgs':
+          if (filters[option].length) {
+            filtered.push({
+              operator: 'EQUALS',
+              path: 'ProductOffer.product.packagingType.id',
+              values: filters[option]
+            })
+          }
+          break
+        // TODO: activate search by grades when BE is ready
+        /*case 'grade':
+          filtered.push({
+            operator: 'CONTAINS',
+            path: 'ProductOffer.productGrades',
+            values: filters[option]
+          })
+          break*/
+        case 'cndt':
+          if (filters[option].length) {
+            filtered.push({
+              operator: 'EQUALS',
+              path: 'ProductOffer.productCondition.id',
+              values: filters[option]
+            })
+          }
+          break
+        case 'frm':
+          if (filters[option].length) {
+            filtered.push({
+              operator: 'EQUALS',
+              path: 'ProductOffer.productForm.id',
+              values: filters[option]
+            })
+          }
+          break
+        case 'agelb':
+          filtered.push({
+            operator: 'GREATER_THAN_OR_EQUAL_TO',
+            path: 'ProductOffer.expirationDate',
+            values: [filters[option] + 'T00:00:00Z']
+          })
+          break
+        case 'ageub':
+          filtered.push({
+            operator: 'LESS_THAN_OR_EQUAL_TO',
+            path: 'ProductOffer.expirationDate',
+            values: [filters[option] + 'T00:00:00Z']
+          })
+          break
+        case 'assaylb':
+          filtered.push({
+            operator: 'GREATER_THAN_OR_EQUAL_TO',
+            path: 'ProductOffer.assayMin',
+            values: [filters[option]]
+          })
+          break
+        case 'assayub':
+          filtered.push({
+            operator: 'LESS_THAN_OR_EQUAL_TO',
+            path: 'ProductOffer.assayMax',
+            values: [filters[option]]
+          })
+          break
+      }
+      return filtered
+    }, [])
+  }
+
   return {
     type: AT.INVENTORY_GET_MY_PRODUCT_OFFERS,
-    payload: api.getMyProductOffers()
+    async payload() {
+      const {data} = await api.getMyProductOffers({
+        ...filtersReady,
+        pageSize,
+        pageNumber
+      })
+
+      return {
+        data,
+        pageNumber
+      }
+    }
   }
 }
 
@@ -165,7 +301,7 @@ export function getProductOffer(productOfferId) {
   return {
     type: AT.INVENTORY_GET_PRODUCT_OFFER,
     async payload() {
-      const {data} = await api.getProductOffer(productOfferId)
+      const { data } = await api.getProductOffer(productOfferId)
 
       return {
         data: {
@@ -184,8 +320,14 @@ export function getProductOffer(productOfferId) {
 
 export function deleteProductOffer(productOfferId) {
   return async dispatch => {
-    await api.deleteProductOffer(productOfferId)
-    dispatch(getMyProductOffers())
+    dispatch({
+      type: AT.INVENTORY_DELETE_PRODUCT_OFFER,
+      async payload() {
+        await api.deleteProductOffer(productOfferId)
+        return productOfferId
+      }
+    })
+    // dispatch(getMyProductOffers())
   }
 }
 
@@ -210,6 +352,20 @@ export function loadFile(attachment) {
   }
 }
 
+export function patchBroadcast(broadcasted, productOfferId, oldStatus) {
+  return {
+    type: AT.INVENTORY_PATCH_BROADCAST,
+    async payload() {
+      const response = await api.patchBroadcast(broadcasted, productOfferId)
+
+      return {
+        broadcasted: response.status === 200 ? response.data : oldStatus,
+        productOfferId
+      }
+    }
+  }
+}
+
 export function removeAttachmentLink(isLot, itemId, aId) {
   return {
     type: AT.INVENTORY_REMOVE_ATTACHMENT_LINK,
@@ -224,10 +380,14 @@ export function removeAttachment(aId) {
   }
 }
 
-export function resetForm() {
+export function resetForm(initValues) {
   return {
     type: AT.INVENTORY_RESET_FORM,
-    payload: {}
+    payload: {
+      data: {
+        ...initValues
+      }
+    }
   }
 }
 
@@ -275,7 +435,10 @@ export function searchProducts(text) {
         data: response.data ? response.data.map(p => ({
           text: p.casProduct ? p.casProduct.casIndexName : p.productName + ' (Unmapped)',
           value: p,
-          key: p.casProduct ? p.casProduct.id : ''
+          key: p.casProduct ? p.casProduct.id : '',
+          id: p ? p.id : '',
+          name: p.productName + (p.productCode ? ' (' + p.productCode + ')' : ''),
+          casName: p.casProduct ? p.casProduct.casIndexName + ' (' + p.casProduct.casNumber + ')' : ''
         })) : []
       }
     }
@@ -284,15 +447,15 @@ export function searchProducts(text) {
 
 export function uploadDocuments(isLot, productOfferId, fileIds) {
   let files = []
-  (function loop(j) {
-    if (j < fileIds.length) new Promise((resolve, reject) => {
-      files[j] = fileIds[j].id.id
-      linkAttachment(isLot, productOfferId, files[j]).then(() => {
-        resolve()
-      }).catch(e => {
-        // TODO: solve errors
-        reject()
-      })
-    }).then(loop.bind(null, j+1))
-  })(0)
+    (function loop(j) {
+      if (j < fileIds.length) new Promise((resolve, reject) => {
+        files[j] = fileIds[j].id.id
+        linkAttachment(isLot, productOfferId, files[j]).then(() => {
+          resolve()
+        }).catch(e => {
+          // TODO: solve errors
+          reject()
+        })
+      }).then(loop.bind(null, j + 1))
+    })(0)
 }

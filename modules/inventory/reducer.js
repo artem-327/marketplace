@@ -1,38 +1,56 @@
 import * as AT from './action-types'
 
 export const initialState = {
-    fileIds: [],
-    listConditions: [],
-    listForms: [],
-    listGrades: [],
-    lotFiles: [],
-    poCreated: false,
-    searchedManufacturers: [],
-    searchedManufacturersLoading: false,
-    searchedOrigins: [],
-    searchedOriginsLoading: false,
-    myProductOffers: [],
-    searchedProducts: [],
-    searchedProductsLoading: false,
-    warehousesList: [],
-    loading: false,
+  fileIds: [],
+  listDocumentTypes: [],
+  listConditions: [],
+  listForms: [],
+  listGrades: [],
+  lotFiles: [],
+  poCreated: false,
+  searchedManufacturers: [],
+  searchedManufacturersLoading: false,
+  searchedOrigins: [],
+  searchedOriginsLoading: false,
+  myProductOffers: [],
+  myProductOffersPageLoaded: -1,
+  searchedProducts: [],
+  searchedProductsLoading: false,
+  warehousesList: [],
+  loading: false,
 }
 
 export default function reducer(state = initialState, action) {
     const {type, payload} = action
 
     switch (type) {
+        case AT.INVENTORY_ADD_PRODUCT_OFFER_PENDING: {
+          return {
+            ...state,
+            loading: true
+          }
+        }
+
         case AT.INVENTORY_ADD_PRODUCT_OFFER_FULFILLED: {
           return {
             ...state,
-            poCreated: true
+            poCreated: true,
+            loading: false
+          }
+        }
+
+        case AT.INVENTORY_EDIT_PRODUCT_OFFER_PENDING: {
+          return {
+            ...state,
+            loading: true
           }
         }
 
         case AT.INVENTORY_EDIT_PRODUCT_OFFER_FULFILLED: {
           return {
             ...state,
-            poCreated: true
+            poCreated: true,
+            loading: false
           }
         }
 
@@ -75,12 +93,36 @@ export default function reducer(state = initialState, action) {
           }
         }
 
+        case AT.INVENTORY_GET_PRODUCT_OFFER_PENDING: {
+          return {
+            ...state,
+            loading: true
+          }
+        }
+
         case AT.INVENTORY_GET_PRODUCT_OFFER_FULFILLED: {
           let {data} = action.payload
+
+          let filteredAttachments = data.attachments.reduce(function(filtered, att) {
+            if (att.documentType.id === 2) {
+              var returnedAtt = {id: att.id, name: att.name, linked: true}
+              filtered.push(returnedAtt)
+            }
+            return filtered
+          }, [])
+
+          let filteredAdditional = data.attachments.reduce(function(filtered, att) {
+            if (att.documentType.id !== 2) {
+              var returnedAtt = {id: att.id, name: att.name, linked: true}
+              filtered.push(returnedAtt)
+            }
+            return filtered
+          }, [])
           
           return {
             ...state,
             ...action.payload.data,
+            loading: false,
             fileIds: action.payload.data.attachments.map(att => {
               att.attachment = true
               return att
@@ -98,15 +140,10 @@ export default function reducer(state = initialState, action) {
             }]: [],
             
             initialState: {
+              additional: filteredAdditional,
               assayMax: data.assayMax,
               assayMin: data.assayMin,
-              attachments: data.attachments && data.attachments.length ? data.attachments.map(att => {
-                return {
-                  id: att.id,
-                  name: att.name,
-                  linked: true
-                }
-              }) : [],
+              attachments: filteredAttachments,
               doesExpire: !!data.lots[0].expirationDate,
               externalNotes: data.externalNotes,
               lots: data.lots.map(lot => {
@@ -133,7 +170,12 @@ export default function reducer(state = initialState, action) {
               pricing: {
                 price: data.pricing.price
               },
-              pricingTiers: data.pricingTiers,
+              pricingTiers: data.pricingTiers.map((pricingTier, index) => {
+                return {
+                  ...pricingTier,
+                  quantityFrom: !index ? data.minimum : pricingTier.quantityFrom
+                }
+              }),
               processingTimeDays: 1,
               product: data.product,
               productCondition: data.productCondition ? data.productCondition.id : null,
@@ -154,13 +196,45 @@ export default function reducer(state = initialState, action) {
         }
 
         case AT.INVENTORY_GET_MY_PRODUCT_OFFERS_FULFILLED: {
-          let {data} = action.payload
+          let {data, pageNumber} = action.payload
           return {
             ...state,
             loading: false,
-            myProductOffers: action.payload.data
+            myProductOffers: pageNumber === 0 ? [
+              ...data
+            ] : [
+              ...state.myProductOffers,
+              ...(pageNumber > state.myProductOffersPageLoaded ? data : [])
+            ],
+            myProductOffersPageLoaded: pageNumber
           }
         }
+
+        case AT.INVENTORY_DELETE_PRODUCT_OFFER_PENDING: {
+          return { ...state,
+            loading: true
+          }
+        }
+
+        case AT.INVENTORY_DELETE_PRODUCT_OFFER_FULFILLED: {
+          return { ...state,
+            loading: false,
+            myProductOffers: state.myProductOffers.filter(p => p.id !== action.payload)
+          }
+        }
+
+      case AT.INVENTORY_GET_DOCUMENT_TYPES_FULFILLED: {
+        return {
+          ...state,
+          listDocumentTypes: action.payload.data.map((docType) => {
+            return {
+              key: docType.id,
+              text: docType.name,
+              value: docType.id
+            }
+          })
+        }
+      }
 
         case AT.INVENTORY_GET_WAREHOUSES_FULFILLED: {
           return {
@@ -177,7 +251,18 @@ export default function reducer(state = initialState, action) {
 
         case AT.INVENTORY_RESET_FORM: {
           return {
-            ...initialState
+            ...initialState,
+            listConditions: state.listConditions,
+            listForms: state.listForms,
+            listGrades: state.listGrades,
+            warehousesList: state.warehousesList,
+            initialState: {
+              ...action.payload.data,
+              pricingTiers: [{
+                quantityFrom: 1,
+                price: ''
+              }]
+            }
           }
         }
 
@@ -214,6 +299,7 @@ export default function reducer(state = initialState, action) {
         case AT.INVENTORY_SEARCH_PRODUCTS_PENDING: {
           return {
             ...state,
+            searchedProducts: [],
             searchedProductsLoading: true
           }
         }
@@ -231,6 +317,22 @@ export default function reducer(state = initialState, action) {
             ...state,
             searchedProducts: action.payload.data,
             searchedProductsLoading: false
+          }
+        }
+
+        case AT.INVENTORY_PATCH_BROADCAST_FULFILLED: {
+          return {
+            ...state,
+            myProductOffers: state.myProductOffers.map(po => {
+              if (po.id === action.payload.productOfferId) {
+                return {
+                  ...po,
+                  status: action.payload.broadcasted
+                }
+              } else {
+                return po
+              }
+            })
           }
         }
 

@@ -16,6 +16,14 @@ export function addProductOffer(values) {
   return api.post(`/prodex/api/product-offers/`, values)
 }
 
+export function findProducts(search) {
+  return api.get(`/prodex/api/products/search?search=${search}`)
+}
+
+export function getDocumentTypes() {
+  return api.get(`/prodex/api/document-types/`)
+}
+
 export function getProductConditions() {
   return api.get(`/prodex/api/product-conditions/`)
 }
@@ -28,8 +36,8 @@ export function getProductGrades() {
   return api.get(`/prodex/api/product-grades/`)
 }
 
-export async function getMyProductOffers() {
-    return api.get(`/prodex/api/product-offers/own/all/`)
+export async function getMyProductOffers(filter) {
+    return api.post(`/prodex/api/product-offers/own/datagrid/`, filter)
 }
 
 export async function getProductOffer(poId) {
@@ -58,6 +66,10 @@ export function loadFile(attachment) {
   }).then(r => new File([r.data], attachment.name, {type: attachment.type}))
 }
 
+export function patchBroadcast(broadcasted, productOfferId) {
+  return api.patch(`/prodex/api/product-offers/${productOfferId}/broadcast?broadcasted=${!!broadcasted}`)
+}
+
 export function removeAttachment(aId) {
   return api.delete('/prodex/api/attachments/'+aId)
 }
@@ -72,12 +84,12 @@ export async function searchManufacturers(text) {
 }
 
 export async function searchOrigins(text) {
-  const response = await api.get(`/prodex/api/countries/search?search=${text}`)
+  const response = await api.get(`/prodex/api/countries/search?pattern=${text}`)
   return response
 }
 
 export async function searchProducts(text) {
-  const response = await api.get(`/prodex/api/products/search?search=${text}`)
+  const response = await api.get(`/prodex/api/products/search?search=${text}&onlyMapped=false`)
   return response
 }
 
