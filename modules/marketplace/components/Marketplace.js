@@ -156,8 +156,10 @@ export default class Marketplace extends Component {
             }}
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
             onRowClick={(e, row) => {
-              if (e.target.tagName === 'TD')
+              const targetTag = e.target.tagName.toLowerCase()
+              if (targetTag !== 'input' && targetTag !== 'label') {
                 this.tableRowClicked(row.id)
+              }
             }}
             rowActions={[
               { text: 'Buy Product Offer', callback: (row) => this.tableRowClicked(row.id) }

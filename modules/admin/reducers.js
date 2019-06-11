@@ -21,6 +21,7 @@ export const initialState = {
   companiesRows: [],
   countries: [],
   countriesDropDown: [],
+  singleCompany: [],
   primaryBranchProvinces: [],
   mailingBranchProvinces: [],
   tabsNames: [
@@ -41,6 +42,8 @@ export const initialState = {
   currentEditForm: null,
   currentEdit2Form: null,
   currentAddForm: null,
+  currentAddDwolla: null,
+  
   confirmMessage: null,
   deleteRowById: null,
   filterValue: '',
@@ -68,6 +71,22 @@ export default function reducer(state = initialState, action) {
         currentAddForm: null,
         currentEditForm: null,
         currentEdit2Form: null
+      }
+    }
+
+    case AT.ADMIN_OPEN_REGISTER_DWOLLA_ACCOUNT_POPUP: {
+      return {
+        ...state,
+        // popupValues: action.payload,
+        currentAddDwolla: true
+      }
+    }
+
+    case AT.ADMIN_CLOSE_REGISTER_DWOLLA_ACCOUNT_POPUP: {
+      return {
+        ...state,
+        popupValues: null,
+        currentAddDwolla: null
       }
     }
 
@@ -160,8 +179,6 @@ export default function reducer(state = initialState, action) {
         loading: false
       }
     }
-
-
 
     case AT.ADMIN_GET_COUNTRIES_FULFILLED: {
       return {
@@ -313,7 +330,12 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-
+    case AT.ADMIN_GET_FULL_COMPANY_FULFILLED: {
+      return {
+        ...state,
+        singleCompany: action.payload
+      }
+    }
 
     case AT.ADMIN_POST_NEW_PRODUCT_NAME_REJECTED:
     case AT.ADMIN_UPDATE_PRODUCT_NAME_REJECTED:

@@ -1,19 +1,21 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { Modal, FormGroup, Header, Dropdown as SDropdown, FormField } from 'semantic-ui-react'
+import {Modal, FormGroup, Header, Dropdown as SDropdown, FormField, Search} from 'semantic-ui-react'
 
 import { closeAddPopup, postNewCasProductRequest, updateCasProductRequest, getUnNumbersByString } from '../../actions'
 import { Form, Input, Button, Dropdown, Field  } from 'formik-semantic-ui'
 import * as Yup from 'yup'
+import debounce from "lodash/debounce";
+import escapeRegExp from "lodash/escapeRegExp";
+import filter from "lodash/filter";
 
 const initialFormValues = {
   'casIndexName':   '',
   'casNumber':      '',
   'chemicalName':   '',
-  'unNumberId':     '',
-  'hazardClasses':  [],
-  'packagingGroup': '',
+  'hazardClassesId':  [],
+  'packagingGroupId': '',
 }
 
 const formValidation = Yup.object().shape({
@@ -23,10 +25,11 @@ const formValidation = Yup.object().shape({
 })
 
 class AddEditCasProductsPopup extends React.Component {
-
   state = {
     packagingGroups: [],
-    hazardClasses: []
+    hazardClasses: [],
+    isUnLoading: false,
+    unNumber: null,
   }
 
   initCollections = () => {
@@ -50,6 +53,7 @@ class AddEditCasProductsPopup extends React.Component {
 
 
     this.setState({
+      ...this.state,
       packagingGroups,
       hazardClasses
     })
@@ -59,8 +63,30 @@ class AddEditCasProductsPopup extends React.Component {
     this.initCollections()
   }
 
-  handleUnNumbers = (e, d) => {
-    this.props.getUnNumbersByString(d.searchQuery)
+  handleSearchUnNumber = debounce((e, { value }) => {
+    this.setState({ isUnLoading: true, unNumber: value })
+
+    this.props.getUnNumbersByString(value)
+
+    setTimeout(() => {
+      const re = new RegExp(escapeRegExp(this.state.unNumber), 'i')
+      const isMatch = result => re.test(result.unNumberCode)
+
+      this.setState({
+        isUnLoading: false,
+        unNumbers: filter(this.handleUnNumber(), isMatch) // ! ! ???
+      })
+    }, 300)
+  }, 500)
+
+  handleUnNumber = () => {
+    return this.props.unNumbersFiltered.map(unNumber => ({
+      unNumberCode: unNumber.unNumberCode
+    }))
+  }
+
+  handleUnNumberSelect = (e, { result }) => {
+    this.setState({unNumber: result})
   }
 
   render() {
@@ -71,14 +97,19 @@ class AddEditCasProductsPopup extends React.Component {
       config,
       postNewCasProductRequest,
       updateCasProductRequest,
-      unNumbersFiltered,
+      //unNumbersFiltered,
       reloadFilter
     } = this.props
 
     const {
       hazardClasses,
-      packagingGroups
+      packagingGroups,
+      isUnLoading,
     } = this.state
+
+
+    const unNumber = popupValues ? popupValues.unNumber : null
+    const unNumbersFiltered = this.props.unNumbersFiltered && this.props.unNumbersFiltered.length ? this.props.unNumbersFiltered : (unNumber ? [unNumber] : [])
 
     return (
       <Modal open centered={false}>
@@ -92,13 +123,15 @@ class AddEditCasProductsPopup extends React.Component {
             validateOnChange={false}
             onReset={closeAddPopup}
             onSubmit={(values, actions) => {
+              const unNumberId = this.state.unNumber ? this.state.unNumber.id :
+                  (popupValues && popupValues.unNumber) ? popupValues.unNumber.id : null
               const data = {
                 casIndexName: values.casIndexName.trim(),
                 casNumber: values.casNumber.trim(),
                 chemicalName: values.chemicalName.trim(),
-                ...(values.unNumberId !== '' && { unNumber: values.unNumberId }),
-                ...(values.packagingGroup !== '' && { packagingGroup: values.packagingGroup }),
-                ...(values.hazardClasses.length && { hazardClasses: values.hazardClasses }),
+                ...(unNumberId !== null && { unNumber: unNumberId }),
+                ...(values.packagingGroupId !== '' && { packagingGroup: values.packagingGroupId }),
+                ...(values.hazardClassesId.length && { hazardClasses: values.hazardClassesId }),
               }
               if (popupValues) updateCasProductRequest(popupValues.id, data, reloadFilter)
               else postNewCasProductRequest(data, reloadFilter)
@@ -114,22 +147,20 @@ class AddEditCasProductsPopup extends React.Component {
                   <Input type='text' label={config.display.columns[2].title} name="chemicalName" />
                 </FormGroup>
                 <FormGroup widths="equal">
-                  <Dropdown
-                    name="unNumberId"
-                    label={config.display.columns[3].title}
-                    options={unNumbersFiltered}
-                    inputProps={{
-                      selection: true,
-                      search: true,
-                      placeholder: 'Search for UN Number...',
-                      clearable: true,
-                      onSearchChange: (e, d) => this.handleUnNumbers(e, d)
-                    }}
-                  />
+                  <FormField>
+                    <label>{config.display.columns[3].title}</label>
+                    <Search
+                        loading={isUnLoading}
+                        onResultSelect={this.handleUnNumberSelect}
+                        onSearchChange={this.handleSearchUnNumber}
+                        results={unNumbersFiltered}
+                        defaultValue={popupValues && popupValues.unNumberCode ? popupValues.unNumberCode : ''}
+                    />
+                  </FormField>
                 </FormGroup>
                 <FormGroup widths="equal">
                   <Dropdown
-                    name="packagingGroup"
+                    name="packagingGroupId"
                     label={config.display.columns[4].title} options={packagingGroups}
                     inputProps={{
                       selection: true,
@@ -141,7 +172,7 @@ class AddEditCasProductsPopup extends React.Component {
                 </FormGroup>
                 <FormGroup widths="equal">
                   <Dropdown
-                    name="hazardClasses"
+                    name="hazardClassesId"
                     label={config.display.columns[5].title}
                     options={hazardClasses}
                     inputProps={{
@@ -173,19 +204,6 @@ const mapDispatchToProps = {
   getUnNumbersByString,
 };
 
-const transformUnNumbers = (unNumbersFiltered) => {
-  const unNumbers = unNumbersFiltered.map(d => {
-    return {
-      key: d.id,
-      text: d.unNumberCode,
-      value: d.id,
-      dataSearch: d.unNumberCode + ' ' + d.description,
-      content: <Header content={d.unNumberCode} subheader={d.description} />,
-    }
-  })
-  return unNumbers;
-}
-
 const mapStateToProps = state => {
   let cfg = state.admin.config[state.admin.currentTab]
   return {
@@ -199,7 +217,12 @@ const mapStateToProps = state => {
         currentTab: state.admin.currentTab,
         casListDataRequest: state.admin.casListDataRequest},
       value: state.admin.filterValue},
-    unNumbersFiltered: transformUnNumbers(state.admin.unNumbersFiltered),
+    unNumbersFiltered: state.admin.unNumbersFiltered.map(d => {
+        return {
+          id: d.id,
+          title: d.unNumberCode,
+          description: d.description
+        }}),
   }
 }
 

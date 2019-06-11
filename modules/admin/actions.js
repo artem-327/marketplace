@@ -84,6 +84,13 @@ export function postNewRequest(config, values) {
 	}
 }
 
+export function postDwollaAccount(payload){
+	return {
+	  type: AT.ADMIN_CREATE_DWOLLA_ACCOUNT,
+	  payload: api.postNewDwollaAccount(payload)
+	}
+}
+
 export function putEditedDataRequest(config, id, values) {
 	return async dispatch => {
 		await dispatch({
@@ -242,24 +249,10 @@ export function updateProductName(productId, id, value) {
 	}
 }
 
-export function openEditCasPopup(value) {
-	const data = {
-		casIndexName: value.casIndexName,
-		casNumber: value.casNumber,
-		chemicalName: value.chemicalName,
-		hazardClasses: value.hazardClassesId,
-		id: value.id,
-		packagingGroup: value.packagingGroupId,
-		unNumberId: value.unNumberId,
-		unNumberCode: value.unNumberCode,
-		unNumberDescription: value.unNumberDescription,
-	}
-	return async dispatch => {
-		await dispatch({ // Save UN number data to global props (not needed to call get UN Numbers api)
-			type: AT.ADMIN_GET_UN_NUMBERS_FULFILLED,
-			payload: [{ id: data.unNumberId, unNumberCode: data.unNumberCode, unNumberDescription: data.unNumberDescription }]
-		})
-		dispatch(openPopup(data))
+export function openEditCasPopup(data) {	// ! ! TODO probably openPopup() may be used
+	return {
+		type: AT.ADMIN_OPEN_POPUP,
+		payload: { data }
 	}
 }
 
@@ -320,6 +313,13 @@ export function getCompanies(params) {
 	}
 }
 
+export function getCompany(params) {
+	return {
+		type: AT.ADMIN_GET_FULL_COMPANY,
+		payload: api.getCompany(params)
+	}
+}
+
 /*
 export function getCompany(id) {
 	return {
@@ -374,6 +374,25 @@ export function openEditCompany(id, formData) {
 		dispatch(openPopup(formData))
 		// const data = await api.getCompany(id)
 		// dispatch(openPopup(data))
+	}
+}
+
+export function openRegisterDwollaAccount(data) {
+	return async dispatch => {
+		dispatch(getCompany(data))
+		dispatch(registerDwollaAccount())
+	}
+}
+
+export function registerDwollaAccount() {
+	return {
+		type: AT.ADMIN_OPEN_REGISTER_DWOLLA_ACCOUNT_POPUP
+	}
+}
+
+export function closeRegisterDwollaAccount() {
+	return {
+		type: AT.ADMIN_CLOSE_REGISTER_DWOLLA_ACCOUNT_POPUP
 	}
 }
 

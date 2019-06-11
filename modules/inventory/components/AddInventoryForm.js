@@ -1014,6 +1014,12 @@ class AddInventoryForm extends Component {
                             </GridColumn>
                             <GridColumn width={5}>
                               <FormField width={16}>
+                                <label>
+                                  <FormattedMessage
+                                    id='addInventory.documentType'
+                                    defaultMessage={'Document Type'}
+                                  />
+                                </label>
                                 <Dropdown
                                   name={`additionalType`}
                                   options={listDocumentTypes}

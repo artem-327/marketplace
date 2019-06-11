@@ -55,6 +55,8 @@ export default {
     await api.put(`/prodex/api/products/id/${id}`, body)
   },
 
+  postNewDwollaAccount: async body => {return await api.post('/prodex/api/payments/dwolla/register', body)},
+
   postImportProductCSV: (body, id) => {
     return api
       .post(
