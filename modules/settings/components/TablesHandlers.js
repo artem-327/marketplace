@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import get from 'lodash/get'
 import { Header, Menu, Button, Checkbox, Input, Dropdown } from 'semantic-ui-react'
-import { openPopup, handleFiltersValue, openImportPopup, handleProductCatalogUnmappedValue } from '../actions'
+import { openPopup, openDwollaPopup, handleFiltersValue, openImportPopup, handleProductCatalogUnmappedValue } from '../actions'
+import Router from 'next/router'
 
 const textsTable = {
   'users': {
@@ -63,10 +65,14 @@ class TablesHandlers extends Component {
       openPopup,
       openImportPopup,
       handleProductCatalogUnmappedValue,
-      productCatalogUnmappedValue
+      productCatalogUnmappedValue,
+      dwollaAccount,
+      openDwollaPopup,
+      isCompanyAdmin
     } = this.props
 
     const { filterFieldCurrentValue } = this.state
+    const isDwollaAccountVisible = isCompanyAdmin && dwollaAccount && !dwollaAccount.hasDwollaAccount && currentTab.type === 'bank-accounts'
 
     return (
       <Menu secondary>
@@ -94,6 +100,16 @@ class TablesHandlers extends Component {
                 onChange={(e, { checked }) => handleProductCatalogUnmappedValue(checked, this.props)}
               />
             )}
+            { isDwollaAccountVisible &&  (
+              <Button
+                size="large"
+                style={{ marginLeft: 10 }}
+                primary
+                onClick={() => openDwollaPopup()}
+              >
+                Register Dwolla Account
+              </Button>
+            )}
             <Button
               size="large"
               style={{ marginLeft: 10 }}
@@ -120,8 +136,14 @@ class TablesHandlers extends Component {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
+  const company = get(state, 'auth.identity.company', null)
+  const isCompanyAdmin = get(state, 'auth.identity.isCompanyAdmin', null)
   return {
+    dwollaAccount: company,
+    isCompanyAdmin,
+    currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) || state.settings.tabsNames[0] : state.settings.tabsNames[0],
+
     productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
     productsFilter: state.settings.productsFilter,
@@ -131,6 +153,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   openPopup,
+  openDwollaPopup,
   handleFiltersValue,
   openImportPopup,
   handleProductCatalogUnmappedValue

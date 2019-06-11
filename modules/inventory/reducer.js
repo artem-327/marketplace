@@ -316,14 +316,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.INVENTORY_FILL_PRODUCT: {
-      return {
-        ...state,
-        searchedProducts: action.payload.data,
-        searchedProductsLoading: false
-      }
-    }
-
     case AT.INVENTORY_PATCH_BROADCAST_FULFILLED: {
       return {
         ...state,
@@ -331,7 +323,7 @@ export default function reducer(state = initialState, action) {
           if (po.id === action.payload.productOfferId) {
             return {
               ...po,
-              status: action.payload.broadcasted ? 'Broadcasting' : 'Not broadcasting'
+              status: action.payload.broadcasted
             }
           } else {
             return po
@@ -339,7 +331,6 @@ export default function reducer(state = initialState, action) {
         })
       }
     }
-
     case AT.POST_FILTER_FULFILLED: {
       return {
         ...state,
@@ -348,10 +339,10 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-
-
     default: {
       return state
     }
   }
+
 }
+

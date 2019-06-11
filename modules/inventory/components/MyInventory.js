@@ -13,17 +13,17 @@ const PAGE_SIZE = 50
 class MyInventory extends Component {
   state = {
     columns: [
-      { name: 'productName', title: 'Product Name', width: 250 },
-      { name: 'productNumber', title: 'Product Number' },
-      { name: 'warehouse', title: 'Warehouse', width: 180 },
-      { name: 'available', title: 'Available', width: 80 },
-      { name: 'packaging', title: 'Packaging' },
-      { name: 'pkgAmount', title: 'Pkg. Size' },
-      { name: 'quantity', title: 'Quantity' },
-      { name: 'cost', title: 'Cost' },
-      { name: 'fobPrice', title: 'FOB Price' },
-      { name: 'manufacturer', title: 'MFR.', width: 220 },
-      { name: 'broadcast', title: 'Broadcast', width: 120 }
+      { name: "productName", title: "Product Name", width: 250 },
+      { name: "productNumber", title: "Product Number" },
+      { name: "warehouse", title: "Warehouse", width: 180 },
+      { name: "available", title: "Available", width: 80 },
+      { name: "packaging", title: "Packaging" },
+      { name: "pkgAmount", title: "Pkg. Size" },
+      { name: "quantity", title: "Quantity" },
+      { name: "cost", title: "Cost" },
+      { name: "fobPrice", title: "FOB Price" },
+      { name: "manufacturer", title: "MFR.", width: 220 },
+      { name: "broadcast", title: "Broadcast", width: 120 }
     ],
     selectedRows: [],
     pageNumber: 0
@@ -55,7 +55,6 @@ class MyInventory extends Component {
 
   getRows = () => {
     const { rows } = this.props
-
     let title = ''
 
     return rows.map(r => {
@@ -87,7 +86,7 @@ class MyInventory extends Component {
                   disabled={r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'}
                   onChange={(e, data) => {
                     e.preventDefault()
-                    this.props.patchBroadcast(data.checked, r.id)
+                    this.props.patchBroadcast(data.checked, r.id, r.status)
                   }} />
               }
               content={title}
@@ -134,15 +133,18 @@ class MyInventory extends Component {
                     values={{ number: selectedRows.length }} />
                 </Header>
               </Menu.Item>
-            ) : ''}
+            ) : (
+                ""
+              )}
 
-            <Menu.Menu position='right'>
+            <Menu.Menu position="right">
               <Menu.Item>
                 <SubMenu />
               </Menu.Item>
             </Menu.Menu>
           </Menu>
         </Container>
+
         <div class="flex stretched" style={{ padding: '10px 32px' }}>
           <ProdexGrid
             tableName="my_inventory_grid"
@@ -186,7 +188,8 @@ class MyInventory extends Component {
               }
             ]}
             onRowClick={(e, row) => {
-              if (e.target.tagName === 'TD') {
+              const targetTag = e.target.tagName.toLowerCase()
+              if (targetTag !== 'input' && targetTag !== 'label') {
                 Router.push({ pathname: '/inventory/edit', query: { id: row.id } })
               }
             }}
@@ -201,6 +204,5 @@ class MyInventory extends Component {
     )
   }
 }
-
 
 export default injectIntl(MyInventory)

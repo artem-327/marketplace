@@ -1,3 +1,4 @@
+
 import { connect } from 'react-redux'
 import Router from 'next/router'
 import MyInventory from './MyInventory'
@@ -15,8 +16,12 @@ function mapStateToProps(store) {
         id: po.id,
         product: po.product,
         productName: po.product.productName,
-        productNumber: po.product.casProduct ? po.product.casProduct.casNumber : 'Unmapped',
-        chemicalName: po.product.casProduct ? po.product.casProduct.chemicalName : po.product.productName,
+        productNumber: po.product.casProduct
+          ? po.product.casProduct.casNumber
+          : "Unmapped",
+        chemicalName: po.product.casProduct
+          ? po.product.casProduct.chemicalName
+          : po.product.productName,
         warehouse: po.warehouse.warehouseName,
         productId: po.product.casProduct ? po.product.casProduct.id : 0,
         available: po.pkgAmount.formatNumber(),
@@ -37,3 +42,4 @@ function mapStateToProps(store) {
 }
 
 export default connect(mapStateToProps, { ...Actions, openBroadcast })(MyInventory)
+

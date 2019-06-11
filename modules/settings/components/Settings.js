@@ -20,6 +20,7 @@ import TablesHandlers from './TablesHandlers'
 import ProductImportPopup from './ProductCatalogTable/ProductImportPopup'
 import DeliveryAddressesTable from './DeliveryAddressesTable/DeliveryAddressesTable'
 import DeliveryAddressesPopup from './DeliveryAddressesTable/DeliveryAddressesPopup'
+import DwollaAccount from './DwollaAccountComponent'
 import { CompanyForm } from '~/modules/company-form/'
 import { companyDetailsTab } from '../contants'
 import Router from 'next/router'
@@ -77,7 +78,7 @@ class Settings extends Component {
   }
 
   renderContent = () => {
-    let { action, actionId, currentTab, isOpenPopup, isOpenImportPopup } = this.props
+    let { action, actionId, currentTab, isOpenPopup, isOpenImportPopup, isDwollaOpenPopup } = this.props
 
     const tables = {
       'company-details': this.companyDetails(),
@@ -104,10 +105,15 @@ class Settings extends Component {
       products: <ProductImportPopup />
     }
 
+    const addDwollaForms = {
+      'bank-accounts': <DwollaAccount />
+    }
+
     return (
       <>
         {isOpenPopup && popupForm[currentTab.type]}
         {isOpenImportPopup && importForm[currentTab.type]}
+        {isDwollaOpenPopup && addDwollaForms[currentTab.type]}
         {tables[currentTab.type] || <p>This page is still under construction</p>}
       </>
     )

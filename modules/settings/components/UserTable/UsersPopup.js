@@ -8,12 +8,13 @@ import {
   closeRolesPopup,
   handlerSubmitUserEditPopup,
   postNewUserRequest,
-  putNewUserRoleRequest
+  putNewUserRoleRequest,
+  getCurrencies
 } from "../../actions"
 import { Form, Input, Button, Dropdown, Checkbox } from "formik-semantic-ui"
 import * as Yup from "yup"
 
-const formValidationNew = Yup.object().shape({
+const formValidation = popupValues => Yup.object().shape({
   name: Yup.string().trim()
     .min(3, "Too short")
     .required("Name is required"),
@@ -22,7 +23,7 @@ const formValidationNew = Yup.object().shape({
     .required("Emails is required"),
   homeBranchId: Yup.number()
     .required('Home Branch is required'),
-  password: Yup.string().trim()
+  password: !popupValues && Yup.string().trim()
     .min(3, "Too short")
     .required("Password is required"),
   title: Yup.string().trim()
@@ -31,25 +32,12 @@ const formValidationNew = Yup.object().shape({
     .min(3, "Too short"),
 })
 
-const formValidationEdit = Yup.object().shape({
-  name: Yup.string().trim()
-    .min(3, "Too short")
-    .required("Name is required"),
-  email: Yup.string().trim()
-    .email("Invalid email")
-    .required("Emails is required"),
-  homeBranchId: Yup.number()
-    .required('Home Branch is required'),
-  /*title: Yup.string().trim()
-    .min(3, "Too short"),
-  phone: Yup.string().trim()
-    .min(3, "Too short"),
-    */
-})
-
 class UsersPopup extends React.Component {
+  componentDidMount() {
+    this.props.getCurrencies()
+  }
+
   submitHandler = (values, actions) => {
-    console.log('!!!!!!!!!! new user 1');
     if (this.props.userEditRoles) {
       this.props.putNewUserRoleRequest(
         this.addNewRole(values),
@@ -85,7 +73,8 @@ class UsersPopup extends React.Component {
       userEditRoles,
       closeRolesPopup,
       roles,
-      userRoles
+      userRoles,
+      currencies
     } = this.props
 
     const {
@@ -95,7 +84,7 @@ class UsersPopup extends React.Component {
       preferredCurrency = "",
       title = "",
       phone = "",
-      password = ""
+      password = "",
     } = popupValues || {}
 
     const initialFormValues = {
@@ -105,7 +94,7 @@ class UsersPopup extends React.Component {
       preferredCurrency,
       title,
       phone,
-      password
+      password,
     }
     // this.props.roles.forEach(item => {
     //   let flag = this.props.popupValues.allUserRoles.some(
@@ -122,7 +111,7 @@ class UsersPopup extends React.Component {
         <Modal.Content>
           <Form
             initialValues={initialFormValues}
-            validationSchema={popupValues ? formValidationEdit : formValidationNew}
+            validationSchema={formValidation(popupValues)}
             onReset={userEditRoles ? closeRolesPopup : closePopup}
             onSubmit={this.submitHandler}
           >
@@ -142,19 +131,32 @@ class UsersPopup extends React.Component {
                   <Input type="text" label="Name" name="name" />
                   <Input type="text" label="Email" name="email" />
                 </FormGroup>
-                {!popupValues ? (
                 <FormGroup widths="equal">
                   <Input type="text" label="Job Title" name="title" />
                   <Input type="text" label="Phone" name="phone" />
-                </FormGroup>) : null }
-                <FormGroup widths="equal">
-                  <Dropdown
-                    label="Home Branches"
-                    name="homeBranchId"
-                    options={branchesAll}
-                  />
-                  {!popupValues ? (<Input type="text" label="Password" name="password" />) : null}
                 </FormGroup>
+                {popupValues ? (
+                  <FormGroup>
+                    <Dropdown
+                        label="Home Branch"
+                        name="homeBranchId"
+                        options={branchesAll}
+                        fieldProps={{width: 8}}
+                    />
+                    <Dropdown label="Currency" name="preferredCurrency" options={currencies} fieldProps={{width: 2}} />
+                  </FormGroup>
+                ) : (
+                  <FormGroup>
+                    <Dropdown
+                        label="Home Branch"
+                        name="homeBranchId"
+                        options={branchesAll}
+                        fieldProps={{width: 8}}
+                    />
+                    <Input type="text" label="Password" name="password" fieldProps={{width: 6}} />
+                    <Dropdown label="Currency" name="preferredCurrency" options={currencies} fieldProps={{width: 2}} />
+                  </FormGroup>
+                ) }
               </>
             )}
             <div style={{ textAlign: "right" }}>
@@ -177,7 +179,8 @@ const mapDispatchToProps = {
   putNewUserRoleRequest,
   closePopup,
   closeRolesPopup,
-  handlerSubmitUserEditPopup
+  handlerSubmitUserEditPopup,
+  getCurrencies
 }
 
 const mapStateToProps = state => {
@@ -189,7 +192,13 @@ const mapStateToProps = state => {
     )),
     branchesAll: state.settings.branchesAll,
     roles: state.settings.roles,
-    userEditRoles: state.settings.userEditRoles
+    userEditRoles: state.settings.userEditRoles,
+    currencies: state.settings.currency.map(d => {
+      return {
+        id: d.id,
+        text: d.code,
+        value: d.id
+      }}),
   }
 }
 

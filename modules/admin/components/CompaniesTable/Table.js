@@ -12,6 +12,7 @@ import {
   deleteCompany,
   handleOpenConfirmPopup,
   closeConfirmPopup,
+  openRegisterDwollaAccount,
 } from '../../actions'
 
 const PAGE_SIZE = 50
@@ -43,13 +44,13 @@ class CompaniesTable extends Component {
       filterValue,
       loading,
       openEditCompany,
-      intl,
-      deleteCompany,
-      // handleOpenConfirmPopup,
-      // currentTab,
-      // confirmMessage,
+      confirmMessage,
+      handleOpenConfirmPopup,
       // closeConfirmPopup,
       // deleteRowById,
+      deleteCompany,
+      openRegisterDwollaAccount,
+      intl
     } = this.props
 
     const { formatMessage } = intl
@@ -68,7 +69,8 @@ class CompaniesTable extends Component {
                 formatMessage({id: 'confirm.deleteCompany', defaultMessage: 'Delete Company?'}),
                 formatMessage({id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` }, { item: row.name })
               ).then(() => deleteCompany(row.id))
-            }
+            },
+            { text: 'Register Dwolla Account', callback: (row) => openRegisterDwollaAccount(row.id)}
           ]}
         />
       </React.Fragment>
@@ -82,7 +84,7 @@ const mapDispatchToProps = {
   closeConfirmPopup,
   deleteCompany,
   openEditCompany,
-  deleteCompany
+  openRegisterDwollaAccount
 }
 
 const mapStateToProps = ({admin}) => {

@@ -29,6 +29,17 @@ export function closePopup(rows = null) {
   }
 }
 
+export function openDwollaPopup(){
+  return {
+    type: AT.OPEN_DWOLLA_POPUP
+  }
+}
+export function closeDwollaPopup(){
+  return {
+    type: AT.CLOSE_DWOLLA_POPUP
+  }
+}
+
 export function openImportPopup() {
   return {
     type: AT.OPEN_IMPORT_POPUP
@@ -65,10 +76,12 @@ export function handlerSubmitUserEditPopup(payload, id) {
       name: payload.name,
       email: payload.email,
       homeBranchId: payload.homeBranchId,
-      //preferredCurrency: payload.preferredCurrency
+      jobTitle: payload.title,
+      phone: payload.phone,
+      preferredCurrency: payload.preferredCurrency
     }
     removeEmpty(updateUser)
-    console.log('!!!!!!!!!! new user x', updateUser);
+    console.log('!!!!!!!!!! edit user', updateUser);
     await dispatch({
       type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
       payload: api.patchUser(id, updateUser)
@@ -308,8 +321,8 @@ export function getUsersDataRequest() {
           payload: branches
         })
         dispatch({
-          type: AT.GET_ROLES_DATA,
-          payload: roles
+            type: AT.GET_ROLES_DATA,
+            payload: roles
         })
         return users
       }
@@ -429,6 +442,13 @@ export function getProductsCatalogRequest(data) {
   }
 }
 
+export function getCurrencies() {
+  return {
+    type: AT.SETTINGS_GET_CURRENCIES,
+    payload: api.getCurrencies()
+  }
+}
+
 export function getBankAccountsDataRequest() {
   return (dispatch) => {
     dispatch({
@@ -480,9 +500,10 @@ export function postNewUserRequest(payload) {
       password: payload.password,
       jobTitle: payload.title,
       phone: payload.phone,
+      preferredCurrency: payload.preferredCurrency
     }
     removeEmpty(dataBody)
-    console.log('!!!!!!!!!! new user x', dataBody);
+    console.log('!!!!!!!!!! new user', dataBody);
     await dispatch({
       type: AT.POST_NEW_USER_REQUEST,
       payload: api.postNewUser(dataBody)
@@ -628,6 +649,13 @@ export function postImportProductCSV(payload, id) {
   return {
     type: AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS,
     payload: api.postImportProductCSV(payload, id)
+  }
+}
+
+export function postDwollaAccount(payload){
+  return {
+    type: AT.SETTINGS_CREATE_DWOLLA_ACCOUNT,
+    payload: api.postNewDwollaAccount(payload)
   }
 }
 
