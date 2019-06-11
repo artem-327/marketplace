@@ -146,7 +146,7 @@ export default class _Table extends Component {
     sorting: true,
     groupBy: [],
     onSelectionChange: () => { },
-    getNextPage: () => { },
+    onScrollToEnd: () => { },
   }
 
   constructor(props) {
@@ -161,16 +161,16 @@ export default class _Table extends Component {
         widths: this.getColumnsExtension(),
         order: this.getColumns().map(c => c.name)
       },
-      lastPageNumber: 0,
-      allLoaded: false
+      // lastPageNumber: 0,
+      // allLoaded: false
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.rows.length < this.props.pageSize * this.state.lastPageNumber) {
-      this.setState({ allLoaded: true })
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   if (nextProps.rows.length < this.props.pageSize * this.state.lastPageNumber) {
+  //     this.setState({ allLoaded: true })
+  //   }
+  // }
 
   componentDidMount() {
     this.loadColumnsSettings()
@@ -185,14 +185,13 @@ export default class _Table extends Component {
   }
 
   handleScroll = ({ target }) => {
-    const { getNextPage } = this.props
-    const { allLoaded, lastPageNumber } = this.state
+    const { onScrollToEnd } = this.props
+    // const { allLoaded, lastPageNumber } = this.state
 
     if (target.offsetHeight + target.scrollTop === target.scrollHeight) {
-      if (!allLoaded) {
-        this.setState({ lastPageNumber: lastPageNumber + 1 })
-        getNextPage(lastPageNumber + 1)
-      }
+      // this.setState({ lastPageNumber: lastPageNumber + 1 })
+      // onScrollToEnd(lastPageNumber + 1)
+      onScrollToEnd()
     }
   }
 
@@ -211,7 +210,7 @@ export default class _Table extends Component {
   }
 
   handleSelectionChange = (selection) => {
-    const { onSelectionChange } = thos.props
+    const { onSelectionChange } = this.props
 
     onSelectionChange(selection)
   }
@@ -277,12 +276,6 @@ export default class _Table extends Component {
     }), () => {
       tableName && (localStorage[tableName] = JSON.stringify(this.state.columnsSettings))
     })
-  }
-
-  rowAction = (row) => {
-    const {rowActions} = this.props
-    if (rowActions)
-      rowActions[0].callback(row)
   }
 
   render() {

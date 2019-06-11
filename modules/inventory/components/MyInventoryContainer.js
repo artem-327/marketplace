@@ -4,12 +4,13 @@ import Router from 'next/router'
 import MyInventory from './MyInventory'
 import * as Actions from '../actions'
 import { openBroadcast } from '~/modules/broadcast/actions'
+import { withDatagrid } from '~/modules/datagrid'
 
-function mapStateToProps(store) {
+function mapStateToProps(store, {datagrid}) {
   return {
-    loading: store.simpleAdd.loading,
+    ...datagrid,
     searchedProducts: store.simpleAdd.searchedProducts,
-    rows: store.simpleAdd.myProductOffers.map(po => {
+    rows: datagrid.rows.map(po => {
       const qtyPart = `${po.product.packagingUnit ? po.product.packagingUnit.nameAbbreviation : ''}`
 
       return {
@@ -41,5 +42,9 @@ function mapStateToProps(store) {
   }
 }
 
-export default connect(mapStateToProps, { ...Actions, openBroadcast })(MyInventory)
+export default withDatagrid(
+  '/prodex/api/product-offers/own/datagrid/',
+  connect(mapStateToProps, { ...Actions, openBroadcast })(MyInventory)
+)
+
 

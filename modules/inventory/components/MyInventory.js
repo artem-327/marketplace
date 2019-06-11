@@ -3,7 +3,7 @@ import { Container, Menu, Header, Checkbox, Icon, Popup } from "semantic-ui-reac
 import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
-import ProdexGrid from '~/components/table'
+import ProdexTable from '~/components/table'
 import { Broadcast } from '~/modules/broadcast'
 import Filter from '~/src/components/Filter'
 import confirm from '~/src/components/Confirmable/confirm'
@@ -30,12 +30,12 @@ class MyInventory extends Component {
   }
 
   componentDidMount() {
-    this.getNextPage()
+    //this.getNextPage()
   }
 
-  getNextPage = (pageNumber) => {
-    this.props.getMyProductOffers({}, PAGE_SIZE, pageNumber)
-  }
+  // getNextPage = (pageNumber) => {
+  //   this.props.getMyProductOffers({}, PAGE_SIZE, pageNumber)
+  // }
 
   filterInventory = async (filter) => {
     let productIds = []
@@ -50,11 +50,10 @@ class MyInventory extends Component {
         filter = { ...filter, product: productIds }
       }
     }
-    this.props.getMyProductOffers(filter, PAGE_SIZE)
+    //this.props.getMyProductOffers(filter, PAGE_SIZE)
   }
 
-  getRows = () => {
-    const { rows } = this.props
+  getRows = (rows) => {
     let title = ''
 
     return rows.map(r => {
@@ -82,12 +81,12 @@ class MyInventory extends Component {
             <Popup id={r.id}
               trigger={
                 <Checkbox toggle={true}
-                          defaultChecked={r.status.toLowerCase() === 'broadcasting'}
-                          disabled={r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'}
-                          onChange={(e, data) => {
-                            e.preventDefault()
-                            this.props.patchBroadcast(data.checked, r.id, r.status)
-                          }} />
+                  defaultChecked={r.status.toLowerCase() === 'broadcasting'}
+                  disabled={r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'}
+                  onChange={(e, data) => {
+                    e.preventDefault()
+                    this.props.patchBroadcast(data.checked, r.id, r.status)
+                  }} />
               }
               content={title}
             />
@@ -99,12 +98,14 @@ class MyInventory extends Component {
 
   render() {
     const {
-      loading,
       openBroadcast,
-      intl
+      intl,
+      rows,
+      loading,
+      onScrollToEnd
     } = this.props
     const { columns, selectedRows } = this.state
-    const rows = this.getRows()
+
     let { formatMessage } = intl
 
     return (
@@ -126,8 +127,8 @@ class MyInventory extends Component {
                 </Header>
               </Menu.Item>
             ) : (
-              ""
-            )}
+                ""
+              )}
 
             <Menu.Menu position="right">
               <Menu.Item>
@@ -138,14 +139,15 @@ class MyInventory extends Component {
         </Container>
 
         <div class="flex stretched" style={{ padding: '10px 32px' }}>
-          <ProdexGrid
+
+          <ProdexTable
             tableName="my_inventory_grid"
+            rows={this.getRows(rows)}
+            onScrollToEnd={onScrollToEnd}
             loading={loading}
+            
             columns={columns}
-            rows={rows}
             rowSelection
-            getNextPage={this.getNextPage}
-            pageSize={PAGE_SIZE}
             groupBy={['productNumber']}
             getChildGroups={rows =>
               _(rows)
@@ -182,10 +184,12 @@ class MyInventory extends Component {
             onRowClick={(e, row) => {
               const targetTag = e.target.tagName.toLowerCase()
               if (targetTag !== 'input' && targetTag !== 'label') {
-                Router.push({pathname: '/inventory/edit', query: {id: row.id}})
+                Router.push({ pathname: '/inventory/edit', query: { id: row.id } })
               }
             }}
           />
+
+
         </div>
         <Broadcast />
         <Filter
@@ -201,12 +205,12 @@ class MyInventory extends Component {
           form
           filterFunc={(filter) => { this.filterInventory({ ...filter }) }}
           savingFilters={true}
-          {...this.props}
+          // {...this.props}
           searchedProducts={this.props.searchedProducts.map(prod => {
             return {
               key: prod.key,
               id: prod.id,
-              name: <Header content={prod.name} subheader={prod.casName} style={{margin: 0, fontSize: '1em'}} />
+              name: <Header content={prod.name} subheader={prod.casName} style={{ margin: 0, fontSize: '1em' }} />
             }
           })}
         />
