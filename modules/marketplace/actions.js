@@ -1,5 +1,6 @@
 import * as AT from './action-types'
 import * as api from './api'
+import { toggleFilter, filterSaving, filterApplying } from '~/modules/filter/actions'
 
 export function findProducts(search) {
   return {
@@ -118,7 +119,7 @@ export function getBroadcastedProductOffers(filters = {}, pageSize = 50, pageNum
   return {
     type: AT.MARKETPLACE_GET_BROADCASTED_PRODUCT_OFFERS,
     async payload() {
-      const {data} = await api.getBroadcastedProductOffers({
+      const { data } = await api.getBroadcastedProductOffers({
         ...filtersReady,
         pageSize,
         pageNumber
@@ -147,5 +148,42 @@ export function searchProducts(text) {
         })) : []
       }
     }
+  }
+}
+
+
+export const getBroadcastedFilters = () => ({
+  type: AT.GET_BROADCASTED_FILTERS,
+  payload: api.getBroadcastedFilters()
+})
+
+export const postBroadcastedDatagrid = (filter) => {
+  return async dispatch => {
+    dispatch({
+      type: AT.POST_BROADCASTED_DATAGRID, async payload() {
+        dispatch(filterApplying(true))
+        let data = await api.postBroadcastedDatagrid(filter)
+        dispatch(filterApplying(false))
+        dispatch(toggleFilter(false))
+        return { data, filter }
+      }
+    })
+  }
+}
+
+export const saveBroadcastedFilter = (filter) => {
+  return async dispatch => {
+    dispatch({
+      type: AT.SAVE_BROADCASTED_FILTER, async payload() {
+        dispatch(filterSaving(true))
+        try {
+          var data = await api.saveBroadcastedFilter(filter)
+        } catch (_) { }
+        finally {
+          dispatch(filterSaving(false))
+        }
+        return { data, filter }
+      }
+    })
   }
 }

@@ -1,31 +1,31 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from "prop-types";
 import './TooltipFilter.scss'
 import classnames from 'classnames';
-import {FormattedMessage} from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 class TooltipFilter extends Component {
 
-    formatName(name){
-        switch(name) {
-            case 'chemicalName' : return 'Chemical name';
-            case 'quantityFrom' : return 'Quantity From';
-            case 'quantityTo' : return 'Quantity To';
-            case 'priceFrom' : return 'Price from';
-            case 'priceTo' : return 'Price to';
-            case 'distanceLimit' : return 'Distance limit';
-            case 'container' : return 'Container';
-            case 'grade' : return 'Grade';
-            case 'form' : return 'Form';
-            case 'condition' : return 'Condition';
-            case 'origin' : return 'Origin';
-            case 'manufacturer' : return 'Manufacturer';
-            case 'zip' : return 'ZIP';
-            default : return name;
+    formatName(name) {
+        switch (name) {
+            case 'chemicalName': return 'Chemical name';
+            case 'quantityFrom': return 'Quantity From';
+            case 'quantityTo': return 'Quantity To';
+            case 'priceFrom': return 'Price from';
+            case 'priceTo': return 'Price to';
+            case 'distanceLimit': return 'Distance limit';
+            case 'container': return 'Container';
+            case 'grade': return 'Grade';
+            case 'form': return 'Form';
+            case 'condition': return 'Condition';
+            case 'origin': return 'Origin';
+            case 'manufacturer': return 'Manufacturer';
+            case 'zip': return 'ZIP';
+            default: return name;
         }
     }
 
-    renderContent(content){
+    renderContent(content) {
         let inside = content.map((item, index) => {
             const value = item.value;
             return <tr key={index}>
@@ -54,8 +54,8 @@ class TooltipFilter extends Component {
                         id='filter.selectedFilter'
                         defaultMessage='SELECTED FILTER - '
                     />
-                    : null}{name}</span>
-                <label className={classnames({show: isVisible})}>{this.renderContent(content)}</label>
+                    : null}<FormattedMessage id='filter.saved.name' defaultMessage='Filter name: ' /><b>{name}</b></span>
+                <label className={classnames({ show: isVisible })}>{this.renderContent(content)}</label>
             </div>
         )
     }

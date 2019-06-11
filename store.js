@@ -20,7 +20,7 @@ import productOffers, { initialState as addProductsInit } from '~/src/modules/pr
 import marketplace from '~/modules/marketplace/reducer'
 import shippingQuotes, { initialState as shippingQuotesInit } from '~/src/modules/shippingQuotes'
 import popup from '~/src/modules/popup'
-import filter, { initialState as filterInit } from '~/src/modules/filter'
+import filter, { initialState as filterInit } from '~/modules/filter/reducer'
 import packageTypes from '~/src/modules/packageTypes'
 import brcRules, { initialState as broadcastInit } from "~/src/modules/broadcast"
 // import cart, { initialState as cartInit } from "./modules/cart"
