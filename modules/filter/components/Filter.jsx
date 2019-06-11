@@ -29,11 +29,7 @@ class Filter extends Component {
 
   state = {
     savedFiltersActive: false,
-    accordion: {},
-    checkboxes: {
-      automaticallyApply: true
-    },
-    notifications: {}
+    accordion: {}
   }
 
   componentDidMount() {
@@ -164,14 +160,6 @@ class Filter extends Component {
     let active = !!accordion[name]
     this.setState({ accordion: { ...this.state.accordion, [name]: !active } })
   }
-
-
-  handleCheckboxChange = (e, { name }) => {
-    let { checkboxes } = this.state
-    checkboxes[name] = !checkboxes[name]
-    this.setState({ checkboxes })
-  }
-
 
   accordionTitle = (name, text) => (
     <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
