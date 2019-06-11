@@ -7,7 +7,7 @@ export const initialState = {
 
 export default typeToReducer({
 
-  [a.addMessage]: (state, {payload: message}) => ({
+  [a.addMessage]: (state, { payload: message }) => ({
     ...state,
     messages: [
       ...state.messages,
@@ -15,9 +15,8 @@ export default typeToReducer({
     ]
   }),
 
-  [a.removeMessage]: (state, {payload: index}) => ({
+  [a.removeMessage]: (state, { payload: index }) => ({
     ...state,
-    messages: state.messages.filter((_,i) => i !== index)
+    messages: state.messages.filter((_, i) => i !== index)
   })
-
 }, initialState)

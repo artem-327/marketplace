@@ -1,6 +1,8 @@
 import * as AT from './action-types'
 import * as api from './api'
 
+import { toggleFilter, filterSaving, filterApplying } from '~/modules/filter/actions'
+
 export function initProductOfferEdit(id) {
 
   return dispatch => {
@@ -283,7 +285,7 @@ export function getMyProductOffers(filters = {}, pageSize = 50, pageNumber = 0) 
   return {
     type: AT.INVENTORY_GET_MY_PRODUCT_OFFERS,
     async payload() {
-      const {data} = await api.getMyProductOffers({
+      const { data } = await api.getMyProductOffers({
         ...filtersReady,
         pageSize,
         pageNumber
@@ -458,4 +460,34 @@ export function uploadDocuments(isLot, productOfferId, fileIds) {
         })
       }).then(loop.bind(null, j + 1))
     })(0)
+}
+
+export const getSavedFilters = () => ({ type: AT.GET_SAVED_FILTERS, payload: api.getSavedFilters() })
+
+export const postFilter = filter => {
+  return async dispatch => {
+    dispatch({
+      type: AT.POST_FILTER, async payload() {
+        dispatch(filterApplying(true))
+        let data = await api.postFilter(filter)
+        dispatch(filterApplying(false))
+        dispatch(toggleFilter(false))
+        return { data, filter }
+      }
+    })
+  }
+}
+
+export const saveFilter = filter => {
+  return async dispatch => {
+    dispatch({
+      type: AT.SAVE_FILTER, async payload() {
+        dispatch(filterSaving(true))
+        let data = await api.saveFilter(filter)
+        dispatch(filterSaving(false))
+        dispatch(toggleFilter(false))
+        return { data, filter }
+      }
+    })
+  }
 }

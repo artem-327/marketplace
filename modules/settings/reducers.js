@@ -266,7 +266,7 @@ export default function reducer(state = initialState, action) {
               : null
             : null,
             */
-          preferredCurrency: (user.preferredCurrency || {}).code || 0,
+          preferredCurrency: (user.preferredCurrency || {}).id || 0,
           homeBranch: user.homeBranch.name,
           permissions: user.roles ? user.roles.name : "", // ! ! array?
           id: user.id,
@@ -439,6 +439,13 @@ export default function reducer(state = initialState, action) {
         bankAccountsRows: rows,
         country: newCountryFormat,
         currency: newCurrencyFormat
+      }
+    }
+
+    case AT.SETTINGS_GET_CURRENCIES_FULFILLED: {
+      return {
+        ...state,
+        currency: action.payload
       }
     }
 

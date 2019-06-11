@@ -30,6 +30,7 @@ function mapStateToProps(store) {
     productAgeCustomModel: store.forms.filter.productAgeCustom,
     location: store.products.location,
     saveFilters: store.filter.saveFilters,
+    savedFiltersFetching: store.filter.savedFiltersFetching
   }
 }
 

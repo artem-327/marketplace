@@ -5,7 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
 import ProdexTable from '~/components/table'
 import { Broadcast } from '~/modules/broadcast'
-import Filter from '~/src/components/Filter'
+import { Filter } from '~/modules/filter'
 import confirm from '~/src/components/Confirmable/confirm'
 
 const PAGE_SIZE = 50
@@ -94,6 +94,14 @@ class MyInventory extends Component {
         )
       }
     })
+  }
+
+  handleFilterApply = filter => {
+    this.props.postFilter(filter)
+  }
+
+  handleFilterSave = filter => {
+    this.props.saveFilter(filter)
   }
 
   render() {
@@ -193,26 +201,8 @@ class MyInventory extends Component {
         </div>
         <Broadcast />
         <Filter
-          chemicalName
-          productAgeFilter
-          date
-          assay
-          quantity
-          price
-          package
-          condition
-          productGrade
-          form
-          filterFunc={(filter) => { this.filterInventory({ ...filter }) }}
-          savingFilters={true}
-          // {...this.props}
-          searchedProducts={this.props.searchedProducts.map(prod => {
-            return {
-              key: prod.key,
-              id: prod.id,
-              name: <Header content={prod.name} subheader={prod.casName} style={{ margin: 0, fontSize: '1em' }} />
-            }
-          })}
+          onApply={this.handleFilterApply}
+          onSave={this.handleFilterSave}
         />
       </>
     )
