@@ -1,9 +1,9 @@
 import React, { Component } from "react"
 import { Container, Menu, Header, Button } from "semantic-ui-react"
-import {FormattedMessage} from 'react-intl'
-import {ShippingQuotes} from '~/modules/shipping'
+import { FormattedMessage } from 'react-intl'
+import { ShippingQuotes } from '~/modules/shipping'
 import SubMenu from '~/src/components/SubMenu'
-import Filter from '~/src/components/Filter'
+import { Filter } from '~/modules/filter'
 import ProdexGrid from '~/components/table'
 import AddCart from '~/src/pages/cart/components/AddCart'
 
@@ -12,8 +12,8 @@ const PAGE_SIZE = 50
 export default class Marketplace extends Component {
   state = {
     columns: [
-      { name: 'productName', disabled: true},
-      { name: 'productNumber', disabled: true},
+      { name: 'productName', disabled: true },
+      { name: 'productNumber', disabled: true },
       { name: 'merchant', title: 'Merchant', width: 250 },
       { name: 'available', title: 'Available', width: 80 },
       { name: 'packaging', title: 'Packaging', width: 140 },
@@ -47,7 +47,7 @@ export default class Marketplace extends Component {
       }, [])
 
       if (productIds.length) {
-        filter = {...filter, product: productIds}
+        filter = { ...filter, product: productIds }
       }
     }
     this.props.getBroadcastedProductOffers(filter, PAGE_SIZE)
@@ -58,7 +58,7 @@ export default class Marketplace extends Component {
   }
 
   getRows = () => {
-    const {rows} = this.props
+    const { rows } = this.props
 
     return rows.map(r => ({
       ...r
@@ -75,12 +75,20 @@ export default class Marketplace extends Component {
 
   }
 
+  onFilterApply = (filter) => {
+    this.props.postBroadcastedDatagrid(filter)
+  }
+
+  onFilterSave = (filter) => {
+    this.props.saveBroadcastedFilter(filter)
+  }
+
   render() {
-    const {
+    let {
       loading
     } = this.props
-    const {columns, selectedRows} = this.state
-    const rows = this.getRows()
+    let { columns, selectedRows } = this.state
+    let rows = this.getRows()
 
     return (
       <>
@@ -99,9 +107,9 @@ export default class Marketplace extends Component {
           <Menu secondary>
             <Menu.Item header>
               <Header as='h1' size='medium'>
-                <FormattedMessage 
+                <FormattedMessage
                   id='allInventory.marketplace'
-                  defaultMessage='MARKETPLACE' 
+                  defaultMessage='MARKETPLACE'
                 />
               </Header>
             </Menu.Item>
@@ -114,7 +122,7 @@ export default class Marketplace extends Component {
 
               }
               <Menu.Item>
-                <SubMenu/>
+                <SubMenu />
               </Menu.Item>
             </Menu.Menu>
           </Menu>
@@ -138,15 +146,15 @@ export default class Marketplace extends Component {
                 }))
                 .value()
             }
-            renderGroupLabel={({row: {value}}) => {
+            renderGroupLabel={({ row: { value } }) => {
               const [name, number, count] = value.split('_')
               return (
                 <span>
-                  <span style={{color: '#2599d5'}}>{number}</span>&nbsp;&nbsp; {name} <span className="right">Product offerings: {count}</span>
+                  <span style={{ color: '#2599d5' }}>{number}</span>&nbsp;&nbsp; {name} <span className="right">Product offerings: {count}</span>
                 </span>
               )
             }}
-            onSelectionChange={selectedRows => this.setState({selectedRows})}
+            onSelectionChange={selectedRows => this.setState({ selectedRows })}
             onRowClick={(e, row) => {
               if (e.target.tagName === 'TD')
                 this.tableRowClicked(row.id)
@@ -157,26 +165,8 @@ export default class Marketplace extends Component {
           />
         </div>
         <Filter
-          chemicalName
-          productAgeFilter
-          date
-          assay
-          quantity
-          price
-          package
-          condition
-          productGrade
-          form
-          filterFunc={(filter) => { this.filterInventory({...filter}) }}
-          savingFilters={true}
-          {...this.props}
-          searchedProducts={this.props.searchedProducts.map(prod => {
-            return {
-              key: prod.key,
-              id: prod.id,
-              name: <Header content={prod.name} subheader={prod.casName} style={{margin: 0, fontSize: '1em'}} />
-            }
-          })}
+          onApply={this.onFilterApply}
+          onSave={this.onFilterSave}
         />
         <AddCart />
       </>
