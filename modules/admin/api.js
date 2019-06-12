@@ -98,7 +98,7 @@ export async function getCountries() {
 //   return data
 // }
 
-export const getProvinces = (id) => api.get(`/prodex/api/provinces/search?countryId=${id}`).then(response => response.data)
+export const getProvinces = (id) => api.get(`/prodex/api/provinces/country/${id}`).then(response => response.data)
 
 export async function getCompanies(params) {
   const { data } = await api.post(`/prodex/api/companies/datagrid`, {

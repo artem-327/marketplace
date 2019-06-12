@@ -175,7 +175,8 @@ const mapStateToProps = state => {
     country: state.settings.country,
     countries: state.settings.countries,
     provincesDropDown: state.settings.provincesDropDown,
-    currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+    currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
+        state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
   }
 }
 

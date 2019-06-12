@@ -84,7 +84,8 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     popupValues: state.settings.popupValues,
-    currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+    currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
+        state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
   }
 }
 

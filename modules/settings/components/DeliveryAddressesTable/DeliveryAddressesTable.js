@@ -104,7 +104,8 @@ const mapStateToProps = state => {
     // reloadFilter is used to reload Delivery addresses list after Edit / Add new Delivery address
     reloadFilter: {
       props: {
-        currentTab: state.settings.currentTab,
+        currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
+            state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
         deliveryAddressesFilter: state.settings.deliveryAddressesFilter
       },
       value: state.settings.filterValue

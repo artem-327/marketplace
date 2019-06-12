@@ -95,7 +95,8 @@ const mapStateToProps = state => {
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
-    currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+    currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
+        state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
     loading: state.settings.loading,
     roles: state.settings.roles
   }
