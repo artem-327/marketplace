@@ -243,6 +243,7 @@ export function handleProductCatalogUnmappedValue(checked, props) {
 
 export function handlerSubmitWarehouseEditPopup(payload, id) {
   return async dispatch => {
+    const currentUser = await api.getCurrentUser()
     const dataBody = {
       address: {
         city: payload.city,
@@ -251,7 +252,7 @@ export function handlerSubmitWarehouseEditPopup(payload, id) {
         streetAddress: payload.address,
         zip: payload.zip
       },
-      company: 3,
+      company: currentUser.company.id,
       contactEmail: payload.email,
       contactName: payload.contactName,
       contactPhone: payload.phone,
@@ -515,7 +516,6 @@ export function postNewUserRequest(payload) {
 
 export function postNewWarehouseRequest(payload) {
   return async dispatch => {
-    const currentUser = await api.getCurrentUser()
     const dataBody = {
       address: {
         city: payload.city,
@@ -524,7 +524,6 @@ export function postNewWarehouseRequest(payload) {
         streetAddress: payload.address,
         zip: payload.zip
       },
-      company: currentUser.company.id,
       contactEmail: payload.email,
       contactName: payload.contactName,
       contactPhone: payload.phone,

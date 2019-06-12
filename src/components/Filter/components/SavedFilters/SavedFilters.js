@@ -15,7 +15,7 @@ const CenteredSegment = styled(Segment)`
 export default class SavedFilters extends Component {
 
   componentDidMount() {
-    this.props.fetchSavedFilters()
+    this.props.getSavedFilters()
   }
 
   renderSaveItems(saved) {
@@ -41,6 +41,7 @@ export default class SavedFilters extends Component {
   }
 
   render() {
+    
     let { saveFilters, fetching } = this.props
     if (fetching) {
       return (

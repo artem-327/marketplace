@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { Form, Input, Checkbox as FormikCheckbox } from 'formik-semantic-ui'
+import { Form, Input, Checkbox as FormikCheckbox, Dropdown } from 'formik-semantic-ui'
 import { Field as FormikField } from 'formik'
-import { bool, string, object, func } from 'prop-types'
-import { DateInput } from '~/components/custom-formik'
+import { bool, string, object, func, array } from 'prop-types'
+import { debounce } from 'lodash'
+import { DateInput } from 'semantic-ui-calendar-react' //'~/components/custom-formik'
 import {
   Button, Accordion,
   Segment, FormGroup,
@@ -23,6 +24,48 @@ import {
   GraySegment, Title,
   RelaxedRow
 } from '../constants/layout'
+
+const countryOptions = [
+  { key: 'af', value: 'af', flag: 'af', text: 'Afghanistan' },
+  { key: 'ax', value: 'ax', flag: 'ax', text: 'Aland Islands' },
+  { key: 'al', value: 'al', flag: 'al', text: 'Albania' },
+  { key: 'dz', value: 'dz', flag: 'dz', text: 'Algeria' },
+  { key: 'as', value: 'as', flag: 'as', text: 'American Samoa' },
+  { key: 'ad', value: 'ad', flag: 'ad', text: 'Andorra' },
+  { key: 'ao', value: 'ao', flag: 'ao', text: 'Angola' },
+  { key: 'ai', value: 'ai', flag: 'ai', text: 'Anguilla' },
+  { key: 'ag', value: 'ag', flag: 'ag', text: 'Antigua' },
+  { key: 'ar', value: 'ar', flag: 'ar', text: 'Argentina' },
+  { key: 'am', value: 'am', flag: 'am', text: 'Armenia' },
+  { key: 'aw', value: 'aw', flag: 'aw', text: 'Aruba' },
+  { key: 'au', value: 'au', flag: 'au', text: 'Australia' },
+  { key: 'at', value: 'at', flag: 'at', text: 'Austria' },
+  { key: 'az', value: 'az', flag: 'az', text: 'Azerbaijan' },
+  { key: 'bs', value: 'bs', flag: 'bs', text: 'Bahamas' },
+  { key: 'bh', value: 'bh', flag: 'bh', text: 'Bahrain' },
+  { key: 'bd', value: 'bd', flag: 'bd', text: 'Bangladesh' },
+  { key: 'bb', value: 'bb', flag: 'bb', text: 'Barbados' },
+  { key: 'by', value: 'by', flag: 'by', text: 'Belarus' },
+  { key: 'be', value: 'be', flag: 'be', text: 'Belgium' },
+  { key: 'bz', value: 'bz', flag: 'bz', text: 'Belize' },
+  { key: 'bj', value: 'bj', flag: 'bj', text: 'Benin' },
+  { key: 'bm', value: 'bm', flag: 'bm', text: 'Bermuda' },
+  { key: 'bt', value: 'bt', flag: 'bt', text: 'Bhutan' },
+  { key: 'bo', value: 'bo', flag: 'bo', text: 'Bolivia' },
+  { key: 'ba', value: 'ba', flag: 'ba', text: 'Bosnia' },
+  { key: 'bw', value: 'bw', flag: 'bw', text: 'Botswana' },
+  { key: 'bv', value: 'bv', flag: 'bv', text: 'Bouvet Island' },
+  { key: 'br', value: 'br', flag: 'br', text: 'Brazil' },
+  { key: 'vg', value: 'vg', flag: 'vg', text: 'British Virgin Islands' },
+  { key: 'bn', value: 'bn', flag: 'bn', text: 'Brunei' },
+  { key: 'bg', value: 'bg', flag: 'bg', text: 'Bulgaria' },
+  { key: 'bf', value: 'bf', flag: 'bf', text: 'Burkina Faso' },
+  { key: 'bi', value: 'bi', flag: 'bi', text: 'Burundi' },
+  { key: 'tc', value: 'tc', flag: 'tc', text: 'Caicos Islands' },
+  { key: 'kh', value: 'kh', flag: 'kh', text: 'Cambodia' },
+  { key: 'cm', value: 'cm', flag: 'cm', text: 'Cameroon' },
+  { key: 'ca', value: 'ca', flag: 'ca', text: 'Canada' },
+]
 
 
 class Filter extends Component {
@@ -55,38 +98,42 @@ class Filter extends Component {
       filters: []
     }
 
-    Object.keys(inputs)
-      .forEach((key) => {
-        if (inputs[key]) {
+    let keys = Object.keys(inputs)
 
-          if (!!datagridValues[key].nested) {
-            var values = []
-            // If nested (checkboxes) take their id's and push them to an array
-            Object.keys(inputs[key]).forEach(k => {
-              if (inputs[key][k]) values.push(inputs[key][k])
-            })
+    keys.forEach((key) => {
+      if (inputs[key]) {
 
-            if (values.length > 0) datagridFilter.filters.push(datagridValues[key].getFilter(values))
-          }
-          else {
-            try {
-              let filter = datagridValues[key].getFilter(inputs[key])
-              if (!(filter.values instanceof Array)) filter.values = [filter.values]  // We need values to be an array
-
-              datagridFilter.filters.push(filter)
-            } catch (err) {
-              console.error(`Key: ${key} is not defined in datagridValues. \n ${err}`)
+        if (!!datagridValues[key].nested) {
+          var ids = [], names = []
+          // If nested (checkboxes) take their id's and push them to an array
+          Object.keys(inputs[key]).forEach(k => {
+            if (inputs[key][k]) {
+              ids.push(inputs[key][k].id)
+              names.push((inputs[key][k].name))
             }
+          })
+
+          if (ids.length > 0) datagridFilter.filters.push(datagridValues[key].getFilter(ids, names))
+        }
+        else {
+          try {
+            let filter = datagridValues[key].getFilter(inputs[key])
+            if (!(filter.values instanceof Array)) filter.values = [filter.values]  // We need values to be an array
+
+            datagridFilter.filters.push(filter)
+          } catch (err) {
+            console.error(`Key: ${key} is not defined in datagridValues. \n ${err}`)
           }
         }
-      })
+      }
+    })
 
     return datagridFilter
   }
 
   handleSubmit = ({ notifications, checkboxes, name, ...rest }) => { // { setSubmitting }
     let { onApply } = this.props
-
+    console.log({rest})
     onApply(this.generateDatagridFilter(rest))
   }
 
@@ -107,7 +154,6 @@ class Filter extends Component {
 
     this.props.onSave(requestData)
     if (automaticallyApply) this.handleSubmit(rest)
-
   }
 
   fetchIfNoData = (fn, propertyName) => {
@@ -133,7 +179,7 @@ class Filter extends Component {
       <FormField key={i}>
         <FormikField onChange={(e, data) => {
           let { setFieldValue } = data.form
-          setFieldValue(`${group}${el.name.toLowerCase()}`, data.checked ? el.id : null)
+          setFieldValue(`${group}${el.name.toLowerCase()}`, data.checked ? { id: el.id, name: el.name } : null)
         }} component={Checkbox} name={`${group}${el.name.toLowerCase()}`} label={el.name} />
       </FormField>
     )
@@ -161,6 +207,10 @@ class Filter extends Component {
     this.setState({ accordion: { ...this.state.accordion, [name]: !active } })
   }
 
+  handleSearch = debounce(({ searchQuery, name }) => {
+    if (searchQuery.length > 3) this.props.searchProducts(searchQuery)
+  }, 250)
+
   accordionTitle = (name, text) => (
     <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
       <Icon name={this.state.accordion[name] ? 'chevron down' : 'chevron up'} color={this.state.accordion[name] ? 'blue' : 'black'} />
@@ -169,8 +219,12 @@ class Filter extends Component {
   )
 
 
-  formMarkup = (values) => {
-    let { productConditions, productForms, packagingTypes, productGradeTypes, intl, filterSaving } = this.props
+  formMarkup = (values, setFieldValue) => {
+    let {
+      productConditions, productForms, packagingTypes,
+      productGradeTypes, intl, filterSaving,
+      searchedProducts, searchedProductsLoading
+    } = this.props
 
     const { formatMessage } = intl
 
@@ -179,6 +233,17 @@ class Filter extends Component {
     let productGradeRows = this.generateCheckboxes(productGradeTypes, 'productGrades')
     let productFormsRows = this.generateCheckboxes(productForms, 'productForms')
 
+    let dropdownInputProps = {
+      search: true,
+      selection: true,
+      multiple: true,
+      loading: searchedProductsLoading,
+      onSearchChange: (_, data) => this.handleSearch(data),
+      onChange: () => console.log('onChange')
+    }
+
+    if (!searchedProductsLoading) dropdownInputProps.icon = null
+
     return (
       <Accordion>
         <Segment basic>
@@ -186,8 +251,17 @@ class Filter extends Component {
           <AccordionItem>
             {this.accordionTitle('chemicalType', <FormattedMessage id='filter.chemicalType' />)}
             <AccordionContent active={this.state.accordion.chemicalType}>
-              {/* TODO SEARCH ! */}
-              <Input fieldProps={{ width: 8 }} label={<FormattedMessage id='filter.ChemicalNameCAS' />} name='search' />
+              <Dropdown
+                inputProps={dropdownInputProps}
+                fieldProps={{ width: 16 }}
+                fluid
+                options={searchedProducts.map((product) => ({
+                  key: product.id,
+                  text: product.name,
+                  value: { id: product.id, name: product.name }
+                }))}
+                label={<FormattedMessage id='filter.ChemicalNameCAS' />}
+                name='search' />
             </AccordionContent>
           </AccordionItem>
 
@@ -246,13 +320,25 @@ class Filter extends Component {
               <FormGroup widths='equal'>
                 <FormField width={8}>
                   <DateInput
+                    onChange={(e, { name, value }) => setFieldValue(name, value)}
+                    closable
+                    value={values.dateFrom}
+                    closeOnMouseLeave={false}
+                    dateFormat='DD-MM-YYYY'
+                    animation='none'
                     label={<FormattedMessage id='filter.From' defaultMessage='From' />}
-                    inputProps={{ closeOnMouseLeave: false, animation: 'none' }} name='dateFrom' />
+                    name='dateFrom' />
                 </FormField>
                 <FormField width={8}>
                   <DateInput
+                    onChange={(e, { name, value }) => setFieldValue(name, value)}
+                    closable
+                    value={values.dateTo}
+                    dateFormat='DD-MM-YYYY'
+                    animation='none'
+                    closeOnMouseLeave={false}
                     label={<FormattedMessage id='filter.To' defaultMessage='To' />}
-                    inputProps={{ closeOnMouseLeave: false, animation: 'none' }} name='dateTo' />
+                    name='dateTo' />
                 </FormField>
               </FormGroup>
             </AccordionContent>
@@ -318,7 +404,7 @@ class Filter extends Component {
                       fluid
                       inputProps={{ placeholder: ' Email' }}
                       type='text'
-                      name='notifications.notificationMail'/>
+                      name='notifications.notificationMail' />
                   </GridColumn>
                 )
               }
@@ -376,8 +462,12 @@ class Filter extends Component {
         width={width}
         direction={direction}
         animation={animation}
-        // TODO handle calendar on click so it does not hide sidebar...
-        // onHide={() => toggleFilter()}
+        onHide={(e) => {
+          // Workaround, close if you haven't clicked on calendar item or filter icon
+          if (e && (!(e.path[0] instanceof HTMLTableCellElement) && !(e.path[1] instanceof HTMLTableCellElement) && !e.target.className.includes('submenu-filter'))) {
+            toggleFilter(false)
+          }
+        }}
         {...additionalSidebarProps}>
 
         <FlexContent>
@@ -401,9 +491,9 @@ class Filter extends Component {
               this.handleSubmit(values)
               setSubmitting(false)
             }}>
-              {({ submitForm, values }) => {
+              {({ submitForm, values, setFieldValue }) => {
                 this.submitForm = submitForm
-                return this.formMarkup(values)
+                return this.formMarkup(values, setFieldValue)
               }}
             </Form>
           </Segment>
@@ -413,8 +503,7 @@ class Filter extends Component {
           <Grid>
             <GridRow columns={2}>
               <GridColumn>
-                {/* TODO Clear filter implementation */}
-                <Button fluid> <FormattedMessage id='filter.clearFilter' defaultMessage='Clear Filter' /></Button>
+                <Button fluid onClick={this.props.onClear}> <FormattedMessage id='filter.clearFilter' defaultMessage='Clear Filter' /></Button>
               </GridColumn>
               <GridColumn>
                 <Button loading={filterApplying} primary fluid onClick={() => this.submitForm()}><FormattedMessage id='global.apply' defaultMessage='Apply' /></Button>
@@ -434,7 +523,10 @@ Filter.propTypes = {
   animation: string,
   additionalSidebarProps: object,
   onApply: func,
-  onSave: func
+  onSave: func,
+  onClear: func,
+  searchProducts: func,
+  searchedProducts: array
 }
 
 Filter.defaultProps = {
@@ -442,9 +534,12 @@ Filter.defaultProps = {
   width: 'very wide',
   direction: 'right',
   animation: 'overlay',
+  additionalSidebarProps: {},
   onApply: () => alert('onApply function not supplied!'),
   onSave: () => alert('onSave function not supplied!'),
-  additionalSidebarProps: {}
+  onClear: () => alert('onClear function not supplied!'),
+  searchProducts: () => alert('searchProducts not supplied!'),
+  searchedProducts: [],
 }
 
 export default injectIntl(Filter)

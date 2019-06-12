@@ -9,9 +9,10 @@ import { withDatagrid } from '~/modules/datagrid'
 function mapStateToProps(store, {datagrid}) {
   return {
     searchedProducts: store.simpleAdd.searchedProducts,
+    searchedProductsLoading: store.simpleAdd.searchedProductsLoading,
     rows: datagrid.rows.map(po => {
       const qtyPart = `${po.product.packagingUnit ? po.product.packagingUnit.nameAbbreviation : ''}`
-
+      
       return {
         id: po.id,
         product: po.product,
@@ -37,7 +38,8 @@ function mapStateToProps(store, {datagrid}) {
         broadcasted: po.broadcasted,
         status: po.status // new broadcasted
       }
-    })
+    }),
+    filter: store.simpleAdd.filter
   }
 }
 

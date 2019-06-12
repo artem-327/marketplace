@@ -7,6 +7,7 @@ import ProdexTable from '~/components/table'
 import { Broadcast } from '~/modules/broadcast'
 import { Filter } from '~/modules/filter'
 import confirm from '~/src/components/Confirmable/confirm'
+import FilterTags from '~/modules/filter/components/FitlerTags'
 
 class MyInventory extends Component {
   state = {
@@ -103,6 +104,20 @@ class MyInventory extends Component {
     this.props.saveFilter(filter)
   }
 
+  handleFilterClear = () => {
+    let { filter } = this.props
+    filter.filters = []
+    this.props.postFilter(filter)
+  }
+
+  removeFilter = (i) => {
+    let { filter } = this.props
+
+    filter.filters.splice(i, 1)
+
+    this.props.postFilter(filter)
+  }
+
   render() {
     const {
       openBroadcast,
@@ -132,11 +147,17 @@ class MyInventory extends Component {
                     values={{ number: selectedRows.length }} />
                 </Header>
               </Menu.Item>
-            ) : (
-                ""
-              )}
+            ) : null}
 
             <Menu.Menu position="right">
+              <Menu.Item>
+                <FilterTags />
+              </Menu.Item>
+
+              <Menu.Item>
+                <FilterTags filter={this.props.filter} onClick={this.removeFilter} />
+              </Menu.Item>
+
               <Menu.Item>
                 <SubMenu />
               </Menu.Item>
@@ -204,6 +225,10 @@ class MyInventory extends Component {
         <Filter
           onApply={this.handleFilterApply}
           onSave={this.handleFilterSave}
+          onClear={this.handleFilterClear}
+          searchProducts={this.props.searchProducts}
+          searchedProducts={this.props.searchedProducts}
+          searchedProductsLoading={this.props.searchedProductsLoading}
         />
       </>
     )
