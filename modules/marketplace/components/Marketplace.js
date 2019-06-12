@@ -8,8 +8,6 @@ import ProdexGrid from '~/components/table'
 import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 
-const PAGE_SIZE = 50
-
 export default class Marketplace extends Component {
   state = {
     columns: [
@@ -34,28 +32,13 @@ export default class Marketplace extends Component {
     open: false
   }
 
+  initData = () => {
+    const { datagrid } = this.props
+    datagrid.loadData()
+  }
+
   componentDidMount() {
-    this.getNextPage()
-  }
-
-  filterInventory = async (filter) => {
-    let productIds = []
-    if (filter.search) {
-      let foundProducts = await this.props.findProducts(filter.search)
-      foundProducts.value.data.reduce((filteredProducts, product) => {
-        if (product.casProduct.chemicalName === filter.search || product.casProduct.casNumber === filter.search)
-          productIds.push(product.id)
-      }, [])
-
-      if (productIds.length) {
-        filter = { ...filter, product: productIds }
-      }
-    }
-    this.props.getBroadcastedProductOffers(filter, PAGE_SIZE)
-  }
-
-  getNextPage = (pageNumber) => {
-    this.props.getBroadcastedProductOffers({}, PAGE_SIZE, pageNumber)
+    this.initData()
   }
 
   getRows = () => {
@@ -77,7 +60,9 @@ export default class Marketplace extends Component {
   }
 
   onFilterApply = (filter) => {
-    this.props.postBroadcastedDatagrid(filter)
+    const { datagrid } = this.props
+
+    datagrid.setFilter(filter)
   }
 
   onFilterSave = (filter) => {
@@ -99,11 +84,9 @@ export default class Marketplace extends Component {
   }
 
   render() {
-    let {
-      loading
-    } = this.props
-    let { columns, selectedRows } = this.state
-    let rows = this.getRows()
+    const { datagrid } = this.props
+    const { columns, selectedRows } = this.state
+    const rows = this.getRows()
 
     return (
       <>
@@ -148,12 +131,12 @@ export default class Marketplace extends Component {
         <div class="flex stretched" style={{ padding: '10px 32px' }}>
           <ProdexGrid
             tableName="marketplace_grid"
-            loading={loading}
-            columns={columns}
             rows={rows}
+            loading={datagrid.loading}
+            onScrollToEnd={datagrid.onScrollToEnd}
+
+            columns={columns}
             rowSelection
-            getNextPage={this.getNextPage}
-            pageSize={PAGE_SIZE}
             groupBy={['productNumber']}
             getChildGroups={rows =>
               _(rows)

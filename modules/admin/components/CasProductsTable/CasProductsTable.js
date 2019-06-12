@@ -1,5 +1,5 @@
-import React, {Component} from "react"
-import {connect} from "react-redux"
+import React, { Component } from "react"
+import { connect } from "react-redux"
 import { Popup, Label } from 'semantic-ui-react'
 import ProdexTable from '~/components/table'
 import {
@@ -13,14 +13,12 @@ import {
   getPackagingGroupsDataRequest,
   deleteCasProduct
 } from '../../actions'
-
-
-const PAGE_SIZE = 50
+import { withDatagrid } from '~/modules/datagrid'
 
 class CasProductsTable extends Component {
 
   getNextPage = (pageNumber) => {
-    const {getCasProductByFilter, casListDataRequest, filterCasIds} = this.props
+    const { getCasProductByFilter, casListDataRequest, filterCasIds } = this.props
 
     let filter = {}
     if (filterCasIds && filterCasIds.length) {
@@ -42,9 +40,29 @@ class CasProductsTable extends Component {
     })
   }
 
+  initialLoad = () => {
+    const { getCasProductByFilter, casListDataRequest, filterCasIds } = this.props
+
+    let filter = {}
+    if (filterCasIds && filterCasIds.length) {
+      filter = {
+        filters: [{
+          operator: "EQUALS",
+          path: "CasProduct.id",
+          values: filterCasIds.map(casId => {
+            return casId
+          })
+        }]
+      }
+    }
+
+    this.props.datagrid.setFilter(filter.filters)
+  }
+
   componentDidMount() {
-    this.getNextPage(0)
-    
+    // this.getNextPage(0)
+    this.initialLoad()
+
     this.props.getHazardClassesDataRequest()
     this.props.getPackagingGroupsDataRequest()
   }
@@ -72,15 +90,15 @@ class CasProductsTable extends Component {
     return (
       <React.Fragment>
         <ProdexTable
+          tableName='admin_cas_products'
           loading={loading}
           columns={columns}
-          pageSize={PAGE_SIZE}
-          getNextPage={this.getNextPage}
+          onScrollToEnd={this.props.datagrid.onScrollToEnd}
           rows={rows}
           rowActions={[
-            {text: 'Edit', callback: (row) => openPopup(row)},
-            {text: 'Edit Alternative Names', callback: (row) => openEditAltNamesCasPopup(row)},
-            {text: 'Delete', callback: (row) => deleteCasProduct(row.id)}
+            { text: 'Edit', callback: (row) => openPopup(row) },
+            { text: 'Edit Alternative Names', callback: (row) => openEditAltNamesCasPopup(row) },
+            { text: 'Delete', callback: (row) => deleteCasProduct(row.id) }
           ]}
         />
       </React.Fragment>
@@ -102,11 +120,11 @@ const mapDispatchToProps = {
 
 const transformHazardClasses = classes => (
   <Label.Group color='blue'>
-    {classes.map((b,i) => <Popup content={b.description} trigger={<Label size='tiny' key={i}>{b.classCode}</Label>} />)}
+    {classes.map((b, i) => <Popup content={b.description} trigger={<Label size='tiny' key={i}>{b.classCode}</Label>} />)}
   </Label.Group>
 )
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, { datagrid }) => {
   let cfg = state.admin.config[state.admin.currentTab]
   return {
     config: cfg,
@@ -114,8 +132,8 @@ const mapStateToProps = state => {
     filterValue: state.admin.filterValue,
     currentTab: state.admin.currentTab,
     casListDataRequest: state.admin.casListDataRequest,
-    loading: state.admin.loading,
-    rows: state.admin.casProductsRows.map(d => {
+    loading: datagrid.loading, // state.admin.loading,
+    rows: datagrid.rows.map(d => {
       return {
         id: d.id,
         casIndexName: d.casIndexName,
@@ -136,13 +154,18 @@ const mapStateToProps = state => {
       }
     }),
     // reloadFilter is used to reload CAS Product list after Edit / Add new CAS Product
-    reloadFilter: {props: {
+    reloadFilter: {
+      props: {
         currentTab: state.admin.currentTab,
-        casListDataRequest: state.admin.casListDataRequest},
-      value: state.admin.filterValue},
+        casListDataRequest: state.admin.casListDataRequest
+      },
+      value: state.admin.filterValue
+    },
     confirmMessage: state.admin.confirmMessage,
     deleteRowById: state.admin.deleteRowById,
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CasProductsTable)
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(CasProductsTable), { 
+  apiUrl: '/prodex/api/cas-products/datagrid' 
+})

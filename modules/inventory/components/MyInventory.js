@@ -3,13 +3,11 @@ import { Container, Menu, Header, Checkbox, Icon, Popup } from "semantic-ui-reac
 import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
-import ProdexGrid from '~/components/table'
+import ProdexTable from '~/components/table'
 import { Broadcast } from '~/modules/broadcast'
 import { Filter } from '~/modules/filter'
 import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
-
-const PAGE_SIZE = 50
 
 class MyInventory extends Component {
   state = {
@@ -31,12 +29,11 @@ class MyInventory extends Component {
   }
 
   componentDidMount() {
-    this.getNextPage()
+    const { datagrid } = this.props
+    
+    datagrid.loadData()
   }
 
-  getNextPage = (pageNumber) => {
-    this.props.getMyProductOffers({}, PAGE_SIZE, pageNumber)
-  }
 
   filterInventory = async (filter) => {
     let productIds = []
@@ -51,11 +48,10 @@ class MyInventory extends Component {
         filter = { ...filter, product: productIds }
       }
     }
-    this.props.getMyProductOffers(filter, PAGE_SIZE)
+    //this.props.getMyProductOffers(filter, PAGE_SIZE)
   }
 
-  getRows = () => {
-    const { rows } = this.props
+  getRows = (rows) => {
     let title = ''
 
     return rows.map(r => {
@@ -99,7 +95,9 @@ class MyInventory extends Component {
   }
 
   handleFilterApply = filter => {
-    this.props.postFilter(filter)
+    const { datagrid } = this.props
+
+    datagrid.setFilter(filter)
   }
 
   handleFilterSave = filter => {
@@ -122,12 +120,13 @@ class MyInventory extends Component {
 
   render() {
     const {
-      loading,
       openBroadcast,
-      intl
+      intl,
+      rows,
+      datagrid
     } = this.props
     const { columns, selectedRows } = this.state
-    const rows = this.getRows()
+
     let { formatMessage } = intl
 
     return (
@@ -152,6 +151,10 @@ class MyInventory extends Component {
 
             <Menu.Menu position="right">
               <Menu.Item>
+                <FilterTags />
+              </Menu.Item>
+
+              <Menu.Item>
                 <FilterTags filter={this.props.filter} onClick={this.removeFilter} />
               </Menu.Item>
 
@@ -163,14 +166,15 @@ class MyInventory extends Component {
         </Container>
 
         <div class="flex stretched" style={{ padding: '10px 32px' }}>
-          <ProdexGrid
+
+          <ProdexTable
             tableName="my_inventory_grid"
-            loading={loading}
+            rows={this.getRows(rows)}
+            onScrollToEnd={datagrid.onScrollToEnd}
+            loading={datagrid.loading}
+
             columns={columns}
-            rows={rows}
             rowSelection
-            getNextPage={this.getNextPage}
-            pageSize={PAGE_SIZE}
             groupBy={['productNumber']}
             getChildGroups={rows =>
               _(rows)
@@ -200,7 +204,10 @@ class MyInventory extends Component {
                     formatMessage({ id: 'confirm.deleteItem', defaultMessage: `Do you really want to remove ${row.chemicalName}?` },
                       { item: row.chemicalName }
                     )
-                  ).then(() => this.props.deleteProductOffer(row.id))
+                  ).then(() => {
+                    this.props.deleteProductOffer(row.id)
+                    datagrid.removeRow(row.id)
+                  })
                 }
               }
             ]}
@@ -211,12 +218,17 @@ class MyInventory extends Component {
               }
             }}
           />
+
+
         </div>
         <Broadcast />
         <Filter
           onApply={this.handleFilterApply}
           onSave={this.handleFilterSave}
           onClear={this.handleFilterClear}
+          searchProducts={this.props.searchProducts}
+          searchedProducts={this.props.searchedProducts}
+          searchedProductsLoading={this.props.searchedProductsLoading}
         />
       </>
     )

@@ -143,8 +143,6 @@ export default class AddCart extends Component {
 
     let canProceed = !warning && pricing
 
-
-
     return (
       <>
         <FlexContent basic>

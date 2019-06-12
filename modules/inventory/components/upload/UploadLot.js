@@ -13,7 +13,8 @@ import {withToastManager} from 'react-toast-notifications'
 
 class UploadLot extends Component {
     constructor(props) {
-        super(props);
+        super(props)
+        
         this.state = {
             files: []
         }
@@ -111,14 +112,14 @@ class UploadLot extends Component {
 
                         resolve()
                     }).catch(e => {
-                        onUploadFail(files[j].name);
+                        onUploadFail(files[j].name)
                         resolve()
                     })
                 }).catch(e => {
-                    onUploadFail(files[j].name);
+                    onUploadFail(files[j].name)
                     resolve()
-                });
-            }).then(loop.bind(null, j+1));
+                })
+            }).then(loop.bind(null, j+1))
         })(0)
     }
 
@@ -131,7 +132,7 @@ class UploadLot extends Component {
             <strong>File limit exceeded</strong>
             <div>You can't upload more than {filesLimit} documents</div>
           </div>
-        );
+        )
 
         return (
             <div className={"uploadLot " + (hasFile ? ' has-file' : '')}>
@@ -228,6 +229,6 @@ UploadLot.propTypes = {
     type: PropTypes.string,
     uploadClass: PropTypes.string,
     uploadedClass: PropTypes.string
-};
+}
 
 export default withToastManager(UploadLot)

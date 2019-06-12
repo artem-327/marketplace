@@ -8,9 +8,12 @@ import { filterNonEmptyAttributes } from "../../utils/functions"
 import SavedFilters from "./components/SavedFilters/SavedFilters"
 import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { checkToken } from "../../utils/auth"
 
 import { Segment, Accordion, Button, Grid, Sidebar, GridRow, GridColumn, Header, Input, Checkbox } from 'semantic-ui-react'
+
+import { operators } from './constants'
+import Axios from 'axios';
+
 
 const FlexContent = styled.div`
   flex: 1;
@@ -32,6 +35,38 @@ const GrayRow = styled(GridRow)`
   background-color: #ededed;
 `
 
+
+
+const datagridValues = {
+  search: { getFilter: (values) => ({ operator: operators.LIKE, path: 'ProductOffer.product.productName', values }) },
+  qntylb: { getFilter: (values) => ({ operator: operators.GREATER_THAN_OR_EQUAL_TO, path: 'ProductOffer.quantity', values }) },
+  qntyub: { getFilter: (values) => ({ operator: operators.LESS_THAN_OR_EQUAL_TO, path: 'ProductOffer.quantity', values }) },
+  prclb: { getFilter: (values) => ({ operator: operators.GREATER_THAN_OR_EQUAL_TO, path: 'ProductOffer.pricingPrice', values }) },
+  prcub: { getFilter: (values) => ({ operator: operators.LESS_THAN_OR_EQUAL_TO, path: 'ProductOffer.pricingPrice', values }) },
+}
+// ProductOffer.product.packagingType.id
+// { name: 'search',  },
+// { name: 'qntylb', filter: (values) => ({ operator: GREATER_THAN_OR_EQUAL_TO, path: 'ProductOffer.Quantity', values }) },
+// { name: 'qntyub', filter: (values) => ({ operator: LESS_THAN_OR_EQUAL_TO, path: 'ProductOffer.Quantity', values }) }
+
+
+
+
+
+// 
+
+
+
+
+
+
+
+
+
+
+
+
+
 class Filter extends Component {
 
   constructor(props) {
@@ -48,6 +83,45 @@ class Filter extends Component {
         notifications: false
       }
     }
+  }
+
+
+  handleSubmit(inputs) {
+    // let filter = Object.assign({}, inputs,
+    //   { pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
+    //   { cndt: Object.entries(inputs.cndt || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
+    //   { grade: Object.entries(inputs.grade || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
+    //   { frm: Object.entries(inputs.frm || {}).filter(([key, value]) => value === 'true').map(([key]) => key) })
+
+    let datagridFilter = {
+      filters: []
+    }
+
+    Object.keys(inputs)
+      .forEach((key, i) => {
+        if (inputs[key]) {
+          try {
+            let filter = datagridValues[key].getFilter(inputs[key])
+            if (!(filter.values instanceof Array)) filter.values = [filter.values]  // We need values to be an array
+
+            datagridFilter.filters.push(filter)
+          } catch (err) {
+            console.error(`Key: ${key} is not defined in datagridValues. \n ${err}`)
+          }
+        }
+      })
+
+    console.log({ datagridFilter })
+    Axios.post('/prodex/api/product-offers/own/datagrid', datagridFilter)
+      .then((response) => console.log('OK!', response.data))
+      .catch((err) => console.log('err', err))
+    // this.props.filterFunc(params)
+
+    // let filterTags = []
+    // for (let tag in params) filterTags.push({ name: tag, value: params[tag] })
+    // this.props.addFilterTag(filterTags)
+    // this.props.toggleFilter()
+    // this.switchFilter(true)
   }
 
 
@@ -118,6 +192,7 @@ class Filter extends Component {
 
 
   getContent = () => {
+    console.log('filterData', this.props.filterData)
     return (
       <div>
         <FilterGroup className="filterGroup"
@@ -211,6 +286,7 @@ class Filter extends Component {
           isVisible={!!this.props.chemicalName}
           data={this.props.filterData}
           isOpen={this.props.filterGroupStatus.chemName}
+          searchedProducts={this.props.searchedProducts}
           onOpen={(value) => { this.props.toggleFilterGroup('chemName', value) }}
           inputs={[
             {
@@ -377,6 +453,7 @@ class Filter extends Component {
           inputs={[
             {
               label: 'From',
+              something: 'spicy',
               model: '.agelb',
               type: 'date',
             },
@@ -412,26 +489,8 @@ class Filter extends Component {
     )
   }
 
-  handleSubmit(inputs) {
-    if (checkToken(this.props)) return
-
-    let filter = Object.assign({}, inputs,
-      { pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
-      { cndt: Object.entries(inputs.cndt || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
-      { grade: Object.entries(inputs.grade || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
-      { frm: Object.entries(inputs.frm || {}).filter(([key, value]) => value === 'true').map(([key]) => key) })
-
-    let params = filterNonEmptyAttributes(filter)
-    this.props.filterFunc(params)
-    let filterTags = []
-    for (let tag in params) filterTags.push({ name: tag, value: params[tag] })
-    this.props.addFilterTag(filterTags)
-    this.props.toggleFilter()
-    this.switchFilter(true)
-  }
 
   handleReset(e) {
-    if (checkToken(this.props)) return
     e.preventDefault()
     this.props.resetForm('forms.filter')
     this.props.filterFunc({})
@@ -668,6 +727,7 @@ class Filter extends Component {
               fillFilter={(inputs) => this.props.fillFilter(inputs)}
               filterFunc={(inputs) => this.handleSubmit(inputs)}
               saveFilters={this.props.saveFilters}
+              getSavedFilters={this.props.getSavedFilters}
             />
           }
         </FlexContent>

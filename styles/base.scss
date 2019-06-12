@@ -381,11 +381,13 @@ div.inventory {
   overflow-y: auto;
   padding-left: 2.2857143rem;
   padding-right: 2.2857143rem;
+  
+  
 
   .ui.secondary.pointing.menu:not(.vertical) {
     border-bottom: 1px solid #d8d8d8;
     box-shadow: 0 0 0 0 transparent;
-
+    padding: 0 57px;
     .item {
       margin-bottom: 0;
     }

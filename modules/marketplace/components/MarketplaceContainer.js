@@ -5,11 +5,14 @@ import { sidebarChanged } from '~/src/modules/cart'
 import { getProductOffer } from '~/modules/purchase-order/actions'
 import moment from "moment/moment"
 import { getLocationString } from '~/src/utils/functions'
+import { withDatagrid } from '~/modules/datagrid'
 
-function mapStateToProps(store) {
+function mapStateToProps(store, {datagrid}) {
   return {
     ...store.marketplace,
-    rows: store.marketplace.broadcastedProductOffers.map(po => {
+    // rows: store.marketplace.broadcastedProductOffers.map(po => {
+    ...datagrid,
+    rows: datagrid.rows.map(po => {
       const qtyPart = `${po.product.packagingUnit ? po.product.packagingUnit.nameAbbreviation : ''}`
 
       return {
@@ -38,4 +41,9 @@ function mapStateToProps(store) {
   }
 }
 
-export default connect(mapStateToProps, {...Actions, sidebarChanged, getProductOffer})(Marketplace)
+export default withDatagrid(
+  connect(mapStateToProps, {...Actions, sidebarChanged, getProductOffer})(Marketplace), 
+  {
+    apiUrl: '/prodex/api/product-offers/broadcasted/datagrid/'
+  }
+)

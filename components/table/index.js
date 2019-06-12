@@ -8,10 +8,6 @@ import _ from 'lodash'
 import GroupCell from './GroupCell'
 
 import {
-  Template, TemplateConnector
-} from '@devexpress/dx-react-core'
-
-import {
   SearchState,
   IntegratedFiltering,
   IntegratedSelection,
@@ -150,7 +146,7 @@ export default class _Table extends Component {
     sorting: true,
     groupBy: [],
     onSelectionChange: () => { },
-    getNextPage: () => { }
+    onScrollToEnd: () => { },
   }
 
   constructor(props) {
@@ -165,26 +161,6 @@ export default class _Table extends Component {
         widths: this.getColumnsExtension(),
         order: this.getColumns().map(c => c.name)
       },
-      lastPageNumber: 0,
-      allLoaded: false
-    }
-  }
-
-  handleScroll = ({ target }) => {
-    const { getNextPage } = this.props
-    const { allLoaded, lastPageNumber } = this.state
-
-    if (target.offsetHeight + target.scrollTop === target.scrollHeight) {
-      if (!allLoaded) {
-        this.setState({ lastPageNumber: lastPageNumber + 1 })
-        getNextPage(lastPageNumber + 1)
-      }
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.rows.length < this.props.pageSize * this.state.lastPageNumber) {
-      this.setState({ allLoaded: true })
     }
   }
 
@@ -197,7 +173,17 @@ export default class _Table extends Component {
 
   componentDidUpdate(prevProps) {
     // expand groups after data was loaded when grouping is set
-    prevProps.loading != this.props.loading && prevProps.loading && this.props.groupBy.length > 0 && this.expandGroups()
+    if (prevProps.rows !== this.props.rows) this.props.groupBy.length && this.expandGroups()
+    // prevProps.loading != this.props.loading && prevProps.loading && this.props.groupBy.length > 0 && this.expandGroups()
+  }
+
+  handleScroll = ({ target }) => {
+    const { onScrollToEnd } = this.props
+    
+    if (target.offsetHeight + target.scrollTop === target.scrollHeight) {
+      
+      onScrollToEnd()
+    }
   }
 
   expandGroups = () => {
@@ -214,6 +200,11 @@ export default class _Table extends Component {
     this.setState({ expandedGroups })
   }
 
+  handleSelectionChange = (selection) => {
+    const { onSelectionChange } = this.props
+
+    onSelectionChange(selection)
+  }
 
   getColumns = () => {
     const { rowActions, columns } = this.props
@@ -264,6 +255,7 @@ export default class _Table extends Component {
         })
     }
   }
+
   handleColumnsSettings = (data) => {
     const { tableName } = this.props
 
@@ -275,12 +267,6 @@ export default class _Table extends Component {
     }), () => {
       tableName && (localStorage[tableName] = JSON.stringify(this.state.columnsSettings))
     })
-  }
-
-  rowAction = (row) => {
-    const {rowActions} = this.props
-    if (rowActions)
-      rowActions[0].callback(row)
   }
 
   render() {
@@ -360,7 +346,7 @@ export default class _Table extends Component {
 
             {columnReordering && <DragDropProvider />}
 
-            {rowSelection && <SelectionState onSelectionChange={onSelectionChange} />}
+            {rowSelection && <SelectionState onSelectionChange={this.handleSelectionChange} />}
             {rowSelection && <IntegratedSelection />}
 
             <SearchState value={filterValue} />

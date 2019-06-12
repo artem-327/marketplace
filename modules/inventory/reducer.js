@@ -1,5 +1,7 @@
 import * as AT from './action-types'
 
+import { uniqueArrayByKey } from '~/utils/functions'
+
 export const initialState = {
   fileIds: [],
   listDocumentTypes: [],
@@ -190,28 +192,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.INVENTORY_GET_MY_PRODUCT_OFFERS_PENDING: {
-      return {
-        ...state,
-        loading: true
-      }
-    }
-
-    case AT.INVENTORY_GET_MY_PRODUCT_OFFERS_FULFILLED: {
-      let { data, pageNumber } = action.payload
-      return {
-        ...state,
-        loading: false,
-        myProductOffers: pageNumber === 0 ? [
-          ...data
-        ] : [
-            ...state.myProductOffers,
-            ...(pageNumber > state.myProductOffersPageLoaded ? data : [])
-          ],
-        myProductOffersPageLoaded: pageNumber
-      }
-    }
-
     case AT.INVENTORY_DELETE_PRODUCT_OFFER_PENDING: {
       return {
         ...state,
@@ -303,15 +283,15 @@ export default function reducer(state = initialState, action) {
     case AT.INVENTORY_SEARCH_PRODUCTS_PENDING: {
       return {
         ...state,
-        searchedProducts: [],
         searchedProductsLoading: true
       }
     }
 
     case AT.INVENTORY_SEARCH_PRODUCTS_FULFILLED: {
+      console.log('searched', state.searchedProducts)
       return {
         ...state,
-        searchedProducts: action.payload.data,
+        searchedProducts: uniqueArrayByKey(action.payload.data.concat(state.searchedProducts), 'id'),
         searchedProductsLoading: false
       }
     }

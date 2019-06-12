@@ -8,11 +8,6 @@ import * as val from 'yup'
 import { DateInput } from '~/components/custom-formik'
 import UploadLot from './upload/UploadLot'
 import { FieldArray } from "formik"
-import ProdexGrid from '~/components/table'
-
-// debug purposes only
-import JSONPretty from 'react-json-pretty'
-
 
 const TopDivider = styled(Divider)`
   padding-bottom: 20px;
@@ -242,12 +237,14 @@ class AddInventoryForm extends Component {
       activeIndex
     } = this.state
 
-    const {toastManager} = this.props
+    const { toastManager } = this.props
 
     return (
       <Grid className='product-details' centered>
         <CustomPaddedColumn>
-          <Segment fluid attached={values.product ? false : 'top'} style={{ padding: '1.5em' }}>
+          <Segment fluid 
+            attached={values.product ? false : 'top'} 
+            style={{ padding: '1.5em' }}>
             <Accordion>
               <Accordion.Title active={activeIndex === 0} index={0} onClick={this.accClick}>
                 <Header as='h4'>
@@ -319,35 +316,35 @@ class AddInventoryForm extends Component {
               <GridRow>
                 <ResponsiveColumn computer={6} mobile={16}>
                   <Button fluid size='big' floated='left' onClick={() => this.goToList()}>
-                    <FormattedMessage id='addInventory.cancel' defaultMessage='Cancel'/></Button>
+                    <FormattedMessage id='addInventory.cancel' defaultMessage='Cancel' /></Button>
                 </ResponsiveColumn>
                 <GridColumn computer={10} mobile={16}>
                   <Button.Submit fluid
-                                 size='big'
-                                 floated='right'
-                                 onClick={(e, data={data, validateForm}) => {
-                                   validateForm()
-                                     .then(r => {
-                                       // stop when errors found
-                                       if (Object.keys(r).length) {
-                                         toastManager.add((
-                                           <div>
-                                             <strong>Form is invalid</strong>
-                                             <div>There are errors on current tab. Please, fix them before submit.</div>
-                                           </div>
-                                         ), {
-                                           appearance: 'error',
-                                           autoDismiss: true
-                                         })
-                                       }
-                                     }).catch(e => {
-                                       console.log('CATCH', e)
-                                     })
-                                 }}
-                                 style={{ paddingLeft: '1em', paddingRight: '1em' }}
+                    size='big'
+                    floated='right'
+                    onClick={(e, data = { data, validateForm }) => {
+                      validateForm()
+                        .then(r => {
+                          // stop when errors found
+                          if (Object.keys(r).length) {
+                            toastManager.add((
+                              <div>
+                                <strong>Form is invalid</strong>
+                                <div>There are errors on current tab. Please, fix them before submit.</div>
+                              </div>
+                            ), {
+                                appearance: 'error',
+                                autoDismiss: true
+                              })
+                          }
+                        }).catch(e => {
+                          console.log('CATCH', e)
+                        })
+                    }}
+                    style={{ paddingLeft: '1em', paddingRight: '1em' }}
                   >
                     <FormattedMessage id={this.props.edit ? 'addInventory.editButton' : 'addInventory.addButton'}
-                                      defaultMessage={this.props.edit ? 'Save Product Offer' : 'Add Product Offer'} />
+                      defaultMessage={this.props.edit ? 'Save Product Offer' : 'Add Product Offer'} />
                   </Button.Submit>
                 </GridColumn>
               </GridRow>
@@ -407,8 +404,8 @@ class AddInventoryForm extends Component {
   }
 
   componentDidMount = () => {
-    const {initProductOfferEdit, edit} = this.props
-    
+    const { initProductOfferEdit, edit } = this.props
+
     initProductOfferEdit(edit)
   }
 
@@ -447,12 +444,12 @@ class AddInventoryForm extends Component {
             <FormattedMessage id='global.loading' defaultMessage='Loading' />
           </Loader>
         </Dimmer>
-        <div className='header-top' style={{padding: '0 32px'}}>
+        <div className='header-top' style={{ padding: '0 32px' }}>
           <Menu secondary>
             <Menu.Item header>
               <Header as='h1' size='medium'>
                 <FormattedMessage id={this.props.edit ? 'addInventory.editInventory' : 'addInventory.addInventory'}
-                                  defaultMessage={this.props.edit ? 'EDIT INVENTORY' : 'ADD INVENTORY'} />
+                  defaultMessage={this.props.edit ? 'EDIT INVENTORY' : 'ADD INVENTORY'} />
               </Header>
             </Menu.Item>
           </Menu>
@@ -472,20 +469,20 @@ class AddInventoryForm extends Component {
                 actions.resetForm()
               })
           }}
-          className='inventory flex'
-          style={{padding: '20px'}}
+          className='flex stretched'
+          style={{ padding: '20px' }}
         >
           {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => (
             <>
               <Modal open={this.props.poCreated} closeOnDimmerClick={false} size='tiny'>
                 <Modal.Header>
                   <FormattedMessage id={this.props.edit ? 'addInventory.editDone' : 'addInventory.addDone'}
-                                    defaultMessage={this.props.edit ? 'Product Offer was edited' : 'Product Offer was created'} />
+                    defaultMessage={this.props.edit ? 'Product Offer was edited' : 'Product Offer was created'} />
                 </Modal.Header>
                 {this.props.edit ? '' : (
                   <Modal.Content>
                     <FormattedMessage id={'addInventory.whatNow'}
-                                      defaultMessage={'What now?'} />
+                      defaultMessage={'What now?'} />
                   </Modal.Content>
                 )}
                 <Modal.Actions>
@@ -495,423 +492,427 @@ class AddInventoryForm extends Component {
                   <Button primary icon='checkmark' labelPosition='right' content='Go to My Inventory' onClick={this.goToList} />
                 </Modal.Actions>
               </Modal>
-              <div className="flex stretched" style={{padding: '0 32px'}}>
-              <Tab className='inventory flex stretched' menu={{ secondary: true, pointing: true }} renderActiveOnly={false} activeIndex={this.state.activeTab} style={{height: '100%'}} panes={[
-                {
-                  menuItem: (
-                    <Menu.Item key='productOffer' onClick={() => {
-                      validateForm()
-                        .then(r => {
-                          // stop when errors found
-                          if (Object.keys(r).length) {
-                            submitForm() // show errors
-                            return false
-                          }
+              <div className="flex stretched">
+                <Tab className='inventory tab-menu flex stretched' menu={{ secondary: true, pointing: true }} renderActiveOnly={false} activeIndex={this.state.activeTab} panes={[
+                  {
+                    menuItem: (
+                      <Menu.Item key='productOffer' onClick={() => {
+                        validateForm()
+                          .then(r => {
+                            // stop when errors found
+                            if (Object.keys(r).length) {
+                              submitForm() // show errors
+                              return false
+                            }
 
-                          // if validation is correct - switch tabs
-                          this.switchTab(0, values, setFieldValue)
-                        })
-                        .catch(e => {
-                          console.log('CATCH', e)
-                        })
-                    }}>
-                      PRODUCT OFFER
+                            // if validation is correct - switch tabs
+                            this.switchTab(0, values, setFieldValue)
+                          })
+                          .catch(e => {
+                            console.log('CATCH', e)
+                          })
+                      }}>
+                        PRODUCT OFFER
                     </Menu.Item>
-                  ),
-                  pane: (
-                    <Tab.Pane style={{height: '1px', flexGrow: '10', flexShrink: '10'}}>
-                      <Grid divided style={{ marginTop: '2rem' }}>
-                        <Grid.Column width={5}>
-                          <Header as='h3'>What product do you want to list?</Header>
-                          <FormGroup>
-                            <FormField width={13}>
-                              <Dropdown
-                                label="Product search"
-                                name="product"
-                                options={searchedProducts}
-                                inputProps={{
-                                  style: { width: '300px' },
-                                  size: 'large',
-                                  minCharacters: 3,
-                                  icon: "search",
-                                  search: true,
+                    ),
+                    pane: (
+                      <Tab.Pane style={{ padding: '0 32px' }}>
+                        <Grid divided style={{ marginTop: '2rem' }}>
+                          <Grid.Column width={5}>
+                            <Header as='h3'>What product do you want to list?</Header>
+                            <FormGroup>
+                              <FormField width={13}>
+                                <Dropdown
+                                  label="Product search"
+                                  name="product"
+                                  options={searchedProducts}
+                                  inputProps={{
+                                    style: { width: '300px' },
+                                    size: 'large',
+                                    minCharacters: 3,
+                                    icon: "search",
+                                    search: true,
+                                    selection: true,
+                                    clearable: true,
+                                    loading: searchedProductsLoading,
+                                    onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchProducts(searchQuery)
+                                  }}
+                                />
+                              </FormField>
+                            </FormGroup>
+
+                            <Header as='h3'>Is this product in stock?</Header>
+                            <FormGroup inline>
+                              <Radio label="No" value={false} name="inStock" />
+                              <Radio label="Yes" value={true} name="inStock" />
+                            </FormGroup>
+                            <FormGroup>
+                              <FormField width={4}>
+                                <Dropdown label="Processing time" name="processingTimeDays" options={this.getProcessingTimes(14)} />
+                              </FormField>
+                            </FormGroup>
+
+                            <Header as='h3'>Does this product expire?</Header>
+                            <FormGroup inline>
+                              <Radio label="No" value={false} name="doesExpire" />
+                              <Radio label="Yes" value={true} name="doesExpire" />
+                            </FormGroup>
+                            <FormGroup>
+                              <FormField width={5}>
+                                <DateInput inputProps={{ disabled: !values.doesExpire }} label="Expiration date" name="validityDate" />
+                              </FormField>
+                            </FormGroup>
+
+                            <Header as='h3'>Where will this product ship from?</Header>
+                            <FormGroup>
+                              <FormField width={10}>
+                                <Dropdown label="Warehouse" name="warehouse" options={warehousesList} inputProps={{
                                   selection: true,
-                                  clearable: true,
-                                  loading: searchedProductsLoading,
-                                  onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchProducts(searchQuery)
-                                }}
-                              />
-                            </FormField>
-                          </FormGroup>
+                                  value: 0
+                                }} />
+                              </FormField>
+                            </FormGroup>
 
-                          <Header as='h3'>Is this product in stock?</Header>
-                          <FormGroup inline>
-                            <Radio label="No" value={false} name="inStock" />
-                            <Radio label="Yes" value={true} name="inStock" />
-                          </FormGroup>
-                          <FormGroup>
-                            <FormField width={4}>
-                              <Dropdown label="Processing time" name="processingTimeDays" options={this.getProcessingTimes(14)} />
-                            </FormField>
-                          </FormGroup>
+                            <Header as='h3'>How many packages are available?</Header>
+                            <FormGroup>
+                              <FormField width={4}>
+                                <Input label="Total Packages" inputProps={{ type: 'number' }} name="pkgAmount" />
+                              </FormField>
+                            </FormGroup>
 
-                          <Header as='h3'>Does this product expire?</Header>
-                          <FormGroup inline>
-                            <Radio label="No" value={false} name="doesExpire" />
-                            <Radio label="Yes" value={true} name="doesExpire" />
-                          </FormGroup>
-                          <FormGroup>
-                            <FormField width={5}>
-                              <DateInput inputProps={{ disabled: !values.doesExpire }} label="Expiration date" name="validityDate" />
-                            </FormField>
-                          </FormGroup>
+                          </Grid.Column>
+                          <GridColumn width={6}>
+                            <Grid centered>
+                              <GridColumn width={12}>
 
-                          <Header as='h3'>Where will this product ship from?</Header>
-                          <FormGroup>
-                            <FormField width={10}>
-                              <Dropdown label="Warehouse" name="warehouse" options={warehousesList} inputProps={{
-                                selection: true,
-                                value: 0
-                              }} />
-                            </FormField>
-                          </FormGroup>
-
-                          <Header as='h3'>How many packages are available?</Header>
-                          <FormGroup>
-                            <FormField width={4}>
-                              <Input label="Total Packages" inputProps={{ type: 'number'}} name="pkgAmount" />
-                            </FormField>
-                          </FormGroup>
-
-                        </Grid.Column>
-                        <GridColumn width={6}>
-                          <Grid centered>
-                            <GridColumn width={12}>
-
-                              <Header as="h3">Is there any order minimum requirement?</Header>
-                              <FormGroup>
-                                <Radio label="No" value={false} name="minimumRequirement" inputProps={{ onClick: () => {
-                                  setFieldValue('minimum', 1)
-                                  setFieldValue('pricingTiers[0].quantityFrom', 1)
-                                }}} />
-                                <Radio label="Yes" value={true} name="minimumRequirement" />
-                              </FormGroup>
-                              <FormGroup>
-                                <FormField width={5}>
-                                  <Input label="Minimum OQ" name="minimum" inputProps={{ type: 'number', onChange: (e, data) => {
-                                    if (data.value > 1) {
-                                      setFieldValue('minimumRequirement', true)
-                                      setFieldValue('pricingTiers[0].quantityFrom', data.value)
+                                <Header as="h3">Is there any order minimum requirement?</Header>
+                                <FormGroup>
+                                  <Radio label="No" value={false} name="minimumRequirement" inputProps={{
+                                    onClick: () => {
+                                      setFieldValue('minimum', 1)
+                                      setFieldValue('pricingTiers[0].quantityFrom', 1)
                                     }
-                                  }}} />
-                                </FormField>
-                                <FormField width={5}>
-                                  <Input label="Splits" name="splits" inputProps={{ type: 'number' }} />
-                                </FormField>
-                              </FormGroup>
+                                  }} />
+                                  <Radio label="Yes" value={true} name="minimumRequirement" />
+                                </FormGroup>
+                                <FormGroup>
+                                  <FormField width={5}>
+                                    <Input label="Minimum OQ" name="minimum" inputProps={{
+                                      type: 'number', onChange: (e, data) => {
+                                        if (data.value > 1) {
+                                          setFieldValue('minimumRequirement', true)
+                                          setFieldValue('pricingTiers[0].quantityFrom', data.value)
+                                        }
+                                      }
+                                    }} />
+                                  </FormField>
+                                  <FormField width={5}>
+                                    <Input label="Splits" name="splits" inputProps={{ type: 'number' }} />
+                                  </FormField>
+                                </FormGroup>
 
-                              <Header as='h3'>How many price tiers would you like to offer?</Header>
-                              <FormGroup>
-                                <FormField width={5}>
+                                <Header as='h3'>How many price tiers would you like to offer?</Header>
+                                <FormGroup>
+                                  <FormField width={5}>
+                                    <Dropdown
+                                      label="Price tiers"
+                                      name="priceTiers"
+                                      options={this.getPriceTiers(10)}
+                                      inputProps={{
+                                        onChange: (e, { value }) => setFieldValue(
+                                          "pricingTiers",
+                                          [
+                                            ...values.pricingTiers.slice(0, value),
+                                            ...[...new Array((value - values.priceTiers) > 0 ? value - values.priceTiers : 0)].map(t => ({ price: '0', quantityFrom: '0' }))
+                                          ]
+                                        )
+                                      }}
+                                    />
+                                  </FormField>
+                                </FormGroup>
+
+                                <Header as='h3' style={{ marginBottom: '2rem' }}>What is the FOB price for each tier?</Header>
+                                <Grid className='tier-prices'>
+                                  {this.renderPricingTiers(values.priceTiers)}
+                                </Grid>
+
+                                <Divider style={{ marginTop: '3rem', marginBottom: '3rem' }} />
+
+                                <Header as='h3'>Upload Spec Sheet</Header>
+                                <UploadLot {...this.props}
+                                  attachments={values.attachments}
+                                  name='attachments'
+                                  type={2}
+                                  fileMaxSize={20}
+                                  onChange={(files) => setFieldValue(
+                                    `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
+                                    {
+                                      id: files.id,
+                                      name: files.name
+                                    }
+                                  )}
+                                  emptyContent={(
+                                    <label>
+                                      <FormattedMessage
+                                        id='addInventory.dragDrop'
+                                        defaultMessage={'Drag and drop ' + this.props.type + ' file here'}
+                                        values={{ docType: this.props.type }}
+                                      />
+                                      <br />
+                                      <FormattedMessage
+                                        id='addInventory.dragDropOr'
+                                        defaultMessage={'or select from computer'}
+                                      />
+                                    </label>
+                                  )}
+                                  uploadedContent={(
+                                    <label>
+                                      <FormattedMessage
+                                        id='addInventory.dragDrop'
+                                        defaultMessage={'Drag and drop ' + this.props.type + ' file here'}
+                                        values={{ docType: this.props.type }}
+                                      />
+                                      <br />
+                                      <FormattedMessage
+                                        id='addInventory.dragDropOr'
+                                        defaultMessage={'or select from computer'}
+                                      />
+                                    </label>
+                                  )}
+                                />
+
+                              </GridColumn>
+                            </Grid>
+                          </GridColumn>
+
+                          <GridColumn width={5}>
+                            {this.renderProductDetails(values, validateForm)}
+                          </GridColumn>
+                        </Grid>
+                      </Tab.Pane>
+                    )
+                  },
+                  {
+                    menuItem: (
+                      <Menu.Item key='productOptional' onClick={() => {
+                        validateForm()
+                          .then(r => {
+                            // stop when errors found
+                            if (Object.keys(r).length) {
+                              submitForm() // show errors
+                              return false
+                            }
+
+                            // if validation is correct - switch tabs
+                            this.switchTab(1, values, setFieldValue)
+                          })
+                          .catch(e => {
+                            console.log('CATCH', e)
+                          })
+                      }}>
+                        OPTIONAL PRODUCT INFO
+                    </Menu.Item>
+                    ),
+                    pane: (
+                      <Tab.Pane style={{ height: '1px', flexGrow: '10', flexShrink: '10' }}>
+                        <Grid style={{ marginTop: '2rem' }}>
+                          <GridColumn width={11}>
+                            <Grid columns={3} centered>
+                              <GridColumn width={5} floated='left'>
+                                <FormField width={16}>
                                   <Dropdown
-                                    label="Price tiers"
-                                    name="priceTiers"
-                                    options={this.getPriceTiers(10)}
+                                    label="Origin"
+                                    name="origin"
+                                    options={searchedOrigins}
                                     inputProps={{
-                                      onChange: (e, { value }) => setFieldValue(
-                                        "pricingTiers",
-                                        [
-                                          ...values.pricingTiers.slice(0, value),
-                                          ...[...new Array((value - values.priceTiers) > 0 ? value - values.priceTiers : 0)].map(t => ({price: '0', quantityFrom: '0'}))
-                                        ]
-                                      )
+                                      size: 'large',
+                                      minCharacters: 3,
+                                      icon: "search",
+                                      search: true,
+                                      selection: true,
+                                      clearable: true,
+                                      loading: searchedOriginsLoading,
+                                      onChange: (e, v) => { console.log(v) },
+                                      onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchOrigins(searchQuery)
                                     }}
                                   />
                                 </FormField>
-                              </FormGroup>
-
-                              <Header as='h3' style={{ marginBottom: '2rem' }}>What is the FOB price for each tier?</Header>
-                              <Grid className='tier-prices'>
-                                {this.renderPricingTiers(values.priceTiers)}
-                              </Grid>
-
-                              <Divider style={{ marginTop: '3rem', marginBottom: '3rem' }}/>
-
-                              <Header as='h3'>Upload Spec Sheet</Header>
-                              <UploadLot {...this.props}
-                                         attachments={values.attachments}
-                                         name='attachments'
-                                         type={2}
-                                         fileMaxSize={20}
-                                         onChange={(files) => setFieldValue(
-                                           `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
-                                           {
-                                             id: files.id,
-                                             name: files.name
-                                           }
-                                         )}
-                                         emptyContent={(
-                                           <label>
-                                             <FormattedMessage
-                                               id='addInventory.dragDrop'
-                                               defaultMessage={'Drag and drop ' + this.props.type + ' file here'}
-                                               values={{docType: this.props.type}}
-                                             />
-                                             <br />
-                                             <FormattedMessage
-                                               id='addInventory.dragDropOr'
-                                               defaultMessage={'or select from computer'}
-                                             />
-                                           </label>
-                                         )}
-                                         uploadedContent={(
-                                           <label>
-                                             <FormattedMessage
-                                               id='addInventory.dragDrop'
-                                               defaultMessage={'Drag and drop ' + this.props.type + ' file here'}
-                                               values={{docType: this.props.type}}
-                                             />
-                                             <br />
-                                             <FormattedMessage
-                                               id='addInventory.dragDropOr'
-                                               defaultMessage={'or select from computer'}
-                                             />
-                                           </label>
-                                         )}
-                              />
-
-                            </GridColumn>
-                          </Grid>
-                        </GridColumn>
-
-                        <GridColumn width={5}>
-                          {this.renderProductDetails(values, validateForm)}
-                        </GridColumn>
-                      </Grid>
-                    </Tab.Pane>
-                  )
-                },
-                {
-                  menuItem: (
-                    <Menu.Item key='productOptional' onClick={() => {
-                      validateForm()
-                        .then(r => {
-                          // stop when errors found
-                          if (Object.keys(r).length) {
-                            submitForm() // show errors
-                            return false
-                          }
-
-                          // if validation is correct - switch tabs
-                          this.switchTab(1, values, setFieldValue)
-                        })
-                        .catch(e => {
-                          console.log('CATCH', e)
-                        })
-                    }}>
-                      OPTIONAL PRODUCT INFO
-                    </Menu.Item>
-                  ),
-                  pane: (
-                    <Tab.Pane style={{height: '1px', flexGrow: '10', flexShrink: '10'}}>
-                      <Grid style={{marginTop: '2rem'}}>
-                        <GridColumn width={11}>
-                          <Grid columns={3} centered>
-                            <GridColumn width={5} floated='left'>
-                              <FormField width={16}>
-                                <Dropdown
-                                  label="Origin"
-                                  name="origin"
-                                  options={searchedOrigins}
-                                  inputProps={{
-                                    size: 'large',
-                                    minCharacters: 3,
-                                    icon: "search",
-                                    search: true,
-                                    selection: true,
-                                    clearable: true,
-                                    loading: searchedOriginsLoading,
-                                    onChange: (e, v) => { console.log(v) },
-                                    onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchOrigins(searchQuery)
-                                  }}
-                                />
-                              </FormField>
-                              <FormField width={16}>
-                                <Dropdown
-                                  label="Manufacturer"
-                                  name="manufacturer"
-                                  options={searchedManufacturers}
-                                  inputProps={{
-                                    size: 'large',
-                                    minCharacters: 3,
-                                    icon: "search",
-                                    search: true,
-                                    selection: true,
-                                    clearable: true,
-                                    loading: searchedManufacturersLoading,
-                                    onChange: (e, v) => { console.log(v) },
-                                    onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchManufacturers(searchQuery)
-                                  }}
-                                />
-                              </FormField>
-                              <FormField width={16}>
-                                <Input label="Trade Name" name="tradeName" inputProps={{ type: 'text' }} />
-                              </FormField>
-                            </GridColumn>
-                            <GridColumn width={5}>
-                              <FormField width={16}>
-                                <Dropdown label="Form" name="productForm" options={listForms} />
-                              </FormField>
-                              <FormGroup>
-                                <FormField width={8}>
-                                  <Dropdown label="Condition" name="productCondition" options={listConditions} />
+                                <FormField width={16}>
+                                  <Dropdown
+                                    label="Manufacturer"
+                                    name="manufacturer"
+                                    options={searchedManufacturers}
+                                    inputProps={{
+                                      size: 'large',
+                                      minCharacters: 3,
+                                      icon: "search",
+                                      search: true,
+                                      selection: true,
+                                      clearable: true,
+                                      loading: searchedManufacturersLoading,
+                                      onChange: (e, v) => { console.log(v) },
+                                      onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchManufacturers(searchQuery)
+                                    }}
+                                  />
                                 </FormField>
-                                <FormField width={8}>
-                                  <Dropdown label="Grade" name="productGrade" options={listGrades} />
+                                <FormField width={16}>
+                                  <Input label="Trade Name" name="tradeName" inputProps={{ type: 'text' }} />
                                 </FormField>
-                              </FormGroup>
-                              <FormGroup>
-                                <FormField width={8}>
-                                  <Input name={`assayMin`} label="Assay Min %" inputProps={{ type: 'number', step: '0.001', value: null }} />
+                              </GridColumn>
+                              <GridColumn width={5}>
+                                <FormField width={16}>
+                                  <Dropdown label="Form" name="productForm" options={listForms} />
                                 </FormField>
-                                <FormField width={8}>
-                                  <Input name={`assayMax`} label="Assay Max %" inputProps={{ type: 'number', step: '0.001', value: null }} />
-                                </FormField>
-                              </FormGroup>
-                            </GridColumn>
-                            <GridColumn width={5} floated='right'>
-                              <FormField width={16}>
-                                <TextArea name='externalNotes' label='External Notes' />
-                              </FormField>
-                              <FormField width={16}>
-                                <TextArea name='internalNotes' label='Internal Notes' />
-                              </FormField>
-                            </GridColumn>
-                          </Grid>
-
-                          <Divider />
-
-                          <Header as='h3'>Does this Product Offer consist of multiple lots?</Header>
-
-                          <FieldArray
-                            name="lots"
-                            render={arrayHelpers => (
-                              <>
-                                <Message attached='top' className='header-table-fields'>
-                                  <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{marginTop: '-0.5em'}} onClick={() => arrayHelpers.push({lotNumber: null, pkgAmount: null, manufacturedDate: '', expirationDate: ''})} />
-                                  Lot Details
-                                </Message>
-                                <Table attached='bottom' className='table-fields'>
-                                  <Table.Header>
-                                    <Table.Row>
-                                      <Popup content={'What is the lot number?'} trigger={<TableHeaderCell>Lot #</TableHeaderCell>} />
-                                      <Popup content={'How many packages in this lot?'} trigger={<TableHeaderCell>Total</TableHeaderCell>} />
-                                      <TableHeaderCell>Available</TableHeaderCell>
-                                      <TableHeaderCell>Allocated</TableHeaderCell>
-                                      <Popup content={'What is the MFG?'} trigger={<TableHeaderCell>MFG Date</TableHeaderCell>} />
-                                      <Popup content={'What is the expiration?'} trigger={<TableHeaderCell>Expiration Date</TableHeaderCell>} />
-                                      <TableHeaderCell>C of A</TableHeaderCell>
-                                      <TableHeaderCell>&nbsp;</TableHeaderCell>
-                                    </Table.Row>
-                                  </Table.Header>
-                                  <Table.Body>
-                                    {values.lots && values.lots.length ? values.lots.map((lot, index) => (
-                                      <Table.Row key={index}>
-                                        <TableCell><Input name={`lots[${index}].lotNumber`} inputProps={{onClick: () => setFieldValue('touchedLot', true)}} /></TableCell>
-                                        <TableCell><Input name={`lots[${index}].pkgAmount`} inputProps={{
-                                          onClick: () => setFieldValue('touchedLot', true),
-                                          onChange: (e, data) => this.modifyCosts(setFieldValue, {
-                                            costs: values.costs,
-                                            lots: values.lots.map((bLot, bIndex) => {
-                                              return {
-                                                pkgAmount: bIndex === index ? data.value : bLot.pkgAmount
-                                              }
-                                            })
-                                          })
-                                        }} /></TableCell>
-                                        <TableCell>0</TableCell>
-                                        <TableCell>0</TableCell>
-                                        <TableCell><DateInput name={`lots[${index}].manufacturedDate`} /></TableCell>
-                                        <TableCell><DateInput name={`lots[${index}].expirationDate`} /></TableCell>
-                                        <TableCell>
-                                          <UploadLot {...this.props}
-                                                     attachments={values.lots[index].attachments}
-                                                     name={`lots[${index}].attachments`}
-                                                     type={1}
-                                                     lot={true}
-                                                     filesLimit={1}
-                                                     fileMaxSize={20}
-                                                     onChange={(files) => setFieldValue(
-                                                       `lots[${index}].attachments[${values.lots[index].attachments && values.lots[index].attachments.length ? values.lots[index].attachments.length : 0}]`,
-                                                       {
-                                                         id: files.id,
-                                                         name: files.name
-                                                       }
-                                                     )}
-                                                     emptyContent={(
-                                                       <FormattedMessage
-                                                         id='addInventory.clickUpload'
-                                                         defaultMessage={'Click to upload'}
-                                                       />
-                                                     )}
-                                          />
-                                        </TableCell>
-                                        <TableCell><Icon name='trash alternate outline' size='large' onClick={() => this.removeLot(arrayHelpers, setFieldValue, { costs: values.costs, lots: values.lots }, index)} /></TableCell>
-                                      </Table.Row>
-                                    )) : ''
-                                    }
-                                  </Table.Body>
-                                </Table>
-                              </>
-                            )}
-                          />
-
-                          <Header as='h3'>PRODUCT COST</Header>
-                          <Grid>
-                            <GridColumn width={4}>
-                              <FormField width={12}>
-                                <Input name='cost' label='Cost/UOM' inputProps={{ type: 'number', step: '0.01', value: null, min: 0 }} />
-                              </FormField>
-                              <FormField>
-                                <label>Track Sub-Costs</label>
                                 <FormGroup>
-                                  <FormField width={5}>
-                                    <Radio label="Yes" value={true} name="trackSubCosts" />
+                                  <FormField width={8}>
+                                    <Dropdown label="Condition" name="productCondition" options={listConditions} />
                                   </FormField>
-                                  <FormField width={5}>
-                                    <Radio label="No" value={false} name="trackSubCosts" />
+                                  <FormField width={8}>
+                                    <Dropdown label="Grade" name="productGrade" options={listGrades} />
                                   </FormField>
                                 </FormGroup>
-                              </FormField>
-                            </GridColumn>
-                            <GridColumn width={12}>
-                              <FieldArray name="costs"
-                                          render={arrayHelpers => (
-                                  <>
-                                    <Message attached='top' className='header-table-fields'>
-                                      <Button type='button' icon='plus' color='blue' size='small' disabled={!values.trackSubCosts} floated='right' style={{marginTop: '-0.5em'}} onClick={() => arrayHelpers.push({description: '', lot: 0, cost: null, costUom: null})} />
-                                      Sub-Cost Breakdown
-                                    </Message>
-                                    <Table attached='bottom' className='table-fields'>
-                                      <Table.Header>
-                                        <Table.Row>
-                                          <TableHeaderCell width={4}>Description</TableHeaderCell>
-                                          <TableHeaderCell width={2}>Lot</TableHeaderCell>
-                                          <TableHeaderCell width={3}>Cost</TableHeaderCell>
-                                          <TableHeaderCell width={3}>Cost/UOM</TableHeaderCell>
-                                          <TableHeaderCell width={3}>Attachment</TableHeaderCell>
-                                          <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
+                                <FormGroup>
+                                  <FormField width={8}>
+                                    <Input name={`assayMin`} label="Assay Min %" inputProps={{ type: 'number', step: '0.001', value: null }} />
+                                  </FormField>
+                                  <FormField width={8}>
+                                    <Input name={`assayMax`} label="Assay Max %" inputProps={{ type: 'number', step: '0.001', value: null }} />
+                                  </FormField>
+                                </FormGroup>
+                              </GridColumn>
+                              <GridColumn width={5} floated='right'>
+                                <FormField width={16}>
+                                  <TextArea name='externalNotes' label='External Notes' />
+                                </FormField>
+                                <FormField width={16}>
+                                  <TextArea name='internalNotes' label='Internal Notes' />
+                                </FormField>
+                              </GridColumn>
+                            </Grid>
+
+                            <Divider />
+
+                            <Header as='h3'>Does this Product Offer consist of multiple lots?</Header>
+
+                            <FieldArray
+                              name="lots"
+                              render={arrayHelpers => (
+                                <>
+                                  <Message attached='top' className='header-table-fields'>
+                                    <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{ marginTop: '-0.5em' }} onClick={() => arrayHelpers.push({ lotNumber: null, pkgAmount: null, manufacturedDate: '', expirationDate: '' })} />
+                                    Lot Details
+                                </Message>
+                                  <Table attached='bottom' className='table-fields'>
+                                    <Table.Header>
+                                      <Table.Row>
+                                        <Popup content={'What is the lot number?'} trigger={<TableHeaderCell>Lot #</TableHeaderCell>} />
+                                        <Popup content={'How many packages in this lot?'} trigger={<TableHeaderCell>Total</TableHeaderCell>} />
+                                        <TableHeaderCell>Available</TableHeaderCell>
+                                        <TableHeaderCell>Allocated</TableHeaderCell>
+                                        <Popup content={'What is the MFG?'} trigger={<TableHeaderCell>MFG Date</TableHeaderCell>} />
+                                        <Popup content={'What is the expiration?'} trigger={<TableHeaderCell>Expiration Date</TableHeaderCell>} />
+                                        <TableHeaderCell>C of A</TableHeaderCell>
+                                        <TableHeaderCell>&nbsp;</TableHeaderCell>
+                                      </Table.Row>
+                                    </Table.Header>
+                                    <Table.Body>
+                                      {values.lots && values.lots.length ? values.lots.map((lot, index) => (
+                                        <Table.Row key={index}>
+                                          <TableCell><Input name={`lots[${index}].lotNumber`} inputProps={{ onClick: () => setFieldValue('touchedLot', true) }} /></TableCell>
+                                          <TableCell><Input name={`lots[${index}].pkgAmount`} inputProps={{
+                                            onClick: () => setFieldValue('touchedLot', true),
+                                            onChange: (e, data) => this.modifyCosts(setFieldValue, {
+                                              costs: values.costs,
+                                              lots: values.lots.map((bLot, bIndex) => {
+                                                return {
+                                                  pkgAmount: bIndex === index ? data.value : bLot.pkgAmount
+                                                }
+                                              })
+                                            })
+                                          }} /></TableCell>
+                                          <TableCell>0</TableCell>
+                                          <TableCell>0</TableCell>
+                                          <TableCell><DateInput name={`lots[${index}].manufacturedDate`} /></TableCell>
+                                          <TableCell><DateInput name={`lots[${index}].expirationDate`} /></TableCell>
+                                          <TableCell>
+                                            <UploadLot {...this.props}
+                                              attachments={values.lots[index].attachments}
+                                              name={`lots[${index}].attachments`}
+                                              type={1}
+                                              lot={true}
+                                              filesLimit={1}
+                                              fileMaxSize={20}
+                                              onChange={(files) => setFieldValue(
+                                                `lots[${index}].attachments[${values.lots[index].attachments && values.lots[index].attachments.length ? values.lots[index].attachments.length : 0}]`,
+                                                {
+                                                  id: files.id,
+                                                  name: files.name
+                                                }
+                                              )}
+                                              emptyContent={(
+                                                <FormattedMessage
+                                                  id='addInventory.clickUpload'
+                                                  defaultMessage={'Click to upload'}
+                                                />
+                                              )}
+                                            />
+                                          </TableCell>
+                                          <TableCell><Icon name='trash alternate outline' size='large' onClick={() => this.removeLot(arrayHelpers, setFieldValue, { costs: values.costs, lots: values.lots }, index)} /></TableCell>
                                         </Table.Row>
-                                      </Table.Header>
-                                      <Table.Body>
-                                        {values.costs && values.costs.length ? values.costs.map((costRow, index) => (
-                                          <Table.Row key={index}>
-                                            <TableCell width={4}><FormField width={16}><Input inputProps={{disabled: !values.trackSubCosts}} name={`costs[${index}].description`} /></FormField></TableCell>
-                                            <TableCell width={2}>
-                                              <FormField width={16}>
-                                                <Dropdown
-                                                  name={`costs[${index}].lot`}
-                                                  options={[{
+                                      )) : ''
+                                      }
+                                    </Table.Body>
+                                  </Table>
+                                </>
+                              )}
+                            />
+
+                            <Header as='h3'>PRODUCT COST</Header>
+                            <Grid>
+                              <GridColumn width={4}>
+                                <FormField width={12}>
+                                  <Input name='cost' label='Cost/UOM' inputProps={{ type: 'number', step: '0.01', value: null, min: 0 }} />
+                                </FormField>
+                                <FormField>
+                                  <label>Track Sub-Costs</label>
+                                  <FormGroup>
+                                    <FormField width={5}>
+                                      <Radio label="Yes" value={true} name="trackSubCosts" />
+                                    </FormField>
+                                    <FormField width={5}>
+                                      <Radio label="No" value={false} name="trackSubCosts" />
+                                    </FormField>
+                                  </FormGroup>
+                                </FormField>
+                              </GridColumn>
+                              <GridColumn width={12}>
+                                <FieldArray name="costs"
+                                  render={arrayHelpers => (
+                                    <>
+                                      <Message attached='top' className='header-table-fields'>
+                                        <Button type='button' icon='plus' color='blue' size='small' disabled={!values.trackSubCosts} floated='right' style={{ marginTop: '-0.5em' }} onClick={() => arrayHelpers.push({ description: '', lot: 0, cost: null, costUom: null })} />
+                                        Sub-Cost Breakdown
+                                    </Message>
+                                      <Table attached='bottom' className='table-fields'>
+                                        <Table.Header>
+                                          <Table.Row>
+                                            <TableHeaderCell width={4}>Description</TableHeaderCell>
+                                            <TableHeaderCell width={2}>Lot</TableHeaderCell>
+                                            <TableHeaderCell width={3}>Cost</TableHeaderCell>
+                                            <TableHeaderCell width={3}>Cost/UOM</TableHeaderCell>
+                                            <TableHeaderCell width={3}>Attachment</TableHeaderCell>
+                                            <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
+                                          </Table.Row>
+                                        </Table.Header>
+                                        <Table.Body>
+                                          {values.costs && values.costs.length ? values.costs.map((costRow, index) => (
+                                            <Table.Row key={index}>
+                                              <TableCell width={4}><FormField width={16}><Input inputProps={{ disabled: !values.trackSubCosts }} name={`costs[${index}].description`} /></FormField></TableCell>
+                                              <TableCell width={2}>
+                                                <FormField width={16}>
+                                                  <Dropdown
+                                                    name={`costs[${index}].lot`}
+                                                    options={[{
                                                       key: 0,
                                                       text: 'All',
                                                       value: 0
@@ -922,122 +923,122 @@ class AddInventoryForm extends Component {
                                                         value: index + 1
                                                       }
                                                     }) : [])
-                                                  }
-                                                  inputProps={{
-                                                    onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(values.costs[index].cost) * (parseInt(data.value) ? parseFloat(values.lots[parseInt(data.value) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3)),
-                                                    disabled: !values.trackSubCosts
-                                                  }}
+                                                    }
+                                                    inputProps={{
+                                                      onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(values.costs[index].cost) * (parseInt(data.value) ? parseFloat(values.lots[parseInt(data.value) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3)),
+                                                      disabled: !values.trackSubCosts
+                                                    }}
+                                                  />
+                                                </FormField>
+                                              </TableCell>
+                                              <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].cost`} inputProps={{ type: 'number', step: '1', value: null, min: 0, disabled: !values.trackSubCosts, onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(data.value) * (parseInt(values.costs[index].lot) ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3)) }} /></FormField></TableCell>
+                                              <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].costUom`} inputProps={{ type: 'text', step: '0.01', value: null, min: 0, disabled: true }} /></FormField></TableCell>
+                                              <TableCell width={3}>
+                                                <UploadLot {...this.props}
+                                                  attachments={values.costs[index].attachments}
+                                                  name={`costs[${index}].attachments`}
+                                                  type={3}
+                                                  lot={false}
+                                                  filesLimit={1}
+                                                  fileMaxSize={20}
+                                                  disabled={!values.trackSubCosts}
+                                                  onChange={(files) => setFieldValue(
+                                                    `costs[${index}].attachments[${values.costs[index].attachments && values.costs[index].attachments.length ? values.costs[index].attachments.length : 0}]`,
+                                                    {
+                                                      id: files.id,
+                                                      name: files.name
+                                                    }
+                                                  )}
+                                                  emptyContent={(
+                                                    <FormattedMessage
+                                                      id='addInventory.clickUpload'
+                                                      defaultMessage={'Click to upload'}
+                                                    />
+                                                  )}
                                                 />
-                                              </FormField>
-                                            </TableCell>
-                                            <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].cost`} inputProps={{ type: 'number', step: '1', value: null, min: 0, disabled: !values.trackSubCosts, onChange: (e, data) => setFieldValue(`costs[${index}].costUom`, +(parseFloat(data.value) * (parseInt(values.costs[index].lot) ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAmount) : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3))}} /></FormField></TableCell>
-                                            <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].costUom`} inputProps={{ type: 'text', step: '0.01', value: null, min: 0, disabled: true }} /></FormField></TableCell>
-                                            <TableCell width={3}>
-                                              <UploadLot {...this.props}
-                                                         attachments={values.costs[index].attachments}
-                                                         name={`costs[${index}].attachments`}
-                                                         type={3}
-                                                         lot={false}
-                                                         filesLimit={1}
-                                                         fileMaxSize={20}
-                                                         disabled={!values.trackSubCosts}
-                                                         onChange={(files) => setFieldValue(
-                                                           `costs[${index}].attachments[${values.costs[index].attachments && values.costs[index].attachments.length ? values.costs[index].attachments.length : 0}]`,
-                                                           {
-                                                             id: files.id,
-                                                             name: files.name
-                                                           }
-                                                         )}
-                                                         emptyContent={(
-                                                           <FormattedMessage
-                                                             id='addInventory.clickUpload'
-                                                             defaultMessage={'Click to upload'}
-                                                           />
-                                                         )}
-                                              />
-                                            </TableCell>
-                                            <TableCell width={1}><Icon name='trash alternate outline' size='large' disabled={!values.trackSubCosts} onClick={() => arrayHelpers.remove(index)} /></TableCell>
-                                          </Table.Row>
-                                        )) : ''
-                                        }
-                                      </Table.Body>
-                                    </Table>
-                                  </>
-                                )}
-                              />
-                            </GridColumn>
-                          </Grid>
-
-                          <Header as='h3'>ADDITIONAL DOCUMENTS</Header>
-                          <Grid>
-                            <GridColumn width={10}>
-                              <UploadLot {...this.props}
-                                         attachments={values.additional}
-                                         name='additional'
-                                         type={values.additionalType}
-                                         unspecifiedTypes={['Unspecified']}
-                                         fileMaxSize={20}
-                                         onChange={(files) => setFieldValue(
-                                           `additional[${values.additional && values.additional.length ? values.additional.length : 0}]`,
-                                           {
-                                             id: files.id,
-                                             name: files.name
-                                           }
-                                         )}
-                                         emptyContent={(
-                                           <label>
-                                             <FormattedMessage
-                                               id='addInventory.dragDropAdditional'
-                                               defaultMessage={'Drop additional documents here'}
-                                             />
-                                             <br />
-                                             <FormattedMessage
-                                               id='addInventory.dragDropOr'
-                                               defaultMessage={'or select from computer'}
-                                             />
-                                           </label>
-                                         )}
-                                         uploadedContent={(
-                                           <label>
-                                             <FormattedMessage
-                                               id='addInventory.dragDropAdditional'
-                                               defaultMessage={'Drop additional documents here'}
-                                             />
-                                             <br />
-                                             <FormattedMessage
-                                               id='addInventory.dragDropOr'
-                                               defaultMessage={'or select from computer'}
-                                             />
-                                           </label>
-                                         )}
-                              />
-                            </GridColumn>
-                            <GridColumn width={5}>
-                              <FormField width={16}>
-                                <label>
-                                  <FormattedMessage
-                                    id='addInventory.documentType'
-                                    defaultMessage={'Document Type'}
-                                  />
-                                </label>
-                                <Dropdown
-                                  name={`additionalType`}
-                                  options={listDocumentTypes}
+                                              </TableCell>
+                                              <TableCell width={1}><Icon name='trash alternate outline' size='large' disabled={!values.trackSubCosts} onClick={() => arrayHelpers.remove(index)} /></TableCell>
+                                            </Table.Row>
+                                          )) : ''
+                                          }
+                                        </Table.Body>
+                                      </Table>
+                                    </>
+                                  )}
                                 />
-                              </FormField>
-                            </GridColumn>
-                          </Grid>
+                              </GridColumn>
+                            </Grid>
 
-                        </GridColumn>
+                            <Header as='h3'>ADDITIONAL DOCUMENTS</Header>
+                            <Grid>
+                              <GridColumn width={10}>
+                                <UploadLot {...this.props}
+                                  attachments={values.additional}
+                                  name='additional'
+                                  type={values.additionalType}
+                                  unspecifiedTypes={['Unspecified']}
+                                  fileMaxSize={20}
+                                  onChange={(files) => setFieldValue(
+                                    `additional[${values.additional && values.additional.length ? values.additional.length : 0}]`,
+                                    {
+                                      id: files.id,
+                                      name: files.name
+                                    }
+                                  )}
+                                  emptyContent={(
+                                    <label>
+                                      <FormattedMessage
+                                        id='addInventory.dragDropAdditional'
+                                        defaultMessage={'Drop additional documents here'}
+                                      />
+                                      <br />
+                                      <FormattedMessage
+                                        id='addInventory.dragDropOr'
+                                        defaultMessage={'or select from computer'}
+                                      />
+                                    </label>
+                                  )}
+                                  uploadedContent={(
+                                    <label>
+                                      <FormattedMessage
+                                        id='addInventory.dragDropAdditional'
+                                        defaultMessage={'Drop additional documents here'}
+                                      />
+                                      <br />
+                                      <FormattedMessage
+                                        id='addInventory.dragDropOr'
+                                        defaultMessage={'or select from computer'}
+                                      />
+                                    </label>
+                                  )}
+                                />
+                              </GridColumn>
+                              <GridColumn width={5}>
+                                <FormField width={16}>
+                                  <label>
+                                    <FormattedMessage
+                                      id='addInventory.documentType'
+                                      defaultMessage={'Document Type'}
+                                    />
+                                  </label>
+                                  <Dropdown
+                                    name={`additionalType`}
+                                    options={listDocumentTypes}
+                                  />
+                                </FormField>
+                              </GridColumn>
+                            </Grid>
 
-                        <GridColumn width={5}>
-                          {this.renderProductDetails(values, validateForm)}
-                        </GridColumn>
-                      </Grid>
-                    </Tab.Pane>
-                  )
-                }
-              ]} />
+                          </GridColumn>
+
+                          <GridColumn width={5}>
+                            {this.renderProductDetails(values, validateForm)}
+                          </GridColumn>
+                        </Grid>
+                      </Tab.Pane>
+                    )
+                  }
+                ]} />
               </div>
             </>
           )}

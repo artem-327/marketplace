@@ -38,10 +38,6 @@ export function getProductGrades() {
   return api.get(`/prodex/api/product-grades/`)
 }
 
-export async function getMyProductOffers(filter) {
-  return api.post(`/prodex/api/product-offers/own/datagrid/`, filter)
-}
-
 export async function getProductOffer(poId) {
   return api.get(`/prodex/api/product-offers/${poId}`)
 }
@@ -91,7 +87,7 @@ export async function searchOrigins(text) {
 }
 
 export async function searchProducts(text) {
-  const response = await api.get(`/prodex/api/products/search?search=${text}&onlyMapped=false`)
+  const response = await api.get(`/prodex/api/products/own/search?pattern=${text}`)
   return response
 }
 
@@ -100,7 +96,5 @@ export function updateProductOffer(poId, values) {
 }
 
 export const getSavedFilters = () => api.get('/prodex/api/product-offers/own/datagrid/saved-filters').then((response) => response.data)
-
-export const postFilter = filter => api.post('/prodex/api/product-offers/own/datagrid', filter).then(response => response.data)
 
 export const saveFilter = filter => api.post('/prodex/api/product-offers/own/datagrid/saved-filters', filter).then(response => response.data)
