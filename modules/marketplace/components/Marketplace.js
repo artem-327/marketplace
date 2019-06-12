@@ -1,11 +1,12 @@
 import React, { Component } from "react"
-import { Container, Menu, Header, Button } from "semantic-ui-react"
+import { Container, Menu, Header, Button, MenuItem } from "semantic-ui-react"
 import { FormattedMessage } from 'react-intl'
 import { ShippingQuotes } from '~/modules/shipping'
 import SubMenu from '~/src/components/SubMenu'
 import { Filter } from '~/modules/filter'
 import ProdexGrid from '~/components/table'
 import AddCart from '~/src/pages/cart/components/AddCart'
+import FilterTags from '~/modules/filter/components/FitlerTags'
 
 const PAGE_SIZE = 50
 
@@ -83,6 +84,20 @@ export default class Marketplace extends Component {
     this.props.saveBroadcastedFilter(filter)
   }
 
+  onFilterClear = () => {
+    let { filter } = this.props
+    filter.filters = []
+    this.props.postBroadcastedDatagrid(filter)
+  }
+
+  removeFilter = (i) => {
+    let { filter } = this.props
+
+    filter.filters.splice(i, 1)
+
+    this.props.postBroadcastedDatagrid(filter)
+  }
+
   render() {
     let {
       loading
@@ -115,6 +130,9 @@ export default class Marketplace extends Component {
             </Menu.Item>
 
             <Menu.Menu position='right'>
+              <Menu.Item>
+                <FilterTags filter={this.props.filter} onClick={this.removeFilter} />
+              </Menu.Item>
               {selectedRows.length === 0 ? null :
                 <Button primary onClick={() => this.setState({ open: true })}>
                   <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote' />
@@ -169,6 +187,7 @@ export default class Marketplace extends Component {
         <Filter
           onApply={this.onFilterApply}
           onSave={this.onFilterSave}
+          onClear={this.onFilterClear}
         />
         <AddCart />
       </>

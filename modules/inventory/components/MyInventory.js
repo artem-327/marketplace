@@ -7,6 +7,7 @@ import ProdexGrid from '~/components/table'
 import { Broadcast } from '~/modules/broadcast'
 import { Filter } from '~/modules/filter'
 import confirm from '~/src/components/Confirmable/confirm'
+import FilterTags from '~/modules/filter/components/FitlerTags'
 
 const PAGE_SIZE = 50
 
@@ -105,6 +106,20 @@ class MyInventory extends Component {
     this.props.saveFilter(filter)
   }
 
+  handleFilterClear = () => {
+    let { filter } = this.props
+    filter.filters = []
+    this.props.postFilter(filter)
+  }
+
+  removeFilter = (i) => {
+    let { filter } = this.props
+
+    filter.filters.splice(i, 1)
+
+    this.props.postFilter(filter)
+  }
+
   render() {
     const {
       loading,
@@ -133,11 +148,13 @@ class MyInventory extends Component {
                     values={{ number: selectedRows.length }} />
                 </Header>
               </Menu.Item>
-            ) : (
-                ""
-              )}
+            ) : null}
 
             <Menu.Menu position="right">
+              <Menu.Item>
+                <FilterTags filter={this.props.filter} onClick={this.removeFilter} />
+              </Menu.Item>
+
               <Menu.Item>
                 <SubMenu />
               </Menu.Item>
@@ -199,6 +216,7 @@ class MyInventory extends Component {
         <Filter
           onApply={this.handleFilterApply}
           onSave={this.handleFilterSave}
+          onClear={this.handleFilterClear}
         />
       </>
     )

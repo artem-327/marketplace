@@ -64,11 +64,26 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.POST_BROADCASTED_DATAGRID_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
     case AT.POST_BROADCASTED_DATAGRID_FULFILLED: {
       return {
         ...state,
         broadcastedProductOffers: payload.data,
+        loading: false,
         filter: payload.filter
+      }
+    }
+
+    case AT.POST_BROADCASTED_DATAGRID_REJECTED: {
+      return {
+        ...state,
+        loading: false
       }
     }
 

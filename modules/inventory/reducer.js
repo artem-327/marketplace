@@ -331,11 +331,19 @@ export default function reducer(state = initialState, action) {
         })
       }
     }
+
+    case AT.POST_FILTER_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
     case AT.POST_FILTER_FULFILLED: {
       return {
         ...state,
         myProductOffers: payload.data,
-        filter: payload.filter
+        filter: payload.filter,
+        loading: false
       }
     }
 
