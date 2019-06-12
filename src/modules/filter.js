@@ -7,7 +7,9 @@ const ADD_FILTER_TAG = 'ADD_FILTER_TAG';
 const CLOSE_FILTER_TAG = 'CLOSE_FILTER_TAG';
 const CLOSE_FILTER_TAG_FULFILLED = 'CLOSE_FILTER_TAG_FULFILLED';
 const GET_SAVE_FILTERS = 'GET_SAVE_FILTERS';
-const GET_SAVE_FILTERS_FULFILLED = 'GET_SAVE_FILTERS_FULFILLED';
+const GET_SAVE_FILTERS_PENDING = 'GET_SAVE_FILTERS_PENDING'
+const GET_SAVE_FILTERS_REJECTED = 'GET_SAVE_FILTERS_REJECTED'
+const GET_SAVE_FILTERS_FULFILLED = 'GET_SAVE_FILTERS_FULFILLED'
 const DELETE_SAVE_FILTER = 'DELETE_SAVE_FILTER';
 const SAVE_SAVE_FILTER = 'SAVE_SAVE_FILTER';
 
@@ -33,6 +35,7 @@ export const initialState = {
         form: false
     },
     filterTags: [],
+    savedFiltersFetching: false,
     saveFilters: []
 };
 
@@ -71,10 +74,26 @@ export default function reducer(state = initialState, action) {
                 filterTags: []
             }
         }
+
+        case GET_SAVE_FILTERS_PENDING: {
+            return {
+                ...state,
+                savedFiltersFetching: true
+            }
+        }
+
         case GET_SAVE_FILTERS_FULFILLED: {
             return {
                 ...state,
-                saveFilters: action.payload
+                saveFilters: action.payload,
+                savedFiltersFetching: false
+            }
+        }
+
+        case GET_SAVE_FILTERS_REJECTED: {
+            return {
+                ...state,
+                savedFiltersFetching: false
             }
         }
         default: {

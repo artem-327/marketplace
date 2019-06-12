@@ -5,7 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
 import ProdexGrid from '~/components/table'
 import { Broadcast } from '~/modules/broadcast'
-import Filter from '~/src/components/Filter'
+import { Filter } from '~/modules/filter'
 import confirm from '~/src/components/Confirmable/confirm'
 
 const PAGE_SIZE = 50
@@ -82,12 +82,12 @@ class MyInventory extends Component {
             <Popup id={r.id}
               trigger={
                 <Checkbox toggle={true}
-                          defaultChecked={r.status.toLowerCase() === 'broadcasting'}
-                          disabled={r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'}
-                          onChange={(e, data) => {
-                            e.preventDefault()
-                            this.props.patchBroadcast(data.checked, r.id, r.status)
-                          }} />
+                  defaultChecked={r.status.toLowerCase() === 'broadcasting'}
+                  disabled={r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'}
+                  onChange={(e, data) => {
+                    e.preventDefault()
+                    this.props.patchBroadcast(data.checked, r.id, r.status)
+                  }} />
               }
               content={title}
             />
@@ -95,6 +95,14 @@ class MyInventory extends Component {
         )
       }
     })
+  }
+
+  handleFilterApply = filter => {
+    this.props.postFilter(filter)
+  }
+
+  handleFilterSave = filter => {
+    this.props.saveFilter(filter)
   }
 
   render() {
@@ -126,8 +134,8 @@ class MyInventory extends Component {
                 </Header>
               </Menu.Item>
             ) : (
-              ""
-            )}
+                ""
+              )}
 
             <Menu.Menu position="right">
               <Menu.Item>
@@ -182,33 +190,15 @@ class MyInventory extends Component {
             onRowClick={(e, row) => {
               const targetTag = e.target.tagName.toLowerCase()
               if (targetTag !== 'input' && targetTag !== 'label') {
-                Router.push({pathname: '/inventory/edit', query: {id: row.id}})
+                Router.push({ pathname: '/inventory/edit', query: { id: row.id } })
               }
             }}
           />
         </div>
         <Broadcast />
         <Filter
-          chemicalName
-          productAgeFilter
-          date
-          assay
-          quantity
-          price
-          package
-          condition
-          productGrade
-          form
-          filterFunc={(filter) => { this.filterInventory({ ...filter }) }}
-          savingFilters={true}
-          {...this.props}
-          searchedProducts={this.props.searchedProducts.map(prod => {
-            return {
-              key: prod.key,
-              id: prod.id,
-              name: <Header content={prod.name} subheader={prod.casName} style={{margin: 0, fontSize: '1em'}} />
-            }
-          })}
+          onApply={this.handleFilterApply}
+          onSave={this.handleFilterSave}
         />
       </>
     )

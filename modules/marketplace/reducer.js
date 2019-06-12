@@ -18,52 +18,62 @@ export const initialState = {
   searchedProducts: [],
   searchedProductsLoading: false,
   warehousesList: [],
-  loading: false
+  loading: false,
+  filter: null
 }
 
 export default function reducer(state = initialState, action) {
-    const {type, payload} = action
+  const { type, payload } = action
 
-    switch (type) {
-        case AT.MARKETPLACE_GET_BROADCASTED_PRODUCT_OFFERS_PENDING: {
-          return { ...state,
-            loading: true
-          }
-        }
-
-        case AT.MARKETPLACE_GET_BROADCASTED_PRODUCT_OFFERS_FULFILLED: {
-          let {data, pageNumber} = action.payload
-          return {
-            ...state,
-            loading: false,
-            broadcastedProductOffers: pageNumber === 0 ? [
-              ...data
-            ] : [
-              ...state.broadcastedProductOffers,
-              ...(pageNumber > state.broadcastedProductOffersPageLoaded ? data : [])
-            ],
-            broadcastedProductOffersPageLoaded: pageNumber
-          }
-        }
-
-        case AT.MARKETPLACE_SEARCH_PRODUCTS_PENDING: {
-          return {
-            ...state,
-            searchedProducts: [],
-            searchedProductsLoading: true
-          }
-        }
-
-        case AT.MARKETPLACE_SEARCH_PRODUCTS_FULFILLED: {
-          return {
-            ...state,
-            searchedProducts: action.payload.data,
-            searchedProductsLoading: false
-          }
-        }
-
-        default: {
-          return state
-        }
+  switch (type) {
+    case AT.MARKETPLACE_GET_BROADCASTED_PRODUCT_OFFERS_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
     }
+
+    case AT.MARKETPLACE_GET_BROADCASTED_PRODUCT_OFFERS_FULFILLED: {
+      let { data, pageNumber } = action.payload
+      return {
+        ...state,
+        loading: false,
+        broadcastedProductOffers: pageNumber === 0 ? [
+          ...data
+        ] : [
+            ...state.broadcastedProductOffers,
+            ...(pageNumber > state.broadcastedProductOffersPageLoaded ? data : [])
+          ],
+        broadcastedProductOffersPageLoaded: pageNumber
+      }
+    }
+
+    case AT.MARKETPLACE_SEARCH_PRODUCTS_PENDING: {
+      return {
+        ...state,
+        searchedProducts: [],
+        searchedProductsLoading: true
+      }
+    }
+
+    case AT.MARKETPLACE_SEARCH_PRODUCTS_FULFILLED: {
+      return {
+        ...state,
+        searchedProducts: action.payload.data,
+        searchedProductsLoading: false
+      }
+    }
+
+    case AT.POST_BROADCASTED_DATAGRID_FULFILLED: {
+      return {
+        ...state,
+        broadcastedProductOffers: payload.data,
+        filter: payload.filter
+      }
+    }
+
+    default: {
+      return state
+    }
+  }
 }
