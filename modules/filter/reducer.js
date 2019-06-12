@@ -11,7 +11,7 @@ export const initialState = {
 export default typeToReducer({
   [a.toggleFilter]: (state, { payload: value }) => ({
     ...state,
-    isOpen: value ? value : !state.isOpen
+    isOpen: typeof value === 'boolean' ? value : !state.isOpen
   }),
   [a.filterSaving]: (state, { payload: isSaving }) => ({
     ...state,

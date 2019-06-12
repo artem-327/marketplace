@@ -37,7 +37,8 @@ function mapStateToProps(store) {
         broadcasted: po.broadcasted,
         status: po.status // new broadcasted
       }
-    })
+    }),
+    filter: store.simpleAdd.filter
   }
 }
 

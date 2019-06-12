@@ -3,7 +3,7 @@ import { injectIntl, FormattedMessage } from 'react-intl'
 import { Form, Input, Checkbox as FormikCheckbox } from 'formik-semantic-ui'
 import { Field as FormikField } from 'formik'
 import { bool, string, object, func } from 'prop-types'
-import { DateInput } from '~/components/custom-formik'
+import { DateInput } from 'semantic-ui-calendar-react' //'~/components/custom-formik'
 import {
   Button, Accordion,
   Segment, FormGroup,
@@ -55,31 +55,35 @@ class Filter extends Component {
       filters: []
     }
 
-    Object.keys(inputs)
-      .forEach((key) => {
-        if (inputs[key]) {
+    let keys = Object.keys(inputs)
 
-          if (!!datagridValues[key].nested) {
-            var values = []
-            // If nested (checkboxes) take their id's and push them to an array
-            Object.keys(inputs[key]).forEach(k => {
-              if (inputs[key][k]) values.push(inputs[key][k])
-            })
+    keys.forEach((key) => {
+      if (inputs[key]) {
 
-            if (values.length > 0) datagridFilter.filters.push(datagridValues[key].getFilter(values))
-          }
-          else {
-            try {
-              let filter = datagridValues[key].getFilter(inputs[key])
-              if (!(filter.values instanceof Array)) filter.values = [filter.values]  // We need values to be an array
-
-              datagridFilter.filters.push(filter)
-            } catch (err) {
-              console.error(`Key: ${key} is not defined in datagridValues. \n ${err}`)
+        if (!!datagridValues[key].nested) {
+          var ids = [], names = []
+          // If nested (checkboxes) take their id's and push them to an array
+          Object.keys(inputs[key]).forEach(k => {
+            if (inputs[key][k]) {
+              ids.push(inputs[key][k].id)
+              names.push((inputs[key][k].name))
             }
+          })
+
+          if (ids.length > 0) datagridFilter.filters.push(datagridValues[key].getFilter(ids, names))
+        }
+        else {
+          try {
+            let filter = datagridValues[key].getFilter(inputs[key])
+            if (!(filter.values instanceof Array)) filter.values = [filter.values]  // We need values to be an array
+
+            datagridFilter.filters.push(filter)
+          } catch (err) {
+            console.error(`Key: ${key} is not defined in datagridValues. \n ${err}`)
           }
         }
-      })
+      }
+    })
 
     return datagridFilter
   }
@@ -107,7 +111,6 @@ class Filter extends Component {
 
     this.props.onSave(requestData)
     if (automaticallyApply) this.handleSubmit(rest)
-
   }
 
   fetchIfNoData = (fn, propertyName) => {
@@ -133,7 +136,7 @@ class Filter extends Component {
       <FormField key={i}>
         <FormikField onChange={(e, data) => {
           let { setFieldValue } = data.form
-          setFieldValue(`${group}${el.name.toLowerCase()}`, data.checked ? el.id : null)
+          setFieldValue(`${group}${el.name.toLowerCase()}`, data.checked ? { id: el.id, name: el.name } : null)
         }} component={Checkbox} name={`${group}${el.name.toLowerCase()}`} label={el.name} />
       </FormField>
     )
@@ -169,7 +172,7 @@ class Filter extends Component {
   )
 
 
-  formMarkup = (values) => {
+  formMarkup = (values, setFieldValue) => {
     let { productConditions, productForms, packagingTypes, productGradeTypes, intl, filterSaving } = this.props
 
     const { formatMessage } = intl
@@ -246,13 +249,25 @@ class Filter extends Component {
               <FormGroup widths='equal'>
                 <FormField width={8}>
                   <DateInput
+                    onChange={(e, { name, value }) => setFieldValue(name, value)}
+                    closable
+                    value={values.dateFrom}
+                    closeOnMouseLeave={false}
+                    dateFormat='DD-MM-YYYY'
+                    animation='none'
                     label={<FormattedMessage id='filter.From' defaultMessage='From' />}
-                    inputProps={{ closeOnMouseLeave: false, animation: 'none' }} name='dateFrom' />
+                    name='dateFrom' />
                 </FormField>
                 <FormField width={8}>
                   <DateInput
+                    onChange={(e, { name, value }) => setFieldValue(name, value)}
+                    closable
+                    value={values.dateTo}
+                    dateFormat='DD-MM-YYYY'
+                    animation='none'
+                    closeOnMouseLeave={false}
                     label={<FormattedMessage id='filter.To' defaultMessage='To' />}
-                    inputProps={{ closeOnMouseLeave: false, animation: 'none' }} name='dateTo' />
+                    name='dateTo' />
                 </FormField>
               </FormGroup>
             </AccordionContent>
@@ -318,7 +333,7 @@ class Filter extends Component {
                       fluid
                       inputProps={{ placeholder: ' Email' }}
                       type='text'
-                      name='notifications.notificationMail'/>
+                      name='notifications.notificationMail' />
                   </GridColumn>
                 )
               }
@@ -376,8 +391,12 @@ class Filter extends Component {
         width={width}
         direction={direction}
         animation={animation}
-        // TODO handle calendar on click so it does not hide sidebar...
-        // onHide={() => toggleFilter()}
+        onHide={(e) => {
+          // Workaround, close if you haven't clicked on calendar item or filter icon
+          if (e && (!(e.path[0] instanceof HTMLTableCellElement) && !(e.path[1] instanceof HTMLTableCellElement)  && !e.target.className.includes('submenu-filter'))) {
+            toggleFilter(false)
+          }
+        }}
         {...additionalSidebarProps}>
 
         <FlexContent>
@@ -401,9 +420,9 @@ class Filter extends Component {
               this.handleSubmit(values)
               setSubmitting(false)
             }}>
-              {({ submitForm, values }) => {
+              {({ submitForm, values, setFieldValue }) => {
                 this.submitForm = submitForm
-                return this.formMarkup(values)
+                return this.formMarkup(values, setFieldValue)
               }}
             </Form>
           </Segment>
@@ -413,8 +432,7 @@ class Filter extends Component {
           <Grid>
             <GridRow columns={2}>
               <GridColumn>
-                {/* TODO Clear filter implementation */}
-                <Button fluid> <FormattedMessage id='filter.clearFilter' defaultMessage='Clear Filter' /></Button>
+                <Button fluid onClick={this.props.onClear}> <FormattedMessage id='filter.clearFilter' defaultMessage='Clear Filter' /></Button>
               </GridColumn>
               <GridColumn>
                 <Button loading={filterApplying} primary fluid onClick={() => this.submitForm()}><FormattedMessage id='global.apply' defaultMessage='Apply' /></Button>
@@ -434,7 +452,8 @@ Filter.propTypes = {
   animation: string,
   additionalSidebarProps: object,
   onApply: func,
-  onSave: func
+  onSave: func,
+  onClear: func
 }
 
 Filter.defaultProps = {
@@ -444,6 +463,7 @@ Filter.defaultProps = {
   animation: 'overlay',
   onApply: () => alert('onApply function not supplied!'),
   onSave: () => alert('onSave function not supplied!'),
+  onClear: () => alert('onClear function not supplied!'),
   additionalSidebarProps: {}
 }
 
