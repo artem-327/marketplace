@@ -1,5 +1,7 @@
 import * as AT from './action-types'
 
+import { uniqueArrayByKey } from '~/utils/functions'
+
 export const initialState = {
   fileIds: [],
   listDocumentTypes: [],
@@ -303,15 +305,15 @@ export default function reducer(state = initialState, action) {
     case AT.INVENTORY_SEARCH_PRODUCTS_PENDING: {
       return {
         ...state,
-        searchedProducts: [],
         searchedProductsLoading: true
       }
     }
 
     case AT.INVENTORY_SEARCH_PRODUCTS_FULFILLED: {
+      console.log('searched', state.searchedProducts)
       return {
         ...state,
-        searchedProducts: action.payload.data,
+        searchedProducts: uniqueArrayByKey(action.payload.data.concat(state.searchedProducts), 'id'),
         searchedProductsLoading: false
       }
     }

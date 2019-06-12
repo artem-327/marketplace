@@ -9,9 +9,10 @@ function mapStateToProps(store) {
   return {
     loading: store.simpleAdd.loading,
     searchedProducts: store.simpleAdd.searchedProducts,
+    searchedProductsLoading: store.simpleAdd.searchedProductsLoading,
     rows: store.simpleAdd.myProductOffers.map(po => {
       const qtyPart = `${po.product.packagingUnit ? po.product.packagingUnit.nameAbbreviation : ''}`
-
+      
       return {
         id: po.id,
         product: po.product,

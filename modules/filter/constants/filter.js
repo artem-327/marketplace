@@ -13,11 +13,11 @@ export const operators = {
 export const datagridValues = {
   search: {
     getFilter: (values) => ({
-      operator: operators.LIKE,
-      path: 'ProductOffer.product.productName',
-      values,
+      operator: operators.EQUALS,
+      path: 'ProductOffer.product.id',
+      values: values.map((val) => val.id),
       description: 'Chemical Name',
-      valuesDescription: values.toString()
+      valuesDescription: values.map((val) => val.name)
     })
   },
   quantityFrom: {

@@ -152,6 +152,10 @@ class MyInventory extends Component {
 
             <Menu.Menu position="right">
               <Menu.Item>
+                <FilterTags />
+              </Menu.Item>
+
+              <Menu.Item>
                 <FilterTags filter={this.props.filter} onClick={this.removeFilter} />
               </Menu.Item>
 
@@ -217,6 +221,9 @@ class MyInventory extends Component {
           onApply={this.handleFilterApply}
           onSave={this.handleFilterSave}
           onClear={this.handleFilterClear}
+          searchProducts={this.props.searchProducts}
+          searchedProducts={this.props.searchedProducts}
+          searchedProductsLoading={this.props.searchedProductsLoading}
         />
       </>
     )
