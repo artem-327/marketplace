@@ -26,27 +26,6 @@ export default function reducer(state = initialState, action) {
   const { type, payload } = action
 
   switch (type) {
-    case AT.MARKETPLACE_GET_BROADCASTED_PRODUCT_OFFERS_PENDING: {
-      return {
-        ...state,
-        loading: true
-      }
-    }
-
-    case AT.MARKETPLACE_GET_BROADCASTED_PRODUCT_OFFERS_FULFILLED: {
-      let { data, pageNumber } = action.payload
-      return {
-        ...state,
-        loading: false,
-        broadcastedProductOffers: pageNumber === 0 ? [
-          ...data
-        ] : [
-            ...state.broadcastedProductOffers,
-            ...(pageNumber > state.broadcastedProductOffersPageLoaded ? data : [])
-          ],
-        broadcastedProductOffersPageLoaded: pageNumber
-      }
-    }
 
     case AT.MARKETPLACE_SEARCH_PRODUCTS_PENDING: {
       return {
@@ -61,14 +40,6 @@ export default function reducer(state = initialState, action) {
         ...state,
         searchedProducts: action.payload.data,
         searchedProductsLoading: false
-      }
-    }
-
-    case AT.POST_BROADCASTED_DATAGRID_FULFILLED: {
-      return {
-        ...state,
-        broadcastedProductOffers: payload.data,
-        filter: payload.filter
       }
     }
 
