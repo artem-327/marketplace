@@ -190,28 +190,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.INVENTORY_GET_MY_PRODUCT_OFFERS_PENDING: {
-      return {
-        ...state,
-        loading: true
-      }
-    }
-
-    case AT.INVENTORY_GET_MY_PRODUCT_OFFERS_FULFILLED: {
-      let { data, pageNumber } = action.payload
-      return {
-        ...state,
-        loading: false,
-        myProductOffers: pageNumber === 0 ? [
-          ...data
-        ] : [
-            ...state.myProductOffers,
-            ...(pageNumber > state.myProductOffersPageLoaded ? data : [])
-          ],
-        myProductOffersPageLoaded: pageNumber
-      }
-    }
-
     case AT.INVENTORY_DELETE_PRODUCT_OFFER_PENDING: {
       return {
         ...state,

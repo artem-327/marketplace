@@ -8,8 +8,6 @@ import { Broadcast } from '~/modules/broadcast'
 import { Filter } from '~/modules/filter'
 import confirm from '~/src/components/Confirmable/confirm'
 
-const PAGE_SIZE = 50
-
 class MyInventory extends Component {
   state = {
     columns: [
@@ -30,12 +28,11 @@ class MyInventory extends Component {
   }
 
   componentDidMount() {
-    //this.getNextPage()
+    const { datagrid } = this.props
+    
+    datagrid.loadData()
   }
 
-  // getNextPage = (pageNumber) => {
-  //   this.props.getMyProductOffers({}, PAGE_SIZE, pageNumber)
-  // }
 
   filterInventory = async (filter) => {
     let productIds = []
@@ -97,7 +94,9 @@ class MyInventory extends Component {
   }
 
   handleFilterApply = filter => {
-    this.props.postFilter(filter)
+    const { datagrid } = this.props
+
+    datagrid.setFilter(filter)
   }
 
   handleFilterSave = filter => {
@@ -109,8 +108,7 @@ class MyInventory extends Component {
       openBroadcast,
       intl,
       rows,
-      loading,
-      onScrollToEnd
+      datagrid
     } = this.props
     const { columns, selectedRows } = this.state
 
@@ -151,9 +149,9 @@ class MyInventory extends Component {
           <ProdexTable
             tableName="my_inventory_grid"
             rows={this.getRows(rows)}
-            onScrollToEnd={onScrollToEnd}
-            loading={loading}
-            
+            onScrollToEnd={datagrid.onScrollToEnd}
+            loading={datagrid.loading}
+
             columns={columns}
             rowSelection
             groupBy={['productNumber']}
@@ -185,7 +183,10 @@ class MyInventory extends Component {
                     formatMessage({ id: 'confirm.deleteItem', defaultMessage: `Do you really want to remove ${row.chemicalName}?` },
                       { item: row.chemicalName }
                     )
-                  ).then(() => this.props.deleteProductOffer(row.id))
+                  ).then(() => {
+                    this.props.deleteProductOffer(row.id)
+                    datagrid.removeRow(row.id)
+                  })
                 }
               }
             ]}

@@ -8,7 +8,6 @@ import { withDatagrid } from '~/modules/datagrid'
 
 function mapStateToProps(store, {datagrid}) {
   return {
-    ...datagrid,
     searchedProducts: store.simpleAdd.searchedProducts,
     rows: datagrid.rows.map(po => {
       const qtyPart = `${po.product.packagingUnit ? po.product.packagingUnit.nameAbbreviation : ''}`
@@ -42,9 +41,8 @@ function mapStateToProps(store, {datagrid}) {
   }
 }
 
-export default withDatagrid(
-  '/prodex/api/product-offers/own/datagrid/',
-  connect(mapStateToProps, { ...Actions, openBroadcast })(MyInventory)
-)
+export default withDatagrid(connect(mapStateToProps, { ...Actions, openBroadcast })(MyInventory), { 
+  apiUrl: '/prodex/api/product-offers/own/datagrid/',
+})
 
 
