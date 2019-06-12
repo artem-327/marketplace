@@ -161,16 +161,8 @@ export default class _Table extends Component {
         widths: this.getColumnsExtension(),
         order: this.getColumns().map(c => c.name)
       },
-      // lastPageNumber: 0,
-      // allLoaded: false
     }
   }
-
-  // componentWillReceiveProps(nextProps) {
-  //   if (nextProps.rows.length < this.props.pageSize * this.state.lastPageNumber) {
-  //     this.setState({ allLoaded: true })
-  //   }
-  // }
 
   componentDidMount() {
     this.loadColumnsSettings()
@@ -181,16 +173,15 @@ export default class _Table extends Component {
 
   componentDidUpdate(prevProps) {
     // expand groups after data was loaded when grouping is set
-    prevProps.loading != this.props.loading && prevProps.loading && this.props.groupBy.length > 0 && this.expandGroups()
+    if (prevProps.rows !== this.props.rows) this.props.groupBy.length && this.expandGroups()
+    // prevProps.loading != this.props.loading && prevProps.loading && this.props.groupBy.length > 0 && this.expandGroups()
   }
 
   handleScroll = ({ target }) => {
     const { onScrollToEnd } = this.props
-    // const { allLoaded, lastPageNumber } = this.state
-
+    
     if (target.offsetHeight + target.scrollTop === target.scrollHeight) {
-      // this.setState({ lastPageNumber: lastPageNumber + 1 })
-      // onScrollToEnd(lastPageNumber + 1)
+      
       onScrollToEnd()
     }
   }
