@@ -3,24 +3,13 @@ import pt from 'prop-types'
 import api from '~/api'
 import _ from 'lodash'
 
-export default (apiUrl, Component) => {
+export default (Component, {apiUrl, filters = []}) => {
   class DatagridProvider extends React.Component {
 
-    static propTypes = {
-      apiUrl: pt.string.isRequired,
-      filters: pt.arrayOf(pt.shape({
-        operator: pt.string,
-        path: pt.string,
-        values: pt.arrayOf(pt.string)
-      }))
-    }
-
-    static defaultProps = {
-      filters: []
-    }
-
     state = {
+      apiUrl,
       rows: [],
+      filters: [],
       pageSize: 50,
       pageNumber: 0,
       allLoaded: false,
@@ -28,12 +17,11 @@ export default (apiUrl, Component) => {
     }
 
     componentDidMount() {
-      this.loadNextPage()
+      //this.loadNextPage()
     }
 
     async loadNextPage() {
-      const { filters } = this.props
-      const { pageNumber, pageSize } = this.state
+      const { pageNumber, pageSize, filters } = this.state
 
       this.setState({ loading: true })
 
@@ -60,10 +48,31 @@ export default (apiUrl, Component) => {
       }))
     }
 
+    removeRowByIndex = (index) => {
+      this.setState(s => ({
+        rows: s.rows.filter((r,i) => i !== index)
+      }))
+    }
+
     onScrollToEnd = () => {
       const { rows, pageSize, pageNumber } = this.state
 
       !(rows.length < pageSize * pageNumber) && this.loadNextPage()
+    }
+
+    loadData = (pageNumber = 0) => {
+      this.setState({
+        pageNumber,
+        rows: []
+      }, this.loadNextPage)
+    }
+
+    setFilter = (filters, reload = true) => {
+      this.setState({
+        ...filters,
+        rows: [],
+        pageNumber: 0
+      }, reload && this.loadNextPage)
     }
 
     render() {
@@ -75,6 +84,8 @@ export default (apiUrl, Component) => {
             rows,
             loading,
             removeRow: this.removeRowById,
+            loadData: this.loadData,
+            setFilter: this.setFilter,
             onScrollToEnd: this.onScrollToEnd
           }}
         />
