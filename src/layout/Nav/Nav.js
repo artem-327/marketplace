@@ -29,7 +29,8 @@ class Nav extends Component {
                 clients: false,
                 orders: false,
                 inventory: false,
-                dashboard: false
+                dashboard: false,
+                profile: false
             }
         }
     }
@@ -43,7 +44,8 @@ class Nav extends Component {
                 clients: false,
                 orders: false,
                 inventory: false,
-                dashboard: false
+                dashboard: false,
+                profile: false
             }}, () => document.removeEventListener('click', this.handleClickOutside, false))
     }
 
@@ -199,6 +201,8 @@ class Nav extends Component {
             currentLogo = inventory
         } else if (path.includes('/administration')) {
             currentLogo = inventory
+        } else if (path.includes('/profile')) {
+            currentLogo = inventory
         } else {
             currentLogo = inventory
         }
@@ -235,6 +239,9 @@ class Nav extends Component {
                     {this.renderMenuItem('admin', [
                         {name: 'Admin', url: '/admin'},
                     ], 'Admin')}
+                    {this.renderMenuItem('profile', [
+                        {name: 'Profile', url: '/profile'},
+                    ], 'Profile')}
                 </div>
                 <div className='logout'>
                     {this.renderMyAccount('myaccount', [

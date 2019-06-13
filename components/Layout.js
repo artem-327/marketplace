@@ -62,6 +62,7 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange' }) => 
         <Menu.Menu position='right' className='black'>
           <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
             <Dropdown.Menu>
+              <Dropdown.Item as={MenuLink} to='/profile'>User / My Profile</Dropdown.Item>
               <Dropdown.Item as={MenuLink} to='/auth/logout'>Logout</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>

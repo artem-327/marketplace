@@ -26,6 +26,7 @@ import OfficesDetail from "../pages/administration/officesAdmin/OfficesDetailAdm
 import UsersNew from "../pages/administration/users";
 import Operators from "../pages/administration/operators";
 import Administration from "../pages/administration/";
+import Profile from "../pages/profile";
 import NoMatch from "../components/404";
 
 import {withEdit} from '../pages/inventory/addInventory/EditInventoryHOC';
@@ -62,6 +63,7 @@ class Main extends Component {
                     <Route exact path="/test-page" component={TestPage}/>
                     <Route exact path="/cart/purchase-order" component={withAuth(PurchaseOrder)}/>
                     <Route exact path="/cart/shopping-cart" component={withAuth(ShoppingCart)}/>
+                    <Route exact path="/profile" component={withAuth(Profile)}/>
                     {/* broadcast route for development */}
                     <Route exact path="/broadcast" component={withAuth(AddBroadcast)}/>
                     <Route component={withAuth(NoMatch)}/>
