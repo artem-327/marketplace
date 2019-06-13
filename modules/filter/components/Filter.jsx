@@ -1,21 +1,24 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { Form, Input, Checkbox as FormikCheckbox, Dropdown } from 'formik-semantic-ui'
+import { Form, Input, Checkbox as FormikCheckbox, } from 'formik-semantic-ui'
 import { Field as FormikField } from 'formik'
 import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
-import { DateInput } from 'semantic-ui-calendar-react' //'~/components/custom-formik'
+import { DateInput } from 'semantic-ui-calendar-react'
 import {
   Button, Accordion,
   Segment, FormGroup,
   Icon, FormField,
   Checkbox, Grid,
   GridRow, GridColumn,
-  Input as SemanticInput
+  Dropdown
 } from 'semantic-ui-react'
 
 import { datagridValues } from '../constants/filter'
 import { initialValues } from '../constants/validation'
+
+import SavedFilters from './SavedFilters'
+// import SavedFilters from '~/src/components/Filter/components/SavedFilters/SavedFilters'
 
 import {
   FlexSidebar, FlexContent,
@@ -24,49 +27,6 @@ import {
   GraySegment, Title,
   RelaxedRow
 } from '../constants/layout'
-
-const countryOptions = [
-  { key: 'af', value: 'af', flag: 'af', text: 'Afghanistan' },
-  { key: 'ax', value: 'ax', flag: 'ax', text: 'Aland Islands' },
-  { key: 'al', value: 'al', flag: 'al', text: 'Albania' },
-  { key: 'dz', value: 'dz', flag: 'dz', text: 'Algeria' },
-  { key: 'as', value: 'as', flag: 'as', text: 'American Samoa' },
-  { key: 'ad', value: 'ad', flag: 'ad', text: 'Andorra' },
-  { key: 'ao', value: 'ao', flag: 'ao', text: 'Angola' },
-  { key: 'ai', value: 'ai', flag: 'ai', text: 'Anguilla' },
-  { key: 'ag', value: 'ag', flag: 'ag', text: 'Antigua' },
-  { key: 'ar', value: 'ar', flag: 'ar', text: 'Argentina' },
-  { key: 'am', value: 'am', flag: 'am', text: 'Armenia' },
-  { key: 'aw', value: 'aw', flag: 'aw', text: 'Aruba' },
-  { key: 'au', value: 'au', flag: 'au', text: 'Australia' },
-  { key: 'at', value: 'at', flag: 'at', text: 'Austria' },
-  { key: 'az', value: 'az', flag: 'az', text: 'Azerbaijan' },
-  { key: 'bs', value: 'bs', flag: 'bs', text: 'Bahamas' },
-  { key: 'bh', value: 'bh', flag: 'bh', text: 'Bahrain' },
-  { key: 'bd', value: 'bd', flag: 'bd', text: 'Bangladesh' },
-  { key: 'bb', value: 'bb', flag: 'bb', text: 'Barbados' },
-  { key: 'by', value: 'by', flag: 'by', text: 'Belarus' },
-  { key: 'be', value: 'be', flag: 'be', text: 'Belgium' },
-  { key: 'bz', value: 'bz', flag: 'bz', text: 'Belize' },
-  { key: 'bj', value: 'bj', flag: 'bj', text: 'Benin' },
-  { key: 'bm', value: 'bm', flag: 'bm', text: 'Bermuda' },
-  { key: 'bt', value: 'bt', flag: 'bt', text: 'Bhutan' },
-  { key: 'bo', value: 'bo', flag: 'bo', text: 'Bolivia' },
-  { key: 'ba', value: 'ba', flag: 'ba', text: 'Bosnia' },
-  { key: 'bw', value: 'bw', flag: 'bw', text: 'Botswana' },
-  { key: 'bv', value: 'bv', flag: 'bv', text: 'Bouvet Island' },
-  { key: 'br', value: 'br', flag: 'br', text: 'Brazil' },
-  { key: 'vg', value: 'vg', flag: 'vg', text: 'British Virgin Islands' },
-  { key: 'bn', value: 'bn', flag: 'bn', text: 'Brunei' },
-  { key: 'bg', value: 'bg', flag: 'bg', text: 'Bulgaria' },
-  { key: 'bf', value: 'bf', flag: 'bf', text: 'Burkina Faso' },
-  { key: 'bi', value: 'bi', flag: 'bi', text: 'Burundi' },
-  { key: 'tc', value: 'tc', flag: 'tc', text: 'Caicos Islands' },
-  { key: 'kh', value: 'kh', flag: 'kh', text: 'Cambodia' },
-  { key: 'cm', value: 'cm', flag: 'cm', text: 'Cameroon' },
-  { key: 'ca', value: 'ca', flag: 'ca', text: 'Canada' },
-]
-
 
 class Filter extends Component {
 
@@ -133,7 +93,7 @@ class Filter extends Component {
 
   handleSubmit = ({ notifications, checkboxes, name, ...rest }) => { // { setSubmitting }
     let { onApply } = this.props
-    console.log({rest})
+
     onApply(this.generateDatagridFilter(rest))
   }
 
@@ -153,7 +113,7 @@ class Filter extends Component {
     }
 
     this.props.onSave(requestData)
-    if (automaticallyApply) this.handleSubmit(rest)
+    if (automaticallyApply) this.props.onApply(this.generateDatagridFilter(rest))
   }
 
   fetchIfNoData = (fn, propertyName) => {
@@ -233,35 +193,34 @@ class Filter extends Component {
     let productGradeRows = this.generateCheckboxes(productGradeTypes, 'productGrades')
     let productFormsRows = this.generateCheckboxes(productForms, 'productForms')
 
-    let dropdownInputProps = {
+    let dropdownProps = {
       search: true,
       selection: true,
       multiple: true,
+      fluid: true,
+      options: searchedProducts.map((product) => ({
+        key: product.id,
+        text: product.productName,
+        value: JSON.stringify({ id: product.id, name: product.productName })
+      })),
+      label: <FormattedMessage id='filter.ChemicalNameCAS' />,
       loading: searchedProductsLoading,
+      name: 'search',
+      placeholder: <FormattedMessage id='filter.searchProducts' defaultMessage='Search Products' />,
       onSearchChange: (_, data) => this.handleSearch(data),
-      onChange: () => console.log('onChange')
+      value: values.search,
+      onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null),
     }
 
-    if (!searchedProductsLoading) dropdownInputProps.icon = null
+    if (!searchedProductsLoading) dropdownProps.icon = null
 
     return (
       <Accordion>
         <Segment basic>
-
           <AccordionItem>
             {this.accordionTitle('chemicalType', <FormattedMessage id='filter.chemicalType' />)}
             <AccordionContent active={this.state.accordion.chemicalType}>
-              <Dropdown
-                inputProps={dropdownInputProps}
-                fieldProps={{ width: 16 }}
-                fluid
-                options={searchedProducts.map((product) => ({
-                  key: product.id,
-                  text: product.name,
-                  value: { id: product.id, name: product.name }
-                }))}
-                label={<FormattedMessage id='filter.ChemicalNameCAS' />}
-                name='search' />
+              <Dropdown {...dropdownProps} />
             </AccordionContent>
           </AccordionItem>
 
@@ -315,7 +274,6 @@ class Filter extends Component {
 
           <AccordionItem>
             {this.accordionTitle('expiration', <FormattedMessage id='filter.expiration' defaultMessage='Expiration' />)}
-
             <AccordionContent active={this.state.accordion.expiration}>
               <FormGroup widths='equal'>
                 <FormField width={8}>
@@ -324,7 +282,7 @@ class Filter extends Component {
                     closable
                     value={values.dateFrom}
                     closeOnMouseLeave={false}
-                    dateFormat='DD-MM-YYYY'
+                    dateFormat='YYYY-MM-DD'
                     animation='none'
                     label={<FormattedMessage id='filter.From' defaultMessage='From' />}
                     name='dateFrom' />
@@ -334,7 +292,7 @@ class Filter extends Component {
                     onChange={(e, { name, value }) => setFieldValue(name, value)}
                     closable
                     value={values.dateTo}
-                    dateFormat='DD-MM-YYYY'
+                    dateFormat='YYYY-MM-DD'
                     animation='none'
                     closeOnMouseLeave={false}
                     label={<FormattedMessage id='filter.To' defaultMessage='To' />}
@@ -353,7 +311,6 @@ class Filter extends Component {
               </FormGroup>
             </AccordionContent>
           </AccordionItem>
-
 
           <Grid verticalAlign='middle'>
 
@@ -437,7 +394,7 @@ class Filter extends Component {
             </GridRow>
           </Grid>
         </Segment>
-      </Accordion>
+      </Accordion >
     )
   }
 
@@ -454,6 +411,8 @@ class Filter extends Component {
     const {
       toggleFilter
     } = this.props
+
+
 
 
     return (
@@ -493,9 +452,16 @@ class Filter extends Component {
             }}>
               {({ submitForm, values, setFieldValue }) => {
                 this.submitForm = submitForm
-                return this.formMarkup(values, setFieldValue)
+                return (
+                  !this.state.savedFiltersActive && this.formMarkup(values, setFieldValue)
+                )
               }}
             </Form>
+
+            <SavedFilters
+              savedFilters={this.props.savedFilters}
+              savedFiltersLoading={this.props.savedFiltersLoading}
+              getSavedFilters={this.props.getSavedFilters} />
           </Segment>
         </FlexContent>
 

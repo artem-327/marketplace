@@ -4,6 +4,7 @@ import SaveFilterItem from './SaveFilterItem'
 import { Segment, Loader, Dimmer } from 'semantic-ui-react'
 import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
+import Axios from 'axios';
 
 const CenteredSegment = styled(Segment)`
   vertical-align: middle;
@@ -13,9 +14,11 @@ const CenteredSegment = styled(Segment)`
 `
 
 export default class SavedFilters extends Component {
-
+  state = {
+    savedFilters: []
+  }
   componentDidMount() {
-    this.props.getSavedFilters()
+    Axios.get('/prodex/api/product-offers/broadcasted/datagrid/saved-filters').then((response) => this.setState({ savedFilters: response.data }))
   }
 
   renderSaveItems(saved) {
@@ -41,7 +44,7 @@ export default class SavedFilters extends Component {
   }
 
   render() {
-    
+
     let { saveFilters, fetching } = this.props
     if (fetching) {
       return (
@@ -53,7 +56,7 @@ export default class SavedFilters extends Component {
       )
     }
 
-    if (saveFilters.length === 0) {
+    if (this.state.savedFilters.length === 0) {
       return (
         <Segment basic padded>
           <FormattedMessage id='filter.noSavedFilters' defaultMessage='No saved filters available' />
@@ -63,7 +66,7 @@ export default class SavedFilters extends Component {
 
     return (
       <ul className='saved-filters'>
-        {this.renderSaveItems(saveFilters)}
+        {this.renderSaveItems(this.state.savedFilters)}
       </ul>
     )
   }

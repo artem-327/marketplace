@@ -6,6 +6,7 @@ import Router from 'next/router'
 import ProdexTable from '~/components/table'
 import { Broadcast } from '~/modules/broadcast'
 import { Filter } from '~/modules/filter'
+
 import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 
@@ -30,7 +31,7 @@ class MyInventory extends Component {
 
   componentDidMount() {
     const { datagrid } = this.props
-    
+
     datagrid.loadData()
   }
 
@@ -105,18 +106,19 @@ class MyInventory extends Component {
   }
 
   handleFilterClear = () => {
-    let { filter } = this.props
-    filter.filters = []
-    this.props.postFilter(filter)
+    let { datagrid } = this.props
+
+    datagrid.setFilter({ filters: [] })
   }
 
   removeFilter = (i) => {
-    let { filter } = this.props
+    let { datagrid } = this.props
+    let { filters } = datagrid
 
-    filter.filters.splice(i, 1)
-
-    this.props.postFilter(filter)
+    filters.splice(i, 1)
+    datagrid.setFilter(filters)
   }
+ 
 
   render() {
     const {
@@ -128,7 +130,7 @@ class MyInventory extends Component {
     const { columns, selectedRows } = this.state
 
     let { formatMessage } = intl
-
+    
     return (
       <>
         <Container fluid style={{ padding: '0 32px' }}>
@@ -151,13 +153,8 @@ class MyInventory extends Component {
 
             <Menu.Menu position="right">
               <Menu.Item>
-                <FilterTags />
+                <FilterTags filters={datagrid.filters} onClick={this.removeFilter} />
               </Menu.Item>
-
-              <Menu.Item>
-                <FilterTags filter={this.props.filter} onClick={this.removeFilter} />
-              </Menu.Item>
-
               <Menu.Item>
                 <SubMenu />
               </Menu.Item>
@@ -226,9 +223,7 @@ class MyInventory extends Component {
           onApply={this.handleFilterApply}
           onSave={this.handleFilterSave}
           onClear={this.handleFilterClear}
-          searchProducts={this.props.searchProducts}
-          searchedProducts={this.props.searchedProducts}
-          searchedProductsLoading={this.props.searchedProductsLoading}
+          {...this.props.datagrid}
         />
       </>
     )

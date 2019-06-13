@@ -5,7 +5,7 @@ export function findProducts(search) {
 }
 
 export async function searchProducts(text) {
-  const response = await api.get(`/prodex/api/products/search?search=${text}&onlyMapped=true`)
+  const response = await api.get(`/prodex/api/products/broadcasted/search?pattern=${text}`)
   return response
 }
 

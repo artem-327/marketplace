@@ -87,3 +87,21 @@ export const FilterTag = styled.div`
   cursor: pointer;
   margin-right: 10px
 `
+
+export const SavedFiltersSegment = styled(Segment)`
+  padding-top: 0px !important;
+  margin-top: 0px !important;
+`
+
+export const SavedFilterItem = styled.div`
+  border-bottom: solid 1px #e3e3e3;
+  font-weight: normal;
+`
+
+export const SavedFilterTitle = styled(AccordionTitle)`
+  text-transform: uppercase;
+  font-weight: normal;
+  margin-bottom: 0px !important;
+`
+
+

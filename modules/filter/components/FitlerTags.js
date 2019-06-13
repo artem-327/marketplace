@@ -6,8 +6,9 @@ import { Icon } from 'semantic-ui-react'
 
 export default class FilterTags extends Component {
   render() {
+
     try {
-      var { filters } = this.props.filter
+      var { filters } = this.props
     } catch (_) {
       return null
     }
@@ -17,8 +18,8 @@ export default class FilterTags extends Component {
     return (
       <>
         {filters.map((el, i) =>
-          <FilterTag key={i} onClick={() => this.props.onClick(i)}>
-            <span>{el.description}: {el.valuesDescription.toString().replace(/,/g, ', ')}<Icon name='delete' /></span>
+          <FilterTag key={i} >
+            <span>{el.description}: {el.valuesDescription.toString().replace(/,/g, ', ')}<Icon onClick={() => this.props.onClick(i)} name='delete' /></span>
           </FilterTag>
         )}
       </>

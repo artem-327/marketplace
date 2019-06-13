@@ -88,6 +88,7 @@
   "myInventory.myInventory": "MY INVENTORY",
   "myInventory.smallHeader": "{number} products offerings selected",
   "filter.saved": "Saved",
+  "filter.searchProducts": "Search Products",
   "filter.selectedFilter": "SELECTED FILTER - ",
   "filter.setFilters": "SET FILTERS",
   "filter.setFilterName": "Set Filter Name",

@@ -60,27 +60,19 @@ export default class Marketplace extends Component {
   }
 
   onFilterApply = (filter) => {
-    const { datagrid } = this.props
-
-    datagrid.setFilter(filter)
+    this.props.datagrid.setFilter(filter)
   }
 
   onFilterSave = (filter) => {
-    this.props.saveBroadcastedFilter(filter)
+    this.props.datagrid.saveFilter(filter)
   }
 
-  onFilterClear = () => {
-    let { filter } = this.props
-    filter.filters = []
-    this.props.postBroadcastedDatagrid(filter)
+  onFilterClear = () => {  
+    this.props.datagrid.clearFilter()
   }
 
   removeFilter = (i) => {
-    let { filter } = this.props
-
-    filter.filters.splice(i, 1)
-
-    this.props.postBroadcastedDatagrid(filter)
+    this.props.datagrid.removeFilter(i)
   }
 
   render() {
@@ -114,7 +106,7 @@ export default class Marketplace extends Component {
 
             <Menu.Menu position='right'>
               <Menu.Item>
-                <FilterTags filter={this.props.filter} onClick={this.removeFilter} />
+                <FilterTags filters={datagrid.filters} onClick={this.removeFilter} />
               </Menu.Item>
               {selectedRows.length === 0 ? null :
                 <Button primary onClick={() => this.setState({ open: true })}>
@@ -171,6 +163,9 @@ export default class Marketplace extends Component {
           onApply={this.onFilterApply}
           onSave={this.onFilterSave}
           onClear={this.onFilterClear}
+          searchProducts={this.props.datagrid.searchProducts}
+          searchedProducts={this.props.datagrid.searchedProducts}
+          searchedProductsLoading={this.props.datagrid.searchedProductsLoading}
         />
         <AddCart />
       </>
