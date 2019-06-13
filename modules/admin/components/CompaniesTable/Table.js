@@ -70,7 +70,7 @@ class CompaniesTable extends Component {
                 formatMessage({id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` }, { item: row.name })
               ).then(() => deleteCompany(row.id))
             },
-            { text: 'Register Dwolla Account', callback: (row) => openRegisterDwollaAccount(row.id)}
+            { text: 'Register Dwolla Account', callback: (row) => openRegisterDwollaAccount(row.id), hidden: row => row.hasDwollaAccount === "Yes"}
           ]}
         />
       </React.Fragment>
