@@ -81,7 +81,7 @@ export function handlerSubmitUserEditPopup(payload, id) {
       preferredCurrency: payload.preferredCurrency
     }
     removeEmpty(updateUser)
-    console.log('!!!!!!!!!! edit user', updateUser);
+    console.log('!!!!!!!!!! edit user', updateUser)
     await dispatch({
       type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
       payload: api.patchUser(id, updateUser)
@@ -504,7 +504,7 @@ export function postNewUserRequest(payload) {
       preferredCurrency: payload.preferredCurrency
     }
     removeEmpty(dataBody)
-    console.log('!!!!!!!!!! new user', dataBody);
+    console.log('!!!!!!!!!! new user', dataBody)
     await dispatch({
       type: AT.POST_NEW_USER_REQUEST,
       payload: api.postNewUser(dataBody)

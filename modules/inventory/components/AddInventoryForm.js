@@ -714,7 +714,7 @@ class AddInventoryForm extends Component {
                     </Menu.Item>
                     ),
                     pane: (
-                      <Tab.Pane style={{ height: '1px', flexGrow: '10', flexShrink: '10' }}>
+                      <Tab.Pane style={{ padding: '0 32px' }}>
                         <Grid style={{ marginTop: '2rem' }}>
                           <GridColumn width={11}>
                             <Grid columns={3} centered>
