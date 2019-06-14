@@ -612,3 +612,8 @@ i.file {
     background-image: url("../images/attachment-negative.png");
   }
 }
+
+.ui.toggle.checkbox input:not([type=radio]):indeterminate ~ .box:before,
+.ui.toggle.checkbox input:not([type=radio]):indeterminate ~ label:before {
+  background: #ffff55 !important;
+}
