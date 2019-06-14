@@ -3,17 +3,19 @@ import pt from 'prop-types'
 import api from '~/api'
 import _ from 'lodash'
 
-export default (Component, {apiUrl, filters = []}) => {
+export default (Component, { apiUrl, filters = [] }) => {
   class DatagridProvider extends React.Component {
 
     state = {
       apiUrl,
       rows: [],
-      filters: [],
-      pageSize: 50,
-      pageNumber: 0,
-      allLoaded: false,
-      loading: false
+      datagridParams: {
+        filters: [],
+        pageSize: 50,
+        pageNumber: 0,
+        allLoaded: false,
+        loading: false
+      }
     }
 
     componentDidMount() {
@@ -21,21 +23,22 @@ export default (Component, {apiUrl, filters = []}) => {
     }
 
     async loadNextPage() {
-      const { pageNumber, pageSize, filters } = this.state
+      const { datagridParams } = this.state
 
       this.setState({ loading: true })
 
       try {
         const { data } = await api.post(apiUrl, {
-          filters,
-          pageNumber,
-          pageSize
+          ...datagridParams
         })
 
         this.setState(s => ({
-          rows:  _.unionBy(s.rows, data, 'id'),
-          pageNumber: pageNumber + 1,
-          loading: false
+          rows: _.unionBy(s.rows, data, 'id'),
+          loading: false,
+          datagridParams: {
+            ...s.datagridParams,
+            pageNumber: s.datagridParams.pageNumber + 1,
+          }
         }))
       } catch (e) {
         this.setState({ loading: false })
@@ -50,29 +53,44 @@ export default (Component, {apiUrl, filters = []}) => {
 
     removeRowByIndex = (index) => {
       this.setState(s => ({
-        rows: s.rows.filter((r,i) => i !== index)
+        rows: s.rows.filter((r, i) => i !== index)
       }))
     }
 
     onScrollToEnd = () => {
-      const { rows, pageSize, pageNumber } = this.state
+      const { rows, datagridParams: { pageSize, pageNumber } } = this.state
 
       !(rows.length < pageSize * pageNumber) && this.loadNextPage()
     }
 
     loadData = (pageNumber = 0) => {
-      this.setState({
-        pageNumber,
+      this.setState(s => ({
+        datagridParams: { 
+          ...s.datagridParams,
+          pageNumber 
+        },
         rows: []
-      }, this.loadNextPage)
+      }), this.loadNextPage)
     }
 
     setFilter = (filters, reload = true) => {
-      this.setState({
-        ...filters,
-        rows: [],
-        pageNumber: 0
-      }, reload && this.loadNextPage)
+      this.setState(s => ({
+        datagridParams: {
+          ...s.datagridParams,
+          ...filters,
+          pageNumber: 0
+        },
+        rows: []
+      }), reload && this.loadNextPage)
+    }
+
+    clearFilter = () => {
+      this.setState(s => ({
+        datagridParams: {
+          filters: [],
+          pageNumber: 0
+        }
+      }), this.loadNextPage())
     }
 
     render() {
