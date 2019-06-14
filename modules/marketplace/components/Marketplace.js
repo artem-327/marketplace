@@ -45,7 +45,8 @@ export default class Marketplace extends Component {
     const { rows } = this.props
 
     return rows.map(r => ({
-      ...r
+      ...r,
+      packaging: r.packagingType && r.packagingUnit && r.packagingSize ? `${r.packagingSize} ${r.packagingUnit} ${r.packagingType}` : 'N/A'
     }))
   }
 

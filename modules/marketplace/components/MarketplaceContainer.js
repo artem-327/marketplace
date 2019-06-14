@@ -21,7 +21,9 @@ function mapStateToProps(store, {datagrid}) {
         productNumber: po.product.casProduct ? po.product.casProduct.casNumber : 'Unmapped',
         merchant: po.warehouse.warehouseName,
         available: po.pkgAmount.formatNumber(),
-        packaging: po.product.packagingType && po.product.packagingType.name ? po.product.packagingType.name : 'N/A',
+        packagingType: po.product.packagingType && po.product.packagingType.name ? po.product.packagingType.name : false,
+        packagingUnit: po.product.packagingUnit && po.product.packagingUnit.nameAbbreviation ? po.product.packagingUnit.nameAbbreviation : false,
+        packagingSize: po.product.packagingSize ? po.product.packagingSize : false,
         quantity: qtyPart ? `${(parseInt(po.pkgAmount, 10) * parseInt(po.product.packagingSize, 10)).formatNumber()} ${qtyPart}` : 'N/A',
         fobPrice: po.pricingTiers.length > 1 ?
           ("$" + po.pricingTiers[po.pricingTiers.length - 1].price.formatMoney(3)
