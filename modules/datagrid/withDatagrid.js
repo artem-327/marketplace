@@ -57,7 +57,7 @@ export default (Component, { apiUrl, filters = [] }) => {
       }))
     }
 
-    onScrollToEnd = () => {
+    loadNextPageSafe = () => {
       const { rows, datagridParams: { pageSize, pageNumber } } = this.state
 
       !(rows.length < pageSize * pageNumber) && this.loadNextPage()
@@ -104,7 +104,7 @@ export default (Component, { apiUrl, filters = [] }) => {
             removeRow: this.removeRowById,
             loadData: this.loadData,
             setFilter: this.setFilter,
-            onScrollToEnd: this.onScrollToEnd
+            loadNextPage: this.loadNextPageSafe
           }}
         />
       )

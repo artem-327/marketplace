@@ -93,7 +93,7 @@ class CasProductsTable extends Component {
           tableName='admin_cas_products'
           loading={loading}
           columns={columns}
-          onScrollToEnd={this.props.datagrid.onScrollToEnd}
+          onScrollToEnd={this.props.datagrid.loadNextPage}
           rows={rows}
           rowActions={[
             { text: 'Edit', callback: (row) => openPopup(row) },

@@ -133,7 +133,7 @@ export default class Marketplace extends Component {
             tableName="marketplace_grid"
             rows={rows}
             loading={datagrid.loading}
-            onScrollToEnd={datagrid.onScrollToEnd}
+            onScrollToEnd={datagrid.loadNextPage}
 
             columns={columns}
             rowSelection

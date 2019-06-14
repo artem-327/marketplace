@@ -170,7 +170,7 @@ class MyInventory extends Component {
           <ProdexTable
             tableName="my_inventory_grid"
             rows={this.getRows(rows)}
-            onScrollToEnd={datagrid.onScrollToEnd}
+            onScrollToEnd={datagrid.loadNextPage}
             loading={datagrid.loading}
 
             columns={columns}
