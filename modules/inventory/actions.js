@@ -185,9 +185,9 @@ export function getProductOffer(productOfferId) {
         data: {
           ...data,
           searchedProducts: [{
-            text: data.product.casProduct.casIndexName,
+            text: data.product.casProducts.length ? data.product.casProducts[0].casIndexName : data.product.productName + ' (Unmapped)',
             value: data.product,
-            key: data.product.casProduct.id
+            key: data.product.id
           }],
           searchedProductsLoading: false
         }
@@ -311,12 +311,12 @@ export function searchProducts(text) {
 
       return {
         data: response.data ? response.data.map(p => ({
-          text: p.casProduct ? p.casProduct.casIndexName : p.productName + ' (Unmapped)',
+          text: p.casProducts.length ? p.casProducts[0].casIndexName : p.productName + ' (Unmapped)',
           value: p,
-          key: p.casProduct ? p.casProduct.id : '',
+          key: p.id,
           id: p ? p.id : '',
           name: p.productName + (p.productCode ? ' (' + p.productCode + ')' : ''),
-          casName: p.casProduct ? p.casProduct.casIndexName + ' (' + p.casProduct.casNumber + ')' : ''
+          casName: p.casProducts.length ? p.casProducts[0].casIndexName + ' (' + p.casProducts[0].casNumber + ')' : ''
         })) : []
       }
     }

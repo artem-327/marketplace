@@ -61,7 +61,7 @@ class WarehouseTable extends Component {
       return rowsWarehouses
     }
     else if (currentTab.type === 'branches') {
-      return rowsBranches.filter(branch => branch.warehouse === false)
+      return rowsBranches
     }
   }
 
@@ -152,7 +152,8 @@ const mapStateToProps = state => {
     addNewWarehousePopup: state.settings.addNewWarehousePopup,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
-    currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+    currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
+        state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
     deleteRowById: state.settings.deleteRowById,
     loading: state.settings.loading
   }

@@ -319,7 +319,8 @@ const mapStateToProps = state => {
     searchedCasProducts: state.settings.searchedCasProducts,
     searchedUnNumbers: state.settings.searchedUnNumbers,
     reloadFilter: {props: {
-        currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+        currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
+            state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
         productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
         productsFilter: state.settings.productsFilter},
       value: state.settings.filterValue},

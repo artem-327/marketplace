@@ -165,7 +165,8 @@ const mapStateToProps = state => {
     provincesDropDown: state.settings.provincesDropDown,
     countries: state.settings.countries,
     reloadFilter: {props: {
-        currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+        currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
+            state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
         deliveryAddressesFilter: state.settings.deliveryAddressesFilter},
       value: state.settings.filterValue},
   }
