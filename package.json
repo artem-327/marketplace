@@ -78,7 +78,7 @@
     "semantic-ui-calendar-react": "^0.14.4",
     "semantic-ui-react": "^0.87.1",
     "shortid": "^2.2.14",
-    "styled-components": "^4.2.0",
+    "styled-components": "^4.3.1",
     "styled-jsx": "^3.2.1",
     "tree-model": "^1.0.7",
     "type-to-reducer": "^1.1.0",

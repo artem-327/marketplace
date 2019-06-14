@@ -15,4 +15,4 @@ class Index extends Component {
   }
 }
 
-export default connect()(securePage(Index))
+export default securePage(Index)

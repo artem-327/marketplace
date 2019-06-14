@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
 import securePage from '../hocs/securePage'
 import Router from 'next/router'
 
@@ -10,4 +9,4 @@ class Index extends Component {
   render() { return null }
 }
 
-export default connect()(securePage(Index))
+export default securePage(Index)
