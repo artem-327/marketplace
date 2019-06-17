@@ -586,7 +586,10 @@ class AddInventoryForm extends Component {
                               </FormField>
                             </FormGroup>
 
-                            <Header as='h3'>Where will this product ship from?</Header>
+                            <Header as='h3'>Where will this product ship from? <Popup content={`Warehouse is the physical location where your product offer will be picked up after an order is accepted. If you do not see the warehouse you need to list then go to Settings/Warehouses and add the information there. If you do not have permissions to add a new Warehouse then contact your company Admin.`}
+                                                                                      trigger={<Icon name='info circle' color='blue' />}
+                                                                                      wide />
+                            </Header>
                             <FormGroup>
                               <FormField width={10}>
                                 <Dropdown label="Warehouse" name="warehouse" options={warehousesList} inputProps={{
