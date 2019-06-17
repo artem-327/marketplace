@@ -21,6 +21,7 @@ import marketplace from '~/modules/marketplace/reducer'
 import shippingQuotes, { initialState as shippingQuotesInit } from '~/src/modules/shippingQuotes'
 import popup from '~/src/modules/popup'
 import filter, { initialState as filterInit } from '~/modules/filter/reducer'
+import oldFilter, { initialState as oldFilterInit } from '~/src/modules/filter' // TODO: remove it when not needed
 import packageTypes from '~/src/modules/packageTypes'
 import brcRules, { initialState as broadcastInit } from "~/src/modules/broadcast"
 // import cart, { initialState as cartInit } from "./modules/cart"
@@ -79,6 +80,7 @@ const reducer = combineReducers({
   popup,
   merchants,
   filter,
+  oldFilter,
   errors,
   dataTables,
   saveFilterItem,
@@ -89,6 +91,7 @@ const reducer = combineReducers({
   zip,
   forms: combineForms({
     filter: filterInit.data,
+    oldFilter: oldFilterInit.data,
     brcRules: broadcastInit.broadcastData,
     addProductOffer: addProductsInit.addProductOffer,
     shippingQuotes: shippingQuotesInit.shippingQuotes,
