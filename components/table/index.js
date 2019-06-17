@@ -232,6 +232,7 @@ export default class _Table extends Component {
     let colNames = columns.map(column => {
       return column.name
     })
+    
     if (rowActions)
       colNames.push('__actions')
 

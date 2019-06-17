@@ -15,8 +15,7 @@ import * as Yup from 'yup'
 import Router from "next/router"
 
 const initialFormValues = {
-  'firstName':    '',
-  'lastName':     '',
+  'name':    '',
   'email':        '',
   'phoneNumber':  '',
   'address': {
@@ -29,10 +28,7 @@ const initialFormValues = {
 }
 
 const formValidation = hasProvinces => Yup.object().shape({
-  firstName: Yup.string().trim()
-    .min(3, 'Too short')
-    .required('Required'),
-  lastName: Yup.string().trim()
+  name: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
   email: Yup.string().trim()
@@ -102,15 +98,6 @@ class DeliveryAddressesPopup extends React.Component {
           >
             {({ values, errors, setFieldValue }) => (
               <>
-                <h4>User Contact</h4>
-                <FormGroup widths="equal">
-                  <Input type="text" label="First Name" name="firstName" />
-                  <Input type="text" label="Last Name" name="lastName" />
-                </FormGroup>
-                <FormGroup widths="equal">
-                  <Input type="text" label="Contact Email" name="email" />
-                  <Input type="text" label="Contact Phone" name="phoneNumber" />
-                </FormGroup>
                 <h4>Address</h4>
                 <FormGroup widths="equal">
                   <Input type="text" label="Street Address" name="address.streetAddress" />
@@ -123,6 +110,14 @@ class DeliveryAddressesPopup extends React.Component {
                                 setFieldValue('address.province', ''); this.handleCountry(e, d)}}} />
                   <Dropdown label="Province" name="address.province" options={provincesDropDown}
                             inputProps={{search: true, disabled: !this.state.hasProvinces}} />
+                </FormGroup>
+                <h4>Contact Info</h4>
+                <FormGroup>
+                  <Input type="text" label="Name" name="name" fieldProps={{width: 8}} />
+                </FormGroup>
+                <FormGroup widths="equal">
+                  <Input type="text" label="Contact Email" name="email" />
+                  <Input type="text" label="Contact Phone" name="phoneNumber" />
                 </FormGroup>
                 <div style={{ textAlign: 'right' }}>
                   <Button.Reset>Cancel</Button.Reset>

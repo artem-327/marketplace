@@ -132,22 +132,34 @@ class EditAltNamesCasProductsPopup extends React.Component {
                       <Message attached='top' className='header-table-fields'>
                         <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{marginTop: '-0.5em'}}
                                 onClick={() => this.handleAddName(arrayHelpers)}/>
-                        {`CAS Product Name: ${popupValues.data.casIndexName}`}
+                        {`${popupValues.data.casNumber} ${popupValues.data.casIndexName}`}
                       </Message>
 
                       <Table attached='bottom' className='table-fields'>
                         <Table.Header>
                           <Table.Row>
-                            <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
-                            <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
                             <TableHeaderCell>Alternative Name</TableHeaderCell>
+                            <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
+                            <TableHeaderCell width={1}>&nbsp;</TableHeaderCell>
                           </Table.Row>
                         </Table.Header>
                         <Table.Body>
                           {values && values.casAlternativeNames.length ? values.casAlternativeNames.map((val, index, vals) => (
                             <Table.Row key={index}>
-                              <TableCell width={1}><Icon name='trash alternate outline' size='large'
-                                                         onClick={() => this.handleDeleteName(popupValues.data.id, arrayHelpers, val, index)} /></TableCell>
+                              <TableCell width={16}>
+                                <FormField>
+                                  <Input name={`casAlternativeNames[${index}].alternativeName`}
+                                         inputProps={{
+                                           onChange: (e, d) => {
+                                             const {color, description, canSave} = nameValidation(index, d.value.trim(), vals)
+                                             setFieldValue(`casAlternativeNames[${index}].color`, color)
+                                             setFieldValue(`casAlternativeNames[${index}].description`, description)
+                                             setFieldValue(`casAlternativeNames[${index}].canSave`, canSave)
+                                           }
+                                         }}
+                                  />
+                                </FormField>
+                              </TableCell>
                               <TableCell width={1}>{val.description ? (
                                 <Popup content={val.description}
                                        trigger={<Icon name='save outline'
@@ -171,20 +183,8 @@ class EditAltNamesCasProductsPopup extends React.Component {
                                       }}}
                                       color={val.color} />
                               )}</TableCell>
-                              <TableCell width={16}>
-                                <FormField>
-                                  <Input name={`casAlternativeNames[${index}].alternativeName`}
-                                         inputProps={{
-                                           onChange: (e, d) => {
-                                             const {color, description, canSave} = nameValidation(index, d.value.trim(), vals)
-                                             setFieldValue(`casAlternativeNames[${index}].color`, color)
-                                             setFieldValue(`casAlternativeNames[${index}].description`, description)
-                                             setFieldValue(`casAlternativeNames[${index}].canSave`, canSave)
-                                           }
-                                         }}
-                                  />
-                                </FormField>
-                              </TableCell>
+                              <TableCell width={1}><Icon name='trash alternate outline' size='large'
+                                                         onClick={() => this.handleDeleteName(popupValues.data.id, arrayHelpers, val, index)} /></TableCell>
                             </Table.Row>
                           )) : ''
                           }

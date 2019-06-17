@@ -259,6 +259,7 @@ export function openEditCasPopup(data) {	// ! ! TODO probably openPopup() may be
 export function openEditAltNamesCasPopup(value) {
 	const data = {
 		casIndexName: value.casIndexName,
+		casNumber: value.casNumber,
 		id: value.id,
 	}
 	return {

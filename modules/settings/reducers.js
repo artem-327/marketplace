@@ -426,6 +426,7 @@ export default function reducer(state = initialState, action) {
           accountHolderName: account.accountHolderName,
           accountHolderType: account.accountHolderType,
           accountNumber: `**** **** **** ${account.last4}`,
+          status: account.status,
           // country: account.country,
           currency: account.currency,
           routingNumber: account.routingNumber
