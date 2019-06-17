@@ -409,6 +409,16 @@ class AddInventoryForm extends Component {
     initProductOfferEdit(edit)
   }
 
+  renderProductSearchTitle() {
+    return (
+      <>
+        Enter any product name, product number, or trade name from your product catalog for the product offer that you would like to list. Once you do the data related to that product name/umber will populate in the right hand column.<br /><br />
+        If you do not see the product that you would like to list then check in Settings/Product Catalog that it is entered and mapped to a CAS Index Name/Number and then return to this page.<br /><br />
+        Entering a product name and number and mapping to a CAS Index Name and Number is required first before entering a product offer.
+      </>
+    )
+  }
+
   render() {
     const {
       listDocumentTypes,
@@ -519,7 +529,10 @@ class AddInventoryForm extends Component {
                       <Tab.Pane style={{ padding: '0 32px' }}>
                         <Grid divided style={{ marginTop: '2rem' }}>
                           <Grid.Column width={5}>
-                            <Header as='h3'>What product do you want to list?</Header>
+                            <Header as='h3'>What product do you want to list? <Popup content={this.renderProductSearchTitle()}
+                                                                                     trigger={<Icon name='info circle' color='blue' />}
+                                                                                     wide />
+                            </Header>
                             <FormGroup>
                               <FormField width={13}>
                                 <Dropdown
