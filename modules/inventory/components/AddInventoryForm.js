@@ -573,9 +573,9 @@ class AddInventoryForm extends Component {
                               </FormField>
                             </FormGroup>
 
-                            <Header as='h3'>How many packages are available?
-                              <Popup content='Total packages represents the number of drums, totes, super sacks etc that you will be listing for this product offer. Your packaging type and measurement for this product offer will populate on the right panel as soon as you select a product name/number.'
-                                     trigger={<Icon name='info circle' color='blue' />} />
+                            <Header as='h3'>
+                              How many packages are available? <Popup content='Total packages represents the number of drums, totes, super sacks etc that you will be listing for this product offer. Your packaging type and measurement for this product offer will populate on the right panel as soon as you select a product name/number.'
+                                                                      trigger={<Icon name='info circle' color='blue' />} />
                             </Header>
                             <FormGroup>
                               <FormField width={4}>
@@ -588,7 +588,10 @@ class AddInventoryForm extends Component {
                             <Grid centered>
                               <GridColumn width={12}>
 
-                                <Header as="h3">Is there any order minimum requirement?</Header>
+                                <Header as="h3">Is there any order minimum requirement? <Popup content='Minimum OQ is the minimum amount of packages you want to sell for any single order. If you want to sell no less than 10 drums for an order then enter 10. If you have no minimum order requirement then enter 1. Splits is the multiples you are willing to accept for any single order. If you only want to sell multiples of 4 drums then enter 4. If you have no split requirements then enter 1.'
+                                                                                               trigger={<Icon name='info circle' color='blue' />}
+                                                                                               wide />
+                                </Header>
                                 <FormGroup>
                                   <Radio label="No" value={false} name="minimumRequirement" inputProps={{
                                     onClick: () => {
@@ -803,7 +806,7 @@ class AddInventoryForm extends Component {
                                     <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{ marginTop: '-0.5em' }} onClick={() => arrayHelpers.push({ lotNumber: null, pkgAmount: null, manufacturedDate: '', expirationDate: '' })} />
                                     Lot Details <Popup content={`This is where you can track lot(s) that make up your product offer. For example if your product offer consists of three separate lots then hit the plus button to the right twice to add two more lots. Then enter the Lot # for each, the amount of packages that are associated to that lot within this product offer, the MFG date, the expiration date, and the associated Certificate of Analysis. This does not have to be completed when listing a product offer but it is required to designate lot info and CofA's within 48 hours of an order being shipped.`}
                                                        trigger={<Icon name='info circle' color='blue' />}
-                                                       wide={500}
+                                                       wide
                                                 />
                                 </Message>
                                   <Table attached='bottom' className='table-fields'>
