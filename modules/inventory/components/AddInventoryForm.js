@@ -573,7 +573,10 @@ class AddInventoryForm extends Component {
                               </FormField>
                             </FormGroup>
 
-                            <Header as='h3'>How many packages are available?</Header>
+                            <Header as='h3'>How many packages are available?
+                              <Popup content='Total packages represents the number of drums, totes, super sacks etc that you will be listing for this product offer. Your packaging type and measurement for this product offer will populate on the right panel as soon as you select a product name/number.'
+                                     trigger={<Icon name='info circle' color='blue' />} />
+                            </Header>
                             <FormGroup>
                               <FormField width={4}>
                                 <Input label="Total Packages" inputProps={{ type: 'number' }} name="pkgAmount" />
