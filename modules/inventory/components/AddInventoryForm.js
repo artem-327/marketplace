@@ -409,6 +409,16 @@ class AddInventoryForm extends Component {
     initProductOfferEdit(edit)
   }
 
+  renderSpecSheetTitle() {
+    return (
+      <>
+        The Spec Sheet, also known as a Technical Data Sheet (TDS), is required for a product offer to broadcast to the marketplace.<br /><br />
+        You can drag and drop a file from your computer or click on the box to search for the file as well.<br /><br />
+        IMPORTANT! Your company name and contact information cannot be listed on this document and non compliance is against Echo's Terms and Conditions.
+      </>
+    )
+  }
+
   renderProductSearchTitle() {
     return (
       <>
@@ -663,7 +673,10 @@ class AddInventoryForm extends Component {
 
                                 <Divider style={{ marginTop: '3rem', marginBottom: '3rem' }} />
 
-                                <Header as='h3'>Upload Spec Sheet</Header>
+                                <Header as='h3'>Upload Spec Sheet <Popup content={this.renderSpecSheetTitle()}
+                                                                         trigger={<Icon name='info circle' color='blue' />}
+                                                                         wide />
+                                </Header>
                                 <UploadLot {...this.props}
                                   attachments={values.attachments}
                                   name='attachments'
