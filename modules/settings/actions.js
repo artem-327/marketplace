@@ -601,10 +601,18 @@ export function handleSubmitProductAddPopup(inputsValue, reloadFilter) {
       unNumber: inputsValue.unNumber ? inputsValue.unNumber : null
     }
     removeEmpty(data)
-    await dispatch({
+    const newProd = await dispatch({
       type: AT.SETTINGS_POST_NEW_PRODUCT_REQUEST,
       payload: api.postNewProduct(data)
     })
+    if (inputsValue.attachments && inputsValue.attachments.length) {
+      for (let i = 0; i < inputsValue.attachments.length; i++) {
+        dispatch({
+          type: AT.SETTINGS_POST_LINK_ATTACHMENT,
+          payload: api.postLinkAttachment(inputsValue.attachments[i].id, newProd.value.data.id)
+        })
+      }
+    }
     dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
     dispatch(closePopup())
   }
@@ -741,6 +749,27 @@ export function getProvinces(id) {
   return {
     type: AT.SETTINGS_GET_PROVINCES,
     payload: api.getProvinces(id)
+  }
+}
+
+export function getDocumentTypes() {
+  return {
+    type: AT.SETTINGS_GET_DOCUMENT_TYPES,
+    payload: api.getDocumentTypes()
+  }
+}
+
+export function addAttachment(attachment, type) {
+  return {
+    type: AT.SETTINGS_ADD_ATTACHMENT,
+    payload: api.addAttachment(attachment, type)
+  }
+}
+
+export function loadFile(attachment) {
+  return {
+    type: AT.SETTINGS_LOAD_FILE,
+    payload: api.loadFile(attachment)
   }
 }
 

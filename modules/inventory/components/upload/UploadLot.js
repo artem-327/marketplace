@@ -69,7 +69,7 @@ class UploadLot extends Component {
         </div>
       ), {
         appearance: 'error',
-        autoDismiss: true,
+        autoDismiss: true
       })
     }
 
@@ -107,7 +107,6 @@ class UploadLot extends Component {
             if (j < files.length) new Promise((resolve, reject) => {
                 loadFile(files[j]).then(file => {
                     addAttachment(file.value, parseInt(type)).then((aId) => {
-
                         onUploadSuccess(aId.value.data)
 
                         resolve()
