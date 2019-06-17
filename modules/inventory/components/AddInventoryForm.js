@@ -575,7 +575,10 @@ class AddInventoryForm extends Component {
                               </FormField>
                             </FormGroup>
 
-                            <Header as='h3'>Does this product expire?</Header>
+                            <Header as='h3'>Does this product expire? <Popup content={`If the product you are listing has an expiration then you are required to disclose that date. If you sell a product that is not represented correctly the buyer has the right to request a return of the order and the cost of shipping to/from will be the sellers responsibility.`}
+                                                                             trigger={<Icon name='info circle' color='blue' />}
+                                                                             wide />
+                            </Header>
                             <FormGroup inline>
                               <Radio label="No" value={false} name="doesExpire" />
                               <Radio label="Yes" value={true} name="doesExpire" />
