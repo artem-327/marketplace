@@ -640,7 +640,10 @@ class AddInventoryForm extends Component {
                                   </FormField>
                                 </FormGroup>
 
-                                <Header as='h3' style={{ marginBottom: '2rem' }}>What is the FOB price for each tier?</Header>
+                                <Header as='h3' style={{ marginBottom: '2rem' }}>What is the FOB price for each tier? <Popup content='FOB stands for free on board and freight on board and designates that the buyer is responsible for shipping costs. It also represents that ownership and liability is passed from seller to the buyer when the good are loaded at the originating location.'
+                                                                                                                             trigger={<Icon name='info circle' color='blue' />}
+                                                                                                                             wide />
+                                </Header>
                                 <Grid className='tier-prices'>
                                   {this.renderPricingTiers(values.priceTiers)}
                                 </Grid>
