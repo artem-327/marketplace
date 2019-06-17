@@ -792,15 +792,16 @@ class AddInventoryForm extends Component {
 
                             <Divider />
 
-                            <Header as='h3'>Does this Product Offer consist of multiple lots?</Header>
-
                             <FieldArray
                               name="lots"
                               render={arrayHelpers => (
                                 <>
                                   <Message attached='top' className='header-table-fields'>
                                     <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{ marginTop: '-0.5em' }} onClick={() => arrayHelpers.push({ lotNumber: null, pkgAmount: null, manufacturedDate: '', expirationDate: '' })} />
-                                    Lot Details
+                                    Lot Details <Popup content={`This is where you can track lot(s) that make up your product offer. For example if your product offer consists of three separate lots then hit the plus button to the right twice to add two more lots. Then enter the Lot # for each, the amount of packages that are associated to that lot within this product offer, the MFG date, the expiration date, and the associated Certificate of Analysis. This does not have to be completed when listing a product offer but it is required to designate lot info and CofA's within 48 hours of an order being shipped.`}
+                                                       trigger={<Icon name='info circle' color='blue' />}
+                                                       wide={500}
+                                                />
                                 </Message>
                                   <Table attached='bottom' className='table-fields'>
                                     <Table.Header>
