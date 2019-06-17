@@ -409,26 +409,6 @@ class AddInventoryForm extends Component {
     initProductOfferEdit(edit)
   }
 
-  renderSpecSheetTitle() {
-    return (
-      <>
-        The Spec Sheet, also known as a Technical Data Sheet (TDS), is required for a product offer to broadcast to the marketplace.<br /><br />
-        You can drag and drop a file from your computer or click on the box to search for the file as well.<br /><br />
-        IMPORTANT! Your company name and contact information cannot be listed on this document and non compliance is against Echo's Terms and Conditions.
-      </>
-    )
-  }
-
-  renderProductSearchTitle() {
-    return (
-      <>
-        Enter any product name, product number, or trade name from your product catalog for the product offer that you would like to list. Once you do the data related to that product name/umber will populate in the right hand column.<br /><br />
-        If you do not see the product that you would like to list then check in Settings/Product Catalog that it is entered and mapped to a CAS Index Name/Number and then return to this page.<br /><br />
-        Entering a product name and number and mapping to a CAS Index Name and Number is required first before entering a product offer.
-      </>
-    )
-  }
-
   render() {
     const {
       listDocumentTypes,
@@ -539,7 +519,7 @@ class AddInventoryForm extends Component {
                       <Tab.Pane style={{ padding: '0 32px' }}>
                         <Grid divided style={{ marginTop: '2rem' }}>
                           <Grid.Column width={5}>
-                            <Header as='h3'>What product do you want to list? <Popup content={this.renderProductSearchTitle()}
+                            <Header as='h3'>What product do you want to list? <Popup content={<>Enter any product name, product number, or trade name from your product catalog for the product offer that you would like to list. Once you do the data related to that product name/umber will populate in the right hand column.<br /><br />If you do not see the product that you would like to list then check in Settings/Product Catalog that it is entered and mapped to a CAS Index Name/Number and then return to this page.<br /><br />Entering a product name and number and mapping to a CAS Index Name and Number is required first before entering a product offer.</>}
                                                                                      trigger={<Icon name='info circle' color='blue' />}
                                                                                      wide />
                             </Header>
@@ -617,7 +597,7 @@ class AddInventoryForm extends Component {
                             <Grid centered>
                               <GridColumn width={12}>
 
-                                <Header as="h3">Is there any order minimum requirement? <Popup content='Minimum OQ is the minimum amount of packages you want to sell for any single order. If you want to sell no less than 10 drums for an order then enter 10. If you have no minimum order requirement then enter 1. Splits is the multiples you are willing to accept for any single order. If you only want to sell multiples of 4 drums then enter 4. If you have no split requirements then enter 1.'
+                                <Header as="h3">Is there any order minimum requirement? <Popup content={<>Minimum OQ is the minimum amount of packages you want to sell for any single order. If you want to sell no less than 10 drums for an order then enter 10. If you have no minimum order requirement then enter 1.<br />Splits is the multiples you are willing to accept for any single order. If you only want to sell multiples of 4 drums then enter 4. If you have no split requirements then enter 1.</>}
                                                                                                trigger={<Icon name='info circle' color='blue' />}
                                                                                                wide />
                                 </Header>
@@ -646,7 +626,7 @@ class AddInventoryForm extends Component {
                                   </FormField>
                                 </FormGroup>
 
-                                <Header as='h3'>How many pricing tiers would you like to offer? <Popup content='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer. For example if you list 40 drums you could set 2 tiers and offer orders of 1-20 drums at $1.00/lb and orders of 21-40 drums at $.90/lb. If you only want to set only one price then enter "1".'
+                                <Header as='h3'>How many price tiers would you like to offer? <Popup content={<>Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.<br />For example if you list 40 drums you could set 2 tiers and offer orders of <span style={{whiteSpace: 'nowrap'}}>1-20 drums</span> at $1.00/lb and orders of <span style={{whiteSpace: 'nowrap'}}>21-40</span> drums at $.90/lb.<br />If you only want to set only one price then enter "1".</>}
                                                                                                      trigger={<Icon name='info circle' color='blue' />}
                                                                                                      wide />
                                 </Header>
@@ -679,7 +659,7 @@ class AddInventoryForm extends Component {
 
                                 <Divider style={{ marginTop: '3rem', marginBottom: '3rem' }} />
 
-                                <Header as='h3'>Upload Spec Sheet <Popup content={this.renderSpecSheetTitle()}
+                                <Header as='h3'>Upload Spec Sheet <Popup content={<>The Spec Sheet, also known as a Technical Data Sheet (TDS), is required for a product offer to broadcast to the marketplace.<br /><br />You can drag and drop a file from your computer or click on the box to search for the file as well.<br /><br />IMPORTANT! Your company name and contact information cannot be listed on this document and non compliance is against Echo's Terms and Conditions.</>}
                                                                          trigger={<Icon name='info circle' color='blue' />}
                                                                          wide />
                                 </Header>
