@@ -617,7 +617,10 @@ class AddInventoryForm extends Component {
                                   </FormField>
                                 </FormGroup>
 
-                                <Header as='h3'>How many price tiers would you like to offer?</Header>
+                                <Header as='h3'>How many pricing tiers would you like to offer? <Popup content='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer. For example if you list 40 drums you could set 2 tiers and offer orders of 1-20 drums at $1.00/lb and orders of 21-40 drums at $.90/lb. If you only want to set only one price then enter "1".'
+                                                                                                     trigger={<Icon name='info circle' color='blue' />}
+                                                                                                     wide />
+                                </Header>
                                 <FormGroup>
                                   <FormField width={5}>
                                     <Dropdown
