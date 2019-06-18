@@ -26,6 +26,7 @@ export const initialState = {
   provincesDropDown: [],
   country: [],
   currency: [],
+  currentUser: null,
 
   tabsNames: defaultTabs,
   currentTab: defaultTabs[0],
@@ -261,6 +262,7 @@ export default function reducer(state = initialState, action) {
           //phone: user.homeBranch.contactPhone || '',
           phone: user.phone || '',
           homeBranchId: user.homeBranch.id,
+          enabled: user.enabled,
           /*preferredCurrency: user.preferredCurrency
             ? user.preferredCurrency.code
               ? user.preferredCurrency.code
@@ -285,6 +287,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         roles: action.payload
+      }
+    }
+
+    case AT.GET_CURRENT_USER_DATA: {
+      return {
+        ...state,
+        currentUser: action.payload
       }
     }
 
