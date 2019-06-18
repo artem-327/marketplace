@@ -3,20 +3,29 @@ import { connect } from 'react-redux'
 import filter from 'lodash/filter'
 import escapeRegExp from 'lodash/escapeRegExp'
 import debounce from 'lodash/debounce'
+import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import {withToastManager} from 'react-toast-notifications'
+import { FormattedMessage } from 'react-intl'
 
 import { Modal, FormGroup, FormField, Search, Label } from 'semantic-ui-react'
+import { DateInput } from '~/components/custom-formik'
 
 import {
   closePopup,
   handleSubmitProductEditPopup,
   handleSubmitProductAddPopup,
   searchCasProduct,
-  searchUnNumber
+  searchUnNumber,
+  getDocumentTypes,
+  loadFile,
+  addAttachment,
+  removeAttachment,
+  removeAttachmentLink
 } from '../../actions'
 import { Form, Input, Button, Dropdown, TextArea, Checkbox } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 import './styles.scss'
-import Router from "next/router"
+import Router from "next/router" 
 
 const formValidation = Yup.object().shape({
   productName: Yup.string().trim()
@@ -43,6 +52,11 @@ const formValidation = Yup.object().shape({
 })
 
 class ProductPopup extends React.Component {
+  componentDidMount() {
+    if (this.props.documentTypes.length === 0)
+      this.props.getDocumentTypes()
+  }
+
   componentWillMount() {
     this.resetComponent()
   }
@@ -189,110 +203,170 @@ class ProductPopup extends React.Component {
             onReset={closePopup}
             onSubmit={this.handlerSubmit}
           >
-            <FormGroup widths="equal">
-              <Input type="text" label="Product Name" name="productName" />
-              <Input type="text" label="Product Number" name="productNumber" />
-              <FormField>
-                <label>CAS Number / Product Search</label>
-                <Search
-                  loading={isLoading}
-                  onResultSelect={this.handleResultSelect}
-                  onSearchChange={this.handleSearchChange}
-                  results={searchedCasProducts.map(item => {
-                    return {
-                      id: item.id,
-                      title: item.casNumber,
-                      description: item.casIndexName,
-                      unNumber: item.unNumber ? item.unNumber.id : 0
-                    }
-                  })}
-                  defaultValue={casProduct && casProduct.casNumber ? casProduct.casNumber : null}
-                />
-              </FormField>
-            </FormGroup>
-            <FormGroup>
-              <FormField width={16}>
-                <label>Description</label>
-                <TextArea rows='3'
-                          name='description'
-                />
-              </FormField>
-            </FormGroup>
-            <FormGroup widths="equal">
-              <Input type="text" label="Packaging Size" name="packagingSize" />
-              <Dropdown
-                label="Unit"
-                name="unitID"
-                options={productsUnitsType}
-              />
-              <Dropdown
-                label="Packaging Type"
-                name="packageID"
-                options={packagingType}
-              />
-            </FormGroup>
-            <FormGroup width='equal'>
-              <FormField>
-                <Checkbox toggle
-                          label='Stackable'
-                          name='stackable'
-                />
-              </FormField>
-              <FormField>
-                <Checkbox toggle
-                          label='Hazardous'
-                          name='hazardous'
-                />
-              </FormField>
-            </FormGroup>
-            <FormGroup widths='equal'>
-              <FormField>
-                <label>UN Number</label>
-                <Search loading={isUnLoading}
-                        onResultSelect={this.handleUnNumberSelect}
-                        onSearchChange={this.handleSearchUnNumber}
-                        results={searchedUnNumbers.map(item => {
-                          return {
-                            id: item.id,
-                            title: item.unNumberCode,
-                            description: item.description
-                          }
-                        })}
-                        defaultValue={unNumber && unNumber.unNumberCode ? unNumber.unNumberCode : null}
-                />
-              </FormField>
-              <FormField>
-                <Input type="number"
-                       label="NMFC Code"
-                       name="nmfcNumber"
-                />
-              </FormField>
-              <Dropdown label='Freight Class'
-                        name='freightClass'
-                        options={freightClasses}
-              />
-            </FormGroup>
-            <FormGroup widths='equal'>
-              <Dropdown label='Hazard Class'
-                        name='hazardClass'
-                        inputProps={{ multiple: true }}
-                        options={hazardClasses}
-                        inputProps={{
-                          multiple: true,
-                          selection: true,
-                          search: true,
-                          clearable: true
-                        }}
-              />
-              <Dropdown label='Packaging Group'
-                        name='packagingGroup'
-                        options={packagingGroups}
-              />
-            </FormGroup>
-            <div style={{ textAlign: 'right' }}>
-              <Button.Reset onClick={closePopup}>Cancel</Button.Reset>
-              <Button.Submit>Save</Button.Submit>
-            </div>
+            {({ values, setFieldValue }) => (
+              <>
+                <FormGroup widths="equal">
+                  <Input type="text" label="Product Name" name="productName" />
+                  <Input type="text" label="Product Number" name="productNumber" />
+                  <FormField>
+                    <label>CAS Number / Product Search</label>
+                    <Search
+                      loading={isLoading}
+                      onResultSelect={this.handleResultSelect}
+                      onSearchChange={this.handleSearchChange}
+                      results={searchedCasProducts.map(item => {
+                        return {
+                          id: item.id,
+                          title: item.casNumber,
+                          description: item.casIndexName,
+                          unNumber: item.unNumber ? item.unNumber.id : 0
+                        }
+                      })}
+                      defaultValue={casProduct && casProduct.casNumber ? casProduct.casNumber : null}
+                    />
+                  </FormField>
+                </FormGroup>
+                <FormGroup>
+                  <FormField width={16}>
+                    <label>Description</label>
+                    <TextArea rows='3'
+                              name='description'
+                    />
+                  </FormField>
+                </FormGroup>
+                <FormGroup widths="equal">
+                  <Input type="text" label="Packaging Size" name="packagingSize" />
+                  <Dropdown
+                    label="Unit"
+                    name="unitID"
+                    options={productsUnitsType}
+                  />
+                  <Dropdown
+                    label="Packaging Type"
+                    name="packageID"
+                    options={packagingType}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <FormField>
+                    <Checkbox toggle
+                              label='Stackable'
+                              name='stackable'
+                    />
+                  </FormField>
+                  <FormField>
+                    <Checkbox toggle
+                              label='Hazardous'
+                              name='hazardous'
+                    />
+                  </FormField>
+                </FormGroup>
+                <FormGroup widths='equal'>
+                  <FormField>
+                    <label>UN Number</label>
+                    <Search loading={isUnLoading}
+                            onResultSelect={this.handleUnNumberSelect}
+                            onSearchChange={this.handleSearchUnNumber}
+                            results={searchedUnNumbers.map(item => {
+                              return {
+                                id: item.id,
+                                title: item.unNumberCode,
+                                description: item.description
+                              }
+                            })}
+                            defaultValue={unNumber && unNumber.unNumberCode ? unNumber.unNumberCode : null}
+                    />
+                  </FormField>
+                  <FormField>
+                    <Input type="number"
+                           label="NMFC Code"
+                           name="nmfcNumber"
+                    />
+                  </FormField>
+                  <Dropdown label='Freight Class'
+                            name='freightClass'
+                            options={freightClasses}
+                  />
+                </FormGroup>
+                <FormGroup widths='equal'>
+                  <Dropdown label='Hazard Class'
+                            name='hazardClass'
+                            inputProps={{ multiple: true }}
+                            options={hazardClasses}
+                            inputProps={{
+                              multiple: true,
+                              selection: true,
+                              search: true,
+                              clearable: true
+                            }}
+                  />
+                  <Dropdown label='Packaging Group'
+                            name='packagingGroup'
+                            options={packagingGroups}
+                  />
+                </FormGroup>
+                <FormGroup widths='equal'>
+                  <FormField>
+                    <Dropdown label="Document Type"
+                              name={`attachmentType`}
+                              options={this.props.documentTypes}
+                              style={{paddingBottom: '2em'}}
+                    />
+                    <DateInput label='Expiration Date'
+                               name='expirationDate'
+                    />
+                  </FormField>
+                  <FormField>
+                    <label>Document</label>
+                    <UploadLot {...this.props}
+                               attachments={values.attachments}
+                               name='attachments'
+                               type={values.attachmentType ? values.attachmentType : 'Unspecified'}
+                               expiration={values.expirationDate}
+                               unspecifiedTypes={['Unspecified']}
+                               fileMaxSize={20}
+                               onChange={(files) => setFieldValue(
+                                 `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
+                                 {
+                                   id: files.id,
+                                   name: files.name
+                                 }
+                               )}
+                               emptyContent={(
+                                 <label>
+                                   <FormattedMessage
+                                     id='addInventory.dragDropAdditional'
+                                     defaultMessage={'Drop additional documents here'}
+                                   />
+                                   <br />
+                                   <FormattedMessage
+                                     id='addInventory.dragDropOr'
+                                     defaultMessage={'or select from computer'}
+                                   />
+                                 </label>
+                               )}
+                               uploadedContent={(
+                                 <label>
+                                   <FormattedMessage
+                                     id='addInventory.dragDropAdditional'
+                                     defaultMessage={'Drop additional documents here'}
+                                   />
+                                   <br />
+                                   <FormattedMessage
+                                     id='addInventory.dragDropOr'
+                                     defaultMessage={'or select from computer'}
+                                   />
+                                 </label>
+                               )}
+                    />
+                  </FormField>
+                </FormGroup>
+                <div style={{ textAlign: 'right' }}>
+                  <Button.Reset onClick={closePopup}>Cancel</Button.Reset>
+                  <Button.Submit>Save</Button.Submit>
+                </div>
+              </>
+            )}
           </Form>
         </Modal.Content>
       </Modal>
@@ -305,7 +379,12 @@ const mapDispatchToProps = {
   handleSubmitProductEditPopup,
   handleSubmitProductAddPopup,
   searchCasProduct,
-  searchUnNumber
+  searchUnNumber,
+  getDocumentTypes,
+  loadFile,
+  addAttachment,
+  removeAttachment,
+  removeAttachmentLink
 }
 const mapStateToProps = state => {
   return {
@@ -324,10 +403,11 @@ const mapStateToProps = state => {
         productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
         productsFilter: state.settings.productsFilter},
       value: state.settings.filterValue},
+    documentTypes: state.settings.documentTypes
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProductPopup)
+)(withToastManager(ProductPopup))

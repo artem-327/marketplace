@@ -126,10 +126,8 @@ export default class Marketplace extends Component {
         <div class="flex stretched" style={{ padding: '10px 32px' }}>
           <ProdexGrid
             tableName="marketplace_grid"
+            {...datagrid.tableProps}
             rows={rows}
-            loading={datagrid.loading}
-            onScrollToEnd={datagrid.onScrollToEnd}
-
             columns={columns}
             rowSelection
             groupBy={['productNumber']}
@@ -166,7 +164,7 @@ export default class Marketplace extends Component {
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}
           savedUrl='/prodex/api/product-offers/broadcasted/datagrid/saved-filters'
-          searchUrl={(text) => `/prodex/api/products/broadcasted/search?pattern=${text}`}
+          searchUrl={(text) => `/prodex/api/products/broadcasted/search?pattern=${text}&onlyMapped=true`}
           filters={datagrid.filters}
         />
         <AddCart />

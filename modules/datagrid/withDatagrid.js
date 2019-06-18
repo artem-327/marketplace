@@ -5,23 +5,17 @@ import _ from 'lodash'
 
 export default (Component, { apiUrl, filters = [] }) => {
   class DatagridProvider extends React.Component {
-    constructor(props) {
-      super(props)
-      this.state = {
-        rows: [],
+
+    state = {
+      apiUrl,
+      rows: [],
+      allLoaded: false,
+      loading: false,
+      datagridParams: {
         filters: [],
         pageSize: 50,
-        pageNumber: 0,
-        allLoaded: false,
-        loading: false,
+        pageNumber: 0
       }
-
-      this.loadNextPage = this.loadNextPage.bind(this)
-    }
-
-
-    componentDidMount() {
-      //this.loadNextPage()
     }
 
     async loadNextPage() {
@@ -33,11 +27,16 @@ export default (Component, { apiUrl, filters = [] }) => {
         const { data } = await api.post(apiUrl, {
           ...datagridParams
         })
+        const allLoaded = data.length < datagridParams.pageSize || data.length === 0
 
         this.setState(s => ({
           rows: _.unionBy(s.rows, data, 'id'),
-          pageNumber: s.pageNumber + 1,
-          loading: false
+          loading: false,
+          allLoaded,
+          datagridParams: {
+            ...s.datagridParams,
+            pageNumber: s.datagridParams.pageNumber + (allLoaded ? 0 : 1),
+          }
         }))
       } catch (e) {
         this.setState({ loading: false })
@@ -56,17 +55,18 @@ export default (Component, { apiUrl, filters = [] }) => {
       }))
     }
 
-    onScrollToEnd = () => {
-      const { rows, datagridParams: { pageSize, pageNumber } } = this.state
+    loadNextPageSafe = () => {
+      const { allLoaded } = this.state
 
-      !(rows.length < pageSize * pageNumber) && this.loadNextPage()
+      !allLoaded && this.loadNextPage()
     }
 
-    loadData = (pageNumber = 0) => {
+    loadData = (params = {}) => {
       this.setState(s => ({
-        datagridParams: { 
+        datagridParams: {
+          pageNumber: 0,
           ...s.datagridParams,
-          pageNumber 
+          ...params
         },
         rows: []
       }), this.loadNextPage)
@@ -80,37 +80,31 @@ export default (Component, { apiUrl, filters = [] }) => {
           pageNumber: 0
         },
         rows: []
-      }), reload && this.loadNextPage)
-    }
-
-    clearFilter = () => {
-      this.setState(s => ({
-        datagridParams: {
-          filters: [],
-          pageNumber: 0
-        }
-      }), this.loadNextPage())
-    }
-
-    clearFilter = () => {
-      this.setState({ filters: [] }, this.loadData)
+      }), () => reload && this.loadNextPage())
     }
 
 
     render() {
-      const { rows, loading } = this.state
+      const { rows, loading, datagridParams: { filters } } = this.state
 
       return (
         <Component {...this.props}
           datagrid={{
             rows,
             loading,
+            filters,
             removeRow: this.removeRowById,
             loadData: this.loadData,
             setFilter: this.setFilter,
-            onScrollToEnd: this.onScrollToEnd,
-            filters: this.state.filters,
-            setFilter: this.setFilter,
+            loadNextPage: this.loadNextPageSafe,
+
+            tableProps: {
+              rows,
+              loading,
+              onTableReady: this.loadData,
+              onSortingChange: this.setFilter,
+              onScrollToEnd: this.loadNextPageSafe
+            }
           }}
         />
       )

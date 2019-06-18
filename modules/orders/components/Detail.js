@@ -356,11 +356,11 @@ class Detail extends Component {
                       <Grid.Column>
                         <GridData columns={2}>
                           <GridDataColumn width={4}><strong>Shipping Contact</strong></GridDataColumn>
-                          <GridDataColumn width={12}></GridDataColumn>
+                          <GridDataColumn width={12}>{order.shippingContact}</GridDataColumn>
                           <GridDataColumn width={4}><strong>Contact Number</strong></GridDataColumn>
-                          <GridDataColumn width={12}></GridDataColumn>
+                          <GridDataColumn width={12}>{order.contactNumber}</GridDataColumn>
                           <GridDataColumn width={4}><strong>Contact E-Mail</strong></GridDataColumn>
-                          <GridDataColumn width={12}></GridDataColumn>
+                          <GridDataColumn width={12}>{order.contactEmail}</GridDataColumn>
                         </GridData>
                       </Grid.Column>
                     </Grid.Row>
@@ -397,11 +397,11 @@ class Detail extends Component {
                           <GridDataColumn width={4}><strong>Carrier</strong></GridDataColumn>
                           <GridDataColumn width={12}>{order.carrier}</GridDataColumn>
                           <GridDataColumn width={4}><strong>Service</strong></GridDataColumn>
-                          <GridDataColumn width={12}></GridDataColumn>
+                          <GridDataColumn width={12}>{order.service}</GridDataColumn>
                           <GridDataColumn width={4}><strong>Pro Number</strong></GridDataColumn>
-                          <GridDataColumn width={12}></GridDataColumn>
+                          <GridDataColumn width={12}>{order.proNumber}</GridDataColumn>
                           <GridDataColumn width={4}><strong>Incoterms</strong></GridDataColumn>
-                          <GridDataColumn width={12}></GridDataColumn>
+                          <GridDataColumn width={12}>{order.incoterms}</GridDataColumn>
                         </GridData>
                       </Grid.Column>
                     </Grid.Row>
@@ -428,7 +428,7 @@ class Detail extends Component {
                           <GridDataColumn width={4}><strong>Refund Date</strong></GridDataColumn>
                           <GridDataColumn width={12}>{order.refundDate}</GridDataColumn>
                           <GridDataColumn width={4}><strong>Terms</strong></GridDataColumn>
-                          <GridDataColumn width={12}></GridDataColumn>
+                          <GridDataColumn width={12}>{order.terms}</GridDataColumn>
                         </GridData>
                       </Grid.Column>
                       <Grid.Column>

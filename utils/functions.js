@@ -19,7 +19,7 @@ export const transformRequestOptions = params => {
 export const uniqueArrayByKey = (array, key) => {
     let unique = []
 
-    if (!array[0][key]) {
+    if (!array[0] || !array[0][key]) {
         console.error(`Array does not contain key: ${key}`)
         return array
     }
