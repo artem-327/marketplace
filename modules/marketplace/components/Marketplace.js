@@ -126,10 +126,8 @@ export default class Marketplace extends Component {
         <div class="flex stretched" style={{ padding: '10px 32px' }}>
           <ProdexGrid
             tableName="marketplace_grid"
+            {...datagrid.tableProps}
             rows={rows}
-            loading={datagrid.loading}
-            onScrollToEnd={datagrid.onScrollToEnd}
-
             columns={columns}
             rowSelection
             groupBy={['productNumber']}
