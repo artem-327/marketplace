@@ -223,7 +223,6 @@ class Filter extends Component {
     return (
       <Accordion>
         <Segment basic>
-          {/* <pre>{JSON.stringify({ ...values, ...rest }, null, 2)}</pre> */}
           <AccordionItem>
             {this.accordionTitle('chemicalType', <FormattedMessage id='filter.chemicalType' />)}
             <AccordionContent active={this.state.accordion.chemicalType}>
@@ -411,7 +410,7 @@ class Filter extends Component {
               </Button>
             </FiltersContainer>
             <Form initialValues={initialValues} validateOnChange={true} validationSchema={validationSchema} onSubmit={(values, { setSubmitting }) => {
-              // this.handleSubmit(values)
+              this.handleSubmit(values)
               setSubmitting(false)
             }}>
               {(props) => {
