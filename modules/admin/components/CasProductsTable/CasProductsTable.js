@@ -41,7 +41,7 @@ class CasProductsTable extends Component {
   }
 
   initialLoad = () => {
-    const { getCasProductByFilter, casListDataRequest, filterCasIds } = this.props
+    const { getCasProductByFilter, casListDataRequest, filterCasIds, datagrid } = this.props
 
     let filter = {}
     if (filterCasIds && filterCasIds.length) {
@@ -49,19 +49,17 @@ class CasProductsTable extends Component {
         filters: [{
           operator: "EQUALS",
           path: "CasProduct.id",
-          values: filterCasIds.map(casId => {
-            return casId
-          })
+          values: filterCasIds
         }]
       }
     }
 
-    this.props.datagrid.setFilter(filter.filters)
+    datagrid.setFilter(filter.filters, false)
   }
 
   componentDidMount() {
     // this.getNextPage(0)
-    this.initialLoad()
+    // this.initialLoad()
 
     this.props.getHazardClassesDataRequest()
     this.props.getPackagingGroupsDataRequest()
@@ -69,8 +67,8 @@ class CasProductsTable extends Component {
 
   render() {
     const {
+      datagrid,
       config,
-      loading,
       rows,
       openPopup,
       openEditAltNamesCasPopup,
@@ -90,15 +88,20 @@ class CasProductsTable extends Component {
     return (
       <React.Fragment>
         <ProdexTable
+          {...datagrid.tableProps}
           tableName='admin_cas_products'
-          loading={loading}
           columns={columns}
-          onScrollToEnd={this.props.datagrid.loadNextPage}
           rows={rows}
           rowActions={[
             { text: 'Edit', callback: (row) => openPopup(row) },
             { text: 'Edit Alternative Names', callback: (row) => openEditAltNamesCasPopup(row) },
-            { text: 'Delete', callback: (row) => deleteCasProduct(row.id) }
+            { 
+              text: 'Delete', 
+              callback: (row) => {
+                deleteCasProduct(row.id) 
+                datagrid.removeRow(row.id)
+              }
+            }
           ]}
         />
       </React.Fragment>
@@ -132,7 +135,6 @@ const mapStateToProps = (state, { datagrid }) => {
     filterValue: state.admin.filterValue,
     currentTab: state.admin.currentTab,
     casListDataRequest: state.admin.casListDataRequest,
-    loading: datagrid.loading, // state.admin.loading,
     rows: datagrid.rows.map(d => {
       return {
         id: d.id,

@@ -5,9 +5,9 @@ export const config = {
     searchText: 'Search cas product by name or number ...',
     display: {
       columns: [
-        { name: 'casIndexName', title: 'Index Name', width: 375 },
+        { name: 'casIndexName', title: 'Index Name', width: 375, sortPath: 'CasProduct.casIndexName' },
         { name: 'casNumber', title: 'CAS Number', width: 150 },
-        { name: 'chemicalName', title: 'Chemical Name', width: 375 },
+        { name: 'chemicalName', title: 'Chemical Name', width: 375, sortPath: 'CasProduct.chemicalName' },
         { name: 'unNumberCode', title: 'UN Number', width: 150 },
         { name: 'packagingGroup', title: 'Packaging Group', width: 150 },
         { name: 'hazardClasses', title: 'Hazard Classes', width: 150 },
@@ -20,10 +20,10 @@ export const config = {
     searchText: 'Search company by name',
     display: {
       columns: [
-        { name: 'name', title: 'Company Name'},
-        { name: 'primaryBranchAddress', title: 'Headquarters Address'},
-        { name: 'primaryContact', title: 'Primary Contact'},
-        { name: 'contactEmail', title: 'Contact E-mail'}
+        { name: 'name', title: 'Company Name', sortPath: 'Company.name' },
+        { name: 'primaryBranchAddress', title: 'Headquarters Address' },
+        { name: 'primaryContact', title: 'Primary Contact' },
+        { name: 'contactEmail', title: 'Contact E-mail' }
       ]
     }
   },
@@ -133,12 +133,12 @@ export const config = {
         typeSuccess: 'ADMIN_GET_MANUFACTURERS_DATA_FULFILLED',
         apiCall: '/prodex/api/manufacturers/search',
         retFcnProcess: (state, action, config) => { // Order alphabetically by name
-          const rows = action.payload.sort(function(a, b){
-            let x = a.name.toLowerCase();
-            let y = b.name.toLowerCase();
-            if (x < y) {return -1;}
-            if (x > y) {return 1;}
-            return 0;
+          const rows = action.payload.sort(function (a, b) {
+            let x = a.name.toLowerCase()
+            let y = b.name.toLowerCase()
+            if (x < y) { return -1 }
+            if (x > y) { return 1 }
+            return 0
           })
           return {
             ...state,

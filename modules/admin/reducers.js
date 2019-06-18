@@ -36,7 +36,7 @@ export const initialState = {
     { name: 'Document Types', id: 9 },
   ],
 
-  currentTab: 'Companies',
+  currentTab: 'CAS Products',
   casListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: "ASC", sortPath: "CasProduct.chemicalName" },
   companyListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: "ASC", sortPath: "Company.name" },
   currentEditForm: null,
