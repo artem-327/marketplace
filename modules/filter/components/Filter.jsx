@@ -171,7 +171,7 @@ class Filter extends Component {
   }
 
   handleSearch = debounce(({ searchQuery, name }) => {
-    if (searchQuery.length > 2) this.props.getAutocompleteData(this.props.searchUrl(searchQuery))
+    if (searchQuery.length > 1) this.props.getAutocompleteData(this.props.searchUrl(searchQuery))
   }, 250)
 
 
