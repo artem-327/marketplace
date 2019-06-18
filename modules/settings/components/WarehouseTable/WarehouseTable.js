@@ -59,9 +59,10 @@ class WarehouseTable extends Component {
     const { currentTab, rowsWarehouses, rowsBranches } = this.props
     if (currentTab.type === 'warehouses') {
       return rowsWarehouses
-    }
-    else if (currentTab.type === 'branches') {
+    } else if (currentTab.type === 'branches') {
       return rowsBranches
+    } else {
+      return []
     }
   }
 
