@@ -55,7 +55,10 @@ class CompaniesTable extends Component {
             { text: 'Delete', callback: (row) => confirm(
                 formatMessage({id: 'confirm.deleteCompany', defaultMessage: 'Delete Company?'}),
                 formatMessage({id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` }, { item: row.name })
-              ).then(() => deleteCompany(row.id))
+              ).then(() => {
+                deleteCompany(row.id)
+                datagrid.removeRow(row.id)
+              })
             },
             { text: 'Register Dwolla Account', callback: (row) => openRegisterDwollaAccount(row.id), hidden: row => row.hasDwollaAccount === "Yes"}
           ]}
