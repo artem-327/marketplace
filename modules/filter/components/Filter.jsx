@@ -204,11 +204,16 @@ class Filter extends Component {
       selection: true,
       multiple: true,
       fluid: true,
-      options: autocompleteData.map((product) => ({
-        key: product.id,
-        text: product.productName,
-        value: JSON.stringify({ id: product.id, name: product.productName })
-      })),
+      options: autocompleteData.map((product) => {
+        if (product.casNumberCombined) var text = `${product.productName} (${product.casNumberCombined})`
+        else var text = product.productName
+
+        return {
+          key: product.id,
+          text,
+          value: JSON.stringify({ id: product.id, name: product.productName, casNumberCombined: product.casNumberCombined || null }),
+        }
+      }),
       label: <FormattedMessage id='filter.ChemicalNameCAS' />,
       loading: autocompleteDataLoading,
       name: 'search',
