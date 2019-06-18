@@ -605,6 +605,7 @@ i.file {
     border-radius: 0;
     background-color: transparent;
     background-size: contain;
+    background-repeat: no-repeat;
 
     &:before {
       content: "" !important;
