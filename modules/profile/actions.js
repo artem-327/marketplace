@@ -38,3 +38,10 @@ export function getCurrencies() {
   }
 }
 
+export function updateMyProfile(data) {
+  return {
+    type: AT.PROFILE_UPDATE_MY_PROFILE,
+    payload: api.updateMyProfile(data)
+  }
+}
+

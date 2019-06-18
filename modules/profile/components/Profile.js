@@ -8,7 +8,7 @@ import {
   closePopup,
   getUserMeData,
   getCurrencies,
-  //updateDeliveryAddresses,
+  updateMyProfile,
 } from '../actions'
 
 const initialFormValues = {
@@ -26,7 +26,6 @@ class Profile extends Component {
     this.props.getCurrencies()
   }
 
-
   render() {
     const {
       closePopup,
@@ -36,14 +35,17 @@ class Profile extends Component {
 
     return (
       <Modal open centered={false} size="small">
-        <Modal.Header>User Profile</Modal.Header>
+        <Modal.Header>My Profile</Modal.Header>
         <Modal.Content>
           <Form
             enableReinitialize
             initialValues={popupValues ? popupValues : initialFormValues}
             onReset={closePopup}
             onSubmit={async (values, actions) => {
+              delete values['email']
               console.log('!!!!!!!!!!! Profile', values)
+              this.props.updateMyProfile(values)
+
               // delete email field, delete empty fields
 
               actions.setSubmitting(false)
@@ -75,7 +77,8 @@ class Profile extends Component {
 const mapDispatchToProps = {
   closePopup,
   getUserMeData,
-  getCurrencies
+  getCurrencies,
+  updateMyProfile
 }
 
 const mapStateToProps = state => {

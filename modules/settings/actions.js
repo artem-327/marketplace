@@ -582,6 +582,13 @@ export function putNewUserRoleRequest(payload, id) {
   }
 }
 
+export function userSwitchEnableDisable(id) {
+  return {
+    type: AT.USER_SWITCH_ENABLE_DISABLE,
+    payload: api.userSwitchEnableDisable(id)
+  }
+}
+
 export function handleSubmitProductAddPopup(inputsValue, reloadFilter) {
   return async dispatch => {
     const data = {

@@ -21,7 +21,7 @@ class WarehouseTable extends Component {
       { name: 'name', title: 'Warehouse Name' },
       { name: 'streetAddress', title: 'Street Address' },
       { name: 'city', title: 'City' },
-      { name: 'zip', title: 'State' }, //waiting state from api
+      { name: 'provinceName', title: 'State' },
       { name: 'countryName', title: 'Country' },
       { name: 'contactName', title: 'Contact Name' },
       { name: 'phone', title: 'Phone' },
