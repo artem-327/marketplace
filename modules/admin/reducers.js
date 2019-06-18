@@ -36,7 +36,7 @@ export const initialState = {
     { name: 'Document Types', id: 9 },
   ],
 
-  currentTab: 'Companies',
+  currentTab: 'CAS Products',
   casListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: "ASC", sortPath: "CasProduct.chemicalName" },
   companyListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: "ASC", sortPath: "Company.name" },
   currentEditForm: null,
@@ -247,13 +247,10 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-
-    case AT.ADMIN_GET_COMPANIES_PENDING:
     case AT.ADMIN_POST_NEW_PRODUCT_NAME_PENDING:
     case AT.ADMIN_UPDATE_PRODUCT_NAME_PENDING:
     case AT.ADMIN_DELETE_PRODUCT_NAME_PENDING:
     case AT.ADMIN_GET_ALTERNATIVE_CAS_PRODUCT_NAMES_PENDING:
-    case AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER_PENDING:
     case AT.ADMIN_GET_MANUFACTURERS_BY_STRING_PENDING:
     case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_PENDING: {
       return {
@@ -262,7 +259,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER_FULFILLED:
     case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_FULFILLED: {
       return {
         ...state,
@@ -319,26 +315,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_GET_COMPANIES_FULFILLED: {
-      const requiredFields = action.payload.map(row => {
-        return {
-          displayName: row.displayName,
-          primaryBranchAddress: row.primaryBranchAddress,
-          primaryContact: row.primaryContact,
-          contactEmail: row.contactEmail,
-          hasDwollaAccount: row.hasDwollaAccount ? 'Yes' : 'No'
-        }
-      })
-      return {
-        ...state,
-        loading: false,
-        companiesRows: [
-          // ...state.companiesRows,
-          ...requiredFields
-        ]
-      }
-    }
-
     case AT.ADMIN_GET_FULL_COMPANY_FULFILLED: {
       return {
         ...state,
@@ -350,10 +326,8 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_UPDATE_PRODUCT_NAME_REJECTED:
     case AT.ADMIN_DELETE_PRODUCT_NAME_REJECTED:
     case AT.ADMIN_GET_ALTERNATIVE_CAS_PRODUCT_NAMES_REJECTED:
-    case AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER_REJECTED:
     case AT.ADMIN_GET_MANUFACTURERS_BY_STRING_REJECTED:
-    case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_REJECTED:
-    case AT.ADMIN_GET_COMPANIES_REJECTED: {
+    case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_REJECTED: {
       return {
         ...state,
         loading: false

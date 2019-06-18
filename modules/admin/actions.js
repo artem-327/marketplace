@@ -156,13 +156,6 @@ export function handleFiltersValue(props, value) {
 	}
 }
 
-export function getCasProductByFilter(value) {
-	return {
-		type: AT.ADMIN_GET_CAS_PRODUCT_BY_FILTER,
-		payload: api.getCasProductByFilter(value)
-	}
-}
-
 export function getAlternativeProductNames(value) {
 	return {
 		type: AT.ADMIN_GET_ALTERNATIVE_CAS_PRODUCT_NAMES,
@@ -304,13 +297,6 @@ export function getMailingBranchProvinces(id) {
 	return {
 		type: AT.ADMIN_GET_MAILING_BRANCH_PROVINCES,
 		payload: api.getProvinces(id)
-	}
-}
-
-export function getCompanies(params) {
-	return {
-		type: AT.ADMIN_GET_COMPANIES,
-		payload: api.getCompanies(params)
 	}
 }
 
