@@ -17,45 +17,45 @@ import { withDatagrid } from '~/modules/datagrid'
 
 class CasProductsTable extends Component {
 
-  getNextPage = (pageNumber) => {
-    const { getCasProductByFilter, casListDataRequest, filterCasIds } = this.props
+  // getNextPage = (pageNumber) => {
+  //   const { getCasProductByFilter, casListDataRequest, filterCasIds } = this.props
 
-    let filter = {}
-    if (filterCasIds && filterCasIds.length) {
-      filter = {
-        filters: [{
-          operator: "EQUALS",
-          path: "CasProduct.id",
-          values: filterCasIds.map(casId => {
-            return casId
-          })
-        }]
-      }
-    }
+  //   let filter = {}
+  //   if (filterCasIds && filterCasIds.length) {
+  //     filter = {
+  //       filters: [{
+  //         operator: "EQUALS",
+  //         path: "CasProduct.id",
+  //         values: filterCasIds.map(casId => {
+  //           return casId
+  //         })
+  //       }]
+  //     }
+  //   }
 
-    getCasProductByFilter({
-      ...casListDataRequest,
-      ...filter,
-      pageNumber
-    })
-  }
+  //   getCasProductByFilter({
+  //     ...casListDataRequest,
+  //     ...filter,
+  //     pageNumber
+  //   })
+  // }
 
-  initialLoad = () => {
-    const { getCasProductByFilter, casListDataRequest, filterCasIds, datagrid } = this.props
+  // initialLoad = () => {
+  //   const { casListDataRequest, filterCasIds, datagrid } = this.props
 
-    let filter = {}
-    if (filterCasIds && filterCasIds.length) {
-      filter = {
-        filters: [{
-          operator: "EQUALS",
-          path: "CasProduct.id",
-          values: filterCasIds
-        }]
-      }
-    }
+  //   let filter = {}
+  //   if (filterCasIds && filterCasIds.length) {
+  //     filter = {
+  //       filters: [{
+  //         operator: "EQUALS",
+  //         path: "CasProduct.id",
+  //         values: filterCasIds
+  //       }]
+  //     }
+  //   }
 
-    datagrid.setFilter(filter.filters, false)
-  }
+  //   datagrid.setFilter(filter.filters, false)
+  // }
 
   componentDidMount() {
     // this.getNextPage(0)
