@@ -197,7 +197,9 @@ export default function reducer(state = initialState, action) {
         ...state,
         primaryBranchProvinces: payload.map(d => ({
           text: d.name,
-          value: { id: d.id, name: d.name, abbreviation: d.abbreviation || '' },
+          //! ! This is not working in Admin/Companies - Add/Edit submit sends wrong data body format in this case
+          //! ! ??? value: { id: d.id, name: d.name, abbreviation: d.abbreviation || '' },
+          value: d.id,
           key: d.id
         }))
       }
@@ -208,7 +210,9 @@ export default function reducer(state = initialState, action) {
         ...state,
         mailingBranchProvinces: payload.map(d => ({
           text: d.name,
-          value: { id: d.id, name: d.name, abbreviation: d.abbreviation || '' },
+          //! ! This is not working in Admin/Companies - Add/Edit submit sends wrong data body format in this case
+          //! ! ??? value: { id: d.id, name: d.name, abbreviation: d.abbreviation || '' },
+          value: d.id,
           key: d.id
         }))
       }
@@ -322,10 +326,11 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_GET_COMPANIES_FULFILLED: {
       const requiredFields = action.payload.map(row => {
         return {
-          displayName: row.displayName,
-          primaryBranchAddress: row.primaryBranchAddress,
-          primaryContact: row.primaryContact,
-          contactEmail: row.contactEmail,
+          ...row,
+          //displayName: row.displayName,
+          //primaryBranchAddress: row.primaryBranchAddress,
+          //primaryContact: row.primaryContact,
+          //contactEmail: row.contactEmail,
           hasDwollaAccount: row.hasDwollaAccount ? 'Yes' : 'No'
         }
       })

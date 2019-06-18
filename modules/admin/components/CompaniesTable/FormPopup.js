@@ -209,7 +209,6 @@ class AddNewPopupCasProducts extends React.Component {
         initialValues={popupValues ? popupValues : initialFormValues}
         validationSchema={popupValues ? validationSchema : this.formValidationNew()}
         onSubmit={async (values, actions) => {
-
           if (popupValues) {
             let newValues = {}
 
@@ -305,7 +304,7 @@ class AddNewPopupCasProducts extends React.Component {
                               }} />
                             <Dropdown label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />}
                               name='primaryBranch.address.province' options={primaryBranchProvinces}
-                              inputProps={{ search: true, disabled: !this.state.primaryBranchHasProvinces, clearable: true }} />
+                              inputProps={{ search: true, disabled: !this.state.primaryBranchHasProvinces }} />
                           </FormGroup>
                         </Accordion.Content>
                         <Divider />
@@ -343,7 +342,7 @@ class AddNewPopupCasProducts extends React.Component {
                               }} />
                             <Dropdown label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />}
                               name='mailingBranch.address.province' options={mailingBranchProvinces}
-                              inputProps={{ search: true, disabled: !this.state.mailingBranchHasProvinces, clearable: true }} />
+                              inputProps={{ search: true, disabled: !this.state.mailingBranchHasProvinces }} />
                           </FormGroup>
                         </Accordion.Content>
                       </>}
