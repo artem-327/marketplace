@@ -12,28 +12,21 @@ import FilterTags from '~/modules/filter/components/FitlerTags'
 class MyInventory extends Component {
   state = {
     columns: [
-      { name: "productName", title: "Product Name", width: 250 },
+      { name: "productName", title: "Product Name", width: 250, sortPath: 'ProductOffer.product.productName' },
       { name: "productNumber", title: "Product Number" },
-      { name: "warehouse", title: "Warehouse", width: 180 },
-      { name: "available", title: "Available", width: 80 },
-      { name: "packaging", title: "Packaging" },
-      { name: "pkgAmount", title: "Pkg. Size" },
+      { name: "warehouse", title: "Warehouse", width: 180, sortPath: 'ProductOffer.warehouse.warehouse' },
+      { name: "available", title: "Available", width: 80, sortPath: 'ProductOffer.quantity' },
+      { name: "packaging", title: "Packaging", sortPath: 'ProductOffer.product.packagingType.name' },
+      { name: "pkgAmount", title: "Pkg. Size", sortPath: 'ProductOffer.pkgAmount' },
       { name: "quantity", title: "Quantity" },
       { name: "cost", title: "Cost" },
-      { name: "fobPrice", title: "FOB Price" },
+      { name: "fobPrice", title: "FOB Price", sortPath: 'ProductOffer.pricingPrice' },
       { name: "manufacturer", title: "MFR.", width: 220 },
-      { name: "broadcast", title: "Broadcast", width: 120 }
+      { name: "broadcast", title: "Broadcast", width: 120, sortPath: 'ProductOffer.broadcasted' }
     ],
     selectedRows: [],
     pageNumber: 0
   }
-
-  componentDidMount() {
-    const { datagrid } = this.props
-    
-    datagrid.loadData()
-  }
-
 
   filterInventory = async (filter) => {
     let productIds = []
@@ -168,12 +161,10 @@ class MyInventory extends Component {
         <div class="flex stretched" style={{ padding: '10px 32px' }}>
 
           <ProdexTable
+            {...datagrid.tableProps}
             tableName="my_inventory_grid"
-            rows={this.getRows(rows)}
-            onScrollToEnd={datagrid.loadNextPage}
-            loading={datagrid.loading}
-
             columns={columns}
+            rows={this.getRows(rows)}
             rowSelection
             groupBy={['productNumber']}
             getChildGroups={rows =>
