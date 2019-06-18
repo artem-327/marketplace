@@ -8,6 +8,7 @@ import {withToastManager} from 'react-toast-notifications'
 import { FormattedMessage } from 'react-intl'
 
 import { Modal, FormGroup, FormField, Search, Label } from 'semantic-ui-react'
+import { DateInput } from '~/components/custom-formik'
 
 import {
   closePopup,
@@ -16,13 +17,15 @@ import {
   searchCasProduct,
   searchUnNumber,
   getDocumentTypes,
+  loadFile,
   addAttachment,
-  loadFile
+  removeAttachment,
+  removeAttachmentLink
 } from '../../actions'
 import { Form, Input, Button, Dropdown, TextArea, Checkbox } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 import './styles.scss'
-import Router from "next/router"
+import Router from "next/router" 
 
 const formValidation = Yup.object().shape({
   productName: Yup.string().trim()
@@ -303,16 +306,23 @@ class ProductPopup extends React.Component {
                   />
                 </FormGroup>
                 <FormGroup widths='equal'>
-                  <Dropdown label="Document Type"
-                            name={`attachmentType`}
-                            options={this.props.documentTypes}
-                  />
+                  <FormField>
+                    <Dropdown label="Document Type"
+                              name={`attachmentType`}
+                              options={this.props.documentTypes}
+                              style={{paddingBottom: '2em'}}
+                    />
+                    <DateInput label='Expiration Date'
+                               name='expirationDate'
+                    />
+                  </FormField>
                   <FormField>
                     <label>Document</label>
                     <UploadLot {...this.props}
                                attachments={values.attachments}
                                name='attachments'
-                               type={values.attachmentType}
+                               type={values.attachmentType ? values.attachmentType : 'Unspecified'}
+                               expiration={values.expirationDate}
                                unspecifiedTypes={['Unspecified']}
                                fileMaxSize={20}
                                onChange={(files) => setFieldValue(
@@ -371,8 +381,10 @@ const mapDispatchToProps = {
   searchCasProduct,
   searchUnNumber,
   getDocumentTypes,
+  loadFile,
   addAttachment,
-  loadFile
+  removeAttachment,
+  removeAttachmentLink
 }
 const mapStateToProps = state => {
   return {

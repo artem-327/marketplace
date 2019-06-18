@@ -371,6 +371,10 @@ h3.ui.header {
   font-weight: 400;
 }
 
+.ui.form .field > .field + .field {
+  padding-top: 1em;
+}
+
 form.inventory {
   height: 100%;
 }

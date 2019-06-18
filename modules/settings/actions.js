@@ -310,6 +310,14 @@ export function handleSubmitProductEditPopup(productData, id, reloadFilter) {
       type: AT.SETTINGS_UPDATE_PRODUCT_CATALOG,
       payload: api.updateProduct(id, data)
     })
+    if (productData.attachments && productData.attachments.length) {
+      for (let i = 0; i < productData.attachments.length; i++) {
+        dispatch({
+          type: AT.SETTINGS_POST_LINK_ATTACHMENT,
+          payload: api.postLinkAttachment(productData.attachments[i].id, id)
+        })
+      }
+    }
     dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
     dispatch(closePopup())
   }
@@ -518,7 +526,6 @@ export function postNewUserRequest(payload) {
       preferredCurrency: payload.preferredCurrency
     }
     removeEmpty(dataBody)
-    console.log('!!!!!!!!!! new user', dataBody)
     await dispatch({
       type: AT.POST_NEW_USER_REQUEST,
       payload: api.postNewUser(dataBody)
@@ -759,17 +766,31 @@ export function getDocumentTypes() {
   }
 }
 
-export function addAttachment(attachment, type) {
-  return {
-    type: AT.SETTINGS_ADD_ATTACHMENT,
-    payload: api.addAttachment(attachment, type)
-  }
-}
-
 export function loadFile(attachment) {
   return {
     type: AT.SETTINGS_LOAD_FILE,
     payload: api.loadFile(attachment)
+  }
+}
+
+export function addAttachment(attachment, type, expirationDate) {
+  return {
+    type: AT.SETTINGS_ADD_ATTACHMENT,
+    payload: api.addAttachment(attachment, type, expirationDate)
+  }
+}
+
+export function removeAttachmentLink(isLot, itemId, aId) {
+  return {
+    type: AT.SETTINGS_REMOVE_ATTACHMENT_LINK,
+    payload: api.removeAttachmentLink(itemId, aId)
+  }
+}
+
+export function removeAttachment(aId) {
+  return {
+    type: AT.SETTINGS_REMOVE_ATTACHMENT,
+    payload: api.removeAttachment(aId)
   }
 }
 
