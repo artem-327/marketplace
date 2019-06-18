@@ -132,6 +132,8 @@
   "filter.OffSpec": "Off Spec",
   "filter.Prime": "Prime",
   "filter.From": "From",
+  "filter.dateFrom": "Date From",
+  "filter.dateTo": "Date To",
   "filter.To": "To",
   "filter.Minimum(%)": "Minimum (%)",
   "filter.Maximum(%)": "Maximum (%)",
@@ -353,5 +355,7 @@
   "validation.enterPhoneNumber": "Enter phone number",
   "validation.minimum": "Minimum is {min}",
   "validation.maximum": "Maximum is {max}",
+  "validation.greaterThan": "Must be greater than {value}",
+  "validation.lessThan": "Must be less than {value}",
   "validation.multiplyOfSplit": "Must be multiply of split ({split})"
 }

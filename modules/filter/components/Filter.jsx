@@ -15,7 +15,7 @@ import {
 } from 'semantic-ui-react'
 
 import { datagridValues } from '../constants/filter'
-import { initialValues } from '../constants/validation'
+import { initialValues, validationSchema } from '../constants/validation'
 
 import SavedFilters from './SavedFilters'
 import Notifications from './Notifications'
@@ -185,7 +185,7 @@ class Filter extends Component {
 
 
 
-  formMarkup = (values, setFieldValue) => {
+  formMarkup = ({ values, setFieldValue, errors, setFieldError }) => {
     let {
       productConditions, productForms, packagingTypes,
       productGradeTypes, intl, isFilterSaving,
@@ -223,6 +223,7 @@ class Filter extends Component {
     return (
       <Accordion>
         <Segment basic>
+          {/* <pre>{JSON.stringify({ ...values, ...rest }, null, 2)}</pre> */}
           <AccordionItem>
             {this.accordionTitle('chemicalType', <FormattedMessage id='filter.chemicalType' />)}
             <AccordionContent active={this.state.accordion.chemicalType}>
@@ -234,8 +235,8 @@ class Filter extends Component {
             {this.accordionTitle('quantity', <FormattedMessage id='filter.quantity' />)}
             <AccordionContent active={this.state.accordion.quantity}>
               <FormGroup widths='equal'>
-                <Input type='number' label={<FormattedMessage id='filter.FromQuantity' defaultMessage='From Quantity' />} name='quantityFrom' />
-                <Input type='number' label={<FormattedMessage id='filter.ToQuantity' defaultMessage='To Quantity' />} name='quantityTo' />
+                <Input inputProps={{ type: 'number' }} label={<FormattedMessage id='filter.FromQuantity' defaultMessage='From Quantity' />} name='quantityFrom' />
+                <Input inputProps={{ type: 'number' }} label={<FormattedMessage id='filter.ToQuantity' defaultMessage='To Quantity' />} name='quantityTo' />
               </FormGroup>
             </AccordionContent>
           </AccordionItem>
@@ -244,8 +245,8 @@ class Filter extends Component {
             {this.accordionTitle('price', <FormattedMessage id='filter.price' />)}
             <AccordionContent active={this.state.accordion.price}>
               <FormGroup widths='equal'>
-                <Input type='number' label={<FormattedMessage id='filter.FromPrice' defaultMessage='From Price' />} name='priceFrom' />
-                <Input type='number' label={<FormattedMessage id='filter.ToPrice' defaultMessage='To Price' />} name='priceTo' />
+                <Input inputProps={{ type: 'number', step: 0.01 }} label={<FormattedMessage id='filter.FromPrice' defaultMessage='From Price' />} name='priceFrom' />
+                <Input inputProps={{ type: 'number', step: 0.01 }} label={<FormattedMessage id='filter.ToPrice' defaultMessage='To Price' />} name='priceTo' />
               </FormGroup>
             </AccordionContent>
           </AccordionItem>
@@ -282,7 +283,7 @@ class Filter extends Component {
             {this.accordionTitle('expiration', <FormattedMessage id='filter.expiration' defaultMessage='Expiration' />)}
             <AccordionContent active={this.state.accordion.expiration}>
               <FormGroup widths='equal'>
-                <FormField width={8}>
+                <FormField error={errors.dateFrom} width={8}>
                   <DateInput
                     onChange={(e, { name, value }) => setFieldValue(name, value)}
                     closable
@@ -290,10 +291,11 @@ class Filter extends Component {
                     closeOnMouseLeave={false}
                     dateFormat='YYYY-MM-DD'
                     animation='none'
-                    label={<FormattedMessage id='filter.From' defaultMessage='From' />}
+                    label={<label><FormattedMessage id='filter.dateFrom' defaultMessage='Date From' /></label>}
                     name='dateFrom' />
+                  {errors.dateFrom && <span className='sui-error-message'>{errors.dateFrom}</span>}
                 </FormField>
-                <FormField width={8}>
+                <FormField error={errors.dateTo} width={8}>
                   <DateInput
                     onChange={(e, { name, value }) => setFieldValue(name, value)}
                     closable
@@ -301,8 +303,9 @@ class Filter extends Component {
                     dateFormat='YYYY-MM-DD'
                     animation='none'
                     closeOnMouseLeave={false}
-                    label={<FormattedMessage id='filter.To' defaultMessage='To' />}
+                    label={<label><FormattedMessage id='filter.dateTo' defaultMessage='Date To' /></label>}
                     name='dateTo' />
+                  {errors.dateTo && <span className='sui-error-message'>{errors.dateTo}</span>}
                 </FormField>
               </FormGroup>
             </AccordionContent>
@@ -312,13 +315,13 @@ class Filter extends Component {
             {this.accordionTitle('assay', <FormattedMessage id='filter.assay' />)}
             <AccordionContent active={this.state.accordion.assay}>
               <FormGroup widths='equal'>
-                <Input type='number' label={<FormattedMessage id='filter.Minimum(%)' defaultMessage='Minimum' />} name='assayFrom' />
-                <Input type='number' label={<FormattedMessage id='filter.Maximum(%)' defaultMessage='Maximum' />} name='assayTo' />
+                <Input inputProps={{ type: 'number' }} label={<FormattedMessage id='filter.Minimum(%)' defaultMessage='Minimum' />} name='assayFrom' />
+                <Input inputProps={{ type: 'number' }} label={<FormattedMessage id='filter.Maximum(%)' defaultMessage='Maximum' />} name='assayTo' />
               </FormGroup>
             </AccordionContent>
           </AccordionItem>
 
-          <Grid verticalAlign='middle'>
+          <Grid verticalAlign='top'>
 
             {/* Save Filter */}
             <GridRow>
@@ -338,10 +341,13 @@ class Filter extends Component {
                 <Input name='name' fluid />
               </GridColumn>
 
-              <Button onClick={(e) => {
-                e.preventDefault()
-                this.handleFilterSave(values)
-              }} positive basic loading={isFilterSaving}>Save</Button>
+              <GridColumn>
+                <Button onClick={(e) => {
+                  e.preventDefault()
+                  if (!values.name) setFieldError('name', <FormattedMessage id='validation.required' />)
+                  else this.handleFilterSave(values)
+                }} positive basic loading={isFilterSaving}>Save</Button>
+              </GridColumn>
             </GridRow>
 
             <GridRow>
@@ -404,14 +410,14 @@ class Filter extends Component {
                 />
               </Button>
             </FiltersContainer>
-            <Form initialValues={initialValues} onSubmit={(values, { setSubmitting }) => {
-              this.handleSubmit(values)
+            <Form initialValues={initialValues} validateOnChange={true} validationSchema={validationSchema} onSubmit={(values, { setSubmitting }) => {
+              // this.handleSubmit(values)
               setSubmitting(false)
             }}>
-              {({ submitForm, values, setFieldValue }) => {
-                this.submitForm = submitForm
+              {(props) => {
+                this.submitForm = props.submitForm
                 return (
-                  !this.state.savedFiltersActive && this.formMarkup(values, setFieldValue)
+                  !this.state.savedFiltersActive && this.formMarkup(props)
                 )
               }}
             </Form>
