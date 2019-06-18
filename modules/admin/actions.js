@@ -300,13 +300,6 @@ export function getMailingBranchProvinces(id) {
 	}
 }
 
-export function getCompanies(params) {
-	return {
-		type: AT.ADMIN_GET_COMPANIES,
-		payload: api.getCompanies(params)
-	}
-}
-
 export function getCompany(params) {
 	return {
 		type: AT.ADMIN_GET_FULL_COMPANY,

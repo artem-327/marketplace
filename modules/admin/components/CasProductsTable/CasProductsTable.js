@@ -17,6 +17,20 @@ import { withDatagrid } from '~/modules/datagrid'
 
 class CasProductsTable extends Component {
 
+  componentWillReceiveProps({filterValue}) {
+    
+    if (this.props.filterValue !== filterValue) {
+      this.props.datagrid.setFilter({
+        filters: filterValue && filterValue.length >= 1 ? [{
+          operator: "LIKE",
+          path: "CasProduct.chemicalName",
+          values: ['%'+filterValue+'%']
+        }] : []
+      })
+    }
+
+  }
+
   // getNextPage = (pageNumber) => {
   //   const { getCasProductByFilter, casListDataRequest, filterCasIds } = this.props
 
@@ -40,27 +54,8 @@ class CasProductsTable extends Component {
   //   })
   // }
 
-  // initialLoad = () => {
-  //   const { casListDataRequest, filterCasIds, datagrid } = this.props
-
-  //   let filter = {}
-  //   if (filterCasIds && filterCasIds.length) {
-  //     filter = {
-  //       filters: [{
-  //         operator: "EQUALS",
-  //         path: "CasProduct.id",
-  //         values: filterCasIds
-  //       }]
-  //     }
-  //   }
-
-  //   datagrid.setFilter(filter.filters, false)
-  // }
 
   componentDidMount() {
-    // this.getNextPage(0)
-    // this.initialLoad()
-
     this.props.getHazardClassesDataRequest()
     this.props.getPackagingGroupsDataRequest()
   }

@@ -7,11 +7,6 @@ BE version 0.8.7.
 
  */
 
-export async function getCasProductByFilter(value) {
-  const { data } = await api.post("/prodex/api/cas-products/datagrid", value)
-  return data
-}
-
 export async function getAlternativeProductNames(value) {
   const { data } = await api.get(`/prodex/api/product-names?productId=${value}`)
   return data

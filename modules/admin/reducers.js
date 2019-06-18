@@ -247,8 +247,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-
-    case AT.ADMIN_GET_COMPANIES_PENDING:
     case AT.ADMIN_POST_NEW_PRODUCT_NAME_PENDING:
     case AT.ADMIN_UPDATE_PRODUCT_NAME_PENDING:
     case AT.ADMIN_DELETE_PRODUCT_NAME_PENDING:
@@ -317,26 +315,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.ADMIN_GET_COMPANIES_FULFILLED: {
-      const requiredFields = action.payload.map(row => {
-        return {
-          displayName: row.displayName,
-          primaryBranchAddress: row.primaryBranchAddress,
-          primaryContact: row.primaryContact,
-          contactEmail: row.contactEmail,
-          hasDwollaAccount: row.hasDwollaAccount ? 'Yes' : 'No'
-        }
-      })
-      return {
-        ...state,
-        loading: false,
-        companiesRows: [
-          // ...state.companiesRows,
-          ...requiredFields
-        ]
-      }
-    }
-
     case AT.ADMIN_GET_FULL_COMPANY_FULFILLED: {
       return {
         ...state,
@@ -349,8 +327,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_DELETE_PRODUCT_NAME_REJECTED:
     case AT.ADMIN_GET_ALTERNATIVE_CAS_PRODUCT_NAMES_REJECTED:
     case AT.ADMIN_GET_MANUFACTURERS_BY_STRING_REJECTED:
-    case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_REJECTED:
-    case AT.ADMIN_GET_COMPANIES_REJECTED: {
+    case AT.ADMIN_GET_CAS_PRODUCT_BY_STRING_REJECTED: {
       return {
         ...state,
         loading: false

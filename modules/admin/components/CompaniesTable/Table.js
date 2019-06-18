@@ -1,44 +1,32 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {injectIntl} from 'react-intl'
-
+import { withDatagrid } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
 import confirm from '~/src/components/Confirmable/confirm'
 
+import * as Actions from '../../actions'
 
-import {
-  getCompanies,
-  openEditCompany,
-  deleteCompany,
-  handleOpenConfirmPopup,
-  closeConfirmPopup,
-  openRegisterDwollaAccount,
-} from '../../actions'
-
-const PAGE_SIZE = 50
 
 class CompaniesTable extends Component {
 
-  getNextPage = (pageNumber) => {
-    const {companyListDataRequest, filterValue} = this.props
+  componentWillReceiveProps({filterValue}) {
+    
+    if (this.props.filterValue !== filterValue) {
+      this.props.datagrid.setFilter({
+        filters: filterValue && filterValue.length >= 1 ? [{
+          operator: "LIKE",
+          path: "Company.name",
+          values: ['%'+filterValue+'%']
+        }] : []
+      })
+    }
 
-    this.props.getCompanies({
-      ...companyListDataRequest,
-      filters: filterValue && filterValue.length >= 3 ? [{
-        operator: "LIKE",
-        path: "Company.name",
-        values: ['%'+filterValue+'%']
-      }] : [],
-      pageNumber
-    })
-  }
-
-  componentDidMount() {
-    this.getNextPage(0)
   }
 
   render() {
     const {
+      datagrid,
       columns,
       rows,
       filterValue,
@@ -58,11 +46,10 @@ class CompaniesTable extends Component {
     return (
       <React.Fragment>
         <ProdexTable
+          {...datagrid.tableProps}
+          tableName='admin_companies'
           columns={columns}
           rows={rows}
-          pageSize={PAGE_SIZE}
-          getNextPage={this.getNextPage}
-          loading={loading}
           rowActions={[
             { text: 'Edit', callback: (row) => openEditCompany(row.id, row) },
             { text: 'Delete', callback: (row) => confirm(
@@ -78,23 +65,13 @@ class CompaniesTable extends Component {
   }
 }
 
-const mapDispatchToProps = {
-  getCompanies,
-  handleOpenConfirmPopup,
-  closeConfirmPopup,
-  deleteCompany,
-  openEditCompany,
-  openRegisterDwollaAccount
-}
-
-const mapStateToProps = ({admin}) => {
+const mapStateToProps = ({admin}, {datagrid}) => {
   return {
     columns: admin.config[admin.currentTab].display.columns,
     companyListDataRequest: admin.companyListDataRequest,
     filterValue: admin.filterValue,
     currentTab: admin.currentTab,
-    loading: admin.loading,
-    rows: admin.companiesRows.map(c => ({
+    rows: datagrid.rows.map(c => ({
       ...c,
       primaryBranchAddress: c.primaryBranch && c.primaryBranch.address ?
         c.primaryBranch.address.streetAddress + ', ' +
@@ -114,4 +91,6 @@ const mapStateToProps = ({admin}) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(CompaniesTable))
+export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(CompaniesTable)),{
+  apiUrl: '/prodex/api/companies/datagrid'
+})
