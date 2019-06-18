@@ -15,9 +15,9 @@ export const datagridValues = {
     getFilter: (values) => ({
       operator: operators.EQUALS,
       path: 'ProductOffer.product.id',
-      values: values.map((val) => val.id),
+      values: values.map((val) => JSON.parse(val).id),
       description: 'Chemical Name',
-      valuesDescription: values.map((val) => val.name)
+      valuesDescription: values.map((val) => JSON.parse(val).name)
     })
   },
   quantityFrom: {

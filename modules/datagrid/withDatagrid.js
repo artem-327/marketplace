@@ -5,18 +5,20 @@ import _ from 'lodash'
 
 export default (Component, { apiUrl, filters = [] }) => {
   class DatagridProvider extends React.Component {
-
-    state = {
-      apiUrl,
-      rows: [],
-      datagridParams: {
+    constructor(props) {
+      super(props)
+      this.state = {
+        rows: [],
         filters: [],
         pageSize: 50,
         pageNumber: 0,
         allLoaded: false,
-        loading: false
+        loading: false,
       }
+
+      this.loadNextPage = this.loadNextPage.bind(this)
     }
+
 
     componentDidMount() {
       //this.loadNextPage()
@@ -34,11 +36,8 @@ export default (Component, { apiUrl, filters = [] }) => {
 
         this.setState(s => ({
           rows: _.unionBy(s.rows, data, 'id'),
-          loading: false,
-          datagridParams: {
-            ...s.datagridParams,
-            pageNumber: s.datagridParams.pageNumber + 1,
-          }
+          pageNumber: s.pageNumber + 1,
+          loading: false
         }))
       } catch (e) {
         this.setState({ loading: false })
@@ -93,6 +92,11 @@ export default (Component, { apiUrl, filters = [] }) => {
       }), this.loadNextPage())
     }
 
+    clearFilter = () => {
+      this.setState({ filters: [] }, this.loadData)
+    }
+
+
     render() {
       const { rows, loading } = this.state
 
@@ -104,7 +108,9 @@ export default (Component, { apiUrl, filters = [] }) => {
             removeRow: this.removeRowById,
             loadData: this.loadData,
             setFilter: this.setFilter,
-            onScrollToEnd: this.onScrollToEnd
+            onScrollToEnd: this.onScrollToEnd,
+            filters: this.state.filters,
+            setFilter: this.setFilter,
           }}
         />
       )

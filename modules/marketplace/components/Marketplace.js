@@ -60,29 +60,23 @@ export default class Marketplace extends Component {
 
   }
 
-  onFilterApply = (filter) => {
-    const { datagrid } = this.props
-
-    datagrid.setFilter(filter)
+  handleFilterApply = filter => {
+    this.props.datagrid.setFilter(filter)
   }
 
-  onFilterSave = (filter) => {
-    this.props.saveBroadcastedFilter(filter)
-  }
 
-  onFilterClear = () => {
-    let { filter } = this.props
-    filter.filters = []
-    this.props.postBroadcastedDatagrid(filter)
+  handleFilterClear = () => {
+    this.props.datagrid.setFilter({ filters: [] })
   }
 
   removeFilter = (i) => {
-    let { filter } = this.props
+    let { datagrid } = this.props
+    let { filters } = datagrid
 
-    filter.filters.splice(i, 1)
-
-    this.props.postBroadcastedDatagrid(filter)
+    filters.splice(i, 1)
+    datagrid.setFilter(filters)
   }
+
 
   render() {
     const { datagrid } = this.props
@@ -115,7 +109,7 @@ export default class Marketplace extends Component {
 
             <Menu.Menu position='right'>
               <Menu.Item>
-                <FilterTags filter={this.props.filter} onClick={this.removeFilter} />
+                <FilterTags filters={datagrid.filters} onClick={this.removeFilter} />
               </Menu.Item>
               {selectedRows.length === 0 ? null :
                 <Button primary onClick={() => this.setState({ open: true })}>
@@ -169,9 +163,11 @@ export default class Marketplace extends Component {
           />
         </div>
         <Filter
-          onApply={this.onFilterApply}
-          onSave={this.onFilterSave}
-          onClear={this.onFilterClear}
+          onApply={this.handleFilterApply}
+          onClear={this.handleFilterClear}
+          savedUrl='/prodex/api/product-offers/broadcasted/datagrid/saved-filters'
+          searchUrl={(text) => `/prodex/api/products/broadcasted/search?pattern=${text}`}
+          filters={datagrid.filters}
         />
         <AddCart />
       </>
