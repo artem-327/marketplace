@@ -9,12 +9,12 @@ export default (Component, { apiUrl, filters = [] }) => {
     state = {
       apiUrl,
       rows: [],
+      allLoaded: false,
+      loading: false,
       datagridParams: {
         filters: [],
         pageSize: 50,
-        pageNumber: 0,
-        allLoaded: false,
-        loading: false
+        pageNumber: 0
       }
     }
 
@@ -31,13 +31,15 @@ export default (Component, { apiUrl, filters = [] }) => {
         const { data } = await api.post(apiUrl, {
           ...datagridParams
         })
+        const allLoaded = data.length < datagridParams.pageSize || data.length === 0
 
         this.setState(s => ({
           rows: _.unionBy(s.rows, data, 'id'),
           loading: false,
+          allLoaded,
           datagridParams: {
             ...s.datagridParams,
-            pageNumber: s.datagridParams.pageNumber + 1,
+            pageNumber: s.datagridParams.pageNumber + (allLoaded ? 0 : 1),
           }
         }))
       } catch (e) {
@@ -58,16 +60,17 @@ export default (Component, { apiUrl, filters = [] }) => {
     }
 
     loadNextPageSafe = () => {
-      const { rows, datagridParams: { pageSize, pageNumber } } = this.state
+      const { allLoaded } = this.state
 
-      !(rows.length < pageSize * pageNumber) && this.loadNextPage()
+      !allLoaded && this.loadNextPage()
     }
 
-    loadData = (pageNumber = 0) => {
+    loadData = (params = {}) => {
       this.setState(s => ({
-        datagridParams: { 
+        datagridParams: {
+          pageNumber: 0,
           ...s.datagridParams,
-          pageNumber 
+          ...params
         },
         rows: []
       }), this.loadNextPage)
@@ -81,7 +84,7 @@ export default (Component, { apiUrl, filters = [] }) => {
           pageNumber: 0
         },
         rows: []
-      }), reload && this.loadNextPage)
+      }), () => reload && this.loadNextPage())
     }
 
     clearFilter = () => {

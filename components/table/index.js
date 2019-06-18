@@ -55,9 +55,13 @@ const GlobalTableOverrideStyle = createGlobalStyle`
 const SettingButton = styled(Icon)`
   position: absolute !important;
   cursor: pointer !important;
-  top: 13px;
-  right: 16px;
+  top: 8px;
+  right: 28px;
   z-index: 601;
+  &:before {
+    padding: 10px 16px 10px 10px;
+    background-color: white !important;
+  }
 `
 const ColumnsSetting = ({ onClick }) => (
   <SettingButton onClick={onClick} name="setting" />
@@ -114,7 +118,8 @@ export default class _Table extends Component {
       pt.shape({
         name: pt.string.isRequired,
         title: pt.string,
-        width: pt.number
+        width: pt.number,
+        sortPath: pt.string
       })
     ),
     rows: pt.arrayOf(pt.any),
@@ -131,8 +136,10 @@ export default class _Table extends Component {
     renderGroupLabel: pt.func,
     getChildGroups: pt.func,
     tableName: pt.string,
-    getNextPage: pt.func,
-    onRowClick: pt.func
+    onScrollToEnd: pt.func,
+    onRowClick: pt.func,
+    onSortingChange: pt.func,
+    onTableReady: pt.func
   }
 
   static defaultProps = {
@@ -147,6 +154,8 @@ export default class _Table extends Component {
     groupBy: [],
     onSelectionChange: () => { },
     onScrollToEnd: () => { },
+    onSortingChange: () => { },
+    onTableReady: () => { }
   }
 
   constructor(props) {
@@ -159,7 +168,8 @@ export default class _Table extends Component {
       columnsSettings: {
         hiddenColumnNames: this.getColumns().filter(c => c.disabled).map(c => c.name),
         widths: this.getColumnsExtension(),
-        order: this.getColumns().map(c => c.name)
+        order: this.getColumns().map(c => c.name),
+        sorting: []
       },
     }
   }
@@ -169,21 +179,25 @@ export default class _Table extends Component {
 
     let table = this.gridWrapper.querySelector('.table-responsive')
     table.addEventListener('scroll', this.handleScroll)
+
+    // if (!this.state.columnsSettings.sorting) this.handleSortingChange(this.state.columnsSettings.sorting || [{
+    //   columnName: this.props.columns[0].name,
+    //   direction: 'asc'
+    // }])
+  }
+
+  handleScroll = ({ target }) => {
+    const { onScrollToEnd } = this.props
+
+    if (target.offsetHeight + target.scrollTop >= target.scrollHeight - 50) {
+      onScrollToEnd()
+    }
   }
 
   componentDidUpdate(prevProps) {
     // expand groups after data was loaded when grouping is set
     if (prevProps.rows !== this.props.rows) this.props.groupBy.length && this.expandGroups()
     // prevProps.loading != this.props.loading && prevProps.loading && this.props.groupBy.length > 0 && this.expandGroups()
-  }
-
-  handleScroll = ({ target }) => {
-    const { onScrollToEnd } = this.props
-    
-    if (target.offsetHeight + target.scrollTop === target.scrollHeight) {
-      
-      onScrollToEnd()
-    }
   }
 
   expandGroups = () => {
@@ -229,15 +243,18 @@ export default class _Table extends Component {
     const { tableName, columns, rowActions } = this.props
 
     // get column names from current table settings
-    let colNames = columns.map(column => {
-      return column.name
-    })
+    let colNames = columns.map(column => column.name)
+
+    // Why this should be in colNames saved in localstorage?? Discuss with Mirek is you have any concerns about it.
+    //
     if (rowActions)
       colNames.push('__actions')
 
     if (tableName && localStorage[tableName]) {
+
       // if saved table settings exists then compare it with current settings
       let savedSettings = JSON.parse(localStorage[tableName])
+
       let invalidItems = (savedSettings.order.length === colNames.length) ? savedSettings.order.filter(col => {
         if (colNames.indexOf(col) > -1) {
           return false
@@ -247,13 +264,42 @@ export default class _Table extends Component {
       }) : true
 
       // if number of columns is different or any column uses different name then remove saved settings
-      if (invalidItems === true || invalidItems.length)
+      if (invalidItems === true || invalidItems.length) {
         localStorage.removeItem(tableName)
-      else
+      }
+      else {
         this.setState({
-          columnsSettings: JSON.parse(localStorage[tableName])
-        })
+          columnsSettings: savedSettings
+        }, this.handleTableReady)
+        return
+      }
     }
+
+    this.handleTableReady()
+  }
+
+  handleTableReady = () => {
+    const { onTableReady, columns } = this.props
+    const { columnsSettings: { sorting: [s] } } = this.state
+    const column = s ? columns.find(c => c.name === s.columnName) : {}
+
+    onTableReady({
+      sortPath: column.sortPath,
+      sortDirection: s && s.direction.toUpperCase()
+    })
+  }
+
+  handleSortingChange = (sorting) => {
+    const [s] = sorting
+    const { onSortingChange, columns } = this.props
+    const column = columns.find(c => c.name === s.columnName)
+
+    this.handleColumnsSettings({ sorting })
+
+    onSortingChange({
+      sortPath: column ? column.sortPath : s.columnName,
+      sortDirection: s.direction.toUpperCase()
+    })
   }
 
   handleColumnsSettings = (data) => {
@@ -292,10 +338,10 @@ export default class _Table extends Component {
       ...restProps
     } = this.props
 
-    const { columnSettingOpen, expandedGroups, columnsSettings } = this.state
+    const { columnSettingOpen, expandedGroups, columnsSettings, loaded } = this.state
     const grouping = groupBy.map(g => ({ columnName: g }))
-    const columnsFiltered = this.getColumns().filter(c => !c.disabled)
-    
+    const columnsFiltered = columns.filter(c => !c.disabled)
+
     const hiddenColumns = [
       ...this.getColumns().filter(c => c.disabled).map(c => c.name),
       ...(columnsSettings.hiddenColumnNames || [])
@@ -324,10 +370,11 @@ export default class _Table extends Component {
             {sorting &&
               <SortingState
                 sorting={columnsSettings.sorting}
-                onSortingChange={sorting => this.handleColumnsSettings({ sorting })}
+                onSortingChange={sorting => this.handleSortingChange(sorting)}
               />
             }
-            {sorting && <IntegratedSorting />}
+
+            {/* {sorting && <IntegratedSorting />} */}
 
             {groupBy &&
               <GroupingState
@@ -353,12 +400,12 @@ export default class _Table extends Component {
             <IntegratedFiltering />
 
             {virtual
-              ? <VirtualTable 
-                  columnExtensions={this.getColumnsExtension()} 
-                  height="auto" 
-                  cellComponent={TableCells} 
-                  rowComponent={props => <Row onClick={onRowClick} {...props} />}
-                />
+              ? <VirtualTable
+                columnExtensions={this.getColumnsExtension()}
+                height="auto"
+                cellComponent={TableCells}
+                rowComponent={props => <Row onClick={onRowClick} {...props} />}
+              />
               : <Table columnExtensions={this.getColumnsExtension()} />}
 
             <TableColumnResizing
