@@ -107,7 +107,14 @@ export default (Component, { apiUrl, filters = [] }) => {
             removeRow: this.removeRowById,
             loadData: this.loadData,
             setFilter: this.setFilter,
-            loadNextPage: this.loadNextPageSafe
+            loadNextPage: this.loadNextPageSafe,
+            tableProps: {
+              rows,
+              loading,
+              onTableReady: this.loadData,
+              onSortingChange: this.setFilter,
+              onScrollToEnd: this.loadNextPageSafe
+            }
           }}
         />
       )
