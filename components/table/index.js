@@ -247,8 +247,8 @@ export default class _Table extends Component {
       return column.name
     })
     
-    // if (rowActions)
-    //   colNames.push('__actions')
+    if (rowActions)
+      colNames.push('__actions')
 
     if (tableName && localStorage[tableName]) {
 

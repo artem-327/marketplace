@@ -83,32 +83,21 @@ export default (Component, { apiUrl, filters = [] }) => {
       }), () => reload && this.loadNextPage())
     }
 
-    clearFilter = () => {
-      this.setState(s => ({
-        datagridParams: {
-          filters: [],
-          pageNumber: 0
-        }
-      }), this.loadNextPage())
-    }
-
-    clearFilter = () => {
-      this.setState({ filters: [] }, this.loadData)
-    }
-
 
     render() {
-      const { rows, loading } = this.state
+      const { rows, loading, datagridParams: { filters } } = this.state
 
       return (
         <Component {...this.props}
           datagrid={{
             rows,
             loading,
+            filters,
             removeRow: this.removeRowById,
             loadData: this.loadData,
             setFilter: this.setFilter,
             loadNextPage: this.loadNextPageSafe,
+
             tableProps: {
               rows,
               loading,
