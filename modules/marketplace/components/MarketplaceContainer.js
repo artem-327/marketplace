@@ -44,7 +44,6 @@ function mapStateToProps(store, {datagrid}) {
 export default withDatagrid(
   connect(mapStateToProps, {...Actions, sidebarChanged, getProductOffer})(Marketplace), 
   {
-    apiUrl: '/prodex/api/product-offers/broadcasted/datagrid/',
-    searchUrl: (text) => `/prodex/api/products/broadcasted/search?pattern=${text}`
+    apiUrl: '/prodex/api/product-offers/broadcasted/datagrid/'
   }
 )

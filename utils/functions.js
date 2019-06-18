@@ -19,14 +19,18 @@ export const transformRequestOptions = params => {
 export const uniqueArrayByKey = (array, key) => {
     let unique = []
 
+    if (!array[0][key]) {
+        console.error(`Array does not contain key: ${key}`)
+        return array
+    }
+
     for (let i = 0; i < array.length; i++) {
         let exists = false
         for (let j = 0; j < unique.length; j++) {
-            console.log(unique[j][key], array[i][key])
             if (unique[j][key] === array[i][key]) exists = true
         }
         if (!exists) unique.push(array[i])
     }
-    
+
     return unique
 }

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Sidebar, Accordion, Segment, GridRow } from 'semantic-ui-react'
+import { Sidebar, Accordion, Segment, GridRow, Icon } from 'semantic-ui-react'
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -104,4 +104,11 @@ export const SavedFilterTitle = styled(AccordionTitle)`
   margin-bottom: 0px !important;
 `
 
+export const SavedFilterIcon = styled(Icon)`
+  font-size: 22px !important;
+`
 
+export const ActionRow = styled(GridRow)`
+  padding-top: 0px !important;
+  margin-bottom: 15px !important;
+`

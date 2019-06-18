@@ -59,21 +59,23 @@ export default class Marketplace extends Component {
 
   }
 
-  onFilterApply = (filter) => {
+  handleFilterApply = filter => {
     this.props.datagrid.setFilter(filter)
   }
 
-  onFilterSave = (filter) => {
-    this.props.datagrid.saveFilter(filter)
-  }
 
-  onFilterClear = () => {  
-    this.props.datagrid.clearFilter()
+  handleFilterClear = () => {
+    this.props.datagrid.setFilter({ filters: [] })
   }
 
   removeFilter = (i) => {
-    this.props.datagrid.removeFilter(i)
+    let { datagrid } = this.props
+    let { filters } = datagrid
+
+    filters.splice(i, 1)
+    datagrid.setFilter(filters)
   }
+
 
   render() {
     const { datagrid } = this.props
@@ -160,12 +162,11 @@ export default class Marketplace extends Component {
           />
         </div>
         <Filter
-          onApply={this.onFilterApply}
-          onSave={this.onFilterSave}
-          onClear={this.onFilterClear}
-          searchProducts={this.props.datagrid.searchProducts}
-          searchedProducts={this.props.datagrid.searchedProducts}
-          searchedProductsLoading={this.props.datagrid.searchedProductsLoading}
+          onApply={this.handleFilterApply}
+          onClear={this.handleFilterClear}
+          savedUrl='/prodex/api/product-offers/broadcasted/datagrid/saved-filters'
+          searchUrl={(text) => `/prodex/api/products/broadcasted/search?pattern=${text}`}
+          filters={datagrid.filters}
         />
         <AddCart />
       </>

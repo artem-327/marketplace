@@ -19,7 +19,6 @@ export const initialState = {
   searchedProducts: [],
   searchedProductsLoading: false,
   warehousesList: [],
-  filter: null,
   loading: false,
 }
 
@@ -280,22 +279,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.INVENTORY_SEARCH_PRODUCTS_PENDING: {
-      return {
-        ...state,
-        searchedProductsLoading: true
-      }
-    }
-
-    case AT.INVENTORY_SEARCH_PRODUCTS_FULFILLED: {
-      console.log('searched', state.searchedProducts)
-      return {
-        ...state,
-        searchedProducts: uniqueArrayByKey(action.payload.data.concat(state.searchedProducts), 'id'),
-        searchedProductsLoading: false
-      }
-    }
-
     case AT.INVENTORY_PATCH_BROADCAST_FULFILLED: {
       return {
         ...state,
@@ -312,20 +295,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.POST_FILTER_PENDING: {
-      return {
-        ...state,
-        loading: true
-      }
-    }
-    case AT.POST_FILTER_FULFILLED: {
-      return {
-        ...state,
-        myProductOffers: payload.data,
-        filter: payload.filter,
-        loading: false
-      }
-    }
 
     default: {
       return state

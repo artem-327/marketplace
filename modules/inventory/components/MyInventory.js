@@ -101,10 +101,6 @@ class MyInventory extends Component {
     datagrid.setFilter(filter)
   }
 
-  handleFilterSave = filter => {
-    this.props.saveFilter(filter)
-  }
-
   handleFilterClear = () => {
     let { datagrid } = this.props
 
@@ -118,7 +114,6 @@ class MyInventory extends Component {
     filters.splice(i, 1)
     datagrid.setFilter(filters)
   }
- 
 
   render() {
     const {
@@ -130,7 +125,7 @@ class MyInventory extends Component {
     const { columns, selectedRows } = this.state
 
     let { formatMessage } = intl
-    
+
     return (
       <>
         <Container fluid style={{ padding: '0 32px' }}>
@@ -221,9 +216,10 @@ class MyInventory extends Component {
         <Broadcast />
         <Filter
           onApply={this.handleFilterApply}
-          onSave={this.handleFilterSave}
           onClear={this.handleFilterClear}
-          {...this.props.datagrid}
+          savedUrl='/prodex/api/product-offers/own/datagrid/saved-filters'
+          searchUrl={(text) => `/prodex/api/products/own/search?pattern=${text}`}
+          filters={datagrid.filters}
         />
       </>
     )

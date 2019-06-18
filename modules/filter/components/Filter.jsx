@@ -18,7 +18,8 @@ import { datagridValues } from '../constants/filter'
 import { initialValues } from '../constants/validation'
 
 import SavedFilters from './SavedFilters'
-// import SavedFilters from '~/src/components/Filter/components/SavedFilters/SavedFilters'
+import Notifications from './Notifications'
+
 
 import {
   FlexSidebar, FlexContent,
@@ -32,7 +33,9 @@ class Filter extends Component {
 
   state = {
     savedFiltersActive: false,
-    accordion: {}
+    accordion: {
+      chemicalType: true
+    }
   }
 
   componentDidMount() {
@@ -112,7 +115,7 @@ class Filter extends Component {
       notifyMail, notifyPhone, notifySystem
     }
 
-    this.props.onSave(requestData)
+    this.props.saveFilter(this.props.savedUrl, requestData)
     if (automaticallyApply) this.props.onApply(this.generateDatagridFilter(rest))
   }
 
@@ -123,9 +126,9 @@ class Filter extends Component {
     })
   }
 
-  toggleFilter = () => {
-    let { savedFiltersActive } = this.state
-    this.setState({ savedFiltersActive: !savedFiltersActive })
+  toggleFilter = savedFiltersActive => {
+    if (this.state.savedFiltersActive !== savedFiltersActive)
+      this.setState({ savedFiltersActive })
   }
 
   generateCheckboxes = (data, groupName = null) => {
@@ -168,8 +171,9 @@ class Filter extends Component {
   }
 
   handleSearch = debounce(({ searchQuery, name }) => {
-    if (searchQuery.length > 3) this.props.searchProducts(searchQuery)
+    if (searchQuery.length > 2) this.props.getAutocompleteData(this.props.searchUrl(searchQuery))
   }, 250)
+
 
   accordionTitle = (name, text) => (
     <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
@@ -179,11 +183,13 @@ class Filter extends Component {
   )
 
 
+
+
   formMarkup = (values, setFieldValue) => {
     let {
       productConditions, productForms, packagingTypes,
-      productGradeTypes, intl, filterSaving,
-      searchedProducts, searchedProductsLoading
+      productGradeTypes, intl, isFilterSaving,
+      autocompleteData, autocompleteDataLoading
     } = this.props
 
     const { formatMessage } = intl
@@ -198,13 +204,13 @@ class Filter extends Component {
       selection: true,
       multiple: true,
       fluid: true,
-      options: searchedProducts.map((product) => ({
+      options: autocompleteData.map((product) => ({
         key: product.id,
         text: product.productName,
         value: JSON.stringify({ id: product.id, name: product.productName })
       })),
       label: <FormattedMessage id='filter.ChemicalNameCAS' />,
-      loading: searchedProductsLoading,
+      loading: autocompleteDataLoading,
       name: 'search',
       placeholder: <FormattedMessage id='filter.searchProducts' defaultMessage='Search Products' />,
       onSearchChange: (_, data) => this.handleSearch(data),
@@ -212,7 +218,7 @@ class Filter extends Component {
       onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null),
     }
 
-    if (!searchedProductsLoading) dropdownProps.icon = null
+    if (!autocompleteDataLoading) dropdownProps.icon = null
 
     return (
       <Accordion>
@@ -335,7 +341,7 @@ class Filter extends Component {
               <Button onClick={(e) => {
                 e.preventDefault()
                 this.handleFilterSave(values)
-              }} positive basic loading={filterSaving}>Save</Button>
+              }} positive basic loading={isFilterSaving}>Save</Button>
             </GridRow>
 
             <GridRow>
@@ -346,52 +352,7 @@ class Filter extends Component {
                 />
               </GridColumn>
             </GridRow>
-
-            {/* Notifications content */}
-            <GridRow>
-              <GridColumn computer={7}>
-                <FormikCheckbox
-                  name='checkboxes.notifyMail'
-                  label={formatMessage({ id: 'filter.notifications.email', defaultMessage: 'Email Notifications:' })} />
-              </GridColumn>
-              {
-                values.checkboxes && values.checkboxes.notifyMail && (
-                  <GridColumn computer={9}>
-                    <Input
-                      fluid
-                      inputProps={{ placeholder: ' Email' }}
-                      type='text'
-                      name='notifications.notificationMail' />
-                  </GridColumn>
-                )
-              }
-            </GridRow>
-
-            <GridRow>
-              <GridColumn computer={7}>
-                <FormikCheckbox
-                  name='checkboxes.notifyPhone'
-                  label={formatMessage({ id: 'filter.notifications.mobile', defaultMessage: 'Mobile Notifications:' })} />
-              </GridColumn>
-              {
-                values.checkboxes && values.checkboxes.notifyPhone && (
-                  <GridColumn computer={9}>
-                    <Input
-                      fluid
-                      type='text'
-                      name='notifications.notificationPhone'
-                      inputProps={{ placeholder: ' Phone Number' }} />
-                  </GridColumn>
-                )
-              }
-            </GridRow>
-            <GridRow>
-              <GridColumn>
-                <FormikCheckbox
-                  name='checkboxes.notifySystem'
-                  label={formatMessage({ id: 'filter.notifications.system', defaultMessage: 'System Notifications:' })} />
-              </GridColumn>
-            </GridRow>
+            <Notifications values={values} />
           </Grid>
         </Segment>
       </Accordion >
@@ -405,15 +366,12 @@ class Filter extends Component {
       direction,
       animation,
       additionalSidebarProps,
-      filterApplying
+      isFilterApplying
     } = this.props
 
     const {
       toggleFilter
     } = this.props
-
-
-
 
     return (
       <FlexSidebar
@@ -432,14 +390,14 @@ class Filter extends Component {
         <FlexContent>
           <Segment basic>
             <FiltersContainer>
-              <Button onClick={this.toggleFilter} primary={!this.state.savedFiltersActive}>
+              <Button onClick={() => this.toggleFilter(false)} primary={!this.state.savedFiltersActive}>
                 <FormattedMessage
                   id='filter.setFilters'
                   defaultMessage='SET FILTERS'
                 />
               </Button>
 
-              <Button onClick={this.toggleFilter} primary={this.state.savedFiltersActive}>
+              <Button onClick={() => this.toggleFilter(true)} primary={this.state.savedFiltersActive}>
                 <FormattedMessage
                   id='filter.savedFilter'
                   defaultMessage='SAVED FILTERS'
@@ -457,11 +415,12 @@ class Filter extends Component {
                 )
               }}
             </Form>
-
-            <SavedFilters
-              savedFilters={this.props.savedFilters}
-              savedFiltersLoading={this.props.savedFiltersLoading}
-              getSavedFilters={this.props.getSavedFilters} />
+            {this.state.savedFiltersActive &&
+              <SavedFilters
+                savedFilters={this.props.savedFilters}
+                savedFiltersLoading={this.props.savedFiltersLoading}
+                getSavedFilters={() => this.props.getSavedFilters(this.props.savedUrl)} />
+            }
           </Segment>
         </FlexContent>
 
@@ -472,7 +431,7 @@ class Filter extends Component {
                 <Button fluid onClick={this.props.onClear}> <FormattedMessage id='filter.clearFilter' defaultMessage='Clear Filter' /></Button>
               </GridColumn>
               <GridColumn>
-                <Button loading={filterApplying} primary fluid onClick={() => this.submitForm()}><FormattedMessage id='global.apply' defaultMessage='Apply' /></Button>
+                <Button loading={isFilterApplying} primary fluid onClick={() => this.submitForm()}><FormattedMessage id='global.apply' defaultMessage='Apply' /></Button>
               </GridColumn>
             </GridRow>
           </Grid>
@@ -489,10 +448,15 @@ Filter.propTypes = {
   animation: string,
   additionalSidebarProps: object,
   onApply: func,
-  onSave: func,
   onClear: func,
-  searchProducts: func,
-  searchedProducts: array
+  filters: array,
+  getAutocompleteData: func,
+  autocompleteData: array,
+  savedFilters: array,
+  getSavedFilters: func,
+  savedFiltersLoading: bool,
+  savedUrl: string,
+  searchUrl: func
 }
 
 Filter.defaultProps = {
@@ -501,11 +465,15 @@ Filter.defaultProps = {
   direction: 'right',
   animation: 'overlay',
   additionalSidebarProps: {},
-  onApply: () => alert('onApply function not supplied!'),
-  onSave: () => alert('onSave function not supplied!'),
-  onClear: () => alert('onClear function not supplied!'),
-  searchProducts: () => alert('searchProducts not supplied!'),
-  searchedProducts: [],
+  filters: [],
+  onApply: () => console.warn('onApply function not supplied!'),
+  onClear: () => console.warn('onClear function not supplied!'),
+  getAutocompleteData: (searchUrl, text) => console.warn('getAutocompleteData not supplied!'),
+  autocompleteData: [],
+  savedFilters: [],
+  getSavedFilters: console.warn('getSavedFilters function not supplied!'),
+  savedFiltersLoading: false
+
 }
 
 export default injectIntl(Filter)

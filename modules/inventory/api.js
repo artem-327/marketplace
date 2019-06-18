@@ -86,15 +86,7 @@ export async function searchOrigins(text) {
   return response
 }
 
-export async function searchProducts(text) {
-  const response = await api.get(`/prodex/api/products/own/search?pattern=${text}`)
-  return response
-}
 
 export function updateProductOffer(poId, values) {
   return api.patch(`/prodex/api/product-offers/${poId}`, values)
 }
-
-export const getSavedFilters = () => api.get('/prodex/api/product-offers/own/datagrid/saved-filters').then((response) => response.data)
-
-export const saveFilter = filter => api.post('/prodex/api/product-offers/own/datagrid/saved-filters', filter).then(response => response.data)
