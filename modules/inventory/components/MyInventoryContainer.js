@@ -6,13 +6,12 @@ import * as Actions from '../actions'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import { withDatagrid } from '~/modules/datagrid'
 
-function mapStateToProps(store, {datagrid}) {
+function mapStateToProps(store, { datagrid }) {
   return {
-    searchedProducts: store.simpleAdd.searchedProducts,
-    searchedProductsLoading: store.simpleAdd.searchedProductsLoading,
+    ...store.simpleAdd,
     rows: datagrid.rows.map(po => {
       const qtyPart = `${po.product.packagingUnit ? po.product.packagingUnit.nameAbbreviation : ''}`
-      
+
       return {
         id: po.id,
         product: po.product,
@@ -39,12 +38,11 @@ function mapStateToProps(store, {datagrid}) {
         status: po.status // new broadcasted
       }
     }),
-    filter: store.simpleAdd.filter
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions, openBroadcast })(MyInventory), { 
-  apiUrl: '/prodex/api/product-offers/own/datagrid/',
+export default withDatagrid(connect(mapStateToProps, { ...Actions, openBroadcast })(MyInventory), {
+  apiUrl: '/prodex/api/product-offers/own/datagrid/'
 })
 
 

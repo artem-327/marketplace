@@ -303,25 +303,27 @@ export function searchOrigins(text) {
   }
 }
 
-export function searchProducts(text) {
-  return {
-    type: AT.INVENTORY_SEARCH_PRODUCTS,
-    async payload() {
-      const response = await api.searchProducts(text)
+// export function searchProducts(text) {
+//   return {
+//     type: AT.INVENTORY_SEARCH_PRODUCTS,
+//     async payload() {
+//       const response = await api.searchProducts(text)
 
-      return {
-        data: response.data ? response.data.map(p => ({
-          text: p.casProducts.length ? p.casProducts[0].casIndexName : p.productName + ' (Unmapped)',
-          value: p,
-          key: p.id,
-          id: p ? p.id : '',
-          name: p.productName + (p.productCode ? ' (' + p.productCode + ')' : ''),
-          casName: p.casProducts.length ? p.casProducts[0].casIndexName + ' (' + p.casProducts[0].casNumber + ')' : ''
-        })) : []
-      }
-    }
-  }
-}
+//       return {
+//         data: response.data ? response.data.map(p => ({
+//           text: p.casProduct ? p.casProduct.casIndexName : p.productName + ' (Unmapped)',
+//           value: p,
+//           key: p.casProduct ? p.casProduct.id : '',
+//           id: p ? p.id : '',
+//           name: p.productName + (p.productCode ? ' (' + p.productCode + ')' : ''),
+//           casName: p.casProduct ? p.casProduct.casIndexName + ' (' + p.casProduct.casNumber + ')' : ''
+//         })) : []
+//       }
+//     }
+//   }
+// }
+
+
 
 export function uploadDocuments(isLot, productOfferId, fileIds) {
   let files = []
@@ -336,20 +338,4 @@ export function uploadDocuments(isLot, productOfferId, fileIds) {
         })
       }).then(loop.bind(null, j + 1))
     })(0)
-}
-
-export const getSavedFilters = () => ({ type: AT.GET_SAVED_FILTERS, payload: api.getSavedFilters() })
-
-export const saveFilter = filter => {
-  return async dispatch => {
-    dispatch({
-      type: AT.SAVE_FILTER, async payload() {
-        dispatch(filterSaving(true))
-        let data = await api.saveFilter(filter)
-        dispatch(filterSaving(false))
-        dispatch(toggleFilter(false))
-        return { data, filter }
-      }
-    })
-  }
 }

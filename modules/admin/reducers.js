@@ -320,12 +320,21 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.ADMIN_GET_COMPANIES_FULFILLED: {
+      const requiredFields = action.payload.map(row => {
+        return {
+          displayName: row.displayName,
+          primaryBranchAddress: row.primaryBranchAddress,
+          primaryContact: row.primaryContact,
+          contactEmail: row.contactEmail,
+          hasDwollaAccount: row.hasDwollaAccount ? 'Yes' : 'No'
+        }
+      })
       return {
         ...state,
         loading: false,
         companiesRows: [
           // ...state.companiesRows,
-          ...action.payload
+          ...requiredFields
         ]
       }
     }

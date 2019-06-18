@@ -1,7 +1,8 @@
 import { connect } from 'react-redux'
 
 import Filter from './Filter'
-import { toggleFilter } from '../actions'
+import * as Actions from '../actions'
+
 import {
   fetchProductConditions,
   fetchProductForms,
@@ -20,17 +21,17 @@ function mapStateToProps(store) {
     productForms: store.products.productForms,
     productAge: store.products.productAge,
     productGradeTypes: store.products.productGrade,
-    location: store.products.location,
+    location: store.products.location
   }
 }
 
 const mapDispatchToProps = {
-  toggleFilter,
   fetchProductConditions,
   fetchProductForms,
   fetchPackagingTypes,
   fetchWarehouseDistances,
-  fetchProductGrade
+  fetchProductGrade,
+  ...Actions
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Filter)

@@ -18,10 +18,6 @@ export default (Component, { apiUrl, filters = [] }) => {
       }
     }
 
-    componentDidMount() {
-      //this.loadNextPage()
-    }
-
     async loadNextPage() {
       const { datagridParams } = this.state
 
@@ -95,6 +91,11 @@ export default (Component, { apiUrl, filters = [] }) => {
         }
       }), this.loadNextPage())
     }
+
+    clearFilter = () => {
+      this.setState({ filters: [] }, this.loadData)
+    }
+
 
     render() {
       const { rows, loading } = this.state

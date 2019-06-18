@@ -130,24 +130,26 @@ class WarehousePopup extends React.Component {
             <>
               <FormGroup widths="equal">
                 <Input type="text" label={name} name="name" />
-                <Input type="text" label="Contact Name" name="contactName" />
               </FormGroup>
+              <h4>Address</h4>
               <FormGroup widths="equal">
                 <Input type="text" label="Street Address" name="address" />
                 <Input type="text" label="City" name="city" />
               </FormGroup>
               <FormGroup widths="equal">
                 <Input type="text" label="Zip" name="zip" />
-                <Input type="text" label="Phone" name="phone" />
-              </FormGroup>
-              <FormGroup widths="equal">
                 <Dropdown label="Country" name="country" options={country}
                           inputProps={{search: true, onChange:  (e, d) => {
                               setFieldValue('province', ''); this.handleCountry(e, d)}}} />
                 <Dropdown label="Province" name="province" options={provincesDropDown}
                           inputProps={{search: true, disabled: !hasProvinces}} />
               </FormGroup>
+              <h4>Contact Info</h4>
+              <FormGroup>
+                <Input type="text" label="Contact Name" name="contactName" fieldProps={{width: 8}} />
+              </FormGroup>
               <FormGroup widths="equal">
+                <Input type="text" label="Phone" name="phone" />
                 <Input type="text" label="Email" name="email" />
               </FormGroup>
               <div style={{ textAlign: 'right' }}>

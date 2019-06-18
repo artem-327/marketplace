@@ -42,7 +42,7 @@ const formValidationNew = Yup.object().shape({
       city: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Enter at least 2 characters'),
       country: Yup.string().required(),
       postalCode: Yup.string().required(),
-      stateProvinceRegion: Yup.string().trim().required('Required'),
+      stateProvinceRegion: Yup.string().trim(),
     }),
     dateOfBirth: Yup.string().trim().min(3, 'Too short').required('Required'),
     firstName: Yup.string().trim().min(3, 'Too short').required('Required'),

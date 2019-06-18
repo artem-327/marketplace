@@ -88,6 +88,7 @@
   "myInventory.myInventory": "MY INVENTORY",
   "myInventory.smallHeader": "{number} products offerings selected",
   "filter.saved": "Saved",
+  "filter.searchProducts": "Search Products",
   "filter.selectedFilter": "SELECTED FILTER - ",
   "filter.setFilters": "SET FILTERS",
   "filter.setFilterName": "Set Filter Name",
@@ -131,6 +132,8 @@
   "filter.OffSpec": "Off Spec",
   "filter.Prime": "Prime",
   "filter.From": "From",
+  "filter.dateFrom": "Date From",
+  "filter.dateTo": "Date To",
   "filter.To": "To",
   "filter.Minimum(%)": "Minimum (%)",
   "filter.Maximum(%)": "Maximum (%)",
@@ -161,6 +164,7 @@
   "filter.noSavedFilters": "No saved filters available",
   "filter.saved.name": "Filter Name: ",
   "filter.notifications": "Notifications",
+  "filter.notifications.enable": "Enable Notifications:",
   "filter.notifications.email": "Email Notifications:",
   "filter.notifications.mobile": "Mobile Notifications:",
   "filter.notifications.system": "System Notifications:",
@@ -351,5 +355,7 @@
   "validation.enterPhoneNumber": "Enter phone number",
   "validation.minimum": "Minimum is {min}",
   "validation.maximum": "Maximum is {max}",
+  "validation.greaterThan": "Must be greater than {value}",
+  "validation.lessThan": "Must be less than {value}",
   "validation.multiplyOfSplit": "Must be multiply of split ({split})"
 }

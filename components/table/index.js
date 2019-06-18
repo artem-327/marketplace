@@ -243,12 +243,12 @@ export default class _Table extends Component {
     const { tableName, columns, rowActions } = this.props
 
     // get column names from current table settings
-    let colNames = columns.map(column => column.name)
-
-    // Why this should be in colNames saved in localstorage?? Discuss with Mirek is you have any concerns about it.
-    //
-    if (rowActions)
-      colNames.push('__actions')
+    let colNames = columns.map(column => {
+      return column.name
+    })
+    
+    // if (rowActions)
+    //   colNames.push('__actions')
 
     if (tableName && localStorage[tableName]) {
 

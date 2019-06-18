@@ -20,10 +20,11 @@ export const config = {
     searchText: 'Search company by name',
     display: {
       columns: [
-        { name: 'name', title: 'Company Name', sortPath: 'Company.name' },
-        { name: 'primaryBranchAddress', title: 'Headquarters Address' },
-        { name: 'primaryContact', title: 'Primary Contact' },
-        { name: 'contactEmail', title: 'Contact E-mail' }
+        { name: 'displayName', title: 'Company Name'},
+        { name: 'primaryBranchAddress', title: 'Headquarters Address'},
+        { name: 'primaryContact', title: 'Primary Contact'},
+        { name: 'contactEmail', title: 'Contact E-mail'},
+        { name: 'hasDwollaAccount', title: 'Dwolla Account'},
       ]
     }
   },

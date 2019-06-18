@@ -70,7 +70,7 @@ body {
   font-size: 70%;
 }
 
-i.icon:not(.dropdown):not(.times):not(.sort):not(.unlink) {
+i.icon:not(.dropdown):not(.times):not(.sort):not(.unlink):not(.thick) {
   font-family: 'thin-icons' !important;
 }
 
@@ -359,6 +359,11 @@ h1.ui.header {
 
 h3.ui.header {
   font-size: 1.142857em;
+
+  i.info.circle {
+    vertical-align: top;
+    font-size: 0.875em;
+  }
 }
 
 .ui.form .field > label {
@@ -610,5 +615,26 @@ i.file {
   }
   &.negative {
     background-image: url("../images/attachment-negative.png");
+  }
+}
+
+.ui.toggle.checkbox input:not([type=radio]):indeterminate ~ .box:before,
+.ui.toggle.checkbox input:not([type=radio]):indeterminate ~ label:before {
+  background: #ffff55 !important;
+}
+
+.ui.wide.popup {
+  max-width: 500px;
+}
+
+@media (max-width: 1024px) {
+  .ui.wide.popup {
+    max-width: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ui.wide.popup {
+    max-width: 250px;
   }
 }

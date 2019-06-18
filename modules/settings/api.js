@@ -3,6 +3,7 @@ import api from '~/api'
 export default {
   getUsers: () => api.get('/prodex/api/users').then(response => response.data),
   getRoles: () => api.get('/prodex/api/roles?includeSuperAdmin=true').then(response => response.data),
+  userSwitchEnableDisable: id => api.patch(`/prodex/api/users/id/${id}/switch-enabled`),
   getCurrentUser: () =>
     api.get('/prodex/api/users/me').then(response => response.data),
   getWarehouses: () =>
@@ -115,6 +116,12 @@ export default {
   },
   updateDeliveryAddresses: async (id, value) => {
     return await api.put(`/prodex/api/delivery-addresses/id/${id}`, value)
+  },
+  dwollaInitiateVerification: async (id) => {
+    return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify/initialize`)
+  },
+  dwollaFinalizeVerification: async (id) => {
+    return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify?value1=0.03&value2=0.06`)
   },
 
 }

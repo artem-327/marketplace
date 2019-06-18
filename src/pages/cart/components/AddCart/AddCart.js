@@ -82,6 +82,7 @@ export default class AddCart extends Component {
 
 
     let { packagingUnit, packagingSize, packagingType } = offer.product
+    let nameAbbreviation = packagingUnit ? packagingUnit.nameAbbreviation : null
 
     let totalPrice = (quantity && pricing) ? pricing.price * quantity * packagingSize : null
     let error = null
@@ -143,6 +144,8 @@ export default class AddCart extends Component {
 
     let canProceed = !warning && pricing
 
+    console.log('product', offer)
+
     return (
       <>
         <FlexContent basic>
@@ -155,7 +158,7 @@ export default class AddCart extends Component {
 
             <GridRow columns={1}>
               <GridColumn>
-                <Header as='h4'>{offer.product.casProduct.casIndexName}</Header>
+                <Header as='h4'>{offer.product.casProducts[0].casIndexName}</Header>
               </GridColumn>
             </GridRow>
 
@@ -183,7 +186,7 @@ export default class AddCart extends Component {
                 Available Product:
           </GridColumn>
               <GridColumn computer={10}>
-                <FormattedNumber minimumFractionDigits={0} value={pkgAmount} /> {packagingType.name} / <FormattedUnit unit={packagingUnit.nameAbbreviation} separator={' '} value={pkgAmount * packagingSize} />
+                <FormattedNumber minimumFractionDigits={0} value={pkgAmount} /> {packagingType.name} / <FormattedUnit unit={nameAbbreviation} separator={' '} value={pkgAmount * packagingSize} />
               </GridColumn>
 
             </GridRow>
@@ -203,7 +206,7 @@ export default class AddCart extends Component {
           </GridColumn>
 
               <GridColumn company={10}>
-                <FormattedUnit unit={packagingUnit.nameAbbreviation} separator={' '} value={packagingSize} />  {offer.product.packagingType.name}
+                <FormattedUnit unit={nameAbbreviation} separator={' '} value={packagingSize} />  {offer.product.packagingType.name}
               </GridColumn>
             </GridRow>
 
@@ -274,7 +277,7 @@ export default class AddCart extends Component {
                   pricing && !isNaN(pricing.price) ? <><FormattedNumber
                     style='currency'
                     currency={currencyCode}
-                    value={pricing && pricing.price} /> / {packagingUnit.nameAbbreviation}</> : null
+                    value={pricing && pricing.price} /> {nameAbbreviation && `/ ${nameAbbreviation  }`}</> : null
                 }
 
 

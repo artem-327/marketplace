@@ -40,6 +40,19 @@ export function closeDwollaPopup(){
   }
 }
 
+export function dwollaInitiateVerification(id) {
+  return {
+    type: AT.DWOLLA_START_VERIFICATION,
+    payload: api.dwollaInitiateVerification(id)
+  }
+}
+export function dwollaFinalizeVerification(id) {
+  return {
+    type: AT.DWOLLA_FINALIZE_VERIFICATION,
+    payload: api.dwollaFinalizeVerification(id)
+  }
+}
+
 export function openImportPopup() {
   return {
     type: AT.OPEN_IMPORT_POPUP
@@ -113,6 +126,7 @@ export function closeAddPopup() {
     payload: null
   }
 }
+
 export function changeHeadersCSV(payload) {
   return {
     type: AT.CHANGE_HEADERS_CSV,
@@ -568,6 +582,13 @@ export function putNewUserRoleRequest(payload, id) {
   }
 }
 
+export function userSwitchEnableDisable(id) {
+  return {
+    type: AT.USER_SWITCH_ENABLE_DISABLE,
+    payload: api.userSwitchEnableDisable(id)
+  }
+}
+
 export function handleSubmitProductAddPopup(inputsValue, reloadFilter) {
   return async dispatch => {
     const data = {
@@ -597,18 +618,10 @@ export function handleSubmitProductAddPopup(inputsValue, reloadFilter) {
 }
 
 export function postNewBankAccountRequest(payload) {
-  return async dispatch => {
-    const dataBody = {
-      accountHolderName: payload.accountHolderName,
-      accountHolderType: payload.accountHolderType,
-      accountNumber: payload.account,
-      country: payload.country,
-      currency: payload.currency,
-      routingNumber: payload.routingNumber
-    }
-    await dispatch({
+  return dispatch => {
+    dispatch({
       type: AT.POST_NEW_BANK_ACCOUNT_REQUEST,
-      payload: api.postNewBankAccount(dataBody)
+      payload: api.postNewBankAccount(payload)
     })
     dispatch(closePopup())
     // TODO: Add Bank Accounts reload

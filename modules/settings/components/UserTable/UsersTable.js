@@ -12,9 +12,15 @@ import {
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteUser,
-  openRolesPopup
+  openRolesPopup,
+  userSwitchEnableDisable
 } from "../../actions"
 import Router from "next/router"
+import {Checkbox, Popup} from "semantic-ui-react";
+
+const handleSwitchEnabled = (id) => {
+  userSwitchEnableDisable(id)
+}
 
 class UsersTable extends Component {
   state = {
@@ -24,7 +30,8 @@ class UsersTable extends Component {
       { name: "email", title: "E-mail" },
       { name: "phone", title: "Phone" },
       { name: "homeBranch", title: "Home Branch" },
-      { name: "userRoles", title: "Roles", width: 200 }
+      { name: "userRoles", title: "Roles", width: 200 },
+      { name: "switchEnable", title: "Enable User", width: 120 }
     ]
   }
 
@@ -81,8 +88,24 @@ const mapDispatchToProps = {
   openRolesPopup,
   handleOpenConfirmPopup,
   closeConfirmPopup,
-  deleteUser
+  deleteUser,
+  userSwitchEnableDisable,
 }
+
+const userEnableDisableStatus = r => (
+  <div style={{ float: 'right' }}>
+    <Popup id={r.id}
+           trigger={
+             <Checkbox toggle={true}
+                       defaultChecked={false}
+                       disabled={false}
+                       onChange={() => handleSwitchEnabled(r.id)}
+             />
+           }
+           content={'User enabled / disabled (! ! TODO based on actual state)'}
+    />
+  </div>
+)
 
 const mapStateToProps = state => {
   return {
@@ -91,6 +114,7 @@ const mapStateToProps = state => {
       userRoles: r.allUserRoles.map(rol => (
         rol.name
       )).join(", "),
+      switchEnable: userEnableDisableStatus(r),
     })),
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
