@@ -259,8 +259,18 @@ class Filter extends Component {
             {this.accordionTitle('quantity', <FormattedMessage id='filter.quantity' />)}
             <AccordionContent active={this.state.accordion.quantity}>
               <FormGroup widths='equal'>
-                <Input inputProps={{ type: 'number' }} label={<FormattedMessage id='filter.FromQuantity' defaultMessage='From Quantity' />} name='quantityFrom' />
-                <Input inputProps={{ type: 'number' }} label={<FormattedMessage id='filter.ToQuantity' defaultMessage='To Quantity' />} name='quantityTo' />
+                <Input inputProps={{
+                  type: 'number',
+                  placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
+                }}
+                  label={<FormattedMessage id='filter.FromQuantity' defaultMessage='From' />}
+                  name='quantityFrom' />
+                <Input inputProps={{
+                  type: 'number',
+                  placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
+                }}
+                  label={<FormattedMessage id='filter.ToQuantity' defaultMessage='To' />}
+                  name='quantityTo' />
               </FormGroup>
             </AccordionContent>
           </AccordionItem>
@@ -268,9 +278,31 @@ class Filter extends Component {
           <AccordionItem>
             {this.accordionTitle('price', <FormattedMessage id='filter.price' />)}
             <AccordionContent active={this.state.accordion.price}>
-              <FormGroup widths='equal'>
-                <Input inputProps={{ type: 'number', step: 0.01 }} label={<FormattedMessage id='filter.FromPrice' defaultMessage='From Price' />} name='priceFrom' />
-                <Input inputProps={{ type: 'number', step: 0.01 }} label={<FormattedMessage id='filter.ToPrice' defaultMessage='To Price' />} name='priceTo' />
+              <FormGroup>
+                <FormField width={8}>
+
+                  <Input inputProps={{
+                    label: this.props.preferredCurrency,
+                    labelPosition: 'left',
+                    type: 'number',
+                    step: 0.01,
+                    placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
+                  }}
+                    label={<FormattedMessage id='filter.FromPrice' defaultMessage='From Price' />}
+                    name='priceFrom' />
+                </FormField>
+
+                <FormField width={8}>
+                  <Input inputProps={{
+                    label: this.props.preferredCurrency,
+                    labelPosition: 'left',
+                    type: 'number',
+                    step: 0.01,
+                    placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
+                  }}
+                    label={<FormattedMessage id='filter.ToPrice' defaultMessage='To Price' />}
+                    name='priceTo' />
+                </FormField>
               </FormGroup>
             </AccordionContent>
           </AccordionItem>
@@ -311,6 +343,7 @@ class Filter extends Component {
                   <DateInput
                     onChange={(e, { name, value }) => setFieldValue(name, value)}
                     closable
+                    inputProps={{ placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }) }}
                     value={values.dateFrom}
                     closeOnMouseLeave={false}
                     dateFormat='YYYY-MM-DD'
@@ -323,6 +356,7 @@ class Filter extends Component {
                   <DateInput
                     onChange={(e, { name, value }) => setFieldValue(name, value)}
                     closable
+                    inputProps={{ placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }) }}
                     value={values.dateTo}
                     dateFormat='YYYY-MM-DD'
                     animation='none'
@@ -339,8 +373,12 @@ class Filter extends Component {
             {this.accordionTitle('assay', <FormattedMessage id='filter.assay' />)}
             <AccordionContent active={this.state.accordion.assay}>
               <FormGroup widths='equal'>
-                <Input inputProps={{ type: 'number' }} label={<FormattedMessage id='filter.Minimum(%)' defaultMessage='Minimum' />} name='assayFrom' />
-                <Input inputProps={{ type: 'number' }} label={<FormattedMessage id='filter.Maximum(%)' defaultMessage='Maximum' />} name='assayTo' />
+                <Input
+                  inputProps={{ type: 'number', placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }) }}
+                  label={<FormattedMessage id='filter.Minimum(%)' defaultMessage='Minimum' />} name='assayFrom' />
+                <Input
+                  inputProps={{ type: 'number', placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }) }}
+                  label={<FormattedMessage id='filter.Maximum(%)' defaultMessage='Maximum' />} name='assayTo' />
               </FormGroup>
             </AccordionContent>
           </AccordionItem>
@@ -447,7 +485,7 @@ class Filter extends Component {
                 this.submitForm = props.submitForm
                 this.resetForm = props.resetForm
                 this.setFieldValue = props.setFieldValue
-                console.log(props.values)
+
                 return (
                   !this.state.savedFiltersActive && this.formMarkup(props)
                 )
@@ -473,7 +511,11 @@ class Filter extends Component {
                 }}> <FormattedMessage id='filter.clearFilter' defaultMessage='Clear Filter' /></Button>
               </GridColumn>
               <GridColumn>
-                <Button loading={isFilterApplying} primary fluid onClick={() => this.submitForm()}><FormattedMessage id='global.apply' defaultMessage='Apply' /></Button>
+                <Button loading={isFilterApplying}
+                  primary fluid
+                  onClick={() => this.submitForm()}>
+                  <FormattedMessage id='global.apply' defaultMessage='Apply' />
+                </Button>
               </GridColumn>
             </GridRow>
           </Grid>

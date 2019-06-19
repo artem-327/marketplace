@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Sidebar, Accordion, Segment, GridRow, Icon } from 'semantic-ui-react'
+import { Sidebar, Accordion, Segment, GridRow, Icon, Popup } from 'semantic-ui-react'
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -80,7 +80,8 @@ export const FilterTag = styled.div`
   border: 1px solid #979797;
   height: 24px;
   font-size: 14px;
-  padding: 5px 5px 0px 15px;
+  padding: 5px 5px 5px 15px;
+  margin-bottom: 5px;
   text-align: center;
   color: #979797;
   border-radius: 25px;
@@ -111,4 +112,13 @@ export const SavedFilterIcon = styled(Icon)`
 export const ActionRow = styled(GridRow)`
   padding-top: 0px !important;
   margin-bottom: 15px !important;
+`
+
+export const PopupRow = styled(GridRow)`
+  padding-top: 0.6rem !important;
+  padding-bottom: 0.6rem !important;
+`
+
+export const WiderPopup = styled(Popup)`
+  min-width: 200px !important;
 `
