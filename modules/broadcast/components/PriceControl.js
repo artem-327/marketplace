@@ -22,7 +22,7 @@ export default class PriceControl extends Component {
   constructor(props) {
     super(props)
 
-    this.onChange = _.debounce(props.onChange, 300)
+    this.onChange = _.debounce(props.onChange, 250)
   }
 
   componentWillMount() {
