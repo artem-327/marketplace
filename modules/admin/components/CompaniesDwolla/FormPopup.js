@@ -93,7 +93,7 @@ class AddNewPopupCasProducts extends React.Component {
   }
 
   handlePrimaryBranchCountry = (e, d) => {
-    let country = this.props.countries.find(obj => obj.id == d.value);
+    let country = this.props.countries.find(obj => obj.id == d.value)
     if (country.hasProvinces) {
       this.props.getPrimaryBranchProvinces(country.id)
     }
@@ -101,7 +101,7 @@ class AddNewPopupCasProducts extends React.Component {
   }
 
   handleMailingBranchCountry = (e, d) => {
-    let country = this.props.countries.find(obj => obj.id == d.value);
+    let country = this.props.countries.find(obj => obj.id == d.value)
     if (country.hasProvinces) {
       this.props.getMailingBranchProvinces(country.id)
     }
@@ -130,28 +130,28 @@ class AddNewPopupCasProducts extends React.Component {
     return (
       <Formik
         enableReinitialize
-        initialValues= {initialFormValues}
+        initialValues={initialFormValues}
         validationSchema={formValidationNew}
         onSubmit={(values, actions) => {
-            values.beneficialOwner.address.country += ''
-            values.beneficialOwner.passport.country += ''
-            values.beneficialOwner.address.stateProvinceRegion += ''
-            if(values.controller && values.controller.address && values.controller.address.country){
-              values.controller.address.country += ''
-            }
-            if(values.controller && values.controller.passport && values.controller.passport.country){
-              values.controller.passport.country += ''
-            }
-            if(values.controller && values.controller.address && values.controller.address.stateProvinceRegion){
-              values.controller.address.stateProvinceRegion += ''
-            }
+          values.beneficialOwner.address.country += ''
+          values.beneficialOwner.passport.country += ''
+          values.beneficialOwner.address.stateProvinceRegion += ''
+          if (values.controller && values.controller.address && values.controller.address.country) {
+            values.controller.address.country += ''
+          }
+          if (values.controller && values.controller.passport && values.controller.passport.country) {
+            values.controller.passport.country += ''
+          }
+          if (values.controller && values.controller.address && values.controller.address.stateProvinceRegion) {
+            values.controller.address.stateProvinceRegion += ''
+          }
 
-            values.beneficialOwner.status = 'status'
-            values.beneficialOwner.id = auth.identity.id +''
+          values.beneficialOwner.status = 'status'
+          values.beneficialOwner.id = auth.identity.id + ''
 
-            closeRegisterDwollaAccount()
-            postDwollaAccount(values)
-            actions.setSubmitting(false)
+          closeRegisterDwollaAccount()
+          postDwollaAccount(values)
+          actions.setSubmitting(false)
         }}
         onReset={closeRegisterDwollaAccount}
         render={props => {
@@ -174,18 +174,18 @@ class AddNewPopupCasProducts extends React.Component {
                         <Input label={<FormattedMessage id='global.dateOfBirth' defaultMessage='Birth' />} name='beneficialOwner.dateOfBirth' />
                       </FormGroup>
                       <FormGroup widths='equal'>
-                        <Dropdown label="Passport Country" name="beneficialOwner.passport.country" options={countriesDropDown}/>
+                        <Dropdown label="Passport Country" name="beneficialOwner.passport.country" options={countriesDropDown} />
                         <Input label="Passport Number" name="beneficialOwner.passport.number" />
                       </FormGroup>
                       <FormGroup widths='equal'>
                         <Dropdown label={<FormattedMessage id='global.country' defaultMessage='Country' />} name='beneficialOwner.address.country' options={countriesDropDown}
                           inputProps={{
-                          search: true, onChange: (e, d) => {
+                            search: true, onChange: (e, d) => {
                               this.handlePrimaryBranchCountry(e, d)
-                          }
-                        }} />
+                            }
+                          }} />
                         <Dropdown label="Province" name="beneficialOwner.address.stateProvinceRegion" options={primaryBranchProvinces}
-                          inputProps={{search: true, disabled: !this.state.primaryBranchHasProvinces, clearable: true}} />
+                          inputProps={{ search: true, disabled: !this.state.primaryBranchHasProvinces, clearable: true }} />
                       </FormGroup>
                       <FormGroup widths='equal'>
                         <Input label={<FormattedMessage id='global.postalCode' defaultMessage='Postal Code' />} name='beneficialOwner.address.postalCode' />
@@ -198,8 +198,8 @@ class AddNewPopupCasProducts extends React.Component {
 
                       <Accordion.Title active={accordionActive.controllerAddress} onClick={this.handleAccordionChange} name='controllerAddress'>
                         <h4>
-                            <Icon color={accordionActive.controllerAddress && 'blue'} name={accordionActive.controllerAddress ? 'chevron up' : 'chevron down'} />
-                            <FormattedMessage id='global.Controller' defaultMessage='Controller' />
+                          <Icon color={accordionActive.controllerAddress && 'blue'} name={accordionActive.controllerAddress ? 'chevron up' : 'chevron down'} />
+                          <FormattedMessage id='global.Controller' defaultMessage='Controller' />
                         </h4>
                       </Accordion.Title>
 
@@ -208,31 +208,31 @@ class AddNewPopupCasProducts extends React.Component {
                           <Input label={<FormattedMessage id='global.address4' defaultMessage='Address1' />} name='controller.address.address1' />
                           <Input label={<FormattedMessage id='global.address5' defaultMessage='Address2' />} name='controller.address.address2' />
                           <Input label={<FormattedMessage id='global.address6' defaultMessage='Address3' />} name='controller.address.address3' />
-                          
+
                         </FormGroup>
                         <FormGroup widths='equal'>
                           <Input label={<FormattedMessage id='global.city2' defaultMessage='City' />} name='controller.address.city' />
                           <Input label={<FormattedMessage id='global.postalCode2' defaultMessage='Postal Code' />} name='controller.address.postalCode' />
                           <Dropdown label={<FormattedMessage id='global.country2' defaultMessage='Country' />} name='controller.address.country' options={countriesDropDown}
-                                inputProps={{
-                                search: true, onChange: (e, d) => {
-                                  this.handleMailingBranchCountry(e, d)
-                                }
+                            inputProps={{
+                              search: true, onChange: (e, d) => {
+                                this.handleMailingBranchCountry(e, d)
+                              }
                             }} />
                           <Dropdown label="Province" name="controller.address.stateProvinceRegion" options={mailingBranchProvinces}
-                            inputProps={{search: true, disabled: !this.state.mailingBranchHasProvinces, clearable: true}} />
+                            inputProps={{ search: true, disabled: !this.state.mailingBranchHasProvinces, clearable: true }} />
                         </FormGroup>
                         <FormGroup widths='equal'>
-                            <Input label={<FormattedMessage id='global.firstName2' defaultMessage='First Name' />} name='controller.firstName' />
-                            <Input label={<FormattedMessage id='global.lastName2' defaultMessage='Last Name' />} name='controller.lastName' />
+                          <Input label={<FormattedMessage id='global.firstName2' defaultMessage='First Name' />} name='controller.firstName' />
+                          <Input label={<FormattedMessage id='global.lastName2' defaultMessage='Last Name' />} name='controller.lastName' />
                         </FormGroup>
                         <FormGroup widths='equal'>
-                          <Dropdown label="Passport Country" name="controller.passport.country" options={countriesDropDown}/>
+                          <Dropdown label="Passport Country" name="controller.passport.country" options={countriesDropDown} />
                           <Input label="Passport Number" name="controller.passport.number" />
                         </FormGroup>
                         <FormGroup widths='equal'>
-                            <Input label={<FormattedMessage id='global.ssn2' defaultMessage='SSN' />} name='controller.ssn' />
-                            <Input label={<FormattedMessage id='global.title' defaultMessage='Title' />} name='controller.title' />
+                          <Input label={<FormattedMessage id='global.ssn2' defaultMessage='SSN' />} name='controller.ssn' />
+                          <Input label={<FormattedMessage id='global.title' defaultMessage='Title' />} name='controller.title' />
                         </FormGroup>
                         <FormGroup widths='equal'>
                           <Input label={<FormattedMessage id='global.dateOfBirth2' defaultMessage='Birth' />} name='controller.dateOfBirth' />

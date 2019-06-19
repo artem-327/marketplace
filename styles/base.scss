@@ -371,6 +371,10 @@ h3.ui.header {
   font-weight: 400;
 }
 
+.ui.form .field > .field + .field {
+  padding-top: 1em;
+}
+
 form.inventory {
   height: 100%;
 }
@@ -601,6 +605,7 @@ i.file {
     border-radius: 0;
     background-color: transparent;
     background-size: contain;
+    background-repeat: no-repeat;
 
     &:before {
       content: "" !important;
@@ -621,6 +626,13 @@ i.file {
 .ui.toggle.checkbox input:not([type=radio]):indeterminate ~ .box:before,
 .ui.toggle.checkbox input:not([type=radio]):indeterminate ~ label:before {
   background: #ffff55 !important;
+}
+
+/* ------------------------------------------------------------------------------------------------
+    TOAST NOTIFICATIONS
+   ------------------------------------------------------------------------------------------------ */
+.css-e110bw {
+  z-index: 1001;
 }
 
 .ui.wide.popup {

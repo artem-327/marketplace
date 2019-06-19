@@ -18,6 +18,7 @@ import {
 import Router from "next/router"
 import {Checkbox, Popup} from "semantic-ui-react";
 
+
 const handleSwitchEnabled = (id) => {
   userSwitchEnableDisable(id)
 }
@@ -92,29 +93,34 @@ const mapDispatchToProps = {
   userSwitchEnableDisable,
 }
 
-const userEnableDisableStatus = r => (
+const userEnableDisableStatus = (r, currentUserId) => (
   <div style={{ float: 'right' }}>
     <Popup id={r.id}
            trigger={
              <Checkbox toggle={true}
-                       defaultChecked={false}
-                       disabled={false}
+                       defaultChecked={r.enabled}
+                       disabled={r.id === currentUserId}
                        onChange={() => handleSwitchEnabled(r.id)}
              />
            }
-           content={'User enabled / disabled (! ! TODO based on actual state)'}
+           content={
+             r.id === currentUserId ?
+               r.enabled ? 'User enabled.' : 'User disabled.' :
+               r.enabled ? 'User enabled. Click to disable user.' : 'User disabled. Click to enable user.'
+           }
     />
   </div>
 )
 
 const mapStateToProps = state => {
+  const currentUserId = state.settings.currentUser && state.settings.currentUser.id
   return {
     rows: state.settings.usersRows.map(r => ({
       ...r,
       userRoles: r.allUserRoles.map(rol => (
         rol.name
       )).join(", "),
-      switchEnable: userEnableDisableStatus(r),
+      switchEnable: userEnableDisableStatus(r, currentUserId),
     })),
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,

@@ -310,6 +310,14 @@ export function handleSubmitProductEditPopup(productData, id, reloadFilter) {
       type: AT.SETTINGS_UPDATE_PRODUCT_CATALOG,
       payload: api.updateProduct(id, data)
     })
+    if (productData.attachments && productData.attachments.length) {
+      for (let i = 0; i < productData.attachments.length; i++) {
+        dispatch({
+          type: AT.SETTINGS_POST_LINK_ATTACHMENT,
+          payload: api.postLinkAttachment(productData.attachments[i].id, id)
+        })
+      }
+    }
     dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
     dispatch(closePopup())
   }
@@ -326,10 +334,11 @@ export function getUsersDataRequest() {
     dispatch({
       type: AT.GET_USERS_DATA,
       async payload() {
-        const [users, branches, roles] = await Promise.all([
+        const [users, branches, roles, currentUser] = await Promise.all([
           api.getUsers(),
           api.getBranches(),
           api.getRoles(),
+          api.getCurrentUser()
         ])
         dispatch({
           type: AT.GET_ALL_BRANCHES_DATA,
@@ -338,6 +347,10 @@ export function getUsersDataRequest() {
         dispatch({
             type: AT.GET_ROLES_DATA,
             payload: roles
+        })
+        dispatch({
+          type: AT.GET_CURRENT_USER_DATA,
+          payload: currentUser
         })
         return users
       }
@@ -518,7 +531,6 @@ export function postNewUserRequest(payload) {
       preferredCurrency: payload.preferredCurrency
     }
     removeEmpty(dataBody)
-    console.log('!!!!!!!!!! new user', dataBody)
     await dispatch({
       type: AT.POST_NEW_USER_REQUEST,
       payload: api.postNewUser(dataBody)
@@ -608,10 +620,18 @@ export function handleSubmitProductAddPopup(inputsValue, reloadFilter) {
       unNumber: inputsValue.unNumber ? inputsValue.unNumber : null
     }
     removeEmpty(data)
-    await dispatch({
+    const newProd = await dispatch({
       type: AT.SETTINGS_POST_NEW_PRODUCT_REQUEST,
       payload: api.postNewProduct(data)
     })
+    if (inputsValue.attachments && inputsValue.attachments.length) {
+      for (let i = 0; i < inputsValue.attachments.length; i++) {
+        dispatch({
+          type: AT.SETTINGS_POST_LINK_ATTACHMENT,
+          payload: api.postLinkAttachment(inputsValue.attachments[i].id, newProd.value.data.id)
+        })
+      }
+    }
     dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
     dispatch(closePopup())
   }
@@ -748,6 +768,41 @@ export function getProvinces(id) {
   return {
     type: AT.SETTINGS_GET_PROVINCES,
     payload: api.getProvinces(id)
+  }
+}
+
+export function getDocumentTypes() {
+  return {
+    type: AT.SETTINGS_GET_DOCUMENT_TYPES,
+    payload: api.getDocumentTypes()
+  }
+}
+
+export function loadFile(attachment) {
+  return {
+    type: AT.SETTINGS_LOAD_FILE,
+    payload: api.loadFile(attachment)
+  }
+}
+
+export function addAttachment(attachment, type, expirationDate) {
+  return {
+    type: AT.SETTINGS_ADD_ATTACHMENT,
+    payload: api.addAttachment(attachment, type, expirationDate)
+  }
+}
+
+export function removeAttachmentLink(isLot, itemId, aId) {
+  return {
+    type: AT.SETTINGS_REMOVE_ATTACHMENT_LINK,
+    payload: api.removeAttachmentLink(itemId, aId)
+  }
+}
+
+export function removeAttachment(aId) {
+  return {
+    type: AT.SETTINGS_REMOVE_ATTACHMENT,
+    payload: api.removeAttachment(aId)
   }
 }
 

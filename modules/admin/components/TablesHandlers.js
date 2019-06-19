@@ -14,7 +14,7 @@ class TablesHandlers extends Component {
       filterFieldCurrentValue: 'None'
     }
 
-    this.debouncedOnChange = debounce(this.handleChange, 250)
+    this.handleChange = debounce(this.handleChange, 250)
   }
 
   componentDidUpdate(prevProps) {
@@ -49,8 +49,8 @@ class TablesHandlers extends Component {
     } = this.props
 
 
-    if (currentTab === 'Manufactures' || currentTab === 'CAS Products') var onChange = this.debouncedOnChange
-    else var onChange = this.handleChange
+    // if (currentTab === 'Manufactures' || currentTab === 'CAS Products' || currentTab === 'Companies') var onChange = this.debouncedOnChange
+    // else var onChange = this.handleChange
 
     return (
       <Menu secondary>
@@ -61,7 +61,7 @@ class TablesHandlers extends Component {
         <Menu.Menu position='right'>
           <Menu.Item>
             <Input style={{ width: 340 }} size="large" icon='search' placeholder={config[currentTab].searchText}
-              onChange={onChange} />
+              onChange={this.handleChange} />
           </Menu.Item>
           <Menu.Item>
             <Button size="large" primary onClick={() => openPopup()}>

@@ -36,7 +36,7 @@ class CompanyForm extends Component {
               loading,
             }}
             label={<FormattedMessage id='company.businessType' defaultMessage='Business Type' />}
-            name='businessType.id' />
+            name='businessType' />
           <Input label={
             <Popup
               content={<FormattedMessage id='company.tooltip.orEin' defaultMessage='or Employer Identification Number' />}

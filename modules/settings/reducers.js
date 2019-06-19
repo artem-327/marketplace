@@ -26,6 +26,7 @@ export const initialState = {
   provincesDropDown: [],
   country: [],
   currency: [],
+  currentUser: null,
 
   tabsNames: defaultTabs,
   currentTab: defaultTabs[0],
@@ -56,6 +57,7 @@ export const initialState = {
   searchedUnNumbers: [],
   deliveryAddressesFilter: { pageSize: 50, pageNumber: 0 },
   productsFilter: { pageSize: 50, pageNumber: 0 },
+  documentTypes: []
 }
 
 export default function reducer(state = initialState, action) {
@@ -260,6 +262,7 @@ export default function reducer(state = initialState, action) {
           //phone: user.homeBranch.contactPhone || '',
           phone: user.phone || '',
           homeBranchId: user.homeBranch.id,
+          enabled: user.enabled,
           /*preferredCurrency: user.preferredCurrency
             ? user.preferredCurrency.code
               ? user.preferredCurrency.code
@@ -284,6 +287,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         roles: action.payload
+      }
+    }
+
+    case AT.GET_CURRENT_USER_DATA: {
+      return {
+        ...state,
+        currentUser: action.payload
       }
     }
 
@@ -835,6 +845,19 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         currentTab: payload
+      }
+    }
+
+    case AT.SETTINGS_GET_DOCUMENT_TYPES_FULFILLED: {
+      return {
+        ...state,
+        documentTypes: action.payload.data.map((docType) => {
+          return {
+            key: docType.id,
+            text: docType.name,
+            value: docType.id
+          }
+        })
       }
     }
 

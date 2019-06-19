@@ -17,60 +17,53 @@ import { withDatagrid } from '~/modules/datagrid'
 
 class CasProductsTable extends Component {
 
-  getNextPage = (pageNumber) => {
-    const { getCasProductByFilter, casListDataRequest, filterCasIds } = this.props
-
-    let filter = {}
-    if (filterCasIds && filterCasIds.length) {
-      filter = {
-        filters: [{
-          operator: "EQUALS",
-          path: "CasProduct.id",
-          values: filterCasIds.map(casId => {
-            return casId
-          })
-        }]
-      }
+  componentWillReceiveProps({filterValue}) {
+    
+    if (this.props.filterValue !== filterValue) {
+      this.props.datagrid.setFilter({
+        filters: filterValue && filterValue.length >= 1 ? [{
+          operator: "LIKE",
+          path: "CasProduct.chemicalName",
+          values: ['%'+filterValue+'%']
+        }] : []
+      })
     }
 
-    getCasProductByFilter({
-      ...casListDataRequest,
-      ...filter,
-      pageNumber
-    })
   }
 
-  initialLoad = () => {
-    const { getCasProductByFilter, casListDataRequest, filterCasIds } = this.props
+  // getNextPage = (pageNumber) => {
+  //   const { getCasProductByFilter, casListDataRequest, filterCasIds } = this.props
 
-    let filter = {}
-    if (filterCasIds && filterCasIds.length) {
-      filter = {
-        filters: [{
-          operator: "EQUALS",
-          path: "CasProduct.id",
-          values: filterCasIds.map(casId => {
-            return casId
-          })
-        }]
-      }
-    }
+  //   let filter = {}
+  //   if (filterCasIds && filterCasIds.length) {
+  //     filter = {
+  //       filters: [{
+  //         operator: "EQUALS",
+  //         path: "CasProduct.id",
+  //         values: filterCasIds.map(casId => {
+  //           return casId
+  //         })
+  //       }]
+  //     }
+  //   }
 
-    this.props.datagrid.setFilter(filter.filters)
-  }
+  //   getCasProductByFilter({
+  //     ...casListDataRequest,
+  //     ...filter,
+  //     pageNumber
+  //   })
+  // }
+
 
   componentDidMount() {
-    // this.getNextPage(0)
-    this.initialLoad()
-
     this.props.getHazardClassesDataRequest()
     this.props.getPackagingGroupsDataRequest()
   }
 
   render() {
     const {
+      datagrid,
       config,
-      loading,
       rows,
       openPopup,
       openEditAltNamesCasPopup,
@@ -90,15 +83,20 @@ class CasProductsTable extends Component {
     return (
       <React.Fragment>
         <ProdexTable
+          {...datagrid.tableProps}
           tableName='admin_cas_products'
-          loading={loading}
           columns={columns}
-          onScrollToEnd={this.props.datagrid.onScrollToEnd}
           rows={rows}
           rowActions={[
             { text: 'Edit', callback: (row) => openPopup(row) },
             { text: 'Edit Alternative Names', callback: (row) => openEditAltNamesCasPopup(row) },
-            { text: 'Delete', callback: (row) => deleteCasProduct(row.id) }
+            { 
+              text: 'Delete', 
+              callback: (row) => {
+                deleteCasProduct(row.id) 
+                datagrid.removeRow(row.id)
+              }
+            }
           ]}
         />
       </React.Fragment>
@@ -132,7 +130,6 @@ const mapStateToProps = (state, { datagrid }) => {
     filterValue: state.admin.filterValue,
     currentTab: state.admin.currentTab,
     casListDataRequest: state.admin.casListDataRequest,
-    loading: datagrid.loading, // state.admin.loading,
     rows: datagrid.rows.map(d => {
       return {
         id: d.id,

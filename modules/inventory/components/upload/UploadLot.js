@@ -69,12 +69,12 @@ class UploadLot extends Component {
         </div>
       ), {
         appearance: 'error',
-        autoDismiss: true,
+        autoDismiss: true
       })
     }
 
     onPreviewDrop = async (files) => {
-        let {loadFile, addAttachment, type, fileMaxSize, unspecifiedTypes, toastManager} = this.props
+        let {loadFile, addAttachment, type, fileMaxSize, unspecifiedTypes, toastManager, expiration} = this.props
         let {onDropRejected, onUploadSuccess, onUploadFail} = this
 
         if (typeof unspecifiedTypes === 'undefined')
@@ -94,20 +94,19 @@ class UploadLot extends Component {
 
         // add new files to attachments and save indexes of own files
         for (let i = 0; i < files.length; i++) {
-            if (files[i].size > fileMaxSize * 1024 * 1024) {
-              // remove file
-              onDropRejected([files[i]])
-              files.splice(i, 1)
-              i--
-            }
+          if (files[i].size > fileMaxSize * 1024 * 1024) {
+            // remove file
+            onDropRejected([files[i]])
+            files.splice(i, 1)
+            i--
+          }
         }
 
         // upload new files as temporary attachments
         (function loop(j) {
             if (j < files.length) new Promise((resolve, reject) => {
                 loadFile(files[j]).then(file => {
-                    addAttachment(file.value, parseInt(type)).then((aId) => {
-
+                    addAttachment(file.value, parseInt(type), expiration).then((aId) => {
                         onUploadSuccess(aId.value.data)
 
                         resolve()
