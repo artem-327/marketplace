@@ -57,7 +57,7 @@ export default class FilterTags extends Component {
 
       tagsToDisplay.push(
         <WiderPopup trigger={
-          <FilterTag id='more' key={TAGS_TO_DISPLAY} >
+          <FilterTag key={TAGS_TO_DISPLAY} >
             <span><FormattedMessage id='filterTags.andMore' values={{ count: filters.length - TAGS_TO_DISPLAY }} /></span>
           </FilterTag>
         }>
