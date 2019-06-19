@@ -80,7 +80,7 @@ const mapStateToProps = ({admin}, {datagrid}) => {
         c.primaryBranch.address.streetAddress + ', ' +
         c.primaryBranch.address.city + ', ' +
         (c.primaryBranch.address.province ? c.primaryBranch.address.province.name + ', ' : '') +
-        c.primaryBranch.address.country.name
+        (c.primaryBranch.address.country ? c.primaryBranch.address.country.name : '')
         : '',
       primaryContact: c.primaryUser ?
         c.primaryUser.name
