@@ -134,6 +134,8 @@
   "filter.From": "From",
   "filter.dateFrom": "Date From",
   "filter.dateTo": "Date To",
+  "filter.startTypingToSearch": "Please start typing to obtain search results...",
+  "filter.noResultsFound": "No results found.",
   "filter.To": "To",
   "filter.Minimum(%)": "Minimum (%)",
   "filter.Maximum(%)": "Maximum (%)",

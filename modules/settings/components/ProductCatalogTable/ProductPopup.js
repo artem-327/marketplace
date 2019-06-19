@@ -99,7 +99,7 @@ class ProductPopup extends React.Component {
         isLoading: false,
         results: filter(this.handleCasProduct(), isMatch)
       })
-    }, 300)
+    }, 250)
   }, 500)
 
   handleSearchUnNumber = debounce((e, { value }) => {

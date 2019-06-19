@@ -35,7 +35,9 @@ class Filter extends Component {
     savedFiltersActive: false,
     accordion: {
       chemicalType: true
-    }
+    },
+    searchQuery: '',
+    isTyping: false
   }
 
   componentDidMount() {
@@ -209,6 +211,11 @@ class Filter extends Component {
     let productGradeRows = this.generateCheckboxes(productGradeTypes, values, 'productGrades')
     let productFormsRows = this.generateCheckboxes(productForms, values, 'productForms')
 
+    var noResultsMessage = null
+
+    if (this.state.searchQuery.length <= 1) noResultsMessage = <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
+    if (autocompleteDataLoading) noResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
+
     let dropdownProps = {
       search: true,
       selection: true,
@@ -228,7 +235,10 @@ class Filter extends Component {
       loading: autocompleteDataLoading,
       name: 'search',
       placeholder: <FormattedMessage id='filter.searchProducts' defaultMessage='Search Products' />,
-      onSearchChange: (_, data) => this.handleSearch(data),
+      noResultsMessage,
+      onSearchChange: (_, data) => {
+        this.handleSearch(data)
+      },
       value: values.search,
       onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null),
     }
@@ -378,9 +388,6 @@ class Filter extends Component {
       </Accordion >
     )
   }
-
-
-  // zkoncil, odjebat ty checkboxy kdyz dam clear filter
 
   render() {
     let {
