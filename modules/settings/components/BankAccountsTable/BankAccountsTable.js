@@ -49,6 +49,7 @@ class ProductCatalogTable extends Component {
     return (
       <React.Fragment>
         <ProdexTable
+          tableName="settings_bankaccounts"
           rows={rows}
           columns={columns}
           filterValue={filterValue}

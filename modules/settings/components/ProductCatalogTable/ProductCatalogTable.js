@@ -67,6 +67,7 @@ class ProductCatalogTable extends Component {
     return (
       <React.Fragment>
         <ProdexTable
+          tableName="settings_product_catalog"
           rows={rows}
           columns={columns}
           loading={loading}
