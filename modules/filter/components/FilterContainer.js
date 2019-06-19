@@ -15,6 +15,7 @@ import { fetchWarehouseDistances } from '~/src/modules/location'
 function mapStateToProps(store) {
   return {
     ...store.filter,
+    preferredCurrency: store.auth.identity && store.auth.identity.preferredCurrency.symbol,
     warehouseDistances: store.location.warehouseDistances,
     packagingTypes: store.products.packagingTypes,
     productConditions: store.products.productConditions,
