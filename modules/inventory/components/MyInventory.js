@@ -164,7 +164,6 @@ class MyInventory extends Component {
             rows={this.getRows(rows)}
             onScrollToEnd={datagrid.onScrollToEnd}
             loading={datagrid.loading}
-
             columns={columns}
             rowSelection
             groupBy={['productNumber']}

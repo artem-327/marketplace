@@ -131,21 +131,30 @@ class Filter extends Component {
       this.setState({ savedFiltersActive })
   }
 
-  generateCheckboxes = (data, groupName = null) => {
+  generateCheckboxes = (data, values, groupName = null) => {
     if (!data) return []
     let group = null
 
     if (groupName) group = `${groupName}.`
 
     let tmp = []
-    var getCheckbox = (el, i) => (
-      <FormField key={i}>
-        <FormikField onChange={(e, data) => {
-          let { setFieldValue } = data.form
-          setFieldValue(`${group}${el.name.toLowerCase()}`, data.checked ? { id: el.id, name: el.name } : null)
-        }} component={Checkbox} name={`${group}${el.name.toLowerCase()}`} label={el.name} />
-      </FormField>
-    )
+    var getCheckbox = (el, i) => {
+      let name = el.name.toLowerCase().replace(/ /g, '')
+      let path = `${group}${name}`
+
+      return (
+        <FormField key={i}>
+          <FormikField
+            onChange={(e, data) => {
+              let { setFieldValue } = data.form
+              setFieldValue(path, data.checked ? { id: el.id, name: el.name } : null)
+            }}
+            component={Checkbox}
+            checked={!!values[groupName] && values[groupName][name]}
+            name={path} label={el.name} />
+        </FormField>
+      )
+    }
 
     for (let i = 0; i < (data.length / 2 - data.length % 2); i++) {
       tmp.push(
@@ -161,6 +170,7 @@ class Filter extends Component {
       tmp.push(<FormGroup widths='equal'>{getCheckbox(data[Math.round(data.length / 2) - 1])}</FormGroup>)
     }
 
+
     return tmp
   }
 
@@ -171,7 +181,7 @@ class Filter extends Component {
   }
 
   handleSearch = debounce(({ searchQuery, name }) => {
-    if (searchQuery.length > 2) this.props.getAutocompleteData(this.props.searchUrl(searchQuery))
+    if (searchQuery.length > 1) this.props.getAutocompleteData(this.props.searchUrl(searchQuery))
   }, 250)
 
 
@@ -194,10 +204,10 @@ class Filter extends Component {
 
     const { formatMessage } = intl
 
-    let packagingTypesRows = this.generateCheckboxes(packagingTypes, 'packagingTypes')
-    let productConditionRows = this.generateCheckboxes(productConditions, 'productConditions')
-    let productGradeRows = this.generateCheckboxes(productGradeTypes, 'productGrades')
-    let productFormsRows = this.generateCheckboxes(productForms, 'productForms')
+    let packagingTypesRows = this.generateCheckboxes(packagingTypes, values, 'packagingTypes')
+    let productConditionRows = this.generateCheckboxes(productConditions, values, 'productConditions')
+    let productGradeRows = this.generateCheckboxes(productGradeTypes, values, 'productGrades')
+    let productFormsRows = this.generateCheckboxes(productForms, values, 'productForms')
 
     let dropdownProps = {
       search: true,
@@ -369,6 +379,9 @@ class Filter extends Component {
     )
   }
 
+
+  // zkoncil, odjebat ty checkboxy kdyz dam clear filter
+
   render() {
     let {
       isOpen,
@@ -414,12 +427,20 @@ class Filter extends Component {
                 />
               </Button>
             </FiltersContainer>
-            <Form initialValues={initialValues} validateOnChange={true} validationSchema={validationSchema} onSubmit={(values, { setSubmitting }) => {
-              this.handleSubmit(values)
-              setSubmitting(false)
-            }}>
+            <Form
+              enableReinitialize={true}
+              initialValues={initialValues}
+              validateOnChange={true}
+              validationSchema={validationSchema}
+              onSubmit={(values, { setSubmitting }) => {
+                this.handleSubmit(values)
+                setSubmitting(false)
+              }}>
               {(props) => {
                 this.submitForm = props.submitForm
+                this.resetForm = props.resetForm
+                this.setFieldValue = props.setFieldValue
+                console.log(props.values)
                 return (
                   !this.state.savedFiltersActive && this.formMarkup(props)
                 )
@@ -438,7 +459,11 @@ class Filter extends Component {
           <Grid>
             <GridRow columns={2}>
               <GridColumn>
-                <Button fluid onClick={this.props.onClear}> <FormattedMessage id='filter.clearFilter' defaultMessage='Clear Filter' /></Button>
+                <Button fluid onClick={(e, data) => {
+                  this.resetForm({ ...initialValues })
+                  toggleFilter(false)
+                  this.props.onClear(e, data)
+                }}> <FormattedMessage id='filter.clearFilter' defaultMessage='Clear Filter' /></Button>
               </GridColumn>
               <GridColumn>
                 <Button loading={isFilterApplying} primary fluid onClick={() => this.submitForm()}><FormattedMessage id='global.apply' defaultMessage='Apply' /></Button>
