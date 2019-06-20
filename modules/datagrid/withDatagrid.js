@@ -21,13 +21,11 @@ export default (Component, { apiUrl }) => {
           pageNumber: 0
         }
       }
-
-      // this.loadNextPage = _.debounce(this.loadNextPage, 100)
     }
 
 
     async loadNextPage() {
-      const { datagridParams, query, apiUrl } = this.state
+      const { datagridParams, query } = this.state
 
       this.setState({ loading: true })
 
