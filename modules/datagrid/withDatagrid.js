@@ -3,30 +3,44 @@ import pt from 'prop-types'
 import api from '~/api'
 import _ from 'lodash'
 
-export default (Component, { apiUrl, filters = [] }) => {
+export default (Component, { apiUrl }) => {
   class DatagridProvider extends React.Component {
 
-    state = {
-      apiUrl,
-      rows: [],
-      allLoaded: false,
-      loading: false,
-      datagridParams: {
-        filters: [],
-        pageSize: 50,
-        pageNumber: 0
+    constructor(props) {
+      super(props)
+
+      this.apiUrl = apiUrl
+      this.state = {
+        rows: [],
+        allLoaded: false,
+        loading: true,
+        query: {},
+        datagridParams: {
+          filters: [],
+          pageSize: 50,
+          pageNumber: 0
+        }
       }
+
+      // this.loadNextPage = _.debounce(this.loadNextPage, 100)
     }
 
+
     async loadNextPage() {
-      const { datagridParams } = this.state
+      const { datagridParams, query, apiUrl } = this.state
 
       this.setState({ loading: true })
 
       try {
-        const { data } = await api.post(apiUrl, {
-          ...datagridParams
+        const { data } = await api.request({
+          url: this.apiUrl, 
+          method: 'POST',
+          params: query,
+          data: {
+            ...datagridParams
+          }
         })
+
         const allLoaded = data.length < datagridParams.pageSize || data.length === 0
 
         this.setState(s => ({
@@ -61,7 +75,7 @@ export default (Component, { apiUrl, filters = [] }) => {
       !allLoaded && this.loadNextPage()
     }
 
-    loadData = (params = {}) => {
+    loadData = (params = {}, query = {}) => {
       this.setState(s => ({
         datagridParams: {
           pageNumber: 0,
@@ -72,13 +86,19 @@ export default (Component, { apiUrl, filters = [] }) => {
       }), this.loadNextPage)
     }
 
-    setFilter = (filters, reload = true) => {
+    setApiUrl = (apiUrl, reload = true) => {
+      this.apiUrl = apiUrl
+      reload && this.loadData()
+    }
+
+    setFilter = (filters, query = {}, reload = true) => {
       this.setState(s => ({
         datagridParams: {
           ...s.datagridParams,
           ...filters,
           pageNumber: 0
         },
+        query,
         rows: []
       }), () => reload && this.loadNextPage())
     }
@@ -96,6 +116,7 @@ export default (Component, { apiUrl, filters = [] }) => {
             removeRow: this.removeRowById,
             loadData: this.loadData,
             setFilter: this.setFilter,
+            setApiUrl: this.setApiUrl,
             loadNextPage: this.loadNextPageSafe,
 
             tableProps: {
