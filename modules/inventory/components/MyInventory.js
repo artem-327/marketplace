@@ -163,7 +163,7 @@ class MyInventory extends Component {
               _(rows)
                 .groupBy('productName')
                 .map(v => ({
-                  key: `${v[0].productName}_${v[0].productNumber}_${v.length}`,
+                  key: `${v[0].product.productName}_${(v[0].product.casNumberCombined ? v[0].product.casNumberCombined : 'Unmapped')}_${v.length}`,
                   childRows: v
                 }))
                 .value()
