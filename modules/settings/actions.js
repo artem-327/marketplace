@@ -525,7 +525,6 @@ export function postNewUserRequest(payload) {
       email: payload.email,
       name: payload.name,
       homeBranch: payload.homeBranchId,
-      password: payload.password,
       jobTitle: payload.title,
       phone: payload.phone,
       preferredCurrency: payload.preferredCurrency

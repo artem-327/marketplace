@@ -16,12 +16,25 @@ const removeEmpty = (obj) =>
         }
     })
 
-
 export function closePopup() {
     return {
         type: AT.PROFILE_CLOSE_POPUP,
         payload: null
     }
+}
+
+export function openChangePasswordPopup() {
+  return {
+    type: AT.PROFILE_OPEN_CHANGE_PASSWORD,
+    payload: null
+  }
+}
+
+export function closeChangePasswordPopup() {
+  return {
+    type: AT.PROFILE_CLOSE_CHANGE_PASSWORD,
+    payload: null
+  }
 }
 
 export function getUserMeData() {
@@ -45,3 +58,9 @@ export function updateMyProfile(data) {
   }
 }
 
+export function changePassword(data) {
+  return {
+    type: AT.PROFILE_CHANGE_PASSWORD,
+    payload: api.changePassword(data)
+  }
+}
