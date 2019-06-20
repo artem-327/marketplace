@@ -16,8 +16,8 @@ function mapStateToProps(store, { datagrid }) {
         id: po.id,
         product: po.product,
         productName: po.product.productName,
-        productNumber: po.product.casProduct
-          ? po.product.casProduct.casNumber
+        productNumber: po.product.casNumberCombined
+          ? po.product.casNumberCombined
           : "Unmapped",
         chemicalName: po.product.casProduct
           ? po.product.casProduct.chemicalName
