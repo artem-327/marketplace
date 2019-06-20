@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import get from 'lodash/get'
 import { Header, Menu, Button, Checkbox, Input, Dropdown } from 'semantic-ui-react'
-import { openPopup, openDwollaPopup, handleFiltersValue, openImportPopup, handleProductCatalogUnmappedValue } from '../actions'
+import * as Actions from '../actions'
 import Router from 'next/router'
+import { debounce } from 'lodash'
 
 const textsTable = {
   'users': {
@@ -42,25 +43,30 @@ const textsTable = {
 }
 
 class TablesHandlers extends Component {
-  state = {
-    filterFieldCurrentValue: 'None'
+
+  constructor(props) {
+    super(props)
+    
+    this.state = {
+      filterValue: props.filterValue
+    }
+
+    this.handleFiltersValue = debounce(this.handleFiltersValue, 250)
+    
   }
 
-  handleChangeSelectField = (event, value) => {
-    this.setState({
-      filterFieldCurrentValue: value
-    })
+  handleFiltersValue = (value) => {
+    this.props.handleFiltersValue(value)
   }
 
-  handleChangeFieldsCurrentValue = fieldStateName => event => {
-    this.setState({
-      [fieldStateName]: event.target.value
-    })
+  handleFilterChange = (e, {value}) => {
+    this.setState({filterValue: value})
+    
+    this.handleFiltersValue(value)
   }
 
   render() {
     const {
-      handleFiltersValue,
       currentTab,
       openPopup,
       openImportPopup,
@@ -68,10 +74,11 @@ class TablesHandlers extends Component {
       productCatalogUnmappedValue,
       dwollaAccount,
       openDwollaPopup,
-      isCompanyAdmin
+      isCompanyAdmin,
     } = this.props
 
-    const { filterFieldCurrentValue } = this.state
+    const {filterValue} = this.state
+
     const isDwollaAccountVisible = isCompanyAdmin && dwollaAccount && !dwollaAccount.hasDwollaAccount && currentTab.type === 'bank-accounts'
 
     return (
@@ -82,54 +89,55 @@ class TablesHandlers extends Component {
           </Header>
         </Menu.Item>
         {!currentTab.hideHandler &&
-        <Menu.Menu position="right">
-          <Menu.Item>
-            <Input
-              style={{ width: 340 }}
-              size="large"
-              icon="search"
-              placeholder={textsTable[currentTab.type].SearchText}
-              onChange={e => handleFiltersValue(this.props, e.target.value)}
-            />
-          </Menu.Item>
-          <Menu.Item>
-            {currentTab.type === 'products' && (
-              <Checkbox
-                label='Unmapped only'
-                defaultChecked={productCatalogUnmappedValue}
-                onChange={(e, { checked }) => handleProductCatalogUnmappedValue(checked, this.props)}
+          <Menu.Menu position="right">
+            <Menu.Item>
+              <Input
+                style={{ width: 340 }}
+                size="large"
+                icon="search"
+                value={filterValue}
+                placeholder={textsTable[currentTab.type].SearchText}
+                onChange={this.handleFilterChange}
               />
-            )}
-            { isDwollaAccountVisible &&  (
+            </Menu.Item>
+            <Menu.Item>
+              {currentTab.type === 'products' && (
+                <Checkbox
+                  label='Unmapped only'
+                  defaultChecked={productCatalogUnmappedValue}
+                  onChange={(e, { checked }) => handleProductCatalogUnmappedValue(checked, this.props)}
+                />
+              )}
+              {isDwollaAccountVisible && (
+                <Button
+                  size="large"
+                  style={{ marginLeft: 10 }}
+                  primary
+                  onClick={() => openDwollaPopup()}
+                >
+                  Register Dwolla Account
+              </Button>
+              )}
               <Button
                 size="large"
                 style={{ marginLeft: 10 }}
                 primary
-                onClick={() => openDwollaPopup()}
+                onClick={() => openPopup()}
               >
-                Register Dwolla Account
+                Add {textsTable[currentTab.type].BtnAddText}
               </Button>
-            )}
-            <Button
-              size="large"
-              style={{ marginLeft: 10 }}
-              primary
-              onClick={() => openPopup()}
-            >
-              Add {textsTable[currentTab.type].BtnAddText}
-            </Button>
-            {currentTab.type === 'products' && (
-              <Button
-                size="large"
-                style={{ marginLeft: 10 }}
-                primary
-                onClick={() => openImportPopup()}
-              >
-                Import {textsTable[currentTab.type].BtnImportText}
-              </Button>
-            )}
-          </Menu.Item>
-        </Menu.Menu>
+              {currentTab.type === 'products' && (
+                <Button
+                  size="large"
+                  style={{ marginLeft: 10 }}
+                  primary
+                  onClick={() => openImportPopup()}
+                >
+                  Import {textsTable[currentTab.type].BtnImportText}
+                </Button>
+              )}
+            </Menu.Item>
+          </Menu.Menu>
         }
       </Menu>
     )
@@ -139,6 +147,7 @@ class TablesHandlers extends Component {
 const mapStateToProps = (state) => {
   const company = get(state, 'auth.identity.company', null)
   const isCompanyAdmin = get(state, 'auth.identity.isCompanyAdmin', null)
+
   return {
     dwollaAccount: company,
     isCompanyAdmin,
@@ -151,15 +160,7 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispatchToProps = {
-  openPopup,
-  openDwollaPopup,
-  handleFiltersValue,
-  openImportPopup,
-  handleProductCatalogUnmappedValue
-}
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  Actions
 )(TablesHandlers)
