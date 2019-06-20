@@ -1,5 +1,5 @@
 import api from '~/api'
-import axios from "axios/index";
+import axios from "axios/index"
 
 export default {
 
