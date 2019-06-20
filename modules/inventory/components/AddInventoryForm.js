@@ -414,14 +414,14 @@ class AddInventoryForm extends Component {
     let searchedProducts = await this.props.getAutocompleteData(`/prodex/api/products/own/search?pattern=${text}`, text)
     let dropdownOptions = searchedProducts.value.map(p => {
       return {
-        text: `${p.productCode} ${p.productName}`,
+        text: `${p.productCode ? p.productCode : ''} ${p.productName ? p.productName : ''}`,
         value: p,
         key: p.id,
         id: p.id,
         content: (
           <Header style={{fontSize: '1em'}}>
             <Header.Content>
-              {`${p.productCode} ${p.productName}`}
+              {`${p.productCode ? p.productCode : ''} ${p.productName ? p.productName : ''}`}
               {this.renderCasProducts(p)}
             </Header.Content>
           </Header>
