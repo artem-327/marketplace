@@ -18,7 +18,7 @@ class Broadcast extends Component {
   constructor(props) {
     super(props)
 
-    this.handleFilterChange = _.debounce(this.handleFilterChange, 300)
+    this.handleFilterChange = _.debounce(this.handleFilterChange, 250)
   }
 
   componentWillReceiveProps(props) {

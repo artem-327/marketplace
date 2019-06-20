@@ -3,6 +3,14 @@ import { FormattedMessage } from 'react-intl'
 
 
 export const initialValues = {
+  search: '',
+  quantityFrom: '',
+  quantityTo: '',
+  priceFrom: '',
+  priceTo: '',
+  assayFrom: '',
+  assayTo: '',
+  name: '',
   checkboxes: {
     automaticallyApply: true,
     notifyMail: false,
@@ -21,8 +29,8 @@ const errorMessages = {
   greaterThan: (value) => <FormattedMessage id='validation.greaterThan' values={{ value }} />
 }
 
-const comparationHelper = (fieldOne, fieldTwo, values) => {
-  let minimumOne = Yup.number().min(1, errorMessages.minimum(1)).notRequired()
+const comparationHelper = (fieldOne, fieldTwo, values, minimum = 1) => {
+  let minimumOne = Yup.number().min(minimum, errorMessages.minimum(minimum)).notRequired().nullable()
 
   return {
     [fieldOne.propertyName]: Yup.lazy(() => {
@@ -51,7 +59,7 @@ export const validationSchema = () => Yup.lazy(values => {
       ...comparationHelper(
         { propertyName: 'priceFrom', value: 'To Price' },
         { propertyName: 'priceTo', value: 'From Price' },
-        values),
+        values, 0.01),
 
       ...comparationHelper(
         { propertyName: 'assayFrom', value: 'Maximum' },
