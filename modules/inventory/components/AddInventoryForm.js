@@ -121,7 +121,8 @@ class AddInventoryForm extends Component {
 
     },
     activeIndex: 0,
-    activeTab: 0
+    activeTab: 0,
+    searchedProducts: []
   }
 
   accClick = (e, titleProps) => {
@@ -409,6 +410,43 @@ class AddInventoryForm extends Component {
     initProductOfferEdit(edit)
   }
 
+  searchProducts = async (text) => {
+    let searchedProducts = await this.props.getAutocompleteData(`/prodex/api/products/own/search?pattern=${text}`, text)
+    let dropdownOptions = searchedProducts.value.map(p => {
+      return {
+        text: `${p.productCode} ${p.productName}`,
+        value: p,
+        key: p.id,
+        id: p.id,
+        content: (
+          <Header style={{fontSize: '1em'}}>
+            <Header.Content>
+              {`${p.productCode} ${p.productName}`}
+              {this.renderCasProducts(p)}
+            </Header.Content>
+          </Header>
+        )
+      }
+    })
+    this.setState({'searchedProducts': dropdownOptions})
+  }
+
+  renderCasProducts = (product) => {
+    if (product.casProducts && product.casProducts.length) {
+      const {casProducts} = product
+
+      return (
+        <>
+          {casProducts.map(cp => {
+            return (
+              <Header.Subheader>{`${cp.casNumber} ${cp.chemicalName}`}</Header.Subheader>
+            )
+          })}
+        </>
+      )
+    }
+  }
+
   render() {
     const {
       listDocumentTypes,
@@ -421,8 +459,6 @@ class AddInventoryForm extends Component {
       searchOrigins,
       searchedOrigins,
       searchedOriginsLoading,
-      searchProducts,
-      searchedProducts,
       searchedProductsLoading,
       warehousesList,
       addProductOffer,
@@ -528,17 +564,17 @@ class AddInventoryForm extends Component {
                                 <Dropdown
                                   label="Product search"
                                   name="product"
-                                  options={searchedProducts}
+                                  options={this.state.searchedProducts}
                                   inputProps={{
                                     style: { width: '300px' },
                                     size: 'large',
                                     minCharacters: 3,
                                     icon: "search",
-                                    search: true,
+                                    search: options => options,
                                     selection: true,
                                     clearable: true,
                                     loading: searchedProductsLoading,
-                                    onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchProducts(searchQuery)
+                                    onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && this.searchProducts(searchQuery)
                                   }}
                                 />
                               </FormField>
