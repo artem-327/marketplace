@@ -6,10 +6,10 @@ export const config = {
     display: {
       columns: [
         { name: 'casIndexName', title: 'Index Name', width: 375, sortPath: 'CasProduct.casIndexName' },
-        { name: 'casNumber', title: 'CAS Number', width: 150 },
+        { name: 'casNumber', title: 'CAS Number', width: 150, sortPath: 'CasProduct.casNumber' },
         { name: 'chemicalName', title: 'Chemical Name', width: 375, sortPath: 'CasProduct.chemicalName' },
-        { name: 'unNumberCode', title: 'UN Number', width: 150 },
-        { name: 'packagingGroup', title: 'Packaging Group', width: 150 },
+        { name: 'unNumberCode', title: 'UN Number', width: 150, sortPath: 'CasProduct.unNumber.unNumberCode' },
+        { name: 'packagingGroup', title: 'Packaging Group', width: 150, sortPath: 'CasProduct.packagingGroup.groupCode' },
         { name: 'hazardClasses', title: 'Hazard Classes', width: 150 },
       ],
     },

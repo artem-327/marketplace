@@ -46,6 +46,7 @@ class ProductCatalogTable extends Component {
           onConfirm={() => deleteConfirmation(deleteRowById, currentTab)}
         />
         <ProdexTable
+          tableName="settings_credit_cards"
           rows={rows}
           columns={columns}
           filterValue={filterValue}

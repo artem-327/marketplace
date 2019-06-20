@@ -154,7 +154,6 @@ export default class _Table extends Component {
     groupBy: [],
     onSelectionChange: () => { },
     onScrollToEnd: () => { },
-    onSortingChange: () => { },
     onTableReady: () => { }
   }
 
@@ -296,7 +295,7 @@ export default class _Table extends Component {
 
     this.handleColumnsSettings({ sorting })
 
-    onSortingChange({
+    onSortingChange && onSortingChange({
       sortPath: column ? column.sortPath : s.columnName,
       sortDirection: s.direction.toUpperCase()
     })
@@ -331,6 +330,8 @@ export default class _Table extends Component {
       loading,
       virtual,
       sorting,
+      onSortingChange,
+      integratedSorting,
       groupBy,
       renderGroupLabel,
       getChildGroups,
@@ -374,7 +375,7 @@ export default class _Table extends Component {
               />
             }
 
-            {/* {sorting && <IntegratedSorting />} */}
+            {!onSortingChange && <IntegratedSorting />}
 
             {groupBy &&
               <GroupingState

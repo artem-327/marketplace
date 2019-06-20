@@ -18,7 +18,7 @@ function mapStateToProps(store, {datagrid}) {
       return {
         id: po.id,
         productName: po.product.productName,
-        productNumber: po.product.casProduct ? po.product.casProduct.casNumber : 'Unmapped',
+        productNumber: po.product.casNumberCombined ? po.product.casNumberCombined : 'Unmapped',
         merchant: po.warehouse.warehouseName,
         available: po.pkgAmount.formatNumber(),
         packagingType: po.product.packagingType && po.product.packagingType.name ? po.product.packagingType.name : false,

@@ -76,11 +76,12 @@ const mapStateToProps = ({admin}, {datagrid}) => {
     currentTab: admin.currentTab,
     rows: datagrid.rows.map(c => ({
       ...c,
+      hasDwollaAccount: c.hasDwollaAccount ? 'Yes' : 'No',
       primaryBranchAddress: c.primaryBranch && c.primaryBranch.address ?
         c.primaryBranch.address.streetAddress + ', ' +
         c.primaryBranch.address.city + ', ' +
         (c.primaryBranch.address.province ? c.primaryBranch.address.province.name + ', ' : '') +
-        c.primaryBranch.address.country.name
+        (c.primaryBranch.address.country ? c.primaryBranch.address.country.name : '')
         : '',
       primaryContact: c.primaryUser ?
         c.primaryUser.name
