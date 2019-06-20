@@ -129,7 +129,7 @@ class AddNewPopupCasProducts extends React.Component {
             province: this.state.mailingBranchProvinceValidation
           })
         })
-        return Yup.mixed().notRequired();
+        return Yup.mixed().notRequired()
       }),
 
       primaryBranch: Yup.object().shape({
@@ -150,7 +150,7 @@ class AddNewPopupCasProducts extends React.Component {
           email: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.invalidEmail),
           name: Yup.string().trim().min(2, minLength).required(minLength),
         })
-        return Yup.mixed().notRequired();
+        return Yup.mixed().notRequired()
       }),
     })
 
@@ -159,7 +159,7 @@ class AddNewPopupCasProducts extends React.Component {
   )
 
   handlePrimaryBranchCountry = (e, d) => {
-    let country = this.props.countries.find(obj => obj.id == d.value);
+    let country = this.props.countries.find(obj => obj.id == d.value)
     if (country.hasProvinces) {
       this.props.getPrimaryBranchProvinces(country.id)
     }
@@ -167,7 +167,7 @@ class AddNewPopupCasProducts extends React.Component {
   }
 
   handleMailingBranchCountry = (e, d) => {
-    let country = this.props.countries.find(obj => obj.id == d.value);
+    let country = this.props.countries.find(obj => obj.id == d.value)
     if (country.hasProvinces) {
       this.props.getMailingBranchProvinces(country.id)
     }
