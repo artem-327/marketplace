@@ -420,7 +420,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_BANK_ACCOUNTS_DATA: { // ! ! pending
+    case AT.GET_BANK_ACCOUNTS_DATA_PENDING: { // ! ! pending
       return { ...state, loading: true }
     }
 

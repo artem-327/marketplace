@@ -34,6 +34,7 @@ class ProductCatalogTable extends Component {
   render() {
     const {
       rows,
+      loading,
       filterValue,
       openPopup,
       deleteBankAccount,
@@ -51,6 +52,7 @@ class ProductCatalogTable extends Component {
         <ProdexTable
           tableName="settings_bankaccounts"
           rows={rows}
+          loading={loading}
           columns={columns}
           filterValue={filterValue}
           rowActions={[
@@ -85,6 +87,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
+    loading: state.settings.loading,
     rows: state.settings.bankAccountsRows,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
