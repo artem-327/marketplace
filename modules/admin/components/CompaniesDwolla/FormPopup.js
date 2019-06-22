@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { Form, Modal, FormGroup, Accordion, Icon, Segment } from 'semantic-ui-react'
+import { Form, Modal, FormGroup, Accordion, Icon, Segment, Header } from 'semantic-ui-react'
 
 import { Formik } from 'formik'
 import { closeRegisterDwollaAccount, updateCompany, createCompany, getCountries, getPrimaryBranchProvinces, getMailingBranchProvinces, postDwollaAccount } from '../../actions'
@@ -160,11 +160,11 @@ class AddNewPopupCasProducts extends React.Component {
           return (
             <Modal open centered={false} size='small'>
               <Modal.Header>Register Dwolla Account</Modal.Header>
-              <Segment basic>
+              <Segment basic padded>
                 <Form loading={isSubmitting}>
                   <Accordion exclusive={false}>
                     <Modal.Content>
-                      <FormGroup widths='equal'>
+                      {/* <FormGroup widths='equal'>
                         <Input label={<FormattedMessage id='global.address1' defaultMessage='Address1' />} name='beneficialOwner.address.address1' />
                         <Input label={<FormattedMessage id='global.address2' defaultMessage='Address2' />} name='beneficialOwner.address.address2' />
                         <Input label={<FormattedMessage id='global.address3' defaultMessage='Address3' />} name='beneficialOwner.address.address3' />
@@ -194,14 +194,18 @@ class AddNewPopupCasProducts extends React.Component {
                       <FormGroup widths='equal'>
                         <Input label={<FormattedMessage id='global.lastName' defaultMessage='Last Name' />} name='beneficialOwner.lastName' />
                         <Input label={<FormattedMessage id='global.ssn' defaultMessage='SSN' />} name='beneficialOwner.ssn' />
-                      </FormGroup>
+                      </FormGroup> */}
 
-                      <Accordion.Title active={accordionActive.controllerAddress} onClick={this.handleAccordionChange} name='controllerAddress'>
+                      {/* <Accordion.Title active={accordionActive.controllerAddress} onClick={this.handleAccordionChange} name='controllerAddress'>
                         <h4>
                           <Icon color={accordionActive.controllerAddress && 'blue'} name={accordionActive.controllerAddress ? 'chevron up' : 'chevron down'} />
-                          <FormattedMessage id='global.Controller' defaultMessage='Controller' />
+                          <FormattedMessage id='global.Controller' defaultMessage='Controlling person' />
                         </h4>
-                      </Accordion.Title>
+                      </Accordion.Title> */}
+
+                      <Header>
+                        <FormattedMessage id='global.Controller' defaultMessage='Controlling person' />
+                      </Header>
 
                       <Accordion.Content active={accordionActive.controllerAddress}>
                         <FormGroup widths='equal'>

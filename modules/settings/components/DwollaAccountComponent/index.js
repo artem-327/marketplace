@@ -185,7 +185,7 @@ class BankAccountsPopup extends React.Component {
               <Accordion.Title active={accordionActive.controllerAddress} onClick={this.handleAccordionChange} name='controllerAddress'>
                 <h4>
                     <Icon color={accordionActive.controllerAddress && 'blue'} name={accordionActive.controllerAddress ? 'chevron up' : 'chevron down'} />
-                    <FormattedMessage id='global.Controller' defaultMessage='Controller' />
+                    <FormattedMessage id='global.Controller' defaultMessage='Controlling person' />
                 </h4>
               </Accordion.Title>
               <Accordion.Content active={accordionActive.controllerAddress}>
