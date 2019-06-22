@@ -88,7 +88,7 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, open }) => 
 
 // const TableGroupRow = props => <TableGroupRow {...props} />
 const TableCells = props => <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions' : ''} />
-const GridRoot = props => <Grid.Root {...props} style={{ height: '100%' }} />
+const GridRoot = props => <Grid.Root {...props} style={{ height: '100%', flex: 1 }} />
 
 const SortLabel = ({ onSort, children, direction }) => (
   <span
