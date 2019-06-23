@@ -710,6 +710,13 @@ export function searchUnNumber(pattern) {
   }
 }
 
+export function getAddressSearch(pattern, countryId='', provinceId='') {
+  return {
+    type: AT.SETTINGS_GET_ADDRESSES_SEARCH,
+    payload: api.getAddressSearch(pattern, countryId, provinceId)
+  }
+}
+
 export function getDeliveryAddressesByStringRequest(value) {
   return {
     type: AT.SETTINGS_GET_DELIVERY_ADDRESSES_BY_STRING,
