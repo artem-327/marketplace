@@ -411,6 +411,7 @@ class AddInventoryForm extends Component {
   }
 
   componentDidUpdate = (oldProps) => {
+    // prepare state for searchedProducts when opened edit form
     if (!this.state.searchedProducts.length && !oldProps.searchedProducts.length && this.props.searchedProducts.length)
       this.setState({'searchedProducts': this.props.searchedProducts})
   }
