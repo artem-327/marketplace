@@ -249,7 +249,7 @@ class AddInventoryForm extends Component {
             <Accordion>
               <Accordion.Title active={activeIndex === 0} index={0} onClick={this.accClick}>
                 <Header as='h4'>
-                  <Icon name={activeIndex === 0 ? 'chevron down' : 'chevron right'} />PRODUCT DETAILS
+                  <Icon name={activeIndex === 0 ? 'chevron up' : 'chevron right'} />PRODUCT DETAILS
                 </Header>
               </Accordion.Title>
               <Accordion.Content active={activeIndex === 0}>
