@@ -57,7 +57,7 @@ class ProductCatalogTable extends Component {
           columns={columns}
           filterValue={filterValue}
           rowActions={[
-            { text: 'Edit', callback: row => openPopup(row) },
+            // { text: 'Edit', callback: row => openPopup(row) },
             {
               text: 'Delete',
               callback: row => confirm(

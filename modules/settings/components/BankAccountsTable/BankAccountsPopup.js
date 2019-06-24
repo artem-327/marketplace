@@ -30,13 +30,13 @@ const formValidation = Yup.object().shape({
 const bankAccountType = [
   {
     key: 1,
-    text: 'checking',
-    value: 'checking',
+    text: 'Checking',
+    value: 'CHECKING',
   },
   {
     key: 2,
-    text: 'savings',
-    value: 'savings',
+    text: 'Savings',
+    value: 'SAVINGS',
   }
 ]
 
@@ -70,7 +70,11 @@ class BankAccountsPopup extends React.Component {
         </Modal.Header>
         <Modal.Content>
           <Form
-            initialValues={initialFormValues}
+            enableReinitialize
+            initialValues={{
+              ...initialFormValues,
+              ...popupValues
+            }}
             validationSchema={formValidation}
             onReset={closePopup}
             onSubmit={this.submitHandler}
