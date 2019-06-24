@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {Modal, FormGroup, Item, Divider} from 'semantic-ui-react'
+import {Modal, FormGroup, Item, Divider, Popup, Label} from 'semantic-ui-react'
 
 import {
   closePopup,
@@ -8,6 +8,7 @@ import {
   createDeliveryAddress,
   getCountries,
   getProvinces,
+  getAddressSearch,
 } from '../../actions'
 
 import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui'
@@ -64,6 +65,18 @@ class DeliveryAddressesPopup extends React.Component {
     this.setState({hasProvinces: country.hasProvinces})
   }
 
+  handleAddressSelect = (d, values, setFieldValue) => {
+    const i = this.props.AddressSuggestOptions.indexOf(d.value)
+    if (i >= 0) {
+      setFieldValue('address.streetAddress', this.props.AddressSuggestData[i].streetAddress)
+      setFieldValue('address.city', this.props.AddressSuggestData[i].city)
+      setFieldValue('address.zip', this.props.AddressSuggestData[i].zip &&  this.props.AddressSuggestData[i].zip.zip)
+    }
+    else {
+      this.props.getAddressSearch(d.value, values.address.country, values.address.province)
+    }
+  }
+
   render() {
     const {
       closePopup,
@@ -73,7 +86,10 @@ class DeliveryAddressesPopup extends React.Component {
       createDeliveryAddress,
       countriesDropDown,
       provincesDropDown,
-      reloadFilter
+      reloadFilter,
+      AddressSuggestInput,
+      AddressSuggestOptions,
+      AddressSuggestData
     } = this.props
 
     const {
@@ -98,13 +114,20 @@ class DeliveryAddressesPopup extends React.Component {
           >
             {({ values, errors, setFieldValue }) => (
               <>
+                {AddressSuggestInput}
                 <h4>Address</h4>
                 <FormGroup widths="equal">
-                  <Input type="text" label="Street Address" name="address.streetAddress" />
-                  <Input type="text" label="City" name="address.city" />
+                  <Input
+                    inputProps={{list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue)}}}
+                    type="text" label="Street Address" name="address.streetAddress" />
+                  <Input
+                    inputProps={{list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue)}}}
+                    type="text" label="City" name="address.city" />
                 </FormGroup>
                 <FormGroup widths="equal">
-                  <Input type="text" label="Zip" name="address.zip" />
+                  <Input
+                    inputProps={{list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue)}}}
+                    type="text" label="Zip" name="address.zip" />
                   <Dropdown label="Country" name="address.country" options={countriesDropDown}
                             inputProps={{search: true, onChange:  (e, d) => {
                                 setFieldValue('address.province', ''); this.handleCountry(e, d)}}} />
@@ -137,11 +160,24 @@ const mapDispatchToProps = {
   createDeliveryAddress,
   getCountries,
   getProvinces,
+  getAddressSearch,
 }
+
+const prepareAddressSuggest = (AddressSuggestOptions) => (
+  <datalist id='addresses'>
+    {AddressSuggestOptions.map((a, id) => <option key={id} value={a} />)}
+  </datalist>
+)
 
 const mapStateToProps = state => {
   const popupValues = state.settings.popupValues
+  const AddressSuggestOptions = state.settings.addressSearch.map((a) => (
+      a.streetAddress + ', ' + a.city + ', ' + a.zip.zip
+  ))
   return {
+    AddressSuggestInput: prepareAddressSuggest(AddressSuggestOptions),
+    AddressSuggestOptions: AddressSuggestOptions,
+    AddressSuggestData: state.settings.addressSearch,
     rowId: popupValues ? popupValues.id : null,
     hasProvinces: popupValues ? popupValues.address.country.hasProvinces : false,
     popupValues: popupValues ? {

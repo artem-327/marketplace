@@ -23,9 +23,6 @@ const formValidation = popupValues => Yup.object().shape({
     .required("Emails is required"),
   homeBranchId: Yup.number()
     .required('Home Branch is required'),
-  password: !popupValues && Yup.string().trim()
-    .min(3, "Too short")
-    .required("Password is required"),
   title: Yup.string().trim()
     .min(3, "Too short"),
   phone: Yup.string().trim()
@@ -84,7 +81,6 @@ class UsersPopup extends React.Component {
       preferredCurrency = "",
       title = "",
       phone = "",
-      password = "",
     } = popupValues || {}
 
     const initialFormValues = {
@@ -94,7 +90,6 @@ class UsersPopup extends React.Component {
       preferredCurrency,
       title,
       phone,
-      password,
     }
     // this.props.roles.forEach(item => {
     //   let flag = this.props.popupValues.allUserRoles.some(
@@ -135,28 +130,15 @@ class UsersPopup extends React.Component {
                   <Input type="text" label="Job Title" name="title" />
                   <Input type="text" label="Phone" name="phone" />
                 </FormGroup>
-                {popupValues ? (
-                  <FormGroup>
-                    <Dropdown
-                        label="Home Branch"
-                        name="homeBranchId"
-                        options={branchesAll}
-                        fieldProps={{width: 8}}
-                    />
-                    <Dropdown label="Currency" name="preferredCurrency" options={currencies} fieldProps={{width: 2}} />
-                  </FormGroup>
-                ) : (
-                  <FormGroup>
-                    <Dropdown
-                        label="Home Branch"
-                        name="homeBranchId"
-                        options={branchesAll}
-                        fieldProps={{width: 8}}
-                    />
-                    <Input type="text" label="Password" name="password" fieldProps={{width: 6}} />
-                    <Dropdown label="Currency" name="preferredCurrency" options={currencies} fieldProps={{width: 2}} />
-                  </FormGroup>
-                ) }
+                <FormGroup>
+                  <Dropdown
+                      label="Home Branch"
+                      name="homeBranchId"
+                      options={branchesAll}
+                      fieldProps={{width: 8}}
+                  />
+                  <Dropdown label="Currency" name="preferredCurrency" options={currencies} fieldProps={{width: 2}} />
+                </FormGroup>
               </>
             )}
             <div style={{ textAlign: "right" }}>

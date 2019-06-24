@@ -5,6 +5,7 @@ export const initialState = {
   usersMe: null,
   currency: null,
   loading: false,
+  changePasswordPopup: false
 
 }
 
@@ -16,6 +17,7 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
 
 
+    case AT.PROFILE_CHANGE_PASSWORD_PENDING:
     case AT.PROFILE_GET_CURRENCIES_PENDING:
     case AT.PROFILE_GET_USERS_ME_PENDING: {
       return {
@@ -32,7 +34,22 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.PROFILE_OPEN_CHANGE_PASSWORD: {
+      return {
+        ...state,
+        changePasswordPopup: true
+      }
+    }
 
+    case AT.PROFILE_CHANGE_PASSWORD:    // ! ! smazat
+    case AT.PROFILE_CHANGE_PASSWORD_FULFILLED:
+    case AT.PROFILE_CLOSE_CHANGE_PASSWORD: {
+      return {
+        ...state,
+        changePasswordPopup: false,
+        loading: false
+      }
+    }
 
     case AT.PROFILE_GET_USERS_ME_FULFILLED: {
       return {

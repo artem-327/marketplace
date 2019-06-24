@@ -525,7 +525,6 @@ export function postNewUserRequest(payload) {
       email: payload.email,
       name: payload.name,
       homeBranch: payload.homeBranchId,
-      password: payload.password,
       jobTitle: payload.title,
       phone: payload.phone,
       preferredCurrency: payload.preferredCurrency
@@ -708,6 +707,13 @@ export function searchUnNumber(pattern) {
   return {
     type: AT.SEARCH_UN_NUMBER,
     payload: api.searchUnNumber(pattern)
+  }
+}
+
+export function getAddressSearch(pattern, countryId='', provinceId='') {
+  return {
+    type: AT.SETTINGS_GET_ADDRESSES_SEARCH,
+    payload: api.getAddressSearch(pattern, countryId, provinceId)
   }
 }
 
