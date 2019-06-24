@@ -290,7 +290,7 @@ export function handlerSubmitWarehouseEditPopup(payload, id) {
 export function handleSubmitProductEditPopup(productData, id, reloadFilter) {
   return async dispatch => {
     const data = {
-      casProduct: productData.casProduct ? productData.casProduct.id : null,
+      casProducts: productData.casProducts ? productData.casProducts : null,
       description: productData.description,
       freightClass: productData.freightClass ? productData.freightClass : null,
       hazardClasses: productData.hazardClass ? productData.hazardClass : null,
@@ -451,7 +451,7 @@ export function getProductsCatalogRequest(data) {
     dispatch({
       type: AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA,
       async payload() {
-        const [productCatalog, productPacTypes, units, hazardClasses, packagingGroups] = await Promise.all([
+        const [/*productCatalog,*/ productPacTypes, units, hazardClasses, packagingGroups] = await Promise.all([
           // typeof data.body === 'object' ? api.getProductsCatalogByFilter(data) : api.getProductsCatalogByString(data),
           api.getProductTypes(),
           api.getUnitsType(),
@@ -603,7 +603,7 @@ export function userSwitchEnableDisable(id) {
 export function handleSubmitProductAddPopup(inputsValue, reloadFilter) {
   return async dispatch => {
     const data = {
-      casProduct: inputsValue.casProduct ? inputsValue.casProduct.id : null,
+      casProducts: inputsValue.casProducts ? inputsValue.casProducts : [],
       description: inputsValue.description,
       freightClass: inputsValue.freightClass ? inputsValue.freightClass : null,
       hazardClasses: inputsValue.hazardClass ? inputsValue.hazardClass : null,
@@ -696,10 +696,41 @@ export function clearDataOfCSV() {
   }
 }
 
-export function searchCasProduct(pattern) {
+export function newCasProductsIndex() {
+  return {
+    type: AT.SETTINGS_CREATE_CAS_PRODUCTS_INDEX,
+    payload: {}
+  }
+}
+
+export function removeCasProductsIndex(index) {
+  return {
+    type: AT.SETTINGS_REMOVE_CAS_PRODUCTS_INDEX,
+    payload: {
+      index
+    }
+  }
+}
+
+export function prepareSearchedCasProducts(casProducts) {
+  return {
+    type: AT.SETTINGS_PREPARE_CAS_PRODUCTS,
+    payload: {
+      casProducts
+    }
+  }
+}
+
+export function searchCasProduct(pattern, index) {
   return {
     type: AT.SEARCH_CAS_PRODUCT,
-    payload: api.searchCasProduct(pattern)
+    async payload() {
+      const dataResponse = await api.searchCasProduct(pattern)
+      return {
+        ...dataResponse,
+        index
+      }
+    }
   }
 }
 

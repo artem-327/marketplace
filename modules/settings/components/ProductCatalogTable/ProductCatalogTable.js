@@ -109,17 +109,22 @@ const mapStateToProps = (state, { datagrid }) => {
         description: product.description ? product.description : '',
         productName: product.productName,
         productNumber: product.productCode,
-        casName: product.casProduct
-          ? product.casProduct.casIndexName
-            ? product.casProduct.casIndexName
-            : null
-          : null,
-        casNumber: product.casProduct
-          ? product.casProduct.casNumber
-            ? product.casProduct.casNumber
-            : null
-          : null,
-        casProduct: product.casProduct ? product.casProduct : null,
+        casName: product.casProducts
+          ? product.casProducts.map(cp => {
+            return cp.casIndexName
+          }).join(', ') : null,
+        casNumber: product.casProducts
+          ? product.casProducts.map(cp => {
+            return cp.casNumber
+          }).join(', ') : null,
+        casProducts: product.casProducts ? product.casProducts.map((casProduct, cpIndex) => {
+          return {
+            casProduct: casProduct.id,
+            min: cpIndex ? 0 : 100,
+            max: cpIndex ? 0 : 100,
+            item: casProduct
+          }
+        }) : null,
         packagingType: product.packagingType
           ? product.packagingType.name
           : null,
