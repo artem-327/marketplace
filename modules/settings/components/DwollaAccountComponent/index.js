@@ -90,7 +90,7 @@ class BankAccountsPopup extends React.Component {
   }
 
   handleCountry = (e, d) => {
-    let country = this.props.countries.find(obj => obj.id === d.value);
+    let country = this.props.countries.find(obj => obj.id === d.value)
     if (country.hasProvinces) {
       this.props.getProvinces(country.id)
     }
