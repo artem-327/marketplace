@@ -71,9 +71,9 @@ const formValidation = Yup.object().shape({
   packageID: Yup.number()
     .typeError('Required')
     .required(),
-  /*nmfcNumber: Yup.number().typeError('must be number').test("digit5", "There has to be 5 digit numbers.", val => {
+  nmfcNumber: Yup.number().typeError('must be number').test("digit5", "There has to be 5 digit numbers.", val => {
     return !val || val.toString().length === 5    // ! ! nejak divne to funguje
-  }),*/
+  }),
   casProducts: Yup.array().of(Yup.object().uniqueProperty('casProduct', 'CAS Product ahs to be unique').shape({
     casProduct: Yup.number(),
     //min: Yup.number().min(10).max(100),
