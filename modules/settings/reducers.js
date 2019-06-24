@@ -431,7 +431,7 @@ export default function reducer(state = initialState, action) {
         newCountryFormat,
         newCurrencyFormat
       } = action.payload
-      
+
 
       return {
         ...state,
@@ -480,8 +480,8 @@ export default function reducer(state = initialState, action) {
           freightClass: product.freightClass ? product.freightClass : null,
           hazardous: product.hazardous,
           hazardClass: product.hazardClasses && product.hazardClasses.length ? product.hazardClasses.map(d => (
-              d.id
-            )) : null,
+            d.id
+          )) : null,
           nmfcNumber: product.nmfcNumber ? product.nmfcNumber : null,
           stackable: product.stackable,
           unNumber: product.unNumber ? product.unNumber : null
@@ -878,7 +878,8 @@ export default function reducer(state = initialState, action) {
     case AT.TAB_CHANGED: {
       return {
         ...state,
-        currentTab: payload
+        currentTab: payload,
+        filterValue: state.currentTab !== payload ? '' : state.filterValue
       }
     }
 
