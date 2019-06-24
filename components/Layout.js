@@ -47,41 +47,42 @@ const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
 ))
 
 const Layout = ({ children, router: { pathname }, title = 'Echo exchange' }) => (
-  <MainContainer fluid>
-    <PopUp />
-    <Head>
-      <title>Echo exchange / {title}</title>
-    </Head>
-    <TopMenu fixed='top' inverted size='large' borderless>
+    <MainContainer fluid>
+      <PopUp />
+      <Head>
+        <title>Echo exchange / {title}</title>
+      </Head>
+      <TopMenu fixed='top' inverted size='large' borderless>
 
-      <TopMenuContainer fluid>
-        <LogoImage src={Logo} />
+        <TopMenuContainer fluid>
+          <LogoImage src={Logo} />
 
-        <NavigationMenu />
+          <NavigationMenu />
 
-        <Menu.Menu position='right' className='black'>
-          <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
-            <Dropdown.Menu>
-              <Dropdown.Item as={MenuLink} to='/profile'>My Profile</Dropdown.Item>
-              <Dropdown.Item as={MenuLink} to='/auth/logout'>Logout</Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
-        </Menu.Menu>
-      </TopMenuContainer>
+          <Menu.Menu position='right' className='black'>
+            <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
+              <Dropdown.Menu>
+                <Dropdown.Item as={MenuLink} to='/profile'>My Profile</Dropdown.Item>
+                <Dropdown.Item as={MenuLink} to='/auth/logout'>Logout</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </Menu.Menu>
+        </TopMenuContainer>
 
 
-    </TopMenu>
+      </TopMenu>
 
-    <FlexContainer>
-      <TopMenuContainer fluid>
-        <Messages />
-      </TopMenuContainer>
-      <ContentContainer fluid className='page-wrapper flex stretched'>
-        {children}
-      </ContentContainer>
-    </FlexContainer>
+      <FlexContainer>
+        <TopMenuContainer fluid>
+          <Messages />
+        </TopMenuContainer>
+        <ContentContainer fluid className='page-wrapper flex stretched'>
+          {children}
+        </ContentContainer>
+      </FlexContainer>
 
-  </MainContainer>
+    </MainContainer>
+    
 )
 
 export default withRouter(Layout)
