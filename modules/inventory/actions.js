@@ -12,6 +12,8 @@ export function initProductOfferEdit(id) {
     dispatch(getProductForms())
     dispatch(getProductGrades())
     dispatch(getWarehouses())
+    dispatch(searchManufacturers('', 200))
+    dispatch(searchOrigins('', 200))
 
     if (id) {
       dispatch(getProductOffer(id))
@@ -269,11 +271,11 @@ export function resetForm(initValues) {
   }
 }
 
-export function searchManufacturers(text) {
+export function searchManufacturers(text, limit = false) {
   return {
     type: AT.INVENTORY_SEARCH_MANUFACTURERS,
     async payload() {
-      const response = await api.searchManufacturers(text)
+      const response = await api.searchManufacturers(text, limit)
 
       return {
         data: response.data ? response.data.map(p => ({
@@ -286,11 +288,11 @@ export function searchManufacturers(text) {
   }
 }
 
-export function searchOrigins(text) {
+export function searchOrigins(text, limit = false) {
   return {
     type: AT.INVENTORY_SEARCH_ORIGINS,
     async payload() {
-      const response = await api.searchOrigins(text)
+      const response = await api.searchOrigins(text, limit)
 
       return {
         data: response.data ? response.data.map(p => ({

@@ -786,7 +786,7 @@ class AddInventoryForm extends Component {
                                     options={searchedOrigins}
                                     inputProps={{
                                       size: 'large',
-                                      minCharacters: 3,
+                                      minCharacters: 0,
                                       icon: "search",
                                       search: true,
                                       selection: true,
@@ -804,7 +804,7 @@ class AddInventoryForm extends Component {
                                     options={searchedManufacturers}
                                     inputProps={{
                                       size: 'large',
-                                      minCharacters: 3,
+                                      minCharacters: 0,
                                       icon: "search",
                                       search: true,
                                       selection: true,
