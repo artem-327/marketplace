@@ -4,11 +4,12 @@ import { Icon } from 'semantic-ui-react'
 import { array } from 'prop-types'
 
 import { MessageContainer, StyledMessage, CloseIcon, themes } from '../constants'
+import { FormattedMessage } from 'react-intl';
 
 export default class Messages extends Component {
   componentDidMount() {
     let self = this
-    
+
     if (!this.interceptor) {
       this.interceptor = axios.interceptors.response.use(response => response, function (error) {
         var errorMessage = null
@@ -29,10 +30,15 @@ export default class Messages extends Component {
   }
 
   onError = (errorMessage) => {
-    let { addMessage } = this.props
+    let { addMessage, toastManager } = this.props
 
     if (errorMessage) {
-      addMessage({ theme: themes.ERROR, content: errorMessage })
+      toastManager.add(
+        <div>
+          <strong><FormattedMessage id='global.error' defaultMessage='Error!' /></strong>
+          <div>{errorMessage}</div>
+        </div>, { appearance: themes.ERROR })
+      // addMessage({ theme: themes.ERROR, content: errorMessage })
     }
   }
 
@@ -57,7 +63,7 @@ export default class Messages extends Component {
     }
 
     return (
-      <StyledMessage key={index} color={color} size='large'>
+      <StyledMessage floating key={index} color={color} size='large'>
         <Icon size='big' name={iconName} /> {content}
         <CloseIcon size='large' name='x' onClick={() => this.handleMessageDismiss(index)} />
       </StyledMessage>
@@ -65,14 +71,13 @@ export default class Messages extends Component {
   }
 
   render() {
-    let { messages } = this.props
-
-    if (messages.length === 0) return null
+    // let { messages } = this.props
 
     return (
-      <MessageContainer fluid>
-        {messages.map((message, i) => this.getMessage(message, i))}
-      </MessageContainer>
+      null
+      // <MessageContainer fluid>
+      //   {messages.map((message, i) => this.getMessage(message, i))}
+      // </MessageContainer>
     )
   }
 }

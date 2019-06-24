@@ -2,6 +2,7 @@
   "global.addNew": "Add New",
   "global.name": "Name",
   "global.delete": "Delete",
+  "global.error": "Error",
   "global.apply": "Apply",
   "global.continue": "Continue",
   "global.pricePer": "Price per {unit}",

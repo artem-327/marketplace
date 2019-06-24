@@ -4,14 +4,16 @@ import withRedux from 'next-redux-wrapper'
 import { makeStore } from '~/store'
 import { Provider } from 'react-redux'
 import { IntlProvider, FormattedNumber } from 'react-intl'
+
 import EN from '../localization/en.json'
 import NProgress from 'nprogress'
-import Router, {withRouter} from 'next/router'
+import Router, { withRouter } from 'next/router'
 
 import '~/semantic/dist/semantic.css'
 import '~/styles/base.scss'
 import 'nprogress/nprogress.css'
 import shortid from 'shortid'
+import { ToastProvider } from 'react-toast-notifications'
 
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
@@ -24,7 +26,7 @@ class ProdexApp extends App {
   }
 
   componentDidMount() {
-    Router.events.on('routeChangeComplete', () => this.setState({key: shortid.generate()}))
+    Router.events.on('routeChangeComplete', () => this.setState({ key: shortid.generate() }))
   }
 
 
@@ -34,9 +36,11 @@ class ProdexApp extends App {
     return (
       <Container key={this.state.key}>
         <IntlProvider locale="en" messages={EN}>
-          <Provider store={store}>
-            <Component {...pageProps} />
-          </Provider>
+          <ToastProvider autoDismiss={1000 * 10}>
+            <Provider store={store}>
+              <Component {...pageProps} />
+            </Provider>
+          </ToastProvider>
         </IntlProvider>
       </Container>
     )
