@@ -410,6 +410,11 @@ class AddInventoryForm extends Component {
     initProductOfferEdit(edit)
   }
 
+  componentDidUpdate = (oldProps) => {
+    if (!this.state.searchedProducts.length && !oldProps.searchedProducts.length && this.props.searchedProducts.length)
+      this.setState({'searchedProducts': this.props.searchedProducts})
+  }
+
   searchProducts = async (text) => {
     let searchedProducts = await this.props.getAutocompleteData(`/prodex/api/products/own/search?pattern=${text}`, text)
     let dropdownOptions = searchedProducts.value.map(p => {

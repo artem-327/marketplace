@@ -187,7 +187,7 @@ export function getProductOffer(productOfferId) {
         data: {
           ...data,
           searchedProducts: [{
-            text: data.product.casProducts.length ? data.product.casProducts[0].casIndexName : data.product.productName + ' (Unmapped)',
+            text: (data.product.productCode ? data.product.productCode + ' ' : '') + data.product.productName,
             value: data.product,
             key: data.product.id
           }],
