@@ -112,6 +112,7 @@ class WarehouseTable extends Component {
     return (
       <React.Fragment>
         <ProdexGrid
+          tableName="settings_werehouser_branches"
           filterValue={filterValue}
           columns={this.branchChecker()}
           loading={loading}

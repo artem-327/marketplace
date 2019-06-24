@@ -57,7 +57,8 @@ export const initialState = {
   searchedUnNumbers: [],
   deliveryAddressesFilter: { pageSize: 50, pageNumber: 0 },
   productsFilter: { pageSize: 50, pageNumber: 0 },
-  documentTypes: []
+  documentTypes: [],
+  addressSearch: []
 }
 
 export default function reducer(state = initialState, action) {
@@ -420,7 +421,7 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_BANK_ACCOUNTS_DATA: { // ! ! pending
+    case AT.GET_BANK_ACCOUNTS_DATA_PENDING: { // ! ! pending
       return { ...state, loading: true }
     }
 
@@ -683,6 +684,14 @@ export default function reducer(state = initialState, action) {
     case AT.SETTINGS_CREATE_NEW_DELIVERY_ADDRESS_FULFILLED: {
       return {
         ...state,
+        loading: false
+      }
+    }
+
+    case AT.SETTINGS_GET_ADDRESSES_SEARCH_FULFILLED: {
+      return {
+        ...state,
+        addressSearch: action.payload,
         loading: false
       }
     }

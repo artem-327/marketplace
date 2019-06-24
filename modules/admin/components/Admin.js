@@ -84,7 +84,7 @@ class Admin extends Component {
         {currentEditForm && editForms[currentTab]}
         {currentEdit2Form && edit2Forms[currentTab]}
         {currentAddDwolla && addDwollaForms[currentTab]}
-        {tables[currentTab]|| <p>This page is still under construction</p>}
+        {tables[currentTab] || <p>This page is still under construction</p>}
       </>
     )
   }

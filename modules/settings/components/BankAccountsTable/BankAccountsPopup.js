@@ -24,7 +24,7 @@ const formValidation = Yup.object().shape({
   accountNumber: Yup.string().trim().min(3, 'Too short').required('Required'),
   bankAccountType: Yup.string().trim().min(3, 'Too short').required('Required'),
   name: Yup.string().trim().min(3, 'Too short').required('Required'),
-  routingNumber: Yup.string().trim().min(1, 'Too short').required('Required')
+  routingNumber: Yup.string().trim().min(9, 'Routing number must be 9 characters long').required('Required')
 })
 
 const bankAccountType = [
@@ -74,6 +74,8 @@ class BankAccountsPopup extends React.Component {
             validationSchema={formValidation}
             onReset={closePopup}
             onSubmit={this.submitHandler}
+            validateOnChange={false}
+            validateOnBlur={false}
           >
             <FormGroup widths="equal">
               <Input 

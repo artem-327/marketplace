@@ -16,7 +16,7 @@ import {
   userSwitchEnableDisable
 } from "../../actions"
 import Router from "next/router"
-import {Checkbox, Popup} from "semantic-ui-react";
+import { Checkbox, Popup } from "semantic-ui-react"
 
 
 const handleSwitchEnabled = (id) => {
@@ -62,6 +62,7 @@ class UsersTable extends Component {
     return (
       <React.Fragment>
         <ProdexGrid
+          tableName="settings_users"
           filterValue={filterValue}
           columns={columns}
           rows={rows}
@@ -96,18 +97,18 @@ const mapDispatchToProps = {
 const userEnableDisableStatus = (r, currentUserId) => (
   <div style={{ float: 'right' }}>
     <Popup id={r.id}
-           trigger={
-             <Checkbox toggle={true}
-                       defaultChecked={r.enabled}
-                       disabled={r.id === currentUserId}
-                       onChange={() => handleSwitchEnabled(r.id)}
-             />
-           }
-           content={
-             r.id === currentUserId ?
-               r.enabled ? 'User enabled.' : 'User disabled.' :
-               r.enabled ? 'User enabled. Click to disable user.' : 'User disabled. Click to enable user.'
-           }
+      trigger={
+        <Checkbox toggle={true}
+          defaultChecked={r.enabled}
+          disabled={r.id === currentUserId}
+          onChange={() => handleSwitchEnabled(r.id)}
+        />
+      }
+      content={
+        r.id === currentUserId ?
+          r.enabled ? 'User enabled.' : 'User disabled.' :
+          r.enabled ? 'User enabled. Click to disable user.' : 'User disabled. Click to enable user.'
+      }
     />
   </div>
 )
@@ -126,7 +127,7 @@ const mapStateToProps = state => {
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
     currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
-        state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+      state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
     loading: state.settings.loading,
     roles: state.settings.roles
   }

@@ -226,22 +226,22 @@ export function closeToast() {
   }
 }*/
 
-export function handleFiltersValue(props, value) {
+export function handleFiltersValue(value) {
   return async dispatch => {
     dispatch({
       type: AT.HANDLE_FILTERS_VALUE,
       payload: value
     })
-    switch (props.currentTab.type) {
-      case "delivery-addresses":
-        if (value.trim().length) await dispatch(getDeliveryAddressesByStringRequest(value))
-        else await dispatch(getDeliveryAddressesByFilterRequest(props.deliveryAddressesFilter))
-        break
-      case "products":
-        if (value.trim().length > 2) await dispatch(getProductsCatalogRequest({ body: value, unmapped: props.productCatalogUnmappedValue }))
-        else await dispatch(getProductsCatalogRequest({ body: props.productsFilter, unmapped: props.productCatalogUnmappedValue }))
-        break
-    }
+    // switch (props.currentTab.type) {
+    //   case "delivery-addresses":
+    //     if (value.trim().length) await dispatch(getDeliveryAddressesByStringRequest(value))
+    //     else await dispatch(getDeliveryAddressesByFilterRequest(props.deliveryAddressesFilter))
+    //     break
+    //   case "products":
+    //     if (value.trim().length > 2) await dispatch(getProductsCatalogRequest({ body: value, unmapped: props.productCatalogUnmappedValue }))
+    //     else await dispatch(getProductsCatalogRequest({ body: props.productsFilter, unmapped: props.productCatalogUnmappedValue }))
+    //     break
+    // }
   }
 }
 
@@ -452,14 +452,14 @@ export function getProductsCatalogRequest(data) {
       type: AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA,
       async payload() {
         const [productCatalog, productPacTypes, units, hazardClasses, packagingGroups] = await Promise.all([
-          typeof data.body === 'object' ? api.getProductsCatalogByFilter(data) : api.getProductsCatalogByString(data),
+          // typeof data.body === 'object' ? api.getProductsCatalogByFilter(data) : api.getProductsCatalogByString(data),
           api.getProductTypes(),
           api.getUnitsType(),
           api.getHazardClasses(),
           api.getPackagingGroups()
         ])
         return {
-          products: productCatalog,
+          // products: productCatalog,
           productsTypes: productPacTypes,
           units: units.data,
           hazardClasses: hazardClasses.data,
@@ -525,7 +525,6 @@ export function postNewUserRequest(payload) {
       email: payload.email,
       name: payload.name,
       homeBranch: payload.homeBranchId,
-      password: payload.password,
       jobTitle: payload.title,
       phone: payload.phone,
       preferredCurrency: payload.preferredCurrency
@@ -708,6 +707,13 @@ export function searchUnNumber(pattern) {
   return {
     type: AT.SEARCH_UN_NUMBER,
     payload: api.searchUnNumber(pattern)
+  }
+}
+
+export function getAddressSearch(pattern, countryId='', provinceId='') {
+  return {
+    type: AT.SETTINGS_GET_ADDRESSES_SEARCH,
+    payload: api.getAddressSearch(pattern, countryId, provinceId)
   }
 }
 

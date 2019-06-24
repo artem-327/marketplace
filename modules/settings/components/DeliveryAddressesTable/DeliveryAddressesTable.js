@@ -54,6 +54,7 @@ class DeliveryAddressesTable extends Component {
     return (
       <React.Fragment>
         <ProdexGrid
+          tableName="settings_delivery_address"
           filterValue={filterValue}
           columns={columns}
           rows={rows}
