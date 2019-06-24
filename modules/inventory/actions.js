@@ -12,8 +12,10 @@ export function initProductOfferEdit(id) {
     dispatch(getProductForms())
     dispatch(getProductGrades())
     dispatch(getWarehouses())
-    dispatch(searchManufacturers('', 200))
-    dispatch(searchOrigins('', 200))
+    if (!id) {
+      dispatch(searchManufacturers('', 200))
+      dispatch(searchOrigins('', 200))
+    }
 
     if (id) {
       dispatch(getProductOffer(id))

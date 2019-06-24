@@ -8,6 +8,7 @@ import * as val from 'yup'
 import { DateInput } from '~/components/custom-formik'
 import UploadLot from './upload/UploadLot'
 import { FieldArray } from "formik"
+import { debounce } from 'lodash'
 
 const TopDivider = styled(Divider)`
   padding-bottom: 20px;
@@ -798,8 +799,8 @@ class AddInventoryForm extends Component {
                                       selection: true,
                                       clearable: true,
                                       loading: searchedOriginsLoading,
-                                      onChange: (e, v) => { console.log(v) },
-                                      onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchOrigins(searchQuery)
+                                      onChange: (e, { value }) => { value ? console.log(value) : searchOrigins('') },
+                                      onSearchChange: debounce((e, { searchQuery }) => searchOrigins(searchQuery), 500)
                                     }}
                                   />
                                 </FormField>
@@ -816,8 +817,8 @@ class AddInventoryForm extends Component {
                                       selection: true,
                                       clearable: true,
                                       loading: searchedManufacturersLoading,
-                                      onChange: (e, v) => { console.log(v) },
-                                      onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchManufacturers(searchQuery)
+                                      onChange: (e, { value }) => { value ? console.log(value) : searchManufacturers('') },
+                                      onSearchChange: debounce((e, { searchQuery }) => searchManufacturers(searchQuery), 500)
                                     }}
                                   />
                                 </FormField>
