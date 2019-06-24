@@ -11,19 +11,24 @@ class TablesHandlers extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      filterFieldCurrentValue: 'None'
+      filterFieldCurrentValue: 'None',
+      filterValue: ''
     }
 
-    this.handleChange = debounce(this.handleChange, 250)
+    this.handleChange = debounce(this.handleChange, 300)
   }
 
   componentDidUpdate(prevProps) {
     let { filterValueKey } = this.state
+
     if (prevProps.filterValue && this.props.filterValue === '') {
       this.setState({
         filterValueKey: ++filterValueKey
       })
+    } if (prevProps.currentTab !== this.props.currentTab) {
+      this.setState({ filterValue: '' })
     }
+    
   }
 
   handleChangeSelectField = (event, value) => {
@@ -38,7 +43,7 @@ class TablesHandlers extends Component {
     })
   }
 
-  handleChange = (e, { value }) => {
+  handleChange = (value) => {
     this.props.handleFiltersValue(this.props, value)
   }
 
@@ -61,7 +66,10 @@ class TablesHandlers extends Component {
         <Menu.Menu position='right'>
           <Menu.Item>
             <Input style={{ width: 340 }} size="large" icon='search' placeholder={config[currentTab].searchText}
-              onChange={this.handleChange} />
+              onChange={(e, { value }) => {
+                this.setState({ filterValue: value })
+                this.handleChange(value)
+              }} value={this.state.filterValue} />
           </Menu.Item>
           <Menu.Item>
             <Button size="large" primary onClick={() => openPopup()}>
@@ -79,7 +87,7 @@ const mapStateToProps = state => {
     currentTab: state.admin.currentTab,
     casListDataRequest: state.admin.casListDataRequest,
     companyListDataRequest: state.admin.companyListDataRequest,
-    filterValue: state.admin.filterValue
+
   }
 }
 

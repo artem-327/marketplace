@@ -209,29 +209,33 @@ class AddNewPopupCasProducts extends React.Component {
         initialValues={popupValues ? popupValues : initialFormValues}
         validationSchema={popupValues ? validationSchema : this.formValidationNew()}
         onSubmit={async (values, actions) => {
-          if (popupValues) {
-            let newValues = {}
+          try {
 
-            Object.keys(values)
-              .forEach(key => {
-                if (typeof values[key] === 'string') newValues[key] = values[key].trim()
-                else newValues[key] = values[key]
-              })
+            if (popupValues) {
+              let newValues = {}
 
-            await updateCompany(popupValues.id, newValues)
+              Object.keys(values)
+                .forEach(key => {
+                  if (typeof values[key] === 'string') newValues[key] = values[key].trim()
+                  else newValues[key] = values[key]
+                })
+
+              await updateCompany(popupValues.id, newValues)
+            }
+            else {
+              if (values.mailingBranch && !(values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
+                values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
+                values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
+                values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''))
+                delete values['mailingBranch']
+
+              removeEmpty(values)
+              await createCompany(values)
+            }
+          } catch (_) { }
+          finally {
+            actions.setSubmitting(false)
           }
-          else {
-            if (values.mailingBranch && !(values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
-              values.mailingBranch.contactName.trim() !== '' || values.mailingBranch.contactPhone.trim() !== '' ||
-              values.mailingBranch.address.streetAddress.trim() !== '' || values.mailingBranch.address.city.trim() !== '' ||
-              values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''))
-              delete values['mailingBranch']
-
-            removeEmpty(values)
-            await createCompany(values)
-          }
-
-          actions.setSubmitting(false)
         }}
         onReset={closePopup}
         render={props => {
