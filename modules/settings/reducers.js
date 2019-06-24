@@ -431,24 +431,12 @@ export default function reducer(state = initialState, action) {
         newCountryFormat,
         newCurrencyFormat
       } = action.payload
-      const rows = bankAccountsData.map(account => {
-        return {
-          id: account.id,
-          accountHolderName: account.accountHolderName,
-          accountHolderType: account.accountHolderType,
-          accountNumber: `**** **** **** ${account.last4}`,
-          status: account.status,
-          // country: account.country,
-          currency: account.currency,
-          routingNumber: account.routingNumber
-          // accountNumber - what does it mean
-        }
-      })
+      
 
       return {
         ...state,
         loading: false,
-        bankAccountsRows: rows,
+        bankAccountsRows: bankAccountsData,
         country: newCountryFormat,
         currency: newCurrencyFormat
       }

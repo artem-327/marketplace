@@ -21,9 +21,10 @@ import { injectIntl } from 'react-intl'
 class ProductCatalogTable extends Component {
   state = {
     columns: [
-      { name: 'accountNumber', title: 'Account Number' },
-      { name: 'accountHolderName', title: 'Account Name' },
-      { name: 'currency', title: 'Currency' }
+      { name: 'name', title: 'Account Name' },
+      { name: 'bankAccountType', title: 'Account Type' },
+      { name: 'bankName', title: 'Bank Name' },
+      { name: 'status', title: 'Status' },
     ]
   }
 
@@ -56,7 +57,7 @@ class ProductCatalogTable extends Component {
           columns={columns}
           filterValue={filterValue}
           rowActions={[
-            { text: 'Edit', callback: row => openPopup(row) },
+            // { text: 'Edit', callback: row => openPopup(row) },
             {
               text: 'Delete',
               callback: row => confirm(
@@ -88,7 +89,10 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     loading: state.settings.loading,
-    rows: state.settings.bankAccountsRows,
+    rows: state.settings.bankAccountsRows.map(r => ({
+      ...r,
+      // some changes here
+    })),
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
