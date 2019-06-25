@@ -27,8 +27,9 @@ class TablesHandlers extends Component {
       })
     } if (prevProps.currentTab !== this.props.currentTab) {
       this.setState({ filterValue: '' })
+      this.props.handleFiltersValue(this.props, '')
     }
-    
+
   }
 
   handleChangeSelectField = (event, value) => {
