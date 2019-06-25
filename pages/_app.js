@@ -36,7 +36,7 @@ class ProdexApp extends App {
     return (
       <Container key={this.state.key}>
         <IntlProvider locale="en" messages={EN}>
-          <ToastProvider autoDismiss={1000 * 10}>
+          <ToastProvider autoDismiss autoDismissTimeout={10 * 1000}>
             <Provider store={store}>
               <Component {...pageProps} />
             </Provider>

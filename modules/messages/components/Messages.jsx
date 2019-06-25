@@ -37,7 +37,7 @@ export default class Messages extends Component {
         <div>
           <strong><FormattedMessage id='global.error' defaultMessage='Error!' /></strong>
           <div>{errorMessage}</div>
-        </div>, { appearance: themes.ERROR })
+        </div>, { appearance: themes.ERROR, pauseOnHover: true })
       // addMessage({ theme: themes.ERROR, content: errorMessage })
     }
   }
