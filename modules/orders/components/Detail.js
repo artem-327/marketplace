@@ -176,7 +176,7 @@ class Detail extends Component {
 
               <Accordion defaultActiveIndex={[0, 1]} styled fluid style={{ width: 'calc(100% - 64px)', margin: '0 32px' }}>
                 <AccordionTitle active={activeIndexes[0]} index={0} onClick={this.handleClick}>
-                  <Icon name={'chevron ' + (activeIndexes[0] ? 'up' : 'right')} size='large' color={activeIndexes[0] ? 'blue' : 'black'} />
+                  <Icon name={'chevron ' + (activeIndexes[0] ? 'down' : 'right')} size='large' color={activeIndexes[0] ? 'blue' : 'black'} />
                   Order Info
                             </AccordionTitle>
                 <Accordion.Content active={activeIndexes[0]}>
@@ -213,7 +213,7 @@ class Detail extends Component {
                 </Accordion.Content>
 
                 <AccordionTitle active={activeIndexes[1]} index={1} onClick={this.handleClick}>
-                  <Icon name={'chevron ' + (activeIndexes[1] ? 'up' : 'right')} size='large' color={activeIndexes[1] ? 'blue' : 'black'} />
+                  <Icon name={'chevron ' + (activeIndexes[1] ? 'down' : 'right')} size='large' color={activeIndexes[1] ? 'blue' : 'black'} />
                   Product Info
                             </AccordionTitle>
                 <Accordion.Content active={activeIndexes[1]}>
@@ -341,7 +341,7 @@ class Detail extends Component {
                 </Accordion.Content>
 
                 <AccordionTitle active={activeIndexes[2]} index={2} onClick={this.handleClick}>
-                  <Icon name={'chevron ' + (activeIndexes[2] ? 'up' : 'right')} size='large' color={activeIndexes[2] ? 'blue' : 'black'} />
+                  <Icon name={'chevron ' + (activeIndexes[2] ? 'down' : 'right')} size='large' color={activeIndexes[2] ? 'blue' : 'black'} />
                   Pick Up Info
                             </AccordionTitle>
                 <Accordion.Content active={activeIndexes[2]}>
@@ -368,7 +368,7 @@ class Detail extends Component {
                 </Accordion.Content>
 
                 <AccordionTitle active={activeIndexes[3]} index={3} onClick={this.handleClick}>
-                  <Icon name={'chevron ' + (activeIndexes[3] ? 'up' : 'right')} size='large' color={activeIndexes[3] ? 'blue' : 'black'} />
+                  <Icon name={'chevron ' + (activeIndexes[3] ? 'down' : 'right')} size='large' color={activeIndexes[3] ? 'blue' : 'black'} />
                   Shipping
                             </AccordionTitle>
                 <Accordion.Content active={activeIndexes[3]}>
@@ -409,7 +409,7 @@ class Detail extends Component {
                 </Accordion.Content>
 
                 <AccordionTitle active={activeIndexes[4]} index={4} onClick={this.handleClick}>
-                  <Icon name={'chevron ' + (activeIndexes[4] ? 'up' : 'right')} size='large' color={activeIndexes[4] ? 'blue' : 'black'} />
+                  <Icon name={'chevron ' + (activeIndexes[4] ? 'down' : 'right')} size='large' color={activeIndexes[4] ? 'blue' : 'black'} />
                   Payment / {order.paymentType}
                 </AccordionTitle>
                 <Accordion.Content active={activeIndexes[4]}>
