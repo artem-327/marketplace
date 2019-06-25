@@ -17,7 +17,7 @@ export default {
   },
   getDocumentTypes: () => api.get(`/prodex/api/document-types/`),
   getUsers: () => api.get('/prodex/api/users').then(response => response.data),
-  getRoles: () => api.get('/prodex/api/roles?includeSuperAdmin=true').then(response => response.data),
+  getRoles: () => api.get('/prodex/api/roles?includeSuperAdmin=false').then(response => response.data),
   userSwitchEnableDisable: id => api.patch(`/prodex/api/users/id/${id}/switch-enabled`),
   getCurrentUser: () =>
     api.get('/prodex/api/users/me').then(response => response.data),

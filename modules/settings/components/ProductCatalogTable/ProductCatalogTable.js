@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
+import { Popup } from 'semantic-ui-react'
 
 import * as Actions from '../../actions'
 import Router from "next/router"
@@ -60,6 +61,16 @@ class ProductCatalogTable extends Component {
     }
   }
 
+  getRows = (rows) => {
+    return rows.map(row => {
+      return {
+        ...row,
+        casName: row.casNameText ? (<Popup content={row.casNameText} trigger={<span>{row.casName}</span>} />) : row.casName,
+        casNumber: row.casNumberText ? (<Popup content={row.casNumberText} trigger={<span>{row.casNumber}</span>} />) : row.casNumber
+      }
+    })
+  }
+
   render() {
     const {
       rows,
@@ -78,7 +89,7 @@ class ProductCatalogTable extends Component {
         <ProdexTable
           tableName="settings_product_catalog"
           {...datagrid.tableProps}
-          rows={rows}
+          rows={this.getRows(rows)}
           columns={columns}
           style={{ marginTop: '5px' }}
           filterValue={filterValue}
@@ -109,14 +120,30 @@ const mapStateToProps = (state, { datagrid }) => {
         description: product.description ? product.description : '',
         productName: product.productName,
         productNumber: product.productCode,
-        casName: product.casProducts
-          ? product.casProducts.map(cp => {
-            return cp.casIndexName
-          }).join(', ') : null,
-        casNumber: product.casProducts
-          ? product.casProducts.map(cp => {
-            return cp.casNumber
-          }).join(', ') : null,
+        casName: product.casProducts && product.casProducts.length
+          ? product.casProducts.length > 1
+            ? 'Blend'
+            : product.casProducts[0].casIndexName
+          : null,
+        casNameText: product.casProducts && product.casProducts.length
+          ? product.casProducts.length > 1
+            ? product.casProducts.map(cp => {
+              return cp.casIndexName
+            }).join(', ')
+            : null
+          : null,
+        casNumber: product.casProducts && product.casProducts.length
+          ? product.casProducts.length > 1
+            ? 'Blend'
+            : product.casProducts[0].casNumber
+          : null,
+        casNumberText: product.casProducts && product.casProducts.length
+          ? product.casProducts.length > 1
+            ? product.casProducts.map(cp => {
+              return cp.casNumber
+            }).join(', ')
+            : null
+          : null,
         casProducts: product.casProducts ? product.casProducts.map((casProduct, cpIndex) => {
           return {
             casProduct: casProduct.id,

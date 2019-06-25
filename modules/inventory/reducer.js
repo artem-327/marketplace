@@ -121,6 +121,22 @@ export default function reducer(state = initialState, action) {
         return filtered
       }, [])
 
+      let searchedLists = {}
+      if (action.payload.data.manufacturer) {
+        searchedLists.searchedManufacturers = [{
+          key: action.payload.data.manufacturer.id,
+          value: action.payload.data.manufacturer.id,
+          text: action.payload.data.manufacturer.name
+        }]
+      }
+      if (action.payload.data.origin) {
+        searchedLists.searchedOrigins = [{
+          key: action.payload.data.origin.id,
+          value: action.payload.data.origin.id,
+          text: action.payload.data.origin.name
+        }]
+      }
+
       return {
         ...state,
         ...action.payload.data,
@@ -130,16 +146,7 @@ export default function reducer(state = initialState, action) {
           return att
         }).concat(state.fileIds),
         poCreated: false,
-        searchedManufacturers: action.payload.data.manufacturer ? [{
-          key: action.payload.data.manufacturer.id,
-          value: action.payload.data.manufacturer.id,
-          text: action.payload.data.manufacturer.name
-        }] : [],
-        searchedOrigins: action.payload.data.origin ? [{
-          key: action.payload.data.origin.id,
-          value: action.payload.data.origin.id,
-          text: action.payload.data.origin.name
-        }] : [],
+        ...searchedLists,
 
         initialState: {
           additional: filteredAdditional,

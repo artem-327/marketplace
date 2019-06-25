@@ -76,13 +76,13 @@ export function removeAttachmentLink(isLot, itemId, aId) {
   return api.delete(`/prodex/api/attachment-links/to-${isLot ? 'lot' : 'product-offer'}?attachmentId=${aId}&${isLot ? 'lotId' : 'productOfferId'}=${itemId}`)
 }
 
-export async function searchManufacturers(text) {
-  const response = await api.get(`/prodex/api/manufacturers/search?search=${text}`)
+export async function searchManufacturers(text, limit) {
+  const response = await api.get(`/prodex/api/manufacturers/search?search=${text}${Number.isInteger(limit) ? '&limit='+(limit > 30 ? 30 : limit) : ''}`)
   return response
 }
 
-export async function searchOrigins(text) {
-  const response = await api.get(`/prodex/api/countries/search?pattern=${text}`)
+export async function searchOrigins(text, limit) {
+  const response = await api.get(`/prodex/api/countries/search?pattern=${text}${Number.isInteger(limit) ? '&limit='+(limit > 30 ? 30 : limit) : ''}`)
   return response
 }
 

@@ -5,13 +5,15 @@ import { toggleFilter, filterSaving, filterApplying } from '~/modules/filter/act
 
 export function initProductOfferEdit(id) {
 
-  return dispatch => {
+  return async dispatch => {
 
     dispatch(getDocumentTypes())
     dispatch(getProductConditions())
     dispatch(getProductForms())
     dispatch(getProductGrades())
     dispatch(getWarehouses())
+    await dispatch(searchManufacturers('', 200))
+    await dispatch(searchOrigins('', 200))
 
     if (id) {
       dispatch(getProductOffer(id))
@@ -185,7 +187,7 @@ export function getProductOffer(productOfferId) {
         data: {
           ...data,
           searchedProducts: [{
-            text: data.product.casProducts.length ? data.product.casProducts[0].casIndexName : data.product.productName + ' (Unmapped)',
+            text: (data.product.productCode ? data.product.productCode + ' ' : '') + data.product.productName,
             value: data.product,
             key: data.product.id
           }],
@@ -269,11 +271,11 @@ export function resetForm(initValues) {
   }
 }
 
-export function searchManufacturers(text) {
+export function searchManufacturers(text, limit = false) {
   return {
     type: AT.INVENTORY_SEARCH_MANUFACTURERS,
     async payload() {
-      const response = await api.searchManufacturers(text)
+      const response = await api.searchManufacturers(text, limit)
 
       return {
         data: response.data ? response.data.map(p => ({
@@ -286,11 +288,11 @@ export function searchManufacturers(text) {
   }
 }
 
-export function searchOrigins(text) {
+export function searchOrigins(text, limit = false) {
   return {
     type: AT.INVENTORY_SEARCH_ORIGINS,
     async payload() {
-      const response = await api.searchOrigins(text)
+      const response = await api.searchOrigins(text, limit)
 
       return {
         data: response.data ? response.data.map(p => ({
