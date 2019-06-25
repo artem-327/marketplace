@@ -15,6 +15,8 @@ import 'nprogress/nprogress.css'
 import shortid from 'shortid'
 import { ToastProvider } from 'react-toast-notifications'
 
+import { DatagridProvider } from '~/modules/datagrid'
+
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
 Router.events.on('routeChangeError', () => NProgress.done())
@@ -38,7 +40,9 @@ class ProdexApp extends App {
         <IntlProvider locale="en" messages={EN}>
           <ToastProvider autoDismiss={1000 * 10}>
             <Provider store={store}>
-              <Component {...pageProps} />
+              <DatagridProvider>
+                <Component {...pageProps} />
+              </DatagridProvider>
             </Provider>
           </ToastProvider>
         </IntlProvider>
