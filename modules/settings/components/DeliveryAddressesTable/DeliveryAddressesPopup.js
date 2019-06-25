@@ -71,6 +71,10 @@ class DeliveryAddressesPopup extends React.Component {
       setFieldValue('address.streetAddress', this.props.AddressSuggestData[i].streetAddress)
       setFieldValue('address.city', this.props.AddressSuggestData[i].city)
       setFieldValue('address.zip', this.props.AddressSuggestData[i].zip &&  this.props.AddressSuggestData[i].zip.zip)
+      setFieldValue('address.country', this.props.AddressSuggestData[i].country.id)
+      setFieldValue('address.province', this.props.AddressSuggestData[i].province ? this.props.AddressSuggestData[i].province.id : '')
+      this.setState({hasProvinces: this.props.AddressSuggestData[i].country.hasProvinces})
+      if (this.props.AddressSuggestData[i].country.hasProvinces) this.props.getProvinces(this.props.AddressSuggestData[i].country.id)
     }
     else {
       this.props.getAddressSearch(d.value, values.address.country, values.address.province)
@@ -172,7 +176,7 @@ const prepareAddressSuggest = (AddressSuggestOptions) => (
 const mapStateToProps = state => {
   const popupValues = state.settings.popupValues
   const AddressSuggestOptions = state.settings.addressSearch.map((a) => (
-      a.streetAddress + ', ' + a.city + ', ' + a.zip.zip
+      a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
   ))
   return {
     AddressSuggestInput: prepareAddressSuggest(AddressSuggestOptions),

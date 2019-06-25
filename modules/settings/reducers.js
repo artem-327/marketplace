@@ -53,7 +53,7 @@ export const initialState = {
   maps: null,
   selectedSavedMap: null,
   loaded: false,
-  searchedCasProducts: [],
+  searchedCasProducts: [[]],
   searchedUnNumbers: [],
   deliveryAddressesFilter: { pageSize: 50, pageNumber: 0 },
   productsFilter: { pageSize: 50, pageNumber: 0 },
@@ -431,7 +431,7 @@ export default function reducer(state = initialState, action) {
         newCountryFormat,
         newCurrencyFormat
       } = action.payload
-      
+
 
       return {
         ...state,
@@ -450,7 +450,7 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.SETTINGS_GET_PRODUCTS_CATALOG_DATA_FULFILLED: {
-      const rows = action.payload.products.map(product => {
+      /*const rows = action.payload.products.map(product => {
         return {
           id: product.id,
           description: product.description ? product.description : '',
@@ -466,7 +466,7 @@ export default function reducer(state = initialState, action) {
               ? product.casProduct.casNumber
               : null
             : null,
-          casProduct: product.casProduct ? product.casProduct : null,
+          casProducts: product.casProducts ? product.casProducts : [],
           packagingType: product.packagingType
             ? product.packagingType.name
             : null,
@@ -480,13 +480,13 @@ export default function reducer(state = initialState, action) {
           freightClass: product.freightClass ? product.freightClass : null,
           hazardous: product.hazardous,
           hazardClass: product.hazardClasses && product.hazardClasses.length ? product.hazardClasses.map(d => (
-              d.id
-            )) : null,
+            d.id
+          )) : null,
           nmfcNumber: product.nmfcNumber ? product.nmfcNumber : null,
           stackable: product.stackable,
           unNumber: product.unNumber ? product.unNumber : null
         }
-      })
+      })*/
       const packagingType = action.payload.productsTypes.map((type, id) => {
         return {
           key: id,
@@ -528,7 +528,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         loaded: true,
-        productsCatalogRows: rows,
+        //productsCatalogRows: rows,
         productsPackagingType: packagingType,
         productsUnitsType: packagingUnitsType,
         productsHazardClasses: hazardClasses,
@@ -642,10 +642,47 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_CREATE_CAS_PRODUCTS_INDEX: {
+      // ADD new array to casProducts
+      let {searchedCasProducts} = state
+      searchedCasProducts.push([])
+
+      return {
+        ...state,
+        searchedCasProducts
+      }
+    }
+
+    case AT.SETTINGS_REMOVE_CAS_PRODUCTS_INDEX: {
+      // REMOVE array from casProducts
+      let {searchedCasProducts} = state
+      searchedCasProducts.splice(action.payload.index, 1)
+
+      return {
+        ...state,
+        searchedCasProducts
+      }
+    }
+
+    case AT.SETTINGS_PREPARE_CAS_PRODUCTS: {
+      return {
+        ...state,
+        searchedCasProducts: action.payload.casProducts.map(casProduct => {
+          return [casProduct.item]
+        })
+      }
+    }
+
     case AT.SEARCH_CAS_PRODUCT_FULFILLED: {
       return {
         ...state,
-        searchedCasProducts: action.payload.data
+        searchedCasProducts: state.searchedCasProducts.map((list, listIndex) => {
+          if (listIndex === action.payload.index) {
+            return action.payload.data
+          } else {
+            return list
+          }
+        })
       }
     }
 
@@ -841,7 +878,8 @@ export default function reducer(state = initialState, action) {
     case AT.TAB_CHANGED: {
       return {
         ...state,
-        currentTab: payload
+        currentTab: payload,
+        filterValue: state.currentTab !== payload ? '' : state.filterValue
       }
     }
 

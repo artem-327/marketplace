@@ -363,5 +363,19 @@
   "validation.maximum": "Maximum is {max}",
   "validation.greaterThan": "Must be greater than {value}",
   "validation.lessThan": "Must be less than {value}",
-  "validation.multiplyOfSplit": "Must be multiply of split ({split})"
+  "validation.multiplyOfSplit": "Must be multiply of split ({split})",
+  "validation.passwordsMustMatch": "Passwords must match",
+  "verification.hello": "Hello!",
+  "verification.helloAgain": "Hello again!",
+  "verification.termsAndServices": "Terms and Services",
+  "verification.termsOfUse": "Terms of Use",
+  "verification.privacyPolicy": "Privacy Policy",
+  "verification.termsOfAgreement": "For US residents only. By signing up for an Echo account, you agree to Echo's {echosTermsAndServices}, {echosTermsOfUse} and {echosPrivacyPolicy}. As well as our partner Dwolla's {dwollasTermsOfServices} and {dwollasPrivacyPolicy}.",
+  "verification.verification": "We're almost done creating your account. Please provide your e-mail and create a password.",
+  "verification.provideSecurityCode": "Please provide the Security Code sent to your email, your email and desired new password.",
+  "verification.labels.securityCode": "Security Code",
+  "verification.labels.email": "E-mail Address",
+  "verification.labels.password": "Password",
+  "verification.labels.passwordConfirm": "Password Confirmation",
+  "verification.nextStep": "Next Step"
 }

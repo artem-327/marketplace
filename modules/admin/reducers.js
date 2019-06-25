@@ -46,7 +46,7 @@ export const initialState = {
   
   confirmMessage: null,
   deleteRowById: null,
-  filterValue: '',
+  // filterValue: '',
   filterCasIds: [],
   loading: false,
   config: config,
@@ -229,18 +229,17 @@ export default function reducer(state = initialState, action) {
         currentEditForm: null,
         currentEdit2Form: null,
         filterCasIds: [],
-        filterValue: ''
       }
     }
 
-    case AT.ADMIN_HANDLE_FILTERS_VALUE: {
-      return {
-        ...state,
-        filterValue: action.payload,
-        casProductsRows: [],
-        companiesRows: []
-      }
-    }
+    // case AT.ADMIN_HANDLE_FILTERS_VALUE: {
+    //   return {
+    //     ...state,
+    //     filterValue: action.payload,
+    //     casProductsRows: [],
+    //     companiesRows: []
+    //   }
+    // }
 
     case AT.ADMIN_HANDLE_CAS_FILTER_IDS: {
       return {

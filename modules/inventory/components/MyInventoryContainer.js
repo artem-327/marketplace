@@ -5,6 +5,26 @@ import MyInventory from './MyInventory'
 import * as Actions from '../actions'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import { withDatagrid } from '~/modules/datagrid'
+import {Label, Popup, List} from "semantic-ui-react";
+import React from "react";
+
+
+const transformLotNumbers = lots => {
+  if ( lots.length > 1) {
+    let onMouseoverTest = lots.map(d => (d.lotNumber))
+    return (
+      <div>
+        <Popup
+          content={<List items={onMouseoverTest} />}
+          trigger={<Label>Multiple</Label>}
+        />
+      </div>
+    )
+  }
+  else {
+    return lots[0].lotNumber
+  }
+}
 
 function mapStateToProps(store, { datagrid }) {
   return {
@@ -35,6 +55,7 @@ function mapStateToProps(store, { datagrid }) {
           : po.pricing.price ? ("$" + po.pricing.price.formatMoney(3)) : 'N/A',
         manufacturer: po.manufacturer && po.manufacturer.name ? po.manufacturer.name : 'N/A',
         broadcasted: po.broadcasted,
+        lotNumber: transformLotNumbers(po.lots),
         status: po.status // new broadcasted
       }
     }),

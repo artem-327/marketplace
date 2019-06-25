@@ -8,6 +8,7 @@ import * as val from 'yup'
 import { DateInput } from '~/components/custom-formik'
 import UploadLot from './upload/UploadLot'
 import { FieldArray } from "formik"
+import { debounce } from 'lodash'
 
 const TopDivider = styled(Divider)`
   padding-bottom: 20px;
@@ -249,7 +250,7 @@ class AddInventoryForm extends Component {
             <Accordion>
               <Accordion.Title active={activeIndex === 0} index={0} onClick={this.accClick}>
                 <Header as='h4'>
-                  <Icon name={activeIndex === 0 ? 'chevron down' : 'chevron right'} />PRODUCT DETAILS
+                  <Icon name={activeIndex === 0 ? 'chevron up' : 'chevron right'} />PRODUCT DETAILS
                 </Header>
               </Accordion.Title>
               <Accordion.Content active={activeIndex === 0}>
@@ -408,6 +409,12 @@ class AddInventoryForm extends Component {
     const { initProductOfferEdit, edit } = this.props
 
     initProductOfferEdit(edit)
+  }
+
+  componentDidUpdate = (oldProps) => {
+    // prepare state for searchedProducts when opened edit form
+    if (!this.state.searchedProducts.length && !oldProps.searchedProducts.length && this.props.searchedProducts.length)
+      this.setState({'searchedProducts': this.props.searchedProducts})
   }
 
   searchProducts = async (text) => {
@@ -786,14 +793,14 @@ class AddInventoryForm extends Component {
                                     options={searchedOrigins}
                                     inputProps={{
                                       size: 'large',
-                                      minCharacters: 3,
+                                      minCharacters: 0,
                                       icon: "search",
                                       search: true,
                                       selection: true,
                                       clearable: true,
                                       loading: searchedOriginsLoading,
-                                      onChange: (e, v) => { console.log(v) },
-                                      onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchOrigins(searchQuery)
+                                      onChange: (e, { value }) => { value ? console.log(value) : searchOrigins('') },
+                                      onSearchChange: debounce((e, { searchQuery }) => searchOrigins(searchQuery), 500)
                                     }}
                                   />
                                 </FormField>
@@ -804,14 +811,14 @@ class AddInventoryForm extends Component {
                                     options={searchedManufacturers}
                                     inputProps={{
                                       size: 'large',
-                                      minCharacters: 3,
+                                      minCharacters: 0,
                                       icon: "search",
                                       search: true,
                                       selection: true,
                                       clearable: true,
                                       loading: searchedManufacturersLoading,
-                                      onChange: (e, v) => { console.log(v) },
-                                      onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && searchManufacturers(searchQuery)
+                                      onChange: (e, { value }) => { value ? console.log(value) : searchManufacturers('') },
+                                      onSearchChange: debounce((e, { searchQuery }) => searchManufacturers(searchQuery), 500)
                                     }}
                                   />
                                 </FormField>

@@ -447,7 +447,7 @@ export default class _Table extends Component {
             />
             {groupBy && <TableGroupRow
               indentColumnWidth={1}
-              iconComponent={({ expanded }) => <Icon style={{ float: 'right' }} size='large' color='blue' name={expanded ? 'chevron down' : 'chevron up'} />}
+              iconComponent={({ expanded }) => <Icon style={{ float: 'right' }} size='large' color='blue' name={expanded ? 'chevron up' : 'chevron right'} />}
               contentComponent={({ column, row, children, ...restProps }) => (
                 renderGroupLabel
                   ? renderGroupLabel({ column, row })

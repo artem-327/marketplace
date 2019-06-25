@@ -49,9 +49,7 @@ class MyProfile extends Component {
             onSubmit={async (values, actions) => {
               delete values['email']
               delete values['jobTitle']
-
               this.props.updateMyProfile(values)
-
               actions.setSubmitting(false)
             }}
           >

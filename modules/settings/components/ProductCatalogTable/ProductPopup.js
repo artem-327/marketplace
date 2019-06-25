@@ -7,13 +7,18 @@ import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import {withToastManager} from 'react-toast-notifications'
 import { FormattedMessage } from 'react-intl'
 
-import { Modal, FormGroup, FormField, Search, Label } from 'semantic-ui-react'
+import { Modal, Header, FormGroup, FormField, Search, Label, Icon } from 'semantic-ui-react'
 import { DateInput } from '~/components/custom-formik'
+import { FieldArray } from "formik"
 
 import {
   closePopup,
+  getProductsCatalogRequest,
   handleSubmitProductEditPopup,
   handleSubmitProductAddPopup,
+  newCasProductsIndex,
+  removeCasProductsIndex,
+  prepareSearchedCasProducts,
   searchCasProduct,
   searchUnNumber,
   getDocumentTypes,
@@ -25,7 +30,30 @@ import {
 import { Form, Input, Button, Dropdown, TextArea, Checkbox } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 import './styles.scss'
-import Router from "next/router" 
+import Router from "next/router"
+
+Yup.addMethod(Yup.object, 'uniqueProperty', function (propertyName, message) {
+  return this.test('unique', message, function (value) {
+    if (!value || !value[propertyName]) {
+      return true
+    }
+
+    const { path } = this
+    const options = [...this.parent]
+    const currentIndex = options.indexOf(value)
+
+    const subOptions = options.slice(0, currentIndex)
+
+    if (subOptions.some((option) => option[propertyName] === value[propertyName])) {
+      throw this.createError({
+        path: `${path}.${propertyName}`,
+        message,
+      })
+    }
+
+    return true
+  })
+})
 
 const formValidation = Yup.object().shape({
   productName: Yup.string().trim()
@@ -46,6 +74,11 @@ const formValidation = Yup.object().shape({
   nmfcNumber: Yup.number().typeError('must be number').test("digit5", "There has to be 5 digit numbers.", val => {
     return !val || val.toString().length === 5    // ! ! nejak divne to funguje
   }),
+  casProducts: Yup.array().of(Yup.object().uniqueProperty('casProduct', 'CAS Product ahs to be unique').shape({
+    casProduct: Yup.number(),
+    //min: Yup.number().min(10).max(100),
+    //max: Yup.number().min(10).max(100)
+  }))
 
   //hazardClass: Yup.number(),
   //packagingGroup: Yup.number()
@@ -53,8 +86,14 @@ const formValidation = Yup.object().shape({
 
 class ProductPopup extends React.Component {
   componentDidMount() {
+    this.props.getProductsCatalogRequest()
+
     if (this.props.documentTypes.length === 0)
       this.props.getDocumentTypes()
+
+    if (this.props.popupValues && this.props.popupValues.casProducts.length) {
+      this.props.prepareSearchedCasProducts(this.props.popupValues.casProducts)
+    }
   }
 
   componentWillMount() {
@@ -66,14 +105,18 @@ class ProductPopup extends React.Component {
     if (popupValues) {
       this.props.handleSubmitProductEditPopup({
         ...values,
-        casProduct: this.state.value ? this.state.value : popupValues.casProduct,
+        casProducts: values.casProducts ? values.casProducts.map(cp => {
+          return cp.casProduct
+        }) : popupValues.casProducts,
         unNumber: this.state.unNumber ? this.state.unNumber.id :
             popupValues.unNumber ? popupValues.unNumber.id : null,
       }, popupValues.id, reloadFilter)
     } else {
       this.props.handleSubmitProductAddPopup({
         ...values,
-        casProduct: this.state.value,
+        casProducts: values.casProducts ? values.casProducts.map(cp => {
+          return cp.casProduct
+        }) : [],
         unNumber: this.state.unNumber ? this.state.unNumber.id : null
       }, reloadFilter)
     }
@@ -93,17 +136,19 @@ class ProductPopup extends React.Component {
       isUnLoading: false,
       results: [],
       value: (popupValues && popupValues.casProduct) || '',
-      unNumber: null
+      unNumber: null,
+      selectedList: []
     })
   }
 
-  handleResultSelect = (e, { result }) =>
-    this.setState({value: result})
+  handleResultSelect = (e, { result }) => {
+    this.setState({value: result, selectedList: [result].concat(this.state.selectedList)})
+  }
 
-  handleSearchChange = debounce((e, { value }) => {
-    this.setState({ isLoading: true, value })
+  handleSearchChange = debounce((e, {searchQuery, dataindex}) => {
+    this.setState({ isLoading: true, value: searchQuery })
 
-    this.props.searchCasProduct(value)
+    this.props.searchCasProduct(searchQuery, dataindex)
 
     setTimeout(() => {
       const re = new RegExp(escapeRegExp(this.state.value), 'i')
@@ -145,7 +190,7 @@ class ProductPopup extends React.Component {
   getInitialFormValues = () => {
     const { popupValues } = this.props
     const {
-      casProduct = '',
+      casProducts = [{casProduct: null, min: 100, max: 100}],
       description = '',
       freightClass = '',
       hazardClass = [],
@@ -160,7 +205,7 @@ class ProductPopup extends React.Component {
       unitID = ''
     } = popupValues || {}
     return {
-      casProduct,
+      casProducts,
       description,
       freightClass,
       hazardClass,
@@ -208,24 +253,87 @@ class ProductPopup extends React.Component {
                 <FormGroup widths="equal">
                   <Input type="text" label="Product Name" name="productName" />
                   <Input type="text" label="Product Number" name="productNumber" />
-                  <FormField>
-                    <label>CAS Number / Product Search</label>
-                    <Search
-                      loading={isLoading}
-                      onResultSelect={this.handleResultSelect}
-                      onSearchChange={this.handleSearchChange}
-                      results={searchedCasProducts.map(item => {
-                        return {
-                          id: item.id,
-                          title: item.casNumber,
-                          description: item.casIndexName,
-                          unNumber: item.unNumber ? item.unNumber.id : 0
-                        }
-                      })}
-                      defaultValue={casProduct && casProduct.casNumber ? casProduct.casNumber : null}
-                    />
-                  </FormField>
                 </FormGroup>
+
+                <FormGroup style={{alignItems: 'flex-end', marginBottom: '0'}}>
+                  <FormField width={6}>
+                    <Header as='h2' style={{marginBottom: '0.28571429rem', fontSize: '1.3571429em'}}>What are the associated CAS Index Numbers?</Header>
+                  </FormField>
+                  {false ? (
+                    <>
+                      <FormField width={3}>
+                        <label>Min Concentration</label>
+                      </FormField>
+                      <FormField width={3}>
+                        <label>Max Concentration</label>
+                      </FormField>
+                    </>
+                  ) : ''}
+                </FormGroup>
+                <FieldArray name="casProducts"
+                            render={arrayHelpers => (
+                              <>
+                                {values.casProducts && values.casProducts.length ? values.casProducts.map((casProduct, index) => (
+                                  <FormGroup key={index}>
+                                    <FormField width={6}>
+                                      <Dropdown name={`casProducts[${index}].casProduct`}
+                                                options={searchedCasProducts.length > index ? searchedCasProducts[index].map(item => {
+                                                  return {
+                                                    key: item.id,
+                                                    id: item.id,
+                                                    text: item.casNumber + ' ' + item.chemicalName,
+                                                    unNumber: item.unNumber ? item.unNumber.id : 0,
+                                                    value: item.id,
+                                                    content: <Header content={item.casNumber} subheader={item.chemicalName} style={{fontSize: '1em'}} />
+                                                  }
+                                                }) : []}
+                                                inputProps={{
+                                                  size: 'large',
+                                                  minCharacters: 3,
+                                                  icon: "search",
+                                                  search: options => options,
+                                                  selection: true,
+                                                  clearable: true,
+                                                  loading: isLoading,
+                                                  //onResultSelect: this.handleResultSelect,
+                                                  onSearchChange: this.handleSearchChange,
+                                                  dataindex: index
+                                                }}
+                                                defaultValue={casProduct && casProduct.casNumber ? casProduct.casNumber : null}
+                                      />
+                                    </FormField>
+                                    {false ? (
+                                      <>
+                                        <FormField width={3}>
+                                          <Input type="text" name={`casProducts[${index}].min`} />
+                                        </FormField>
+                                        <FormField width={3}>
+                                          <Input type="text" name={`casProducts[${index}].max`} />
+                                        </FormField>
+                                      </>
+                                    ) : ''}
+                                    <FormField width={4}>
+                                      {index ? (
+                                        <Button basic icon onClick={() => {
+                                          arrayHelpers.remove(index)
+                                          this.props.removeCasProductsIndex(index)
+                                        }}>
+                                          <Icon name='minus' />
+                                        </Button>
+                                      ) : ''}
+                                      {values.casProducts.length === (index + 1) ? (
+                                        <Button basic icon color='green' onClick={() => {
+                                          arrayHelpers.push({ casProduct: '', min: 0, max: 0 })
+                                          this.props.newCasProductsIndex()
+                                        }}>
+                                          <Icon name='plus' />
+                                        </Button>
+                                      ) : ''}
+                                    </FormField>
+                                  </FormGroup>
+                                )) : ''}
+                              </>
+                            )} />
                 <FormGroup>
                   <FormField width={16}>
                     <label>Description</label>
@@ -376,8 +484,12 @@ class ProductPopup extends React.Component {
 
 const mapDispatchToProps = {
   closePopup,
+  getProductsCatalogRequest,
   handleSubmitProductEditPopup,
   handleSubmitProductAddPopup,
+  newCasProductsIndex,
+  removeCasProductsIndex,
+  prepareSearchedCasProducts,
   searchCasProduct,
   searchUnNumber,
   getDocumentTypes,

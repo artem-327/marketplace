@@ -23,6 +23,7 @@ class MyInventory extends Component {
       { name: "cost", title: "Cost" },
       { name: "fobPrice", title: "FOB Price", sortPath: 'ProductOffer.pricingPrice' },
       { name: "manufacturer", title: "MFR.", width: 220 },
+      { name: "lotNumber", title: "Lot #", width: 100 },
       { name: "broadcast", title: "Broadcast", width: 120, sortPath: 'ProductOffer.broadcasted' }
     ],
     selectedRows: [],
