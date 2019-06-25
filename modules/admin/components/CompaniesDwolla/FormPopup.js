@@ -198,7 +198,7 @@ class AddNewPopupCasProducts extends React.Component {
 
                       {/* <Accordion.Title active={accordionActive.controllerAddress} onClick={this.handleAccordionChange} name='controllerAddress'>
                         <h4>
-                          <Icon color={accordionActive.controllerAddress && 'blue'} name={accordionActive.controllerAddress ? 'chevron up' : 'chevron down'} />
+                          <Icon color={accordionActive.controllerAddress && 'blue'} name={accordionActive.controllerAddress ? 'chevron down' : 'chevron right'} />
                           <FormattedMessage id='global.Controller' defaultMessage='Controlling person' />
                         </h4>
                       </Accordion.Title> */}

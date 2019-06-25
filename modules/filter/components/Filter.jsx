@@ -189,7 +189,7 @@ class Filter extends Component {
 
   accordionTitle = (name, text) => (
     <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
-      <Icon name={this.state.accordion[name] ? 'chevron up' : 'chevron right'} color={this.state.accordion[name] ? 'blue' : 'black'} />
+      <Icon name={this.state.accordion[name] ? 'chevron down' : 'chevron right'} color={this.state.accordion[name] ? 'blue' : 'black'} />
       {text}
     </AccordionTitle>
   )

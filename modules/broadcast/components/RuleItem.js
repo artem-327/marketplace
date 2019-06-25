@@ -46,7 +46,7 @@ const RuleItem = (props) => {
     <>
       <Rule.Row depth={item.depth} type={type} onClick={() => type !== 'root' && onRowClick(item.node)}>
         <Rule.RowContent>
-          {item.children.length > 0 && type !== 'root' && <Icon name={`chevron ${item.node.model.expanded ? 'up' : 'right'}`} />}
+          {item.children.length > 0 && type !== 'root' && <Icon name={`chevron ${item.node.model.expanded ? 'down' : 'right'}`} />}
           <span>{item.name}</span>
         </Rule.RowContent>
 

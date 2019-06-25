@@ -59,7 +59,7 @@ class GroupRow extends Component {
                                     values={{ number: this.props.rows.rows.length }}
                                 />
                                 : null}
-                            {this.state.open ? <Icon name='chevron up' size='large' color='blue' /> : <Icon name='chevron right' size='large' color='blue' />}
+                            {this.state.open ? <Icon name='chevron down' size='large' color='blue' /> : <Icon name='chevron right' size='large' color='blue' />}
                         </span>
                     </td>
                 </tr>
