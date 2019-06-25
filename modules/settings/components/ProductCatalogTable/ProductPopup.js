@@ -75,7 +75,7 @@ const formValidation = Yup.object().shape({
     return !val || val.toString().length === 5    // ! ! nejak divne to funguje
   }),
   casProducts: Yup.array().of(Yup.object().uniqueProperty('casProduct', 'CAS Product ahs to be unique').shape({
-    casProduct: Yup.number(),
+    casProduct: Yup.number().nullable(),
     //min: Yup.number().min(10).max(100),
     //max: Yup.number().min(10).max(100)
   }))
@@ -189,7 +189,7 @@ class ProductPopup extends React.Component {
 
   getInitialFormValues = () => {
     const { popupValues } = this.props
-    const {
+    let {
       casProducts = [{casProduct: null, min: 100, max: 100}],
       description = '',
       freightClass = '',
@@ -204,6 +204,9 @@ class ProductPopup extends React.Component {
       stackable = false,
       unitID = ''
     } = popupValues || {}
+    if (casProducts.length === 0) {
+      casProducts = [{casProduct: '', min: 100, max: 100}]
+    }
     return {
       casProducts,
       description,
