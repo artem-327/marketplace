@@ -5,17 +5,15 @@ import { toggleFilter, filterSaving, filterApplying } from '~/modules/filter/act
 
 export function initProductOfferEdit(id) {
 
-  return dispatch => {
+  return async dispatch => {
 
     dispatch(getDocumentTypes())
     dispatch(getProductConditions())
     dispatch(getProductForms())
     dispatch(getProductGrades())
     dispatch(getWarehouses())
-    if (!id) {
-      dispatch(searchManufacturers('', 200))
-      dispatch(searchOrigins('', 200))
-    }
+    await dispatch(searchManufacturers('', 200))
+    await dispatch(searchOrigins('', 200))
 
     if (id) {
       dispatch(getProductOffer(id))
