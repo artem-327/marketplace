@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 import { Form, Modal, FormGroup, Divider, Accordion, Icon, Segment, Header } from 'semantic-ui-react'
 
 import { Formik } from 'formik'
-import { closePopup, updateCompany, createCompany, getCountries, getPrimaryBranchProvinces, getMailingBranchProvinces } from '../../actions'
+import { closePopup, updateCompany, createCompany, getCountries, getPrimaryBranchProvinces, getMailingBranchProvinces,
+          getAddressSearchPrimaryBranch, getAddressSearchMailingBranch } from '../../actions'
 import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
 import { Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
@@ -180,6 +181,37 @@ class AddNewPopupCasProducts extends React.Component {
     this.setState({ accordionActive })
   }
 
+  handleAddressSelectPrimaryBranch = (d, values, setFieldValue) => {
+    const i = this.props.AddressSuggestPrimaryBranchOptions.indexOf(d.value)
+    if (i >= 0) {
+      setFieldValue('primaryBranch.address.streetAddress', this.props.AddressSuggestPrimaryBranchData[i].streetAddress)
+      setFieldValue('primaryBranch.address.city', this.props.AddressSuggestPrimaryBranchData[i].city)
+      setFieldValue('primaryBranch.address.zip', this.props.AddressSuggestPrimaryBranchData[i].zip &&  this.props.AddressSuggestPrimaryBranchData[i].zip.zip)
+      setFieldValue('primaryBranch.address.country', this.props.AddressSuggestPrimaryBranchData[i].country.id)
+      setFieldValue('primaryBranch.address.province', this.props.AddressSuggestPrimaryBranchData[i].province ? this.props.AddressSuggestPrimaryBranchData[i].province.id : '')
+      this.setState({primaryBranchHasProvinces: this.props.AddressSuggestPrimaryBranchData[i].country.hasProvinces})
+      if (this.props.AddressSuggestPrimaryBranchData[i].country.hasProvinces) this.props.getPrimaryBranchProvinces(this.props.AddressSuggestPrimaryBranchData[i].country.id)
+    }
+    else {
+      this.props.getAddressSearchPrimaryBranch(d.value, values.primaryBranch.address.country, values.primaryBranch.address.province)
+    }
+  }
+
+  handleAddressSelectMailingBranch = (d, values, setFieldValue) => {
+    const i = this.props.AddressSuggestMailingBranchOptions.indexOf(d.value)
+    if (i >= 0) {
+      setFieldValue('mailingBranch.address.streetAddress', this.props.AddressSuggestMailingBranchData[i].streetAddress)
+      setFieldValue('mailingBranch.address.city', this.props.AddressSuggestMailingBranchData[i].city)
+      setFieldValue('mailingBranch.address.zip', this.props.AddressSuggestMailingBranchData[i].zip &&  this.props.AddressSuggestMailingBranchData[i].zip.zip)
+      setFieldValue('mailingBranch.address.country', this.props.AddressSuggestMailingBranchData[i].country.id)
+      setFieldValue('mailingBranch.address.province', this.props.AddressSuggestMailingBranchData[i].province ? this.props.AddressSuggestMailingBranchData[i].province.id : '')
+      this.setState({MailingBranchHasProvinces: this.props.AddressSuggestMailingBranchData[i].country.hasProvinces})
+      if (this.props.AddressSuggestMailingBranchData[i].country.hasProvinces) this.props.getMailingBranchProvinces(this.props.AddressSuggestMailingBranchData[i].country.id)
+    }
+    else {
+      this.props.getAddressSearchMailingBranch(d.value, values.mailingBranch.address.country, values.mailingBranch.address.province)
+    }
+  }
 
   render() {
     const {
@@ -191,7 +223,9 @@ class AddNewPopupCasProducts extends React.Component {
       primaryBranchProvinces,
       mailingBranchProvinces,
       config,
-      intl
+      intl,
+      AddressSuggestPrimaryBranchInput,
+      AddressSuggestMailingBranchInput
     } = this.props
 
     let { accordionActive } = this.state
@@ -273,6 +307,8 @@ class AddNewPopupCasProducts extends React.Component {
 
 
                       {!popupValues && <>
+                        {AddressSuggestPrimaryBranchInput}
+                        {AddressSuggestMailingBranchInput}
                         <Divider />
                         <Accordion.Title active={accordionActive.billingAddress} onClick={this.handleAccordionChange} name='billingAddress'>
                           <AccordionHeader as='h4'>
@@ -294,11 +330,22 @@ class AddNewPopupCasProducts extends React.Component {
                           </FormGroup>
                           <h5><FormattedMessage id='global.address' defaultMessage='Address' /></h5>
                           <FormGroup widths='equal'>
-                            <Input label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />} name='primaryBranch.address.streetAddress' />
-                            <Input label={<FormattedMessage id='global.city' defaultMessage='City' />} name='primaryBranch.address.city' />
+                            <Input
+                              inputProps={{list: 'addressesPrimaryBranch', onChange: (e, d) => { this.handleAddressSelectPrimaryBranch(d, values, setFieldValue)}}}
+                              label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />}
+                              name='primaryBranch.address.streetAddress'
+                            />
+                            <Input
+                              inputProps={{list: 'addressesPrimaryBranch', onChange: (e, d) => { this.handleAddressSelectPrimaryBranch(d, values, setFieldValue)}}}
+                              label={<FormattedMessage id='global.city' defaultMessage='City' />}
+                              name='primaryBranch.address.city'
+                            />
                           </FormGroup>
                           <FormGroup widths='equal'>
-                            <ZipDropdown name='primaryBranch.address.zip' countryId={values.mailingBranch && values.mailingBranch.country && values.mailingBranch.address.country} />
+                            <ZipDropdown
+                              inputProps={{list: 'addressesPrimaryBranch', onChange: (e, d) => { this.handleAddressSelectPrimaryBranch(d, values, setFieldValue)}}}
+                              name='primaryBranch.address.zip' countryId={values.mailingBranch && values.mailingBranch.country && values.mailingBranch.address.country}
+                            />
                             <Dropdown label={<FormattedMessage id='global.country' defaultMessage='Country' />} name='primaryBranch.address.country'
                               options={countriesDropDown}
                               inputProps={{
@@ -333,11 +380,22 @@ class AddNewPopupCasProducts extends React.Component {
                           </FormGroup>
                           <h5><FormattedMessage id='global.address' defaultMessage='Address' /></h5>
                           <FormGroup widths='equal'>
-                            <Input label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />} name='mailingBranch.address.streetAddress' />
-                            <Input label={<FormattedMessage id='global.city' defaultMessage='City' />} name='mailingBranch.address.city' />
+                            <Input
+                              inputProps={{list: 'addressesMailingBranch', onChange: (e, d) => { this.handleAddressSelectMailingBranch(d, values, setFieldValue)}}}
+                              label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />}
+                              name='mailingBranch.address.streetAddress'
+                            />
+                            <Input
+                              inputProps={{list: 'addressesMailingBranch', onChange: (e, d) => { this.handleAddressSelectMailingBranch(d, values, setFieldValue)}}}
+                              label={<FormattedMessage id='global.city' defaultMessage='City' />}
+                              name='mailingBranch.address.city'
+                            />
                           </FormGroup>
                           <FormGroup widths='equal'>
-                            <ZipDropdown name='mailingBranch.address.zip' countryId={values.mailingBranch && values.mailingBranch.country && values.mailingBranch.address.country} />
+                            <ZipDropdown
+                              inputProps={{list: 'addressesMailingBranch', onChange: (e, d) => { this.handleAddressSelectMailingBranch(d, values, setFieldValue)}}}
+                              name='mailingBranch.address.zip' countryId={values.mailingBranch && values.mailingBranch.country && values.mailingBranch.address.country}
+                            />
                             <Dropdown label={<FormattedMessage id='global.country' defaultMessage='Country' />} name='mailingBranch.address.country' options={countriesDropDown}
                               inputProps={{
                                 search: true, onChange: (e, d) => {
@@ -375,12 +433,38 @@ const mapDispatchToProps = {
   getPrimaryBranchProvinces,
   getMailingBranchProvinces,
   addZip,
-  getZipCodes
+  getZipCodes,
+  getAddressSearchPrimaryBranch,
+  getAddressSearchMailingBranch
 }
 
+const prepareAddressSuggestPrimaryBranch = (AddressSuggestOptions) => (
+  <datalist id='addressesPrimaryBranch'>
+    {AddressSuggestOptions.map((a, id) => <option key={id} value={a} />)}
+  </datalist>
+)
+
+const prepareAddressSuggestMailingBranch = (AddressSuggestOptions) => (
+  <datalist id='addressesMailingBranch'>
+    {AddressSuggestOptions.map((a, id) => <option key={id} value={a} />)}
+  </datalist>
+)
+
 const mapStateToProps = ({ admin, zip }) => {
+  const AddressSuggestOptionsPrimaryBranch = admin.addressSearchPrimaryBranch.map((a) => (
+    a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
+  ))
+  const AddressSuggestOptionsMailingBranch = admin.addressSearchMailingBranch.map((a) => (
+    a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
+  ))
   return {
     ...admin,
+    AddressSuggestPrimaryBranchInput: prepareAddressSuggestPrimaryBranch(AddressSuggestOptionsPrimaryBranch),
+    AddressSuggestPrimaryBranchOptions: AddressSuggestOptionsPrimaryBranch,
+    AddressSuggestPrimaryBranchData: admin.addressSearchPrimaryBranch,
+    AddressSuggestMailingBranchInput: prepareAddressSuggestMailingBranch(AddressSuggestOptionsMailingBranch),
+    AddressSuggestMailingBranchOptions: AddressSuggestOptionsMailingBranch,
+    AddressSuggestMailingBranchData: admin.addressSearchMailingBranch,
     zip,
     config: admin.config[admin.currentTab]
   }

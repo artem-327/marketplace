@@ -92,8 +92,6 @@ class DeliveryAddressesPopup extends React.Component {
       provincesDropDown,
       reloadFilter,
       AddressSuggestInput,
-      AddressSuggestOptions,
-      AddressSuggestData
     } = this.props
 
     const {

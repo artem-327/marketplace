@@ -50,6 +50,8 @@ export const initialState = {
   filterCasIds: [],
   loading: false,
   config: config,
+  addressSearchPrimaryBranch: [],
+  addressSearchMailingBranch: [],
 }
 
 export default function reducer(state = initialState, action) {
@@ -428,6 +430,22 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_DELETE_UNIT_OF_PACKAGING_REJECTED: {
       return {
         ...state,
+        loading: false
+      }
+    }
+
+    case AT.ADMIN_GET_ADDRESSES_SEARCH_PRIMARY_BRANCH_FULFILLED: {
+      return {
+        ...state,
+        addressSearchPrimaryBranch: action.payload,
+        loading: false
+      }
+    }
+
+    case AT.ADMIN_GET_ADDRESSES_SEARCH_MAILING_BRANCH_FULFILLED: {
+      return {
+        ...state,
+        addressSearchMailingBranch: action.payload,
         loading: false
       }
     }
