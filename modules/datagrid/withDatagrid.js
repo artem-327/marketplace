@@ -2,7 +2,7 @@ import React from 'react'
 import _ from 'lodash'
 import { DatagridContext } from './DatagridProvider'
 
-export default (Component, opts) => {
+export default (Component) => {
   class DatagridComponent extends React.Component {
     static contextType = DatagridContext
 

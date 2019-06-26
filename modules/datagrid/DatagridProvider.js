@@ -2,12 +2,15 @@ import React, { Component } from 'react'
 import api from '~/api'
 export const DatagridContext = React.createContext({})
 
+export let Datagrid
+
 export class DatagridProvider extends Component {
 
   constructor(props) {
     super(props)
 
     this.state = {
+      ready: false,
       rows: [],
       allLoaded: false,
       loading: true,
@@ -18,33 +21,37 @@ export class DatagridProvider extends Component {
         pageNumber: 0
       }
     }
+
+    Datagrid = this
   }
 
-  // componentDidUpdate({apiUrl}) {
-  //   console.log()
-  //   if (apiUrl !== this.props.apiUrl && this.state.ready) {
-  //     this.loadData()
-  //   }
-  // }
+  componentDidUpdate({apiConfig}) {
+    if (JSON.stringify(apiConfig) !== JSON.stringify(this.props.apiConfig)) {
+      this.loadData()
+    }
+  }
+
+  isReady = () => {
+    return this.state.ready && this.props.apiConfig
+  }
 
   loadNextPage = async () => {
-    if (!this.props.apiUrl) return
-
+    if (!this.props.apiConfig) return
+    
     const { datagridParams, query } = this.state
-    const { apiUrl } = this.props
+    const { apiConfig } = this.props
 
     this.setState({ loading: true })
 
     try {
       const { data } = await api.request({
-        url: apiUrl,
-        method: 'POST',
+        url: apiConfig.url,
+        method: apiConfig.method || 'POST',
         params: query,
         data: {
           ...datagridParams
         }
       })
-
       const allLoaded = data.length < datagridParams.pageSize || data.length === 0
 
       this.setState(s => ({
@@ -57,6 +64,7 @@ export class DatagridProvider extends Component {
         }
       }))
     } catch (e) {
+      console.error(e)
       this.setState({ loading: false })
     }
   }
@@ -90,10 +98,10 @@ export class DatagridProvider extends Component {
     }), this.loadNextPage)
   }
 
-  setApiUrl = (apiUrl, reload = true) => {
-    this.apiUrl = apiUrl
-    reload && this.loadData()
-  }
+  // setApiUrl = (apiUrl, reload = true) => {
+  //   this.api.url = apiUrl
+  //   reload && this.loadData()
+  // }
 
   setFilter = (filters, reload = true) => {
     this.setState(s => ({
@@ -107,7 +115,15 @@ export class DatagridProvider extends Component {
   }
 
   setQuery = (query, reload = true) => {
-    this.setState({query}, () => reload && this.loadData())
+    this.setState({ query }, () => reload && this.loadData())
+  }
+
+  setSearch = (value, reload = true) => {
+    const { apiConfig: { searchToFilter } } = this.props
+
+    this.setFilter({
+      filters: [searchToFilter(value)]
+    }, reload)
   }
 
   onTableReady = () => {
@@ -128,7 +144,7 @@ export class DatagridProvider extends Component {
           loadData: this.loadData,
           setFilter: this.setFilter,
           setQuery: this.setQuery,
-          setApiUrl: this.setApiUrl,
+          // setApiUrl: this.setApiUrl,
           loadNextPage: this.loadNextPageSafe,
 
           tableProps: {

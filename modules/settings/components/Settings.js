@@ -121,14 +121,21 @@ class Settings extends Component {
     )
   }
 
-  getApiUrl = () => {
+  getApiConfig = () => {
     const { productCatalogUnmappedValue, currentTab } = this.props
     const datagridApiMap = {
       // 'company-details': this.companyDetails(),
       // 'users': null,
       // 'branches': null,
       // 'warehouses': null,
-      'products': `/prodex/api/products/datagrid`,
+      'products': {
+        url: `/prodex/api/products/datagrid`,
+        searchToFilter: (value) => ({
+            operator: "LIKE",
+            path: "Product.productName",
+            values: ['%' + value + '%']
+        })
+      },
       // 'bank-accounts': null,
       // 'credit-cards': null,
       // 'delivery-addresses': null,
@@ -141,10 +148,11 @@ class Settings extends Component {
     const { currentTab } = this.props
 
     return (
-      <DatagridProvider apiUrl={this.getApiUrl()}>
+      <DatagridProvider apiConfig={this.getApiConfig()}
+      >
         <Container fluid className="flex stretched">
           <Container fluid style={{ padding: '0 32px' }}>
-            <TablesHandlers currentTab={currentTab} />
+            <TablesHandlers currentTab={currentTab} datagridEnabled={!!this.getApiConfig()} />
           </Container>
           <Grid columns="equal" className="flex stretched" style={{ padding: '0 32px' }}>
             <Grid.Row>

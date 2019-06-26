@@ -33,15 +33,15 @@ class ProductCatalogTable extends Component {
   componentWillReceiveProps({ productCatalogUnmappedValue: newUnmapped, filterValue: newFilterValue }) {
     const { datagrid, filterValue } = this.props
 
-    if (filterValue !== newFilterValue) {
-      datagrid.setFilter({
-        filters: newFilterValue && newFilterValue.length >= 1 ? [{
-          operator: "LIKE",
-          path: "Product.productName",
-          values: ['%'+newFilterValue+'%']
-        }] : []
-      })
-    }
+    // if (filterValue !== newFilterValue) {
+    //   datagrid.setFilter({
+    //     filters: newFilterValue && newFilterValue.length >= 1 ? [{
+    //       operator: "LIKE",
+    //       path: "Product.productName",
+    //       values: ['%'+newFilterValue+'%']
+    //     }] : []
+    //   })
+    // }
   }
 
   componentDidUpdate() {

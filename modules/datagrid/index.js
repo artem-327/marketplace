@@ -1,7 +1,8 @@
 import withDatagrid from './withDatagrid'
-import { DatagridProvider, DatagridContext } from './DatagridProvider'
+import { DatagridProvider, DatagridContext, Datagrid } from './DatagridProvider'
 export {
   withDatagrid,
+  Datagrid,
   DatagridProvider,
   DatagridContext
 }
