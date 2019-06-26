@@ -3,6 +3,7 @@ import * as api from './api'
 import { updateIdentity } from '~/modules/auth/actions'
 import { addMessage } from '~/modules/messages/actions'
 import { themes, responses } from '~/modules/messages/constants'
+import { Datagrid } from '~/modules/datagrid'
 
 export const removeEmpty = (obj) =>
 	Object.entries(obj).forEach(([key, val]) => {
@@ -118,6 +119,8 @@ export function putEditedDataRequest(config, id, values) {
 }
 
 export function handleActiveTab(tab) {
+	Datagrid.clear()
+	
 	return {
 		type: AT.ADMIN_HANDLE_ACTIVE_TAB,
 		payload: { tab }
@@ -154,18 +157,18 @@ export function handleFiltersValue(props, value) {
 					payload: api.getManufacturersByString(value)
 				})
 			}
-			case 'Companies':
-				await dispatch({
-					type: AT.ADMIN_GET_COMPANIES,
-					payload: api.getCompanies({
-						...props.companyListDataRequest,
-						filters: [{
-							operator: "LIKE",
-							path: "Company.name",
-							values: ['%' + value + '%']
-						}]
-					})
-				})
+			// case 'Companies':
+			// 	await dispatch({
+			// 		type: AT.ADMIN_GET_COMPANIES,
+			// 		payload: api.getCompanies({
+			// 			...props.companyListDataRequest,
+			// 			filters: [{
+			// 				operator: "LIKE",
+			// 				path: "Company.name",
+			// 				values: ['%' + value + '%']
+			// 			}]
+			// 		})
+			// 	})
 				break
 		}
 	}

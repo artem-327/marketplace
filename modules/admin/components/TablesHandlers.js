@@ -6,6 +6,7 @@ import { debounce } from 'lodash'
 import { Header, Menu, Button, Input, Dropdown } from 'semantic-ui-react'
 
 import { openPopup, handleFiltersValue } from '../actions'
+import { Datagrid } from '~/modules/datagrid'
 
 class TablesHandlers extends Component {
   constructor(props) {
@@ -45,7 +46,8 @@ class TablesHandlers extends Component {
   }
 
   handleChange = (value) => {
-    this.props.handleFiltersValue(this.props, value)
+    if (Datagrid.isReady()) Datagrid.setSearch(value)
+    else this.props.handleFiltersValue(this.props, value)
   }
 
   render() {
@@ -70,7 +72,8 @@ class TablesHandlers extends Component {
               onChange={(e, { value }) => {
                 this.setState({ filterValue: value })
                 this.handleChange(value)
-              }} value={this.state.filterValue} />
+              }} 
+              value={this.state.filterValue} />
           </Menu.Item>
           <Menu.Item>
             <Button size="large" primary onClick={() => openPopup()}>
