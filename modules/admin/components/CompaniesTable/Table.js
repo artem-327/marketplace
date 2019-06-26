@@ -11,7 +11,7 @@ import * as Actions from '../../actions'
 class CompaniesTable extends Component {
 
   componentWillReceiveProps({filterValue}) {
-    
+    console.log(filterValue)
     if (this.props.filterValue !== filterValue) {
       this.props.datagrid.setFilter({
         filters: filterValue && filterValue.length >= 1 ? [{

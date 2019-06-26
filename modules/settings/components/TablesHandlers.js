@@ -5,6 +5,7 @@ import { Header, Menu, Button, Checkbox, Input, Dropdown } from 'semantic-ui-rea
 import * as Actions from '../actions'
 import Router from 'next/router'
 import { debounce } from 'lodash'
+import { withDatagrid } from '~/modules/datagrid'
 
 const textsTable = {
   'users': {
@@ -105,7 +106,7 @@ class TablesHandlers extends Component {
                 <Checkbox
                   label='Unmapped only'
                   defaultChecked={productCatalogUnmappedValue}
-                  onChange={(e, { checked }) => handleProductCatalogUnmappedValue(checked, this.props)}
+                  onChange={(e, { checked }) => this.props.datagrid.setQuery({unmappedOnly: checked})}
                 />
               )}
               {isDwollaAccountVisible && (
@@ -160,7 +161,7 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(
+export default withDatagrid(connect(
   mapStateToProps,
   Actions
-)(TablesHandlers)
+)(TablesHandlers))

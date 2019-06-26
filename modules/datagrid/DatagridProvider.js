@@ -1,21 +1,12 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import api from '~/api'
 export const DatagridContext = React.createContext({})
 
 export class DatagridProvider extends Component {
 
-  loadNextPage = this.loadNextPage.bind(this)
-  removeRowById = this.removeRowById.bind(this)
-  removeRowByIndex = this.removeRowByIndex.bind(this)
-  loadNextPageSafe = this.loadNextPageSafe.bind(this)
-  loadData = this.loadData.bind(this)
-  setApiUrl = this.setApiUrl.bind(this)
-  setFilter = this.setFilter.bind(this)
-
   constructor(props) {
     super(props)
 
-    this.apiUrl = null
     this.state = {
       rows: [],
       allLoaded: false,
@@ -29,14 +20,24 @@ export class DatagridProvider extends Component {
     }
   }
 
-  async loadNextPage() {
+  // componentDidUpdate({apiUrl}) {
+  //   console.log()
+  //   if (apiUrl !== this.props.apiUrl && this.state.ready) {
+  //     this.loadData()
+  //   }
+  // }
+
+  loadNextPage = async () => {
+    if (!this.props.apiUrl) return
+
     const { datagridParams, query } = this.state
+    const { apiUrl } = this.props
 
     this.setState({ loading: true })
 
     try {
       const { data } = await api.request({
-        url: this.apiUrl, 
+        url: apiUrl,
         method: 'POST',
         params: query,
         data: {
@@ -60,25 +61,25 @@ export class DatagridProvider extends Component {
     }
   }
 
-  removeRowById(id) {
+  removeRowById = (id) => {
     this.setState(s => ({
       rows: s.rows.filter(r => r.id !== id)
     }))
   }
 
-  removeRowByIndex(index) {
+  removeRowByIndex = (index) => {
     this.setState(s => ({
       rows: s.rows.filter((r, i) => i !== index)
     }))
   }
 
-  loadNextPageSafe() {
+  loadNextPageSafe = () => {
     const { allLoaded } = this.state
 
     !allLoaded && this.loadNextPage()
   }
 
-  loadData(params = {}, query = {}) {
+  loadData = (params = {}, query = {}) => {
     this.setState(s => ({
       datagridParams: {
         pageNumber: 0,
@@ -89,29 +90,36 @@ export class DatagridProvider extends Component {
     }), this.loadNextPage)
   }
 
-  setApiUrl(apiUrl, reload = true) {
+  setApiUrl = (apiUrl, reload = true) => {
     this.apiUrl = apiUrl
     reload && this.loadData()
   }
 
-  setFilter(filters, query = {}, reload = true) {
-    console.log(query)
+  setFilter = (filters, reload = true) => {
     this.setState(s => ({
       datagridParams: {
         ...s.datagridParams,
         ...filters,
         pageNumber: 0
       },
-      query,
       rows: []
-    }), () => reload && this.loadNextPage())
+    }), () => reload && this.loadData())
+  }
+
+  setQuery = (query, reload = true) => {
+    this.setState({query}, () => reload && this.loadData())
+  }
+
+  onTableReady = () => {
+    this.setState({ ready: true })
+    this.loadData()
   }
 
   render() {
     const { rows, loading, datagridParams: { filters } } = this.state
 
     return (
-      <DatagridContext.Provider 
+      <DatagridContext.Provider
         value={{
           rows,
           loading,
@@ -119,13 +127,14 @@ export class DatagridProvider extends Component {
           removeRow: this.removeRowById,
           loadData: this.loadData,
           setFilter: this.setFilter,
+          setQuery: this.setQuery,
           setApiUrl: this.setApiUrl,
           loadNextPage: this.loadNextPageSafe,
 
           tableProps: {
             rows,
             loading,
-            onTableReady: this.loadData,
+            onTableReady: this.onTableReady,
             onSortingChange: this.setFilter,
             onScrollToEnd: this.loadNextPageSafe
           }

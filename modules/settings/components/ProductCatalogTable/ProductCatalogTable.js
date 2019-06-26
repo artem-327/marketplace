@@ -11,10 +11,11 @@ import confirm from '~/src/components/Confirmable/confirm'
 import { injectIntl } from 'react-intl'
 
 class ProductCatalogTable extends Component {
+
   state = {
     columns: [
-      { name: 'productName', title: 'Product Name' },
-      { name: 'productNumber', title: 'Product Number' },
+      { name: 'productName', title: 'Product Name', sortPath: "Product.productName" },
+      { name: 'productNumber', title: 'Product Number', sortPath: "Product.productCode" },
       { name: 'casNumber', title: 'CAS Number' },
       { name: 'casName', title: 'CAS Name' },
       { name: 'packagingSize', title: 'Packaging Size' },
@@ -23,18 +24,14 @@ class ProductCatalogTable extends Component {
     ]
   }
 
-  componentDidMount() {
-    const { datagrid, productCatalogUnmappedValue: unmapped } = this.props
+  // componentDidMount() {
+  //   const { datagrid, productCatalogUnmappedValue: unmapped } = this.props
 
-    datagrid.setFilter([], { unmappedOnly: unmapped })
-  }
+  //   datagrid.setFilter([], { unmappedOnly: unmapped })
+  // }
 
   componentWillReceiveProps({ productCatalogUnmappedValue: newUnmapped, filterValue: newFilterValue }) {
-    const { datagrid, filterValue, productCatalogUnmappedValue } = this.props
-    
-    if (productCatalogUnmappedValue != newUnmapped) {
-      datagrid.setFilter([], { unmappedOnly: newUnmapped })
-    }
+    const { datagrid, filterValue } = this.props
 
     if (filterValue !== newFilterValue) {
       datagrid.setFilter({
@@ -43,7 +40,7 @@ class ProductCatalogTable extends Component {
           path: "Product.productName",
           values: ['%'+newFilterValue+'%']
         }] : []
-      }, { unmappedOnly: newUnmapped })
+      })
     }
   }
 
@@ -92,7 +89,6 @@ class ProductCatalogTable extends Component {
           rows={this.getRows(rows)}
           columns={columns}
           style={{ marginTop: '5px' }}
-          filterValue={filterValue}
           rowActions={[
             { text: 'Edit', callback: row => openPopup(row) },
             {
@@ -187,6 +183,4 @@ const mapStateToProps = (state, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(ProductCatalogTable)), {
-  apiUrl: '/prodex/api/products/datagrid'
-})
+export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(ProductCatalogTable)))
