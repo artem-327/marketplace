@@ -46,10 +46,12 @@ export const initialState = {
   
   confirmMessage: null,
   deleteRowById: null,
-  // filterValue: '',
+  filterValue: '',
   filterCasIds: [],
   loading: false,
   config: config,
+  addressSearchPrimaryBranch: [],
+  addressSearchMailingBranch: [],
 }
 
 export default function reducer(state = initialState, action) {
@@ -232,14 +234,14 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    // case AT.ADMIN_HANDLE_FILTERS_VALUE: {
-    //   return {
-    //     ...state,
-    //     filterValue: action.payload,
-    //     casProductsRows: [],
-    //     companiesRows: []
-    //   }
-    // }
+    case AT.ADMIN_HANDLE_FILTERS_VALUE: {
+      return {
+        ...state,
+        filterValue: action.payload,
+        casProductsRows: [],
+        companiesRows: []
+      }
+    }
 
     case AT.ADMIN_HANDLE_CAS_FILTER_IDS: {
       return {
@@ -428,6 +430,22 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_DELETE_UNIT_OF_PACKAGING_REJECTED: {
       return {
         ...state,
+        loading: false
+      }
+    }
+
+    case AT.ADMIN_GET_ADDRESSES_SEARCH_PRIMARY_BRANCH_FULFILLED: {
+      return {
+        ...state,
+        addressSearchPrimaryBranch: action.payload,
+        loading: false
+      }
+    }
+
+    case AT.ADMIN_GET_ADDRESSES_SEARCH_MAILING_BRANCH_FULFILLED: {
+      return {
+        ...state,
+        addressSearchMailingBranch: action.payload,
         loading: false
       }
     }

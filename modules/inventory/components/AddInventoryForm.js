@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button, TextArea } from 'formik-semantic-ui'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { Modal, Icon, Segment, Dimmer, Loader, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab, Popup } from 'semantic-ui-react'
 import styled from 'styled-components'
 import * as val from 'yup'
@@ -9,6 +9,7 @@ import { DateInput } from '~/components/custom-formik'
 import UploadLot from './upload/UploadLot'
 import { FieldArray } from "formik"
 import { debounce } from 'lodash'
+import confirm from '~/src/components/Confirmable/confirm'
 
 const TopDivider = styled(Divider)`
   padding-bottom: 20px;
@@ -472,8 +473,11 @@ class AddInventoryForm extends Component {
       initialState,
       editProductOffer,
       uploadDocuments,
-      loading
+      loading,
+      intl
     } = this.props
+
+    let { formatMessage } = intl
 
     const {
       //initialState,
@@ -503,14 +507,49 @@ class AddInventoryForm extends Component {
           initialValues={{ ...initValues, ...initialState }}
           validationSchema={validationScheme}
           onSubmit={(values, actions) => {
-            actions.setSubmitting(false)
-            addProductOffer(values, this.props.edit)
-              .then((productOffer) => {
-                //Router.push('/inventory/my') xxx
-              })
-              .finally(() => {
-                actions.resetForm()
-              })
+            const reducer = (accumulator, currentValue) => accumulator + currentValue
+            const formQty = values.pkgAmount
+            const lotsQty = values.lots.map(l => parseInt(l.pkgAmount)).reduce(reducer)
+
+            if (lotsQty !== values.quantity) {
+              confirm(
+                formatMessage({id: 'confirm.quantityHeader', defaultMessage: 'Quantity Modified'}),
+                formatMessage({
+                    id: 'confirm.quantityMisconfiguration',
+                    defaultMessage: 'You originally entered {formQty} as the quantity, but you have entered total quantity of {lotsQty} in Lots. Would you like to proceed? The total quantity will be adjusted according the Lot records.'
+                  },
+                  {
+                    formQty,
+                    lotsQty
+                  }
+                )
+              ).then(
+                () => {
+                  // confirm
+                  actions.setSubmitting(false)
+                  addProductOffer(values, this.props.edit)
+                    .then((productOffer) => {
+                      //Router.push('/inventory/my') xxx
+                    })
+                    .finally(() => {
+                      actions.resetForm()
+                    })
+                },
+                () => {
+                  // cancel
+                  actions.setSubmitting(false)
+                }
+              )
+            } else {
+              actions.setSubmitting(false)
+              addProductOffer(values, this.props.edit)
+                .then((productOffer) => {
+                  //Router.push('/inventory/my') xxx
+                })
+                .finally(() => {
+                  actions.resetForm()
+                })
+            }
           }}
           className='flex stretched'
           style={{ padding: '20px' }}
@@ -1116,4 +1155,4 @@ class AddInventoryForm extends Component {
   }
 }
 
-export default AddInventoryForm
+export default injectIntl(AddInventoryForm)

@@ -64,6 +64,8 @@
   "confirm.deleteWarehouse": "Delete Warehouse",
   "confirm.deleteDeliveryAddress": "Delete Delivery Address",
   "confirm.deleteCompany": "Delete Company",
+  "confirm.quantityHeader": "Quantity Modified",
+  "confirm.quantityMisconfiguration": "You originally entered {formQty} as the quantity, but you have entered total quantity of {lotsQty} in Lots. Would you like to proceed? The total quantity will be adjusted according the Lot records.",
   "login.username": "Username",
   "login.password": "Password",
   "login.login": "LOG IN",

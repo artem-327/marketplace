@@ -401,3 +401,18 @@ export const deleteCasProduct = id => ({ type: AT.ADMIN_CAS_DELETE_PRODUCT, payl
 export const deleteUnit = id => ({ type: AT.ADMIN_DELETE_UNIT, payload: api.deleteUnit(id) })
 
 export const deleteUnitOfPackaging = id => ({ type: AT.ADMIN_DELETE_UNIT_OF_PACKAGING, payload: api.deleteUnitOfPackaging(id) })
+
+
+export function getAddressSearchPrimaryBranch(pattern, countryId='', provinceId='') {
+	return {
+		type: AT.ADMIN_GET_ADDRESSES_SEARCH_PRIMARY_BRANCH,
+		payload: api.getAddressSearch(pattern, countryId, provinceId)
+	}
+}
+
+export function getAddressSearchMailingBranch(pattern, countryId='', provinceId='') {
+	return {
+		type: AT.ADMIN_GET_ADDRESSES_SEARCH_MAILING_BRANCH,
+		payload: api.getAddressSearch(pattern, countryId, provinceId)
+	}
+}

@@ -8,6 +8,7 @@ import {
   handlerSubmitWarehouseEditPopup,
   postNewWarehouseRequest,
   getProvinces,
+  getAddressSearch,
 } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
@@ -103,7 +104,27 @@ class WarehousePopup extends React.Component {
     this.setState({hasProvinces: country.hasProvinces})
   }
 
+  handleAddressSelect = (d, values, setFieldValue) => {
+    const i = this.props.AddressSuggestOptions.indexOf(d.value)
+    if (i >= 0) {
+      setFieldValue('address', this.props.AddressSuggestData[i].streetAddress)
+      setFieldValue('city', this.props.AddressSuggestData[i].city)
+      setFieldValue('zip', this.props.AddressSuggestData[i].zip &&  this.props.AddressSuggestData[i].zip.zip)
+      setFieldValue('country', this.props.AddressSuggestData[i].country.id)
+      setFieldValue('province', this.props.AddressSuggestData[i].province ? this.props.AddressSuggestData[i].province.id : '')
+      this.setState({hasProvinces: this.props.AddressSuggestData[i].country.hasProvinces})
+      if (this.props.AddressSuggestData[i].country.hasProvinces) this.props.getProvinces(this.props.AddressSuggestData[i].country.id)
+    }
+    else {
+      this.props.getAddressSearch(d.value, values.country, values.province)
+    }
+  }
+
   render() {
+    const {
+      AddressSuggestInput,
+    } = this.props
+
     const {
       hasProvinces,
     } = this.state
@@ -128,16 +149,26 @@ class WarehousePopup extends React.Component {
           >
             {({ values, errors, setFieldValue }) => (
             <>
+              {AddressSuggestInput}
               <FormGroup widths="equal">
                 <Input type="text" label={name} name="name" />
               </FormGroup>
               <h4>Address</h4>
               <FormGroup widths="equal">
-                <Input type="text" label="Street Address" name="address" />
-                <Input type="text" label="City" name="city" />
+                <Input
+                  inputProps={{list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue)}}}
+                  type="text" label="Street Address" name="address"
+                />
+                <Input
+                  type="text" label="City" name="city"
+                  inputProps={{list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue)}}}
+                />
               </FormGroup>
               <FormGroup widths="equal">
-                <Input type="text" label="Zip" name="zip" />
+                <Input
+                  type="text" label="Zip" name="zip"
+                  inputProps={{list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue)}}}
+                />
                 <Dropdown label="Country" name="country" options={country}
                           inputProps={{search: true, onChange:  (e, d) => {
                               setFieldValue('province', ''); this.handleCountry(e, d)}}} />
@@ -164,14 +195,27 @@ class WarehousePopup extends React.Component {
   }
 }
 
+const prepareAddressSuggest = (AddressSuggestOptions) => (
+  <datalist id='addresses'>
+    {AddressSuggestOptions.map((a, id) => <option key={id} value={a} />)}
+  </datalist>
+)
+
 const mapDispatchToProps = {
   postNewWarehouseRequest,
   handlerSubmitWarehouseEditPopup,
   closePopup,
   getProvinces,
+  getAddressSearch,
 }
 const mapStateToProps = state => {
+  const AddressSuggestOptions = state.settings.addressSearch.map((a) => (
+    a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
+  ))
   return {
+    AddressSuggestInput: prepareAddressSuggest(AddressSuggestOptions),
+    AddressSuggestOptions: AddressSuggestOptions,
+    AddressSuggestData: state.settings.addressSearch,
     hasProvinces: state.settings.popupValues ? state.settings.popupValues.hasProvinces : false,
     popupValues: state.settings.popupValues,
     country: state.settings.country,
