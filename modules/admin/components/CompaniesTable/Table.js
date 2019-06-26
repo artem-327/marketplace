@@ -10,19 +10,19 @@ import * as Actions from '../../actions'
 
 class CompaniesTable extends Component {
 
-  componentWillReceiveProps({filterValue}) {
-    
-    if (this.props.filterValue !== filterValue) {
-      this.props.datagrid.setFilter({
-        filters: filterValue && filterValue.length >= 1 ? [{
-          operator: "LIKE",
-          path: "Company.name",
-          values: ['%'+filterValue+'%']
-        }] : []
-      })
-    }
+  // componentWillReceiveProps({filterValue}) {
+  //   console.log(filterValue)
+  //   if (this.props.filterValue !== filterValue) {
+  //     this.props.datagrid.setFilter({
+  //       filters: filterValue && filterValue.length >= 1 ? [{
+  //         operator: "LIKE",
+  //         path: "Company.name",
+  //         values: ['%'+filterValue+'%']
+  //       }] : []
+  //     })
+  //   }
 
-  }
+  // }
 
   render() {
     const {
@@ -95,6 +95,4 @@ const mapStateToProps = ({admin}, {datagrid}) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(CompaniesTable)),{
-  apiUrl: '/prodex/api/companies/datagrid'
-})
+export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(CompaniesTable)))

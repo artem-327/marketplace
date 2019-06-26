@@ -17,19 +17,19 @@ import { withDatagrid } from '~/modules/datagrid'
 
 class CasProductsTable extends Component {
 
-  componentWillReceiveProps({filterValue}) {
+  // componentWillReceiveProps({filterValue}) {
     
-    if (this.props.filterValue !== filterValue) {
-      this.props.datagrid.setFilter({
-        filters: filterValue && filterValue.length >= 1 ? [{
-          operator: "LIKE",
-          path: "CasProduct.chemicalName",
-          values: ['%'+filterValue+'%']
-        }] : []
-      })
-    }
+  //   if (this.props.filterValue !== filterValue) {
+  //     this.props.datagrid.setFilter({
+  //       filters: filterValue && filterValue.length >= 1 ? [{
+  //         operator: "LIKE",
+  //         path: "CasProduct.chemicalName",
+  //         values: ['%'+filterValue+'%']
+  //       }] : []
+  //     })
+  //   }
 
-  }
+  // }
 
   // getNextPage = (pageNumber) => {
   //   const { getCasProductByFilter, casListDataRequest, filterCasIds } = this.props
@@ -124,6 +124,7 @@ const transformHazardClasses = classes => (
 
 const mapStateToProps = (state, { datagrid }) => {
   let cfg = state.admin.config[state.admin.currentTab]
+  
   return {
     config: cfg,
     filterCasIds: state.admin.filterCasIds,
@@ -151,18 +152,16 @@ const mapStateToProps = (state, { datagrid }) => {
       }
     }),
     // reloadFilter is used to reload CAS Product list after Edit / Add new CAS Product
-    reloadFilter: {
-      props: {
-        currentTab: state.admin.currentTab,
-        casListDataRequest: state.admin.casListDataRequest
-      },
-      value: state.admin.filterValue
-    },
+    // reloadFilter: {
+    //   props: {
+    //     currentTab: state.admin.currentTab,
+    //     casListDataRequest: state.admin.casListDataRequest
+    //   },
+    //   value: state.admin.filterValue
+    // },
     confirmMessage: state.admin.confirmMessage,
     deleteRowById: state.admin.deleteRowById,
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(CasProductsTable), { 
-  apiUrl: '/prodex/api/cas-products/datagrid' 
-})
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(CasProductsTable))
