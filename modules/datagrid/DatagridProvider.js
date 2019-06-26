@@ -2,6 +2,20 @@ import React, { Component } from 'react'
 import api from '~/api'
 export const DatagridContext = React.createContext({})
 
+const initialState = {
+  ready: false,
+  rows: [],
+  allLoaded: false,
+  loading: true,
+  query: {},
+  datagridParams: {
+    filters: [],
+    pageSize: 50,
+    pageNumber: 0
+  }
+}
+
+// singleton instance
 export let Datagrid
 
 export class DatagridProvider extends Component {
@@ -9,26 +23,21 @@ export class DatagridProvider extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      ready: false,
-      rows: [],
-      allLoaded: false,
-      loading: true,
-      query: {},
-      datagridParams: {
-        filters: [],
-        pageSize: 50,
-        pageNumber: 0
-      }
-    }
+    this.state = initialState
 
     Datagrid = this
   }
 
-  componentDidUpdate({apiConfig}) {
-    if (JSON.stringify(apiConfig) !== JSON.stringify(this.props.apiConfig)) {
-      this.loadData()
-    }
+  // componentWillReceiveProps({apiConfig}) {
+  //   if (JSON.stringify(apiConfig) !== JSON.stringify(this.props.apiConfig)) {
+  //     console.log('CHANGE', apiConfig)
+  //     this.setState(initialState)
+  //     this.loadData()
+  //   }
+  // }
+
+  clear = () => {
+    this.setState(initialState)
   }
 
   isReady = () => {
