@@ -606,7 +606,7 @@ export default function reducer(state = initialState, action) {
     case AT.POST_UPLOAD_CSV_FILE_FULFILLED: {
       return {
         ...state,
-        fileCSVId: action.data.id
+        fileCSVId: action.payload.id
       }
     }
 

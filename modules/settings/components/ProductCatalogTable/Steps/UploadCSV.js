@@ -51,14 +51,14 @@ class UploadCSV extends Component {
         <Grid.Row>
           <StyledDropzone
             onDrop={this.onDrop}
-            accept="text/csv"
+            accept='.csv'
             multiple={false}
             uploaded={uploadedFile}
             error={hasError ? "true" : undefined}
           >
             <StyledSegment placeholder>
               <Header icon>
-                <Icon name="file csv" />
+                <Icon name="file" className="csv" />
                 Drag and drop or browse computer to upload your .csv file
               </Header>
               <Segment.Inline>
