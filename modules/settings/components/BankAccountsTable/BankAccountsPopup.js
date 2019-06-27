@@ -31,29 +31,20 @@ const bankAccountType = [
   {
     key: 1,
     text: 'Checking',
-    value: 'CHECKING',
+    value: 'checking',
   },
   {
     key: 2,
     text: 'Savings',
-    value: 'SAVINGS',
+    value: 'savings',
   }
 ]
 
 class BankAccountsPopup extends React.Component {
   submitHandler = (values, actions) => {
-    if (this.props.popupValues) {
-      this.props.putBankAccountRequest(
-        {
-          ...values,
-          tab: this.props.currentTab.type === 'bank-accounts' ? 'bank' : null
-        },
-        this.props.popupValues.branchId
-      )
-    } else {
-      this.props.postNewBankAccountRequest(values)
-    }
-    actions.setSubmitting(false)
+    const { postNewBankAccountRequest } = this.props
+
+    postNewBankAccountRequest(values)
   }
 
   render() {
@@ -82,20 +73,20 @@ class BankAccountsPopup extends React.Component {
             validateOnBlur={false}
           >
             <FormGroup widths="equal">
-              <Input 
+              <Input
                 type="text"
                 label="Account Number"
                 name="accountNumber"
               />
-              <Dropdown  label="Account Type" name="bankAccountType" options={bankAccountType} />
+              <Dropdown label="Account Type" name="bankAccountType" options={bankAccountType} />
             </FormGroup>
             <FormGroup widths="equal">
-              <Input 
+              <Input
                 type="text"
                 label="Name"
                 name="name"
               />
-              <Input 
+              <Input
                 type="text"
                 label="Routing Number"
                 name="routingNumber"
@@ -123,7 +114,7 @@ const mapStateToProps = state => {
     country: state.settings.country,
     currency: state.settings.currency,
     currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
-        state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+      state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
   }
 }
 

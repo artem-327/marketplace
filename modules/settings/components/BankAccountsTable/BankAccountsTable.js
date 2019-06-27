@@ -41,12 +41,14 @@ class ProductCatalogTable extends Component {
       deleteBankAccount,
       dwollaInitiateVerification,
       dwollaFinalizeVerification,
+      getBankAccountsDataRequest,
       intl
     } = this.props
 
     let { columns } = this.state
     const { formatMessage } = intl
 
+    console.log(loading)
 
     return (
       <React.Fragment>
@@ -67,8 +69,15 @@ class ProductCatalogTable extends Component {
                   { item: row.name })
               ).then(() => deleteBankAccount(row.id))
             },
-            { text: 'Initiate Verification', callback: row => dwollaInitiateVerification(row.id), hidden: row => row.status !== 'unverified'}, 
-            { text: 'Finalize Verification', callback: row => dwollaFinalizeVerification(row.id), hidden: row => row.status !== 'verification_in_process' }, 
+            { 
+              text: 'Initiate Verification', 
+              callback: row => dwollaInitiateVerification(row.id), 
+              hidden: row => row.status !== 'unverified'
+            }, 
+            { 
+              text: 'Finalize Verification', 
+              callback: row => dwollaFinalizeVerification(row.id), 
+              hidden: row => row.status !== 'verification_in_process' }, 
           ]}
         />
       </React.Fragment>

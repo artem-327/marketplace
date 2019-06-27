@@ -79,7 +79,7 @@ const reducer = combineReducers({
   cart,
   popup,
   merchants,
-  filter,
+  filter: combineReducers({ filter, products }),
   oldFilter,
   errors,
   dataTables,

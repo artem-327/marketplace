@@ -1,6 +1,8 @@
 import styled from 'styled-components'
 import { Sidebar, Accordion, Segment, GridRow, Icon, Popup } from 'semantic-ui-react'
 
+const popupWidth = 400;
+
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
   flex-direction: column;
@@ -120,5 +122,13 @@ export const PopupRow = styled(GridRow)`
 `
 
 export const WiderPopup = styled(Popup)`
-  min-width: 200px !important;
+  min-width: ${popupWidth}px !important;
+  ::before {
+    left: ${popupWidth * 0.5}px !important
+  }
+`
+
+export const LessPaddedRow = styled(GridRow)`
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
 `
