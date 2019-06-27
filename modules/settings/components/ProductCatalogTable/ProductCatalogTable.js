@@ -11,10 +11,11 @@ import confirm from '~/src/components/Confirmable/confirm'
 import { injectIntl } from 'react-intl'
 
 class ProductCatalogTable extends Component {
+
   state = {
     columns: [
-      { name: 'productName', title: 'Product Name' },
-      { name: 'productNumber', title: 'Product Number' },
+      { name: 'productName', title: 'Product Name', sortPath: "Product.productName" },
+      { name: 'productNumber', title: 'Product Number', sortPath: "Product.productCode" },
       { name: 'casNumber', title: 'CAS Number' },
       { name: 'casName', title: 'CAS Name' },
       { name: 'packagingSize', title: 'Packaging Size' },
@@ -23,28 +24,24 @@ class ProductCatalogTable extends Component {
     ]
   }
 
-  componentDidMount() {
-    const { datagrid, productCatalogUnmappedValue: unmapped } = this.props
+  // componentDidMount() {
+  //   const { datagrid, productCatalogUnmappedValue: unmapped } = this.props
 
-    datagrid.setFilter([], { unmappedOnly: unmapped })
-  }
+  //   datagrid.setFilter([], { unmappedOnly: unmapped })
+  // }
 
   componentWillReceiveProps({ productCatalogUnmappedValue: newUnmapped, filterValue: newFilterValue }) {
-    const { datagrid, filterValue, productCatalogUnmappedValue } = this.props
-    
-    if (productCatalogUnmappedValue != newUnmapped) {
-      datagrid.setFilter([], { unmappedOnly: newUnmapped })
-    }
+    const { datagrid, filterValue } = this.props
 
-    if (filterValue !== newFilterValue) {
-      datagrid.setFilter({
-        filters: newFilterValue && newFilterValue.length >= 1 ? [{
-          operator: "LIKE",
-          path: "Product.productName",
-          values: ['%'+newFilterValue+'%']
-        }] : []
-      }, { unmappedOnly: newUnmapped })
-    }
+    // if (filterValue !== newFilterValue) {
+    //   datagrid.setFilter({
+    //     filters: newFilterValue && newFilterValue.length >= 1 ? [{
+    //       operator: "LIKE",
+    //       path: "Product.productName",
+    //       values: ['%'+newFilterValue+'%']
+    //     }] : []
+    //   })
+    // }
   }
 
   componentDidUpdate() {
@@ -78,7 +75,8 @@ class ProductCatalogTable extends Component {
       openPopup,
       deleteProduct,
       intl,
-      datagrid
+      datagrid,
+      loading
     } = this.props
 
     let { columns } = this.state
@@ -89,10 +87,10 @@ class ProductCatalogTable extends Component {
         <ProdexTable
           tableName="settings_product_catalog"
           {...datagrid.tableProps}
+          loading={datagrid.loading || loading}
           rows={this.getRows(rows)}
           columns={columns}
           style={{ marginTop: '5px' }}
-          filterValue={filterValue}
           rowActions={[
             { text: 'Edit', callback: row => openPopup(row) },
             {
@@ -146,9 +144,9 @@ const mapStateToProps = (state, { datagrid }) => {
           : null,
         casProducts: product.casProducts ? product.casProducts.map((casProduct, cpIndex) => {
           return {
-            casProduct: casProduct.id,
-            min: cpIndex ? 0 : 100,
-            max: cpIndex ? 0 : 100,
+            casProduct: casProduct.casProduct.id,
+            minimumConcentration: casProduct.minimumConcentration ? casProduct.minimumConcentration : (product.casProducts.length === 1 ? 100 : 0),
+            maximumConcentration: casProduct.maximumConcentration ? casProduct.maximumConcentration : 100,
             item: casProduct
           }
         }) : null,
@@ -187,6 +185,4 @@ const mapStateToProps = (state, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(ProductCatalogTable)), {
-  apiUrl: '/prodex/api/products/datagrid'
-})
+export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(ProductCatalogTable)))

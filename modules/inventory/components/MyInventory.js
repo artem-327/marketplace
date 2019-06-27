@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Container, Menu, Header, Checkbox, Icon, Popup } from "semantic-ui-react"
+import { Container, Menu, Header, Checkbox, Icon, Popup, List } from "semantic-ui-react"
 import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
@@ -171,9 +171,10 @@ class MyInventory extends Component {
             }
             renderGroupLabel={({ row: { value } }) => {
               const [name, number, count] = value.split('_')
+              const numberArray = number.split(' & ')
               return (
                 <span>
-                  <span style={{ color: '#2599d5' }}>{number}</span>&nbsp;&nbsp; {name} <span className="right">Product offerings: {count}</span>
+                  <span style={{ color: '#2599d5' }}>{numberArray.length > 1 ? (<Popup content={<List items={numberArray.map(n => { return n })} />} trigger={<span>Blend</span>} />) : number}</span>&nbsp;&nbsp; {name} <span className="right">Product offerings: {count}</span>
                 </span>
               )
             }}

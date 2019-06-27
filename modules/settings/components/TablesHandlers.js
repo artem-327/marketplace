@@ -5,6 +5,7 @@ import { Header, Menu, Button, Checkbox, Input, Dropdown } from 'semantic-ui-rea
 import * as Actions from '../actions'
 import Router from 'next/router'
 import { debounce } from 'lodash'
+import { withDatagrid, Datagrid } from '~/modules/datagrid'
 
 const textsTable = {
   'users': {
@@ -46,22 +47,25 @@ class TablesHandlers extends Component {
 
   constructor(props) {
     super(props)
-    
+
     this.state = {
       filterValue: props.filterValue
     }
 
     this.handleFiltersValue = debounce(this.handleFiltersValue, 250)
-    
+
   }
 
   handleFiltersValue = (value) => {
-    this.props.handleFiltersValue(value)
+    const { handleFiltersValue } = this.props
+    
+    if (Datagrid.isReady()) Datagrid.setSearch(value)
+    else handleFiltersValue(value) 
   }
 
-  handleFilterChange = (e, {value}) => {
-    this.setState({filterValue: value})
-    
+  handleFilterChange = (e, { value }) => {
+    this.setState({ filterValue: value })
+
     this.handleFiltersValue(value)
   }
 
@@ -77,7 +81,7 @@ class TablesHandlers extends Component {
       isCompanyAdmin,
     } = this.props
 
-    const {filterValue} = this.state
+    const { filterValue } = this.state
 
     const isDwollaAccountVisible = isCompanyAdmin && dwollaAccount && !dwollaAccount.hasDwollaAccount && currentTab.type === 'bank-accounts'
 
@@ -105,7 +109,7 @@ class TablesHandlers extends Component {
                 <Checkbox
                   label='Unmapped only'
                   defaultChecked={productCatalogUnmappedValue}
-                  onChange={(e, { checked }) => handleProductCatalogUnmappedValue(checked, this.props)}
+                  onChange={(e, { checked }) => Datagrid.setQuery({ unmappedOnly: checked })}
                 />
               )}
               {isDwollaAccountVisible && (
@@ -160,7 +164,7 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(
+export default withDatagrid(connect(
   mapStateToProps,
   Actions
-)(TablesHandlers)
+)(TablesHandlers))

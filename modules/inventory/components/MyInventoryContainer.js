@@ -65,8 +65,6 @@ function mapStateToProps(store, { datagrid }) {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions, openBroadcast, applyFilter })(MyInventory), {
-  apiUrl: '/prodex/api/product-offers/own/datagrid/'
-})
+export default withDatagrid(connect(mapStateToProps, { ...Actions, openBroadcast, applyFilter })(MyInventory))
 
 

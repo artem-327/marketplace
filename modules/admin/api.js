@@ -149,5 +149,8 @@ export const deleteUnit = id => api.delete(`/prodex/api/units/${id}`).then(() =>
 
 export const deleteUnitOfPackaging = id => api.delete(`/prodex/api/packaging-types/${id}`).then(() => id)
 
-
+export async function getAddressSearch(pattern, countryId, provinceId) {
+  const { data } = await api.get(`/prodex/api/addresses/search?countryId=${countryId}&pattern=${pattern}&provinceId=${provinceId}`)
+  return data
+}
 

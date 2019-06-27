@@ -29,6 +29,8 @@ import { addTab, tabChanged } from '../actions'
 import { updateCompany } from '~/modules/admin/actions'
 import { validationSchema } from '~/modules/company-form/constants'
 
+import { DatagridProvider } from '~/modules/datagrid'
+
 // import Toast from '../../../../components/toast'
 
 const TopMargedGrid = styled(Grid)`
@@ -119,25 +121,58 @@ class Settings extends Component {
     )
   }
 
+  getApiConfig = () => {
+    const { productCatalogUnmappedValue, currentTab } = this.props
+    const datagridApiMap = {
+      // 'company-details': this.companyDetails(),
+      // 'users': null,
+      // 'branches': null,
+      // 'warehouses': null,
+      'products': {
+        url: `/prodex/api/products/datagrid`,
+        searchToFilter: (value) => ({
+            operator: "LIKE",
+            path: "Product.productName",
+            values: ['%' + value + '%']
+        })
+      },
+      // 'bank-accounts': null,
+      // 'credit-cards': null,
+      'delivery-addresses': {
+        url: '/prodex/api/delivery-addresses/datagrid',
+        searchToFilter: (value) => ({
+          operator: "LIKE",
+          path: "DeliveryAddress.address.streetAddress",
+          values: ['%' + value + '%']
+        })
+      },
+    }
+
+    return datagridApiMap[currentTab.type]
+  }
+
   render() {
     const { currentTab } = this.props
 
     return (
-      <Container fluid className="flex stretched">
-        <Container fluid style={{ padding: '0 32px' }}>
-          <TablesHandlers currentTab={currentTab} />
+      <DatagridProvider apiConfig={this.getApiConfig()}
+      >
+        <Container fluid className="flex stretched">
+          <Container fluid style={{ padding: '0 32px' }}>
+            <TablesHandlers currentTab={currentTab} datagridEnabled={!!this.getApiConfig()} />
+          </Container>
+          <Grid columns="equal" className="flex stretched" style={{ padding: '0 32px' }}>
+            <Grid.Row>
+              <Grid.Column width={3}>
+                <Tabs currentTab={currentTab} isCompanyAdmin={this.props.isCompanyAdmin} />
+              </Grid.Column>
+              <Grid.Column className="flex stretched" style={{ marginTop: '10px' }}>
+                {this.renderContent()}
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
         </Container>
-        <Grid columns="equal" className="flex stretched" style={{ padding: '0 32px' }}>
-          <Grid.Row>
-            <Grid.Column width={3}>
-              <Tabs currentTab={currentTab} isCompanyAdmin={this.props.isCompanyAdmin} />
-            </Grid.Column>
-            <Grid.Column className="flex stretched" style={{ marginTop: '10px' }}>
-              {this.renderContent()}
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Container>
+      </DatagridProvider>
     )
   }
 }

@@ -23,6 +23,8 @@ import CompaniesTable from './CompaniesTable/Table'
 import CompaniesForm from './CompaniesTable/FormPopup'
 import CompaniesDwollaForm from './CompaniesDwolla/FormPopup'
 
+import { DatagridProvider } from '~/modules/datagrid'
+
 const tables = {
   'Units of Measure': <UnitOfMeasureTable />,
   'Units of Packaging': <UnitOfPackagingTable />,
@@ -33,6 +35,25 @@ const tables = {
   'CAS Products': <CasProductsTable />,
   'Companies': <CompaniesTable />,
   'Document Types': <DataTable />,
+}
+
+const datagridConfig = {
+  'CAS Products': {
+    url: '/prodex/api/cas-products/datagrid',
+    searchToFilter: v => ({
+      operator: "LIKE",
+      path: "CasProduct.chemicalName",
+      values: ['%'+v+'%']
+    })
+  },
+  'Companies': { 
+    url: '/prodex/api/companies/datagrid',
+    searchToFilter: v => ({
+      operator: "LIKE",
+      path: "Company.name",
+      values: ['%'+v+'%']
+    }) 
+  },
 }
 
 const editForms = {
@@ -89,25 +110,33 @@ class Admin extends Component {
     )
   }
 
+  getApiConfig = () => {
+    const { currentTab } = this.props
+    
+    return datagridConfig[currentTab]
+  }
+
   render() {
     if (!!this.props.auth.identity && !this.props.auth.identity.isAdmin) return "Access denied!"
 
     return (
-      <Container fluid className="flex stretched">
-        <Container fluid style={{padding: '0 32px'}}>
-          <TablesHandlers />
+      <DatagridProvider apiConfig={this.getApiConfig()}>
+        <Container fluid className="flex stretched">
+          <Container fluid style={{ padding: '0 32px' }}>
+            <TablesHandlers />
+          </Container>
+          <Grid columns='equal' className="flex stretched" style={{ padding: '0 32px' }}>
+            <Grid.Row>
+              <Grid.Column width={3}>
+                <Tabs />
+              </Grid.Column>
+              <Grid.Column key={this.props.currentTab} style={{ marginTop: '10px' }} className="flex stretched">
+                {this.renderContent()}
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
         </Container>
-        <Grid columns='equal' className="flex stretched" style={{padding: '0 32px'}}>
-          <Grid.Row>
-            <Grid.Column width={3}>
-              <Tabs />
-            </Grid.Column>
-            <Grid.Column key={this.props.currentTab} style={{marginTop: '10px'}} className="flex stretched"> 
-              {this.renderContent()}
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Container>
+      </DatagridProvider>
     )
   }
 }

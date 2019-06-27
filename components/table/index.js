@@ -338,7 +338,7 @@ export default class _Table extends Component {
       tableName,
       ...restProps
     } = this.props
-
+    
     const { columnSettingOpen, expandedGroups, columnsSettings, loaded } = this.state
     const grouping = groupBy.map(g => ({ columnName: g }))
     const columnsFiltered = columns.filter(c => !c.disabled)
