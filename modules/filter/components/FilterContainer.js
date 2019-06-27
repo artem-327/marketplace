@@ -14,15 +14,10 @@ import { fetchWarehouseDistances } from '~/src/modules/location'
 
 function mapStateToProps(store) {
   return {
-    ...store.filter,
+    ...store.filter.filter,
+    ...store.filter.products,
     preferredCurrency: store.auth.identity && store.auth.identity.preferredCurrency.symbol,
     warehouseDistances: store.location.warehouseDistances,
-    packagingTypes: store.products.packagingTypes,
-    productConditions: store.products.productConditions,
-    productForms: store.products.productForms,
-    productAge: store.products.productAge,
-    productGradeTypes: store.products.productGrade,
-    location: store.products.location
   }
 }
 
