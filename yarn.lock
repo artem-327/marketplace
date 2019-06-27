@@ -4015,7 +4015,7 @@ formik-semantic-ui@^0.9.2:
     hoist-non-react-statics "^3.0.1"
     prop-types "^15.6.2"
 
-formik@^1.5.1:
+formik@^1.5.7:
   version "1.5.7"
   resolved "https://registry.yarnpkg.com/formik/-/formik-1.5.7.tgz#2fc5fc2f0c693cdc4e8c9dad3a10eb4c4e131ff5"
   integrity sha512-kZo8lS4WzfC2uivnSkE9DOuX9x+jVjCtIZOlb1A4lHGeURyuLt6eDfwGJzNlcP0lXIwmpANKzegiB8j60B54TA==

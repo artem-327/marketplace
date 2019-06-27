@@ -5,6 +5,7 @@ import { Confirm } from 'semantic-ui-react'
 import ProdexGrid from '~/components/table'
 import confirm from '~/src/components/Confirmable/confirm'
 import { injectIntl } from 'react-intl'
+import { withDatagrid } from '~/modules/datagrid'
 
 // import { TablePopUp } from '~/components/tablePopup'
 
@@ -29,11 +30,12 @@ class DeliveryAddressesTable extends Component {
   }
 
   componentDidMount() {
-    this.props.getDeliveryAddressesByFilterRequest(this.props.deliveryAddressesFilter)
+    // this.props.getDeliveryAddressesByFilterRequest(this.props.deliveryAddressesFilter)
   }
 
   render() {
     const {
+      datagrid,
       rows,
       filterValue,
       loading,
@@ -55,10 +57,11 @@ class DeliveryAddressesTable extends Component {
       <React.Fragment>
         <ProdexGrid
           tableName="settings_delivery_address"
-          filterValue={filterValue}
+          {...datagrid.tableProps}
+          // filterValue={filterValue}
           columns={columns}
           rows={rows}
-          loading={loading}
+          loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
           rowActions={[
             { text: 'Edit', callback: row => openPopup(row.data) },
@@ -68,7 +71,9 @@ class DeliveryAddressesTable extends Component {
                 formatMessage(
                   { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.streetAddress}?` },
                   { item: row.streetAddress })
-              ).then(() => deleteDeliveryAddress(row.id))
+              ).then(() => { 
+                deleteDeliveryAddress(row.id) 
+              })
 
             }
           ]}
@@ -84,14 +89,14 @@ const mapDispatchToProps = {
   openPopup
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, { datagrid }) => {
   return {
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
     loading: state.settings.loading,
-    rows: state.settings.deliveryAddressesRows.map(d => {
+    rows: datagrid.rows.map(d => {
       return {
         data: d,   // all row data, used for edit popup
         id: d.id,
@@ -106,7 +111,7 @@ const mapStateToProps = state => {
     reloadFilter: {
       props: {
         currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
-            state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+          state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
         deliveryAddressesFilter: state.settings.deliveryAddressesFilter
       },
       value: state.settings.filterValue
@@ -114,7 +119,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
+export default withDatagrid(connect(
   mapStateToProps,
   mapDispatchToProps
-)(injectIntl(DeliveryAddressesTable))
+)(injectIntl(DeliveryAddressesTable)))

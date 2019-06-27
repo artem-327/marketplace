@@ -94,24 +94,24 @@ class MyInventory extends Component {
   }
 
   handleFilterApply = filter => {
-    const { datagrid } = this.props
-
-    datagrid.setFilter(filter)
+    this.props.datagrid.setFilter(filter)
   }
 
-  handleFilterClear = () => {
-    let { datagrid } = this.props
 
-    datagrid.setFilter({ filters: [] })
+  handleFilterClear = () => {
+    this.props.applyFilter({ filters: [] })
+    this.props.datagrid.setFilter({ filters: [] })
   }
 
   removeFilter = (i) => {
-    let { datagrid } = this.props
-    let { filters } = datagrid
+    let { datagrid, appliedFilter } = this.props
 
-    filters.splice(i, 1)
-    datagrid.setFilter(filters)
+    datagrid.filters.splice(i, 1)
+    appliedFilter.filters.splice(i, 1)
+    this.props.applyFilter(appliedFilter)
+    datagrid.setFilter(datagrid.filters)
   }
+
 
   render() {
     const {
@@ -216,6 +216,7 @@ class MyInventory extends Component {
           onClear={this.handleFilterClear}
           savedUrl='/prodex/api/product-offers/own/datagrid/saved-filters'
           searchUrl={(text) => `/prodex/api/products/own/search?pattern=${text}&onlyMapped=false`}
+          apiUrl={datagrid.apiUrl}
           filters={datagrid.filters}
         />
       </>
