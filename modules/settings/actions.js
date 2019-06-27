@@ -44,13 +44,24 @@ export function closeDwollaPopup() {
 export function dwollaInitiateVerification(id) {
   return {
     type: AT.DWOLLA_START_VERIFICATION,
-    payload: api.dwollaInitiateVerification(id)
+    async payload() {
+      await api.dwollaInitiateVerification(id)
+      const data = await api.getBankAccountsData()
+
+      return data
+    }
   }
 }
+
 export function dwollaFinalizeVerification(id) {
   return {
     type: AT.DWOLLA_FINALIZE_VERIFICATION,
-    payload: api.dwollaFinalizeVerification(id)
+    async payload() {
+      await api.dwollaFinalizeVerification(id)
+      const data = await api.getBankAccountsData()
+
+      return data
+    }
   }
 }
 
@@ -164,10 +175,10 @@ export const deleteProduct = (id) => ({
 
 export const deleteBankAccount = (id) => ({ type: AT.DELETE_BANK_ACCOUNT, payload: api.deleteBankAccount(id) })
 
-export const deleteDeliveryAddress = (id) => ({ 
-  type: AT.SETTINGS_DELETE_DELIVERY_ADDRESSES, 
+export const deleteDeliveryAddress = (id) => ({
+  type: AT.SETTINGS_DELETE_DELIVERY_ADDRESSES,
   async payload() {
-    const response = await api.deleteDeliveryAddress(id) 
+    const response = await api.deleteDeliveryAddress(id)
     Datagrid.removeRow(id)
     return response
   }
@@ -652,13 +663,12 @@ export function handleSubmitProductAddPopup(inputsValue, reloadFilter) {
 }
 
 export function postNewBankAccountRequest(payload) {
-  return dispatch => {
-    dispatch({
-      type: AT.POST_NEW_BANK_ACCOUNT_REQUEST,
-      payload: api.postNewBankAccount(payload)
-    })
-    dispatch(closePopup())
-    // TODO: Add Bank Accounts reload
+  return {
+    type: AT.POST_NEW_BANK_ACCOUNT_REQUEST,
+    async payload() {
+      const { data } = await api.postNewBankAccount(payload)
+      return data
+    }
   }
 }
 

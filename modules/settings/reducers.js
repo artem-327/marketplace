@@ -4,7 +4,9 @@ import { defaultTabs } from "./contants"
 export const initialState = {
   editPopupBoolean: false,
   addNewWarehousePopup: false,
-  popupValues: [],
+  popupLoading: false,
+  popupValues: null,
+  isOpenPopup: false,
   usersRows: [],
   userEditRoles: false,
   roles: [],
@@ -31,7 +33,6 @@ export const initialState = {
   tabsNames: defaultTabs,
   currentTab: defaultTabs[0],
 
-  isOpenPopup: false,
   isOpenImportPopup: false,
   isDwollaOpenPopup: false,
   currentEditForm: null,
@@ -827,6 +828,27 @@ export default function reducer(state = initialState, action) {
 
     /* DELETE BANK ACCOUNT */
 
+    case AT.POST_NEW_BANK_ACCOUNT_REQUEST_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.POST_NEW_BANK_ACCOUNT_REQUEST_FULFILLED: {
+      
+      return {
+        ...state,
+        loading: false,
+        popupValues: null,
+        isOpenPopup: false,
+        bankAccountsRows: [
+          ...state.bankAccountsRows,
+          action.payload
+        ]
+      }
+    }
+
     case AT.DELETE_BANK_ACCOUNT_PENDING: {
       return {
         ...state,
@@ -846,6 +868,36 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false
+      }
+    }
+
+    case AT.DWOLLA_START_VERIFICATION_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.DWOLLA_START_VERIFICATION_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        bankAccountsRows: action.payload
+      }
+    }
+
+    case AT.DWOLLA_FINALIZE_VERIFICATION_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.DWOLLA_FINALIZE_VERIFICATION_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        bankAccountsRows: action.payload
       }
     }
 
