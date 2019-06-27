@@ -1,5 +1,6 @@
 import * as AT from "./action-types"
 import api from "./api"
+import { Datagrid } from '~/modules/datagrid'
 
 const removeEmpty = (obj) =>
   Object.entries(obj).forEach(([key, val]) => {
@@ -29,12 +30,12 @@ export function closePopup(rows = null) {
   }
 }
 
-export function openDwollaPopup(){
+export function openDwollaPopup() {
   return {
     type: AT.OPEN_DWOLLA_POPUP
   }
 }
-export function closeDwollaPopup(){
+export function closeDwollaPopup() {
   return {
     type: AT.CLOSE_DWOLLA_POPUP
   }
@@ -152,11 +153,25 @@ export const deleteUser = (id) => ({ type: AT.DELETE_USER, payload: api.deleteUs
 
 export const deleteBranch = (id) => ({ type: AT.DELETE_BRANCH, payload: api.deleteWarehouse(id) })
 
-export const deleteProduct = (id) => ({ type: AT.DELETE_PRODUCT, payload: api.deleteProduct(id) })
+export const deleteProduct = (id) => ({
+  type: AT.DELETE_PRODUCT,
+  async payload() {
+    const response = await api.deleteProduct(id)
+    Datagrid.removeRow(id)
+    return response
+  }
+})
 
 export const deleteBankAccount = (id) => ({ type: AT.DELETE_BANK_ACCOUNT, payload: api.deleteBankAccount(id) })
 
-export const deleteDeliveryAddress = (id) => ({ type: AT.SETTINGS_DELETE_DELIVERY_ADDRESSES, payload: api.deleteDeliveryAddress(id) })
+export const deleteDeliveryAddress = (id) => ({ 
+  type: AT.SETTINGS_DELETE_DELIVERY_ADDRESSES, 
+  async payload() {
+    const response = await api.deleteDeliveryAddress(id) 
+    Datagrid.removeRow(id)
+    return response
+  }
+})
 
 // export function deleteConfirmation(deleteRowById, currentTab, reloadFilter=null) {
 //   let toast = {}
@@ -345,8 +360,8 @@ export function getUsersDataRequest() {
           payload: branches
         })
         dispatch({
-            type: AT.GET_ROLES_DATA,
-            payload: roles
+          type: AT.GET_ROLES_DATA,
+          payload: roles
         })
         dispatch({
           type: AT.GET_CURRENT_USER_DATA,
@@ -683,7 +698,7 @@ export function postImportProductCSV(payload, id) {
   }
 }
 
-export function postDwollaAccount(payload){
+export function postDwollaAccount(payload) {
   return {
     type: AT.SETTINGS_CREATE_DWOLLA_ACCOUNT,
     payload: api.postNewDwollaAccount(payload)
@@ -741,7 +756,7 @@ export function searchUnNumber(pattern) {
   }
 }
 
-export function getAddressSearch(pattern, countryId='', provinceId='') {
+export function getAddressSearch(pattern, countryId = '', provinceId = '') {
   return {
     type: AT.SETTINGS_GET_ADDRESSES_SEARCH,
     payload: api.getAddressSearch(pattern, countryId, provinceId)

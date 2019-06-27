@@ -78,6 +78,10 @@ export class DatagridProvider extends Component {
     }
   }
 
+  removeRow = (id) => {
+    this.removeRowById(id)
+  }
+
   removeRowById = (id) => {
     this.setState(s => ({
       rows: s.rows.filter(r => r.id !== id)
@@ -133,6 +137,12 @@ export class DatagridProvider extends Component {
     this.setFilter({
       filters: [searchToFilter(value)]
     }, reload)
+  }
+
+  setLoading = (loading) => {
+    this.setState({
+      loading
+    })
   }
 
   onTableReady = () => {

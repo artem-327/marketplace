@@ -75,7 +75,8 @@ class ProductCatalogTable extends Component {
       openPopup,
       deleteProduct,
       intl,
-      datagrid
+      datagrid,
+      loading
     } = this.props
 
     let { columns } = this.state
@@ -86,6 +87,7 @@ class ProductCatalogTable extends Component {
         <ProdexTable
           tableName="settings_product_catalog"
           {...datagrid.tableProps}
+          loading={datagrid.loading || loading}
           rows={this.getRows(rows)}
           columns={columns}
           style={{ marginTop: '5px' }}

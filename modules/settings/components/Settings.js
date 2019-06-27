@@ -138,7 +138,14 @@ class Settings extends Component {
       },
       // 'bank-accounts': null,
       // 'credit-cards': null,
-      // 'delivery-addresses': null,
+      'delivery-addresses': {
+        url: '/prodex/api/delivery-addresses/datagrid',
+        searchToFilter: (value) => ({
+          operator: "LIKE",
+          path: "DeliveryAddress.address.streetAddress",
+          values: ['%' + value + '%']
+        })
+      },
     }
 
     return datagridApiMap[currentTab.type]
