@@ -14,7 +14,7 @@ import {
   Dropdown
 } from 'semantic-ui-react'
 
-import { datagridValues } from '../constants/filter'
+import { datagridValues, replaceAmbigiousCharacters, dateFormat } from '../constants/filter'
 import { initialValues, validationSchema } from '../constants/validation'
 
 import SavedFilters from './SavedFilters'
@@ -28,6 +28,7 @@ import {
   GraySegment, Title,
   RelaxedRow
 } from '../constants/layout'
+
 
 class Filter extends Component {
 
@@ -54,11 +55,26 @@ class Filter extends Component {
       this.fetchIfNoData(fetchProductForms, 'productForms'),
       this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
       this.fetchIfNoData(fetchWarehouseDistances, 'warehouseDistances'),
-      this.fetchIfNoData(fetchProductGrade, 'productGradeTypes')
+      this.fetchIfNoData(fetchProductGrade, 'productGrade')
     ]).finally(() => this.setState({ loaded: true }))
   }
 
-  generateDatagridFilter = (inputs) => {
+  generateRequestData = ({ notifications, checkboxes, name, ...rest }) => {
+    let { notificationMail } = notifications
+    let { notifyMail, notifyPhone, notifySystem } = checkboxes
+    let { filters } = this.toSavedFilter(rest)
+
+    return {
+      filters,
+      name,
+      notificationEnabled: notifyMail || notifyPhone || notifySystem,
+      notificationMail,
+      notifyMail, notifyPhone, notifySystem
+    }
+  }
+
+
+  toSavedFilter = (inputs) => {
     let datagridFilter = {
       filters: []
     }
@@ -66,7 +82,7 @@ class Filter extends Component {
     let keys = Object.keys(inputs)
 
     keys.forEach((key) => {
-      if (inputs[key]) {
+      if (inputs[key] && inputs[key] !== '' && Object.keys(inputs[key]).length > 0) {
 
         if (!!datagridValues[key].nested) {
           var ids = [], names = []
@@ -78,16 +94,16 @@ class Filter extends Component {
             }
           })
 
-          if (ids.length > 0) datagridFilter.filters.push(datagridValues[key].getFilter(ids, names))
+          if (ids.length > 0) datagridFilter.filters.push(datagridValues[key].toFilter(ids, names))
         }
         else {
           try {
-            let filter = datagridValues[key].getFilter(inputs[key])
+            let filter = datagridValues[key].toFilter(inputs[key])
             if (!(filter.values instanceof Array)) filter.values = [filter.values]  // We need values to be an array
 
             datagridFilter.filters.push(filter)
           } catch (err) {
-            console.error(`Key: ${key} is not defined in datagridValues. \n ${err}`)
+            console.error(err)
           }
         }
       }
@@ -96,29 +112,37 @@ class Filter extends Component {
     return datagridFilter
   }
 
-  handleSubmit = ({ notifications, checkboxes, name, ...rest }) => { // { setSubmitting }
-    let { onApply } = this.props
+  toDatagridFilter = savedFilter => {
+    let { filters, ...rest } = savedFilter
 
-    onApply(this.generateDatagridFilter(rest))
+    return {
+      filters: filters.map((filter) => ({ ...filter, values: filter.values.map((val) => val.value) })),
+      ...rest
+    }
   }
 
-  handleFilterSave = ({ notifications, checkboxes, name, ...rest }) => {
-    let dataGridFilter = this.generateDatagridFilter(rest)
 
-    let { notificationMail, notificationPhone } = notifications
-    let { notifyMail, notifyPhone, notifySystem, automaticallyApply } = checkboxes
+  handleSubmit = (params) => { // { setSubmitting }
+    let { onApply } = this.props
 
-    let requestData = {
-      dataGridFilter,
-      name,
-      notificationEnabled: notifyMail || notifyPhone || notifySystem,
-      // notificationPhone not supported by BE, but I guess it should be, may have different property name if implemented
-      notificationMail, notificationPhone,
-      notifyMail, notifyPhone, notifySystem
-    }
+    let filter = this.generateRequestData(params)
+
+
+    this.props.applyFilter(filter)
+    onApply(this.toDatagridFilter(filter))
+  }
+
+  handleFilterSave = (params) => {
+    let requestData = this.generateRequestData(params)
+
 
     this.props.saveFilter(this.props.savedUrl, requestData)
-    if (automaticallyApply) this.props.onApply(this.generateDatagridFilter(rest))
+
+    if (params.checkboxes.automaticallyApply) {
+      let filter = this.toDatagridFilter(requestData)
+      this.props.onApply(filter)
+      this.props.applyFilter(requestData)
+    }
   }
 
   fetchIfNoData = (fn, propertyName) => {
@@ -141,7 +165,7 @@ class Filter extends Component {
 
     let tmp = []
     var getCheckbox = (el, i) => {
-      let name = el.name.toLowerCase().replace(/ /g, '')
+      let name = replaceAmbigiousCharacters(el.name)
       let path = `${group}${name}`
 
       return (
@@ -149,7 +173,7 @@ class Filter extends Component {
           <FormikField
             onChange={(e, data) => {
               let { setFieldValue } = data.form
-              setFieldValue(path, data.checked ? { id: el.id, name: el.name } : null)
+              setFieldValue(path, data.checked ? { id: el.id, name: el.name } : { id: null, name: null })
             }}
             component={Checkbox}
             checked={!!values[groupName] && values[groupName][name]}
@@ -176,6 +200,58 @@ class Filter extends Component {
     return tmp
   }
 
+  handleSavedFilterApply = async (filter, { setFieldValue, resetForm }) => {
+    resetForm({ ...initialValues })
+
+    this.props.applyFilter(filter)
+
+
+    let formikValues = {
+
+    }
+
+    let datagridFilter = this.toDatagridFilter(filter)
+    let datagridKeys = Object.keys(datagridValues)
+
+    let { filters, ...rest } = filter
+
+    for (let i = 0; i < filters.length; i++) {
+      datagridKeys.forEach(key => {
+        let datagrid = datagridValues[key]
+        if (filters[i].path === datagrid.toFilter([]).path && filters[i].operator === datagrid.toFilter([]).operator) {
+          formikValues[key] = datagrid.toFormik(filters[i], datagrid.nested && this.props[key])
+        }
+      })
+    }
+
+    let { notifyMail, notifyPhone, notifySystem, notificationMail } = rest
+
+    formikValues = {
+      checkboxes: {
+        notifyMail,
+        notifyPhone,
+        notifySystem,
+        notificationEnabled: notifyMail || notifyPhone || notifySystem
+      },
+      notifications: { notificationMail },
+      ...formikValues
+    }
+
+
+    Object.keys(formikValues)
+      .forEach(key => {
+        setFieldValue(key, formikValues[key])
+      })
+
+    this.handleSubmit(formikValues)
+  }
+
+  handleGetSavedFilters = () => {
+    let { packagingTypes, productConditions, productGrade, productForms } = this.props
+    this.props.getSavedFilters(this.props.savedUrl, { packagingTypes, productConditions, productGrade, productForms }, this.props.apiUrl)
+  }
+
+
   toggleAccordion = (name) => {
     let { accordion } = this.state
     let active = !!accordion[name]
@@ -194,13 +270,10 @@ class Filter extends Component {
     </AccordionTitle>
   )
 
-
-
-
   formMarkup = ({ values, setFieldValue, errors, setFieldError }) => {
     let {
       productConditions, productForms, packagingTypes,
-      productGradeTypes, intl, isFilterSaving,
+      productGrade, intl, isFilterSaving,
       autocompleteData, autocompleteDataLoading
     } = this.props
 
@@ -208,7 +281,7 @@ class Filter extends Component {
 
     let packagingTypesRows = this.generateCheckboxes(packagingTypes, values, 'packagingTypes')
     let productConditionRows = this.generateCheckboxes(productConditions, values, 'productConditions')
-    let productGradeRows = this.generateCheckboxes(productGradeTypes, values, 'productGrades')
+    let productGradeRows = this.generateCheckboxes(productGrade, values, 'productGrade')
     let productFormsRows = this.generateCheckboxes(productForms, values, 'productForms')
 
     var noResultsMessage = null
@@ -346,7 +419,7 @@ class Filter extends Component {
                     inputProps={{ placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }) }}
                     value={values.dateFrom}
                     closeOnMouseLeave={false}
-                    dateFormat='YYYY-MM-DD'
+                    dateFormat={dateFormat}
                     animation='none'
                     label={<label><FormattedMessage id='filter.dateFrom' defaultMessage='Date From' /></label>}
                     name='dateFrom' />
@@ -358,7 +431,7 @@ class Filter extends Component {
                     closable
                     inputProps={{ placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }) }}
                     value={values.dateTo}
-                    dateFormat='YYYY-MM-DD'
+                    dateFormat={dateFormat}
                     animation='none'
                     closeOnMouseLeave={false}
                     label={<label><FormattedMessage id='filter.dateTo' defaultMessage='Date To' /></label>}
@@ -392,15 +465,9 @@ class Filter extends Component {
               </GridColumn>
             </GridRow>
 
-            <RelaxedRow>
-              <GridColumn>
-                <label> <FormattedMessage id='filter.enterFilterName' defaultMessage='Enter Filter Name' /></label>
-              </GridColumn>
-            </RelaxedRow>
-
             <GridRow>
               <GridColumn computer={12}>
-                <Input name='name' fluid />
+                <Input inputProps={{ placeholder: formatMessage({ id: 'filter.enterFilterName', defaultMessage: 'Enter Filter Name' }) }} name='name' fluid />
               </GridColumn>
 
               <GridColumn>
@@ -413,15 +480,18 @@ class Filter extends Component {
             </GridRow>
 
             <GridRow>
-              <GridColumn>
+              <GridColumn computer={14}>
+                <label>{formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}</label>
+              </GridColumn>
+              <GridColumn computer={2}>
                 <FormikCheckbox
-                  label={formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}
+                  inputProps={{ toggle: true }}
                   name='checkboxes.automaticallyApply'
                 />
               </GridColumn>
             </GridRow>
-            <Notifications values={values} />
           </Grid>
+          <Notifications values={values} />
         </Segment>
       </Accordion >
     )
@@ -449,29 +519,33 @@ class Filter extends Component {
         animation={animation}
         onHide={(e) => {
           // Workaround, close if you haven't clicked on calendar item or filter icon
-          if (e && (!(e.path[0] instanceof HTMLTableCellElement) && !(e.path[1] instanceof HTMLTableCellElement) && !e.target.className.includes('submenu-filter'))) {
-            toggleFilter(false)
+          try {
+            if (e && (!(e.path[0] instanceof HTMLTableCellElement) && !(e.path[1] instanceof HTMLTableCellElement) && !e.target.className.includes('submenu-filter'))) {
+              toggleFilter(false)
+            }
+          } catch (e) {
+            console.error(e)
           }
         }}
         {...additionalSidebarProps}>
+        <FiltersContainer>
+          <Button onClick={() => this.toggleFilter(false)} primary={!this.state.savedFiltersActive}>
+            <FormattedMessage
+              id='filter.setFilters'
+              defaultMessage='SET FILTERS'
+            />
+          </Button>
 
+          <Button onClick={() => this.toggleFilter(true)} primary={this.state.savedFiltersActive}>
+            <FormattedMessage
+              id='filter.savedFilter'
+              defaultMessage='SAVED FILTERS'
+            />
+          </Button>
+        </FiltersContainer>
         <FlexContent>
           <Segment basic>
-            <FiltersContainer>
-              <Button onClick={() => this.toggleFilter(false)} primary={!this.state.savedFiltersActive}>
-                <FormattedMessage
-                  id='filter.setFilters'
-                  defaultMessage='SET FILTERS'
-                />
-              </Button>
 
-              <Button onClick={() => this.toggleFilter(true)} primary={this.state.savedFiltersActive}>
-                <FormattedMessage
-                  id='filter.savedFilter'
-                  defaultMessage='SAVED FILTERS'
-                />
-              </Button>
-            </FiltersContainer>
             <Form
               enableReinitialize={true}
               initialValues={initialValues}
@@ -487,16 +561,22 @@ class Filter extends Component {
                 this.setFieldValue = props.setFieldValue
 
                 return (
-                  !this.state.savedFiltersActive && this.formMarkup(props)
+                  !this.state.savedFiltersActive
+                    ? this.formMarkup(props)
+                    : (
+                      <SavedFilters
+                        onApply={(filter) => this.handleSavedFilterApply(filter, props)}
+                        savedFilters={this.props.savedFilters}
+                        savedFiltersLoading={this.props.savedFiltersLoading}
+                        getSavedFilters={this.handleGetSavedFilters}
+                        deleteFilter={this.props.deleteFilter}
+                        updateFilterNotifications={this.props.updateFilterNotifications}
+                        savedFilterUpdating={this.props.savedFilterUpdating} />
+                    )
                 )
+
               }}
             </Form>
-            {this.state.savedFiltersActive &&
-              <SavedFilters
-                savedFilters={this.props.savedFilters}
-                savedFiltersLoading={this.props.savedFiltersLoading}
-                getSavedFilters={() => this.props.getSavedFilters(this.props.savedUrl)} />
-            }
           </Segment>
         </FlexContent>
 
@@ -550,12 +630,8 @@ Filter.defaultProps = {
   animation: 'overlay',
   additionalSidebarProps: {},
   filters: [],
-  onApply: () => console.warn('onApply function not supplied!'),
-  onClear: () => console.warn('onClear function not supplied!'),
-  getAutocompleteData: (searchUrl, text) => console.warn('getAutocompleteData not supplied!'),
   autocompleteData: [],
   savedFilters: [],
-  getSavedFilters: console.warn('getSavedFilters function not supplied!'),
   savedFiltersLoading: false
 
 }

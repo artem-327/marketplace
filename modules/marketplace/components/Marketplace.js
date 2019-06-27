@@ -66,16 +66,19 @@ export default class Marketplace extends Component {
 
 
   handleFilterClear = () => {
+    this.props.applyFilter({ filters: [] })
     this.props.datagrid.setFilter({ filters: [] })
   }
 
   removeFilter = (i) => {
-    let { datagrid } = this.props
-    let { filters } = datagrid
+    let { datagrid, appliedFilter } = this.props
 
-    filters.splice(i, 1)
-    datagrid.setFilter(filters)
+    datagrid.filters.splice(i, 1)
+    appliedFilter.filters.splice(i, 1)
+    this.props.applyFilter(appliedFilter)
+    datagrid.setFilter(datagrid.filters)
   }
+
 
 
   render() {
@@ -166,6 +169,7 @@ export default class Marketplace extends Component {
           onClear={this.handleFilterClear}
           savedUrl='/prodex/api/product-offers/broadcasted/datagrid/saved-filters'
           searchUrl={(text) => `/prodex/api/products/broadcasted/search?pattern=${text}&onlyMapped=true`}
+          apiUrl={datagrid.apiUrl}
           filters={datagrid.filters}
         />
         <AddCart />

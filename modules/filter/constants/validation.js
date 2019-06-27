@@ -3,7 +3,7 @@ import { FormattedMessage } from 'react-intl'
 
 
 export const initialValues = {
-  search: '',
+  search: [],
   quantityFrom: '',
   quantityTo: '',
   priceFrom: '',
@@ -80,4 +80,15 @@ export const validationSchema = () => Yup.lazy(values => {
       })
     })
   )
+})
+
+export const savedFilterValidation = Yup.lazy(values => {
+  if (values.checkboxes.notifyMail) {
+    return Yup.object().shape({
+      notifications: Yup.object().shape({
+        notificationMail: Yup.string('Required').email('Valid mail required').required('Required!')
+      })
+    })
+  }
+
 })

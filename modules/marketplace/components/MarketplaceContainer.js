@@ -1,4 +1,4 @@
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import Marketplace from './Marketplace'
 import * as Actions from '../actions'
 import { sidebarChanged } from '~/src/modules/cart'
@@ -6,12 +6,14 @@ import { getProductOffer } from '~/modules/purchase-order/actions'
 import moment from "moment/moment"
 import { getLocationString } from '~/src/utils/functions'
 import { withDatagrid } from '~/modules/datagrid'
+import { applyFilter } from '~/modules/filter/actions'
 
-function mapStateToProps(store, {datagrid}) {
+function mapStateToProps(store, { datagrid }) {
   return {
     ...store.marketplace,
     // rows: store.marketplace.broadcastedProductOffers.map(po => {
     ...datagrid,
+    appliedFilter: store.filter.filter.appliedFilter,
     rows: datagrid.rows.map(po => {
       const qtyPart = `${po.product.packagingUnit ? po.product.packagingUnit.nameAbbreviation : ''}`
 
@@ -43,4 +45,4 @@ function mapStateToProps(store, {datagrid}) {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, {...Actions, sidebarChanged, getProductOffer})(Marketplace))
+export default withDatagrid(connect(mapStateToProps, { ...Actions, sidebarChanged, getProductOffer, applyFilter })(Marketplace))
