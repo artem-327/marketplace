@@ -668,7 +668,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         searchedCasProducts: action.payload.casProducts.map(casProduct => {
-          return [casProduct.item]
+          return [casProduct.item.casProduct]
         })
       }
     }

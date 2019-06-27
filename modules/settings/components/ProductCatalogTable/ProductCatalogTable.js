@@ -144,9 +144,9 @@ const mapStateToProps = (state, { datagrid }) => {
           : null,
         casProducts: product.casProducts ? product.casProducts.map((casProduct, cpIndex) => {
           return {
-            casProduct: casProduct.id,
-            min: cpIndex ? 0 : 100,
-            max: cpIndex ? 0 : 100,
+            casProduct: casProduct.casProduct.id,
+            minimumConcentration: casProduct.minimumConcentration ? casProduct.minimumConcentration : (product.casProducts.length === 1 ? 100 : 0),
+            maximumConcentration: casProduct.maximumConcentration ? casProduct.maximumConcentration : 100,
             item: casProduct
           }
         }) : null,

@@ -76,8 +76,8 @@ const formValidation = Yup.object().shape({
   }),
   casProducts: Yup.array().of(Yup.object().uniqueProperty('casProduct', 'CAS Product ahs to be unique').shape({
     casProduct: Yup.number().nullable(),
-    //min: Yup.number().min(10).max(100),
-    //max: Yup.number().min(10).max(100)
+    minimumConcentration: Yup.number().nullable().min(0).max(100),
+    maximumConcentration: Yup.number().nullable().min(0).max(100)
   }))
 
   //hazardClass: Yup.number(),
@@ -106,7 +106,11 @@ class ProductPopup extends React.Component {
       this.props.handleSubmitProductEditPopup({
         ...values,
         casProducts: values.casProducts ? values.casProducts.map(cp => {
-          return cp.casProduct
+          return {
+            casProduct: cp.casProduct,
+            minimumConcentration: parseInt(cp.minimumConcentration),
+            maximumConcentration: parseInt(cp.maximumConcentration)
+          }
         }) : popupValues.casProducts,
         unNumber: this.state.unNumber ? this.state.unNumber.id :
             popupValues.unNumber ? popupValues.unNumber.id : null,
@@ -115,7 +119,11 @@ class ProductPopup extends React.Component {
       this.props.handleSubmitProductAddPopup({
         ...values,
         casProducts: values.casProducts ? values.casProducts.map(cp => {
-          return cp.casProduct
+          return {
+            casProduct: cp.casProduct,
+            minimumConcentration: parseInt(cp.minimumConcentration),
+            maximumConcentration: parseInt(cp.maximumConcentration)
+          }
         }) : [],
         unNumber: this.state.unNumber ? this.state.unNumber.id : null
       }, reloadFilter)
@@ -190,7 +198,7 @@ class ProductPopup extends React.Component {
   getInitialFormValues = () => {
     const { popupValues } = this.props
     let {
-      casProducts = [{casProduct: null, min: 100, max: 100}],
+      casProducts = [{casProduct: null, minimumConcentration: 100, maximumConcentration: 100}],
       description = '',
       freightClass = '',
       hazardClass = [],
@@ -205,7 +213,7 @@ class ProductPopup extends React.Component {
       unitID = ''
     } = popupValues || {}
     if (casProducts.length === 0) {
-      casProducts = [{casProduct: '', min: 100, max: 100}]
+      casProducts = [{casProduct: '', minimumConcentration: 100, maximumConcentration: 100}]
     }
     return {
       casProducts,
@@ -262,16 +270,12 @@ class ProductPopup extends React.Component {
                   <FormField width={6}>
                     <Header as='h2' style={{marginBottom: '0.28571429rem', fontSize: '1.3571429em'}}>What are the associated CAS Index Numbers?</Header>
                   </FormField>
-                  {false ? (
-                    <>
-                      <FormField width={3}>
-                        <label>Min Concentration</label>
-                      </FormField>
-                      <FormField width={3}>
-                        <label>Max Concentration</label>
-                      </FormField>
-                    </>
-                  ) : ''}
+                  <FormField width={3}>
+                    <label>Min Concentration</label>
+                  </FormField>
+                  <FormField width={3}>
+                    <label>Max Concentration</label>
+                  </FormField>
                 </FormGroup>
                 <FieldArray name="casProducts"
                             render={arrayHelpers => (
@@ -305,16 +309,12 @@ class ProductPopup extends React.Component {
                                                 defaultValue={casProduct && casProduct.casNumber ? casProduct.casNumber : null}
                                       />
                                     </FormField>
-                                    {false ? (
-                                      <>
-                                        <FormField width={3}>
-                                          <Input type="text" name={`casProducts[${index}].min`} />
-                                        </FormField>
-                                        <FormField width={3}>
-                                          <Input type="text" name={`casProducts[${index}].max`} />
-                                        </FormField>
-                                      </>
-                                    ) : ''}
+                                    <FormField width={3}>
+                                      <Input type="text" name={`casProducts[${index}].minimumConcentration`} />
+                                    </FormField>
+                                    <FormField width={3}>
+                                      <Input type="text" name={`casProducts[${index}].maximumConcentration`} />
+                                    </FormField>
                                     <FormField width={4}>
                                       {index ? (
                                         <Button basic icon onClick={() => {
