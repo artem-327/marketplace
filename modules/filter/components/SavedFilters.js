@@ -7,52 +7,68 @@ import { SavedFilterItem, SavedFilterTitle, SavedFiltersSegment, SavedFilterIcon
 
 import Notifications from './Notifications'
 import { FormattedMessage } from 'react-intl';
+import { savedFilterValidation } from '../constants/validation';
 
 export default class SavedFilters extends Component {
   state = {
-    activeIndex: 0
+    activeIndex: -1,
+    activeTooltip: -1
   }
   componentDidMount() {
     this.props.getSavedFilters()
   }
 
-  toggleAccordion = (id) => {
-    const { activeIndex } = this.state
+  toggle = (id, name = 'activeIndex') => {
+    const activeIndex = this.state[name]
     const newIndex = activeIndex === id ? -1 : id
 
-    this.setState({ activeIndex: newIndex })
+    this.setState({ [name]: newIndex })
   }
 
-  getTitle = (name, id) => {
+  handleFilterApply = (filter) => {
+    let { onApply } = this.props
+
+    onApply(filter)
+  }
+
+  getTitle = (filter, i) => {
+    let { id, name } = filter
+
     return (
       <SavedFilterTitle>
         <Grid>
           <GridRow>
-            <GridColumn computer={10}>
+            <GridColumn computer={10} onClick={() => this.handleFilterApply(filter)}>
               {name}
             </GridColumn>
-            <GridColumn computer={2} onClick={() => this.toggleAccordion(id)}>
+            <GridColumn computer={2} onClick={() => this.toggle(id)}>
               <SavedFilterIcon
                 name='bell'
                 className={this.state.activeIndex === id && 'thick'}
                 color={this.state.activeIndex === id ? 'yellow' : 'black'} />
             </GridColumn>
             <Popup trigger={
-              <GridColumn computer={2}>
-                <SavedFilterIcon name='info circle' />
+              <GridColumn onClick={() => this.toggle(i, 'activeTooltip')} computer={2}>
+                <SavedFilterIcon color={this.state.activeTooltip === i ? 'blue' : 'black'} name='info circle' />
               </GridColumn>
-            } position='right center'>
+            } position='left center' on='click'>
               <GridColumn computer={8}>
-                <Grid>
-                  <GridRow>
-                    <GridColumn>
-                      IMPLEMENT WHEN BACKEND PROVIDES DATA!
-                    </GridColumn>
-                  </GridRow>
+                <Grid verticalAlign='top'>
+                  {filter.filters && filter.filters.length > 0 ? filter.filters.map((f) => (
+                    <GridRow>
+                      <GridColumn computer={8}>
+                        {f.description}:
+                      </GridColumn>
+
+                      <GridColumn computer={8}>
+                        {f.valuesDescription instanceof Array ? f.valuesDescription.map((v) => <p>{v}</p>) : f.valuesDescription}
+                      </GridColumn>
+                    </GridRow>
+                  )) : <GridRow><GridColumn> <FormattedMessage id='filter.noFitlersApplied' defaultMessage='No filters applied' /> </GridColumn></GridRow>}
                 </Grid>
               </GridColumn>
             </Popup>
-            <GridColumn computer={2}>
+            <GridColumn onClick={() => this.props.deleteFilter(id)} computer={2}>
               <SavedFilterIcon name='remove' />
             </GridColumn>
           </GridRow>
@@ -73,32 +89,41 @@ export default class SavedFilters extends Component {
     return (
       <SavedFiltersSegment basic>
         <Accordion>
-          {this.props.savedFilters.map((filter) => {
+          {this.props.savedFilters.map((filter, i) => {
 
-            let { notificationEnabled, notifyMail, notifyPhone, notifySystem, notificationMail, notificationPhone } = filter
+            let { notificationEnabled, notifyMail, notifyPhone, notifySystem, notificationMail, } = filter
             let initialValues = {
               checkboxes: {
                 notificationEnabled, notifyMail, notifyPhone, notifySystem,
               },
               notifications: {
-                notificationMail, notificationPhone
+                notificationMail
               }
             }
 
             return (
               <SavedFilterItem key={filter.id}>
-                {this.getTitle(filter.name, filter.id)}
+                {this.getTitle(filter, i)}
 
-                <AccordionContent active={this.state.activeIndex === filter.id}>
+                <AccordionContent key={i} active={this.state.activeIndex === filter.id}>
                   {this.state.activeIndex === filter.id && (
-                    <Form initialValues={initialValues}>
-                      {({ values }) => {
+                    <Form
+                      enableReinitialize={true}
+                      validationSchema={savedFilterValidation}
+                      initialValues={initialValues}
+                      validateOnChange={false}
+                      validateOnBlur={false}
+                      onSubmit={(values, { setSubmitting }) => {
+                        this.props.updateFilterNotifications(this.state.activeIndex, { name: filter.name, ...values.checkboxes, ...values.notifications })
+                        setSubmitting(false)
+                      }}>
+                      {({ values, submitForm }) => {
                         return (
                           <Grid verticalAlign='middle'>
                             <Notifications values={values} />
                             <ActionRow>
                               <GridColumn computer={4} floated='right'>
-                                <Button.Submit fluid positive basic><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
+                                <Button onClick={submitForm} loading={this.props.savedFilterUpdating} fluid positive basic><FormattedMessage id='global.save' defaultMessage='Save' /></Button>
                               </GridColumn>
                             </ActionRow>
                           </Grid>
@@ -117,13 +142,14 @@ export default class SavedFilters extends Component {
 }
 
 SavedFilters.propTypes = {
+  onApply: func,
   getSavedFilters: func,
   savedFilters: array,
-  savedFiltersLoading: bool
+  savedFiltersLoading: bool,
+  deleteFilter: func
 }
 
 SavedFilters.defaultProps = {
-  getSavedFilters: () => console.warn('getSavedFilters not implemented!'),
   savedFilters: [],
   savedFiltersLoading: false
 }

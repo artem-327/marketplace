@@ -4,6 +4,31 @@ import typeToReducer from 'type-to-reducer'
 
 import { uniqueArrayByKey } from '~/utils/functions'
 
+import { datagridValues, paths } from './constants/filter'
+
+const asignFiltersDescription = filter => {
+  let datagridKeys = Object.keys(datagridValues)
+
+  let { filters } = filter
+
+  if (filters) {
+    filters.forEach(filter => {
+      datagridKeys.forEach(key => {
+        let datagrid = datagridValues[key]
+
+        if (datagrid.path === filter.path && datagrid.operator === filter.operator) {
+          filter.description = datagrid.description
+          filter.valuesDescription = datagridValues[key].valuesDescription(filter.values)
+        }
+      })
+    })
+  }
+
+
+  return filter
+}
+
+
 export const initialState = {
   isOpen: false,
   isFilterSaving: false,
@@ -11,7 +36,9 @@ export const initialState = {
   autocompleteData: [],
   autocompleteDataLoading: false,
   savedFilters: [],
-  savedFiltersLoading: false
+  appliedFilter: [],
+  savedFiltersLoading: false,
+  savedFilterUpdating: false
 }
 
 export default typeToReducer({
@@ -46,10 +73,31 @@ export default typeToReducer({
     }
   },
   [a.getSavedFilters.fulfilled]: (state, { payload }) => {
+
+    let { data } = payload
+    let autocompleteData = []
+
+    data.forEach(element => {
+
+      element = asignFiltersDescription(element)
+      element.filters.forEach(filter => {
+        if (filter.path === paths.productOffers.productId) {
+          filter.values.forEach(element => {
+            let parsed = JSON.parse(element.description)
+            let { name, casNumberCombined } = parsed
+            autocompleteData.push({ id: element.value, productName: name, casNumberCombined })
+          })
+        }
+      })
+
+    })
+
+
     return {
       ...state,
       savedFiltersLoading: false,
-      savedFilters: payload
+      savedFilters: data,
+      autocompleteData: uniqueArrayByKey(autocompleteData.concat(state.autocompleteData), 'id'),
     }
   },
   [a.getSavedFilters.rejected]: (state) => {
@@ -104,4 +152,79 @@ export default typeToReducer({
       isFilterSaving: false
     }
   },
+
+  /* APPLY_FILTER */
+
+
+
+  [a.applyFilter]: (state, { payload }) => {
+    let appliedFilter = asignFiltersDescription(payload)
+
+    return {
+      ...state,
+      appliedFilter: {
+        ...state.appliedFilter,
+        ...appliedFilter
+      }
+    }
+  },
+
+  /* DELETE_FILTER */
+
+  [a.deleteFilter.pending]: (state) => {
+    return {
+      ...state,
+      savedFiltersLoading: true
+    }
+  },
+
+  [a.deleteFilter.fulfilled]: (state, { payload }) => {
+    return {
+      ...state,
+      savedFilters: state.savedFilters.filter((filter) => filter.id !== payload),
+      savedFiltersLoading: false
+    }
+  },
+
+
+  [a.deleteFilter.rejected]: (state) => {
+    return {
+      ...state,
+      savedFiltersLoading: false
+    }
+  },
+
+  /* UPDATE_FILTER_NOTIFICATIONS */
+
+
+  [a.updateFilterNotifications.pending]: (state) => {
+    return {
+      ...state,
+      savedFilterUpdating: true
+    }
+  },
+
+
+  [a.updateFilterNotifications.fulfilled]: (state, { payload }) => {
+    let savedFilters = state.savedFilters.slice(0)
+    let index = savedFilters.findIndex((el) => el.id === payload.id)
+
+    savedFilters[index] = payload
+
+
+    return {
+      ...state,
+      savedFilters,
+      savedFilterUpdating: false
+    }
+  },
+
+
+  [a.updateFilterNotifications.rejected]: (state) => {
+    return {
+      ...state,
+      savedFilterUpdating: false
+    }
+  },
+
 }, initialState)

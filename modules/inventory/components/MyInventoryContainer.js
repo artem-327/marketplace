@@ -1,16 +1,17 @@
+import React from "react";
 
 import { connect } from 'react-redux'
 import Router from 'next/router'
 import MyInventory from './MyInventory'
 import * as Actions from '../actions'
-import { openBroadcast } from '~/modules/broadcast/actions'
 import { withDatagrid } from '~/modules/datagrid'
-import {Label, Popup, List} from "semantic-ui-react";
-import React from "react";
+import { Label, Popup, List } from "semantic-ui-react";
 
+import { openBroadcast } from '~/modules/broadcast/actions'
+import { applyFilter } from '~/modules/filter/actions'
 
 const transformLotNumbers = lots => {
-  if ( lots.length > 1) {
+  if (lots.length > 1) {
     let onMouseoverTest = lots.map(d => (d.lotNumber))
     return (
       <div>
@@ -28,10 +29,12 @@ const transformLotNumbers = lots => {
 
 function mapStateToProps(store, { datagrid }) {
   return {
+
     ...store.simpleAdd,
+    appliedFilter: store.filter.filter.appliedFilter,
+    
     rows: datagrid.rows.map(po => {
       const qtyPart = `${po.product.packagingUnit ? po.product.packagingUnit.nameAbbreviation : ''}`
-
       return {
         id: po.id,
         product: po.product,
@@ -62,7 +65,7 @@ function mapStateToProps(store, { datagrid }) {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions, openBroadcast })(MyInventory), {
+export default withDatagrid(connect(mapStateToProps, { ...Actions, openBroadcast, applyFilter })(MyInventory), {
   apiUrl: '/prodex/api/product-offers/own/datagrid/'
 })
 

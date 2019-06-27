@@ -116,6 +116,7 @@ export default (Component, { apiUrl }) => {
             setFilter: this.setFilter,
             setApiUrl: this.setApiUrl,
             loadNextPage: this.loadNextPageSafe,
+            apiUrl,
 
             tableProps: {
               rows,
