@@ -8,7 +8,6 @@ import {withRouter, Router} from 'next/router'
 class Index extends Component {
 
   render() {
-
     return (
       <Layout title="Settings">
           <SettingsPage type={this.props.router.query.type} />

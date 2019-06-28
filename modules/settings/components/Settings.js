@@ -159,7 +159,7 @@ class Settings extends Component {
       >
         <Container fluid className="flex stretched">
           <Container fluid style={{ padding: '0 32px' }}>
-            <TablesHandlers currentTab={currentTab} datagridEnabled={!!this.getApiConfig()} />
+            <TablesHandlers currentTab={currentTab} />
           </Container>
           <Grid columns="equal" className="flex stretched" style={{ padding: '0 32px' }}>
             <Grid.Row>

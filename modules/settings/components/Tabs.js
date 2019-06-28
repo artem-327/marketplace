@@ -14,6 +14,7 @@ class Tabs extends Component {
       tabChanged(tab)
     }
   }
+  
   render() {
     const { tabsNames, currentTab } = this.props
     return (
