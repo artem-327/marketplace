@@ -119,10 +119,8 @@ export default {
     api.delete(`/prodex/api/payments/cards/${cardId}`).then(() => cardId),
   deleteBankAccount: bankAccountId =>
     api.delete(`/prodex/api/payments/bank-accounts/${bankAccountId}`).then(() => bankAccountId),
-  getAddressSearch: (pattern, countryId, provinceId) => {
-    return api.get(`/prodex/api/addresses/search?countryId=${countryId}&pattern=${pattern}&provinceId=${provinceId}`)
-      .then(response => response.data)
-  },
+  getAddressSearch: body =>
+    api.post('/prodex/api/addresses/search', body).then(response => response.data),
   getDeliveryAddressesByStringRequest: async (value, limit = 30) => {
     return await api.get(`/prodex/api/delivery-addresses/search?limit=${limit}&pattern=${value}`)
       .then(response => response.data)

@@ -31,7 +31,7 @@ import { validationSchema } from '~/modules/company-form/constants'
 
 import { DatagridProvider } from '~/modules/datagrid'
 
-// import Toast from '../../../../components/toast'
+import { withToastManager } from 'react-toast-notifications'
 
 const TopMargedGrid = styled(Grid)`
   margin-top: 1rem !important;
@@ -47,6 +47,7 @@ class Settings extends Component {
   }
 
   companyDetails = () => {
+    let { toastManager } = this.props
     return (
       <TopMargedGrid relaxed='very' centered>
         <GridColumn computer={12}>
@@ -56,9 +57,17 @@ class Settings extends Component {
             onSubmit={async (values, { setSubmitting }) => {
               try {
                 await this.props.updateCompany(values.id, { ...values, businessType: values.businessType.id })
-              } catch (ignored) { }
 
-              setSubmitting(false)
+                toastManager.add(
+                  <div>
+                    <strong><FormattedMessage id='notifications.companyUpdated' defaultMessage='Company updated' values={{ name: values.name }} /></strong>
+                  </div>, { appearance: 'success', pauseOnHover: true })
+              } catch (err) {
+                console.error(err)
+              }
+              finally {
+                setSubmitting(false)
+              }
             }}
           >
             {({ values, errors, setFieldValue }) => {
@@ -131,9 +140,9 @@ class Settings extends Component {
       'products': {
         url: `/prodex/api/products/datagrid`,
         searchToFilter: (value) => ({
-            operator: "LIKE",
-            path: "Product.productName",
-            values: ['%' + value + '%']
+          operator: "LIKE",
+          path: "Product.productName",
+          values: ['%' + value + '%']
         })
       },
       // 'bank-accounts': null,
@@ -159,7 +168,7 @@ class Settings extends Component {
       >
         <Container fluid className="flex stretched">
           <Container fluid style={{ padding: '0 32px' }}>
-            <TablesHandlers currentTab={currentTab} datagridEnabled={!!this.getApiConfig()} />
+            <TablesHandlers currentTab={currentTab} />
           </Container>
           <Grid columns="equal" className="flex stretched" style={{ padding: '0 32px' }}>
             <Grid.Row>
@@ -189,4 +198,4 @@ const mapStateToProps = ({ settings, auth }) => {
 export default connect(
   mapStateToProps,
   { addTab, updateCompany, tabChanged }
-)(Settings)
+)(withToastManager(Settings))

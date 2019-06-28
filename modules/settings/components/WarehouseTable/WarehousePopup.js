@@ -9,6 +9,7 @@ import {
   postNewWarehouseRequest,
   getProvinces,
   getAddressSearch,
+  removeEmpty
 } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
@@ -116,7 +117,17 @@ class WarehousePopup extends React.Component {
       if (this.props.AddressSuggestData[i].country.hasProvinces) this.props.getProvinces(this.props.AddressSuggestData[i].country.id)
     }
     else {
-      this.props.getAddressSearch(d.value, values.country, values.province)
+      let newValues = {...values, [d.name]: d.value}
+      const body = {
+        city:           newValues.city,
+        countryId:      newValues.country,
+        provinceId:     newValues.province,
+        streetAddress:  newValues.address,
+        zip:            newValues.zip
+      }
+      removeEmpty(body)
+      if (Object.entries(body).length === 0) return
+      this.props.getAddressSearch(body)
     }
   }
 
@@ -207,6 +218,7 @@ const mapDispatchToProps = {
   closePopup,
   getProvinces,
   getAddressSearch,
+  removeEmpty
 }
 const mapStateToProps = state => {
   const AddressSuggestOptions = state.settings.addressSearch.map((a) => (

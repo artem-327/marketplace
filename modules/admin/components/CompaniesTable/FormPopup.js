@@ -4,8 +4,10 @@ import { connect } from 'react-redux'
 import { Form, Modal, FormGroup, Divider, Accordion, Icon, Segment, Header } from 'semantic-ui-react'
 
 import { Formik } from 'formik'
-import { closePopup, updateCompany, createCompany, getCountries, getPrimaryBranchProvinces, getMailingBranchProvinces,
-          getAddressSearchPrimaryBranch, getAddressSearchMailingBranch } from '../../actions'
+import {
+  closePopup, updateCompany, createCompany, getCountries, getPrimaryBranchProvinces, getMailingBranchProvinces,
+  getAddressSearchPrimaryBranch, getAddressSearchMailingBranch
+} from '../../actions'
 import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
 import { Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
@@ -14,6 +16,7 @@ import { ZipDropdown } from '~/modules/zip-dropdown'
 // import JSONPretty from 'react-json-pretty'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
+import { withToastManager } from 'react-toast-notifications'
 
 import { validationSchema } from '~/modules/company-form/constants'
 import { provinceObjectRequired, errorMessages } from '~/constants/yupValidation'
@@ -68,23 +71,6 @@ const initialFormValues = {
     name: '',
   }
 }
-
-const removeEmpty = (obj) =>
-  Object.entries(obj).forEach(([key, val]) => {
-    if (val && typeof val === 'object') {
-      removeEmpty(val)
-      if (Object.entries(val).length === 0) delete obj[key]
-    }
-    else {
-      if (val == null) delete obj[key]
-      else if (typeof val === 'string') {
-        if (val.trim() === '') delete obj[key]
-        else obj[key] = val.trim()
-      }
-    }
-  })
-
-
 
 class AddNewPopupCasProducts extends React.Component {
   state = {
@@ -186,14 +172,25 @@ class AddNewPopupCasProducts extends React.Component {
     if (i >= 0) {
       setFieldValue('primaryBranch.address.streetAddress', this.props.AddressSuggestPrimaryBranchData[i].streetAddress)
       setFieldValue('primaryBranch.address.city', this.props.AddressSuggestPrimaryBranchData[i].city)
-      setFieldValue('primaryBranch.address.zip', this.props.AddressSuggestPrimaryBranchData[i].zip &&  this.props.AddressSuggestPrimaryBranchData[i].zip.zip)
+      setFieldValue('primaryBranch.address.zip', this.props.AddressSuggestPrimaryBranchData[i].zip && this.props.AddressSuggestPrimaryBranchData[i].zip.zip)
       setFieldValue('primaryBranch.address.country', this.props.AddressSuggestPrimaryBranchData[i].country.id)
       setFieldValue('primaryBranch.address.province', this.props.AddressSuggestPrimaryBranchData[i].province ? this.props.AddressSuggestPrimaryBranchData[i].province.id : '')
-      this.setState({primaryBranchHasProvinces: this.props.AddressSuggestPrimaryBranchData[i].country.hasProvinces})
+      this.setState({ primaryBranchHasProvinces: this.props.AddressSuggestPrimaryBranchData[i].country.hasProvinces })
       if (this.props.AddressSuggestPrimaryBranchData[i].country.hasProvinces) this.props.getPrimaryBranchProvinces(this.props.AddressSuggestPrimaryBranchData[i].country.id)
     }
     else {
-      this.props.getAddressSearchPrimaryBranch(d.value, values.primaryBranch.address.country, values.primaryBranch.address.province)
+      let newValues = {...values.primaryBranch.address, [d.name.split('.')[2]]: d.value}
+
+      const body = {
+        city:           newValues.city,
+        countryId:      newValues.country,
+        provinceId:     newValues.province,
+        streetAddress:  newValues.streetAddress,
+        zip:            newValues.zip
+      }
+      removeEmpty(body)
+      if (Object.entries(body).length === 0) return
+      this.props.getAddressSearchPrimaryBranch(body)
     }
   }
 
@@ -202,14 +199,25 @@ class AddNewPopupCasProducts extends React.Component {
     if (i >= 0) {
       setFieldValue('mailingBranch.address.streetAddress', this.props.AddressSuggestMailingBranchData[i].streetAddress)
       setFieldValue('mailingBranch.address.city', this.props.AddressSuggestMailingBranchData[i].city)
-      setFieldValue('mailingBranch.address.zip', this.props.AddressSuggestMailingBranchData[i].zip &&  this.props.AddressSuggestMailingBranchData[i].zip.zip)
+      setFieldValue('mailingBranch.address.zip', this.props.AddressSuggestMailingBranchData[i].zip && this.props.AddressSuggestMailingBranchData[i].zip.zip)
       setFieldValue('mailingBranch.address.country', this.props.AddressSuggestMailingBranchData[i].country.id)
       setFieldValue('mailingBranch.address.province', this.props.AddressSuggestMailingBranchData[i].province ? this.props.AddressSuggestMailingBranchData[i].province.id : '')
-      this.setState({MailingBranchHasProvinces: this.props.AddressSuggestMailingBranchData[i].country.hasProvinces})
+      this.setState({ MailingBranchHasProvinces: this.props.AddressSuggestMailingBranchData[i].country.hasProvinces })
       if (this.props.AddressSuggestMailingBranchData[i].country.hasProvinces) this.props.getMailingBranchProvinces(this.props.AddressSuggestMailingBranchData[i].country.id)
     }
     else {
-      this.props.getAddressSearchMailingBranch(d.value, values.mailingBranch.address.country, values.mailingBranch.address.province)
+      let newValues = {...values.mailingBranch.address, [d.name.split('.')[2]]: d.value}
+
+      const body = {
+        city:           newValues.city,
+        countryId:      newValues.country,
+        provinceId:     newValues.province,
+        streetAddress:  newValues.streetAddress,
+        zip:            newValues.zip
+      }
+      removeEmpty(body)
+      if (Object.entries(body).length === 0) return
+      this.props.getAddressSearchMailingBranch(body)
     }
   }
 
@@ -225,7 +233,8 @@ class AddNewPopupCasProducts extends React.Component {
       config,
       intl,
       AddressSuggestPrimaryBranchInput,
-      AddressSuggestMailingBranchInput
+      AddressSuggestMailingBranchInput,
+      toastManager
     } = this.props
 
     let { accordionActive } = this.state
@@ -255,6 +264,10 @@ class AddNewPopupCasProducts extends React.Component {
                 })
 
               await updateCompany(popupValues.id, newValues)
+              toastManager.add(
+                <div>
+                  <strong><FormattedMessage id='notifications.companyUpdated' defaultMessage='Company updated' values={{ name: values.name }} /></strong>
+                </div>, { appearance: 'success', pauseOnHover: true })
             }
             else {
               if (values.mailingBranch && !(values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
@@ -265,8 +278,14 @@ class AddNewPopupCasProducts extends React.Component {
 
               removeEmpty(values)
               await createCompany(values)
+              toastManager.add(
+                <div>
+                  <strong><FormattedMessage id='notifications.companyCreated' defaultMessage='Company created' values={{ name: values.name }} /></strong>
+                </div>, { appearance: 'success', pauseOnHover: true })
             }
-          } catch (_) { }
+          } catch (err) { 
+            console.error(err)
+          }
           finally {
             actions.setSubmitting(false)
           }
@@ -331,19 +350,19 @@ class AddNewPopupCasProducts extends React.Component {
                           <h5><FormattedMessage id='global.address' defaultMessage='Address' /></h5>
                           <FormGroup widths='equal'>
                             <Input
-                              inputProps={{list: 'addressesPrimaryBranch', onChange: (e, d) => { this.handleAddressSelectPrimaryBranch(d, values, setFieldValue)}}}
+                              inputProps={{ list: 'addressesPrimaryBranch', onChange: (e, d) => { this.handleAddressSelectPrimaryBranch(d, values, setFieldValue) } }}
                               label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />}
                               name='primaryBranch.address.streetAddress'
                             />
                             <Input
-                              inputProps={{list: 'addressesPrimaryBranch', onChange: (e, d) => { this.handleAddressSelectPrimaryBranch(d, values, setFieldValue)}}}
+                              inputProps={{ list: 'addressesPrimaryBranch', onChange: (e, d) => { this.handleAddressSelectPrimaryBranch(d, values, setFieldValue) } }}
                               label={<FormattedMessage id='global.city' defaultMessage='City' />}
                               name='primaryBranch.address.city'
                             />
                           </FormGroup>
                           <FormGroup widths='equal'>
                             <ZipDropdown
-                              inputProps={{list: 'addressesPrimaryBranch', onChange: (e, d) => { this.handleAddressSelectPrimaryBranch(d, values, setFieldValue)}}}
+                              inputProps={{ list: 'addressesPrimaryBranch', onChange: (e, d) => { this.handleAddressSelectPrimaryBranch(d, values, setFieldValue) } }}
                               name='primaryBranch.address.zip' countryId={values.mailingBranch && values.mailingBranch.country && values.mailingBranch.address.country}
                             />
                             <Dropdown label={<FormattedMessage id='global.country' defaultMessage='Country' />} name='primaryBranch.address.country'
@@ -381,19 +400,19 @@ class AddNewPopupCasProducts extends React.Component {
                           <h5><FormattedMessage id='global.address' defaultMessage='Address' /></h5>
                           <FormGroup widths='equal'>
                             <Input
-                              inputProps={{list: 'addressesMailingBranch', onChange: (e, d) => { this.handleAddressSelectMailingBranch(d, values, setFieldValue)}}}
+                              inputProps={{ list: 'addressesMailingBranch', onChange: (e, d) => { this.handleAddressSelectMailingBranch(d, values, setFieldValue) } }}
                               label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />}
                               name='mailingBranch.address.streetAddress'
                             />
                             <Input
-                              inputProps={{list: 'addressesMailingBranch', onChange: (e, d) => { this.handleAddressSelectMailingBranch(d, values, setFieldValue)}}}
+                              inputProps={{ list: 'addressesMailingBranch', onChange: (e, d) => { this.handleAddressSelectMailingBranch(d, values, setFieldValue) } }}
                               label={<FormattedMessage id='global.city' defaultMessage='City' />}
                               name='mailingBranch.address.city'
                             />
                           </FormGroup>
                           <FormGroup widths='equal'>
                             <ZipDropdown
-                              inputProps={{list: 'addressesMailingBranch', onChange: (e, d) => { this.handleAddressSelectMailingBranch(d, values, setFieldValue)}}}
+                              inputProps={{ list: 'addressesMailingBranch', onChange: (e, d) => { this.handleAddressSelectMailingBranch(d, values, setFieldValue) } }}
                               name='mailingBranch.address.zip' countryId={values.mailingBranch && values.mailingBranch.country && values.mailingBranch.address.country}
                             />
                             <Dropdown label={<FormattedMessage id='global.country' defaultMessage='Country' />} name='mailingBranch.address.country' options={countriesDropDown}
@@ -470,4 +489,4 @@ const mapStateToProps = ({ admin, zip }) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddNewPopupCasProducts))
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(AddNewPopupCasProducts)))

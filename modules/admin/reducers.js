@@ -43,7 +43,7 @@ export const initialState = {
   currentEdit2Form: null,
   currentAddForm: null,
   currentAddDwolla: null,
-  
+
   confirmMessage: null,
   deleteRowById: null,
   filterValue: '',
@@ -449,7 +449,6 @@ export default function reducer(state = initialState, action) {
         loading: false
       }
     }
-
 
 
 

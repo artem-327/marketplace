@@ -9,6 +9,7 @@ import {
   getCountries,
   getProvinces,
   getAddressSearch,
+  removeEmpty
 } from '../../actions'
 
 import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui'
@@ -77,7 +78,18 @@ class DeliveryAddressesPopup extends React.Component {
       if (this.props.AddressSuggestData[i].country.hasProvinces) this.props.getProvinces(this.props.AddressSuggestData[i].country.id)
     }
     else {
-      this.props.getAddressSearch(d.value, values.address.country, values.address.province)
+      let newValues = {...values.address, [d.name.split('.')[1]]: d.value}
+
+      const body = {
+        city:           newValues.city,
+        countryId:      newValues.country,
+        provinceId:     newValues.province,
+        streetAddress:  newValues.streetAddress,
+        zip:            newValues.zip
+      }
+      removeEmpty(body)
+      if (Object.entries(body).length === 0) return
+      this.props.getAddressSearch(body)
     }
   }
 
@@ -162,7 +174,7 @@ const mapDispatchToProps = {
   createDeliveryAddress,
   getCountries,
   getProvinces,
-  getAddressSearch,
+  getAddressSearch
 }
 
 const prepareAddressSuggest = (AddressSuggestOptions) => (

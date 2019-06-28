@@ -1,9 +1,22 @@
 import * as AT from './action-types'
 import * as api from './api'
 import { updateIdentity } from '~/modules/auth/actions'
-import { addMessage } from '~/modules/messages/actions'
-import { themes, responses } from '~/modules/messages/constants'
 import { Datagrid } from '~/modules/datagrid'
+
+export const removeEmpty = (obj) =>
+	Object.entries(obj).forEach(([key, val]) => {
+		if (val && typeof val === 'object') {
+			removeEmpty(val)
+			if (Object.entries(val).length === 0) delete obj[key]
+		}
+		else {
+			if (val == null) delete obj[key]
+			else if (typeof val === 'string') {
+				if (val.trim() === '') delete obj[key]
+				else obj[key] = val.trim()
+			}
+		}
+	})
 
 export function openEditPopup(editedData) {
 	return {
@@ -340,7 +353,6 @@ export function createCompany(formData) {
 		})
 
 		dispatch(closePopup())
-		dispatch(getCompanies())
 	}
 }
 
@@ -352,10 +364,9 @@ export function updateCompany(id, formData) {
 			response
 		})
 
-		dispatch(addMessage({ theme: themes.SUCCESS, content: responses.SUCCESS }))
 		dispatch(updateIdentity(response))
 		dispatch(closePopup())
-		dispatch(getCompanies())
+		// dispatch(getCompanies())
 	}
 }
 
@@ -406,16 +417,16 @@ export const deleteUnit = id => ({ type: AT.ADMIN_DELETE_UNIT, payload: api.dele
 export const deleteUnitOfPackaging = id => ({ type: AT.ADMIN_DELETE_UNIT_OF_PACKAGING, payload: api.deleteUnitOfPackaging(id) })
 
 
-export function getAddressSearchPrimaryBranch(pattern, countryId='', provinceId='') {
+export function getAddressSearchPrimaryBranch(body) {
 	return {
 		type: AT.ADMIN_GET_ADDRESSES_SEARCH_PRIMARY_BRANCH,
-		payload: api.getAddressSearch(pattern, countryId, provinceId)
+		payload: api.getAddressSearch(body)
 	}
 }
 
-export function getAddressSearchMailingBranch(pattern, countryId='', provinceId='') {
+export function getAddressSearchMailingBranch(body) {
 	return {
 		type: AT.ADMIN_GET_ADDRESSES_SEARCH_MAILING_BRANCH,
-		payload: api.getAddressSearch(pattern, countryId, provinceId)
+		payload: api.getAddressSearch(body)
 	}
 }
