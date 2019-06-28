@@ -13,14 +13,15 @@ export default class CartItemSummary extends Component {
     let { productOffer } = item
     let { deleteCart, currency } = this.props
 
-    
     return (
       <>
         <GridColumn computer={16}>
           <Grid columns={2} className='light-gray cart-item-summary'>
             <HeaderTextRow>
               <GridColumn>
-                {productOffer.product.casProduct.casIndexName}
+                {productOffer.product.casProducts.length ? productOffer.product.casProducts.map(cp => {
+                  return cp.casProduct.casIndexName
+                }).join(' & ') : ('Unmapped' + ' ' + productOffer.product.productName)}
               </GridColumn>
 
               <GridColumn floated='right'>
@@ -45,7 +46,7 @@ export default class CartItemSummary extends Component {
               </GridColumn>
 
               <GridColumn floated='right'>
-                {productOffer.owner && productOffer.owner.company.name}
+                {productOffer.owner && productOffer.owner.displayName}
               </GridColumn>
             </RelaxedRow>
 
