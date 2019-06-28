@@ -78,6 +78,18 @@ export class DatagridProvider extends Component {
     }
   }
 
+  updateRow = (id, updateFn) => {
+    this.setState(s => {
+      let rows = s.rows.slice(0).map((r,i) => {
+        if (r.id === id) {
+          return updateFn(r)
+        } else return r
+      })
+      
+      return { rows }
+    })
+  }
+
   removeRow = (id) => {
     this.removeRowById(id)
   }
@@ -160,10 +172,12 @@ export class DatagridProvider extends Component {
           loading,
           filters,
           removeRow: this.removeRowById,
+          updateRow: this.updateRow,
           loadData: this.loadData,
           setFilter: this.setFilter,
           setQuery: this.setQuery,
-          // setApiUrl: this.setApiUrl,
+          setSearch: this.setSearch,
+          setLoading: this.setLoading,
           loadNextPage: this.loadNextPageSafe,
 
           tableProps: {
