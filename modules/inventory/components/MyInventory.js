@@ -14,7 +14,7 @@ class MyInventory extends Component {
   state = {
     columns: [
       { name: "productName", title: "Product Name", width: 250, sortPath: 'ProductOffer.product.productName' },
-      { name: "productNumber", title: "Product Number" },
+      { name: "productNumber", title: "Product Number", width: 160 },
       { name: "warehouse", title: "Warehouse", width: 180, sortPath: 'ProductOffer.warehouse.warehouse' },
       { name: "available", title: "Available", width: 80, sortPath: 'ProductOffer.quantity' },
       { name: "packaging", title: "Packaging", sortPath: 'ProductOffer.product.packagingType.name' },
@@ -24,7 +24,7 @@ class MyInventory extends Component {
       { name: "fobPrice", title: "FOB Price", sortPath: 'ProductOffer.pricingPrice' },
       { name: "manufacturer", title: "MFR.", width: 220 },
       { name: "lotNumber", title: "Lot #", width: 100 },
-      { name: "broadcast", title: "Broadcast", width: 120, sortPath: 'ProductOffer.broadcasted' }
+      { name: "broadcast", title: "Broadcast", width: 120, align: 'right', sortPath: 'ProductOffer.broadcasted' }
     ],
     selectedRows: [],
     pageNumber: 0
@@ -69,6 +69,10 @@ class MyInventory extends Component {
 
       return {
         ...r,
+        productNumber: !r.product.casProducts.length ? 'Unmapped' : (r.product.casProducts.length > 1 ? (
+            <Popup content={<List items={r.product.casProducts.map(cp => { return cp.casProduct.casNumber })} />} trigger={<span>Blend</span>} />
+          ) : r.product.casNumberCombined),
+        productNumberSimplified: !r.product.casProducts.length ? 'Unmapped' : r.product.casNumberCombined,
         broadcast: (
           <div style={{ float: 'right' }}>
             <Popup id={r.id}
@@ -164,7 +168,7 @@ class MyInventory extends Component {
               _(rows)
                 .groupBy('productName')
                 .map(v => ({
-                  key: `${v[0].productName}_${v[0].productNumber}_${v.length}`,
+                  key: `${v[0].productName}_${v[0].productNumberSimplified}_${v.length}`,
                   childRows: v
                 }))
                 .value()

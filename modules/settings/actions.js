@@ -2,7 +2,7 @@ import * as AT from "./action-types"
 import api from "./api"
 import { Datagrid } from '~/modules/datagrid'
 
-const removeEmpty = (obj) =>
+export const removeEmpty = (obj) =>
   Object.entries(obj).forEach(([key, val]) => {
     if (val && typeof val === 'object') {
       removeEmpty(val)
@@ -766,10 +766,10 @@ export function searchUnNumber(pattern) {
   }
 }
 
-export function getAddressSearch(pattern, countryId = '', provinceId = '') {
+export function getAddressSearch(body) {
   return {
     type: AT.SETTINGS_GET_ADDRESSES_SEARCH,
-    payload: api.getAddressSearch(pattern, countryId, provinceId)
+    payload: api.getAddressSearch(body)
   }
 }
 

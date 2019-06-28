@@ -234,7 +234,8 @@ export default class _Table extends Component {
     const columns = this.getColumns()
     return columns.map(c => ({
       columnName: c.name,
-      width: c.width || (1280 / columns.length)
+      width: c.width || (1280 / columns.length),
+      align: c.align ? c.align : 'left'
     }))
   }
 
@@ -446,6 +447,7 @@ export default class _Table extends Component {
               for={columns.filter(c => c.options).map(c => c.name)}
             />
             {groupBy && <TableGroupRow
+              showColumnsWhenGrouped={true}
               indentColumnWidth={1}
               iconComponent={({ expanded }) => <Icon style={{ float: 'right' }} size='large' color='blue' name={expanded ? 'chevron down' : 'chevron right'} />}
               contentComponent={({ column, row, children, ...restProps }) => (
