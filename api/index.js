@@ -19,10 +19,14 @@ axios.interceptors.request.use(function (config) {
 })
 
 axios.interceptors.response.use(response => response, function (error) {
-  // Do something with response error
-  const errData = error && error.response && error.response.data
+  if (error && error.response && error.response.config && error.response.config.headers && error.response.config.headers.Pragma && error.response.config.headers.Pragma.includes('no-handle-error')) {
+    // do nothing
+  } else {
+    // Do something with response error
+    const errData = error && error.response && error.response.data
 
-  return Promise.reject(errData || error)
+    return Promise.reject(errData || error)
+  }
 })
 
 export default axios
