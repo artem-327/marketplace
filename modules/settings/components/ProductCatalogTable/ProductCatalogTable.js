@@ -115,6 +115,13 @@ const mapStateToProps = (state, { datagrid }) => {
     rows: datagrid.rows.map(product => {
       return {
         id: product.id,
+        attachments: product.attachments ? product.attachments.map(att => {
+          return {
+            id: att.id,
+            name: att.name,
+            linked: true
+          }
+        }) : [],
         description: product.description ? product.description : '',
         productName: product.productName,
         productNumber: product.productCode,
@@ -164,7 +171,7 @@ const mapStateToProps = (state, { datagrid }) => {
         hazardous: product.hazardous,
         hazardClass: product.hazardClasses && product.hazardClasses.length ? product.hazardClasses.map(d => (
           d.id
-        )) : null,
+        )) : [],
         nmfcNumber: product.nmfcNumber ? product.nmfcNumber : null,
         stackable: product.stackable,
         unNumber: product.unNumber ? product.unNumber : null
