@@ -380,5 +380,7 @@
   "verification.labels.email": "E-mail Address",
   "verification.labels.password": "Password",
   "verification.labels.passwordConfirm": "Password Confirmation",
-  "verification.nextStep": "Next Step"
+  "verification.nextStep": "Next Step",
+  "notifications.companyUpdated": "Company {name} succesfully updated.",
+  "notifications.companyCreated": "Company {name} succesfully created."
 }

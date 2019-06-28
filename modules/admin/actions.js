@@ -1,8 +1,6 @@
 import * as AT from './action-types'
 import * as api from './api'
 import { updateIdentity } from '~/modules/auth/actions'
-import { addMessage } from '~/modules/messages/actions'
-import { themes, responses } from '~/modules/messages/constants'
 import { Datagrid } from '~/modules/datagrid'
 
 export const removeEmpty = (obj) =>
@@ -355,7 +353,6 @@ export function createCompany(formData) {
 		})
 
 		dispatch(closePopup())
-		dispatch(getCompanies())
 	}
 }
 
@@ -367,10 +364,9 @@ export function updateCompany(id, formData) {
 			response
 		})
 
-		dispatch(addMessage({ theme: themes.SUCCESS, content: responses.SUCCESS }))
 		dispatch(updateIdentity(response))
 		dispatch(closePopup())
-		dispatch(getCompanies())
+		// dispatch(getCompanies())
 	}
 }
 
