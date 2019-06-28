@@ -337,12 +337,13 @@ export default class _Table extends Component {
       renderGroupLabel,
       getChildGroups,
       tableName,
+      showColumnsWhenGrouped = false,
       ...restProps
     } = this.props
     
     const { columnSettingOpen, expandedGroups, columnsSettings, loaded } = this.state
     const grouping = groupBy.map(g => ({ columnName: g }))
-    const columnsFiltered = columns.filter(c => !c.disabled)
+    const columnsFiltered = columns.filter(c => !c.disabled && (showColumnsWhenGrouped || !groupBy.includes(c.name)))
 
     const hiddenColumns = [
       ...this.getColumns().filter(c => c.disabled).map(c => c.name),
@@ -447,7 +448,7 @@ export default class _Table extends Component {
               for={columns.filter(c => c.options).map(c => c.name)}
             />
             {groupBy && <TableGroupRow
-              showColumnsWhenGrouped={true}
+              showColumnsWhenGrouped={showColumnsWhenGrouped}
               indentColumnWidth={1}
               iconComponent={({ expanded }) => <Icon style={{ float: 'right' }} size='large' color='blue' name={expanded ? 'chevron down' : 'chevron right'} />}
               contentComponent={({ column, row, children, ...restProps }) => (
