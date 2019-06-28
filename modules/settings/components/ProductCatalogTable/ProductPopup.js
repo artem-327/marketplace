@@ -100,6 +100,35 @@ class ProductPopup extends React.Component {
     this.resetComponent()
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.popupValues && nextProps.popupValues.unitID) {
+      this.filterPackagingTypes (nextProps.popupValues.unitID, nextProps.unitsAll, nextProps.packagingTypesAll)
+    }
+    else this.setState({packagingTypesReduced: nextProps.packagingType})
+  }
+
+  filterPackagingTypes(id, unitsAll, packagingTypesAll) {
+    if (!unitsAll) return
+    const unit = unitsAll.find(unit => unit.id === id)
+    if (!unit) return
+    const measureType = unit.measureType
+    if (!measureType) return
+
+    const packagingTypesReduced = packagingTypesAll.filter(p => p.measureType && p.measureType.id === measureType.id)
+
+    this.setState({packagingTypesReduced: packagingTypesReduced.map((type, id) => {
+      return {
+        key: id,
+        text: type.name,
+        value: type.id
+      }
+    })})
+  }
+
+  handleUnitChange(id, unitsAll, packagingTypesAll) {
+    this.filterPackagingTypes(id, unitsAll, packagingTypesAll)
+  }
+
   handlerSubmit = (values, actions) => {
     const { popupValues, reloadFilter } = this.props
     if (popupValues) {
@@ -242,7 +271,7 @@ class ProductPopup extends React.Component {
       hazardClasses,
       packagingGroups
     } = this.props
-    const { isLoading, isUnLoading, results, value } = this.state
+    const { isLoading, isUnLoading, results, value, packagingTypesReduced } = this.state
     const title = popupValues ? 'Edit' : 'Add'
     const casProduct = popupValues && popupValues.casProduct ? popupValues.casProduct : null
     const unNumber = popupValues && popupValues.unNumber ? popupValues.unNumber : null
@@ -351,11 +380,15 @@ class ProductPopup extends React.Component {
                     label="Unit"
                     name="unitID"
                     options={productsUnitsType}
+                    inputProps={{ onChange: (e, d) => {
+                      setFieldValue('packageID', '')
+                      this.handleUnitChange(d.value, this.props.unitsAll, this.props.packagingTypesAll)
+                      }}}
                   />
                   <Dropdown
                     label="Packaging Type"
                     name="packageID"
-                    options={packagingType}
+                    options={packagingTypesReduced}
                   />
                 </FormGroup>
                 <FormGroup>
@@ -506,7 +539,9 @@ const mapStateToProps = state => {
     popupValues: state.settings.popupValues,
     productsCatalogRows: state.settings.productsCatalogRows,
     packagingType: state.settings.productsPackagingType,
+    packagingTypesAll: state.settings.packagingTypes,
     productsUnitsType: state.settings.productsUnitsType,
+    unitsAll: state.settings.units,
     freightClasses: state.settings.productsFreightClasses,
     hazardClasses: state.settings.productsHazardClasses,
     packagingGroups: state.settings.productsPackagingGroups,
