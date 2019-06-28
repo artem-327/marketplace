@@ -179,14 +179,14 @@ class AddNewPopupCasProducts extends React.Component {
       if (this.props.AddressSuggestPrimaryBranchData[i].country.hasProvinces) this.props.getPrimaryBranchProvinces(this.props.AddressSuggestPrimaryBranchData[i].country.id)
     }
     else {
-      let newValues = {...values.primaryBranch.address, [d.name.split('.')[2]]: d.value}
+      let newValues = { ...values.primaryBranch.address, [d.name.split('.')[2]]: d.value }
 
       const body = {
-        city:           newValues.city,
-        countryId:      newValues.country,
-        provinceId:     newValues.province,
-        streetAddress:  newValues.streetAddress,
-        zip:            newValues.zip
+        city: newValues.city,
+        countryId: newValues.country,
+        provinceId: newValues.province,
+        streetAddress: newValues.streetAddress,
+        zip: newValues.zip
       }
       removeEmpty(body)
       if (Object.entries(body).length === 0) return
@@ -206,14 +206,14 @@ class AddNewPopupCasProducts extends React.Component {
       if (this.props.AddressSuggestMailingBranchData[i].country.hasProvinces) this.props.getMailingBranchProvinces(this.props.AddressSuggestMailingBranchData[i].country.id)
     }
     else {
-      let newValues = {...values.mailingBranch.address, [d.name.split('.')[2]]: d.value}
+      let newValues = { ...values.mailingBranch.address, [d.name.split('.')[2]]: d.value }
 
       const body = {
-        city:           newValues.city,
-        countryId:      newValues.country,
-        provinceId:     newValues.province,
-        streetAddress:  newValues.streetAddress,
-        zip:            newValues.zip
+        city: newValues.city,
+        countryId: newValues.country,
+        provinceId: newValues.province,
+        streetAddress: newValues.streetAddress,
+        zip: newValues.zip
       }
       removeEmpty(body)
       if (Object.entries(body).length === 0) return
@@ -263,7 +263,8 @@ class AddNewPopupCasProducts extends React.Component {
                   else newValues[key] = values[key]
                 })
 
-              await updateCompany(popupValues.id, newValues)
+              await updateCompany(popupValues.id, { ...newValues, businessType: newValues.businessType.id })
+
               toastManager.add(
                 <div>
                   <strong><FormattedMessage id='notifications.companyUpdated' defaultMessage='Company updated' values={{ name: values.name }} /></strong>
@@ -283,7 +284,7 @@ class AddNewPopupCasProducts extends React.Component {
                   <strong><FormattedMessage id='notifications.companyCreated' defaultMessage='Company created' values={{ name: values.name }} /></strong>
                 </div>, { appearance: 'success', pauseOnHover: true })
             }
-          } catch (err) { 
+          } catch (err) {
             console.error(err)
           }
           finally {
@@ -293,7 +294,6 @@ class AddNewPopupCasProducts extends React.Component {
         onReset={closePopup}
         render={props => {
           let { setFieldValue, values, isSubmitting } = props
-
           return (
             <Modal open centered={false} size='small'>
               <Modal.Header><FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} /> {config.addEditText}</Modal.Header>
