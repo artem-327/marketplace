@@ -18,7 +18,7 @@ export default class ItemCartBody extends Component {
         <div className='item-cart-body'>
           <div className='item-cart-body-section'>
             <div className='item-cart-body-section-name'>
-              {(productOffer.product.casProducts.length ? productOffer.product.casNumbersCombined : 'Unmapped') + ' ' + productOffer.product.productName}
+              {(productOffer.product.casProducts.length ? productOffer.product.casNumberCombined : 'Unmapped') + ' ' + productOffer.product.productName}
             </div>
             <div>
               {/* <FormattedMessage
