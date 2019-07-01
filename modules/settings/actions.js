@@ -53,11 +53,11 @@ export function dwollaInitiateVerification(id) {
   }
 }
 
-export function dwollaFinalizeVerification(id) {
+export function dwollaFinalizeVerification(id, value1, value2) {
   return {
     type: AT.DWOLLA_FINALIZE_VERIFICATION,
     async payload() {
-      await api.dwollaFinalizeVerification(id)
+      await api.dwollaFinalizeVerification(id, value1, value2)
       const data = await api.getBankAccountsData()
 
       return data

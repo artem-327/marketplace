@@ -145,8 +145,8 @@ export default {
   dwollaInitiateVerification: async (id) => {
     return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify/initialize`)
   },
-  dwollaFinalizeVerification: async (id) => {
-    return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify?value1=0.03&value2=0.06`)
+  dwollaFinalizeVerification: async (id, value1, value2) => {
+    return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify?value1=${value1}&value2=${value2}`)
   },
   removeAttachment: (aId) => {
     return api.delete('/prodex/api/attachments/' + aId)

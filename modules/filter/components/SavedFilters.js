@@ -6,8 +6,9 @@ import { Form, Button } from 'formik-semantic-ui'
 import { SavedFilterItem, SavedFilterTitle, SavedFiltersSegment, SavedFilterIcon, AccordionContent, ActionRow } from '../constants/layout'
 
 import Notifications from './Notifications'
-import { FormattedMessage } from 'react-intl';
-import { savedFilterValidation } from '../constants/validation';
+import { FormattedMessage } from 'react-intl'
+import { savedFilterValidation } from '../constants/validation'
+import { groupFilters } from '../constants/filter'
 
 export default class SavedFilters extends Component {
   state = {
@@ -33,6 +34,7 @@ export default class SavedFilters extends Component {
 
   getTitle = (filter, i) => {
     let { id, name } = filter
+    let filterDescription = groupFilters(filter.filters)
 
     return (
       <SavedFilterTitle>
@@ -54,7 +56,7 @@ export default class SavedFilters extends Component {
             } position='left center' on='click'>
               <GridColumn computer={8}>
                 <Grid verticalAlign='top'>
-                  {filter.filters && filter.filters.length > 0 ? filter.filters.map((f) => (
+                  {filterDescription && filterDescription.length > 0 ? filterDescription.map((f) => (
                     <GridRow>
                       <GridColumn computer={8}>
                         {f.description}:

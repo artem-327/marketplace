@@ -361,3 +361,70 @@ export const datagridValues = {
     }
   },
 }
+
+export const groupFilters = appliedFilters => {
+  let groups = [{
+    description: 'Quantity',
+    from: {
+      path: paths.productOffers.quantity, operator: operators.GREATER_THAN_OR_EQUAL_TO
+    },
+    to: {
+      path: paths.productOffers.quantity, operator: operators.LESS_THAN_OR_EQUAL_TO
+    }
+  }, {
+    description: 'Price',
+    from: {
+      path: paths.productOffers.price, operator: operators.GREATER_THAN_OR_EQUAL_TO
+    },
+    to: {
+      path: paths.productOffers.price, operator: operators.LESS_THAN_OR_EQUAL_TO
+    }
+  }, {
+    description: 'Assay',
+    from: {
+      path: paths.productOffers.assayFrom, operator: operators.GREATER_THAN_OR_EQUAL_TO
+    },
+    to: {
+      path: paths.productOffers.assayTo, operator: operators.LESS_THAN_OR_EQUAL_TO
+    }
+  }, {
+    description: 'Expiration',
+    from: {
+      path: paths.productOffers.expirationDate, operator: operators.GREATER_THAN_OR_EQUAL_TO
+    },
+    to: {
+      path: paths.productOffers.expirationDate, operator: operators.LESS_THAN_OR_EQUAL_TO
+    }
+  },
+  ]
+
+  // Create copy so we dont mutate original filters
+  let filters = appliedFilters.slice(0)
+
+  let results = [], indexes = []
+
+  groups.forEach(group => {
+    let from = filters.findIndex((el) => el.operator === group.from.operator && el.path === group.from.path)
+    let to = filters.findIndex((el) => el.operator === group.to.operator && el.path === group.to.path)
+
+    if (from !== -1 && to !== -1) {
+      results.push({
+        description: group.description,
+        valuesDescription: `${filters[from].valuesDescription.toString()} - ${filters[to].valuesDescription.toString()}`,
+        indexes:  [from, to]
+      })
+      indexes.push(from, to)
+    }
+  })
+
+  // Take rest elements (those who aren't grouped) and push them to array
+
+  filters.forEach((filter, i) => {
+    if (!indexes.find((index) => index === i)) {
+      results.push({ description: filter.description, valuesDescription: filter.valuesDescription, indexes: [i] })
+    }
+  })
+
+  return results
+
+} 
