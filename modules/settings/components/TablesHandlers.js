@@ -34,7 +34,7 @@ const textsTable = {
     SearchText: 'Search credit card ...'
   },
   'bank-accounts': {
-    BtnAddText: 'Bank account',
+    BtnAddText: 'Bank Account',
     SearchText: 'Search bank account ...'
   },
   'delivery-addresses': {

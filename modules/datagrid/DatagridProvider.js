@@ -179,6 +179,7 @@ export class DatagridProvider extends Component {
           setSearch: this.setSearch,
           setLoading: this.setLoading,
           loadNextPage: this.loadNextPageSafe,
+          clear: this.clear,
 
           tableProps: {
             rows,
