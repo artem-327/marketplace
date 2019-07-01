@@ -14,7 +14,7 @@ import {
   Dropdown
 } from 'semantic-ui-react'
 
-import { datagridValues, replaceAmbigiousCharacters, dateFormat } from '../constants/filter'
+import { datagridValues, replaceAmbigiousCharacters, dateFormat, groupFilters } from '../constants/filter'
 import { initialValues, validationSchema } from '../constants/validation'
 
 import SavedFilters from './SavedFilters'
@@ -202,7 +202,7 @@ class Filter extends Component {
 
   handleSavedFilterApply = async (filter, { setFieldValue, resetForm }) => {
     resetForm({ ...initialValues })
-
+    
     this.props.applyFilter(filter)
 
 
@@ -582,21 +582,26 @@ class Filter extends Component {
 
         <GraySegment basic>
           <Grid>
-            <GridRow columns={2}>
-              <GridColumn>
-                <Button fluid onClick={(e, data) => {
-                  this.resetForm({ ...initialValues })
-                  toggleFilter(false)
-                  this.props.onClear(e, data)
-                }}> <FormattedMessage id='filter.clearFilter' defaultMessage='Clear Filter' /></Button>
-              </GridColumn>
-              <GridColumn>
-                <Button loading={isFilterApplying}
-                  primary fluid
+            <GridRow>
+              <GridColumn computer={16} textAlign='right' >
+                <Button
+                  size='large'
+                  onClick={(e, data) => {
+                    this.resetForm({ ...initialValues })
+                    toggleFilter(false)
+                    this.props.onClear(e, data)
+                  }}> <FormattedMessage id='filter.clearFilter' defaultMessage='Clear Filter' /></Button>
+
+
+                <Button
+                  size='large'
+                  loading={isFilterApplying}
+                  primary
                   onClick={() => this.submitForm()}>
                   <FormattedMessage id='global.apply' defaultMessage='Apply' />
                 </Button>
               </GridColumn>
+
             </GridRow>
           </Grid>
         </GraySegment>
