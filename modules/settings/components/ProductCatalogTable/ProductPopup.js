@@ -78,9 +78,8 @@ const formValidation = Yup.object().shape({
     casProduct: Yup.number().nullable(),
     minimumConcentration: Yup.number().nullable().min(0).max(100),
     maximumConcentration: Yup.number().nullable().min(0).max(100)
-  }))
-
-  //hazardClass: Yup.number(),
+  })),
+  hazardClass: Yup.array().of(Yup.number()),
   //packagingGroup: Yup.number()
 })
 
@@ -227,6 +226,7 @@ class ProductPopup extends React.Component {
   getInitialFormValues = () => {
     const { popupValues } = this.props
     let {
+      attachments = [],
       casProducts = [{casProduct: null, minimumConcentration: 100, maximumConcentration: 100}],
       description = '',
       freightClass = '',
@@ -239,14 +239,17 @@ class ProductPopup extends React.Component {
       packagingGroup = '',
       packageID = '',
       stackable = false,
-      unitID = ''
+      unitID = '',
+      expirationDate = ''
     } = popupValues || {}
     if (casProducts.length === 0) {
       casProducts = [{casProduct: '', minimumConcentration: 100, maximumConcentration: 100}]
     }
     return {
+      attachments,
       casProducts,
       description,
+      expirationDate,
       freightClass,
       hazardClass,
       hazardous,
@@ -318,7 +321,6 @@ class ProductPopup extends React.Component {
                                                     key: item.id,
                                                     id: item.id,
                                                     text: item.casNumber + ' ' + item.chemicalName,
-                                                    unNumber: item.unNumber ? item.unNumber.id : 0,
                                                     value: item.id,
                                                     content: <Header content={item.casNumber} subheader={item.chemicalName} style={{fontSize: '1em'}} />
                                                   }
@@ -335,7 +337,7 @@ class ProductPopup extends React.Component {
                                                   onSearchChange: this.handleSearchChange,
                                                   dataindex: index
                                                 }}
-                                                defaultValue={casProduct && casProduct.casNumber ? casProduct.casNumber : null}
+                                                defaultValue={casProduct && casProduct.casNumber ? casProduct.casNumber : ''}
                                       />
                                     </FormField>
                                     <FormField width={3}>
@@ -355,7 +357,7 @@ class ProductPopup extends React.Component {
                                       ) : ''}
                                       {values.casProducts.length === (index + 1) ? (
                                         <Button basic icon color='green' onClick={() => {
-                                          arrayHelpers.push({ casProduct: '', min: 0, max: 0 })
+                                          arrayHelpers.push({ casProduct: '', minimumConcentration: 0, maximumConcentration: 0 })
                                           this.props.newCasProductsIndex()
                                         }}>
                                           <Icon name='plus' />
@@ -418,7 +420,7 @@ class ProductPopup extends React.Component {
                                 description: item.description
                               }
                             })}
-                            defaultValue={unNumber && unNumber.unNumberCode ? unNumber.unNumberCode : null}
+                            defaultValue={unNumber && unNumber.unNumberCode ? unNumber.unNumberCode : ''}
                     />
                   </FormField>
                   <FormField>
@@ -435,7 +437,6 @@ class ProductPopup extends React.Component {
                 <FormGroup widths='equal'>
                   <Dropdown label='Hazard Class'
                             name='hazardClass'
-                            inputProps={{ multiple: true }}
                             options={hazardClasses}
                             inputProps={{
                               multiple: true,
@@ -464,9 +465,10 @@ class ProductPopup extends React.Component {
                     <label>Document</label>
                     <UploadLot {...this.props}
                                attachments={values.attachments}
+                               edit={this.props.popupValues ? this.props.popupValues.id : ''}
                                name='attachments'
-                               type={values.attachmentType ? values.attachmentType : 'Unspecified'}
-                               expiration={values.expirationDate}
+                               type={values.attachmentType ? ''+values.attachmentType : 'Unspecified'}
+                               expiration={values.expirationDate ? values.expirationDate+'T00:00:00Z' : ''}
                                unspecifiedTypes={['Unspecified']}
                                fileMaxSize={20}
                                onChange={(files) => setFieldValue(

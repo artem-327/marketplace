@@ -40,19 +40,19 @@ const tables = {
 const datagridConfig = {
   'CAS Products': {
     url: '/prodex/api/cas-products/datagrid',
-    searchToFilter: v => ({
-      operator: "LIKE",
-      path: "CasProduct.chemicalName",
-      values: ['%'+v+'%']
-    })
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'CasProduct.chemicalName', values: [`%${v}%`] },
+      { operator: 'LIKE', path: 'CasProduct.casNumber', values: [`%${v}%`] }
+    ]),
+    params: {
+      orOperator: true
+    }
   },
-  'Companies': { 
+  'Companies': {
     url: '/prodex/api/companies/datagrid',
-    searchToFilter: v => ({
-      operator: "LIKE",
-      path: "Company.name",
-      values: ['%'+v+'%']
-    }) 
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] }
+    ])
   },
 }
 
@@ -112,7 +112,7 @@ class Admin extends Component {
 
   getApiConfig = () => {
     const { currentTab } = this.props
-    
+
     return datagridConfig[currentTab]
   }
 

@@ -1,8 +1,6 @@
 import * as AT from './action-types'
 import * as api from './api'
 import { updateIdentity } from '~/modules/auth/actions'
-import { addMessage } from '~/modules/messages/actions'
-import { themes, responses } from '~/modules/messages/constants'
 import { Datagrid } from '~/modules/datagrid'
 
 export const removeEmpty = (obj) =>
@@ -100,10 +98,10 @@ export function postNewRequest(config, values) {
 	}
 }
 
-export function postDwollaAccount(payload){
+export function postDwollaAccount(payload) {
 	return {
-	  type: AT.ADMIN_CREATE_DWOLLA_ACCOUNT,
-	  payload: api.postNewDwollaAccount(payload)
+		type: AT.ADMIN_CREATE_DWOLLA_ACCOUNT,
+		payload: api.postNewDwollaAccount(payload)
 	}
 }
 
@@ -120,7 +118,7 @@ export function putEditedDataRequest(config, id, values) {
 
 export function handleActiveTab(tab) {
 	Datagrid.clear()
-	
+
 	return {
 		type: AT.ADMIN_HANDLE_ACTIVE_TAB,
 		payload: { tab }
@@ -157,18 +155,18 @@ export function handleFiltersValue(props, value) {
 					payload: api.getManufacturersByString(value)
 				})
 			}
-			// case 'Companies':
-			// 	await dispatch({
-			// 		type: AT.ADMIN_GET_COMPANIES,
-			// 		payload: api.getCompanies({
-			// 			...props.companyListDataRequest,
-			// 			filters: [{
-			// 				operator: "LIKE",
-			// 				path: "Company.name",
-			// 				values: ['%' + value + '%']
-			// 			}]
-			// 		})
-			// 	})
+				// case 'Companies':
+				// 	await dispatch({
+				// 		type: AT.ADMIN_GET_COMPANIES,
+				// 		payload: api.getCompanies({
+				// 			...props.companyListDataRequest,
+				// 			filters: [{
+				// 				operator: "LIKE",
+				// 				path: "Company.name",
+				// 				values: ['%' + value + '%']
+				// 			}]
+				// 		})
+				// 	})
 				break
 		}
 	}
@@ -355,7 +353,6 @@ export function createCompany(formData) {
 		})
 
 		dispatch(closePopup())
-		dispatch(getCompanies())
 	}
 }
 
@@ -367,10 +364,12 @@ export function updateCompany(id, formData) {
 			response
 		})
 
-		dispatch(addMessage({ theme: themes.SUCCESS, content: responses.SUCCESS }))
+		Datagrid.updateRow(id, () => response)
+		
+		
 		dispatch(updateIdentity(response))
 		dispatch(closePopup())
-		dispatch(getCompanies())
+		// dispatch(getCompanies())
 	}
 }
 
