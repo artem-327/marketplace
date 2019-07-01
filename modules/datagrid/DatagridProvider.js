@@ -46,7 +46,7 @@ export class DatagridProvider extends Component {
 
   loadNextPage = async () => {
     if (!this.props.apiConfig) return
-    
+
     const { datagridParams, query } = this.state
     const { apiConfig } = this.props
 
@@ -80,12 +80,12 @@ export class DatagridProvider extends Component {
 
   updateRow = (id, updateFn) => {
     this.setState(s => {
-      let rows = s.rows.slice(0).map((r,i) => {
+      let rows = s.rows.slice(0).map((r, i) => {
         if (r.id === id) {
           return updateFn(r)
         } else return r
       })
-      
+
       return { rows }
     })
   }
@@ -144,11 +144,19 @@ export class DatagridProvider extends Component {
   }
 
   setSearch = (value, reload = true) => {
-    const { apiConfig: { searchToFilter } } = this.props
+    const { apiConfig: { searchToFilter, params } } = this.props
 
-    this.setFilter({
-      filters: [searchToFilter(value)]
-    }, reload)
+
+    this.setState(s => ({
+      datagridParams: { ...s.datagridParams, ...params }
+    }), () => {
+      this.setFilter({
+        filters: searchToFilter(value),
+      }, reload)
+    })
+
+
+
   }
 
   setLoading = (loading) => {

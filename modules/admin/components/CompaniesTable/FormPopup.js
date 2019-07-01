@@ -263,7 +263,7 @@ class AddNewPopupCasProducts extends React.Component {
                   else newValues[key] = values[key]
                 })
 
-              await updateCompany(popupValues.id, { ...newValues, businessType: newValues.businessType.id })
+              await updateCompany(popupValues.id, { ...newValues, businessType: newValues.businessType && newValues.businessType.id })
 
               toastManager.add(
                 <div>
