@@ -382,5 +382,9 @@
   "verification.labels.passwordConfirm": "Password Confirmation",
   "verification.nextStep": "Next Step",
   "notifications.companyUpdated": "Company {name} succesfully updated.",
-  "notifications.companyCreated": "Company {name} succesfully created."
+  "notifications.companyCreated": "Company {name} succesfully created.",
+  "productCatalog.newProduct": "New Product",
+  "productCatalog.editProduct": "Edited Product",
+  "productCatalog.successfullyCreated": "Product {productName} successfully created.",
+  "productCatalog.successfullyUpdated": "Product {productName} successfully updated."
 }
