@@ -303,7 +303,7 @@ class AddNewPopupCasProducts extends React.Component {
           return (
             <Modal open centered={false} size='small'>
               <Modal.Header><FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} /> {config.addEditText}</Modal.Header>
-              <Segment basic>
+              <Segment basic padded>
                 <Form loading={isSubmitting}>
                   <Accordion exclusive={false}>
                     <Modal.Content>

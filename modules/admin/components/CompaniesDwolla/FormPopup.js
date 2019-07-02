@@ -6,6 +6,7 @@ import { Form, Modal, FormGroup, Accordion, Icon, Segment, Header } from 'semant
 import { Formik } from 'formik'
 import { closeRegisterDwollaAccount, updateCompany, createCompany, getCountries, getPrimaryBranchProvinces, getMailingBranchProvinces, postDwollaAccount } from '../../actions'
 import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
+import { ZipDropdown } from '~/modules/zip-dropdown'
 import { Input, Button, Dropdown } from 'formik-semantic-ui'
 import { DateInput } from '~/components/custom-formik'
 import * as Yup from 'yup'
@@ -111,6 +112,7 @@ class AddNewPopupCasProducts extends React.Component {
       primaryBranchProvinces,
       mailingBranchProvinces,
       auth,
+      zip,
     } = this.props
 
     let { accordionActive } = this.state
@@ -129,7 +131,6 @@ class AddNewPopupCasProducts extends React.Component {
         dateOfBirth: ''
       }
     }
-    console.log(popupValues)
 
     return (
       <Formik
@@ -208,9 +209,11 @@ class AddNewPopupCasProducts extends React.Component {
                         </FormGroup>
                         <FormGroup widths='equal'>
                           <Input label={<FormattedMessage id='global.address4' defaultMessage='Street address' />} name='dwollaController.streetAddress' />
+                          <Input label={<FormattedMessage id='global.city2' defaultMessage='City' />} name='dwollaController.city' />
                         </FormGroup>
                         <FormGroup widths='equal'>
-                          <Input label={<FormattedMessage id='global.city2' defaultMessage='City' />} name='dwollaController.city' />
+                          <ZipDropdown label="Zip" name="dwollaController.zip" options={zip.codes}
+                            inputProps={{ search: true, clearable: true }} />
                           <Dropdown label={<FormattedMessage id='global.country2' defaultMessage='Country' />} name='dwollaController.country' options={countriesDropDown}
                             inputProps={{
                               search: true,
