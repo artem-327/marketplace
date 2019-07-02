@@ -6,8 +6,8 @@ import { Form, Modal, FormGroup, Divider, Accordion, Icon, Segment, Header } fro
 import { Formik } from 'formik'
 import {
   closePopup, updateCompany, createCompany, getCountries, getPrimaryBranchProvinces, getMailingBranchProvinces,
-  getAddressSearchPrimaryBranch, getAddressSearchMailingBranch
-} from '../../actions'
+  getAddressSearchPrimaryBranch, getAddressSearchMailingBranch, removeEmpty
+} from '~/modules/admin/actions'
 import { addZip, getZipCodes } from '~/modules/zip-dropdown/actions'
 import { Input, Button, Checkbox, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
@@ -35,6 +35,9 @@ const initialFormValues = {
   name: '',
   nacdMember: true,
   phone: '',
+  businessType: {
+    id: null
+  },
   website: '',
   mailingBranch: {
     name: '',
@@ -277,7 +280,10 @@ class AddNewPopupCasProducts extends React.Component {
                 values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''))
                 delete values['mailingBranch']
 
+              if(values.businessType) values.businessType = values.businessType.id
+
               removeEmpty(values)
+
               await createCompany(values)
               toastManager.add(
                 <div>
@@ -340,8 +346,8 @@ class AddNewPopupCasProducts extends React.Component {
                             <Input label={<FormattedMessage id='global.name' defaultMessage='Name' />} name='primaryBranch.name' />
                           </FormGroup>
                           <FormGroup widths='equal'>
-                            <Input label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />} name='primaryBranch.contactEmail' />
                             <Input label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='primaryBranch.contactName' />
+                            <Input label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />} name='primaryBranch.contactEmail' />
                             <Input label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />} name='primaryBranch.contactPhone' />
                           </FormGroup>
                           <FormGroup widths='equal'>
