@@ -46,7 +46,7 @@ class CompaniesTable extends Component {
                 datagrid.removeRow(row.id)
               })
             },
-            { text: 'Register Dwolla Account', callback: (row) => openRegisterDwollaAccount(row.id), hidden: row => row.hasDwollaAccount === "Yes"}
+            { text: 'Register Dwolla Account', callback: (row) => openRegisterDwollaAccount(row), hidden: row => row.hasDwollaAccount === "Yes"}
           ]}
         />
       </React.Fragment>

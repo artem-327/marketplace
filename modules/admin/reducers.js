@@ -79,7 +79,7 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_OPEN_REGISTER_DWOLLA_ACCOUNT_POPUP: {
       return {
         ...state,
-        // popupValues: action.payload,
+        popupValues: action.payload,
         currentAddDwolla: true
       }
     }

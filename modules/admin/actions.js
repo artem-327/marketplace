@@ -383,14 +383,15 @@ export function openEditCompany(id, formData) {
 
 export function openRegisterDwollaAccount(data) {
 	return async dispatch => {
-		dispatch(getCompany(data))
-		dispatch(registerDwollaAccount())
+		dispatch(getCompany(data.id))
+		dispatch(registerDwollaAccount(data))
 	}
 }
 
-export function registerDwollaAccount() {
+export function registerDwollaAccount(data) {
 	return {
-		type: AT.ADMIN_OPEN_REGISTER_DWOLLA_ACCOUNT_POPUP
+		type: AT.ADMIN_OPEN_REGISTER_DWOLLA_ACCOUNT_POPUP,
+		payload: data
 	}
 }
 
