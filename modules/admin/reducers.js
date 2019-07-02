@@ -79,12 +79,34 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_OPEN_REGISTER_DWOLLA_ACCOUNT_POPUP: {
       return {
         ...state,
-        // popupValues: action.payload,
+        popupValues: action.payload,
         currentAddDwolla: true
       }
     }
 
     case AT.ADMIN_CLOSE_REGISTER_DWOLLA_ACCOUNT_POPUP: {
+      return {
+        ...state,
+        popupValues: null,
+        currentAddDwolla: null
+      }
+    }
+
+    case AT.ADMIN_CREATE_DWOLLA_ACCOUNT_PENDING: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED: {
+      return {
+        ...state,
+        currentAddDwolla: null,
+        popupValues: null
+      }
+    }
+
+    case AT.ADMIN_CREATE_DWOLLA_ACCOUNT_REJECTED: {
       return {
         ...state,
         popupValues: null,

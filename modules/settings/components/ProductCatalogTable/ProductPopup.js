@@ -307,8 +307,8 @@ class ProductPopup extends React.Component {
                 </FormGroup>
 
                 <FormGroup style={{alignItems: 'flex-end', marginBottom: '0'}}>
-                  <FormField width={6}>
-                    <Header as='h2' style={{marginBottom: '0.28571429rem', fontSize: '1.3571429em'}}>What are the associated CAS Index Numbers?</Header>
+                  <FormField width={8}>
+                    <label>What are the associated CAS Index Numbers?</label>
                   </FormField>
                   <FormField width={3}>
                     <label>Min Concentration</label>
@@ -322,7 +322,7 @@ class ProductPopup extends React.Component {
                               <>
                                 {values.casProducts && values.casProducts.length ? values.casProducts.map((casProduct, index) => (
                                   <FormGroup key={index}>
-                                    <FormField width={6}>
+                                    <FormField width={8}>
                                       <Dropdown name={`casProducts[${index}].casProduct`}
                                                 options={searchedCasProducts.length > index ? searchedCasProducts[index].map(item => {
                                                   return {
@@ -354,7 +354,7 @@ class ProductPopup extends React.Component {
                                     <FormField width={3}>
                                       <Input type="text" name={`casProducts[${index}].maximumConcentration`} />
                                     </FormField>
-                                    <FormField width={4}>
+                                    <FormField width={2}>
                                       {index ? (
                                         <Button basic icon onClick={() => {
                                           arrayHelpers.remove(index)
