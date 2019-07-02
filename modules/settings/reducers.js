@@ -32,6 +32,9 @@ export const initialState = {
   currency: [],
   currentUser: null,
 
+  addedProduct: {},
+  editedProduct: {},
+
   tabsNames: defaultTabs,
   currentTab: defaultTabs[0],
 
@@ -539,6 +542,20 @@ export default function reducer(state = initialState, action) {
         productsHazardClasses: hazardClasses,
         productsFreightClasses: freightClasses,
         productsPackagingGroups: packagingGroups
+      }
+    }
+
+    case AT.SETTINGS_POST_NEW_PRODUCT_REQUEST_FULFILLED: {
+      return {
+        ...state,
+        addedProduct: action.payload.data
+      }
+    }
+
+    case AT.SETTINGS_UPDATE_PRODUCT_CATALOG_FULFILLED: {
+      return {
+        ...state,
+        editedProduct: action.payload.data
       }
     }
 

@@ -2,13 +2,14 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
-import { Popup } from 'semantic-ui-react'
+import { Popup, List } from 'semantic-ui-react'
 
 import * as Actions from '../../actions'
 import Router from "next/router"
 
 import confirm from '~/src/components/Confirmable/confirm'
 import { injectIntl } from 'react-intl'
+import {withToastManager} from 'react-toast-notifications'
 
 class ProductCatalogTable extends Component {
 
@@ -44,8 +45,34 @@ class ProductCatalogTable extends Component {
     // }
   }
 
-  componentDidUpdate() {
-    const { action, actionId, currentTab, loaded, openPopup, rows } = this.props
+  componentDidUpdate(oldProps) {
+    const { action, actionId, currentTab, loaded, openPopup, rows, addedProduct, editedProduct, datagrid, toastManager } = this.props
+
+    if (editedProduct !== oldProps.editedProduct) {
+      datagrid.updateRow(editedProduct.id, this.getEditedProduct)
+      toastManager.add((
+        <div>
+          <strong>Edit Product</strong>
+          <div>Product was successfully modified.</div>
+        </div>
+      ), {
+        appearance: 'success',
+        autoDismiss: true
+      })
+    }
+
+    if (addedProduct !== oldProps.addedProduct) {
+      datagrid.loadData()
+      toastManager.add((
+        <div>
+          <strong>New Product</strong>
+          <div>Product was successfully created.</div>
+        </div>
+      ), {
+        appearance: 'success',
+        autoDismiss: true
+      })
+    }
 
     if (action === 'edit' && actionId && loaded) {
       if (currentTab.type === 'products') {
@@ -58,12 +85,16 @@ class ProductCatalogTable extends Component {
     }
   }
 
+  getEditedProduct = (r) => {
+    return this.props.editedProduct
+  }
+
   getRows = (rows) => {
     return rows.map(row => {
       return {
         ...row,
-        casName: row.casNameText ? (<Popup content={row.casNameText} trigger={<span>{row.casName}</span>} />) : row.casName,
-        casNumber: row.casNumberText ? (<Popup content={row.casNumberText} trigger={<span>{row.casNumber}</span>} />) : row.casNumber
+        casName: row.casNames ? (<Popup content={<List items={row.casNames.map(n => { return n })} />} trigger={<span>{row.casName}</span>} />) : row.casName,
+        casNumber: row.casNumbers ? (<Popup content={<List items={row.casNumbers.map(n => { return n })} />} trigger={<span>{row.casNumber}</span>} />) : row.casNumber
       }
     })
   }
@@ -128,25 +159,25 @@ const mapStateToProps = (state, { datagrid }) => {
         casName: product.casProducts && product.casProducts.length
           ? product.casProducts.length > 1
             ? 'Blend'
-            : product.casProducts[0].casIndexName
+            : product.casProducts[0].casProduct.casIndexName
           : null,
-        casNameText: product.casProducts && product.casProducts.length
+        casNames: product.casProducts && product.casProducts.length
           ? product.casProducts.length > 1
             ? product.casProducts.map(cp => {
-              return cp.casIndexName
-            }).join(', ')
+              return cp.casProduct.casIndexName
+            })
             : null
           : null,
         casNumber: product.casProducts && product.casProducts.length
           ? product.casProducts.length > 1
             ? 'Blend'
-            : product.casProducts[0].casNumber
+            : product.casProducts[0].casProduct.casNumber
           : null,
-        casNumberText: product.casProducts && product.casProducts.length
+        casNumbers: product.casProducts && product.casProducts.length
           ? product.casProducts.length > 1
             ? product.casProducts.map(cp => {
-              return cp.casNumber
-            }).join(', ')
+              return cp.casProduct.casNumber
+            })
             : null
           : null,
         casProducts: product.casProducts ? product.casProducts.map((casProduct, cpIndex) => {
@@ -156,7 +187,7 @@ const mapStateToProps = (state, { datagrid }) => {
             maximumConcentration: casProduct.maximumConcentration ? casProduct.maximumConcentration : 100,
             item: casProduct
           }
-        }) : null,
+        }) : [],
         packagingType: product.packagingType
           ? product.packagingType.name
           : null,
@@ -172,11 +203,13 @@ const mapStateToProps = (state, { datagrid }) => {
         hazardClass: product.hazardClasses && product.hazardClasses.length ? product.hazardClasses.map(d => (
           d.id
         )) : [],
-        nmfcNumber: product.nmfcNumber ? product.nmfcNumber : null,
+        nmfcNumber: product.nmfcNumber ? product.nmfcNumber : undefined,
         stackable: product.stackable,
         unNumber: product.unNumber ? product.unNumber : null
       }
     }),
+    addedProduct: state.settings.addedProduct,
+    editedProduct: state.settings.editedProduct,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
@@ -192,4 +225,4 @@ const mapStateToProps = (state, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(ProductCatalogTable)))
+export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(withToastManager(ProductCatalogTable))))
