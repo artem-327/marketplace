@@ -77,10 +77,8 @@ export default {
   postNewCreditCard: body => api.post('/prodex/api/payments/cards/add', body),
   postNewBankAccount: body =>
     api.post('/prodex/api/payments/bank-accounts/add', body),
-  postNewProduct: async body => { return await api.post('/prodex/api/products', body) },
-  updateProduct: async (id, body) => {
-    await api.put(`/prodex/api/products/id/${id}`, body)
-  },
+  postNewProduct: (body) => api.post('/prodex/api/products', body),
+  updateProduct: (id, body) => api.put(`/prodex/api/products/id/${id}`, body),
 
   postNewDwollaAccount: async body => {return await api.post('/prodex/api/payments/dwolla/register', body)},
 
@@ -147,8 +145,8 @@ export default {
   dwollaInitiateVerification: async (id) => {
     return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify/initialize`)
   },
-  dwollaFinalizeVerification: async (id) => {
-    return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify?value1=0.03&value2=0.06`)
+  dwollaFinalizeVerification: async (id, value1, value2) => {
+    return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify?value1=${value1}&value2=${value2}`)
   },
   removeAttachment: (aId) => {
     return api.delete('/prodex/api/attachments/' + aId)

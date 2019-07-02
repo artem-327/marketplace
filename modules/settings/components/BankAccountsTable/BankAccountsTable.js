@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
-
+import { Modal, Form, Segment } from 'semantic-ui-react'
+import { createConfirmation, confirmable } from 'react-confirm'
 import confirm from '~/src/components/Confirmable/confirm'
+import { Formik } from 'formik'
+import { Input, Button } from "formik-semantic-ui"
+import * as Yup from "yup"
 
 import {
   openPopup,
@@ -12,14 +16,63 @@ import {
   deleteConfirmation,
   deleteBankAccount,
   dwollaInitiateVerification,
-  dwollaFinalizeVerification
+  dwollaFinalizeVerification,
+  dwollaFinalizeVerificationConfirmOpen
 } from '../../actions'
 import Router from "next/router"
 
 import { injectIntl } from 'react-intl'
 
+const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
+  <Formik
+    initialValues={{
+      amount1: '',
+      amount2: ''
+    }}
+    validationSchema={Yup.object().shape({
+      amount1: Yup.number('Amount mus be a number').required("Amount must be set."),
+      amount2: Yup.number('Amount mus be a number').required("Amount must be set.")
+    })}
+    onSubmit={(values) => {
+      proceed(values)
+    }}
+    onReset={dismiss}
+    validateOnBlur={false}
+    validateOnChange={false}
+  >
+    {({ handleReset, handleSubmit, isSubmitting }) => (
+      <Modal size='tiny' centered={false} open={show} onClose={dismiss}>
+        <Modal.Header>
+          Finalize Verification
+        </Modal.Header>
+        <Modal.Content>
+          <Segment basic loading={isSubmitting}>
+            <Form>
+              <h4>Please provide amounts that were transferred to you account:</h4>
+              <Form.Group widths='equal'>
+                <Input label="Amount 1" name="amount1" type="number" min="0" />
+                <Input label="Amount 2" name="amount2" type="number" min="0" />
+              </Form.Group>
+
+            </Form>
+          </Segment>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button primary inverted onClick={handleReset}>Cancel</Button>
+          <Button primary onClick={handleSubmit}>Confirm</Button>
+        </Modal.Actions>
+      </Modal>
+    )}
+
+  </Formik>
+))
+
+const finalizeConfirm = createConfirmation(FinalizeConfirmDialog)
+
 class ProductCatalogTable extends Component {
   state = {
+    amount1: 0,
+    amount2: 0,
     columns: [
       { name: 'name', title: 'Account Name' },
       { name: 'bankAccountType', title: 'Account Type' },
@@ -48,8 +101,6 @@ class ProductCatalogTable extends Component {
     let { columns } = this.state
     const { formatMessage } = intl
 
-    console.log(loading)
-
     return (
       <React.Fragment>
         <ProdexTable
@@ -69,21 +120,28 @@ class ProductCatalogTable extends Component {
                   { item: row.name })
               ).then(() => deleteBankAccount(row.id))
             },
-            { 
-              text: 'Initiate Verification', 
-              callback: row => dwollaInitiateVerification(row.id), 
+            {
+              text: 'Initiate Verification',
+              callback: row => dwollaInitiateVerification(row.id),
               hidden: row => row.status !== 'unverified'
-            }, 
-            { 
-              text: 'Finalize Verification', 
-              callback: row => dwollaFinalizeVerification(row.id), 
-              hidden: row => row.status !== 'verification_in_process' }, 
+            },
+            {
+              text: 'Finalize Verification',
+              callback: row => {
+                finalizeConfirm().then(v => {
+                  dwollaFinalizeVerification(row.id, v.amount1, v.amount2)
+                })
+              },
+              hidden: row => row.status !== 'verification_in_process'
+            },
           ]}
         />
+
       </React.Fragment>
     )
   }
 }
+
 
 const mapDispatchToProps = {
   openPopup,
@@ -92,7 +150,8 @@ const mapDispatchToProps = {
   closeConfirmPopup,
   deleteBankAccount,
   dwollaInitiateVerification,
-  dwollaFinalizeVerification
+  dwollaFinalizeVerification,
+  dwollaFinalizeVerificationConfirmOpen,
 }
 
 const mapStateToProps = state => {
@@ -106,7 +165,7 @@ const mapStateToProps = state => {
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
     currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
-        state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+      state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
   }
 }
 

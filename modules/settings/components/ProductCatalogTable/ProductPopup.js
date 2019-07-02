@@ -74,8 +74,8 @@ const formValidation = Yup.object().shape({
   nmfcNumber: Yup.number().typeError('must be number').test("digit5", "There has to be 5 digit numbers.", val => {
     return !val || val.toString().length === 5    // ! ! nejak divne to funguje
   }),
-  casProducts: Yup.array().of(Yup.object().uniqueProperty('casProduct', 'CAS Product ahs to be unique').shape({
-    casProduct: Yup.number().nullable(),
+  casProducts: Yup.array().of(Yup.object().uniqueProperty('casProduct', 'CAS Product has to be unique').shape({
+    casProduct: Yup.number().nullable().typeError('select valid option'),
     minimumConcentration: Yup.number().nullable().min(0).max(100),
     maximumConcentration: Yup.number().nullable().min(0).max(100)
   })),
@@ -133,26 +133,34 @@ class ProductPopup extends React.Component {
     if (popupValues) {
       this.props.handleSubmitProductEditPopup({
         ...values,
-        casProducts: values.casProducts ? values.casProducts.map(cp => {
-          return {
-            casProduct: cp.casProduct,
-            minimumConcentration: parseInt(cp.minimumConcentration),
-            maximumConcentration: parseInt(cp.maximumConcentration)
+        casProducts: values.casProducts ? values.casProducts.reduce(function(filtered, option) {
+          if (option.casProduct) {
+            var newValue = {
+              casProduct: option.casProduct,
+              minimumConcentration: parseInt(option.minimumConcentration),
+              maximumConcentration: parseInt(option.maximumConcentration)
+            }
+            filtered.push(newValue);
           }
-        }) : popupValues.casProducts,
+          return filtered;
+        }, []) : [],
         unNumber: this.state.unNumber ? this.state.unNumber.id :
             popupValues.unNumber ? popupValues.unNumber.id : null,
       }, popupValues.id, reloadFilter)
     } else {
       this.props.handleSubmitProductAddPopup({
         ...values,
-        casProducts: values.casProducts ? values.casProducts.map(cp => {
-          return {
-            casProduct: cp.casProduct,
-            minimumConcentration: parseInt(cp.minimumConcentration),
-            maximumConcentration: parseInt(cp.maximumConcentration)
+        casProducts: values.casProducts ? values.casProducts.reduce(function(filtered, option) {
+          if (option.casProduct) {
+            var newValue = {
+              casProduct: option.casProduct,
+              minimumConcentration: parseInt(option.minimumConcentration),
+              maximumConcentration: parseInt(option.maximumConcentration)
+            }
+            filtered.push(newValue);
           }
-        }) : [],
+          return filtered;
+        }, []) : [],
         unNumber: this.state.unNumber ? this.state.unNumber.id : null
       }, reloadFilter)
     }
@@ -227,12 +235,12 @@ class ProductPopup extends React.Component {
     const { popupValues } = this.props
     let {
       attachments = [],
-      casProducts = [{casProduct: null, minimumConcentration: 100, maximumConcentration: 100}],
+      casProducts = [{casProduct: undefined, minimumConcentration: 100, maximumConcentration: 100}],
       description = '',
       freightClass = '',
       hazardClass = [],
       hazardous = false,
-      nmfcNumber = '',
+      nmfcNumber = undefined,
       productName = '',
       productNumber = '',
       packagingSize = '',
@@ -243,7 +251,7 @@ class ProductPopup extends React.Component {
       expirationDate = ''
     } = popupValues || {}
     if (casProducts.length === 0) {
-      casProducts = [{casProduct: '', minimumConcentration: 100, maximumConcentration: 100}]
+      casProducts = [{casProduct: undefined, minimumConcentration: 100, maximumConcentration: 100}]
     }
     return {
       attachments,
