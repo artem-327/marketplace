@@ -100,11 +100,15 @@ class MyInventory extends Component {
     this.props.datagrid.setFilter({ filters: [] })
   }
 
-  removeFilter = (i) => {
+  removeFilter = (indexes) => {
     let { datagrid, appliedFilter } = this.props
 
-    datagrid.filters.splice(i, 1)
-    appliedFilter.filters.splice(i, 1)
+    indexes.forEach((index, i) => {
+      datagrid.filters.splice(index - i, 1)
+      appliedFilter.filters.splice(index - i, 1)
+    })
+
+
     this.props.applyFilter(appliedFilter)
     datagrid.setFilter(datagrid.filters)
   }

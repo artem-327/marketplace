@@ -5,6 +5,8 @@ import { Field as FormikField } from 'formik'
 import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
 import { DateInput } from 'semantic-ui-calendar-react'
+import { withToastManager } from 'react-toast-notifications'
+
 import {
   Button, Accordion,
   Segment, FormGroup,
@@ -14,7 +16,9 @@ import {
   Dropdown
 } from 'semantic-ui-react'
 
-import { datagridValues, replaceAmbigiousCharacters, dateFormat, groupFilters } from '../constants/filter'
+import confirm from '~/src/components/Confirmable/confirm'
+
+import { datagridValues, replaceAmbigiousCharacters, dateFormat } from '../constants/filter'
 import { initialValues, validationSchema } from '../constants/validation'
 
 import SavedFilters from './SavedFilters'
@@ -25,8 +29,7 @@ import {
   FlexSidebar, FlexContent,
   FiltersContainer, AccordionTitle,
   AccordionItem, AccordionContent,
-  GraySegment, Title,
-  RelaxedRow
+  GraySegment, Title
 } from '../constants/layout'
 
 
@@ -47,8 +50,12 @@ class Filter extends Component {
       fetchProductForms,
       fetchPackagingTypes,
       fetchWarehouseDistances,
-      fetchProductGrade
+      fetchProductGrade,
+      setParams
     } = this.props
+
+    this.handleGetSavedFilters()
+    setParams({ currencyCode: this.props.preferredCurrency.code })
 
     Promise.all([
       this.fetchIfNoData(fetchProductConditions, 'productConditions'),
@@ -57,6 +64,8 @@ class Filter extends Component {
       this.fetchIfNoData(fetchWarehouseDistances, 'warehouseDistances'),
       this.fetchIfNoData(fetchProductGrade, 'productGrade')
     ]).finally(() => this.setState({ loaded: true }))
+
+
   }
 
   generateRequestData = ({ notifications, checkboxes, name, ...rest }) => {
@@ -133,16 +142,39 @@ class Filter extends Component {
   }
 
   handleFilterSave = (params) => {
-    let requestData = this.generateRequestData(params)
+    const { intl, toastManager } = this.props
+    const { formatMessage } = intl
+    let self = this
+
+    async function callback(id) {
+      let requestData = self.generateRequestData(params)
+
+      if (id) await self.props.updateFilter(id, requestData)
+      else await self.props.saveFilter(self.props.savedUrl, requestData)
 
 
-    this.props.saveFilter(this.props.savedUrl, requestData)
+      toastManager.add(<div>
+        <strong><FormattedMessage id={`confirm.filter.${id ? 'updated' : 'saved'}`} values={{ name: params.name }} /></strong>
+      </div>, { appearance: 'success', pauseOnHover: true })
 
-    if (params.checkboxes.automaticallyApply) {
-      let filter = this.toDatagridFilter(requestData)
-      this.props.onApply(filter)
-      this.props.applyFilter(requestData)
+
+      if (params.checkboxes.automaticallyApply) {
+        let filter = self.toDatagridFilter(requestData)
+        self.props.onApply(filter)
+        self.props.applyFilter(requestData)
+      }
     }
+
+    let filter = this.props.savedFilters.find((filter) => filter.name === params.name)
+
+    if (filter) {
+      confirm(
+        formatMessage({ id: 'confirm.filter.overwrite' }, { name: params.name }),
+        formatMessage({ id: 'confirm.filter.overwriteContent' }))
+        .then(() => {
+          callback(filter.id)
+        }).catch(() => { return })
+    } else callback()
   }
 
   fetchIfNoData = (fn, propertyName) => {
@@ -173,7 +205,7 @@ class Filter extends Component {
           <FormikField
             onChange={(e, data) => {
               let { setFieldValue } = data.form
-              setFieldValue(path, data.checked ? { id: el.id, name: el.name } : { id: null, name: null })
+              setFieldValue(path, data.checked ? { id: el.id, name: el.name } : false)
             }}
             component={Checkbox}
             checked={!!values[groupName] && values[groupName][name]}
@@ -202,18 +234,14 @@ class Filter extends Component {
 
   handleSavedFilterApply = async (filter, { setFieldValue, resetForm }) => {
     resetForm({ ...initialValues })
-    
-    this.props.applyFilter(filter)
-
 
     let formikValues = {
 
     }
 
-    let datagridFilter = this.toDatagridFilter(filter)
     let datagridKeys = Object.keys(datagridValues)
 
-    let { filters, ...rest } = filter
+    let { filters, name, ...rest } = filter
 
     for (let i = 0; i < filters.length; i++) {
       datagridKeys.forEach(key => {
@@ -227,6 +255,7 @@ class Filter extends Component {
     let { notifyMail, notifyPhone, notifySystem, notificationMail } = rest
 
     formikValues = {
+      name,
       checkboxes: {
         notifyMail,
         notifyPhone,
@@ -318,6 +347,8 @@ class Filter extends Component {
 
     if (!autocompleteDataLoading) dropdownProps.icon = null
 
+    let currencySymbol = this.props.preferredCurrency ? this.props.preferredCurrency.symbol : null
+
     return (
       <Accordion>
         <Segment basic>
@@ -355,7 +386,7 @@ class Filter extends Component {
                 <FormField width={8}>
 
                   <Input inputProps={{
-                    label: this.props.preferredCurrency,
+                    label: currencySymbol,
                     labelPosition: 'left',
                     type: 'number',
                     step: 0.01,
@@ -367,7 +398,7 @@ class Filter extends Component {
 
                 <FormField width={8}>
                   <Input inputProps={{
-                    label: this.props.preferredCurrency,
+                    label: currencySymbol,
                     labelPosition: 'left',
                     type: 'number',
                     step: 0.01,
@@ -565,6 +596,7 @@ class Filter extends Component {
                     ? this.formMarkup(props)
                     : (
                       <SavedFilters
+                        params={this.props.params}
                         onApply={(filter) => this.handleSavedFilterApply(filter, props)}
                         savedFilters={this.props.savedFilters}
                         savedFiltersLoading={this.props.savedFiltersLoading}
@@ -641,4 +673,4 @@ Filter.defaultProps = {
 
 }
 
-export default injectIntl(Filter)
+export default withToastManager(injectIntl(Filter))

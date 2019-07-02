@@ -1,4 +1,5 @@
 import moment from 'moment'
+import { FormattedNumber } from 'react-intl';
 
 export const operators = {
   CONTAINS: 'CONTAINS',
@@ -80,6 +81,10 @@ export const datagridValues = {
       })
     },
 
+    tagDescription: function (values) {
+      return this.valuesDescription(values)
+    },
+
     toFormik: function ({ values }) {
       return values.map((val) => {
         let parsed = JSON.parse(val.description)
@@ -102,6 +107,8 @@ export const datagridValues = {
         description: this.description
       }
     },
+
+    tagDescription: (values) => `>= ${values[0].description} pckgs`,
 
     valuesDescription: function (values) {
       return values.map((val) => val.description)
@@ -127,6 +134,8 @@ export const datagridValues = {
       })
     },
 
+    tagDescription: (values) => `<= ${values[0].description} pckgs`,
+
     valuesDescription: function (values) {
       return values.map((val) => val.description)
     },
@@ -150,6 +159,8 @@ export const datagridValues = {
       })
     },
 
+    tagDescription: (values, { currencyCode } = '$') => <label>{'>= '}{<FormattedNumber style='currency' currency={currencyCode} value={values[0].description} />}</label>,
+
     valuesDescription: function (values) {
       return values.map((val) => val.description)
     },
@@ -171,6 +182,8 @@ export const datagridValues = {
         description: this.description
       })
     },
+    
+    tagDescription: (values, { currencyCode } = '$') => <label>{'<= '}{<FormattedNumber style='currency' currency={currencyCode} value={values[0].description} />}</label>,
 
     valuesDescription: function (values) {
       return values.map((val) => val.description)
@@ -197,6 +210,10 @@ export const datagridValues = {
       return values.map((val) => val.description)
     },
 
+    tagDescription: function (values) {
+      return this.valuesDescription(values)
+    },
+
     toFormik: function ({ values }, packagingTypes) {
       return checkboxesToFormik(values, packagingTypes)
     },
@@ -218,6 +235,10 @@ export const datagridValues = {
 
     valuesDescription: function (values) {
       return values.map((val) => val.description)
+    },
+
+    tagDescription: function (values) {
+      return this.valuesDescription(values)
     },
 
     toFormik: function ({ values }, productConditions) {
@@ -243,6 +264,10 @@ export const datagridValues = {
       return values.map((val) => val.description)
     },
 
+    tagDescription: function (values) {
+      return this.valuesDescription(values)
+    },
+
     toFormik: function ({ values }, productGrades) {
       return checkboxesToFormik(values, productGrades)
     },
@@ -266,6 +291,11 @@ export const datagridValues = {
       return values.map((val) => val.description)
     },
 
+    tagDescription: function (values) {
+      return this.valuesDescription(values)
+    },
+
+
     toFormik: function ({ values }, productForms) {
       return checkboxesToFormik(values, productForms)
     },
@@ -284,6 +314,8 @@ export const datagridValues = {
         values: [{ value: moment(values).format(), description: moment(values.toString()).format(dateFormat) }],
       }
     },
+
+    tagDescription: (values) => `Exp. >= ${values[0].description}`,
 
     valuesDescription: function (values) {
       return values.map((val) => val.description)
@@ -306,6 +338,8 @@ export const datagridValues = {
         values: [{ value: moment(values).format(), description: moment(values.toString()).format(dateFormat) }],
       }
     },
+
+    tagDescription: (values) => `Exp. <= ${values[0].description}`,
 
     valuesDescription: function (values) {
       return values.map((val) => val.description)
@@ -333,6 +367,8 @@ export const datagridValues = {
       return values.map((val) => val.description)
     },
 
+    tagDescription: (values) => `Assay Min. ${values[0].description}%`,
+
     toFormik: function ({ values }) {
       return values[0].value.toString()
     },
@@ -356,13 +392,17 @@ export const datagridValues = {
       return values.map((val) => val.description)
     },
 
+    tagDescription: (values) => `Assay Max. ${values[0].description}%`,
+
     toFormik: function ({ values }) {
       return values[0].value.toString()
     }
   },
 }
 
-export const groupFilters = appliedFilters => {
+
+
+export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
   let groups = [{
     description: 'Quantity',
     from: {
@@ -370,7 +410,8 @@ export const groupFilters = appliedFilters => {
     },
     to: {
       path: paths.productOffers.quantity, operator: operators.LESS_THAN_OR_EQUAL_TO
-    }
+    },
+    tagDescription: (from, to) => `${from} - ${to} pkgs`
   }, {
     description: 'Price',
     from: {
@@ -378,7 +419,9 @@ export const groupFilters = appliedFilters => {
     },
     to: {
       path: paths.productOffers.price, operator: operators.LESS_THAN_OR_EQUAL_TO
-    }
+    },
+    tagDescription: (from, to) => <label><FormattedNumber style='currency' currency={currencyCode} value={from} /> - <FormattedNumber style='currency' currency={currencyCode} value={to} /></label>
+    ,
   }, {
     description: 'Assay',
     from: {
@@ -386,7 +429,8 @@ export const groupFilters = appliedFilters => {
     },
     to: {
       path: paths.productOffers.assayTo, operator: operators.LESS_THAN_OR_EQUAL_TO
-    }
+    },
+    tagDescription: (from, to) => `Assay ${from}% - ${to}% `
   }, {
     description: 'Expiration',
     from: {
@@ -394,12 +438,13 @@ export const groupFilters = appliedFilters => {
     },
     to: {
       path: paths.productOffers.expirationDate, operator: operators.LESS_THAN_OR_EQUAL_TO
-    }
+    },
+    tagDescription: (from, to) => `Exp. ${from} - ${to} `
   },
   ]
 
   // Create copy so we dont mutate original filters
-  let filters = appliedFilters.slice(0)
+  let filters = appliedFilters.slice()
 
   let results = [], indexes = []
 
@@ -411,7 +456,8 @@ export const groupFilters = appliedFilters => {
       results.push({
         description: group.description,
         valuesDescription: `${filters[from].valuesDescription.toString()} - ${filters[to].valuesDescription.toString()}`,
-        indexes:  [from, to]
+        tagDescription: group.tagDescription(filters[from].valuesDescription.toString(), filters[to].valuesDescription.toString()),
+        indexes: [from, to]
       })
       indexes.push(from, to)
     }
@@ -420,11 +466,16 @@ export const groupFilters = appliedFilters => {
   // Take rest elements (those who aren't grouped) and push them to array
 
   filters.forEach((filter, i) => {
-    if (!indexes.find((index) => index === i)) {
-      results.push({ description: filter.description, valuesDescription: filter.valuesDescription, indexes: [i] })
+    if (!indexes.includes(i)) {
+      results.push({
+        description: filter.description,
+        valuesDescription: filter.valuesDescription,
+        tagDescription: filter.tagDescription,
+        indexes: [i]
+      })
     }
   })
 
-  return results
 
+  return results
 } 
