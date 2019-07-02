@@ -86,14 +86,14 @@ class EditAltNamesCasProductsPopup extends React.Component {
   }
 
   handleSaveName = async (productId, val, index) => {
-    let name = val.tradeName.trim()
+    let name = val.alternativeName.trim()
     if (name.length < 3) return
     if (val.id === null) {  // Create new name
-      let value = {casProduct: productId, tradeName: name}
+      let value = {casProduct: productId, alternativeName: name}
       await this.props.postNewProductName(productId, value)
     }
     else {                  // Update name
-      let value = {tradeName: name}
+      let value = {alternativeName: name}
       await this.props.updateProductName(productId, val.id, value)
     }
     await this.processFetchedData()
@@ -148,7 +148,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
                             <Table.Row key={index}>
                               <TableCell width={16}>
                                 <FormField>
-                                  <Input name={`casAlternativeNames[${index}].tradeName`}
+                                  <Input name={`casAlternativeNames[${index}].alternativeName`}
                                          inputProps={{
                                            onChange: (e, d) => {
                                              const {color, description, canSave} = nameValidation(index, d.value.trim(), vals)

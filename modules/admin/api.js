@@ -8,7 +8,7 @@ BE version 0.8.7.
  */
 
 export async function getAlternativeProductNames(value) {
-  const { data } = await api.get(`/prodex/api/products/trade-names/${value}`)
+  const { data } = await api.get(`/prodex/api/cas-products/alternative-names/${value}`)
   return data
 }
 
@@ -132,17 +132,17 @@ export async function updateCompany(id, formData) {
 export const deleteCompany = (id) => api.delete(`/prodex/api/companies/id/${id}`).then(() => id)
 
 export async function postNewProductName(value) {
-  const { data } = await api.post('/prodex/api/products/trade-names', value)
+  const { data } = await api.post('/prodex/api/cas-products/alternative-names', value)
   return data
 }
 
 export async function updateProductName(id, value) {
-  const { data } = await api.put(`/prodex/api/product-names/${id}`, value)
+  const { data } = await api.patch(`/prodex/api/cas-products/alternative-names/id/${id}`, value)
   return data
 }
 
 export async function deleteProductName(id) {
-  await api.delete(`/prodex/api/product-names/${id}`)
+  await api.delete(`/prodex/api/cas-products/alternative-names/id/${id}`)
 }
 
 export const deleteUnit = id => api.delete(`/prodex/api/units/${id}`).then(() => id)
