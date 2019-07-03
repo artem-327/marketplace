@@ -336,8 +336,7 @@ class AddInventoryForm extends Component {
                                 <div>There are errors on current tab. Please, fix them before submit.</div>
                               </div>
                             ), {
-                                appearance: 'error',
-                                autoDismiss: true
+                                appearance: 'error'
                               })
                           }
                         }).catch(e => {
