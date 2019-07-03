@@ -24,7 +24,7 @@ const formValidation = Yup.object().shape({
   accountNumber: Yup.string().trim().min(3, 'Too short').required('Required'),
   bankAccountType: Yup.string().trim().min(3, 'Too short').required('Required'),
   name: Yup.string().trim().min(3, 'Too short').required('Required'),
-  routingNumber: Yup.string().trim().length(9, 'Routing number must be 9 characters long').required('Required')
+  routingNumber: Yup.string().trim().matches(/^\d{9}$/, 'Routing number must be 9 characters long').required('Required')
 })
 
 const bankAccountType = [

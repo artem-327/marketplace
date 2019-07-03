@@ -839,6 +839,15 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.POST_NEW_BANK_ACCOUNT_REQUEST_REJECTED: {
+      return {
+        ...state,
+        loading: false,
+        popupValues: null,
+        isOpenPopup: false,
+      }
+    }
+
     case AT.POST_NEW_BANK_ACCOUNT_REQUEST_FULFILLED: {
       
       return {
