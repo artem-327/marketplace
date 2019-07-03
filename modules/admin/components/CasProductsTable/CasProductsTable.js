@@ -3,11 +3,8 @@ import { connect } from "react-redux"
 import { Popup, Label } from 'semantic-ui-react'
 import ProdexTable from '~/components/table'
 import {
-  getCasProductByFilter,
   openPopup,
   openEditAltNamesCasPopup,
-  casDeleteItem,
-  handleOpenConfirmPopup,
   closeConfirmPopup,
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
@@ -16,44 +13,6 @@ import {
 import { withDatagrid } from '~/modules/datagrid'
 
 class CasProductsTable extends Component {
-
-  // componentWillReceiveProps({filterValue}) {
-    
-  //   if (this.props.filterValue !== filterValue) {
-  //     this.props.datagrid.setFilter({
-  //       filters: filterValue && filterValue.length >= 1 ? [{
-  //         operator: "LIKE",
-  //         path: "CasProduct.chemicalName",
-  //         values: ['%'+filterValue+'%']
-  //       }] : []
-  //     })
-  //   }
-
-  // }
-
-  // getNextPage = (pageNumber) => {
-  //   const { getCasProductByFilter, casListDataRequest, filterCasIds } = this.props
-
-  //   let filter = {}
-  //   if (filterCasIds && filterCasIds.length) {
-  //     filter = {
-  //       filters: [{
-  //         operator: "EQUALS",
-  //         path: "CasProduct.id",
-  //         values: filterCasIds.map(casId => {
-  //           return casId
-  //         })
-  //       }]
-  //     }
-  //   }
-
-  //   getCasProductByFilter({
-  //     ...casListDataRequest,
-  //     ...filter,
-  //     pageNumber
-  //   })
-  // }
-
 
   componentDidMount() {
     this.props.getHazardClassesDataRequest()
@@ -67,15 +26,7 @@ class CasProductsTable extends Component {
       rows,
       openPopup,
       openEditAltNamesCasPopup,
-      deleteCasProduct,
-      // handleOpenConfirmPopup,
-      // filterValue,
-      // currentTab,
-      // casDeleteItem,
-      // reloadFilter,
-      // confirmMessage,
-      // closeConfirmPopup,
-      // deleteRowById
+      deleteCasProduct
     } = this.props
 
     const { columns } = config.display
@@ -105,11 +56,8 @@ class CasProductsTable extends Component {
 }
 
 const mapDispatchToProps = {
-  getCasProductByFilter,
   openPopup,
   openEditAltNamesCasPopup,
-  casDeleteItem,
-  handleOpenConfirmPopup,
   closeConfirmPopup,
   getHazardClassesDataRequest,
   getPackagingGroupsDataRequest,
@@ -151,14 +99,6 @@ const mapStateToProps = (state, { datagrid }) => {
         hazardClassesId: !!d.hazardClasses ? (d.hazardClasses.map(a => a.id)) : [],
       }
     }),
-    // reloadFilter is used to reload CAS Product list after Edit / Add new CAS Product
-    // reloadFilter: {
-    //   props: {
-    //     currentTab: state.admin.currentTab,
-    //     casListDataRequest: state.admin.casListDataRequest
-    //   },
-    //   value: state.admin.filterValue
-    // },
     confirmMessage: state.admin.confirmMessage,
     deleteRowById: state.admin.deleteRowById,
   }

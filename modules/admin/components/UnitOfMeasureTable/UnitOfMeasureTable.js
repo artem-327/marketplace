@@ -6,7 +6,6 @@ import ProdexTable from '~/components/table'
 import {
   getDataRequest,
   openEditPopup,
-  handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation,
   getMeasureTypesDataRequest,
@@ -16,7 +15,7 @@ import {
 class UnitOfMeasureTable extends Component {
   componentDidMount() {
     this.props.getDataRequest(this.props.config)
-    this.props.getMeasureTypesDataRequest();
+    this.props.getMeasureTypesDataRequest()
   }
 
   render() {
@@ -26,13 +25,6 @@ class UnitOfMeasureTable extends Component {
       filterValue,
       openEditPopup,
       deleteUnit,
-      // handleOpenConfirmPopup,
-      // config,
-      // currentTab,
-      // confirmMessage,
-      // closeConfirmPopup,
-      // deleteConfirmation,
-      // deleteRowById
     } = this.props
 
     const { columns } = this.props.config.display
@@ -57,7 +49,6 @@ class UnitOfMeasureTable extends Component {
 const mapDispatchToProps = {
   getDataRequest,
   openEditPopup,
-  handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation,
   getMeasureTypesDataRequest,

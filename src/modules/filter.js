@@ -1,17 +1,17 @@
-import axios from "axios";
+import axios from "axios"
 
-const RESET_TAGS = "RESET_TAGS";
-const TOGGLE_FILTER = "TOGGLE_FILTER";
-const TOGGLE_FILTER_GROUP = 'TOGGLE_FILTER_GROUP';
-const ADD_FILTER_TAG = 'ADD_FILTER_TAG';
-const CLOSE_FILTER_TAG = 'CLOSE_FILTER_TAG';
-const CLOSE_FILTER_TAG_FULFILLED = 'CLOSE_FILTER_TAG_FULFILLED';
-const GET_SAVE_FILTERS = 'GET_SAVE_FILTERS';
+const RESET_TAGS = "RESET_TAGS"
+const TOGGLE_FILTER = "TOGGLE_FILTER"
+const TOGGLE_FILTER_GROUP = 'TOGGLE_FILTER_GROUP'
+const ADD_FILTER_TAG = 'ADD_FILTER_TAG'
+const CLOSE_FILTER_TAG = 'CLOSE_FILTER_TAG'
+const CLOSE_FILTER_TAG_FULFILLED = 'CLOSE_FILTER_TAG_FULFILLED'
+const GET_SAVE_FILTERS = 'GET_SAVE_FILTERS'
 const GET_SAVE_FILTERS_PENDING = 'GET_SAVE_FILTERS_PENDING'
 const GET_SAVE_FILTERS_REJECTED = 'GET_SAVE_FILTERS_REJECTED'
 const GET_SAVE_FILTERS_FULFILLED = 'GET_SAVE_FILTERS_FULFILLED'
-const DELETE_SAVE_FILTER = 'DELETE_SAVE_FILTER';
-const SAVE_SAVE_FILTER = 'SAVE_SAVE_FILTER';
+const DELETE_SAVE_FILTER = 'DELETE_SAVE_FILTER'
+const SAVE_SAVE_FILTER = 'SAVE_SAVE_FILTER'
 
 import {
     GET_BROADCASTED_FILTERS_PENDING,
@@ -51,7 +51,7 @@ export const initialState = {
     savedFiltersFetching: false,
     saveFilters: [],
     savedBroadcastedFilters: []
-};
+}
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
@@ -137,19 +137,19 @@ export default function reducer(state = initialState, action) {
 
         /* GET SAVED FILTERS */
 
-        case GET_SAVED_FILTERS_PENDING: {
-            return {
-                ...state,
-                savedFiltersFetching: true
-            }
-        }
+        // case GET_SAVED_FILTERS_PENDING: {
+        //     return {
+        //         ...state,
+        //         savedFiltersFetching: true
+        //     }
+        // }
 
-        case GET_SAVED_FILTERS_FULFILLED: {
-            return {
-                ...state,
-                saveFilters: action.payload
-            }
-        }
+        // case GET_SAVED_FILTERS_FULFILLED: {
+        //     return {
+        //         ...state,
+        //         saveFilters: action.payload
+        //     }
+        // }
 
 
         default: {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
-import { Modal, Form, Segment } from 'semantic-ui-react'
+import { Modal, Form, Segment, Label } from 'semantic-ui-react'
 import { createConfirmation, confirmable } from 'react-confirm'
 import confirm from '~/src/components/Confirmable/confirm'
 import { Formik } from 'formik'
@@ -77,7 +77,7 @@ class ProductCatalogTable extends Component {
       { name: 'name', title: 'Account Name' },
       { name: 'bankAccountType', title: 'Account Type' },
       { name: 'bankName', title: 'Bank Name' },
-      { name: 'status', title: 'Status' },
+      { name: 'statusLabel', title: 'Status' },
     ]
   }
 
@@ -154,11 +154,17 @@ const mapDispatchToProps = {
   dwollaFinalizeVerificationConfirmOpen,
 }
 
+const statusToLabel = {
+  "verified": <Label color='green' horizontal>Verified</Label>,
+  "unverified": <Label color='red' horizontal>Unverified</Label>,
+  "verification_in_process": <Label color='orange' horizontal>Verification in process</Label>
+}
 const mapStateToProps = state => {
   return {
     loading: state.settings.loading,
     rows: state.settings.bankAccountsRows.map(r => ({
       ...r,
+      statusLabel: statusToLabel[r.status]
       // some changes here
     })),
     filterValue: state.settings.filterValue,
