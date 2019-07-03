@@ -3,9 +3,13 @@ import { connect } from 'react-redux'
 
 import { Modal, FormGroup } from 'semantic-ui-react'
 
-import { closeAddPopup , postNewRequest } from '../../actions'
+import { closeAddPopup, postNewRequest } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
+
+import { withToastManager } from 'react-toast-notifications'
+import { generateToastMarkup } from '~/utils/functions'
+import { FormattedMessage } from 'react-intl';
 
 const initialFormValues = {
     val0: '',
@@ -24,24 +28,33 @@ class AddNewUnitOfPackagingPopup extends React.Component {
             currentTab,
             config,
             postNewRequest,
-            measureOptions
+            measureOptions,
+            toastManager
         } = this.props
 
         return (
             <Modal open centered={false}>
-                <Modal.Header>Add { config.addEditText }</Modal.Header>
+                <Modal.Header>Add {config.addEditText}</Modal.Header>
                 <Modal.Content>
                     <Form
                         initialValues={initialFormValues}
                         validationSchema={formValidation}
                         onReset={closeAddPopup}
-                        onSubmit={(values, actions) => {
+                        onSubmit={async (values, { setSubmitting }) => {
                             let data = {
                                 [config.edit[0].name]: values.val0.trim(),
                                 [config.edit[1].name]: values.val1,
                             }
-                            postNewRequest(config, data)
+                            await postNewRequest(config, data)
+
+                            toastManager.add(generateToastMarkup(
+                                <FormattedMessage id='notifications.unitOfPackagingCreated.header' />,
+                                <FormattedMessage id='notifications.unitOfPackagingCreated.content' values={{ name: values.val0 }} />
+                            ), { appearance: 'success' })
+
+                            setSubmitting(false)
                         }}
+
                     >
                         <FormGroup widths="equal">
                             <Input type={config.edit[0].type} label={config.edit[0].title} name="val0" />
@@ -66,18 +79,18 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = state => {
-  let cfg = state.admin.config[state.admin.currentTab];
-  return {
-    config: cfg,
-    currentTab: state.admin.currentTab,
-    measureOptions: state.admin.measureTypes.map( d=> {
-      return {
-        id: d.id,
-        text: d.name,
-        value: d.id,
-      }
-    })
-  }
+    let cfg = state.admin.config[state.admin.currentTab];
+    return {
+        config: cfg,
+        currentTab: state.admin.currentTab,
+        measureOptions: state.admin.measureTypes.map(d => {
+            return {
+                id: d.id,
+                text: d.name,
+                value: d.id,
+            }
+        })
+    }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddNewUnitOfPackagingPopup)
+export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(AddNewUnitOfPackagingPopup))

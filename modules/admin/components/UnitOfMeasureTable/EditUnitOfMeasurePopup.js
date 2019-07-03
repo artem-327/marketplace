@@ -3,9 +3,14 @@ import { connect } from 'react-redux'
 
 import { Modal, FormGroup } from 'semantic-ui-react'
 
-import { closeEditPopup , putEditedDataRequest } from '../../actions'
+import { closeEditPopup, putEditedDataRequest } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
+
+import { withToastManager } from 'react-toast-notifications'
+
+import { generateToastMarkup } from '~/utils/functions'
+import { FormattedMessage } from 'react-intl';
 
 const formValidation = Yup.object().shape({
     val0: Yup.string().min(1, "Too short").required("Required"),
@@ -21,10 +26,11 @@ class EditUnitOfMeasurePopup extends React.Component {
             config,
             popupValues,
             putEditedDataRequest,
-            measureOptions
+            measureOptions,
+            toastManager
         } = this.props
 
-        const { id } = popupValues;
+        const { id } = popupValues
 
         const initialFormValues = {
             val0: popupValues[config.edit[0].name],
@@ -34,20 +40,29 @@ class EditUnitOfMeasurePopup extends React.Component {
 
         return (
             <Modal open centered={false}>
-                <Modal.Header>Edit { config.addEditText }</Modal.Header>
+                <Modal.Header>Edit {config.addEditText}</Modal.Header>
                 <Modal.Content>
                     <Form
                         initialValues={initialFormValues}
                         validationSchema={formValidation}
                         onReset={closeEditPopup}
-                        onSubmit={(values, actions) => {
+                        onSubmit={async (values, { setSubmitting }) => {
                             let data = {
                                 [config.edit[0].name]: values.val0,
                                 [config.edit[1].name]: values.val1,
                                 [config.edit[2].name]: values.val2,
                             }
-                            putEditedDataRequest(config, id, data)
-                            actions.setSubmitting(false);
+                            await putEditedDataRequest(config, id, data)
+
+                            toastManager.add(generateToastMarkup(
+                                <FormattedMessage id='notifications.unitOfMeasurementUpdated.header' />,
+                                <FormattedMessage id='notifications.unitOfMeasurementUpdated.content' values={{ name: values.val0 }} />
+                            ),
+                                {
+                                    appearance: 'success'
+                                })
+
+                            setSubmitting(false)
                         }}
                     >
                         <FormGroup widths="equal">
@@ -82,7 +97,7 @@ const mapStateToProps = state => {
         config: cfg,
         currentTab: state.admin.currentTab,
         popupValues: state.admin.popupValues,
-        measureOptions: state.admin.measureTypes.map( d=> {
+        measureOptions: state.admin.measureTypes.map(d => {
             return {
                 id: d.id,
                 text: d.name,
@@ -92,4 +107,4 @@ const mapStateToProps = state => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditUnitOfMeasurePopup)
+export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(EditUnitOfMeasurePopup))

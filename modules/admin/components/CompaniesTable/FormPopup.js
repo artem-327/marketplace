@@ -16,12 +16,16 @@ import { ZipDropdown } from '~/modules/zip-dropdown'
 // import JSONPretty from 'react-json-pretty'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
+
 import { withToastManager } from 'react-toast-notifications'
 
 import { validationSchema } from '~/modules/company-form/constants'
 import { provinceObjectRequired, errorMessages } from '~/constants/yupValidation'
 
 import { CompanyForm } from '~/modules/company-form/'
+
+import { generateToastMarkup } from '~/utils/functions'
+
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -268,10 +272,6 @@ class AddNewPopupCasProducts extends React.Component {
 
               await updateCompany(popupValues.id, { ...newValues, businessType: newValues.businessType && newValues.businessType.id })
 
-              toastManager.add(
-                <div>
-                  <strong><FormattedMessage id='notifications.companyUpdated' defaultMessage='Company updated' values={{ name: values.name }} /></strong>
-                </div>, { appearance: 'success', pauseOnHover: true })
             }
             else {
               if (values.mailingBranch && !(values.mailingBranch.name.trim() !== '' || values.mailingBranch.contactEmail.trim() !== '' ||
@@ -280,16 +280,22 @@ class AddNewPopupCasProducts extends React.Component {
                 values.mailingBranch.address.zip !== '' || values.mailingBranch.address.country !== ''))
                 delete values['mailingBranch']
 
-              if(values.businessType) values.businessType = values.businessType.id
+              if (values.businessType) values.businessType = values.businessType.id
 
               removeEmpty(values)
 
               await createCompany(values)
-              toastManager.add(
-                <div>
-                  <strong><FormattedMessage id='notifications.companyCreated' defaultMessage='Company created' values={{ name: values.name }} /></strong>
-                </div>, { appearance: 'success', pauseOnHover: true })
             }
+            let status = popupValues ? 'companyUpdated' : 'companyCreated'
+
+
+            toastManager.add(generateToastMarkup(
+              <FormattedMessage id={`notifications.${status}.header`} />,
+              <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
+            ), {
+                appearance: 'success'
+              })
+
           } catch (err) {
             console.error(err)
           }
