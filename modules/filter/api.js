@@ -6,6 +6,8 @@ export const getSavedFilters = savedUrl => api.get(savedUrl).then((response) => 
 
 export const saveFilter = (savedUrl, filter) => api.post(savedUrl, filter).then(response => response.data)
 
+export const updateFilter = (templateId, filter) => api.put(`/prodex/api/data-grid-templates/${templateId}`, filter)
+
 export const getProductsInfo = (url, filters) => api.post(url, filters).then((response) => response.data)
 
 export const deleteFilter = templateId => api.delete(`/prodex/api/data-grid-templates/${templateId}`).then(() => templateId)

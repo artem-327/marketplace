@@ -111,6 +111,10 @@ const Row = ({ tableRow, selected, onToggle, onClick, ...restProps }) => {
   )
 }
 
+const MESSAGES = {
+  noData: 'No records found.'
+}
+
 export default class _Table extends Component {
 
   static propTypes = {
@@ -353,7 +357,10 @@ export default class _Table extends Component {
     return (
       <Segment basic loading={loading} {...restProps} className="flex stretched" style={{ padding: 0 }}>
         <GlobalTableOverrideStyle />
-        <div className="bootstrapiso flex stretched" style={{ flex: '1 300px' }} ref={c => c && (this.gridWrapper = c)}>
+        <div className="bootstrapiso flex stretched" 
+          style={{ flex: '1 300px', opacity: loading ? 0 : 1, transition: 'opacity 0.2s' }} 
+          ref={c => c && (this.gridWrapper = c)}
+        >
           <ColumnsSetting
             onClick={() => this.setState({ columnSettingOpen: !columnSettingOpen })} />
           <ColumnsSettingModal
@@ -407,9 +414,10 @@ export default class _Table extends Component {
                 columnExtensions={this.getColumnsExtension()}
                 height="auto"
                 cellComponent={TableCells}
+                messages={MESSAGES}
                 rowComponent={props => <Row onClick={onRowClick} {...props} />}
               />
-              : <Table columnExtensions={this.getColumnsExtension()} />}
+              : <Table columnExtensions={this.getColumnsExtension()} messages={MESSAGES} />}
 
             <TableColumnResizing
               onColumnWidthsChange={widths => this.handleColumnsSettings({ widths })}

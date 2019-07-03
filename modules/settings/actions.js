@@ -97,18 +97,10 @@ export function openEditPopup(rows) {
 }
 export function handlerSubmitUserEditPopup(payload, id) {
   return async dispatch => {
-    const updateUser = {
-      name: payload.name,
-      email: payload.email,
-      homeBranch: payload.homeBranch,
-      jobTitle: payload.title,
-      phone: payload.phone,
-      preferredCurrency: payload.preferredCurrency
-    }
-    removeEmpty(updateUser)
+    removeEmpty(payload)
     await dispatch({
       type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
-      payload: api.patchUser(id, updateUser)
+      payload: api.patchUser(id, payload)
     })
     dispatch(getUsersDataRequest())
     dispatch(closePopup())
@@ -446,35 +438,38 @@ export function getBranchesDataRequest() {
 }
 
 export function getCreditCardsDataRequest() {
-  const creditCardsData = [ // TODO - temporary fake function
-    {
-      id: "3",
-      cardNumber: "15",
-      last4: "7891",
-      expMonth: 8,
-      expYear: 21,
-      cvcCheck: "123"
-    },
-    {
-      id: "2",
-      cardNumber: "75",
-      last4: "4569",
-      expMonth: 5,
-      expYear: 19,
-      cvcCheck: "951"
-    },
-    {
-      id: "8",
-      cardNumber: "9849",
-      last4: "123",
-      expMonth: 5,
-      expYear: 21,
-      cvcCheck: "753"
-    }
-  ]
-  return {
-    type: AT.GET_CREDIT_CARDS_DATA_FULFILLED,
-    payload: creditCardsData
+  return dispatch => {
+    const creditCardsData = [ // TODO - temporary fake function
+      {
+        id: "3",
+        cardNumber: "15",
+        last4: "7891",
+        expMonth: 8,
+        expYear: 21,
+        cvcCheck: "123"
+      },
+      {
+        id: "2",
+        cardNumber: "75",
+        last4: "4569",
+        expMonth: 5,
+        expYear: 19,
+        cvcCheck: "951"
+      },
+      {
+        id: "8",
+        cardNumber: "9849",
+        last4: "123",
+        expMonth: 5,
+        expYear: 21,
+        cvcCheck: "753"
+      }
+    ]
+    
+    dispatch({
+      type: AT.GET_CREDIT_CARDS_DATA,
+      async payload() { return creditCardsData }
+    })
   }
 }
 
@@ -553,18 +548,10 @@ export function getStoredCSV(data) {
 
 export function postNewUserRequest(payload) {
   return async dispatch => {
-    const dataBody = {
-      email: payload.email,
-      name: payload.name,
-      homeBranch: payload.homeBranch,
-      jobTitle: payload.title,
-      phone: payload.phone,
-      preferredCurrency: payload.preferredCurrency
-    }
-    removeEmpty(dataBody)
+    removeEmpty(payload)
     await dispatch({
       type: AT.POST_NEW_USER_REQUEST,
-      payload: api.postNewUser(dataBody)
+      payload: api.postNewUser(payload)
     })
     dispatch(getUsersDataRequest())
     dispatch(closePopup())
