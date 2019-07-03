@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import { withToastManager } from 'react-toast-notifications'
 import { Modal, FormGroup } from 'semantic-ui-react'
 
 import {
@@ -11,6 +12,9 @@ import {
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import Router from "next/router"
 import * as Yup from 'yup'
+
+import { generateToastMarkup } from '~/utils/functions'
+import { FormattedMessage } from 'react-intl'
 
 
 const initialFormValues = {
@@ -41,10 +45,20 @@ const bankAccountType = [
 ]
 
 class BankAccountsPopup extends React.Component {
-  submitHandler = (values, actions) => {
-    const { postNewBankAccountRequest } = this.props
+  submitHandler = async (values, { setSubmitting }) => {
+    const { postNewBankAccountRequest, toastManager } = this.props
 
-    postNewBankAccountRequest(values)
+    await postNewBankAccountRequest(values)
+
+    toastManager.add(generateToastMarkup(
+      <FormattedMessage id='notifications.bankAccountCreated.header' />,
+      <FormattedMessage id='notifications.bankAccountCreated.content' values={{ name: values.name }} />
+    ),
+      {
+        appearance: 'success'
+      })
+
+    setSubmitting(false)
   }
 
   render() {
@@ -121,4 +135,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(BankAccountsPopup)
+)(withToastManager(BankAccountsPopup))
