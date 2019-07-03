@@ -357,7 +357,10 @@ export default class _Table extends Component {
     return (
       <Segment basic loading={loading} {...restProps} className="flex stretched" style={{ padding: 0 }}>
         <GlobalTableOverrideStyle />
-        <div className="bootstrapiso flex stretched" style={{ flex: '1 300px' }} ref={c => c && (this.gridWrapper = c)}>
+        <div className="bootstrapiso flex stretched" 
+          style={{ flex: '1 300px', opacity: loading ? 0 : 1, transition: 'opacity 0.2s' }} 
+          ref={c => c && (this.gridWrapper = c)}
+        >
           <ColumnsSetting
             onClick={() => this.setState({ columnSettingOpen: !columnSettingOpen })} />
           <ColumnsSettingModal
