@@ -111,6 +111,10 @@ const Row = ({ tableRow, selected, onToggle, onClick, ...restProps }) => {
   )
 }
 
+const MESSAGES = {
+  noData: 'No records found.'
+}
+
 export default class _Table extends Component {
 
   static propTypes = {
@@ -407,9 +411,10 @@ export default class _Table extends Component {
                 columnExtensions={this.getColumnsExtension()}
                 height="auto"
                 cellComponent={TableCells}
+                messages={MESSAGES}
                 rowComponent={props => <Row onClick={onRowClick} {...props} />}
               />
-              : <Table columnExtensions={this.getColumnsExtension()} />}
+              : <Table columnExtensions={this.getColumnsExtension()} messages={MESSAGES} />}
 
             <TableColumnResizing
               onColumnWidthsChange={widths => this.handleColumnsSettings({ widths })}
