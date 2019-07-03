@@ -59,6 +59,8 @@ class UsersTable extends Component {
     let { columns } = this.state
     const { formatMessage } = intl
 
+    console.log({ rows })
+
     return (
       <React.Fragment>
         <ProdexGrid

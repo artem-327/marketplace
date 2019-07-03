@@ -401,5 +401,9 @@
   "productCatalog.newProduct": "New Product",
   "productCatalog.editProduct": "Edited Product",
   "productCatalog.successfullyCreated": "Product {productName} successfully created.",
-  "productCatalog.successfullyUpdated": "Product {productName} successfully updated."
+  "productCatalog.successfullyUpdated": "Product {productName} successfully updated.",
+  "notifications.userCreated.header": "Created user",
+  "notifications.userCreated.content": "User {name} successfully created.",
+  "notifications.userUpdated.header": "Updated user",
+  "notifications.userUpdated.content": "User {name} successfully updated."
 }

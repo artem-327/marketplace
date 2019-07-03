@@ -34,3 +34,10 @@ export const uniqueArrayByKey = (array, key) => {
 
     return unique
 }
+
+export const generateToastMarkup = (header, content) => (
+    <div>
+        <strong>{header}</strong>
+        <div>{content}</div>
+    </div>
+)
