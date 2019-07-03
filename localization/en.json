@@ -419,5 +419,9 @@
   "notifications.productUpdated.header": "Updated Product",
   "notifications.productUpdated.content": "Product {name} successfully updated.",
   "notifications.bankAccountCreated.header": "Created Bank Account",
-  "notifications.bankAccountCreated.content": "Bank Account {name} successfully created."
+  "notifications.bankAccountCreated.content": "Bank Account {name} successfully created.",
+  "notifications.deliveryAddressCreated.header": "Created Delivery Address",
+  "notifications.deliveryAddressCreated.content": "Delivery Address {name} successfully created.",
+  "notifications.deliveryAddressUpdated.header": "Updated Delivery Address",
+  "notifications.deliveryAddressUpdated.content": "Delivery Address {name} successfully updated."
 }

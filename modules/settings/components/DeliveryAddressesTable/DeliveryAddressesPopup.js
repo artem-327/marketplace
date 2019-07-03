@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {Modal, FormGroup, Item, Divider, Popup, Label} from 'semantic-ui-react'
+import { Modal, FormGroup } from 'semantic-ui-react'
+import { withToastManager } from 'react-toast-notifications'
 
 import {
   closePopup,
@@ -12,20 +13,23 @@ import {
   removeEmpty
 } from '../../actions'
 
-import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 import Router from "next/router"
+import { FormattedMessage } from 'react-intl'
+
+import { generateToastMarkup } from '~/utils/functions'
 
 const initialFormValues = {
-  'name':    '',
-  'email':        '',
-  'phoneNumber':  '',
+  'name': '',
+  'email': '',
+  'phoneNumber': '',
   'address': {
-    'city':           '',
-    'country':        '',
-    'province':       '',
-    'streetAddress':  '',
-    'zip':            '',
+    'city': '',
+    'country': '',
+    'province': '',
+    'streetAddress': '',
+    'zip': '',
   }
 }
 
@@ -63,7 +67,7 @@ class DeliveryAddressesPopup extends React.Component {
     if (country.hasProvinces) {
       this.props.getProvinces(country.id)
     }
-    this.setState({hasProvinces: country.hasProvinces})
+    this.setState({ hasProvinces: country.hasProvinces })
   }
 
   handleAddressSelect = (d, values, setFieldValue) => {
@@ -71,21 +75,21 @@ class DeliveryAddressesPopup extends React.Component {
     if (i >= 0) {
       setFieldValue('address.streetAddress', this.props.AddressSuggestData[i].streetAddress)
       setFieldValue('address.city', this.props.AddressSuggestData[i].city)
-      setFieldValue('address.zip', this.props.AddressSuggestData[i].zip &&  this.props.AddressSuggestData[i].zip.zip)
+      setFieldValue('address.zip', this.props.AddressSuggestData[i].zip && this.props.AddressSuggestData[i].zip.zip)
       setFieldValue('address.country', this.props.AddressSuggestData[i].country.id)
       setFieldValue('address.province', this.props.AddressSuggestData[i].province ? this.props.AddressSuggestData[i].province.id : '')
-      this.setState({hasProvinces: this.props.AddressSuggestData[i].country.hasProvinces})
+      this.setState({ hasProvinces: this.props.AddressSuggestData[i].country.hasProvinces })
       if (this.props.AddressSuggestData[i].country.hasProvinces) this.props.getProvinces(this.props.AddressSuggestData[i].country.id)
     }
     else {
-      let newValues = {...values.address, [d.name.split('.')[1]]: d.value}
+      let newValues = { ...values.address, [d.name.split('.')[1]]: d.value }
 
       const body = {
-        city:           newValues.city,
-        countryId:      newValues.country,
-        provinceId:     newValues.province,
-        streetAddress:  newValues.streetAddress,
-        zip:            newValues.zip
+        city: newValues.city,
+        countryId: newValues.country,
+        provinceId: newValues.province,
+        streetAddress: newValues.streetAddress,
+        zip: newValues.zip
       }
       removeEmpty(body)
       if (Object.entries(body).length === 0) return
@@ -104,6 +108,7 @@ class DeliveryAddressesPopup extends React.Component {
       provincesDropDown,
       reloadFilter,
       AddressSuggestInput,
+      toastManager
     } = this.props
 
     const {
@@ -119,48 +124,70 @@ class DeliveryAddressesPopup extends React.Component {
             initialValues={popupValues ? popupValues : initialFormValues}
             validationSchema={formValidation(hasProvinces)}
             onReset={closePopup}
-            onSubmit={async (values, actions) => { 
-              if (values.address.province === '') delete values.address['province']
-              if (popupValues) await updateDeliveryAddresses(rowId, values, reloadFilter)
-              else await createDeliveryAddress(values, reloadFilter)
-              actions.setSubmitting(false)
+            onSubmit={async (values, { setSubmitting }) => {
+              try {
+
+                if (values.address.province === '') delete values.address['province']
+                if (popupValues) await updateDeliveryAddresses(rowId, values, reloadFilter)
+                else await createDeliveryAddress(values, reloadFilter)
+
+                let status = popupValues ? 'deliveryAddressUpdated' : 'deliveryAddressCreated'
+
+                toastManager.add(generateToastMarkup(
+                  <FormattedMessage id={`notifications.${status}.header`} />,
+                  <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
+                ),
+                  {
+                    appearance: 'success'
+                  })
+              }
+              catch { }
+              finally {
+                setSubmitting(false)
+              }
+
             }}
           >
-            {({ values, errors, setFieldValue }) => (
-              <>
-                {AddressSuggestInput}
-                <h4>Address</h4>
-                <FormGroup widths="equal">
-                  <Input
-                    inputProps={{list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue)}}}
-                    type="text" label="Street Address" name="address.streetAddress" />
-                  <Input
-                    inputProps={{list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue)}}}
-                    type="text" label="City" name="address.city" />
-                </FormGroup>
-                <FormGroup widths="equal">
-                  <Input
-                    inputProps={{list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue)}}}
-                    type="text" label="Zip" name="address.zip" />
-                  <Dropdown label="Country" name="address.country" options={countriesDropDown}
-                            inputProps={{search: true, onChange:  (e, d) => {
-                                setFieldValue('address.province', ''); this.handleCountry(e, d)}}} />
-                  <Dropdown label="Province" name="address.province" options={provincesDropDown}
-                            inputProps={{search: true, disabled: !this.state.hasProvinces}} />
-                </FormGroup>
-                <h4>Contact Info</h4>
-                <FormGroup>
-                  <Input type="text" label="Name" name="name" fieldProps={{width: 8}} />
-                </FormGroup>
-                <FormGroup widths="equal">
-                  <Input type="text" label="Contact Email" name="email" />
-                  <Input type="text" label="Contact Phone" name="phoneNumber" />
-                </FormGroup>
-                <div style={{ textAlign: 'right' }}>
-                  <Button.Reset>Cancel</Button.Reset>
-                  <Button.Submit>Save</Button.Submit>
-                </div>
-              </>)}
+            {({ values, errors, setFieldValue }) => {
+              return (
+                <>
+                  {AddressSuggestInput}
+                  <h4>Address</h4>
+                  <FormGroup widths="equal">
+                    <Input
+                      inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
+                      type="text" label="Street Address" name="address.streetAddress" />
+                    <Input
+                      inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
+                      type="text" label="City" name="address.city" />
+                  </FormGroup>
+                  <FormGroup widths="equal">
+                    <Input
+                      inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
+                      type="text" label="Zip" name="address.zip" />
+                    <Dropdown label="Country" name="address.country" options={countriesDropDown}
+                      inputProps={{
+                        search: true, onChange: (e, d) => {
+                          setFieldValue('address.province', ''); this.handleCountry(e, d)
+                        }
+                      }} />
+                    <Dropdown label="Province" name="address.province" options={provincesDropDown}
+                      inputProps={{ search: true, disabled: !this.state.hasProvinces }} />
+                  </FormGroup>
+                  <h4>Contact Info</h4>
+                  <FormGroup>
+                    <Input type="text" label="Name" name="name" fieldProps={{ width: 8 }} />
+                  </FormGroup>
+                  <FormGroup widths="equal">
+                    <Input type="text" label="Contact Email" name="email" />
+                    <Input type="text" label="Contact Phone" name="phoneNumber" />
+                  </FormGroup>
+                  <div style={{ textAlign: 'right' }}>
+                    <Button.Reset>Cancel</Button.Reset>
+                    <Button.Submit>Save</Button.Submit>
+                  </div>
+                </>)
+            }}
           </Form>
         </Modal.Content>
       </Modal>
@@ -186,7 +213,7 @@ const prepareAddressSuggest = (AddressSuggestOptions) => (
 const mapStateToProps = state => {
   const popupValues = state.settings.popupValues
   const AddressSuggestOptions = state.settings.addressSearch.map((a) => (
-      a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
+    a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
   ))
   return {
     AddressSuggestInput: prepareAddressSuggest(AddressSuggestOptions),
@@ -197,6 +224,7 @@ const mapStateToProps = state => {
     popupValues: popupValues ? {
       firstName: popupValues.firstName,
       lastName: popupValues.lastName,
+      name: popupValues.name,
       email: popupValues.email,
       phoneNumber: popupValues.phoneNumber,
       address: {
@@ -205,19 +233,23 @@ const mapStateToProps = state => {
         province: !!popupValues.address.province ? popupValues.address.province.id : '',
         streetAddress: popupValues.address.streetAddress,
         zip: popupValues.address.zip.zip
-    }} : null,
+      }
+    } : null,
     countriesDropDown: state.settings.countriesDropDown,
     provincesDropDown: state.settings.provincesDropDown,
     countries: state.settings.countries,
-    reloadFilter: {props: {
+    reloadFilter: {
+      props: {
         currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
-            state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
-        deliveryAddressesFilter: state.settings.deliveryAddressesFilter},
-      value: state.settings.filterValue},
+          state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+        deliveryAddressesFilter: state.settings.deliveryAddressesFilter
+      },
+      value: state.settings.filterValue
+    },
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(DeliveryAddressesPopup)
+)(withToastManager(DeliveryAddressesPopup))
