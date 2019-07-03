@@ -1,8 +1,11 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { injectIntl } from 'react-intl'
+import { withToastManager } from 'react-toast-notifications'
+import { FormattedMessage } from 'react-intl'
 
 import ProdexGrid from "~/components/table"
+import { withDatagrid } from '~/modules/datagrid'
 import { TablePopUp } from "~/components/tablePopup"
 import confirm from '~/src/components/Confirmable/confirm'
 
@@ -30,7 +33,7 @@ class UsersTable extends Component {
       { name: "title", title: "Job Title" },
       { name: "email", title: "E-mail" },
       { name: "phone", title: "Phone" },
-      { name: "homeBranch", title: "Home Branch" },
+      { name: "homeBranchName", title: "Home Branch" },
       { name: "userRoles", title: "Roles", width: 200 },
       { name: "switchEnable", title: "Enable User", width: 120 }
     ]
@@ -38,6 +41,85 @@ class UsersTable extends Component {
 
   componentDidMount() {
     this.props.getUsersDataRequest()
+  }
+
+  componentDidUpdate(oldProps) {
+    const { addedItem, editedItem, removedItem, datagrid, toastManager } = this.props
+
+    if (addedItem !== oldProps.addedItem) {
+      datagrid.loadData()
+      toastManager.add((
+        <div>
+          <strong>
+            <FormattedMessage
+              id='productCatalog.newUser'
+              defaultMessage={'New User'}
+            />
+          </strong>
+          <div>
+            <FormattedMessage
+              id='productCatalog.userCreated'
+              defaultMessage={'User {userName} successfully created.'}
+              values={{ userName: addedItem.name }}
+            />
+          </div>
+        </div>
+      ), {
+        appearance: 'success',
+        autoDismiss: true
+      })
+    }
+
+    if (editedItem !== oldProps.editedItem) {
+      datagrid.updateRow(editedItem.id, this.getEditedUser)
+      toastManager.add((
+        <div>
+          <strong>
+            <FormattedMessage
+              id='productCatalog.editedUser'
+              defaultMessage={'Edited User'}
+            />
+          </strong>
+          <div>
+            <FormattedMessage
+              id='productCatalog.userUpdated'
+              defaultMessage={'User {userName} successfully updated.'}
+              values={{ userName: editedItem.name }}
+            />
+          </div>
+        </div>
+      ), {
+        appearance: 'success',
+        autoDismiss: true
+      })
+    }
+
+    if (removedItem !== oldProps.removedItem) {
+      toastManager.add((
+        <div>
+          <strong>
+            <FormattedMessage
+              id='productCatalog.removedUser'
+              defaultMessage={'Removed User'}
+            />
+          </strong>
+          <div>
+            <FormattedMessage
+              id='productCatalog.userRemoved'
+              defaultMessage={'User {userName} successfully removed.'}
+              values={{ userName: removedItem.name }}
+            />
+          </div>
+        </div>
+      ), {
+        appearance: 'success',
+        autoDismiss: true
+      })
+    }
+  }
+
+  getEditedUser = () => {
+    return this.props.editedItem
   }
 
   render() {
@@ -48,6 +130,7 @@ class UsersTable extends Component {
       openPopup,
       openRolesPopup,
       intl,
+      datagrid,
       deleteUser,
       // confirmMessage,
       // handleOpenConfirmPopup,
@@ -63,10 +146,11 @@ class UsersTable extends Component {
       <React.Fragment>
         <ProdexGrid
           tableName="settings_users"
+          {...datagrid.tableProps}
           filterValue={filterValue}
           columns={columns}
           rows={rows}
-          loading={loading}
+          loading={datagrid.loading || loading}
           style={{ marginTop: "5px" }}
           rowActions={[
             { text: "Edit", callback: row => openPopup(row) },
@@ -75,7 +159,7 @@ class UsersTable extends Component {
               text: "Delete", callback: row => confirm(
                 formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete user' }),
                 formatMessage({ id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` }, { item: row.name })
-              ).then(() => deleteUser(row.id))
+              ).then(() => deleteUser(row.id, row.name))
             }
           ]}
         />
@@ -113,16 +197,29 @@ const userEnableDisableStatus = (r, currentUserId) => (
   </div>
 )
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, { datagrid }) => {
   const currentUserId = state.settings.currentUser && state.settings.currentUser.id
   return {
-    rows: state.settings.usersRows.map(r => ({
-      ...r,
-      userRoles: r.allUserRoles.map(rol => (
+    rows: datagrid.rows.map(user => ({
+      name: user.name,
+      title: user.jobTitle || '',
+      email: user.email,
+      phone: user.phone || '',
+      homeBranch: user.homeBranch && user.homeBranch.id,
+      enabled: user.enabled,
+      preferredCurrency: (user.preferredCurrency || {}).id || 0,
+      homeBranchName: user.homeBranch && user.homeBranch.name,
+      permissions: user.roles ? user.roles.name : "", // ! ! array?
+      id: user.id,
+      allUserRoles: user.roles || [],
+      userRoles: user.roles.map(rol => (
         rol.name
       )).join(", "),
-      switchEnable: userEnableDisableStatus(r, currentUserId),
+      switchEnable: userEnableDisableStatus(user, currentUserId)
     })),
+    addedItem: state.settings.addedItem,
+    editedItem: state.settings.editedItem,
+    removedItem: state.settings.removedItem,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
@@ -133,7 +230,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(injectIntl(UsersTable))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(withToastManager(UsersTable))))

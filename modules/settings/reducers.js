@@ -32,8 +32,9 @@ export const initialState = {
   currency: [],
   currentUser: null,
 
-  addedProduct: {},
-  editedProduct: {},
+  addedItem: {},
+  editedItem: {},
+  removedItem: {},
 
   tabsNames: defaultTabs,
   currentTab: defaultTabs[0],
@@ -545,17 +546,45 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.SETTINGS_POST_NEW_PRODUCT_REQUEST_FULFILLED: {
+    case AT.DELETE_PRODUCT_PENDING:
+    case AT.DELETE_USER_PENDING: {
       return {
         ...state,
-        addedProduct: action.payload.data
+        loading: true
       }
     }
 
-    case AT.SETTINGS_UPDATE_PRODUCT_CATALOG_FULFILLED: {
+    case AT.SETTINGS_POST_NEW_PRODUCT_REQUEST_FULFILLED:
+    case AT.POST_NEW_USER_REQUEST_FULFILLED: {
       return {
         ...state,
-        editedProduct: action.payload.data
+        addedItem: action.payload.data
+      }
+    }
+
+    case AT.SETTINGS_UPDATE_PRODUCT_CATALOG_FULFILLED:
+    case AT.HANDLE_SUBMIT_USER_EDIT_POPUP_FULFILLED: {
+      return {
+        ...state,
+        editedItem: action.payload.data
+      }
+    }
+
+
+    case AT.DELETE_PRODUCT_FULFILLED:
+    case AT.DELETE_USER_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        removedItem: { name: action.payload }
+      }
+    }
+
+    case AT.DELETE_PRODUCT_REJECTED:
+    case AT.DELETE_USER_REJECTED: {
+      return {
+        ...state,
+        loading: false
       }
     }
 
@@ -795,55 +824,6 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         tabsNames: tabsNames
-      }
-    }
-
-    /* DELETE PRODUCT */
-
-    case AT.DELETE_PRODUCT_PENDING: {
-      return {
-        ...state,
-        loading: true
-      }
-    }
-
-
-    case AT.DELETE_PRODUCT_FULFILLED: {
-      return {
-        ...state,
-        loading: false,
-        productsCatalogRows: state.productsCatalogRows.filter((el) => el.id !== payload)
-      }
-    }
-
-    case AT.DELETE_PRODUCT_REJECTED: {
-      return {
-        ...state,
-        loading: false
-      }
-    }
-
-    /* DELETE USER */
-
-    case AT.DELETE_USER_PENDING: {
-      return {
-        ...state,
-        loading: true
-      }
-    }
-
-    case AT.DELETE_USER_FULFILLED: {
-      return {
-        ...state,
-        loading: false,
-        usersRows: state.usersRows.filter((user) => user.id !== payload)
-      }
-    }
-
-    case AT.DELETE_USER_REJECTED: {
-      return {
-        ...state,
-        loading: false
       }
     }
 

@@ -100,13 +100,12 @@ export function handlerSubmitUserEditPopup(payload, id) {
     const updateUser = {
       name: payload.name,
       email: payload.email,
-      homeBranchId: payload.homeBranchId,
+      homeBranch: payload.homeBranch,
       jobTitle: payload.title,
       phone: payload.phone,
       preferredCurrency: payload.preferredCurrency
     }
     removeEmpty(updateUser)
-    console.log('!!!!!!!!!! edit user', updateUser)
     await dispatch({
       type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
       payload: api.patchUser(id, updateUser)
@@ -160,16 +159,23 @@ export function handleOpenConfirmPopup(payload) {
   }
 }
 
-export const deleteUser = (id) => ({ type: AT.DELETE_USER, payload: api.deleteUser(id) })
+export const deleteUser = (id, name) => ({
+  type: AT.DELETE_USER,
+  async payload() {
+    await api.deleteUser(id)
+    Datagrid.removeRow(id)
+    return name
+  }
+})
 
 export const deleteBranch = (id) => ({ type: AT.DELETE_BRANCH, payload: api.deleteWarehouse(id) })
 
-export const deleteProduct = (id) => ({
+export const deleteProduct = (id, name) => ({
   type: AT.DELETE_PRODUCT,
   async payload() {
-    const response = await api.deleteProduct(id)
+    await api.deleteProduct(id)
     Datagrid.removeRow(id)
-    return response
+    return name
   }
 })
 
@@ -550,7 +556,7 @@ export function postNewUserRequest(payload) {
     const dataBody = {
       email: payload.email,
       name: payload.name,
-      homeBranch: payload.homeBranchId,
+      homeBranch: payload.homeBranch,
       jobTitle: payload.title,
       phone: payload.phone,
       preferredCurrency: payload.preferredCurrency

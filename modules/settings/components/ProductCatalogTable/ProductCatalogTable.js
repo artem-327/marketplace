@@ -9,7 +9,7 @@ import Router from "next/router"
 
 import confirm from '~/src/components/Confirmable/confirm'
 import { injectIntl } from 'react-intl'
-import {withToastManager} from 'react-toast-notifications'
+import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage } from 'react-intl'
 
 class ProductCatalogTable extends Component {
@@ -47,33 +47,9 @@ class ProductCatalogTable extends Component {
   }
 
   componentDidUpdate(oldProps) {
-    const { action, actionId, currentTab, loaded, openPopup, rows, addedProduct, editedProduct, datagrid, toastManager } = this.props
+    const { action, actionId, currentTab, loaded, openPopup, rows, addedItem, editedItem, removedItem, datagrid, toastManager } = this.props
 
-    if (editedProduct !== oldProps.editedProduct) {
-      datagrid.updateRow(editedProduct.id, this.getEditedProduct)
-      toastManager.add((
-        <div>
-          <strong>
-            <FormattedMessage
-              id='productCatalog.editProduct'
-              defaultMessage={'Edited Product'}
-            />
-          </strong>
-          <div>
-            <FormattedMessage
-              id='productCatalog.successfullyUpdated'
-              defaultMessage={'Product {productName} successfully updated.'}
-              values={{ productName: editedProduct.productName }}
-            />
-          </div>
-        </div>
-      ), {
-        appearance: 'success',
-        autoDismiss: true
-      })
-    }
-
-    if (addedProduct !== oldProps.addedProduct) {
+    if (addedItem !== oldProps.addedItem) {
       datagrid.loadData()
       toastManager.add((
         <div>
@@ -85,9 +61,56 @@ class ProductCatalogTable extends Component {
           </strong>
           <div>
             <FormattedMessage
-              id='productCatalog.successfullyCreated'
+              id='productCatalog.productCreated'
               defaultMessage={'Product {productName} successfully created.'}
-              values={{ productName: addedProduct.productName }}
+              values={{ productName: addedItem.productName }}
+            />
+          </div>
+        </div>
+      ), {
+        appearance: 'success',
+        autoDismiss: true
+      })
+    }
+
+    if (editedItem !== oldProps.editedItem) {
+      datagrid.updateRow(editedItem.id, this.getEditedProduct)
+      toastManager.add((
+        <div>
+          <strong>
+            <FormattedMessage
+              id='productCatalog.editedProduct'
+              defaultMessage={'Edited Product'}
+            />
+          </strong>
+          <div>
+            <FormattedMessage
+              id='productCatalog.productUpdated'
+              defaultMessage={'Product {productName} successfully updated.'}
+              values={{ productName: editedItem.productName }}
+            />
+          </div>
+        </div>
+      ), {
+        appearance: 'success',
+        autoDismiss: true
+      })
+    }
+
+    if (removedItem !== oldProps.removedItem) {
+      toastManager.add((
+        <div>
+          <strong>
+            <FormattedMessage
+              id='productCatalog.removedProduct'
+              defaultMessage={'Removed Product'}
+            />
+          </strong>
+          <div>
+            <FormattedMessage
+              id='productCatalog.productRemoved'
+              defaultMessage={'Product {productName} successfully removed.'}
+              values={{ productName: removedItem.name }}
             />
           </div>
         </div>
@@ -109,7 +132,7 @@ class ProductCatalogTable extends Component {
   }
 
   getEditedProduct = (r) => {
-    return this.props.editedProduct
+    return this.props.editedItem
   }
 
   getRows = (rows) => {
@@ -155,7 +178,7 @@ class ProductCatalogTable extends Component {
                   formatMessage(
                     { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.productName}!?` },
                     { item: row.productName })
-                ).then(() => deleteProduct(row.id))
+                ).then(() => deleteProduct(row.id, row.productName))
             }
           ]}
         />
@@ -231,8 +254,9 @@ const mapStateToProps = (state, { datagrid }) => {
         unNumber: product.unNumber ? product.unNumber : null
       }
     }),
-    addedProduct: state.settings.addedProduct,
-    editedProduct: state.settings.editedProduct,
+    addedItem: state.settings.addedItem,
+    editedItem: state.settings.editedItem,
+    removedItem: state.settings.removedItem,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
