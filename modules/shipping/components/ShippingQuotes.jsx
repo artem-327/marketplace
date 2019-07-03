@@ -162,7 +162,7 @@ export default class ShippingQuotes extends Component {
     const { closeModal } = this.props.modalProps
 
     return (
-      <Modal onClose={closeModal} {...this.props.modalProps}>
+      <Modal onClose={closeModal} centered={false} {...this.props.modalProps}>
         <Modal.Header>Shiping Quote</Modal.Header>
         <Modal.Content>
           {this.renderForm()}
