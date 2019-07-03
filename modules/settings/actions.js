@@ -151,16 +151,23 @@ export function handleOpenConfirmPopup(payload) {
   }
 }
 
-export const deleteUser = (id) => ({ type: AT.DELETE_USER, payload: api.deleteUser(id) })
+export const deleteUser = (id, name) => ({
+  type: AT.DELETE_USER,
+  async payload() {
+    await api.deleteUser(id)
+    Datagrid.removeRow(id)
+    return name
+  }
+})
 
 export const deleteBranch = (id) => ({ type: AT.DELETE_BRANCH, payload: api.deleteWarehouse(id) })
 
-export const deleteProduct = (id) => ({
+export const deleteProduct = (id, name) => ({
   type: AT.DELETE_PRODUCT,
   async payload() {
-    const response = await api.deleteProduct(id)
+    await api.deleteProduct(id)
     Datagrid.removeRow(id)
-    return response
+    return name
   }
 })
 

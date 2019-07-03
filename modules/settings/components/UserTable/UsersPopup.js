@@ -24,7 +24,7 @@ const formValidation = popupValues => Yup.object().shape({
   email: Yup.string().trim()
     .email("Invalid email")
     .required("Emails is required"),
-  homeBranchId: Yup.number()
+  homeBranch: Yup.number()
     .required('Home Branch is required'),
   title: Yup.string().trim()
     .min(3, "Too short"),
@@ -49,7 +49,7 @@ class UsersPopup extends React.Component {
     let requestData = {
       email: values.email,
       name: values.name,
-      homeBranch: values.homeBranchId,
+      homeBranch: values.homeBranch,
       jobTitle: values.title,
       phone: values.phone,
       preferredCurrency: values.preferredCurrency
@@ -103,7 +103,7 @@ class UsersPopup extends React.Component {
     const {
       name = "",
       email = "",
-      homeBranchId = "",
+      homeBranch = undefined,
       preferredCurrency = "",
       title = "",
       phone = "",
@@ -112,7 +112,7 @@ class UsersPopup extends React.Component {
     const initialFormValues = {
       name,
       email,
-      homeBranchId,
+      homeBranch,
       preferredCurrency,
       title,
       phone,
@@ -159,7 +159,7 @@ class UsersPopup extends React.Component {
                   <FormGroup>
                     <Dropdown
                       label="Home Branch"
-                      name="homeBranchId"
+                      name="homeBranch"
                       options={branchesAll}
                       fieldProps={{ width: 8 }}
                     />

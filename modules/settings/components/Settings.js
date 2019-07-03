@@ -134,7 +134,14 @@ class Settings extends Component {
     const { productCatalogUnmappedValue, currentTab } = this.props
     const datagridApiMap = {
       // 'company-details': this.companyDetails(),
-      // 'users': null,
+      'users': {
+        url: `/prodex/api/users/datagrid`,
+        searchToFilter: (value) => ({
+          operator: "LIKE",
+          path: "User.name",
+          values: ['%' + value + '%']
+        })
+      },
       // 'branches': null,
       // 'warehouses': null,
       'products': {
