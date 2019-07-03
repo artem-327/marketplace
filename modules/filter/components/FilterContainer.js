@@ -16,7 +16,7 @@ function mapStateToProps(store) {
   return {
     ...store.filter.filter,
     ...store.filter.products,
-    preferredCurrency: store.auth.identity && store.auth.identity.preferredCurrency.symbol,
+    preferredCurrency: store.auth.identity && store.auth.identity.preferredCurrency,
     warehouseDistances: store.location.warehouseDistances,
   }
 }

@@ -10,6 +10,7 @@ import Router from "next/router"
 import confirm from '~/src/components/Confirmable/confirm'
 import { injectIntl } from 'react-intl'
 import {withToastManager} from 'react-toast-notifications'
+import { FormattedMessage } from 'react-intl'
 
 class ProductCatalogTable extends Component {
 
@@ -52,8 +53,19 @@ class ProductCatalogTable extends Component {
       datagrid.updateRow(editedProduct.id, this.getEditedProduct)
       toastManager.add((
         <div>
-          <strong>Edit Product</strong>
-          <div>Product was successfully modified.</div>
+          <strong>
+            <FormattedMessage
+              id='productCatalog.editProduct'
+              defaultMessage={'Edited Product'}
+            />
+          </strong>
+          <div>
+            <FormattedMessage
+              id='productCatalog.successfullyUpdated'
+              defaultMessage={'Product {productName} successfully updated.'}
+              values={{ productName: editedProduct.productName }}
+            />
+          </div>
         </div>
       ), {
         appearance: 'success',
@@ -65,8 +77,19 @@ class ProductCatalogTable extends Component {
       datagrid.loadData()
       toastManager.add((
         <div>
-          <strong>New Product</strong>
-          <div>Product was successfully created.</div>
+          <strong>
+            <FormattedMessage
+              id='productCatalog.newProduct'
+              defaultMessage={'New Product'}
+            />
+          </strong>
+          <div>
+            <FormattedMessage
+              id='productCatalog.successfullyCreated'
+              defaultMessage={'Product {productName} successfully created.'}
+              values={{ productName: addedProduct.productName }}
+            />
+          </div>
         </div>
       ), {
         appearance: 'success',

@@ -1,10 +1,10 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {logout} from '~/modules/auth/actions'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { logout } from '~/modules/auth/actions'
 
 class Logout extends Component {
   componentDidMount() {
-    const {logout, router} = this.props
+    const { logout, router } = this.props
 
     logout(router.query.autoLogout)
   }
@@ -12,4 +12,4 @@ class Logout extends Component {
   render() { return null }
 }
 
-export default connect(() => ({}), {logout})(Logout)
+export default connect(() => ({}), { logout })(Logout)

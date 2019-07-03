@@ -16,18 +16,18 @@ const MAX_TAG_ENTITIES = 2
 class FilterTags extends Component {
 
   removeFilter = filter => {
-    filter.indexes.forEach((index, i) => this.props.onClick(index - i))
+    this.props.onClick(filter.indexes)
   }
 
   tagMarkup = (filters) => {
     return filters.map((filter, i) => {
-      let { valuesDescription } = filter
+      let { tagDescription } = filter
 
-      if (valuesDescription instanceof Array && valuesDescription.length > MAX_TAG_ENTITIES) {
+      if (tagDescription instanceof Array && tagDescription.length > MAX_TAG_ENTITIES) {
         return (
           <WiderPopup position='bottom center' trigger={
             <FilterTag key={i} >
-              <span>{filter.description}: ({valuesDescription.length})...
+              <span> {filter.description} ({tagDescription.length})...
                   <Icon onClick={() => this.removeFilter(filter)}
                   name='delete' />
               </span>
@@ -36,15 +36,16 @@ class FilterTags extends Component {
             <Grid verticalAlign='middle'>
               <PopupRow>
                 <GridColumn>
-                  {valuesDescription.toString().replace(/,/g, ', ')}
+                  {tagDescription.toString().replace(/,/g, ', ')}
                 </GridColumn>
               </PopupRow>
             </Grid>
           </WiderPopup>
         )
+        // {tagDescription.toString().replace(/,/g, ', ')}
       } else {
         return <FilterTag key={i}>
-          <span>{filter.description}: {valuesDescription.toString().replace(/,/g, ', ')}
+          <span>{tagDescription} 
             <Icon onClick={() => this.removeFilter(filter)}
               name='delete' />
           </span>
@@ -58,7 +59,9 @@ class FilterTags extends Component {
   render() {
     let { appliedFilter } = this.props
     if (!appliedFilter.filters || appliedFilter.filters.length === 0) return null
-    let filters = groupFilters(appliedFilter.filters)
+    let filters = groupFilters(appliedFilter.filters, this.props.params)
+
+    console.log({ filters, appliedFilter })
 
     if (!filters || filters.length === 0) return null
     let tagsToDisplay = []
@@ -112,7 +115,8 @@ FilterTags.defaultProps = {
 
 function mapStateToProps(store) {
   return {
-    appliedFilter: store.filter.filter.appliedFilter
+    appliedFilter: store.filter.filter.appliedFilter,
+    params: store.filter.filter.params
   }
 }
 
