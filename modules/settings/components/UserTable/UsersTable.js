@@ -39,6 +39,18 @@ class UsersTable extends Component {
     ]
   }
 
+  componentDidUpdate(oldProps) {
+    const {addedItem, editedItem, datagrid} = this.props
+
+    if (addedItem !== oldProps.addedItem) {
+      datagrid.loadData()
+    }
+
+    if (editedItem !== oldProps.editedItem) {
+      datagrid.updateRow(editedItem.id, this.getEditedUser)
+    }
+  }
+
   componentDidMount() {
     this.props.getUsersDataRequest()
   }
@@ -66,8 +78,6 @@ class UsersTable extends Component {
 
     let { columns } = this.state
     const { formatMessage } = intl
-
-    console.log({ rows })
 
     return (
       <React.Fragment>
@@ -144,6 +154,8 @@ const mapStateToProps = (state, { datagrid }) => {
       )).join(", "),
       switchEnable: userEnableDisableStatus(user, currentUserId)
     })),
+    addedItem: state.settings.addedItem,
+    editedItem: state.settings.editedItem,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
