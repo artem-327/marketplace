@@ -1,4 +1,11 @@
 {
+  "auth.resetMyPassword": "Reset my Password",
+  "auth.cancelPasswordReset": "Cancel Password Reset",
+  "auth.username": "Username",
+  "auth.password": "Password",
+  "auth.login": "Log in",
+  "auth.resetPassword": "Reset Password",
+  "auth.resetPasswordInstructions": "If you forgot your password and want to reset it, please enter your Username and click 'Reset Password' button. We will email you instructions.",
   "global.addNew": "Add New",
   "global.name": "Name",
   "global.delete": "Delete",

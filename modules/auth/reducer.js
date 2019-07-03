@@ -1,12 +1,12 @@
 import * as AT from './action-types'
-import { ROLES_ENUM } from '../../src/utils/constants';
-const ROLE_GUEST = 'ROLE_GUEST'
+import { ROLES_ENUM } from '../../src/utils/constants'
 
 export const initialState = {
   loginForm: {
     isLoading: false,
     message: null,
-    isLogged: false
+    isLogged: false,
+    version: '',
   },
   identity: null,
 }
@@ -66,17 +66,9 @@ export default function reducer(state = initialState, action) {
       return initialState
     }
 
-
-    case AT.GET_VERSION_FULFILLED: {
-      return {
-        ...state,
-        version: payload
-      }
-    }
-
     case AT.UPDATE_IDENTITY: {
       let { branches, primaryBranch, ...rest } = action.payload
-      
+
       return {
         ...state,
         identity: {
@@ -87,6 +79,37 @@ export default function reducer(state = initialState, action) {
             ...state.identity.company,
             ...rest
           }
+        }
+      }
+    }
+
+    case AT.GET_VERSION_PENDING: {
+      return {
+        ...state,
+        loginForm: {
+          ...state.loginForm,
+          isLoading: true
+        }
+      }
+    }
+
+    case AT.GET_VERSION_FULFILLED: {
+      return {
+        ...state,
+        loginForm: {
+          ...state.loginForm,
+          version: payload.version,
+          isLoading: false
+        }
+      }
+    }
+
+    case AT.GET_VERSION_REJECTED: {
+      return {
+        ...state,
+        loginForm: {
+          ...state.loginForm,
+          isLoading: true
         }
       }
     }

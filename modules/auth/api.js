@@ -1,12 +1,7 @@
 import api from '~/api'
 
-export async function getIdentity() {
-  const {data} = await api.get("/prodex/api/users/me")
-  return data
-}
+export const getIdentity = () => api.get('/prodex/api/users/me').then(response => response.data)
 
-export async function getVersion() {
-  const {data} = await api.get("/prodex/api/version")
-  return data
-}
+export const getVersion = () => api.get('/prodex/api/version').then(response => response.data)
 
+export const resetPasswordRequest = email => api.post(`/prodex/api/users/reset-password-request?email=${email}`)
