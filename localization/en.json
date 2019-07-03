@@ -405,5 +405,13 @@
   "notifications.userCreated.header": "Created user",
   "notifications.userCreated.content": "User {name} successfully created.",
   "notifications.userUpdated.header": "Updated user",
-  "notifications.userUpdated.content": "User {name} successfully updated."
+  "notifications.userUpdated.content": "User {name} successfully updated.",
+  "notifications.branchCreated.header": "Created branch",
+  "notifications.branchCreated.content": "Branch {name} successfully created.",
+  "notifications.branchUpdated.header": "Updated branch",
+  "notifications.branchUpdated.content": "Branch {name} successfully updated.",
+  "notifications.warehouseCreated.header": "Created warehouse",
+  "notifications.warehouseCreated.content": "Warehouse {name} successfully created.",
+  "notifications.warehouseUpdated.header": "Updated warehouse",
+  "notifications.warehouseUpdated.content": "Warehouse {name} successfully updated."
 }

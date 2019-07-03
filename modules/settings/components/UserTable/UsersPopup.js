@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
-import { withToastManager, toastManager } from 'react-toast-notifications'
+import { withToastManager } from 'react-toast-notifications'
 import { Modal, FormGroup } from "semantic-ui-react"
 
 import {
