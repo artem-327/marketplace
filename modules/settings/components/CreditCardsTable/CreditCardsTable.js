@@ -31,7 +31,8 @@ class ProductCatalogTable extends Component {
       closeConfirmPopup,
       deleteConfirmation,
       deleteRowById,
-      currentTab
+      currentTab,
+      loading
     } = this.props
 
     const { columns } = this.state
@@ -48,6 +49,7 @@ class ProductCatalogTable extends Component {
         <ProdexTable
           tableName="settings_credit_cards"
           rows={rows}
+          loading={loading}
           columns={columns}
           filterValue={filterValue}
           rowActions={[
@@ -72,6 +74,7 @@ const mapDispatchToProps = {
 const mapStateToProps = state => {
   return {
     rows: state.settings.creditCardsRows,
+    loading: state.settings.loading,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,

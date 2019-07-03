@@ -248,15 +248,15 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_USERS_DATA: {// ! ! vsude zmenit na pending
-      return { ...state, loading: true }
-    }
-
     case AT.HANDLE_PRODUCT_CATALOG_UNMAPPED_VALUE: {
       return {
         ...state,
         productCatalogUnmappedValue: action.payload
       }
+    }
+
+    case AT.GET_USERS_DATA_PENDING: {// ! ! vsude zmenit na pending
+      return { ...state, loading: true }
     }
 
     case AT.GET_USERS_DATA_FULFILLED: {
@@ -403,8 +403,11 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_CREDIT_CARDS_DATA: {  // ! ! pending
-      return { ...state, loading: true }
+    case AT.GET_CREDIT_CARDS_DATA_PENDING: {  // ! ! pending
+      return { 
+        ...state, 
+        loading: true 
+      }
     }
 
     case AT.GET_CREDIT_CARDS_DATA_FULFILLED: {
