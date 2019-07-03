@@ -68,8 +68,7 @@ class UsersPopup extends React.Component {
       <FormattedMessage id={`notifications.${status}.header`} />,
       <FormattedMessage id={`notifications.${status}.content`} values={{ name: requestData.name }} />
     ), {
-        appearance: 'success',
-        autoDismiss: true
+        appearance: 'success'
       })
 
 

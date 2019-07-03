@@ -413,5 +413,9 @@
   "notifications.warehouseCreated.header": "Created warehouse",
   "notifications.warehouseCreated.content": "Warehouse {name} successfully created.",
   "notifications.warehouseUpdated.header": "Updated warehouse",
-  "notifications.warehouseUpdated.content": "Warehouse {name} successfully updated."
+  "notifications.warehouseUpdated.content": "Warehouse {name} successfully updated.",
+  "notifications.productCreated.header": "Created product",
+  "notifications.productCreated.content": "Product {name} successfully created.",
+  "notifications.productUpdated.header": "Updated product",
+  "notifications.productUpdated.content": "Product {name} successfully updated."
 }

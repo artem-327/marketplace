@@ -81,8 +81,7 @@ class WarehousePopup extends React.Component {
       <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
     ),
       {
-        appearance: 'success',
-        autoDismiss: true
+        appearance: 'success'
       })
 
     actions.setSubmitting(false)

@@ -9,8 +9,6 @@ import Router from "next/router"
 
 import confirm from '~/src/components/Confirmable/confirm'
 import { injectIntl } from 'react-intl'
-import {withToastManager} from 'react-toast-notifications'
-import { FormattedMessage } from 'react-intl'
 
 class ProductCatalogTable extends Component {
 
@@ -47,55 +45,7 @@ class ProductCatalogTable extends Component {
   }
 
   componentDidUpdate(oldProps) {
-    const { action, actionId, currentTab, loaded, openPopup, rows, addedProduct, editedProduct, datagrid, toastManager } = this.props
-
-    if (editedProduct !== oldProps.editedProduct) {
-      datagrid.updateRow(editedProduct.id, this.getEditedProduct)
-      toastManager.add((
-        <div>
-          <strong>
-            <FormattedMessage
-              id='productCatalog.editProduct'
-              defaultMessage={'Edited Product'}
-            />
-          </strong>
-          <div>
-            <FormattedMessage
-              id='productCatalog.successfullyUpdated'
-              defaultMessage={'Product {productName} successfully updated.'}
-              values={{ productName: editedProduct.productName }}
-            />
-          </div>
-        </div>
-      ), {
-        appearance: 'success',
-        autoDismiss: true
-      })
-    }
-
-    if (addedProduct !== oldProps.addedProduct) {
-      datagrid.loadData()
-      toastManager.add((
-        <div>
-          <strong>
-            <FormattedMessage
-              id='productCatalog.newProduct'
-              defaultMessage={'New Product'}
-            />
-          </strong>
-          <div>
-            <FormattedMessage
-              id='productCatalog.successfullyCreated'
-              defaultMessage={'Product {productName} successfully created.'}
-              values={{ productName: addedProduct.productName }}
-            />
-          </div>
-        </div>
-      ), {
-        appearance: 'success',
-        autoDismiss: true
-      })
-    }
+    const { action, actionId, currentTab, loaded, openPopup, rows } = this.props
 
     if (action === 'edit' && actionId && loaded) {
       if (currentTab.type === 'products') {
@@ -248,4 +198,4 @@ const mapStateToProps = (state, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(withToastManager(ProductCatalogTable))))
+export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(ProductCatalogTable)))
