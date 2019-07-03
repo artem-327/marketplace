@@ -5,7 +5,6 @@ import ProdexTable from '~/components/table'
 import {
   getDataRequest,
   openEditPopup,
-  handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation,
   deleteUnitOfPackaging,
@@ -25,13 +24,6 @@ class UnitOfPackagingTable extends Component {
       filterValue,
       openEditPopup,
       deleteUnitOfPackaging,
-      // handleOpenConfirmPopup,
-      // config,
-      // currentTab,
-      // confirmMessage,
-      // closeConfirmPopup,
-      // deleteConfirmation,
-      // deleteRowById
     } = this.props
 
     const { columns } = this.props.config.display
@@ -57,7 +49,6 @@ const mapDispatchToProps = {
   getDataRequest,
   deleteUnitOfPackaging,
   openEditPopup,
-  handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation,
   getMeasureTypesDataRequest

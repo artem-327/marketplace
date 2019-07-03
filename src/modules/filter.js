@@ -137,19 +137,19 @@ export default function reducer(state = initialState, action) {
 
         /* GET SAVED FILTERS */
 
-        case GET_SAVED_FILTERS_PENDING: {
-            return {
-                ...state,
-                savedFiltersFetching: true
-            }
-        }
+        // case GET_SAVED_FILTERS_PENDING: {
+        //     return {
+        //         ...state,
+        //         savedFiltersFetching: true
+        //     }
+        // }
 
-        case GET_SAVED_FILTERS_FULFILLED: {
-            return {
-                ...state,
-                saveFilters: action.payload
-            }
-        }
+        // case GET_SAVED_FILTERS_FULFILLED: {
+        //     return {
+        //         ...state,
+        //         saveFilters: action.payload
+        //     }
+        // }
 
 
         default: {

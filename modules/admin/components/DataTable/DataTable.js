@@ -6,7 +6,6 @@ import ProdexTable from '~/components/table'
 import {
   getDataRequest,
   openEditPopup,
-  handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation,
 } from '../../actions'
@@ -23,12 +22,7 @@ class DataTable extends Component {
       rows,
       filterValue,
       openEditPopup,
-      deleteConfirmation,
-      // currentTab,
-      // confirmMessage,
-      // handleOpenConfirmPopup,
-      // closeConfirmPopup,
-      // deleteRowById
+      deleteConfirmation
     } = this.props
 
     const { columns } = this.props.config.display
@@ -53,7 +47,6 @@ class DataTable extends Component {
 const mapDispatchToProps = {
   getDataRequest,
   openEditPopup,
-  handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation
 }
