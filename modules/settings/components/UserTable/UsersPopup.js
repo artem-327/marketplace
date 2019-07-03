@@ -49,7 +49,7 @@ class UsersPopup extends React.Component {
     let requestData = {
       email: values.email,
       name: values.name,
-      homeBranch: values.homeBranchId,
+      homeBranch: values.homeBranch,
       jobTitle: values.title,
       phone: values.phone,
       preferredCurrency: values.preferredCurrency

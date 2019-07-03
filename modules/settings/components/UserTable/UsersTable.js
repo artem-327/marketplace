@@ -43,81 +43,6 @@ class UsersTable extends Component {
     this.props.getUsersDataRequest()
   }
 
-  componentDidUpdate(oldProps) {
-    const { addedItem, editedItem, removedItem, datagrid, toastManager } = this.props
-
-    if (addedItem !== oldProps.addedItem) {
-      datagrid.loadData()
-      toastManager.add((
-        <div>
-          <strong>
-            <FormattedMessage
-              id='productCatalog.newUser'
-              defaultMessage={'New User'}
-            />
-          </strong>
-          <div>
-            <FormattedMessage
-              id='productCatalog.userCreated'
-              defaultMessage={'User {userName} successfully created.'}
-              values={{ userName: addedItem.name }}
-            />
-          </div>
-        </div>
-      ), {
-        appearance: 'success',
-        autoDismiss: true
-      })
-    }
-
-    if (editedItem !== oldProps.editedItem) {
-      datagrid.updateRow(editedItem.id, this.getEditedUser)
-      toastManager.add((
-        <div>
-          <strong>
-            <FormattedMessage
-              id='productCatalog.editedUser'
-              defaultMessage={'Edited User'}
-            />
-          </strong>
-          <div>
-            <FormattedMessage
-              id='productCatalog.userUpdated'
-              defaultMessage={'User {userName} successfully updated.'}
-              values={{ userName: editedItem.name }}
-            />
-          </div>
-        </div>
-      ), {
-        appearance: 'success',
-        autoDismiss: true
-      })
-    }
-
-    if (removedItem !== oldProps.removedItem) {
-      toastManager.add((
-        <div>
-          <strong>
-            <FormattedMessage
-              id='productCatalog.removedUser'
-              defaultMessage={'Removed User'}
-            />
-          </strong>
-          <div>
-            <FormattedMessage
-              id='productCatalog.userRemoved'
-              defaultMessage={'User {userName} successfully removed.'}
-              values={{ userName: removedItem.name }}
-            />
-          </div>
-        </div>
-      ), {
-        appearance: 'success',
-        autoDismiss: true
-      })
-    }
-  }
-
   getEditedUser = () => {
     return this.props.editedItem
   }
@@ -219,9 +144,6 @@ const mapStateToProps = (state, { datagrid }) => {
       )).join(", "),
       switchEnable: userEnableDisableStatus(user, currentUserId)
     })),
-    addedItem: state.settings.addedItem,
-    editedItem: state.settings.editedItem,
-    removedItem: state.settings.removedItem,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
