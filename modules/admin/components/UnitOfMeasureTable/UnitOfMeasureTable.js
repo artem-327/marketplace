@@ -15,7 +15,7 @@ import {
 class UnitOfMeasureTable extends Component {
   componentDidMount() {
     this.props.getDataRequest(this.props.config)
-    this.props.getMeasureTypesDataRequest();
+    this.props.getMeasureTypesDataRequest()
   }
 
   render() {
