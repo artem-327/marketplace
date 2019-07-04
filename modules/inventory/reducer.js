@@ -41,6 +41,13 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.INVENTORY_ADD_PRODUCT_OFFER_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
     case AT.INVENTORY_EDIT_PRODUCT_OFFER_PENDING: {
       return {
         ...state,
