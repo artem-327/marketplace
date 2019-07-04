@@ -27,6 +27,7 @@ const ToggleLabel = styled.label`
 const InstructionsDiv = styled.div`
   margin-bottom: 15px;
   text-align: justify;
+  font-size: 0.9rem;
 `
 
 
