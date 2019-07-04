@@ -2,6 +2,8 @@ import {Checkbox, Icon} from 'semantic-ui-react'
 import PriceControl from './PriceControl'
 import {Rule} from './Broadcast.style'
 
+const EmptyIconSpace = () => <span style={{width: '1.18em', display: 'inline-block', marginRight: '0.25rem'}}>&nbsp;</span>
+
 const RuleItem = (props) => {
   const { onChange, onPriceChange, onRowClick, item, mode } = props
 
@@ -46,7 +48,7 @@ const RuleItem = (props) => {
     <>
       <Rule.Row depth={item.depth} type={type} onClick={() => type !== 'root' && onRowClick(item.node)}>
         <Rule.RowContent>
-          {item.children.length > 0 && type !== 'root' && <Icon name={`chevron ${item.node.model.expanded ? 'down' : 'right'}`} />}
+          {(item.children.length > 0 && type !== 'root') ? <Icon name={`chevron ${item.node.model.expanded ? 'down' : 'right'}`} /> : <EmptyIconSpace />}
           <span>{item.name}</span>
         </Rule.RowContent>
 

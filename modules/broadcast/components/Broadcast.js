@@ -178,7 +178,7 @@ class Broadcast extends Component {
 
     return (
       <Modal open={open} onClose={closeBroadcast} centered={false}>
-        <Modal.Header>Broadcast center</Modal.Header>
+        <Modal.Header>Broadcast Controls</Modal.Header>
         <Modal.Content scrolling style={{ minHeight: '70vh' }} className="flex stretched">
           <Grid className="flex stretched">
             <Grid.Row divided className="flex stretched">
@@ -203,8 +203,8 @@ class Broadcast extends Component {
                         value={filter.category}
                         onChange={this.handleFilterChange}
                         options={[
-                          { key: 'region', text: 'All Regions', value: 'region' },
-                          { key: 'branch', text: 'All Companies', value: 'branch' },
+                          { key: 'region', text: 'By Region', value: 'region' },
+                          { key: 'branch', text: 'By Company', value: 'branch' },
                         ]}
                       />
                     </Form.Field>

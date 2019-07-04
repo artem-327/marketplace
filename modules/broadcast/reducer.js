@@ -59,6 +59,11 @@ export default typeToReducer({
   [saveRules.fulfilled]: (state) => ({...state,
     loading: false,
     open: false
+  }),
+
+  [saveRules.rejected]: (state) => ({
+    ...state,
+    loading: false
   })
 
 }, initialState)

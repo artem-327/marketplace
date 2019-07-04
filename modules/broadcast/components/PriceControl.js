@@ -27,8 +27,9 @@ export default class PriceControl extends Component {
 
   componentWillMount() {
     const { node: { model } } = this.props
+
     this.setState({
-      type: model.priceAddition > 0 ? 'addition' : model.priceMultiplier > 0 ? 'multiplier' : '',
+      type: model.priceAddition > 0 ? 'addition' : model.priceMultiplier > 0 ? 'multiplier' : 'multiplier',
       value: model.priceAddition > 0 ? model.priceAddition : model.priceMultiplier > 0 ? model.priceMultiplier : ''
     })
   }
@@ -55,7 +56,7 @@ export default class PriceControl extends Component {
         model.priceAddition = value ? parseInt(value, 10) : 0
         model.priceMultiplier = 0
         
-        this.onChange(node, { priceAddition: TreeModel.priceAddition })
+        this.onChange(node, { priceAddition: model.priceAddition })
       } else if (type === 'multiplier') {
         model.priceMultiplier = value ? parseInt(value, 10) : 0
         model.priceAddition = 0
