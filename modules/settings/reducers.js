@@ -566,7 +566,8 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.SETTINGS_UPDATE_PRODUCT_CATALOG_FULFILLED:
-    case AT.HANDLE_SUBMIT_USER_EDIT_POPUP_FULFILLED: {
+    case AT.HANDLE_SUBMIT_USER_EDIT_POPUP_FULFILLED:
+    case AT.PUT_NEW_USER_ROLES_REQUEST_FULFILLED: {
       return {
         ...state,
         editedItem: action.payload.data

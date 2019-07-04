@@ -116,12 +116,14 @@ class UsersPopup extends React.Component {
       title,
       phone,
     }
-    // this.props.roles.forEach(item => {
-    //   let flag = this.props.popupValues.allUserRoles.some(
-    //     role => role.id === item.id
-    //   )
-    //   initialFormValues[`checkBoxId_${item.id}`] = flag
-    // })
+
+    // necessary for Edit Roles
+    this.props.roles.forEach(item => {
+      let flag = this.props.popupValues.allUserRoles.some(
+        role => role.id === item.id
+      )
+      initialFormValues[`checkBoxId_${item.id}`] = flag
+    })
 
     return (
       <Modal open centered={false} size={userEditRoles ? "mini" : null}>

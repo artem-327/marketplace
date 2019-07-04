@@ -102,7 +102,7 @@ export function handlerSubmitUserEditPopup(payload, id) {
       type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
       payload: api.patchUser(id, payload)
     })
-    dispatch(getUsersDataRequest())
+    //dispatch(getUsersDataRequest())
     dispatch(closePopup())
   }
 }
@@ -553,7 +553,7 @@ export function postNewUserRequest(payload) {
       type: AT.POST_NEW_USER_REQUEST,
       payload: api.postNewUser(payload)
     })
-    dispatch(getUsersDataRequest())
+    //dispatch(getUsersDataRequest())
     dispatch(closePopup())
   }
 }
@@ -607,8 +607,8 @@ export function putNewUserRoleRequest(payload, id) {
       type: AT.PUT_NEW_USER_ROLES_REQUEST,
       payload: api.patchUserRole(id, payload)
     })
-    dispatch(getUsersDataRequest())
-    dispatch(closePopup())
+    //dispatch(getUsersDataRequest())
+    dispatch(closeRolesPopup())
   }
 }
 
