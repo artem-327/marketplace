@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 // import '../styles/orders.scss'
 import Spinner from "~/src/components/Spinner/Spinner"
-import Filter from '~/src/components/Filter'
+import { Filter } from '~/modules/filter'
 import SubMenu from '~/src/components/SubMenu'
 import { Menu, Header, Container, Icon } from 'semantic-ui-react'
 import styled from "styled-components"
@@ -28,33 +28,35 @@ class Orders extends Component {
     ]
   }
 
-  componentDidMount() {
-    this.props.loadData(this.props.endpointType)
-  }
-
   loadData(endpointType, filterData) {
     this.props.dispatch(actions.change('forms.filter.status', filterData.status))
     this.props.loadData(endpointType, filterData)
   }
 
   getRows = () => {
-    return this.props.rows.map(row => {
-      return {
-        ...row,
-        bl: <Icon name="file" className='unknown' />, // unknown / positive / negative
-        sds: <Icon name="file" className='unknown' />,
-        cofA: <Icon name="file" className='unknown' />
-      }
-    })
+    return this.props.rows.map(row => ({
+      ...row,
+      bl: <Icon name="file" className='unknown' />, // unknown / positive / negative
+      sds: <Icon name="file" className='unknown' />,
+      cofA: <Icon name="file" className='unknown' />
+    }))
+  }
+
+  handleFilterApply = filter => {
+    this.props.datagrid.setFilter(filter)
   }
 
 
+  handleFilterClear = () => {
+    this.props.applyFilter({ filters: [] })
+    this.props.datagrid.setFilter({ filters: [] })
+  }
+
   render() {
-    const { endpointType, match, rows, isFetching, activeStatus, router } = this.props
+    const { endpointType, match, rows, isFetching, activeStatus, queryType, router, datagrid } = this.props
     const { status } = this.props.filterData
     const { columns } = this.state
-    const query = router ? router.query : match.params
-    let ordersType = query.type.charAt(0).toUpperCase() + query.type.slice(1)
+    let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
 
     return (
       <div id="page" className='flex stretched scrolling'>
@@ -75,29 +77,29 @@ class Orders extends Component {
         </Container>
         <Container fluid style={{ padding: '20px 32px 0 32px' }} className="flex stretched">
           <Header as='h1' size='medium'>{(activeStatus ? activeStatus.toUpperCase() : 'ALL') + ' ' + ordersType.toUpperCase() + ' ORDERS'}</Header>
-          <Filter orderId
-            orderDate
-            customer
-            product
-            orderStatus={{ filterValue: activeStatus }}
-            filterFunc={(inputs) => this.props.loadData(endpointType, inputs)}
-            savingFilters={false}
-            {...this.props}
+          <Filter
+            onApply={this.handleFilterApply}
+            onClear={this.handleFilterClear}
+            searchUrl={(text) => `/prodex/api/products/own/search?pattern=${text}&onlyMapped=false`}
+            apiUrl={datagrid.apiUrl}
+            filters={datagrid.filters}
           />
           {isFetching ? <Spinner /> :
 
             <ProdexGrid tableName="orders_grid"
-              columns={columns}
-              rows={this.getRows()}
-              rowActions={[
-                { text: 'Detail', callback: (row) => router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`) }
-              ]}
-              onRowClick={(e, row) => {
-                const targetTag = e.target.tagName.toLowerCase()
-                if (targetTag !== 'input' && targetTag !== 'label' && targetTag !== 'i') {
-                  router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`)
-                }
-              }}
+                        columns={columns}
+                        {...datagrid.tableProps}
+                        loading={datagrid.loading}
+                        rows={this.getRows()}
+                        rowActions={[
+                          { text: 'Detail', callback: (row) => router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`) }
+                        ]}
+                        onRowClick={(e, row) => {
+                          const targetTag = e.target.tagName.toLowerCase()
+                          if (targetTag !== 'input' && targetTag !== 'label' && targetTag !== 'i') {
+                            router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`)
+                          }
+                        }}
             />
           }
         </Container>
