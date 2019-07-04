@@ -24,6 +24,12 @@ const ToggleLabel = styled.label`
   cursor: pointer;
 `
 
+const InstructionsDiv = styled.div`
+  margin-bottom: 15px;
+  text-align: justify;
+`
+
+
 class LoginForm extends Component {
 
   state = {
@@ -76,6 +82,10 @@ class LoginForm extends Component {
         </Segment>
 
         <StyledForm onSubmit={this.handleSubmit}>
+          <InstructionsDiv>
+            {this.state.resetPassword && <FormattedMessage id='auth.resetPasswordInstructions' />}
+          </InstructionsDiv>
+
           <Form.Field error={usernameError}>
             <label><FormattedMessage id='auth.username' defaultMessage='Username' /></label>
             <input placeholder={formatMessage({ id: 'auth.username', defaultMessage: 'Password' })} name='username' />
@@ -101,24 +111,16 @@ class LoginForm extends Component {
               <ToggleLabel onClick={this.toggleResetPassword}>
                 {this.state.resetPassword
                   ? <FormattedMessage id='auth.cancelPasswordReset' />
-                  : <FormattedMessage id='auth.resetMyPassword' defaultMessage='Reset my Password' />
+                  : <FormattedMessage id='auth.resetMyPassword' defaultMessage='Password Reset' />
                 }
 
               </ToggleLabel>
             </GridColumn>
 
             <GridColumn computer={4} textAlign='right'>
-              {version}
+              v{version}
             </GridColumn>
           </GridRow>
-
-          {this.state.resetPassword &&
-            <GridRow>
-              <GridColumn>
-                <FormattedMessage id='auth.resetPasswordInstructions' />
-              </GridColumn>
-            </GridRow>
-          }
         </Grid>
 
       </LoginSegment>
