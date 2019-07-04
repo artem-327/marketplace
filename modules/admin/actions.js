@@ -3,6 +3,8 @@ import * as api from './api'
 import { updateIdentity } from '~/modules/auth/actions'
 import { Datagrid } from '~/modules/datagrid'
 
+import Router from 'next/router'
+
 export const removeEmpty = (obj) =>
 	Object.entries(obj).forEach(([key, val]) => {
 		if (val && typeof val === 'object') {
@@ -365,8 +367,8 @@ export function updateCompany(id, formData) {
 		})
 
 		Datagrid.updateRow(id, () => response)
-		
-		
+
+
 		dispatch(updateIdentity(response))
 		dispatch(closePopup())
 		// dispatch(getCompanies())
@@ -432,5 +434,21 @@ export function getAddressSearchMailingBranch(body) {
 	return {
 		type: AT.ADMIN_GET_ADDRESSES_SEARCH_MAILING_BRANCH,
 		payload: api.getAddressSearch(body)
+	}
+}
+export const takeOverCompany = (id) => {
+	return async dispatch => {
+		let payload = await api.takeOverCompany(id)
+		dispatch(updateIdentity(payload))
+		Router.push('/inventory/my')
+	}
+}
+
+
+export const takeOverCompanyFinish = () => {
+	return async dispatch => {
+		let payload = await api.takeOverCompanyFinish()
+		dispatch(updateIdentity(payload))
+		Router.push('/admin')
 	}
 }

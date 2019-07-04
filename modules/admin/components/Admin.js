@@ -141,8 +141,6 @@ class Admin extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  return { ...state.admin, auth: state.auth }
-}
+const mapStateToProps = state => ({ ...state.admin, auth: state.auth })
 
 export default connect(mapStateToProps, null)(Admin)

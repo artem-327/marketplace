@@ -19,6 +19,6 @@ export default Component => class WithAuthComponent extends React.Component {
   render() {
     const auth = getAuthFromLocalCookie() || {}
 
-    return <Component auth={auth} isAdmin={auth.isAdmin}  />
+    return <Component {...this.props} auth={auth} isAdmin={auth.isAdmin} />
   }
 }

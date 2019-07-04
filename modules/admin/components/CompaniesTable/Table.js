@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {injectIntl} from 'react-intl'
+import { injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
 import confirm from '~/src/components/Confirmable/confirm'
+
+import { FormattedMessage } from 'react-intl'
 
 import * as Actions from '../../actions'
 
@@ -24,6 +26,7 @@ class CompaniesTable extends Component {
       // deleteRowById,
       deleteCompany,
       openRegisterDwollaAccount,
+      takeOverCompany,
       intl
     } = this.props
 
@@ -38,15 +41,17 @@ class CompaniesTable extends Component {
           rows={rows}
           rowActions={[
             { text: 'Edit', callback: (row) => openEditCompany(row.id, row) },
-            { text: 'Delete', callback: (row) => confirm(
-                formatMessage({id: 'confirm.deleteCompany', defaultMessage: 'Delete Company?'}),
-                formatMessage({id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` }, { item: row.name })
+            {
+              text: 'Delete', callback: (row) => confirm(
+                formatMessage({ id: 'confirm.deleteCompany', defaultMessage: 'Delete Company?' }),
+                formatMessage({ id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` }, { item: row.name })
               ).then(() => {
                 deleteCompany(row.id)
                 datagrid.removeRow(row.id)
               })
             },
-            { text: 'Register Dwolla Account', callback: (row) => openRegisterDwollaAccount(row), hidden: row => row.hasDwollaAccount === "Yes"}
+            { text: 'Register Dwolla Account', callback: (row) => openRegisterDwollaAccount(row), hidden: row => row.hasDwollaAccount === "Yes" },
+            { text: <FormattedMessage id='admin.takeOver' defaultMessage='Take over as Company Admin' />, callback: (row) => takeOverCompany(row.id) }
           ]}
         />
       </React.Fragment>
@@ -54,7 +59,7 @@ class CompaniesTable extends Component {
   }
 }
 
-const mapStateToProps = ({admin}, {datagrid}) => {
+const mapStateToProps = ({ admin }, { datagrid }) => {
   return {
     columns: admin.config[admin.currentTab].display.columns,
     companyListDataRequest: admin.companyListDataRequest,
