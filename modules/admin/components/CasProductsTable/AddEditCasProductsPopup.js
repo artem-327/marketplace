@@ -1,27 +1,31 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import {Modal, FormGroup, Header, Dropdown as SDropdown, FormField, Search} from 'semantic-ui-react'
+import { Modal, FormGroup, Header, Dropdown as SDropdown, FormField, Search } from 'semantic-ui-react'
 
 import { closeAddPopup, postNewCasProductRequest, updateCasProductRequest, getUnNumbersByString } from '../../actions'
-import { Form, Input, Button, Dropdown, Field  } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown, Field } from 'formik-semantic-ui'
 import * as Yup from 'yup'
-import debounce from "lodash/debounce";
-import escapeRegExp from "lodash/escapeRegExp";
-import filter from "lodash/filter";
+import debounce from 'lodash/debounce'
+import escapeRegExp from 'lodash/escapeRegExp'
+import filter from 'lodash/filter'
+
+import { withToastManager } from 'react-toast-notifications'
+import { generateToastMarkup } from '~/utils/functions'
+import { FormattedMessage } from 'react-intl'
 
 const initialFormValues = {
-  'casIndexName':   '',
-  'casNumber':      '',
-  'chemicalName':   '',
-  'hazardClassesId':  [],
+  'casIndexName': '',
+  'casNumber': '',
+  'chemicalName': '',
+  'hazardClassesId': [],
   'packagingGroupId': '',
 }
 
 const formValidation = Yup.object().shape({
-  casIndexName: Yup.string().trim().min(3, "Too short").required("Required"),
-  casNumber: Yup.string().trim().min(3, "Too short").required("Required"),
-  chemicalName: Yup.string().trim().min(3, "Too short").required("Required"),
+  casIndexName: Yup.string().trim().min(3, 'Too short').required('Required'),
+  casNumber: Yup.string().trim().min(3, 'Too short').required('Required'),
+  chemicalName: Yup.string().trim().min(3, 'Too short').required('Required'),
 })
 
 class AddEditCasProductsPopup extends React.Component {
@@ -86,7 +90,7 @@ class AddEditCasProductsPopup extends React.Component {
   }
 
   handleUnNumberSelect = (e, { result }) => {
-    this.setState({unNumber: result})
+    this.setState({ unNumber: result })
   }
 
   render() {
@@ -98,7 +102,8 @@ class AddEditCasProductsPopup extends React.Component {
       postNewCasProductRequest,
       updateCasProductRequest,
       //unNumbersFiltered,
-      reloadFilter
+      reloadFilter,
+      toastManager
     } = this.props
 
     const {
@@ -117,14 +122,14 @@ class AddEditCasProductsPopup extends React.Component {
         <Modal.Content>
           <Form
             enableReinitialize
-            initialValues={{...initialFormValues, ...popupValues}}
+            initialValues={{ ...initialFormValues, ...popupValues }}
             validationSchema={formValidation}
             validateOnBlur={false}
             validateOnChange={false}
             onReset={closeAddPopup}
-            onSubmit={(values, actions) => {
+            onSubmit={async (values, { setSubmitting }) => {
               const unNumberId = this.state.unNumber ? this.state.unNumber.id :
-                  (popupValues && popupValues.unNumber) ? popupValues.unNumber.id : null
+                (popupValues && popupValues.unNumber) ? popupValues.unNumber.id : null
               const data = {
                 casIndexName: values.casIndexName.trim(),
                 casNumber: values.casNumber.trim(),
@@ -133,62 +138,77 @@ class AddEditCasProductsPopup extends React.Component {
                 ...(values.packagingGroupId !== '' && { packagingGroup: values.packagingGroupId }),
                 ...(values.hazardClassesId.length && { hazardClasses: values.hazardClassesId }),
               }
-              if (popupValues) updateCasProductRequest(popupValues.id, data, reloadFilter)
-              else postNewCasProductRequest(data, reloadFilter)
+              if (popupValues) await updateCasProductRequest(popupValues.id, data, reloadFilter)
+              else await postNewCasProductRequest(data, reloadFilter)
+
+              let status = popupValues ? 'casProductUpdated' : 'casProductCreated'
+
+              toastManager.add(generateToastMarkup(
+                <FormattedMessage id={`notifications.${status}.header`} />,
+                <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.casIndexName }} />
+              ), {
+                  appearance: 'success'
+                })
+
+
+              setSubmitting(false)
+
             }}
           >
-            {(props) => { return (
-              <>
-                <FormGroup widths="equal">
-                  <Input type='text' label={config.display.columns[0].title} name="casIndexName" />
-                </FormGroup>
-                <FormGroup widths="equal">
-                  <Input type='text' label={config.display.columns[1].title} name="casNumber" />
-                  <Input type='text' label={config.display.columns[2].title} name="chemicalName" />
-                </FormGroup>
-                <FormGroup widths="equal">
-                  <FormField>
-                    <label>{config.display.columns[3].title}</label>
-                    <Search
+            {(props) => {
+              return (
+                <>
+                  <FormGroup widths='equal'>
+                    <Input type='text' label={config.display.columns[0].title} name='casIndexName' />
+                  </FormGroup>
+                  <FormGroup widths='equal'>
+                    <Input type='text' label={config.display.columns[1].title} name='casNumber' />
+                    <Input type='text' label={config.display.columns[2].title} name='chemicalName' />
+                  </FormGroup>
+                  <FormGroup widths='equal'>
+                    <FormField>
+                      <label>{config.display.columns[3].title}</label>
+                      <Search
                         loading={isUnLoading}
                         onResultSelect={this.handleUnNumberSelect}
                         onSearchChange={this.handleSearchUnNumber}
                         results={unNumbersFiltered}
                         defaultValue={popupValues && popupValues.unNumberCode ? popupValues.unNumberCode : ''}
+                      />
+                    </FormField>
+                  </FormGroup>
+                  <FormGroup widths='equal'>
+                    <Dropdown
+                      name='packagingGroupId'
+                      label={config.display.columns[4].title} options={packagingGroups}
+                      inputProps={{
+                        selection: true,
+                        search: true,
+                        placeholder: 'Choose an option',
+                        clearable: true
+                      }}
                     />
-                  </FormField>
-                </FormGroup>
-                <FormGroup widths="equal">
-                  <Dropdown
-                    name="packagingGroupId"
-                    label={config.display.columns[4].title} options={packagingGroups}
-                    inputProps={{
-                      selection: true,
-                      search: true,
-                      placeholder: 'Choose an option',
-                      clearable: true
-                    }}
-                  />
-                </FormGroup>
-                <FormGroup widths="equal">
-                  <Dropdown
-                    name="hazardClassesId"
-                    label={config.display.columns[5].title}
-                    options={hazardClasses}
-                    inputProps={{
-                      placeholder: 'Choose an option',
-                      multiple: true,
-                      selection: true,
-                      search: true,
-                    }}
-                  />
-                </FormGroup>
-                <div style={{ textAlign: 'right' }}>
-                  <Button.Reset>Cancel</Button.Reset>
-                  <Button.Submit>Save</Button.Submit>
-                </div>
-              </>
-            )}}
+                  </FormGroup>
+                  <FormGroup widths='equal'>
+                    <Dropdown
+                      name='hazardClassesId'
+                      label={config.display.columns[5].title}
+                      options={hazardClasses}
+                      inputProps={{
+                        placeholder: 'Choose an option',
+                        multiple: true,
+                        selection: true,
+                        search: true,
+                      }}
+                    />
+                  </FormGroup>
+                  <div style={{ textAlign: 'right' }}>
+                    <Button.Reset>Cancel</Button.Reset>
+                    <Button.Submit>Save</Button.Submit>
+                  </div>
+                </>
+              )
+            }}
 
           </Form>
         </Modal.Content>
@@ -213,17 +233,21 @@ const mapStateToProps = state => {
     hazardClasses: state.admin.hazardClasses,
     popupValues: state.admin.popupValues,
     // reloadFilter is used to reload CAS Product list after Edit / Add new CAS Product
-    reloadFilter: {props: {
+    reloadFilter: {
+      props: {
         currentTab: state.admin.currentTab,
-        casListDataRequest: state.admin.casListDataRequest},
-      value: state.admin.filterValue},
+        casListDataRequest: state.admin.casListDataRequest
+      },
+      value: state.admin.filterValue
+    },
     unNumbersFiltered: state.admin.unNumbersFiltered.map(d => {
-        return {
-          id: d.id,
-          title: d.unNumberCode,
-          description: d.description
-        }}),
+      return {
+        id: d.id,
+        title: d.unNumberCode,
+        description: d.description
+      }
+    }),
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddEditCasProductsPopup)
+export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(AddEditCasProductsPopup))

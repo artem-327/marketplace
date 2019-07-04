@@ -470,8 +470,6 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-
-
     default: {
       for (let groupName in config) {
         if (typeof config[groupName].api !== 'undefined') {

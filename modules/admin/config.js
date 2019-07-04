@@ -1,6 +1,7 @@
 export const config = {
   'CAS Products': {
     addEditText: 'CAS Product',
+    formattedMessageName: 'casProduct',
     addEditText2: 'CAS Product Alternative Names',
     searchText: 'Search cas product by name or number ...',
     display: {
@@ -17,6 +18,7 @@ export const config = {
 
   'Companies': {
     addEditText: 'Company',
+    formattedMessageName: 'company',
     searchText: 'Search company by name',
     display: {
       columns: [
@@ -31,6 +33,7 @@ export const config = {
 
   'Units of Measure': {
     addEditText: 'Unit of Measure',
+    formattedMessageName: 'unitOfMeasurement',
     searchText: 'Search unit of measure by name or measure type',
     display: {
       columns: [
@@ -68,6 +71,7 @@ export const config = {
 
   'Units of Packaging': {
     addEditText: 'Unit of Packaging',
+    formattedMessageName: 'unitOfPackaging',
     searchText: 'Search unit of packaging by name or measure type',
     display: {
       columns: [
@@ -118,6 +122,7 @@ export const config = {
 
   'Manufacturers': {
     addEditText: 'Manufacturer',
+    formattedMessageName: 'manufacturer',
     searchText: 'Search manufacturer by name',
     display: {
       columns: [
@@ -165,6 +170,7 @@ export const config = {
 
   'Grades': {
     addEditText: 'Grade',
+    formattedMessageName: 'grade',
     searchText: 'Search grade by name',
     display: {
       columns: [
@@ -198,6 +204,7 @@ export const config = {
 
   'Forms': {
     addEditText: 'Form',
+    formattedMessageName: 'form',
     searchText: 'Search form by name',
     display: {
       columns: [
@@ -231,6 +238,7 @@ export const config = {
 
   'Conditions': {
     addEditText: 'Condition',
+    formattedMessageName: 'condition',
     searchText: 'Search condition by name',
     display: {
       columns: [
@@ -264,6 +272,7 @@ export const config = {
 
   'Document Types': {
     addEditText: 'Document Type',
+    formattedMessageName: 'documentType',
     searchText: 'Search document type by name',
     display: {
       columns: [

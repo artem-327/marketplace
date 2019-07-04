@@ -3,10 +3,14 @@ import { connect } from 'react-redux'
 
 import { Modal, FormGroup } from 'semantic-ui-react'
 
-import { closeAddPopup , postNewRequest } from '../../actions'
+import { closeAddPopup, postNewRequest } from '../../actions'
 import { Form, Input, Button } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 
+import { withToastManager } from 'react-toast-notifications'
+
+import { generateToastMarkup } from '~/utils/functions'
+import { FormattedMessage } from 'react-intl'
 
 const initialFormValues = {
     val0: ''
@@ -23,22 +27,37 @@ class AddNewPopup1Parameter extends React.Component {
             closeAddPopup,
             currentTab,
             config,
-            postNewRequest
+            postNewRequest,
+            toastManager
         } = this.props
 
         return (
             <Modal open centered={false}>
-                <Modal.Header>Add { config.addEditText }</Modal.Header>
+                <Modal.Header>Add {config.addEditText}</Modal.Header>
                 <Modal.Content>
                     <Form
                         initialValues={initialFormValues}
                         validationSchema={formValidation}
                         onReset={closeAddPopup}
-                        onSubmit={(values, actions) => {
+                        onSubmit={async (values, { setSubmitting }) => {
                             let data = {
                                 [config.edit[0].name]: values.val0.trim()
                             }
-                            postNewRequest(config, data)
+
+                            try {
+                                await postNewRequest(config, data)
+
+                                let formattedMsgId = `notifications.${config.formattedMessageName}Created`
+
+                                toastManager.add(generateToastMarkup(
+                                    <FormattedMessage id={`${formattedMsgId}.header`} />,
+                                    <FormattedMessage id={`${formattedMsgId}.content`} values={{ name: values.val0 }} />
+                                ), { appearance: 'success' })
+                            }
+                            catch (e) { console.error(e) }
+                            finally {
+                                setSubmitting(false)
+                            }
                         }}
                     >
                         <FormGroup widths="equal">
@@ -69,4 +88,4 @@ const mapStateToProps = state => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddNewPopup1Parameter)
+export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(AddNewPopup1Parameter))

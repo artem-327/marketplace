@@ -67,19 +67,15 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.UPDATE_IDENTITY: {
-      let { branches, primaryBranch, ...rest } = action.payload
+      let accessRights = {}
 
+      ROLES_ENUM.forEach(role => {
+        accessRights[role.propertyName] = !!payload.roles.find((el) => el.id === role.id)
+      })
+      
       return {
         ...state,
-        identity: {
-          ...state.identity,
-          branches,
-          primaryBranch,
-          company: {
-            ...state.identity.company,
-            ...rest
-          }
-        }
+        identity: { ...payload, ...accessRights }
       }
     }
 

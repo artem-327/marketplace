@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { Modal, FormGroup } from 'semantic-ui-react'
-
+import { withToastManager } from 'react-toast-notifications'
 import {
   closePopup,
   handlerSubmitWarehouseEditPopup,
@@ -14,6 +14,9 @@ import {
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 import Router from "next/router"
+
+import { generateToastMarkup } from '~/utils/functions'
+import { FormattedMessage } from 'react-intl';
 
 const formValidation = hasProvinces => Yup.object().shape({
   name: Yup.string().trim()
@@ -50,21 +53,37 @@ class WarehousePopup extends React.Component {
     this.props.popupValues && this.props.popupValues.hasProvinces && this.props.getProvinces(this.props.popupValues.countryId)
   }
 
-  submitHandler = (values, actions) => {
-    if (this.props.popupValues) {
-      this.props.handlerSubmitWarehouseEditPopup(
+  submitHandler = async (values, actions) => {
+    let { toastManager, popupValues, currentTab } = this.props
+    const { handlerSubmitWarehouseEditPopup, postNewWarehouseRequest } = this.props
+
+    if (popupValues) {
+      await handlerSubmitWarehouseEditPopup(
         {
           ...values,
-          tab: this.props.currentTab.type === 'branches' ? 'branches' : null
+          tab: currentTab.type === 'branches' ? 'branches' : null
         },
-        this.props.popupValues.branchId
+        popupValues.branchId
       )
     } else {
-      this.props.postNewWarehouseRequest({
+      await postNewWarehouseRequest({
         ...values,
-        tab: this.props.currentTab.type === 'branches' ? 'branches' : null
+        tab: currentTab.type === 'branches' ? 'branches' : null
       })
     }
+
+    let status = currentTab === 'branches' ? 'branch' : 'warehouse'
+
+    status += popupValues ? 'Updated' : 'Created'
+
+    toastManager.add(generateToastMarkup(
+      <FormattedMessage id={`notifications.${status}.header`} />,
+      <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
+    ),
+      {
+        appearance: 'success'
+      })
+
     actions.setSubmitting(false)
   }
 
@@ -102,7 +121,7 @@ class WarehousePopup extends React.Component {
     if (country.hasProvinces) {
       this.props.getProvinces(country.id)
     }
-    this.setState({hasProvinces: country.hasProvinces})
+    this.setState({ hasProvinces: country.hasProvinces })
   }
 
   handleAddressSelect = (d, values, setFieldValue) => {
@@ -110,20 +129,20 @@ class WarehousePopup extends React.Component {
     if (i >= 0) {
       setFieldValue('address', this.props.AddressSuggestData[i].streetAddress)
       setFieldValue('city', this.props.AddressSuggestData[i].city)
-      setFieldValue('zip', this.props.AddressSuggestData[i].zip &&  this.props.AddressSuggestData[i].zip.zip)
+      setFieldValue('zip', this.props.AddressSuggestData[i].zip && this.props.AddressSuggestData[i].zip.zip)
       setFieldValue('country', this.props.AddressSuggestData[i].country.id)
       setFieldValue('province', this.props.AddressSuggestData[i].province ? this.props.AddressSuggestData[i].province.id : '')
-      this.setState({hasProvinces: this.props.AddressSuggestData[i].country.hasProvinces})
+      this.setState({ hasProvinces: this.props.AddressSuggestData[i].country.hasProvinces })
       if (this.props.AddressSuggestData[i].country.hasProvinces) this.props.getProvinces(this.props.AddressSuggestData[i].country.id)
     }
     else {
-      let newValues = {...values, [d.name]: d.value}
+      let newValues = { ...values, [d.name]: d.value }
       const body = {
-        city:           newValues.city,
-        countryId:      newValues.country,
-        provinceId:     newValues.province,
-        streetAddress:  newValues.address,
-        zip:            newValues.zip
+        city: newValues.city,
+        countryId: newValues.country,
+        provinceId: newValues.province,
+        streetAddress: newValues.address,
+        zip: newValues.zip
       }
       removeEmpty(body)
       if (Object.entries(body).length === 0) return
@@ -159,46 +178,49 @@ class WarehousePopup extends React.Component {
             onSubmit={this.submitHandler}
           >
             {({ values, errors, setFieldValue }) => (
-            <>
-              {AddressSuggestInput}
-              <FormGroup widths="equal">
-                <Input type="text" label={name} name="name" />
-              </FormGroup>
-              <h4>Address</h4>
-              <FormGroup widths="equal">
-                <Input
-                  inputProps={{list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue)}}}
-                  type="text" label="Street Address" name="address"
-                />
-                <Input
-                  type="text" label="City" name="city"
-                  inputProps={{list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue)}}}
-                />
-              </FormGroup>
-              <FormGroup widths="equal">
-                <Input
-                  type="text" label="Zip" name="zip"
-                  inputProps={{list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue)}}}
-                />
-                <Dropdown label="Country" name="country" options={country}
-                          inputProps={{search: true, onChange:  (e, d) => {
-                              setFieldValue('province', ''); this.handleCountry(e, d)}}} />
-                <Dropdown label="Province" name="province" options={provincesDropDown}
-                          inputProps={{search: true, disabled: !hasProvinces}} />
-              </FormGroup>
-              <h4>Contact Info</h4>
-              <FormGroup>
-                <Input type="text" label="Contact Name" name="contactName" fieldProps={{width: 8}} />
-              </FormGroup>
-              <FormGroup widths="equal">
-                <Input type="text" label="Phone" name="phone" />
-                <Input type="text" label="Email" name="email" />
-              </FormGroup>
-              <div style={{ textAlign: 'right' }}>
-                <Button.Reset onClick={closePopup}>Cancel</Button.Reset>
-                <Button.Submit>Save</Button.Submit>
-              </div>
-            </>)}
+              <>
+                {AddressSuggestInput}
+                <FormGroup widths="equal">
+                  <Input type="text" label={name} name="name" />
+                </FormGroup>
+                <h4>Address</h4>
+                <FormGroup widths="equal">
+                  <Input
+                    inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
+                    type="text" label="Street Address" name="address"
+                  />
+                  <Input
+                    type="text" label="City" name="city"
+                    inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
+                  />
+                </FormGroup>
+                <FormGroup widths="equal">
+                  <Input
+                    type="text" label="Zip" name="zip"
+                    inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
+                  />
+                  <Dropdown label="Country" name="country" options={country}
+                    inputProps={{
+                      search: true, onChange: (e, d) => {
+                        setFieldValue('province', ''); this.handleCountry(e, d)
+                      }
+                    }} />
+                  <Dropdown label="Province" name="province" options={provincesDropDown}
+                    inputProps={{ search: true, disabled: !hasProvinces }} />
+                </FormGroup>
+                <h4>Contact Info</h4>
+                <FormGroup>
+                  <Input type="text" label="Contact Name" name="contactName" fieldProps={{ width: 8 }} />
+                </FormGroup>
+                <FormGroup widths="equal">
+                  <Input type="text" label="Phone" name="phone" />
+                  <Input type="text" label="Email" name="email" />
+                </FormGroup>
+                <div style={{ textAlign: 'right' }}>
+                  <Button.Reset onClick={closePopup}>Cancel</Button.Reset>
+                  <Button.Submit>Save</Button.Submit>
+                </div>
+              </>)}
           </Form>
         </Modal.Content>
       </Modal>
@@ -234,11 +256,11 @@ const mapStateToProps = state => {
     countries: state.settings.countries,
     provincesDropDown: state.settings.provincesDropDown,
     currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
-        state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+      state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(WarehousePopup)
+)(withToastManager(WarehousePopup))

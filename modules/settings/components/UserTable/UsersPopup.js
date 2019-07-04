@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
-import { withToastManager, toastManager } from 'react-toast-notifications'
+import { withToastManager } from 'react-toast-notifications'
 import { Modal, FormGroup } from "semantic-ui-react"
 
 import {
@@ -68,8 +68,7 @@ class UsersPopup extends React.Component {
       <FormattedMessage id={`notifications.${status}.header`} />,
       <FormattedMessage id={`notifications.${status}.content`} values={{ name: requestData.name }} />
     ), {
-        appearance: 'success',
-        autoDismiss: true
+        appearance: 'success'
       })
 
 

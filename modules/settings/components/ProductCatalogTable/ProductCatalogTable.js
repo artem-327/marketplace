@@ -9,8 +9,6 @@ import Router from "next/router"
 
 import confirm from '~/src/components/Confirmable/confirm'
 import { injectIntl } from 'react-intl'
-import { withToastManager } from 'react-toast-notifications'
-import { FormattedMessage } from 'react-intl'
 
 class ProductCatalogTable extends Component {
 
@@ -47,78 +45,7 @@ class ProductCatalogTable extends Component {
   }
 
   componentDidUpdate(oldProps) {
-    const { action, actionId, currentTab, loaded, openPopup, rows, addedItem, editedItem, removedItem, datagrid, toastManager } = this.props
-
-    if (addedItem !== oldProps.addedItem) {
-      datagrid.loadData()
-      toastManager.add((
-        <div>
-          <strong>
-            <FormattedMessage
-              id='productCatalog.newProduct'
-              defaultMessage={'New Product'}
-            />
-          </strong>
-          <div>
-            <FormattedMessage
-              id='productCatalog.productCreated'
-              defaultMessage={'Product {productName} successfully created.'}
-              values={{ productName: addedItem.productName }}
-            />
-          </div>
-        </div>
-      ), {
-        appearance: 'success',
-        autoDismiss: true
-      })
-    }
-
-    if (editedItem !== oldProps.editedItem) {
-      datagrid.updateRow(editedItem.id, this.getEditedProduct)
-      toastManager.add((
-        <div>
-          <strong>
-            <FormattedMessage
-              id='productCatalog.editedProduct'
-              defaultMessage={'Edited Product'}
-            />
-          </strong>
-          <div>
-            <FormattedMessage
-              id='productCatalog.productUpdated'
-              defaultMessage={'Product {productName} successfully updated.'}
-              values={{ productName: editedItem.productName }}
-            />
-          </div>
-        </div>
-      ), {
-        appearance: 'success',
-        autoDismiss: true
-      })
-    }
-
-    if (removedItem !== oldProps.removedItem) {
-      toastManager.add((
-        <div>
-          <strong>
-            <FormattedMessage
-              id='productCatalog.removedProduct'
-              defaultMessage={'Removed Product'}
-            />
-          </strong>
-          <div>
-            <FormattedMessage
-              id='productCatalog.productRemoved'
-              defaultMessage={'Product {productName} successfully removed.'}
-              values={{ productName: removedItem.name }}
-            />
-          </div>
-        </div>
-      ), {
-        appearance: 'success',
-        autoDismiss: true
-      })
-    }
+    const { action, actionId, currentTab, loaded, openPopup, rows } = this.props
 
     if (action === 'edit' && actionId && loaded) {
       if (currentTab.type === 'products') {
@@ -272,4 +199,4 @@ const mapStateToProps = (state, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(withToastManager(ProductCatalogTable))))
+export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(ProductCatalogTable)))

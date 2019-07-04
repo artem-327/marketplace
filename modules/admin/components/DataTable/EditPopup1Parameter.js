@@ -3,9 +3,14 @@ import { connect } from 'react-redux'
 
 import { Modal, FormGroup } from 'semantic-ui-react'
 
-import { closeEditPopup , putEditedDataRequest } from '../../actions'
+import { closeEditPopup, putEditedDataRequest } from '../../actions'
 import { Form, Input, Button } from 'formik-semantic-ui'
 import * as Yup from 'yup'
+
+import { withToastManager } from 'react-toast-notifications'
+import { generateToastMarkup } from '~/utils/functions'
+
+import { FormattedMessage } from 'react-intl'
 
 const formValidation = Yup.object().shape({
     val0: Yup.string().trim().min(1, "Too short").required("Required"),
@@ -19,7 +24,8 @@ class EditPopup1Parameter extends React.Component {
             currentTab,
             config,
             popupValues,
-            putEditedDataRequest
+            putEditedDataRequest,
+            toastManager
         } = this.props
 
         const { id } = popupValues;
@@ -30,19 +36,31 @@ class EditPopup1Parameter extends React.Component {
 
         return (
             <Modal open centered={false}>
-                <Modal.Header>Edit { config.addEditText }</Modal.Header>
+                <Modal.Header>Edit {config.addEditText}</Modal.Header>
                 <Modal.Content>
                     <Form
                         initialValues={initialFormValues}
                         validationSchema={formValidation}
                         onReset={closeEditPopup}
-                        onSubmit={(values, actions) => {
+                        onSubmit={async (values, { setSubmitting }) => {
                             let data = {
                                 [config.edit[0].name]: values.val0.trim()
                             }
+                            try {
+                                await putEditedDataRequest(config, id, data)
 
-                            putEditedDataRequest(config, id, data)
-                            actions.setSubmitting(false);
+                                let formattedMsgId = `notifications.${config.formattedMessageName}Updated`
+
+                                toastManager.add(generateToastMarkup(
+                                    <FormattedMessage id={`${formattedMsgId}.header`} />,
+                                    <FormattedMessage id={`${formattedMsgId}.content`} values={{ name: values.val0 }} />
+                                ), { appearance: 'success' })
+                            }
+                            catch (e) { console.error(e) }
+                            finally {
+                                setSubmitting(false)
+                            }
+
                         }}
                     >
                         <FormGroup widths="equal">
@@ -74,4 +92,4 @@ const mapStateToProps = state => {
     }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditPopup1Parameter)
+export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(EditPopup1Parameter))

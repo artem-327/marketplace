@@ -1,9 +1,8 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Link from 'next/link'
 import { withRouter } from 'next/router'
 import { Menu, Dropdown } from 'semantic-ui-react'
-import {withAuth} from '~/hocs'
-
+import { withAuth } from '~/hocs'
 
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   <Link prefetch href={to}>
@@ -11,7 +10,7 @@ const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   </Link>
 ))
 
-const DropdownItem = ({children, ...props}) => (
+const DropdownItem = ({ children, ...props }) => (
   <Dropdown item icon="chevron down" {...props}>
     {children}
   </Dropdown>
@@ -19,10 +18,10 @@ const DropdownItem = ({children, ...props}) => (
 
 class Navigation extends Component {
   render() {
-    const { isAdmin } = this.props
-    
+    const { isAdmin, identity } = this.props
+
     return (
-      !isAdmin ? <>
+      !isAdmin || (isAdmin && identity.company && identity.company.id) ? <>
         <DropdownItem text="Inventory">
           <Dropdown.Menu>
             <Dropdown.Item as={MenuLink} to="/inventory/my">My Inventory</Dropdown.Item>
@@ -42,10 +41,8 @@ class Navigation extends Component {
           </Dropdown.Menu>
         </DropdownItem>
         <MenuLink to='/settings'>Settings</MenuLink>
-      </>
-      : <>
-        <MenuLink to="/admin">Admin</MenuLink>
-      </>
+        {isAdmin && <MenuLink to="/admin">Admin</MenuLink>}
+      </> : null
     )
   }
 }

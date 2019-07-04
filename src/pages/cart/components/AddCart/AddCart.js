@@ -248,7 +248,7 @@ export default class AddCart extends Component {
               </GridColumn>
               <GridColumn className='purchase-info'>
                 <Dropdown
-                  placeholder='Select Price Level'
+                  placeholder='Select Pricing Tier'
                   value={this.props.sidebar.pricing}
                   selection
                   options={dropdownOptions}

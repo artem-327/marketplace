@@ -4,12 +4,14 @@ import filter from 'lodash/filter'
 import escapeRegExp from 'lodash/escapeRegExp'
 import debounce from 'lodash/debounce'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
-import {withToastManager} from 'react-toast-notifications'
+import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage } from 'react-intl'
 
 import { Modal, Header, FormGroup, FormField, Search, Label, Icon } from 'semantic-ui-react'
 import { DateInput } from '~/components/custom-formik'
 import { FieldArray } from "formik"
+
+import { generateToastMarkup } from '~/utils/functions'
 
 import {
   closePopup,
@@ -101,9 +103,9 @@ class ProductPopup extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.popupValues && nextProps.popupValues.unitID) {
-      this.filterPackagingTypes (nextProps.popupValues.unitID, nextProps.unitsAll, nextProps.packagingTypesAll)
+      this.filterPackagingTypes(nextProps.popupValues.unitID, nextProps.unitsAll, nextProps.packagingTypesAll)
     }
-    else this.setState({packagingTypesReduced: nextProps.packagingType})
+    else this.setState({ packagingTypesReduced: nextProps.packagingType })
   }
 
   filterPackagingTypes(id, unitsAll, packagingTypesAll) {
@@ -115,55 +117,69 @@ class ProductPopup extends React.Component {
 
     const packagingTypesReduced = packagingTypesAll.filter(p => p.measureType && p.measureType.id === measureType.id)
 
-    this.setState({packagingTypesReduced: packagingTypesReduced.map((type, id) => {
-      return {
-        key: id,
-        text: type.name,
-        value: type.id
-      }
-    })})
+    this.setState({
+      packagingTypesReduced: packagingTypesReduced.map((type, id) => {
+        return {
+          key: id,
+          text: type.name,
+          value: type.id
+        }
+      })
+    })
   }
 
   handleUnitChange(id, unitsAll, packagingTypesAll) {
     this.filterPackagingTypes(id, unitsAll, packagingTypesAll)
   }
 
-  handlerSubmit = (values, actions) => {
-    const { popupValues, reloadFilter } = this.props
+  handlerSubmit = async (values, actions) => {
+    const { popupValues, reloadFilter, handleSubmitProductEditPopup, handleSubmitProductAddPopup, toastManager } = this.props
+
     if (popupValues) {
-      this.props.handleSubmitProductEditPopup({
+      await handleSubmitProductEditPopup({
         ...values,
-        casProducts: values.casProducts ? values.casProducts.reduce(function(filtered, option) {
+        casProducts: values.casProducts ? values.casProducts.reduce(function (filtered, option) {
           if (option.casProduct) {
             var newValue = {
               casProduct: option.casProduct,
               minimumConcentration: parseInt(option.minimumConcentration),
               maximumConcentration: parseInt(option.maximumConcentration)
             }
-            filtered.push(newValue);
+            filtered.push(newValue)
           }
-          return filtered;
+          return filtered
         }, []) : [],
         unNumber: this.state.unNumber ? this.state.unNumber.id :
-            popupValues.unNumber ? popupValues.unNumber.id : null,
+          popupValues.unNumber ? popupValues.unNumber.id : null,
       }, popupValues.id, reloadFilter)
     } else {
-      this.props.handleSubmitProductAddPopup({
+      await handleSubmitProductAddPopup({
         ...values,
-        casProducts: values.casProducts ? values.casProducts.reduce(function(filtered, option) {
+        casProducts: values.casProducts ? values.casProducts.reduce(function (filtered, option) {
           if (option.casProduct) {
             var newValue = {
               casProduct: option.casProduct,
               minimumConcentration: parseInt(option.minimumConcentration),
               maximumConcentration: parseInt(option.maximumConcentration)
             }
-            filtered.push(newValue);
+            filtered.push(newValue)
           }
           return filtered;
         }, []) : [],
         unNumber: this.state.unNumber ? this.state.unNumber.id : null
       }, reloadFilter)
     }
+
+    let status = popupValues ? 'productUpdated' : 'productCreated'
+
+    toastManager.add(generateToastMarkup(
+      <FormattedMessage id={`notifications.${status}.header`} />,
+      <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.productName }} />,
+    ),
+      {
+        appearance: 'success'
+      })
+
     actions.setSubmitting(false)
   }
 
@@ -186,10 +202,10 @@ class ProductPopup extends React.Component {
   }
 
   handleResultSelect = (e, { result }) => {
-    this.setState({value: result, selectedList: [result].concat(this.state.selectedList)})
+    this.setState({ value: result, selectedList: [result].concat(this.state.selectedList) })
   }
 
-  handleSearchChange = debounce((e, {searchQuery, dataindex}) => {
+  handleSearchChange = debounce((e, { searchQuery, dataindex }) => {
     this.setState({ isLoading: true, value: searchQuery })
 
     this.props.searchCasProduct(searchQuery, dataindex)
@@ -228,14 +244,14 @@ class ProductPopup extends React.Component {
   }
 
   handleUnNumberSelect = (e, { result }) => {
-    this.setState({unNumber: result})
+    this.setState({ unNumber: result })
   }
 
   getInitialFormValues = () => {
     const { popupValues } = this.props
     let {
       attachments = [],
-      casProducts = [{casProduct: undefined, minimumConcentration: 100, maximumConcentration: 100}],
+      casProducts = [{ casProduct: undefined, minimumConcentration: 100, maximumConcentration: 100 }],
       description = '',
       freightClass = '',
       hazardClass = [],
@@ -251,7 +267,7 @@ class ProductPopup extends React.Component {
       expirationDate = ''
     } = popupValues || {}
     if (casProducts.length === 0) {
-      casProducts = [{casProduct: undefined, minimumConcentration: 100, maximumConcentration: 100}]
+      casProducts = [{ casProduct: undefined, minimumConcentration: 100, maximumConcentration: 100 }]
     }
     return {
       attachments,
@@ -306,7 +322,7 @@ class ProductPopup extends React.Component {
                   <Input type="text" label="Product Number" name="productNumber" />
                 </FormGroup>
 
-                <FormGroup style={{alignItems: 'flex-end', marginBottom: '0'}}>
+                <FormGroup style={{ alignItems: 'flex-end', marginBottom: '0' }}>
                   <FormField width={8}>
                     <label>What are the associated CAS Index Numbers?</label>
                   </FormField>
@@ -318,69 +334,69 @@ class ProductPopup extends React.Component {
                   </FormField>
                 </FormGroup>
                 <FieldArray name="casProducts"
-                            render={arrayHelpers => (
-                              <>
-                                {values.casProducts && values.casProducts.length ? values.casProducts.map((casProduct, index) => (
-                                  <FormGroup key={index}>
-                                    <FormField width={8}>
-                                      <Dropdown name={`casProducts[${index}].casProduct`}
-                                                options={searchedCasProducts.length > index ? searchedCasProducts[index].map(item => {
-                                                  return {
-                                                    key: item.id,
-                                                    id: item.id,
-                                                    text: item.casNumber + ' ' + item.chemicalName,
-                                                    value: item.id,
-                                                    content: <Header content={item.casNumber} subheader={item.chemicalName} style={{fontSize: '1em'}} />
-                                                  }
-                                                }) : []}
-                                                inputProps={{
-                                                  size: 'large',
-                                                  minCharacters: 3,
-                                                  icon: "search",
-                                                  search: options => options,
-                                                  selection: true,
-                                                  clearable: true,
-                                                  loading: isLoading,
-                                                  //onResultSelect: this.handleResultSelect,
-                                                  onSearchChange: this.handleSearchChange,
-                                                  dataindex: index
-                                                }}
-                                                defaultValue={casProduct && casProduct.casNumber ? casProduct.casNumber : ''}
-                                      />
-                                    </FormField>
-                                    <FormField width={3}>
-                                      <Input type="text" name={`casProducts[${index}].minimumConcentration`} />
-                                    </FormField>
-                                    <FormField width={3}>
-                                      <Input type="text" name={`casProducts[${index}].maximumConcentration`} />
-                                    </FormField>
-                                    <FormField width={2}>
-                                      {index ? (
-                                        <Button basic icon onClick={() => {
-                                          arrayHelpers.remove(index)
-                                          this.props.removeCasProductsIndex(index)
-                                        }}>
-                                          <Icon name='minus' />
-                                        </Button>
-                                      ) : ''}
-                                      {values.casProducts.length === (index + 1) ? (
-                                        <Button basic icon color='green' onClick={() => {
-                                          arrayHelpers.push({ casProduct: '', minimumConcentration: 0, maximumConcentration: 0 })
-                                          this.props.newCasProductsIndex()
-                                        }}>
-                                          <Icon name='plus' />
-                                        </Button>
-                                      ) : ''}
-                                    </FormField>
-                                  </FormGroup>
-                                )) : ''}
-                              </>
-                            )} />
+                  render={arrayHelpers => (
+                    <>
+                      {values.casProducts && values.casProducts.length ? values.casProducts.map((casProduct, index) => (
+                        <FormGroup key={index}>
+                          <FormField width={8}>
+                            <Dropdown name={`casProducts[${index}].casProduct`}
+                              options={searchedCasProducts.length > index ? searchedCasProducts[index].map(item => {
+                                return {
+                                  key: item.id,
+                                  id: item.id,
+                                  text: item.casNumber + ' ' + item.chemicalName,
+                                  value: item.id,
+                                  content: <Header content={item.casNumber} subheader={item.chemicalName} style={{ fontSize: '1em' }} />
+                                }
+                              }) : []}
+                              inputProps={{
+                                size: 'large',
+                                minCharacters: 3,
+                                icon: "search",
+                                search: options => options,
+                                selection: true,
+                                clearable: true,
+                                loading: isLoading,
+                                //onResultSelect: this.handleResultSelect,
+                                onSearchChange: this.handleSearchChange,
+                                dataindex: index
+                              }}
+                              defaultValue={casProduct && casProduct.casNumber ? casProduct.casNumber : ''}
+                            />
+                          </FormField>
+                          <FormField width={3}>
+                            <Input type="text" name={`casProducts[${index}].minimumConcentration`} />
+                          </FormField>
+                          <FormField width={3}>
+                            <Input type="text" name={`casProducts[${index}].maximumConcentration`} />
+                          </FormField>
+                          <FormField width={2}>
+                            {index ? (
+                              <Button basic icon onClick={() => {
+                                arrayHelpers.remove(index)
+                                this.props.removeCasProductsIndex(index)
+                              }}>
+                                <Icon name='minus' />
+                              </Button>
+                            ) : ''}
+                            {values.casProducts.length === (index + 1) ? (
+                              <Button basic icon color='green' onClick={() => {
+                                arrayHelpers.push({ casProduct: '', minimumConcentration: 0, maximumConcentration: 0 })
+                                this.props.newCasProductsIndex()
+                              }}>
+                                <Icon name='plus' />
+                              </Button>
+                            ) : ''}
+                          </FormField>
+                        </FormGroup>
+                      )) : ''}
+                    </>
+                  )} />
                 <FormGroup>
                   <FormField width={16}>
                     <label>Description</label>
                     <TextArea rows='3'
-                              name='description'
+                      name='description'
                     />
                   </FormField>
                 </FormGroup>
@@ -390,10 +406,12 @@ class ProductPopup extends React.Component {
                     label="Unit"
                     name="unitID"
                     options={productsUnitsType}
-                    inputProps={{ onChange: (e, d) => {
-                      setFieldValue('packageID', '')
-                      this.handleUnitChange(d.value, this.props.unitsAll, this.props.packagingTypesAll)
-                      }}}
+                    inputProps={{
+                      onChange: (e, d) => {
+                        setFieldValue('packageID', '')
+                        this.handleUnitChange(d.value, this.props.unitsAll, this.props.packagingTypesAll)
+                      }
+                    }}
                   />
                   <Dropdown
                     label="Packaging Type"
@@ -404,14 +422,14 @@ class ProductPopup extends React.Component {
                 <FormGroup>
                   <FormField>
                     <Checkbox toggle
-                              label='Stackable'
-                              name='stackable'
+                      label='Stackable'
+                      name='stackable'
                     />
                   </FormField>
                   <FormField>
                     <Checkbox toggle
-                              label='Hazardous'
-                              name='hazardous'
+                      label='Hazardous'
+                      name='hazardous'
                     />
                   </FormField>
                 </FormGroup>
@@ -419,99 +437,99 @@ class ProductPopup extends React.Component {
                   <FormField>
                     <label>UN Number</label>
                     <Search loading={isUnLoading}
-                            onResultSelect={this.handleUnNumberSelect}
-                            onSearchChange={this.handleSearchUnNumber}
-                            results={searchedUnNumbers.map(item => {
-                              return {
-                                id: item.id,
-                                title: item.unNumberCode,
-                                description: item.description
-                              }
-                            })}
-                            defaultValue={unNumber && unNumber.unNumberCode ? unNumber.unNumberCode : ''}
+                      onResultSelect={this.handleUnNumberSelect}
+                      onSearchChange={this.handleSearchUnNumber}
+                      results={searchedUnNumbers.map(item => {
+                        return {
+                          id: item.id,
+                          title: item.unNumberCode,
+                          description: item.description
+                        }
+                      })}
+                      defaultValue={unNumber && unNumber.unNumberCode ? unNumber.unNumberCode : ''}
                     />
                   </FormField>
                   <FormField>
                     <Input type="number"
-                           label="NMFC Code"
-                           name="nmfcNumber"
+                      label="NMFC Code"
+                      name="nmfcNumber"
                     />
                   </FormField>
                   <Dropdown label='Freight Class'
-                            name='freightClass'
-                            options={freightClasses}
+                    name='freightClass'
+                    options={freightClasses}
                   />
                 </FormGroup>
                 <FormGroup widths='equal'>
                   <Dropdown label='Hazard Class'
-                            name='hazardClass'
-                            options={hazardClasses}
-                            inputProps={{
-                              multiple: true,
-                              selection: true,
-                              search: true,
-                              clearable: true
-                            }}
+                    name='hazardClass'
+                    options={hazardClasses}
+                    inputProps={{
+                      multiple: true,
+                      selection: true,
+                      search: true,
+                      clearable: true
+                    }}
                   />
                   <Dropdown label='Packaging Group'
-                            name='packagingGroup'
-                            options={packagingGroups}
+                    name='packagingGroup'
+                    options={packagingGroups}
                   />
                 </FormGroup>
                 <FormGroup widths='equal'>
                   <FormField>
                     <Dropdown label="Document Type"
-                              name={`attachmentType`}
-                              options={this.props.documentTypes}
-                              style={{paddingBottom: '2em'}}
+                      name={`attachmentType`}
+                      options={this.props.documentTypes}
+                      style={{ paddingBottom: '2em' }}
                     />
                     <DateInput label='Expiration Date'
-                               name='expirationDate'
+                      name='expirationDate'
                     />
                   </FormField>
                   <FormField>
                     <label>Document</label>
                     <UploadLot {...this.props}
-                               attachments={values.attachments}
-                               edit={this.props.popupValues ? this.props.popupValues.id : ''}
-                               name='attachments'
-                               type={values.attachmentType ? ''+values.attachmentType : 'Unspecified'}
-                               expiration={values.expirationDate ? values.expirationDate+'T00:00:00Z' : ''}
-                               unspecifiedTypes={['Unspecified']}
-                               fileMaxSize={20}
-                               onChange={(files) => setFieldValue(
-                                 `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
-                                 {
-                                   id: files.id,
-                                   name: files.name
-                                 }
-                               )}
-                               emptyContent={(
-                                 <label>
-                                   <FormattedMessage
-                                     id='addInventory.dragDropAdditional'
-                                     defaultMessage={'Drop additional documents here'}
-                                   />
-                                   <br />
-                                   <FormattedMessage
-                                     id='addInventory.dragDropOr'
-                                     defaultMessage={'or select from computer'}
-                                   />
-                                 </label>
-                               )}
-                               uploadedContent={(
-                                 <label>
-                                   <FormattedMessage
-                                     id='addInventory.dragDropAdditional'
-                                     defaultMessage={'Drop additional documents here'}
-                                   />
-                                   <br />
-                                   <FormattedMessage
-                                     id='addInventory.dragDropOr'
-                                     defaultMessage={'or select from computer'}
-                                   />
-                                 </label>
-                               )}
+                      attachments={values.attachments}
+                      edit={this.props.popupValues ? this.props.popupValues.id : ''}
+                      name='attachments'
+                      type={values.attachmentType ? '' + values.attachmentType : 'Unspecified'}
+                      expiration={values.expirationDate ? values.expirationDate + 'T00:00:00Z' : ''}
+                      unspecifiedTypes={['Unspecified']}
+                      fileMaxSize={20}
+                      onChange={(files) => setFieldValue(
+                        `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
+                        {
+                          id: files.id,
+                          name: files.name
+                        }
+                      )}
+                      emptyContent={(
+                        <label>
+                          <FormattedMessage
+                            id='addInventory.dragDropAdditional'
+                            defaultMessage={'Drop additional documents here'}
+                          />
+                          <br />
+                          <FormattedMessage
+                            id='addInventory.dragDropOr'
+                            defaultMessage={'or select from computer'}
+                          />
+                        </label>
+                      )}
+                      uploadedContent={(
+                        <label>
+                          <FormattedMessage
+                            id='addInventory.dragDropAdditional'
+                            defaultMessage={'Drop additional documents here'}
+                          />
+                          <br />
+                          <FormattedMessage
+                            id='addInventory.dragDropOr'
+                            defaultMessage={'or select from computer'}
+                          />
+                        </label>
+                      )}
                     />
                   </FormField>
                 </FormGroup>
@@ -557,12 +575,15 @@ const mapStateToProps = state => {
     packagingGroups: state.settings.productsPackagingGroups,
     searchedCasProducts: state.settings.searchedCasProducts,
     searchedUnNumbers: state.settings.searchedUnNumbers,
-    reloadFilter: {props: {
+    reloadFilter: {
+      props: {
         currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
-            state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+          state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
         productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
-        productsFilter: state.settings.productsFilter},
-      value: state.settings.filterValue},
+        productsFilter: state.settings.productsFilter
+      },
+      value: state.settings.filterValue
+    },
     documentTypes: state.settings.documentTypes
   }
 }
