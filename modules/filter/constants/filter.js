@@ -26,9 +26,15 @@ export const paths = {
     productForms: 'ProductOffer.productForm.id',
     expirationDate: 'ProductOffer.expirationDate',
     assayFrom: 'ProductOffer.assayMin',
-    assayTo: 'ProductOffer.assayMax'
+    assayTo: 'ProductOffer.assayMax',
+    manufacturedDate: 'ProductOffer.manufacturedDate'
   }
 }
+
+export const dateDropdownOptions = [
+  { key: 0, value: 'From', text: 'More Than' },
+  { key: 1, value: 'To', text: 'Less Than' }
+]
 
 export const dateFormat = 'YYYY-MM-DD'
 
@@ -182,7 +188,7 @@ export const datagridValues = {
         description: this.description
       })
     },
-    
+
     tagDescription: (values, { currencyCode } = '$') => <label>{'<= '}{<FormattedNumber style='currency' currency={currencyCode} value={values[0].description} />}</label>,
 
     valuesDescription: function (values) {
@@ -302,20 +308,22 @@ export const datagridValues = {
 
     nested: true
   },
-  dateFrom: {
-    operator: operators.GREATER_THAN_OR_EQUAL_TO,
+
+  expirationFrom: {
+    operator: operators.GREATER_THAN,
     path: paths.productOffers.expirationDate,
     description: 'Expiration From',
 
     toFilter: function (values) {
+      let date = moment().add(values, 'days')
       return {
         operator: this.operator,
         path: this.path,
-        values: [{ value: moment(values).format(), description: moment(values.toString()).format(dateFormat) }],
+        values: [{ value: date.format(), description: date.format(dateFormat) }],
       }
     },
 
-    tagDescription: (values) => `Exp. >= ${values[0].description}`,
+    tagDescription: (values) => `Expires > ${values[0].description}`,
 
     valuesDescription: function (values) {
       return values.map((val) => val.description)
@@ -326,20 +334,21 @@ export const datagridValues = {
     }
 
   },
-  dateTo: {
-    operator: operators.LESS_THAN_OR_EQUAL_TO,
+  expirationTo: {
+    operator: operators.LESS_THAN,
     path: paths.productOffers.expirationDate,
     description: 'Expiration To',
 
     toFilter: function (values) {
+      let date = moment().add(values, 'days')
       return {
         operator: this.operator,
         path: this.path,
-        values: [{ value: moment(values).format(), description: moment(values.toString()).format(dateFormat) }],
+        values: [{ value: date.format(), description: date.format(dateFormat) }],
       }
     },
 
-    tagDescription: (values) => `Exp. <= ${values[0].description}`,
+    tagDescription: (values) => `Expires < ${values[0].description}`,
 
     valuesDescription: function (values) {
       return values.map((val) => val.description)
@@ -350,6 +359,59 @@ export const datagridValues = {
     }
 
   },
+
+  mfgFrom: {
+    operator: operators.LESS_THAN,
+    path: paths.productOffers.manufacturedDate,
+    description: 'Manufactured Date From',
+
+    toFilter: function (values) {
+      let date = moment().subtract(values, 'days')
+      return {
+        operator: this.operator,
+        path: this.path,
+        values: [{ value: date.format(), description: date.format(dateFormat) }],
+      }
+    },
+
+    tagDescription: (values) => `Manufactured > ${values[0].description}`,
+
+    valuesDescription: function (values) {
+      return values.map((val) => val.description)
+    },
+
+    toFormik: function ({ values }) {
+      return moment(values[0].value.toString()).format(dateFormat)
+    }
+
+  },
+
+  mfgTo: {
+    operator: operators.GREATER_THAN,
+    path: paths.productOffers.manufacturedDate,
+    description: 'Manufactured Date To',
+
+    toFilter: function (values) {
+      let date = moment().subtract(values, 'days')
+      return {
+        operator: this.operator,
+        path: this.path,
+        values: [{ value: date.format(), description: date.format(dateFormat) }],
+      }
+    },
+
+    tagDescription: (values) => `Manufactured < ${values[0].description}`,
+
+    valuesDescription: function (values) {
+      return values.map((val) => val.description)
+    },
+
+    toFormik: function ({ values }) {
+      return moment(values[0].value.toString()).format(dateFormat)
+    }
+
+  },
+  
   assayFrom: {
     operator: operators.GREATER_THAN_OR_EQUAL_TO,
     path: paths.productOffers.assayFrom,
@@ -431,16 +493,17 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
       path: paths.productOffers.assayTo, operator: operators.LESS_THAN_OR_EQUAL_TO
     },
     tagDescription: (from, to) => `Assay ${from}% - ${to}% `
-  }, {
-    description: 'Expiration',
-    from: {
-      path: paths.productOffers.expirationDate, operator: operators.GREATER_THAN_OR_EQUAL_TO
-    },
-    to: {
-      path: paths.productOffers.expirationDate, operator: operators.LESS_THAN_OR_EQUAL_TO
-    },
-    tagDescription: (from, to) => `Exp. ${from} - ${to} `
   },
+    // {
+    //   description: 'Expiration',
+    //   from: {
+    //     path: paths.productOffers.expirationDate, operator: operators.GREATER_THAN_OR_EQUAL_TO
+    //   },
+    //   to: {
+    //     path: paths.productOffers.expirationDate, operator: operators.LESS_THAN_OR_EQUAL_TO
+    //   },
+    //   tagDescription: (from, to) => `Exp. ${from} - ${to} `
+    // },
   ]
 
   // Create copy so we dont mutate original filters

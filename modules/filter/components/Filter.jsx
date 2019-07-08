@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { injectIntl, FormattedMessage } from 'react-intl'
-import { Form, Input, Checkbox as FormikCheckbox, } from 'formik-semantic-ui'
+import { Form, Input, Checkbox as FormikCheckbox, Dropdown } from 'formik-semantic-ui'
 import { Field as FormikField } from 'formik'
 import { bool, string, object, func, array } from 'prop-types'
 import { debounce } from 'lodash'
-import { DateInput } from 'semantic-ui-calendar-react'
+
 import { withToastManager } from 'react-toast-notifications'
 
 import {
@@ -13,12 +13,12 @@ import {
   Icon, FormField,
   Checkbox, Grid,
   GridRow, GridColumn,
-  Dropdown
+  Dropdown as SemanticDropdown, Input as SemanticInput
 } from 'semantic-ui-react'
 
 import confirm from '~/src/components/Confirmable/confirm'
 
-import { datagridValues, replaceAmbigiousCharacters, dateFormat } from '../constants/filter'
+import { datagridValues, replaceAmbigiousCharacters, dateFormat, dateDropdownOptions } from '../constants/filter'
 import { initialValues, validationSchema } from '../constants/validation'
 
 import SavedFilters from './SavedFilters'
@@ -32,13 +32,16 @@ import {
   GraySegment, Title
 } from '../constants/layout'
 
-
 class Filter extends Component {
 
   state = {
     savedFiltersActive: false,
     accordion: {
       chemicalType: true
+    },
+    dateDropdown: {
+      expiration: dateDropdownOptions[0].value,
+      mfg: dateDropdownOptions[0].value
     },
     searchQuery: '',
     isTyping: false
@@ -53,6 +56,7 @@ class Filter extends Component {
       fetchProductGrade,
       setParams
     } = this.props
+
 
     this.handleGetSavedFilters()
     setParams({ currencyCode: this.props.preferredCurrency.code })
@@ -92,9 +96,10 @@ class Filter extends Component {
 
     keys.forEach((key) => {
       if (inputs[key] && inputs[key] !== '' && Object.keys(inputs[key]).length > 0) {
-
-        if (!!datagridValues[key].nested) {
+        console.log({ key, datagridValues })
+        if (datagridValues[key] && !!datagridValues[key].nested) {
           var ids = [], names = []
+
           // If nested (checkboxes) take their id's and push them to an array
           Object.keys(inputs[key]).forEach(k => {
             if (inputs[key][k]) {
@@ -299,7 +304,53 @@ class Filter extends Component {
     </AccordionTitle>
   )
 
-  formMarkup = ({ values, setFieldValue, errors, setFieldError }) => {
+  dateField = (name, { values, setFieldValue, handleChange }) => {
+    let inputName = `${name}${this.state.dateDropdown[name]}`
+
+    return (
+      <>
+        <FormField>
+          <Dropdown name={name} options={dateDropdownOptions} selection
+            onChange={handleChange}
+            inputProps={{
+              value: this.state.dateDropdown[name],
+              onChange: (_, data) => {
+                Object.keys(values)
+                  .forEach(key => {
+                    if (typeof values[key] === 'string' && values[key].startsWith(name)) setFieldValue(key, '')
+                  })
+
+                setFieldValue(inputName, '')
+                this.setState((state) => ({
+                  ...state,
+                  dateDropdown: {
+                    ...state.dateDropdown,
+                    [name]: data.value
+                  }
+                }))
+              }
+            }
+            } />
+        </FormField>
+
+        <FormField>
+          <Input
+            name={inputName}
+            onChange={handleChange}
+            inputProps={{
+              label: 'Days',
+              labelPosition: 'right',
+              type: 'number'
+            }}
+          />
+        </FormField>
+      </>
+    )
+  }
+
+
+
+  formMarkup = ({ values, setFieldValue, handleChange, errors, setFieldError }) => {
     let {
       productConditions, productForms, packagingTypes,
       productGrade, intl, isFilterSaving,
@@ -355,7 +406,7 @@ class Filter extends Component {
           <AccordionItem>
             {this.accordionTitle('chemicalType', <FormattedMessage id='filter.chemicalType' />)}
             <AccordionContent active={this.state.accordion.chemicalType}>
-              <Dropdown {...dropdownProps} />
+              <SemanticDropdown {...dropdownProps} />
             </AccordionContent>
           </AccordionItem>
 
@@ -443,32 +494,8 @@ class Filter extends Component {
             {this.accordionTitle('expiration', <FormattedMessage id='filter.expiration' defaultMessage='Expiration' />)}
             <AccordionContent active={this.state.accordion.expiration}>
               <FormGroup widths='equal'>
-                <FormField error={errors.dateFrom} width={8}>
-                  <DateInput
-                    onChange={(e, { name, value }) => setFieldValue(name, value)}
-                    closable
-                    inputProps={{ placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }) }}
-                    value={values.dateFrom}
-                    closeOnMouseLeave={false}
-                    dateFormat={dateFormat}
-                    animation='none'
-                    label={<label><FormattedMessage id='filter.dateFrom' defaultMessage='Date From' /></label>}
-                    name='dateFrom' />
-                  {errors.dateFrom && <span className='sui-error-message'>{errors.dateFrom}</span>}
-                </FormField>
-                <FormField error={errors.dateTo} width={8}>
-                  <DateInput
-                    onChange={(e, { name, value }) => setFieldValue(name, value)}
-                    closable
-                    inputProps={{ placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }) }}
-                    value={values.dateTo}
-                    dateFormat={dateFormat}
-                    animation='none'
-                    closeOnMouseLeave={false}
-                    label={<label><FormattedMessage id='filter.dateTo' defaultMessage='Date To' /></label>}
-                    name='dateTo' />
-                  {errors.dateTo && <span className='sui-error-message'>{errors.dateTo}</span>}
-                </FormField>
+                {this.dateField('expiration', { values, setFieldValue, handleChange })}
+
               </FormGroup>
             </AccordionContent>
           </AccordionItem>
@@ -483,6 +510,16 @@ class Filter extends Component {
                 <Input
                   inputProps={{ type: 'number', placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }) }}
                   label={<FormattedMessage id='filter.Maximum(%)' defaultMessage='Maximum' />} name='assayTo' />
+              </FormGroup>
+            </AccordionContent>
+          </AccordionItem>
+
+
+          <AccordionItem>
+            {this.accordionTitle('mfg', <FormattedMessage id='filter.mfg' defaultMessage='Manufactured Date' />)}
+            <AccordionContent active={this.state.accordion.mfg}>
+              <FormGroup widths='equal'>
+                {this.dateField('mfg', { values, setFieldValue, handleChange })}
               </FormGroup>
             </AccordionContent>
           </AccordionItem>
