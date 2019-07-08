@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexGrid from '~/components/table'
+import { withDatagrid } from '~/modules/datagrid'
 import { injectIntl } from 'react-intl'
 import {
   getWarehousesDataRequest,
@@ -36,33 +37,18 @@ class WarehouseTable extends Component {
 
   handlerLoadPage() {
     const {
-      currentTab,
-      getWarehousesDataRequest,
-      getBranchesDataRequest
+      currentTab
     } = this.props
 
     if (currentTab.type === 'warehouses') {
-      getWarehousesDataRequest()
       this.setState({
         tab: 'warehouses'
       })
     }
     else if (currentTab.type === 'branches') {
-      getBranchesDataRequest()
       this.setState({
         tab: 'branches'
       })
-    }
-  }
-
-  handlerChangeRows() {
-    const { currentTab, rowsWarehouses, rowsBranches } = this.props
-    if (currentTab.type === 'warehouses') {
-      return rowsWarehouses
-    } else if (currentTab.type === 'branches') {
-      return rowsBranches
-    } else {
-      return []
     }
   }
 
@@ -73,7 +59,6 @@ class WarehouseTable extends Component {
   branchChecker() {
     if (this.state.tab === 'branches') {
       let { columns } = this.state
-      console.log({ columns })
       return columns.map(item => {
         let obj = {}
         if (item.title === 'Warehouse Name') {
@@ -90,6 +75,8 @@ class WarehouseTable extends Component {
   render() {
     const {
       filterValue,
+      rows,
+      datagrid,
       loading,
       openPopup,
       deleteBranch,
@@ -113,10 +100,11 @@ class WarehouseTable extends Component {
       <React.Fragment>
         <ProdexGrid
           tableName="settings_werehouser_branches"
+          {...datagrid.tableProps}
           filterValue={filterValue}
           columns={this.branchChecker()}
-          loading={loading}
-          rows={this.handlerChangeRows()}
+          loading={datagrid.loading || loading}
+          rows={rows}
           style={{ marginTop: '5px' }}
           rowActions={[
             { text: 'Edit', callback: row => openPopup(row) },
@@ -146,10 +134,27 @@ const mapDispatchToProps = {
   deleteBranch
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, {datagrid}) => {
   return {
-    rowsWarehouses: state.settings.warehousesRows,
-    rowsBranches: state.settings.branchesRows,
+    rows: datagrid.rows.map(r => ({
+      name: r.name,
+      address: r.address.streetAddress + ", " + r.address.city,
+      streetAddress: r.address.streetAddress,
+      city: r.address.city,
+      countryName: r.address.country.name,
+      countryId: r.address.country.id,
+      hasProvinces: r.address.country.hasProvinces,
+      provinceName: r.address.province ? r.address.province.name : '',
+      provinceId: r.address.province ? r.address.province.id : '',
+      zip: r.address.zip.zip,
+      zipID: r.address.zip.id,
+      contactName: r.contactName,
+      phone: r.contactPhone,
+      email: r.contactEmail,
+      branchId: r.id,
+      id: r.id,
+      warehouse: r.warehouse
+    })),
     editPopupBoolean: state.settings.editPopupBoolean,
     addNewWarehousePopup: state.settings.addNewWarehousePopup,
     filterValue: state.settings.filterValue,
@@ -161,7 +166,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(injectIntl(WarehouseTable))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(WarehouseTable)))
