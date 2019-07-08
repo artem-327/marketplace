@@ -13,7 +13,7 @@ import { generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 
 const formValidation = Yup.object().shape({
-    val0: Yup.string().trim().min(1, "Too short").required("Required"),
+    val0: Yup.string().trim().min(1, 'Too short').required('Required'),
 })
 
 class EditPopup1Parameter extends React.Component {
@@ -46,6 +46,8 @@ class EditPopup1Parameter extends React.Component {
                             let data = {
                                 [config.edit[0].name]: values.val0.trim()
                             }
+
+
                             try {
                                 await putEditedDataRequest(config, id, data)
 
@@ -57,14 +59,11 @@ class EditPopup1Parameter extends React.Component {
                                 ), { appearance: 'success' })
                             }
                             catch (e) { console.error(e) }
-                            finally {
-                                setSubmitting(false)
-                            }
-
-                        }}
-                    >
-                        <FormGroup widths="equal">
-                            <Input type={config.edit[0].type} label={config.edit[0].title} name="val0" />
+                            finally { setSubmitting(false) }
+                        }}>
+                        
+                        <FormGroup widths='equal'>
+                            <Input type={config.edit[0].type} label={config.edit[0].title} name='val0' />
                         </FormGroup>
 
                         <div style={{ textAlign: 'right' }}>
