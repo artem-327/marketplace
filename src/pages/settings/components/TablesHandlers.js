@@ -1,49 +1,49 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { Component } from "react"
+import { connect } from "react-redux"
 
-import { Header, Menu, Button, Input, Dropdown } from 'semantic-ui-react'
+import { Header, Menu, Button, Input, Dropdown } from "semantic-ui-react"
 
-import { openPopup, handleFiltersValue, openImportPopup } from '../actions'
-import unitedStates from '../../../components/unitedStates'
+import { openPopup, handleFiltersValue, openImportPopup } from "../actions"
+import unitedStates from "../../../components/unitedStates"
 
 const textsTable = {
   Users: {
-    BtnAddText: 'Add User',
-    SearchText: 'Search user by name, title or branch ...'
+    BtnAddText: "Add User",
+    SearchText: "Search user by name, title or branch ..."
   },
   Branches: {
-    BtnAddText: 'Add Branch',
-    SearchText: 'Search branch by name, address or contact ...'
+    BtnAddText: "Add Branch",
+    SearchText: "Search branch by name, address or contact ..."
   },
   Warehouses: {
-    BtnAddText: 'Add Warehouse',
-    SearchText: 'Search warehouse by name, address or contact ...'
+    BtnAddText: "Add Warehouse",
+    SearchText: "Search warehouse by name, address or contact ..."
   },
-  'Product catalog': {
-    BtnAddText: 'Add Product Catalog',
-    SearchText: 'Search product catalog by name, number ...'
+  "Product catalog": {
+    BtnAddText: "Add Product Catalog",
+    SearchText: "Search product catalog by name, number ..."
   },
-  'Global Broadcast': {
-    BtnAddText: 'Add Global Broadcast',
-    SearchText: 'Search global broadcast by name ...'
+  "Global Broadcast": {
+    BtnAddText: "Add Global Broadcast",
+    SearchText: "Search global broadcast by name ..."
   },
-  'Credit cards': {
-    BtnAddText: 'Add Credit Card',
-    SearchText: 'Search credit card ...'
+  "Credit cards": {
+    BtnAddText: "Add Credit Card",
+    SearchText: "Search credit card ..."
   },
-  'Bank accounts': {
-    BtnAddText: 'Add Bank Account',
-    SearchText: 'Search bank account ...'
+  "Bank accounts": {
+    BtnAddText: "Add Bank Account",
+    SearchText: "Search bank account ..."
   },
-  'Delivery addresses': {
-    BtnAddText: 'Add Delivery Address',
-    SearchText: 'Search delivery address ...'
+  "Import Maps": {
+    BtnAddText: "Add map",
+    SearchText: "Search map ..."
   }
 }
 
 class TablesHandlers extends Component {
   state = {
-    filterFieldCurrentValue: 'None'
+    filterFieldCurrentValue: "None"
   }
 
   handleChangeSelectField = (event, value) => {
@@ -60,15 +60,26 @@ class TablesHandlers extends Component {
 
   currentTabTitle = currentTab => {
     switch (currentTab) {
-      case 'Users': return 'User'
-      case 'Branches': return 'Branch'
-      case 'Warehouses': return 'Warehouse'
-      case 'Product catalog': return 'Product'
-      case 'Global Broadcast': return 'Broadcast'
-      case 'Credit cards': return 'Credit card'
-      case 'Bank accounts': return 'Bank account'
-      case 'Delivery addresses': return 'Delivery addresses'
-      default: null
+      case "Users":
+        return "User"
+        break
+      case "Branches":
+        return "Branch"
+        break
+      case "Warehouses":
+        return "Warehouse"
+        break
+      case "Product catalog":
+        return "Product"
+        break
+      case "Credit cards":
+        return "Credit card"
+        break
+      case "Bank accounts":
+        return "Bank account"
+        break
+      default:
+        null
     }
   }
 
@@ -86,36 +97,36 @@ class TablesHandlers extends Component {
       <Menu secondary>
         <Menu.Item header>
           <Header as="h1" size="medium">
-            {currentTab.name}
+            {currentTab}
           </Header>
         </Menu.Item>
-        {!currentTab.hideHandler &&
-          <Menu.Menu position="right">
-            <Menu.Item>
-              <Input
-                style={{ width: 340 }}
+
+        <Menu.Menu position="right">
+          <Menu.Item>
+            <Input
+              style={{ width: 340 }}
+              size="large"
+              icon="search"
+              placeholder={textsTable[currentTab].SearchText}
+              onChange={e => handleFiltersValue(e.target.value)}
+            />
+          </Menu.Item>
+          <Menu.Item>
+            <Button size="large" primary onClick={() => openPopup()}>
+              Add {this.currentTabTitle(currentTab)}
+            </Button>
+            {currentTab === "Product catalog" && (
+              <Button
                 size="large"
-                icon="search"
-                placeholder={textsTable[currentTab.name].SearchText}
-                onChange={e => handleFiltersValue(this.props, e.target.value)}
-              />
-            </Menu.Item>
-            <Menu.Item>
-              <Button size="large" primary onClick={() => openPopup()}>
-                Add {this.currentTabTitle(currentTab.name)}
+                style={{ marginLeft: 10 }}
+                primary
+                onClick={() => openImportPopup()}
+              >
+                Import {this.currentTabTitle(currentTab)}
               </Button>
-              {currentTab.name === 'Product catalog' && (
-                <Button
-                  size="large"
-                  style={{ marginLeft: 10 }}
-                  primary
-                  onClick={() => openImportPopup()}>
-                  Import {this.currentTabTitle(currentTab.name)}
-                </Button>
-              )}
-            </Menu.Item>
-          </Menu.Menu>
-        }
+            )}
+          </Menu.Item>
+        </Menu.Menu>
       </Menu>
     )
   }
@@ -123,8 +134,7 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentTab: state.settings.currentTab,
-    deliveryAddressesFilter: state.settings.deliveryAddressesFilter
+    currentTab: state.settings.currentTab
   }
 }
 

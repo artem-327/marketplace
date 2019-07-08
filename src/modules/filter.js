@@ -1,15 +1,30 @@
-import axios from "axios";
+import axios from "axios"
 
-const RESET_TAGS = "RESET_TAGS";
-const TOGGLE_FILTER = "TOGGLE_FILTER";
-const TOGGLE_FILTER_GROUP = 'TOGGLE_FILTER_GROUP';
-const ADD_FILTER_TAG = 'ADD_FILTER_TAG';
-const CLOSE_FILTER_TAG = 'CLOSE_FILTER_TAG';
-const CLOSE_FILTER_TAG_FULFILLED = 'CLOSE_FILTER_TAG_FULFILLED';
-const GET_SAVE_FILTERS = 'GET_SAVE_FILTERS';
-const GET_SAVE_FILTERS_FULFILLED = 'GET_SAVE_FILTERS_FULFILLED';
-const DELETE_SAVE_FILTER = 'DELETE_SAVE_FILTER';
-const SAVE_SAVE_FILTER = 'SAVE_SAVE_FILTER';
+const RESET_TAGS = "RESET_TAGS"
+const TOGGLE_FILTER = "TOGGLE_FILTER"
+const TOGGLE_FILTER_GROUP = 'TOGGLE_FILTER_GROUP'
+const ADD_FILTER_TAG = 'ADD_FILTER_TAG'
+const CLOSE_FILTER_TAG = 'CLOSE_FILTER_TAG'
+const CLOSE_FILTER_TAG_FULFILLED = 'CLOSE_FILTER_TAG_FULFILLED'
+const GET_SAVE_FILTERS = 'GET_SAVE_FILTERS'
+const GET_SAVE_FILTERS_PENDING = 'GET_SAVE_FILTERS_PENDING'
+const GET_SAVE_FILTERS_REJECTED = 'GET_SAVE_FILTERS_REJECTED'
+const GET_SAVE_FILTERS_FULFILLED = 'GET_SAVE_FILTERS_FULFILLED'
+const DELETE_SAVE_FILTER = 'DELETE_SAVE_FILTER'
+const SAVE_SAVE_FILTER = 'SAVE_SAVE_FILTER'
+
+import {
+    GET_BROADCASTED_FILTERS_PENDING,
+    GET_BROADCASTED_FILTERS_FULFILLED,
+    GET_BROADCASTED_FILTERS_REJECTED
+} from '~/modules/marketplace/action-types'
+
+import {
+    GET_SAVED_FILTERS_PENDING,
+    GET_SAVED_FILTERS_FULFILLED,
+    GET_SAVED_FILTERS_REJECTED
+} from '~/modules/inventory/action-types'
+
 
 export const initialState = {
     isOpen: false,
@@ -33,8 +48,10 @@ export const initialState = {
         form: false
     },
     filterTags: [],
-    saveFilters: []
-};
+    savedFiltersFetching: false,
+    saveFilters: [],
+    savedBroadcastedFilters: []
+}
 
 export default function reducer(state = initialState, action) {
     switch (action.type) {
@@ -71,12 +88,70 @@ export default function reducer(state = initialState, action) {
                 filterTags: []
             }
         }
+
+        case GET_SAVE_FILTERS_PENDING: {
+            return {
+                ...state,
+                savedFiltersFetching: true
+            }
+        }
+
         case GET_SAVE_FILTERS_FULFILLED: {
             return {
                 ...state,
-                saveFilters: action.payload
+                saveFilters: action.payload,
+                savedFiltersFetching: false
             }
         }
+
+        case GET_SAVE_FILTERS_REJECTED: {
+            return {
+                ...state,
+                savedFiltersFetching: false
+            }
+        }
+
+        /* GET BROADCASTED FILTERS */
+
+        case GET_BROADCASTED_FILTERS_PENDING: {
+            return {
+                ...state,
+                savedFiltersFetching: true
+            }
+        }
+
+        case GET_BROADCASTED_FILTERS_FULFILLED: {
+            return {
+                ...state,
+                savedFiltersFetching: false,
+                savedBroadcastedFilters: action.payload
+            }
+        }
+
+        case GET_BROADCASTED_FILTERS_REJECTED: {
+            return {
+                ...state,
+                savedFiltersFetching: false
+            }
+        }
+
+        /* GET SAVED FILTERS */
+
+        // case GET_SAVED_FILTERS_PENDING: {
+        //     return {
+        //         ...state,
+        //         savedFiltersFetching: true
+        //     }
+        // }
+
+        // case GET_SAVED_FILTERS_FULFILLED: {
+        //     return {
+        //         ...state,
+        //         saveFilters: action.payload
+        //     }
+        // }
+
+
         default: {
             return state
         }
@@ -118,7 +193,7 @@ export function resetFilterTags() {
 export function fetchSavedFilters() {
     return {
         type: GET_SAVE_FILTERS,
-        payload: axios.get("/prodex/api/filters").then(response => response.data)
+        payload: axios.get('/prodex/api/product-offers/broadcasted/datagrid/saved-filters').then(response => response.data)
     }
 }
 
@@ -135,5 +210,6 @@ export function saveSaveFilter(inputs) {
         payload: axios.post("/prodex/api/filters", inputs)
     }
 }
+
 
 

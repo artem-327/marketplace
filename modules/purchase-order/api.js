@@ -19,6 +19,6 @@ export const getShippingQuotes = (countryId, zip) => api.get('/prodex/api/shipme
 export const getRegions = (search) => api.get('/prodex/api/regions', { params: { search: search } }).then(response => response.data.regions)
 export const getRegionDetail = (id) => api.get(`/prodex/api/countries/?regionId=${id}`).then(response => response.data)
 export const getStates = (search) => api.get(`/prodex/api/countries`, { params: { search: search } }).then(response => response.data)
-export const getProvinces = ({ countryId }) => api.get(`/prodex/api/provinces/search/?countryId=${countryId}`).then(response => response.data)
+export const getProvinces = ({ countryId }) => api.get(`/prodex/api/provinces/country/${countryId}`).then(response => response.data)
 export const getStateDetail = (id) => api.get(`/prodex/api/companies/?entityId=${id}&entityType=country`).then(response => response.data)
 export const getBranches = () => api.get('/prodex/api/branches').then(response => response.data)

@@ -10,7 +10,7 @@ import ComboBoxRedux from '../../ComboBox/ComboBoxRedux'
 import RemoteComboBoxRedux from '../../ComboBox/RemoteComboBoxRedux'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Icon, Input, Checkbox } from 'semantic-ui-react';
-
+import { debounce } from 'lodash'
 
 class FilterGroup extends Component {
 
@@ -37,6 +37,10 @@ class FilterGroup extends Component {
     }
   }
 
+  handleChange = debounce((input, data) => {
+    input.search(data)
+  })
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.isOpen !== this.state.isOpen) this.setState({ isOpen: nextProps.isOpen })
   }
@@ -60,7 +64,13 @@ class FilterGroup extends Component {
                         defaultMessage={input.label}
                       />
                     </label>
-                  } component={Checkbox} model={input.model} id={input.model} value={false} onChange={(e) => {e.target.value = e.target.checked ? true : false}} />
+                  }
+                    component={Checkbox}
+                    model={input.model}
+                    id={input.model}
+                    // value={false}
+                  //  onChange={(e) => { e.target.value = e.target.checked ? true : false }} 
+                  />
                 </div>
               )
             }
@@ -88,12 +98,18 @@ class FilterGroup extends Component {
             case 'dropdown': {
               return (
                 <div key={index} className='filter-input-dropdown'>
-                  <label className='input-label' htmlFor={input.model}>{input.label}</label>
+                  <label className='input-label' htmlFor={input.model}>
+                    <FormattedMessage
+                      id={'filter.' + input.label.split(' ').join('')}
+                      defaultMessage={input.label}
+                    />
+                  </label>
                   <DropdownRedux
+                    clearable={true}
+                    selection={true}
                     dispatch={this.props.dispatch}
                     model={input.model}
-                    opns={input.data}
-                    currentValue={input.filterValue}
+                    options={input.data}
                   />
                 </div>
               )
@@ -120,6 +136,7 @@ class FilterGroup extends Component {
               )
             }
             case 'search': {
+              console.log('seasrched products', this.props.searchedProducts)
               return (
                 <div key={index} className='filter-input-dropdown'>
                   <label
@@ -130,13 +147,28 @@ class FilterGroup extends Component {
                       defaultMessage={input.label + '1'}
                     />
                   </label>
-                  <RemoteComboBoxRedux
+                  <Control
+                    onChange={(e, { value }) => { if (value && value.length > 2) this.handleChange(input, value) }}
+                    component={Input}
+                    type={input.type}
+                    model={input.model}
+                    list='searched-products'
+                    id={input.model}
+                    placeholder={input.placeholder} />
+                  {
+                    this.props.searchedProducts && (
+                      <datalist id='searched-products'>
+                        {this.props.searchedProducts.map((product) => <option value={product.name} label={product.casName} />)}
+                      </datalist>
+                    )
+                  }
+                  {/* <RemoteComboBoxRedux
                     dispatch={this.props.dispatch}
                     model={input.model}
                     placeholder={input.placeholder}
                     items={input.data}
                     api={(text) => text.length > 2 && input.search(text)}
-                  />
+                  /> */}
                 </div>
               )
             }
@@ -151,10 +183,11 @@ class FilterGroup extends Component {
                       defaultMessage={input.label + '1'}
                     />
                   </label>
-                  <DatepickerRedux
+                  <Input type='date' />
+                  {/* <DatepickerRedux
                     dispatch={this.props.dispatch}
                     model={input.model}
-                  />
+                  /> */}
                 </div>
               )
             }
@@ -263,7 +296,7 @@ class FilterGroup extends Component {
           className='header'
           onClick={() => this.props.onOpen(!this.state.isOpen)}>
           <div className='dropdown-icon'>
-            <Icon name={isOpen ? 'chevron up' : 'chevron down'} color={isOpen ? 'blue' : 'black'} />
+            <Icon name={isOpen ? 'chevron down' : 'chevron right'} color={isOpen ? 'blue' : 'black'} />
           </div>
           <FormattedMessage
             id={'filter.' + this.props.header}

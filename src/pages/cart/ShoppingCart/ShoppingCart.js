@@ -70,8 +70,8 @@ export default class ShoppingCart extends Component {
     const headerTitle = <FormattedMessage id='cart.shoppingCartHeader' defaultMessage={`Items (${itemsNumber})`} values={{ number: itemsNumber }} />
 
     return (
-      <div className='app-inner-main'>
-        <div className='header-top'>
+      <div className='app-inner-main flex stretched'>
+        <div className='header-top' style={{padding: '0 32px', zIndex: 10, backgroundColor: '#FFF'}}>
           <Container fluid>
             <Menu secondary>
               <Menu.Item header>
@@ -93,7 +93,7 @@ export default class ShoppingCart extends Component {
             </Menu>
           </Container>
         </div>
-        <div className='shopping-cart'>
+        <div className='shopping-cart flex stretched' style={{overflow: 'auto'}}>
           <div className='shopping-cart-body'>
             <div className='shopping-cart-items'>
               <header><h2>{headerTitle}</h2></header>

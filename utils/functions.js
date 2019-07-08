@@ -16,4 +16,28 @@ export const transformRequestOptions = params => {
 }
 
 
+export const uniqueArrayByKey = (array, key) => {
+    let unique = []
 
+    if (!array[0] || !array[0][key]) {
+        console.error(`Array does not contain key: ${key}`)
+        return array
+    }
+
+    for (let i = 0; i < array.length; i++) {
+        let exists = false
+        for (let j = 0; j < unique.length; j++) {
+            if (unique[j][key] === array[i][key]) exists = true
+        }
+        if (!exists) unique.push(array[i])
+    }
+
+    return unique
+}
+
+export const generateToastMarkup = (header, content) => (
+    <div>
+        <strong>{header}</strong>
+        <div>{content}</div>
+    </div>
+)

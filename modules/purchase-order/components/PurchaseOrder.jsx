@@ -22,8 +22,9 @@ import '../styles/PurchaseOrder.scss'
 
 
 const RelaxedGrid = styled(Grid)`
-  margin-top 1.5rem !important;
+  padding-top 1.5rem !important;
   padding-bottom: 50px !important;
+  overflow: auto;
 `
 
 
@@ -103,15 +104,15 @@ class PurchaseOrder extends Component {
     const { dispatch, postNewDeliveryAddress, updateDeliveryAddress } = this.props
     let { cart, deliveryAddresses, payments, cartIsFetching, shippingQuotes, shipping } = this.props
 
-
     if (cartIsFetching) return <Spinner />
+    if (cart.cartItems.length === 0) Router.push('/cart')
 
     let currency = cart.cartItems[0].productOffer.price.currency.code
 
     return (
-      <div className="app-inner-main">
-        <div className="header-top">
-          <Container fluid>
+      <div className="app-inner-main flex stretched">
+        <div className="header-top" style={{zIndex: 10, backgroundColor: '#FFF'}}>
+          <Container fluid style={{padding: '0 32px'}}>
             <Menu secondary>
               <Menu.Item header>
                 <Header as='h1' size='medium'>

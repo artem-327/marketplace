@@ -4,10 +4,13 @@ import { withRouter } from 'next/router'
 import { Container, Menu, Image, Dropdown } from 'semantic-ui-react'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/inventory.png'
-import ErrorsHandler from '~/src/utils/errorsHandler'
+// import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
 import PopUp from '~/src/components/PopUp'
-import ErrorMessage from './message/ErrorMessage'
+import { Messages } from '~/modules/messages'
+import { connect } from 'react-redux'
+
+import { takeOverCompanyFinish } from '~/modules/admin/actions'
 
 const TopMenu = styled(Menu)`
   background-color: #33373e !important;
@@ -23,11 +26,10 @@ const MainContainer = styled(Container)`
   top: 0; right: 0; bottom: 0; left: 0;
 `
 const ContentContainer = styled(Container)`
-  padding: 0 20px;
+  /* padding: 0 20px; */
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  overflow: auto;
 `
 const FlexContainer = styled.div`
   position: fixed;
@@ -41,13 +43,13 @@ const LogoImage = styled(Image)`
   height: 23.78px;
 `
 
-const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
+const MenuLink = withRouter(({ router: { pathname }, to, children, }) => (
   <Link prefetch href={to}>
     <Menu.Item as='a' active={pathname === to}>{children}</Menu.Item>
   </Link>
 ))
 
-const Layout = ({ children, router: { pathname }, title = 'Echo exchange' }) => (
+const Layout = ({ children, router: { pathname }, title = 'Echo exchange', identity, takeOverCompanyFinish }) => (
   <MainContainer fluid>
     <PopUp />
     <Head>
@@ -58,11 +60,15 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange' }) => 
       <TopMenuContainer fluid>
         <LogoImage src={Logo} />
 
-        <NavigationMenu />
+        <NavigationMenu identity={identity} />
 
         <Menu.Menu position='right' className='black'>
           <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
             <Dropdown.Menu>
+              <Dropdown.Item as={MenuLink} to='/profile'>My Profile</Dropdown.Item>
+              {identity && identity.isAdmin &&
+                <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()} >Return to Admin</Dropdown.Item>
+              }
               <Dropdown.Item as={MenuLink} to='/auth/logout'>Logout</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
@@ -71,15 +77,24 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange' }) => 
 
 
     </TopMenu>
-    
+
     <FlexContainer>
-      <ErrorMessage />
+      <TopMenuContainer fluid>
+        <Messages />
+      </TopMenuContainer>
       <ContentContainer fluid className='page-wrapper flex stretched'>
         {children}
       </ContentContainer>
     </FlexContainer>
 
   </MainContainer>
+
 )
 
-export default withRouter(Layout)
+const mapDispatchToProps = {
+  takeOverCompanyFinish
+}
+
+const mapStateToProps = state => ({ identity: state.auth.identity })
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Layout))

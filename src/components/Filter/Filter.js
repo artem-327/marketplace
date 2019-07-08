@@ -1,4 +1,4 @@
-import { Form } from 'react-redux-form'
+import { Form, Control } from 'react-redux-form'
 import './filter.scss'
 
 import FilterGroup from './components/FilterGroup'
@@ -8,9 +8,12 @@ import { filterNonEmptyAttributes } from "../../utils/functions"
 import SavedFilters from "./components/SavedFilters/SavedFilters"
 import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { checkToken } from "../../utils/auth"
 
-import { Segment, Accordion, Button, Grid, Sidebar, GridRow, GridColumn } from 'semantic-ui-react'
+import { Segment, Accordion, Button, Grid, Sidebar, GridRow, GridColumn, Header, Input, Checkbox } from 'semantic-ui-react'
+
+import { operators } from './constants'
+import Axios from 'axios';
+
 
 const FlexContent = styled.div`
   flex: 1;
@@ -22,9 +25,47 @@ const RelaxedSegment = styled(Segment)`
   margin: 0 !important;
 `
 
+const RelaxedRow = styled(GridRow)`
+  padding-bottom: 0px !important;
+  padding-top: 6px !important;
+`
+
+
 const GrayRow = styled(GridRow)`
   background-color: #ededed;
 `
+
+
+
+const datagridValues = {
+  search: { getFilter: (values) => ({ operator: operators.LIKE, path: 'ProductOffer.product.productName', values }) },
+  qntylb: { getFilter: (values) => ({ operator: operators.GREATER_THAN_OR_EQUAL_TO, path: 'ProductOffer.quantity', values }) },
+  qntyub: { getFilter: (values) => ({ operator: operators.LESS_THAN_OR_EQUAL_TO, path: 'ProductOffer.quantity', values }) },
+  prclb: { getFilter: (values) => ({ operator: operators.GREATER_THAN_OR_EQUAL_TO, path: 'ProductOffer.pricingPrice', values }) },
+  prcub: { getFilter: (values) => ({ operator: operators.LESS_THAN_OR_EQUAL_TO, path: 'ProductOffer.pricingPrice', values }) },
+}
+// ProductOffer.product.packagingType.id
+// { name: 'search',  },
+// { name: 'qntylb', filter: (values) => ({ operator: GREATER_THAN_OR_EQUAL_TO, path: 'ProductOffer.Quantity', values }) },
+// { name: 'qntyub', filter: (values) => ({ operator: LESS_THAN_OR_EQUAL_TO, path: 'ProductOffer.Quantity', values }) }
+
+
+
+
+
+// 
+
+
+
+
+
+
+
+
+
+
+
+
 
 class Filter extends Component {
 
@@ -35,16 +76,125 @@ class Filter extends Component {
       saveFilter: false,
       filterSwitch: true,
       filterName: "",
-      loaded: false
+      loaded: false,
+      saving: false,
+      checkboxes: {
+        automaticallyApply: true,
+        notifications: false
+      }
     }
   }
 
 
+  handleSubmit(inputs) {
+    // let filter = Object.assign({}, inputs,
+    //   { pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
+    //   { cndt: Object.entries(inputs.cndt || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
+    //   { grade: Object.entries(inputs.grade || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
+    //   { frm: Object.entries(inputs.frm || {}).filter(([key, value]) => value === 'true').map(([key]) => key) })
+
+    let datagridFilter = {
+      filters: []
+    }
+
+    Object.keys(inputs)
+      .forEach((key, i) => {
+        if (inputs[key]) {
+          try {
+            let filter = datagridValues[key].getFilter(inputs[key])
+            if (!(filter.values instanceof Array)) filter.values = [filter.values]  // We need values to be an array
+
+            datagridFilter.filters.push(filter)
+          } catch (err) {
+            console.error(`Key: ${key} is not defined in datagridValues. \n ${err}`)
+          }
+        }
+      })
+
+    console.log({ datagridFilter })
+    Axios.post('/prodex/api/product-offers/own/datagrid', datagridFilter)
+      .then((response) => console.log('OK!', response.data))
+      .catch((err) => console.log('err', err))
+    // this.props.filterFunc(params)
+
+    // let filterTags = []
+    // for (let tag in params) filterTags.push({ name: tag, value: params[tag] })
+    // this.props.addFilterTag(filterTags)
+    // this.props.toggleFilter()
+    // this.switchFilter(true)
+  }
+
+
+  notificationsMarkup = () => {
+    let { intl } = this.props
+    let { formatMessage } = intl
+    return (
+      <>
+        <GridRow>
+          <GridColumn computer={7}>
+            <Checkbox
+              name='email'
+              checked={this.state.checkboxes.email}
+              onChange={this.handleCheckboxChange}
+              label={formatMessage({ id: 'filter.notifications.email', defaultMessage: 'Email Notifications:' })} />
+          </GridColumn>
+          {
+            this.state.checkboxes.email && (
+              <GridColumn computer={9}>
+                <Control
+                  fluid
+                  component={Input}
+                  type='text'
+                  model={'.email'}
+                  id={'.email'}
+                  placeholder={'Email'} />
+              </GridColumn>
+            )
+          }
+        </GridRow>
+
+        <GridRow>
+          <GridColumn computer={7}>
+            <Checkbox
+              name='phone'
+              checked={this.state.checkboxes.phone}
+              onChange={this.handleCheckboxChange}
+              label={formatMessage({ id: 'filter.notifications.mobile', defaultMessage: 'Mobile Notifications:' })} />
+          </GridColumn>
+          {
+            this.state.checkboxes.phone && (
+              <GridColumn computer={9}>
+                <Control
+                  fluid
+                  component={Input}
+                  type='text'
+                  model={'.phone'}
+                  id={'.phone'}
+                  placeholder={'Phone Number'} />
+              </GridColumn>
+            )
+          }
+        </GridRow>
+
+        <GridRow>
+          <GridColumn>
+            <Checkbox
+              name='system'
+              checked={this.state.checkboxes.system}
+              onChange={this.handleCheckboxChange}
+              label={formatMessage({ id: 'filter.notifications.system', defaultMessage: 'System Notifications:' })} />
+          </GridColumn>
+        </GridRow>
+
+      </>
+    )
+  }
+
+
   getContent = () => {
+    console.log('filterData', this.props.filterData)
     return (
       <div>
-
-
         <FilterGroup className="filterGroup"
           header='order'
           isVisible={!!this.props.orderId}
@@ -65,6 +215,7 @@ class Filter extends Component {
           isOpen={this.props.filterGroupStatus.orderDate}
           onOpen={(value) => { this.props.toggleFilterGroup('orderDate', value) }}
           split
+          dispatch={this.props.dispatch}
           inputs={[
             {
               label: 'orderFrom',
@@ -106,7 +257,7 @@ class Filter extends Component {
             }
           ]} />
         <FilterGroup className="filterGroup"
-          header='orderStatus'
+          header='status'
           isVisible={!!this.props.orderStatus}
           data={this.props.filterData}
           isOpen={this.props.filterGroupStatus.orderStatus}
@@ -118,14 +269,14 @@ class Filter extends Component {
               model: '.status',
               type: 'dropdown',
               data: [
-                { id: 'All', name: 'All' },
-                { id: 'Pending', name: 'Pending' },
-                { id: 'In Transit', name: 'In Transit' },
-                { id: 'Review', name: 'Review' },
-                { id: 'Credit', name: 'Credit' },
-                { id: 'Completed', name: 'Completed' },
-                { id: 'Returned', name: 'Returned' },
-                { id: 'Declined', name: 'Declined' }
+                { key: 0, text: 'All', value: 'All' },
+                { key: 1, text: 'Pending', value: 'Pending' },
+                { key: 2, text: 'In Transit', value: 'In Transit' },
+                { key: 3, text: 'Review', value: 'Review' },
+                { key: 4, text: 'Credit', value: 'Credit' },
+                { key: 5, text: 'Completed', value: 'Completed' },
+                { key: 6, text: 'Returned', value: 'Returned' },
+                { key: 7, text: 'Declined', value: 'Declined' }
               ],
               filterValue: this.props.orderStatus && this.props.orderStatus.filterValue ? this.props.orderStatus.filterValue : null
             }
@@ -135,12 +286,16 @@ class Filter extends Component {
           isVisible={!!this.props.chemicalName}
           data={this.props.filterData}
           isOpen={this.props.filterGroupStatus.chemName}
+          searchedProducts={this.props.searchedProducts}
           onOpen={(value) => { this.props.toggleFilterGroup('chemName', value) }}
           inputs={[
             {
               label: 'ChemicalNameCAS',
               model: '.search',
-              type: 'text',
+              type: 'search',
+              placeholder: '',
+              search: this.props.searchProducts,
+              data: this.props.searchedProducts
             }
           ]} />
         <FilterGroup className="filterGroup"
@@ -298,6 +453,7 @@ class Filter extends Component {
           inputs={[
             {
               label: 'From',
+              something: 'spicy',
               model: '.agelb',
               type: 'date',
             },
@@ -333,26 +489,8 @@ class Filter extends Component {
     )
   }
 
-  handleSubmit(inputs) {
-    if (checkToken(this.props)) return
-
-    let filter = Object.assign({}, inputs,
-      { pckgs: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
-      { cndt: Object.entries(inputs.cndt || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
-      { grade: Object.entries(inputs.grade || {}).filter(([key, value]) => value === 'true').map(([key]) => key) },
-      { frm: Object.entries(inputs.frm || {}).filter(([key, value]) => value === 'true').map(([key]) => key) })
-
-    let params = filterNonEmptyAttributes(filter)
-    this.props.filterFunc(params)
-    let filterTags = []
-    for (let tag in params) filterTags.push({ name: tag, value: params[tag] })
-    this.props.addFilterTag(filterTags)
-    this.props.toggleFilter()
-    this.switchFilter(true)
-  }
 
   handleReset(e) {
-    if (checkToken(this.props)) return
     e.preventDefault()
     this.props.resetForm('forms.filter')
     this.props.filterFunc({})
@@ -388,7 +526,14 @@ class Filter extends Component {
     this.setState({ filterSwitch: value })
   }
 
-  saveFilters() {
+  handleCheckboxChange = (e, { name }) => {
+    let { checkboxes } = this.state
+    checkboxes[name] = !checkboxes[name]
+    this.setState({ checkboxes })
+  }
+
+  saveFilters = () => {
+    this.setState({ saveFilter: false, saving: true })
     let inputs = this.props.filterData
     let filter = Object.assign({}, inputs,
       { containers: Object.entries(inputs.pckgs || {}).filter(([key, value]) => value).map(([key]) => key) },
@@ -401,168 +546,231 @@ class Filter extends Component {
       { priceTo: (inputs.prcub || "") },
       { chemicalName: (inputs.search || "") }
     )
-    this.props.saveSaveFilter(filter).then(() => this.setState({ saveFilter: true }))
+    this.props.saveSaveFilter(filter).finally(() => this.setState({ saveFilter: true, saving: false }))
   }
 
   render() {
     if (!this.state.loaded) return null
 
-    let saveFilter = this.state.saveFilter ?
-      <span
-        className="savedButton"
-        onClick={() => this.saveFilters()}>
-        <FormattedMessage
-          id='filter.saved'
-          defaultMessage='Saved'
-        />
-      </span>
-      :
-      <span
-        className="saveButton"
-        onClick={() => this.saveFilters()}>
-        <FormattedMessage
-          id='global.save'
-          defaultMessage='Save'
-        />
-      </span>
+    // let saveFilter = this.state.saveFilter ?
+    //   <span
+    //     className="savedButton"
+    //     onClick={() => this.saveFilters()}>
+    //     <FormattedMessage
+    //       id='filter.saved'
+    //       defaultMessage='Saved'
+    //     />
+    //   </span>
+    //   :
+    //   <span
+    //     className="saveButton"
+    //     onClick={() => this.saveFilters()}>
+    //     <FormattedMessage
+    //       id='global.save'
+    //       defaultMessage='Save'
+    //     />
+    //   </span>
+
+    let { intl } = this.props
+    let { formatMessage } = intl
 
     return (
-        <Sidebar
-          onHide={(event) => {
-            // If we clicked on filter icon, prevent duplicate calls of action toggleFilter
-            if (event !== null && !event.target.className.includes('submenu-filter')) {
-              this.props.toggleFilter(false)
-            }
-          }}
-          visible={this.state.isOpen} className='filter flex'
-          width='very wide' direction='right' animation='overlay'>
+      <Sidebar
+        onHide={(event) => {
+          // If we clicked on filter icon, prevent duplicate calls of action toggleFilter
+          if (event !== null && !event.target.className.includes('submenu-filter')) {
+            this.props.toggleFilter(false)
+          }
+        }}
+        visible={this.state.isOpen} className='filter flex'
+        width='very wide' direction='right' animation='overlay'>
 
-          <FlexContent>
-            <div className="filter-switch">
-              <Button attached="left" onClick={() => this.switchFilter(true)} primary={this.state.filterSwitch}>
-                <FormattedMessage
-                  id='filter.setFilters'
-                  defaultMessage='SET FILTERS'
-                />
-              </Button>
+        <FlexContent>
+          <div className="filter-switch">
+            <Button attached={this.props.savingFilters ? 'left' : ''} onClick={() => this.switchFilter(true)} primary={this.state.filterSwitch}>
+              <FormattedMessage
+                id='filter.setFilters'
+                defaultMessage='SET FILTERS'
+              />
+            </Button>
+            {this.props.savingFilters ? (
               <Button attached="right" onClick={() => this.switchFilter(false)} primary={!this.state.filterSwitch}>
                 <FormattedMessage
                   id='filter.savedFilter'
                   defaultMessage='SAVED FILTERS'
                 />
               </Button>
-            </div>
-            {this.state.filterSwitch ?
-              <Form
-                id="filter-form"
-                model="forms.filter"
-                onSubmit={(val) => this.handleSubmit(val)}>
+            ) : ''}
+          </div>
+          {this.state.filterSwitch ?
+            <Form
+              id="filter-form"
+              model="forms.filter"
+              onSubmit={(val) => this.handleSubmit(val)}>
 
-                <Accordion>
-
-
-                  {this.getContent()}
-                  <div className="save-filter">
-                    <div className="header">
-                      <FormattedMessage
-                        id='filter.saveFilter'
-                        defaultMessage='Save Filter'
-                      />
-                    </div>
-                    <div className='filter-input-text'>
-                      <label className="input-label">
-                        <FormattedMessage
-                          id='filter.enterFilterName'
-                          defaultMessage='Enter Filter Name'
-                        />
-                      </label>
-                      <React.Fragment>
-                        <input
-                          type="text"
-                          onChange={(e) => this.changeFilterName(e)}
-                          placeholder={this.props.intl.formatMessage({
-                            id: 'filter.setFilterName',
-                            defaultMessage: 'Set Filter Name'
-                          })}
-                          className="input"
-                          value={this.state.filterName} />
-                        {saveFilter}
-                      </React.Fragment>
-                    </div>
-                  </div>
-                </Accordion>
-              </Form>
-              :
-              <SavedFilters
-                fetchSavedFilters={this.props.fetchSavedFilters}
-                deleteSaveFilter={(id) => this.deleteSaveFilter(id)}
-                fillFilter={(inputs) => this.props.fillFilter(inputs)}
-                filterFunc={(inputs) => this.handleSubmit(inputs)}
-                saveFilters={this.props.saveFilters}
-              />
-            }
-          </FlexContent>
-
-          <RelaxedSegment basic>
-            <Grid>
-              <GrayRow columns={2}>
-                <GridColumn>
-                  <Button
-                    fluid
-                    floated='right'
-                    size='large'
-                    color='grey'
-                    onClick={(e) => { this.handleReset(e) }}>
-                    <FormattedMessage
-                      id='filter.clearFilter'
-                      defaultMessage='Clear Filter'
-                    />
-                  </Button>
-                </GridColumn>
-
-                <GridColumn>
-                  <Button primary
-                          fluid
-                          floated='right'
-                          size='large'
-                          onClick={(e) => {
-                            document.getElementById('filter-form').submit()
-                          }}
-                  >
-                    <FormattedMessage
-                      id='global.apply'
-                      defaultMessage='Apply'
-                    />
-                  </Button>
-                </GridColumn>
-              </GrayRow>
-            </Grid>
+              <Accordion>
 
 
-          </RelaxedSegment>
-          {/* <div className="filterBottom">
-          <Container textAlign='right' style={{ marginTop: '24px' }}>
-            <Button
-              size='large'
-              color='grey'
-              onClick={(e) => { this.handleReset(e) }}>
-              <FormattedMessage
-                id='filter.clearFilter'
-                defaultMessage='Clear Filter'
-              />
-            </Button>
-            <Button primary
-              size='large'>
-              <FormattedMessage
-                id='global.apply'
-                defaultMessage='Apply'
-              />
-            </Button>
-          </Container>
-        </div> */}
+                {this.getContent()}
+                {this.props.savingFilters ? (
+                  <Segment basic>
+                    <Grid verticalAlign='middle'>
+                      <GridRow>
+                        <GridColumn>
+                          <Header><FormattedMessage id='filter.saveFilter' defaultMessage='Save Filter' /></Header>
+                        </GridColumn>
+                      </GridRow>
 
-        </Sidebar>
-  
+                      <RelaxedRow>
+                        <GridColumn>
+                          <label> <FormattedMessage id='filter.enterFilterName' defaultMessage='Enter Filter Name' /></label>
+                        </GridColumn>
+                      </RelaxedRow>
+                      <GridRow>
+                        <GridColumn computer={12}>
+                          <Input
+                            size='large'
+                            fluid
+                            value={this.state.filterName}
+                            placeholder={formatMessage({ id: 'filter.setFilterName', defaultMessage: 'Set Filter Name' })}
+                            onChange={(e) => this.changeFilterName(e)} />
+                        </GridColumn>
+                        <GridColumn>
+                          <Button
+                            as='span'
+                            size='large'
+                            onClick={this.saveFilters}
+                            basic={!this.state.saveFilter}
+                            primary={this.state.saveFilter}
+                            positive={!this.state.saveFilter}
+                            loading={this.state.saving}>
+                            <FormattedMessage id={this.state.saveFilter ? 'filter.saved' : 'global.save'} />
+                          </Button>
+                        </GridColumn>
+                      </GridRow>
+                      <GridRow>
+                        <GridColumn>
+                          <Checkbox
+                            label={formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}
+                            onChange={this.handleCheckboxChange}
+                            name='automaticallyApply'
+                            checked={this.state.checkboxes.automaticallyApply} />
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow>
+                        <GridColumn>
+                          <Checkbox
+                            name='notifications'
+                            label={formatMessage({ id: 'filter.notifications', defaultMessage: 'Notifications' })}
+                            onChange={this.handleCheckboxChange}
+                            checked={this.state.checkboxes.notifications} />
+                        </GridColumn>
+                      </GridRow>
+
+                      {this.state.checkboxes.notifications && this.notificationsMarkup()}
+
+                    </Grid>
+                  </Segment>
+                  // <div className="save-filter">
+                  //   <div className="header">
+                  //     <FormattedMessage
+                  //       id='filter.saveFilter'
+                  //       defaultMessage='Save Filter'
+                  //     />
+                  //   </div>
+                  //   <div className='filter-input-text'>
+                  //     <label className="input-label">
+                  //       <FormattedMessage
+                  //         id='filter.enterFilterName'
+                  //         defaultMessage='Enter Filter Name'
+                  //       />
+                  //     </label>
+                  //     <React.Fragment>
+                  //       <input
+                  //         type="text"
+                  //         onChange={(e) => this.changeFilterName(e)}
+                  //         placeholder={this.props.intl.formatMessage({
+                  //           id: 'filter.setFilterName',
+                  //           defaultMessage: 'Set Filter Name'
+                  //         })}
+                  //         className="input"
+                  //         value={this.state.filterName} />
+                  //       {/* {saveFilter} */}
+
+                  //       <Button
+                  //         style={{ marginLeft: '20px' }}
+                  //         as='span'
+                  //         size='large'
+                  //         onClick={this.saveFilters}
+                  //         basic={!this.state.saveFilter}
+                  //         primary={this.state.saveFilter}
+                  //         positive={!this.state.saveFilter}
+                  //         loading={this.state.saving}>
+                  //         <FormattedMessage id={this.state.saveFilter ? 'filter.saved' : 'global.save'} />
+                  //       </Button>
+
+                  //     </React.Fragment>
+
+
+                  //   </div>
+
+                  // </div>
+                ) : null}
+              </Accordion>
+            </Form>
+            :
+            <SavedFilters
+              fetching={this.props.savedFiltersFetching}
+              fetchSavedFilters={this.props.fetchSavedFilters}
+              deleteSaveFilter={(id) => this.deleteSaveFilter(id)}
+              fillFilter={(inputs) => this.props.fillFilter(inputs)}
+              filterFunc={(inputs) => this.handleSubmit(inputs)}
+              saveFilters={this.props.saveFilters}
+              getSavedFilters={this.props.getSavedFilters}
+            />
+          }
+        </FlexContent>
+
+        <RelaxedSegment basic>
+          <Grid>
+            <GrayRow columns={2}>
+              <GridColumn>
+                <Button
+                  fluid
+                  floated='right'
+                  size='large'
+                  color='grey'
+                  onClick={(e) => { this.handleReset(e) }}>
+                  <FormattedMessage
+                    id='filter.clearFilter'
+                    defaultMessage='Clear Filter'
+                  />
+                </Button>
+              </GridColumn>
+
+              <GridColumn>
+                <Button primary
+                  fluid
+                  floated='right'
+                  size='large'
+                  onClick={(e) => {
+                    document.getElementById('filter-form').submit()
+                  }}
+                >
+                  <FormattedMessage
+                    id='global.apply'
+                    defaultMessage='Apply'
+                  />
+                </Button>
+              </GridColumn>
+            </GrayRow>
+          </Grid>
+
+
+        </RelaxedSegment>
+      </Sidebar>
+
     )
   }
 }

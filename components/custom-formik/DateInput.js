@@ -6,11 +6,16 @@ import {getFieldError, setFieldValue} from './helpers'
 
 import {DateInput} from 'semantic-ui-calendar-react'
 
+
 class FormikInput extends Component {
   constructor(props) {
     super(props)
     const {id, name} = props
     this.id = id || `field_input_${name}`
+  }
+
+  handleRef = (r) => {
+    r && r.inputNode.setAttribute("autocomplete", "off")
   }
 
   render() {
@@ -32,19 +37,18 @@ class FormikInput extends Component {
         validate={validate}
         render={({field, form}) => {
           const error = getFieldError(field, form)
-
           return (
             <Form.Field error={!!error} {...fieldProps}>
               {!!label && <label htmlFor={this.id}>{label}</label>}
 
               {/* <InputRef inputRef={inputRef}> */}
-
                 <DateInput
                   closable
                   id={this.id}
                   name={name}
                   {...safeInputProps}
                   value={field.value}
+                  animation="none"
                   onChange={(e, {name, value}) => {
                     setFieldValue(form, name, value, false)
                     Promise.resolve().then(() => {
@@ -53,6 +57,7 @@ class FormikInput extends Component {
                   }}
                   onBlur={form.handleBlur}
                   dateFormat='YYYY-MM-DD'
+                  ref={this.handleRef}
                 />
               {/* </InputRef> */}
 

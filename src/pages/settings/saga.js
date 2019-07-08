@@ -154,17 +154,13 @@ function* getProductCatalogWorker() {
     const productCatalog = yield call(api.getProductsCatalog)
     const productPacTypes = yield call(api.getProductTypes)
     const units = yield call(api.getUnitsType)
-    const hazardClasses = yield call(api.getHazardClasses)
-    const packagingGroups = yield call(api.getPackagingGroups)
 
     yield put({
       type: AT.GET_PRODUCTS_CATALOG_DATA_SUCCESS,
       payload: {
         products: productCatalog,
         productsTypes: productPacTypes,
-        units: units.data,
-        hazardClasses: hazardClasses.data,
-        packagingGroups: packagingGroups.data
+        units: units.data
       }
     })
   } catch (e) {
@@ -191,13 +187,21 @@ function* getStoredCSV({ payload }) {
   }
 }
 
+function* getCSVMapProductOffer() {
+  try {
+    const data = yield call(api.getCSVMapProductOffer)
+    yield put({ type: AT.GET_CSV_MAP_PRODUCT_OFFER_SUCCESS, data })
+  } catch (e) {
+    yield console.log("error:", e)
+  }
+}
+
 function* postNewUserWorker({ payload }) {
   try {
     const dataBody = {
       email: payload.email,
-      name: payload.name,
-      //firstname: payload.firstName,
-      //lastname: payload.lastName,
+      firstname: payload.firstName,
+      lastname: payload.lastName,
       middlename: payload.middleName,
       homeBranch: payload.homeBranchId,
       password: "123"
@@ -277,20 +281,12 @@ function* postNewBankAccountWorker({ payload }) {
 function* postNewProductWorker({ payload }) {
   try {
     const productData = {
-      casProduct: payload.casProduct ? payload.casProduct.id : null,
-      description: payload.description,
-      freightClass: payload.freightClass ? payload.freightClass : null,
-      hazardClasses: payload.hazardClass ? [payload.hazardClass] : null,
-      hazardous: payload.hazardous,
-      nmfcNumber: parseInt(payload.nmfcNumber),
+      casProduct: payload.casProduct,
       packagingSize: payload.packagingSize,
       packagingType: payload.packageID,
       packagingUnit: payload.unitID,
-      packagingGroup: payload.packagingGroup ? payload.packagingGroup : null,
       productCode: payload.productNumber,
-      productName: payload.productName,
-      stackable: payload.stackable,
-      unNumber: payload.unNumber ? payload.unNumber : null
+      productName: payload.productName
     }
     yield call(api.postNewProduct, productData)
     yield put({ type: AT.GET_WAREHOUSES_DATA })
@@ -314,6 +310,23 @@ function* postImportProductCSV({ payload, id }) {
   try {
     const data = yield call(api.postImportProductCSV, payload, id)
     yield put({ type: AT.POST_CSV_IMPORT_PRODUCTS_SUCCESS, data })
+  } catch (e) {
+    yield console.log("error:", e)
+  }
+}
+
+function* postImportProductOfferCSV({ payload, id }) {
+  try {
+    const data = yield call(api.postImportProductOfferCSV, payload, id)
+    yield put({ type: AT.POST_CSV_IMPORT_PRODUCTS_OFFER_SUCCESS, data })
+  } catch (e) {
+    yield console.log("error:", e)
+  }
+}
+
+function* postCSVMapProductOffer({ payload }) {
+  try {
+    yield call(api.postCSVMapProductOffer, payload)
   } catch (e) {
     yield console.log("error:", e)
   }
@@ -415,20 +428,13 @@ function* putProductEditPopup({ payload }) {
   try {
     const id = payload.id
     const updateProduct = {
-      casProduct: payload.casProduct.id,
-      description: payload.description,
-      freightClass: payload.freightClass ? payload.freightClass : null,
-      hazardClasses: payload.hazardClass ? [payload.hazardClass] : null,
-      hazardous: payload.hazardous,
-      nmfcNumber: parseInt(payload.nmfcNumber),
+      casProduct: payload.casProduct,
       packagingSize: payload.packagingSize,
       packagingType: payload.packageID,
-      packagingGroup: payload.packagingGroup ? payload.packagingGroup : null,
       productCode: payload.productNumber,
       productName: payload.productName,
       packagingUnit: payload.unitID,
-      stackable: payload.stackable,
-      unNumber: payload.unNumber ? payload.unNumber : null
+      unNumber: payload.unNumber
     }
     yield call(api.putProduct, id, updateProduct)
     yield put({ type: AT.GET_WAREHOUSES_DATA })
@@ -470,7 +476,10 @@ function* closeImportPopup({}) {
   yield put({ type: AT.GET_PRODUCTS_CATALOG_DATA })
 }
 
-function* closeImportPopupCancel({}) {
+function* closeImportPopupCancel({ payload }) {
+  if (payload) {
+    yield call(api.deleteTemporaryFile, payload)
+  }
   yield put({ type: AT.CLOSE_IMPORT_POPUP_SUCCESS })
 }
 
@@ -536,6 +545,7 @@ export default function* settingsSaga() {
     getProductsWithRequiredParamWorker
   )
   yield takeEvery(AT.GET_STORED_CSV, getStoredCSV)
+  yield takeEvery(AT.GET_CSV_MAP_PRODUCT_OFFER, getCSVMapProductOffer)
 
   yield takeEvery(AT.POST_NEW_USER_REQUEST, postNewUserWorker)
   yield takeEvery(AT.POST_NEW_WAREHOUSE_REQUEST, postNewWarehouseWorker)
@@ -544,6 +554,8 @@ export default function* settingsSaga() {
   yield takeEvery(AT.POST_NEW_PRODUCT_REQUEST, postNewProductWorker)
   yield takeEvery(AT.POST_UPLOAD_CSV_FILE, postUploadCSVFile)
   yield takeEvery(AT.POST_CSV_IMPORT_PRODUCTS, postImportProductCSV)
+  yield takeEvery(AT.POST_CSV_IMPORT_PRODUCTS_OFFER, postImportProductOfferCSV)
+  yield takeEvery(AT.POST_CSV_MAP_PRODUCT_OFFER, postCSVMapProductOffer)
 
   yield takeEvery(AT.HANDLE_SUBMIT_USER_EDIT_POPUP, putUserWorker)
 

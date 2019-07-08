@@ -13,23 +13,24 @@ import { fetchProductAge, fetchProductConditions, fetchProductForms, fetchPackag
 import { fetchWarehouseDistances } from '../../modules/location'
 import { resetForm } from '../../utils/functions'
 import { actions } from "react-redux-form"
-
+import { getBroadcastedFilters } from '~/modules/marketplace/actions'
 
 function mapStateToProps(store) {
   return {
-    isOpen: store.filter.isOpen,
-    packagingTypes: store.products.packagingTypes,
+    isOpen: store.oldFilter.isOpen,
     warehouseDistances: store.location.warehouseDistances,
-    filterGroupStatus: store.filter.filterGroup,
-    filterData: store.forms.filter,
+    filterGroupStatus: store.oldFilter.filterGroup,
+    filterData: store.forms.oldFilter,
+    packagingTypes: store.products.packagingTypes,
     productConditions: store.products.productConditions,
     productForms: store.products.productForms,
     productAge: store.products.productAge,
-    productAgeModel: store.forms.filter.productAge,
     productGradeTypes: store.products.productGrade,
-    productAgeCustomModel: store.forms.filter.productAgeCustom,
     location: store.products.location,
-    saveFilters: store.filter.saveFilters,
+    productAgeModel: store.forms.oldFilter.productAge,
+    productAgeCustomModel: store.forms.oldFilter.productAgeCustom,
+    saveFilters: store.oldFilter.saveFilters,
+    savedFiltersFetching: store.oldFilter.savedFiltersFetching
   }
 }
 

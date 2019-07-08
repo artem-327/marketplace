@@ -66,10 +66,18 @@ export default class ShippingQuote extends Component {
 
     if (!shippingQuotes || shippingQuotes.length === 0) {
       return (
-        <FormattedMessage
-          id='cart.nothing'
-          defaultMessage='Nothing to show'
-        />
+        <GridColumn computer={16}>
+          <Grid>
+            <GridRow>
+              <GridColumn computer={16}>
+                <FormattedMessage
+                  id='cart.nothing'
+                  defaultMessage='Nothing to show'
+                />
+              </GridColumn>
+            </GridRow>
+          </Grid>
+        </GridColumn>
       )
     }
 

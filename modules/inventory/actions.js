@@ -1,18 +1,23 @@
 import * as AT from './action-types'
 import * as api from './api'
 
+import { toggleFilter, filterSaving, filterApplying } from '~/modules/filter/actions'
+
 export function initProductOfferEdit(id) {
 
-  return dispatch => {
-    
-      dispatch(getProductConditions())
-      dispatch(getProductForms())
-      dispatch(getProductGrades())
-      dispatch(getWarehouses())
+  return async dispatch => {
 
-      if (id) {
-        dispatch(getProductOffer(id))
-      }
+    dispatch(getDocumentTypes())
+    dispatch(getProductConditions())
+    dispatch(getProductForms())
+    dispatch(getProductGrades())
+    dispatch(getWarehouses())
+    await dispatch(searchManufacturers('', 200))
+    await dispatch(searchOrigins('', 200))
+
+    if (id) {
+      dispatch(getProductOffer(id))
+    }
   }
 }
 
@@ -63,6 +68,7 @@ export function addProductOffer(values, poId = false) {
       }
     }) : null,
     manufacturer: values.manufacturer ? values.manufacturer : null,
+    minimum: parseInt(values.minimum),
     origin: values.origin ? values.origin : null,
     pkgAmount: parseInt(values.pkgAmount),
     price: values.pricing && values.pricing.price ? parseInt(values.pricing.price) : parseInt(values.pricingTiers[0].price),
@@ -77,7 +83,8 @@ export function addProductOffer(values, poId = false) {
     productCode: values.productCode ? values.productCode : null,
     productCondition: values.productCondition ? parseInt(values.productCondition) : null,
     productForm: values.productForm ? parseInt(values.productForm) : null,
-    productGrades: values.productGrade ? [{id: values.productGrade}] : null,
+    productGrades: values.productGrade ? [{ id: values.productGrade }] : null,
+    splits: parseInt(values.splits),
     tradeName: values.tradeName ? values.tradeName : null,
     validityDate: values.validityDate ? values.validityDate + "T00:00:00Z" : null,
     warehouse: parseInt(values.warehouse)
@@ -142,6 +149,13 @@ export function findProducts(search) {
   }
 }
 
+export function getDocumentTypes() {
+  return {
+    type: AT.INVENTORY_GET_DOCUMENT_TYPES,
+    payload: api.getDocumentTypes()
+  }
+}
+
 export function getProductConditions() {
   return {
     type: AT.INVENTORY_GET_PRODUCT_CONDITIONS,
@@ -163,132 +177,19 @@ export function getProductGrades() {
   }
 }
 
-export function getMyProductOffers(filters = {}) {
-  let filtersReady = {
-    filters: Object.keys(filters).reduce((filtered, option) => {
-      switch(option) {
-        case 'product':
-          filtered.push({
-            operator: 'EQUALS',
-            path: 'ProductOffer.product.id',
-            values: filters[option]
-          })
-          break
-        case 'qntylb':
-          filtered.push({
-            operator: 'GREATER_THAN_OR_EQUAL_TO',
-            path: 'ProductOffer.quantity',
-            values: [filters[option]]
-          })
-          break
-        case 'qntyub':
-          filtered.push({
-            operator: 'LESS_THAN_OR_EQUAL_TO',
-            path: 'ProductOffer.quantity',
-            values: [filters[option]]
-          })
-          break
-        case 'prclb':
-            filtered.push({
-              operator: 'GREATER_THAN_OR_EQUAL_TO',
-              path: 'ProductOffer.pricingPrice',
-              values: [filters[option]]
-            })
-          break
-        case 'prcub':
-          filtered.push({
-            operator: 'LESS_THAN_OR_EQUAL_TO',
-            path: 'ProductOffer.pricingPrice',
-            values: [filters[option]]
-          })
-          break
-        case 'pckgs':
-          if (filters[option].length) {
-            filtered.push({
-              operator: 'EQUALS',
-              path: 'ProductOffer.product.packagingType.id',
-              values: filters[option]
-            })
-          }
-          break
-        // TODO: activate search by grades when BE is ready
-        /*case 'grade':
-          filtered.push({
-            operator: 'CONTAINS',
-            path: 'ProductOffer.productGrades',
-            values: filters[option]
-          })
-          break*/
-        case 'cndt':
-          if (filters[option].length) {
-            filtered.push({
-              operator: 'EQUALS',
-              path: 'ProductOffer.productCondition.id',
-              values: filters[option]
-            })
-          }
-          break
-        case 'frm':
-          if (filters[option].length) {
-            filtered.push({
-              operator: 'EQUALS',
-              path: 'ProductOffer.productForm.id',
-              values: filters[option]
-            })
-          }
-          break
-        case 'agelb':
-          filtered.push({
-            operator: 'GREATER_THAN_OR_EQUAL_TO',
-            path: 'ProductOffer.expirationDate',
-            values: [filters[option] + 'T00:00:00Z']
-          })
-          break
-        case 'ageub':
-          filtered.push({
-            operator: 'LESS_THAN_OR_EQUAL_TO',
-            path: 'ProductOffer.expirationDate',
-            values: [filters[option] + 'T00:00:00Z']
-          })
-          break
-        case 'assaylb':
-          filtered.push({
-            operator: 'GREATER_THAN_OR_EQUAL_TO',
-            path: 'ProductOffer.assayMin',
-            values: [filters[option]]
-          })
-          break
-        case 'assayub':
-          filtered.push({
-            operator: 'LESS_THAN_OR_EQUAL_TO',
-            path: 'ProductOffer.assayMax',
-            values: [filters[option]]
-          })
-          break
-      }
-      return filtered
-    }, [])
-  }
-
-  return {
-    type: AT.INVENTORY_GET_MY_PRODUCT_OFFERS,
-    payload: api.getMyProductOffers(filtersReady)
-  }
-}
-
 export function getProductOffer(productOfferId) {
   return {
     type: AT.INVENTORY_GET_PRODUCT_OFFER,
     async payload() {
-      const {data} = await api.getProductOffer(productOfferId)
+      const { data } = await api.getProductOffer(productOfferId)
 
       return {
         data: {
           ...data,
           searchedProducts: [{
-            text: data.product.casProduct.casIndexName,
+            text: (data.product.productCode ? data.product.productCode + ' ' : '') + data.product.productName,
             value: data.product,
-            key: data.product.casProduct.id
+            key: data.product.id
           }],
           searchedProductsLoading: false
         }
@@ -299,8 +200,14 @@ export function getProductOffer(productOfferId) {
 
 export function deleteProductOffer(productOfferId) {
   return async dispatch => {
-    await api.deleteProductOffer(productOfferId)
-    dispatch(getMyProductOffers())
+    dispatch({
+      type: AT.INVENTORY_DELETE_PRODUCT_OFFER,
+      async payload() {
+        await api.deleteProductOffer(productOfferId)
+        return productOfferId
+      }
+    })
+    // dispatch(getMyProductOffers())
   }
 }
 
@@ -322,6 +229,20 @@ export function loadFile(attachment) {
   return {
     type: AT.INVENTORY_LOAD_FILE,
     payload: api.loadFile(attachment)
+  }
+}
+
+export function patchBroadcast(broadcasted, productOfferId, oldStatus) {
+  return {
+    type: AT.INVENTORY_PATCH_BROADCAST,
+    async payload() {
+      const response = await api.patchBroadcast(broadcasted, productOfferId)
+
+      return {
+        broadcasted: response.status === 200 ? response.data : oldStatus,
+        productOfferId
+      }
+    }
   }
 }
 
@@ -350,11 +271,11 @@ export function resetForm(initValues) {
   }
 }
 
-export function searchManufacturers(text) {
+export function searchManufacturers(text, limit = false) {
   return {
     type: AT.INVENTORY_SEARCH_MANUFACTURERS,
     async payload() {
-      const response = await api.searchManufacturers(text)
+      const response = await api.searchManufacturers(text, limit)
 
       return {
         data: response.data ? response.data.map(p => ({
@@ -367,11 +288,11 @@ export function searchManufacturers(text) {
   }
 }
 
-export function searchOrigins(text) {
+export function searchOrigins(text, limit = false) {
   return {
     type: AT.INVENTORY_SEARCH_ORIGINS,
     async payload() {
-      const response = await api.searchOrigins(text)
+      const response = await api.searchOrigins(text, limit)
 
       return {
         data: response.data ? response.data.map(p => ({
@@ -384,34 +305,39 @@ export function searchOrigins(text) {
   }
 }
 
-export function searchProducts(text) {
-  return {
-    type: AT.INVENTORY_SEARCH_PRODUCTS,
-    async payload() {
-      const response = await api.searchProducts(text)
+// export function searchProducts(text) {
+//   return {
+//     type: AT.INVENTORY_SEARCH_PRODUCTS,
+//     async payload() {
+//       const response = await api.searchProducts(text)
 
-      return {
-        data: response.data ? response.data.map(p => ({
-          text: p.casProduct ? p.casProduct.casIndexName : p.productName + ' (Unmapped)',
-          value: p,
-          key: p.casProduct ? p.casProduct.id : ''
-        })) : []
-      }
-    }
-  }
-}
+//       return {
+//         data: response.data ? response.data.map(p => ({
+//           text: p.casProduct ? p.casProduct.casIndexName : p.productName + ' (Unmapped)',
+//           value: p,
+//           key: p.casProduct ? p.casProduct.id : '',
+//           id: p ? p.id : '',
+//           name: p.productName + (p.productCode ? ' (' + p.productCode + ')' : ''),
+//           casName: p.casProduct ? p.casProduct.casIndexName + ' (' + p.casProduct.casNumber + ')' : ''
+//         })) : []
+//       }
+//     }
+//   }
+// }
+
+
 
 export function uploadDocuments(isLot, productOfferId, fileIds) {
   let files = []
-  (function loop(j) {
-    if (j < fileIds.length) new Promise((resolve, reject) => {
-      files[j] = fileIds[j].id.id
-      linkAttachment(isLot, productOfferId, files[j]).then(() => {
-        resolve()
-      }).catch(e => {
-        // TODO: solve errors
-        reject()
-      })
-    }).then(loop.bind(null, j+1))
-  })(0)
+    (function loop(j) {
+      if (j < fileIds.length) new Promise((resolve, reject) => {
+        files[j] = fileIds[j].id.id
+        linkAttachment(isLot, productOfferId, files[j]).then(() => {
+          resolve()
+        }).catch(e => {
+          // TODO: solve errors
+          reject()
+        })
+      }).then(loop.bind(null, j + 1))
+    })(0)
 }

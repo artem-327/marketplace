@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 import * as api from './api'
-import {setAuth, unsetAuth, authorize} from '~/utils/auth'
+import { setAuth, unsetAuth, authorize } from '~/utils/auth'
 import Router from 'next/router'
 
 export function getIdentity() {
@@ -36,7 +36,7 @@ export function login(username, password) {
         identity,
         preferredCurrency
       }
-    } 
+    }
   }
 }
 
@@ -49,13 +49,20 @@ export function getVersion() {
 
 export function logout(isAutologout) {
   if (!isAutologout) unsetAuth()
-  
+
   Router.push('/auth/login')
 
   return {
     type: AT.LOGOUT
   }
 }
+
+export const resetPasswordRequest = email => ({
+  type: AT.RESET_PASSWORD_REQUEST, payload: async () => {
+    await api.resetPasswordRequest(email)
+    Router.push('/password/reset')
+  }
+})
 
 // export function registration(email, password, firstName, middleName, lastName) {
 //   return {
@@ -73,3 +80,6 @@ export function logout(isAutologout) {
 //     })
 //   }
 // }
+
+
+export const updateIdentity = (payload) => ({ type: AT.UPDATE_IDENTITY, payload })

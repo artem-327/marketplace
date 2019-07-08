@@ -1,47 +1,49 @@
-import api from '~/api'
+import api from "~/api"
 
 export default {
-  getUsers: () => api.get('/prodex/api/users').then(response => response.data),
-  getRoles: () => api.get('/prodex/api/roles').then(response => response.data),
+  getUsers: () => api.get("/prodex/api/users").then(response => response.data),
+  getRoles: () => api.get("/prodex/api/roles").then(response => response.data),
   getCurrentUser: () =>
-    api.get('/prodex/api/users/me').then(response => response.data),
+    api.get("/prodex/api/users/me").then(response => response.data),
   getWarehouses: () =>
-    api.get('/prodex/api/branches/warehouses').then(response => response.data),
+    api.get("/prodex/api/branches/warehouses").then(response => response.data),
   getBranches: () =>
-    api.get('/prodex/api/branches').then(response => response.data),
+    api.get("/prodex/api/branches").then(response => response.data),
   getCreditCardsData: () =>
-    api.get('/prodex/api/payments/cards').then(response => response.data),
+    api.get("/prodex/api/payments/cards").then(response => response.data),
   getBankAccountsData: () =>
     api
-      .get('/prodex/api/payments/bank-accounts')
+      .get("/prodex/api/payments/bank-accounts")
       .then(response => response.data),
   getProductsCatalog: () =>
-    api.get('/prodex/api/products/search').then(response => response.data),
+    api.get("/prodex/api/products/search").then(response => response.data),
   getProductTypes: () =>
-    api.get('/prodex/api/packaging-types').then(response => response.data),
-  getUnitsType: () => api.get('/prodex/api/units'),
-  getHazardClasses: () => api.get('/prodex/api/hazard-classes'),
-  getPackagingGroups: () => api.get('/prodex/api/packaging-groups'),
+    api.get("/prodex/api/packaging-types").then(response => response.data),
+  getUnitsType: () => api.get("/prodex/api/units"),
   getProductsWithRequiredParamPar: char =>
     api
       .get(`/prodex/api/product-templates?search=${char}`)
       .then(response => response.data),
   getCountry: () =>
-    api.get('/prodex/api/countries').then(response => response.data),
+    api.get("/prodex/api/countries").then(response => response.data),
   getCurrencies: () =>
-    api.get('/prodex/api/currencies').then(response => response.data),
+    api.get("/prodex/api/currencies").then(response => response.data),
   getStoredCSV: body => {
     return api
       .get(`/prodex/api/imports/read-stored-csv?temporaryFileId=${body}`)
       .then(response => response.data)
   },
-
-  postNewUser: body => api.post('/prodex/api/users', body),
-  postNewWarehouse: body => api.post('/prodex/api/branches/', body),
-  postNewCreditCard: body => api.post('/prodex/api/payments/cards/add', body),
+  getCSVMapProductOffer: () => {
+    return api
+      .get("/prodex/api/imports/product-offer-maps")
+      .then(response => response.data)
+  },
+  postNewUser: body => api.post("/prodex/api/users", body),
+  postNewWarehouse: body => api.post("/prodex/api/branches/", body),
+  postNewCreditCard: body => api.post("/prodex/api/payments/cards/add", body),
   postNewBankAccount: body =>
-    api.post('/prodex/api/payments/bank-accounts/add', body),
-  postNewProduct: body => api.post('/prodex/api/products', body),
+    api.post("/prodex/api/payments/bank-accounts/add", body),
+  postNewProduct: body => api.post("/prodex/api/products", body),
   postImportProductCSV: (body, id) => {
     return api
       .post(
@@ -50,13 +52,23 @@ export default {
       )
       .then(response => response.data)
   },
+  postImportProductOfferCSV: (body, id) => {
+    return api
+      .post(
+        `/prodex/api/imports/csv-import-product-offers?temporaryFileId=${id}`,
+        body
+      )
+      .then(response => response.data)
+  },
+  postCSVMapProductOffer: data =>
+    api.post("/prodex/api/imports/product-offer-maps", data),
   uploadCSVFile: body => {
     const formData = new FormData()
-    formData.append('file', body)
+    formData.append("file", body)
     return api
-      .post('/prodex/api/imports/temporary-files', formData, {
+      .post("/prodex/api/imports/temporary-files", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          "Content-Type": "multipart/form-data"
         }
       })
       .then(response => response.data)
@@ -67,34 +79,16 @@ export default {
   patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body),
   patchUserRole: (id, body) =>
     api.patch(`/prodex/api/users/id/${id}/add-roles`, body),
-  putProduct: (id, body) => api.put(`/prodex/api/products/id/${id}`, body),
-  searchCasProduct: (pattern) => api.get(`/prodex/api/cas-products/search?limit=5&pattern=${pattern}`),
-  searchUnNumber: (pattern) => api.get(`/prodex/api/un-numbers/search?limit=5&pattern=${pattern}`),
+  putProduct: (id, body) => api.put(`/prodex/api/products/${id}`, body),
 
   deleteUser: userId => api.delete(`/prodex/api/users/id/${userId}`),
   deleteWarehouse: branchId => api.delete(`/prodex/api/branches/${branchId}`),
-  deleteProduct: branchId => api.delete(`/prodex/api/products/id/${branchId}`),
+  deleteProduct: branchId => api.delete(`/prodex/api/products/${branchId}`),
   deleteCreditCard: cardId =>
     api.delete(`/prodex/api/payments/cards/${cardId}`),
   deleteBankAccount: bankAccountId =>
     api.delete(`/prodex/api/payments/bank-accounts/${bankAccountId}`),
-
-  getDeliveryAddressesByStringRequest: async (value, limit=30) => {
-    return await api.get(`/prodex/api/delivery-addresses/search?limit=${limit}&pattern=${value}`)
-        .then(response => response.data)},
-  getDeliveryAddressesByFilterRequest: async (value) => {
-    return await api.post('/prodex/api/delivery-addresses/datagrid', value)
-      .then(response => response.data)},
-  deleteDeliveryAddresses: async (id) => {
-    await api.delete(`/prodex/api/delivery-addresses/id/${id}`)},
-  getCountries: async () => {return await api.get('/prodex/api/countries')
-    .then(response => response.data)},
-  //! ! will be added new BE endpoint
-  getProvinces: async (id) => {return await api.get(`/prodex/api/provinces/search?countryId=${id}`)
-    .then(response => response.data)},
-  createDeliveryAddress: async (value) => {
-    return await api.post('/prodex/api/delivery-addresses', value)},
-  updateDeliveryAddresses: async (id, value) => {
-    return await api.put(`/prodex/api/delivery-addresses/id/${id}`, value)},
-
+  deleteTemporaryFile: temporaryFileId => {
+    api.delete(`/prodex/api/imports/temporary-files/${temporaryFileId}`)
+  }
 }
