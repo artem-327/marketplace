@@ -54,6 +54,36 @@ const datagridConfig = {
       { operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] }
     ])
   },
+  'Conditions': {
+    url: '/prodex/api/product-conditions/datagrid',
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'ProductCondition.name', values: [`%${v}%`] }
+    ])
+  },
+  'Document Types': {
+    url: 'prodex/api/document-types/datagrid',
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'DocumentType.name', values: [`%${v}%`] }
+    ])
+  },
+  'Forms': {
+    url: '/prodex/api/product-forms/datagrid',
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'ProductForm.name', values: [`%${v}%`] }
+    ])
+  },
+  'Grades': {
+    url: '/prodex/api/product-grades/datagrid',
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'ProductGrade.name', values: [`%${v}%`] }
+    ])
+  },
+  'Manufacturers': {
+    url: '/prodex/api/manufacturers/datagrid',
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'Manufacturer.name', values: [`%${v}%`] }
+    ])
+  }
 }
 
 const editForms = {

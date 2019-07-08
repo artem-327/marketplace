@@ -121,12 +121,13 @@ export const config = {
   },
 
   'Manufacturers': {
+    tableName: 'admin_manufacturers',
     addEditText: 'Manufacturer',
     formattedMessageName: 'manufacturer',
     searchText: 'Search manufacturer by name',
     display: {
       columns: [
-        { name: 'name', title: 'Name' },
+        { name: 'name', title: 'Name', sortPath: 'Manufacturer.name' },
       ],
     },
     edit: [
@@ -169,12 +170,13 @@ export const config = {
   },
 
   'Grades': {
+    tableName: 'admin_grades',
     addEditText: 'Grade',
     formattedMessageName: 'grade',
     searchText: 'Search grade by name',
     display: {
       columns: [
-        { name: 'name', title: 'Name' },
+        { name: 'name', title: 'Name', sortPath: 'ProductGrade.name' },
       ],
     },
     edit: [
@@ -203,12 +205,13 @@ export const config = {
   },
 
   'Forms': {
+    tableName: 'admin_forms',
     addEditText: 'Form',
     formattedMessageName: 'form',
     searchText: 'Search form by name',
     display: {
       columns: [
-        { name: 'name', title: 'Name' },
+        { name: 'name', title: 'Name', sortPath: 'ProductForm.name' },
       ],
     },
     edit: [
@@ -237,12 +240,13 @@ export const config = {
   },
 
   'Conditions': {
+    tableName: 'admin_conditions',
     addEditText: 'Condition',
     formattedMessageName: 'condition',
     searchText: 'Search condition by name',
     display: {
       columns: [
-        { name: 'name', title: 'Name' },
+        { name: 'name', title: 'Name', sortPath: 'ProductCondition.name' },
       ],
     },
     edit: [
@@ -271,12 +275,13 @@ export const config = {
   },
 
   'Document Types': {
+    tableName: 'admin_document_types',
     addEditText: 'Document Type',
     formattedMessageName: 'documentType',
     searchText: 'Search document type by name',
     display: {
       columns: [
-        { name: 'name', title: 'Name' },
+        { name: 'name', title: 'Name', sortPath: 'DocumentType.name' },
       ],
     },
     edit: [

@@ -9,6 +9,7 @@ import {
   closeConfirmPopup,
   deleteConfirmation,
 } from '../../actions'
+import { withDatagrid } from '~/modules/datagrid'
 
 class DataTable extends Component {
   componentDidMount() {
@@ -20,18 +21,22 @@ class DataTable extends Component {
       config,
       loading,
       rows,
+      datagrid,
       filterValue,
       openEditPopup,
       deleteConfirmation
     } = this.props
 
+    const { tableName } = this.props.config
     const { columns } = this.props.config.display
 
     return (
       <React.Fragment>
         <ProdexTable
+          tableName={tableName}
+          {...datagrid.tableProps}
           filterValue={filterValue}
-          loading={loading}
+          loading={datagrid.loading || loading}
           columns={columns}
           rows={rows}
           rowActions={[
@@ -51,11 +56,11 @@ const mapDispatchToProps = {
   deleteConfirmation
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, {datagrid}) => {
   let cfg = state.admin.config[state.admin.currentTab]
   return {
     config: cfg,
-    rows: state.admin[cfg.api.get.dataName],
+    rows: datagrid.rows,
     filterValue: state.admin.filterValue,
     currentTab: state.admin.currentTab,
     loading: state.admin.loading,
@@ -64,4 +69,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DataTable)
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(DataTable))
