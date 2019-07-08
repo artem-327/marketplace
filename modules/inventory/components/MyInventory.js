@@ -9,6 +9,7 @@ import { Filter } from '~/modules/filter'
 
 import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
+import cn from 'classnames'
 
 class MyInventory extends Component {
   state = {
@@ -76,6 +77,7 @@ class MyInventory extends Component {
               trigger={
                 <Checkbox toggle={true}
                   defaultChecked={r.status.toLowerCase() === 'broadcasting'}
+                  className={cn({error: r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'})}
                   disabled={r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'}
                   onChange={(e, data) => {
                     e.preventDefault()

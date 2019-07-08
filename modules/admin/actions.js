@@ -373,7 +373,8 @@ export function updateCompany(id, formData) {
 
 		Datagrid.updateRow(id, () => response)
 
-		dispatch(updateIdentity(response))
+
+		// dispatch(updateIdentity(response))
 		dispatch(closePopup())
 		// dispatch(getCompanies())
 	}
