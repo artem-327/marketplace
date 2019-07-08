@@ -32,20 +32,20 @@ class Broadcast extends Component {
 
         if (v === 1) {
 
-          node.all(n => n.model[k] = 1)
-          node.getPath().forEach(n => {
-            const found = n.first(_n => !_n.hasChildren() && _n.model[k] !== 1)
-            n.model[k] = found ? 2 : 1
-          })
+          // node.all(n => n.model[k] = 1)
+          // node.getPath().forEach(n => {
+          //   const found = n.first(_n => !_n.hasChildren() && _n.model[k] !== 1)
+          //   n.model[k] = found ? 2 : 1
+          // })
           node.model[k] = 1
 
         } else if (v === 0) {
 
-          node.all(n => n.model[k] = 0)
-          node.getPath().forEach(n => {
-            const found = n.first(_n => !_n.hasChildren() && _n.model[k] === 1)
-            n.model[k] = found ? 2 : 0
-          })
+          // node.all(n => n.model[k] = 0)
+          // node.getPath().forEach(n => {
+          //   const found = n.first(_n => !_n.hasChildren() && _n.model[k] === 1)
+          //   n.model[k] = found ? 2 : 0
+          // })
           node.model[k] = 0
 
         }

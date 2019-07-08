@@ -10,7 +10,7 @@ export default class PriceControl extends Component {
     disabled: pt.bool
   }
 
-  defaultProps = {
+  static defaultProps = {
     disabled: false
   }
 
