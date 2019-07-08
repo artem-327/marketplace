@@ -75,14 +75,16 @@ class MyInventory extends Component {
           <div style={{ float: 'right' }}>
             <Popup id={r.id}
               trigger={
-                <Checkbox toggle={true}
+                <Checkbox 
+                  toggle
                   defaultChecked={r.status.toLowerCase() === 'broadcasting'}
                   className={cn({error: r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'})}
                   disabled={r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'}
                   onChange={(e, data) => {
                     e.preventDefault()
                     this.props.patchBroadcast(data.checked, r.id, r.status)
-                  }} />
+                  }} 
+                />
               }
               content={title}
             />
