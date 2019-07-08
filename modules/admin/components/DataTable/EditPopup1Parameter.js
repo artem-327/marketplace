@@ -46,21 +46,6 @@ class EditPopup1Parameter extends React.Component {
                             let data = {
                                 [config.edit[0].name]: values.val0.trim()
                             }
-                            try {
-                                await putEditedDataRequest(config, id, data)
-
-                                let formattedMsgId = `notifications.${config.formattedMessageName}Updated`
-
-                                toastManager.add(generateToastMarkup(
-                                    <FormattedMessage id={`${formattedMsgId}.header`} />,
-                                    <FormattedMessage id={`${formattedMsgId}.content`} values={{ name: values.val0 }} />
-                                ), { appearance: 'success' })
-                            }
-                            catch (e) { console.error(e) }
-                            finally {
-                                setSubmitting(false)
-                            }
-
 
                             try {
                                 await putEditedDataRequest(config, id, data)
