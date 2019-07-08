@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import { Sidebar, Accordion, Segment, GridRow, Icon, Popup } from 'semantic-ui-react'
+import { Sidebar, Accordion, Segment, GridRow, Icon, Popup, Dropdown } from 'semantic-ui-react'
 
-const popupWidth = 400;
+const popupWidth = 400
 
 export const FlexSidebar = styled(Sidebar)`
   display: flex;
@@ -39,7 +39,7 @@ export const Title = styled.div`
 `
 
 export const AccordionTitle = styled(Accordion.Title)`
-  margin: 15px 0 10px 0px !important;
+  margin: 5px 0 5px 0px !important;
   font-size: 18px !important;
   font-weight: bold;
   & > i {
@@ -131,4 +131,8 @@ export const WiderPopup = styled(Popup)`
 export const LessPaddedRow = styled(GridRow)`
   padding-top: 12px !important;
   padding-bottom: 12px !important;
+`
+
+export const BottomMargedDropdown = styled(Dropdown)`
+  margin-bottom: 15px;
 `
