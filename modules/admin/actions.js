@@ -224,6 +224,7 @@ export function postNewCasProductRequest(values, reloadFilter) {
 			type: AT.ADMIN_POST_NEW_CAS_PRODUCT,
 			payload: api.postNewCasProduct(values)
 		})
+		Datagrid.loadData()
 		dispatch(closePopup())
 		// Reload CAS Product list using filters
 		dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
@@ -232,11 +233,13 @@ export function postNewCasProductRequest(values, reloadFilter) {
 
 export function updateCasProductRequest(id, values, reloadFilter) {
 	return async dispatch => {
+		const editedCasProduct = await api.updateCasProduct(id, values)
 		await dispatch({
 			type: AT.ADMIN_UPDATE_CAS_PRODUCT,
-			payload: api.updateCasProduct(id, values)
+			payload: editedCasProduct
 		})
 		dispatch(closePopup())
+		Datagrid.updateRow(id, () => (editedCasProduct))
 		// Reload CAS Product list using filters
 		dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))
 	}
@@ -422,8 +425,15 @@ export const deleteCasProduct = id => ({ type: AT.ADMIN_CAS_DELETE_PRODUCT, payl
 
 export const deleteUnit = id => ({ type: AT.ADMIN_DELETE_UNIT, payload: api.deleteUnit(id) })
 
-export const deleteUnitOfPackaging = id => ({ type: AT.ADMIN_DELETE_UNIT_OF_PACKAGING, payload: api.deleteUnitOfPackaging(id) })
-
+export const deleteUnitOfPackaging = (id)  => {
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_DELETE_UNIT_OF_PACKAGING,
+			payload: api.deleteUnitOfPackaging(id)
+		})
+		Datagrid.removeRow(id)
+	}
+}
 
 export function getAddressSearchPrimaryBranch(body) {
 	return {
