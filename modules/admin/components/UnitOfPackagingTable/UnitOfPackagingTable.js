@@ -10,10 +10,10 @@ import {
   deleteUnitOfPackaging,
   getMeasureTypesDataRequest
 } from '../../actions'
+import { withDatagrid } from '~/modules/datagrid'
 
 class UnitOfPackagingTable extends Component {
   componentDidMount() {
-    this.props.getDataRequest(this.props.config)
     this.props.getMeasureTypesDataRequest()
   }
 
@@ -21,18 +21,22 @@ class UnitOfPackagingTable extends Component {
     const {
       loading,
       rows,
+      datagrid,
       filterValue,
       openEditPopup,
       deleteUnitOfPackaging,
     } = this.props
 
+    const { tableName } = this.props.config
     const { columns } = this.props.config.display
 
     return (
       <React.Fragment>
         <ProdexTable
+          tableName={tableName}
+          {...datagrid.tableProps}
           filterValue={filterValue}
-          loading={loading}
+          loading={datagrid.loading || loading}
           columns={columns}
           rows={rows}
           rowActions={[
@@ -54,19 +58,19 @@ const mapDispatchToProps = {
   getMeasureTypesDataRequest
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, { datagrid }) => {
   let cfg = state.admin.config[state.admin.currentTab]
   return {
     config: cfg,
-    rows: state.admin[cfg.api.get.dataName].map( d => {
+    rows: datagrid.rows.map((d => {
       return {
         id: d.id,
         name: d.name,
         nameAbbreviation: d.nameAbbreviation,
         measureType: d.measureType.name,
-        measureTypeId: d.measureType.id,
+        measureTypeId: d.measureType.id
       }
-    }),
+    })),
     filterValue: state.admin.filterValue,
     currentTab: state.admin.currentTab,
     loading: state.admin.loading,
@@ -75,4 +79,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UnitOfPackagingTable)
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(UnitOfPackagingTable))

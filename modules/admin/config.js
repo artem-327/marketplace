@@ -75,8 +75,8 @@ export const config = {
     searchText: 'Search unit of packaging by name or measure type',
     display: {
       columns: [
-        { name: 'name', title: 'Name' },
-        { name: 'measureType', title: 'Measure Type' },
+        { name: 'name', title: 'Name', sortPath: 'PackagingType.name' },
+        { name: 'measureType', title: 'Measure Type', sortPath: 'PackagingType.measureType.name' },
       ],
     },
     edit: [
