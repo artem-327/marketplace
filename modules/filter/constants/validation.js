@@ -1,6 +1,8 @@
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
 
+import { dateDropdownOptions } from './filter'
+
 
 export const initialValues = {
   search: [],
@@ -11,6 +13,8 @@ export const initialValues = {
   assayFrom: '',
   assayTo: '',
   name: '',
+  expiration: dateDropdownOptions[0].value,
+  mfg: dateDropdownOptions[0].value,
   checkboxes: {
     automaticallyApply: true,
     notifyMail: false,
@@ -25,25 +29,40 @@ export const initialValues = {
 
 const errorMessages = {
   minimum: (min) => <FormattedMessage id='validation.minimum' values={{ min }} />,
+  maximum: (max) => <FormattedMessage id='validation.maximum' values={{ max }} />,
   lessThan: (value) => <FormattedMessage id='validation.lessThan' values={{ value }} />,
   greaterThan: (value) => <FormattedMessage id='validation.greaterThan' values={{ value }} />
 }
 
-const comparationHelper = (fieldOne, fieldTwo, values, minimum = 1) => {
-  let minimumOne = Yup.number().min(minimum, errorMessages.minimum(minimum)).notRequired().nullable()
+const comparationHelper = (fieldOne, fieldTwo, values, options = {}) => {
+  let initialOptions = {
+    minimum: 1
+  }
+
+  let newOptions = {
+    ...initialOptions,
+    ...options
+  }
+
+  let defaultValidation = Yup.number().min(newOptions.minimum, errorMessages.minimum(newOptions.minimum))
+
+  if (newOptions.additionalValidation) defaultValidation = newOptions.additionalValidation(defaultValidation)
+
+
+  let validation = defaultValidation.notRequired().nullable()
 
   return {
     [fieldOne.propertyName]: Yup.lazy(() => {
       if (values[fieldTwo.propertyName]) {
-        return minimumOne.lessThan(values[fieldTwo.propertyName], errorMessages.lessThan(fieldOne.value))
+        return validation.lessThan(values[fieldTwo.propertyName], errorMessages.lessThan(fieldOne.value))
       }
-      return minimumOne
+      return validation
     }),
     [fieldTwo.propertyName]: Yup.lazy(() => {
       if (values[fieldOne.propertyName]) {
-        return minimumOne.moreThan(values[fieldOne.propertyName], errorMessages.greaterThan(fieldTwo.value))
+        return validation.moreThan(values[fieldOne.propertyName], errorMessages.greaterThan(fieldTwo.value))
       }
-      return minimumOne
+      return validation
     })
   }
 }
@@ -59,25 +78,21 @@ export const validationSchema = () => Yup.lazy(values => {
       ...comparationHelper(
         { propertyName: 'priceFrom', value: 'To Price' },
         { propertyName: 'priceTo', value: 'From Price' },
-        values, 0.01),
+        values, { minimum: 0.01 }),
 
       ...comparationHelper(
         { propertyName: 'assayFrom', value: 'Maximum' },
         { propertyName: 'assayTo', value: 'Minimum' },
-        values),
+        values, {
+          minimum: 0, additionalValidation: (validation) => {
+            return validation.max(100, errorMessages.maximum(100))
+          }
+        }),
 
-      dateFrom: Yup.lazy(() => {
-        if (values.dateTo) {
-          return Yup.date().max(values.dateTo, errorMessages.lessThan('Date To'))
-        }
-        return Yup.mixed().notRequired()
-      }),
-      dateTo: Yup.lazy(() => {
-        if (values.dateFrom) {
-          return Yup.date().min(values.dateFrom, errorMessages.greaterThan('Date From'))
-        }
-        return Yup.mixed().notRequired()
-      })
+      expirationFrom: Yup.number('number').moreThan(0, errorMessages.greaterThan(0)).notRequired(),
+      expirationTo: Yup.number('number').moreThan(0, errorMessages.greaterThan(0)).notRequired(),
+      mfgFrom: Yup.number('number').moreThan(0, errorMessages.greaterThan(0)).notRequired(),
+      mfgTo: Yup.number('number').moreThan(0, errorMessages.greaterThan(0)).notRequired()
     })
   )
 })
