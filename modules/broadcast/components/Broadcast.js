@@ -131,7 +131,7 @@ class Broadcast extends Component {
 
   render() {
     const { open, loading, treeData, filter, closeBroadcast, saveRules, id, mode, switchMode } = this.props
-    const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'branch' && n.model.broadcast === 1).length}/${treeData.all(n => n.model.type === 'branch').length}`
+    const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'branch' && n.getPath().filter(_n => _n.model.broadcast === 1).length > 0).length}/${treeData.all(n => n.model.type === 'branch').length}`
 
     return (
       <Modal open={open} onClose={closeBroadcast} centered={false}>

@@ -16,7 +16,7 @@ const initialState = {
 export default typeToReducer({
   [openBroadcast.pending]: (state, action) => {
     return {
-      ...state,
+      ...initialState,
       open: true,
       loading: true
     }
