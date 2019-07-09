@@ -102,7 +102,7 @@ export default {
       .then(response => response.data)
   },
   putWarehouse: (branchId, body) =>
-    api.put(`/prodex/api/branches/${branchId}`, body),
+    api.put(`/prodex/api/branches/${branchId}`, body).then((r) => r.data),
   // putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
   patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body),
   patchUserRole: (id, body) =>
@@ -139,9 +139,7 @@ export default {
   createDeliveryAddress: async (value) => {
     return await api.post('/prodex/api/delivery-addresses', value)
   },
-  updateDeliveryAddresses: async (id, value) => {
-    return await api.put(`/prodex/api/delivery-addresses/id/${id}`, value)
-  },
+  updateDeliveryAddresses: (id, value) => api.put(`/prodex/api/delivery-addresses/id/${id}`, value),
   dwollaInitiateVerification: async (id) => {
     return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify/initialize`)
   },

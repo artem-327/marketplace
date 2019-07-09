@@ -181,9 +181,6 @@ const mapStateToProps = (state, { datagrid }) => {
         unNumber: product.unNumber ? product.unNumber : null
       }
     }),
-    addedItem: state.settings.addedItem,
-    editedItem: state.settings.editedItem,
-    removedItem: state.settings.removedItem,
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,

@@ -98,11 +98,13 @@ export function openEditPopup(rows) {
 export function handlerSubmitUserEditPopup(payload, id) {
   return async dispatch => {
     removeEmpty(payload)
-    await dispatch({
+    const response = await api.patchUser(id, payload)
+    dispatch({
       type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
-      payload: api.patchUser(id, payload)
+      payload: response
     })
     //dispatch(getUsersDataRequest())
+    Datagrid.updateRow(id, () => response.data)
     dispatch(closePopup())
   }
 }
@@ -160,7 +162,14 @@ export const deleteUser = (id, name) => ({
   }
 })
 
-export const deleteBranch = (id) => ({ type: AT.DELETE_BRANCH, payload: api.deleteWarehouse(id) })
+export const deleteBranch = (id) => ({
+  type: AT.DELETE_BRANCH,
+  async payload() {
+    await api.deleteWarehouse(id)
+    Datagrid.removeRow(id)
+    return id
+  }
+})
 
 export const deleteProduct = (id, name) => ({
   type: AT.DELETE_PRODUCT,
@@ -171,7 +180,14 @@ export const deleteProduct = (id, name) => ({
   }
 })
 
-export const deleteBankAccount = (id) => ({ type: AT.DELETE_BANK_ACCOUNT, payload: api.deleteBankAccount(id) })
+export const deleteBankAccount = (id) => ({
+  type: AT.DELETE_BANK_ACCOUNT,
+  async payload() {
+    const response = await api.deleteBankAccount(id)
+    Datagrid.removeRow(id)
+    return response
+  }
+})
 
 export const deleteDeliveryAddress = (id) => ({
   type: AT.SETTINGS_DELETE_DELIVERY_ADDRESSES,
@@ -298,15 +314,12 @@ export function handlerSubmitWarehouseEditPopup(payload, id) {
       name: payload.name
     }
     removeEmpty(dataBody)
+    const response = await api.putWarehouse(id, dataBody)
     await dispatch({
       type: AT.PUT_WAREHOUSE_EDIT_POPUP,
-      payload: api.putWarehouse(id, dataBody)
+      payload: response
     })
-    if (payload.tab) {
-      dispatch(getBranchesDataRequest())
-    } else {
-      dispatch(getWarehousesDataRequest())
-    }
+    Datagrid.updateRow(id, () => response)
     dispatch(closePopup())
   }
 }
@@ -330,9 +343,10 @@ export function handleSubmitProductEditPopup(productData, id, reloadFilter) {
       unNumber: productData.unNumber ? productData.unNumber : null
     }
     removeEmpty(data)
-    await dispatch({
+    const response = await api.updateProduct(id, data)
+    dispatch({
       type: AT.SETTINGS_UPDATE_PRODUCT_CATALOG,
-      payload: api.updateProduct(id, data)
+      payload: response
     })
     if (productData.attachments && productData.attachments.length) {
       for (let i = 0; i < productData.attachments.length; i++) {
@@ -343,6 +357,7 @@ export function handleSubmitProductEditPopup(productData, id, reloadFilter) {
       }
     }
     dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
+    Datagrid.updateRow(id, () => response.data)
     dispatch(closePopup())
   }
 }
@@ -554,6 +569,7 @@ export function postNewUserRequest(payload) {
       payload: api.postNewUser(payload)
     })
     //dispatch(getUsersDataRequest())
+    Datagrid.loadData()
     dispatch(closePopup())
   }
 }
@@ -579,11 +595,7 @@ export function postNewWarehouseRequest(payload) {
       type: AT.POST_NEW_WAREHOUSE_REQUEST,
       payload: api.postNewWarehouse(dataBody)
     })
-    if (payload.tab) {
-      dispatch(getBranchesDataRequest())
-    } else {
-      dispatch(getWarehousesDataRequest())
-    }
+    Datagrid.loadData()
     dispatch(closePopup())
   }
 }
@@ -650,7 +662,8 @@ export function handleSubmitProductAddPopup(inputsValue, reloadFilter) {
         })
       }
     }
-    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
+    //dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
+    Datagrid.loadData()
     dispatch(closePopup())
   }
 }
@@ -660,6 +673,7 @@ export function postNewBankAccountRequest(payload) {
     type: AT.POST_NEW_BANK_ACCOUNT_REQUEST,
     async payload() {
       const { data } = await api.postNewBankAccount(payload)
+      Datagrid.loadData()
       return data
     }
   }
@@ -668,7 +682,10 @@ export function postNewBankAccountRequest(payload) {
 export function putBankAccountRequest(account, id) {
   return {  // ! ! missing in saga
     type: AT.PUT_BANK_ACCOUNT_EDIT_POPUP,
-    payload: account,
+    async payload() {
+      Datagrid.updateRow(id, () => account)
+      return account
+    },
     id
   }
 }
@@ -782,12 +799,14 @@ export function getDeliveryAddressesByFilterRequest(value) {
 
 export function updateDeliveryAddresses(id, value, reloadFilter) {
   return async dispatch => {
-    await dispatch({
+    const response = await api.updateDeliveryAddresses(id, value)
+    dispatch({
       type: AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES,
-      payload: api.updateDeliveryAddresses(id, value)
+      payload: response
     })
     dispatch(closePopup())
-    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
+    Datagrid.updateRow(id, () => response.data)
+    //dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
   }
 }
 
@@ -798,7 +817,8 @@ export function createDeliveryAddress(value, reloadFilter) {
       payload: api.createDeliveryAddress(value)
     })
     dispatch(closePopup())
-    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
+    Datagrid.loadData()
+    //dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
   }
 }
 

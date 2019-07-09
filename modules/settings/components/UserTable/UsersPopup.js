@@ -119,9 +119,9 @@ class UsersPopup extends React.Component {
 
     // necessary for Edit Roles
     this.props.roles.forEach(item => {
-      let flag = this.props.popupValues.allUserRoles.some(
+      let flag = this.props.popupValues ? this.props.popupValues.allUserRoles.some(
         role => role.id === item.id
-      )
+      ) : []
       initialFormValues[`checkBoxId_${item.id}`] = flag
     })
 

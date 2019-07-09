@@ -44,9 +44,11 @@ export default function reducer(state = initialState, action) {
     case AT.LOGIN_FULFILLED: {
       let accessRights = {}
 
-      ROLES_ENUM.forEach(role => {
-        accessRights[role.propertyName] = !!payload.identity.roles.find((el) => el.id === role.id)
-      })
+      if(payload.identity.roles) {
+        ROLES_ENUM.forEach(role => {
+          accessRights[role.propertyName] = !!payload.identity.roles.find((el) => el.id === role.id)
+        })
+      }
 
       return {
         ...state,
@@ -68,10 +70,11 @@ export default function reducer(state = initialState, action) {
 
     case AT.UPDATE_IDENTITY: {
       let accessRights = {}
-
-      ROLES_ENUM.forEach(role => {
-        accessRights[role.propertyName] = !!payload.roles.find((el) => el.id === role.id)
-      })
+      if(payload.roles) {
+        ROLES_ENUM.forEach(role => {
+          accessRights[role.propertyName] = !!payload.roles.find((el) => el.id === role.id)
+        })
+      }
       
       return {
         ...state,

@@ -55,7 +55,7 @@ const formValidation = Yup.object().shape({
     ssn: Yup.string().trim().min(3, 'Too short').required('Required'),
     // "status": "string"
   }),
-  controller: Yup.object().shape({
+  dwollaController: Yup.object().shape({
     address: Yup.object().shape({
       address1: Yup.string().trim().min(3, 'Enter at least 2 characters'),
       address2: Yup.string().trim().min(3, 'Enter at least 2 characters'),
@@ -128,14 +128,14 @@ class BankAccountsPopup extends React.Component {
               values.beneficialOwner.address.country += ''
               values.beneficialOwner.passport.country += ''
               values.beneficialOwner.address.stateProvinceRegion += ''
-              if(values.controller && values.controller.address && values.controller.address.country){
-                values.controller.address.country += ''
+              if(values.dwollaController && values.dwollaController.address && values.dwollaController.address.country){
+                values.dwollaController.address.country += ''
               }
-              if(values.controller && values.controller.passport && values.controller.passport.country){
-                values.controller.passport.country += ''
+              if(values.dwollaController && values.dwollaController.passport && values.dwollaController.passport.country){
+                values.dwollaController.passport.country += ''
               }
-              if(values.controller && values.controller.address && values.controller.address.stateProvinceRegion){
-                values.controller.address.stateProvinceRegion += ''
+              if(values.dwollaController && values.dwollaController.address && values.dwollaController.address.stateProvinceRegion){
+                values.dwollaController.address.stateProvinceRegion += ''
               }
 
               values.beneficialOwner.status = 'status'
@@ -190,34 +190,34 @@ class BankAccountsPopup extends React.Component {
               </Accordion.Title>
               <Accordion.Content active={accordionActive.controllerAddress}>
                 <FormGroup widths="equal">
-                  <Input label="Address 1" name="controller.address.address1" />
-                  <Input label="Address 2" name="controller.address.address2" />
-                  <Input label="Address 3" name="controller.address.address3" />
+                  <Input label="Address 1" name="dwollaController.address.address1" />
+                  <Input label="Address 2" name="dwollaController.address.address2" />
+                  <Input label="Address 3" name="dwollaController.address.address3" />
                 </FormGroup>
                 <FormGroup widths="equal">
-                  <Input label="City" name="controller.address.city" />
-                  <Input label="Postal Code" name="controller.address.postalCode" />
-                  <Dropdown label="Country" name="controller.address.country" options={countriesDropDown}
+                  <Input label="City" name="dwollaController.address.city" />
+                  <Input label="Postal Code" name="dwollaController.address.postalCode" />
+                  <Dropdown label="Country" name="dwollaController.address.country" options={countriesDropDown}
                       inputProps={{
                       search: true, onChange: (e, d) => {
                           this.handleCountry(e, d)
                       }
                   }} />
-                  <Dropdown label="Province" name="controller.address.stateProvinceRegion" options={provincesDropDown}
+                  <Dropdown label="Province" name="dwollaController.address.stateProvinceRegion" options={provincesDropDown}
                           inputProps={{search: true, disabled: !this.state.hasProvinces, clearable: true}} />
                 </FormGroup>
                 <FormGroup widths="equal">
-                    <Input label="First Name" name="controller.firstName" />
-                    <Input label="Last Name" name="controller.lastName" />
-                    <Dropdown label="Passport Country" name="controller.passport.country" options={countriesDropDown}/>
-                    <Input label="Passport Number" name="controller.passport.number" />
+                    <Input label="First Name" name="dwollaController.firstName" />
+                    <Input label="Last Name" name="dwollaController.lastName" />
+                    <Dropdown label="Passport Country" name="dwollaController.passport.country" options={countriesDropDown}/>
+                    <Input label="Passport Number" name="dwollaController.passport.number" />
                 </FormGroup>
                 <FormGroup widths="equal">
-                    <Input label="SSN" name="controller.ssn" />
-                    <Input label="Title" name="controller.title" />
+                    <Input label="SSN" name="dwollaController.ssn" />
+                    <Input label="Title" name="dwollaController.title" />
                 </FormGroup>
                 <FormGroup widths="equal">
-                  <Input label="Birth" name="controller.dateOfBirth" />
+                  <Input label="Birth" name="dwollaController.dateOfBirth" />
                 </FormGroup>
               </Accordion.Content>
             </Accordion>
