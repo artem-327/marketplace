@@ -64,8 +64,8 @@ export async function postNewRequest(config, values) {
   return data
 }
 
-export async function postNewDwollaAccount(values) {
-  const { data } = await api.post('/prodex/api/payments/dwolla/register', values)
+export async function postNewDwollaAccount(values, companyId) {
+  const { data } = await api.post(`/prodex/api/payments/dwolla/register/${companyId}`, values)
   return data
 }
 

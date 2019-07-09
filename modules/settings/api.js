@@ -139,9 +139,7 @@ export default {
   createDeliveryAddress: async (value) => {
     return await api.post('/prodex/api/delivery-addresses', value)
   },
-  updateDeliveryAddresses: async (id, value) => {
-    return await api.put(`/prodex/api/delivery-addresses/id/${id}`, value)
-  },
+  updateDeliveryAddresses: (id, value) => api.put(`/prodex/api/delivery-addresses/id/${id}`, value),
   dwollaInitiateVerification: async (id) => {
     return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify/initialize`)
   },

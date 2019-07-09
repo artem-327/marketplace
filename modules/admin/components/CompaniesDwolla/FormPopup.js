@@ -140,7 +140,7 @@ class AddNewPopupCasProducts extends React.Component {
         validateOnChange={false}
         validateOnBlur={false}
         onSubmit={(values, actions) => {
-          postDwollaAccount(values)
+          postDwollaAccount(values, popupValues.id)
           // actions.setSubmitting(false)
         }}
         onReset={closeRegisterDwollaAccount}

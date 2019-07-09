@@ -100,10 +100,10 @@ export function postNewRequest(config, values) {
 	}
 }
 
-export function postDwollaAccount(payload) {
+export function postDwollaAccount(values, companyId) {
 	return {
 		type: AT.ADMIN_CREATE_DWOLLA_ACCOUNT,
-		payload: api.postNewDwollaAccount(payload)
+		payload: api.postNewDwollaAccount(values, companyId)
 	}
 }
 

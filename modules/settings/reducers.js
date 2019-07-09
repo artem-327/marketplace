@@ -32,10 +32,6 @@ export const initialState = {
   currency: [],
   currentUser: null,
 
-  addedItem: {},
-  editedItem: {},
-  removedItem: {},
-
   tabsNames: defaultTabs,
   currentTab: defaultTabs[0],
 
@@ -558,30 +554,11 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.SETTINGS_POST_NEW_PRODUCT_REQUEST_FULFILLED:
-    case AT.POST_NEW_USER_REQUEST_FULFILLED: {
-      return {
-        ...state,
-        addedItem: action.payload.data
-      }
-    }
-
-    case AT.SETTINGS_UPDATE_PRODUCT_CATALOG_FULFILLED:
-    case AT.HANDLE_SUBMIT_USER_EDIT_POPUP_FULFILLED:
-    case AT.PUT_NEW_USER_ROLES_REQUEST_FULFILLED: {
-      return {
-        ...state,
-        editedItem: action.payload.data
-      }
-    }
-
-
     case AT.DELETE_PRODUCT_FULFILLED:
     case AT.DELETE_USER_FULFILLED: {
       return {
         ...state,
-        loading: false,
-        removedItem: { name: action.payload }
+        loading: false
       }
     }
 
