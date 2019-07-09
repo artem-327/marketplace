@@ -12,7 +12,8 @@ import RuleItem from './RuleItem'
 class Broadcast extends Component {
 
   state = {
-    filterSearch: ''
+    filterSearch: '',
+    tree: new TreeModel().parse({model: {rule:{}} })
   }
 
   constructor(props) {
@@ -22,59 +23,25 @@ class Broadcast extends Component {
   }
 
   componentWillReceiveProps(props) {
-    this.setState({ filterSearch: props.filter.search })
-  }
-
-  updateTreeSelection = (node, values) => {
-    const update = (node, values) => {
-      Object.keys(values).forEach(k => {
-        const v = values[k]
-
-        if (v === 1) {
-
-          node.all(n => n.model[k] = 1)
-          node.getPath().forEach(n => {
-            const found = n.first(_n => !_n.hasChildren() && _n.model[k] !== 1)
-            n.model[k] = found ? 2 : 1
-          })
-          node.model[k] = 1
-
-        } else if (v === 0) {
-
-          node.all(n => n.model[k] = 0)
-          node.getPath().forEach(n => {
-            const found = n.first(_n => !_n.hasChildren() && _n.model[k] === 1)
-            n.model[k] = found ? 2 : 0
-          })
-          node.model[k] = 0
-
-        }
-      })
-    }
-
-    update(node, values)
+    this.setState({ 
+      filterSearch: props.filter.search,
+      tree: this.getFilteredTree(props.treeData, props.filter)
+    })
   }
 
   handlePriceChange = () => {
-    const { updateLocalRules, treeData } = this.props
-
-    updateLocalRules(treeData.model)
+    this.setState({tree: this.state.tree})
   }
 
-  handleChange = (node, values) => {
-    const { updateLocalRules, treeData } = this.props
-
-    this.updateTreeSelection(node, values)
-
-    updateLocalRules(treeData.model)
+  handleChange = (node) => {
+    this.setState({tree: this.state.tree})
   }
 
   handleRowClick = (node) => {
-    const { updateLocalRules, treeData } = this.props
     node.model.expanded = !node.model.expanded
     if (!node.model.expanded) node.all(n => n.model.expanded = false)
-
-    updateLocalRules(treeData.model)
+    
+    this.setState({tree: this.state.tree})
   }
 
   handleSearchChange = (e, { name, value }) => {
@@ -84,14 +51,7 @@ class Broadcast extends Component {
   }
 
   handleFilterChange = (e, { name, value }) => {
-    const { updateFilter, updateLocalRules, filter, treeData } = this.props
-
-    if (name === 'search' && value.length > 0) {
-      treeData.all().forEach(n => n.model.expanded = true)
-      //updateLocalRules(treeData.model)
-    } else {
-      treeData.all().forEach(n => n.model.expanded = false)
-    }
+    const { updateFilter, filter } = this.props
 
     updateFilter({
       ...filter,
@@ -99,9 +59,7 @@ class Broadcast extends Component {
     })
   }
 
-  getFilteredTree = () => {
-    const { treeData, filter } = this.props
-
+  getFilteredTree = (treeData, filter) => {
     const fs = filter.search.toLowerCase()
 
     const searchFn = (n => {
@@ -122,45 +80,38 @@ class Broadcast extends Component {
     const searchParentFn = (n => n.first(i => i.model.type !== 'company' && searchFn(i)))
 
     const presets = {
-      region: () => ({
+      region: () => new TreeModel().parse({
         name: "By region",
-        type: treeData.model.type,
-        node: treeData,
+        rule: treeData.model,
         depth: 1,
         children: treeData.children.filter(n => searchParentFn(n)).map(n1 => ({
           name: n1.model.name,
-          type: n1.model.type,
-          node: n1,
+          rule: n1.model,
           depth: 2,
           children: n1.children.filter(n => searchFn(n) || searchParentFn(n)).map(n2 => ({
             name: n2.model.name,
-            type: n2.model.type,
-            node: n2,
+            rule: n2.model,
             depth: 3,
             children: n2.all(n => n.model.type === 'branch' && searchFn(n)).map(n3 => ({
               name: n3.model.name,
-              type: n3.model.type,
-              node: n3,
+              rule: n3.model,
               depth: 4,
               children: []
             }))
           }))
         }))
       }),
-      branch: () => ({
+      branch: () => new TreeModel().parse({
         name: "By company",
-        type: treeData.model.type,
-        node: treeData,
+        rule: treeData.model,
         depth: 1,
-        children: treeData.all(n => n.model.type === 'company').map(n1 => ({
+        children: _.uniqBy(treeData.all(n => n.model.type === 'company'), n => n.model.id).map(n1 => ({
           name: n1.model.name,
-          type: n1.model.type,
-          node: n1,
+          rule: n1.model,
           depth: 2,
-          children: n1.children.map(n2 => ({
+          children: treeData.all(n => n.model.type === 'branch' && n.parent.model.id === n1.model.id).map(n2 => ({
             name: n2.model.name,
-            type: n2.model.type,
-            node: n2,
+            rule: n2.model,
             depth: 3,
             children: []
           }))
@@ -168,13 +119,19 @@ class Broadcast extends Component {
       })
     }
 
+    let tree = presets[filter.category]()
 
-    return presets[filter.category]()
+    // expand when search is active
+    if (fs.length > 0) {
+      tree.walk(n => n.model.expanded = true)
+    }
+
+    return tree
   }
 
   render() {
     const { open, loading, treeData, filter, closeBroadcast, saveRules, id, mode, switchMode } = this.props
-    const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'branch' && n.model.broadcast === 1).length}/${treeData.all(n => n.model.type === 'branch').length}`
+    const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'branch' && n.getPath().filter(_n => _n.model.broadcast === 1).length > 0).length}/${treeData.all(n => n.model.type === 'branch').length}`
 
     return (
       <Modal open={open} onClose={closeBroadcast} centered={false}>
@@ -183,12 +140,6 @@ class Broadcast extends Component {
           <Grid className="flex stretched">
             <Grid.Row divided className="flex stretched">
               <Grid.Column width={6}>
-                {/* <div style={{ flex: '0 0', padding: '0 0 15px 0' }}>
-                  <Button.Group widths={2}>
-                    <Button onClick={() => switchMode('client')} active={mode === 'client'} basic={mode !== 'client'} color="blue">Client list</Button>
-                    <Button onClick={() => switchMode('price')} basic={mode !== 'price'} active={mode === 'price'} color="blue">Price list</Button>
-                  </Button.Group>
-                </div> */}
                 <div>
                   <Message info size='large' style={{ padding: '6px 15px' }}>
                     <Icon name='info circle' />
@@ -227,23 +178,15 @@ class Broadcast extends Component {
                     <Rule.Toggle style={{marginRight: '20px'}}>
                       Mark-up/down
                     </Rule.Toggle>
-                    {/* <Rule.Toggle>
-                      {mode === "client" ? "Include" : "Mark-up/down"}
-                    </Rule.Toggle> */}
-                    {/* <Rule.Checkbox>
-                      Anomymous
-                    </Rule.Checkbox> */}
                   </Rule.Header>
                   <Rule.Content>
-                    {treeData && [this.getFilteredTree()].map(i => (
-                      <RuleItem
-                        item={i}
-                        mode={mode}
-                        onRowClick={this.handleRowClick}
-                        onPriceChange={this.handlePriceChange}
-                        onChange={this.handleChange}
-                      />
-                    ))}
+                    <RuleItem
+                      item={this.state.tree}
+                      mode={mode}
+                      onRowClick={this.handleRowClick}
+                      onPriceChange={this.handlePriceChange}
+                      onChange={this.handleChange}
+                    />
                     {loading && <Dimmer active inverted><Loader active /></Dimmer>}
                   </Rule.Content>
                 </Rule.Root>
@@ -253,7 +196,14 @@ class Broadcast extends Component {
         </Modal.Content>
         <Modal.Actions>
           <Button onClick={() => closeBroadcast()}>Cancel</Button>
-          <Button primary onClick={() => saveRules(id, treeData.model)}>Save</Button>
+          <Button primary 
+            onClick={() => { 
+              console.log(treeData.model)
+              saveRules(id, treeData.model)
+            }}
+          >
+            Save
+          </Button>
         </Modal.Actions>
       </Modal>
     )
@@ -261,7 +211,10 @@ class Broadcast extends Component {
 }
 
 export default connect(({ broadcast: { data, filter, ...rest } }) => {
-  const treeData = data ? new TreeModel({ childrenPropertyName: 'elements' }).parse(data) : null
+  const treeData = data 
+    ? new TreeModel({ childrenPropertyName: 'elements' }).parse(data) 
+    : new TreeModel().parse({model: {rule:{}} })
+
   return {
     treeData,
     filter,
