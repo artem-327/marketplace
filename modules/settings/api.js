@@ -102,7 +102,7 @@ export default {
       .then(response => response.data)
   },
   putWarehouse: (branchId, body) =>
-    api.put(`/prodex/api/branches/${branchId}`, body),
+    api.put(`/prodex/api/branches/${branchId}`, body).then((r) => r.data),
   // putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
   patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body),
   patchUserRole: (id, body) =>

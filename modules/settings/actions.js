@@ -160,7 +160,14 @@ export const deleteUser = (id, name) => ({
   }
 })
 
-export const deleteBranch = (id) => ({ type: AT.DELETE_BRANCH, payload: api.deleteWarehouse(id) })
+export const deleteBranch = (id) => ({
+  type: AT.DELETE_BRANCH,
+  async payload() {
+    await api.deleteWarehouse(id)
+    Datagrid.removeRow(id)
+    return id
+  }
+})
 
 export const deleteProduct = (id, name) => ({
   type: AT.DELETE_PRODUCT,
@@ -298,15 +305,12 @@ export function handlerSubmitWarehouseEditPopup(payload, id) {
       name: payload.name
     }
     removeEmpty(dataBody)
+    const response = await api.putWarehouse(id, dataBody)
     await dispatch({
       type: AT.PUT_WAREHOUSE_EDIT_POPUP,
-      payload: api.putWarehouse(id, dataBody)
+      payload: response
     })
-    if (payload.tab) {
-      dispatch(getBranchesDataRequest())
-    } else {
-      dispatch(getWarehousesDataRequest())
-    }
+    Datagrid.updateRow(id, () => response)
     dispatch(closePopup())
   }
 }
@@ -579,11 +583,7 @@ export function postNewWarehouseRequest(payload) {
       type: AT.POST_NEW_WAREHOUSE_REQUEST,
       payload: api.postNewWarehouse(dataBody)
     })
-    if (payload.tab) {
-      dispatch(getBranchesDataRequest())
-    } else {
-      dispatch(getWarehousesDataRequest())
-    }
+    Datagrid.loadData()
     dispatch(closePopup())
   }
 }
