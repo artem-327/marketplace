@@ -1,15 +1,17 @@
 import './AddCart.scss'
-import file from '../../../../images/file.svg'
+// import file from '../../../../images/file.svg'
 import { checkToken } from '../../../../utils/auth'
 
 import styled from 'styled-components'
 import React, { Component } from 'react'
 import { object, func } from 'prop-types'
-import { Sidebar, Button, Header, Grid, GridRow, GridColumn, Loader, Dimmer, Dropdown, Input, Divider, Segment } from 'semantic-ui-react'
+import { Sidebar, Button, Header, Grid, GridRow, GridColumn, Loader, Dimmer, Dropdown, Input, Divider, Segment, List } from 'semantic-ui-react'
 import Router from 'next/router'
 import { FormattedNumber, FormattedMessage } from 'react-intl'
 import { FormattedUnit } from '~/components/formatted-messages'
 import { errorMessages } from '~/constants/yupValidation'
+
+import { isEqual } from 'lodash'
 
 
 const CapitalizedColumn = styled(GridColumn)`
@@ -29,6 +31,16 @@ const RelaxedSegment = styled(Segment)`
 
 const ErrorLabel = styled.label`
   color: red;
+`
+
+const CustomList = styled(List)`
+  pointer-events: none;
+  margin-top: 0px !important;
+`
+
+const ListHeader = styled(List.Header)`
+  font-size: 1rem !important;
+  padding-bottom: 15px;
 `
 
 export default class AddCart extends Component {
@@ -87,7 +99,6 @@ export default class AddCart extends Component {
     let totalPrice = (quantity && pricing) ? pricing.price * quantity * packagingSize : null
     let error = null
 
-
     var dropdownOptions = []
     let currencyCode = offer.price.currency.code || 'USD'
 
@@ -112,7 +123,7 @@ export default class AddCart extends Component {
 
       dropdownOptions.push({
         key: 0,
-        value: { quantityFrom: 0, price: value },
+        value: { quantityFrom: 1, price: value },
         text: <><FormattedNumber minimumFractionDigits={0} value={value} style='currency' currency={currencyCode} /></>
       })
     }
@@ -143,8 +154,6 @@ export default class AddCart extends Component {
     // )
 
     let canProceed = !warning && pricing
-
-    console.log('product', offer)
 
     return (
       <>
@@ -226,34 +235,48 @@ export default class AddCart extends Component {
               </GridColumn>
             </GridRow>
 
-
+            <CustomList selection>
+              <ListHeader>Pricing Level:</ListHeader>
+              {dropdownOptions.map((el) => (
+                <List.Item active={isEqual(el.value, this.props.sidebar.pricing)}>
+                  <List.Content>
+                    {el.text}
+                  </List.Content>
+                </List.Item>
+              ))}
+            </CustomList>
             <GridRow columns={2}>
-              <GridColumn>
-                Select Quantity
-              </GridColumn>
-
-              <GridColumn className='purchase-info'>
-                Select Pricing Level
-              </GridColumn>
+              <GridColumn>Minimum Order Quantity:</GridColumn>
+              <GridColumn>{offer.minimum}</GridColumn>
             </GridRow>
 
-            <GridRow stretched columns={2}>
+
+            <GridRow columns={2}>
+              <GridColumn>Splits:</GridColumn>
+              <GridColumn>{offer.splits}</GridColumn>
+            </GridRow>
+
+
+            <GridRow verticalAlign='middle' columns={2}>
+              <GridColumn>
+                Select Quantity:
+              </GridColumn>
               <GridColumn>
                 <Input
                   step={offer.splits}
                   error={!!error}
                   value={this.props.sidebar.quantity}
                   onChange={this.handleQuantity} type='number' />
-                {error}
               </GridColumn>
-              <GridColumn className='purchase-info'>
-                <Dropdown
-                  placeholder='Select Pricing Tier'
-                  value={this.props.sidebar.pricing}
-                  selection
-                  options={dropdownOptions}
-                />
-              </GridColumn>
+            </GridRow>
+
+            {error && <GridRow columns={2}>
+              <GridColumn />
+              <GridColumn> {error}</GridColumn>
+            </GridRow>}
+
+            <GridRow columns={1}>
+
             </GridRow>
 
             <GridRow className='action'>
@@ -277,7 +300,7 @@ export default class AddCart extends Component {
                   pricing && !isNaN(pricing.price) ? <><FormattedNumber
                     style='currency'
                     currency={currencyCode}
-                    value={pricing && pricing.price} /> {nameAbbreviation && `/ ${nameAbbreviation  }`}</> : null
+                    value={pricing && pricing.price} /> {nameAbbreviation && `/ ${nameAbbreviation}`}</> : null
                 }
 
 
