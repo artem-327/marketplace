@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Modal, FormGroup, Divider, ButtonToolbar } from 'semantic-ui-react'
+import { Modal, FormGroup, Divider, ButtonToolbar, Label } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from "formik-semantic-ui";
-
+import * as Yup from "yup"
 
 import {
   closePopup,
@@ -19,6 +19,17 @@ const initialFormValues = {
   'jobTitle':  '',
   'preferredCurrency':  '',
 }
+
+const formValidation = Yup.object().shape({
+  name: Yup.string().trim()
+    .min(3, "Too short")
+    .required("Name is required"),
+  phone: Yup.string().trim()
+    .min(3, "Too short")
+    .matches(
+      /([0-9\(\)\-\+\s])/
+      , 'Please, enter valid phone number (numbers and \'+-()\' characters can be used)')
+})
 
 class MyProfile extends Component {
 
@@ -44,6 +55,7 @@ class MyProfile extends Component {
         <Modal.Content>
           <Form
             enableReinitialize
+            validationSchema={formValidation}
             initialValues={popupValues ? popupValues : initialFormValues}
             onReset={closePopup}
             onSubmit={async (values, actions) => {
@@ -59,6 +71,8 @@ class MyProfile extends Component {
             <Input type="text" label="Phone" name="phone" />
             <Input type="text" label="Title" name="jobTitle" inputProps={{readOnly: true}} />
             <Dropdown label="Currency" name="preferredCurrency" options={currencies} />
+
+            Last login at: {popupValues && popupValues.lastLoginAt}
 
             <div style={{ textAlign: 'right' }}>
               <Button style={{ "margin-bottom":'10px' }} onClick={this.handleChangePassword} >Change Password</Button>
@@ -82,15 +96,24 @@ const mapDispatchToProps = {
   openChangePasswordPopup
 }
 
+const formatDateTime = dt => {
+  const s = dt.split('T')
+  return (
+  s[0] + ' ' + s[1].split('.')[0]
+  )
+}
+
 const mapStateToProps = state => {
   const popupValues = state.profile.usersMe
+  console.log('!!!!!!!!! popupValues', popupValues)
   return {
     popupValues: popupValues ? {
       email: popupValues.email,
       name: popupValues.name,
       phone: popupValues.phone,
       jobTitle: popupValues.jobTitle,
-      preferredCurrency: popupValues.preferredCurrency && popupValues.preferredCurrency.id
+      preferredCurrency: popupValues.preferredCurrency && popupValues.preferredCurrency.id,
+      lastLoginAt: formatDateTime(popupValues.lastLoginAt)
     } : null,
     currencies: state.profile.currency && state.profile.currency.map(d => {
       return {

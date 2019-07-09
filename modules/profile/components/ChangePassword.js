@@ -20,10 +20,12 @@ const formValidation = () => Yup.object().shape({
     .min(3, "Too short")
     .required("Current Password is required"),
   newPassword: Yup.string().trim()
-    .min(3, "Too short")
-    .required("New Password is required"),
+    .min(8, "Too short")
+    .required("New Password is required")
+    .matches(/[a-z]/, 'at least one lowercase char')
+    .matches(/[A-Z]/, 'at least one uppercase char')
+    .matches(/[^a-zA-Z\s]+/, 'at least 1 number or special char (@,!,#, etc).'),
   newPasswordRetype: Yup.string().trim()
-    .min(3, "Too short")
     .required("New Password is required")
     .test('Passwords match', 'Passwords must match', function(value) {
       return this.parent.newPassword === value;

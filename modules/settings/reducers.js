@@ -281,7 +281,8 @@ export default function reducer(state = initialState, action) {
           homeBranch: user.homeBranch.name,
           permissions: user.roles ? user.roles.name : "", // ! ! array?
           id: user.id,
-          allUserRoles: user.roles || []
+          allUserRoles: user.roles || [],
+          lastLoginAt: user.lastLoginAt
         }
       })
       return {
