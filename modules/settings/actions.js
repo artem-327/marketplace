@@ -79,7 +79,8 @@ export function closeImportPopup(reloadFilter) {
     dispatch({
       type: AT.SETTINGS_CLOSE_IMPORT_POPUP_FULFILLED,
     })
-    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
+    Datagrid.loadData()
+    //dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
   }
 }
 
