@@ -222,7 +222,7 @@ const mapDispatchToProps = {
   postNewCasProductRequest,
   updateCasProductRequest,
   getUnNumbersByString,
-};
+}
 
 const mapStateToProps = state => {
   let cfg = state.admin.config[state.admin.currentTab]

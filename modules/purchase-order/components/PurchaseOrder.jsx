@@ -109,10 +109,11 @@ class PurchaseOrder extends Component {
 
     let currency = cart.cartItems[0].productOffer.price.currency.code
 
+    
     return (
       <div className="app-inner-main flex stretched">
-        <div className="header-top" style={{zIndex: 10, backgroundColor: '#FFF'}}>
-          <Container fluid style={{padding: '0 32px'}}>
+        <div className="header-top" style={{ zIndex: 10, backgroundColor: '#FFF' }}>
+          <Container fluid style={{ padding: '0 32px' }}>
             <Menu secondary>
               <Menu.Item header>
                 <Header as='h1' size='medium'>

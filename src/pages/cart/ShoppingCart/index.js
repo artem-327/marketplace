@@ -25,7 +25,7 @@ function mapStateToProps(store) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ getCart, addPopup, removePopup, deleteCart, sidebarChanged, getProductOffer }, dispatch)
+  return bindActionCreators({ getCart, addPopup, removePopup, deleteCart, deleteCartItem, sidebarChanged, getProductOffer }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShoppingCart)

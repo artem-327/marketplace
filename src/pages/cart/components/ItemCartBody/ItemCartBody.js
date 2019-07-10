@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 import { object, func } from 'prop-types'
 import confirm from '../../../../components/Confirmable/confirm'
 import { FormattedMessage, FormattedNumber } from 'react-intl'
-import { checkToken } from '../../../../utils/auth'
+
 import { Button } from 'semantic-ui-react'
 import { FormattedUnit } from '~/components/formatted-messages'
 
 export default class ItemCartBody extends Component {
   render() {
-    let { cartItem, deleteCart } = this.props
+    let { cartItem, deleteCartItem } = this.props
     let { productOffer } = cartItem
 
     let unitName = productOffer.product.packagingUnit.nameAbbreviation
@@ -89,8 +89,7 @@ export default class ItemCartBody extends Component {
               .then(() => {
                 // `proceed`
                 // remove Edit Cart popup if opened currently deleted offer
-                if (checkToken(this.props)) return
-                deleteCart(cartItem.id)
+                deleteCartItem(cartItem.id)
               }, (result) => {
                 // `cancel`
               }
@@ -117,5 +116,5 @@ export default class ItemCartBody extends Component {
 ItemCartBody.propTypes = {
   cartItem: object,
   editCart: func,
-  deleteCart: func
+  deleteCartItem: func
 }
