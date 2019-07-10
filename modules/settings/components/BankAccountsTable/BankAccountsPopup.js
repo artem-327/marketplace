@@ -48,17 +48,18 @@ class BankAccountsPopup extends React.Component {
   submitHandler = async (values, { setSubmitting }) => {
     const { postNewBankAccountRequest, toastManager } = this.props
 
-    await postNewBankAccountRequest(values)
+    try {
+      await postNewBankAccountRequest(values)
 
-    toastManager.add(generateToastMarkup(
-      <FormattedMessage id='notifications.bankAccountCreated.header' />,
-      <FormattedMessage id='notifications.bankAccountCreated.content' values={{ name: values.name }} />
-    ),
-      {
-        appearance: 'success'
-      })
-
-    setSubmitting(false)
+      toastManager.add(generateToastMarkup(
+        <FormattedMessage id='notifications.bankAccountCreated.header' />,
+        <FormattedMessage id='notifications.bankAccountCreated.content' values={{ name: values.name }} />
+      ), {
+          appearance: 'success'
+        })
+    }
+    catch { }
+    finally { setSubmitting(false) }
   }
 
   render() {
