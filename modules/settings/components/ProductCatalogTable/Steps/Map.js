@@ -66,7 +66,7 @@ class Map extends Component {
   }
 
   componentDidMount() {
-    this.props.getCSVMapProductOffer()
+    // this.props.getCSVMapProductOffer()
     this.setState({ newHeaders: this.props.CSV.headerCSV })
   }
 

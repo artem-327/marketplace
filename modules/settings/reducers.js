@@ -592,8 +592,8 @@ export default function reducer(state = initialState, action) {
 
     case AT.SETTINGS_GET_STORED_CSV_FULFILLED: {
       const CSV = {
-        headerCSV: action.data.lines[0].columns,
-        bodyCSV: action.data.lines.slice(1)
+        headerCSV: payload.lines[0].columns,
+        bodyCSV: payload.lines.slice(1)
       }
       return {
         ...state,
