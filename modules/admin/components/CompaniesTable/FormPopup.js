@@ -359,7 +359,7 @@ class AddNewPopupCasProducts extends React.Component {
                           <FormGroup widths='equal'>
                             <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='primaryBranch.warehouse' />
                           </FormGroup>
-                          <h5><FormattedMessage id='global.address' defaultMessage='Address' /></h5>
+                          <Header as='h3'><FormattedMessage id='global.address' defaultMessage='Address' /></Header>
                           <FormGroup widths='equal'>
                             <Input
                               inputProps={{ list: 'addressesPrimaryBranch', onChange: (e, d) => { this.handleAddressSelectPrimaryBranch(d, values, setFieldValue) } }}
@@ -409,7 +409,7 @@ class AddNewPopupCasProducts extends React.Component {
                           <FormGroup widths='equal'>
                             <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='mailingBranch.warehouse' />
                           </FormGroup>
-                          <h5><FormattedMessage id='global.address' defaultMessage='Address' /></h5>
+                          <Header as='h3'><FormattedMessage id='global.address' defaultMessage='Address' /></Header>
                           <FormGroup widths='equal'>
                             <Input
                               inputProps={{ list: 'addressesMailingBranch', onChange: (e, d) => { this.handleAddressSelectMailingBranch(d, values, setFieldValue) } }}
