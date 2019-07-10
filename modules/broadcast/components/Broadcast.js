@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import _ from 'lodash'
 import * as Actions from '../actions'
 import { Modal, Grid, Icon, Button, Form, Input, Dropdown, Dimmer, Loader, Message, Menu } from 'semantic-ui-react'
+import { withToastManager } from 'react-toast-notifications'
+import { generateToastMarkup } from '~/utils/functions'
 import TreeModel from 'tree-model'
 import { Rule } from './Broadcast.style'
 import RuleItem from './RuleItem'
@@ -130,7 +132,7 @@ class Broadcast extends Component {
   }
 
   render() {
-    const { open, loading, treeData, filter, closeBroadcast, saveRules, id, mode, switchMode } = this.props
+    const { open, loading, treeData, filter, closeBroadcast, saveRules, id, mode, switchMode, toastManager } = this.props
     const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'branch' && n.getPath().filter(_n => _n.model.broadcast === 1).length > 0).length}/${treeData.all(n => n.model.type === 'branch').length}`
 
     return (
@@ -197,9 +199,15 @@ class Broadcast extends Component {
         <Modal.Actions>
           <Button onClick={() => closeBroadcast()}>Cancel</Button>
           <Button primary 
-            onClick={() => { 
+            onClick={async () => { 
               console.log(treeData.model)
-              saveRules(id, treeData.model)
+              await saveRules(id, treeData.model)
+              toastManager.add(generateToastMarkup(
+                "Saved successfully!",
+                "New broadcast rules have been saved."
+              ), {
+                appearance: 'success'
+              })
             }}
           >
             Save
@@ -210,7 +218,7 @@ class Broadcast extends Component {
   }
 }
 
-export default connect(({ broadcast: { data, filter, ...rest } }) => {
+export default withToastManager(connect(({ broadcast: { data, filter, ...rest } }) => {
   const treeData = data 
     ? new TreeModel({ childrenPropertyName: 'elements' }).parse(data) 
     : new TreeModel().parse({model: {rule:{}} })
@@ -220,5 +228,5 @@ export default connect(({ broadcast: { data, filter, ...rest } }) => {
     filter,
     ...rest,
   }
-}, Actions)(Broadcast)
+}, Actions)(Broadcast))
 
