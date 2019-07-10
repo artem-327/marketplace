@@ -145,3 +145,14 @@ export function addFirstTier(productOffer) {
   return productOffer
 
 }
+
+export const calculateTotalPrice = cart => {
+  let totalPrice = 0
+  let cartItems = cart.cartItems.slice()
+
+  cartItems.forEach(cartItem => {
+    cartItem.price = cartItem.pricing.price * cartItem.quantity * cartItem.productOffer.product.packagingSize
+    totalPrice += cartItem.price
+  })
+  return { ...cart, totalPrice, cartItems }
+}

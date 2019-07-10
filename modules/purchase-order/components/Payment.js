@@ -11,6 +11,7 @@ export default class Payment extends Component {
     let columns = payments.length === 0
       ? { computer: 16 }
       : { computer: 8 }
+      
     return (
       <>
         <GridRow>
@@ -27,7 +28,11 @@ export default class Payment extends Component {
                     </FormattedMessage>
                   }} />
                 : <Dropdown
-                  options={payments}
+                  options={payments.map(payment => ({
+                    key: payment.id,
+                    value: payment.id,
+                    text: payment.name
+                  }))}
                   fluid
                   selection
                   placeholder={<FormattedMessage id='cart.selectBankAccount' />}

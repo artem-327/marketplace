@@ -12,9 +12,7 @@ export const postNewDeliveryAddress = (address) => api.post('/prodex/api/deliver
 export const updateDeliveryAddress = (address) => api.put(`/prodex/api/delivery-addresses/id/${address.id}`, address).then(response => response.data)
 export const getDeliveryAddresses = () => api.get('/prodex/api/delivery-addresses').then(response => response.data)
 export const getPayments = () => api.get('/prodex/api/payments/bank-accounts').then(response => response.data)
-export const getShippingQuotes = (countryId, zip) => api.get('/prodex/api/shipment/cart', {
-  params: { destinationCountryId: countryId, destinationZIP: zip }
-}).then(response => response.data)
+export const getShippingQuotes = (countryId, zip) => api.get(`/prodex/api/shipment/cart?destinationCountryId=${countryId}&destinationZIP=${zip}`).then(response => response.data)
 
 export const getRegions = (search) => api.get('/prodex/api/regions', { params: { search: search } }).then(response => response.data.regions)
 export const getRegionDetail = (id) => api.get(`/prodex/api/countries/?regionId=${id}`).then(response => response.data)

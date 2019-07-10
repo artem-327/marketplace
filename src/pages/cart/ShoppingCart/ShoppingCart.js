@@ -47,7 +47,7 @@ export default class ShoppingCart extends Component {
   }
 
   render() {
-    const { cart, deleteCart, history, cartIsFetching, sidebarChanged } = this.props
+    const { cart, deleteCartItem, history, cartIsFetching, sidebarChanged } = this.props
     let { cartItems, totalPrice } = cart
 
     if (cartIsFetching) return <Spinner />
@@ -61,7 +61,7 @@ export default class ShoppingCart extends Component {
             location={this.props.location}
             key={cartItem.id}
             cartItem={cartItem}
-            deleteCart={deleteCart}
+            deleteCartItem={deleteCartItem}
           />
         </>
       )
@@ -138,5 +138,5 @@ ShoppingCart.propTypes = {
   addPopup: func,
   cartItem: array,
   history: object,
-  deleteCart: func,
+  deleteCartItem: func,
 }
