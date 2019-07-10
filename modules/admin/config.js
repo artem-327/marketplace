@@ -308,4 +308,39 @@ export const config = {
       },
     },
   },
+
+  'Market Segments': {
+    tableName: 'admin_market_segments',
+    addEditText: 'Market Segment',
+    formattedMessageName: 'marketSegment',
+    searchText: 'Search market segment by name',
+    display: {
+      columns: [
+        { name: 'name', title: 'Name', sortPath: 'MarketSegment.name' }
+      ]
+    },
+    edit: [
+      { name: 'name', title: 'Name', type: 'text', required: true }
+    ],
+    api: {
+      get: {
+        dataName: 'marketSegmentsRows',
+        typeRequest: 'ADMIN_GET_MARKET_SEGMENTS_DATA',
+        typeSuccess: 'ADMIN_GET_MARKET_SEGMENTS_DATA_FULFILLED',
+        apiCall: '/prodex/api/market-segments',
+      },
+      post: {
+        typeRequest: 'ADMIN_POST_MARKET_SEGMENTS_DATA',
+        apiCall: '/prodex/api/market-segments',
+      },
+      put: {
+        typeRequest: 'ADMIN_PUT_MARKET_SEGMENTS_DATA',
+        apiCall: '/prodex/api/market-segments/id/',
+      },
+      delete: {
+        typeRequest: 'ADMIN_DELETE_MARKET_SEGMENTS_DATA',
+        apiCall: '/prodex/api/market-segments/id/',
+      }
+    }
+  }
 }

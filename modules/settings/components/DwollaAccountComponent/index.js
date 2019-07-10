@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Modal, FormGroup, Accordion, Icon } from 'semantic-ui-react'
+import { Header, Modal, FormGroup, Accordion, Icon } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import {
   closeDwollaPopup,
@@ -183,10 +183,10 @@ class BankAccountsPopup extends React.Component {
               </FormGroup>
 
               <Accordion.Title active={accordionActive.controllerAddress} onClick={this.handleAccordionChange} name='controllerAddress'>
-                <h4>
-                    <Icon color={accordionActive.controllerAddress && 'blue'} name={accordionActive.controllerAddress ? 'chevron down' : 'chevron right'} />
-                    <FormattedMessage id='global.Controller' defaultMessage='Controlling person' />
-                </h4>
+                <Header as='h3'>
+                    <Icon color={accordionActive.controllerAddress && 'blue'} name={accordionActive.controllerAddress ? 'chevron down' : 'chevron right'} size='small' />
+                    <Header.Content><FormattedMessage id='global.controller' defaultMessage='Controlling Person' /></Header.Content>
+                </Header>
               </Accordion.Title>
               <Accordion.Content active={accordionActive.controllerAddress}>
                 <FormGroup widths="equal">
