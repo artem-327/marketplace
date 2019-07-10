@@ -105,7 +105,7 @@ class Broadcast extends Component {
         name: "By company",
         rule: treeData.model,
         depth: 1,
-        children: _.uniqBy(treeData.all(n => n.model.type === 'company'), n => n.model.id).map(n1 => ({
+        children: _.uniqBy(treeData.all(n => n.model.type === 'company'), n => n.model.id).filter(searchFn).map(n1 => ({
           name: n1.model.name,
           rule: n1.model,
           depth: 2,
