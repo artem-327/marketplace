@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { Modal, FormGroup } from 'semantic-ui-react'
+import { Header, Modal, FormGroup } from 'semantic-ui-react'
 import { withToastManager } from 'react-toast-notifications'
 import {
   closePopup,
@@ -183,7 +183,7 @@ class WarehousePopup extends React.Component {
                 <FormGroup widths="equal">
                   <Input type="text" label={name} name="name" />
                 </FormGroup>
-                <h4>Address</h4>
+                <Header as='h3'>Address</Header>
                 <FormGroup widths="equal">
                   <Input
                     inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
@@ -208,7 +208,7 @@ class WarehousePopup extends React.Component {
                   <Dropdown label="Province" name="province" options={provincesDropDown}
                     inputProps={{ search: true, disabled: !hasProvinces }} />
                 </FormGroup>
-                <h4>Contact Info</h4>
+                <Header as='h3'>Contact Info</Header>
                 <FormGroup>
                   <Input type="text" label="Contact Name" name="contactName" fieldProps={{ width: 8 }} />
                 </FormGroup>
