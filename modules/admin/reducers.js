@@ -34,6 +34,7 @@ export const initialState = {
     { name: 'Forms', id: 5 },
     { name: 'Conditions', id: 6 },
     { name: 'Document Types', id: 9 },
+    { name: 'Market Segments', id: 10 }
   ],
 
   currentTab: 'CAS Products',
