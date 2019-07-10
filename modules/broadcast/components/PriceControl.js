@@ -30,7 +30,7 @@ export default class PriceControl extends Component {
 
     this.setState({
       type: rule.priceAddition > 0 ? 'addition' : rule.priceMultiplier > 0 ? 'multiplier' : 'multiplier',
-      value: rule.priceAddition > 0 ? rule.priceAddition : rule.priceMultiplier > 0 ? moruledel.priceMultiplier : ''
+      value: rule.priceAddition > 0 ? rule.priceAddition : rule.priceMultiplier > 0 ? rule.priceMultiplier : ''
     })
   }
 
