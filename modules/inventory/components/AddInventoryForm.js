@@ -507,11 +507,10 @@ class AddInventoryForm extends Component {
           validationSchema={validationScheme}
           onSubmit={(values, actions) => {
             const reducer = (accumulator, currentValue) => accumulator + currentValue
-            const formQty = values.pkgAmount
-            console.log({ values })
-            const lotsQty = values.lots.length > 0 && values.lots.map(l => parseInt(l.pkgAmount)).reduce(reducer)
+            const formQty = parseInt(values.pkgAmount)
+            const lotsQty = values.lots.length > 0 ? values.lots.map(l => parseInt(l.pkgAmount)).reduce(reducer) : formQty
 
-            if (lotsQty !== values.quantity) {
+            if (lotsQty !== formQty) {
               confirm(
                 formatMessage({ id: 'confirm.quantityHeader', defaultMessage: 'Quantity Modified' }),
                 formatMessage({

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-
+import { injectIntl } from 'react-intl'
+import confirm from '~/src/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 import {
   getDataRequest,
@@ -19,6 +20,7 @@ class UnitOfPackagingTable extends Component {
 
   render() {
     const {
+      intl,
       loading,
       rows,
       datagrid,
@@ -27,6 +29,7 @@ class UnitOfPackagingTable extends Component {
       deleteUnitOfPackaging,
     } = this.props
 
+    const { formatMessage } = intl
     const { tableName } = this.props.config
     const { columns } = this.props.config.display
 
@@ -41,7 +44,13 @@ class UnitOfPackagingTable extends Component {
           rows={rows}
           rowActions={[
             { text: 'Edit', callback: (row) => openEditPopup(row) },
-            { text: 'Delete', callback: (row) => deleteUnitOfPackaging(row.id) }
+            { text: 'Delete', callback: (row) =>
+                confirm(
+                  formatMessage({ id: 'confirm.deletePackaging.title', defaultMessage: 'Delete Unit of Packaging' }),
+                  formatMessage(
+                    { id: 'confirm.deletePackaging.content', defaultMessage: `Do you really want to delete '${row.name}' unit?` },
+                    { name: row.name })
+                ).then(() => deleteUnitOfPackaging(row.id)) }
           ]}
         />
       </React.Fragment>
@@ -79,4 +88,4 @@ const mapStateToProps = (state, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(UnitOfPackagingTable))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UnitOfPackagingTable)))

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Confirm } from 'semantic-ui-react'
-//import ProdexGrid from '~/components/table'
+import { injectIntl } from 'react-intl'
+import confirm from '~/src/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 import {
   getDataRequest,
@@ -19,6 +19,7 @@ class DataTable extends Component {
   render() {
     const {
       config,
+      intl,
       loading,
       rows,
       datagrid,
@@ -27,8 +28,10 @@ class DataTable extends Component {
       deleteConfirmation
     } = this.props
 
+    const { formatMessage } = intl
     const { tableName } = this.props.config
     const { columns } = this.props.config.display
+    const { addEditText, formattedMessageName } = this.props.config
 
     return (
       <React.Fragment>
@@ -41,7 +44,13 @@ class DataTable extends Component {
           rows={rows}
           rowActions={[
             { text: 'Edit', callback: (row) => openEditPopup(row) },
-            { text: 'Delete', callback: (row) => deleteConfirmation(row.id, config) }
+            { text: 'Delete', callback: (row) =>
+                confirm(
+                  formatMessage({ id: `confirm.delete${formattedMessageName.charAt(0).toUpperCase() + formattedMessageName.slice(1)}.title`, defaultMessage: `Delete ${addEditText}` }),
+                  formatMessage(
+                    { id: `confirm.delete${formattedMessageName.charAt(0).toUpperCase() + formattedMessageName.slice(1)}.content`, defaultMessage: `Do you really want to delete '${row.name}' ${formattedMessageName}?` },
+                    { name: row.name })
+                ).then(() => deleteConfirmation(row.id, config)) }
           ]}
         />
       </React.Fragment>
@@ -69,4 +78,4 @@ const mapStateToProps = (state, {datagrid}) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(DataTable))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(DataTable)))
