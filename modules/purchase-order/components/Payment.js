@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { FormattedMessage } from 'react-intl'
-import { Dropdown, GridRow, GridColumn, Divider } from 'semantic-ui-react'
+import { GridRow, GridColumn, Divider } from 'semantic-ui-react'
+import { Dropdown } from 'formik-semantic-ui'
 import ShippingAddress from './ShippingAddress'
 import Link from 'next/link'
 
@@ -11,7 +12,7 @@ export default class Payment extends Component {
     let columns = payments.length === 0
       ? { computer: 16 }
       : { computer: 8 }
-      
+
     return (
       <>
         <GridRow>
@@ -35,7 +36,8 @@ export default class Payment extends Component {
                   }))}
                   fluid
                   selection
-                  placeholder={<FormattedMessage id='cart.selectBankAccount' />}
+                  name='payment'
+                  inputProps={{ placeholder: <FormattedMessage id='cart.selectBankAccount' /> }}
                 />
             }
 

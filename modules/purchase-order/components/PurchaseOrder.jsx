@@ -7,6 +7,7 @@ import ShippingEdit from './ShippingEdit'
 import ShippingQuote from "./ShippingQuote"
 import Payment from './Payment'
 import { Container, Menu, Header, Button, Icon, Grid, GridColumn, GridRow, Segment } from 'semantic-ui-react'
+import { Form } from 'formik-semantic-ui'
 import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
@@ -101,15 +102,23 @@ class PurchaseOrder extends Component {
   }
 
   render() {
-    const { dispatch, postNewDeliveryAddress, updateDeliveryAddress } = this.props
+    const { dispatch, postNewDeliveryAddress, updateDeliveryAddress, preferredBankAccountId } = this.props
     let { cart, deliveryAddresses, payments, cartIsFetching, shippingQuotes, shipping } = this.props
 
     if (cartIsFetching) return <Spinner />
     if (cart.cartItems.length === 0) Router.push('/cart')
 
     let currency = cart.cartItems[0].productOffer.price.currency.code
+    console.log(this.props)
 
-    
+    let payment = null
+    if (payments.length === 1) payment = payments[0].id
+    else if (preferredBankAccountId) payment = preferredBankAccountId
+
+    let initialValues = {
+      payment
+    }
+
     return (
       <div className="app-inner-main flex stretched">
         <div className="header-top" style={{ zIndex: 10, backgroundColor: '#FFF' }}>
@@ -137,7 +146,7 @@ class PurchaseOrder extends Component {
 
           <GridColumn computer={8}>
 
-            {shipping.isShippingEdit ?
+            {shipping.isShippingEdit &&
               <ShippingEdit
                 savedShippingPreferences={shipping.savedShippingPreferences}
                 selectedAddress={shipping.selectedAddress}
@@ -151,8 +160,9 @@ class PurchaseOrder extends Component {
                 provinces={this.props.provinces}
                 isFetching={this.props.isFetching}
               />
-              :
-              <>
+            }
+            <Form initialValues={initialValues}>
+              {!shipping.isShippingEdit &&
                 <Shipping
                   otherAddresses={this.state.otherAddresses}
                   deliveryAddresses={deliveryAddresses}
@@ -166,53 +176,51 @@ class PurchaseOrder extends Component {
                   handleToggleChange={this.handleToggleChange}
                   shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
                 />
-              </>
-            }
+              }
+              <Segment>
+                <Grid className='bottom-padded'>
+                  <GridRow className='header'>
+                    <GridColumn>
+                      <Header as='h2'>
+                        <FormattedMessage id='cart.2freightSelection' defaultMessage='2. Freight Selection' />
+                      </Header>
+                    </GridColumn>
+                  </GridRow>
 
-            <Segment>
-              <Grid className='bottom-padded'>
-                <GridRow className='header'>
-                  <GridColumn>
-                    <Header as='h2'>
-                      <FormattedMessage id='cart.2freightSelection' defaultMessage='2. Freight Selection' />
-                    </Header>
-                  </GridColumn>
-                </GridRow>
-
-                <ShippingQuote
-                  currency={currency}
-                  selectedShippingQuote={this.props.cart.selectedShipping}
-                  handleQuoteSelect={this.handleQuoteSelect}
-                  selectedAddress={shipping.selectedAddress}
-                  shippingQuotes={shippingQuotes}
-                  shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
-                />
-              </Grid>
-            </Segment>
+                  <ShippingQuote
+                    currency={currency}
+                    selectedShippingQuote={this.props.cart.selectedShipping}
+                    handleQuoteSelect={this.handleQuoteSelect}
+                    selectedAddress={shipping.selectedAddress}
+                    shippingQuotes={shippingQuotes}
+                    shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
+                  />
+                </Grid>
+              </Segment>
 
 
 
-            <Segment>
-              <Grid className='bottom-padded'>
-                <GridRow className='header'>
-                  <GridColumn>
-                    <Header as='h2'>
-                      <FormattedMessage id='cart.3payment' defaultMessage='3. Payment' />
-                    </Header>
-                  </GridColumn>
-                </GridRow>
+              <Segment>
+                <Grid className='bottom-padded'>
+                  <GridRow className='header'>
+                    <GridColumn>
+                      <Header as='h2'>
+                        <FormattedMessage id='cart.3payment' defaultMessage='3. Payment' />
+                      </Header>
+                    </GridColumn>
+                  </GridRow>
 
-                <Payment
-                  dispatch={dispatch}
-                  selectedAddress={shipping.selectedAddress}
-                  selectedPayment={shipping.selectedPayment}
-                  payments={payments}
-                  getPayment={this.getPayment}
-                />
-              </Grid>
-            </Segment>
+                  <Payment
+                    dispatch={dispatch}
+                    selectedAddress={shipping.selectedAddress}
+                    selectedPayment={shipping.selectedPayment}
+                    payments={payments}
+                    getPayment={this.getPayment}
+                  />
+                </Grid>
+              </Segment>
 
-
+            </Form>
           </GridColumn>
 
           <GridColumn computer={5}>
