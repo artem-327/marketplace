@@ -136,45 +136,54 @@ class Settings extends Component {
       // 'company-details': this.companyDetails(),
       'users': {
         url: `/prodex/api/users/datagrid`,
-        searchToFilter: (value) => ({
-          operator: "LIKE",
-          path: "User.name",
-          values: ['%' + value + '%']
-        })
+        searchToFilter: v => ([
+          { operator: 'LIKE', path: 'User.name', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'User.homeBranch.name', values: [`%${v}%`] },
+          // { operator: 'LIKE', path: '', values: [`%${v}%`] }, // TODO here should be User.jobTitle but BE doesn't seem to have it as filterable field...
+        ]),
+        params: {
+          orOperator: true
+        }
       },
       'branches': {
         url: `/prodex/api/branches/datagrid`,
-        searchToFilter: (value) => ({
-          operator: "LIKE",
-          path: "Branch.name",
-          values: [`%${value}%`]
-        })
+        searchToFilter: v => ([
+          { operator: 'LIKE', path: 'Branch.name', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'Branch.address.streetAddress', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'Branch.contactName', values: [`%${v}%`] },
+        ]),
+        params: {
+          orOperator: true
+        }
       },
       'warehouses': {
         url: `/prodex/api/branches/warehouses/datagrid`,
-        searchToFilter: (value) => ({
-          operator: "LIKE",
-          path: "Branch.warehouse",
-          values: [`%${value}%`]
-        })
+        searchToFilter: v => ([
+          { operator: 'LIKE', path: 'Branch.name', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'Branch.address.streetAddress', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'Branch.contactName', values: [`%${v}%`] },
+        ]),
+        params: {
+          orOperator: true
+        }
       },
       'products': {
         url: `/prodex/api/products/datagrid`,
-        searchToFilter: (value) => ({
-          operator: "LIKE",
-          path: "Product.productName",
-          values: ['%' + value + '%']
-        })
+        searchToFilter: v => ([
+          { operator: 'LIKE', path: 'Product.productName', values: [`%${v}%`] },
+          { operator: 'LIKE', path: 'Product.productCode', values: [`%${v}%`] },
+        ]),
+        params: {
+          orOperator: true
+        }
       },
       // 'bank-accounts': null,
       // 'credit-cards': null,
       'delivery-addresses': {
         url: '/prodex/api/delivery-addresses/datagrid',
-        searchToFilter: (value) => ({
-          operator: "LIKE",
-          path: "DeliveryAddress.address.streetAddress",
-          values: ['%' + value + '%']
-        })
+        searchToFilter: v => ([
+          { operator: 'LIKE', path: 'DeliveryAddress.address.streetAddress', values: [`%${v}%`] }
+        ])
       },
     }
 
@@ -187,16 +196,16 @@ class Settings extends Component {
     return (
       <DatagridProvider apiConfig={this.getApiConfig()}
       >
-        <Container fluid className="flex stretched">
+        <Container fluid className='flex stretched'>
           <Container fluid style={{ padding: '0 32px' }}>
             <TablesHandlers currentTab={currentTab} />
           </Container>
-          <Grid columns="equal" className="flex stretched" style={{ padding: '0 32px' }}>
+          <Grid columns='equal' className='flex stretched' style={{ padding: '0 32px' }}>
             <Grid.Row>
               <Grid.Column width={3}>
                 <Tabs currentTab={currentTab} isCompanyAdmin={this.props.isCompanyAdmin} />
               </Grid.Column>
-              <Grid.Column className="flex stretched" style={{ marginTop: '10px' }}>
+              <Grid.Column className='flex stretched' style={{ marginTop: '10px' }}>
                 {this.renderContent()}
               </Grid.Column>
             </Grid.Row>

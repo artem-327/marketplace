@@ -14,6 +14,8 @@ import {
 } from '../../actions'
 import Router from "next/router"
 
+import { getSafe } from '~/utils/functions'
+
 import confirm from '~/src/components/Confirmable/confirm'
 
 class WarehouseTable extends Component {
@@ -134,20 +136,20 @@ const mapDispatchToProps = {
   deleteBranch
 }
 
-const mapStateToProps = (state, {datagrid}) => {
+const mapStateToProps = (state, { datagrid }) => {
   return {
     rows: datagrid.rows.map(r => ({
       name: r.name,
-      address: r.address.streetAddress + ", " + r.address.city,
-      streetAddress: r.address.streetAddress,
-      city: r.address.city,
-      countryName: r.address.country.name,
-      countryId: r.address.country.id,
-      hasProvinces: r.address.country.hasProvinces,
-      provinceName: r.address.province ? r.address.province.name : '',
-      provinceId: r.address.province ? r.address.province.id : '',
-      zip: r.address.zip.zip,
-      zipID: r.address.zip.id,
+      address: r.address && r.address.streetAddress + ", " + r.address.city,
+      streetAddress: getSafe(() => r.address.streetAddress),
+      city: getSafe(() => r.address.city),
+      countryName: getSafe(() => r.address.country.name),
+      countryId: getSafe(() => r.address.country.id),
+      hasProvinces: getSafe(() => r.address.country.hasProvinces),
+      provinceName: getSafe(() => r.address.province.name),
+      provinceId: getSafe(() => r.address.province.id),
+      zip: getSafe(() => r.address.zip.zip),
+      zipID: getSafe(() => r.address.zip.id),
       contactName: r.contactName,
       phone: r.contactPhone,
       email: r.contactEmail,
@@ -160,7 +162,7 @@ const mapStateToProps = (state, {datagrid}) => {
     filterValue: state.settings.filterValue,
     confirmMessage: state.settings.confirmMessage,
     currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
-        state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+      state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
     deleteRowById: state.settings.deleteRowById,
     loading: state.settings.loading
   }
