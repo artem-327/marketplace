@@ -3,7 +3,7 @@ import Cookie from 'js-cookie'
 import ServerCookie from 'cookie'
 import api from '~/api'
 
-export const IDLE_TIMEOUT = 11000 // 30 * (60 * 1000)
+export const IDLE_TIMEOUT = 30 * (60 * 1000)
 
 export const setAuth = (auth) => {
   let now = new Date()
