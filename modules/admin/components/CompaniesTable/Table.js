@@ -51,7 +51,11 @@ class CompaniesTable extends Component {
               })
             },
             { text: 'Register Dwolla Account', callback: (row) => openRegisterDwollaAccount(row), hidden: row => row.hasDwollaAccount === "Yes" },
-            { text: <FormattedMessage id='admin.takeOver' defaultMessage='Take over as Company Admin' />, callback: (row) => takeOverCompany(row.id) }
+            {
+              text: <FormattedMessage id='admin.takeOver' defaultMessage='Take over as Company Admin' />,
+              callback: (row) => takeOverCompany(row.id),
+              hidden: row => !row.primaryUser
+            }
           ]}
         />
       </React.Fragment>
