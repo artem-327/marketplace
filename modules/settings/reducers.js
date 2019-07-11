@@ -592,8 +592,8 @@ export default function reducer(state = initialState, action) {
 
     case AT.SETTINGS_GET_STORED_CSV_FULFILLED: {
       const CSV = {
-        headerCSV: payload.lines[0].columns,
-        bodyCSV: payload.lines.slice(1)
+        headerCSV: action.payload.lines[0].columns,
+        bodyCSV: action.payload.lines.slice(1)
       }
       return {
         ...state,
@@ -601,10 +601,10 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_CSV_MAP_PRODUCT_OFFER_SUCCESS: {
+    case AT.GET_CSV_MAP_PRODUCT_OFFER_FULFILLED: {
       return {
         ...state,
-        maps: action.data
+        maps: action.payload
       }
     }
 
@@ -643,10 +643,11 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER_FULFILLED:
     case AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_FULFILLED: {
       return {
         ...state,
-        csvImportError: action.data
+        csvImportError: action.payload
       }
     }
 

@@ -174,7 +174,7 @@ class AddNewPopupCasProducts extends React.Component {
                               this.handlePrimaryBranchCountry(e, d)
                             }
                           }} />
-                        <Dropdown label="Province" name="beneficialOwner.address.stateProvinceRegion" options={primaryBranchProvinces}
+                        <Dropdown label="State/Province" name="beneficialOwner.address.stateProvinceRegion" options={primaryBranchProvinces}
                           inputProps={{ search: true, disabled: !this.state.primaryBranchHasProvinces, clearable: true }} />
                       </FormGroup>
                       <FormGroup widths='equal'>
@@ -221,7 +221,7 @@ class AddNewPopupCasProducts extends React.Component {
                                 this.handleMailingBranchCountry(e, d)
                               }
                             }} />
-                          <Dropdown label="Province" name="dwollaController.province" options={mailingBranchProvinces}
+                          <Dropdown label="State/Province" name="dwollaController.province" options={mailingBranchProvinces}
                             inputProps={{ search: true, disabled: !this.state.mailingBranchHasProvinces, clearable: true }} />
                         </FormGroup>
                       </Accordion.Content>

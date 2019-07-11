@@ -23,14 +23,14 @@ class DeliveryAddressesTable extends Component {
     columns: [
       { name: 'streetAddress', title: 'Street Name' },
       { name: 'city', title: 'City' },
-      { name: 'province', title: 'Province' },
+      { name: 'province', title: 'State/Province' },
       { name: 'country', title: 'Country' },
       { name: 'zip', title: 'ZIP Code' },
     ]
   }
 
   componentDidMount() {
-    // this.props.getDeliveryAddressesByFilterRequest(this.props.deliveryAddressesFilter)
+    this.props.getDeliveryAddressesByFilterRequest(this.props.deliveryAddressesFilter)
   }
 
   render() {

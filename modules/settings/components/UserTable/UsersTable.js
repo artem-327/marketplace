@@ -157,7 +157,7 @@ const mapStateToProps = (state, { datagrid }) => {
       permissions: user.roles ? user.roles.name : "", // ! ! array?
       id: user.id,
       allUserRoles: user.roles || [],
-      userRoles: user.roles.map(rol => (
+      userRoles: user.roles && user.roles.map(rol => (
         rol.name
       )).join(", "),
       switchEnable: userEnableDisableStatus(user, currentUserId),
