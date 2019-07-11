@@ -90,6 +90,14 @@ export default {
       )
       .then(response => response.data)
   },
+  postImportProductOfferCSV: (body, id) => {
+    return api
+      .post(
+        `/prodex/api/imports/csv-import-product-offers?temporaryFileId=${id}`,
+        body
+      )
+      .then(response => response.data)
+  },
   uploadCSVFile: body => {
     const formData = new FormData()
     formData.append('file', body)
@@ -101,6 +109,10 @@ export default {
       })
       .then(response => response.data)
   },
+  getCSVMapProductOffer: () =>
+    api.get('/prodex/api/imports/product-offer-maps').then(response => response.data),
+  postCSVMapProductOffer: data =>
+    api.post('/prodex/api/imports/product-offer-maps', data),
   putWarehouse: (branchId, body) =>
     api.put(`/prodex/api/branches/${branchId}`, body).then((r) => r.data),
   // putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),

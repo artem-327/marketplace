@@ -171,7 +171,7 @@ class DeliveryAddressesPopup extends React.Component {
                           setFieldValue('address.province', ''); this.handleCountry(e, d)
                         }
                       }} />
-                    <Dropdown label="Province" name="address.province" options={provincesDropDown}
+                    <Dropdown label="State/Province" name="address.province" options={provincesDropDown}
                       inputProps={{ search: true, disabled: !this.state.hasProvinces }} />
                   </FormGroup>
                   <h4>Contact Info</h4>

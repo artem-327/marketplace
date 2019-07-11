@@ -169,7 +169,7 @@ class BankAccountsPopup extends React.Component {
                         this.handleCountry(e, d)
                     }
                 }} />
-                <Dropdown label="Province" name="beneficialOwner.address.stateProvinceRegion" options={provincesDropDown}
+                <Dropdown label="State/Province" name="beneficialOwner.address.stateProvinceRegion" options={provincesDropDown}
                         inputProps={{search: true, disabled: !this.state.hasProvinces, clearable: true}} />
               </FormGroup>
 
@@ -203,7 +203,7 @@ class BankAccountsPopup extends React.Component {
                           this.handleCountry(e, d)
                       }
                   }} />
-                  <Dropdown label="Province" name="dwollaController.address.stateProvinceRegion" options={provincesDropDown}
+                  <Dropdown label="State/Province" name="dwollaController.address.stateProvinceRegion" options={provincesDropDown}
                           inputProps={{search: true, disabled: !this.state.hasProvinces, clearable: true}} />
                 </FormGroup>
                 <FormGroup widths="equal">

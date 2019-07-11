@@ -205,7 +205,7 @@ class WarehousePopup extends React.Component {
                         setFieldValue('province', ''); this.handleCountry(e, d)
                       }
                     }} />
-                  <Dropdown label="Province" name="province" options={provincesDropDown}
+                  <Dropdown label="State/Province" name="province" options={provincesDropDown}
                     inputProps={{ search: true, disabled: !hasProvinces }} />
                 </FormGroup>
                 <h4>Contact Info</h4>

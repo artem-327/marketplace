@@ -711,10 +711,51 @@ export function uploadCSVFile(payload) {
   }
 }
 
+export function getCSVMapProductOffer() {
+  return {
+    type: AT.GET_CSV_MAP_PRODUCT_OFFER,
+    payload: api.getCSVMapProductOffer()
+  }
+}
+
+export function postCSVMapProductOffer(payload) {
+  return {
+    type: AT.POST_CSV_MAP_PRODUCT_OFFER,
+    payload: api.postCSVMapProductOffer(payload)
+  }
+}
+
+export function handleSaveMapCSV() {
+  return {
+    type: AT.SAVE_MAP_CSV
+  }
+}
+
+export function handleChangeMapCSVName(payload) {
+  return {
+    type: AT.CHANGE_MAP_CSV_NAME,
+    payload
+  }
+}
+
 export function postImportProductCSV(payload, id) {
   return {
     type: AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS,
     payload: api.postImportProductCSV(payload, id)
+  }
+}
+
+export function postImportProductOfferCSV(payload, id) {
+  return {
+    type: AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER,
+    payload: api.postImportProductOfferCSV(payload, id)
+  }
+}
+
+export function selectSavedMap(payload) {
+  return {
+    type: AT.SELECT_SAVED_MAP,
+    payload
   }
 }
 
