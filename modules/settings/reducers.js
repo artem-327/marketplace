@@ -824,7 +824,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false,
         popupValues: null,
-        isOpenPopup: false,
+        // isOpenPopup: false,
       }
     }
 

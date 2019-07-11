@@ -33,7 +33,7 @@ class ConfirmationPage extends Component {
           ))}
 
         <Grid.Row>
-          <StyledButton basic primary onClick={this.props.closeImportPopup(reloadFilter)}>
+          <StyledButton basic primary onClick={() => this.props.closeImportPopup(reloadFilter)}>
             View Products
           </StyledButton>
         </Grid.Row>

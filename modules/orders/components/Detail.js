@@ -104,7 +104,7 @@ class Detail extends Component {
           <Grid verticalAlign='middle' columns='equal' style={{ padding: '0 32px' }}>
             <Grid.Column width={6}>
               <div className='header-top clean left detail-align'>
-                <h1 className='header inv-header' style={{ marginBottom: '0.5rem', textTransform: 'uppercase', fontSize: '1.14285714em', fontWeight: '500' }}>{ordersType} Order {isDetailFetching ? '' : '# ' + order.id}</h1>
+                <Header as='h1' className='header inv-header' style={{ marginBottom: '0.5rem', textTransform: 'uppercase', fontSize: '1.14285714em', fontWeight: '500' }}>{ordersType} Order {isDetailFetching ? '' : '# ' + order.id}</Header>
                 <a onClick={() => this.downloadOrder()} style={{ fontSize: '1.14285714em', cursor: 'pointer' }}><Icon name='download' style={{ verticalAlign: 'top' }} color='blue' /> Download {order.orderType} Order</a>
               </div>
             </Grid.Column>

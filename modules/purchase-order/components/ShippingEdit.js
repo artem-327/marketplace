@@ -15,8 +15,7 @@ const BottomMargedGrid = styled(Grid)`
 `
 
 const initialValues = {
-  firstName: '',
-  lastName: '',
+  name: '',
   email: '',
   phoneNumber: '',
   address: {
@@ -54,8 +53,8 @@ class ShippingEdit extends Component {
 
     return (
       Yup.object().shape({
-        firstName: Yup.string(invalidString).required(requiredMessage),
-        lastName: Yup.string(invalidString).required(requiredMessage),
+        name: Yup.string(invalidString).required(requiredMessage),
+        // lastName: Yup.string(invalidString).required(requiredMessage),
         email: Yup.string().email(invalidEmail).required(requiredMessage),
         phoneNumber: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
         address: Yup.object().shape({
@@ -95,35 +94,29 @@ class ShippingEdit extends Component {
 
     return (
       <>
-        <FormGroup>
+        <FormGroup widths='equal'>
           <Input
-            fieldProps={{ width: 8 }}
-            label={<FormattedMessage id='global.firstName' default='First Name' />}
-            name='firstName' />
+            label={<FormattedMessage id='global.name' default='Name' />}
+            name='name' />
 
           <Input
-            fieldProps={{ width: 8 }}
-            label={<FormattedMessage id='global.lastName' defaultMessage='Last Name' />}
-            name='lastName' />
-        </FormGroup>
-
-        <FormGroup>
-          <Input
-            fieldProps={{ width: 10 }}
             label={<FormattedMessage id='global.address' defaultMessage='Address' />}
             name='address.streetAddress' />
-
-          <Input
-            fieldProps={{ width: 6 }}
-            label={<FormattedMessage id='global.zip' defaultMessage='Postal Code' />}
-            name='address.zip.zip' />
 
         </FormGroup>
 
         <FormGroup widths='equal'>
           <Input
+            label={<FormattedMessage id='global.zip' defaultMessage='Postal Code' />}
+            name='address.zip.zip' />
+
+          <Input
             label={<FormattedMessage id='global.city' defaultMessage='City' />}
             name='address.city' />
+        </FormGroup>
+
+        <FormGroup widths='equal'>
+
 
           <Dropdown
             inputProps={{
@@ -181,8 +174,8 @@ class ShippingEdit extends Component {
   }
 
 
-  handleSubmit = (values) => {
-    let { address, email, firstName, lastName, phoneNumber } = values
+  handleSubmit = async (values, { setSubmitting }) => {
+    let { address, email, name, phoneNumber } = values
     let { isNewAddress, postNewDeliveryAddress, updateDeliveryAddress } = this.props
 
     let payload = {
@@ -193,15 +186,18 @@ class ShippingEdit extends Component {
         streetAddress: address.streetAddress,
         zip: address.zip.zip
       },
-      email, firstName, lastName, phoneNumber,
+      email, name, phoneNumber,
     }
-
-
-    if (!isNewAddress) postNewDeliveryAddress(payload)
-    else updateDeliveryAddress({
-      ...payload,
-      id: this.props.selectedAddress.id
-    })
+    
+    try {
+      if (!isNewAddress) await postNewDeliveryAddress(payload)
+      else await updateDeliveryAddress({
+        ...payload,
+        id: this.props.selectedAddress.id
+      })
+    }
+    catch (e) { console.error(e) }
+    finally { setSubmitting(false) }
 
   }
 

@@ -446,7 +446,7 @@ class AddInventoryForm extends Component {
         <>
           {casProducts.map(cp => {
             return (
-              <Header.Subheader>{`${cp.casNumber} ${cp.chemicalName}`}</Header.Subheader>
+              <Header.Subheader>{`${cp.casProduct.casNumber} ${cp.casProduct.chemicalName}`}</Header.Subheader>
             )
           })}
         </>

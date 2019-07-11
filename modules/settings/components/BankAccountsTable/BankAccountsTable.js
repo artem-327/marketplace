@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
-import { Modal, Form, Segment, Label } from 'semantic-ui-react'
+import { Header, Modal, Form, Segment, Label } from 'semantic-ui-react'
 import { createConfirmation, confirmable } from 'react-confirm'
 import confirm from '~/src/components/Confirmable/confirm'
 import { Formik } from 'formik'
@@ -48,7 +48,7 @@ const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
         <Modal.Content>
           <Segment basic loading={isSubmitting}>
             <Form>
-              <h4>Please provide amounts that were transferred to you account:</h4>
+              <Header as='h3'>Please provide amounts that were transferred to you account:</Header>
               <Form.Group widths='equal'>
                 <Input label="Amount 1" name="amount1" type="number" min="0" />
                 <Input label="Amount 2" name="amount2" type="number" min="0" />

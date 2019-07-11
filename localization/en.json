@@ -54,7 +54,7 @@
   "global.zip": "Zip",
   "global.warehouse": "Warehouse",
   "global.enterValue": "Enter Value",
-  "global.controller": "Controlling person",
+  "global.controller": "Controlling Person",
   "company.legalCompanyName": "Legal Company Name",
   "company.dba": "Doing Business As",
   "company.businessType": "Business Type",
@@ -91,6 +91,8 @@
   "confirm.deleteGrade.content": "Do you really want to delete '{name}' grade?",
   "confirm.deleteManufacturer.title": "Delete Manufacturer",
   "confirm.deleteManufacturer.content": "Do you really want to delete '{name}' manufacturer?",
+  "confirm.deleteMarketSegment.title": "Delete Market Segment",
+  "confirm.deleteMarketSegment.content": "Do you really want to delete '{name}' market segment?",
   "confirm.deleteMeasurement.title": "Delete Unit of Measure",
   "confirm.deleteMeasurement.content": "Do you really want to delete '{name}' unit?",
   "confirm.deletePackaging.title": "Delete Unit of Packaging",
@@ -482,5 +484,9 @@
   "notifications.documentTypeCreated.header": "Document Type created",
   "notifications.documentTypeCreated.content": "Document Type {name} successfully created.",
   "notifications.documentTypeUpdated.header": "Updated Document Type",
-  "notifications.documentTypeUpdated.content": "Document Type {name} successfully updated."
+  "notifications.documentTypeUpdated.content": "Document Type {name} successfully updated.",
+  "notifications.marketSegmentCreated.header": "Market Segment created",
+  "notifications.marketSegmentCreated.content": "Market Segment {name} successfully created.",
+  "notifications.marketSegmentUpdated.header": "Updated Market Segment",
+  "notifications.marketSegmentUpdated.content": "Market Segment {name} successfully updated."
 }

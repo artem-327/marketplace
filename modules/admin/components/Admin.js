@@ -35,6 +35,7 @@ const tables = {
   'CAS Products': <CasProductsTable />,
   'Companies': <CompaniesTable />,
   'Document Types': <DataTable />,
+  'Market Segments': <DataTable />
 }
 
 const datagridConfig = {
@@ -84,6 +85,12 @@ const datagridConfig = {
       { operator: 'LIKE', path: 'Manufacturer.name', values: [`%${v}%`] }
     ])
   },
+  'Market Segments': {
+    url: '/prodex/api/market-segments/datagrid',
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'MarketSegment.name', values: [`%${v}%`] }
+    ])
+  },
   'Units of Packaging': {
     url: '/prodex/api/packaging-types/datagrid',
     searchToFilter: v => ([
@@ -102,6 +109,7 @@ const editForms = {
   'CAS Products': <AddEditCasProductsPopup />,
   'Companies': <CompaniesForm />,
   'Document Types': <EditPopup1Parameter />,
+  'Market Segments': <EditPopup1Parameter />
 }
 
 const edit2Forms = {
@@ -118,6 +126,7 @@ const addForms = {
   'CAS Products': <AddEditCasProductsPopup />,
   'Companies': <CompaniesForm />,
   'Document Types': <AddNewPopup1Parameter />,
+  'Market Segments': <AddNewPopup1Parameter />
 }
 
 const addDwollaForms = {
