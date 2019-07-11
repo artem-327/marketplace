@@ -68,7 +68,7 @@ const securePageHoc = Page => class SecurePage extends React.Component {
       <SecureContext.Provider value={{auth}}>
         <IdleTimer
           timeout={IDLE_TIMEOUT}
-          onIdle={() => Router.push(`/auth/logout`)}
+          onIdle={() => Router.push(`/auth/logout?auto=true`)}
           onAction={() => refreshToken()}
           debounce={10000}
         />

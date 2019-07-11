@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Router from 'next/router'
+import {withRouter} from 'next/router'
 import { Segment, Form, Image, Button, Message, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
@@ -72,7 +72,7 @@ class LoginForm extends Component {
   }
 
   render() {
-    const { isLoading, message, version, intl } = this.props
+    const { isLoading, message, version, intl, router } = this.props
     const { usernameError, passwordError } = this.state
     const { formatMessage } = intl
 
@@ -106,6 +106,7 @@ class LoginForm extends Component {
         </StyledForm>
 
         <Message error content={message} hidden={!message} />
+        {router.query.auto && <Message info content={'You have been automatically logged out.'} />}
         <Grid>
           <GridRow>
             <GridColumn computer={12}>
@@ -129,4 +130,4 @@ class LoginForm extends Component {
   }
 }
 
-export default injectIntl(LoginForm)
+export default withRouter(injectIntl(LoginForm))

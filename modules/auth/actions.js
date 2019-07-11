@@ -63,9 +63,9 @@ export function getVersion() {
 }
 
 export function logout(isAutologout) {
-  if (!isAutologout) unsetAuth()
+  unsetAuth()
 
-  Router.push('/auth/login')
+  Router.push(`/auth/login${isAutologout ? '?auto=true' : ''}`)
 
   return {
     type: AT.LOGOUT
