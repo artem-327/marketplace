@@ -9,7 +9,7 @@ import NavigationMenu from './NavigationMenu'
 import PopUp from '~/src/components/PopUp'
 import { Messages } from '~/modules/messages'
 import { connect } from 'react-redux'
-
+import { withAuth } from '~/hocs'
 import { takeOverCompanyFinish } from '~/modules/admin/actions'
 
 const TopMenu = styled(Menu)`
@@ -49,7 +49,7 @@ const MenuLink = withRouter(({ router: { pathname }, to, children, }) => (
   </Link>
 ))
 
-const Layout = ({ children, router: { pathname }, title = 'Echo exchange', identity, takeOverCompanyFinish }) => (
+const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth, takeOverCompanyFinish }) => (
   <MainContainer fluid>
     <PopUp />
     <Head>
@@ -60,14 +60,14 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange', ident
       <TopMenuContainer fluid>
         <LogoImage src={Logo} />
 
-        <NavigationMenu identity={identity} />
+        <NavigationMenu />
 
         <Menu.Menu position='right' className='black'>
           <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
             <Dropdown.Menu>
               <Dropdown.Item as={MenuLink} to='/profile'>My Profile</Dropdown.Item>
-              {identity && identity.isAdmin &&
-                <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()} >Return to Admin</Dropdown.Item>
+              {auth && auth.identity.isAdmin &&
+                <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()}>Return to Admin</Dropdown.Item>
               }
               <Dropdown.Item as={MenuLink} to='/auth/logout'>Logout</Dropdown.Item>
             </Dropdown.Menu>
@@ -95,6 +95,6 @@ const mapDispatchToProps = {
   takeOverCompanyFinish
 }
 
-const mapStateToProps = state => ({ identity: state.auth.identity })
+const mapStateToProps = state => ({})
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Layout))
+export default withAuth(withRouter(connect(mapStateToProps, mapDispatchToProps)(Layout)))

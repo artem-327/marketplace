@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import TablesHandlers from './TablesHandlers'
 import { Container, Grid, Divider } from 'semantic-ui-react'
 import Tabs from './Tabs'
+import { withAuth } from '~/hocs'
 
 import DataTable from './DataTable/DataTable'
 import UnitOfMeasureTable from './UnitOfMeasureTable/UnitOfMeasureTable'
@@ -186,6 +187,6 @@ class Admin extends Component {
   }
 }
 
-const mapStateToProps = state => ({ ...state.admin, auth: state.auth })
+const mapStateToProps = state => ({ ...state.admin })
 
-export default connect(mapStateToProps, null)(Admin)
+export default withAuth(connect(mapStateToProps, null)(Admin))

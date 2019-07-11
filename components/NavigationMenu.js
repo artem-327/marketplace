@@ -18,10 +18,10 @@ const DropdownItem = ({ children, ...props }) => (
 
 class Navigation extends Component {
   render() {
-    const { isAdmin, identity } = this.props
-
+    const { isAdmin, auth } = this.props
+    
     return (
-      !isAdmin || (isAdmin && identity.company && identity.company.id) ? <>
+      !isAdmin || (auth.identity.isCompanyAdmin) ? <>
         <DropdownItem text="Inventory">
           <Dropdown.Menu>
             <Dropdown.Item as={MenuLink} to="/inventory/my">My Inventory</Dropdown.Item>
@@ -42,7 +42,7 @@ class Navigation extends Component {
         </DropdownItem>
         <MenuLink to='/settings'>Settings</MenuLink>
         {isAdmin && <MenuLink to="/admin">Admin</MenuLink>}
-      </> : null
+      </> : isAdmin && <MenuLink to="/admin">Admin</MenuLink>
     )
   }
 }

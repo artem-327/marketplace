@@ -6,7 +6,7 @@ class Logout extends Component {
   componentDidMount() {
     const { logout, router } = this.props
 
-    logout(router.query.autoLogout)
+    logout(router.query.auto)
   }
 
   render() { return null }

@@ -1,24 +1,20 @@
 import React from 'react'
-import { getAuthFromServerCookie, getAuthFromLocalCookie } from '~/utils/auth'
+import { SecureContext } from './securePage'
 
 export default Component => class WithAuthComponent extends React.Component {
-  // static getInitialProps(ctx) {
-  //   const auth = process.browser ? getAuthFromLocalCookie() : getAuthFromServerCookie(ctx.req)
-  //   const initProps = Component.getInitialProps && Component.getInitialProps(ctx)
-
-  //   console.log("init props", auth)
-
-  //   return {
-  //     ...initProps,
-  //     auth,
-  //     isAdmin: auth && auth.isAdmin,
-  //     fooo: true
-  //   }
-  // }
+  static contextType = SecureContext
 
   render() {
-    const auth = getAuthFromLocalCookie() || {}
+    const { auth } = this.context
 
-    return <Component {...this.props} auth={auth} isAdmin={auth.isAdmin} />
+    return (
+      <Component
+        {...this.props}
+        {...{
+          auth: auth,
+          isAdmin: auth && auth.isAdmin
+        }}
+      />
+    )
   }
 }

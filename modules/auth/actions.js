@@ -2,6 +2,7 @@ import * as AT from './action-types'
 import * as api from './api'
 import { setAuth, unsetAuth, authorize } from '~/utils/auth'
 import Router from 'next/router'
+import { ROLES_ENUM } from '~/src/utils/constants'
 
 export function getIdentity() {
   return {
@@ -26,11 +27,25 @@ export function login(username, password) {
       const identity = await api.getIdentity()
       const preferredCurrency = identity.preferredCurrency
       const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
+
+      let accessRights = {}
+
+      if(identity.roles) {
+        ROLES_ENUM.forEach(role => {
+          accessRights[role.propertyName] = !!identity.roles.find((el) => el.id === role.id)
+        })
+      }
+
       setAuth({
         ...auth,
-        isAdmin: isAdmin
+        isAdmin: isAdmin,
+        identity: {
+          ...accessRights
+        }
       })
+
       isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
+      
       return {
         auth,
         identity,
@@ -48,9 +63,9 @@ export function getVersion() {
 }
 
 export function logout(isAutologout) {
-  if (!isAutologout) unsetAuth()
+  unsetAuth()
 
-  Router.push('/auth/login')
+  Router.push(`/auth/login${isAutologout ? '?auto=true' : ''}`)
 
   return {
     type: AT.LOGOUT
