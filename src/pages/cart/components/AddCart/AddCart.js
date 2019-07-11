@@ -5,7 +5,7 @@ import { checkToken } from '../../../../utils/auth'
 import styled from 'styled-components'
 import React, { Component } from 'react'
 import { object, func } from 'prop-types'
-import { Sidebar, Button, Header, Grid, GridRow, GridColumn, Loader, Dimmer, Dropdown, Input, Divider, Segment, List } from 'semantic-ui-react'
+import { Sidebar, Button, Header, Grid, GridRow, GridColumn, Loader, Dimmer, Dropdown, Input, Divider, Segment, List, Popup } from 'semantic-ui-react'
 import Router from 'next/router'
 import { FormattedNumber, FormattedMessage } from 'react-intl'
 import { FormattedUnit } from '~/components/formatted-messages'
@@ -246,13 +246,17 @@ export default class AddCart extends Component {
               ))}
             </CustomList>
             <GridRow columns={2}>
-              <GridColumn>Minimum Order Quantity:</GridColumn>
+              <Popup trigger={
+                <GridColumn><FormattedMessage id='cart.minimumQQ' defaultMessage='Minimum Order QQ' />:</GridColumn>
+              }
+                content={<FormattedMessage id='cart.minimumOrderQQ' defaultMessage='Minimum Order Quantity' />}
+              />
               <GridColumn>{offer.minimum}</GridColumn>
             </GridRow>
 
 
             <GridRow columns={2}>
-              <GridColumn>Splits:</GridColumn>
+              <GridColumn><FormattedMessage id='cart.split' defaultMessage='Split' />:</GridColumn>
               <GridColumn>{offer.splits}</GridColumn>
             </GridRow>
 
