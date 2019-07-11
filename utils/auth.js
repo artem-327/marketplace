@@ -24,19 +24,19 @@ export const unsetAuth = () => {
   window.localStorage.removeItem('state')
 }
 
-export const getAuthFromServerCookie = (req) => {
-  if (!req.headers.cookie) {
-    return undefined
-  }
-  const cookie = ServerCookie.parse(req.headers.cookie)
-  const auth = JSON.parse(cookie.auth || null)
+// export const getAuthFromServerCookie = (req) => {
+//   if (!req.headers.cookie) {
+//     return undefined
+//   }
+//   const cookie = ServerCookie.parse(req.headers.cookie)
+//   const auth = JSON.parse(cookie.auth || null)
 
-  return auth
-}
+//   return auth
+// }
 
-export const getAuthFromLocalCookie = () => {
-  return Cookie.getJSON('auth')
-}
+// export const getAuthFromLocalCookie = () => {
+//   return Cookie.getJSON('auth')
+// }
 
 export async function authorize(username, password) {
   const { data } = await api.post(

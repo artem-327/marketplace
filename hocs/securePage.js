@@ -3,7 +3,9 @@ import PropTypes from 'prop-types'
 import Router from 'next/router'
 import IdleTimer from 'react-idle-timer'
 import nextCookie from 'next-cookies'
-import { IDLE_TIMEOUT, refreshToken, getAuthFromServerCookie, getAuthFromLocalCookie } from '~/utils/auth'
+import { IDLE_TIMEOUT, refreshToken } from '~/utils/auth'
+
+export const SecureContext = React.createContext()
 
 const authorize = ctx => {
   const { auth } = nextCookie(ctx)
@@ -24,12 +26,13 @@ const authorize = ctx => {
     Router.push('/auth/login')
   }
 
-  return auth
+  return JSON.parse(auth)
 }
 
 const securePageHoc = Page => class SecurePage extends React.Component {
   static getInitialProps(ctx) {
-    const auth = authorize(ctx) // process.browser ? getAuthFromLocalCookie() : getAuthFromServerCookie(ctx.req)
+    const auth = authorize(ctx)
+    
     const pageProps = Page.getInitialProps && Page.getInitialProps(ctx)
 
     return {
@@ -62,7 +65,7 @@ const securePageHoc = Page => class SecurePage extends React.Component {
     const { auth } = this.props
 
     return (
-      <>
+      <SecureContext.Provider value={{auth}}>
         <IdleTimer
           timeout={IDLE_TIMEOUT}
           onIdle={() => Router.push(`/auth/logout`)}
@@ -70,7 +73,7 @@ const securePageHoc = Page => class SecurePage extends React.Component {
           debounce={10000}
         />
         <Page {...this.props} />
-      </>
+      </SecureContext.Provider>
     )
   }
 }
