@@ -142,8 +142,22 @@ class Settings extends Component {
           values: ['%' + value + '%']
         })
       },
-      // 'branches': null,
-      // 'warehouses': null,
+      'branches': {
+        url: `/prodex/api/branches/datagrid`,
+        searchToFilter: (value) => ({
+          operator: "LIKE",
+          path: "Branch.name",
+          values: [`%${value}%`]
+        })
+      },
+      'warehouses': {
+        url: `/prodex/api/branches/warehouses/datagrid`,
+        searchToFilter: (value) => ({
+          operator: "LIKE",
+          path: "Branch.warehouse",
+          values: [`%${value}%`]
+        })
+      },
       'products': {
         url: `/prodex/api/products/datagrid`,
         searchToFilter: (value) => ({

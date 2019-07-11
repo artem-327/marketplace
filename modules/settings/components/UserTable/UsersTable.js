@@ -35,6 +35,7 @@ class UsersTable extends Component {
       { name: "phone", title: "Phone" },
       { name: "homeBranchName", title: "Home Branch" },
       { name: "userRoles", title: "Roles", width: 200 },
+      { name: "lastLoginAt", title: "Last Login", width: 200 },
       { name: "switchEnable", title: "Enable User", width: 120 }
     ]
   }
@@ -134,6 +135,13 @@ const userEnableDisableStatus = (r, currentUserId) => (
   </div>
 )
 
+const formatDateTime = dt => {
+  const s = dt.split('T')
+  return (
+    s[0] + ' ' + s[1].split('.')[0]
+  )
+}
+
 const mapStateToProps = (state, { datagrid }) => {
   const currentUserId = state.settings.currentUser && state.settings.currentUser.id
   return {
@@ -149,10 +157,11 @@ const mapStateToProps = (state, { datagrid }) => {
       permissions: user.roles ? user.roles.name : "", // ! ! array?
       id: user.id,
       allUserRoles: user.roles || [],
-      userRoles: user.roles.map(rol => (
+      userRoles: user.roles && user.roles.map(rol => (
         rol.name
       )).join(", "),
-      switchEnable: userEnableDisableStatus(user, currentUserId)
+      switchEnable: userEnableDisableStatus(user, currentUserId),
+      lastLoginAt: user.lastLoginAt ? formatDateTime(user.lastLoginAt) : ''
     })),
     addedItem: state.settings.addedItem,
     editedItem: state.settings.editedItem,

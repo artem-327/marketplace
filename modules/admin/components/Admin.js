@@ -35,6 +35,7 @@ const tables = {
   'CAS Products': <CasProductsTable />,
   'Companies': <CompaniesTable />,
   'Document Types': <DataTable />,
+  'Market Segments': <DataTable />
 }
 
 const datagridConfig = {
@@ -54,6 +55,48 @@ const datagridConfig = {
       { operator: 'LIKE', path: 'Company.name', values: [`%${v}%`] }
     ])
   },
+  'Conditions': {
+    url: '/prodex/api/product-conditions/datagrid',
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'ProductCondition.name', values: [`%${v}%`] }
+    ])
+  },
+  'Document Types': {
+    url: 'prodex/api/document-types/datagrid',
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'DocumentType.name', values: [`%${v}%`] }
+    ])
+  },
+  'Forms': {
+    url: '/prodex/api/product-forms/datagrid',
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'ProductForm.name', values: [`%${v}%`] }
+    ])
+  },
+  'Grades': {
+    url: '/prodex/api/product-grades/datagrid',
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'ProductGrade.name', values: [`%${v}%`] }
+    ])
+  },
+  'Manufacturers': {
+    url: '/prodex/api/manufacturers/datagrid',
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'Manufacturer.name', values: [`%${v}%`] }
+    ])
+  },
+  'Market Segments': {
+    url: '/prodex/api/market-segments/datagrid',
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'MarketSegment.name', values: [`%${v}%`] }
+    ])
+  },
+  'Units of Packaging': {
+    url: '/prodex/api/packaging-types/datagrid',
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'PackagingType.name', values: [`%${v}%`] }
+    ])
+  }
 }
 
 const editForms = {
@@ -66,6 +109,7 @@ const editForms = {
   'CAS Products': <AddEditCasProductsPopup />,
   'Companies': <CompaniesForm />,
   'Document Types': <EditPopup1Parameter />,
+  'Market Segments': <EditPopup1Parameter />
 }
 
 const edit2Forms = {
@@ -82,6 +126,7 @@ const addForms = {
   'CAS Products': <AddEditCasProductsPopup />,
   'Companies': <CompaniesForm />,
   'Document Types': <AddNewPopup1Parameter />,
+  'Market Segments': <AddNewPopup1Parameter />
 }
 
 const addDwollaForms = {

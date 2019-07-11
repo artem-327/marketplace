@@ -1,6 +1,6 @@
 import * as AT from "./action-types"
 
-import { getLocationString, getPricing, addFirstTier } from "~/src/utils/functions"
+import { getLocationString, getPricing, addFirstTier, calculateTotalPrice } from "~/src/utils/functions"
 
 
 
@@ -162,6 +162,8 @@ export default function reducer(state = initialState, action) {
     case AT.OFFER_FETCH_FULFILLED: {
       let { payload } = action
 
+
+
       return {
         ...state,
         offerDetail: addFirstTier(payload.productOffer),
@@ -190,9 +192,11 @@ export default function reducer(state = initialState, action) {
         })
       }
 
+      // console.log((payload))
+
       return {
         ...state,
-        cart: payload,
+        cart: calculateTotalPrice(payload),
         cartIsFetching: false
       }
     }
@@ -333,9 +337,11 @@ export default function reducer(state = initialState, action) {
     /* DELETE_CART_ITEM */
 
     case AT.DELETE_CART_ITEM_FULFILLED: {
+      let cart = { ...state.cart, cartItems: state.cart.cartItems.filter((item) => item.id !== action.payload) }
+
       return {
         ...state,
-        cart: { ...state.cart, cartItems: state.cart.cartItems.filter((item) => item.id !== action.payload) }
+        cart: calculateTotalPrice(cart) 
       }
     }
 

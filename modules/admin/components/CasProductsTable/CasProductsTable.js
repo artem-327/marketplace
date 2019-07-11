@@ -1,5 +1,7 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
+import confirm from '~/src/components/Confirmable/confirm'
+import { injectIntl } from 'react-intl'
 import { Popup, Label } from 'semantic-ui-react'
 import ProdexTable from '~/components/table'
 import {
@@ -23,12 +25,14 @@ class CasProductsTable extends Component {
     const {
       datagrid,
       config,
+      intl,
       rows,
       openPopup,
       openEditAltNamesCasPopup,
       deleteCasProduct
     } = this.props
 
+    const { formatMessage } = intl
     const { columns } = config.display
 
     return (
@@ -41,12 +45,18 @@ class CasProductsTable extends Component {
           rowActions={[
             { text: 'Edit', callback: (row) => openPopup(row) },
             { text: 'Edit Alternative Names', callback: (row) => openEditAltNamesCasPopup(row) },
-            { 
-              text: 'Delete', 
-              callback: (row) => {
-                deleteCasProduct(row.id) 
+            {
+              text: 'Delete',
+              callback: (row) => confirm(
+                formatMessage({id: 'confirm.deleteCasProduct.title', defaultMessage: 'Delete CAS Product?'}),
+                formatMessage({
+                  id: 'confirm.deleteCasProduct.content',
+                  defaultMessage: `Do you really want to delete '${row.chemicalName}' CAS product?`
+                }, {name: row.chemicalName})
+              ).then(() => {
+                deleteCasProduct(row.id)
                 datagrid.removeRow(row.id)
-              }
+              })
             }
           ]}
         />
@@ -104,4 +114,4 @@ const mapStateToProps = (state, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(CasProductsTable))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(CasProductsTable)))

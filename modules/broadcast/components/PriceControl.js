@@ -10,7 +10,7 @@ export default class PriceControl extends Component {
     disabled: pt.bool
   }
 
-  defaultProps = {
+  static defaultProps = {
     disabled: false
   }
 
@@ -26,19 +26,20 @@ export default class PriceControl extends Component {
   }
 
   componentWillMount() {
-    const { node: { model } } = this.props
+    const { rule } = this.props
+
     this.setState({
-      type: model.priceAddition > 0 ? 'addition' : model.priceMultiplier > 0 ? 'multiplier' : '',
-      value: model.priceAddition > 0 ? model.priceAddition : model.priceMultiplier > 0 ? model.priceMultiplier : ''
+      type: rule.priceAddition > 0 ? 'addition' : rule.priceMultiplier > 0 ? 'multiplier' : 'multiplier',
+      value: rule.priceAddition > 0 ? rule.priceAddition : rule.priceMultiplier > 0 ? rule.priceMultiplier : ''
     })
   }
 
-  componentWillReceiveProps({ node: { model } }) {
+  componentWillReceiveProps({ rule }) {
     // console.log('receive props:', model)
 
     this.setState({
       //type: model.priceAddition > 0 ? 'addition' : model.priceMultiplier > 0 ? 'multiplier' : '',
-      value: model.priceAddition > 0 ? model.priceAddition : model.priceMultiplier > 0 ? model.priceMultiplier : ''
+      value: rule.priceAddition > 0 ? rule.priceAddition : rule.priceMultiplier > 0 ? rule.priceMultiplier : ''
     })
   }
 
@@ -46,21 +47,21 @@ export default class PriceControl extends Component {
     e.preventDefault()
     e.stopPropagation()
 
-    const { node: { model }, node, disabled } = this.props
+    const { rule } = this.props
 
     this.setState({ [name]: value }, () => {
       const { value, type } = this.state
 
       if (type === 'addition') {
-        model.priceAddition = value ? parseInt(value, 10) : 0
-        model.priceMultiplier = 0
+        rule.priceAddition = value ? parseInt(value, 10) : 0
+        rule.priceMultiplier = 0
         
-        this.onChange(node, { priceAddition: TreeModel.priceAddition })
+        this.onChange(rule)
       } else if (type === 'multiplier') {
-        model.priceMultiplier = value ? parseInt(value, 10) : 0
-        model.priceAddition = 0
+        rule.priceMultiplier = value ? parseInt(value, 10) : 0
+        rule.priceAddition = 0
         
-        this.onChange(node, { priceMultiplier: model.priceMultiplier })
+        this.onChange(rule)
       }
     })
 
@@ -68,7 +69,7 @@ export default class PriceControl extends Component {
   }
 
   render() {
-    const { node: { model }, disabled } = this.props
+    const { disabled } = this.props
     const { type, value } = this.state
 
     return (

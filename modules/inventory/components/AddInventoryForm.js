@@ -245,8 +245,8 @@ class AddInventoryForm extends Component {
     return (
       <Grid className='product-details' centered>
         <CustomPaddedColumn>
-          <Segment fluid 
-            attached={values.product ? false : 'top'} 
+          <Segment fluid
+            attached={values.product ? false : 'top'}
             style={{ padding: '1.5em' }}>
             <Accordion>
               <Accordion.Title active={activeIndex === 0} index={0} onClick={this.accClick}>
@@ -414,7 +414,7 @@ class AddInventoryForm extends Component {
   componentDidUpdate = (oldProps) => {
     // prepare state for searchedProducts when opened edit form
     if (!this.state.searchedProducts.length && !oldProps.searchedProducts.length && this.props.searchedProducts.length)
-      this.setState({'searchedProducts': this.props.searchedProducts})
+      this.setState({ 'searchedProducts': this.props.searchedProducts })
   }
 
   searchProducts = async (text) => {
@@ -426,7 +426,7 @@ class AddInventoryForm extends Component {
         key: p.id,
         id: p.id,
         content: (
-          <Header style={{fontSize: '1em'}}>
+          <Header style={{ fontSize: '1em' }}>
             <Header.Content>
               {`${p.productCode ? p.productCode : ''} ${p.productName ? p.productName : ''}`}
               {this.renderCasProducts(p)}
@@ -435,18 +435,18 @@ class AddInventoryForm extends Component {
         )
       }
     })
-    this.setState({'searchedProducts': dropdownOptions})
+    this.setState({ 'searchedProducts': dropdownOptions })
   }
 
   renderCasProducts = (product) => {
     if (product.casProducts && product.casProducts.length) {
-      const {casProducts} = product
+      const { casProducts } = product
 
       return (
         <>
           {casProducts.map(cp => {
             return (
-              <Header.Subheader>{`${cp.casNumber} ${cp.chemicalName}`}</Header.Subheader>
+              <Header.Subheader>{`${cp.casProduct.casNumber} ${cp.casProduct.chemicalName}`}</Header.Subheader>
             )
           })}
         </>
@@ -507,16 +507,16 @@ class AddInventoryForm extends Component {
           validationSchema={validationScheme}
           onSubmit={(values, actions) => {
             const reducer = (accumulator, currentValue) => accumulator + currentValue
-            const formQty = values.pkgAmount
-            const lotsQty = values.lots.map(l => parseInt(l.pkgAmount)).reduce(reducer)
+            const formQty = parseInt(values.pkgAmount)
+            const lotsQty = values.lots.length > 0 ? values.lots.map(l => parseInt(l.pkgAmount)).reduce(reducer) : formQty
 
-            if (lotsQty !== values.quantity) {
+            if (lotsQty !== formQty) {
               confirm(
-                formatMessage({id: 'confirm.quantityHeader', defaultMessage: 'Quantity Modified'}),
+                formatMessage({ id: 'confirm.quantityHeader', defaultMessage: 'Quantity Modified' }),
                 formatMessage({
-                    id: 'confirm.quantityMisconfiguration',
-                    defaultMessage: 'You originally entered {formQty} as the quantity, but you have entered total quantity of {lotsQty} in Lots. Would you like to proceed? The total quantity will be adjusted according the Lot records.'
-                  },
+                  id: 'confirm.quantityMisconfiguration',
+                  defaultMessage: 'You originally entered {formQty} as the quantity, but you have entered total quantity of {lotsQty} in Lots. Would you like to proceed? The total quantity will be adjusted according the Lot records.'
+                },
                   {
                     formQty,
                     lotsQty
@@ -531,7 +531,8 @@ class AddInventoryForm extends Component {
                       //Router.push('/inventory/my') xxx
                     })
                     .finally(() => {
-                      actions.resetForm()
+                      // actions.resetForm()
+                      actions.setSubmitting(false)
                     })
                 },
                 () => {
@@ -601,8 +602,8 @@ class AddInventoryForm extends Component {
                         <Grid divided style={{ marginTop: '2rem' }}>
                           <Grid.Column width={5}>
                             <Header as='h3'>What product do you want to list? <Popup content={<>Enter any product name, product number, or trade name from your product catalog for the product offer that you would like to list. Once you do the data related to that product name/umber will populate in the right hand column.<br /><br />If you do not see the product that you would like to list then check in Settings/Product Catalog that it is entered and mapped to a CAS Index Name/Number and then return to this page.<br /><br />Entering a product name and number and mapping to a CAS Index Name and Number is required first before entering a product offer.</>}
-                                                                                     trigger={<Icon name='info circle' color='blue' />}
-                                                                                     wide />
+                              trigger={<Icon name='info circle' color='blue' />}
+                              wide />
                             </Header>
                             <FormGroup>
                               <FormField width={13}>
@@ -637,8 +638,8 @@ class AddInventoryForm extends Component {
                             </FormGroup>
 
                             <Header as='h3'>Does this product expire? <Popup content={`If the product you are listing has an expiration then you are required to disclose that date. If you sell a product that is not represented correctly the buyer has the right to request a return of the order and the cost of shipping to/from will be the sellers responsibility.`}
-                                                                             trigger={<Icon name='info circle' color='blue' />}
-                                                                             wide />
+                              trigger={<Icon name='info circle' color='blue' />}
+                              wide />
                             </Header>
                             <FormGroup inline>
                               <Radio label="No" value={false} name="doesExpire" />
@@ -651,8 +652,8 @@ class AddInventoryForm extends Component {
                             </FormGroup>
 
                             <Header as='h3'>Where will this product ship from? <Popup content={`Warehouse is the physical location where your product offer will be picked up after an order is accepted. If you do not see the warehouse you need to list then go to Settings/Warehouses and add the information there. If you do not have permissions to add a new Warehouse then contact your company Admin.`}
-                                                                                      trigger={<Icon name='info circle' color='blue' />}
-                                                                                      wide />
+                              trigger={<Icon name='info circle' color='blue' />}
+                              wide />
                             </Header>
                             <FormGroup>
                               <FormField width={10}>
@@ -665,7 +666,7 @@ class AddInventoryForm extends Component {
 
                             <Header as='h3'>
                               How many packages are available? <Popup content='Total packages represents the number of drums, totes, super sacks etc that you will be listing for this product offer. Your packaging type and measurement for this product offer will populate on the right panel as soon as you select a product name/number.'
-                                                                      trigger={<Icon name='info circle' color='blue' />} />
+                                trigger={<Icon name='info circle' color='blue' />} />
                             </Header>
                             <FormGroup>
                               <FormField width={4}>
@@ -679,8 +680,8 @@ class AddInventoryForm extends Component {
                               <GridColumn width={12}>
 
                                 <Header as="h3">Is there any order minimum requirement? <Popup content={<>Minimum OQ is the minimum amount of packages you want to sell for any single order. If you want to sell no less than 10 drums for an order then enter 10. If you have no minimum order requirement then enter 1.<br />Splits is the multiples you are willing to accept for any single order. If you only want to sell multiples of 4 drums then enter 4. If you have no split requirements then enter 1.</>}
-                                                                                               trigger={<Icon name='info circle' color='blue' />}
-                                                                                               wide />
+                                  trigger={<Icon name='info circle' color='blue' />}
+                                  wide />
                                 </Header>
                                 <FormGroup>
                                   <Radio label="No" value={false} name="minimumRequirement" inputProps={{
@@ -707,9 +708,9 @@ class AddInventoryForm extends Component {
                                   </FormField>
                                 </FormGroup>
 
-                                <Header as='h3'>How many price tiers would you like to offer? <Popup content={<>Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.<br />For example if you list 40 drums you could set 2 tiers and offer orders of <span style={{whiteSpace: 'nowrap'}}>1-20 drums</span> at $1.00/lb and orders of <span style={{whiteSpace: 'nowrap'}}>21-40</span> drums at $.90/lb.<br />If you only want to set only one price then enter "1".</>}
-                                                                                                     trigger={<Icon name='info circle' color='blue' />}
-                                                                                                     wide />
+                                <Header as='h3'>How many price tiers would you like to offer? <Popup content={<>Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.<br />For example if you list 40 drums you could set 2 tiers and offer orders of <span style={{ whiteSpace: 'nowrap' }}>1-20 drums</span> at $1.00/lb and orders of <span style={{ whiteSpace: 'nowrap' }}>21-40</span> drums at $.90/lb.<br />If you only want to set only one price then enter "1".</>}
+                                  trigger={<Icon name='info circle' color='blue' />}
+                                  wide />
                                 </Header>
                                 <FormGroup>
                                   <FormField width={5}>
@@ -731,8 +732,8 @@ class AddInventoryForm extends Component {
                                 </FormGroup>
 
                                 <Header as='h3' style={{ marginBottom: '2rem' }}>What is the FOB price for each tier? <Popup content='FOB stands for free on board and freight on board and designates that the buyer is responsible for shipping costs. It also represents that ownership and liability is passed from seller to the buyer when the good are loaded at the originating location.'
-                                                                                                                             trigger={<Icon name='info circle' color='blue' />}
-                                                                                                                             wide />
+                                  trigger={<Icon name='info circle' color='blue' />}
+                                  wide />
                                 </Header>
                                 <Grid className='tier-prices'>
                                   {this.renderPricingTiers(values.priceTiers)}
@@ -741,8 +742,8 @@ class AddInventoryForm extends Component {
                                 <Divider style={{ marginTop: '3rem', marginBottom: '3rem' }} />
 
                                 <Header as='h3'>Upload Spec Sheet <Popup content={<>The Spec Sheet, also known as a Technical Data Sheet (TDS), is required for a product offer to broadcast to the marketplace.<br /><br />You can drag and drop a file from your computer or click on the box to search for the file as well.<br /><br />IMPORTANT! Your company name and contact information cannot be listed on this document and non compliance is against Echo's Terms and Conditions.</>}
-                                                                         trigger={<Icon name='info circle' color='blue' />}
-                                                                         wide />
+                                  trigger={<Icon name='info circle' color='blue' />}
+                                  wide />
                                 </Header>
                                 <UploadLot {...this.props}
                                   attachments={values.attachments}
@@ -904,10 +905,10 @@ class AddInventoryForm extends Component {
                                   <Message attached='top' className='header-table-fields'>
                                     <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{ marginTop: '-0.5em' }} onClick={() => arrayHelpers.push({ lotNumber: null, pkgAmount: null, manufacturedDate: '', expirationDate: '' })} />
                                     Lot Details <Popup content={`This is where you can track lot(s) that make up your product offer. For example if your product offer consists of three separate lots then hit the plus button to the right twice to add two more lots. Then enter the Lot # for each, the amount of packages that are associated to that lot within this product offer, the MFG date, the expiration date, and the associated Certificate of Analysis. This does not have to be completed when listing a product offer but it is required to designate lot info and CofA's within 48 hours of an order being shipped.`}
-                                                       trigger={<Icon name='info circle' color='blue' />}
-                                                       wide
-                                                />
-                                </Message>
+                                      trigger={<Icon name='info circle' color='blue' />}
+                                      wide
+                                    />
+                                  </Message>
                                   <Table attached='bottom' className='table-fields'>
                                     <Table.Header>
                                       <Table.Row>

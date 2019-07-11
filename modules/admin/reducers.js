@@ -34,6 +34,7 @@ export const initialState = {
     { name: 'Forms', id: 5 },
     { name: 'Conditions', id: 6 },
     { name: 'Document Types', id: 9 },
+    { name: 'Market Segments', id: 10 }
   ],
 
   currentTab: 'CAS Products',
@@ -432,7 +433,7 @@ export default function reducer(state = initialState, action) {
 
     /* DELETE UNIT OF PACKAGING */
 
-    case AT.ADMIN_DELETE_UNIT_OF_PACKAGING_PENDING: {
+    /*case AT.ADMIN_DELETE_UNIT_OF_PACKAGING_PENDING: {
       return {
         ...state,
         loading: true
@@ -442,7 +443,6 @@ export default function reducer(state = initialState, action) {
     case AT.ADMIN_DELETE_UNIT_OF_PACKAGING_FULFILLED: {
       return {
         ...state,
-        unitsOfPackagingRows: state.unitsOfPackagingRows.filter((el) => el.id !== payload),
         loading: false
       }
     }
@@ -452,7 +452,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loading: false
       }
-    }
+    }*/
 
     case AT.ADMIN_GET_ADDRESSES_SEARCH_PRIMARY_BRANCH_FULFILLED: {
       return {

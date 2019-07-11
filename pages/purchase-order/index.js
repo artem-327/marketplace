@@ -3,7 +3,7 @@ import Layout from 'components/Layout'
 import { PurchaseOrder } from '~/modules/purchase-order'
 
 export default securePage(() => (
-  <Layout title="Cart">
+  <Layout title='Cart'>
     <PurchaseOrder />
   </Layout>
 ))

@@ -160,7 +160,7 @@ export default class ShippingEdit extends Component {
             id='address.province'
             name='address.province'
             selection fluid
-            label={<FormattedMessage id='global.province' defaultMessage='Province' />}
+            label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />}
           />
 
         </FormGroup>

@@ -7,7 +7,7 @@ export default {
     const formData = new FormData()
     formData.append('file', attachment)
 
-    return api.post(`/prodex/api/attachments?type=${docType}&isTemporary=true`+(expirationDate ? '&expirationDate='+expirationDate : ''), formData, {
+    return api.post(`/prodex/api/attachments?type=${docType}&isTemporary=true` + (expirationDate ? '&expirationDate=' + expirationDate : ''), formData, {
       headers: {
         'accept': 'application/json',
         'Accept-Language': 'en-US,en;q=0.8',
@@ -80,7 +80,7 @@ export default {
   postNewProduct: (body) => api.post('/prodex/api/products', body),
   updateProduct: (id, body) => api.put(`/prodex/api/products/id/${id}`, body),
 
-  postNewDwollaAccount: async body => {return await api.post('/prodex/api/payments/dwolla/register', body)},
+  postNewDwollaAccount: async body => { return await api.post('/prodex/api/payments/dwolla/register', body) },
 
   postImportProductCSV: (body, id) => {
     return api
@@ -90,19 +90,32 @@ export default {
       )
       .then(response => response.data)
   },
+  postImportProductOfferCSV: (body, id) => {
+    return api
+      .post(
+        `/prodex/api/imports/csv-import-product-offers?temporaryFileId=${id}`,
+        body
+      )
+      .then(response => response.data)
+  },
   uploadCSVFile: body => {
     const formData = new FormData()
-    formData.append('file', body)
+    formData.append('file', new Blob([body], { type: 'text/plain' }))
+    
     return api
       .post('/prodex/api/imports/temporary-files', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'text/plain'
         }
       })
       .then(response => response.data)
   },
+  getCSVMapProductOffer: () =>
+    api.get('/prodex/api/imports/product-offer-maps').then(response => response.data),
+  postCSVMapProductOffer: data =>
+    api.post('/prodex/api/imports/product-offer-maps', data),
   putWarehouse: (branchId, body) =>
-    api.put(`/prodex/api/branches/${branchId}`, body),
+    api.put(`/prodex/api/branches/${branchId}`, body).then((r) => r.data),
   // putUser: (id, body) => api.put(`/prodex/api/users/${id}`, body),
   patchUser: (id, body) => api.patch(`/prodex/api/users/id/${id}`, body),
   patchUserRole: (id, body) =>
@@ -139,9 +152,7 @@ export default {
   createDeliveryAddress: async (value) => {
     return await api.post('/prodex/api/delivery-addresses', value)
   },
-  updateDeliveryAddresses: async (id, value) => {
-    return await api.put(`/prodex/api/delivery-addresses/id/${id}`, value)
-  },
+  updateDeliveryAddresses: (id, value) => api.put(`/prodex/api/delivery-addresses/id/${id}`, value),
   dwollaInitiateVerification: async (id) => {
     return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify/initialize`)
   },

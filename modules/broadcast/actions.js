@@ -15,6 +15,5 @@ export const saveRules = createAsyncAction('BROADCAST_SAVE', async (id, rules) =
 })
 
 export const closeBroadcast = createAction('BROADCAST_CLOSE')
-export const updateLocalRules = createAction('BROADCAST_LOCAL_UPDATE', rules => rules)
 export const updateFilter = createAction('BROADCAST_FILTER_UPDATE', filter => filter)
 export const switchMode = createAction('BROADCAST_SWITCH_MODE', (mode) => mode)

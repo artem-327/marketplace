@@ -367,7 +367,7 @@ h3.ui.header {
 }
 
 .ui.form .field > label {
-  font-size: 1.142857em;
+  font-size: 1em;
   font-weight: 400;
 }
 
@@ -583,14 +583,15 @@ table.order-total.ui[class*="very basic"]:not(.sortable):not(.striped) {
   background-color: #ffffff;
 }
 
-.ui.toggle.checkbox input[disabled] ~ .box:before,
-.ui.toggle.checkbox input[disabled] ~ label:before {
+// special error state of toggle button
+.ui.toggle.checkbox.error input[disabled] ~ .box:before,
+.ui.toggle.checkbox.error input[disabled] ~ label:before {
   border: solid 1px #e74c3c;
   background-color: #e7e7e7;
 }
 
-.ui.toggle.checkbox input[disabled] ~ .box:after,
-.ui.toggle.checkbox input[disabled] ~ label:after {
+.ui.toggle.checkbox.error input[disabled] ~ .box:after,
+.ui.toggle.checkbox.error input[disabled] ~ label:after {
   border-color: #e74c3c;
   background-color: rgba(231, 76, 60, 0.2);
 }

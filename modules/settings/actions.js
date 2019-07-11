@@ -79,7 +79,8 @@ export function closeImportPopup(reloadFilter) {
     dispatch({
       type: AT.SETTINGS_CLOSE_IMPORT_POPUP_FULFILLED,
     })
-    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
+    Datagrid.loadData()
+    //dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
   }
 }
 
@@ -98,11 +99,13 @@ export function openEditPopup(rows) {
 export function handlerSubmitUserEditPopup(payload, id) {
   return async dispatch => {
     removeEmpty(payload)
-    await dispatch({
+    const response = await api.patchUser(id, payload)
+    dispatch({
       type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
-      payload: api.patchUser(id, payload)
+      payload: response
     })
-    dispatch(getUsersDataRequest())
+    //dispatch(getUsersDataRequest())
+    Datagrid.updateRow(id, () => response.data)
     dispatch(closePopup())
   }
 }
@@ -160,7 +163,14 @@ export const deleteUser = (id, name) => ({
   }
 })
 
-export const deleteBranch = (id) => ({ type: AT.DELETE_BRANCH, payload: api.deleteWarehouse(id) })
+export const deleteBranch = (id) => ({
+  type: AT.DELETE_BRANCH,
+  async payload() {
+    await api.deleteWarehouse(id)
+    Datagrid.removeRow(id)
+    return id
+  }
+})
 
 export const deleteProduct = (id, name) => ({
   type: AT.DELETE_PRODUCT,
@@ -171,7 +181,14 @@ export const deleteProduct = (id, name) => ({
   }
 })
 
-export const deleteBankAccount = (id) => ({ type: AT.DELETE_BANK_ACCOUNT, payload: api.deleteBankAccount(id) })
+export const deleteBankAccount = (id) => ({
+  type: AT.DELETE_BANK_ACCOUNT,
+  async payload() {
+    const response = await api.deleteBankAccount(id)
+    Datagrid.removeRow(id)
+    return response
+  }
+})
 
 export const deleteDeliveryAddress = (id) => ({
   type: AT.SETTINGS_DELETE_DELIVERY_ADDRESSES,
@@ -298,15 +315,12 @@ export function handlerSubmitWarehouseEditPopup(payload, id) {
       name: payload.name
     }
     removeEmpty(dataBody)
+    const response = await api.putWarehouse(id, dataBody)
     await dispatch({
       type: AT.PUT_WAREHOUSE_EDIT_POPUP,
-      payload: api.putWarehouse(id, dataBody)
+      payload: response
     })
-    if (payload.tab) {
-      dispatch(getBranchesDataRequest())
-    } else {
-      dispatch(getWarehousesDataRequest())
-    }
+    Datagrid.updateRow(id, () => response)
     dispatch(closePopup())
   }
 }
@@ -330,9 +344,10 @@ export function handleSubmitProductEditPopup(productData, id, reloadFilter) {
       unNumber: productData.unNumber ? productData.unNumber : null
     }
     removeEmpty(data)
-    await dispatch({
+    const response = await api.updateProduct(id, data)
+    dispatch({
       type: AT.SETTINGS_UPDATE_PRODUCT_CATALOG,
-      payload: api.updateProduct(id, data)
+      payload: response
     })
     if (productData.attachments && productData.attachments.length) {
       for (let i = 0; i < productData.attachments.length; i++) {
@@ -343,6 +358,7 @@ export function handleSubmitProductEditPopup(productData, id, reloadFilter) {
       }
     }
     dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
+    Datagrid.updateRow(id, () => response.data)
     dispatch(closePopup())
   }
 }
@@ -553,7 +569,8 @@ export function postNewUserRequest(payload) {
       type: AT.POST_NEW_USER_REQUEST,
       payload: api.postNewUser(payload)
     })
-    dispatch(getUsersDataRequest())
+    //dispatch(getUsersDataRequest())
+    Datagrid.loadData()
     dispatch(closePopup())
   }
 }
@@ -579,11 +596,7 @@ export function postNewWarehouseRequest(payload) {
       type: AT.POST_NEW_WAREHOUSE_REQUEST,
       payload: api.postNewWarehouse(dataBody)
     })
-    if (payload.tab) {
-      dispatch(getBranchesDataRequest())
-    } else {
-      dispatch(getWarehousesDataRequest())
-    }
+    Datagrid.loadData()
     dispatch(closePopup())
   }
 }
@@ -607,8 +620,8 @@ export function putNewUserRoleRequest(payload, id) {
       type: AT.PUT_NEW_USER_ROLES_REQUEST,
       payload: api.patchUserRole(id, payload)
     })
-    dispatch(getUsersDataRequest())
-    dispatch(closePopup())
+    //dispatch(getUsersDataRequest())
+    dispatch(closeRolesPopup())
   }
 }
 
@@ -650,7 +663,8 @@ export function handleSubmitProductAddPopup(inputsValue, reloadFilter) {
         })
       }
     }
-    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
+    //dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Products list using string filters or page display
+    Datagrid.loadData()
     dispatch(closePopup())
   }
 }
@@ -660,6 +674,7 @@ export function postNewBankAccountRequest(payload) {
     type: AT.POST_NEW_BANK_ACCOUNT_REQUEST,
     async payload() {
       const { data } = await api.postNewBankAccount(payload)
+      Datagrid.loadData()
       return data
     }
   }
@@ -668,7 +683,10 @@ export function postNewBankAccountRequest(payload) {
 export function putBankAccountRequest(account, id) {
   return {  // ! ! missing in saga
     type: AT.PUT_BANK_ACCOUNT_EDIT_POPUP,
-    payload: account,
+    async payload() {
+      Datagrid.updateRow(id, () => account)
+      return account
+    },
     id
   }
 }
@@ -694,10 +712,51 @@ export function uploadCSVFile(payload) {
   }
 }
 
+export function getCSVMapProductOffer() {
+  return {
+    type: AT.GET_CSV_MAP_PRODUCT_OFFER,
+    payload: api.getCSVMapProductOffer()
+  }
+}
+
+export function postCSVMapProductOffer(payload) {
+  return {
+    type: AT.POST_CSV_MAP_PRODUCT_OFFER,
+    payload: api.postCSVMapProductOffer(payload)
+  }
+}
+
+export function handleSaveMapCSV() {
+  return {
+    type: AT.SAVE_MAP_CSV
+  }
+}
+
+export function handleChangeMapCSVName(payload) {
+  return {
+    type: AT.CHANGE_MAP_CSV_NAME,
+    payload
+  }
+}
+
 export function postImportProductCSV(payload, id) {
   return {
     type: AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS,
     payload: api.postImportProductCSV(payload, id)
+  }
+}
+
+export function postImportProductOfferCSV(payload, id) {
+  return {
+    type: AT.SETTINGS_POST_CSV_IMPORT_PRODUCTS_OFFER,
+    payload: api.postImportProductOfferCSV(payload, id)
+  }
+}
+
+export function selectSavedMap(payload) {
+  return {
+    type: AT.SELECT_SAVED_MAP,
+    payload
   }
 }
 
@@ -782,12 +841,14 @@ export function getDeliveryAddressesByFilterRequest(value) {
 
 export function updateDeliveryAddresses(id, value, reloadFilter) {
   return async dispatch => {
-    await dispatch({
+    const response = await api.updateDeliveryAddresses(id, value)
+    dispatch({
       type: AT.SETTINGS_UPDATE_DELIVERY_ADDRESSES,
-      payload: api.updateDeliveryAddresses(id, value)
+      payload: response
     })
     dispatch(closePopup())
-    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
+    Datagrid.updateRow(id, () => response.data)
+    //dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
   }
 }
 
@@ -798,7 +859,8 @@ export function createDeliveryAddress(value, reloadFilter) {
       payload: api.createDeliveryAddress(value)
     })
     dispatch(closePopup())
-    dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
+    Datagrid.loadData()
+    //dispatch(handleFiltersValue(reloadFilter.props, reloadFilter.value))  // Reload Delivery Addresses list using string filters or page display
   }
 }
 

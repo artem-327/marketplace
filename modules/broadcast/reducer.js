@@ -1,5 +1,5 @@
 import typeToReducer from 'type-to-reducer'
-import {openBroadcast, closeBroadcast, updateLocalRules, updateFilter, saveRules, switchMode} from './actions'
+import { openBroadcast, closeBroadcast, updateFilter, saveRules, switchMode } from './actions'
 
 const initialState = {
   id: null,
@@ -15,50 +15,55 @@ const initialState = {
 
 export default typeToReducer({
   [openBroadcast.pending]: (state, action) => {
-    return {...state,
+    return {
+      ...initialState,
       open: true,
       loading: true
     }
   },
 
-  [openBroadcast.fulfilled]: (state, {payload: {data, id}}) => {
-    return {...state,
+  [openBroadcast.fulfilled]: (state, { payload: { data, id } }) => {
+    return {
+      ...state,
       loading: false,
       data,
       id
     }
   },
 
-  [updateLocalRules]: (state, {payload}) => {
-    return {...state,
-      data: payload
-    }
-  },
-
   [closeBroadcast]: (state) => {
-    return {...state,
+    return {
+      ...state,
       open: false,
       data: null,
-      loading: false  
+      loading: false
     }
   },
 
-  [switchMode]: (state, {payload: mode}) => ({ ...state,
+  [switchMode]: (state, { payload: mode }) => ({
+    ...state,
     mode
   }),
 
-  [updateFilter]: (state, {payload}) => ({
+  [updateFilter]: (state, { payload }) => ({
     ...state,
     filter: payload
   }),
 
-  [saveRules.pending]: (state) => ({...state,
+  [saveRules.pending]: (state) => ({
+    ...state,
     loading: true
   }),
 
-  [saveRules.fulfilled]: (state) => ({...state,
+  [saveRules.fulfilled]: (state) => ({
+    ...state,
     loading: false,
     open: false
+  }),
+
+  [saveRules.rejected]: (state) => ({
+    ...state,
+    loading: false
   })
 
 }, initialState)

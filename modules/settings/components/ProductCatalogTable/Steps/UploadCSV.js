@@ -1,11 +1,11 @@
-import React, { Component } from "react"
-import { connect } from "react-redux"
-import styled from "styled-components"
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import styled from 'styled-components'
 
-import Dropzone from "react-dropzone"
-import { Grid, Segment, Header, Icon, Button } from "semantic-ui-react"
+import Dropzone from 'react-dropzone'
+import { Grid, Segment, Header, Icon, Button, Form } from 'semantic-ui-react'
 
-import { uploadCSVFile } from "../../../actions"
+import { uploadCSVFile } from '../../../actions'
 
 const StyledDropzone = styled(Dropzone)`
   display: flex;
@@ -49,24 +49,27 @@ class UploadCSV extends Component {
     return (
       <Grid centered padded>
         <Grid.Row>
-          <StyledDropzone
-            onDrop={this.onDrop}
-            accept='.csv'
-            multiple={false}
-            uploaded={uploadedFile}
-            error={hasError ? "true" : undefined}
-          >
-            <StyledSegment placeholder>
-              <Header icon>
-                <Icon name="file" className="csv" />
-                Drag and drop or browse computer to upload your .csv file
+          <Form>
+
+            <StyledDropzone
+              onDrop={this.onDrop}
+              accept={['.csv', '.xlsx']}
+              multiple={false}
+              uploaded={uploadedFile}
+              error={hasError ? 'true' : undefined}>
+
+              <StyledSegment placeholder>
+                <Header icon>
+                  <Icon name='file' className='csv' />
+                  Drag and drop or browse computer to upload your .csv file
               </Header>
-              <Segment.Inline>
-                {uploadedFile && uploadedFile.name}
-                {hasError && <p style={{ color: "red" }}>Invalid type file</p>}
-              </Segment.Inline>
-            </StyledSegment>
-          </StyledDropzone>
+                <Segment.Inline>
+                  {uploadedFile && uploadedFile.name}
+                  {hasError && <p style={{ color: 'red' }}>Invalid type file</p>}
+                </Segment.Inline>
+              </StyledSegment>
+            </StyledDropzone>
+          </Form>
         </Grid.Row>
       </Grid>
     )

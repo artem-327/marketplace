@@ -147,8 +147,8 @@ class AddEditCasProductsPopup extends React.Component {
                 <FormattedMessage id={`notifications.${status}.header`} />,
                 <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.casIndexName }} />
               ), {
-                  appearance: 'success'
-                })
+                appearance: 'success'
+              })
 
 
               setSubmitting(false)
@@ -222,7 +222,7 @@ const mapDispatchToProps = {
   postNewCasProductRequest,
   updateCasProductRequest,
   getUnNumbersByString,
-};
+}
 
 const mapStateToProps = state => {
   let cfg = state.admin.config[state.admin.currentTab]

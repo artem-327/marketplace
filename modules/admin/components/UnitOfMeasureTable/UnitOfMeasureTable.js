@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Confirm } from "semantic-ui-react"
+import { injectIntl } from 'react-intl'
+import confirm from '~/src/components/Confirmable/confirm'
 //import ProdexGrid from '~/components/table'
 import ProdexTable from '~/components/table'
 import {
@@ -20,6 +21,7 @@ class UnitOfMeasureTable extends Component {
 
   render() {
     const {
+      intl,
       loading,
       rows,
       filterValue,
@@ -27,6 +29,7 @@ class UnitOfMeasureTable extends Component {
       deleteUnit,
     } = this.props
 
+    const { formatMessage } = intl
     const { columns } = this.props.config.display
 
     return (
@@ -38,7 +41,13 @@ class UnitOfMeasureTable extends Component {
           rows={rows}
           rowActions={[
             { text: 'Edit', callback: (row) => openEditPopup(row) },
-            { text: 'Delete', callback: (row) => deleteUnit(row.id) }
+            { text: 'Delete', callback: (row) =>
+              confirm(
+                formatMessage({ id: 'confirm.deleteMeasurement.title', defaultMessage: 'Delete Unit of Measure' }),
+                formatMessage(
+                  { id: 'confirm.deleteMeasurement.content', defaultMessage: `Do you really want to delete '${row.name}' unit?` },
+                  { name: row.name })
+              ).then(() => deleteUnit(row.id)) }
           ]}
         />
       </React.Fragment>
@@ -77,4 +86,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UnitOfMeasureTable)
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(UnitOfMeasureTable))

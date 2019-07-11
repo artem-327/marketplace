@@ -41,6 +41,13 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.INVENTORY_ADD_PRODUCT_OFFER_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
     case AT.INVENTORY_EDIT_PRODUCT_OFFER_PENDING: {
       return {
         ...state,
@@ -286,21 +293,21 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.INVENTORY_PATCH_BROADCAST_FULFILLED: {
-      return {
-        ...state,
-        myProductOffers: state.myProductOffers.map(po => {
-          if (po.id === action.payload.productOfferId) {
-            return {
-              ...po,
-              status: action.payload.broadcasted
-            }
-          } else {
-            return po
-          }
-        })
-      }
-    }
+    // case AT.INVENTORY_PATCH_BROADCAST_FULFILLED: {
+    //   return {
+    //     ...state,
+    //     myProductOffers: state.myProductOffers.map(po => {
+    //       if (po.id === action.payload.productOfferId) {
+    //         return {
+    //           ...po,
+    //           status: action.payload.broadcasted
+    //         }
+    //       } else {
+    //         return po
+    //       }
+    //     })
+    //   }
+    // }
 
 
     default: {

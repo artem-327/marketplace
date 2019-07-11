@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import confirm from '~/src/components/Confirmable/confirm'
 import { injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
-import confirm from '~/src/components/Confirmable/confirm'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -43,8 +43,8 @@ class CompaniesTable extends Component {
             { text: 'Edit', callback: (row) => openEditCompany(row.id, row) },
             {
               text: 'Delete', callback: (row) => confirm(
-                formatMessage({ id: 'confirm.deleteCompany', defaultMessage: 'Delete Company?' }),
-                formatMessage({ id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` }, { item: row.name })
+                formatMessage({ id: 'confirm.deleteCompany.title', defaultMessage: 'Delete Company?' }),
+                formatMessage({ id: 'confirm.deleteCompany.content', defaultMessage: `Do you really want to delete '${row.name}' company?` }, { name: row.name })
               ).then(() => {
                 deleteCompany(row.id)
                 datagrid.removeRow(row.id)
