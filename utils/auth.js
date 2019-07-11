@@ -3,12 +3,16 @@ import Cookie from 'js-cookie'
 import ServerCookie from 'cookie'
 import api from '~/api'
 
-export const IDLE_TIMEOUT = 30 * (60 * 1000)
+export const IDLE_TIMEOUT = 1 * (60 * 1000)
 
 export const setAuth = (auth) => {
   let now = new Date()
-  now.setTime(now.getTime() + (IDLE_TIMEOUT+1000))
-  Cookie.set('auth', auth, {expires: now})
+  now.setTime(now.getTime() + (IDLE_TIMEOUT + 1000))
+
+  Cookie.set('auth',
+    { ...auth, expires: now.getTime() },
+    { expires: now }
+  )
 }
 
 export const unsetAuth = () => {
@@ -26,7 +30,7 @@ export const getAuthFromServerCookie = (req) => {
   }
   const cookie = ServerCookie.parse(req.headers.cookie)
   const auth = JSON.parse(cookie.auth || null)
-  
+
   return auth
 }
 
@@ -35,7 +39,7 @@ export const getAuthFromLocalCookie = () => {
 }
 
 export async function authorize(username, password) {
-  const {data} = await api.post(
+  const { data } = await api.post(
     '/prodex/oauth/token',
     `grant_type=password&username=${username}&password=${password}`,
     {
@@ -43,7 +47,7 @@ export async function authorize(username, password) {
         'Authorization': 'Basic cHJvZGV4LXJlYWN0OmthcmVsLXZhcmVs'
       }
     })
-    
+
   return data
 }
 
@@ -51,7 +55,9 @@ export async function refreshToken() {
   const auth = Cookie.getJSON('auth')
   if (!auth) return
 
-  const {data} = await api.post('/prodex/oauth/token',
+  if (auth.expires - 10000 > new Date().getTime()) return
+
+  const { data } = await api.post('/prodex/oauth/token',
     `grant_type=refresh_token&refresh_token=${auth.refresh_token}`,
     {
       headers: {

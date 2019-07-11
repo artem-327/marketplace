@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {LoginForm} from '~/modules/auth'
-import defaultPage from '~/hocs/defaultPage'
 import styled from 'styled-components'
 import Layout from '~/components/LayoutUnauthorized'
 // import '~/styles/login.scss'
@@ -22,4 +21,4 @@ class Login extends Component {
   }
 }
 
-export default defaultPage(Login)
+export default Login

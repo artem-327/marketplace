@@ -38,6 +38,7 @@
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
     "next": "^v8.1.0",
+    "next-cookies": "^1.1.2",
     "next-redux-wrapper": "^2.0.0",
     "next-routes": "^1.4.2",
     "next.js": "^1.0.3",
