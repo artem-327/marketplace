@@ -69,6 +69,15 @@ export const AccordionContent = styled(Accordion.Content)`
   }
 `
 
+export const WhiteSegment = styled(Segment)`
+  position: absolute !important;
+  bottom: 4.57142858em;
+  max-width: 100%;
+  margin: -1em -1em 0 !important;
+  padding: 1em 2em 2em !important;
+  background-color: #ffffff !important;
+`
+
 export const GraySegment = styled(Segment)`
   background-color: #ededed !important;
 `
