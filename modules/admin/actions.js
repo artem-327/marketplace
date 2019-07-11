@@ -53,22 +53,22 @@ export function closeAddPopup() {
 // }
 
 export function deleteConfirmation(id, config = null) {
-  if (config != null) {
-    if (typeof config.api.delete !== 'undefined') {
-      return async dispatch => {
-        await dispatch({
-          type: config.api.delete.typeRequest,
-          payload: api.deleteItem(config, id)
-        })
-        Datagrid.removeRow(id)
-      }
-    }
-  }
-  else {
-    return {
-      type: AT.ADMIN_DELETE_CONFIRM_POPUP
-    }
-  }
+	if (config != null) {
+		if (typeof config.api.delete !== 'undefined') {
+			return async dispatch => {
+				await dispatch({
+					type: config.api.delete.typeRequest,
+					payload: api.deleteItem(config, id)
+				})
+				Datagrid.removeRow(id)
+			}
+		}
+	}
+	else {
+		return {
+			type: AT.ADMIN_DELETE_CONFIRM_POPUP
+		}
+	}
 }
 export function confirmationSuccess() {
 	return {
@@ -108,16 +108,16 @@ export function postDwollaAccount(values, companyId) {
 }
 
 export function putEditedDataRequest(config, id, values) {
-  return async dispatch => {
-    const editedItem = await api.putEditedDataRequest(config, values, id)
+	return async dispatch => {
+		const editedItem = await api.putEditedDataRequest(config, values, id)
 
-    dispatch({
-      type: config.api.put.typeRequest,
-      payload: editedItem,
-    })
-    Datagrid.updateRow(id, () => (editedItem))
-    dispatch(closePopup())
-  }
+		dispatch({
+			type: config.api.put.typeRequest,
+			payload: editedItem,
+		})
+		Datagrid.updateRow(id, () => (editedItem))
+		dispatch(closePopup())
+	}
 }
 
 export function handleActiveTab(tab) {
@@ -425,7 +425,7 @@ export const deleteCasProduct = id => ({ type: AT.ADMIN_CAS_DELETE_PRODUCT, payl
 
 export const deleteUnit = id => ({ type: AT.ADMIN_DELETE_UNIT, payload: api.deleteUnit(id) })
 
-export const deleteUnitOfPackaging = (id)  => {
+export const deleteUnitOfPackaging = (id) => {
 	return async dispatch => {
 		await dispatch({
 			type: AT.ADMIN_DELETE_UNIT_OF_PACKAGING,
