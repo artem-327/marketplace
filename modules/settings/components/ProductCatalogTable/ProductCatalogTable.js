@@ -119,7 +119,6 @@ class ProductCatalogTable extends Component {
 }
 
 const mapStateToProps = (state, { datagrid }) => {
-  console.log(state)
   return {
     rows: datagrid.rows.map(product => {
       let hasCasProducts = product.casProducts && product.casProducts.length
