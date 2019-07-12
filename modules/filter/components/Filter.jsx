@@ -617,7 +617,7 @@ class Filter extends Component {
               onHide={(e) => {
                 // Workaround, close if you haven't clicked on calendar item or filter icon
                 try {
-                  if (e && (!(e.path[0] instanceof HTMLTableCellElement) && !(e.path[1] instanceof HTMLTableCellElement) && !e.target.className.includes('submenu-filter'))) {
+                  if (e && (!(e.path[0] instanceof HTMLTableCellElement) && !(e.path[1] instanceof HTMLTableCellElement) && (!e.target.parent || !e.target.parent.className.includes('submenu-filter')))) {
                     toggleFilter(false)
                   }
                 } catch (e) {
