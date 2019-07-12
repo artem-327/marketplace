@@ -16,13 +16,13 @@ class Notifications extends Component {
     return (
       <Grid verticalAlign='middle'>
         <LessPaddedRow>
-          <GridColumn computer={14}>
+          <GridColumn computer={13}>
             <label>{formatMessage({ id: 'filter.notifications.enable', defaultMessage: 'Enable Notifications:' })}</label>
           </GridColumn>
-          <GridColumn computer={2}>
+          <GridColumn computer={3}>
             <FormikCheckbox
               name='checkboxes.notificationEnabled'
-              inputProps={{ toggle: true }} />
+              inputProps={{ toggle: true, style: { marginBottom: '-4px' } }} />
           </GridColumn>
         </LessPaddedRow>
 
@@ -38,7 +38,7 @@ class Notifications extends Component {
               <Input
                 fluid
                 fieldProps={{ disabled: !(values.checkboxes && values.checkboxes.notifyMail) || disabled }}
-                inputProps={{ placeholder: ' Email' }}
+                inputProps={{ placeholder: ' Email', style: { marginTop: '-9px', marginBottom: '-10px' } }}
                 type='text'
                 name='notifications.notificationMail' />
             </GridColumn>
@@ -54,7 +54,7 @@ class Notifications extends Component {
           </GridColumn>
         </LessPaddedRow>
         <LessPaddedRow>
-          <GridColumn>
+          <GridColumn computer={7}>
             <FormikCheckbox
               inputProps={{ disabled }}
               name='checkboxes.notifySystem'

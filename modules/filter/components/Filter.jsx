@@ -13,7 +13,8 @@ import {
   Icon, FormField,
   Checkbox, Grid,
   GridRow, GridColumn,
-  Dropdown as SemanticDropdown
+  Dropdown as SemanticDropdown,
+  Transition
 } from 'semantic-ui-react'
 
 import confirm from '~/src/components/Confirmable/confirm'
@@ -29,13 +30,16 @@ import {
   FlexSidebar, FlexContent,
   FiltersContainer, AccordionTitle,
   AccordionItem, AccordionContent,
-  GraySegment, Title, BottomMargedDropdown
+  WhiteSegment, GraySegment,
+  Title, BottomMargedDropdown,
+  LessPaddedRow
 } from '../constants/layout'
 
 class Filter extends Component {
 
   state = {
     savedFiltersActive: false,
+    openedSaveFilter: false,
     inactiveAccordion: { },
     dateDropdown: {
       expiration: dateDropdownOptions[0].value,
@@ -303,6 +307,11 @@ class Filter extends Component {
     </AccordionTitle>
   )
 
+  toggleSaveFilter = (e, data) => {
+    e.preventDefault()
+    this.setState(prevState => ({ openedSaveFilter: !prevState.openedSaveFilter }))
+  }
+
   dateField = (name, { values, setFieldValue, handleChange }) => {
     let inputName = `${name}${this.state.dateDropdown[name]}`
 
@@ -328,8 +337,7 @@ class Filter extends Component {
                   }
                 }))
               }
-            }
-            } />
+            }} />
         </FormField>
 
         <FormField>
@@ -347,7 +355,51 @@ class Filter extends Component {
     )
   }
 
+  formSaveFilter = ({ values, setFieldError }) => {
+    let { intl, isFilterSaving } = this.props
 
+    const { formatMessage } = intl
+
+    return (
+      <>
+        <Grid verticalAlign='top'>
+          {/* Save Filter */}
+          <GridRow>
+            <GridColumn>
+              <Title><FormattedMessage id='filter.saveFilter' defaultMessage='Save Filter' /></Title>
+            </GridColumn>
+          </GridRow>
+
+          <GridRow>
+            <GridColumn computer={12}>
+              <Input inputProps={{ placeholder: formatMessage({ id: 'filter.enterFilterName', defaultMessage: 'Enter Filter Name' }) }} name='name' fluid />
+            </GridColumn>
+
+            <GridColumn computer={4}>
+              <Button onClick={(e) => {
+                e.preventDefault()
+                if (!values.name) setFieldError('name', <FormattedMessage id='validation.required' />)
+                else this.handleFilterSave(values)
+              }} positive basic loading={isFilterSaving} style={{marginRight: '0'}}>Save</Button>
+            </GridColumn>
+          </GridRow>
+
+          <LessPaddedRow>
+            <GridColumn computer={13}>
+              <label>{formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}</label>
+            </GridColumn>
+            <GridColumn computer={3}>
+              <FormikCheckbox
+                inputProps={{ toggle: true, style: { marginBottom: '-4px' } }}
+                name='checkboxes.automaticallyApply'
+              />
+            </GridColumn>
+          </LessPaddedRow>
+        </Grid>
+        <Notifications values={values} />
+      </>
+    )
+  }
 
   formMarkup = ({ values, setFieldValue, handleChange, errors, setFieldError }) => {
     let {
@@ -521,43 +573,6 @@ class Filter extends Component {
               </FormGroup>
             </AccordionContent>
           </AccordionItem>
-
-          <Grid verticalAlign='top'>
-
-            {/* Save Filter */}
-            <GridRow>
-              <GridColumn>
-                <Title><FormattedMessage id='filter.saveFilter' defaultMessage='Save Filter' /></Title>
-              </GridColumn>
-            </GridRow>
-
-            <GridRow>
-              <GridColumn computer={12}>
-                <Input inputProps={{ placeholder: formatMessage({ id: 'filter.enterFilterName', defaultMessage: 'Enter Filter Name' }) }} name='name' fluid />
-              </GridColumn>
-
-              <GridColumn>
-                <Button onClick={(e) => {
-                  e.preventDefault()
-                  if (!values.name) setFieldError('name', <FormattedMessage id='validation.required' />)
-                  else this.handleFilterSave(values)
-                }} positive basic loading={isFilterSaving}>Save</Button>
-              </GridColumn>
-            </GridRow>
-
-            <GridRow>
-              <GridColumn computer={14}>
-                <label>{formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}</label>
-              </GridColumn>
-              <GridColumn computer={2}>
-                <FormikCheckbox
-                  inputProps={{ toggle: true }}
-                  name='checkboxes.automaticallyApply'
-                />
-              </GridColumn>
-            </GridRow>
-          </Grid>
-          <Notifications values={values} />
         </Segment>
       </Accordion >
     )
@@ -578,101 +593,116 @@ class Filter extends Component {
     } = this.props
 
     return (
-      <FlexSidebar
-        visible={isOpen}
-        width={width}
-        direction={direction}
-        animation={animation}
-        onHide={(e) => {
-          // Workaround, close if you haven't clicked on calendar item or filter icon
-          try {
-            if (e && (!(e.path[0] instanceof HTMLTableCellElement) && !(e.path[1] instanceof HTMLTableCellElement) && !e.target.className.includes('submenu-filter'))) {
-              toggleFilter(false)
-            }
-          } catch (e) {
-            console.error(e)
-          }
-        }}
-        {...additionalSidebarProps}>
-        <FiltersContainer>
-          <Button onClick={() => this.toggleFilter(false)} primary={!this.state.savedFiltersActive}>
-            <FormattedMessage
-              id='filter.setFilters'
-              defaultMessage='SET FILTERS'
-            />
-          </Button>
 
-          <Button onClick={() => this.toggleFilter(true)} primary={this.state.savedFiltersActive}>
-            <FormattedMessage
-              id='filter.savedFilter'
-              defaultMessage='SAVED FILTERS'
-            />
-          </Button>
-        </FiltersContainer>
-        <FlexContent>
-          <Segment basic>
+      <Form
+        enableReinitialize={true}
+        initialValues={initialValues}
+        validateOnChange={true}
+        validationSchema={validationSchema}
+        onSubmit={(values, { setSubmitting }) => {
+          this.handleSubmit(values)
+          setSubmitting(false)
+        }}>
+        {(props) => {
+          this.submitForm = props.submitForm
+          this.resetForm = props.resetForm
+          this.setFieldValue = props.setFieldValue
 
-            <Form
-              enableReinitialize={true}
-              initialValues={initialValues}
-              validateOnChange={true}
-              validationSchema={validationSchema}
-              onSubmit={(values, { setSubmitting }) => {
-                this.handleSubmit(values)
-                setSubmitting(false)
-              }}>
-              {(props) => {
-                this.submitForm = props.submitForm
-                this.resetForm = props.resetForm
-                this.setFieldValue = props.setFieldValue
-
-                return (
-                  !this.state.savedFiltersActive
-                    ? this.formMarkup(props)
-                    : (
-                      <SavedFilters
-                        params={this.props.params}
-                        onApply={(filter) => this.handleSavedFilterApply(filter, props)}
-                        savedFilters={this.props.savedFilters}
-                        savedFiltersLoading={this.props.savedFiltersLoading}
-                        getSavedFilters={this.handleGetSavedFilters}
-                        deleteFilter={this.props.deleteFilter}
-                        updateFilterNotifications={this.props.updateFilterNotifications}
-                        savedFilterUpdating={this.props.savedFilterUpdating} />
-                    )
-                )
-
-              }}
-            </Form>
-          </Segment>
-        </FlexContent>
-
-        <GraySegment basic>
-          <Grid>
-            <GridRow>
-              <GridColumn computer={16} textAlign='right' >
-                <Button
-                  size='large'
-                  onClick={(e, data) => {
-                    this.resetForm({ ...initialValues })
+          return (
+            <FlexSidebar
+              visible={isOpen}
+              width={width}
+              direction={direction}
+              animation={animation}
+              onHide={(e) => {
+                // Workaround, close if you haven't clicked on calendar item or filter icon
+                try {
+                  if (e && (!(e.path[0] instanceof HTMLTableCellElement) && !(e.path[1] instanceof HTMLTableCellElement) && !e.target.className.includes('submenu-filter'))) {
                     toggleFilter(false)
-                    this.props.onClear(e, data)
-                  }}> <FormattedMessage id='filter.clearFilter' defaultMessage='Clear Filter' /></Button>
-
-
-                <Button
-                  size='large'
-                  loading={isFilterApplying}
-                  primary
-                  onClick={() => this.submitForm()}>
-                  <FormattedMessage id='global.apply' defaultMessage='Apply' />
+                  }
+                } catch (e) {
+                  console.error(e)
+                }
+              }}
+              {...additionalSidebarProps}>
+              <FiltersContainer>
+                <Button onClick={() => this.toggleFilter(false)} primary={!this.state.savedFiltersActive}>
+                  <FormattedMessage
+                    id='filter.setFilters'
+                    defaultMessage='SET FILTERS'
+                  />
                 </Button>
-              </GridColumn>
 
-            </GridRow>
-          </Grid>
-        </GraySegment>
-      </FlexSidebar>
+                <Button onClick={() => this.toggleFilter(true)} primary={this.state.savedFiltersActive}>
+                  <FormattedMessage
+                    id='filter.savedFilter'
+                    defaultMessage='SAVED FILTERS'
+                  />
+                </Button>
+              </FiltersContainer>
+              <FlexContent>
+              <Segment basic>
+                {!this.state.savedFiltersActive
+                  ? this.formMarkup(props)
+                  : (
+                    <SavedFilters
+                      params={this.props.params}
+                      onApply={(filter) => this.handleSavedFilterApply(filter, props)}
+                      savedFilters={this.props.savedFilters}
+                      savedFiltersLoading={this.props.savedFiltersLoading}
+                      getSavedFilters={this.handleGetSavedFilters}
+                      deleteFilter={this.props.deleteFilter}
+                      updateFilterNotifications={this.props.updateFilterNotifications}
+                      savedFilterUpdating={this.props.savedFilterUpdating} />
+                  )}
+                </Segment>
+              </FlexContent>
+              <GraySegment basic style={{ position: 'relative', overflow: 'visible', height: '4.57142858em', margin: '0' }}>
+                <Transition visible={this.state.openedSaveFilter} animation='fade down' duration={500}>
+                  <WhiteSegment basic>
+                    {this.formSaveFilter(props)}
+                  </WhiteSegment>
+                </Transition>
+                <Grid>
+                  <GridRow>
+                    <GridColumn computer={6} textAlign='left'>
+                      <Button
+                        size='large'
+                        onClick={this.toggleSaveFilter}
+                        inputProps={{type: 'button'}}>
+                        <FormattedMessage id='filter.saveFilter' defaultMessage='Save Filter' />
+                      </Button>
+                    </GridColumn>
+                    <GridColumn computer={10} textAlign='right'>
+                      <Button
+                        type='button'
+                        size='large'
+                        onClick={(e, data) => {
+                          this.resetForm({ ...initialValues })
+                          toggleFilter(false)
+                          this.props.onClear(e, data)
+                        }}
+                        inputProps={{type: 'button'}}>
+                        <FormattedMessage id='filter.clearFilter' defaultMessage='Clear Filter' />
+                      </Button>
+
+                      <Button
+                        size='large'
+                        loading={isFilterApplying}
+                        primary
+                        onClick={() => this.submitForm()}
+                        inputProps={{type: 'button'}}>
+                        <FormattedMessage id='global.apply' defaultMessage='Apply' />
+                      </Button>
+                    </GridColumn>
+
+                  </GridRow>
+                </Grid>
+              </GraySegment>
+            </FlexSidebar>
+          )
+        }}
+      </Form>
     )
   }
 }
