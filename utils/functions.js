@@ -42,9 +42,11 @@ export const generateToastMarkup = (header, content) => (
     </div>
 )
 
-export const getSafe = (fn, defaultValue = '') => {
+export const getSafe = (fn, defaultValue = null) => {
     try {
-        return fn()
+        let value = fn()
+        if (!value) return defaultValue
+        else return value
     }
     catch (e) {
         console.error(e)
