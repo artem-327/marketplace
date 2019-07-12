@@ -34,6 +34,8 @@ import * as Yup from 'yup'
 import './styles.scss'
 import Router from "next/router"
 
+import { UnitOfPackaging } from '~/components/formatted-messages'
+
 Yup.addMethod(Yup.object, 'uniqueProperty', function (propertyName, message) {
   return this.test('unique', message, function (value) {
     if (!value || !value[propertyName]) {
@@ -121,7 +123,7 @@ class ProductPopup extends React.Component {
       packagingTypesReduced: packagingTypesReduced.map((type, id) => {
         return {
           key: id,
-          text: type.name,
+          text: <UnitOfPackaging value={type.name} />,
           value: type.id
         }
       })
@@ -298,6 +300,7 @@ class ProductPopup extends React.Component {
       hazardClasses,
       packagingGroups
     } = this.props
+
     const { isLoading, isUnLoading, results, value, packagingTypesReduced } = this.state
     const title = popupValues ? 'Edit' : 'Add'
     const casProduct = popupValues && popupValues.casProduct ? popupValues.casProduct : null

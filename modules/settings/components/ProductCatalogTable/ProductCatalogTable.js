@@ -22,7 +22,7 @@ class ProductCatalogTable extends Component {
       { name: 'productNumber', title: 'Product Number', sortPath: 'Product.productCode' },
       { name: 'casNumber', title: 'CAS Number' },
       { name: 'casName', title: 'CAS Name' },
-      { name: 'packagingSize', title: 'Packaging Size' },
+      { name: 'packagingSizeFormatted', title: 'Packaging Size' },
       { name: 'unit', title: 'Unit' },
       { name: 'packagingType', title: 'Packaging Type' }
     ]
@@ -119,6 +119,7 @@ class ProductCatalogTable extends Component {
 }
 
 const mapStateToProps = (state, { datagrid }) => {
+  console.log(state)
   return {
     rows: datagrid.rows.map(product => {
       let hasCasProducts = product.casProducts && product.casProducts.length
@@ -171,7 +172,8 @@ const mapStateToProps = (state, { datagrid }) => {
         }) : [],
         packagingType: getSafe(() => product.packagingType.name) ? <UnitOfPackaging value={product.packagingType.name} /> : 'N/A',
         packageID: getSafe(() => product.packagingType.id),
-        packagingSize: product.packagingSize ? <FormattedNumber value={product.packagingSize} minimumFractionDigits={0} /> : 'N/A',
+        packagingSize: getSafe(() => product.packagingSize, 'N/A'),
+        packagingSizeFormatted: product.packagingSize ? <FormattedNumber value={product.packagingSize} minimumFractionDigits={0} /> : 'N/A',
         packagingGroup: getSafe(() => product.packagingGroup.id),
         unit: getSafe(() => product.packagingUnit.nameAbbreviation, 'N/A'),
         unitID: getSafe(() => product.packagingUnit.id),

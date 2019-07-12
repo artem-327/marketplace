@@ -49,7 +49,6 @@ export const getSafe = (fn, defaultValue = null) => {
         else return value
     }
     catch (e) {
-        console.error(e)
         return defaultValue
     }
 }
