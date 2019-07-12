@@ -631,9 +631,14 @@ class AddInventoryForm extends Component {
                               <Radio label="No" value={false} name="inStock" />
                               <Radio label="Yes" value={true} name="inStock" />
                             </FormGroup>
+                            <Header as='h3'>How many business days to pick up? <Popup content={`Processing Time is the number of business days from when an order is confirmed that it will take you to have your product offer ready for pick up at your designated warehouse. NOTE: Saturdays and Sundays do not count for Processing Time.`}
+                                                                             trigger={<Icon name='info circle' color='blue' />}
+                                                                             wide />
+                            </Header>
                             <FormGroup>
                               <FormField width={4}>
-                                <Dropdown label="Processing time" name="processingTimeDays" options={this.getProcessingTimes(14)} />
+                                <Dropdown label="Processing time" name="processingTimeDays" options={this.getProcessingTimes(14)}
+                                />
                               </FormField>
                             </FormGroup>
 
