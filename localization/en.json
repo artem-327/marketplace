@@ -7,6 +7,7 @@
   "auth.resetPassword": "Reset Password",
   "auth.resetPasswordInstructions": "If you forgot your password and want to reset it, please enter your Username and click 'Reset Password' button. We will email you instructions.",
   "admin.takeOver": "Take over as Company Admin",
+  "admin.resendWelcomeEmail": "Resend Welcome Email",
   "global.addNew": "Add New",
   "global.name": "Name",
   "global.delete": "Delete",

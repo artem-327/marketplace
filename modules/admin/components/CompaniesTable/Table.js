@@ -27,6 +27,7 @@ class CompaniesTable extends Component {
       deleteCompany,
       openRegisterDwollaAccount,
       takeOverCompany,
+      resendWelcomeEmail,
       intl
     } = this.props
 
@@ -55,6 +56,11 @@ class CompaniesTable extends Component {
               text: <FormattedMessage id='admin.takeOver' defaultMessage='Take over as Company Admin' />,
               callback: (row) => takeOverCompany(row.id),
               hidden: row => !row.primaryUser
+            },
+            {
+              text: <FormattedMessage id='admin.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
+              callback: (row) => resendWelcomeEmail(row.primaryUser.id),
+              hidden: row => !row.reviewRequested || !row.primaryUser
             }
           ]}
         />
