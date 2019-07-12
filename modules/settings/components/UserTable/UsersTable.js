@@ -16,7 +16,8 @@ import {
   closeConfirmPopup,
   deleteUser,
   openRolesPopup,
-  userSwitchEnableDisable
+  userSwitchEnableDisable,
+  resendWelcomeEmail
 } from "../../actions"
 import Router from "next/router"
 import { Checkbox, Popup } from "semantic-ui-react"
@@ -70,6 +71,7 @@ class UsersTable extends Component {
       intl,
       datagrid,
       deleteUser,
+      resendWelcomeEmail,
       // confirmMessage,
       // handleOpenConfirmPopup,
       // closeConfirmPopup,
@@ -98,6 +100,11 @@ class UsersTable extends Component {
                 formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete user' }),
                 formatMessage({ id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` }, { item: row.name })
               ).then(() => deleteUser(row.id, row.name))
+            },
+            {
+              text: <FormattedMessage id='settings.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
+              callback: (row) => resendWelcomeEmail(row.id),
+              hidden: row => !!row.lastLoginAt
             }
           ]}
         />
@@ -114,6 +121,7 @@ const mapDispatchToProps = {
   closeConfirmPopup,
   deleteUser,
   userSwitchEnableDisable,
+  resendWelcomeEmail
 }
 
 const userEnableDisableStatus = (r, currentUserId) => (

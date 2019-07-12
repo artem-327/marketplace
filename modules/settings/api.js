@@ -164,6 +164,7 @@ export default {
   },
   removeAttachmentLink: (itemId, aId) => {
     return api.delete(`/prodex/api/attachment-links/to-product?attachmentId=${aId}&productId=${itemId}`)
-  }
+  },
+  resendWelcomeEmail: (userId) => api.get(`/prodex/api/users/id/${userId}/email/welcome`).then(response => response.data).catch(e => console.error(e.clientMessage))
 
 }

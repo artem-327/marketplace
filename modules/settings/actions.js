@@ -926,3 +926,5 @@ export function removeAttachment(aId) {
 export const addTab = (payload) => ({ type: AT.ADD_TAB, payload })
 
 export const tabChanged = (tab) => ({ type: AT.TAB_CHANGED, payload: tab })
+
+export const resendWelcomeEmail = (userId) => ({ type: AT.SETTINGS_RESEND_WELCOME_EMAIL, payload: api.resendWelcomeEmail(userId) })
