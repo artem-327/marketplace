@@ -8,7 +8,7 @@ import { object, func } from 'prop-types'
 import { Sidebar, Button, Header, Grid, GridRow, GridColumn, Loader, Dimmer, Dropdown, Input, Divider, Segment, List, Popup } from 'semantic-ui-react'
 import Router from 'next/router'
 import { FormattedNumber, FormattedMessage } from 'react-intl'
-import { FormattedUnit } from '~/components/formatted-messages'
+import { FormattedUnit, UnitOfPackaging } from '~/components/formatted-messages'
 import { errorMessages } from '~/constants/yupValidation'
 
 import { isEqual } from 'lodash'
@@ -195,7 +195,7 @@ export default class AddCart extends Component {
                 Available Product:
           </GridColumn>
               <GridColumn computer={10}>
-                <FormattedNumber minimumFractionDigits={0} value={pkgAmount} /> {packagingType.name} / <FormattedUnit unit={nameAbbreviation} separator={' '} value={pkgAmount * packagingSize} />
+                <FormattedNumber minimumFractionDigits={0} value={pkgAmount} /> <UnitOfPackaging value={packagingType.name} /> / <FormattedUnit unit={nameAbbreviation} separator={' '} value={pkgAmount * packagingSize} />
               </GridColumn>
 
             </GridRow>
@@ -215,7 +215,7 @@ export default class AddCart extends Component {
           </GridColumn>
 
               <GridColumn company={10}>
-                <FormattedUnit unit={nameAbbreviation} separator={' '} value={packagingSize} />  {offer.product.packagingType.name}
+                <FormattedUnit unit={nameAbbreviation} separator={' '} value={packagingSize} /> <UnitOfPackaging value={packagingType.name} />
               </GridColumn>
             </GridRow>
 
@@ -292,8 +292,8 @@ export default class AddCart extends Component {
             <GridRow>
               <GridColumn computer={6}>Total Quantity:</GridColumn>
               <GridColumn computer={10}>
-                {(quantity && quantity > 0 ? <> <FormattedNumber minimumFractionDigits={0} value={quantity} /> {`${packagingType.name}`} </> : null)
-                  || (isEdit && <> <FormattedNumber minimumFractionDigits={0} value={order.quantity} /> {`${packagingType.name}`} </>)}
+                {(quantity && quantity > 0 ? <> <FormattedNumber minimumFractionDigits={0} value={quantity} />  <UnitOfPackaging value={packagingType.name} /> </> : null)
+                  || (isEdit && <> <FormattedNumber minimumFractionDigits={0} value={order.quantity} />  <UnitOfPackaging value={packagingType.name} /> </>)}
               </GridColumn>
             </GridRow>
 

@@ -8,6 +8,8 @@ import ProdexGrid from '~/components/table'
 import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 
+import { UnitOfPackaging } from '~/components/formatted-messages'
+
 export default class Marketplace extends Component {
   state = {
     columns: [
@@ -46,7 +48,7 @@ export default class Marketplace extends Component {
 
     return rows.map(r => ({
       ...r,
-      packaging: r.packagingType && r.packagingUnit && r.packagingSize ? `${r.packagingSize} ${r.packagingUnit} ${r.packagingType}` : 'N/A'
+      packaging: <UnitOfPackaging value={r.packagingType} />,
     }))
   }
 
@@ -107,10 +109,7 @@ export default class Marketplace extends Component {
           <Menu secondary>
             <Menu.Item header>
               <Header as='h1' size='medium'>
-                <FormattedMessage
-                  id='allInventory.marketplace'
-                  defaultMessage='MARKETPLACE'
-                />
+                <FormattedMessage id='allInventory.marketplace' defaultMessage='MARKETPLACE' />
               </Header>
             </Menu.Item>
 
