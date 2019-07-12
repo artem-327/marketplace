@@ -7,6 +7,7 @@ export const initialState = {
   popupLoading: false,
   popupValues: null,
   isOpenPopup: false,
+  isOpenPopup2: false,
   usersRows: [],
   userEditRoles: false,
   roles: [],
@@ -16,6 +17,7 @@ export const initialState = {
   creditCardsRows: [],
   bankAccountsRows: [],
   productsCatalogRows: [],
+  productAltNames: [],
   productsPackagingType: null,
   packagingTypes: [],
   productsUnitsType: [],
@@ -73,6 +75,16 @@ export default function reducer(state = initialState, action) {
         ...state,
         loaded: false,
         isOpenPopup: true,
+        isOpenPopup2: false,
+        popupValues: action.payload
+      }
+    }
+    case AT.OPEN_POPUP2: {
+      return {
+        ...state,
+        loaded: false,
+        isOpenPopup: false,
+        isOpenPopup2: true,
         popupValues: action.payload
       }
     }
@@ -80,6 +92,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         isOpenPopup: false,
+        isOpenPopup2: false,
         popupValues: null
       }
     }
@@ -587,6 +600,14 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         editPopupSearchProducts
+      }
+    }
+
+    case AT.SETTINGS_GET_PRODUCT_ALTERNATIVE_NAMES_FULFILLED: {
+      console.log('!!!!! Reducer Alt names', action.payload)
+      return {
+        ...state,
+        productAltNames: action.payload,
       }
     }
 

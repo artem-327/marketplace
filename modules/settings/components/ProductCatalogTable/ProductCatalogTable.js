@@ -81,6 +81,7 @@ class ProductCatalogTable extends Component {
       rows,
       filterValue,
       openPopup,
+      openPopup2,
       deleteProduct,
       intl,
       datagrid,
@@ -101,6 +102,7 @@ class ProductCatalogTable extends Component {
           style={{ marginTop: '5px' }}
           rowActions={[
             { text: 'Edit', callback: row => openPopup(row) },
+            { text: 'Edit Alternative Names', callback: (row) => openPopup2(row) },
             {
               text: 'Delete',
               callback: row =>

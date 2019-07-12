@@ -14,6 +14,7 @@ import ProductCatalogTable from './ProductCatalogTable/ProductCatalogTable'
 import EditWarehousePopup from './WarehouseTable/WarehousePopup'
 import EditUsersPopup from './UserTable/UsersPopup'
 import EditProductPopup from './ProductCatalogTable/ProductPopup'
+import EditAltNamesProductPopup from './ProductCatalogTable/EditAltNamesProductPopup'
 import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
 import BankAccountsPopup from './BankAccountsTable/BankAccountsPopup'
 import TablesHandlers from './TablesHandlers'
@@ -89,7 +90,7 @@ class Settings extends Component {
   }
 
   renderContent = () => {
-    let { action, actionId, currentTab, isOpenPopup, isOpenImportPopup, isDwollaOpenPopup } = this.props
+    let { action, actionId, currentTab, isOpenPopup, isOpenPopup2, isOpenImportPopup, isDwollaOpenPopup } = this.props
 
     const tables = {
       'company-details': this.companyDetails(),
@@ -112,6 +113,10 @@ class Settings extends Component {
       'delivery-addresses': <DeliveryAddressesPopup />
     }
 
+    const popup2Form = {
+      'products': <EditAltNamesProductPopup />,
+    }
+
     const importForm = {
       products: <ProductImportPopup />
     }
@@ -123,6 +128,7 @@ class Settings extends Component {
     return (
       <>
         {isOpenPopup && popupForm[currentTab.type]}
+        {isOpenPopup2 && popup2Form[currentTab.type]}
         {isOpenImportPopup && importForm[currentTab.type]}
         {isDwollaOpenPopup && addDwollaForms[currentTab.type]}
         {tables[currentTab.type] || <p>This page is still under construction</p>}
