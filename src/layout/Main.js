@@ -63,7 +63,6 @@ class Main extends Component {
                     <Route exact path="/test-page" component={TestPage}/>
                     <Route exact path="/cart/purchase-order" component={withAuth(PurchaseOrder)}/>
                     <Route exact path="/cart/shopping-cart" component={withAuth(ShoppingCart)}/>
-                    <Route exact path="/profile" component={withAuth(Profile)}/>
                     {/* broadcast route for development */}
                     <Route exact path="/broadcast" component={withAuth(AddBroadcast)}/>
                     <Route component={withAuth(NoMatch)}/>

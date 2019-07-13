@@ -11,6 +11,9 @@ import { Messages } from '~/modules/messages'
 import { connect } from 'react-redux'
 import { withAuth } from '~/hocs'
 import { takeOverCompanyFinish } from '~/modules/admin/actions'
+import { openProfilePopup } from '~/modules/profile/actions'
+import Profile from '~/modules/profile/components/Profile'
+import React from "react";
 
 const TopMenu = styled(Menu)`
   background-color: #33373e !important;
@@ -49,7 +52,7 @@ const MenuLink = withRouter(({ router: { pathname }, to, children, }) => (
   </Link>
 ))
 
-const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth, takeOverCompanyFinish }) => (
+const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth, takeOverCompanyFinish, profile, openProfilePopup }) => (
   <MainContainer fluid>
     <PopUp />
     <Head>
@@ -65,7 +68,8 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth,
         <Menu.Menu position='right' className='black'>
           <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
             <Dropdown.Menu>
-              <Dropdown.Item as={MenuLink} to='/profile'>My Profile</Dropdown.Item>
+              {null && <Dropdown.Item as={MenuLink} to='/profile'>My Profile</Dropdown.Item>}
+              <Dropdown.Item as={Menu.Item} onClick={() => openProfilePopup()}>My Profile</Dropdown.Item>
               {auth && auth.identity.isAdmin &&
                 <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()}>Return to Admin</Dropdown.Item>
               }
@@ -74,9 +78,9 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth,
           </Dropdown>
         </Menu.Menu>
       </TopMenuContainer>
-
-
     </TopMenu>
+
+    {profile && profile.profilePopup && <Profile />}
 
     <FlexContainer>
       <TopMenuContainer fluid>
@@ -92,9 +96,14 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth,
 )
 
 const mapDispatchToProps = {
-  takeOverCompanyFinish
+  takeOverCompanyFinish,
+  openProfilePopup
 }
 
-const mapStateToProps = state => ({})
+const mapStateToProps = state => {
+  return {
+    profile: state.profile
+  }
+}
 
 export default withAuth(withRouter(connect(mapStateToProps, mapDispatchToProps)(Layout)))

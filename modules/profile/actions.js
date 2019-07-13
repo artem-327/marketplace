@@ -16,6 +16,16 @@ const removeEmpty = (obj) =>
         }
     })
 
+
+
+
+export function openProfilePopup() {
+  return {
+    type: AT.PROFILE_OPEN_POPUP,
+    payload: null
+  }
+}
+
 export function closePopup() {
     return {
         type: AT.PROFILE_CLOSE_POPUP,

@@ -105,7 +105,6 @@ const formatDateTime = dt => {
 
 const mapStateToProps = state => {
   const popupValues = state.profile.usersMe
-  console.log('!!!!!!!!! popupValues', popupValues)
   return {
     popupValues: popupValues ? {
       email: popupValues.email,
