@@ -124,7 +124,9 @@ class AddInventoryForm extends Component {
     },
     activeIndex: 0,
     activeTab: 0,
-    searchedProducts: []
+    searchedProducts: [],
+    documents: [],
+    openedDocuments: null
   }
 
   accClick = (e, titleProps) => {
@@ -190,6 +192,164 @@ class AddInventoryForm extends Component {
         activeTab: newTab
       })
     }
+  }
+
+  getMimeType = (documentName) => {
+    const documentExtension = documentName.substr(documentName.lastIndexOf(".") + 1)
+    switch (documentExtension) {
+      case 'doc':
+        return 'application/msword'
+      case 'docx':
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      case 'ppt':
+        return 'application/vnd.ms-powerpoint'
+      case 'pptx':
+        return 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+      case 'xls':
+        return 'application/vnd.ms-excel'
+      case 'xlsx':
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      case 'gif':
+        return 'image/gif'
+      case 'png':
+        return 'image/png'
+      case 'jpg':
+      case 'jpeg':
+        return 'image/jpeg'
+      case 'svg':
+        return 'image/svg'
+      case 'pdf':
+        return 'application/pdf'
+      case '7z':
+        return 'application/x-7z-compressed'
+      case 'zip':
+        return 'application/zip'
+      case 'tar':
+        return 'application/x-tar'
+      case 'rar':
+        return 'application/x-rar-compressed'
+      case 'xml':
+        return 'application/xml'
+      default:
+        return 'text/plain'
+    }
+  }
+
+  downloadAttachment = async (documentName, documentId) => {
+    let downloadedFile = await this.props.downloadAttachment(documentId)
+    const mimeType = this.getMimeType(documentName)
+
+    const element = document.createElement("a")
+    const file = new Blob([downloadedFile.value.data], { type: mimeType })
+    let fileURL = URL.createObjectURL(file)
+
+    element.href = fileURL
+    element.download = documentName
+    document.body.appendChild(element) // Required for this to work in FireFox
+    element.click()
+  }
+
+  removeAttachment = async (isLot, documentName, documentId, connectedId, values, setFieldValue) => {
+    const { removeAttachment, removeAttachmentLink } = this.props
+    await removeAttachmentLink(isLot, connectedId, documentId).then(() => removeAttachment(documentId))
+
+    if (isLot) {
+      const lotIndex = values.lots.findIndex(lot => lot.id === connectedId)
+      let filteredAttachments = values.lots[lotIndex].attachments.reduce(function (filtered, attachment) {
+        if (attachment.id !== documentId) {
+          filtered.push(attachment)
+        }
+        return filtered
+      }, [])
+      setFieldValue(`lots[${lotIndex}].attachments`, filteredAttachments)
+    } else {
+      let filteredAttachments = values.attachments.reduce(function (filtered, attachment) {
+        if (attachment.id !== documentId) {
+          filtered.push(attachment)
+        }
+        return filtered
+      }, [])
+      setFieldValue(`attachments`, filteredAttachments)
+
+      let filteredAdditional = values.additional.reduce(function (filtered, additional) {
+        if (additional.id !== documentId) {
+          filtered.push(additional)
+        }
+        return filtered
+      }, [])
+      setFieldValue(`additional`, filteredAdditional)
+    }
+  }
+
+  renderEditDocuments = (values, setFieldValue) => {
+    const {edit, removeAttachment, removeAttachmentLink} = this.props
+    const {additional, attachments, lots} = values
+    let {openedDocuments} = this.state
+    if (typeof attachments === 'undefined' || !edit)
+      return false
+
+    let documents = attachments.concat(additional, lots.reduce(function (filtered, lot) {
+      if (lot.attachments.length) {
+        lot.attachments.map(attachment => {
+          let lotAttachment = {
+            ...attachment,
+            lotId: lot.id
+          }
+          filtered.push(lotAttachment)
+        })
+      }
+      return filtered
+    }, []))
+
+    if (this.state.openedDocuments === null) {
+      if (documents.length > 0) {
+        this.setState({openedDocuments: true})
+      } else {
+        this.setState({openedDocuments: false})
+      }
+    }
+
+    return (
+      <>
+        {this.state.openedDocuments ? (
+          <Modal open={!!this.state.openedDocuments} closeIcon={true} onClose={() => this.setState({ openedDocuments: false })}>
+            <Modal.Header>Product Offer has these documents</Modal.Header>
+            <Modal.Content>
+              <Modal.Description>
+                <Table>
+                  <Table.Header>
+                    <Table.Row>
+                      <Table.HeaderCell>Document</Table.HeaderCell>
+                      <Table.HeaderCell>Type</Table.HeaderCell>
+                      <Table.HeaderCell></Table.HeaderCell>
+                    </Table.Row>
+                  </Table.Header>
+                  <Table.Body>
+                    {documents.map(document => (
+                      <Table.Row key={document.id}>
+                        <Table.Cell>{document.name}</Table.Cell>
+                        <Table.Cell>{document.documentType.name}</Table.Cell>
+                        <Table.Cell width={2} textAlign='right'>
+                          <Icon name='download' size='large' onClick={() => this.downloadAttachment(document.name, document.id)} />
+                          <Icon name='remove circle' size='large' onClick={() => this.removeAttachment(
+                            document.lotId ? true : false, // isLot
+                            document.name, // documentName
+                            document.id, // documentId
+                            document.lotId ? document.lotId : this.props.id, // connectedId
+                            values,
+                            setFieldValue
+                          )} />
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
+                  </Table.Body>
+                </Table>
+              </Modal.Description>
+            </Modal.Content>
+          </Modal>
+        ) : ''}
+      </>
+    )
   }
 
   renderPricingTiers = (count) => {
@@ -556,6 +716,7 @@ class AddInventoryForm extends Component {
         >
           {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => (
             <>
+              {this.renderEditDocuments(values, setFieldValue)}
               <Modal open={this.props.poCreated} closeOnDimmerClick={false} size='tiny'>
                 <Modal.Header>
                   <FormattedMessage id={this.props.edit ? 'addInventory.editDone' : 'addInventory.addDone'}

@@ -110,6 +110,13 @@ export function addProductOffer(values, poId = false) {
   }
 }
 
+export function downloadAttachment(id) {
+  return {
+    type: AT.INVENTORY_DOWNLOAD_ATTACHMENT,
+    payload: api.downloadAttachment(id)
+  }
+}
+
 export function errorTooLarge(fileName, fileMaxSize) {
   return {
     type: AT.ERROR_TOO_LARGE_FILE,

@@ -18,6 +18,10 @@ export function addProductOffer(values) {
   return api.post(`/prodex/api/product-offers/`, values)
 }
 
+export function downloadAttachment(id) {
+  return api.get(`/prodex/api/attachments/${id}/download`, {responseType: 'blob'})
+}
+
 export function findProducts(search) {
   return api.get(`/prodex/api/products/search?search=${search}`)
 }
