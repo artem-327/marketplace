@@ -464,3 +464,10 @@ export const takeOverCompanyFinish = () => {
 		Router.push('/admin')
 	}
 }
+
+export const resendWelcomeEmail = (userId) => {
+	return {
+		type: AT.RESEND_WELCOME_EMAIL,
+		payload: api.resendWelcomeEmail(userId)
+	}
+}

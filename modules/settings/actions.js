@@ -23,6 +23,14 @@ export function openPopup(rows = null) {
     payload: rows
   }
 }
+
+export function openPopup2(rows = null) {
+  return {
+    type: AT.OPEN_POPUP2,
+    payload: rows
+  }
+}
+
 export function closePopup(rows = null) {
   return {
     type: AT.CLOSE_POPUP,
@@ -513,6 +521,43 @@ export function getProductsCatalogRequest(data) {
   }
 }
 
+export function getProductAltNames(value) {
+  return {
+    type: AT.SETTINGS_GET_PRODUCT_ALTERNATIVE_NAMES,
+    payload: api.getProductAltNames(value)
+  }
+}
+
+export function postNewProductAltName(productId, value) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.SETTINGS_POST_NEW_PRODUCT_ALTERNATIVE_NAME,
+      payload: api.postNewProductAltName(value)
+    })
+    await dispatch(getProductAltNames(productId))
+  }
+}
+
+export function updateProductAltName(productId, id, value) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.SETTINGS_UPDATE_PRODUCT_ALTERNATIVE_NAME,
+      payload: api.updateProductAltName(id, value)
+    })
+    await dispatch(getProductAltNames(productId))
+  }
+}
+
+export function deleteProductAltName(productId, id) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.SETTINGS_DELETE_PRODUCT_ALTERNATIVE_NAME,
+      payload: api.deleteProductAltName(id)
+    })
+    await dispatch(getProductAltNames(productId))
+  }
+}
+
 export function getCurrencies() {
   return {
     type: AT.SETTINGS_GET_CURRENCIES,
@@ -926,3 +971,5 @@ export function removeAttachment(aId) {
 export const addTab = (payload) => ({ type: AT.ADD_TAB, payload })
 
 export const tabChanged = (tab) => ({ type: AT.TAB_CHANGED, payload: tab })
+
+export const resendWelcomeEmail = (userId) => ({ type: AT.SETTINGS_RESEND_WELCOME_EMAIL, payload: api.resendWelcomeEmail(userId) })

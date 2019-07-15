@@ -157,3 +157,5 @@ export async function getAddressSearch(body) {
 export const takeOverCompany = (id) => api.patch(`/prodex/api/admin/company/${id}/take-over`).then(response => response.data)
 
 export const takeOverCompanyFinish = () => api.patch('/prodex/api/admin/company/take-over/finish').then(response => response.data)
+
+export const resendWelcomeEmail = (userId) => api.get(`/prodex/api/users/id/${userId}/email/welcome`).then(response => response.data).catch(e => console.error(e.clientMessage))

@@ -5,17 +5,30 @@ export const initialState = {
   usersMe: null,
   currency: null,
   loading: false,
+  profilePopup: false,
   changePasswordPopup: false
 
 }
-
-
 
 export default function reducer(state = initialState, action) {
   const {payload} = action
 
   switch (action.type) {
 
+
+    case AT.PROFILE_OPEN_POPUP: {
+      return {
+        ...state,
+        profilePopup: true
+      }
+    }
+
+    case AT.PROFILE_CLOSE_POPUP: {
+      return {
+        ...state,
+        profilePopup: false
+      }
+    }
 
     case AT.PROFILE_CHANGE_PASSWORD_PENDING:
     case AT.PROFILE_GET_CURRENCIES_PENDING:
@@ -64,6 +77,13 @@ export default function reducer(state = initialState, action) {
         ...state,
         currency: action.payload,
         loading: false
+      }
+    }
+
+    case AT.PROFILE_UPDATE_MY_PROFILE_FULFILLED: {
+      return {
+        ...state,
+        profilePopup: false
       }
     }
 
