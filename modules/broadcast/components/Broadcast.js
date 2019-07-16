@@ -177,8 +177,11 @@ class Broadcast extends Component {
                     <Rule.Toggle>
                       Include
                     </Rule.Toggle>
-                    <Rule.Toggle style={{marginRight: '20px'}}>
+                    <Rule.Toggle>
                       Mark-up/down
+                    </Rule.Toggle>
+                    <Rule.Toggle>
+                      FOB high/low
                     </Rule.Toggle>
                   </Rule.Header>
                   <Rule.Content>

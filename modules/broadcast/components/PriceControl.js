@@ -130,9 +130,9 @@ const FobPrice = styled.label`
 `
 
 const Box = styled.div`
-  flex: 0 0 110px;
+  flex: 0 0 220px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   padding-right: 10px;
 `
