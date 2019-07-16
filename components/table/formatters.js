@@ -3,10 +3,14 @@ import { Dropdown, Icon } from 'semantic-ui-react'
 
 export function rowActionsCellFormatter({ column: { actions }, row }) {
   return (
-    <Dropdown icon="" trigger={<Icon name="ellipsis vertical" size="large" />}>
+    <Dropdown 
+      icon="" 
+      trigger={<Icon data-test={`action_${row.id}`} name="ellipsis vertical" size="large" />}
+    >
       <Dropdown.Menu>
         {actions.map((a, i) => 'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
           <Dropdown.Item
+            data-test={`action_${row.id}_${i}`}  
             key={i}
             text={a.text}
             onClick={() => a.callback(row)}
