@@ -776,7 +776,7 @@ class AddInventoryForm extends Component {
                             <FormGroup>
                               <FormField width={13}>
                                 <Dropdown
-                                  label="Product search"
+                                  label="Product Search"
                                   name="product"
                                   options={this.state.searchedProducts}
                                   inputProps={{
@@ -805,7 +805,7 @@ class AddInventoryForm extends Component {
                             </Header>
                             <FormGroup>
                               <FormField width={4}>
-                                <Dropdown label="Processing time" name="processingTimeDays" options={this.getProcessingTimes(14)}
+                                <Dropdown label="Processing Time" name="processingTimeDays" options={this.getProcessingTimes(14)}
                                 />
                               </FormField>
                             </FormGroup>
@@ -820,7 +820,7 @@ class AddInventoryForm extends Component {
                             </FormGroup>
                             <FormGroup>
                               <FormField width={5}>
-                                <DateInput inputProps={{ disabled: !values.doesExpire }} label="Expiration date" name="validityDate" />
+                                <DateInput inputProps={{ disabled: !values.doesExpire }} label="Expiration Date" name="validityDate" />
                               </FormField>
                             </FormGroup>
 
@@ -888,7 +888,7 @@ class AddInventoryForm extends Component {
                                 <FormGroup>
                                   <FormField width={5}>
                                     <Dropdown
-                                      label="Price tiers"
+                                      label="Price Tiers"
                                       name="priceTiers"
                                       options={this.getPriceTiers(10)}
                                       inputProps={{
