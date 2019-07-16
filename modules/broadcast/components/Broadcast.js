@@ -132,7 +132,7 @@ class Broadcast extends Component {
   }
 
   render() {
-    const { open, loading, treeData, filter, closeBroadcast, saveRules, id, mode, switchMode, toastManager } = this.props
+    const { open, loading, treeData, filter, closeBroadcast, saveRules, id, mode, switchMode, toastManager, offer } = this.props
     const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'branch' && n.getPath().filter(_n => _n.model.broadcast === 1).length > 0).length}/${treeData.all(n => n.model.type === 'branch').length}`
 
     return (
@@ -185,6 +185,7 @@ class Broadcast extends Component {
                     <RuleItem
                       item={this.state.tree}
                       mode={mode}
+                      offer={offer}
                       onRowClick={this.handleRowClick}
                       onPriceChange={this.handlePriceChange}
                       onChange={this.handleChange}

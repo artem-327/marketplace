@@ -1,8 +1,9 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import pt from 'prop-types'
-import {Input, Radio} from 'semantic-ui-react'
+import { Input, Radio } from 'semantic-ui-react'
 import styled from 'styled-components'
 import _ from 'lodash'
+import { FormattedNumber } from 'react-intl'
 
 export default class PriceControl extends Component {
 
@@ -55,12 +56,12 @@ export default class PriceControl extends Component {
       if (type === 'addition') {
         rule.priceAddition = value ? parseInt(value, 10) : 0
         rule.priceMultiplier = 0
-        
+
         this.onChange(rule)
       } else if (type === 'multiplier') {
         rule.priceMultiplier = value ? parseInt(value, 10) : 0
         rule.priceAddition = 0
-        
+
         this.onChange(rule)
       }
     })
@@ -68,25 +69,42 @@ export default class PriceControl extends Component {
     return false
   }
 
+  getPrices = () => {
+    const { offer, rule } = this.props
+    const { value, type } = this.state
+
+    const calc = (p) => (p * (rule.priceMultiplier + 100) / 100) + rule.priceAddition
+
+    return {
+      high: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={calc(offer.pricingTiers[0].price)} />,
+      low: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={calc(offer.pricingTiers[offer.pricingTiers.length - 1].price)} />
+    }
+  }
+
   render() {
     const { disabled } = this.props
     const { type, value } = this.state
+    const prices = this.getPrices()
 
     return (
       <Box>
-        <PriceInput 
+        <PriceInput
           disabled={disabled}
-          name="value" 
-          type="number" 
-          value={value} 
-          onClick={e => {e.preventDefault(); e.stopPropagation()}}
-          onChange={this.handleChange} 
+          name="value"
+          type="number"
+          value={value}
+          onClick={e => { e.preventDefault(); e.stopPropagation() }}
+          onChange={this.handleChange}
           size='small'
         />
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <ControlBox>
           <Radio disabled={disabled} label='%' checked={type === 'multiplier'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'multiplier' })} />
           <Radio disabled={disabled} label='$' checked={type === 'addition'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'addition' })} />
-        </div>
+        </ControlBox>
+        <ControlBox>
+          <FobPrice>{prices.high}</FobPrice>
+          <FobPrice>{prices.low}</FobPrice>
+        </ControlBox>
       </Box>
     )
   }
@@ -96,6 +114,17 @@ export default class PriceControl extends Component {
 const PriceInput = styled(Input)`
   padding: 5px;
   width: 80px;
+`
+
+const ControlBox = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+const FobPrice = styled.label`
+  height: 20px;
+  line-height: 20px;
+  font-size: 14px;
+  padding: 0 0 0 10px;
 `
 
 const Box = styled.div`

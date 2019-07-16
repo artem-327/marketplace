@@ -11,6 +11,7 @@ const RuleItem = (props) => {
     onPriceChange,
     onRowClick,
     item,
+    offer,
     item: { model: { name, rule, rule: { type, broadcast } } }
   } = props
 
@@ -57,13 +58,14 @@ const RuleItem = (props) => {
             onClick={(e) => !toggleDisabled && handleChange('broadcast', e)}
           />
         </Rule.Toggle>
-        <PriceControl disabled={priceDisabled} rule={rule} onChange={onPriceChange} />
+        <PriceControl offer={offer} disabled={priceDisabled} rule={rule} onChange={onPriceChange} />
       </Rule.Row>
 
       {(item.model.expanded || type === 'root') && item.children.map((i, idx) => (
         <RuleItem
           key={idx}
           item={i}
+          offer={offer}
           onRowClick={onRowClick}
           onPriceChange={onPriceChange}
           onChange={onChange}

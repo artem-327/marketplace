@@ -190,7 +190,7 @@ class MyInventory extends Component {
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
             rowActions={[
               { text: 'Edit listing', callback: (row) => Router.push({ pathname: '/inventory/edit', query: { id: row.id } }) },
-              { text: 'Custom broadcast', callback: (row) => { openBroadcast(row.id) } },
+              { text: 'Custom broadcast', callback: (row) => { openBroadcast(row) } },
               {
                 text: 'Delete listing', callback: (row) => {
                   confirm(

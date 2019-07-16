@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 import { connect } from 'react-redux'
 import MyInventory from './MyInventory'
@@ -55,6 +55,8 @@ function mapStateToProps(store, { datagrid }) {
         //qtyPart ? `${po.product.packagingSize} ${qtyPart}` : 'N/A',
         quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.pkgAmount * po.product.packagingSize} /> : 'N/A',
         cost: po.pricing.cost ? <FormattedNumber style='currency' currency={currency} value={po.pricing.cost} /> : 'N/A',
+        pricingTiers: po.pricingTiers,
+        pricing: po.pricing,
         fobPrice: po.pricingTiers.length > 1
           ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price} /> -  <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price} /> </>
           : <FormattedNumber style='currency' currency={currency} value={po.pricing.price} />,
