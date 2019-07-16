@@ -70,10 +70,11 @@ export default class PriceControl extends Component {
   }
 
   getPrices = () => {
-    const { offer, rule } = this.props
+    const { offer, rule, rootRule } = this.props
     const { value, type } = this.state
-
-    const calc = (p) => (p * (rule.priceMultiplier + 100) / 100) + rule.priceAddition
+    console.log(rootRule)
+    const r = rootRule || rule
+    const calc = (p) => (p * (r.priceMultiplier + 100) / 100) + r.priceAddition
 
     return {
       high: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={calc(offer.pricingTiers[0].price)} />,
@@ -102,8 +103,8 @@ export default class PriceControl extends Component {
           <Radio disabled={disabled} label='$' checked={type === 'addition'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'addition' })} />
         </ControlBox>
         <ControlBox>
-          <FobPrice>{prices.high}</FobPrice>
-          <FobPrice>{prices.low}</FobPrice>
+          <FobPrice disabled={disabled}>{prices.high}</FobPrice>
+          <FobPrice disabled={disabled}>{prices.low}</FobPrice>
         </ControlBox>
       </Box>
     )
@@ -123,8 +124,10 @@ const ControlBox = styled.div`
 const FobPrice = styled.label`
   height: 20px;
   line-height: 20px;
-  font-size: 14px;
+  font-size: 12px;
+  font-weight: normal;
   padding: 0 0 0 10px;
+  opacity: ${props => props.disabled ? 0.5 : 1};
 `
 
 const Box = styled.div`

@@ -136,7 +136,7 @@ class Broadcast extends Component {
     const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'branch' && n.getPath().filter(_n => _n.model.broadcast === 1).length > 0).length}/${treeData.all(n => n.model.type === 'branch').length}`
 
     return (
-      <Modal open={open} onClose={closeBroadcast} centered={false}>
+      <Modal open={open} onClose={closeBroadcast} centered={false} size="large">
         <Modal.Header>Broadcast Controls</Modal.Header>
         <Modal.Content scrolling style={{ minHeight: '70vh' }} className="flex stretched">
           <Grid className="flex stretched">
