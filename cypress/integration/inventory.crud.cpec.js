@@ -2,13 +2,14 @@ context("Inventory CRUD",() => {
 	
 	beforeEach(function () {
 		cy.login("user1@example.com","echopass123")
+
+		cy.url().should("include","inventory")
+		cy.wait(500)
 	})
 
     it('Create item',() => {
 		cy.server()
 		cy.route('/prodex/api/products/own/search?pattern=iso&onlyMapped=false').as('search')
-
-        cy.url().should("include","inventory")
 
 		cy.contains("Inventory").click()
 		cy.contains("Add Inventory").click()
@@ -46,7 +47,23 @@ context("Inventory CRUD",() => {
     })
 
     it('See item details',() => {
-       
+		cy.contains("IP550").click()
+
+		cy.get("#field_dropdown_product").contains("IP550 Isopropanol")
+
+		cy.get("#field_input_pkgAmount")
+			.should("have.value","5")
+
+		cy.get("input[name='pricingTiers[0].price']")
+			.should("have.value","5")
+
+		cy.get(".data-grid")
+			.children()
+			.eq(1).contains("Isopropanol")
+
+		cy.get(".data-grid")
+			.children()
+			.eq(3).contains("IP550")
     })
 
 	it('Update item',() => {
