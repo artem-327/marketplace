@@ -3,6 +3,7 @@ import {withRouter} from 'next/router'
 import { Segment, Form, Image, Button, Message, Grid, GridRow, GridColumn } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
+import ConfirmationPage from '~/modules/auth/components/ConfirmationPage'
 
 import Logo from '~/assets/images/login/logo_echo.png'
 
@@ -72,60 +73,68 @@ class LoginForm extends Component {
   }
 
   render() {
-    const { isLoading, message, version, intl, router } = this.props
+    const { isLoading, message, version, intl, router, identity } = this.props
     const { usernameError, passwordError } = this.state
     const { formatMessage } = intl
 
     return (
-      <LoginSegment loading={isLoading} raised padded='very'>
-        <Segment basic textAlign='center'>
-          <LogoImage src={Logo} />
-        </Segment>
+      <>
+        {identity ? (
+            <>
+              <ConfirmationPage />
+            </>
+          ) : (
+          <LoginSegment loading={isLoading} raised padded='very'>
+            <Segment basic textAlign='center'>
+              <LogoImage src={Logo} />
+            </Segment>
 
-        <StyledForm onSubmit={this.handleSubmit}>
-          <InstructionsDiv>
-            {this.state.resetPassword && <FormattedMessage id='auth.resetPasswordInstructions' />}
-          </InstructionsDiv>
+            <StyledForm onSubmit={this.handleSubmit}>
+              <InstructionsDiv>
+                {this.state.resetPassword && <FormattedMessage id='auth.resetPasswordInstructions' />}
+              </InstructionsDiv>
 
-          <Form.Field error={usernameError} data-test="login_username">
-            <label><FormattedMessage id='auth.username' defaultMessage='Username' /></label>
-            <input placeholder={formatMessage({ id: 'auth.username', defaultMessage: 'Password' })} name='username' />
-          </Form.Field>
-          {
-            !this.state.resetPassword &&
-            <Form.Field error={passwordError} data-test="login_password">
-              <label><FormattedMessage id='auth.password' defaultMessage='Password' /></label>
-              <input placeholder={formatMessage({ id: 'auth.password', defaultMessage: 'Password' })} type='password' name='password' />
-            </Form.Field>
-          }
-          <Button type='submit' primary fluid size='large' data-test="login_submit">
-            {this.state.resetPassword
-              ? <FormattedMessage id='auth.resetPassword' defaultMessage='Reset Password' />
-              : <FormattedMessage id='auth.login' defaultMessage='Log in' />}
-          </Button>
-        </StyledForm>
-
-        <Message error content={message} hidden={!message} />
-        {router.query.auto && <Message info content={'You have been automatically logged out.'} />}
-        <Grid>
-          <GridRow>
-            <GridColumn computer={12}>
-              <ToggleLabel onClick={this.toggleResetPassword} data-test="login_reset_toggle">
+              <Form.Field error={usernameError} data-test="login_username">
+                <label><FormattedMessage id='auth.username' defaultMessage='Username' /></label>
+                <input placeholder={formatMessage({ id: 'auth.username', defaultMessage: 'Password' })} name='username' />
+              </Form.Field>
+              {
+                !this.state.resetPassword &&
+                <Form.Field error={passwordError} data-test="login_password">
+                  <label><FormattedMessage id='auth.password' defaultMessage='Password' /></label>
+                  <input placeholder={formatMessage({ id: 'auth.password', defaultMessage: 'Password' })} type='password' name='password' />
+                </Form.Field>
+              }
+              <Button type='submit' primary fluid size='large' data-test="login_submit">
                 {this.state.resetPassword
-                  ? <FormattedMessage id='auth.cancelPasswordReset' />
-                  : <FormattedMessage id='auth.resetMyPassword' defaultMessage='Password Reset' />
-                }
+                  ? <FormattedMessage id='auth.resetPassword' defaultMessage='Reset Password' />
+                  : <FormattedMessage id='auth.login' defaultMessage='Log in' />}
+              </Button>
+            </StyledForm>
 
-              </ToggleLabel>
-            </GridColumn>
+            <Message error content={message} hidden={!message} />
+            {router.query.auto && <Message info content={'You have been automatically logged out.'} />}
+            <Grid>
+              <GridRow>
+                <GridColumn computer={12}>
+                  <ToggleLabel onClick={this.toggleResetPassword} data-test="login_reset_toggle">
+                    {this.state.resetPassword
+                      ? <FormattedMessage id='auth.cancelPasswordReset' />
+                      : <FormattedMessage id='auth.resetMyPassword' defaultMessage='Password Reset' />
+                    }
 
-            <GridColumn computer={4} textAlign='right'>
-              v{version}
-            </GridColumn>
-          </GridRow>
-        </Grid>
+                  </ToggleLabel>
+                </GridColumn>
 
-      </LoginSegment>
+                <GridColumn computer={4} textAlign='right'>
+                  v{version}
+                </GridColumn>
+              </GridRow>
+            </Grid>
+
+          </LoginSegment>
+        )}
+      </>
     )
   }
 }

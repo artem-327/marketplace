@@ -1,7 +1,24 @@
 import * as AT from './action-types'
 import { ROLES_ENUM } from '../../src/utils/constants'
+import { getSafe } from '~/src/utils/functions'
 
 export const initialState = {
+  confirmationForm: {
+    companyName: '',
+    dba: '',
+    streetAddress: '',
+    streetAddress2: '',
+    city: '',
+    state: undefined,
+    zip: '',
+    einNumber: '',
+    dunsNumber: '',
+    firstName: '',
+    lastName: '',
+    title: undefined,
+    phone: '',
+    email: ''
+  },
   loginForm: {
     isLoading: false,
     message: null,
@@ -52,6 +69,22 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
+        confirmationForm: {
+          companyName: payload.identity.company.name,
+          dba: '',
+          streetAddress: payload.identity.branches[0].address.streetAddress,
+          streetAddress2: payload.identity.branches[0].address.streetAddress2,
+          city: payload.identity.branches[0].address.city,
+          state: payload.identity.branches[0].address.province.name,
+          zip: payload.identity.branches[0].address.zip.zip,
+          einNumber: payload.identity.company.cin,
+          dunsNumber: payload.identity.company.tin,
+          firstName: payload.identity.name,
+          lastName: '',
+          title: undefined,
+          phone: payload.identity.phone,
+          email: payload.identity.email
+        },
         identity: {
           ...payload.identity,
           ...accessRights

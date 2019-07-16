@@ -44,7 +44,12 @@ export function login(username, password) {
         }
       })
 
-      isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
+
+      if (identity.company.reviewRequested === false) {
+        //await
+      } else {
+        isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
+      }
       
       return {
         auth,
