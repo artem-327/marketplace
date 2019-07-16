@@ -30,8 +30,8 @@ export default class PriceControl extends Component {
     const { rule } = this.props
 
     this.setState({
-      type: rule.priceAddition > 0 ? 'addition' : rule.priceMultiplier > 0 ? 'multiplier' : 'multiplier',
-      value: rule.priceAddition > 0 ? rule.priceAddition : rule.priceMultiplier > 0 ? rule.priceMultiplier : ''
+      type: rule.priceAddition !== 0 ? 'addition' : rule.priceMultiplier !== 0 ? 'multiplier' : 'multiplier',
+      value: rule.priceAddition !== 0 ? rule.priceAddition : rule.priceMultiplier !== 0 ? rule.priceMultiplier : ''
     })
   }
 
@@ -40,7 +40,7 @@ export default class PriceControl extends Component {
 
     this.setState({
       //type: model.priceAddition > 0 ? 'addition' : model.priceMultiplier > 0 ? 'multiplier' : '',
-      value: rule.priceAddition > 0 ? rule.priceAddition : rule.priceMultiplier > 0 ? rule.priceMultiplier : ''
+      value: rule.priceAddition !== 0 ? rule.priceAddition : rule.priceMultiplier !== 0 ? rule.priceMultiplier : ''
     })
   }
 
@@ -54,12 +54,12 @@ export default class PriceControl extends Component {
       const { value, type } = this.state
 
       if (type === 'addition') {
-        rule.priceAddition = value ? parseInt(value, 10) : 0
+        rule.priceAddition = value !== 0 ? parseInt(value, 10) : 0
         rule.priceMultiplier = 0
 
         this.onChange(rule)
       } else if (type === 'multiplier') {
-        rule.priceMultiplier = value ? parseInt(value, 10) : 0
+        rule.priceMultiplier = value !== 0 ? parseInt(value, 10) : 0
         rule.priceAddition = 0
 
         this.onChange(rule)
@@ -71,8 +71,7 @@ export default class PriceControl extends Component {
 
   getPrices = () => {
     const { offer, rule, rootRule } = this.props
-    const { value, type } = this.state
-    console.log(rootRule)
+
     const r = rootRule || rule
     const calc = (p) => (p * (r.priceMultiplier + 100) / 100) + r.priceAddition
 
