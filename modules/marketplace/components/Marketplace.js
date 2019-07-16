@@ -101,7 +101,12 @@ export default class Marketplace extends Component {
               open: this.state.open,
               closeModal: () => this.setState({ open: false })
             }}
-            selectedRows={selectedRows}
+            productOfferIds={rows.reduce(function(filtered, row, rowIndex) {
+              if (selectedRows.includes(rowIndex)) {
+                filtered.push(row.id)
+              }
+              return filtered
+            }, [])}
             removePopup={this.props.removePopup}
             {...this.props}
           />

@@ -29,9 +29,9 @@ export default class ShippingQuotes extends Component {
   }
 
   getShipingQuotes(inputs) {
-    const { selectedRows, getShipingQuotes } = this.props
+    const { productOfferIds, getShipingQuotes } = this.props
     const params = {
-      productOfferIds: selectedRows,
+      productOfferIds: productOfferIds,
       destinationZIP: inputs.destination.zip,
       destinationCountry: 1,
       quantity: parseInt(inputs.destination.quantity),
