@@ -312,7 +312,7 @@ class AddInventoryForm extends Component {
     return (
       <>
         {this.state.openedDocuments ? (
-          <Modal open={!!this.state.openedDocuments} closeIcon={true} onClose={() => this.setState({ openedDocuments: false })}>
+          <Modal open={!!this.state.openedDocuments} onClose={() => this.setState({ openedDocuments: false })}>
             <Modal.Header>Product Offer has these documents</Modal.Header>
             <Modal.Content>
               <Modal.Description>
@@ -330,8 +330,8 @@ class AddInventoryForm extends Component {
                         <Table.Cell>{document.name}</Table.Cell>
                         <Table.Cell>{document.documentType.name}</Table.Cell>
                         <Table.Cell width={2} textAlign='right'>
-                          <Icon name='download' size='large' onClick={() => this.downloadAttachment(document.name, document.id)} />
-                          <Icon name='remove circle' size='large' onClick={() => this.removeAttachment(
+                          <Icon name='download' size='large' style={{ cursor: 'pointer' }} onClick={() => this.downloadAttachment(document.name, document.id)} />
+                          <Icon name='remove circle' size='large' style={{ cursor: 'pointer' }} onClick={() => this.removeAttachment(
                             document.lotId ? true : false, // isLot
                             document.name, // documentName
                             document.id, // documentId
@@ -344,6 +344,13 @@ class AddInventoryForm extends Component {
                     ))}
                   </Table.Body>
                 </Table>
+                <Grid>
+                  <Grid.Row>
+                    <Grid.Column width={3} floated='right'>
+                      <Button color='blue' floated='right' onClick={() => this.setState({ openedDocuments: false })}>Ok</Button>
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
               </Modal.Description>
             </Modal.Content>
           </Modal>
