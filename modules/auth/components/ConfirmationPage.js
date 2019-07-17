@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../actions'
 import { Grid, Header, Segment, Image, Divider } from 'semantic-ui-react'
-import { Form, Input, Button } from 'formik-semantic-ui'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import styled from 'styled-components'
 import * as val from 'yup'
 
@@ -30,147 +30,199 @@ const LogoImage = styled(Image)`
 `
 
 const initValues = {
-  companyName: '',
+  address: {
+    city: '',
+    country: undefined,
+    province: undefined,
+    streetAddress: '',
+    zip: ''
+  },
+  companyAdminUser: {
+    name: '',
+    jobTitle: undefined,
+    phone: '',
+    email: ''
+  },
   dba: '',
-  streetAddress: '',
-  streetAddress2: '',
-  city: '',
-  state: undefined,
-  zip: '',
-  einNumber: '',
   dunsNumber: '',
-  firstName: '',
-  lastName: '',
-  title: undefined,
-  phone: '',
-  email: ''
+  name: '',
+  tin: ''
 }
 
 const validationScheme = val.object().shape({
-  companyName: val.string()
+  address: val.object().shape({
+    city: val.string().required('required'),
+    country: val.number().moreThan(0, "required").required('required'),
+    //province: val.number().moreThan(0, "required").required('required'),
+    province: val.mixed().test(
+      'requiredIfOptions',
+      'required', // error message
+      function test(value) {
+        return ((value > 0) || (this.options.parent.availableProvinces.length === 0))
+      }
+    ),
+    streetAddress: val.string().required('required'),
+    zip: val.string().required('required')
+  }),
+  companyAdminUser: val.object().shape({
+    name: val.string().required('required'),
+    jobTitle: val.string(),
+    phone: val.string().required('required'),
+    email: val.string().email().required('required')
+  }),
+  dba: val.string(),
+  dunsNumber: val.number().moreThan(0, 'DUNS Number can not be negative'),
+  name: val.string().required('required'),
+  tin: val.string().required('required')
 })
 
 class ConfirmationPage extends Component {
 
   render() {
-    const { confirmationForm } = this.props
+    const {
+      confirmationForm,
+      reviewCompany,
+      searchedCountries,
+      searchedProvinces,
+      searchCountries,
+      searchProvinces
+    } = this.props
 
     return (
-      <ConfirmSegment raised compact>
-        <Segment padded='very' style={{ position: 'static', paddingTop: '0' }}>
-          <LogoWrapper basic textAlign='center'>
-            <LogoImage src={Logo} />
-          </LogoWrapper>
-          <Form initialValues={{ ...initValues, ...confirmationForm }}
-                validationSchema={validationScheme}
-                onSubmit={(values, actions) => {
+      <Form initialValues={{ ...initValues, ...confirmationForm }}
+            validationSchema={validationScheme}
+            onSubmit={(values, actions) => {
+              reviewCompany(values)
+              actions.setSubmitting(false)
+            }}
+            className='flex stretched'
+            style={{ padding: '20px' }}>
+        {({ values, setFieldValue, validateForm, submitForm }) => (
+          <ConfirmSegment raised compact>
+            <Segment padded='very' style={{ position: 'static', paddingTop: '0' }}>
+              <LogoWrapper basic textAlign='center'>
+                <LogoImage src={Logo} />
+              </LogoWrapper>
+                    <Header as='h2' textAlign='center'>
+                      Last Step
+                    </Header>
+                    <Header as='h2' textAlign='center' style={{ marginTop: '0', paddingTop: '0.5em', fontSize: '1.14285714em' }}>Please verify the company information below.</Header>
 
-                }}
-                className='flex stretched'
-                style={{ padding: '20px' }}>
-            {({ values, submitForm }) => (
-              <>
-                <Header as='h2' textAlign='center'>
-                  Last Step
-                </Header>
-                <Header as='h2' textAlign='center' style={{ marginTop: '0', paddingTop: '0.5em', fontSize: '1.14285714em' }}>Please verify the company information below.</Header>
+                    <Header as='h3'>Company Profile</Header>
+                    <Grid>
+                      <Grid.Row columns={2}>
+                        <Grid.Column>
+                          <Input label='Company Legal Name *'
+                                 name='name' />
+                        </Grid.Column>
+                        <Grid.Column>
+                          <Input label='DBA'
+                                 name='dba' />
+                        </Grid.Column>
+                      </Grid.Row>
+                    </Grid>
 
-                <Header as='h3'>Company Profile</Header>
-                <Grid>
-                  <Grid.Row columns={2}>
-                    <Grid.Column>
-                      <Input label='Company Legal Name *'
-                             name='companyName' />
-                    </Grid.Column>
-                    <Grid.Column>
-                      <Input label='DBA'
-                             name='dba' />
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
+                    <Header as='h3'>Company Primary Address</Header>
+                    <Grid>
+                      <Grid.Row columns={2}>
+                        <Grid.Column>
+                          <Input label='Street Address 1 *'
+                                 name='address.streetAddress' />
+                        </Grid.Column>
+                        <Grid.Column>
+                          <Dropdown label='Country *'
+                                    name='address.country'
+                                    options={confirmationForm.address.availableCountries}
+                                    inputProps={{
+                                      search: options => options,
+                                      onSearchChange: (e, {searchQuery}) => searchCountries(searchQuery),
+                                      onChange: async (e, {value}) => {
+                                        setFieldValue('address.province', 0)
 
-                <Header as='h3'>Company Primary Address</Header>
-                <Grid>
-                  <Grid.Row columns={2}>
-                    <Grid.Column>
-                      <Input label='Street Address 1 *'
-                             name='streetAddress' />
-                    </Grid.Column>
-                    <Grid.Column>
-                      <Input label='Street Address 2'
-                             name='streedAddress2' />
-                    </Grid.Column>
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Grid.Column width={8}>
-                      <Input label='City *'
-                             name='city' />
-                    </Grid.Column>
-                    <Grid.Column width={4}>
-                      <Input label='State *'
-                             name='state' />
-                    </Grid.Column>
-                    <Grid.Column width={4}>
-                      <Input label='Zip *'
-                             name='zip' />
-                    </Grid.Column>
-                  </Grid.Row>
-                  <Grid.Row columns={2}>
-                    <Grid.Column>
-                      <Input label='EIN Number *'
-                             name='einNumber' />
-                    </Grid.Column>
-                    <Grid.Column>
-                      <Input label='DUNS Number'
-                             name='dunsNumber' />
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
+                                        const searchedProvinces = await searchProvinces(value)
+                                        setFieldValue('address.availableProvinces', searchedProvinces.value.data.map(province => ({
+                                          key: province.id,
+                                          text: province.name,
+                                          value: province.id
+                                        })))
+                                        validateForm().then(r => {
+                                          // stop when errors found
+                                          if (Object.keys(r).length) {
+                                            submitForm() // show errors
+                                          }
+                                        })
+                                      }
+                                    }} />
+                        </Grid.Column>
+                      </Grid.Row>
+                      <Grid.Row>
+                        <Grid.Column width={8}>
+                          <Input label='City *'
+                                 name='address.city' />
+                        </Grid.Column>
+                        <Grid.Column width={5}>
+                          <Dropdown label='State *'
+                                    name='address.province'
+                                    options={confirmationForm.address.availableProvinces}
+                                    inputProps={{
+                                      selection: true,
+                                      value: 0
+                                    }} />
+                        </Grid.Column>
+                        <Grid.Column width={3}>
+                          <Input label='Zip *'
+                                 name='address.zip' />
+                        </Grid.Column>
+                      </Grid.Row>
+                      <Grid.Row columns={2}>
+                        <Grid.Column>
+                          <Input label='EIN Number *'
+                                 name='tin' />
+                        </Grid.Column>
+                        <Grid.Column>
+                          <Input label='DUNS Number'
+                                 name='dunsNumber' />
+                        </Grid.Column>
+                      </Grid.Row>
+                    </Grid>
 
-                <Header as='h3'>Company Admin Profile</Header>
-                <Grid>
-                  <Grid.Row columns={2}>
-                    <Grid.Column>
-                      <Input label='First Name *'
-                             name='firstName' />
-                    </Grid.Column>
-                    <Grid.Column>
-                      <Input label='Last Name *'
-                             name='lastName' />
-                    </Grid.Column>
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Grid.Column width={4}>
-                      <Input label='Title'
-                             name='title' />
-                    </Grid.Column>
-                  </Grid.Row>
-                  <Grid.Row columns={2}>
-                    <Grid.Column>
-                      <Input label='Phone *'
-                             name='phone' />
-                    </Grid.Column>
-                    <Grid.Column>
-                      <Input label='E-Mail *'
-                             name='email' />
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
-              </>
-            )}
-          </Form>
-        </Segment>
-        <Segment padded='very'>
-          <Grid>
-            <Grid.Row>
-              <Grid.Column aligned='right' textAlign='right'>
-                <Button style={{ marginRight: '1em' }}>Cancel</Button>
-                <Button color='blue'>Enter Echo Exchange</Button>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </Segment>
-      </ConfirmSegment>
+                    <Header as='h3'>Company Admin Profile</Header>
+                    <Grid>
+                      <Grid.Row columns={2}>
+                        <Grid.Column>
+                          <Input label='Name *'
+                                 name='companyAdminUser.name' />
+                        </Grid.Column>
+                        <Grid.Column>
+                          <Input label='Title'
+                                 name='companyAdminUser.jobTitle' />
+                        </Grid.Column>
+                      </Grid.Row>
+                      <Grid.Row columns={2}>
+                        <Grid.Column>
+                          <Input label='Phone *'
+                                 name='companyAdminUser.phone' />
+                        </Grid.Column>
+                        <Grid.Column>
+                          <Input label='E-Mail *'
+                                 name='companyAdminUser.email' />
+                        </Grid.Column>
+                      </Grid.Row>
+                    </Grid>
+            </Segment>
+            <Segment padded='very'>
+              <Grid>
+                <Grid.Row>
+                  <Grid.Column aligned='right' textAlign='right'>
+                    <Button style={{ marginRight: '1em' }}>Cancel</Button>
+                    <Button.Submit color='blue'>Enter Echo Exchange</Button.Submit>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+            </Segment>
+          </ConfirmSegment>
+        )}
+      </Form>
     )
   }
 }

@@ -5,3 +5,9 @@ export const getIdentity = () => api.get('/prodex/api/users/me').then(response =
 export const getVersion = () => api.get('/prodex/api/version').then(response => response.data)
 
 export const resetPasswordRequest = email => api.post(`/prodex/api/users/reset-password-request?email=${email}`)
+
+export const reviewCompany = values => api.patch(`/prodex/api/companies/review`, values)
+
+export const searchCountries = searchQuery => api.get(`/prodex/api/countries/search?pattern=${searchQuery}`)
+
+export const searchProvinces = countryId => api.get(`/prodex/api/provinces/country/${countryId}`)

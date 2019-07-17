@@ -4,20 +4,25 @@ import { getSafe } from '~/src/utils/functions'
 
 export const initialState = {
   confirmationForm: {
-    companyName: '',
+    address: {
+      city: '',
+      country: undefined,
+      availableCountries: [],
+      province: undefined,
+      availableProvinces: [],
+      streetAddress: '',
+      zip: ''
+    },
+    companyAdminUser: {
+      name: '',
+      jobTitle: undefined,
+      phone: '',
+      email: ''
+    },
     dba: '',
-    streetAddress: '',
-    streetAddress2: '',
-    city: '',
-    state: undefined,
-    zip: '',
-    einNumber: '',
     dunsNumber: '',
-    firstName: '',
-    lastName: '',
-    title: undefined,
-    phone: '',
-    email: ''
+    name: '',
+    tin: ''
   },
   loginForm: {
     isLoading: false,
@@ -25,7 +30,7 @@ export const initialState = {
     isLogged: false,
     version: '',
   },
-  identity: null,
+  identity: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -70,20 +75,33 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         confirmationForm: {
-          companyName: payload.identity.company.name,
+          address: {
+            city: payload.identity.branches[0].address.city,
+            country: payload.identity.branches[0].address.country.id,
+            availableCountries: [{
+              key: payload.identity.branches[0].address.country.id,
+              text: payload.identity.branches[0].address.country.name,
+              value: payload.identity.branches[0].address.country.id
+            }],
+            province: payload.identity.branches[0].address.province.id,
+            availableProvinces: [{
+              key: payload.identity.branches[0].address.province.id,
+              text: payload.identity.branches[0].address.province.name,
+              value: payload.identity.branches[0].address.province.id
+            }],
+            streetAddress: payload.identity.branches[0].address.streetAddress,
+            zip: payload.identity.branches[0].address.zip.zip,
+          },
+          companyAdminUser: {
+            name: payload.identity.name,
+            jobTitle: undefined,
+            phone: payload.identity.phone,
+            email: payload.identity.email
+          },
           dba: '',
-          streetAddress: payload.identity.branches[0].address.streetAddress,
-          streetAddress2: payload.identity.branches[0].address.streetAddress2,
-          city: payload.identity.branches[0].address.city,
-          state: payload.identity.branches[0].address.province.name,
-          zip: payload.identity.branches[0].address.zip.zip,
-          einNumber: payload.identity.company.cin,
           dunsNumber: payload.identity.company.tin,
-          firstName: payload.identity.name,
-          lastName: '',
-          title: undefined,
-          phone: payload.identity.phone,
-          email: payload.identity.email
+          name: payload.identity.company.name,
+          tin: payload.identity.company.tin
         },
         identity: {
           ...payload.identity,
@@ -93,7 +111,7 @@ export default function reducer(state = initialState, action) {
           ...loginForm,
           //isLoading: false,
           isLogged: true
-        },
+        }
       }
     }
 
@@ -142,6 +160,47 @@ export default function reducer(state = initialState, action) {
         loginForm: {
           ...state.loginForm,
           isLoading: true
+        }
+      }
+    }
+
+    case AT.AUTH_REVIEW_COMPANY_FULFILLED: {
+      return {
+        ...state
+      }
+    }
+
+    case AT.AUTH_SEARCH_COUNTRIES_FULFILLED: {
+      return {
+        ...state,
+        confirmationForm: {
+          ...state.confirmationForm,
+          address: {
+            ...state.confirmationForm.address,
+            availableCountries: payload.data.map(country => ({
+              key: country.id,
+              text: country.name,
+              value: country.id
+            })),
+            province: 0
+          }
+        }
+      }
+    }
+
+    case AT.AUTH_SEARCH_PROVINCES_FULFILLED: {
+      return {
+        ...state,
+        confirmationForm: {
+          ...state.confirmationForm,
+          address: {
+            ...state.confirmationForm.address,
+            availableProvinces: payload.data.map(province => ({
+              key: province.id,
+              text: province.name,
+              value: province.id
+            }))
+          }
         }
       }
     }

@@ -45,9 +45,7 @@ export function login(username, password) {
       })
 
 
-      if (identity.company.reviewRequested === false) {
-        //await
-      } else {
+      if (!identity.company.reviewRequested) {
         isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
       }
       
@@ -101,5 +99,24 @@ export const resetPasswordRequest = email => ({
 //   }
 // }
 
+export const reviewCompany = (values) => {
+
+  return {
+    type: AT.AUTH_REVIEW_COMPANY,
+    async payload() {
+      const response = api.reviewCompany(values)
+      const identity = await api.getIdentity()
+      const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
+
+      isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
+
+      return response
+    }
+  }
+}
+
+export const searchCountries = (searchQuery) => ({ type: AT.AUTH_SEARCH_COUNTRIES, payload: api.searchCountries(searchQuery) })
+
+export const searchProvinces = (countryId) => ({ type: AT.AUTH_SEARCH_PROVINCES, payload: api.searchProvinces(countryId) })
 
 export const updateIdentity = (payload) => ({ type: AT.UPDATE_IDENTITY, payload })
