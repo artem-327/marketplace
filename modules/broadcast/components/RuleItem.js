@@ -12,7 +12,7 @@ const RuleItem = (props) => {
     onRowClick,
     item,
     offer,
-    item: { model: { name, rule, rule: { type, broadcast } } }
+    item: { model: { name, rule } }
   } = props
 
   const handleChange = (propertyName, e) => {
@@ -20,8 +20,7 @@ const RuleItem = (props) => {
     e.stopPropagation()
 
     const value = rule[propertyName]
-
-    const newValue = value === 2 || value === 1 ? 0 : 1
+    const newValue = value === 1 ? 0 : 1
 
     rule[propertyName] = newValue
 
@@ -42,11 +41,13 @@ const RuleItem = (props) => {
   const toggleDisabled = !!parentBroadcasted
   const priceDisabled = !(rule.broadcast === 1 && !parentBroadcasted) //allChildrenBroadcasting || rule.broadcast !== 1 || toggleDisabled
 
+  console.log(name, !!parentBroadcasted, rule.broadcast, allChildrenBroadcasting)
+
   return (
     <>
-      <Rule.Row depth={nodePath.length} type={type} onClick={() => type !== 'root' && handleRowClick(item)}>
+      <Rule.Row depth={nodePath.length} type={rule.type} onClick={() => rule.type !== 'root' && handleRowClick(item)}>
         <Rule.RowContent>
-          {(item.children.length > 0 && type !== 'root') ? <Icon name={`chevron ${item.model.expanded ? 'down' : 'right'}`} /> : <EmptyIconSpace />}
+          {(item.children.length > 0 && rule.type !== 'root') ? <Icon name={`chevron ${item.model.expanded ? 'down' : 'right'}`} /> : <EmptyIconSpace />}
           <span>{name}</span>
         </Rule.RowContent>
 
@@ -69,7 +70,7 @@ const RuleItem = (props) => {
         />
       </Rule.Row>
 
-      {(item.model.expanded || type === 'root') && item.children.map((i, idx) => (
+      {(item.model.expanded || rule.type === 'root') && item.children.map((i, idx) => (
         <RuleItem
           key={idx}
           item={i}
