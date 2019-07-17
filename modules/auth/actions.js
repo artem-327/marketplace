@@ -100,6 +100,8 @@ export const resetPasswordRequest = email => ({
 // }
 
 export const reviewCompany = (values) => {
+  delete values.address.availableCountries
+  delete values.address.availableProvinces
 
   return {
     type: AT.AUTH_REVIEW_COMPANY,
