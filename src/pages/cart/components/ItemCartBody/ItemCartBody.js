@@ -84,6 +84,7 @@ export default class ItemCartBody extends Component {
         </div>
         <footer className='popup-footer'>
           <Button control={Button}
+            data-test="shopping_cart_remove"
             color='grey'
             onClick={() => confirm('Remove item', 'Are you sure you want to remove item from Shopping Cart?')
               .then(() => {
@@ -100,6 +101,7 @@ export default class ItemCartBody extends Component {
             />
           </Button>
           <Button control={Button}
+            data-test="shopping_cart_edit"
             color='blue'
             onClick={() => this.props.editCart(cartItem)}>
             <FormattedMessage

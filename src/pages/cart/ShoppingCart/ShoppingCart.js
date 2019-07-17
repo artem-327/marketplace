@@ -83,7 +83,7 @@ export default class ShoppingCart extends Component {
 
               <Menu.Menu position='right'>
                 <Menu.Item>
-                  <Button icon basic labelPosition='left' onClick={() => { Router.push('/marketplace/all') }}>
+                  <Button icon basic labelPosition='left' data-test="shopping_cart_back" onClick={() => { Router.push('/marketplace/all') }}>
                     <Icon name='chevron left' />
                     <FormattedMessage id='cart.backToProductPurchaseInfo'
                       defaultMessage='Back to Product/Purchase info' />
@@ -104,7 +104,7 @@ export default class ShoppingCart extends Component {
               <Summary cart={this.props.cart} totalPrice={totalPrice} />
 
               {cartItems.length > 0 ?
-                <MargedButton fluid primary onClick={this.handleContinue}>
+                <MargedButton fluid primary data-test="shopping_cart_continue" onClick={this.handleContinue}>
                   <FormattedMessage
                     id='global.continue'
                     defaultMessage='Continue'
@@ -117,7 +117,7 @@ export default class ShoppingCart extends Component {
                 handleContinue={this.handleContinueShopping}
                 open={this.state.modalOpen}
                 trigger={
-                  <Button size='large' basic fluid color='blue' onClick={() => this.props.sidebarChanged({ isOpen: !this.props.sidebar.isOpen })}>
+                  <Button size='large' basic fluid color='blue' data-test="shopping_cart_keep_shopping" onClick={() => this.props.sidebarChanged({ isOpen: !this.props.sidebar.isOpen })}>
                     <FormattedMessage
                       id='cart.keepShopping'
                       defaultMessage='Keep Shopping'

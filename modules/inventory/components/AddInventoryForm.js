@@ -485,13 +485,14 @@ class AddInventoryForm extends Component {
             <Grid verticalAlign='middle'>
               <GridRow>
                 <ResponsiveColumn computer={6} mobile={16}>
-                  <Button fluid size='big' floated='left' onClick={() => this.goToList()}>
+                  <Button fluid size='big' floated='left' data-test="new_inventory_cancel" onClick={() => this.goToList()}>
                     <FormattedMessage id='addInventory.cancel' defaultMessage='Cancel' /></Button>
                 </ResponsiveColumn>
                 <GridColumn computer={10} mobile={16}>
                   <Button.Submit fluid
                     size='big'
                     floated='right'
+                    data-test="new_inventory_submit"
                     onClick={(e, data = { data, validateForm }) => {
                       validateForm()
                         .then(r => {

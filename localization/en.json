@@ -196,7 +196,7 @@
   "filter.grade": "Grade",
   "filter.condition": "Condition",
   "filter.form": "Form",
-  "filter.expiration": "Expiration",
+  "filter.expiration": "Days Until Expiration",
   "filter.assay": "Assay",
   "filter.productAge": "Product Age",
   "filter.chemicalSearch": "Chemical Search",

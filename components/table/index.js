@@ -64,7 +64,7 @@ const SettingButton = styled(Icon)`
   }
 `
 const ColumnsSetting = ({ onClick }) => (
-  <SettingButton onClick={onClick} name="setting" />
+  <SettingButton onClick={onClick} data-test="table_setting" name="setting" />
 )
 const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, open }) => (
   <Modal open={open} centered={false} size="tiny" style={{ width: 300 }}>
