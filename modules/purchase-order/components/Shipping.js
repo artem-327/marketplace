@@ -63,9 +63,19 @@ class Shipping extends Component {
           <GridRow>
             <GridColumn textAlign='center' computer={8}>
               <Button.Group>
-                <Button disabled={this.props.shippingQuotesAreFetching} onClick={() => this.handleToggleChange(true)} active={this.props.otherAddresses}><FormattedMessage id='cart.addresses' defaultMessage='Addresses' /></Button>
+                <Button
+                  type='button'
+                  disabled={this.props.shippingQuotesAreFetching}
+                  onClick={() => this.handleToggleChange(true)}
+                  active={this.props.otherAddresses}>
+                  <FormattedMessage id='cart.addresses' defaultMessage='Addresses' /></Button>
                 <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
-                <Button disabled={this.props.shippingQuotesAreFetching} onClick={() => this.handleToggleChange(false)} active={!this.props.otherAddresses}><FormattedMessage id='cart.branches' defaultMessage='Branches' /></Button>
+                <Button
+                  type='button'
+                  disabled={this.props.shippingQuotesAreFetching}
+                  onClick={() => this.handleToggleChange(false)}
+                  active={!this.props.otherAddresses}>
+                  <FormattedMessage id='cart.branches' defaultMessage='Branches' /></Button>
               </Button.Group>
             </GridColumn>
           </GridRow>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Dropdown } from 'formik-semantic-ui'
-import { bool, func, object, string, array } from 'prop-types'
+import { bool, func, object, string, array, number } from 'prop-types'
 import { debounce } from 'lodash'
 import { FormattedMessage } from 'react-intl'
 
@@ -36,7 +36,10 @@ export default class ZipDropdown extends Component {
 
   }
 
-  handleChange = (e, { value }) => this.setState({ value })
+  handleChange = (e, data) => {
+    this.setState({ value: data.value })
+    this.props.onChange(e, data)
+  }
 
 
   render() {
@@ -48,13 +51,13 @@ export default class ZipDropdown extends Component {
       additionalInputProps,
       name,
       loading,
-      label } = this.props
-
+      label,
+      initialZipCodes } = this.props
 
     return (
       <Dropdown
         name={name}
-        options={codes}
+        options={codes.concat(initialZipCodes)}
         label={label}
         inputProps={{
           onChange: this.handleChange,
@@ -87,7 +90,9 @@ ZipDropdown.propTypes = {
   onAddition: func,
   handleChange: func,
   onSearchChange: func,
-  countryId: string
+  countryId: number,
+  initialZipCodes: array,
+  onChange: func
 }
 
 ZipDropdown.defaultProps = {
@@ -98,5 +103,7 @@ ZipDropdown.defaultProps = {
   onAddition: (e, data) => { },
   handleChange: (e, data) => { },
   onSearchChange: (e, data) => { },
-  label: <FormattedMessage id='global.zip' defaultMessage='Zip' />
+  label: <FormattedMessage id='global.zip' defaultMessage='Zip' />,
+  initialZipCodes: [],
+  onChange: () => { }
 }
