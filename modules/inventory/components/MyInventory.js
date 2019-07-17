@@ -168,7 +168,7 @@ class MyInventory extends Component {
             tableName="my_inventory_grid"
             columns={columns}
             rows={this.getRows(rows)}
-            rowSelection
+            // rowSelection
             groupBy={['casNumberCombined']}
             getChildGroups={rows =>
               _(rows)
