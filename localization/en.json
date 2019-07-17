@@ -196,7 +196,7 @@
   "filter.grade": "Grade",
   "filter.condition": "Condition",
   "filter.form": "Form",
-  "filter.expiration": "Expiration",
+  "filter.expiration": "Days Until Expiration",
   "filter.assay": "Assay",
   "filter.productAge": "Product Age",
   "filter.chemicalSearch": "Chemical Search",
@@ -493,5 +493,9 @@
   "notifications.marketSegmentCreated.header": "Market Segment created",
   "notifications.marketSegmentCreated.content": "Market Segment {name} successfully created.",
   "notifications.marketSegmentUpdated.header": "Updated Market Segment",
-  "notifications.marketSegmentUpdated.content": "Market Segment {name} successfully updated."
+  "notifications.marketSegmentUpdated.content": "Market Segment {name} successfully updated.",
+  "notifications.addressCreated.header": "Address Created",
+  "notifications.addressCreated.content": "Address {name} successfully created.",
+  "notifications.addressUpdated.header": "Address Updated",
+  "notifications.addressUpdated.content": "Address {name} successfully updated."
 }

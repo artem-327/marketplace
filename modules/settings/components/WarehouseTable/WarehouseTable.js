@@ -24,7 +24,7 @@ class WarehouseTable extends Component {
       { name: 'name', title: 'Warehouse Name' },
       { name: 'streetAddress', title: 'Street Address' },
       { name: 'city', title: 'City' },
-      { name: 'provinceName', title: 'State' },
+      { name: 'provinceName', title: 'State/Province' },
       { name: 'countryName', title: 'Country' },
       { name: 'contactName', title: 'Contact Name' },
       { name: 'phone', title: 'Phone' },
@@ -109,7 +109,7 @@ class WarehouseTable extends Component {
           rows={rows}
           style={{ marginTop: '5px' }}
           rowActions={[
-            { text: 'Edit', callback: row => openPopup(row) },
+            { text: 'Edit', callback: row => openPopup(row.popupValues) },
             {
               text: 'Delete', callback: row =>
                 confirm(
@@ -137,26 +137,54 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = (state, { datagrid }) => {
+
+
   return {
-    rows: datagrid.rows.map(r => ({
-      name: r.name,
-      address: r.address && r.address.streetAddress + ", " + r.address.city,
-      streetAddress: getSafe(() => r.address.streetAddress),
-      city: getSafe(() => r.address.city),
-      countryName: getSafe(() => r.address.country.name),
-      countryId: getSafe(() => r.address.country.id),
-      hasProvinces: getSafe(() => r.address.country.hasProvinces),
-      provinceName: getSafe(() => r.address.province.name),
-      provinceId: getSafe(() => r.address.province.id),
-      zip: getSafe(() => r.address.zip.zip),
-      zipID: getSafe(() => r.address.zip.id),
-      contactName: r.contactName,
-      phone: r.contactPhone,
-      email: r.contactEmail,
-      branchId: r.id,
-      id: r.id,
-      warehouse: r.warehouse
-    })),
+    rows: datagrid.rows.map(r => {
+      let countryId = getSafe(() => r.address.country.id),
+        hasProvinces = getSafe(() => r.address.country.hasProvinces, false),
+        zip = getSafe(() => r.address.zip.zip),
+        provinceId = getSafe(() => r.address.province.id),
+        zipID = getSafe(() => r.address.zip.id)
+
+
+      return {
+        name: r.name,
+        addressName: r.address && r.address.streetAddress + ", " + r.address.city,
+        popupValues: {
+          initialValues: {
+            name: r.name,
+            address: {
+              streetAddress: getSafe(() => r.address.streetAddress),
+              city: getSafe(() => r.address.city),
+              province: provinceId,
+              country: JSON.stringify({ countryId, hasProvinces }),
+              zip,
+            },
+            contactName: r.contactName,
+            contactPhone: r.contactPhone,
+            contactEmail: r.contactEmail
+          },
+          zipID,
+          countryId,
+          hasProvinces,
+          branchId: r.id,
+        },
+        countryName: getSafe(() => r.address.country.name),
+        countryId,
+        hasProvinces,
+        provinceName: getSafe(() => r.address.province.name),
+        provinceId,
+        zip,
+        zipID,
+        contactName: r.contactName,
+        phone: r.contactPhone,
+        email: r.contactEmail,
+        branchId: r.id,
+        id: r.id,
+        warehouse: r.warehouse
+      }
+    }),
     editPopupBoolean: state.settings.editPopupBoolean,
     addNewWarehousePopup: state.settings.addNewWarehousePopup,
     filterValue: state.settings.filterValue,

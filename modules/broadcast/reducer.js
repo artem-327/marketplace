@@ -3,6 +3,10 @@ import { openBroadcast, closeBroadcast, updateFilter, saveRules, switchMode } fr
 
 const initialState = {
   id: null,
+  offer: {
+    pricingTiers: [{price: 0}],
+    price: {}
+  },
   open: false,
   loading: false,
   data: null,
@@ -22,12 +26,13 @@ export default typeToReducer({
     }
   },
 
-  [openBroadcast.fulfilled]: (state, { payload: { data, id } }) => {
+  [openBroadcast.fulfilled]: (state, { payload: { data, id, offer } }) => {
     return {
       ...state,
       loading: false,
       data,
-      id
+      id,
+      offer
     }
   },
 

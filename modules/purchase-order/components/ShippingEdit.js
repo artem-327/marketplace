@@ -1,27 +1,30 @@
 import React, { Component } from 'react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { Container, Segment, Grid, GridRow, GridColumn, Radio, Divider, Header, FormGroup } from 'semantic-ui-react'
-import { Form, Input, Dropdown, Button } from 'formik-semantic-ui'
+import { Form, Input, Button } from 'formik-semantic-ui'
 import { bool, func, object } from 'prop-types'
 
 import * as Yup from 'yup'
 import styled from 'styled-components'
 
-import { provinceObjectRequired } from '~/constants/yupValidation'
+import { withToastManager } from 'react-toast-notifications'
+
 import { PHONE_REGEXP } from '../../../src/utils/constants'
 
 const BottomMargedGrid = styled(Grid)`
   margin-bottom: 1rem !important;
 `
 
+import { AddressForm } from '~/modules/address-form'
+import { addressValidationSchema } from '~/modules/address-form/constants'
+import { generateToastMarkup } from '~/utils/functions'
+
 const initialValues = {
   name: '',
   email: '',
   phoneNumber: '',
   address: {
-    zip: {
-      zip: ''
-    },
+    zip: '',
     city: '',
     streetAddress: '',
     province: '',
@@ -30,16 +33,7 @@ const initialValues = {
 }
 
 class ShippingEdit extends Component {
-
-  state = {
-    stateId: null,
-    hasProvinces: false,
-    selectedProvince: null,
-    provinceValidation: Yup.mixed().notRequired()
-  }
-
   validationSchema = (opts = {}) => {
-
     let defaultOpts = {
       invalidString: <FormattedMessage id='validation.invalidString' defaultMessage='Invalid value' />,
       invalidEmail: <FormattedMessage id='validation.invalidEmail' defaultMessage='Invalid e-mail address' />,
@@ -57,107 +51,20 @@ class ShippingEdit extends Component {
         // lastName: Yup.string(invalidString).required(requiredMessage),
         email: Yup.string().email(invalidEmail).required(requiredMessage),
         phoneNumber: Yup.string().matches(PHONE_REGEXP, invalidPhoneNumber).required(requiredMessage),
-        address: Yup.object().shape({
-          zip: Yup.object().shape({ zip: Yup.string().required(requiredMessage) }),
-          city: Yup.string(invalidString).required(requiredMessage),
-          country: Yup.string(invalidString).required(requiredMessage),
-          streetAddress: Yup.string(invalidString).required(requiredMessage),
-          province: this.state.provinceValidation
-        })
+        address: addressValidationSchema()
       })
     )
   }
 
-  componentDidMount() {
-    let { selectedAddress, getStates } = this.props
-    getStates()
-    if (selectedAddress) {
-      let { id, hasProvinces } = selectedAddress.address.country
-
-      this.handleStateChange({ id, hasProvinces, provinceValidation: provinceObjectRequired(hasProvinces) })
-    }
-  }
-
-
-  handleStateChange = ({ id, hasProvinces, selectedProvince = null }) => {
-    if (this.state.stateId !== id) {
-      this.setState({ stateId: id, hasProvinces, selectedProvince, provinceValidation: provinceObjectRequired(hasProvinces) })
-
-      if (hasProvinces) {
-        this.props.getProvinces(id)
-      }
-    }
-  }
-
-  newAddressMarkup = ({ errors, setFieldValue }) => {
-    let { provinces, states, statesAreFetching, provincesAreFetching } = this.props
-
+  markup = ({ setFieldValue, values }) => {
     return (
       <>
         <FormGroup widths='equal'>
           <Input
             label={<FormattedMessage id='global.name' default='Name' />}
             name='name' />
-
-          <Input
-            label={<FormattedMessage id='global.address' defaultMessage='Address' />}
-            name='address.streetAddress' />
-
         </FormGroup>
-
-        <FormGroup widths='equal'>
-          <Input
-            label={<FormattedMessage id='global.zip' defaultMessage='Postal Code' />}
-            name='address.zip.zip' />
-
-          <Input
-            label={<FormattedMessage id='global.city' defaultMessage='City' />}
-            name='address.city' />
-        </FormGroup>
-
-        <FormGroup widths='equal'>
-
-
-          <Dropdown
-            inputProps={{
-              onChange: (e, { value }) => {
-                this.handleStateChange(value)
-                setFieldValue('address.province', '')
-              },
-              error: !!(errors.address && errors.address.country),
-              search: true
-            }}
-            options={states.map((state) => ({
-              text: state.name,
-              key: state.id,
-              value: state
-            }))}
-            id='address.country'
-            name='address.country'
-            loading={statesAreFetching} selection fluid
-            label={<FormattedMessage id='global.state' defaultMessage='State' />}
-          />
-
-          <Dropdown
-            inputProps={{
-              disabled: !this.state.hasProvinces,
-              onChange: (e, { value }) => this.setState({ selectedProvince: value }),
-              loading: provincesAreFetching,
-              error: !!(this.state.hasProvinces && errors.address && errors.address.province),
-              search: true
-            }}
-            options={provinces.map((province) => ({
-              text: province.name,
-              key: province.id,
-              value: { id: province.id, name: province.name, abbreviation: province.abbreviation || '' }
-            }))}
-            id='address.province'
-            name='address.province'
-            selection fluid
-            label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />}
-          />
-
-        </FormGroup>
+        <AddressForm displayHeader={false} values={values} setFieldValue={setFieldValue} />
 
         <FormGroup widths='equal'>
           <Input
@@ -175,26 +82,34 @@ class ShippingEdit extends Component {
 
 
   handleSubmit = async (values, { setSubmitting }) => {
-    let { address, email, name, phoneNumber } = values
-    let { isNewAddress, postNewDeliveryAddress, updateDeliveryAddress } = this.props
+    let { email, name, phoneNumber } = values
+    let { isNewAddress } = this.props
+
+    const { postNewDeliveryAddress, updateDeliveryAddress, toastManager } = this.props
 
     let payload = {
       address: {
-        city: address.city,
-        country: address.country.id,
-        province: address.province && address.province.id,
-        streetAddress: address.streetAddress,
-        zip: address.zip.zip
+        ...values.address,
+        country: JSON.parse(values.address.country).countryId
       },
       email, name, phoneNumber,
     }
-    
+
     try {
-      if (!isNewAddress) await postNewDeliveryAddress(payload)
+      if (isNewAddress) await postNewDeliveryAddress(payload)
       else await updateDeliveryAddress({
         ...payload,
         id: this.props.selectedAddress.id
       })
+
+      let status = isNewAddress ? 'Created' : 'Updated'
+
+      toastManager.add(generateToastMarkup(
+        <FormattedMessage id={`notifications.address${status}.header`} />,
+        <FormattedMessage id={`notifications.address${status}.content`} values={{ name }} />
+      ), { appearance: 'success' })
+
+
     }
     catch (e) { console.error(e) }
     finally { setSubmitting(false) }
@@ -225,7 +140,7 @@ class ShippingEdit extends Component {
         <Form
           onSubmit={this.handleSubmit}
           enableReinitialize
-          initialValues={selectedAddress ? { ...selectedAddress } : initialValues}
+          initialValues={this.props.initialValues ? { ...this.props.initialValues } : initialValues}
           validationSchema={this.validationSchema}>
 
           {props => {
@@ -234,8 +149,8 @@ class ShippingEdit extends Component {
                 <FormGroup widths='equal'>
                   <Form.Field>
                     <Radio
-                      onChange={() => shippingChanged({ isNewAddress: true })}
-                      checked={isNewAddress}
+                      onChange={() => shippingChanged({ isNewAddress: false })}
+                      checked={!isNewAddress}
                       disabled={!selectedAddress}
                       label={formatMessage({ id: 'global.savedAddress', defaultMessage: 'Saved Address' })}
                     />
@@ -243,30 +158,15 @@ class ShippingEdit extends Component {
 
                   <Form.Field>
                     <Radio
-                      onChange={() => shippingChanged({ isNewAddress: false })}
-                      checked={!isNewAddress}
+                      onChange={() => shippingChanged({ isNewAddress: true })}
+                      checked={isNewAddress}
                       label={formatMessage({ id: 'global.addNewAddress', defaultMessage: 'Add New' })}
                     />
                   </Form.Field>
                 </FormGroup>
-                {this.newAddressMarkup(props)}
-
+                {this.markup(props)}
                 <Divider />
                 <Grid>
-                  {/* <GridRow>
-                    <GridColumn computer={6}>
-                      <Radio checked={savedShippingPreferences} onChange={() => shippingChanged({ savedShippingPreferences: true })} label={formatMessage({
-                        id: 'global.savedShippingPreferences'
-                      })
-                      } />
-                    </GridColumn>
-
-                    <GridColumn computer={6}>
-                      <Radio checked={!savedShippingPreferences} onChange={() => shippingChanged({ savedShippingPreferences: false })} label={formatMessage({
-                        id: 'global.newShippingType'
-                      })} />
-                    </GridColumn>
-                  </GridRow> */}
                   <GridRow>
                     <GridColumn>
                       <Grid>
@@ -281,8 +181,8 @@ class ShippingEdit extends Component {
                         <GridColumn computer={4}>
                           <Button.Submit loading={this.props.isFetching} primary fluid type='submit'>
                             <FormattedMessage
-                              id={`global.${isNewAddress ? 'edit' : 'addNew'}`}
-                              defaultMessage={isNewAddress ? 'Edit' : 'Add New'}
+                              id={`global.${!isNewAddress ? 'edit' : 'addNew'}`}
+                              defaultMessage={!isNewAddress ? 'Edit' : 'Add New'}
                             />
                           </Button.Submit>
                         </GridColumn>
@@ -313,4 +213,4 @@ ShippingEdit.defaultProps = {
   savedShippingPreferences: false
 }
 
-export default injectIntl(ShippingEdit)
+export default withToastManager(injectIntl(ShippingEdit))

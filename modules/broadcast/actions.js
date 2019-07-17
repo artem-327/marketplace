@@ -1,12 +1,17 @@
 import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
 import * as api from './api'
 
-export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async (id) => {
-  const {data} = await api.loadRules(id)
+export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async (offer) => {
+  const {data} = await api.loadRules(offer.id)
 
   return {
     data,
-    id
+    id: offer.id,
+    offer: {
+      id: offer.id,
+      pricingTiers: offer.pricingTiers,
+      currency: offer.cost.currency && offer.cost.currency.code,
+    }
   }
 })
 

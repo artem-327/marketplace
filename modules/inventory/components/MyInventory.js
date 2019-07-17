@@ -75,7 +75,8 @@ class MyInventory extends Component {
           <div style={{ float: 'right' }}>
             <Popup id={r.id}
               trigger={
-                <Checkbox 
+                <Checkbox
+                  data-test="my_inventory_broadcast"
                   toggle
                   defaultChecked={r.status.toLowerCase() === 'broadcasting'}
                   className={cn({error: r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'})}
@@ -151,7 +152,7 @@ class MyInventory extends Component {
 
             <Menu.Menu position="right">
               <Menu.Item>
-                <FilterTags filters={datagrid.filters} onClick={this.removeFilter} />
+                <FilterTags filters={datagrid.filters} data-test="my_inventory_filter" onClick={this.removeFilter} />
               </Menu.Item>
               <Menu.Item>
                 <SubMenu />
@@ -167,7 +168,7 @@ class MyInventory extends Component {
             tableName="my_inventory_grid"
             columns={columns}
             rows={this.getRows(rows)}
-            rowSelection
+            // rowSelection
             groupBy={['casNumberCombined']}
             getChildGroups={rows =>
               _(rows)
@@ -190,7 +191,7 @@ class MyInventory extends Component {
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
             rowActions={[
               { text: 'Edit listing', callback: (row) => Router.push({ pathname: '/inventory/edit', query: { id: row.id } }) },
-              { text: 'Custom broadcast', callback: (row) => { openBroadcast(row.id) } },
+              { text: 'Custom broadcast', callback: (row) => { openBroadcast(row) } },
               {
                 text: 'Delete listing', callback: (row) => {
                   confirm(

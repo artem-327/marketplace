@@ -132,11 +132,11 @@ class Broadcast extends Component {
   }
 
   render() {
-    const { open, loading, treeData, filter, closeBroadcast, saveRules, id, mode, switchMode, toastManager } = this.props
+    const { open, loading, treeData, filter, closeBroadcast, saveRules, id, mode, switchMode, toastManager, offer } = this.props
     const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'branch' && n.getPath().filter(_n => _n.model.broadcast === 1).length > 0).length}/${treeData.all(n => n.model.type === 'branch').length}`
 
     return (
-      <Modal open={open} onClose={closeBroadcast} centered={false}>
+      <Modal open={open} onClose={closeBroadcast} centered={false} size="large">
         <Modal.Header>Broadcast Controls</Modal.Header>
         <Modal.Content scrolling style={{ minHeight: '70vh' }} className="flex stretched">
           <Grid className="flex stretched">
@@ -177,14 +177,18 @@ class Broadcast extends Component {
                     <Rule.Toggle>
                       Include
                     </Rule.Toggle>
-                    <Rule.Toggle style={{marginRight: '20px'}}>
+                    <Rule.Toggle>
                       Mark-up/down
+                    </Rule.Toggle>
+                    <Rule.Toggle>
+                      FOB high/low
                     </Rule.Toggle>
                   </Rule.Header>
                   <Rule.Content>
                     <RuleItem
                       item={this.state.tree}
                       mode={mode}
+                      offer={offer}
                       onRowClick={this.handleRowClick}
                       onPriceChange={this.handlePriceChange}
                       onChange={this.handleChange}

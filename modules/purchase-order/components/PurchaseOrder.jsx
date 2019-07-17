@@ -109,7 +109,7 @@ class PurchaseOrder extends Component {
     if (cart.cartItems.length === 0) Router.push('/cart')
 
     let currency = cart.cartItems[0].productOffer.price.currency.code
-    console.log(this.props)
+
 
     let payment = null
     if (payments.length === 1) payment = payments[0].id
@@ -159,6 +159,7 @@ class PurchaseOrder extends Component {
                 states={this.props.states}
                 provinces={this.props.provinces}
                 isFetching={this.props.isFetching}
+                initialValues={this.props.initialValues}
               />
             }
             <Form initialValues={initialValues}>
@@ -199,7 +200,6 @@ class PurchaseOrder extends Component {
               </Segment>
 
 
-
               <Segment>
                 <Grid className='bottom-padded'>
                   <GridRow className='header'>
@@ -224,8 +224,6 @@ class PurchaseOrder extends Component {
           </GridColumn>
 
           <GridColumn computer={5}>
-
-
             <CartItemSummary
               currency={currency}
               cartItems={cart.cartItems}

@@ -345,9 +345,10 @@ class Filter extends Component {
             name={inputName}
             onChange={handleChange}
             inputProps={{
-              label: 'Days',
-              labelPosition: 'right',
-              type: 'number'
+              //label: 'Days1',
+              //labelPosition: 'right',
+              type: 'number',
+              min: '1'
             }}
           />
         </FormField>
@@ -541,7 +542,7 @@ class Filter extends Component {
           </AccordionItem>
 
           <AccordionItem>
-            {this.accordionTitle('expiration', <FormattedMessage id='filter.expiration' defaultMessage='Expiration' />)}
+            {this.accordionTitle('expiration', <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />)}
             <AccordionContent active={!this.state.inactiveAccordion.expiration}>
               <FormGroup widths='equal'>
                 {this.dateField('expiration', { values, setFieldValue, handleChange })}
@@ -566,7 +567,7 @@ class Filter extends Component {
 
 
           <AccordionItem>
-            {this.accordionTitle('mfg', <FormattedMessage id='filter.mfg' defaultMessage='Manufactured Date' />)}
+            {this.accordionTitle('mfg', <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />)}
             <AccordionContent active={!this.state.inactiveAccordion.mfg}>
               <FormGroup widths='equal'>
                 {this.dateField('mfg', { values, setFieldValue, handleChange })}

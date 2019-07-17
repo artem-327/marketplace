@@ -23,24 +23,24 @@ class Navigation extends Component {
     return (
       !isAdmin || (auth.identity.isCompanyAdmin) ? <>
         <DropdownItem text="Inventory">
-          <Dropdown.Menu>
+          <Dropdown.Menu data-test="navigation_menu_inventory">
             <Dropdown.Item as={MenuLink} to="/inventory/my">My Inventory</Dropdown.Item>
             <Dropdown.Item as={MenuLink} to="/inventory/add">Add Inventory</Dropdown.Item>
           </Dropdown.Menu>
         </DropdownItem>
         <DropdownItem text="Marketplace">
-          <Dropdown.Menu>
+          <Dropdown.Menu data-test="navigation_menu_marketplace">
             <Dropdown.Item as={MenuLink} to="/marketplace/all">Marketplace</Dropdown.Item>
             <Dropdown.Item as={MenuLink} to="/cart">Shopping Cart</Dropdown.Item>
           </Dropdown.Menu>
         </DropdownItem>
         <DropdownItem text="Orders">
-          <Dropdown.Menu>
+          <Dropdown.Menu data-test="navigation_menu_orders">
             <Dropdown.Item as={MenuLink} to="/orders?type=sales">Sales Orders</Dropdown.Item>
             <Dropdown.Item as={MenuLink} to="/orders?type=purchase">Purchase Orders</Dropdown.Item>
           </Dropdown.Menu>
         </DropdownItem>
-        <MenuLink to='/settings'>Settings</MenuLink>
+        <MenuLink to='/settings' data-test="navigation_menu_settings">Settings</MenuLink>
         {isAdmin && <MenuLink to="/admin">Admin</MenuLink>}
       </> : isAdmin && <MenuLink to="/admin">Admin</MenuLink>
     )

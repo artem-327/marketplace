@@ -67,10 +67,9 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth,
 
         <Menu.Menu position='right' className='black'>
           <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
-            <Dropdown.Menu>
-              {null && <Dropdown.Item as={MenuLink} to='/profile'>My Profile</Dropdown.Item>}
+            <Dropdown.Menu data-test="navigation_menu_user">
               <Dropdown.Item as={Menu.Item} onClick={() => openProfilePopup()}>My Profile</Dropdown.Item>
-              {auth && auth.identity.isAdmin &&
+              {auth && auth.identity && auth.identity.isAdmin &&
                 <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()}>Return to Admin</Dropdown.Item>
               }
               <Dropdown.Item as={MenuLink} to='/auth/logout'>Logout</Dropdown.Item>

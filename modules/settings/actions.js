@@ -303,32 +303,27 @@ export function handleProductCatalogUnmappedValue(checked, props) {
     dispatch(handleFiltersValue({ ...props, productCatalogUnmappedValue: checked }, props.filterValue))
   }
 }
-
+//////////////////////
 export function handlerSubmitWarehouseEditPopup(payload, id) {
   return async dispatch => {
-    const currentUser = await api.getCurrentUser()
-    const dataBody = {
-      address: {
-        city: payload.city,
-        country: payload.country,
-        province: payload.province,
-        streetAddress: payload.address,
-        zip: payload.zip
-      },
-      company: currentUser.company.id,
-      contactEmail: payload.email,
-      contactName: payload.contactName,
-      contactPhone: payload.phone,
-      warehouse: payload.tab ? false : true,
-      name: payload.name
-    }
-    removeEmpty(dataBody)
-    const response = await api.putWarehouse(id, dataBody)
+    const response = await api.putWarehouse(id, payload)
     await dispatch({
       type: AT.PUT_WAREHOUSE_EDIT_POPUP,
       payload: response
     })
     Datagrid.updateRow(id, () => response)
+    dispatch(closePopup())
+  }
+}
+
+///////////////////
+export function postNewWarehouseRequest(payload) {
+  return async dispatch => {
+    await dispatch({
+      type: AT.POST_NEW_WAREHOUSE_REQUEST,
+      payload: api.postNewWarehouse(payload)
+    })
+    Datagrid.loadData()
     dispatch(closePopup())
   }
 }
@@ -489,7 +484,7 @@ export function getCreditCardsDataRequest() {
         cvcCheck: "753"
       }
     ]
-    
+
     dispatch({
       type: AT.GET_CREDIT_CARDS_DATA,
       async payload() { return creditCardsData }
@@ -611,36 +606,11 @@ export function postNewUserRequest(payload) {
   return async dispatch => {
     removeEmpty(payload)
     await dispatch({
+
       type: AT.POST_NEW_USER_REQUEST,
       payload: api.postNewUser(payload)
     })
     //dispatch(getUsersDataRequest())
-    Datagrid.loadData()
-    dispatch(closePopup())
-  }
-}
-
-export function postNewWarehouseRequest(payload) {
-  return async dispatch => {
-    const dataBody = {
-      address: {
-        city: payload.city,
-        country: payload.country,
-        province: payload.province,
-        streetAddress: payload.address,
-        zip: payload.zip
-      },
-      contactEmail: payload.email,
-      contactName: payload.contactName,
-      contactPhone: payload.phone,
-      warehouse: payload.tab ? false : true,
-      name: payload.name
-    }
-    removeEmpty(dataBody)
-    await dispatch({
-      type: AT.POST_NEW_WAREHOUSE_REQUEST,
-      payload: api.postNewWarehouse(dataBody)
-    })
     Datagrid.loadData()
     dispatch(closePopup())
   }

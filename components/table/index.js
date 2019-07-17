@@ -64,7 +64,7 @@ const SettingButton = styled(Icon)`
   }
 `
 const ColumnsSetting = ({ onClick }) => (
-  <SettingButton onClick={onClick} name="setting" />
+  <SettingButton onClick={onClick} data-test="table_setting" name="setting" />
 )
 const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, open }) => (
   <Modal open={open} centered={false} size="tiny" style={{ width: 300 }}>
@@ -137,6 +137,7 @@ export default class _Table extends Component {
     sorting: pt.bool,
     groupBy: pt.array,
     onSelectionChange: pt.func,
+    sameGroupSelectionOnly: pt.bool,
     renderGroupLabel: pt.func,
     getChildGroups: pt.func,
     tableName: pt.string,
@@ -168,6 +169,7 @@ export default class _Table extends Component {
 
     this.state = {
       expandedGroups: [],
+      selection: [],
       columnsSettings: {
         hiddenColumnNames: this.getColumns().filter(c => c.disabled).map(c => c.name),
         widths: this.getColumnsExtension(),
@@ -218,9 +220,17 @@ export default class _Table extends Component {
   }
 
   handleSelectionChange = (selection) => {
-    const { onSelectionChange } = this.props
+    const { onSelectionChange, getChildGroups, rows, sameGroupSelectionOnly } = this.props
+    const groups = getChildGroups(rows)
+    const selectionGroups = selection.map(s => groups.find(g => g.childRows.indexOf(rows[s]) > -1))
 
-    onSelectionChange(selection)
+    const sameGroup = selectionGroups.every(sg => sg === selectionGroups[0])
+
+    if (sameGroup || !sameGroupSelectionOnly) {
+      this.setState({ selection })
+      onSelectionChange(selection)
+    }
+
   }
 
   getColumns = () => {
@@ -250,7 +260,7 @@ export default class _Table extends Component {
     let colNames = columns.map(column => {
       return column.name
     })
-    
+
     if (rowActions)
       colNames.push('__actions')
 
@@ -344,7 +354,7 @@ export default class _Table extends Component {
       showColumnsWhenGrouped = false,
       ...restProps
     } = this.props
-    
+
     const { columnSettingOpen, expandedGroups, columnsSettings, loaded } = this.state
     const grouping = groupBy.map(g => ({ columnName: g }))
     const columnsFiltered = columns.filter(c => !c.disabled && (showColumnsWhenGrouped || !groupBy.includes(c.name)))
@@ -357,8 +367,8 @@ export default class _Table extends Component {
     return (
       <Segment basic loading={loading} {...restProps} className="flex stretched" style={{ padding: 0 }}>
         <GlobalTableOverrideStyle />
-        <div className="bootstrapiso flex stretched" 
-          style={{ flex: '1 300px', opacity: loading ? 0 : 1, transition: 'opacity 0.2s' }} 
+        <div className="bootstrapiso flex stretched"
+          style={{ flex: '1 300px', opacity: loading ? 0 : 1, transition: 'opacity 0.2s' }}
           ref={c => c && (this.gridWrapper = c)}
         >
           <ColumnsSetting
@@ -403,7 +413,7 @@ export default class _Table extends Component {
 
             {columnReordering && <DragDropProvider />}
 
-            {rowSelection && <SelectionState onSelectionChange={this.handleSelectionChange} />}
+            {rowSelection && <SelectionState selection={this.state.selection} onSelectionChange={this.handleSelectionChange} />}
             {rowSelection && <IntegratedSelection />}
 
             <SearchState value={filterValue} />

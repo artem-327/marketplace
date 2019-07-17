@@ -13,42 +13,30 @@ import {
 } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
-import Router from "next/router"
+import Router from 'next/router'
 
 import { generateToastMarkup } from '~/utils/functions'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl'
 
-const formValidation = hasProvinces => Yup.object().shape({
-  name: Yup.string().trim()
-    .min(3, 'Too short')
-    .required('Required'),
-  contactName: Yup.string().trim()
-    .min(3, 'Too short')
-    .required('Required'),
-  phone: Yup.string().trim()
-    .min(3, 'Too short')
-    .required('Required'),
-  city: Yup.string().trim()
-    .min(3, 'Too short')
-    .required('Required'),
-  address: Yup.string().trim()
-    .min(3, 'Too short')
-    .required('Required'),
-  email: Yup.string().trim()
-    .min(3, 'Too short')
-    .required('Required'),
-  zip: Yup.string().trim()
-    .min(1, 'Too short')
-    .required('Required'),
-  country: Yup.number().required(),
-  province: hasProvinces && Yup.number('').required('Province is required')
+import { provinceObjectRequired, errorMessages } from '~/constants/yupValidation'
+
+import { AddressForm } from '~/modules/address-form/'
+import { addressValidationSchema } from '~/modules/address-form/constants'
+
+import { getSafe } from '~/utils/functions'
+
+
+const minLength = errorMessages.minLength(3)
+
+const formValidation = () => Yup.object().shape({
+  name: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+  contactName: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+  contactPhone: Yup.string().trim().min(3, minLength).required(errorMessages.requiredMessage),
+  contactEmail: Yup.string().trim().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage),
+  address: addressValidationSchema()
 })
 
 class WarehousePopup extends React.Component {
-  state = {
-    hasProvinces: this.props.hasProvinces,
-  }
-
   componentDidMount() {
     this.props.popupValues && this.props.popupValues.hasProvinces && this.props.getProvinces(this.props.popupValues.countryId)
   }
@@ -56,20 +44,26 @@ class WarehousePopup extends React.Component {
   submitHandler = async (values, actions) => {
     let { toastManager, popupValues, currentTab } = this.props
     const { handlerSubmitWarehouseEditPopup, postNewWarehouseRequest } = this.props
+    let country = JSON.parse(values.address.country).countryId
+
+    let requestData = {
+      ...values,
+      address: {
+        ...values.address,
+        country
+      },
+      warehouse: currentTab.type !== 'branches',
+    }
 
     if (popupValues) {
-      await handlerSubmitWarehouseEditPopup(
-        {
-          ...values,
-          tab: currentTab.type === 'branches' ? 'branches' : null
-        },
+      await handlerSubmitWarehouseEditPopup({
+        ...requestData,
+        company: this.props.company
+      },
         popupValues.branchId
       )
     } else {
-      await postNewWarehouseRequest({
-        ...values,
-        tab: currentTab.type === 'branches' ? 'branches' : null
-      })
+      await postNewWarehouseRequest(requestData)
     }
 
     let status = currentTab === 'branches' ? 'branch' : 'warehouse'
@@ -88,82 +82,76 @@ class WarehousePopup extends React.Component {
   }
 
   getInitialFormValues = () => {
-    const { popupValues } = this.props
-    const [address, city] =
-      popupValues && popupValues.address
-        ? popupValues.address.split(',')
-        : ['', '']
-    const {
-      name = '',
-      contactName = '',
-      countryId = '',
-      provinceId = '',
-      phone = '',
-      email = '',
-      zip = ''
-    } = popupValues || {}
+    let { popupValues } = this.props
 
-    return {
-      name,
-      contactName,
-      address,
-      city,
-      zip,
-      phone,
-      email,
-      country: countryId,
-      province: provinceId,
-    }
+    return getSafe(() => popupValues.initialValues, {
+      name: '',
+      contactName: '',
+      contactPhone: '',
+      contactEmail: '',
+      address: {
+        streetAddress: '',
+        city: '',
+        country: '',
+        zip: '',
+        province: '',
+      },
+    })
+
+
   }
 
-  handleCountry = (e, d) => {
-    let country = this.props.countries.find(obj => obj.id === d.value);
-    if (country.hasProvinces) {
-      this.props.getProvinces(country.id)
-    }
-    this.setState({ hasProvinces: country.hasProvinces })
-  }
+  // handleCountry = (e, d) => {
+  //   let country = this.props.countries.find(obj => obj.id === d.value);
+  //   if (country.hasProvinces) {
+  //     this.props.getProvinces(country.id)
+  //   }
+  //   this.setState({ hasProvinces: country.hasProvinces })
+  // }
 
-  handleAddressSelect = (d, values, setFieldValue) => {
-    const i = this.props.AddressSuggestOptions.indexOf(d.value)
-    if (i >= 0) {
-      setFieldValue('address', this.props.AddressSuggestData[i].streetAddress)
-      setFieldValue('city', this.props.AddressSuggestData[i].city)
-      setFieldValue('zip', this.props.AddressSuggestData[i].zip && this.props.AddressSuggestData[i].zip.zip)
-      setFieldValue('country', this.props.AddressSuggestData[i].country.id)
-      setFieldValue('province', this.props.AddressSuggestData[i].province ? this.props.AddressSuggestData[i].province.id : '')
-      this.setState({ hasProvinces: this.props.AddressSuggestData[i].country.hasProvinces })
-      if (this.props.AddressSuggestData[i].country.hasProvinces) this.props.getProvinces(this.props.AddressSuggestData[i].country.id)
-    }
-    else {
-      let newValues = { ...values, [d.name]: d.value }
-      const body = {
-        city: newValues.city,
-        countryId: newValues.country,
-        provinceId: newValues.province,
-        streetAddress: newValues.address,
-        zip: newValues.zip
-      }
-      removeEmpty(body)
-      if (Object.entries(body).length === 0) return
-      this.props.getAddressSearch(body)
-    }
-  }
+  // handleAddressSelect = (d, name, values, setFieldValue) => {
+  //   const i = this.props.AddressSuggestOptions.indexOf(d.value)
+
+  //   if (i >= 0) {
+  //     setFieldValue('address.streetAddress', this.props.AddressSuggestData[i].streetAddress)
+  //     setFieldValue('address.city', this.props.AddressSuggestData[i].city)
+  //     setFieldValue('address.zip', this.props.AddressSuggestData[i].zip && this.props.AddressSuggestData[i].zip.zip)
+  //     setFieldValue('address.country', this.props.AddressSuggestData[i].country.id)
+  //     setFieldValue('address.province', this.props.AddressSuggestData[i].province ? this.props.AddressSuggestData[i].province.id : '')
+  //     this.setState({ hasProvinces: this.props.AddressSuggestData[i].country.hasProvinces })
+  //     if (this.props.AddressSuggestData[i].country.hasProvinces) this.props.getProvinces(this.props.AddressSuggestData[i].country.id)
+  //   }
+
+  //   else {
+  //     let newValues = { ...values, address: { ...values.address, [name]: d.value } }
+  //     const body = {
+  //       city: getSafe(() => newValues.address.city),
+  //       countryId: getSafe(() => JSON.parse(newValues.address.country).countryId),
+  //       provinceId: getSafe(() => newValues.address.province),
+  //       streetAddress: getSafe(() => newValues.address.streetAddress),
+  //       zip: newValues.address.zip
+  //     }
+
+  //     removeEmpty(body)
+  //     if (Object.entries(body).length === 0) return
+  //     this.props.getAddressSearch(body)
+  //   }
+  // }
 
   render() {
-    const {
-      AddressSuggestInput,
-    } = this.props
+    // const {
+    //   AddressSuggestInput,
+    // } = this.props
 
-    const {
-      hasProvinces,
-    } = this.state
 
     const { closePopup, popupValues, country, currentTab, provincesDropDown } = this.props
     const title = popupValues ? 'Edit ' : 'Add'
 
+
     const name = currentTab.type === 'branches' ? 'Branch Name' : 'Warehouse Name'
     const modalTitle = currentTab.type === 'branches' ? 'Branch' : 'Warehouse'
+    let initialValues = this.getInitialFormValues()
+
 
     return (
       <Modal open centered={false}>
@@ -172,49 +160,27 @@ class WarehousePopup extends React.Component {
         </Modal.Header>
         <Modal.Content>
           <Form
-            initialValues={this.getInitialFormValues()}
-            validationSchema={formValidation(hasProvinces)}
+            initialValues={initialValues}
+            validationSchema={formValidation()}
+            enableReinitialize
             onReset={closePopup}
-            onSubmit={this.submitHandler}
-          >
-            {({ values, errors, setFieldValue }) => (
+            onSubmit={this.submitHandler} >
+            {({ setFieldValue, values }) => (
               <>
-                {AddressSuggestInput}
-                <FormGroup widths="equal">
-                  <Input type="text" label={name} name="name" />
+                <FormGroup widths='equal'>
+                  <Input type='text' label={name} name='name' />
                 </FormGroup>
-                <Header as='h3'>Address</Header>
-                <FormGroup widths="equal">
-                  <Input
-                    inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
-                    type="text" label="Street Address" name="address"
-                  />
-                  <Input
-                    type="text" label="City" name="city"
-                    inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
-                  />
-                </FormGroup>
-                <FormGroup widths="equal">
-                  <Input
-                    type="text" label="Zip" name="zip"
-                    inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
-                  />
-                  <Dropdown label="Country" name="country" options={country}
-                    inputProps={{
-                      search: true, onChange: (e, d) => {
-                        setFieldValue('province', ''); this.handleCountry(e, d)
-                      }
-                    }} />
-                  <Dropdown label="State/Province" name="province" options={provincesDropDown}
-                    inputProps={{ search: true, disabled: !hasProvinces }} />
-                </FormGroup>
+                <AddressForm
+                  setFieldValue={setFieldValue}
+                  values={values} />
+
                 <Header as='h3'>Contact Info</Header>
                 <FormGroup>
-                  <Input type="text" label="Contact Name" name="contactName" fieldProps={{ width: 8 }} />
+                  <Input type='text' label='Contact Name' name='contactName' fieldProps={{ width: 8 }} />
                 </FormGroup>
-                <FormGroup widths="equal">
-                  <Input type="text" label="Phone" name="phone" />
-                  <Input type="text" label="Email" name="email" />
+                <FormGroup widths='equal'>
+                  <Input type='text' label='Phone' name='contactPhone' />
+                  <Input type='text' label='Email' name='contactEmail' />
                 </FormGroup>
                 <div style={{ textAlign: 'right' }}>
                   <Button.Reset onClick={closePopup}>Cancel</Button.Reset>
@@ -228,11 +194,11 @@ class WarehousePopup extends React.Component {
   }
 }
 
-const prepareAddressSuggest = (AddressSuggestOptions) => (
-  <datalist id='addresses'>
-    {AddressSuggestOptions.map((a, id) => <option key={id} value={a} />)}
-  </datalist>
-)
+// const prepareAddressSuggest = (AddressSuggestOptions) => (
+//   <datalist id='addresses'>
+//     {AddressSuggestOptions.map((a, id) => <option key={id} value={a} />)}
+//   </datalist>
+// )
 
 const mapDispatchToProps = {
   postNewWarehouseRequest,
@@ -243,13 +209,14 @@ const mapDispatchToProps = {
   removeEmpty
 }
 const mapStateToProps = state => {
-  const AddressSuggestOptions = state.settings.addressSearch.map((a) => (
-    a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
-  ))
+  // const AddressSuggestOptions = state.settings.addressSearch.map((a) => (
+  //   a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
+  // ))
+
   return {
-    AddressSuggestInput: prepareAddressSuggest(AddressSuggestOptions),
-    AddressSuggestOptions: AddressSuggestOptions,
-    AddressSuggestData: state.settings.addressSearch,
+    // AddressSuggestInput: prepareAddressSuggest(AddressSuggestOptions),
+    // AddressSuggestOptions,
+    // AddressSuggestData: state.settings.addressSearch,
     hasProvinces: state.settings.popupValues ? state.settings.popupValues.hasProvinces : false,
     popupValues: state.settings.popupValues,
     country: state.settings.country,
@@ -257,6 +224,7 @@ const mapStateToProps = state => {
     provincesDropDown: state.settings.provincesDropDown,
     currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
       state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+    company: getSafe(() => state.auth.identity.company.id, null)
   }
 }
 
