@@ -3,6 +3,7 @@ import * as api from './api'
 import { setAuth, unsetAuth, authorize } from '~/utils/auth'
 import Router from 'next/router'
 import { ROLES_ENUM } from '~/src/utils/constants'
+import { getSafe } from '~/utils/functions'
 
 export function getIdentity() {
   return {
@@ -45,7 +46,7 @@ export function login(username, password) {
       })
 
 
-      if (!identity.company.reviewRequested) {
+      if (!getSafe(() => identity.company.reviewRequested, false)) {
         isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
       }
       

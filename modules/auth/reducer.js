@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 import { ROLES_ENUM } from '../../src/utils/constants'
-import { getSafe } from '~/src/utils/functions'
+import { getSafe } from '~/utils/functions'
 
 export const initialState = {
   confirmationForm: {
@@ -74,7 +74,7 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
-        confirmationForm: {
+        confirmationForm: getSafe(() => payload.identity.company.reviewRequested, false) ? {
           address: {
             city: payload.identity.branches[0].address.city,
             country: payload.identity.branches[0].address.country.id,
@@ -102,7 +102,7 @@ export default function reducer(state = initialState, action) {
           dunsNumber: payload.identity.company.tin,
           name: payload.identity.company.name,
           tin: payload.identity.company.tin
-        },
+        } : state.confirmationForm,
         identity: {
           ...payload.identity,
           ...accessRights

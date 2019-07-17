@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { withRouter } from 'next/router'
-import { Container, Menu, Image, Dropdown } from 'semantic-ui-react'
+import { Container, Menu, Image, Dropdown, Icon, Label } from 'semantic-ui-react'
 import styled from 'styled-components'
 import Logo from '~/assets/images/nav/inventory.png'
 // import ErrorsHandler from '~/src/utils/errorsHandler'
@@ -13,7 +13,9 @@ import { withAuth } from '~/hocs'
 import { takeOverCompanyFinish } from '~/modules/admin/actions'
 import { openProfilePopup } from '~/modules/profile/actions'
 import Profile from '~/modules/profile/components/Profile'
-import React from "react";
+import React from "react"
+import Router from 'next/router'
+import { getSafe } from '~/utils/functions'
 
 const TopMenu = styled(Menu)`
   background-color: #33373e !important;
@@ -45,6 +47,16 @@ const LogoImage = styled(Image)`
   margin: 9px 10px 4px 0;
   height: 23.78px;
 `
+const CircularLabel = styled(Label)`
+  position: absolute;
+  top: -0.7em;
+  left: auto;
+  right: -0.7em;
+  bottom: auto;
+  font-size: 0.7142857rem !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+`
 
 const MenuLink = withRouter(({ router: { pathname }, to, children, }) => (
   <Link prefetch href={to}>
@@ -52,7 +64,7 @@ const MenuLink = withRouter(({ router: { pathname }, to, children, }) => (
   </Link>
 ))
 
-const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth, takeOverCompanyFinish, profile, openProfilePopup }) => (
+const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth, takeOverCompanyFinish, profile, openProfilePopup, cartItems }) => (
   <MainContainer fluid>
     <PopUp />
     <Head>
@@ -66,6 +78,14 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth,
         <NavigationMenu />
 
         <Menu.Menu position='right' className='black'>
+          {auth && auth.identity && !auth.identity.isAdmin &&
+            <Menu.Item onClick={() => Router.push('/cart')}>
+              <Icon.Group>
+                <Icon name='shopping cart' color='white' size='large' />
+                <CircularLabel circular color='blue'>{cartItems}</CircularLabel>
+              </Icon.Group>
+            </Menu.Item>
+          }
           <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
             <Dropdown.Menu data-test="navigation_menu_user">
               <Dropdown.Item as={Menu.Item} onClick={() => openProfilePopup()}>My Profile</Dropdown.Item>
@@ -101,7 +121,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
-    profile: state.profile
+    profile: state.profile,
+    cartItems: getSafe(() => state.cart.cart.cartItems.length, 0)
   }
 }
 
