@@ -4,6 +4,7 @@ import { Segment, Form, Image, Button, Message, Grid, GridRow, GridColumn } from
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import ConfirmationPage from '~/modules/auth/components/ConfirmationPage'
+import { getSafe } from '~/utils/functions'
 
 import Logo from '~/assets/images/login/logo_echo.png'
 
@@ -79,7 +80,7 @@ class LoginForm extends Component {
 
     return (
       <>
-        {identity ? (
+        {getSafe(() => identity.company.reviewRequested, false) ? (
             <>
               <ConfirmationPage />
             </>
