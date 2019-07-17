@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import * as Actions from '../actions'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { Grid, Header, Segment, Image, Divider } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import styled from 'styled-components'
 import * as val from 'yup'
-
+import Router from "next/router"
 import Logo from '~/assets/images/logos/logo-dark.png'
 
 const ConfirmSegment = styled(Segment.Group)`
@@ -81,12 +82,17 @@ class ConfirmationPage extends Component {
   render() {
     const {
       confirmationForm,
+      identity,
+      intl,
       reviewCompany,
       searchedCountries,
       searchedProvinces,
       searchCountries,
       searchProvinces
     } = this.props
+    const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
+
+    let { formatMessage } = intl
 
     return (
       <Form initialValues={{ ...initValues, ...confirmationForm }}
@@ -104,33 +110,39 @@ class ConfirmationPage extends Component {
                 <LogoImage src={Logo} />
               </LogoWrapper>
                     <Header as='h2' textAlign='center'>
-                      Last Step
+                      <FormattedMessage id='laststep.header' defaultMessage='Last Step' />
                     </Header>
-                    <Header as='h2' textAlign='center' style={{ marginTop: '0', paddingTop: '0.5em', fontSize: '1.14285714em' }}>Please verify the company information below.</Header>
+                    <Header as='h2' textAlign='center' style={{ marginTop: '0', paddingTop: '0.5em', fontSize: '1.14285714em' }}>
+                      <FormattedMessage id='laststep.subheader' defaultMessage='Please verify the company information below.' />
+                    </Header>
 
-                    <Header as='h3'>Company Profile</Header>
+                    <Header as='h3'>
+                      <FormattedMessage id='laststep.company.header' defaultMessage='Company Profile' />
+                    </Header>
                     <Grid>
                       <Grid.Row columns={2}>
                         <Grid.Column>
-                          <Input label='Company Legal Name *'
+                          <Input label={formatMessage({ id: 'laststep.company.name', defaultMessage: 'Company Legal Name *' })}
                                  name='name' />
                         </Grid.Column>
                         <Grid.Column>
-                          <Input label='DBA'
+                          <Input label={formatMessage({ id: 'laststep.company.dba', defaultMessage: 'DBA' })}
                                  name='dba' />
                         </Grid.Column>
                       </Grid.Row>
                     </Grid>
 
-                    <Header as='h3'>Company Primary Address</Header>
+                    <Header as='h3'>
+                      <FormattedMessage id='laststep.address.header' defaultMessage='Company Primary Address' />
+                    </Header>
                     <Grid>
                       <Grid.Row columns={2}>
                         <Grid.Column>
-                          <Input label='Street Address 1 *'
+                          <Input label={formatMessage({ id: 'laststep.address.street', defaultMessage: 'Street Address 1 *' })}
                                  name='address.streetAddress' />
                         </Grid.Column>
                         <Grid.Column>
-                          <Dropdown label='Country *'
+                          <Dropdown label={formatMessage({ id: 'laststep.address.country', defaultMessage: 'Country *' })}
                                     name='address.country'
                                     options={confirmationForm.address.availableCountries}
                                     inputProps={{
@@ -157,11 +169,11 @@ class ConfirmationPage extends Component {
                       </Grid.Row>
                       <Grid.Row>
                         <Grid.Column width={8}>
-                          <Input label='City *'
+                          <Input label={formatMessage({ id: 'laststep.address.city', defaultMessage: 'City *' })}
                                  name='address.city' />
                         </Grid.Column>
                         <Grid.Column width={5}>
-                          <Dropdown label='State *'
+                          <Dropdown label={formatMessage({ id: 'laststep.address.state', defaultMessage: 'State *' })}
                                     name='address.province'
                                     options={confirmationForm.address.availableProvinces}
                                     inputProps={{
@@ -170,41 +182,43 @@ class ConfirmationPage extends Component {
                                     }} />
                         </Grid.Column>
                         <Grid.Column width={3}>
-                          <Input label='Zip *'
+                          <Input label={formatMessage({ id: 'laststep.address.zip', defaultMessage: 'Zip *' })}
                                  name='address.zip' />
                         </Grid.Column>
                       </Grid.Row>
                       <Grid.Row columns={2}>
                         <Grid.Column>
-                          <Input label='EIN Number *'
+                          <Input label={formatMessage({ id: 'laststep.address.ein', defaultMessage: 'EIN Number *' })}
                                  name='tin' />
                         </Grid.Column>
                         <Grid.Column>
-                          <Input label='DUNS Number'
+                          <Input label={formatMessage({ id: 'laststep.address.duns', defaultMessage: 'DUNS Number' })}
                                  name='dunsNumber' />
                         </Grid.Column>
                       </Grid.Row>
                     </Grid>
 
-                    <Header as='h3'>Company Admin Profile</Header>
+                    <Header as='h3'>
+                      <FormattedMessage id='laststep.admin.header' defaultMessage='Company Admin Profile' />
+                    </Header>
                     <Grid>
                       <Grid.Row columns={2}>
                         <Grid.Column>
-                          <Input label='Name *'
+                          <Input label={formatMessage({ id: 'laststep.admin.name', defaultMessage: 'Name *' })}
                                  name='companyAdminUser.name' />
                         </Grid.Column>
                         <Grid.Column>
-                          <Input label='Title'
+                          <Input label={formatMessage({ id: 'laststep.admin.title', defaultMessage: 'Title' })}
                                  name='companyAdminUser.jobTitle' />
                         </Grid.Column>
                       </Grid.Row>
                       <Grid.Row columns={2}>
                         <Grid.Column>
-                          <Input label='Phone *'
+                          <Input label={formatMessage({ id: 'laststep.admin.phone', defaultMessage: 'Phone *' })}
                                  name='companyAdminUser.phone' />
                         </Grid.Column>
                         <Grid.Column>
-                          <Input label='E-Mail *'
+                          <Input label={formatMessage({ id: 'laststep.admin.email', defaultMessage: 'E-Mail *' })}
                                  name='companyAdminUser.email' />
                         </Grid.Column>
                       </Grid.Row>
@@ -214,8 +228,12 @@ class ConfirmationPage extends Component {
               <Grid>
                 <Grid.Row>
                   <Grid.Column aligned='right' textAlign='right'>
-                    <Button style={{ marginRight: '1em' }}>Cancel</Button>
-                    <Button.Submit color='blue'>Enter Echo Exchange</Button.Submit>
+                    <Button style={{ marginRight: '1em' }} onClick={() => {isAdmin ? Router.push('/admin') : Router.push('/inventory/my')}}>
+                      <FormattedMessage id='laststep.cancel' defaultMessage='Cancel' />
+                    </Button>
+                    <Button.Submit color='blue'>
+                      <FormattedMessage id='laststep.submit' defaultMessage='Enter Echo Exchange' />
+                    </Button.Submit>
                   </Grid.Column>
                 </Grid.Row>
               </Grid>
@@ -227,6 +245,6 @@ class ConfirmationPage extends Component {
   }
 }
 
-const stateToProps = ({ auth: { confirmationForm } }) => ({confirmationForm})
+const stateToProps = ({ auth: { confirmationForm, identity } }) => ({confirmationForm, identity})
 
-export default connect(stateToProps, Actions)(ConfirmationPage)
+export default connect(stateToProps, Actions)(injectIntl(ConfirmationPage))
