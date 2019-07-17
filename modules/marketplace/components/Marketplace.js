@@ -142,6 +142,7 @@ export default class Marketplace extends Component {
             columns={columns}
             rowSelection
             groupBy={['productNumber']}
+            sameGroupSelectionOnly
             getChildGroups={rows =>
               _(rows)
                 .groupBy('productName')
