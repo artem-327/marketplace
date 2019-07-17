@@ -88,7 +88,8 @@
     "yup": "^0.27.0"
   },
   "scripts": {
-    "cypress:open": "cypress open",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
     "dev": "node server.js",
     "build": "next build",
     "start-s": "next start",

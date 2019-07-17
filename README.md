@@ -113,6 +113,14 @@ Your app is ready to be deployed!
 
 See the section about [deployment](#deployment) for more information.
 
+### `npm run cy:open`
+
+Opens Cypress used for manual launching of automated tests.
+
+### `npm run cy:run`
+
+Launches all automated UI tests using Cypress. Results can be found in _cypress/results/_ folder
+
 ## More Information
 
 For more information about creat-react-app and all scripts visit **Docs/Readme.md**
