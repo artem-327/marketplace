@@ -16,6 +16,8 @@ import * as Yup from 'yup'
 
 import styled from 'styled-components'
 
+import { getSafe } from '~/utils/functions'
+
 import confirm from '~/src/components/Confirmable/confirm'
 import { errorMessages } from '~/constants/yupValidation'
 
@@ -268,7 +270,7 @@ class Broadcast extends Component {
 
                       toastManager.add(generateToastMarkup(
                         <FormattedMessage id={`notifications.template${status}.header`} />,
-                        <FormattedMessage id={`notifications.template${status}.content`} values={{ name }} />
+                        <FormattedMessage id={`notifications.template${status}.content`} values={{ name: getSafe(() => values.name, name) }} />
                       ), { appearance: 'success' })
 
 
@@ -290,8 +292,8 @@ class Broadcast extends Component {
                                 fluid selection
                                 onChange={(e, data) => this.onTemplateSelected(e, data, props.setFieldValue)}
                                 options={[
-                                  { key: 1, value: 1, text: 'Johanka Z Parku' },
-                                  { key: 2, value: 2, text: 'Sam Doma' }
+                                  { key: 1, value: 3, text: 'Johanka Z Parku' },
+                                  { key: 2, value: 4, text: 'Sam Doma' }
                                 ]
                                   // templates.map((template) => ({
                                   //   key: template.id,
