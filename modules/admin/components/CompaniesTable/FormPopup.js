@@ -363,7 +363,7 @@ class AddNewPopupCasProducts extends React.Component {
                           <FormGroup widths='equal'>
                             <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='primaryBranch.warehouse' />
                           </FormGroup>
-                          <AddressForm values={values} setFieldValue={setFieldValue} prefix='primaryBranch.' />
+                          <AddressForm values={values} setFieldValue={setFieldValue} prefix='primaryBranch' />
                         </Accordion.Content>
                         <Divider />
 
@@ -385,7 +385,7 @@ class AddNewPopupCasProducts extends React.Component {
                           <FormGroup widths='equal'>
                             <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='mailingBranch.warehouse' />
                           </FormGroup>
-                          <AddressForm values={values} setFieldValue={setFieldValue} prefix='mailingBranch.' datalistName='mailingAddresses' />
+                          <AddressForm values={values} setFieldValue={setFieldValue} prefix='mailingBranch' datalistName='mailingAddresses' />
                         </Accordion.Content>
                       </>}
                     </Modal.Content>

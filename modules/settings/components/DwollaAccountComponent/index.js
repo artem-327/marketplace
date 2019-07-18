@@ -10,7 +10,16 @@ import {
 } from '../../actions'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
+import styled from "styled-components";
 
+
+const AccordionHeader = styled(Header)`
+  font-size: 18px;
+  font-weight: bolder;
+  > i {
+    font-weight: bolder;
+  }
+`
 
 const initialFormValues = {
   beneficialOwner: {
@@ -183,10 +192,10 @@ class BankAccountsPopup extends React.Component {
               </FormGroup>
 
               <Accordion.Title active={accordionActive.controllerAddress} onClick={this.handleAccordionChange} name='controllerAddress'>
-                <Header as='h3'>
-                    <Icon color={accordionActive.controllerAddress && 'blue'} name={accordionActive.controllerAddress ? 'chevron down' : 'chevron right'} size='small' />
-                    <Header.Content><FormattedMessage id='global.controller' defaultMessage='Controlling Person' /></Header.Content>
-                </Header>
+                <AccordionHeader as='h4'>
+                    <Icon color={accordionActive.controllerAddress && 'blue'} name={accordionActive.controllerAddress ? 'chevron down' : 'chevron right'} />
+                    <FormattedMessage id='global.controller' defaultMessage='Controlling Person' />
+                </AccordionHeader>
               </Accordion.Title>
               <Accordion.Content active={accordionActive.controllerAddress}>
                 <FormGroup widths="equal">
