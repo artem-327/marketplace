@@ -1,8 +1,8 @@
-import * as React from 'react';
-import * as PropTypes from 'prop-types';
-import classNames from 'classnames';
+import * as React from 'react'
+import * as PropTypes from 'prop-types'
+import classNames from 'classnames'
 
-import { SelectionControl } from './parts/selection-control';
+import { SelectionControl } from './parts/selection-control'
 
 export const TableSelectCell = ({
   className,
@@ -20,7 +20,7 @@ export const TableSelectCell = ({
       onChange={onToggle}
     />
   </td>
-);
+)
 
 TableSelectCell.propTypes = {
   className: PropTypes.string,
@@ -29,7 +29,7 @@ TableSelectCell.propTypes = {
   row: PropTypes.any,
   tableRow: PropTypes.object,
   tableColumn: PropTypes.object,
-};
+}
 
 TableSelectCell.defaultProps = {
   className: undefined,
@@ -38,4 +38,4 @@ TableSelectCell.defaultProps = {
   row: undefined,
   tableRow: undefined,
   tableColumn: undefined,
-};
+}

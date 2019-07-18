@@ -36,7 +36,7 @@ TableSelectAllCell.propTypes = {
   tableRow: PropTypes.object,
   tableColumn: PropTypes.object,
   rowSpan: PropTypes.number,
-};
+}
 
 TableSelectAllCell.defaultProps = {
   className: undefined,

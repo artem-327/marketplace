@@ -1,5 +1,5 @@
-import * as React from "react";
-import { Table as TableSUI } from "semantic-ui-react";
+import * as React from "react"
+import { Table as TableSUI } from "semantic-ui-react"
 
 export const TableCell = ({
   tableColumn,
@@ -23,4 +23,4 @@ export const TableCell = ({
   >
     {children || value}
   </TableSUI.Cell>
-);
+)

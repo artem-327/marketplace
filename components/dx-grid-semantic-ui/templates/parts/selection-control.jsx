@@ -1,6 +1,6 @@
-import * as React from 'react';
-import * as PropTypes from 'prop-types';
-import classNames from 'classnames';
+import * as React from 'react'
+import * as PropTypes from 'prop-types'
+import classNames from 'classnames'
 
 import { Checkbox } from 'semantic-ui-react'
 
@@ -15,13 +15,13 @@ export const SelectionControl = ({
     checked={checked}
     indeterminate={indeterminate}
     onChange={() => {
-      if (disabled) return;
-      onChange();
+      if (disabled) return
+      onChange()
     }}
     onClick={e => e.stopPropagation()}
     {...restProps}
   />
-);
+)
 
 SelectionControl.propTypes = {
   disabled: PropTypes.bool,
@@ -29,7 +29,7 @@ SelectionControl.propTypes = {
   indeterminate: PropTypes.bool,
   onChange: PropTypes.func,
   className: PropTypes.string,
-};
+}
 
 SelectionControl.defaultProps = {
   disabled: false,
@@ -37,4 +37,4 @@ SelectionControl.defaultProps = {
   indeterminate: false,
   onChange: () => {},
   className: undefined,
-};
+}

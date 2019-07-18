@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from "react"
 
 export const Root = ({ styles, ...restProps }) => (
   <div
@@ -10,4 +10,4 @@ export const Root = ({ styles, ...restProps }) => (
     }}
     {...restProps}
   />
-);
+)
