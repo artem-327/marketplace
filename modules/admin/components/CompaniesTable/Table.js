@@ -41,9 +41,9 @@ class CompaniesTable extends Component {
           columns={columns}
           rows={rows}
           rowActions={[
-            { text: 'Edit', callback: (row) => openEditCompany(row.id, row) },
+            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: (row) => openEditCompany(row.id, row) },
             {
-              text: 'Delete', callback: (row) => confirm(
+              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }), callback: (row) => confirm(
                 formatMessage({ id: 'confirm.deleteCompany.title', defaultMessage: 'Delete Company?' }),
                 formatMessage({ id: 'confirm.deleteCompany.content', defaultMessage: `Do you really want to delete '${row.name}' company?` }, { name: row.name })
               ).then(() => {
@@ -51,7 +51,7 @@ class CompaniesTable extends Component {
                 datagrid.removeRow(row.id)
               })
             },
-            { text: 'Register Dwolla Account', callback: (row) => openRegisterDwollaAccount(row), hidden: row => row.hasDwollaAccount === "Yes" },
+            { text: formatMessage({ id: 'admin.registerDwollaAccount', defaultMessage: 'Register Dwolla Account' }), callback: (row) => openRegisterDwollaAccount(row), hidden: row => row.hasDwollaAccount === "Yes" },
             {
               text: <FormattedMessage id='admin.takeOver' defaultMessage='Take over as Company Admin' />,
               callback: (row) => takeOverCompany(row.id),

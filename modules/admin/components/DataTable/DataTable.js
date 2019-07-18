@@ -43,8 +43,8 @@ class DataTable extends Component {
           columns={columns}
           rows={rows}
           rowActions={[
-            { text: 'Edit', callback: (row) => openEditPopup(row) },
-            { text: 'Delete', callback: (row) =>
+            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: (row) => openEditPopup(row) },
+            { text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }), callback: (row) =>
                 confirm(
                   formatMessage({ id: `confirm.delete${formattedMessageName.charAt(0).toUpperCase() + formattedMessageName.slice(1)}.title`, defaultMessage: `Delete ${addEditText}` }),
                   formatMessage(
