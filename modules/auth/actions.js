@@ -45,7 +45,6 @@ export function login(username, password) {
         }
       })
 
-
       if (!getSafe(() => identity.company.reviewRequested, false)) {
         isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
       }

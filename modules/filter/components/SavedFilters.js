@@ -6,10 +6,19 @@ import { withToastManager } from 'react-toast-notifications'
 
 import { SavedFilterItem, SavedFilterTitle, SavedFiltersSegment, SavedFilterIcon, AccordionContent, ActionRow } from '../constants/layout'
 
+import styled from 'styled-components'
+
 import Notifications from './Notifications'
 import { FormattedMessage } from 'react-intl'
 import { savedFilterValidation } from '../constants/validation'
 import { groupFilters } from '../constants/filter'
+
+const StyledGrid = styled(Grid)`
+  word-break: break-word;
+  > .row {
+    padding: 0.5rem 0px 0.5rem 0px !important;
+  }
+`
 
 class SavedFilters extends Component {
   state = {
@@ -36,7 +45,6 @@ class SavedFilters extends Component {
   getTitle = (filter, i) => {
     let { id, name } = filter
     let filterDescription = groupFilters(filter.filters, this.props.params)
-
     return (
       <SavedFilterTitle>
         <Grid>
@@ -66,7 +74,7 @@ class SavedFilters extends Component {
             } position='left center'>
 
               <GridColumn computer={8}>
-                <Grid verticalAlign='top'>
+                <StyledGrid verticalAlign='top'>
                   {filterDescription && filterDescription.length > 0 ? filterDescription.map((f) => (
                     <GridRow>
                       <GridColumn computer={8}>
@@ -74,11 +82,11 @@ class SavedFilters extends Component {
                       </GridColumn>
 
                       <GridColumn computer={8}>
-                        {f.valuesDescription instanceof Array ? f.valuesDescription.map((v) => <p>{v}</p>) : f.valuesDescription}
+                        {f.valuesDescription instanceof Array ? f.valuesDescription.map((v) => v) : f.tagDescription}
                       </GridColumn>
                     </GridRow>
                   )) : <GridRow><GridColumn> <FormattedMessage id='filter.noFitlersApplied' defaultMessage='No filters applied' /> </GridColumn></GridRow>}
-                </Grid>
+                </StyledGrid>
               </GridColumn>
             </Popup>
             <Popup trigger={

@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import Logo from '~/assets/images/nav/inventory.png'
 // import ErrorsHandler from '~/src/utils/errorsHandler'
 import NavigationMenu from './NavigationMenu'
+import MiniCart from './MiniCart'
 import PopUp from '~/src/components/PopUp'
 import { Messages } from '~/modules/messages'
 import { connect } from 'react-redux'
@@ -80,10 +81,7 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth,
         <Menu.Menu position='right' className='black'>
           {auth && auth.identity && !auth.identity.isAdmin &&
             <Menu.Item onClick={() => Router.push('/cart')}>
-              <Icon.Group>
-                <Icon name='shopping cart' color='white' size='large' />
-                <CircularLabel circular color='blue'>{cartItems}</CircularLabel>
-              </Icon.Group>
+              <MiniCart />
             </Menu.Item>
           }
           <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
