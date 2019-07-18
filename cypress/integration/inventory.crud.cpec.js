@@ -1,20 +1,24 @@
 context("Inventory CRUD",() => {
 	
 	beforeEach(function () {
+		cy.server()
+		cy.route("POST",'/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
+		cy.route("GET",'/prodex/api/countries/search*').as('addingLoading')
+		cy.route("GET",'/prodex/api/product-offers/*').as('offerLoading')
+		cy.route("GET",'/prodex/api/products/own/search?pattern=iso&onlyMapped=false').as('search')
+
 		cy.login("user1@example.com","echopass123")
 
 		cy.url().should("include","inventory")
-		cy.wait(1000)
+
+		cy.wait('@inventoryLoading')
 	})
 
     it('Create item',() => {
-		cy.server()
-		cy.route('/prodex/api/products/own/search?pattern=iso&onlyMapped=false').as('search')
-
 		cy.contains("Inventory").click()
 		cy.contains("Add Inventory").click()
 
-		cy.wait(500)
+		cy.wait("@addingLoading")
 		cy.url().should("include","add")
 
 		cy.get("#field_dropdown_product")
@@ -23,7 +27,7 @@ context("Inventory CRUD",() => {
 			.should("have.value","iso")
 
 		cy.wait('@search')
-		cy.wait(1000)
+		cy.wait(500)
 		cy.contains("IP550 Isopropanol").click({force: true})
 
 		cy.get("#field_dropdown_warehouse").click()
@@ -40,6 +44,8 @@ context("Inventory CRUD",() => {
 		cy.contains("Add Product Offer").click()
 		cy.contains("Go to My Inventory").click()
 
+		cy.wait("@inventoryLoading")
+
 		cy.contains("Isopropanol").should('be.visible')
 		cy.contains("IP550").should('be.visible')
 		cy.contains("Test 2").should('be.visible')
@@ -47,12 +53,9 @@ context("Inventory CRUD",() => {
     })
 
     it('See item details',() => {
-        cy.server()
-        cy.route('/prodex/api/prodex/api/product-offers/*').as('listing')
-
 		cy.contains("IP550").click()
 
-        cy.wait(500)
+		cy.wait("@offerLoading")
 		cy.get("#field_dropdown_product").contains("IP550 Isopropanol")
 
 		cy.get("#field_input_pkgAmount")
@@ -73,10 +76,11 @@ context("Inventory CRUD",() => {
 	it('Update item',() => {
 		cy.contains("IP550").click()
 
+		cy.wait("@offerLoading")
+
 		cy.get("#field_dropdown_warehouse").click()
 		cy.wait(500)
 		cy.get("div[name='Bayport']").first().click()
-		cy.wait(500)
 		cy.get("#field_input_pkgAmount")
 			.clear()
 			.type("10")
@@ -115,7 +119,7 @@ context("Inventory CRUD",() => {
 		cy.contains("Inventory").click()
 		cy.contains("Add Inventory").click()
 
-		cy.wait(500)
+		cy.wait("@addingLoading")
 		cy.url().should("include","add")
 
 		cy.contains("Add Product Offer").click()
@@ -133,13 +137,10 @@ context("Inventory CRUD",() => {
 	})
 
     it('Create item with optional info',() => {
-        cy.server()
-        cy.route('/prodex/api/products/own/search?pattern=iso&onlyMapped=false').as('search')
-
 		cy.contains("Inventory").click()
 		cy.contains("Add Inventory").click()
 
-		cy.wait(500)
+		cy.wait("@addingLoading")
 		cy.url().should("include","add")
 
         cy.get("#field_dropdown_product")
@@ -148,7 +149,7 @@ context("Inventory CRUD",() => {
             .should("have.value","iso")
 
         cy.wait('@search')
-        cy.wait(1000)
+        cy.wait(500)
         cy.contains("IP550 Isopropanol").click({force: true})
 
         cy.get("#field_dropdown_warehouse").click()
@@ -188,7 +189,7 @@ context("Inventory CRUD",() => {
         cy.contains("Add Product Offer").click({force: true})
         cy.contains("Go to My Inventory").click()
 
-        cy.wait(1000)
+		cy.wait('@inventoryLoading')
 
         cy.get(".table-responsive").scrollTo("right")
         cy.wait(1000)
