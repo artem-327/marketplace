@@ -46,6 +46,7 @@ class Filter extends Component {
       mfg: dateDropdownOptions[0].value
     },
     searchQuery: '',
+    searchWarehouseQuery: '',
     isTyping: false
   }
 
@@ -56,6 +57,7 @@ class Filter extends Component {
       fetchPackagingTypes,
       fetchWarehouseDistances,
       fetchProductGrade,
+      fetchWarehouses,
       setParams
     } = this.props
 
@@ -68,7 +70,8 @@ class Filter extends Component {
       this.fetchIfNoData(fetchProductForms, 'productForms'),
       this.fetchIfNoData(fetchPackagingTypes, 'packagingTypes'),
       this.fetchIfNoData(fetchWarehouseDistances, 'warehouseDistances'),
-      this.fetchIfNoData(fetchProductGrade, 'productGrade')
+      this.fetchIfNoData(fetchProductGrade, 'productGrade'),
+      this.fetchIfNoData(fetchWarehouses, 'warehouses')
     ]).finally(() => this.setState({ loaded: true }))
 
 
@@ -299,6 +302,10 @@ class Filter extends Component {
     if (searchQuery.length > 1) this.props.getAutocompleteData(this.props.searchUrl(searchQuery))
   }, 250)
 
+  handleSearchWarehouse = debounce(({ searchWarehouseQuery, name }) => {
+    //! ! if (searchWarehouseQuery.length > 1) this.props.getAutocompleteData(this.props.searchUrl(searchWarehouseQuery))
+  }, 250)
+
 
   accordionTitle = (name, text) => (
     <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
@@ -406,7 +413,8 @@ class Filter extends Component {
     let {
       productConditions, productForms, packagingTypes,
       productGrade, intl, isFilterSaving,
-      autocompleteData, autocompleteDataLoading
+      autocompleteData, autocompleteDataLoading,
+      autocompleteWarehouse, autocompleteWarehouseLoading
     } = this.props
 
     const { formatMessage } = intl
@@ -447,7 +455,40 @@ class Filter extends Component {
       onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null),
     }
 
+    var noWarehouseResultsMessage = null
+
+    if (this.state.searchWarehouseQuery.length <= 1) noWarehouseResultsMessage = <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
+    if (autocompleteWarehouseLoading) noWarehouseResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
+
+    let dropdownWarehouseProps = {
+      search: true,
+      selection: true,
+      multiple: false,
+      fluid: true,
+      options: this.props.warehouses.map((warehouse) => {
+        return {
+          key: warehouse.id,
+          text: warehouse.name,
+          value: JSON.stringify({ id: warehouse.id, name: warehouse.name}), // ! ! potrebuju name? Nestaci jen id?
+        }
+      }),
+      loading: autocompleteWarehouseLoading,
+      name: 'warehouse',
+      placeholder: <FormattedMessage id='filter.searchWarehouse' defaultMessage='Search Warehouse' />,
+      noWarehouseResultsMessage,
+      onSearchChange: (_, data) => {
+        this.handleSearchWarehouse(data)
+      },
+      value: values.warehouse,
+      onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null),
+    }
+
+
+
+
+
     if (!autocompleteDataLoading) dropdownProps.icon = null
+    if (!autocompleteWarehouseLoading) dropdownWarehouseProps.icon = null
 
     let currencySymbol = this.props.preferredCurrency ? this.props.preferredCurrency.symbol : null
 
@@ -574,6 +615,15 @@ class Filter extends Component {
               </FormGroup>
             </AccordionContent>
           </AccordionItem>
+
+          <AccordionItem>
+            {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
+            <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
+              <BottomMargedDropdown {...dropdownWarehouseProps} />
+            </AccordionContent>
+
+          </AccordionItem>
+
         </Segment>
       </Accordion >
     )
@@ -719,6 +769,8 @@ Filter.propTypes = {
   filters: array,
   getAutocompleteData: func,
   autocompleteData: array,
+  getAutocompleteWarehouse: func,
+  autocompleteWarehouse: array,
   savedFilters: array,
   getSavedFilters: func,
   savedFiltersLoading: bool,
@@ -734,6 +786,7 @@ Filter.defaultProps = {
   additionalSidebarProps: {},
   filters: [],
   autocompleteData: [],
+  autocompleteWarehouse: [],
   savedFilters: [],
   savedFiltersLoading: false
 

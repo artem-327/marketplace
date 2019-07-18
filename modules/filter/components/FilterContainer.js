@@ -7,7 +7,8 @@ import {
   fetchProductConditions,
   fetchProductForms,
   fetchPackagingTypes,
-  fetchProductGrade
+  fetchProductGrade,
+  fetchWarehouses
 } from '~/src/modules/products'
 
 import { fetchWarehouseDistances } from '~/src/modules/location'
@@ -27,6 +28,7 @@ const mapDispatchToProps = {
   fetchPackagingTypes,
   fetchWarehouseDistances,
   fetchProductGrade,
+  fetchWarehouses,
   ...Actions
 }
 

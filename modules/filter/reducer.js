@@ -40,6 +40,8 @@ export const initialState = {
   isFilterApplying: false,
   autocompleteData: [],
   autocompleteDataLoading: false,
+  autocompleteWarehouse: [],
+  autocompleteWarehouseLoading: false,
   savedFilters: [],
   appliedFilter: [],
   savedFiltersLoading: false,
@@ -92,6 +94,7 @@ export default typeToReducer({
 
     let { data } = payload
     let autocompleteData = []
+    let autocompleteWarehouse = []  // ! !
 
     data.forEach(element => {
       element = asignFiltersDescription(element, state.params)
@@ -114,6 +117,7 @@ export default typeToReducer({
       savedFiltersLoading: false,
       savedFilters: data,
       autocompleteData: uniqueArrayByKey(autocompleteData.concat(state.autocompleteData), 'id'),
+      //autocompleteWarehouse: uniqueArrayByKey(autocompleteWarehouse.concat(state.autocompleteWarehouse), 'id'), // ! !
     }
   },
   [a.getSavedFilters.rejected]: (state) => {

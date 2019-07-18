@@ -24,7 +24,8 @@ export const initialValues = {
   notifications: {
     notificationMail: null,
     notificationPhone: null
-  }
+  },
+  warehouse: '',
 }
 
 const errorMessages = {
