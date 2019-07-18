@@ -163,7 +163,7 @@ export default typeToReducer({
     return {
       ...state,
       isFilterSaving: false,
-      savedFilters: [].concat(payload, state.savedFilters),
+      savedFilters: [].concat(asignFiltersDescription(payload, state.params), state.savedFilters),
     }
   },
   [a.saveFilter.rejected]: (state) => {
@@ -174,8 +174,6 @@ export default typeToReducer({
   },
 
   /* APPLY_FILTER */
-
-
 
   [a.applyFilter]: (state, { payload }) => {
     let appliedFilter = asignFiltersDescription(payload, state.params)
