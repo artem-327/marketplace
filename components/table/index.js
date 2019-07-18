@@ -229,8 +229,39 @@ export default class _Table extends Component {
     if (sameGroup || !sameGroupSelectionOnly) {
       this.setState({ selection })
       onSelectionChange(selection)
-    }
 
+      return true
+    }
+    return false
+  }
+
+  handleGroupSelectionChange = (groupKey, value) => {
+    const { getChildGroups, rows } = this.props
+    const { selection } = this.state
+    const group = getChildGroups(rows).find(g => g.key === groupKey)
+    const groupRowsIds = group.childRows.map(r => rows.indexOf(r))
+
+    const newSelection = value
+      ? _.uniq([...selection, ...groupRowsIds])
+      : selection.filter(s => groupRowsIds.indexOf(s) === -1)
+    
+    const result = this.handleSelectionChange(newSelection)
+    return result
+  }
+
+  getGroupRowCheckboxState = (groupKey) => {
+    const { getChildGroups, rows } = this.props
+    const { selection } = this.state
+    const group = getChildGroups(rows).find(g => g.key === groupKey)
+    const groupRowsIds = group.childRows.map(r => rows.indexOf(r))
+
+    const checked = groupRowsIds.every(gr => selection.indexOf(gr) > -1)
+    const indeterminate = !checked && _.intersection(groupRowsIds, selection).length > 0
+
+    return {
+      checked,
+      indeterminate,
+    }
   }
 
   getColumns = () => {
@@ -339,6 +370,7 @@ export default class _Table extends Component {
       rowSelection,
       selectByRowClick,
       showSelectAll,
+      sameGroupSelectionOnly,
       rowActions,
       showHeader,
       onSelectionChange,
@@ -458,7 +490,7 @@ export default class _Table extends Component {
 
             {rowSelection && (
               <TableSelection
-                showSelectAll={showSelectAll}
+                showSelectAll={showSelectAll && !sameGroupSelectionOnly}
                 selectByRowClick={selectByRowClick}
               />
             )}
@@ -480,7 +512,12 @@ export default class _Table extends Component {
                   )
               )}
               cellComponent={props => (
-                <GroupCell {...props} />
+                <GroupCell
+                  {...this.getGroupRowCheckboxState(props.row.key)}
+                  rowSelection={rowSelection}
+                  onSelectionChange={this.handleGroupSelectionChange}
+                  {...props}
+                />
               )}
               rowComponent={({ children, row, tableRow, ...restProps }) => (
                 <tr className="group-row" {...restProps}>

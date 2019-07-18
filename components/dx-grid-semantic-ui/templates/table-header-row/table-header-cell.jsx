@@ -1,5 +1,5 @@
-import * as React from "react";
-import { Table as TableSUI } from "semantic-ui-react";
+import * as React from "react"
+import { Table as TableSUI } from "semantic-ui-react"
 
 export const TableHeaderCell = ({
   column,
@@ -32,4 +32,4 @@ export const TableHeaderCell = ({
     }}
     {...restProps}
   />
-);
+)
