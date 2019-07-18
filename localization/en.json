@@ -504,7 +504,7 @@
   "laststep.address.duns": "DUNS Number",
   "laststep.address.ein": "EIN Number *",
   "laststep.address.header": "Company Primary Address",
-  "laststep.address.state": "State *",
+  "laststep.address.state": "Province *",
   "laststep.address.street": "Street Address *",
   "laststep.address.zip": "Zip *",
   "laststep.admin.header": "Company Admin Profile",

@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import * as val from 'yup'
 import Router from "next/router"
 import Logo from '~/assets/images/logos/logo-dark.png'
+import { getSafe } from '~/utils/functions'
 
 const ConfirmSegment = styled(Segment.Group)`
   position: relative;
@@ -79,6 +80,12 @@ const validationScheme = val.object().shape({
 
 class ConfirmationPage extends Component {
 
+  componentDidMount() {
+    if (getSafe(() => this.props.identity.branches[0].address.country.id, false)) {
+      this.props.searchProvinces(this.props.identity.branches[0].address.country.id)
+    }
+  }
+
   render() {
     const {
       confirmationForm,
@@ -142,6 +149,16 @@ class ConfirmationPage extends Component {
                                  name='address.streetAddress' />
                         </Grid.Column>
                         <Grid.Column>
+                          <Input label={formatMessage({ id: 'laststep.address.city', defaultMessage: 'City *' })}
+                                 name='address.city' />
+                        </Grid.Column>
+                      </Grid.Row>
+                      <Grid.Row columns={3}>
+                        <Grid.Column>
+                          <Input label={formatMessage({ id: 'laststep.address.zip', defaultMessage: 'Zip *' })}
+                                 name='address.zip' />
+                        </Grid.Column>
+                        <Grid.Column>
                           <Dropdown label={formatMessage({ id: 'laststep.address.country', defaultMessage: 'Country *' })}
                                     name='address.country'
                                     options={confirmationForm.address.availableCountries}
@@ -166,24 +183,14 @@ class ConfirmationPage extends Component {
                                       }
                                     }} />
                         </Grid.Column>
-                      </Grid.Row>
-                      <Grid.Row>
-                        <Grid.Column width={8}>
-                          <Input label={formatMessage({ id: 'laststep.address.city', defaultMessage: 'City *' })}
-                                 name='address.city' />
-                        </Grid.Column>
-                        <Grid.Column width={5}>
-                          <Dropdown label={formatMessage({ id: 'laststep.address.state', defaultMessage: 'State *' })}
+                        <Grid.Column>
+                          <Dropdown label={formatMessage({ id: 'laststep.address.state', defaultMessage: 'Province *' })}
                                     name='address.province'
                                     options={confirmationForm.address.availableProvinces}
                                     inputProps={{
                                       selection: true,
                                       value: 0
                                     }} />
-                        </Grid.Column>
-                        <Grid.Column width={3}>
-                          <Input label={formatMessage({ id: 'laststep.address.zip', defaultMessage: 'Zip *' })}
-                                 name='address.zip' />
                         </Grid.Column>
                       </Grid.Row>
                       <Grid.Row columns={2}>
