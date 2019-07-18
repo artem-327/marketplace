@@ -531,5 +531,14 @@
   "laststep.company.name": "Company Legal Name *",
   "laststep.submit": "Enter Echo Exchange",
   "laststep.subheader": "Please verify the company information below.",
-  "laststep.header": "Last Step"
+  "laststep.header": "Last Step",
+  "inventory.broadcast": "Custom Broadcast",
+  "inventory.delete": "Delete Listing",
+  "inventory.edit": "Edit Listing",
+  "marketplace.buy": "Buy Product Offer",
+  "orders.detail": "Detail",
+  "settings.editRoles": "Edit Roles",
+  "settings.editAlternativeNames": "Edit Alternative Names",
+  "settings.finalizeVerification": "Finalize Verification",
+  "settings.initiateVerification": "Initiate Verification"
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 // import '../styles/orders.scss'
+import { injectIntl } from 'react-intl'
 import Spinner from "~/src/components/Spinner/Spinner"
 import { Filter } from '~/modules/filter'
 import SubMenu from '~/src/components/SubMenu'
@@ -53,10 +54,12 @@ class Orders extends Component {
   }
 
   render() {
-    const { endpointType, match, rows, isFetching, activeStatus, queryType, router, datagrid } = this.props
+    const { endpointType, match, rows, isFetching, activeStatus, queryType, router, datagrid, intl } = this.props
     const { status } = this.props.filterData
     const { columns } = this.state
     let ordersType = queryType.charAt(0).toUpperCase() + queryType.slice(1)
+
+    let { formatMessage } = intl
 
     return (
       <div id="page" className='flex stretched scrolling'>
@@ -92,7 +95,7 @@ class Orders extends Component {
                         loading={datagrid.loading}
                         rows={this.getRows()}
                         rowActions={[
-                          { text: 'Detail', callback: (row) => router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`) }
+                          { text: formatMessage({ id: 'orders.detail', defaultMessage: 'Detail' }), callback: (row) => router.push(`/orders/detail?type=${ordersType.toLowerCase()}&id=${row.id}`) }
                         ]}
                         onRowClick={(e, row) => {
                           const targetTag = e.target.tagName.toLowerCase()
@@ -108,5 +111,5 @@ class Orders extends Component {
   }
 }
 
-export default Orders
+export default injectIntl(Orders)
 

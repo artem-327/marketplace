@@ -112,7 +112,7 @@ class ProductCatalogTable extends Component {
           rowActions={[
             // { text: 'Edit', callback: row => openPopup(row) },
             {
-              text: 'Delete',
+              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: row => confirm(
                 formatMessage({ id: 'confirm.deleteBankAccount', defaultMessage: 'Delete Bank Account' }),
                 formatMessage(
@@ -121,12 +121,12 @@ class ProductCatalogTable extends Component {
               ).then(() => deleteBankAccount(row.id))
             },
             {
-              text: 'Initiate Verification',
+              text: formatMessage({ id: 'settings.initiateVerification', defaultMessage: 'Initiate Verification' }),
               callback: row => dwollaInitiateVerification(row.id),
               hidden: row => row.status !== 'unverified'
             },
             {
-              text: 'Finalize Verification',
+              text: formatMessage({ id: 'settings.finalizeVerification', defaultMessage: 'Finalize Verification' }),
               callback: row => {
                 finalizeConfirm().then(v => {
                   dwollaFinalizeVerification(row.id, v.amount1, v.amount2)

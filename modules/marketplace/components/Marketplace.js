@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import { Container, Menu, Header, Button, MenuItem, Popup, List } from "semantic-ui-react"
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { ShippingQuotes } from '~/modules/shipping'
 import SubMenu from '~/src/components/SubMenu'
 import { Filter } from '~/modules/filter'
@@ -10,7 +10,7 @@ import FilterTags from '~/modules/filter/components/FitlerTags'
 
 import { UnitOfPackaging } from '~/components/formatted-messages'
 
-export default class Marketplace extends Component {
+class Marketplace extends Component {
   state = {
     columns: [
       { name: 'productName', disabled: true },
@@ -88,9 +88,11 @@ export default class Marketplace extends Component {
 
 
   render() {
-    const { datagrid } = this.props
+    const { datagrid, intl } = this.props
     const { columns, selectedRows } = this.state
     const rows = this.getRows()
+
+    let { formatMessage } = intl
 
     return (
       <>
@@ -169,7 +171,7 @@ export default class Marketplace extends Component {
               }
             }}
             rowActions={[
-              { text: 'Buy Product Offer', callback: (row) => this.tableRowClicked(row.id) }
+              { text: formatMessage({ id: 'marketplace.buy', defaultMessage: 'Buy Product Offer' }), callback: (row) => this.tableRowClicked(row.id) }
             ]}
           />
         </div>
@@ -186,3 +188,5 @@ export default class Marketplace extends Component {
     )
   }
 }
+
+export default injectIntl(Marketplace)
