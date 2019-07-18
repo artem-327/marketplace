@@ -2,7 +2,7 @@ import { createAction, createAsyncAction } from 'redux-promise-middleware-action
 import * as api from './api'
 
 export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async (offer) => {
-  const {data} = await api.loadRules(offer.id)
+  const { data } = await api.loadRules(offer.id)
 
   return {
     data,
@@ -18,6 +18,12 @@ export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async (offer) =
 export const saveRules = createAsyncAction('BROADCAST_SAVE', async (id, rules) => {
   await api.saveRules(id, rules)
 })
+
+export const saveTemplate = createAsyncAction('BROADCAST_SAVE_TEMPLATE', payload => api.saveTemplate(payload))
+export const updateTemplate = createAsyncAction('UPDATE_TEMPLATE', (id, payload) => api.updateTemplate(id, payload))
+export const getTemplate = createAsyncAction('GET_TEMPLATE', id => api.getTemplate(id))
+export const deleteTemplate = createAsyncAction('DELETE_TEMPLATE', id => api.deleteTemplate(id))
+export const getTemplates = createAsyncAction('GET_TEMPLATES', () => api.getTemplates())
 
 export const closeBroadcast = createAction('BROADCAST_CLOSE')
 export const updateFilter = createAction('BROADCAST_FILTER_UPDATE', filter => filter)
