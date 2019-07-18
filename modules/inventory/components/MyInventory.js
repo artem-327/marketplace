@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Container, Menu, Header, Checkbox, Icon, Popup, List } from "semantic-ui-react"
+import { Container, Menu, Header, Checkbox, Icon, Popup, List, Button } from "semantic-ui-react"
 import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
@@ -10,6 +10,8 @@ import { Filter } from '~/modules/filter'
 import confirm from '~/src/components/Confirmable/confirm'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import cn from 'classnames'
+
+import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
 class MyInventory extends Component {
   state = {
@@ -124,7 +126,9 @@ class MyInventory extends Component {
       openBroadcast,
       intl,
       rows,
-      datagrid
+      datagrid,
+      openImportPopup,
+      isOpenImportPopup
     } = this.props
     const { columns, selectedRows } = this.state
 
@@ -132,6 +136,8 @@ class MyInventory extends Component {
 
     return (
       <>
+        {isOpenImportPopup && <ProductImportPopup productOffer={true} />}
+
         <Container fluid style={{ padding: '0 32px' }}>
           <Menu secondary>
             <Menu.Item header>
@@ -151,6 +157,15 @@ class MyInventory extends Component {
             ) : null}
 
             <Menu.Menu position="right">
+              <Menu.Item>
+                <Button
+                  size="large"
+                  primary
+                  onClick={() => openImportPopup()}
+                >
+                  Import
+                </Button>
+              </Menu.Item>
               <Menu.Item>
                 <FilterTags filters={datagrid.filters} data-test="my_inventory_filter" onClick={this.removeFilter} />
               </Menu.Item>

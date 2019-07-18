@@ -57,7 +57,7 @@ class ProductImportPopup extends Component {
         productOffer={this.props.productOffer && this.props.productOffer}
       />
     ),
-    confirmation: <ConfirmationPage toUpload={this.toUpload} />
+    confirmation: <ConfirmationPage toUpload={this.toUpload} productOffer={this.props.productOffer && this.props.productOffer} />
   }
 
   render() {

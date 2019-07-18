@@ -6,6 +6,7 @@ import * as Actions from '../actions'
 import { withDatagrid } from '~/modules/datagrid'
 import { Label, Popup, List } from 'semantic-ui-react'
 
+import { openImportPopup } from '~/modules/settings/actions'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import { applyFilter } from '~/modules/filter/actions'
 import { FormattedNumber } from 'react-intl'
@@ -36,7 +37,6 @@ function mapStateToProps(store, { datagrid }) {
   return {
     ...store.simpleAdd,
     appliedFilter: store.filter.filter.appliedFilter,
-
     rows: datagrid.rows.map(po => {
       const qtyPart = getSafe(() => po.product.packagingUnit.nameAbbreviation)
       let currency = getSafe(() => po.cost.currency.code, 'USD')
@@ -67,9 +67,10 @@ function mapStateToProps(store, { datagrid }) {
         status: po.status // new broadcasted
       }
     }),
+    isOpenImportPopup: store.settings.isOpenImportPopup
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, { ...Actions, openBroadcast, applyFilter })(MyInventory))
+export default withDatagrid(connect(mapStateToProps, { ...Actions, openImportPopup, openBroadcast, applyFilter })(MyInventory))
 
 
