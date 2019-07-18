@@ -411,7 +411,7 @@ export const datagridValues = {
     }
 
   },
-  
+
   assayFrom: {
     operator: operators.GREATER_THAN_OR_EQUAL_TO,
     path: paths.productOffers.assayFrom,
@@ -492,9 +492,10 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
     to: {
       path: paths.productOffers.assayTo, operator: operators.LESS_THAN_OR_EQUAL_TO
     },
-    tagDescription: (from, to) => `Assay ${from}% - ${to}% `
+    tagDescription: (from, to) => `${from}% - ${to}% `
   },
-    // {
+
+  // {
     //   description: 'Expiration',
     //   from: {
     //     path: paths.productOffers.expirationDate, operator: operators.GREATER_THAN_OR_EQUAL_TO
@@ -505,6 +506,7 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
     //   tagDescription: (from, to) => `Exp. ${from} - ${to} `
     // },
   ]
+  
 
   // Create copy so we dont mutate original filters
   let filters = appliedFilters.slice()
