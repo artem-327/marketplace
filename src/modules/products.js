@@ -32,6 +32,9 @@ const FETCH_MANUFACTURER_PENDING = 'FETCH_MANUFACTURER_PENDING';
 const FETCH_MANUFACTURER_FULFILLED = 'FETCH_MANUFACTURER_FULFILLED';
 const FETCH_PACKAGING_TYPES = 'FETCH_PACKAGING_TYPES';
 const FETCH_PACKAGING_TYPES_FULFILLED = 'FETCH_PACKAGING_TYPES_FULFILLED';
+const FETCH_WAREHOUSES = 'FETCH_WAREHOUSES';
+const FETCH_WAREHOUSES_FULFILLED = 'FETCH_WAREHOUSES_FULFILLED';
+
 
 export const initialState = {
     productsMapping: {
@@ -68,7 +71,8 @@ export const initialState = {
     productMappingValidation: false,
     productOfferingValidation: false,
     savedMapping: false,
-    fileMaxSize: 20 // MB
+    fileMaxSize: 20, // MB
+    warehouses: []
 };
 
 export default function reducer(state = initialState, action) {
@@ -225,6 +229,13 @@ export default function reducer(state = initialState, action) {
                 packagingTypes: action.payload
             }
         }
+        case FETCH_WAREHOUSES_FULFILLED:{
+            return{
+                ...state,
+                warehouses: action.payload
+            }
+        }
+
         default: {
             return state
         }
@@ -376,5 +387,12 @@ export function fetchPackagingTypes(filter = {}){
     return {
         type: FETCH_PACKAGING_TYPES,
         payload: axios.get('/prodex/api/packaging-types', {params: {...filter}}).then(result => result.data)
+    }
+}
+
+export function fetchWarehouses() {
+    return {
+        type: FETCH_WAREHOUSES,
+        payload: axios.get('/prodex/api/branches/warehouses').then(result => result.data)
     }
 }

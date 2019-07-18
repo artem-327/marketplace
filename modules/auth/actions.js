@@ -3,6 +3,7 @@ import * as api from './api'
 import { setAuth, unsetAuth, authorize } from '~/utils/auth'
 import Router from 'next/router'
 import { ROLES_ENUM } from '~/src/utils/constants'
+import { getSafe } from '~/utils/functions'
 
 export function getIdentity() {
   return {
@@ -44,7 +45,10 @@ export function login(username, password) {
         }
       })
 
-      isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
+
+      if (!getSafe(() => identity.company.reviewRequested, false)) {
+        isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
+      }
       
       return {
         auth,
@@ -96,5 +100,26 @@ export const resetPasswordRequest = email => ({
 //   }
 // }
 
+export const reviewCompany = (values) => {
+  delete values.address.availableCountries
+  delete values.address.availableProvinces
+
+  return {
+    type: AT.AUTH_REVIEW_COMPANY,
+    async payload() {
+      const response = api.reviewCompany(values)
+      const identity = await api.getIdentity()
+      const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
+
+      isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
+
+      return response
+    }
+  }
+}
+
+export const searchCountries = (searchQuery) => ({ type: AT.AUTH_SEARCH_COUNTRIES, payload: api.searchCountries(searchQuery) })
+
+export const searchProvinces = (countryId) => ({ type: AT.AUTH_SEARCH_PROVINCES, payload: api.searchProvinces(countryId) })
 
 export const updateIdentity = (payload) => ({ type: AT.UPDATE_IDENTITY, payload })

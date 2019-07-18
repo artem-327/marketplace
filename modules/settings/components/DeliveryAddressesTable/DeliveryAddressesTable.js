@@ -100,11 +100,11 @@ const mapStateToProps = (state, { datagrid }) => {
       return {
         data: d,   // all row data, used for edit popup
         id: d.id,
-        streetAddress: d.address.streetAddress,
-        city: d.address.city,
+        streetAddress: d.address ? d.address.streetAddress : '',
+        city: d.address ? d.address.city : '',
         province: !!d.address.province ? d.address.province.name : '',
-        country: d.address.country.name,
-        zip: d.address.zip.zip,
+        country: d.address ? d.address.country.name : '',
+        zip: d.address ? d.address.zip.zip : '',
       }
     }),
     // reloadFilter is used to reload Delivery addresses list after Edit / Add new Delivery address
