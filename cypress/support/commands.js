@@ -83,6 +83,6 @@ Cypress.Commands.add("getFirstItemId", (token) => {
         body: {pageNumber: 0, filters: [], pageSize: 50}
     }).then((response) => {
         expect(response.status).to.eq(200)
-        return response.body[1].id
+        return response.body[0].id
     })
 })
