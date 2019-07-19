@@ -96,7 +96,7 @@ class Broadcast extends Component {
 
   getFilteredTree = (treeData, filter) => {
     const fs = filter.search.toLowerCase()
-
+    const { intl: { formatMessage } } = this.props
     const searchFn = (n => {
       var found = false
       const name = n.model.name.toLowerCase()
@@ -116,7 +116,8 @@ class Broadcast extends Component {
 
     const presets = {
       region: () => new TreeModel().parse({
-        name: 'By region',
+        // name: 'By region',
+        name: formatMessage({ id: 'broadcast.byRegion', defaultMessage: 'By Region' }),
         rule: treeData.model,
         depth: 1,
         children: treeData.children.filter(n => searchParentFn(n)).map(n1 => ({
@@ -137,7 +138,8 @@ class Broadcast extends Component {
         }))
       }),
       branch: () => new TreeModel().parse({
-        name: 'By company',
+        // name: 'By company',
+        name: formatMessage({ id: 'broadcast.byCompany', defaultMessage: 'By Company' }),
         rule: treeData.model,
         depth: 1,
         children: _.uniqBy(treeData.all(n => n.model.type === 'company'), n => n.model.id).filter(searchFn).map(n1 => ({
@@ -205,7 +207,7 @@ class Broadcast extends Component {
 
     return (
       <Modal open={open} onClose={closeBroadcast} centered={false} size='large'>
-        <Modal.Header>Broadcast Controls</Modal.Header>
+        <Modal.Header><FormattedMessage id='broadcast.controls' defaultMessage='Broadcast Controls' /></Modal.Header>
         <Modal.Content scrolling style={{ minHeight: '70vh' }} className='flex stretched'>
           <Grid className='flex stretched'>
             <Grid.Row divided className='flex stretched'>
@@ -213,11 +215,11 @@ class Broadcast extends Component {
                 <div>
                   <Message info size='large' style={{ padding: '6px 15px' }}>
                     <Icon name='info circle' />
-                    Broadcasting to: <strong>{broadcastToBranches}</strong>
+                    <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Broadcasting To' />: <strong>{broadcastToBranches}</strong>
                   </Message>
                   <Form>
                     <Form.Field>
-                      <label>Category filter</label>
+                      <label><FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' /></label>
                       <Dropdown
                         selection
                         name='category'
@@ -230,8 +232,11 @@ class Broadcast extends Component {
                       />
                     </Form.Field>
                     <Form.Field>
-                      <label>Filter</label>
-                      <Input name='search' icon='search' iconPosition='left' value={this.state.filterSearch} onChange={this.handleSearchChange} />
+                      <label><FormattedMessage id='broadcast.filter' defaultMessage='Filter' /></label>
+                      <Input
+                        name='search' icon='search'
+                        iconPosition='left'
+                        value={this.state.filterSearch} onChange={this.handleSearchChange} />
                     </Form.Field>
                   </Form>
                   <Divider />
@@ -287,9 +292,10 @@ class Broadcast extends Component {
                           </BottomUnpaddedRow>
 
                           <GridRow>
-                            <GridColumn computer={12}>
+                            <GridColumn computer={11}>
                               <Dropdown
                                 fluid selection
+                                placeholder={formatMessage({ id: 'broadcast.selectTemplate', defaultMessage: 'Select template' })}
                                 onChange={(e, data) => this.onTemplateSelected(e, data, props.setFieldValue)}
                                 options={[
                                   { key: 1, value: 3, text: 'Johanka Z Parku' },
@@ -302,7 +308,7 @@ class Broadcast extends Component {
                                   // }))
                                 } />
                             </GridColumn>
-                            <GridColumn computer={4}>
+                            <GridColumn computer={5}>
                               <Button
                                 onClick={this.handleTemplateDelete}
                                 disabled={!this.state.selectedTemplate}
@@ -312,7 +318,7 @@ class Broadcast extends Component {
                           </GridRow>
 
                           <GridRow>
-                            <GridColumn computer={12}>
+                            <GridColumn computer={11}>
                               <FormikInput
                                 inputProps={{
                                   fluid: true,
@@ -320,7 +326,7 @@ class Broadcast extends Component {
                                 }} name='name' />
                             </GridColumn>
 
-                            <GridColumn computer={4}>
+                            <GridColumn computer={5}>
                               <FormikButton.Submit loading={this.props.templateSaving} fluid positive basic><FormattedMessage id='global.save' defaultMessage='Save' /></FormikButton.Submit>
                             </GridColumn>
                           </GridRow>
@@ -334,16 +340,16 @@ class Broadcast extends Component {
                 <Rule.Root>
                   <Rule.Header>
                     <Rule.RowContent>
-                      Region select
+                      <FormattedMessage id='broadcast.regionSelect' defaultMessage='Region select' />
                     </Rule.RowContent>
                     <Rule.Toggle>
-                      Include
+                      <FormattedMessage id='broadcast.include' defaultMessage='Include' />
                     </Rule.Toggle>
                     <Rule.Toggle>
-                      Mark-up/down
+                      <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />
                     </Rule.Toggle>
                     <Rule.Toggle>
-                      FOB high/low
+                      <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB high/low' />
                     </Rule.Toggle>
                   </Rule.Header>
                   <Rule.Content>
@@ -363,7 +369,7 @@ class Broadcast extends Component {
           </Grid>
         </Modal.Content>
         <Modal.Actions>
-          <Button onClick={() => closeBroadcast()}>Cancel</Button>
+          <Button onClick={() => closeBroadcast()}><FormattedMessage id='global.cancel' /></Button>
           <Button primary
             onClick={async () => {
               console.log(treeData.model)
@@ -376,7 +382,7 @@ class Broadcast extends Component {
                 })
             }}
           >
-            Save
+            <FormattedMessage id='global.save' />
           </Button>
         </Modal.Actions>
       </Modal >

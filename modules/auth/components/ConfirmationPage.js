@@ -6,7 +6,7 @@ import { Grid, Header, Segment, Image, Divider } from 'semantic-ui-react'
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import styled from 'styled-components'
 import * as val from 'yup'
-import Router from "next/router"
+import Router from 'next/router'
 import Logo from '~/assets/images/logos/logo-dark.png'
 import { getSafe } from '~/utils/functions'
 
@@ -54,8 +54,8 @@ const initValues = {
 const validationScheme = val.object().shape({
   address: val.object().shape({
     city: val.string().required('required'),
-    country: val.number().moreThan(0, "required").required('required'),
-    //province: val.number().moreThan(0, "required").required('required'),
+    country: val.number().moreThan(0, 'required').required('required'),
+    //province: val.number().moreThan(0, 'required').required('required'),
     province: val.mixed().test(
       'requiredIfOptions',
       'required', // error message

@@ -90,8 +90,8 @@ export default class PriceControl extends Component {
       <Box>
         <PriceInput
           disabled={disabled}
-          name="value"
-          type="number"
+          name='value'
+          type='number'
           value={value}
           onClick={e => { e.preventDefault(); e.stopPropagation() }}
           onChange={this.handleChange}
