@@ -116,3 +116,15 @@ Cypress.Commands.add("deleteWholeCart", (token) => {
 Cypress.Commands.add("waitForUI", () => {
     cy.wait(1500)
 })
+
+Cypress.Commands.add("deleteBroadcastRules", (token,id) => {
+    cy.request({
+        method: 'DELETE',
+        url: '/prodex/api/broadcast-rules/'+id,
+        headers: {
+            authorization: "Bearer " + token
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+    })
+})

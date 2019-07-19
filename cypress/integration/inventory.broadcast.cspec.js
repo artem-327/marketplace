@@ -28,6 +28,8 @@ context("Inventory Broadcasting", () => {
     it('Set custom broadcasting', () => {
        cy.getToken().then(token => {
             cy.getFirstItemId(token).then(itemId => {
+                cy.deleteBroadcastRules(token,itemId)
+
                 cy.get('[data-test=action_' + itemId + ']').click()
                 cy.get('[data-test=action_' + itemId + '_1]').click()
 
