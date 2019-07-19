@@ -10,7 +10,7 @@ context("Inventory Broadcasting", () => {
         cy.wait('@inventoryLoading')
     })
 
-    it('Start item broadcasting', () => {
+    it('Start/stop item broadcasting', () => {
         cy.get(".table-responsive").scrollTo("right")
         cy.waitForUI()
 
@@ -19,13 +19,7 @@ context("Inventory Broadcasting", () => {
         cy.wait("@broadcast")
         cy.get("[data-test=my_inventory_broadcast]").eq(0).should("have.class", "checked")
         cy.waitForUI()
-    })
 
-    it('Stop item broadcasting', () => {
-        cy.get(".table-responsive").scrollTo("right")
-        cy.waitForUI()
-
-        cy.get("[data-test=my_inventory_broadcast]").eq(0).should("have.class", "checked")
         cy.get("[data-test=my_inventory_broadcast]").eq(0).click()
         cy.wait("@broadcast")
         cy.get("[data-test=my_inventory_broadcast]").eq(0).should("not.have.class", "checked")
