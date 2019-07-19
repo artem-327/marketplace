@@ -57,9 +57,7 @@ context("Shopping cart CRUD",() => {
 
                 cy.get("[data-test=shopping_cart_back]").click()
 
-                cy.wait("@marketplaceLoading")
                 cy.waitForUI()
-
                 cy.get('[data-test=action_' + (parseInt(itemId,10)+1) + ']').click({force: true})
                 cy.get('[data-test=action_' +  (parseInt(itemId,10)+1) + '_0]').click()
 
