@@ -1,11 +1,10 @@
 context("Inventory CRUD",() => {
 	
 	beforeEach(function () {
-		cy.server()
+	    cy.server()
 		cy.route("POST",'/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
 		cy.route("GET",'/prodex/api/countries/search*').as('addingLoading')
 		cy.route("GET",'/prodex/api/product-offers/*').as('offerLoading')
-		cy.route("GET",'/prodex/api/products/own/search?pattern=iso&onlyMapped=false').as('search')
 
 		cy.login("user1@example.com","echopass123")
 
@@ -21,25 +20,14 @@ context("Inventory CRUD",() => {
 		cy.wait("@addingLoading")
 		cy.url().should("include","add")
 
-		cy.get("#field_dropdown_product")
-			.children("input")
-			.type("iso")
-			.should("have.value","iso")
-
-		cy.wait('@search')
-		cy.wait(500)
-		cy.contains("IP550 Isopropanol").click({force: true})
+        cy.selectChemical("IP550")
 
 		cy.get("#field_dropdown_warehouse").click()
 		cy.get("div[name='Test 2']").first().click()
-		cy.get("#field_input_pkgAmount")
-			.type("5")
-			.should("have.value","05")
 
-		cy.get("input[name='pricingTiers[0].price']")
-			.scrollIntoView()
-			.type("5")
-			.should("have.value","5")
+        cy.setNumberInput("#field_input_pkgAmount","5")
+
+        cy.setNumberInput("input[name='pricingTiers[0].price']","5")
 
 		cy.contains("Add Product Offer").click()
 		cy.contains("Go to My Inventory").click()
@@ -69,13 +57,8 @@ context("Inventory CRUD",() => {
 		cy.get("input[name='pricingTiers[0].price']")
 			.should("have.value","5")
 
-		cy.get(".data-grid")
-			.children()
-			.eq(1).contains("Isopropanol")
-
-		cy.get(".data-grid")
-			.children()
-			.eq(3).contains("IP550")
+        cy.assertProductDetail(1,"Isopropanol")
+        cy.assertProductDetail(3,"IP550")
     })
 
 	it('Update item',() => {
@@ -91,10 +74,7 @@ context("Inventory CRUD",() => {
 		cy.get("#field_dropdown_warehouse").click()
 		cy.wait(500)
 		cy.get("div[name='Bayport']").first().click()
-		cy.get("#field_input_pkgAmount")
-			.clear()
-			.type("10")
-			.should("have.value","10")
+        cy.setNumberInput("#field_input_pkgAmount","10")
 
 		cy.contains("Save Product Offer").click()
         cy.get(".actions").within(() => {
@@ -150,26 +130,14 @@ context("Inventory CRUD",() => {
 		cy.wait("@addingLoading")
 		cy.url().should("include","add")
 
-        cy.get("#field_dropdown_product")
-            .children("input")
-            .type("iso")
-            .should("have.value","iso")
-
-        cy.wait('@search')
-        cy.wait(500)
-        cy.contains("IP550 Isopropanol").click({force: true})
+        cy.selectChemical("IP550")
 
         cy.get("#field_dropdown_warehouse").click()
         cy.get("div[name='Test 2']").first().click()
-        cy.get("#field_input_pkgAmount")
-            .type("5")
-            .should("have.value","05")
 
-        cy.get("input[name='pricingTiers[0].price']")
-            .scrollIntoView()
-            .type("5")
-            .should("have.value","5")
+        cy.setNumberInput("#field_input_pkgAmount","5")
 
+        cy.setNumberInput("input[name='pricingTiers[0].price']","5")
 
         cy.contains("OPTIONAL PRODUCT INFO").click()
 
