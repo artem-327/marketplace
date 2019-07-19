@@ -51,7 +51,7 @@ class CompaniesTable extends Component {
                 datagrid.removeRow(row.id)
               })
             },
-            { text: formatMessage({ id: 'admin.registerDwollaAccount', defaultMessage: 'Register Dwolla Account' }), callback: (row) => openRegisterDwollaAccount(row), hidden: row => row.hasDwollaAccount === "Yes" },
+            { text: formatMessage({ id: 'admin.registerDwollaAccount', defaultMessage: 'Register Dwolla Account' }), callback: (row) => openRegisterDwollaAccount(row), hidden: row => row.hasDwollaAccount === 'Yes' },
             {
               text: <FormattedMessage id='admin.takeOver' defaultMessage='Take over as Company Admin' />,
               callback: (row) => takeOverCompany(row.id),

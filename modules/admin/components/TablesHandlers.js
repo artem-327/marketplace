@@ -1,9 +1,10 @@
-import React, { Component } from "react"
-import { connect } from "react-redux"
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { config } from '../config'
 import { debounce } from 'lodash'
 
 import { Header, Menu, Button, Input, Dropdown } from 'semantic-ui-react'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { openPopup, handleFiltersValue } from '../actions'
 import { Datagrid } from '~/modules/datagrid'
@@ -53,9 +54,11 @@ class TablesHandlers extends Component {
   render() {
     const {
       currentTab,
-      openPopup
+      openPopup,
+      intl
     } = this.props
 
+    const { formatMessage } = intl
 
     // if (currentTab === 'Manufactures' || currentTab === 'CAS Products' || currentTab === 'Companies') var onChange = this.debouncedOnChange
     // else var onChange = this.handleChange
@@ -68,16 +71,16 @@ class TablesHandlers extends Component {
 
         <Menu.Menu position='right'>
           <Menu.Item>
-            <Input style={{ width: 340 }} size="large" icon='search' placeholder={config[currentTab].searchText}
+            <Input style={{ width: 340 }} size='large' icon='search' placeholder={formatMessage({ id: config[currentTab].searchText })}
               onChange={(e, { value }) => {
                 this.setState({ filterValue: value })
                 this.handleChange(value)
-              }} 
+              }}
               value={this.state.filterValue} />
           </Menu.Item>
           <Menu.Item>
-            <Button size="large" primary onClick={() => openPopup()}>
-              Add {config[currentTab].addEditText}
+            <Button size='large' primary onClick={() => openPopup()}>
+              <FormattedMessage id='global.add' defaultMessage='Add' /> {config[currentTab].addEditText}
             </Button>
           </Menu.Item>
         </Menu.Menu>
@@ -100,4 +103,4 @@ const mapDispatchToProps = {
   handleFiltersValue
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TablesHandlers)
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(TablesHandlers))
