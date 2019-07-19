@@ -12,7 +12,12 @@ import { DateInput } from '~/components/custom-formik'
 import * as Yup from 'yup'
 // debug purposes only
 import { FormattedMessage, injectIntl } from 'react-intl'
+
 import { validationSchema } from '~/modules/company-form/constants'
+import { errorMessages } from '~/constants/yupValidation'
+
+
+
 
 
 const formValidationNew = Yup.object().shape({
@@ -39,14 +44,14 @@ const formValidationNew = Yup.object().shape({
   //   // "status": "string"
   // }),
   dwollaController: Yup.object().shape({
-    firstName: Yup.string().trim().min(3, 'Too short').required('Required field'),
-    lastName: Yup.string().trim().min(3, 'Too short').required('Required field'),
-    jobTitle: Yup.string().trim().min(3, 'Too short'),
-    dateOfBirth: Yup.string().required('Required field'),
-    ssn: Yup.string().trim().min(8, 'Must have 8 digits').required('Required field'),
-    streetAddress: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Required field'),
-    city: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Required field'),
-    country: Yup.string().required('Required field'),
+    firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+    lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+    jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)),
+    dateOfBirth: Yup.string().required(errorMessages.requiredMessage),
+    ssn: Yup.string().trim().min(8, errorMessages.minDigits(8)).required(errorMessages.requiredMessage),
+    streetAddress: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+    city: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+    country: Yup.string().required(errorMessages.requiredMessage),
     province: Yup.string(),
     zip: Yup.string()
   })
@@ -149,7 +154,7 @@ class AddNewPopupCasProducts extends React.Component {
 
           return (
             <Modal open centered={false} size='small'>
-              <Modal.Header>Register Dwolla Account</Modal.Header>
+              <Modal.Header><FormattedMessage id='global.registerDwollaAcc' /></Modal.Header>
               <Segment basic padded>
                 <Form loading={isSubmitting} onSubmit={props.handleSubmit}>
                   <Accordion exclusive={false}>
