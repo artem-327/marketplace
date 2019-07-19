@@ -53,7 +53,12 @@ context("Inventory CRUD",() => {
     })
 
     it('See item details',() => {
-		cy.contains("IP550").click()
+        cy.getToken().then(token => {
+            cy.getFirstItemId(token).then(itemId => {
+                cy.get('[data-test=action_' + itemId + ']').click()
+                cy.get('[data-test=action_' + itemId + '_0]').click()
+            })
+        })
 
 		cy.wait("@offerLoading")
 		cy.get("#field_dropdown_product").contains("IP550 Isopropanol")
@@ -74,7 +79,12 @@ context("Inventory CRUD",() => {
     })
 
 	it('Update item',() => {
-		cy.contains("IP550").click()
+        cy.getToken().then(token => {
+            cy.getFirstItemId(token).then(itemId => {
+                cy.get('[data-test=action_' + itemId + ']').click()
+                cy.get('[data-test=action_' + itemId + '_0]').click()
+            })
+        })
 
 		cy.wait("@offerLoading")
 
@@ -97,22 +107,19 @@ context("Inventory CRUD",() => {
 		cy.contains("10").should('be.visible')
     })
 	
-	xit('Delete item',() => {
-        cy.contains("IP550")
-		//TODO Better selector
-		cy.get(".ui .dropdown")
-			.eq(7)
-			.click()
+	it('Delete item',() => {
+        cy.getToken().then(token => {
+            cy.getFirstItemId(token).then(itemId => {
+                cy.get('[data-test=action_' + itemId + ']').click()
+                cy.get('[data-test=action_' + itemId + '_2]').click()
 
-		cy.contains("Delete listing").click({force: true})
-        cy.wait(5000)
-		cy.contains("Yes").click({force: true})
+                cy.contains("Delete listing").click({force: true})
+                cy.waitForUI()
+                cy.contains("Yes").click({force: true})
 
-		//TODO Assert only selected element missing
-		cy.contains("Isopropanol").should('not.visible')
-		cy.contains("IP550").should('not.visible')
-		cy.contains("Bayport").should('not.visible')
-		cy.contains("10").should('not.visible')
+                cy.get('[data-test=action_' + itemId + ']').should('not.exist')
+            })
+        })
     })
 
     it('Create item validation',() => {
@@ -192,8 +199,8 @@ context("Inventory CRUD",() => {
 		cy.wait('@inventoryLoading')
 
         cy.get(".table-responsive").scrollTo("right")
-        cy.wait(1000)
-        cy.get(".ui .label").eq(0).trigger("mouseover")
+        cy.waitForUI()
+        cy.get(".ui .label").eq(1).trigger("mouseover")
         cy.get('[data-test=my_inventory_lot_number]').should("be.visible")
         cy.get("div[role='listitem']").should("have.length",2)
     })
