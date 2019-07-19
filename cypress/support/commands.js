@@ -87,6 +87,32 @@ Cypress.Commands.add("getFirstItemId", (token) => {
     })
 })
 
+Cypress.Commands.add("getFirstMarketId", (token) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/product-offers/broadcasted/datagrid/',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, filters: [], pageSize: 50}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body[0].id
+    })
+})
+
+Cypress.Commands.add("deleteWholeCart", (token) => {
+    cy.request({
+        method: 'DELETE',
+        url: '/prodex/api/cart',
+        headers: {
+            authorization: "Bearer " + token
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+    })
+})
+
 Cypress.Commands.add("waitForUI", () => {
     cy.wait(1500)
 })
