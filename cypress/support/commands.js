@@ -86,3 +86,7 @@ Cypress.Commands.add("getFirstItemId", (token) => {
         return response.body[0].id
     })
 })
+
+Cypress.Commands.add("waitForUI", () => {
+    cy.wait(1500)
+})
