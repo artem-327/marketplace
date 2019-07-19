@@ -8,13 +8,18 @@ import classNames from 'classnames'
 
 
 export default class SubMenu extends Component {
+
+  toggleFilter = () => {
+    this.props.toggleFilter(!this.props.filterOpen)
+  }
+
   renderFilterButton() {
     let filterIcon = this.props.filterOpen ? filterIconOpen : filterIconClose
     let filterClass = this.props.filterOpen ? 'opened' : 'closed'
 
     return (
-      <div className={classNames('submenu-filter', filterClass)} onClick={() => this.props.toggleFilter()}>
-        <img src={filterIcon} alt='open filter' />Filters
+      <div className={classNames('submenu-filter', filterClass)} onClick={() => this.toggleFilter()}>
+        <img src={filterIcon} className={filterClass} alt='open filter' />Filters
       </div>
     )
   }
