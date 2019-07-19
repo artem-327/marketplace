@@ -539,8 +539,11 @@
   "inventory.edit": "Edit Listing",
   "marketplace.buy": "Buy Product Offer",
   "orders.detail": "Detail",
-  "settings.editRoles": "Edit Roles",
+  "settings.addUser": "Add User",
+  "settings.assignUserRoles": "Assign User Roles",
   "settings.editAlternativeNames": "Edit Alternative Names",
+  "settings.editRoles": "Edit Roles",
+  "settings.editUser": "Edit User",
   "settings.finalizeVerification": "Finalize Verification",
   "settings.initiateVerification": "Initiate Verification"
 }

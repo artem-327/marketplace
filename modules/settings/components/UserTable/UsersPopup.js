@@ -13,7 +13,7 @@ import {
 } from "../../actions"
 import { Form, Input, Button, Dropdown, Checkbox } from "formik-semantic-ui"
 import * as Yup from "yup"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, injectIntl } from "react-intl"
 
 import { generateToastMarkup } from '~/utils/functions'
 
@@ -96,7 +96,8 @@ class UsersPopup extends React.Component {
       closeRolesPopup,
       roles,
       userRoles,
-      currencies
+      currencies,
+      intl
     } = this.props
 
     const {
@@ -117,6 +118,8 @@ class UsersPopup extends React.Component {
       phone,
     }
 
+    const { formatMessage } = intl
+
     // necessary for Edit Roles
     this.props.roles.forEach(item => {
       let flag = this.props.popupValues ? this.props.popupValues.allUserRoles.some(
@@ -128,7 +131,13 @@ class UsersPopup extends React.Component {
     return (
       <Modal open centered={false} size={userEditRoles ? "mini" : null}>
         <Modal.Header>
-          {(popupValues ? "Edit" : "Add") + (userEditRoles ? " Role" : " User")}
+          {(userEditRoles
+            ? formatMessage({ id: 'settings.assignUserRoles', defaultMessage: "Assign User Roles" })
+            : (popupValues
+              ? formatMessage({ id: 'settings.editUser', defaultMessage: "Edit User" })
+              : formatMessage({ id: 'settings.addUser', defaultMessage: "Add User" })
+            )
+          )}
         </Modal.Header>
         <Modal.Content>
           <Form
@@ -214,4 +223,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withToastManager(UsersPopup))
+)(withToastManager(injectIntl(UsersPopup)))
