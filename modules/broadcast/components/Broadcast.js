@@ -170,7 +170,7 @@ class Broadcast extends Component {
     setFieldValue('name', name)
     this.setState({ selectedTemplate: { name, id: data.value } })
 
-    this.props.getTemplate(data.value)
+    // this.props.getTemplate(data.value)
   }
 
   handleTemplateDelete = async () => {
@@ -241,7 +241,6 @@ class Broadcast extends Component {
                     validateOnChange={false}
                     enableReinitialize
                     onSubmit={async (values, { setSubmitting }) => {
-                      let { name, id } = this.state.selectedTemplate
                       let payload = {
                         mappedBroadcastRules: {
                           ...treeData.model
@@ -249,19 +248,18 @@ class Broadcast extends Component {
                         ...values
                       }
 
-
                       // TODO When BE is ready; recode it so it is if found in dropdown(templates) not if is same as active dropdown item
+                      if (this.state.selectedTemplate && values.name === name) {
+                        let { name, id } = this.state.selectedTemplate
 
-                      if (values.name === name) {
                         await confirm(
                           formatMessage({ id: 'broadcast.overwriteTemplate.header' }, { name }),
                           formatMessage({ id: 'broadcast.overwriteTemplate.content' })
                         )
 
                         await updateTemplate(id, payload)
-
-
-                      } else {
+                      }
+                      else {
                         await saveTemplate(payload)
                       }
 
@@ -287,22 +285,23 @@ class Broadcast extends Component {
                           </BottomUnpaddedRow>
 
                           <GridRow>
-                            <GridColumn computer={12}>
+                            <GridColumn computer={11}>
                               <Dropdown
                                 fluid selection
                                 onChange={(e, data) => this.onTemplateSelected(e, data, props.setFieldValue)}
-                                options={[
-                                  { key: 1, value: 3, text: 'Johanka Z Parku' },
-                                  { key: 2, value: 4, text: 'Sam Doma' }
-                                ]
-                                  // templates.map((template) => ({
-                                  //   key: template.id,
-                                  //   text: template.name,
-                                  //   value: template.id
-                                  // }))
+                                options={templates.map((template) => ({
+                                  key: template.id,
+                                  text: template.name,
+                                  value: template.id
+                                }))
+
+                                  // {[
+                                  //   { key: 1, value: 3, text: 'Johanka Z Parku' },
+                                  //   { key: 2, value: 4, text: 'Sam Doma' }
+                                  // ]
                                 } />
                             </GridColumn>
-                            <GridColumn computer={4}>
+                            <GridColumn computer={5}>
                               <Button
                                 onClick={this.handleTemplateDelete}
                                 disabled={!this.state.selectedTemplate}
@@ -312,7 +311,7 @@ class Broadcast extends Component {
                           </GridRow>
 
                           <GridRow>
-                            <GridColumn computer={12}>
+                            <GridColumn computer={11}>
                               <FormikInput
                                 inputProps={{
                                   fluid: true,
@@ -320,7 +319,7 @@ class Broadcast extends Component {
                                 }} name='name' />
                             </GridColumn>
 
-                            <GridColumn computer={4}>
+                            <GridColumn computer={5}>
                               <FormikButton.Submit loading={this.props.templateSaving} fluid positive basic><FormattedMessage id='global.save' defaultMessage='Save' /></FormikButton.Submit>
                             </GridColumn>
                           </GridRow>

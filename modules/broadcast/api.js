@@ -7,4 +7,4 @@ export const saveTemplate = payload => api.post('/prodex/api/broadcast-templates
 export const updateTemplate = (id, payload) => api.put(`/prodex/api/broadcast-templates/${id}`, payload)
 export const getTemplate = id => api.get(`/prodex/api/broadcast-templates/${id}`).then(response => response.data)
 export const deleteTemplate = id => api.delete(`/prodex/api/broadcast-templates/${id}`)
-export const getTemplates = () => api.get('/prodex/api/broadcast-templates')
+export const getTemplates = () => api.get('/prodex/api/broadcast-templates').then(response => response.data)

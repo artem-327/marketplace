@@ -342,8 +342,8 @@ class AddNewPopupCasProducts extends React.Component {
 
 
                       {!popupValues && <>
-                        {AddressSuggestPrimaryBranchInput}
-                        {AddressSuggestMailingBranchInput}
+                        {/* {AddressSuggestPrimaryBranchInput}
+                        {AddressSuggestMailingBranchInput} */}
                         <Divider />
                         <Accordion.Title active={accordionActive.billingAddress} onClick={this.handleAccordionChange} name='billingAddress'>
                           <AccordionHeader as='h4'>

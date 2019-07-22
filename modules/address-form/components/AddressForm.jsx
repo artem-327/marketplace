@@ -13,9 +13,9 @@ import { getProvinces } from '../api'
 
 import { getSafe } from '~/utils/functions'
 
-const DatalistInput = styled(Input)`
+const DatalistGroup = styled(FormGroup)`
   input::-webkit-calendar-picker-indicator {
-    opacity: 0;
+    opacity: 0 !important;
   }
 `
 
@@ -57,7 +57,7 @@ export default class AddressForm extends Component {
     if (!values) return
 
     let fields = { streetAddress, city, country, zip, province }
-    Object.keys(fields).forEach(key => fields[key] = `${prefix}address.${fields[key].name}`)
+    Object.keys(fields).forEach(key => fields[key] = `${prefix && `${prefix}.`}address.${fields[key].name}`)
 
 
     let i = addressDatalistOptions.indexOf(value)
@@ -94,17 +94,36 @@ export default class AddressForm extends Component {
   }
 
 
+  getOptions = (values) => {
+    let { prefix, addressDatalistData } = this.props
+    let { address } = values[prefix]
+
+    return addressDatalistData.map((a) => {
+      if (a.streetAddress.startsWith(address.streetAddress) && a.city.startsWith(address.city)) {
+
+        let element = a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
+
+        return element
+      }
+
+      return null
+    })
+  }
+
+
   render() {
     const { setFieldValue } = this.props
     let {
       streetAddress, city, country,
       zip, province, countries, prefix,
-      initialZipCodes, addressDatalist, displayHeader
+      initialZipCodes, addressDatalist, displayHeader,
+      values, datalistName
     } = this.props
+
 
     let fields = { streetAddress, city, country, zip, province }
 
-    Object.keys(fields).forEach(key => fields[key] = `${prefix}address.${fields[key].name}`)
+    Object.keys(fields).forEach(key => fields[key] = `${prefix && `${prefix}.`}address.${fields[key].name}`)
 
 
     let { provinces, countryId, provincesAreFetching } = this.state
@@ -112,20 +131,22 @@ export default class AddressForm extends Component {
 
     return (
       <>
-        {addressDatalist(this.props.datalistName)}
+        <datalist id={datalistName}>
+          {this.getOptions(values).filter((el) => el !== null).map((el, i) => <option key={i} value={el} />)}
+        </datalist >
         {displayHeader && <Header as='h3'><FormattedMessage id='global.address' defaultMessage='Address' /></Header>}
-        <FormGroup widths='equal'>
-          <DatalistInput
-            inputProps={{ icon: 'dropdown', list: streetAddress.list, onChange: this.handleChange }}
+        <DatalistGroup widths='equal'>
+          <Input
+            inputProps={{ icon: 'dropdown', list: datalistName, onChange: this.handleChange }}
             label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />}
             name={fields.streetAddress}
           />
-          <DatalistInput
-            inputProps={{ icon: 'dropdown', list: city.list, onChange: this.handleChange }}
+          <Input
+            inputProps={{ icon: 'dropdown', list: datalistName, onChange: this.handleChange }}
             label={<FormattedMessage id='global.city' defaultMessage='City' />}
             name={fields.city}
           />
-        </FormGroup>
+        </DatalistGroup>
         <FormGroup widths='equal'>
           <ZipDropdown
             onChange={this.handleChange}
@@ -172,15 +193,12 @@ AddressForm.propTypes = {
   displayHeader: bool,
   streetAddress: shape({
     name: string.isRequired,
-    list: string
   }),
   city: shape({
     name: string.isRequired,
-    list: string
   }),
   country: shape({
     name: string.isRequired,
-    list: string
   }),
   zip: shape({
     name: string.isRequired
@@ -200,15 +218,12 @@ AddressForm.defaultProps = {
   displayHeader: true,
   streetAddress: {
     name: 'streetAddress',
-    list: 'addresses'
   },
   city: {
     name: 'city',
-    list: 'addresses'
   },
   country: {
     name: 'country',
-    list: 'addresses'
   },
   zip: {
     name: 'zip'
@@ -216,7 +231,8 @@ AddressForm.defaultProps = {
   province: {
     name: 'province'
   },
-  initialZipCodes: []
+  initialZipCodes: [],
+  values: null
 }
 
 
