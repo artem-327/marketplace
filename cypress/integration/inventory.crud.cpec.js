@@ -93,7 +93,6 @@ context("Inventory CRUD",() => {
                 cy.get('[data-test=action_' + itemId + ']').click()
                 cy.get('[data-test=action_' + itemId + '_2]').click()
 
-                cy.contains("Delete listing").click({force: true})
                 cy.waitForUI()
                 cy.contains("Yes").click({force: true})
 
