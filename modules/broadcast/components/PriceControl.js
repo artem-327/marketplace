@@ -102,8 +102,8 @@ export default class PriceControl extends Component {
           <Radio disabled={disabled} label='$' checked={type === 'addition'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'addition' })} />
         </ControlBox>
         <ControlBox>
+          <FobPrice disabled={disabled}>{prices.low} -</FobPrice>
           <FobPrice disabled={disabled}>{prices.high}</FobPrice>
-          <FobPrice disabled={disabled}>{prices.low}</FobPrice>
         </ControlBox>
       </Box>
     )

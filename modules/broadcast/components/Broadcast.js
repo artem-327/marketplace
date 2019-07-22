@@ -201,13 +201,13 @@ class Broadcast extends Component {
       templates, intl, updateTemplate,
       deleteTemplate } = this.props
 
-    const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'branch' && n.getPath().filter(_n => _n.model.broadcast === 1).length > 0).length}/${treeData.all(n => n.model.type === 'branch').length}`
+    const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
 
     const { formatMessage } = intl
 
     return (
       <Modal open={open} onClose={closeBroadcast} centered={false} size='large'>
-        <Modal.Header>Broadcast Controls</Modal.Header>
+        <Modal.Header>Price Book Controls</Modal.Header>
         <Modal.Content scrolling style={{ minHeight: '70vh' }} className='flex stretched'>
           <Grid className='flex stretched'>
             <Grid.Row divided className='flex stretched'>
@@ -344,7 +344,7 @@ class Broadcast extends Component {
                       Mark-up/down
                     </Rule.Toggle>
                     <Rule.Toggle>
-                      FOB high/low
+                      FOB low - high
                     </Rule.Toggle>
                   </Rule.Header>
                   <Rule.Content>

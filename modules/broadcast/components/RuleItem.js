@@ -41,8 +41,6 @@ const RuleItem = (props) => {
   const toggleDisabled = !!parentBroadcasted
   const priceDisabled = !(rule.broadcast === 1 && !parentBroadcasted) //allChildrenBroadcasting || rule.broadcast !== 1 || toggleDisabled
 
-  console.log(name, !!parentBroadcasted, rule.broadcast, allChildrenBroadcasting)
-
   return (
     <>
       <Rule.Row depth={nodePath.length} type={rule.type} onClick={() => rule.type !== 'root' && handleRowClick(item)}>
