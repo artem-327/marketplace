@@ -44,7 +44,7 @@ class Broadcast extends Component {
   state = {
     filterSearch: '',
     tree: new TreeModel().parse({ model: { rule: {} } }),
-    selectedTemplate: null
+    selectedTemplate: { name: null, id: null }
   }
 
   constructor(props) {
@@ -170,10 +170,10 @@ class Broadcast extends Component {
     setFieldValue('name', name)
     this.setState({ selectedTemplate: { name, id: data.value } })
 
-    // this.props.getTemplate(data.value)
+    this.props.getTemplate(data.value)
   }
 
-  handleTemplateDelete = async () => {
+  handleTemplateDelete = async (setFieldValue) => {
     const { deleteTemplate, toastManager, intl } = this.props
     const { formatMessage } = intl
     let { name, id } = this.state.selectedTemplate
@@ -183,6 +183,8 @@ class Broadcast extends Component {
     )
 
     await deleteTemplate(id)
+
+    setFieldValue('name', '')
 
     toastManager.add(generateToastMarkup(
       <FormattedMessage id='notifications.templateDelete.header' />,
@@ -248,8 +250,8 @@ class Broadcast extends Component {
                         ...values
                       }
 
-                      // TODO When BE is ready; recode it so it is if found in dropdown(templates) not if is same as active dropdown item
-                      if (this.state.selectedTemplate && values.name === name) {
+
+                      if (templates.some((el) => el.name === values.name)) {
                         let { name, id } = this.state.selectedTemplate
 
                         await confirm(
@@ -260,7 +262,8 @@ class Broadcast extends Component {
                         await updateTemplate(id, payload)
                       }
                       else {
-                        await saveTemplate(payload)
+                        let { value } = await saveTemplate(payload)
+                        this.setState({ selectedTemplate: value })
                       }
 
 
@@ -288,22 +291,21 @@ class Broadcast extends Component {
                             <GridColumn computer={11}>
                               <Dropdown
                                 fluid selection
-                                onChange={(e, data) => this.onTemplateSelected(e, data, props.setFieldValue)}
+                                value={this.state.selectedTemplate.id}
+                                onChange={(e, data) => {
+                                  this.onTemplateSelected(e, data, props.setFieldValue)
+                                  this.setState({ selectedTemplate: { id: data.value, name: data.options.find((el) => el.value === data.value).text } })
+                                }}
                                 options={templates.map((template) => ({
                                   key: template.id,
                                   text: template.name,
                                   value: template.id
                                 }))
-
-                                  // {[
-                                  //   { key: 1, value: 3, text: 'Johanka Z Parku' },
-                                  //   { key: 2, value: 4, text: 'Sam Doma' }
-                                  // ]
                                 } />
                             </GridColumn>
                             <GridColumn computer={5}>
                               <Button
-                                onClick={this.handleTemplateDelete}
+                                onClick={() => this.handleTemplateDelete(props.setFieldValue)}
                                 disabled={!this.state.selectedTemplate}
                                 loading={this.props.templateDeleting}
                                 type='button' basic fluid negative><FormattedMessage id='global.delete' /></Button>
