@@ -6,9 +6,19 @@ import { FormGroup, Header } from 'semantic-ui-react'
 import { ZipDropdown } from '~/modules/zip-dropdown'
 import { func, string, shape, array, bool } from 'prop-types'
 
+import styled from 'styled-components'
+
+
 import { getProvinces } from '../api'
 
 import { getSafe } from '~/utils/functions'
+
+const DatalistInput = styled(Input)`
+  input::-webkit-calendar-picker-indicator {
+    opacity: 0;
+  }
+`
+
 
 export default class AddressForm extends Component {
   state = {
@@ -48,10 +58,10 @@ export default class AddressForm extends Component {
 
     let fields = { streetAddress, city, country, zip, province }
     Object.keys(fields).forEach(key => fields[key] = `${prefix}address.${fields[key].name}`)
-  
+
 
     let i = addressDatalistOptions.indexOf(value)
-    
+
     if (i >= 0 && setFieldValue) {
       let suggest = this.props.addressDatalistData[i]
       let { hasProvinces } = suggest.country
@@ -95,7 +105,7 @@ export default class AddressForm extends Component {
     let fields = { streetAddress, city, country, zip, province }
 
     Object.keys(fields).forEach(key => fields[key] = `${prefix}address.${fields[key].name}`)
- 
+
 
     let { provinces, countryId, provincesAreFetching } = this.state
 
@@ -105,13 +115,13 @@ export default class AddressForm extends Component {
         {addressDatalist(this.props.datalistName)}
         {displayHeader && <Header as='h3'><FormattedMessage id='global.address' defaultMessage='Address' /></Header>}
         <FormGroup widths='equal'>
-          <Input
-            inputProps={{ list: streetAddress.list, onChange: this.handleChange }}
+          <DatalistInput
+            inputProps={{ icon: 'dropdown', list: streetAddress.list, onChange: this.handleChange }}
             label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />}
             name={fields.streetAddress}
           />
-          <Input
-            inputProps={{ list: city.list, onChange: this.handleChange }}
+          <DatalistInput
+            inputProps={{ icon: 'dropdown', list: city.list, onChange: this.handleChange }}
             label={<FormattedMessage id='global.city' defaultMessage='City' />}
             name={fields.city}
           />
