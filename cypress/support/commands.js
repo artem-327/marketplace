@@ -117,14 +117,31 @@ Cypress.Commands.add("waitForUI", () => {
     cy.wait(1500)
 })
 
-Cypress.Commands.add("deleteBroadcastRules", (token,id) => {
+Cypress.Commands.add("deleteBroadcastRule", (token,ruleId) => {
     cy.request({
         method: 'DELETE',
-        url: '/prodex/api/broadcast-rules/'+id,
+        url: '/prodex/api/broadcast-rules/'+ruleId,
         headers: {
             authorization: "Bearer " + token
         }
     }).then((response) => {
         expect(response.status).to.eq(200)
+    })
+})
+
+Cypress.Commands.add("getBroadcastRuleId", (token, offerId) => {
+    cy.request({
+        method: 'GET',
+        url: '/prodex/api/broadcast-rules/productOffer/'+offerId,
+        headers: {
+            authorization: "Bearer " + token
+        }
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        if(response.body[0] === undefined){
+            return -1
+        }else{
+            return response.body[0].id
+        }
     })
 })

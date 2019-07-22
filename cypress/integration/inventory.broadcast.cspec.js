@@ -2,8 +2,8 @@ context("Inventory Broadcasting", () => {
 
     beforeEach(function () {
         cy.server()
-        cy.route("POST",'/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
-        cy.route("PATCH",'/prodex/api/product-offers/*/broadcast?broadcasted=***').as('broadcast')
+        cy.route("POST", '/prodex/api/product-offers/own/datagrid*').as('inventoryLoading')
+        cy.route("PATCH", '/prodex/api/product-offers/*/broadcast?broadcasted=***').as('broadcast')
 
         cy.login("user1@example.com", "echopass123")
 
@@ -26,43 +26,36 @@ context("Inventory Broadcasting", () => {
     })
 
     it('Set custom broadcasting', () => {
-       cy.getToken().then(token => {
+        cy.getToken().then(token => {
             cy.getFirstItemId(token).then(itemId => {
-                cy.deleteBroadcastRules(token,itemId)
+                cy.getBroadcastRuleId(token, itemId).then(ruleId => {
+                    if(ruleId != -1) {
+                        cy.deleteBroadcastRule(token, ruleId)
+                    }
 
-                cy.get('[data-test=action_' + itemId + ']').click()
-                cy.get('[data-test=action_' + itemId + '_1]').click()
+                    cy.get('[data-test=action_' + itemId + ']').click()
+                    cy.get('[data-test=action_' + itemId + '_1]').click()
 
-                cy.get('div[type=region]').eq(0).within(() => {
-                    cy.get("input[type=checkbox]").click({force: true})
-                    cy.get("input[type=number]").type("5")
-                })
+                    cy.get('div[type=region]').eq(0).within(() => {
+                        cy.get("input[type=checkbox]").click({force: true})
+                        cy.get("input[type=number]").type("5")
+                    })
 
-                cy.get("div[class=actions]").within(($region) => {
-                    cy.contains("Save").click()
-                })
+                    cy.get("div[class=actions]").within(($region) => {
+                        cy.contains("Save").click()
+                    })
 
-                cy.contains("Saved successfully!")
+                    cy.contains("Saved successfully!")
 
-                cy.get('[data-test=action_' + itemId + ']').click()
-                cy.get('[data-test=action_' + itemId + '_1]').click()
+                    cy.get('[data-test=action_' + itemId + ']').click()
+                    cy.get('[data-test=action_' + itemId + '_1]').click()
 
-                cy.waitForUI()
+                    cy.waitForUI()
 
-                cy.get('div[type=region]').eq(0).within(($region) => {
-                    cy.get(".ui.fitted.toggle.checkbox").should("have.class", "checked")
-                    cy.get("input[type=number]").should("have.value", "5")
-                })
-
-                //TODO Move cleanup
-
-                cy.get('div[type=region]').eq(0).within(() => {
-                    cy.get("input[type=number]").clear()
-                    cy.get("input[type=checkbox]").click({force: true})
-                })
-
-                cy.get("div[class=actions]").within(($region) => {
-                    cy.contains("Save").click()
+                    cy.get('div[type=region]').eq(0).within(($region) => {
+                        cy.get(".ui.fitted.toggle.checkbox").should("have.class", "checked")
+                        cy.get("input[type=number]").should("have.value", "5")
+                    })
                 })
             })
 
