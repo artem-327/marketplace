@@ -4,7 +4,7 @@ import { Icon } from 'semantic-ui-react'
 import { array } from 'prop-types'
 
 import { MessageContainer, StyledMessage, CloseIcon, themes } from '../constants'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl'
 
 export default class Messages extends Component {
   componentDidMount() {

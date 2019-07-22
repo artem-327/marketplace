@@ -24,8 +24,9 @@ axios.interceptors.response.use(response => response, function (error) {
     // do nothing
   } else {
     // Do something with response error
-
-    if (error.response.status === 401) {
+    
+     
+    if (error.response && error.response.status === 401) {
       Router.push('/auth/logout?auto=true')
     }
 
