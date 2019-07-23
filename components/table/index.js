@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import pt from 'prop-types'
 import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css'
 import styled, { createGlobalStyle } from 'styled-components'
-import { Segment, Icon, Dropdown, Modal } from 'semantic-ui-react'
+import { Segment, Icon, Dropdown, Modal, Divider } from 'semantic-ui-react'
 import { Form, Checkbox, Button } from 'formik-semantic-ui'
 import _ from 'lodash'
 import GroupCell from './GroupCell'
@@ -66,7 +66,7 @@ const SettingButton = styled(Icon)`
 const ColumnsSetting = ({ onClick }) => (
   <SettingButton onClick={onClick} data-test="table_setting" name="setting" />
 )
-const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, open }) => (
+const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, open }) => (
   <Modal open={open} centered={false} size="tiny" style={{ width: 300 }}>
     <Modal.Content>
       <Form
@@ -78,9 +78,14 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, open }) => 
           }, []))
           actions.setSubmitting(false)
         }}
+        onReset={onClose}
       >
         {columns.map(c => <Checkbox key={c.name} disabled={c.disabled} name={c.name} label={c.title} />)}
-        <Button.Submit fluid>Save</Button.Submit>
+        <Divider />
+        <div style={{ textAlign: 'right' }}>
+          <Button.Reset>Cancel</Button.Reset>
+          <Button.Submit>Save</Button.Submit>
+        </div>
       </Form>
     </Modal.Content>
   </Modal>
@@ -244,7 +249,7 @@ export default class _Table extends Component {
     const newSelection = value
       ? _.uniq([...selection, ...groupRowsIds])
       : selection.filter(s => groupRowsIds.indexOf(s) === -1)
-    
+
     const result = this.handleSelectionChange(newSelection)
     return result
   }
@@ -409,6 +414,7 @@ export default class _Table extends Component {
             columns={columnsFiltered}
             open={columnSettingOpen}
             hiddenColumnNames={columnsSettings.hiddenColumnNames || []}
+            onClose={() => this.setState({ columnSettingOpen: false })}
             onChange={(hiddenColumnNames) => {
               this.handleColumnsSettings({ hiddenColumnNames })
               this.setState({ columnSettingOpen: false })
