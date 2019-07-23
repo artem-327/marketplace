@@ -15,6 +15,9 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { validationSchema } from '~/modules/company-form/constants'
 
 
+import { AddressForm } from '~/modules/address-form'
+import { addressValidationSchema } from '~/modules/address-form/constants'
+
 const formValidationNew = Yup.object().shape({
 
   // beneficialOwner: Yup.object().shape({
@@ -44,11 +47,13 @@ const formValidationNew = Yup.object().shape({
     jobTitle: Yup.string().trim().min(3, 'Too short'),
     dateOfBirth: Yup.string().required('Required field'),
     ssn: Yup.string().trim().min(8, 'Must have 8 digits').required('Required field'),
-    streetAddress: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Required field'),
-    city: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Required field'),
-    country: Yup.string().required('Required field'),
-    province: Yup.string(),
-    zip: Yup.string()
+    address: addressValidationSchema()
+
+    //   streetAddress: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Required field'),
+    // city: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Required field'),
+    // country: Yup.string().required('Required field'),
+    // province: Yup.string(),
+    // zip: Yup.string()
   })
 })
 
@@ -122,11 +127,22 @@ class AddNewPopupCasProducts extends React.Component {
         ...(popupValues.primaryUser ? {
           firstName: popupValues.primaryUser.name.split(' ')[0],
           lastName: popupValues.primaryUser.name.split(' ')[1],
-          city: popupValues.primaryUser.homeBranch.address.city,
-          streetAddress: popupValues.primaryUser.homeBranch.address.streetAddress,
-          zip: popupValues.primaryUser.homeBranch.address.zip.id,
-          country: popupValues.primaryUser.homeBranch.address.country.id
-        } : {}),
+          address: {
+            city: popupValues.primaryUser.homeBranch.address.city,
+            streetAddress: popupValues.primaryUser.homeBranch.address.streetAddress,
+            zip: popupValues.primaryUser.homeBranch.address.zip.id,
+            country: popupValues.primaryUser.homeBranch.address.country.id
+          }
+        } : {
+            firstName: '',
+            lastName: '',
+            address: {
+              city: '',
+              streetAddress: '',
+              zip: '',
+              country: ''
+            }
+          }),
         ssn: '',
         dateOfBirth: ''
       }
@@ -139,9 +155,18 @@ class AddNewPopupCasProducts extends React.Component {
         validationSchema={formValidationNew}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={(values, actions) => {
-          postDwollaAccount(values, popupValues.id)
-          // actions.setSubmitting(false)
+        onSubmit={async (values, { setSubmitting }) => {
+          let { address, ...rest } = values.dwollaController
+          let payload = {
+            dwollaController: {
+              ...address,
+              country: JSON.parse(address.country).countryId,
+              ...rest
+            }
+          }
+          
+          await postDwollaAccount(payload, popupValues.id)
+          setSubmitting(false)
         }}
         onReset={closeRegisterDwollaAccount}
         render={props => {
@@ -207,7 +232,9 @@ class AddNewPopupCasProducts extends React.Component {
                           <DateInput label={<FormattedMessage id='global.dateOfBirth2' defaultMessage='Birth' />} name='dwollaController.dateOfBirth' />
                           <Input label={<FormattedMessage id='global.ssn2' defaultMessage='SSN' />} name='dwollaController.ssn' />
                         </FormGroup>
-                        <FormGroup widths='equal'>
+
+                        <AddressForm values={values} displayHeader={false} setFieldValue={setFieldValue} prefix='dwollaController' />
+                        {/* <FormGroup widths='equal'>
                           <Input label={<FormattedMessage id='global.address4' defaultMessage='Street address' />} name='dwollaController.streetAddress' />
                           <Input label={<FormattedMessage id='global.city2' defaultMessage='City' />} name='dwollaController.city' />
                         </FormGroup>
@@ -223,7 +250,7 @@ class AddNewPopupCasProducts extends React.Component {
                             }} />
                           <Dropdown label="State/Province" name="dwollaController.province" options={mailingBranchProvinces}
                             inputProps={{ search: true, disabled: !this.state.mailingBranchHasProvinces, clearable: true }} />
-                        </FormGroup>
+                        </FormGroup> */}
                       </Accordion.Content>
                     </Modal.Content>
                   </Accordion>
