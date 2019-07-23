@@ -282,9 +282,9 @@ class AddInventoryForm extends Component {
   }
 
   renderEditDocuments = (values, setFieldValue) => {
-    const {edit, removeAttachment, removeAttachmentLink} = this.props
-    const {additional, attachments, lots} = values
-    let {openedDocuments} = this.state
+    const { edit, removeAttachment, removeAttachmentLink } = this.props
+    const { additional, attachments, lots } = values
+    let { openedDocuments } = this.state
     if (typeof attachments === 'undefined' || !edit)
       return false
 
@@ -303,9 +303,9 @@ class AddInventoryForm extends Component {
 
     if (this.state.openedDocuments === null) {
       if (documents.length > 0) {
-        this.setState({openedDocuments: true})
+        this.setState({ openedDocuments: true })
       } else {
-        this.setState({openedDocuments: false})
+        this.setState({ openedDocuments: false })
       }
     }
 
@@ -801,8 +801,8 @@ class AddInventoryForm extends Component {
                               <Radio label="Yes" value={true} name="inStock" />
                             </FormGroup>
                             <Header as='h3'>How many business days to pick up? <Popup content={`Processing Time is the number of business days from when an order is confirmed that it will take you to have your product offer ready for pick up at your designated warehouse. NOTE: Saturdays and Sundays do not count for Processing Time.`}
-                                                                             trigger={<Icon name='info circle' color='blue' />}
-                                                                             wide />
+                              trigger={<Icon name='info circle' color='blue' />}
+                              wide />
                             </Header>
                             <FormGroup>
                               <FormField width={4}>

@@ -165,20 +165,20 @@ export default class AddCart extends Component {
               </GridColumn>
             </GridRow>
 
-            <GridRow columns={1}>
+            {/* <GridRow columns={1}>
               <GridColumn>
                 <Header as='h4'>{offer.product.casProducts[0].casIndexName}</Header>
               </GridColumn>
-            </GridRow>
+            </GridRow> */}
 
-            <GridRow>
+            {/* <GridRow>
               <GridColumn computer={6}>
                 Merchant:
           </GridColumn>
               <GridColumn computer={10}>
                 {offer.owner && offer.owner.company.name ? offer.owner.company.name : 'Anonymous'}
               </GridColumn>
-            </GridRow>
+            </GridRow> */}
 
 
             <GridRow>

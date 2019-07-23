@@ -15,7 +15,7 @@ class Marketplace extends Component {
     columns: [
       { name: 'productName', disabled: true },
       { name: 'productNumber', disabled: true },
-      { name: 'merchant', title: 'Merchant', width: 250 },
+      // { name: 'merchant', title: 'Merchant', width: 250 },
       { name: 'available', title: 'Available', width: 80 },
       { name: 'packaging', title: 'Packaging', width: 140 },
       { name: 'quantity', title: 'Quantity', width: 140 },
