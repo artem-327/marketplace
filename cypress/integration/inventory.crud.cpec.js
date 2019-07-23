@@ -171,4 +171,38 @@ context("Inventory CRUD",() => {
         cy.get('[data-test=my_inventory_lot_number]').should("be.visible")
         cy.get("div[role='listitem']").should("have.length",2)
     })
+
+    it('Filter inventory', () =>{
+        cy.server()
+        cy.route("GET",'/prodex/api/products/own/search?*').as('search')
+
+        cy.get(".submenu-filter").click()
+
+        //cy.get("div[class='accordion ui']").scrollTo("top")
+        cy.waitForUI()
+
+        cy.get("div[name=search]")
+            .children("input")
+            .type("Monomethyl",{force: true} )
+
+        cy.wait('@search')
+
+        cy.contains("Monomethyl (3052-50-4)").click()
+
+        cy.contains("Apply").click()
+
+        let filter = [{"operator":"EQUALS","path":"ProductOffer.product.id","values":[225],"description":"Chemical Name","valuesDescription":["Monomethyl (3052-50-4)"],"tagDescription":["Monomethyl (3052-50-4)"]}]
+
+        cy.getToken().then(token => {
+            cy.getFirstItemIdWithFilter(token,filter).then(itemId => {
+               cy.get('[data-test=action_' + itemId + ']')
+            })
+        })
+
+        cy.get("#field_input_quantityTo").type("10")
+        cy.contains("Apply").click()
+
+        cy.get(".submenu-filter").click()
+        cy.contains("No records found.")
+    })
 })

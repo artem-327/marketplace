@@ -87,6 +87,21 @@ Cypress.Commands.add("getFirstItemId", (token) => {
     })
 })
 
+Cypress.Commands.add("getFirstItemIdWithFilter", (token, filter) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/product-offers/own/datagrid/',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {filters: filter,pageNumber: 0, pageSize: 50}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body[0].id
+    })
+})
+
+
 Cypress.Commands.add("getFirstMarketId", (token) => {
     cy.request({
         method: 'POST',
