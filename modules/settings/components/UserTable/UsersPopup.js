@@ -189,9 +189,6 @@ class UsersPopup extends React.Component {
                         />
                         <Dropdown label="Currency" name="preferredCurrency" options={currencies} fieldProps={{ width: 2 }} />
                       </FormGroup>
-                      <pre>
-                        {JSON.stringify(values, null, 2)}
-                      </pre>
                     </>
                   )}
                 <div style={{ textAlign: "right" }}>
