@@ -36,6 +36,21 @@ export default class AddressForm extends Component {
     }
   }
 
+  asignPrefix = () => {
+    let { prefix, streetAddress, city, country, zip, province } = this.props
+    let fields = { streetAddress, city, country, zip, province }
+
+    Object.keys(fields)
+      .forEach(key => {
+        if (prefix) {
+          fields[key] = `${prefix && `${prefix}.`}address.${fields[key].name}`
+        } else {
+          fields[key] = `address.${fields[key].name}`
+        }
+      })
+    return fields
+  }
+
   componentDidMount() {
     let { countries, values, prefix } = this.props
     const { addZip } = this.props
@@ -51,13 +66,12 @@ export default class AddressForm extends Component {
   }
 
   handleChange = (_, { name, value }) => {
-    let { prefix, addressDatalistOptions, values, streetAddress, city, country, zip, province } = this.props
+    let { addressDatalistOptions, values, } = this.props
     const { getAddressSearch, setFieldValue, addZip } = this.props
 
     if (!values) return
 
-    let fields = { streetAddress, city, country, zip, province }
-    Object.keys(fields).forEach(key => fields[key] = `${prefix && `${prefix}.`}address.${fields[key].name}`)
+    let fields = this.asignPrefix()
 
 
     let i = addressDatalistOptions.indexOf(value)
@@ -96,7 +110,7 @@ export default class AddressForm extends Component {
 
   getOptions = (values) => {
     let { prefix, addressDatalistData } = this.props
-    
+
     let { address } = prefix ? values[prefix] : values
 
     return addressDatalistData.map((a) => {
@@ -115,16 +129,13 @@ export default class AddressForm extends Component {
   render() {
     const { setFieldValue } = this.props
     let {
-      streetAddress, city, country,
-      zip, province, countries, prefix,
-      initialZipCodes, addressDatalist, displayHeader,
+      countries, prefix,
+      initialZipCodes, displayHeader,
       values, datalistName
     } = this.props
 
 
-    let fields = { streetAddress, city, country, zip, province }
-
-    Object.keys(fields).forEach(key => fields[key] = `${prefix && `${prefix}.`}address.${fields[key].name}`)
+    let fields = this.asignPrefix()
 
 
     let { provinces, countryId, provincesAreFetching } = this.state
