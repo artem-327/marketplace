@@ -114,6 +114,7 @@ class UsersPopup extends React.Component {
       name,
       email,
       homeBranch,
+      additionalBranches,
       preferredCurrency,
       title,
       phone,
