@@ -96,7 +96,8 @@ export default class AddressForm extends Component {
 
   getOptions = (values) => {
     let { prefix, addressDatalistData } = this.props
-    let { address } = values[prefix]
+    
+    let { address } = prefix ? values[prefix] : values
 
     return addressDatalistData.map((a) => {
       if (a.streetAddress.startsWith(address.streetAddress) && a.city.startsWith(address.city)) {
@@ -212,7 +213,7 @@ AddressForm.propTypes = {
 AddressForm.defaultProps = {
   setFieldValue: () => console.warn('setFieldValue not supplied in AddressForm.jsx!'),
   onChange: () => { },
-  prefix: '',
+  prefix: null,
   datalistName: 'addresses',
   countries: [],
   displayHeader: true,
