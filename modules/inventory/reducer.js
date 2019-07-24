@@ -270,7 +270,7 @@ export default function reducer(state = initialState, action) {
           ...action.payload.data,
           pricingTiers: [{
             quantityFrom: 1,
-            price: ''
+            price: 0.001
           }]
         }
       }
