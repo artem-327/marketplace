@@ -274,7 +274,7 @@ export default function reducer(state = initialState, action) {
         return {
           //checkbox: " ",
           name: user.name,
-          title: user.jobTitle || '',
+          jobTitle: user.jobTitle || '',
           email: user.email,
           //phone: user.homeBranch.contactPhone || '',
           phone: user.phone || '',
