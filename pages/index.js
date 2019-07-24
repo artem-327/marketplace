@@ -4,7 +4,7 @@ import Router from 'next/router'
 
 class Index extends Component {
   componentDidMount() {
-    Router.push('/dashboard')
+    Router.push('/inventory/my')
   }
   render() { return null }
 }
