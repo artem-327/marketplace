@@ -1,9 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Router from 'next/router'
-import IdleTimer from 'react-idle-timer'
 import nextCookie from 'next-cookies'
-import { IDLE_TIMEOUT, refreshToken } from '~/utils/auth'
+import Timeout from '~/components/timeout'
 
 export const SecureContext = React.createContext()
 
@@ -32,7 +31,7 @@ const authorize = ctx => {
 const securePageHoc = Page => class SecurePage extends React.Component {
   static getInitialProps(ctx) {
     const auth = authorize(ctx)
-    
+
     const pageProps = Page.getInitialProps && Page.getInitialProps(ctx)
 
     return {
@@ -65,14 +64,9 @@ const securePageHoc = Page => class SecurePage extends React.Component {
     const { auth } = this.props
 
     return (
-      <SecureContext.Provider value={{auth}}>
-        <IdleTimer
-          timeout={IDLE_TIMEOUT}
-          onIdle={() => Router.push(`/auth/logout?auto=true`)}
-          onAction={() => refreshToken()}
-          debounce={10000}
-        />
+      <SecureContext.Provider value={{ auth }}>
         <Page {...this.props} />
+        <Timeout />
       </SecureContext.Provider>
     )
   }
