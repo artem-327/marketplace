@@ -12,12 +12,13 @@ import {
   getCurrencies
 } from "../../actions"
 import { Form, Input, Button, Dropdown, Checkbox } from "formik-semantic-ui"
+import { CheckboxWithValue } from '~/components/custom-formik'
 import * as Yup from "yup"
 import { FormattedMessage, injectIntl } from "react-intl"
 
 import { generateToastMarkup } from '~/utils/functions'
 
-const formValidation = popupValues => Yup.object().shape({
+const userFormValidation = popupValues => Yup.object().shape({
   name: Yup.string().trim()
     .min(3, "Too short")
     .required("Name is required"),
@@ -26,11 +27,16 @@ const formValidation = popupValues => Yup.object().shape({
     .required("Emails is required"),
   homeBranch: Yup.number()
     .required('Home Branch is required'),
-  title: Yup.string().trim()
+  additionalBranches: Yup.array(),
+  jobTitle: Yup.string().trim()
     .min(3, "Too short"),
   phone: Yup.string().trim()
     .min(3, "Too short"),
 })
+const rolesFormValidation = Yup.object().shape({
+  roles: Yup.array()
+})
+
 
 class UsersPopup extends React.Component {
   componentDidMount() {
@@ -38,54 +44,34 @@ class UsersPopup extends React.Component {
   }
 
   submitHandler = async (values, actions) => {
-    let { toastManager } = this.props
+    const { toastManager } = this.props
     if (this.props.userEditRoles) {
       this.props.putNewUserRoleRequest(
-        this.addNewRole(values),
+        values.roles,
         this.props.popupValues.id
       )
       return
     }
-    let requestData = {
-      email: values.email,
-      name: values.name,
-      homeBranch: values.homeBranch,
-      jobTitle: values.title,
-      phone: values.phone,
-      preferredCurrency: values.preferredCurrency,
-      additionalBranches: values.additionalBranches
-    }
+
     if (this.props.popupValues) {
-      await this.props.handlerSubmitUserEditPopup(requestData, this.props.popupValues.id)
+      await this.props.handlerSubmitUserEditPopup(values, this.props.popupValues.id)
     } else {
-      await this.props.postNewUserRequest(requestData)
+      await this.props.postNewUserRequest(values)
     }
 
-    let status = this.props.popupValues ? 'userUpdated' : 'userCreated'
+    const status = this.props.popupValues ? 'userUpdated' : 'userCreated'
 
 
     toastManager.add(generateToastMarkup(
       <FormattedMessage id={`notifications.${status}.header`} />,
-      <FormattedMessage id={`notifications.${status}.content`} values={{ name: requestData.name }} />
+      <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
     ), {
         appearance: 'success'
       })
 
-
     actions.setSubmitting(false)
   }
 
-  addNewRole(values) {
-    const newRoles = []
-    for (let key in values) {
-      const id = Number(key.split("checkBoxId_")[1])
-      if (values[`checkBoxId_${id}`]) {
-        id && newRoles.push(id)
-      }
-    }
-
-    return newRoles
-  }
 
   render() {
     const {
@@ -106,7 +92,7 @@ class UsersPopup extends React.Component {
       homeBranch = undefined,
       preferredCurrency = "",
       additionalBranches = [],
-      title = "",
+      jobTitle = "",
       phone = "",
     } = popupValues || {}
 
@@ -116,19 +102,12 @@ class UsersPopup extends React.Component {
       homeBranch,
       additionalBranches,
       preferredCurrency,
-      title,
+      jobTitle,
       phone,
+      roles: userRoles
     }
 
     const { formatMessage } = intl
-
-    // necessary for Edit Roles
-    this.props.roles.forEach(item => {
-      let flag = this.props.popupValues ? this.props.popupValues.allUserRoles.some(
-        role => role.id === item.id
-      ) : []
-      initialFormValues[`checkBoxId_${item.id}`] = flag
-    })
 
     return (
       <Modal open centered={false} size={userEditRoles ? "mini" : null}>
@@ -144,20 +123,20 @@ class UsersPopup extends React.Component {
         <Modal.Content>
           <Form
             initialValues={initialFormValues}
-            validationSchema={formValidation(popupValues)}
+            validationSchema={userEditRoles ? rolesFormValidation : userFormValidation(popupValues)}
             onReset={userEditRoles ? closeRolesPopup : closePopup}
             onSubmit={this.submitHandler}
 
           >
-            {({values}) => (
+            {({ values }) => (
               <>
                 {userEditRoles ? (
                   roles.map((role, i) => (
                     <FormGroup key={i}>
-                      <Checkbox
+                      <CheckboxWithValue
+                        name="roles"
                         label={role.name}
-                        name={`checkBoxId_${role.id}`}
-                        inputProps={{ defaultChecked: userRoles.includes(role.id) }}
+                        value={role.id}
                       />
                     </FormGroup>
                   ))
@@ -165,7 +144,7 @@ class UsersPopup extends React.Component {
                     <>
                       <FormGroup widths="equal">
                         <Input type="text" label="Name" name="name" />
-                        <Input type="text" label="Job Title" name="title" />
+                        <Input type="text" label="Job Title" name="jobTitle" />
                       </FormGroup>
                       <FormGroup widths="equal">
                         <Input type="text" label="Email" name="email" />
@@ -181,7 +160,7 @@ class UsersPopup extends React.Component {
                         <Dropdown
                           label="Additional Branches"
                           name="additionalBranches"
-                          options={branchesAll.filter(b => b.value !== values.homeBranch)}
+                          options={branchesAll}
                           fieldProps={{ width: 7 }}
                           inputProps={{
                             multiple: true
@@ -189,6 +168,9 @@ class UsersPopup extends React.Component {
                         />
                         <Dropdown label="Currency" name="preferredCurrency" options={currencies} fieldProps={{ width: 2 }} />
                       </FormGroup>
+                      <pre>
+                        {JSON.stringify(values, null, 2)}
+                      </pre>
                     </>
                   )}
                 <div style={{ textAlign: "right" }}>

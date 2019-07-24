@@ -31,7 +31,7 @@ class UsersTable extends Component {
   state = {
     columns: [
       { name: "name", title: "User" },
-      { name: "title", title: "Job Title" },
+      { name: "jobTitle", title: "Job Title" },
       { name: "email", title: "E-mail" },
       { name: "phone", title: "Phone" },
       { name: "homeBranchName", title: "Home Branch" },
@@ -155,7 +155,7 @@ const mapStateToProps = (state, { datagrid }) => {
   return {
     rows: datagrid.rows.map(user => ({
       name: user.name,
-      title: user.jobTitle || '',
+      jobTitle: user.jobTitle || '',
       email: user.email,
       phone: user.phone || '',
       homeBranch: user.homeBranch && user.homeBranch.id,
