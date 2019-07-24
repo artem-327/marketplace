@@ -46,7 +46,6 @@ class Filter extends Component {
       mfg: dateDropdownOptions[0].value
     },
     searchQuery: '',
-    searchWarehouseQuery: '',
     isTyping: false
   }
 
@@ -302,11 +301,6 @@ class Filter extends Component {
     if (searchQuery.length > 1) this.props.getAutocompleteData(this.props.searchUrl(searchQuery))
   }, 250)
 
-  handleSearchWarehouse = debounce(({ searchWarehouseQuery, name }) => {
-    //! ! if (searchWarehouseQuery.length > 1) this.props.getAutocompleteData(this.props.searchUrl(searchWarehouseQuery))
-  }, 250)
-
-
   accordionTitle = (name, text) => (
     <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
       <Icon name={!this.state.inactiveAccordion[name] ? 'chevron down' : 'chevron right'} color={!this.state.inactiveAccordion[name] ? 'blue' : 'black'} />
@@ -319,7 +313,7 @@ class Filter extends Component {
     this.setState(prevState => ({ openedSaveFilter: !prevState.openedSaveFilter }))
   }
 
-  dateField = (name, { values, setFieldValue, handleChange }) => {
+  dateField = (name, { values, setFieldValue, handleChange, min }) => {
     let inputName = `${name}${this.state.dateDropdown[name]}`
 
     return (
@@ -355,7 +349,7 @@ class Filter extends Component {
               //label: 'Days1',
               //labelPosition: 'right',
               type: 'number',
-              min: '1'
+              min: min.toString()
             }}
           />
         </FormField>
@@ -414,7 +408,6 @@ class Filter extends Component {
       productConditions, productForms, packagingTypes,
       productGrade, intl, isFilterSaving,
       autocompleteData, autocompleteDataLoading,
-      autocompleteWarehouse, autocompleteWarehouseLoading
     } = this.props
 
     const { formatMessage } = intl
@@ -455,46 +448,40 @@ class Filter extends Component {
       onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null),
     }
 
-    var noWarehouseResultsMessage = null
-
-    if (this.state.searchWarehouseQuery.length <= 1) noWarehouseResultsMessage = <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
-    if (autocompleteWarehouseLoading) noWarehouseResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
-
     let dropdownWarehouseProps = {
       search: true,
       selection: true,
       multiple: false,
       fluid: true,
+      clearable: true,
       options: this.props.warehouses.map((warehouse) => {
         return {
           key: warehouse.id,
           text: warehouse.name,
-          value: JSON.stringify({ id: warehouse.id, name: warehouse.name}), // ! ! potrebuju name? Nestaci jen id?
+          value: JSON.stringify({ id: warehouse.id, name: warehouse.name}),
         }
       }),
-      loading: autocompleteWarehouseLoading,
       name: 'warehouse',
       placeholder: <FormattedMessage id='filter.searchWarehouse' defaultMessage='Search Warehouse' />,
-      noWarehouseResultsMessage,
-      onSearchChange: (_, data) => {
-        this.handleSearchWarehouse(data)
-      },
+      noWarehouseResultsMessage: <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />,
       value: values.warehouse,
       onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null),
     }
 
-
-
-
-
     if (!autocompleteDataLoading) dropdownProps.icon = null
-    if (!autocompleteWarehouseLoading) dropdownWarehouseProps.icon = null
 
     let currencySymbol = this.props.preferredCurrency ? this.props.preferredCurrency.symbol : null
 
     return (
       <Accordion>
         <Segment basic>
+          <AccordionItem>
+            {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
+            <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
+              <BottomMargedDropdown {...dropdownWarehouseProps} />
+            </AccordionContent>
+          </AccordionItem>
+
           <AccordionItem>
             {this.accordionTitle('chemicalType', <FormattedMessage id='filter.chemicalType' />)}
             <AccordionContent active={!this.state.inactiveAccordion.chemicalType}>
@@ -508,13 +495,15 @@ class Filter extends Component {
               <FormGroup widths='equal'>
                 <Input inputProps={{
                   type: 'number',
-                  placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
+                  placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }),
+                  min: 1
                 }}
                   label={<FormattedMessage id='filter.FromQuantity' defaultMessage='From' />}
                   name='quantityFrom' />
                 <Input inputProps={{
                   type: 'number',
-                  placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
+                  placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }),
+                  min: 1
                 }}
                   label={<FormattedMessage id='filter.ToQuantity' defaultMessage='To' />}
                   name='quantityTo' />
@@ -532,6 +521,7 @@ class Filter extends Component {
                     label: currencySymbol,
                     labelPosition: 'left',
                     type: 'number',
+                    min: 0.01,
                     step: 0.01,
                     placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
                   }}
@@ -544,6 +534,7 @@ class Filter extends Component {
                     label: currencySymbol,
                     labelPosition: 'left',
                     type: 'number',
+                    min: 0.01,
                     step: 0.01,
                     placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' })
                   }}
@@ -586,7 +577,7 @@ class Filter extends Component {
             {this.accordionTitle('expiration', <FormattedMessage id='filter.expiration' defaultMessage='Days Until Expiration' />)}
             <AccordionContent active={!this.state.inactiveAccordion.expiration}>
               <FormGroup widths='equal'>
-                {this.dateField('expiration', { values, setFieldValue, handleChange })}
+                {this.dateField('expiration', { values, setFieldValue, handleChange, min: 1 })}
 
               </FormGroup>
             </AccordionContent>
@@ -597,33 +588,23 @@ class Filter extends Component {
             <AccordionContent active={!this.state.inactiveAccordion.assay}>
               <FormGroup widths='equal'>
                 <Input
-                  inputProps={{ type: 'number', placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }) }}
+                  inputProps={{ type: 'number', min: 0, placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }) }}
                   label={<FormattedMessage id='filter.Minimum(%)' defaultMessage='Minimum' />} name='assayFrom' />
                 <Input
-                  inputProps={{ type: 'number', placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }) }}
+                  inputProps={{ type: 'number', min: 0, placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }) }}
                   label={<FormattedMessage id='filter.Maximum(%)' defaultMessage='Maximum' />} name='assayTo' />
               </FormGroup>
             </AccordionContent>
           </AccordionItem>
 
-
           <AccordionItem>
             {this.accordionTitle('mfg', <FormattedMessage id='filter.mfg' defaultMessage='Days Since Manufacture Date' />)}
             <AccordionContent active={!this.state.inactiveAccordion.mfg}>
               <FormGroup widths='equal'>
-                {this.dateField('mfg', { values, setFieldValue, handleChange })}
+                {this.dateField('mfg', { values, setFieldValue, handleChange, min: 0 })}
               </FormGroup>
             </AccordionContent>
           </AccordionItem>
-
-          <AccordionItem>
-            {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
-            <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
-              <BottomMargedDropdown {...dropdownWarehouseProps} />
-            </AccordionContent>
-
-          </AccordionItem>
-
         </Segment>
       </Accordion >
     )
@@ -769,8 +750,6 @@ Filter.propTypes = {
   filters: array,
   getAutocompleteData: func,
   autocompleteData: array,
-  getAutocompleteWarehouse: func,
-  autocompleteWarehouse: array,
   savedFilters: array,
   getSavedFilters: func,
   savedFiltersLoading: bool,
@@ -786,7 +765,6 @@ Filter.defaultProps = {
   additionalSidebarProps: {},
   filters: [],
   autocompleteData: [],
-  autocompleteWarehouse: [],
   savedFilters: [],
   savedFiltersLoading: false
 
