@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component } from 'react'
 import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button, TextArea } from 'formik-semantic-ui'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import * as val from 'yup'
 import { DateInput } from '~/components/custom-formik'
 import UploadLot from './upload/UploadLot'
-import { FieldArray } from "formik"
+import { FieldArray } from 'formik'
 import { debounce } from 'lodash'
 import confirm from '~/src/components/Confirmable/confirm'
 
@@ -51,18 +51,18 @@ const initValues = {
   minimumRequirement: true,
   minimum: 1,
   multipleLots: false,
-  pkgAmount: 0,
+  pkgAmount: 1,
   priceTiers: 1,
   pricingTiers: [
-    { price: null, quantityFrom: 1 }
+    { price: 0.001, quantityFrom: 1 }
   ],
-  product: "",
+  product: '',
   processingTimeDays: 1,
   splits: 1,
   touchedLot: false,
   trackSubCosts: true,
-  validityDate: "",
-  warehouse: 0
+  validityDate: '',
+  warehouse: null
 }
 
 val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
@@ -91,37 +91,37 @@ val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
 const validationScheme = val.object().shape({
   costs: val.array().of(val.object().shape({
     description: val.string(),
-    lot: val.number().moreThan(-1, 'Lot has to be selected').required("required"),
-    cost: val.number().nullable().moreThan(0, "Must be greater than 0").required("required").test("maxdec", "There can be maximally 3 decimal places.", val => {
-      return !val || val.toString().indexOf('.') === -1 || val.toString().split(".")[1].length <= 3
+    lot: val.number().moreThan(-1, 'Lot has to be selected').required('required'),
+    cost: val.number().nullable().moreThan(0, 'Must be greater than 0').required('required').test('maxdec', 'There can be maximally 3 decimal places.', val => {
+      return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
     })
   })),
-  inStock: val.bool().required("required"),
-  product: val.string().required("required"),
-  processingTimeDays: val.number().required("required"),
+  inStock: val.bool().required('required'),
+  product: val.string().required('required'),
+  processingTimeDays: val.number().required('required'),
   doesExpire: val.bool(),
-  pkgAmount: val.number().typeError('must be number').nullable().moreThan(0, 'Amount has to be greater than 0').required("required"),
+  pkgAmount: val.number().typeError('must be number').nullable().moreThan(0, 'Amount has to be greater than 0').required('required'),
   validityDate: val.string().matches(/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, { message: 'not valid date' }),
   lots: val.array().of(val.object().uniqueProperty('lotNumber', 'LOT number has to be unique').shape({
-    lotNumber: val.string().nullable().required("required"),
-    pkgAmount: val.number().nullable().moreThan(0, "Must be greater than 0").required("required"),
+    lotNumber: val.string().nullable().required('required'),
+    pkgAmount: val.number().nullable().moreThan(0, 'Must be greater than 0').required('required'),
     manufacturedDate: val.string().nullable().matches(/^([0-9]{4}\-[0-9]{2}\-[0-9]{2})?$/, { message: 'not valid date' }),
     expirationDate: val.string().nullable().matches(/^([0-9]{4}\-[0-9]{2}\-[0-9]{2})?$/, { message: 'not valid date' })
   })).nullable(),
   manufacturer: val.number().nullable().moreThan(0, 'Manufacturer value is invalid'),
   minimumRequirement: val.bool(),
-  minimum: val.number().nullable().moreThan(0, "Must be greater than 0"),
-  splits: val.number().nullable().moreThan(0, "Must be greater than 0"),
+  minimum: val.number().nullable().moreThan(0, 'Must be greater than 0'),
+  splits: val.number().nullable().moreThan(0, 'Must be greater than 0'),
   origin: val.number().nullable().moreThan(0, 'Origin value is invalid'),
   priceTiers: val.number(),
   pricingTiers: val.array().of(val.object().shape({
-    quantityFrom: val.number().typeError('must be number').nullable().moreThan(0, "Must be greater than 0").required("Minimum quantity must be set"),
-    price: val.number().typeError('must be number').nullable().moreThan(0, "Must be greater than 0").required("required").test("maxdec", "There can be maximally 3 decimal places.", val => {
-      return !val || val.toString().indexOf('.') === -1 || val.toString().split(".")[1].length <= 3
+    quantityFrom: val.number().typeError('must be number').nullable().moreThan(0, 'Must be greater than 0').required('Minimum quantity must be set'),
+    price: val.number().typeError('must be number').nullable().moreThan(0, 'Must be greater than 0').required('required').test('maxdec', 'There can be maximally 3 decimal places.', val => {
+      return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
     })
   })),
   touchedLot: val.bool(),
-  warehouse: val.number().moreThan(0, "required").required('required')
+  warehouse: val.number('required').nullable('required').moreThan(0, 'required').required('required')
 })
 
 class AddInventoryForm extends Component {
@@ -203,7 +203,7 @@ class AddInventoryForm extends Component {
   }
 
   getMimeType = (documentName) => {
-    const documentExtension = documentName.substr(documentName.lastIndexOf(".") + 1)
+    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
     switch (documentExtension) {
       case 'doc':
         return 'application/msword'
@@ -247,7 +247,7 @@ class AddInventoryForm extends Component {
     let downloadedFile = await this.props.downloadAttachment(documentId)
     const mimeType = this.getMimeType(documentName)
 
-    const element = document.createElement("a")
+    const element = document.createElement('a')
     const file = new Blob([downloadedFile.value.data], { type: mimeType })
     let fileURL = URL.createObjectURL(file)
 
@@ -386,11 +386,11 @@ class AddInventoryForm extends Component {
           </TopMargedColumn>
 
           <GridColumn computer={6}>
-            <Input name={`pricingTiers[${i}].quantityFrom`} inputProps={{ type: 'number', readOnly: i === 0, value: null }} />
+            <Input name={`pricingTiers[${i}].quantityFrom`} inputProps={{ type: 'number', min: 1, value: null }} />
           </GridColumn>
 
           <GridColumn computer={6}>
-            <Input name={`pricingTiers[${i}].price`} inputProps={{ type: 'number', step: '0.001', value: null }} />
+            <Input name={`pricingTiers[${i}].price`} inputProps={{ type: 'number', step: '0.001', min: 0.001, value: null }} />
           </GridColumn>
         </GridRow>
       )
@@ -417,10 +417,10 @@ class AddInventoryForm extends Component {
       //     <Grid.Column width={10}>
       //       <FormGroup widths='equal'>
       //         <FormField width={8}>
-      //           <Input name={`pricingTiers[${i}].quantityFrom`} label={i ? '' : "Minimum OQ"} inputProps={{ type: 'number', readOnly: i === 0, value: null }} />
+      //           <Input name={`pricingTiers[${i}].quantityFrom`} label={i ? '' : 'Minimum OQ'} inputProps={{ type: 'number', readOnly: i === 0, value: null }} />
       //         </FormField>
       //         <Form.Field width={8}>
-      //           <Input name={`pricingTiers[${i}].price`} label={i ? '' : "FOB Price"} inputProps={{ type: 'number', step: '0.001', value: null }} />
+      //           <Input name={`pricingTiers[${i}].price`} label={i ? '' : 'FOB Price'} inputProps={{ type: 'number', step: '0.001', value: null }} />
       //         </Form.Field>
       //       </FormGroup>
       //     </Grid.Column>
@@ -524,14 +524,14 @@ class AddInventoryForm extends Component {
             <Grid verticalAlign='middle'>
               <GridRow>
                 <ResponsiveColumn computer={6} mobile={16}>
-                  <Button fluid size='big' floated='left' data-test="new_inventory_cancel" onClick={() => this.goToList()}>
+                  <Button fluid size='big' floated='left' data-test='new_inventory_cancel' onClick={() => this.goToList()}>
                     <FormattedMessage id='addInventory.cancel' defaultMessage='Cancel' /></Button>
                 </ResponsiveColumn>
                 <GridColumn computer={10} mobile={16}>
                   <Button.Submit fluid
                     size='big'
                     floated='right'
-                    data-test="new_inventory_submit"
+                    data-test='new_inventory_submit'
                     onClick={(e, data = { data, validateForm }) => {
                       validateForm()
                         .then(r => {
@@ -672,6 +672,7 @@ class AddInventoryForm extends Component {
   }
 
   render() {
+
     const {
       listDocumentTypes,
       listConditions,
@@ -701,7 +702,7 @@ class AddInventoryForm extends Component {
     } = this.state
 
     return (
-      <div id="page" className='flex stretched'>
+      <div id='page' className='flex stretched'>
         <Dimmer active={loading} inverted>
           <Loader inverted>
             <FormattedMessage id='global.loading' defaultMessage='Loading' />
@@ -761,13 +762,13 @@ class AddInventoryForm extends Component {
                 }
               )
             } else {
-              actions.setSubmitting(false)
               addProductOffer(values, this.props.edit)
                 .then((productOffer) => {
                   //Router.push('/inventory/my') xxx
+                  actions.resetForm()
                 })
                 .finally(() => {
-                  actions.resetForm()
+                  actions.setSubmitting(false)
                 })
             }
           }}
@@ -798,7 +799,7 @@ class AddInventoryForm extends Component {
                     <Button primary icon='checkmark' labelPosition='right' content='Go to My Inventory' onClick={this.goToList} />
                   </Modal.Actions>
                 </Modal>
-                <div className="flex stretched">
+                <div className='flex stretched'>
                   <Tab className='inventory tab-menu flex stretched' menu={{ secondary: true, pointing: true }} renderActiveOnly={false} activeIndex={this.state.activeTab} panes={[
                     {
                       menuItem: (
@@ -832,14 +833,14 @@ class AddInventoryForm extends Component {
                               <FormGroup>
                                 <FormField width={10}>
                                   <Dropdown
-                                    label="Product Search"
-                                    name="product"
+                                    label='Product Search'
+                                    name='product'
                                     options={this.state.searchedProducts}
                                     inputProps={{
                                       style: { width: '300px' },
                                       size: 'large',
                                       minCharacters: 3,
-                                      icon: "search",
+                                      icon: 'search',
                                       search: options => options,
                                       selection: true,
                                       clearable: true,
@@ -852,8 +853,8 @@ class AddInventoryForm extends Component {
 
                               <Header as='h3'>Is this product in stock?</Header>
                               <FormGroup inline>
-                                <Radio fieldProps={{ width: 5 }} label="No" value={false} name="inStock" />
-                                <Radio fieldProps={{ width: 5 }} label="Yes" value={true} name="inStock" />
+                                <Radio fieldProps={{ width: 5 }} label='No' value={false} name='inStock' />
+                                <Radio fieldProps={{ width: 5 }} label='Yes' value={true} name='inStock' />
                               </FormGroup>
                               <Header as='h3'>How many business days to pick up? <Popup content={`Processing Time is the number of business days from when an order is confirmed that it will take you to have your product offer ready for pick up at your designated warehouse. NOTE: Saturdays and Sundays do not count for Processing Time.`}
                                 trigger={<Icon name='info circle' color='blue' />}
@@ -861,7 +862,7 @@ class AddInventoryForm extends Component {
                               </Header>
                               <FormGroup>
                                 <FormField width={10}>
-                                  <Dropdown label="Processing Time" name="processingTimeDays" options={this.getProcessingTimes(14)}
+                                  <Dropdown label='Processing Time' name='processingTimeDays' options={this.getProcessingTimes(14)}
                                   />
                                 </FormField>
                               </FormGroup>
@@ -871,12 +872,12 @@ class AddInventoryForm extends Component {
                                 wide />
                               </Header>
                               <FormGroup inline>
-                                <Radio fieldProps={{ width: 5 }} label="No" value={false} name="doesExpire" />
-                                <Radio fieldProps={{ width: 5 }} label="Yes" value={true} name="doesExpire" />
+                                <Radio fieldProps={{ width: 5 }} label='No' value={false} name='doesExpire' />
+                                <Radio fieldProps={{ width: 5 }} label='Yes' value={true} name='doesExpire' />
                               </FormGroup>
                               <FormGroup>
                                 <FormField width={10}>
-                                  <DateInput inputProps={{ disabled: !values.doesExpire }} label="Expiration Date" name="validityDate" />
+                                  <DateInput inputProps={{ disabled: !values.doesExpire }} label='Expiration Date' name='validityDate' />
                                 </FormField>
                               </FormGroup>
 
@@ -886,7 +887,7 @@ class AddInventoryForm extends Component {
                               </Header>
                               <FormGroup>
                                 <FormField width={10}>
-                                  <Dropdown label="Warehouse" name="warehouse" options={warehousesList} inputProps={{
+                                  <Dropdown label='Warehouse' name='warehouse' options={warehousesList} inputProps={{
                                     selection: true,
                                     value: 0
                                   }} />
@@ -899,7 +900,7 @@ class AddInventoryForm extends Component {
                               </Header>
                               <FormGroup>
                                 <FormField width={10}>
-                                  <Input label="Total Packages" inputProps={{ type: 'number' }} name="pkgAmount" />
+                                  <Input label='Total Packages' inputProps={{ type: 'number', min: 1 }} name='pkgAmount' />
                                 </FormField>
                               </FormGroup>
 
@@ -914,7 +915,7 @@ class AddInventoryForm extends Component {
 
                                     <GridRow>
                                       <GridColumn>
-                                        <Header as="h3">Is there any order minimum requirement? <Popup content={<>Minimum OQ is the minimum amount of packages you want to sell for any single order. If you want to sell no less than 10 drums for an order then enter 10. If you have no minimum order requirement then enter 1.<br />Splits is the multiples you are willing to accept for any single order. If you only want to sell multiples of 4 drums then enter 4. If you have no split requirements then enter 1.</>}
+                                        <Header as='h3'>Is there any order minimum requirement? <Popup content={<>Minimum OQ is the minimum amount of packages you want to sell for any single order. If you want to sell no less than 10 drums for an order then enter 10. If you have no minimum order requirement then enter 1.<br />Splits is the multiples you are willing to accept for any single order. If you only want to sell multiples of 4 drums then enter 4. If you have no split requirements then enter 1.</>}
                                           trigger={<Icon name='info circle' color='blue' />}
                                           wide />
                                         </Header>
@@ -922,7 +923,7 @@ class AddInventoryForm extends Component {
                                     </GridRow>
                                     <GridRow>
                                       <GridColumn computer={8} tablet={16}>
-                                        <Radio label="No" value={false} name="minimumRequirement" inputProps={{
+                                        <Radio label='No' value={false} name='minimumRequirement' inputProps={{
                                           onClick: () => {
                                             setFieldValue('minimum', 1)
                                             setFieldValue('pricingTiers[0].quantityFrom', 1)
@@ -930,14 +931,14 @@ class AddInventoryForm extends Component {
                                         }} />
                                       </GridColumn>
                                       <GridColumn computer={8} tablet={16}>
-                                        <Radio label="Yes" value={true} name="minimumRequirement" />
+                                        <Radio label='Yes' value={true} name='minimumRequirement' />
                                       </GridColumn>
                                     </GridRow>
 
                                     <GridRow>
                                       <GridColumn computer={8} tablet={16}>
-                                        <Input label="Minimum OQ" name="minimum" inputProps={{
-                                          type: 'number', onChange: (e, data) => {
+                                        <Input label='Minimum OQ' name='minimum' inputProps={{
+                                          type: 'number', min: 1, onChange: (e, data) => {
                                             if (data.value > 1) {
                                               setFieldValue('minimumRequirement', true)
                                               setFieldValue('pricingTiers[0].quantityFrom', data.value)
@@ -947,12 +948,12 @@ class AddInventoryForm extends Component {
                                       </GridColumn>
 
                                       <GridColumn computer={8} tablet={16}>
-                                        <Input label="Splits" name="splits" inputProps={{ type: 'number' }} />
+                                        <Input label='Splits' name='splits' inputProps={{ type: 'number', min: 1 }} />
                                       </GridColumn>
                                     </GridRow>
                                     <GridRow>
                                       <GridColumn>
-                                        <Header as='h3'>How many price tiers would you like to offer? <Popup content={<>Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.<br />For example if you list 40 drums you could set 2 tiers and offer orders of <span style={{ whiteSpace: 'nowrap' }}>1-20 drums</span> at $1.00/lb and orders of <span style={{ whiteSpace: 'nowrap' }}>21-40</span> drums at $.90/lb.<br />If you only want to set only one price then enter "1".</>}
+                                        <Header as='h3'>How many price tiers would you like to offer? <Popup content={<>Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.<br />For example if you list 40 drums you could set 2 tiers and offer orders of <span style={{ whiteSpace: 'nowrap' }}>1-20 drums</span> at $1.00/lb and orders of <span style={{ whiteSpace: 'nowrap' }}>21-40</span> drums at $.90/lb.<br />If you only want to set only one price then enter '1'.</>}
                                           trigger={<Icon name='info circle' color='blue' />}
                                           wide />
                                         </Header>
@@ -964,16 +965,16 @@ class AddInventoryForm extends Component {
                                         <Dropdown
 
                                           // fieldProps={{ width: 16 }}
-                                          label="Price Tiers"
-                                          name="priceTiers"
+                                          label='Price Tiers'
+                                          name='priceTiers'
                                           options={this.getPriceTiers(10)}
                                           inputProps={{
                                             fluid: true,
                                             onChange: (e, { value }) => setFieldValue(
-                                              "pricingTiers",
+                                              'pricingTiers',
                                               [
                                                 ...values.pricingTiers.slice(0, value),
-                                                ...[...new Array((value - values.priceTiers) > 0 ? value - values.priceTiers : 0)].map(t => ({ price: '0', quantityFrom: '0' }))
+                                                ...[...new Array((value - values.priceTiers) > 0 ? value - values.priceTiers : 0)].map(t => ({ price: 0.001, quantityFrom: 1 }))
                                               ]
                                             )
                                           }}
@@ -1093,13 +1094,13 @@ class AddInventoryForm extends Component {
                                 <GridColumn width={5} floated='left'>
                                   <FormField width={16}>
                                     <Dropdown
-                                      label="Origin"
-                                      name="origin"
+                                      label='Origin'
+                                      name='origin'
                                       options={searchedOrigins}
                                       inputProps={{
                                         size: 'large',
                                         minCharacters: 0,
-                                        icon: "search",
+                                        icon: 'search',
                                         search: true,
                                         selection: true,
                                         clearable: true,
@@ -1111,13 +1112,13 @@ class AddInventoryForm extends Component {
                                   </FormField>
                                   <FormField width={16}>
                                     <Dropdown
-                                      label="Manufacturer"
-                                      name="manufacturer"
+                                      label='Manufacturer'
+                                      name='manufacturer'
                                       options={searchedManufacturers}
                                       inputProps={{
                                         size: 'large',
                                         minCharacters: 0,
-                                        icon: "search",
+                                        icon: 'search',
                                         search: true,
                                         selection: true,
                                         clearable: true,
@@ -1128,27 +1129,27 @@ class AddInventoryForm extends Component {
                                     />
                                   </FormField>
                                   <FormField width={16}>
-                                    <Input label="Trade Name" name="tradeName" inputProps={{ type: 'text' }} />
+                                    <Input label='Trade Name' name='tradeName' inputProps={{ type: 'text' }} />
                                   </FormField>
                                 </GridColumn>
                                 <GridColumn width={5}>
                                   <FormField width={16}>
-                                    <Dropdown label="Form" name="productForm" options={listForms} />
+                                    <Dropdown label='Form' name='productForm' options={listForms} />
                                   </FormField>
                                   <FormGroup>
                                     <FormField width={8}>
-                                      <Dropdown label="Condition" name="productCondition" options={listConditions} />
+                                      <Dropdown label='Condition' name='productCondition' options={listConditions} />
                                     </FormField>
                                     <FormField width={8}>
-                                      <Dropdown label="Grade" name="productGrade" options={listGrades} />
+                                      <Dropdown label='Grade' name='productGrade' options={listGrades} />
                                     </FormField>
                                   </FormGroup>
                                   <FormGroup>
                                     <FormField width={8}>
-                                      <Input name={`assayMin`} label="Assay Min %" inputProps={{ type: 'number', step: '0.001', value: null }} />
+                                      <Input name={`assayMin`} label='Assay Min %' inputProps={{ type: 'number', step: '0.001', value: null }} />
                                     </FormField>
                                     <FormField width={8}>
-                                      <Input name={`assayMax`} label="Assay Max %" inputProps={{ type: 'number', step: '0.001', value: null }} />
+                                      <Input name={`assayMax`} label='Assay Max %' inputProps={{ type: 'number', step: '0.001', value: null }} />
                                     </FormField>
                                   </FormGroup>
                                 </GridColumn>
@@ -1165,7 +1166,7 @@ class AddInventoryForm extends Component {
                               <Divider />
 
                               <FieldArray
-                                name="lots"
+                                name='lots'
                                 render={arrayHelpers => (
                                   <>
                                     <Message attached='top' className='header-table-fields'>
@@ -1250,16 +1251,16 @@ class AddInventoryForm extends Component {
                                     <label>Track Sub-Costs</label>
                                     <FormGroup>
                                       <FormField width={5}>
-                                        <Radio label="Yes" value={true} name="trackSubCosts" />
+                                        <Radio label='Yes' value={true} name='trackSubCosts' />
                                       </FormField>
                                       <FormField width={5}>
-                                        <Radio label="No" value={false} name="trackSubCosts" />
+                                        <Radio label='No' value={false} name='trackSubCosts' />
                                       </FormField>
                                     </FormGroup>
                                   </FormField>
                                 </GridColumn>
                                 <GridColumn width={12}>
-                                  <FieldArray name="costs"
+                                  <FieldArray name='costs'
                                     render={arrayHelpers => (
                                       <>
                                         <Message attached='top' className='header-table-fields'>

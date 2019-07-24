@@ -63,6 +63,13 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.INVENTORY_EDIT_PRODUCT_OFFER_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
     case AT.INVENTORY_GET_PRODUCT_CONDITIONS_FULFILLED: {
       return {
         ...state,
@@ -144,6 +151,9 @@ export default function reducer(state = initialState, action) {
         }]
       }
 
+
+      console.log({ list: state.warehousesList, warehouseId: data.warehouse.id })
+
       return {
         ...state,
         ...action.payload.data,
@@ -154,6 +164,8 @@ export default function reducer(state = initialState, action) {
         }).concat(state.fileIds),
         poCreated: false,
         ...searchedLists,
+
+
 
         initialState: {
           additional: filteredAdditional,
@@ -201,7 +213,7 @@ export default function reducer(state = initialState, action) {
           splits: data.splits,
           tradeName: data.tradeName,
           validityDate: data.lots[0].expirationDate ? data.lots[0].expirationDate.substring(0, 10) : '', // TODO: check all lots and get one date (nearest or farthest date?)
-          warehouse: data.warehouse.id
+          warehouse: state.warehousesList.find((wh) => wh.id === data.warehouse.id) ? data.warehouse.id : null // data.warehouse.id
         }
       }
     }
@@ -258,7 +270,7 @@ export default function reducer(state = initialState, action) {
           ...action.payload.data,
           pricingTiers: [{
             quantityFrom: 1,
-            price: ''
+            price: 0.001
           }]
         }
       }
