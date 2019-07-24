@@ -27,7 +27,8 @@ export const paths = {
     expirationDate: 'ProductOffer.expirationDate',
     assayFrom: 'ProductOffer.assayMin',
     assayTo: 'ProductOffer.assayMax',
-    manufacturedDate: 'ProductOffer.manufacturedDate'
+    manufacturedDate: 'ProductOffer.manufacturedDate',
+    warehouseId: 'ProductOffer.warehouse.id'
   }
 }
 
@@ -57,6 +58,46 @@ const checkboxesToFormik = (values, checkboxes) => {
 }
 
 export const datagridValues = {
+  warehouse: {
+    path: paths.productOffers.warehouseId,
+    description: 'Warehouse',
+    operator: operators.EQUALS,
+
+    toFilter: function (values) {
+      let data
+      if (Array.isArray(values)) {
+        data = values.map((val) => {
+          let parsed = JSON.parse(val)
+          return {
+            value: parsed.id,
+            description: parsed.name
+          }
+        })
+      }
+      else {
+        let parsed = JSON.parse(values)
+        data = [{value: parsed.id, description: parsed.name}]
+      }
+
+      return {
+        operator: this.operator,
+        path: this.path,
+        values: data,
+        description: this.description
+      }
+    },
+
+    valuesDescription: function (values) {
+      return values.map((val) => val.description)
+    },
+
+    tagDescription: (values) => `Warehouse: ${values[0].description}`,
+
+    toFormik: function ({ values }) {
+      return JSON.stringify({ id: parseInt(values[0].value), name: values[0].description})
+    }
+  },
+
   search: {
     path: paths.productOffers.productId,
     description: 'Chemical Name',
