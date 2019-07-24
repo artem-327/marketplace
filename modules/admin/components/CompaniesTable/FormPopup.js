@@ -340,7 +340,6 @@ class AddNewPopupCasProducts extends React.Component {
                         </>
                       )}
 
-
                       {!popupValues && <>
                         {/* {AddressSuggestPrimaryBranchInput}
                         {AddressSuggestMailingBranchInput} */}
@@ -418,33 +417,33 @@ const mapDispatchToProps = {
   getAddressSearchMailingBranch
 }
 
-const prepareAddressSuggestPrimaryBranch = (AddressSuggestOptions) => (
-  <datalist id='addressesPrimaryBranch'>
-    {AddressSuggestOptions.map((a, id) => <option key={id} value={a} />)}
-  </datalist>
-)
+// const prepareAddressSuggestPrimaryBranch = (AddressSuggestOptions) => (
+//   <datalist id='addressesPrimaryBranch'>
+//     {AddressSuggestOptions.map((a, id) => <option key={id} value={a} />)}
+//   </datalist>
+// )
 
-const prepareAddressSuggestMailingBranch = (AddressSuggestOptions) => (
-  <datalist id='addressesMailingBranch'>
-    {AddressSuggestOptions.map((a, id) => <option key={id} value={a} />)}
-  </datalist>
-)
+// const prepareAddressSuggestMailingBranch = (AddressSuggestOptions) => (
+//   <datalist id='addressesMailingBranch'>
+//     {AddressSuggestOptions.map((a, id) => <option key={id} value={a} />)}
+//   </datalist>
+// )
 
 const mapStateToProps = ({ admin, zip }) => {
-  const AddressSuggestOptionsPrimaryBranch = admin.addressSearchPrimaryBranch.map((a) => (
-    a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
-  ))
-  const AddressSuggestOptionsMailingBranch = admin.addressSearchMailingBranch.map((a) => (
-    a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
-  ))
+  // const AddressSuggestOptionsPrimaryBranch = admin.addressSearchPrimaryBranch.map((a) => (
+  //   a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
+  // ))
+  // const AddressSuggestOptionsMailingBranch = admin.addressSearchMailingBranch.map((a) => (
+  //   a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
+  // ))
   return {
     ...admin,
-    AddressSuggestPrimaryBranchInput: prepareAddressSuggestPrimaryBranch(AddressSuggestOptionsPrimaryBranch),
-    AddressSuggestPrimaryBranchOptions: AddressSuggestOptionsPrimaryBranch,
-    AddressSuggestPrimaryBranchData: admin.addressSearchPrimaryBranch,
-    AddressSuggestMailingBranchInput: prepareAddressSuggestMailingBranch(AddressSuggestOptionsMailingBranch),
-    AddressSuggestMailingBranchOptions: AddressSuggestOptionsMailingBranch,
-    AddressSuggestMailingBranchData: admin.addressSearchMailingBranch,
+    // AddressSuggestPrimaryBranchInput: prepareAddressSuggestPrimaryBranch(AddressSuggestOptionsPrimaryBranch),
+    // AddressSuggestPrimaryBranchOptions: AddressSuggestOptionsPrimaryBranch,
+    // AddressSuggestPrimaryBranchData: admin.addressSearchPrimaryBranch,
+    // AddressSuggestMailingBranchInput: prepareAddressSuggestMailingBranch(AddressSuggestOptionsMailingBranch),
+    // AddressSuggestMailingBranchOptions: AddressSuggestOptionsMailingBranch,
+    // AddressSuggestMailingBranchData: admin.addressSearchMailingBranch,
     zip,
     config: admin.config[admin.currentTab]
   }

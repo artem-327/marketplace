@@ -37,7 +37,7 @@ class EditUnitOfPackagingPopup extends React.Component {
 
         return (
             <Modal open centered={false}>
-                <Modal.Header>Edit {config.addEditText}</Modal.Header>
+                <Modal.Header><FormattedMessage id='global.edit' defaultMessage='Edit' /> {config.addEditText}</Modal.Header>
                 <Modal.Content>
                     <Form
                         initialValues={initialFormValues}
@@ -65,8 +65,8 @@ class EditUnitOfPackagingPopup extends React.Component {
                             <Dropdown label={config.edit[1].title} options={measureOptions} name="val1" />
                         </FormGroup>
                         <div style={{ textAlign: 'right' }}>
-                            <Button.Reset>Cancel</Button.Reset>
-                            <Button.Submit>Save</Button.Submit>
+                            <Button.Reset><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
+                            <Button.Submit><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
                         </div>
                     </Form>
                 </Modal.Content>

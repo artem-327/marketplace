@@ -1,9 +1,11 @@
+import { FormattedMessage } from 'react-intl'
+
 export const config = {
   'CAS Products': {
-    addEditText: 'CAS Product',
+    addEditText: <FormattedMessage id='admin.casProduct' defaultMessage='CAS Product' />,
     formattedMessageName: 'casProduct',
-    addEditText2: 'CAS Product Alternative Names',
-    searchText: 'Search cas product by name or number ...',
+    addEditText2: <FormattedMessage id='admin.casProductAltNames' />,
+    searchText: 'admin.searchCasProduct',
     display: {
       columns: [
         { name: 'casIndexName', title: 'Index Name', width: 375, sortPath: 'CasProduct.casIndexName' },
@@ -17,9 +19,9 @@ export const config = {
   },
 
   'Companies': {
-    addEditText: 'Company',
+    addEditText: <FormattedMessage id='admin.company' defaultMessage='COMPENY' />,
     formattedMessageName: 'company',
-    searchText: 'Search company by name',
+    searchText: 'admin.searchCompany',
     display: {
       columns: [
         { name: 'displayName', title: 'Company Name', sortPath: 'Company.name' },
@@ -32,9 +34,9 @@ export const config = {
   },
 
   'Units of Measure': {
-    addEditText: 'Unit of Measure',
+    addEditText: <FormattedMessage id='admin.unitOfMeasure' />,
     formattedMessageName: 'unitOfMeasurement',
-    searchText: 'Search unit of measure by name or measure type',
+    searchText: 'admin.searchUnitOfMeasure',
     display: {
       columns: [
         { name: 'name', title: 'Name' },
@@ -70,9 +72,9 @@ export const config = {
   },
 
   'Units of Packaging': {
-    addEditText: 'Unit of Packaging',
+    addEditText: <FormattedMessage id='admin.unitOfPackaging' />,
     formattedMessageName: 'unitOfPackaging',
-    searchText: 'Search unit of packaging by name or measure type',
+    searchText: 'admin.searchUnitOfPackaging',
     display: {
       columns: [
         { name: 'name', title: 'Name', sortPath: 'PackagingType.name' },
@@ -122,9 +124,9 @@ export const config = {
 
   'Manufacturers': {
     tableName: 'admin_manufacturers',
-    addEditText: 'Manufacturer',
+    addEditText: <FormattedMessage id='admin.manufacturer' />, 
     formattedMessageName: 'manufacturer',
-    searchText: 'Search manufacturer by name',
+    searchText: 'admin.searchManufacturer',
     display: {
       columns: [
         { name: 'name', title: 'Name', sortPath: 'Manufacturer.name' },
@@ -171,9 +173,9 @@ export const config = {
 
   'Grades': {
     tableName: 'admin_grades',
-    addEditText: 'Grade',
+    addEditText: <FormattedMessage id='admin.grade' defaultMessage='Grade' />,
     formattedMessageName: 'grade',
-    searchText: 'Search grade by name',
+    searchText: 'admin.searchGrade',
     display: {
       columns: [
         { name: 'name', title: 'Name', sortPath: 'ProductGrade.name' },
@@ -206,9 +208,9 @@ export const config = {
 
   'Forms': {
     tableName: 'admin_forms',
-    addEditText: 'Form',
+    addEditText: <FormattedMessage id='admin.form' defaultMessage='Form' />,
     formattedMessageName: 'form',
-    searchText: 'Search form by name',
+    searchText: 'admin.searchForm',
     display: {
       columns: [
         { name: 'name', title: 'Name', sortPath: 'ProductForm.name' },
@@ -241,9 +243,9 @@ export const config = {
 
   'Conditions': {
     tableName: 'admin_conditions',
-    addEditText: 'Condition',
+    addEditText: <FormattedMessage id='admin.condition' defaultMessage='Condition' />,
     formattedMessageName: 'condition',
-    searchText: 'Search condition by name',
+    searchText: 'admin.searchCondition',
     display: {
       columns: [
         { name: 'name', title: 'Name', sortPath: 'ProductCondition.name' },
@@ -276,9 +278,9 @@ export const config = {
 
   'Document Types': {
     tableName: 'admin_document_types',
-    addEditText: 'Document Type',
+    addEditText: <FormattedMessage id='admin.documentType' defaultMessage='Document Type' />,
     formattedMessageName: 'documentType',
-    searchText: 'Search document type by name',
+    searchText: 'admin.searchDocumentType',
     display: {
       columns: [
         { name: 'name', title: 'Name', sortPath: 'DocumentType.name' },
@@ -311,9 +313,9 @@ export const config = {
 
   'Market Segments': {
     tableName: 'admin_market_segments',
-    addEditText: 'Market Segment',
+    addEditText: <FormattedMessage id='admin.marketSegment' defaultMessage='Market Segment' />,
     formattedMessageName: 'marketSegment',
-    searchText: 'Search market segment by name',
+    searchText: 'admin.searchMarketSegment',
     display: {
       columns: [
         { name: 'name', title: 'Name', sortPath: 'MarketSegment.name' }

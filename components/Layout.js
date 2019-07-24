@@ -14,9 +14,10 @@ import { withAuth } from '~/hocs'
 import { takeOverCompanyFinish } from '~/modules/admin/actions'
 import { openProfilePopup } from '~/modules/profile/actions'
 import Profile from '~/modules/profile/components/Profile'
-import React from "react"
+import React from 'react'
 import Router from 'next/router'
 import { getSafe } from '~/utils/functions'
+import { injectIntl } from 'react-intl'
 
 const TopMenu = styled(Menu)`
   background-color: #33373e !important;
@@ -66,51 +67,51 @@ const MenuLink = withRouter(({ router: { pathname }, to, children, }) => (
 ))
 
 const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth, takeOverCompanyFinish, profile, openProfilePopup, cartItems, takeover }) => (
-    <MainContainer fluid>
-      <PopUp />
-      <Head>
-        <title>Echo exchange / {title}</title>
-      </Head>
-      <TopMenu fixed='top' inverted size='large' borderless>
+  <MainContainer fluid>
+    <PopUp />
+    <Head>
+      <title>{formatMessage({ id: 'global.echoTitle', defaultMessage: 'Echo echange' })} / {title}</title>
+    </Head>
+    <TopMenu fixed='top' inverted size='large' borderless>
 
-        <TopMenuContainer fluid>
-          <LogoImage src={Logo} />
+      <TopMenuContainer fluid>
+        <LogoImage src={Logo} />
 
-          <NavigationMenu takeover={takeover} />
+        <NavigationMenu takeover={takeover} />
 
-          <Menu.Menu position='right' className='black'>
-            {auth && auth.identity && !auth.identity.isAdmin &&
-              <Menu.Item onClick={() => Router.push('/cart')}>
-                <MiniCart />
-              </Menu.Item>
-            }
-            <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
-              <Dropdown.Menu data-test="navigation_menu_user">
-                <Dropdown.Item as={Menu.Item} onClick={() => openProfilePopup()}>My Profile</Dropdown.Item>
-                {getSafe(() => auth.identity.isAdmin, false) && takeover &&
-                  <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()}>Return to Admin</Dropdown.Item>
-                }
-                <Dropdown.Item as={MenuLink} to='/auth/logout'>Logout</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </Menu.Menu>
-        </TopMenuContainer>
-      </TopMenu>
+        <Menu.Menu position='right' className='black'>
+          {auth && auth.identity && !auth.identity.isAdmin &&
+            <Menu.Item onClick={() => Router.push('/cart')}>
+              <MiniCart />
+            </Menu.Item>
+          }
+          <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
+            <Dropdown.Menu data-test="navigation_menu_user">
+              <Dropdown.Item as={Menu.Item} onClick={() => openProfilePopup()}>{formatMessage({ id: 'global.myProfile', defaultMessage: 'My Profile' })}</Dropdown.Item>
+              {getSafe(() => auth.identity.isAdmin, false) && takeover &&
+                <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()}>{formatMessage({ id: 'global.returnToAdmin', defaultMessage: 'Return To Admin' })}</Dropdown.Item>
+              }
+              <Dropdown.Item as={MenuLink} to='/auth/logout'>{formatMessage({ id: 'global.logout', defaultMessage: 'Logout' })}</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        </Menu.Menu>
+      </TopMenuContainer>
+    </TopMenu>
 
-      {profile && profile.profilePopup && <Profile />}
+    {profile && profile.profilePopup && <Profile />}
 
-      <FlexContainer>
-        <TopMenuContainer fluid>
-          <Messages />
-        </TopMenuContainer>
-        <ContentContainer fluid className='page-wrapper flex stretched'>
-          {children}
-        </ContentContainer>
-      </FlexContainer>
+    <FlexContainer>
+      <TopMenuContainer fluid>
+        <Messages />
+      </TopMenuContainer>
+      <ContentContainer fluid className='page-wrapper flex stretched'>
+        {children}
+      </ContentContainer>
+    </FlexContainer>
 
-    </MainContainer>
+  </MainContainer>
 
-  )
+)
 
 
 const mapDispatchToProps = {
@@ -122,8 +123,8 @@ const mapStateToProps = state => {
   return {
     profile: state.profile,
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0),
-    takeover:  getSafe(() => !!state.auth.identity.company.id, false)
+    takeover: getSafe(() => !!state.auth.identity.company.id, false)
   }
 }
 
-export default withAuth(withRouter(connect(mapStateToProps, mapDispatchToProps)(Layout)))
+export default withAuth(withRouter(injectIntl(connect(mapStateToProps, mapDispatchToProps)(Layout))))
