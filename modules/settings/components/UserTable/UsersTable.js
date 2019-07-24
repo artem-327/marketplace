@@ -159,6 +159,7 @@ const mapStateToProps = (state, { datagrid }) => {
       email: user.email,
       phone: user.phone || '',
       homeBranch: user.homeBranch && user.homeBranch.id,
+      additionalBranches: user.additionalBranches && user.additionalBranches.map(b => b.id),
       enabled: user.enabled,
       preferredCurrency: (user.preferredCurrency || {}).id || 0,
       homeBranchName: user.homeBranch && user.homeBranch.name,

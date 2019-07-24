@@ -52,8 +52,8 @@ class UsersPopup extends React.Component {
       homeBranch: values.homeBranch,
       jobTitle: values.title,
       phone: values.phone,
-      preferredCurrency: values.preferredCurrency
-
+      preferredCurrency: values.preferredCurrency,
+      additionalBranches: values.additionalBranches
     }
     if (this.props.popupValues) {
       await this.props.handlerSubmitUserEditPopup(requestData, this.props.popupValues.id)
