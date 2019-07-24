@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="920px" height="563px" viewBox="0 0 920 563" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 53.2 (72643) - https://sketchapp.com -->
+    <title>Group 31</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Error-Pages" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" opacity="0.200497582">
+        <g id="System-Notification-E-mail-Template-" transform="translate(-259.000000, -116.000000)" stroke="#5C5F65" stroke-width="3">
+            <g id="Group-31" transform="translate(721.448889, 436.388229) rotate(-345.000000) translate(-721.448889, -436.388229) translate(265.948889, 149.388229)">
+                <g id="Group" transform="translate(0.189790, 67.072661)">
+                    <path d="M33.5520285,27.5 L111.375378,165.600252" id="Line-15" stroke-linecap="round"></path>
+                    <ellipse id="Oval-12-Copy" fill="#75BCF4" cx="50.3280427" cy="51.5625" rx="50.3280427" ry="51.5625"></ellipse>
+                </g>
+                <path d="M717.45465,229.4375 L819.001514,229.4375" id="Line-15" stroke-linecap="round"></path>
+                <polygon id="Polygon" fill="#FFFFFF" transform="translate(212.360388, 402.185496) rotate(-270.000000) translate(-212.360388, -402.185496) " points="212.360388 199.261866 383.702265 300.723681 383.702265 503.647311 212.360388 605.109126 41.0185111 503.647311 41.0185111 300.723681"></polygon>
+                <polygon id="Polygon-Copy" fill="#FFFFFF" transform="translate(516.142479, 229.765777) rotate(-270.000000) translate(-516.142479, -229.765777) " points="516.142479 26.8421471 687.484356 128.303962 687.484356 331.227592 516.142479 432.689407 344.800602 331.227592 344.800602 128.303962"></polygon>
+                <ellipse id="Oval-12" fill="#FF5AAC" cx="601.824839" cy="51.766945" rx="50.3280427" ry="51.5625"></ellipse>
+                <ellipse id="Oval-12" fill="#DC6CFF" cx="859.671957" cy="229.4375" rx="50.3280427" ry="51.5625"></ellipse>
+            </g>
+        </g>
+    </g>
+</svg>
