@@ -14,6 +14,7 @@ export const initialState = {
   cartIsFetching: true,
   orderDetailIsFetching: true,
   offerDetailIsFetching: true,
+  isPurchasing: false,
   branchesAreFetching: false,
   selectedAddressId: null,
   selectedCardId: null,
@@ -308,11 +309,26 @@ export default function reducer(state = initialState, action) {
 
     /* ADD_CART_ITEM */
 
+    case AT.ADD_CART_ITEM_PENDING: {
+      return {
+        ...state,
+        isPurchasing: true
+      }
+    }
+
 
     case AT.ADD_CART_ITEM_FULFILLED: {
       return {
         ...state,
+        isPurchasing: false,
         sidebar: { ...state.cart.sidebar, isOpen: false }
+      }
+    }
+
+    case AT.ADD_CART_ITEM_REJECTED: {
+      return {
+        ...state,
+        isPurchasing: false
       }
     }
 

@@ -93,11 +93,11 @@ class UsersTable extends Component {
           loading={datagrid.loading || loading}
           style={{ marginTop: "5px" }}
           rowActions={[
-            { text: "Edit", callback: row => openPopup(row) },
-            { text: "Edit Roles", callback: row => openRolesPopup(row) },
+            { text: formatMessage({ id: 'global.edit', defaultMessage: "Edit" }), callback: row => openPopup(row) },
+            { text: formatMessage({ id: 'settings.editRoles', defaultMessage: "Edit Roles" }), callback: row => openRolesPopup(row) },
             {
-              text: "Delete", callback: row => confirm(
-                formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete user' }),
+              text: formatMessage({ id: 'global.delete', defaultMessage: "Delete" }), callback: row => confirm(
+                formatMessage({ id: 'confirm.deleteUser', defaultMessage: 'Delete User' }),
                 formatMessage({ id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` }, { item: row.name })
               ).then(() => deleteUser(row.id, row.name))
             },

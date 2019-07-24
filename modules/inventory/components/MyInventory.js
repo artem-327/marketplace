@@ -205,10 +205,10 @@ class MyInventory extends Component {
             }}
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
             rowActions={[
-              { text: 'Edit listing', callback: (row) => Router.push({ pathname: '/inventory/edit', query: { id: row.id } }) },
-              { text: 'Custom broadcast', callback: (row) => { openBroadcast(row) } },
+              { text: formatMessage({ id: 'inventory.edit', defaultMessage: 'Edit Listing' }), callback: (row) => Router.push({ pathname: '/inventory/edit', query: { id: row.id } }) },
+              { text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => { openBroadcast(row) } },
               {
-                text: 'Delete listing', callback: (row) => {
+                text: formatMessage({ id: 'inventory.delete', defaultMessage: 'Delete Listing' }), callback: (row) => {
                   confirm(
                     formatMessage({ id: 'confirm.deleteOfferHeader', defaultMessage: 'Delete Product Offer' }),
                     formatMessage({ id: 'confirm.deleteItem', defaultMessage: `Do you really want to remove ${row.chemicalName}?` },

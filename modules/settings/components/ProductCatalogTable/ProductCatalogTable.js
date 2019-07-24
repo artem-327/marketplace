@@ -101,10 +101,10 @@ class ProductCatalogTable extends Component {
           columns={columns}
           style={{ marginTop: '5px' }}
           rowActions={[
-            { text: 'Edit', callback: row => openPopup(row) },
-            { text: 'Edit Alternative Names', callback: (row) => openPopup2(row) },
+            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row) },
+            { text: formatMessage({ id: 'settings.editAlternativeNames', defaultMessage: 'Edit Alternative Names' }), callback: (row) => openPopup2(row) },
             {
-              text: 'Delete',
+              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: row =>
                 confirm(
                   formatMessage({ id: 'confirm.deleteProductCatalog', defaultMessage: 'Delete Product Catalog!' }),

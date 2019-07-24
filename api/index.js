@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Cookie from 'js-cookie'
+import Router from 'next/router'
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL // 'https://test.echoexchange.net/'
 axios.defaults.validateStatus = (status) => {
@@ -23,6 +24,12 @@ axios.interceptors.response.use(response => response, function (error) {
     // do nothing
   } else {
     // Do something with response error
+    
+     
+    if (error.response && error.response.status === 401) {
+      Router.push('/auth/logout?auto=true')
+    }
+
     const errData = error && error.response && error.response.data
 
     return Promise.reject(errData || error)

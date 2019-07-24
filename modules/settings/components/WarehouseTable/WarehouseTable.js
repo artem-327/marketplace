@@ -109,9 +109,9 @@ class WarehouseTable extends Component {
           rows={rows}
           style={{ marginTop: '5px' }}
           rowActions={[
-            { text: 'Edit', callback: row => openPopup(row.popupValues) },
+            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row.popupValues) },
             {
-              text: 'Delete', callback: row =>
+              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }), callback: row =>
                 confirm(
                   formatMessage({ ...message }),
                   formatMessage(

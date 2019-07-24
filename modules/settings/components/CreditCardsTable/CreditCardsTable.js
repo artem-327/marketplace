@@ -9,6 +9,7 @@ import {
   deleteConfirmation
 } from '../../actions'
 import Router from "next/router"
+import {injectIntl} from "react-intl"
 
 class ProductCatalogTable extends Component {
   state = {
@@ -32,10 +33,13 @@ class ProductCatalogTable extends Component {
       deleteConfirmation,
       deleteRowById,
       currentTab,
-      loading
+      loading,
+      intl
     } = this.props
 
     const { columns } = this.state
+
+    let { formatMessage } = intl
 
     return (
       <React.Fragment>
@@ -54,7 +58,7 @@ class ProductCatalogTable extends Component {
           filterValue={filterValue}
           rowActions={[
             {
-              text: 'Delete',
+              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: row => handleOpenConfirmPopup(row.id)
             }
           ]}
@@ -86,4 +90,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProductCatalogTable)
+)(injectIntl(ProductCatalogTable))

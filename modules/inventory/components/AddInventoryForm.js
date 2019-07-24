@@ -34,6 +34,14 @@ const ResponsiveColumn = styled(GridColumn)`
 }
 `
 
+const TopMargedColumn = styled(GridColumn)`
+  margin-top: 6px !important;
+`
+
+const BottomUnpaddedRow = styled(GridRow)`
+  padding-bottom: 0px !important;
+`
+
 const initValues = {
   additionalType: 'Unspecified',
   costs: [],
@@ -282,9 +290,9 @@ class AddInventoryForm extends Component {
   }
 
   renderEditDocuments = (values, setFieldValue) => {
-    const {edit, removeAttachment, removeAttachmentLink} = this.props
-    const {additional, attachments, lots} = values
-    let {openedDocuments} = this.state
+    const { edit, removeAttachment, removeAttachmentLink } = this.props
+    const { additional, attachments, lots } = values
+    let { openedDocuments } = this.state
     if (typeof attachments === 'undefined' || !edit)
       return false
 
@@ -303,9 +311,9 @@ class AddInventoryForm extends Component {
 
     if (this.state.openedDocuments === null) {
       if (documents.length > 0) {
-        this.setState({openedDocuments: true})
+        this.setState({ openedDocuments: true })
       } else {
-        this.setState({openedDocuments: false})
+        this.setState({ openedDocuments: false })
       }
     }
 
@@ -363,40 +371,68 @@ class AddInventoryForm extends Component {
     let tiers = []
 
     for (let i = 0; i < count; i++) {
+
       tiers.push(
-        <Grid.Row key={i}>
-          <Grid.Column width={2}>
-            {i ? (
-              <Label name={`pricingTiers[${i}].level`}>{i + 1}</Label>
-            ) : (
-                <div className='field'>
-                  <label>Level</label>
-                  <Label name={`pricingTiers[${i}].level`}>{i + 1}</Label>
-                </div>
-              )}
-          </Grid.Column>
-          <Grid.Column width={1}>
-            <Icon.Group>
-              <Icon name='chevron right' />
-              <Icon name='window minimize outline' />
-            </Icon.Group>
-          </Grid.Column>
-          <Grid.Column width={10}>
-            <FormGroup widths='equal'>
-              <FormField width={8}>
-                <Input name={`pricingTiers[${i}].quantityFrom`} label={i ? '' : "Minimum OQ"} inputProps={{ type: 'number', readOnly: i === 0, value: null }} />
-              </FormField>
-              <Form.Field width={8}>
-                <Input name={`pricingTiers[${i}].price`} label={i ? '' : "FOB Price"} inputProps={{ type: 'number', step: '0.001', value: null }} />
-              </Form.Field>
-            </FormGroup>
-          </Grid.Column>
-        </Grid.Row>
+        <GridRow>
+          <TopMargedColumn computer={2}>
+            <label name={`pricingTiers[${i}].level`}>{i + 1}</label>
+          </TopMargedColumn>
+
+          <TopMargedColumn computer={1}>
+            <Icon name='greater than equal' />
+          </TopMargedColumn>
+
+          <GridColumn computer={6}>
+            <Input name={`pricingTiers[${i}].quantityFrom`} inputProps={{ type: 'number', readOnly: i === 0, value: null }} />
+          </GridColumn>
+
+          <GridColumn computer={6}>
+            <Input name={`pricingTiers[${i}].price`} inputProps={{ type: 'number', step: '0.001', value: null }} />
+          </GridColumn>
+        </GridRow>
       )
+
+
+      // tiers.push(
+      //   <Grid.Row key={i}>
+      //     <Grid.Column width={2}>
+      //       {i !== 0 ? (
+      //         <Label name={`pricingTiers[${i}].level`}>{i + 1}</Label>
+      //       ) : (
+      //           <div className='field'>
+      //             <label>Level</label>
+      //             <Label name={`pricingTiers[${i}].level`}>{i + 1}</Label>
+      //           </div>
+      //         )}
+      //     </Grid.Column>
+      //     <Grid.Column width={1}>
+      //       <Icon.Group>
+      //         <Icon name='chevron right' />
+      //         <Icon name='window minimize outline' />
+      //       </Icon.Group>
+      //     </Grid.Column>
+      //     <Grid.Column width={10}>
+      //       <FormGroup widths='equal'>
+      //         <FormField width={8}>
+      //           <Input name={`pricingTiers[${i}].quantityFrom`} label={i ? '' : "Minimum OQ"} inputProps={{ type: 'number', readOnly: i === 0, value: null }} />
+      //         </FormField>
+      //         <Form.Field width={8}>
+      //           <Input name={`pricingTiers[${i}].price`} label={i ? '' : "FOB Price"} inputProps={{ type: 'number', step: '0.001', value: null }} />
+      //         </Form.Field>
+      //       </FormGroup>
+      //     </Grid.Column>
+      //   </Grid.Row>
+      // )
     }
 
     return (
       <>
+        <BottomUnpaddedRow>
+          <GridColumn computer={2}>Level</GridColumn>
+          <GridColumn computer={1} />
+          <GridColumn computer={6}>Minimum OQ</GridColumn>
+          <GridColumn computer={6}>FOB Price</GridColumn>
+        </BottomUnpaddedRow>
         {tiers}
       </>
     )
@@ -671,6 +707,7 @@ class AddInventoryForm extends Component {
 
         <Form
           enableReinitialize
+          validateOnChange={false}
           initialValues={{ ...initValues, ...initialState }}
           validationSchema={validationScheme}
           onSubmit={(values, actions) => {
@@ -775,7 +812,7 @@ class AddInventoryForm extends Component {
                               wide />
                             </Header>
                             <FormGroup>
-                              <FormField width={13}>
+                              <FormField width={10}>
                                 <Dropdown
                                   label="Product Search"
                                   name="product"
@@ -797,15 +834,15 @@ class AddInventoryForm extends Component {
 
                             <Header as='h3'>Is this product in stock?</Header>
                             <FormGroup inline>
-                              <Radio label="No" value={false} name="inStock" />
-                              <Radio label="Yes" value={true} name="inStock" />
+                              <Radio fieldProps={{ width: 5 }} label="No" value={false} name="inStock" />
+                              <Radio fieldProps={{ width: 5 }} label="Yes" value={true} name="inStock" />
                             </FormGroup>
                             <Header as='h3'>How many business days to pick up? <Popup content={`Processing Time is the number of business days from when an order is confirmed that it will take you to have your product offer ready for pick up at your designated warehouse. NOTE: Saturdays and Sundays do not count for Processing Time.`}
-                                                                             trigger={<Icon name='info circle' color='blue' />}
-                                                                             wide />
+                              trigger={<Icon name='info circle' color='blue' />}
+                              wide />
                             </Header>
                             <FormGroup>
-                              <FormField width={4}>
+                              <FormField width={10}>
                                 <Dropdown label="Processing Time" name="processingTimeDays" options={this.getProcessingTimes(14)}
                                 />
                               </FormField>
@@ -816,11 +853,11 @@ class AddInventoryForm extends Component {
                               wide />
                             </Header>
                             <FormGroup inline>
-                              <Radio label="No" value={false} name="doesExpire" />
-                              <Radio label="Yes" value={true} name="doesExpire" />
+                              <Radio fieldProps={{width: 5}} label="No" value={false} name="doesExpire" />
+                              <Radio fieldProps={{width: 5}} label="Yes" value={true} name="doesExpire" />
                             </FormGroup>
                             <FormGroup>
-                              <FormField width={5}>
+                              <FormField width={10}>
                                 <DateInput inputProps={{ disabled: !values.doesExpire }} label="Expiration Date" name="validityDate" />
                               </FormField>
                             </FormGroup>
@@ -843,124 +880,161 @@ class AddInventoryForm extends Component {
                                 trigger={<Icon name='info circle' color='blue' />} />
                             </Header>
                             <FormGroup>
-                              <FormField width={4}>
+                              <FormField width={10}>
                                 <Input label="Total Packages" inputProps={{ type: 'number' }} name="pkgAmount" />
                               </FormField>
                             </FormGroup>
 
                           </Grid.Column>
                           <GridColumn width={6}>
+                            {/* <Segment basic> */}
+
+
                             <Grid centered>
                               <GridColumn width={12}>
+                                <Grid>
 
-                                <Header as="h3">Is there any order minimum requirement? <Popup content={<>Minimum OQ is the minimum amount of packages you want to sell for any single order. If you want to sell no less than 10 drums for an order then enter 10. If you have no minimum order requirement then enter 1.<br />Splits is the multiples you are willing to accept for any single order. If you only want to sell multiples of 4 drums then enter 4. If you have no split requirements then enter 1.</>}
-                                  trigger={<Icon name='info circle' color='blue' />}
-                                  wide />
-                                </Header>
-                                <FormGroup>
-                                  <Radio label="No" value={false} name="minimumRequirement" inputProps={{
-                                    onClick: () => {
-                                      setFieldValue('minimum', 1)
-                                      setFieldValue('pricingTiers[0].quantityFrom', 1)
-                                    }
-                                  }} />
-                                  <Radio label="Yes" value={true} name="minimumRequirement" />
-                                </FormGroup>
-                                <FormGroup>
-                                  <FormField width={5}>
-                                    <Input label="Minimum OQ" name="minimum" inputProps={{
-                                      type: 'number', onChange: (e, data) => {
-                                        if (data.value > 1) {
-                                          setFieldValue('minimumRequirement', true)
-                                          setFieldValue('pricingTiers[0].quantityFrom', data.value)
+                                  <GridRow>
+                                    <GridColumn>
+                                      <Header as="h3">Is there any order minimum requirement? <Popup content={<>Minimum OQ is the minimum amount of packages you want to sell for any single order. If you want to sell no less than 10 drums for an order then enter 10. If you have no minimum order requirement then enter 1.<br />Splits is the multiples you are willing to accept for any single order. If you only want to sell multiples of 4 drums then enter 4. If you have no split requirements then enter 1.</>}
+                                        trigger={<Icon name='info circle' color='blue' />}
+                                        wide />
+                                      </Header>
+                                    </GridColumn>
+                                  </GridRow>
+                                  <GridRow>
+                                    <GridColumn computer={8} tablet={16}>
+                                      <Radio label="No" value={false} name="minimumRequirement" inputProps={{
+                                        onClick: () => {
+                                          setFieldValue('minimum', 1)
+                                          setFieldValue('pricingTiers[0].quantityFrom', 1)
                                         }
-                                      }
-                                    }} />
-                                  </FormField>
-                                  <FormField width={5}>
-                                    <Input label="Splits" name="splits" inputProps={{ type: 'number' }} />
-                                  </FormField>
-                                </FormGroup>
+                                      }} />
+                                    </GridColumn>
+                                    <GridColumn computer={8} tablet={16}>
+                                      <Radio label="Yes" value={true} name="minimumRequirement" />
+                                    </GridColumn>
+                                  </GridRow>
 
-                                <Header as='h3'>How many price tiers would you like to offer? <Popup content={<>Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.<br />For example if you list 40 drums you could set 2 tiers and offer orders of <span style={{ whiteSpace: 'nowrap' }}>1-20 drums</span> at $1.00/lb and orders of <span style={{ whiteSpace: 'nowrap' }}>21-40</span> drums at $.90/lb.<br />If you only want to set only one price then enter "1".</>}
-                                  trigger={<Icon name='info circle' color='blue' />}
-                                  wide />
-                                </Header>
-                                <FormGroup>
-                                  <FormField width={5}>
-                                    <Dropdown
-                                      label="Price Tiers"
-                                      name="priceTiers"
-                                      options={this.getPriceTiers(10)}
-                                      inputProps={{
-                                        onChange: (e, { value }) => setFieldValue(
-                                          "pricingTiers",
-                                          [
-                                            ...values.pricingTiers.slice(0, value),
-                                            ...[...new Array((value - values.priceTiers) > 0 ? value - values.priceTiers : 0)].map(t => ({ price: '0', quantityFrom: '0' }))
-                                          ]
-                                        )
-                                      }}
-                                    />
-                                  </FormField>
-                                </FormGroup>
+                                  <GridRow>
+                                    <GridColumn computer={8} tablet={16}>
+                                      <Input label="Minimum OQ" name="minimum" inputProps={{
+                                        type: 'number', onChange: (e, data) => {
+                                          if (data.value > 1) {
+                                            setFieldValue('minimumRequirement', true)
+                                            setFieldValue('pricingTiers[0].quantityFrom', data.value)
+                                          }
+                                        }
+                                      }} />
+                                    </GridColumn>
 
-                                <Header as='h3' style={{ marginBottom: '2rem' }}>What is the FOB price for each tier? <Popup content='FOB stands for free on board and freight on board and designates that the buyer is responsible for shipping costs. It also represents that ownership and liability is passed from seller to the buyer when the good are loaded at the originating location.'
-                                  trigger={<Icon name='info circle' color='blue' />}
-                                  wide />
-                                </Header>
-                                <Grid className='tier-prices'>
+                                    <GridColumn computer={8} tablet={16}>
+                                      <Input label="Splits" name="splits" inputProps={{ type: 'number' }} />
+                                    </GridColumn>
+                                  </GridRow>
+                                  <GridRow>
+                                    <GridColumn>
+                                      <Header as='h3'>How many price tiers would you like to offer? <Popup content={<>Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.<br />For example if you list 40 drums you could set 2 tiers and offer orders of <span style={{ whiteSpace: 'nowrap' }}>1-20 drums</span> at $1.00/lb and orders of <span style={{ whiteSpace: 'nowrap' }}>21-40</span> drums at $.90/lb.<br />If you only want to set only one price then enter "1".</>}
+                                        trigger={<Icon name='info circle' color='blue' />}
+                                        wide />
+                                      </Header>
+                                    </GridColumn>
+                                  </GridRow>
+
+                                  <GridRow>
+                                    <GridColumn computer={16} tablet={16}>
+                                      <Dropdown
+
+                                        // fieldProps={{ width: 16 }}
+                                        label="Price Tiers"
+                                        name="priceTiers"
+                                        options={this.getPriceTiers(10)}
+                                        inputProps={{
+                                          fluid: true,
+                                          onChange: (e, { value }) => setFieldValue(
+                                            "pricingTiers",
+                                            [
+                                              ...values.pricingTiers.slice(0, value),
+                                              ...[...new Array((value - values.priceTiers) > 0 ? value - values.priceTiers : 0)].map(t => ({ price: '0', quantityFrom: '0' }))
+                                            ]
+                                          )
+                                        }}
+                                      />
+                                    </GridColumn>
+                                  </GridRow>
+
+
+                                  <GridRow>
+                                    <GridColumn>
+                                      <Header as='h3'
+                                      // style={{ marginBottom: '2rem' }}
+                                      >What is the FOB price for each tier? <Popup content='FOB stands for free on board and freight on board and designates that the buyer is responsible for shipping costs. It also represents that ownership and liability is passed from seller to the buyer when the good are loaded at the originating location.'
+                                        trigger={<Icon name='info circle' color='blue' />}
+                                        wide />
+                                      </Header>
+                                    </GridColumn>
+                                  </GridRow>
+                                  {/* <Grid> */}
                                   {this.renderPricingTiers(values.priceTiers)}
+                                  {/* </Grid> */}
+                                  <GridRow>
+                                    <GridColumn>
+                                      <Divider />
+                                    </GridColumn>
+                                  </GridRow>
+
+                                  <GridRow>
+                                    <GridColumn>
+                                      <Header as='h3'>Upload Spec Sheet <Popup content={<>The Spec Sheet, also known as a Technical Data Sheet (TDS), is required for a product offer to broadcast to the marketplace.<br /><br />You can drag and drop a file from your computer or click on the box to search for the file as well.<br /><br />IMPORTANT! Your company name and contact information cannot be listed on this document and non compliance is against Echo's Terms and Conditions.</>}
+                                        trigger={<Icon name='info circle' color='blue' />}
+                                        wide />
+                                      </Header>
+                                    </GridColumn>
+                                  </GridRow>
+
+                                  <UploadLot {...this.props}
+                                    attachments={values.attachments}
+                                    name='attachments'
+                                    type={2}
+                                    fileMaxSize={20}
+                                    onChange={(files) => setFieldValue(
+                                      `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
+                                      {
+                                        id: files.id,
+                                        name: files.name
+                                      }
+                                    )}
+                                    emptyContent={(
+                                      <label>
+                                        <FormattedMessage
+                                          id='addInventory.dragDrop'
+                                          defaultMessage={'Drag and drop ' + this.props.type + ' file here'}
+                                          values={{ docType: this.props.type }}
+                                        />
+                                        <br />
+                                        <FormattedMessage
+                                          id='addInventory.dragDropOr'
+                                          defaultMessage={'or select from computer'}
+                                        />
+                                      </label>
+                                    )}
+                                    uploadedContent={(
+                                      <label>
+                                        <FormattedMessage
+                                          id='addInventory.dragDrop'
+                                          defaultMessage={'Drag and drop ' + this.props.type + ' file here'}
+                                          values={{ docType: this.props.type }}
+                                        />
+                                        <br />
+                                        <FormattedMessage
+                                          id='addInventory.dragDropOr'
+                                          defaultMessage={'or select from computer'}
+                                        />
+                                      </label>
+                                    )}
+                                  />
+                                  {/* </Segment> */}
                                 </Grid>
-
-                                <Divider style={{ marginTop: '3rem', marginBottom: '3rem' }} />
-
-                                <Header as='h3'>Upload Spec Sheet <Popup content={<>The Spec Sheet, also known as a Technical Data Sheet (TDS), is required for a product offer to broadcast to the marketplace.<br /><br />You can drag and drop a file from your computer or click on the box to search for the file as well.<br /><br />IMPORTANT! Your company name and contact information cannot be listed on this document and non compliance is against Echo's Terms and Conditions.</>}
-                                  trigger={<Icon name='info circle' color='blue' />}
-                                  wide />
-                                </Header>
-                                <UploadLot {...this.props}
-                                  attachments={values.attachments}
-                                  name='attachments'
-                                  type={2}
-                                  fileMaxSize={20}
-                                  onChange={(files) => setFieldValue(
-                                    `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
-                                    {
-                                      id: files.id,
-                                      name: files.name
-                                    }
-                                  )}
-                                  emptyContent={(
-                                    <label>
-                                      <FormattedMessage
-                                        id='addInventory.dragDrop'
-                                        defaultMessage={'Drag and drop ' + this.props.type + ' file here'}
-                                        values={{ docType: this.props.type }}
-                                      />
-                                      <br />
-                                      <FormattedMessage
-                                        id='addInventory.dragDropOr'
-                                        defaultMessage={'or select from computer'}
-                                      />
-                                    </label>
-                                  )}
-                                  uploadedContent={(
-                                    <label>
-                                      <FormattedMessage
-                                        id='addInventory.dragDrop'
-                                        defaultMessage={'Drag and drop ' + this.props.type + ' file here'}
-                                        values={{ docType: this.props.type }}
-                                      />
-                                      <br />
-                                      <FormattedMessage
-                                        id='addInventory.dragDropOr'
-                                        defaultMessage={'or select from computer'}
-                                      />
-                                    </label>
-                                  )}
-                                />
-
                               </GridColumn>
                             </Grid>
                           </GridColumn>

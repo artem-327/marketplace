@@ -5,7 +5,7 @@ import { bool, objectOf, func } from 'prop-types'
 
 import { Modal, Button, Segment, Divider, FormGroup, FormField, Table, Checkbox } from 'semantic-ui-react'
 import { Form, Button as FButton, Input, Dropdown } from 'formik-semantic-ui'
-
+import Router from 'next/router'
 
 
 const initialValues = {
@@ -17,6 +17,11 @@ const initialValues = {
 }
 
 export default class ShippingQuotes extends Component {
+  state = {
+    selectedIndex: null,
+    sQuote: null,
+    quantity: 0
+  }
 
   componentDidMount() {
     const { initShipingForm } = this.props
@@ -24,8 +29,16 @@ export default class ShippingQuotes extends Component {
     initShipingForm()
   }
 
-  createOrder = () => {
-    alert('not implemented yet')
+  createOrder = async () => {
+    let payload = {
+      quantity: this.state.quantity,
+      productOffer: this.state.sQuote.productOfferId
+    }
+
+    try {
+      await this.props.addCartItem(payload)
+      Router.push('/cart')
+    } catch { }
   }
 
   getShipingQuotes(inputs) {
@@ -39,10 +52,6 @@ export default class ShippingQuotes extends Component {
     }
 
     getShipingQuotes(params)
-  }
-
-  checkBox(value) {
-    this.setState({ selectedItem: value })
   }
 
   renderForm() {
@@ -59,7 +68,9 @@ export default class ShippingQuotes extends Component {
       >
         <FormGroup widths='equal'>
 
-          <Input name='destination.quantity' type='number' label='Shipping Quantity' />
+          <Input
+            name='destination.quantity' type='number' label='Shipping Quantity'
+            inputProps={{ onChange: (_, { value }) => this.setState({ quantity: value }) }} />
           <Dropdown name='destination.zip' label='Zip Code' inputProps={{ search: true }} options={zipCodes} />
 
           <Dropdown
@@ -112,7 +123,11 @@ export default class ShippingQuotes extends Component {
               return (
                 <Table.Row key={i}>
                   <Table.Cell>
-                    <Checkbox onChange={(value) => this.checkBox(value)} value={i} />
+                    <Checkbox
+                      radio
+                      checked={this.state.selectedIndex === i}
+                      onChange={() => this.setState({ selectedIndex: i, sQuote })}
+                      value={i} />
                   </Table.Cell>
                   <Table.Cell>{sQuote.shipmentRate.carrierName}</Table.Cell>
                   <Table.Cell>{etd + (etd == 1 ? ' Day' : ' Days')}</Table.Cell>
@@ -171,7 +186,7 @@ export default class ShippingQuotes extends Component {
           <Button onClick={closeModal}>
             Close
           </Button>
-          <Button primary onClick={this.createOrder}>
+          <Button loading={this.props.isPurchasing} disabled={!(this.state.quantity && this.state.sQuote)} primary onClick={this.createOrder}>
             Purchase
           </Button>
         </Modal.Actions>

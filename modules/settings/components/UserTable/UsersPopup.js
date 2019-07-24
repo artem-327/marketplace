@@ -13,7 +13,7 @@ import {
 } from "../../actions"
 import { Form, Input, Button, Dropdown, Checkbox } from "formik-semantic-ui"
 import * as Yup from "yup"
-import { FormattedMessage } from "react-intl"
+import { FormattedMessage, injectIntl } from "react-intl"
 
 import { generateToastMarkup } from '~/utils/functions'
 
@@ -62,7 +62,7 @@ class UsersPopup extends React.Component {
     }
 
     let status = this.props.popupValues ? 'userUpdated' : 'userCreated'
-    
+
 
     toastManager.add(generateToastMarkup(
       <FormattedMessage id={`notifications.${status}.header`} />,
@@ -96,7 +96,8 @@ class UsersPopup extends React.Component {
       closeRolesPopup,
       roles,
       userRoles,
-      currencies
+      currencies,
+      intl
     } = this.props
 
     const {
@@ -104,6 +105,7 @@ class UsersPopup extends React.Component {
       email = "",
       homeBranch = undefined,
       preferredCurrency = "",
+      additionalBranches = [],
       title = "",
       phone = "",
     } = popupValues || {}
@@ -112,10 +114,13 @@ class UsersPopup extends React.Component {
       name,
       email,
       homeBranch,
+      additionalBranches,
       preferredCurrency,
       title,
       phone,
     }
+
+    const { formatMessage } = intl
 
     // necessary for Edit Roles
     this.props.roles.forEach(item => {
@@ -128,7 +133,13 @@ class UsersPopup extends React.Component {
     return (
       <Modal open centered={false} size={userEditRoles ? "mini" : null}>
         <Modal.Header>
-          {(popupValues ? "Edit" : "Add") + (userEditRoles ? " Role" : " User")}
+          {(userEditRoles
+            ? formatMessage({ id: 'settings.assignUserRoles', defaultMessage: "Assign User Roles" })
+            : (popupValues
+              ? formatMessage({ id: 'settings.editUser', defaultMessage: "Edit User" })
+              : formatMessage({ id: 'settings.addUser', defaultMessage: "Add User" })
+            )
+          )}
         </Modal.Header>
         <Modal.Content>
           <Form
@@ -136,46 +147,60 @@ class UsersPopup extends React.Component {
             validationSchema={formValidation(popupValues)}
             onReset={userEditRoles ? closeRolesPopup : closePopup}
             onSubmit={this.submitHandler}
+
           >
-            {userEditRoles ? (
-              roles.map((role, i) => (
-                <FormGroup key={i}>
-                  <Checkbox
-                    label={role.name}
-                    name={`checkBoxId_${role.id}`}
-                    inputProps={{ defaultChecked: userRoles.includes(role.id) }}
-                  />
-                </FormGroup>
-              ))
-            ) : (
-                <>
-                  <FormGroup widths="equal">
-                    <Input type="text" label="Name" name="name" />
-                    <Input type="text" label="Email" name="email" />
-                  </FormGroup>
-                  <FormGroup widths="equal">
-                    <Input type="text" label="Job Title" name="title" />
-                    <Input type="text" label="Phone" name="phone" />
-                  </FormGroup>
-                  <FormGroup>
-                    <Dropdown
-                      label="Home Branch"
-                      name="homeBranch"
-                      options={branchesAll}
-                      fieldProps={{ width: 8 }}
-                    />
-                    <Dropdown label="Currency" name="preferredCurrency" options={currencies} fieldProps={{ width: 2 }} />
-                  </FormGroup>
-                </>
-              )}
-            <div style={{ textAlign: "right" }}>
-              <Button.Reset
-                onClick={userEditRoles ? closeRolesPopup : closePopup}
-              >
-                Cancel
-              </Button.Reset>
-              <Button.Submit>Save</Button.Submit>
-            </div>
+            {({values}) => (
+              <>
+                {userEditRoles ? (
+                  roles.map((role, i) => (
+                    <FormGroup key={i}>
+                      <Checkbox
+                        label={role.name}
+                        name={`checkBoxId_${role.id}`}
+                        inputProps={{ defaultChecked: userRoles.includes(role.id) }}
+                      />
+                    </FormGroup>
+                  ))
+                ) : (
+                    <>
+                      <FormGroup widths="equal">
+                        <Input type="text" label="Name" name="name" />
+                        <Input type="text" label="Job Title" name="title" />
+                      </FormGroup>
+                      <FormGroup widths="equal">
+                        <Input type="text" label="Email" name="email" />
+                        <Input type="text" label="Phone" name="phone" />
+                      </FormGroup>
+                      <FormGroup>
+                        <Dropdown
+                          label="Home Branch"
+                          name="homeBranch"
+                          options={branchesAll}
+                          fieldProps={{ width: 7 }}
+                        />
+                        <Dropdown
+                          label="Additional Branches"
+                          name="additionalBranches"
+                          options={branchesAll.filter(b => b.value !== values.homeBranch)}
+                          fieldProps={{ width: 7 }}
+                          inputProps={{
+                            multiple: true
+                          }}
+                        />
+                        <Dropdown label="Currency" name="preferredCurrency" options={currencies} fieldProps={{ width: 2 }} />
+                      </FormGroup>
+                    </>
+                  )}
+                <div style={{ textAlign: "right" }}>
+                  <Button.Reset
+                    onClick={userEditRoles ? closeRolesPopup : closePopup}
+                  >
+                    Cancel
+                  </Button.Reset>
+                  <Button.Submit>Save</Button.Submit>
+                </div>
+              </>
+            )}
           </Form>
         </Modal.Content>
       </Modal>
@@ -214,4 +239,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withToastManager(UsersPopup))
+)(withToastManager(injectIntl(UsersPopup)))

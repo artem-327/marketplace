@@ -43,10 +43,10 @@ class CasProductsTable extends Component {
           columns={columns}
           rows={rows}
           rowActions={[
-            { text: 'Edit', callback: (row) => openPopup(row) },
-            { text: 'Edit Alternative Names', callback: (row) => openEditAltNamesCasPopup(row) },
+            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: (row) => openPopup(row) },
+            { text: formatMessage({ id: 'admin.editAlternativeNames', defaultMessage: 'Edit Alternative Names' }), callback: (row) => openEditAltNamesCasPopup(row) },
             {
-              text: 'Delete',
+              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: (row) => confirm(
                 formatMessage({id: 'confirm.deleteCasProduct.title', defaultMessage: 'Delete CAS Product?'}),
                 formatMessage({

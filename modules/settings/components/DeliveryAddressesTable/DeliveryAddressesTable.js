@@ -64,9 +64,9 @@ class DeliveryAddressesTable extends Component {
           loading={datagrid.loading || loading}
           style={{ marginTop: '5px' }}
           rowActions={[
-            { text: 'Edit', callback: row => openPopup(row.data) },
+            { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: row => openPopup(row.data) },
             {
-              text: 'Delete', callback: row => confirm(
+              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }), callback: row => confirm(
                 formatMessage({ id: 'confirm.deleteDeliveryAddress', defaultMessage: 'Delete Delivery Address' }),
                 formatMessage(
                   { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.streetAddress}?` },
