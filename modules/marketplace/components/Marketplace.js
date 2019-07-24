@@ -15,7 +15,7 @@ class Marketplace extends Component {
     columns: [
       { name: 'productName', disabled: true },
       { name: 'productNumber', disabled: true },
-      { name: 'merchant', title: 'Merchant', width: 250 },
+      // { name: 'merchant', title: 'Merchant', width: 250 },
       { name: 'available', title: 'Available', width: 80 },
       { name: 'packaging', title: 'Packaging', width: 140 },
       { name: 'quantity', title: 'Quantity', width: 140 },
@@ -103,7 +103,7 @@ class Marketplace extends Component {
               open: this.state.open,
               closeModal: () => this.setState({ open: false })
             }}
-            productOfferIds={rows.reduce(function(filtered, row, rowIndex) {
+            productOfferIds={rows.reduce(function (filtered, row, rowIndex) {
               if (selectedRows.includes(rowIndex)) {
                 filtered.push(row.id)
               }

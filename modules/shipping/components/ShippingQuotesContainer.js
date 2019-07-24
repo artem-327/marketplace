@@ -2,8 +2,18 @@ import { connect } from 'react-redux'
 import ShippingQuotes from './ShippingQuotes'
 import * as Actions from '../actions'
 
-function mapStateToProps({shiping}) {
-  return shiping
+import { addCartItem } from '~/modules/purchase-order/actions'
+
+function mapStateToProps({ shiping, cart }) {
+  return {
+    ...shiping,
+    isPurchasing: cart.isPurchasing
+  }
 }
 
-export default connect(mapStateToProps, Actions)(ShippingQuotes)
+const mapDispatchToProps = {
+  ...Actions,
+  addCartItem
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ShippingQuotes)

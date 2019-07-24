@@ -1,5 +1,10 @@
 import typeToReducer from 'type-to-reducer'
-import { openBroadcast, closeBroadcast, updateFilter, saveRules, switchMode, saveTemplate, getTemplates, getTemplate, updateTemplate, deleteTemplate } from './actions'
+import {
+  openBroadcast, closeBroadcast, updateFilter,
+  saveRules, switchMode, saveTemplate,
+  getTemplates, getTemplate, updateTemplate,
+  deleteTemplate
+} from './actions'
 
 const initialState = {
   id: null,
@@ -25,6 +30,7 @@ export default typeToReducer({
   [openBroadcast.pending]: (state, action) => {
     return {
       ...initialState,
+      templates: state.templates,
       open: true,
       loading: true
     }
@@ -80,10 +86,10 @@ export default typeToReducer({
     templateSaving: true
   }),
 
-  [saveTemplate.fulfilled]: (state) => ({
+  [saveTemplate.fulfilled]: (state, { payload }) => ({
     ...state,
     templateSaving: false,
-    // TODO - add to templates array
+    templates: state.templates.concat(payload)
   }),
 
   [saveTemplate.rejeted]: (state) => ({
@@ -99,7 +105,7 @@ export default typeToReducer({
   [getTemplates.fulfilled]: (state, { payload }) => ({
     ...state,
     loadingTemplates: false,
-    templates: payload // not tested; BE has some issue at get templates endpoint
+    templates: payload
   }),
 
   [getTemplate.pending]: (state) => ({
@@ -128,7 +134,7 @@ export default typeToReducer({
     loadingTemplates: false
   }),
 
-  
+
   [updateTemplate.pending]: (state) => ({
     ...state,
     templateSaving: true
@@ -149,9 +155,9 @@ export default typeToReducer({
     templateDeleting: true
   }),
 
-  [deleteTemplate.fulfilled]: (state) => ({
+  [deleteTemplate.fulfilled]: (state, { payload }) => ({
     ...state,
-    // TODO - remove from templates array
+    templates: state.templates.filter((template) => template.id !== payload),
     templateDeleting: false
   }),
 

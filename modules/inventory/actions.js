@@ -74,7 +74,7 @@ export function addProductOffer(values, poId = false) {
     price: values.pricing && values.pricing.price ? parseInt(values.pricing.price) : parseInt(values.pricingTiers[0].price),
     pricingTiers: values.pricingTiers.map((tier, index) => {
       return {
-        price: parseInt(tier.price),
+        price: parseFloat(tier.price),
         quantityFrom: parseInt(!index ? values.minimum : tier.quantityFrom)
       }
     }),

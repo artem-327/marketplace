@@ -92,7 +92,7 @@ export const validationSchema = () => Yup.lazy(values => {
 
       expirationFrom: Yup.number('number').moreThan(0, errorMessages.greaterThan(0)).notRequired(),
       expirationTo: Yup.number('number').moreThan(0, errorMessages.greaterThan(0)).notRequired(),
-      mfgFrom: Yup.number('number').moreThan(0, errorMessages.greaterThan(0)).notRequired(),
+      mfgFrom: Yup.number('number').min(0, errorMessages.minimum(0)).notRequired(),
       mfgTo: Yup.number('number').moreThan(0, errorMessages.greaterThan(0)).notRequired()
     })
   )

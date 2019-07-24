@@ -6,9 +6,19 @@ import { FormGroup, Header } from 'semantic-ui-react'
 import { ZipDropdown } from '~/modules/zip-dropdown'
 import { func, string, shape, array, bool } from 'prop-types'
 
+import styled from 'styled-components'
+
+
 import { getProvinces } from '../api'
 
 import { getSafe } from '~/utils/functions'
+
+const DatalistGroup = styled(FormGroup)`
+  input::-webkit-calendar-picker-indicator {
+    opacity: 0 !important;
+  }
+`
+
 
 export default class AddressForm extends Component {
   state = {
@@ -26,6 +36,21 @@ export default class AddressForm extends Component {
     }
   }
 
+  asignPrefix = () => {
+    let { prefix, streetAddress, city, country, zip, province } = this.props
+    let fields = { streetAddress, city, country, zip, province }
+
+    Object.keys(fields)
+      .forEach(key => {
+        if (prefix) {
+          fields[key] = `${prefix && `${prefix}.`}address.${fields[key].name}`
+        } else {
+          fields[key] = `address.${fields[key].name}`
+        }
+      })
+    return fields
+  }
+
   componentDidMount() {
     let { countries, values, prefix } = this.props
     const { addZip } = this.props
@@ -41,17 +66,16 @@ export default class AddressForm extends Component {
   }
 
   handleChange = (_, { name, value }) => {
-    let { prefix, addressDatalistOptions, values, streetAddress, city, country, zip, province } = this.props
+    let { addressDatalistOptions, values, } = this.props
     const { getAddressSearch, setFieldValue, addZip } = this.props
 
     if (!values) return
 
-    let fields = { streetAddress, city, country, zip, province }
-    Object.keys(fields).forEach(key => fields[key] = `${prefix}address.${fields[key].name}`)
-  
+    let fields = this.asignPrefix()
+
 
     let i = addressDatalistOptions.indexOf(value)
-    
+
     if (i >= 0 && setFieldValue) {
       let suggest = this.props.addressDatalistData[i]
       let { hasProvinces } = suggest.country
@@ -84,38 +108,57 @@ export default class AddressForm extends Component {
   }
 
 
+  getOptions = (values) => {
+    let { prefix, addressDatalistData } = this.props
+
+    let { address } = prefix ? values[prefix] : values
+
+    return addressDatalistData.map((a) => {
+      if (a.streetAddress.startsWith(address.streetAddress) && a.city.startsWith(address.city)) {
+
+        let element = a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
+
+        return element
+      }
+
+      return null
+    })
+  }
+
+
   render() {
     const { setFieldValue } = this.props
     let {
-      streetAddress, city, country,
-      zip, province, countries, prefix,
-      initialZipCodes, addressDatalist, displayHeader
+      countries, prefix,
+      initialZipCodes, displayHeader,
+      values, datalistName
     } = this.props
 
-    let fields = { streetAddress, city, country, zip, province }
 
-    Object.keys(fields).forEach(key => fields[key] = `${prefix}address.${fields[key].name}`)
- 
+    let fields = this.asignPrefix()
+
 
     let { provinces, countryId, provincesAreFetching } = this.state
 
 
     return (
       <>
-        {addressDatalist(this.props.datalistName)}
+        <datalist id={datalistName}>
+          {this.getOptions(values).filter((el) => el !== null).map((el, i) => <option key={i} value={el} />)}
+        </datalist >
         {displayHeader && <Header as='h3'><FormattedMessage id='global.address' defaultMessage='Address' /></Header>}
-        <FormGroup widths='equal'>
+        <DatalistGroup widths='equal'>
           <Input
-            inputProps={{ list: streetAddress.list, onChange: this.handleChange }}
+            inputProps={{ icon: 'dropdown', list: datalistName, onChange: this.handleChange }}
             label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />}
             name={fields.streetAddress}
           />
           <Input
-            inputProps={{ list: city.list, onChange: this.handleChange }}
+            inputProps={{ icon: 'dropdown', list: datalistName, onChange: this.handleChange }}
             label={<FormattedMessage id='global.city' defaultMessage='City' />}
             name={fields.city}
           />
-        </FormGroup>
+        </DatalistGroup>
         <FormGroup widths='equal'>
           <ZipDropdown
             onChange={this.handleChange}
@@ -162,15 +205,12 @@ AddressForm.propTypes = {
   displayHeader: bool,
   streetAddress: shape({
     name: string.isRequired,
-    list: string
   }),
   city: shape({
     name: string.isRequired,
-    list: string
   }),
   country: shape({
     name: string.isRequired,
-    list: string
   }),
   zip: shape({
     name: string.isRequired
@@ -184,21 +224,18 @@ AddressForm.propTypes = {
 AddressForm.defaultProps = {
   setFieldValue: () => console.warn('setFieldValue not supplied in AddressForm.jsx!'),
   onChange: () => { },
-  prefix: '',
+  prefix: null,
   datalistName: 'addresses',
   countries: [],
   displayHeader: true,
   streetAddress: {
     name: 'streetAddress',
-    list: 'addresses'
   },
   city: {
     name: 'city',
-    list: 'addresses'
   },
   country: {
     name: 'country',
-    list: 'addresses'
   },
   zip: {
     name: 'zip'
@@ -206,7 +243,8 @@ AddressForm.defaultProps = {
   province: {
     name: 'province'
   },
-  initialZipCodes: []
+  initialZipCodes: [],
+  values: null
 }
 
 
