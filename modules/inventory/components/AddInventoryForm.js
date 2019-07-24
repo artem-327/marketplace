@@ -11,6 +11,9 @@ import { FieldArray } from 'formik'
 import { debounce } from 'lodash'
 import confirm from '~/src/components/Confirmable/confirm'
 
+import { generateToastMarkup } from '~/utils/functions'
+import { errorMessages } from '~/constants/yupValidation'
+
 const TopDivider = styled(Divider)`
   padding-bottom: 20px;
 `
@@ -91,37 +94,45 @@ val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
 const validationScheme = val.object().shape({
   costs: val.array().of(val.object().shape({
     description: val.string(),
-    lot: val.number().moreThan(-1, 'Lot has to be selected').required('required'),
-    cost: val.number().nullable().moreThan(0, 'Must be greater than 0').required('required').test('maxdec', 'There can be maximally 3 decimal places.', val => {
-      return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
-    })
+    lot: val.number().moreThan(-1, errorMessages.lotHasToBeSelected).required(errorMessages.requiredMessage),
+    cost: val.number().nullable()
+      .moreThan(0, errorMessages.greaterThan(0))
+      .required(errorMessages.requiredMessage)
+      .test('maxdec', errorMessages.maxDecimals(3), val => {
+        return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
+      })
   })),
-  inStock: val.bool().required('required'),
-  product: val.string().required('required'),
-  processingTimeDays: val.number().required('required'),
+  inStock: val.bool().required(errorMessages.requiredMessage),
+  product: val.string().required(errorMessages.requiredMessage),
+  processingTimeDays: val.number().required(errorMessages.requiredMessage),
   doesExpire: val.bool(),
-  pkgAmount: val.number().typeError('must be number').nullable().moreThan(0, 'Amount has to be greater than 0').required('required'),
-  validityDate: val.string().matches(/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, { message: 'not valid date' }),
-  lots: val.array().of(val.object().uniqueProperty('lotNumber', 'LOT number has to be unique').shape({
-    lotNumber: val.string().nullable().required('required'),
-    pkgAmount: val.number().nullable().moreThan(0, 'Must be greater than 0').required('required'),
-    manufacturedDate: val.string().nullable().matches(/^([0-9]{4}\-[0-9]{2}\-[0-9]{2})?$/, { message: 'not valid date' }),
-    expirationDate: val.string().nullable().matches(/^([0-9]{4}\-[0-9]{2}\-[0-9]{2})?$/, { message: 'not valid date' })
+  pkgAmount: val.number().typeError(errorMessages.mustBeNumber).nullable().moreThan(0, errorMessages.greaterThan(0)).required(errorMessages.requiredMessage),
+  validityDate: val.string().matches(/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, { message: errorMessages.invalidDate }),
+  lots: val.array().of(val.object().uniqueProperty('lotNumber', errorMessages.lotUnique).shape({
+    lotNumber: val.string().nullable().required(errorMessages.requiredMessage),
+    pkgAmount: val.number().nullable().moreThan(0, errorMessages.greaterThan(0)).required(errorMessages.requiredMessage),
+    manufacturedDate: val.string().nullable().matches(/^([0-9]{4}\-[0-9]{2}\-[0-9]{2})?$/, { message: errorMessages.invalidDate }),
+    expirationDate: val.string().nullable().matches(/^([0-9]{4}\-[0-9]{2}\-[0-9]{2})?$/, { message: errorMessages.invalidDate })
   })).nullable(),
   manufacturer: val.number().nullable().moreThan(0, 'Manufacturer value is invalid'),
   minimumRequirement: val.bool(),
-  minimum: val.number().nullable().moreThan(0, 'Must be greater than 0'),
-  splits: val.number().nullable().moreThan(0, 'Must be greater than 0'),
-  origin: val.number().nullable().moreThan(0, 'Origin value is invalid'),
+  minimum: val.number().nullable().moreThan(0, errorMessages.greaterThan(0)),
+  splits: val.number().nullable().moreThan(0, errorMessages.greaterThan(0)),
+  origin: val.number().nullable().moreThan(0, errorMessages.invalidString),
   priceTiers: val.number(),
   pricingTiers: val.array().of(val.object().shape({
-    quantityFrom: val.number().typeError('must be number').nullable().moreThan(0, 'Must be greater than 0').required('Minimum quantity must be set'),
-    price: val.number().typeError('must be number').nullable().moreThan(0, 'Must be greater than 0').required('required').test('maxdec', 'There can be maximally 3 decimal places.', val => {
-      return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
-    })
+    quantityFrom: val.number().typeError(errorMessages.mustBeNumber).nullable()
+      .moreThan(0, errorMessages.greaterThan(0)).required(errorMessages.requiredMessage),
+    price: val.number().typeError(errorMessages.mustBeNumber).nullable()
+      .moreThan(0, errorMessages.greaterThan(0)).required(errorMessages.requiredMessage).test('maxdec', errorMessages.maxDecimals(3), val => {
+        return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
+      })
   })),
   touchedLot: val.bool(),
-  warehouse: val.number('required').nullable('required').moreThan(0, 'required').required('required')
+  warehouse: val.number(errorMessages.requiredMessage)
+    .nullable(errorMessages.required)
+    .moreThan(0, errorMessages.requiredMessage)
+    .required(errorMessages.requiredMessage)
 })
 
 class AddInventoryForm extends Component {
@@ -324,14 +335,14 @@ class AddInventoryForm extends Component {
       <>
         {this.state.openedDocuments ? (
           <Modal open={!!this.state.openedDocuments} onClose={() => this.setState({ openedDocuments: false })}>
-            <Modal.Header>Product Offer has these documents</Modal.Header>
+            <Modal.Header><FormattedMessage id='addInventory.productOfferDocuments' defaultMessage='Product Offer has these documents' /></Modal.Header>
             <Modal.Content>
               <Modal.Description>
                 <Table>
                   <Table.Header>
                     <Table.Row>
-                      <Table.HeaderCell>Document</Table.HeaderCell>
-                      <Table.HeaderCell>Type</Table.HeaderCell>
+                      <Table.HeaderCell><FormattedMessage id='addInventory.document' defaultMessage='Document' /></Table.HeaderCell>
+                      <Table.HeaderCell><FormattedMessage id='addInventory.type' defaultMessage='Type' /></Table.HeaderCell>
                       <Table.HeaderCell></Table.HeaderCell>
                     </Table.Row>
                   </Table.Header>
@@ -358,7 +369,7 @@ class AddInventoryForm extends Component {
                 <Grid>
                   <Grid.Row>
                     <Grid.Column width={3} floated='right'>
-                      <Button color='blue' floated='right' onClick={() => this.setState({ openedDocuments: false })}>Ok</Button>
+                      <Button color='blue' floated='right' onClick={() => this.setState({ openedDocuments: false })}><FormattedMessage id='global.ok' defaultMessage='Ok' /></Button>
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
@@ -457,57 +468,60 @@ class AddInventoryForm extends Component {
             <Accordion>
               <Accordion.Title active={activeIndex === 0} index={0} onClick={this.accClick}>
                 <Header as='h4'>
-                  <Icon name={activeIndex === 0 ? 'chevron down' : 'chevron right'} />PRODUCT DETAILS
+
+                  <FormattedMessage id='addInventory.productDetails' defaultMessage='PRODUCT DETAILS'>
+                    {(message) => <>  <Icon name={activeIndex === 0 ? 'chevron down' : 'chevron right'} /> {message} </>}
+                  </FormattedMessage>
                 </Header>
               </Accordion.Title>
               <Accordion.Content active={activeIndex === 0}>
                 <Grid columns={2} className='data-grid'>
-                  <GridColumn computer={8} mobile={16}>Product Name</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.productName' defaultMessage='Product Name' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? values.product.productName : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Product Number</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.productNumber' defaultMessage='Product Number' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? values.product.productCode : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Measurement</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.measurement' defaultMessage='Measurement' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? values.product.packagingSize : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>U/M</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.um' defaultMessage='U/M' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingUnit ? values.product.packagingUnit.name : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>U/P</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.up' defaultMessage='U/P' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingType ? values.product.packagingType.name : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>CAS Index Name</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.casIndexName' defaultMessage='CAS Index Name' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.casProduct ? values.product.casProduct.casIndexName : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>CAS Number</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.casNumber' defaultMessage='CAS Number' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.casProduct ? values.product.casProduct.casNumber : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Master Product</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.masterProduct' defaultMessage='Master Product' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? !!values.product.masterProduct : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Chemical Name</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.chemicalName' defaultMessage='Chemical Name' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.casProduct ? values.product.casProduct.chemicalName : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Hazaardous</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.hazaardous' defaultMessage='Hazaardous' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.hazaardous ? !!values.product.hazaardous : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>UN Code</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.unCode' defaultMessage='UN Code' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.unNumber ? values.product.unNumber.unNumberCode : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Packaging Group</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.packGrp' defaultMessage='Packaging Group' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingGroup ? values.product.packagingGroup.groupCode : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Hazaardous Class</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.hazaardousClass' defaultMessage='Hazaardous Class' /></GridColumn>
                   <GridColumn computer={8} mobile={16}><Label.Group color='blue'>{values.product && values.product.hazardClasses ? values.product.hazardClasses.map(hClass => { return (<Popup content={hClass.description} trigger={<Label>{hClass.classCode}</Label>} />) }) : ''}</Label.Group></GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Stackable</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.stackable' defaultMessage='Stackable' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? values.product.stackable : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Freight Class</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.freightClass' defaultMessage='Freight Class' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? values.product.freightClass : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>NMFC Number</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.nmfcNumber' defaultMessage='NMFC Number' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? values.product.nmfcNumber : ''}</GridColumn>
                 </Grid>
               </Accordion.Content>
@@ -516,7 +530,7 @@ class AddInventoryForm extends Component {
           {values.product ? '' : (
             <Message attached='bottom'>
               <Icon name='info circle outline' size='large' color='blue' />
-              Please search product to fill data above.
+              <FormattedMessage id='addInventory.fillToSearch' defaultMessage='Please search product to fill data above.' />
             </Message>
           )}
 
@@ -537,11 +551,9 @@ class AddInventoryForm extends Component {
                         .then(r => {
                           // stop when errors found
                           if (Object.keys(r).length) {
-                            toastManager.add((
-                              <div>
-                                <strong>Form is invalid</strong>
-                                <div>There are errors on current tab. Please, fix them before submit.</div>
-                              </div>
+                            toastManager.add(generateToastMarkup(
+                              <FormattedMessage id='addInventory.invalidForm' defaultMessage='Form is invalid' />,
+                              <FormattedMessage id='addInventory.fixErrorsBeforeSubmit' defaultMessage='There are errors on current tab. Please, fix them before submit.' />,
                             ), {
                                 appearance: 'error'
                               })
@@ -776,7 +788,7 @@ class AddInventoryForm extends Component {
           style={{ padding: '20px' }}
         >
           {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
-            console.log(values)
+
             return (
               <>
 
@@ -786,17 +798,20 @@ class AddInventoryForm extends Component {
                     <FormattedMessage id={this.props.edit ? 'addInventory.editDone' : 'addInventory.addDone'}
                       defaultMessage={this.props.edit ? 'Product Offer was edited' : 'Product Offer was created'} />
                   </Modal.Header>
-                  {this.props.edit ? '' : (
+                  {this.props.edit ? null : (
                     <Modal.Content>
-                      <FormattedMessage id={'addInventory.whatNow'}
-                        defaultMessage={'What now?'} />
+                      <FormattedMessage id='addInventory.whatNow' defaultMessage='What now?' />
                     </Modal.Content>
                   )}
                   <Modal.Actions>
                     {this.props.edit ? '' : (
-                      <Button icon='add' labelPosition='right' content='Add another one' onClick={this.resetForm} />
+                      <Button icon='add' labelPosition='right' onClick={this.resetForm}>
+                        <FormattedMessage id='addInventory.addAnotherOne' defaultMessage='Add another one' />
+                      </Button>
                     )}
-                    <Button primary icon='checkmark' labelPosition='right' content='Go to My Inventory' onClick={this.goToList} />
+                    <Button primary icon='checkmark' labelPosition='right' onClick={this.goToList}>
+                      <FormattedMessage id='addInventory.goToMyInventory' defaultMessage='Go to My Inventory' />
+                    </Button>
                   </Modal.Actions>
                 </Modal>
                 <div className='flex stretched'>
@@ -819,16 +834,40 @@ class AddInventoryForm extends Component {
                               console.log('CATCH', e)
                             })
                         }}>
-                          PRODUCT OFFER
-                    </Menu.Item>
+                          <FormattedMessage id='addInventory.productOffer' defaultMessage='PRODUCT OFFER' />
+                        </Menu.Item>
                       ),
                       pane: (
                         <Tab.Pane style={{ padding: '0 32px' }}>
                           <Grid divided style={{ marginTop: '2rem' }}>
                             <Grid.Column width={5}>
-                              <Header as='h3'>What product do you want to list? <Popup content={<>Enter any product name, product number, or trade name from your product catalog for the product offer that you would like to list. Once you do the data related to that product name/umber will populate in the right hand column.<br /><br />If you do not see the product that you would like to list then check in Settings/Product Catalog that it is entered and mapped to a CAS Index Name/Number and then return to this page.<br /><br />Entering a product name and number and mapping to a CAS Index Name and Number is required first before entering a product offer.</>}
-                                trigger={<Icon name='info circle' color='blue' />}
-                                wide />
+                              <Header as='h3'>
+                                <FormattedMessage id='addInventory.whatToList' defaultMessage='What product do you want to list?'>
+                                  {(text) =>
+                                    <>
+                                      {text}
+                                      <Popup
+                                        content={<>
+                                          <FormattedMessage
+                                            id='addInventory.enterProductInfo1'
+                                            defaultMessage='Enter any product name, product number, or trade name from your product catalog for the product offer that you would like to list. Once you do the data related to that product name/umber will populate in the right hand column.' />
+                                          <br /><br />
+                                          <FormattedMessage
+                                            id='addInventory.enterProductInfo2'
+                                            defaultMessage='If you do not see the product that you would like to list then check in Settings/Product Catalog that it is entered and mapped to a CAS Index Name/Number and then return to this page.' />
+                                          <br /><br />
+                                          <FormattedMessage
+                                            id='addInventory.enterProductInfo3'
+                                            defaultMessage='Entering a product name and number and mapping to a CAS Index Name and Number is required first before entering a product offer.' />
+                                        </>
+                                        }
+                                        trigger={<Icon name='info circle' color='blue' />}
+                                        wide />
+                                    </>
+                                  }
+
+                                </FormattedMessage>
+
                               </Header>
                               <FormGroup>
                                 <FormField width={10}>
@@ -851,56 +890,99 @@ class AddInventoryForm extends Component {
                                 </FormField>
                               </FormGroup>
 
-                              <Header as='h3'>Is this product in stock?</Header>
+                              <Header as='h3'><FormattedMessage id='addInventory.isInStock' defaultMessage='Is this product in stock?' /></Header>
                               <FormGroup inline>
-                                <Radio fieldProps={{ width: 5 }} label='No' value={false} name='inStock' />
-                                <Radio fieldProps={{ width: 5 }} label='Yes' value={true} name='inStock' />
+                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='inStock' />
+                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='inStock' />
                               </FormGroup>
-                              <Header as='h3'>How many business days to pick up? <Popup content={`Processing Time is the number of business days from when an order is confirmed that it will take you to have your product offer ready for pick up at your designated warehouse. NOTE: Saturdays and Sundays do not count for Processing Time.`}
-                                trigger={<Icon name='info circle' color='blue' />}
-                                wide />
+                              <Header as='h3'>
+                                <FormattedMessage id='addInventory.pickupDays' defaultMessage='How many business days to pick up?'>{(text) => (
+                                  <>
+                                    {text}
+                                    <Popup
+                                      content={<FormattedMessage id='addInventory.pickupDays.description' defaultMessage='Processing Time is the number of business days from when an order is confirmed that it will take you to have your product offer ready for pick up at your designated warehouse. NOTE: Saturdays and Sundays do not count for Processing Time.' />}
+                                      trigger={<Icon name='info circle' color='blue' />}
+                                      wide />
+                                  </>
+
+                                )}</FormattedMessage>
+
                               </Header>
                               <FormGroup>
-                                <FormField width={10}>
-                                  <Dropdown label='Processing Time' name='processingTimeDays' options={this.getProcessingTimes(14)}
+                                <FormField width={4}>
+                                  <Dropdown label={<FormattedMessage id='addInventory.processingTime' defaultMessage='Processing Time' />} name='processingTimeDays' options={this.getProcessingTimes(14)}
                                   />
                                 </FormField>
                               </FormGroup>
 
-                              <Header as='h3'>Does this product expire? <Popup content={`If the product you are listing has an expiration then you are required to disclose that date. If you sell a product that is not represented correctly the buyer has the right to request a return of the order and the cost of shipping to/from will be the sellers responsibility.`}
-                                trigger={<Icon name='info circle' color='blue' />}
-                                wide />
+                              <Header as='h3'>
+                                <FormattedMessage id='addInventory.expiration' defaultMessage='Does this product expire?'>
+                                  {(text) => (
+                                    <>
+                                      {text}
+                                      <Popup
+                                        content={<FormattedMessage id='addInventory.expirationDescription' defaultValue='If the product you are listing has an expiration then you are required to disclose that date. If you sell a product that is not represented correctly the buyer has the right to request a return of the order and the cost of shipping to/from will be the sellers responsibility.' />}
+                                        trigger={<Icon name='info circle' color='blue' />}
+                                        wide />
+                                    </>
+                                  )}
+                                </FormattedMessage>
                               </Header>
                               <FormGroup inline>
-                                <Radio fieldProps={{ width: 5 }} label='No' value={false} name='doesExpire' />
-                                <Radio fieldProps={{ width: 5 }} label='Yes' value={true} name='doesExpire' />
+                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='doesExpire' />
+                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='doesExpire' />
                               </FormGroup>
                               <FormGroup>
                                 <FormField width={10}>
-                                  <DateInput inputProps={{ disabled: !values.doesExpire }} label='Expiration Date' name='validityDate' />
-                                </FormField>
-                              </FormGroup>
-
-                              <Header as='h3'>Where will this product ship from? <Popup content={`Warehouse is the physical location where your product offer will be picked up after an order is accepted. If you do not see the warehouse you need to list then go to Settings/Warehouses and add the information there. If you do not have permissions to add a new Warehouse then contact your company Admin.`}
-                                trigger={<Icon name='info circle' color='blue' />}
-                                wide />
-                              </Header>
-                              <FormGroup>
-                                <FormField width={10}>
-                                  <Dropdown label='Warehouse' name='warehouse' options={warehousesList} inputProps={{
-                                    selection: true,
-                                    value: 0
-                                  }} />
+                                  <DateInput
+                                    inputProps={{ disabled: !values.doesExpire }}
+                                    label={formatMessage({ id: 'addInventory.expirationDate', defaultMessage: 'Expiration Date' })}
+                                    name='validityDate' />
                                 </FormField>
                               </FormGroup>
 
                               <Header as='h3'>
-                                How many packages are available? <Popup content='Total packages represents the number of drums, totes, super sacks etc that you will be listing for this product offer. Your packaging type and measurement for this product offer will populate on the right panel as soon as you select a product name/number.'
-                                  trigger={<Icon name='info circle' color='blue' />} />
+                                <FormattedMessage id='addInventory.shipFrom.header' defaultMessage='Where will this product ship from?'>{(text) => (
+                                  <>
+                                    {text}
+                                    <Popup
+                                      content={<FormattedMessage id='addInventory.shipFrom.description' defaultMessage='Warehouse is the physical location where your product offer will be picked up after an order is accepted. If you do not see the warehouse you need to list then go to Settings/Warehouses and add the information there. If you do not have permissions to add a new Warehouse then contact your company Admin.' />}
+                                      trigger={<Icon name='info circle' color='blue' />}
+                                      wide />
+                                  </>
+                                )}</FormattedMessage>
                               </Header>
                               <FormGroup>
                                 <FormField width={10}>
-                                  <Input label='Total Packages' inputProps={{ type: 'number', min: 1 }} name='pkgAmount' />
+                                  <Dropdown
+                                    label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse!' })}
+                                    name='warehouse'
+                                    options={warehousesList}
+                                    inputProps={{
+                                      selection: true,
+                                      value: 0
+                                    }} />
+                                </FormField>
+                              </FormGroup>
+
+                              <Header as='h3'>
+                                <FormattedMessage id='addInventory.availablePackages' defaultMessage='How many packages are available?'>
+                                  {(text) => (
+                                    <>
+                                      {text}
+                                      <Popup content={<FormattedMessage id='addInventory.availablePackages.description' defaultMessage='Total packages represents the number of drums, totes, super sacks etc that you will be listing for this product offer. Your packaging type and measurement for this product offer will populate on the right panel as soon as you select a product name/number.' />}
+                                        trigger={<Icon name='info circle' color='blue' />} />
+                                    </>
+                                  )}
+                                </FormattedMessage>
+
+                              </Header>
+                              <FormGroup>
+                                <FormField width={10}>
+                                  <Input
+                                    label={formatMessage({ id: 'addInventory.totalPackages', defaultMessage: 'Total Packages' })}
+                                    inputProps={{ type: 'number', min: 1 }}
+                                    name='pkgAmount' />
                                 </FormField>
                               </FormGroup>
 
@@ -915,15 +997,27 @@ class AddInventoryForm extends Component {
 
                                     <GridRow>
                                       <GridColumn>
-                                        <Header as='h3'>Is there any order minimum requirement? <Popup content={<>Minimum OQ is the minimum amount of packages you want to sell for any single order. If you want to sell no less than 10 drums for an order then enter 10. If you have no minimum order requirement then enter 1.<br />Splits is the multiples you are willing to accept for any single order. If you only want to sell multiples of 4 drums then enter 4. If you have no split requirements then enter 1.</>}
-                                          trigger={<Icon name='info circle' color='blue' />}
-                                          wide />
+                                        <Header as='h3'>
+                                          <FormattedMessage id='addInventory.minimumOrderRequirement' defaultMessage='Is there any order minimum requirement?'>
+                                            {(text) => (
+                                              <>
+                                                {text}
+                                                <Popup content={<>
+                                                  <FormattedMessage id='addInventory.minimumOrderRequirement.description1' defaultMessage='Minimum OQ is the minimum amount of packages you want to sell for any single order. If you want to sell no less than 10 drums for an order then enter 10. If you have no minimum order requirement then enter 1.' />
+                                                  <br /> <br />
+                                                  <FormattedMessage id='addInventory.minimumOrderRequirement.description2' defaultMessage='Splits is the multiples you are willing to accept for any single order. If you only want to sell multiples of 4 drums then enter 4. If you have no split requirements then enter 1.' /> </>}
+
+                                                  trigger={<Icon name='info circle' color='blue' />}
+                                                  wide />
+                                              </>
+                                            )}
+                                          </FormattedMessage>
                                         </Header>
                                       </GridColumn>
                                     </GridRow>
                                     <GridRow>
                                       <GridColumn computer={8} tablet={16}>
-                                        <Radio label='No' value={false} name='minimumRequirement' inputProps={{
+                                        <Radio label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='minimumRequirement' inputProps={{
                                           onClick: () => {
                                             setFieldValue('minimum', 1)
                                             setFieldValue('pricingTiers[0].quantityFrom', 1)
@@ -931,31 +1025,57 @@ class AddInventoryForm extends Component {
                                         }} />
                                       </GridColumn>
                                       <GridColumn computer={8} tablet={16}>
-                                        <Radio label='Yes' value={true} name='minimumRequirement' />
+                                        <Radio label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='minimumRequirement' />
                                       </GridColumn>
                                     </GridRow>
 
                                     <GridRow>
                                       <GridColumn computer={8} tablet={16}>
-                                        <Input label='Minimum OQ' name='minimum' inputProps={{
-                                          type: 'number', min: 1, onChange: (e, data) => {
-                                            if (data.value > 1) {
-                                              setFieldValue('minimumRequirement', true)
-                                              setFieldValue('pricingTiers[0].quantityFrom', data.value)
+                                        <Input
+                                          label={formatMessage({ id: 'addInventory.minimumOQ', defaultMessage: 'Minimum OQ' })}
+                                          name='minimum'
+                                          inputProps={{
+                                            type: 'number', min: 1, onChange: (e, data) => {
+                                              if (data.value > 1) {
+                                                setFieldValue('minimumRequirement', true)
+                                                setFieldValue('pricingTiers[0].quantityFrom', data.value)
+                                              }
                                             }
-                                          }
-                                        }} />
+                                          }} />
                                       </GridColumn>
 
                                       <GridColumn computer={8} tablet={16}>
-                                        <Input label='Splits' name='splits' inputProps={{ type: 'number', min: 1 }} />
+
+                                        <Input
+                                          label={formatMessage({ id: 'addInventory.splits', defaultMessage: 'Splits' })}
+                                          name='splits'
+                                          inputProps={{
+                                            type: 'number', min: 1
+                                          }} />
+
                                       </GridColumn>
                                     </GridRow>
                                     <GridRow>
                                       <GridColumn>
-                                        <Header as='h3'>How many price tiers would you like to offer? <Popup content={<>Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.<br />For example if you list 40 drums you could set 2 tiers and offer orders of <span style={{ whiteSpace: 'nowrap' }}>1-20 drums</span> at $1.00/lb and orders of <span style={{ whiteSpace: 'nowrap' }}>21-40</span> drums at $.90/lb.<br />If you only want to set only one price then enter '1'.</>}
-                                          trigger={<Icon name='info circle' color='blue' />}
-                                          wide />
+
+                                        <Header as='h3'>
+                                          <FormattedMessage id='addInventory.pricesCount' defaultMessage='How many price tiers would you like to offer?'>
+                                            {(text) => (
+                                              <>
+                                                {text}
+                                                <Popup content={<>
+                                                  <FormattedMessage id='addInventory.pricesCount.description1' defaultMessage='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.' />
+                                                  <br /> <br />
+                                                  <FormattedMessage id='addInventory.pricesCount.description2' defaultMessage='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.' />
+                                                  <br /> <br />
+                                                  <FormattedMessage id='addInventory.pricesCount.description3' defaultMessage='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.' />
+                                                </>
+                                                }
+                                                  trigger={<Icon name='info circle' color='blue' />}
+                                                  wide />
+                                              </>
+                                            )}
+                                          </FormattedMessage>
                                         </Header>
                                       </GridColumn>
                                     </GridRow>
@@ -965,7 +1085,7 @@ class AddInventoryForm extends Component {
                                         <Dropdown
 
                                           // fieldProps={{ width: 16 }}
-                                          label='Price Tiers'
+                                          label={formatMessage({ id: 'addInventory.priceTiers', defaultMessage: 'Price Tiers' })}
                                           name='priceTiers'
                                           options={this.getPriceTiers(10)}
                                           inputProps={{
@@ -985,11 +1105,22 @@ class AddInventoryForm extends Component {
 
                                     <GridRow>
                                       <GridColumn>
-                                        <Header as='h3'
-                                        // style={{ marginBottom: '2rem' }}
-                                        >What is the FOB price for each tier? <Popup content='FOB stands for free on board and freight on board and designates that the buyer is responsible for shipping costs. It also represents that ownership and liability is passed from seller to the buyer when the good are loaded at the originating location.'
-                                          trigger={<Icon name='info circle' color='blue' />}
-                                          wide />
+                                        <Header as='h3'>
+                                          <FormattedMessage id='addInventory.fobPrice.header' defaultMessage='What is the FOB price for each tier?'>
+                                            {(text) => (
+                                              <>
+                                                {text}
+                                                <Popup
+                                                  content={
+                                                    <FormattedMessage
+                                                      id='addInventory.fobPrice.description'
+                                                      defaultMessage='FOB stands for free on board and freight on board and designates that the buyer is responsible for shipping costs. It also represents that ownership and liability is passed from seller to the buyer when the good are loaded at the originating location.' />
+                                                  }
+                                                  trigger={<Icon name='info circle' color='blue' />}
+                                                  wide />
+                                              </>
+                                            )}
+                                          </FormattedMessage>
                                         </Header>
                                       </GridColumn>
                                     </GridRow>
@@ -1004,13 +1135,30 @@ class AddInventoryForm extends Component {
 
                                     <GridRow>
                                       <GridColumn>
-                                        <Header as='h3'>Upload Spec Sheet <Popup content={<>The Spec Sheet, also known as a Technical Data Sheet (TDS), is required for a product offer to broadcast to the marketplace.<br /><br />You can drag and drop a file from your computer or click on the box to search for the file as well.<br /><br />IMPORTANT! Your company name and contact information cannot be listed on this document and non compliance is against Echo's Terms and Conditions.</>}
-                                          trigger={<Icon name='info circle' color='blue' />}
-                                          wide />
+                                        <Header as='h3'>
+                                          <FormattedMessage id='addInventory.uploadSpecSheet.header' defaultMessage='Upload Spec Sheet'>
+                                            {(text) => (
+                                              <>
+                                                {text}
+                                                <Popup 
+                                                content={
+                                                <>
+                                                <FormattedMessage id='addInventory.uploadSpecSheet.description1' defaultMessage='The Spec Sheet, also known as a Technical Data Sheet (TDS), is required for a product offer to broadcast to the marketplace.' />
+                                                  <br /> <br />
+                                                <FormattedMessage id='addInventory.uploadSpecSheet.description2' defaultMessage='You can drag and drop a file from your computer or click on the box to search for the file as well.' />
+                                                <br /><br />
+                                                <FormattedMessage id='addInventory.uploadSpecSheet.description3' defaultMessage={`IMPORTANT! Your company name and contact information cannot be listed on this document and non compliance is against Echo's Terms and Conditions.`} />
+                                               </>
+                                               }
+                                                  trigger={<Icon name='info circle' color='blue' />}
+                                                  wide />
+                                              </>
+                                            )}
+                                          </FormattedMessage>
                                         </Header>
                                       </GridColumn>
                                     </GridRow>
-
+{/* TODO - react-intl refactor ended here... */}
                                     <UploadLot {...this.props}
                                       attachments={values.attachments}
                                       name='attachments'
@@ -1439,3 +1587,560 @@ class AddInventoryForm extends Component {
 }
 
 export default injectIntl(AddInventoryForm)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// <Button primary icon='checkmark' labelPosition='right' content='Go to My Inventory' onClick={this.goToList} />
+// </Modal.Actions>
+// </Modal>
+// <div className='flex stretched'>
+// <Tab className='inventory tab-menu flex stretched' menu={{ secondary: true, pointing: true }} renderActiveOnly={false} activeIndex={this.state.activeTab} panes={[
+//   {
+//     menuItem: (
+//       <Menu.Item key='productOffer' onClick={() => {
+//         validateForm()
+//           .then(r => {
+//             // stop when errors found
+//             if (Object.keys(r).length) {
+//               submitForm() // show errors
+//               return false
+//             }
+
+//             // if validation is correct - switch tabs
+//             this.switchTab(0, values, setFieldValue)
+//           })
+//           .catch(e => {
+//             console.log('CATCH', e)
+//           })
+//       }}>
+//         <FormattedMessage id='addInventory.productOffer' defaultMessage='PRODUCT OFFER' />
+//       </Menu.Item>
+//     ),
+//     pane: (
+//       <Tab.Pane style={{ padding: '0 32px' }}>
+//         <Grid divided style={{ marginTop: '2rem' }}>
+//           <Grid.Column width={5}>
+//             <Header as='h3'>
+//               <FormattedMessage id='addInventory.whatToList' defaultMessage='What product do you want to list?' />
+//               {/* <Popup
+//                 content={<> 
+//                 <FormattedMessage 
+//                 id='addInventory.enterProductInfo1'
+//                 defaultMessage='Enter any product name, product number, or trade name from your product catalog for the product offer that you would like to list. Once you do the data related to that product name/umber will populate in the right hand column.' />
+//                 <br /><br />
+//                 <FormattedMessage 
+//                 id='addInventory.enterProductInfo2'
+//                  defaultMessage='If you do not see the product that you would like to list then check in Settings/Product Catalog that it is entered and mapped to a CAS Index Name/Number and then return to this page.' />
+//                 <br /><br />
+//                 <FormattedMessage 
+//                 id='addInventory.enterProductInfo3'
+//                  defaultMessage='Entering a product name and number and mapping to a CAS Index Name and Number is required first before entering a product offer.'/>
+//                 </>
+//                 }
+//                 trigger={<Icon name='info circle' color='blue' />}
+//                 wide /> */}
+//             </Header>
+//             <FormGroup>
+//               <FormField width={13}>
+//                 <Dropdown
+//                   label='Product Search'
+//                   name='product'
+//                   options={this.state.searchedProducts}
+//                   inputProps={{
+//                     style: { width: '300px' },
+//                     size: 'large',
+//                     minCharacters: 3,
+//                     icon: 'search',
+//                     search: options => options,
+//                     selection: true,
+//                     clearable: true,
+//                     loading: searchedProductsLoading,
+//                     onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && this.searchProducts(searchQuery)
+//                   }}
+//                 />
+//               </FormField>
+//             </FormGroup>
+
+//             <Header as='h3'><FormattedMessage id='addInventory.isInStock' defaultMessage='Is this product in stock?' /></Header>
+//             <FormGroup inline>
+//               <Radio label='No' value={false} name='inStock' />
+//               <Radio label='Yes' value={true} name='inStock' />
+//             </FormGroup>
+//             <Header as='h3'>
+            // <FormattedMessage id='addInventory.pickupDays' defaultMessage='How many business days to pick up?' />
+            // <Popup 
+            // content={<FormattedMessage id='addInventory.pickupDays.description' defaultMessage='Processing Time is the number of business days from when an order is confirmed that it will take you to have your product offer ready for pick up at your designated warehouse. NOTE: Saturdays and Sundays do not count for Processing Time.' />}
+            //   trigger={<Icon name='info circle' color='blue' />}
+            //   wide />
+            // </Header>
+            // <FormGroup>
+            //   <FormField width={4}>
+            //     <Dropdown label={<FormattedMessage id='addInventory.processingTime' defaultMessage='Processing Time'/>} name='processingTimeDays' options={this.getProcessingTimes(14)}
+            //     />
+            //   </FormField>
+            // </FormGroup>
+
+            // <Header as='h3'>
+            // <FormattedMessage id='addInventory.expiration' defaultMessage='Does this product expire?' />
+            //   <Popup 
+            //   content={<FormattedMessage id='addInventory.expirationDescription' defaultValue='If the product you are listing has an expiration then you are required to disclose that date. If you sell a product that is not represented correctly the buyer has the right to request a return of the order and the cost of shipping to/from will be the sellers responsibility.' />}
+            //   trigger={<Icon name='info circle' color='blue' />}
+            //   wide />
+            // </Header>
+//             <FormGroup inline>
+//               <Radio label='No' value={false} name='doesExpire' />
+//               <Radio label='Yes' value={true} name='doesExpire' />
+//             </FormGroup>
+//             <FormGroup>
+//               <FormField width={5}>
+//                 <DateInput inputProps={{ disabled: !values.doesExpire }} label='Expiration Date' name='validityDate' />
+//               </FormField>
+//             </FormGroup>
+
+            // <Header as='h3'>
+            // <FormattedMessage id='addInventory.shipFrom.description' defaultMessage='Where will this product ship from?' />
+            //   <Popup content={<FormattedMessage id='addInventory.shipFrom.description' defaultMessage='Warehouse is the physical location where your product offer will be picked up after an order is accepted. If you do not see the warehouse you need to list then go to Settings/Warehouses and add the information there. If you do not have permissions to add a new Warehouse then contact your company Admin.' />}
+            //   trigger={<Icon name='info circle' color='blue' />}
+            //   wide />
+            // </Header>
+//             <FormGroup>
+//               <FormField width={10}>
+//                 <Dropdown label='Warehouse' name='warehouse' options={warehousesList} inputProps={{
+//                   selection: true,
+//                   value: 0
+//                 }} />
+//               </FormField>
+//             </FormGroup>
+
+            // <Header as='h3'>
+            // <FormattedMessage id='addInventory.availablePackages' defaultMessage='How many packages are available?' />
+            //   <Popup content={<FormattedMessage id='addInventory.availablePackages.description' defaultMessage='Total packages represents the number of drums, totes, super sacks etc that you will be listing for this product offer. Your packaging type and measurement for this product offer will populate on the right panel as soon as you select a product name/number.' />}
+            //     trigger={<Icon name='info circle' color='blue' />} />
+            // </Header>
+//             <FormGroup>
+//               <FormField width={4}>
+//                 <Input label={<FormattedMessage id='addInventory.totalPackages' defaultValue='Total Packages' />} inputProps={{ type: 'number' }} name='pkgAmount' />
+//               </FormField>
+//             </FormGroup>
+
+//           </Grid.Column>
+//           <GridColumn width={6}>
+//             <Grid centered>
+//               <GridColumn width={12}>
+
+                // <Header as='h3'>
+                // <FormattedMessage id='addInventory.minimumOrderRequirement' defaultMessage='Is there any order minimum requirement?' />
+
+                //   <Popup content={<>
+                //   <FormattedMessage id='addInventory.minimumOrderRequirement.description1' defaultMessage='Minimum OQ is the minimum amount of packages you want to sell for any single order. If you want to sell no less than 10 drums for an order then enter 10. If you have no minimum order requirement then enter 1.' />
+                //   <br />
+                //   <FormattedMessage id='addInventory.minimumOrderRequirement.description2' defaultMessage='Splits is the multiples you are willing to accept for any single order. If you only want to sell multiples of 4 drums then enter 4. If you have no split requirements then enter 1.' /> </>}
+
+                //   trigger={<Icon name='info circle' color='blue' />}
+                //   wide />
+                // </Header>
+//                 <FormGroup>
+//                   <Radio label='No' value={false} name='minimumRequirement' inputProps={{
+//                     onClick: () => {
+//                       setFieldValue('minimum', 1)
+//                       setFieldValue('pricingTiers[0].quantityFrom', 1)
+//                     }
+//                   }} />
+//                   <Radio label='Yes' value={true} name='minimumRequirement' />
+//                 </FormGroup>
+//                 <FormGroup>
+//                   <FormField width={5}>
+//                     <Input label='Minimum OQ' name='minimum' inputProps={{
+//                       type: 'number', onChange: (e, data) => {
+//                         if (data.value > 1) {
+//                           setFieldValue('minimumRequirement', true)
+//                           setFieldValue('pricingTiers[0].quantityFrom', data.value)
+//                         }
+//                       }
+//                     }} />
+//                   </FormField>
+//                   <FormField width={5}>
+//                     <Input label='Splits' name='splits' inputProps={{ type: 'number' }} />
+//                   </FormField>
+//                 </FormGroup>
+
+//                 <Header as='h3'>
+//                 <FormattedMessage id='addInventory.pricesCount' defaultMessage='How many price tiers would you like to offer?' />
+//                   <Popup content={<>
+//                   <FormattedMessage id='addInventory.pricesCount.description1' defaultMessage='Price Tiers allow you to set different prices related to total quantities ordered for a single product offer.' />
+//                  {/* TODO ENDED react-intl refactor here..., verify if above messages are ok then continue  */}
+//                   <br />For example if you list 40 drums you could set 2 tiers and offer orders of <span style={{ whiteSpace: 'nowrap' }}>1-20 drums</span> at $1.00/lb and orders of <span style={{ whiteSpace: 'nowrap' }}>21-40</span> drums at $.90/lb.<br />If you only want to set only one price then enter '1'.</>}
+//                   trigger={<Icon name='info circle' color='blue' />}
+//                   wide />
+//                 </Header>
+//                 <FormGroup>
+//                   <FormField width={5}>
+//                     <Dropdown
+//                       label='Price Tiers'
+//                       name='priceTiers'
+//                       options={this.getPriceTiers(10)}
+//                       inputProps={{
+//                         onChange: (e, { value }) => setFieldValue(
+//                           'pricingTiers',
+//                           [
+//                             ...values.pricingTiers.slice(0, value),
+//                             ...[...new Array((value - values.priceTiers) > 0 ? value - values.priceTiers : 0)].map(t => ({ price: '0', quantityFrom: '0' }))
+//                           ]
+//                         )
+//                       }}
+//                     />
+//                   </FormField>
+//                 </FormGroup>
+
+//                 <Header as='h3' style={{ marginBottom: '2rem' }}>
+//                 <FormattedMessage id='addInventory.fobPrice' defaultMessage='What is the FOB price for each tier? ' />
+
+//                   <Popup content='FOB stands for free on board and freight on board and designates that the buyer is responsible for shipping costs. It also represents that ownership and liability is passed from seller to the buyer when the good are loaded at the originating location.'
+//                   trigger={<Icon name='info circle' color='blue' />}
+//                   wide />
+//                 </Header>
+//                 <Grid className='tier-prices'>
+//                   {this.renderPricingTiers(values.priceTiers)}
+//                 </Grid>
+
+//                 <Divider style={{ marginTop: '3rem', marginBottom: '3rem' }} />
+
+//                 <Header as='h3'>
+//                 <FormattedMessage id='addInventory.uploadSpecSheet' defaultMessage='Upload Spec Sheet' />
+//                   <Popup content={<>The Spec Sheet, also known as a Technical Data Sheet (TDS), is required for a product offer to broadcast to the marketplace.<br /><br />You can drag and drop a file from your computer or click on the box to search for the file as well.<br /><br />IMPORTANT! Your company name and contact information cannot be listed on this document and non compliance is against Echo's Terms and Conditions.</>}
+//                   trigger={<Icon name='info circle' color='blue' />}
+//                   wide />
+//                 </Header>
+//                 <UploadLot {...this.props}
+//                   attachments={values.attachments}
+//                   name='attachments'
+//                   type={2}
+//                   fileMaxSize={20}
+//                   onChange={(files) => setFieldValue(
+//                     `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
+//                     {
+//                       id: files.id,
+//                       name: files.name
+//                     }
+//                   )}
+//                   emptyContent={(
+//                     <label>
+//                       <FormattedMessage
+//                         id='addInventory.dragDrop'
+//                         defaultMessage={'Drag and drop ' + this.props.type + ' file here'}
+//                         values={{ docType: this.props.type }}
+//                       />
+//                       <br />
+//                       <FormattedMessage
+//                         id='addInventory.dragDropOr'
+//                         defaultMessage={'or select from computer'}
+//                       />
+//                     </label>
+//                   )}
+//                   uploadedContent={(
+//                     <label>
+//                       <FormattedMessage
+//                         id='addInventory.dragDrop'
+//                         defaultMessage={'Drag and drop ' + this.props.type + ' file here'}
+//                         values={{ docType: this.props.type }}
+//                       />
+//                       <br />
+//                       <FormattedMessage
+//                         id='addInventory.dragDropOr'
+//                         defaultMessage={'or select from computer'}
+//                       />
+//                     </label>
+//                   )}
+//                 />
+
+//               </GridColumn>
+//             </Grid>
+//           </GridColumn>
+
+//           <GridColumn width={5}>
+//             {this.renderProductDetails(values, validateForm)}
+//           </GridColumn>
+//         </Grid>
+//       </Tab.Pane>
+//     )
+//   },
+//   {
+//     menuItem: (
+//       <Menu.Item key='productOptional' onClick={() => {
+//         validateForm()
+//           .then(r => {
+//             // stop when errors found
+//             if (Object.keys(r).length) {
+//               submitForm() // show errors
+//               return false
+//             }
+
+//             // if validation is correct - switch tabs
+//             this.switchTab(1, values, setFieldValue)
+//           })
+//           .catch(e => {
+//             console.log('CATCH', e)
+//           })
+//       }}>
+//         OPTIONAL PRODUCT INFO
+//     </Menu.Item>
+//       ),
+//       pane: (
+//         <Tab.Pane style={{ padding: '0 32px' }}>
+//           <Grid divided style={{ marginTop: '2rem' }}>
+//             <Grid.Column width={5}>
+//               <Header as='h3'>What product do you want to list? <Popup content={<>Enter any product name, product number, or trade name from your product catalog for the product offer that you would like to list. Once you do the data related to that product name/umber will populate in the right hand column.<br /><br />If you do not see the product that you would like to list then check in Settings/Product Catalog that it is entered and mapped to a CAS Index Name/Number and then return to this page.<br /><br />Entering a product name and number and mapping to a CAS Index Name and Number is required first before entering a product offer.</>}
+//                 trigger={<Icon name='info circle' color='blue' />}
+//                 wide />
+//               </Header>
+//               <FormGroup>
+//                 <FormField width={10}>
+//                   <Dropdown
+//                     label='Origin'
+//                     name='origin'
+//                     options={searchedOrigins}
+//                     inputProps={{
+//                       style: { width: '300px' },
+//                       size: 'large',
+//                       minCharacters: 0,
+//                       icon: 'search',
+//                       search: true,
+//                       selection: true,
+//                       clearable: true,
+//                       loading: searchedProductsLoading,
+//                       onSearchChange: (e, { searchQuery }) => searchQuery.length > 2 && this.searchProducts(searchQuery)
+//                     }}
+//                   />
+//                 </FormField>
+//                 <FormField width={16}>
+//                   <Dropdown
+//                     label='Manufacturer'
+//                     name='manufacturer'
+//                     options={searchedManufacturers}
+//                     inputProps={{
+//                       size: 'large',
+//                       minCharacters: 0,
+//                       icon: 'search',
+//                       search: true,
+//                       selection: true,
+//                       clearable: true,
+//                       loading: searchedManufacturersLoading,
+//                       onChange: (e, { value }) => { value ? console.log(value) : searchManufacturers('') },
+//                       onSearchChange: debounce((e, { searchQuery }) => searchManufacturers(searchQuery), 500)
+//                     }}
+//                   />
+//                 </FormField>
+//                 <FormField width={16}>
+//                   <Input label='Trade Name' name='tradeName' inputProps={{ type: 'text' }} />
+//                 </FormField>
+//               </GridColumn>
+//               <GridColumn width={5}>
+//                 <FormField width={16}>
+//                   <Dropdown label='Form' name='productForm' options={listForms} />
+//                 </FormField>
+//                 <FormGroup>
+//                   <FormField width={8}>
+//                     <Dropdown label='Condition' name='productCondition' options={listConditions} />
+//                   </FormField>
+//                   <FormField width={8}>
+//                     <Dropdown label='Grade' name='productGrade' options={listGrades} />
+//                   </FormField>
+//                 </FormGroup>
+//                 <FormGroup>
+//                   <FormField width={8}>
+//                     <Input name={`assayMin`} label='Assay Min %' inputProps={{ type: 'number', step: '0.001', value: null }} />
+//                   </FormField>
+//                   <FormField width={8}>
+//                     <Input name={`assayMax`} label='Assay Max %' inputProps={{ type: 'number', step: '0.001', value: null }} />
+//                   </FormField>
+//                 </FormGroup>
+//               </GridColumn>
+//               <GridColumn width={5} floated='right'>
+//                 <FormField width={16}>
+//                   <TextArea name='externalNotes' label='External Notes' />
+//                 </FormField>
+//                 <FormField width={16}>
+//                   <TextArea name='internalNotes' label='Internal Notes' />
+//                 </FormField>
+//               </GridColumn>
+//             </Grid>
+
+//             <Divider />
+
+//             <FieldArray
+//               name='lots'
+//               render={arrayHelpers => (
+//                 <>
+//                   <Message attached='top' className='header-table-fields'>
+//                     <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{ marginTop: '-0.5em' }} onClick={() => arrayHelpers.push({ lotNumber: null, pkgAmount: null, manufacturedDate: '', expirationDate: '' })} />
+//                     Lot Details <Popup content={`This is where you can track lot(s) that make up your product offer. For example if your product offer consists of three separate lots then hit the plus button to the right twice to add two more lots. Then enter the Lot # for each, the amount of packages that are associated to that lot within this product offer, the MFG date, the expiration date, and the associated Certificate of Analysis. This does not have to be completed when listing a product offer but it is required to designate lot info and CofA's within 48 hours of an order being shipped.`}
+//                       trigger={<Icon name='info circle' color='blue' />}
+//                       wide
+//                     />
+//                   </Message>
+//                   <Table attached='bottom' className='table-fields'>
+//                     <Table.Header>
+//                       <Table.Row>
+//                         <Popup content={'What is the lot number?'} trigger={<TableHeaderCell>Lot #</TableHeaderCell>} />
+//                         <Popup content={'How many packages in this lot?'} trigger={<TableHeaderCell>Total</TableHeaderCell>} />
+//                         <TableHeaderCell>Available</TableHeaderCell>
+//                         <TableHeaderCell>Allocated</TableHeaderCell>
+//                         <Popup content={'What is the MFG?'} trigger={<TableHeaderCell>MFG Date</TableHeaderCell>} />
+//                         <Popup content={'What is the expiration?'} trigger={<TableHeaderCell>Expiration Date</TableHeaderCell>} />
+//                         <TableHeaderCell>C of A</TableHeaderCell>
+//                         <TableHeaderCell>&nbsp;</TableHeaderCell>
+//                       </Table.Row>
+//                     </Table.Header>
+//                     <Table.Body>
+//                       {values.lots && values.lots.length ? values.lots.map((lot, index) => (
+//                         <Table.Row key={index}>
+//                           <TableCell><Input name={`lots[${index}].lotNumber`} inputProps={{ onClick: () => setFieldValue('touchedLot', true) }} /></TableCell>
+//                           <TableCell><Input name={`lots[${index}].pkgAmount`} inputProps={{
+//                             onClick: () => setFieldValue('touchedLot', true),
+//                             onChange: (e, data) => this.modifyCosts(setFieldValue, {
+//                               costs: values.costs,
+//                               lots: values.lots.map((bLot, bIndex) => {
+//                                 return {
+//                                   pkgAmount: bIndex === index ? data.value : bLot.pkgAmount
+//                                 }
+//                               })
+//                             })
+//                           }} /></TableCell>
+//                           <TableCell>0</TableCell>
+//                           <TableCell>0</TableCell>
+//                           <TableCell><DateInput name={`lots[${index}].manufacturedDate`} /></TableCell>
+//                           <TableCell><DateInput name={`lots[${index}].expirationDate`} /></TableCell>
+//                           <TableCell>
+//                             <UploadLot {...this.props}
+//                               attachments={values.lots[index].attachments}
+//                               name={`lots[${index}].attachments`}
+//                               type={1}
+//                               lot={true}
+//                               filesLimit={1}
+//                               fileMaxSize={20}
+//                               onChange={(files) => setFieldValue(
+//                                 `lots[${index}].attachments[${values.lots[index].attachments && values.lots[index].attachments.length ? values.lots[index].attachments.length : 0}]`,
+//                                 {
+//                                   id: files.id,
+//                                   name: files.name
+//                                 }
+//                               )}
+//                               emptyContent={(
+//                                 <FormattedMessage
+//                                   id='addInventory.clickUpload'
+//                                   defaultMessage={'Click to upload'}
+//                                 />
+//                               )}
+//                             />
+//                           </TableCell>
+//                           <TableCell><Icon name='trash alternate outline' size='large' onClick={() => this.removeLot(arrayHelpers, setFieldValue, { costs: values.costs, lots: values.lots }, index)} /></TableCell>
+//                         </Table.Row>
+//                       )) : ''
+//                       }
+//                     </Table.Body>
+//                   </Table>
+//                 </>
+//               )}
+//             />
+
+//             <Header as='h3'>PRODUCT COST</Header>
+//             <Grid>
+//               <GridColumn width={4}>
+//                 <FormField width={12}>
+//                   <Input name='cost' label='Cost/UOM' inputProps={{ type: 'number', step: '0.01', value: null, min: 0 }} />
+//                 </FormField>
+//                 <FormField>
+//                   <label>Track Sub-Costs</label>
+//                   <FormGroup>
+//                     <FormField width={5}>
+//                       <Radio label='Yes' value={true} name='trackSubCosts' />
+//                     </FormField>
+//                     <FormField width={5}>
+//                       <Radio label='No' value={false} name='trackSubCosts' />
+//                     </FormField>
+//                   </FormGroup>
+//                 </FormField>
+//               </GridColumn>
+//               <GridColumn width={12}>
+//                 <FieldArray name='costs'
+//                   render={arrayHelpers => (
+//                     <>
+//                       <Message attached='top' className='header-table-fields'>
+//                         <Button type='button' icon='plus' color='blue' size='small' disabled={!values.trackSubCosts} floated='right' style={{ marginTop: '-0.5em' }} onClick={() => arrayHelpers.push({ description: '', lot: 0, cost: null, costUom: null })} />
+//                         Sub-Cost Breakdown
+//                     </Message>
+//                     <Table attached='bottom' className='table-fields'>
+//                       <Table.Header>
+//                         <Table.Row>
+//                           <Popup content={'What is the lot number?'} trigger={<TableHeaderCell>Lot #</TableHeaderCell>} />
+//                           <Popup content={'How many packages in this lot?'} trigger={<TableHeaderCell>Total</TableHeaderCell>} />
+//                           <TableHeaderCell>Available</TableHeaderCell>
+//                           <TableHeaderCell>Allocated</TableHeaderCell>
+//                           <Popup content={'What is the MFG?'} trigger={<TableHeaderCell>MFG Date</TableHeaderCell>} />
+//                           <Popup content={'What is the expiration?'} trigger={<TableHeaderCell>Expiration Date</TableHeaderCell>} />
+//                           <TableHeaderCell>C of A</TableHeaderCell>
+//                           <TableHeaderCell>&nbsp;</TableHeaderCell>
+//                         </Table.Row>
+//                       </Table.Header>
+//                       <Table.Body>
+//                         {values.lots && values.lots.length ? values.lots.map((lot, index) => (
+//                           <Table.Row key={index}>
+//                             <TableCell><Input name={`lots[${index}].lotNumber`} inputProps={{ onClick: () => setFieldValue('touchedLot', true) }} /></TableCell>
+//                             <TableCell><Input name={`lots[${index}].pkgAmount`} inputProps={{
+//                               onClick: () => setFieldValue('touchedLot', true),
+//                               onChange: (e, data) => this.modifyCosts(setFieldValue, {
+//                                 costs: values.costs,
+//                                 lots: values.lots.map((bLot, bIndex) => {
+//                                   return {
+//                                     pkgAmount: bIndex === index ? data.value : bLot.pkgAmount
+//                                   }
+//                                 })
+//                               })
+//                             }} /></TableCell>
+//                             <TableCell>0</TableCell>
+//                             <TableCell>0</TableCell>
+//                             <TableCell><DateInput name={`lots[${index}].manufacturedDate`} /></TableCell>
+//                             <TableCell><DateInput name={`lots[${index}].expirationDate`} /></TableCell>
+//                             <TableCell>
+//                               <UploadLot {...this.props}
+//                                 attachments={values.lots[index].attachments}
+//                                 name={`lots[${index}].attachments`}
+//                                 type={1}
+//                                 lot={true}
+//                                 filesLimit={1}
+//                                 fileMaxSize={20}
+//                                 onChange={(files) => setFieldValue(
+//                                   `lots[${index}].attachments[${values.lots[index].attachments && values.lots[index].attachments.length ? values.lots[index].attachments.length : 0}]`,
+//                                   {
+//                                     id: files.id,
+//                                     name: files.name
+//                                   }
+//                                 )}
+//                                 emptyContent={(
+//                                   <FormattedMessage
+//                                     id='addInventory.clickUpload'
+//                                     defaultMessage={'Click to upload'}
+//                                   />
+//                                 )}
+//                               />
+//                             </TableCell>
+//                             <TableCell><Icon name='trash alternate outline' size='large' onClick={() => this.removeLot(arrayHelpers, setFieldValue, { costs: values.costs, lots: values.lots }, index)} /></TableCell>
+//                           </Table.Row>
+//                         )) : ''
+//                         }
+//                       </Table.Body>
+//                     </Table>

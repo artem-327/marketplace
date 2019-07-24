@@ -61,8 +61,6 @@ class FilterTags extends Component {
     if (!appliedFilter.filters || appliedFilter.filters.length === 0) return null
     let filters = groupFilters(appliedFilter.filters, this.props.params)
 
-    console.log({ filters, appliedFilter })
-
     if (!filters || filters.length === 0) return null
     let tagsToDisplay = []
 

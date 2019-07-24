@@ -2,14 +2,16 @@ import React, { Component } from 'react'
 import './uploadLot.scss'
 import upload from '~/src/images/upload/upload.png'
 import uploaded from '~/src/images/upload/uploaded.png'
-import PropTypes from "prop-types"
-import File from "~/src/pages/inventory/addInventory/components/Upload/components/File"
-import ReactDropzone from "react-dropzone"
+import PropTypes from 'prop-types'
+import File from '~/src/pages/inventory/addInventory/components/Upload/components/File'
+import ReactDropzone from 'react-dropzone'
 import { FormattedMessage } from 'react-intl'
 import { TOO_LARGE_FILE, UPLOAD_FILE_FAILED } from '~/src/modules/errors.js'
-import { FieldArray } from "formik"
+import { FieldArray } from 'formik'
 import confirm from '~/src/components/Confirmable/confirm'
 import { withToastManager } from 'react-toast-notifications'
+
+import { generateToastMarkup } from '~/utils/functions'
 
 class UploadLot extends Component {
   constructor(props) {
@@ -43,11 +45,9 @@ class UploadLot extends Component {
     let { fileMaxSize, toastManager } = this.props
     blobs.forEach(function (blob) {
       if (blob.size > (fileMaxSize * 1024 * 1024)) {
-        toastManager.add((
-          <div>
-            <strong>Too large file</strong>
-            <div>File "{blob.name}" is larger than maximal allowed size: {fileMaxSize} MB</div>
-          </div>
+        toastManager.add(generateToastMarkup(
+          <FormattedMessage id='errors.fileTooLarge.header' defaultMessage='Too large file' />,
+          <FormattedMessage id='errors.fileTooLarge.content' values={{ name: blob.name, size: fileMaxSize }} defaultMessage='File is larger than maximal allowed size' />,
         ), {
             appearance: 'error'
           })
@@ -61,11 +61,10 @@ class UploadLot extends Component {
 
   onUploadFail = (fileName) => {
     let { fileMaxSize, toastManager } = this.props
-    toastManager.add((
-      <div>
-        <strong>File not uploaded</strong>
-        <div>File "{fileName}" was not uploaded due to error</div>
-      </div>
+
+    toastManager.add(generateToastMarkup(
+      <FormattedMessage id='errors.fileNotUploaded.header' defaultMessage='File not uploaded' />,
+      <FormattedMessage id='errors.fileNotUploaded.content' defaultMessage={`File ${fileName} was not uploaded due to an error`} values={{ name: fileName }} />
     ), {
         appearance: 'error'
       })
@@ -79,11 +78,9 @@ class UploadLot extends Component {
       unspecifiedTypes = []
     if (unspecifiedTypes.indexOf(type) >= 0) {
       files = []
-      toastManager.add((
-        <div>
-          <strong>File(s) not uploaded</strong>
-          <div>You have to specify document type first</div>
-        </div>
+      toastManager.add(generateToastMarkup(
+        <FormattedMessage id='errors.fileNotUploaded.header' defaultMessage='File not uploaded' />,
+        <FormattedMessage id='errors.fileNotUploaded.specifyDocType' defaultMessage='You have to specify document type first' />
       ), {
           appearance: 'error'
         })
@@ -123,18 +120,16 @@ class UploadLot extends Component {
     let { attachments, disabled, filesLimit, toastManager } = this.props
     let hasFile = this.props.attachments && this.props.attachments.length !== 0
 
-    const limitMsg = (
-      <div>
-        <strong>File limit exceeded</strong>
-        <div>You can't upload more than {filesLimit} documents</div>
-      </div>
-    )
+    const limitMsg = generateToastMarkup(
+      <FormattedMessage id='errors.fileNotUploaded.limitExceeded.header' defaultMessage='File limit exceeded' />,
+      <FormattedMessage id='errors.fileNotUploaded.limitExceeded.content' values={{ count: filesLimit }} defaultMessage={`You can't upload more than ${filesLimit} documents`} />
+      )
 
     return (
-      <div className={"uploadLot " + (hasFile ? ' has-file' : '')}>
+      <div className={'uploadLot ' + (hasFile ? ' has-file' : '')}>
         {this.props.header}
         {disabled ? (
-          <span className="file-space">
+          <span className='file-space'>
             <FieldArray name={this.props.name}
               render={arrayHelpers => (
                 <>
@@ -142,7 +137,7 @@ class UploadLot extends Component {
                     <File key={file.id} onRemove={() => {
                       this.removeFile(file)
                       arrayHelpers.remove(index)
-                    }} disabled={true} className="file lot" name={file.name} index={index} />
+                    }} disabled={true} className='file lot' name={file.name} index={index} />
                   )) : ''}
                 </>
               )}
@@ -151,8 +146,8 @@ class UploadLot extends Component {
         ) : (hasFile ?
           <React.Fragment>
             {this.props.uploadedContent ? (
-              <ReactDropzone className="dropzoneLot"
-                activeClassName="active"
+              <ReactDropzone className='dropzoneLot'
+                activeClassName='active'
                 onDrop={acceptedFiles => {
                   if (acceptedFiles.length) {
                     if (!filesLimit || acceptedFiles.length <= filesLimit) {
@@ -173,7 +168,7 @@ class UploadLot extends Component {
                 {this.props.uploadedContent}
               </ReactDropzone>
             ) : ''}
-            <span className="file-space">
+            <span className='file-space'>
               <FieldArray name={this.props.name}
                 render={arrayHelpers => (
                   <>
@@ -181,15 +176,15 @@ class UploadLot extends Component {
                       <File key={file.id} onRemove={() => {
                         this.removeFile(file)
                         arrayHelpers.remove(index)
-                      }} className="file lot" name={file.name} index={index} />
+                      }} className='file lot' name={file.name} index={index} />
                     )) : ''}
                   </>
                 )} />
             </span>
           </React.Fragment>
           :
-          <ReactDropzone className="dropzoneLot"
-            activeClassName="active"
+          <ReactDropzone className='dropzoneLot'
+            activeClassName='active'
             onDrop={acceptedFiles => {
               if (acceptedFiles.length) {
                 if (!filesLimit || acceptedFiles.length <= filesLimit) {
