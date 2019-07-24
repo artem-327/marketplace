@@ -2,7 +2,6 @@ import React from "react"
 import { connect } from "react-redux"
 import { withToastManager } from 'react-toast-notifications'
 import { Modal, FormGroup } from "semantic-ui-react"
-
 import {
   closePopup,
   closeRolesPopup,
@@ -15,7 +14,6 @@ import { Form, Input, Button, Dropdown, Checkbox } from "formik-semantic-ui"
 import { CheckboxWithValue } from '~/components/custom-formik'
 import * as Yup from "yup"
 import { FormattedMessage, injectIntl } from "react-intl"
-
 import { generateToastMarkup } from '~/utils/functions'
 
 const userFormValidation = popupValues => Yup.object().shape({
@@ -33,34 +31,46 @@ const userFormValidation = popupValues => Yup.object().shape({
   phone: Yup.string().trim()
     .min(3, "Too short"),
 })
+
 const rolesFormValidation = Yup.object().shape({
   roles: Yup.array()
 })
-
 
 class UsersPopup extends React.Component {
   componentDidMount() {
     this.props.getCurrencies()
   }
 
-  submitHandler = async (values, actions) => {
-    const { toastManager } = this.props
-    if (this.props.userEditRoles) {
-      this.props.putNewUserRoleRequest(
+  submitRoles = async (values, actions) => {
+    const {
+      popupValues,
+      putNewUserRoleRequest
+    } = this.props
+
+    try {
+      await putNewUserRoleRequest(
         values.roles,
-        this.props.popupValues.id
+        popupValues.id
       )
-      return
-    }
+    } catch { }
+    finally { actions.setSubmitting(false) }
+  }
 
-    if (this.props.popupValues) {
-      await this.props.handlerSubmitUserEditPopup(values, this.props.popupValues.id)
+  submitUser = async (values, actions) => {
+    const {
+      toastManager,
+      popupValues,
+      handlerSubmitUserEditPopup,
+      postNewUserRequest,
+    } = this.props
+
+    if (popupValues) {
+      await handlerSubmitUserEditPopup(values, popupValues.id)
     } else {
-      await this.props.postNewUserRequest(values)
+      await postNewUserRequest(values)
     }
 
-    const status = this.props.popupValues ? 'userUpdated' : 'userCreated'
-
+    const status = popupValues ? 'userUpdated' : 'userCreated'
 
     toastManager.add(generateToastMarkup(
       <FormattedMessage id={`notifications.${status}.header`} />,
@@ -125,8 +135,7 @@ class UsersPopup extends React.Component {
             initialValues={initialFormValues}
             validationSchema={userEditRoles ? rolesFormValidation : userFormValidation(popupValues)}
             onReset={userEditRoles ? closeRolesPopup : closePopup}
-            onSubmit={this.submitHandler}
-
+            onSubmit={userEditRoles ? this.submitRoles : this.submitUser}
           >
             {({ values }) => (
               <>
