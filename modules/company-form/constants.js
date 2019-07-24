@@ -1,5 +1,5 @@
 import * as Yup from 'yup'
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl'
 
 export const validationSchema = Yup.object().shape({
   name: Yup

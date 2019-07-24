@@ -4,6 +4,7 @@ import Layout from '~/components/LayoutUnauthorized'
 import { Button } from 'semantic-ui-react'
 import styled from 'styled-components'
 import Router from 'next/router'
+import { FormattedMessage } from 'react-intl'
 
 export default class Error extends React.Component {
   static getInitialProps({ res, err }) {
@@ -19,12 +20,17 @@ export default class Error extends React.Component {
           <Message>
             <h1>
               {this.props.statusCode
-                ? `An ${this.props.statusCode || 'unexpected'} error occurred.`
-                : 'An error occurred on client.'}<br />
-              We apologize for inconvinience.
+                ? <FormattedMessage id="error.server" values={{ error: this.props.statusCode || 'unexpected' }} />
+                : <FormattedMessage id="error.client" />}<br />
+              <FormattedMessage id="error.apologize" />
             </h1><br />
-            <Button size="massive" primary onClick={() => Router.push('/')}>Back to Echo Exchange</Button>
+            <Button size="massive" primary onClick={() => Router.push('/')}>
+              <FormattedMessage id="error.backButtonText" />
+            </Button>
           </Message>
+          <Footer>
+            <FormattedMessage id="error.footer" values={{ email: <a href="mailto:support@echoechange.com">support@echoechange.com</a> }} />
+          </Footer>
         </PageWrapper>
       </Layout>
     )
@@ -38,7 +44,7 @@ const PageWrapper = styled.div`
 `
 const Message = styled.div`
   position: absolute;
-  top: 45%;
+  top: 40%;
   left: 0;
   right: 0;
   text-align: center;
@@ -52,4 +58,9 @@ const Message = styled.div`
 `
 const Background = styled.img`
   width: 100%;
+`
+const Footer = styled.p`
+  text-align: center;
+  font-size: 120%;
+  margin: 40px 0 30px 0 !important;
 `
