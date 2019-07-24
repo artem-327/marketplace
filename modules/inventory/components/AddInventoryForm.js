@@ -121,7 +121,7 @@ const validationScheme = val.object().shape({
     })
   })),
   touchedLot: val.bool(),
-  warehouse: val.number().moreThan(0, "required").required('required')
+  warehouse: val.number('required').nullable('required').moreThan(0, "required").required('required')
 })
 
 class AddInventoryForm extends Component {
@@ -386,7 +386,7 @@ class AddInventoryForm extends Component {
           </TopMargedColumn>
 
           <GridColumn computer={6}>
-            <Input name={`pricingTiers[${i}].quantityFrom`} inputProps={{ type: 'number', readOnly: i === 0, value: null }} />
+            <Input name={`pricingTiers[${i}].quantityFrom`} inputProps={{ type: 'number', value: null }} />
           </GridColumn>
 
           <GridColumn computer={6}>
@@ -672,6 +672,7 @@ class AddInventoryForm extends Component {
   }
 
   render() {
+
     const {
       listDocumentTypes,
       listConditions,
@@ -761,13 +762,13 @@ class AddInventoryForm extends Component {
                 }
               )
             } else {
-              actions.setSubmitting(false)
               addProductOffer(values, this.props.edit)
                 .then((productOffer) => {
                   //Router.push('/inventory/my') xxx
+                  actions.resetForm()
                 })
                 .finally(() => {
-                  actions.resetForm()
+                  actions.setSubmitting(false)
                 })
             }
           }}
