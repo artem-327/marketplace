@@ -4,6 +4,8 @@ import { withRouter } from 'next/router'
 import { Menu, Dropdown } from 'semantic-ui-react'
 import { withAuth } from '~/hocs'
 
+import { getSafe } from '~/utils/functions'
+
 const MenuLink = withRouter(({ router: { pathname }, to, children }) => (
   <Link prefetch href={to}>
     <Menu.Item as="a" active={pathname === to}>{children}</Menu.Item>
@@ -18,10 +20,10 @@ const DropdownItem = ({ children, ...props }) => (
 
 class Navigation extends Component {
   render() {
-    const { isAdmin, auth } = this.props
+    const { isAdmin, auth, takeover } = this.props
     
     return (
-      !isAdmin || (auth.identity.isCompanyAdmin) ? <>
+      !isAdmin || takeover ? <>
         <DropdownItem text="Inventory">
           <Dropdown.Menu data-test="navigation_menu_inventory">
             <Dropdown.Item as={MenuLink} to="/inventory/my">My Inventory</Dropdown.Item>

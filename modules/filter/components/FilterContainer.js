@@ -11,13 +11,15 @@ import {
   fetchWarehouses
 } from '~/src/modules/products'
 
+import { getSafe } from '~/utils/functions'
+
 import { fetchWarehouseDistances } from '~/src/modules/location'
 
 function mapStateToProps(store) {
   return {
     ...store.filter.filter,
     ...store.filter.products,
-    preferredCurrency: store.auth.identity && store.auth.identity.preferredCurrency,
+    preferredCurrency: getSafe(() => store.auth.identity.preferredCurrency.code, 'USD'),
     warehouseDistances: store.location.warehouseDistances,
   }
 }
