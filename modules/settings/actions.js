@@ -6,7 +6,7 @@ export const removeEmpty = (obj) =>
   Object.entries(obj).forEach(([key, val]) => {
     if (val && typeof val === 'object') {
       removeEmpty(val)
-      if (Object.entries(val).length === 0) delete obj[key]
+      // if (Object.entries(val).length === 0) delete obj[key]
     }
     else {
       if (val == null) delete obj[key]
@@ -108,11 +108,12 @@ export function handlerSubmitUserEditPopup(payload, id) {
   return async dispatch => {
     removeEmpty(payload)
     const response = await api.patchUser(id, payload)
+    
     dispatch({
       type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
       payload: response
     })
-    //dispatch(getUsersDataRequest())
+
     Datagrid.updateRow(id, () => response.data)
     dispatch(closePopup())
   }
