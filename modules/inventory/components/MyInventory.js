@@ -237,8 +237,10 @@ class MyInventory extends Component {
           onClear={this.handleFilterClear}
           savedUrl='/prodex/api/product-offers/own/datagrid/saved-filters'
           searchUrl={(text) => `/prodex/api/products/own/search?pattern=${text}&onlyMapped=false`}
+          searchWarehouseUrl={(text) => `/prodex/api/branches/warehouses/search?pattern=${text}`}
           apiUrl={datagrid.apiUrl}
           filters={datagrid.filters}
+          layout='MyInventory'
         />
       </>
     )

@@ -70,13 +70,14 @@ export const datagridValues = {
           let parsed = JSON.parse(val)
           return {
             value: parsed.id,
-            description: parsed.name
+            //description: parsed.name
+            description: JSON.stringify({ name: parsed.name, text: parsed.text })
           }
         })
       }
       else {
         let parsed = JSON.parse(values)
-        data = [{value: parsed.id, description: parsed.name}]
+        data = [{value: parsed.id, description: JSON.stringify({ name: parsed.name, text: parsed.text })}]
       }
 
       return {
@@ -88,13 +89,19 @@ export const datagridValues = {
     },
 
     valuesDescription: function (values) {
-      return values.map((val) => val.description)
+      return values.map((val) => {
+        let parsed = JSON.parse(val.description)
+        return parsed.name
+      })
     },
 
-    tagDescription: (values) => `Warehouse: ${values[0].description}`,
+    tagDescription: function (values) {
+      return `Warehouse: ${this.valuesDescription(values)[0]}`
+    },
 
     toFormik: function ({ values }) {
-      return JSON.stringify({ id: parseInt(values[0].value), name: values[0].description})
+      let parsed = JSON.parse(values[0].description)
+      return JSON.stringify({ id: parseInt(values[0].value), name: parsed.name, text: parsed.text})
     }
   },
 

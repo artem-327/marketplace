@@ -46,6 +46,7 @@ class Filter extends Component {
       mfg: dateDropdownOptions[0].value
     },
     searchQuery: '',
+    searchWarehouseQuery: '',
     isTyping: false
   }
 
@@ -301,6 +302,14 @@ class Filter extends Component {
     if (searchQuery.length > 1) this.props.getAutocompleteData(this.props.searchUrl(searchQuery))
   }, 250)
 
+  handleSearchWarehouse = debounce(({ searchQuery, name }) => {
+    if (searchQuery.length > 1) {
+      this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(searchQuery))
+      this.setState({searchWarehouseQuery: searchQuery})
+    }
+
+  }, 250)
+
   accordionTitle = (name, text) => (
     <AccordionTitle name={name} onClick={(e, { name }) => this.toggleAccordion(name)}>
       <Icon name={!this.state.inactiveAccordion[name] ? 'chevron down' : 'chevron right'} color={!this.state.inactiveAccordion[name] ? 'blue' : 'black'} />
@@ -408,6 +417,8 @@ class Filter extends Component {
       productConditions, productForms, packagingTypes,
       productGrade, intl, isFilterSaving,
       autocompleteData, autocompleteDataLoading,
+      autocompleteWarehouse, autocompleteWarehouseLoading,
+      layout
     } = this.props
 
     const { formatMessage } = intl
@@ -448,39 +459,67 @@ class Filter extends Component {
       onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null),
     }
 
+    let noWarehouseResultsMessage = null
+
+    if (this.state.searchWarehouseQuery.length <= 1) noWarehouseResultsMessage = <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />
+    if (autocompleteWarehouseLoading) noWarehouseResultsMessage = <FormattedMessage id='global.loading' defaultMessage='Loading' />
+
     let dropdownWarehouseProps = {
       search: true,
       selection: true,
       multiple: false,
       fluid: true,
       clearable: true,
-      options: this.props.warehouses.map((warehouse) => {
+      options: autocompleteWarehouse.map((warehouse) => {
+        let text
+        warehouse.text ?
+          text = warehouse.text
+          :
+          text = warehouse.name +
+            (warehouse.address ?
+                ', ' + warehouse.address.streetAddress +
+                ', ' + warehouse.address.city +
+                ', ' + warehouse.address.zip.zip +
+                (
+                  warehouse.address.province ?
+                    ', ' + warehouse.address.province.name : ''
+                ) +
+                ', ' + warehouse.address.country.name
+                :
+                ''
+            )
         return {
           key: warehouse.id,
-          text: warehouse.name,
-          value: JSON.stringify({ id: warehouse.id, name: warehouse.name}),
+          text: text,
+          value: JSON.stringify({ id: warehouse.id, name: warehouse.name, text: text}),
         }
       }),
+      loading: autocompleteWarehouseLoading,
       name: 'warehouse',
       placeholder: <FormattedMessage id='filter.searchWarehouse' defaultMessage='Search Warehouse' />,
-      noWarehouseResultsMessage: <FormattedMessage id='filter.startTypingToSearch' defaultMessage='Start typing to search...' />,
+      noWarehouseResultsMessage,
+      onSearchChange: (_, data) => {
+        this.handleSearchWarehouse(data)
+      },
       value: values.warehouse,
       onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null),
     }
 
     if (!autocompleteDataLoading) dropdownProps.icon = null
+    if (!autocompleteWarehouseLoading) dropdownWarehouseProps.icon = null
 
     let currencySymbol = this.props.preferredCurrency ? this.props.preferredCurrency.symbol : null
 
     return (
       <Accordion>
         <Segment basic>
-          <AccordionItem>
-            {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
+          {(layout === 'MyInventory') && (<AccordionItem>
+            {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse'/>)}
             <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
               <BottomMargedDropdown {...dropdownWarehouseProps} />
             </AccordionContent>
           </AccordionItem>
+          )}
 
           <AccordionItem>
             {this.accordionTitle('chemicalType', <FormattedMessage id='filter.chemicalType' />)}
@@ -750,11 +789,15 @@ Filter.propTypes = {
   filters: array,
   getAutocompleteData: func,
   autocompleteData: array,
+  getAutocompleteWarehouse: func,
+  autocompleteWarehouse: array,
   savedFilters: array,
   getSavedFilters: func,
   savedFiltersLoading: bool,
   savedUrl: string,
-  searchUrl: func
+  searchUrl: func,
+  searchWarehouseUrl: func,
+  layout: string
 }
 
 Filter.defaultProps = {
@@ -765,9 +808,10 @@ Filter.defaultProps = {
   additionalSidebarProps: {},
   filters: [],
   autocompleteData: [],
+  autocompleteWarehouse: [],
   savedFilters: [],
-  savedFiltersLoading: false
-
+  savedFiltersLoading: false,
+  layout: ''
 }
 
 export default withToastManager(injectIntl(Filter))

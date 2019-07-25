@@ -17,6 +17,9 @@ export const getSavedFilters = createAsyncAction('GET_SAVED_FILTERS', async (sav
 })
 export const getAutocompleteData = createAsyncAction('GET_AUTOCOMPLETE_DATA', searchUrl => api.getAutocompleteData(searchUrl))
 
+export const getAutocompleteWarehouse = createAsyncAction('GET_AUTOCOMPLETE_WAREHOUSE_DATA', url => api.getAutocompleteWarehouse(url))
+
+
 export const saveFilter = createAsyncAction('SAVE_FILTER', (savedUrl, filter) => api.saveFilter(savedUrl, filter))
 
 export const updateFilter = createAsyncAction('UPDATE_FILTER', (id, filter) => api.updateFilter(id, filter))
