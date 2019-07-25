@@ -66,7 +66,7 @@ const MenuLink = withRouter(({ router: { pathname }, to, children, }) => (
   </Link>
 ))
 
-const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth, takeOverCompanyFinish, profile, openProfilePopup, cartItems, takeover }) => (
+const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth, takeOverCompanyFinish, profile, openProfilePopup, cartItems, takeover, intl: { formatMessage } }) => (
   <MainContainer fluid>
     <PopUp />
     <Head>
