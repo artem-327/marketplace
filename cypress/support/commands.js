@@ -130,6 +130,33 @@ Cypress.Commands.add("getFirstMarketIdWithFilter", (token,filter) => {
     })
 })
 
+Cypress.Commands.add("getFirstUser", (token) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/users/datagrid',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, filters: filter, pageSize: 50}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body[0].id
+    })
+})
+
+Cypress.Commands.add("getFirstUserIdWithFilter", (token,filter) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/users/datagrid',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, filters: filter, pageSize: 50}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body[0].id
+    })
+})
 
 Cypress.Commands.add("deleteWholeCart", (token) => {
     cy.request({
