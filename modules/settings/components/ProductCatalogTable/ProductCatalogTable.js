@@ -24,7 +24,7 @@ class ProductCatalogTable extends Component {
       { name: 'casName', title: 'CAS Name' },
       { name: 'packagingSizeFormatted', title: 'Packaging Size' },
       { name: 'unit', title: 'Unit' },
-      { name: 'packagingType', title: 'Packaging Type' }
+      { name: 'packagingTypeName', title: 'Packaging Type' }
     ]
   }
 
@@ -126,6 +126,7 @@ const mapStateToProps = (state, { datagrid }) => {
       let hasCasProducts = product.casProducts && product.casProducts.length
 
       return {
+        ...product,
         id: product.id,
         attachments: product.attachments ? product.attachments.map(att => {
           return {
@@ -136,7 +137,6 @@ const mapStateToProps = (state, { datagrid }) => {
         }) : [],
         description: getSafe(() => product.description),
         productName: product.productName,
-        productNumber: product.productCode,
         casName: hasCasProducts
           ? product.casProducts.length > 1
             ? 'Blend'
@@ -171,13 +171,13 @@ const mapStateToProps = (state, { datagrid }) => {
             item: casProduct
           }
         }) : [],
-        packagingType: getSafe(() => product.packagingType.name) ? <UnitOfPackaging value={product.packagingType.name} /> : 'N/A',
-        packageID: getSafe(() => product.packagingType.id),
+        packagingTypeName: getSafe(() => product.packagingType.name) ? <UnitOfPackaging value={product.packagingType.name} /> : 'N/A',
+        packagingType: getSafe(() => product.packagingType.id),
         packagingSize: getSafe(() => product.packagingSize, 'N/A'),
         packagingSizeFormatted: product.packagingSize ? <FormattedNumber value={product.packagingSize} minimumFractionDigits={0} /> : 'N/A',
         packagingGroup: getSafe(() => product.packagingGroup.id),
         unit: getSafe(() => product.packagingUnit.nameAbbreviation, 'N/A'),
-        unitID: getSafe(() => product.packagingUnit.id),
+        packagingUnit: getSafe(() => product.packagingUnit.id),
         freightClass: getSafe(() => product.freightClass),
         hazardous: product.hazardous,
         hazardClass: product.hazardClasses && product.hazardClasses.length ? product.hazardClasses.map(d => (

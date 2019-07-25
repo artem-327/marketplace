@@ -328,35 +328,19 @@ export function postNewWarehouseRequest(payload) {
   }
 }
 
-export function handleSubmitProductEditPopup(productData, id, reloadFilter) {
+export function handleSubmitProductEditPopup(payload, id, reloadFilter) {
   return async dispatch => {
-    const data = {
-      casProducts: productData.casProducts ? productData.casProducts : null,
-      description: productData.description,
-      freightClass: productData.freightClass ? productData.freightClass : null,
-      hazardClasses: productData.hazardClass ? productData.hazardClass : null,
-      hazardous: productData.hazardous,
-      nmfcNumber: productData.nmfcNumber !== '' ? parseInt(productData.nmfcNumber) : null,
-      packagingSize: productData.packagingSize,
-      packagingType: productData.packageID,
-      packagingGroup: productData.packagingGroup ? productData.packagingGroup : null,
-      productCode: productData.productNumber,
-      productName: productData.productName,
-      packagingUnit: productData.unitID,
-      stackable: productData.stackable,
-      unNumber: productData.unNumber ? productData.unNumber : null
-    }
-    removeEmpty(data)
-    const response = await api.updateProduct(id, data)
+    removeEmpty(payload)
+    const response = await api.updateProduct(id, payload)
     dispatch({
       type: AT.SETTINGS_UPDATE_PRODUCT_CATALOG,
       payload: response
     })
-    if (productData.attachments && productData.attachments.length) {
-      for (let i = 0; i < productData.attachments.length; i++) {
+    if (payload.attachments && payload.attachments.length) {
+      for (let i = 0; i < payload.attachments.length; i++) {
         dispatch({
           type: AT.SETTINGS_POST_LINK_ATTACHMENT,
-          payload: api.postLinkAttachment(productData.attachments[i].id, id)
+          payload: api.postLinkAttachment(payload.attachments[i].id, id)
         })
       }
     }
@@ -647,34 +631,19 @@ export function userSwitchEnableDisable(id) {
   }
 }
 
-export function handleSubmitProductAddPopup(inputsValue, reloadFilter) {
+export function handleSubmitProductAddPopup(payload, reloadFilter) {
+
   return async dispatch => {
-    const data = {
-      casProducts: inputsValue.casProducts ? inputsValue.casProducts : [],
-      description: inputsValue.description,
-      freightClass: inputsValue.freightClass ? inputsValue.freightClass : null,
-      hazardClasses: inputsValue.hazardClass ? inputsValue.hazardClass : null,
-      hazardous: inputsValue.hazardous,
-      nmfcNumber: inputsValue.nmfcNumber !== '' ? parseInt(inputsValue.nmfcNumber) : null,
-      packagingSize: inputsValue.packagingSize,
-      packagingType: inputsValue.packageID,
-      packagingUnit: inputsValue.unitID,
-      packagingGroup: inputsValue.packagingGroup ? inputsValue.packagingGroup : null,
-      productCode: inputsValue.productNumber,
-      productName: inputsValue.productName,
-      stackable: inputsValue.stackable,
-      unNumber: inputsValue.unNumber ? inputsValue.unNumber : null
-    }
-    removeEmpty(data)
+    removeEmpty(payload)
     const newProd = await dispatch({
       type: AT.SETTINGS_POST_NEW_PRODUCT_REQUEST,
-      payload: api.postNewProduct(data)
+      payload: api.postNewProduct(payload)
     })
-    if (inputsValue.attachments && inputsValue.attachments.length) {
-      for (let i = 0; i < inputsValue.attachments.length; i++) {
+    if (payload.attachments && payload.attachments.length) {
+      for (let i = 0; i < payload.attachments.length; i++) {
         dispatch({
           type: AT.SETTINGS_POST_LINK_ATTACHMENT,
-          payload: api.postLinkAttachment(inputsValue.attachments[i].id, newProd.value.data.id)
+          payload: api.postLinkAttachment(payload.attachments[i].id, newProd.value.data.id)
         })
       }
     }

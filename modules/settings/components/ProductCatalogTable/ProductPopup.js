@@ -9,9 +9,9 @@ import { FormattedMessage } from 'react-intl'
 
 import { Modal, Header, FormGroup, FormField, Search, Label, Icon } from 'semantic-ui-react'
 import { DateInput } from '~/components/custom-formik'
-import { FieldArray } from "formik"
+import { FieldArray } from 'formik'
 
-import { generateToastMarkup } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
 
 import {
   closePopup,
@@ -32,7 +32,7 @@ import {
 import { Form, Input, Button, Dropdown, TextArea, Checkbox } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 import './styles.scss'
-import Router from "next/router"
+import Router from 'next/router'
 
 import { UnitOfPackaging } from '~/components/formatted-messages'
 
@@ -63,19 +63,19 @@ const formValidation = Yup.object().shape({
   productName: Yup.string().trim()
     .min(3, 'Too short')
     .required('Required'),
-  productNumber: Yup.string().trim()
+  productCode: Yup.string().trim()
     .min(1, 'Too short')
     .required('Required'),
   packagingSize: Yup.number()
     .typeError('must be number')
     .required(),
-  unitID: Yup.number()
+  packagingUnit: Yup.number()
     .typeError('Required')
     .required(),
-  packageID: Yup.number()
+  packagingType: Yup.number()
     .typeError('Required')
     .required(),
-  nmfcNumber: Yup.number().typeError('must be number').test("digit5", "There has to be 5 digit numbers.", val => {
+  nmfcNumber: Yup.number().typeError('must be number').test('digit5', 'There has to be 5 digit numbers.', val => {
     return !val || val.toString().length === 5    // ! ! nejak divne to funguje
   }),
   casProducts: Yup.array().of(Yup.object().uniqueProperty('casProduct', 'CAS Product has to be unique').shape({
@@ -88,6 +88,7 @@ const formValidation = Yup.object().shape({
 })
 
 class ProductPopup extends React.Component {
+  state = { }
   componentDidMount() {
     this.props.getProductsCatalogRequest()
 
@@ -104,8 +105,9 @@ class ProductPopup extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.popupValues && nextProps.popupValues.unitID) {
-      this.filterPackagingTypes(nextProps.popupValues.unitID, nextProps.unitsAll, nextProps.packagingTypesAll)
+    console.log(nextProps)
+    if (nextProps.popupValues && nextProps.popupValues.packagingUnit) {
+      this.filterPackagingTypes(nextProps.popupValues.packagingUnit, nextProps.unitsAll, nextProps.packagingTypesAll)
     }
     else this.setState({ packagingTypesReduced: nextProps.packagingType })
   }
@@ -137,52 +139,45 @@ class ProductPopup extends React.Component {
   handlerSubmit = async (values, actions) => {
     const { popupValues, reloadFilter, handleSubmitProductEditPopup, handleSubmitProductAddPopup, toastManager } = this.props
 
-    if (popupValues) {
-      await handleSubmitProductEditPopup({
-        ...values,
-        casProducts: values.casProducts ? values.casProducts.reduce(function (filtered, option) {
-          if (option.casProduct) {
-            var newValue = {
-              casProduct: option.casProduct,
-              minimumConcentration: parseInt(option.minimumConcentration),
-              maximumConcentration: parseInt(option.maximumConcentration)
-            }
-            filtered.push(newValue)
-          }
-          return filtered
-        }, []) : [],
-        unNumber: this.state.unNumber ? this.state.unNumber.id :
-          popupValues.unNumber ? popupValues.unNumber.id : null,
-      }, popupValues.id, reloadFilter)
-    } else {
-      await handleSubmitProductAddPopup({
-        ...values,
-        casProducts: values.casProducts ? values.casProducts.reduce(function (filtered, option) {
-          if (option.casProduct) {
-            var newValue = {
-              casProduct: option.casProduct,
-              minimumConcentration: parseInt(option.minimumConcentration),
-              maximumConcentration: parseInt(option.maximumConcentration)
-            }
-            filtered.push(newValue)
-          }
-          return filtered;
-        }, []) : [],
-        unNumber: this.state.unNumber ? this.state.unNumber.id : null
-      }, reloadFilter)
+    let payload = {
+      ...values,
+      packagingSizeFormatted: null,
+      packagingTypeName: null,
+      nmfcNumber: values.nmfcNumber !== '' ? parseInt(values.nmfcNumber) : null,
+      hazardClasses: values.hazardClass,
+      casProducts: values.casProducts ? values.casProducts.reduce(function (filtered, option) {
+        if (option.casProduct) {
+          filtered.push({
+            casProduct: option.casProduct,
+            minimumConcentration: parseInt(option.minimumConcentration),
+            maximumConcentration: parseInt(option.maximumConcentration)
+          })
+        }
+        return filtered
+      }, []) : [],
+      unNumber: this.state.unNumber ? this.state.unNumber.id :
+        getSafe(() => popupValues.unNumber.id, null),
     }
 
-    let status = popupValues ? 'productUpdated' : 'productCreated'
+    try {
+      if (popupValues) {
+        await handleSubmitProductEditPopup(payload, popupValues.id, reloadFilter)
+      } else {
+        await handleSubmitProductAddPopup(payload, reloadFilter)
+      }
+      let status = popupValues ? 'productUpdated' : 'productCreated'
 
-    toastManager.add(generateToastMarkup(
-      <FormattedMessage id={`notifications.${status}.header`} />,
-      <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.productName }} />,
-    ),
-      {
-        appearance: 'success'
-      })
+      toastManager.add(generateToastMarkup(
+        <FormattedMessage id={`notifications.${status}.header`} />,
+        <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.productName }} />,
+      ), { appearance: 'success' })
+    } catch (e) { console.error(e) }
+    finally {
+      actions.setSubmitting(false)
+    }
 
-    actions.setSubmitting(false)
+
+
   }
 
   handleCasProduct = () => {
@@ -251,43 +246,32 @@ class ProductPopup extends React.Component {
 
   getInitialFormValues = () => {
     const { popupValues } = this.props
-    let {
-      attachments = [],
-      casProducts = [{ casProduct: undefined, minimumConcentration: 100, maximumConcentration: 100 }],
-      description = '',
-      freightClass = '',
-      hazardClass = [],
-      hazardous = false,
-      nmfcNumber = undefined,
-      productName = '',
-      productNumber = '',
-      packagingSize = '',
-      packagingGroup = '',
-      packageID = '',
-      stackable = false,
-      unitID = '',
-      expirationDate = ''
-    } = popupValues || {}
-    if (casProducts.length === 0) {
-      casProducts = [{ casProduct: undefined, minimumConcentration: 100, maximumConcentration: 100 }]
+    let initialValues = {
+      attachments: [],
+      casProducts: [{ casProduct: undefined, minimumConcentration: 100, maximumConcentration: 100 }],
+      description: '',
+      freightClass: null,
+      hazardClass: null,
+      hazardous: false,
+      nmfcNumber: null,
+      productName: '',
+      productCode: '',
+      packagingSize: '',
+      packagingGroup: null,
+      packagingType: '',
+      stackable: false,
+      nonHap: null,
+      vocExempt: null,
+      prop65Exempt: null,
+      saferChoice: null,
+      packagingUnit: '',
+      expirationDate: '',
+      ...popupValues
     }
-    return {
-      attachments,
-      casProducts,
-      description,
-      expirationDate,
-      freightClass,
-      hazardClass,
-      hazardous,
-      nmfcNumber,
-      productName,
-      productNumber,
-      packagingSize,
-      packagingGroup,
-      packageID,
-      stackable,
-      unitID
+    if (initialValues.casProducts.length === 0) {
+      initialValues.casProducts = [{ casProduct: undefined, minimumConcentration: 100, maximumConcentration: 100 }]
     }
+    return initialValues
   }
 
   render() {
@@ -318,11 +302,13 @@ class ProductPopup extends React.Component {
             onReset={closePopup}
             onSubmit={this.handlerSubmit}
           >
-            {({ values, setFieldValue }) => (
-              <>
-                <FormGroup widths="equal">
-                  <Input type="text" label="Product Name" name="productName" />
-                  <Input type="text" label="Product Number" name="productNumber" />
+            {({ values, setFieldValue }) => {
+              console.log(values)
+              return (<>
+                <FormGroup widths='equal'>
+                  <Input type='text' label='Product Name' name='productName' />
+                  <Input type='text' label='Product Number' name='productCode' />
+                  <Input type='text' label='INCI Name' name='inciName' />
                 </FormGroup>
 
                 <FormGroup style={{ alignItems: 'flex-end', marginBottom: '0' }}>
@@ -336,7 +322,7 @@ class ProductPopup extends React.Component {
                     <label>Max Concentration</label>
                   </FormField>
                 </FormGroup>
-                <FieldArray name="casProducts"
+                <FieldArray name='casProducts'
                   render={arrayHelpers => (
                     <>
                       {values.casProducts && values.casProducts.length ? values.casProducts.map((casProduct, index) => (
@@ -355,7 +341,7 @@ class ProductPopup extends React.Component {
                               inputProps={{
                                 size: 'large',
                                 minCharacters: 3,
-                                icon: "search",
+                                icon: 'search',
                                 search: options => options,
                                 selection: true,
                                 clearable: true,
@@ -368,10 +354,10 @@ class ProductPopup extends React.Component {
                             />
                           </FormField>
                           <FormField width={3}>
-                            <Input type="text" name={`casProducts[${index}].minimumConcentration`} />
+                            <Input type='text' name={`casProducts[${index}].minimumConcentration`} />
                           </FormField>
                           <FormField width={3}>
-                            <Input type="text" name={`casProducts[${index}].maximumConcentration`} />
+                            <Input type='text' name={`casProducts[${index}].maximumConcentration`} />
                           </FormField>
                           <FormField width={2}>
                             {index ? (
@@ -403,37 +389,43 @@ class ProductPopup extends React.Component {
                     />
                   </FormField>
                 </FormGroup>
-                <FormGroup widths="equal">
-                  <Input type="text" label="Packaging Size" name="packagingSize" />
+                <FormGroup widths='equal'>
+                  <Input type='text' label='Packaging Size' name='packagingSize' />
                   <Dropdown
-                    label="Unit"
-                    name="unitID"
+                    label='Unit'
+                    name='packagingUnit'
                     options={productsUnitsType}
                     inputProps={{
                       onChange: (e, d) => {
-                        setFieldValue('packageID', '')
+                        setFieldValue('packagingType', '')
                         this.handleUnitChange(d.value, this.props.unitsAll, this.props.packagingTypesAll)
                       }
                     }}
                   />
                   <Dropdown
-                    label="Packaging Type"
-                    name="packageID"
+                    label='Packaging Type'
+                    name='packagingType'
                     options={packagingTypesReduced}
                   />
                 </FormGroup>
-                <FormGroup>
+                <FormGroup widths='equal'>
                   <FormField>
-                    <Checkbox toggle
-                      label='Stackable'
-                      name='stackable'
-                    />
+                    <Checkbox label='Stackable' name='stackable' />
                   </FormField>
                   <FormField>
-                    <Checkbox toggle
-                      label='Hazardous'
-                      name='hazardous'
-                    />
+                    <Checkbox label='Hazardous' name='hazardous' />
+                  </FormField>
+                  <FormField>
+                    <Checkbox label='Non HAP' name='nonHap' />
+                  </FormField>
+                  <FormField>
+                    <Checkbox label='VOC Exempt' name='vocExempt' />
+                  </FormField>
+                  <FormField>
+                    <Checkbox label='Prop 65 Exempt' name='prop65Exempt' />
+                  </FormField>
+                  <FormField>
+                    <Checkbox label='Safer Choice' name='saferChoice' />
                   </FormField>
                 </FormGroup>
                 <FormGroup widths='equal'>
@@ -453,9 +445,9 @@ class ProductPopup extends React.Component {
                     />
                   </FormField>
                   <FormField>
-                    <Input type="number"
-                      label="NMFC Code"
-                      name="nmfcNumber"
+                    <Input type='number'
+                      label='NMFC Code'
+                      name='nmfcNumber'
                     />
                   </FormField>
                   <Dropdown label='Freight Class'
@@ -481,7 +473,7 @@ class ProductPopup extends React.Component {
                 </FormGroup>
                 <FormGroup widths='equal'>
                   <FormField>
-                    <Dropdown label="Document Type"
+                    <Dropdown label='Document Type'
                       name={`attachmentType`}
                       options={this.props.documentTypes}
                       style={{ paddingBottom: '2em' }}
@@ -541,7 +533,9 @@ class ProductPopup extends React.Component {
                   <Button.Submit>Save</Button.Submit>
                 </div>
               </>
-            )}
+              )
+            }
+            }
           </Form>
         </Modal.Content>
       </Modal>
