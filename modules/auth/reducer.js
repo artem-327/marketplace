@@ -72,6 +72,8 @@ export default function reducer(state = initialState, action) {
         })
       }
 
+      
+
       return {
         ...state,
         confirmationForm: getSafe(() => payload.identity.company.reviewRequested, false) ? {

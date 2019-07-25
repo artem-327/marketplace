@@ -1,13 +1,15 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { injectIntl } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
-import { FormattedMessage } from 'react-intl'
+
+import { FormattedDateTime } from '~/components/formatted-messages/'
 
 import ProdexGrid from "~/components/table"
 import { withDatagrid } from '~/modules/datagrid'
-import { TablePopUp } from "~/components/tablePopup"
+// import { TablePopUp } from "~/components/tablePopup"
 import confirm from '~/src/components/Confirmable/confirm'
+
 
 import {
   getUsersDataRequest,
@@ -42,7 +44,7 @@ class UsersTable extends Component {
   }
 
   componentDidUpdate(oldProps) {
-    const {addedItem, editedItem, datagrid} = this.props
+    const { addedItem, editedItem, datagrid } = this.props
 
     if (addedItem !== oldProps.addedItem) {
       datagrid.loadData()
@@ -151,7 +153,9 @@ const formatDateTime = dt => {
 }
 
 const mapStateToProps = (state, { datagrid }) => {
+
   const currentUserId = state.settings.currentUser && state.settings.currentUser.id
+  console.log(datagrid)
   return {
     rows: datagrid.rows.map(user => ({
       name: user.name,
@@ -170,7 +174,7 @@ const mapStateToProps = (state, { datagrid }) => {
         rol.name
       )).join(", "),
       switchEnable: userEnableDisableStatus(user, currentUserId),
-      lastLoginAt: user.lastLoginAt ? formatDateTime(user.lastLoginAt) : ''
+      lastLoginAt: user.lastLoginAt ? <FormattedDateTime dateTime={user.lastLoginAt} /> : ''
     })),
     addedItem: state.settings.addedItem,
     editedItem: state.settings.editedItem,
