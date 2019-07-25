@@ -113,4 +113,25 @@ context("Login and logout",() => {
         cy.visit("dashboard");
         cy.url().should("include","/login");
     });
+
+    it('Disabled user login',() => {
+        cy.server();
+        //This is the post call we are interested in capturing
+        cy.route('POST', '/prodex/oauth/token').as('login');
+        cy.route('POST', '/auth/logout').as('logout');
+
+        cy.visit("");
+        cy.url().should("include","login");
+        cy.get("input[name=username]")
+            .type("testUser1@server.com")
+            .should("have.value","testUser1@server.com");
+        cy.get("input[name=password]")
+            .type("echopass123")
+            .should("have.value","echopass123");
+        cy.get("button[type=submit]").click();
+
+        cy.wait('@login');
+
+        cy.contains("User is disabled")
+    });
 });
