@@ -551,7 +551,7 @@ class AddInventoryForm extends Component {
                               })
                           }
                         }).catch(e => {
-                          console.log('CATCH', e)
+                          console.error('CATCH', e)
                         })
                     }}
                     style={{ paddingLeft: '1em', paddingRight: '1em' }}
@@ -671,7 +671,6 @@ class AddInventoryForm extends Component {
       ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAmount)
       : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0)
 
-    console.log({ values, value, index })
     return (count / parseFloat(value)).toFixed(3)
   }
 
@@ -780,7 +779,6 @@ class AddInventoryForm extends Component {
           style={{ padding: '20px' }}
         >
           {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
-            console.log(values)
             return (
               <>
 

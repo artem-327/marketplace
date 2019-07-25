@@ -100,7 +100,7 @@ class Filter extends Component {
 
     keys.forEach((key) => {
       if (inputs[key] && inputs[key] !== '' && Object.keys(inputs[key]).length > 0) {
-        console.log({ key, datagridValues })
+        
         if (datagridValues[key] && !!datagridValues[key].nested) {
           var ids = [], names = []
 

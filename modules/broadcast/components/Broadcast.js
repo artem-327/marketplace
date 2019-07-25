@@ -372,7 +372,6 @@ class Broadcast extends Component {
           <Button onClick={() => closeBroadcast()}><FormattedMessage id='global.cancel' /></Button>
           <Button primary
             onClick={async () => {
-              console.log(treeData.model)
               await saveRules(id, treeData.model)
               toastManager.add(generateToastMarkup(
                 'Saved successfully!',

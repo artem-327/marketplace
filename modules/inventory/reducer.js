@@ -151,9 +151,6 @@ export default function reducer(state = initialState, action) {
         }]
       }
 
-
-      console.log({ list: state.warehousesList, warehouseId: data.warehouse.id })
-
       return {
         ...state,
         ...action.payload.data,

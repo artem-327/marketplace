@@ -107,15 +107,20 @@ export function openEditPopup(rows) {
 export function handlerSubmitUserEditPopup(payload, id) {
   return async dispatch => {
     removeEmpty(payload)
-    const response = await api.patchUser(id, payload)
-    
-    dispatch({
-      type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
-      payload: response
-    })
 
-    Datagrid.updateRow(id, () => response.data)
-    dispatch(closePopup())
+    try {
+      const response = await api.patchUser(id, payload)
+      dispatch({
+        type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
+        payload: response
+      })
+      Datagrid.updateRow(id, () => response.data)
+
+      dispatch(closePopup())
+    } catch(e) {
+      // TODO
+      console.error(e)
+    }
   }
 }
 export function handleEditPopup(rows) {

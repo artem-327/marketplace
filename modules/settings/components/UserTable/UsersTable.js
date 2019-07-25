@@ -153,9 +153,7 @@ const formatDateTime = dt => {
 }
 
 const mapStateToProps = (state, { datagrid }) => {
-
   const currentUserId = state.settings.currentUser && state.settings.currentUser.id
-  console.log(datagrid)
   return {
     rows: datagrid.rows.map(user => ({
       name: user.name,
