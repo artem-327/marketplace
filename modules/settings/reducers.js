@@ -604,7 +604,6 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.SETTINGS_GET_PRODUCT_ALTERNATIVE_NAMES_FULFILLED: {
-      console.log('!!!!! Reducer Alt names', action.payload)
       return {
         ...state,
         productAltNames: action.payload,

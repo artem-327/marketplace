@@ -6,7 +6,7 @@ export const removeEmpty = (obj) =>
   Object.entries(obj).forEach(([key, val]) => {
     if (val && typeof val === 'object') {
       removeEmpty(val)
-      if (Object.entries(val).length === 0) delete obj[key]
+      // if (Object.entries(val).length === 0) delete obj[key]
     }
     else {
       if (val == null) delete obj[key]
@@ -107,16 +107,46 @@ export function openEditPopup(rows) {
 export function handlerSubmitUserEditPopup(payload, id) {
   return async dispatch => {
     removeEmpty(payload)
-    const response = await api.patchUser(id, payload)
-    dispatch({
-      type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
-      payload: response
-    })
-    //dispatch(getUsersDataRequest())
-    Datagrid.updateRow(id, () => response.data)
-    dispatch(closePopup())
+
+    try {
+      const response = await api.patchUser(id, payload)
+      dispatch({
+        type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
+        payload: response
+      })
+      Datagrid.updateRow(id, () => response.data)
+
+      dispatch(closePopup())
+    } catch(e) {
+      // TODO
+      console.error(e)
+    }
   }
 }
+export function putNewUserRoleRequest(payload, id) {
+  // return dispatch => ({
+  //   type: AT.PUT_NEW_USER_ROLES_REQUEST,
+  //   async payload() {
+  //     const response = await api.patchUserRole(id, roles)
+  //     dispatch(closeRolesPopup())
+  //     return response
+  //   }
+  // })
+  return async dispatch => {
+    await dispatch({
+      type: AT.PUT_NEW_USER_ROLES_REQUEST,
+      async payload(){
+        const response = await api.patchUserRole(id, payload)
+        Datagrid.updateRow(id, () => response.data)
+        return response
+      }
+    })
+    dispatch(closeRolesPopup())
+    //dispatch(getUsersDataRequest())
+    
+  }
+}
+
 export function handleEditPopup(rows) {
   return {
     type: AT.OPEN_EDIT_POPUP,
@@ -328,35 +358,19 @@ export function postNewWarehouseRequest(payload) {
   }
 }
 
-export function handleSubmitProductEditPopup(productData, id, reloadFilter) {
+export function handleSubmitProductEditPopup(payload, id, reloadFilter) {
   return async dispatch => {
-    const data = {
-      casProducts: productData.casProducts ? productData.casProducts : null,
-      description: productData.description,
-      freightClass: productData.freightClass ? productData.freightClass : null,
-      hazardClasses: productData.hazardClass ? productData.hazardClass : null,
-      hazardous: productData.hazardous,
-      nmfcNumber: productData.nmfcNumber !== '' ? parseInt(productData.nmfcNumber) : null,
-      packagingSize: productData.packagingSize,
-      packagingType: productData.packageID,
-      packagingGroup: productData.packagingGroup ? productData.packagingGroup : null,
-      productCode: productData.productNumber,
-      productName: productData.productName,
-      packagingUnit: productData.unitID,
-      stackable: productData.stackable,
-      unNumber: productData.unNumber ? productData.unNumber : null
-    }
-    removeEmpty(data)
-    const response = await api.updateProduct(id, data)
+    removeEmpty(payload)
+    const response = await api.updateProduct(id, payload)
     dispatch({
       type: AT.SETTINGS_UPDATE_PRODUCT_CATALOG,
       payload: response
     })
-    if (productData.attachments && productData.attachments.length) {
-      for (let i = 0; i < productData.attachments.length; i++) {
+    if (payload.attachments && payload.attachments.length) {
+      for (let i = 0; i < payload.attachments.length; i++) {
         dispatch({
           type: AT.SETTINGS_POST_LINK_ATTACHMENT,
-          payload: api.postLinkAttachment(productData.attachments[i].id, id)
+          payload: api.postLinkAttachment(payload.attachments[i].id, id)
         })
       }
     }
@@ -629,17 +643,6 @@ export function postNewCreditCardRequest(payload) {
   }
 }
 
-export function putNewUserRoleRequest(payload, id) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.PUT_NEW_USER_ROLES_REQUEST,
-      payload: api.patchUserRole(id, payload)
-    })
-    //dispatch(getUsersDataRequest())
-    dispatch(closeRolesPopup())
-  }
-}
-
 export function userSwitchEnableDisable(id) {
   return {
     type: AT.USER_SWITCH_ENABLE_DISABLE,
@@ -647,34 +650,19 @@ export function userSwitchEnableDisable(id) {
   }
 }
 
-export function handleSubmitProductAddPopup(inputsValue, reloadFilter) {
+export function handleSubmitProductAddPopup(payload, reloadFilter) {
+
   return async dispatch => {
-    const data = {
-      casProducts: inputsValue.casProducts ? inputsValue.casProducts : [],
-      description: inputsValue.description,
-      freightClass: inputsValue.freightClass ? inputsValue.freightClass : null,
-      hazardClasses: inputsValue.hazardClass ? inputsValue.hazardClass : null,
-      hazardous: inputsValue.hazardous,
-      nmfcNumber: inputsValue.nmfcNumber !== '' ? parseInt(inputsValue.nmfcNumber) : null,
-      packagingSize: inputsValue.packagingSize,
-      packagingType: inputsValue.packageID,
-      packagingUnit: inputsValue.unitID,
-      packagingGroup: inputsValue.packagingGroup ? inputsValue.packagingGroup : null,
-      productCode: inputsValue.productNumber,
-      productName: inputsValue.productName,
-      stackable: inputsValue.stackable,
-      unNumber: inputsValue.unNumber ? inputsValue.unNumber : null
-    }
-    removeEmpty(data)
+    removeEmpty(payload)
     const newProd = await dispatch({
       type: AT.SETTINGS_POST_NEW_PRODUCT_REQUEST,
-      payload: api.postNewProduct(data)
+      payload: api.postNewProduct(payload)
     })
-    if (inputsValue.attachments && inputsValue.attachments.length) {
-      for (let i = 0; i < inputsValue.attachments.length; i++) {
+    if (payload.attachments && payload.attachments.length) {
+      for (let i = 0; i < payload.attachments.length; i++) {
         dispatch({
           type: AT.SETTINGS_POST_LINK_ATTACHMENT,
-          payload: api.postLinkAttachment(inputsValue.attachments[i].id, newProd.value.data.id)
+          payload: api.postLinkAttachment(payload.attachments[i].id, newProd.value.data.id)
         })
       }
     }

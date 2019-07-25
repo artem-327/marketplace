@@ -1,13 +1,15 @@
 import React, { Component } from "react"
 import { connect } from "react-redux"
-import { injectIntl } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import { withToastManager } from 'react-toast-notifications'
-import { FormattedMessage } from 'react-intl'
+
+import { FormattedDateTime } from '~/components/formatted-messages/'
 
 import ProdexGrid from "~/components/table"
 import { withDatagrid } from '~/modules/datagrid'
-import { TablePopUp } from "~/components/tablePopup"
+// import { TablePopUp } from "~/components/tablePopup"
 import confirm from '~/src/components/Confirmable/confirm'
+
 
 import {
   getUsersDataRequest,
@@ -20,7 +22,7 @@ import {
   resendWelcomeEmail
 } from "../../actions"
 import Router from "next/router"
-import { Checkbox, Popup } from "semantic-ui-react"
+import { Checkbox, Popup, Label } from "semantic-ui-react"
 
 
 const handleSwitchEnabled = (id) => {
@@ -42,7 +44,7 @@ class UsersTable extends Component {
   }
 
   componentDidUpdate(oldProps) {
-    const {addedItem, editedItem, datagrid} = this.props
+    const { addedItem, editedItem, datagrid } = this.props
 
     if (addedItem !== oldProps.addedItem) {
       datagrid.loadData()
@@ -166,11 +168,9 @@ const mapStateToProps = (state, { datagrid }) => {
       permissions: user.roles ? user.roles.name : "", // ! ! array?
       id: user.id,
       allUserRoles: user.roles || [],
-      userRoles: user.roles && user.roles.map(rol => (
-        rol.name
-      )).join(", "),
+      userRoles: user.roles && user.roles.map(rol => <Label size="small">{rol.name}</Label>),
       switchEnable: userEnableDisableStatus(user, currentUserId),
-      lastLoginAt: user.lastLoginAt ? formatDateTime(user.lastLoginAt) : ''
+      lastLoginAt: user.lastLoginAt ? <FormattedDateTime dateTime={user.lastLoginAt} /> : ''
     })),
     addedItem: state.settings.addedItem,
     editedItem: state.settings.editedItem,

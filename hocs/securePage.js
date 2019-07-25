@@ -23,8 +23,9 @@ const authorize = ctx => {
   // We already checked for server. This should only happen on client.
   if (!auth) {
     Router.push('/auth/login')
+    return
   }
-
+  
   return JSON.parse(auth)
 }
 
