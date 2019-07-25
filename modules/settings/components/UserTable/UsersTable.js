@@ -22,7 +22,7 @@ import {
   resendWelcomeEmail
 } from "../../actions"
 import Router from "next/router"
-import { Checkbox, Popup } from "semantic-ui-react"
+import { Checkbox, Popup, Label } from "semantic-ui-react"
 
 
 const handleSwitchEnabled = (id) => {
@@ -168,9 +168,7 @@ const mapStateToProps = (state, { datagrid }) => {
       permissions: user.roles ? user.roles.name : "", // ! ! array?
       id: user.id,
       allUserRoles: user.roles || [],
-      userRoles: user.roles && user.roles.map(rol => (
-        rol.name
-      )).join(", "),
+      userRoles: user.roles && user.roles.map(rol => <Label size="small">{rol.name}</Label>),
       switchEnable: userEnableDisableStatus(user, currentUserId),
       lastLoginAt: user.lastLoginAt ? <FormattedDateTime dateTime={user.lastLoginAt} /> : ''
     })),

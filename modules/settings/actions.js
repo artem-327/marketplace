@@ -123,6 +123,30 @@ export function handlerSubmitUserEditPopup(payload, id) {
     }
   }
 }
+export function putNewUserRoleRequest(payload, id) {
+  // return dispatch => ({
+  //   type: AT.PUT_NEW_USER_ROLES_REQUEST,
+  //   async payload() {
+  //     const response = await api.patchUserRole(id, roles)
+  //     dispatch(closeRolesPopup())
+  //     return response
+  //   }
+  // })
+  return async dispatch => {
+    await dispatch({
+      type: AT.PUT_NEW_USER_ROLES_REQUEST,
+      async payload(){
+        const response = await api.patchUserRole(id, payload)
+        Datagrid.updateRow(id, () => response.data)
+        return response
+      }
+    })
+    dispatch(closeRolesPopup())
+    //dispatch(getUsersDataRequest())
+    
+  }
+}
+
 export function handleEditPopup(rows) {
   return {
     type: AT.OPEN_EDIT_POPUP,
@@ -616,17 +640,6 @@ export function postNewCreditCardRequest(payload) {
   return {
     type: AT.POST_NEW_CREDIT_CARD_REQUEST,
     payload: api.postNewCreditCard(dataBody)
-  }
-}
-
-export function putNewUserRoleRequest(payload, id) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.PUT_NEW_USER_ROLES_REQUEST,
-      payload: api.patchUserRole(id, payload)
-    })
-    //dispatch(getUsersDataRequest())
-    dispatch(closeRolesPopup())
   }
 }
 
