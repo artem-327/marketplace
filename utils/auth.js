@@ -7,7 +7,7 @@ export const IDLE_TIMEOUT = 30 * (60 * 1000)
 
 export const setAuth = (auth) => {
   let now = new Date()
-  now.setTime(now.getTime() + (IDLE_TIMEOUT + 1000))
+  now.setTime(now.getTime() + (IDLE_TIMEOUT + (60*1000)))
 
   Cookie.set('auth',
     { ...auth, expires: now.getTime() },
