@@ -11,6 +11,9 @@ import { FieldArray } from 'formik'
 import { debounce } from 'lodash'
 import confirm from '~/src/components/Confirmable/confirm'
 
+import { generateToastMarkup } from '~/utils/functions'
+import { errorMessages } from '~/constants/yupValidation'
+
 const TopDivider = styled(Divider)`
   padding-bottom: 20px;
 `
@@ -324,14 +327,14 @@ class AddInventoryForm extends Component {
       <>
         {this.state.openedDocuments ? (
           <Modal open={!!this.state.openedDocuments} onClose={() => this.setState({ openedDocuments: false })}>
-            <Modal.Header>Product Offer has these documents</Modal.Header>
+            <Modal.Header><FormattedMessage id='addInventory.productOfferDocuments' defaultMessage='Product Offer has these documents' /></Modal.Header>
             <Modal.Content>
               <Modal.Description>
                 <Table>
                   <Table.Header>
                     <Table.Row>
-                      <Table.HeaderCell>Document</Table.HeaderCell>
-                      <Table.HeaderCell>Type</Table.HeaderCell>
+                      <Table.HeaderCell><FormattedMessage id='addInventory.document' defaultMessage='Document' /></Table.HeaderCell>
+                      <Table.HeaderCell><FormattedMessage id='addInventory.type' defaultMessage='Type' /></Table.HeaderCell>
                       <Table.HeaderCell></Table.HeaderCell>
                     </Table.Row>
                   </Table.Header>
@@ -358,7 +361,7 @@ class AddInventoryForm extends Component {
                 <Grid>
                   <Grid.Row>
                     <Grid.Column width={3} floated='right'>
-                      <Button color='blue' floated='right' onClick={() => this.setState({ openedDocuments: false })}>Ok</Button>
+                      <Button color='blue' floated='right' onClick={() => this.setState({ openedDocuments: false })}><FormattedMessage id='global.ok' defaultMessage='Ok' /></Button>
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
@@ -457,57 +460,60 @@ class AddInventoryForm extends Component {
             <Accordion>
               <Accordion.Title active={activeIndex === 0} index={0} onClick={this.accClick}>
                 <Header as='h4'>
-                  <Icon name={activeIndex === 0 ? 'chevron down' : 'chevron right'} />PRODUCT DETAILS
+
+                  <FormattedMessage id='addInventory.productDetails' defaultMessage='PRODUCT DETAILS'>
+                    {(message) => <>  <Icon name={activeIndex === 0 ? 'chevron down' : 'chevron right'} /> {message} </>}
+                  </FormattedMessage>
                 </Header>
               </Accordion.Title>
               <Accordion.Content active={activeIndex === 0}>
                 <Grid columns={2} className='data-grid'>
-                  <GridColumn computer={8} mobile={16}>Product Name</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.productName' defaultMessage='Product Name' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? values.product.productName : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Product Number</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.productNumber' defaultMessage='Product Number' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? values.product.productCode : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Measurement</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.measurement' defaultMessage='Measurement' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? values.product.packagingSize : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>U/M</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.um' defaultMessage='U/M' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingUnit ? values.product.packagingUnit.name : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>U/P</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.up' defaultMessage='U/P' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingType ? values.product.packagingType.name : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>CAS Index Name</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.casIndexName' defaultMessage='CAS Index Name' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.casProduct ? values.product.casProduct.casIndexName : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>CAS Number</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.casNumber' defaultMessage='CAS Number' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.casProduct ? values.product.casProduct.casNumber : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Master Product</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.masterProduct' defaultMessage='Master Product' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? !!values.product.masterProduct : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Chemical Name</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.chemicalName' defaultMessage='Chemical Name' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.casProduct ? values.product.casProduct.chemicalName : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Hazaardous</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.hazaardous' defaultMessage='Hazaardous' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.hazaardous ? !!values.product.hazaardous : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>UN Code</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.unCode' defaultMessage='UN Code' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.unNumber ? values.product.unNumber.unNumberCode : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Packaging Group</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.packGrp' defaultMessage='Packaging Group' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingGroup ? values.product.packagingGroup.groupCode : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Hazaardous Class</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.hazaardousClass' defaultMessage='Hazaardous Class' /></GridColumn>
                   <GridColumn computer={8} mobile={16}><Label.Group color='blue'>{values.product && values.product.hazardClasses ? values.product.hazardClasses.map(hClass => { return (<Popup content={hClass.description} trigger={<Label>{hClass.classCode}</Label>} />) }) : ''}</Label.Group></GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Stackable</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.stackable' defaultMessage='Stackable' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? values.product.stackable : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>Freight Class</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.freightClass' defaultMessage='Freight Class' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? values.product.freightClass : ''}</GridColumn>
 
-                  <GridColumn computer={8} mobile={16}>NMFC Number</GridColumn>
+                  <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.nmfcNumber' defaultMessage='NMFC Number' /></GridColumn>
                   <GridColumn computer={8} mobile={16}>{values.product ? values.product.nmfcNumber : ''}</GridColumn>
                 </Grid>
               </Accordion.Content>
@@ -516,7 +522,7 @@ class AddInventoryForm extends Component {
           {values.product ? '' : (
             <Message attached='bottom'>
               <Icon name='info circle outline' size='large' color='blue' />
-              Please search product to fill data above.
+              <FormattedMessage id='addInventory.fillToSearch' defaultMessage='Please search product to fill data above.' />
             </Message>
           )}
 
@@ -537,11 +543,9 @@ class AddInventoryForm extends Component {
                         .then(r => {
                           // stop when errors found
                           if (Object.keys(r).length) {
-                            toastManager.add((
-                              <div>
-                                <strong>Form is invalid</strong>
-                                <div>There are errors on current tab. Please, fix them before submit.</div>
-                              </div>
+                            toastManager.add(generateToastMarkup(
+                              <FormattedMessage id='addInventory.invalidForm' defaultMessage='Form is invalid' />,
+                              <FormattedMessage id='addInventory.fixErrorsBeforeSubmit' defaultMessage='There are errors on current tab. Please, fix them before submit.' />,
                             ), {
                                 appearance: 'error'
                               })

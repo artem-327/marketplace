@@ -180,6 +180,6 @@ CartItemSummary.propTypes = {
 }
 
 CartItemSummary.defaultProps = {
-  header: 'YOUR ORDER',
+  header: <FormattedMessage id='cart.yourOrder' defaultMessage='YOUR ORDER' />,
   currency: 'USD'
 }

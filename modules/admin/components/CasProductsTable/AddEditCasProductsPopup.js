@@ -14,6 +14,8 @@ import { withToastManager } from 'react-toast-notifications'
 import { generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 
+import { errorMessages } from '~/constants/yupValidation'
+
 const initialFormValues = {
   'casIndexName': '',
   'casNumber': '',
@@ -23,9 +25,9 @@ const initialFormValues = {
 }
 
 const formValidation = Yup.object().shape({
-  casIndexName: Yup.string().trim().min(3, 'Too short').required('Required'),
-  casNumber: Yup.string().trim().min(3, 'Too short').required('Required'),
-  chemicalName: Yup.string().trim().min(3, 'Too short').required('Required'),
+  casIndexName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+  casNumber: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+  chemicalName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage)
 })
 
 class AddEditCasProductsPopup extends React.Component {
@@ -118,7 +120,7 @@ class AddEditCasProductsPopup extends React.Component {
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>{popupValues ? ('Edit') : ('Add')} {config.addEditText}</Modal.Header>
+        <Modal.Header>{<FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} />} {config.addEditText}</Modal.Header>
         <Modal.Content>
           <Form
             enableReinitialize
@@ -184,7 +186,7 @@ class AddEditCasProductsPopup extends React.Component {
                       inputProps={{
                         selection: true,
                         search: true,
-                        placeholder: 'Choose an option',
+                        placeholder: <FormattedMessage id='global.chooseOption' defaultMessage='Choose an option' />,
                         clearable: true
                       }}
                     />
@@ -195,7 +197,7 @@ class AddEditCasProductsPopup extends React.Component {
                       label={config.display.columns[5].title}
                       options={hazardClasses}
                       inputProps={{
-                        placeholder: 'Choose an option',
+                        placeholder: <FormattedMessage id='global.chooseOption' defaultMessage='Choose an option' />,
                         multiple: true,
                         selection: true,
                         search: true,
@@ -203,8 +205,8 @@ class AddEditCasProductsPopup extends React.Component {
                     />
                   </FormGroup>
                   <div style={{ textAlign: 'right' }}>
-                    <Button.Reset>Cancel</Button.Reset>
-                    <Button.Submit>Save</Button.Submit>
+                    <Button.Reset><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
+                    <Button.Submit><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
                   </div>
                 </>
               )

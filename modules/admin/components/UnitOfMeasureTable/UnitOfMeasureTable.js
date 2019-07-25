@@ -41,13 +41,15 @@ class UnitOfMeasureTable extends Component {
           rows={rows}
           rowActions={[
             { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: (row) => openEditPopup(row) },
-            { text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }), callback: (row) =>
-              confirm(
-                formatMessage({ id: 'confirm.deleteMeasurement.title', defaultMessage: 'Delete Unit of Measure' }),
-                formatMessage(
-                  { id: 'confirm.deleteMeasurement.content', defaultMessage: `Do you really want to delete '${row.name}' unit?` },
-                  { name: row.name })
-              ).then(() => deleteUnit(row.id)) }
+            {
+              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }), callback: (row) =>
+                confirm(
+                  formatMessage({ id: 'confirm.deleteMeasurement.title', defaultMessage: 'Delete Unit of Measure' }),
+                  formatMessage(
+                    { id: 'confirm.deleteMeasurement.content', defaultMessage: `Do you really want to delete '${row.name}' unit?` },
+                    { name: row.name })
+                ).then(() => deleteUnit(row.id))
+            }
           ]}
         />
       </React.Fragment>
@@ -66,10 +68,10 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   let cfg = state.admin.config[state.admin.currentTab]
-  
+
   return {
     config: cfg,
-    rows: state.admin[cfg.api.get.dataName].map( d => {
+    rows: state.admin[cfg.api.get.dataName].map(d => {
       return {
         id: d.id,
         name: d.name,

@@ -1,8 +1,9 @@
-import React, { Component } from "react"
-import { connect } from "react-redux"
+import React, { Component } from 'react'
 import confirm from '~/src/components/Confirmable/confirm'
-import { injectIntl } from 'react-intl'
+import { injectIntl, FormattedMessage } from 'react-intl'
 import { Popup, Label } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+
 import ProdexTable from '~/components/table'
 import {
   openPopup,
@@ -48,11 +49,11 @@ class CasProductsTable extends Component {
             {
               text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
               callback: (row) => confirm(
-                formatMessage({id: 'confirm.deleteCasProduct.title', defaultMessage: 'Delete CAS Product?'}),
+                formatMessage({ id: 'confirm.deleteCasProduct.title', defaultMessage: 'Delete CAS Product?' }),
                 formatMessage({
                   id: 'confirm.deleteCasProduct.content',
                   defaultMessage: `Do you really want to delete '${row.chemicalName}' CAS product?`
-                }, {name: row.chemicalName})
+                }, { name: row.chemicalName })
               ).then(() => {
                 deleteCasProduct(row.id)
                 datagrid.removeRow(row.id)
@@ -82,7 +83,7 @@ const transformHazardClasses = classes => (
 
 const mapStateToProps = (state, { datagrid }) => {
   let cfg = state.admin.config[state.admin.currentTab]
-  
+
   return {
     config: cfg,
     filterCasIds: state.admin.filterCasIds,
