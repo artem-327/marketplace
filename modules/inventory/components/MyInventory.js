@@ -78,7 +78,7 @@ class MyInventory extends Component {
             <Popup id={r.id}
               trigger={
                 <Checkbox
-                  data-test="my_inventory_broadcast"
+                  data-test='my_inventory_broadcast'
                   toggle
                   defaultChecked={r.status.toLowerCase() === 'broadcasting'}
                   className={cn({error: r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'})}
@@ -162,12 +162,13 @@ class MyInventory extends Component {
                   size="large"
                   primary
                   onClick={() => openImportPopup()}
+                  data-test='my_inventory_import'
                 >
                   Import
                 </Button>
               </Menu.Item>
               <Menu.Item>
-                <FilterTags filters={datagrid.filters} data-test="my_inventory_filter" onClick={this.removeFilter} />
+                <FilterTags filters={datagrid.filters} data-test='my_inventory_filter' onClick={this.removeFilter} />
               </Menu.Item>
               <Menu.Item>
                 <SubMenu />

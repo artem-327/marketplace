@@ -205,8 +205,8 @@ class AddEditCasProductsPopup extends React.Component {
                     />
                   </FormGroup>
                   <div style={{ textAlign: 'right' }}>
-                    <Button.Reset><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
-                    <Button.Submit><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
+                    <Button.Reset data-test='admin_popup_cas_cancel'><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
+                    <Button.Submit data-test='admin_popup_cas_save'><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
                   </div>
                 </>
               )

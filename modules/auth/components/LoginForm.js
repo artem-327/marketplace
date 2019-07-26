@@ -106,7 +106,7 @@ class LoginForm extends Component {
                   <input placeholder={formatMessage({ id: 'auth.password', defaultMessage: 'Password' })} type='password' name='password' />
                 </Form.Field>
               }
-              <Button type='submit' primary fluid size='large' data-test="login_submit">
+              <Button type='submit' primary fluid size='large' data-test="login_submit" data-test='auth_login_or_reset_btn'>
                 {this.state.resetPassword
                   ? <FormattedMessage id='auth.resetPassword' defaultMessage='Reset Password' />
                   : <FormattedMessage id='auth.login' defaultMessage='Log in' />}

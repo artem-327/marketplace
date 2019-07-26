@@ -391,7 +391,8 @@ class Filter extends Component {
                 e.preventDefault()
                 if (!values.name) setFieldError('name', <FormattedMessage id='validation.required' />)
                 else this.handleFilterSave(values)
-              }} positive basic loading={isFilterSaving} style={{marginRight: '0'}}>Save</Button>
+              }} positive basic loading={isFilterSaving} style={{marginRight: '0'}}
+              data-test='filter_name_save'>Save</Button>
             </GridColumn>
           </GridRow>
 
@@ -697,14 +698,14 @@ class Filter extends Component {
               }}
               {...additionalSidebarProps}>
               <FiltersContainer>
-                <Button onClick={() => this.toggleFilter(false)} primary={!this.state.savedFiltersActive}>
+                <Button onClick={() => this.toggleFilter(false)} primary={!this.state.savedFiltersActive} data-test='filter_set_filters'>
                   <FormattedMessage
                     id='filter.setFilters'
                     defaultMessage='SET FILTERS'
                   />
                 </Button>
 
-                <Button onClick={() => this.toggleFilter(true)} primary={this.state.savedFiltersActive}>
+                <Button onClick={() => this.toggleFilter(true)} primary={this.state.savedFiltersActive} data-test='filter_saved_filters'>
                   <FormattedMessage
                     id='filter.savedFilter'
                     defaultMessage='SAVED FILTERS'
@@ -740,7 +741,8 @@ class Filter extends Component {
                       <Button
                         size='large'
                         onClick={this.toggleSaveFilter}
-                        inputProps={{type: 'button'}}>
+                        inputProps={{type: 'button'}}
+                        data-test='filter_save_new'>
                         <FormattedMessage id='filter.saveFilter' defaultMessage='Save Filter' />
                       </Button>
                     </GridColumn>
@@ -753,7 +755,8 @@ class Filter extends Component {
                           toggleFilter(false)
                           this.props.onClear(e, data)
                         }}
-                        inputProps={{type: 'button'}}>
+                        inputProps={{type: 'button'}}
+                        data-test='filter_clear'>
                         <FormattedMessage id='filter.clearFilter' defaultMessage='Clear Filter' />
                       </Button>
 
@@ -762,7 +765,8 @@ class Filter extends Component {
                         loading={isFilterApplying}
                         primary
                         onClick={() => this.submitForm()}
-                        inputProps={{type: 'button'}}>
+                        inputProps={{type: 'button'}}
+                        data-test='filter_apply'>
                         <FormattedMessage id='global.apply' defaultMessage='Apply' />
                       </Button>
                     </GridColumn>

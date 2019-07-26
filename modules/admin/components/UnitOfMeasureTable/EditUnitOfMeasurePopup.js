@@ -76,8 +76,8 @@ class EditUnitOfMeasurePopup extends React.Component {
             </FormGroup>
 
             <div style={{ textAlign: 'right' }}>
-              <Button.Reset><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
-              <Button.Submit><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
+              <Button.Reset data-test='admin_edit_unit_measure_cancel'><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
+              <Button.Submit data-test='admin_edit_unit_measure_save'><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
             </div>
           </Form>
         </Modal.Content>

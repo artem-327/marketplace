@@ -64,7 +64,7 @@ const SettingButton = styled(Icon)`
   }
 `
 const ColumnsSetting = ({ onClick }) => (
-  <SettingButton onClick={onClick} data-test="table_setting" name="setting" />
+  <SettingButton onClick={onClick} data-test='table_setting' name="setting" />
 )
 const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, open }) => (
   <Modal open={open} centered={false} size="tiny" style={{ width: 300 }}>
@@ -83,8 +83,8 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
         {columns.map(c => <Checkbox key={c.name} disabled={c.disabled} name={c.name} label={c.title} />)}
         <Divider />
         <div style={{ textAlign: 'right' }}>
-          <Button.Reset>Cancel</Button.Reset>
-          <Button.Submit>Save</Button.Submit>
+          <Button.Reset data-test='table_setting_cancel'>Cancel</Button.Reset>
+          <Button.Submit data-test='table_setting_save'>Save</Button.Submit>
         </div>
       </Form>
     </Modal.Content>
