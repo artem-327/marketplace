@@ -1,4 +1,5 @@
 context("Prodex User CRUD", () => {
+    let userID = null
 
     beforeEach(function () {
         cy.server()
@@ -13,7 +14,7 @@ context("Prodex User CRUD", () => {
         cy.wait('@inventoryLoading')
         cy.contains("Settings").click()
 
-        cy.wait("@settingsLoading")
+        cy.wait("@usersLogin")
 
         cy.contains("USERS").click()
 
@@ -21,13 +22,13 @@ context("Prodex User CRUD", () => {
     })
 
     it("Creates a user", () => {
-        cy.contains("Add ").click()
+        cy.get("button[class='ui large primary button']").click({force: true})
 
         cy.get("#field_input_name")
             .type("John Automator")
             .should("have.value", "John Automator")
 
-        cy.get("#field_input_title")
+        cy.get("#field_input_jobTitle")
             .type("Automatior")
             .should("have.value", "Automatior")
 
@@ -35,31 +36,37 @@ context("Prodex User CRUD", () => {
             .type("automation@example.com")
             .should("have.value", "automation@example.com")
 
-        cy.get("#field_dropdown_warehouse").click()
-        cy.get("div[name='Test 2']").first().click()
+        cy.get("#field_dropdown_homeBranch").click()
+
+        cy.get("#field_dropdown_homeBranch").within(() => {
+            cy.contains("Test 2").click()
+        })
+
 
         cy.contains("Save").click()
 
         cy.contains("User John Automator successfully created.")
 
-        let filter = [{"operator": "LIKE", "path": "User.name", "values": ["%John%"]}, {
+        let filter = [{"operator": "LIKE", "path": "User.name", "values": ["%john%"]}, {
             "operator": "LIKE",
             "path": "User.homeBranch.name",
-            "values": ["%John%"]
+            "values": ["%john%"]
         }]
 
         cy.getToken().then(token => {
             cy.getFirstUserIdWithFilter(token, filter).then(itemId => {
                 cy.get('[data-test=action_' + itemId + ']').click()
+
+                cy.get('[data-test=action_' + itemId + '_0]').click()
+
+                userID = itemId
             })
         })
-
-        cy.contains("Edit").click()
 
         cy.get("#field_input_name")
             .should("have.value", "John Automator")
 
-        cy.get("#field_input_title")
+        cy.get("#field_input_jobTitle")
             .should("have.value", "Automatior")
 
         cy.get("#field_input_email")
@@ -67,72 +74,62 @@ context("Prodex User CRUD", () => {
     })
 
     it("Edits a user", () => {
-        let filter = [{"operator": "LIKE", "path": "User.name", "values": ["%John%"]}, {
-            "operator": "LIKE",
-            "path": "User.homeBranch.name",
-            "values": ["%John%"]
-        }]
+        cy.get("input").type("John")
 
-        cy.getToken().then(token => {
-            cy.getFirstUserIdWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-            })
-        })
+        cy.waitForUI()
 
-        cy.contains("Edit").click()
+        cy.get('[data-test=action_' + userID + ']').click()
+
+        cy.get('[data-test=action_' + userID + '_0]').click()
 
         cy.get("#field_input_name")
             .clear()
             .type("Jen Automator")
-            .should("have.value", "John Automator")
+            .should("have.value", "Jen Automator")
 
         cy.contains("Save").click()
 
-        filter = [{"operator": "LIKE", "path": "User.name", "values": ["%Jen%"]}, {
-            "operator": "LIKE",
-            "path": "User.homeBranch.name",
-            "values": ["%Jen%"]
-        }]
+        cy.get('[data-test=action_' + userID + ']').click()
 
-        cy.getToken().then(token => {
-            cy.getFirstUserIdWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-            })
-        })
-
-        cy.contains("Edit").click()
+        cy.get('[data-test=action_' + userID + '_0]').click()
 
         cy.get("#field_input_name")
             .should("have.value", "Jen Automator")
     })
 
-    it("Deletes a user", () => {
-        let filter = [{"operator": "LIKE", "path": "User.name", "values": ["%Jen%"]}, {
-            "operator": "LIKE",
-            "path": "User.homeBranch.name",
-            "values": ["%Jen%"]
-        }]
+    it("Edit user roles a user", () => {
+        cy.waitForUI()
 
-        cy.getToken().then(token => {
-            cy.getFirstUserIdWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-            })
-        })
+        cy.get('[data-test=action_' + userID + ']').click()
 
-        cy.contains("Delete").click()
+        cy.get('[data-test=action_' + userID + '_1]').click()
 
-        cy.contains("Yes").click()
+        cy.get("#field_checkbox_roles_3")
+            .click({force: true})
+            .should("not.selected")
 
-        cy.contains("Jen Automator").should("not.exist")
+        cy.get("button[class='ui primary button']").click()
+
+        cy.waitForUI()
+
+        cy.get('[data-test=action_' + userID + ']').click()
+
+        cy.get('[data-test=action_' + userID + '_1]').click()
+
+        cy.get("#field_checkbox_roles_3")
+            .should("not.selected")
     })
 
-    xit("Edit user roles a user", () => {
-        cy.getToken().then(token => {
-            cy.getFirstUserIdWithFilter(token, filter).then(itemId => {
-                cy.get('[data-test=action_' + itemId + ']').click()
-            })
-        })
+    it("Deletes a user", () => {
+        cy.waitForUI()
 
-        cy.contains("Edit Roles").click()
+        cy.get('[data-test=action_' + userID + ']').click()
+
+        cy.get('[data-test=action_' + userID + '_2]').click()
+
+        //TODO Own function
+        cy.get("button[class='ui primary button']").click()
+
+        cy.contains("Jen Automator").should("not.exist")
     })
 })
