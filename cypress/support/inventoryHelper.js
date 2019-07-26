@@ -12,6 +12,16 @@ Cypress.Commands.add("selectChemical", (chemical) => {
     cy.get('div[role=option]').eq(0).click({force: true})
 })
 
+Cypress.Commands.add("selectFromDropdown", (selector,value) => {
+    cy.get(selector)
+        .children("input")
+        .type(value)
+        .should("have.value",value)
+
+    cy.wait(1000)
+    cy.get('div[role=option]').eq(0).click({force: true})
+})
+
 Cypress.Commands.add("setNumberInput", (selector,number) => {
     cy.get(selector)
         .scrollIntoView()
