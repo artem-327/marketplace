@@ -120,6 +120,10 @@ context("Prodex User CRUD", () => {
             .should("not.selected")
     })
 
+    xit("Checks error messages", () => {
+
+    })
+
     it("Deletes a user", () => {
         cy.waitForUI()
 

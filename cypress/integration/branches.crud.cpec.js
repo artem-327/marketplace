@@ -103,6 +103,10 @@ context("Prodex Branches CRUD", () => {
             .should("have.value","Arnold Schwarzenegger")
     })
 
+    xit("Checks error messages", () => {
+
+    })
+
     it("Deletes a branch", () => {
         cy.get('[data-test=action_' + branchId + ']').click()
 

@@ -103,6 +103,10 @@ context("Prodex Warehouse CRUD", () => {
             .should("have.value","Arnold Schwarzenegger")
     })
 
+    xit("Checks error messages", () => {
+
+    })
+
     it("Deletes a warehouse", () => {
         cy.get('[data-test=action_' + branchId + ']').click()
 
