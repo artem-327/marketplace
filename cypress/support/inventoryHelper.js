@@ -40,3 +40,7 @@ Cypress.Commands.add("clickSave", () => {
     cy.get("button[class='ui primary button']").click()
     cy.wait(1000)
 })
+
+Cypress.Commands.add("clickAdd", () => {
+    cy.get("button[class='ui large primary button']").click({force: true})
+})

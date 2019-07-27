@@ -110,7 +110,7 @@ context("Inventory CRUD",() => {
 
 		cy.contains("Add Product Offer").click()
 		cy.get(".error")
-			.should("have.length",4)
+			.should("have.length",2)
 			.find(".sui-error-message").each((element) => {
 			expect(element.text()).to.match(/(required)|(must be number)|(Amount has to be greater than 0)/i)
 		})

@@ -19,7 +19,7 @@ context("Prodex Bank Account CRUD", () => {
     })
 
     it("Creates a bank account", () => {
-        cy.get("button[class='ui large primary button']").click({force: true})
+        cy.clickAdd()
 
         let accountNumber = new Date().getTime()
         cy.get("#field_input_accountNumber")
@@ -63,8 +63,16 @@ context("Prodex Bank Account CRUD", () => {
         cy.get("i[class='ellipsis vertical large icon']").click()
     })
 
-    xit("Checks error messages", () => {
+    it("Checks error messages", () => {
+        cy.clickAdd()
 
+        cy.clickSave()
+
+        cy.get(".error")
+            .should("have.length",4)
+            .find(".sui-error-message").each((element) => {
+            expect(element.text()).to.match(/(Required)/i)
+        })
     })
 
     it("Deletes a bank account", () => {
