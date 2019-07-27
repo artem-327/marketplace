@@ -16,6 +16,7 @@ context("Prodex Branches CRUD", () => {
         cy.contains("BRANCHES").click()
 
         cy.wait("@branchesLoading")
+        cy.waitForUI()
     })
 
     it("Creates a branch", () => {
@@ -33,11 +34,11 @@ context("Prodex Branches CRUD", () => {
             .type("Harlingen")
             .should("have.value", "Harlingen")
 
+        cy.selectFromDropdown("div[id='field_dropdown_address.country']","Bahamas")
+
+        cy.waitForUI()
+
         cy.selectFromDropdown("div[id='field_dropdown_address.zip']","75000")
-
-        cy.selectFromDropdown("div[id='field_dropdown_address.country']", "USA")
-
-        cy.selectFromDropdown("div[id='field_dropdown_address.province']", "Alabama")
 
         cy.get("input[id='field_input_contactName']")
             .type("David Cameron")
@@ -51,7 +52,7 @@ context("Prodex Branches CRUD", () => {
             .type("test@central.com")
             .should("have.value","test@central.com")
 
-        cy.get("button[class='ui primary button']").click()
+        cy.clickSave()
 
         cy.contains("Created Warehouse")
 
@@ -69,14 +70,8 @@ context("Prodex Branches CRUD", () => {
             })
         })
 
-        cy.get("#field_dropdown_address.zip")
+        cy.get("input[id='field_input_address.city']")
             .should("have.value","Harlingen")
-
-        cy.get("#field_dropdown_address.country")
-            .should("have.value","USA")
-
-        cy.get("#field_dropdown_address.province")
-            .should("have.value","Alabama")
 
         cy.get("#field_input_contactName")
             .should("have.value","David Cameron")
@@ -89,10 +84,6 @@ context("Prodex Branches CRUD", () => {
     })
 
     it("Edits a branch", () => {
-        cy.get("input").type("Central")
-
-        cy.waitForUI()
-
         cy.get('[data-test=action_' + branchId + ']').click()
 
         cy.get('[data-test=action_' + branchId + '_0]').click()
@@ -102,7 +93,7 @@ context("Prodex Branches CRUD", () => {
             .type("Arnold Schwarzenegger")
             .should("have.value","Arnold Schwarzenegger")
 
-        cy.contains("Save").click()
+        cy.clickSave()
 
         cy.get('[data-test=action_' + branchId + ']').click()
 
@@ -113,15 +104,12 @@ context("Prodex Branches CRUD", () => {
     })
 
     it("Deletes a branch", () => {
-        cy.waitForUI()
+        cy.get('[data-test=action_' + branchId + ']').click()
 
-        cy.get('[data-test=action_' + userID + ']').click()
+        cy.get('[data-test=action_' + branchId + '_1]').click()
 
-        cy.get('[data-test=action_' + userID + '_1]').click()
+        cy.clickSave()
 
-        //TODO Own function
-        cy.get("button[class='ui primary button']").click()
-
-        cy.contains("Central").should("not.exist")
+        cy.contains("Central branch").should("not.exist")
     })
 })

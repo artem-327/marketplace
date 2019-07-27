@@ -19,7 +19,7 @@ Cypress.Commands.add("selectFromDropdown", (selector,value) => {
         .should("have.value",value)
 
     cy.wait(1000)
-    cy.get('div[role=option]').eq(0).click({force: true})
+    cy.get("div[class='selected item']").eq(0).click({force: true})
 })
 
 Cypress.Commands.add("setNumberInput", (selector,number) => {
@@ -34,4 +34,9 @@ Cypress.Commands.add("assertProductDetail", (index,value) => {
     cy.get(".data-grid")
         .children()
         .eq(index).contains(value)
+})
+
+Cypress.Commands.add("clickSave", () => {
+    cy.get("button[class='ui primary button']").click()
+    cy.wait(1000)
 })
