@@ -22,7 +22,7 @@ context("Prodex User CRUD", () => {
     })
 
     it("Creates a user", () => {
-        cy.get("button[class='ui large primary button']").click({force: true})
+        cy.clickAdd()
 
         cy.get("#field_input_name")
             .type("John Automator")
@@ -37,13 +37,12 @@ context("Prodex User CRUD", () => {
             .should("have.value", "automation@example.com")
 
         cy.get("#field_dropdown_homeBranch").click()
-
+        cy.waitForUI()
         cy.get("#field_dropdown_homeBranch").within(() => {
-            cy.contains("Test 2").click()
+            cy.get("div[role='option']").eq(0).click()
         })
 
-
-        cy.contains("Save").click()
+        cy.clickSave()
 
         cy.contains("User John Automator successfully created.")
 
@@ -87,7 +86,7 @@ context("Prodex User CRUD", () => {
             .type("Jen Automator")
             .should("have.value", "Jen Automator")
 
-        cy.contains("Save").click()
+        cy.clickSave()
 
         cy.get('[data-test=action_' + userID + ']').click()
 
@@ -120,8 +119,16 @@ context("Prodex User CRUD", () => {
             .should("not.selected")
     })
 
-    xit("Checks error messages", () => {
+    it("Checks error messages", () => {
+        cy.clickAdd()
 
+        cy.clickSave()
+
+        cy.get(".error")
+            .should("have.length",3)
+            .find(".sui-error-message").each((element) => {
+            expect(element.text()).to.match(/(is required)/i)
+        })
     })
 
     it("Deletes a user", () => {
@@ -131,8 +138,7 @@ context("Prodex User CRUD", () => {
 
         cy.get('[data-test=action_' + userID + '_2]').click()
 
-        //TODO Own function
-        cy.get("button[class='ui primary button']").click()
+        cy.clickSave()
 
         cy.contains("Jen Automator").should("not.exist")
     })

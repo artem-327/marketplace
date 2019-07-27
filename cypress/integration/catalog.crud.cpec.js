@@ -173,8 +173,16 @@ context("Prodex Product Catalog CRUD", () => {
             .should("not.exist")
     })
 
-    xit("Checks error messages", () => {
+    it("Checks error messages", () => {
+        cy.get("button[class='ui large primary button']").eq(0).click({force: true})
 
+        cy.clickSave()
+
+        cy.get(".error")
+            .should("have.length",7)
+            .find(".sui-error-message").each((element) => {
+            expect(element.text()).to.match(/(Required)|(is a required field)|(must be number)/i)
+        })
     })
 
     it("Deletes a product", () => {

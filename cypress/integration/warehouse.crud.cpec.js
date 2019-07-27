@@ -20,7 +20,7 @@ context("Prodex Warehouse CRUD", () => {
     })
 
     it("Creates a warehouse", () => {
-        cy.get("button[class='ui large primary button']").click({force: true})
+        cy.clickAdd()
 
         cy.get("#field_input_name")
             .type("Central branch")
@@ -103,8 +103,16 @@ context("Prodex Warehouse CRUD", () => {
             .should("have.value","Arnold Schwarzenegger")
     })
 
-    xit("Checks error messages", () => {
+    it("Checks error messages", () => {
+        cy.clickAdd()
 
+        cy.clickSave()
+
+        cy.get(".error")
+            .should("have.length",8)
+            .find(".sui-error-message").each((element) => {
+            expect(element.text()).to.match(/(Required)/i)
+        })
     })
 
     it("Deletes a warehouse", () => {
