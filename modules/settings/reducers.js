@@ -36,7 +36,6 @@ export const initialState = {
 
   tabsNames: defaultTabs,
   currentTab: defaultTabs[0],
-
   isOpenImportPopup: false,
   isDwollaOpenPopup: false,
   currentEditForm: null,
@@ -63,7 +62,10 @@ export const initialState = {
   deliveryAddressesFilter: { pageSize: 50, pageNumber: 0 },
   productsFilter: { pageSize: 50, pageNumber: 0 },
   documentTypes: [],
-  addressSearch: []
+  addressSearch: [],
+  logisticsAccounts: [],
+  logisticsProviders: [],
+  logisticsProvidersFetching: false,
 }
 
 export default function reducer(state = initialState, action) {
@@ -415,9 +417,9 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.GET_CREDIT_CARDS_DATA_PENDING: {  // ! ! pending
-      return { 
-        ...state, 
-        loading: true 
+      return {
+        ...state,
+        loading: true
       }
     }
 
@@ -699,7 +701,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.SETTINGS_CREATE_CAS_PRODUCTS_INDEX: {
       // ADD new array to casProducts
-      let {searchedCasProducts} = state
+      let { searchedCasProducts } = state
       searchedCasProducts.push([])
 
       return {
@@ -710,7 +712,7 @@ export default function reducer(state = initialState, action) {
 
     case AT.SETTINGS_REMOVE_CAS_PRODUCTS_INDEX: {
       // REMOVE array from casProducts
-      let {searchedCasProducts} = state
+      let { searchedCasProducts } = state
       searchedCasProducts.splice(action.payload.index, 1)
 
       return {
@@ -850,7 +852,7 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.POST_NEW_BANK_ACCOUNT_REQUEST_FULFILLED: {
-      
+
       return {
         ...state,
         loading: false,
@@ -959,6 +961,99 @@ export default function reducer(state = initialState, action) {
             value: docType.id
           }
         })
+      }
+    }
+
+    /* GET_LOGISTIC_ACCOUNTS */
+
+    case AT.GET_LOGISTICS_ACCOUNTS_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.GET_LOGISTICS_ACCOUNTS_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        logisticsAccounts: payload
+      }
+    }
+
+    case AT.GET_LOGISTICS_ACCOUNTS_REJECTED: {
+      return {
+        ...state,
+        loading: false
+      }
+    }
+
+    /* GET_LOGISTICS_PROVIDERS */
+
+    case AT.GET_LOGISTICS_PROVIDERS_PENDING: {
+      return {
+        ...state,
+        logisticsProvidersFetching: true
+      }
+    }
+
+    case AT.GET_LOGISTICS_PROVIDERS_FULFILLED: {
+      return {
+        ...state,
+        logisticsProvidersFetching: false,
+        logisticsProviders: payload
+      }
+    }
+
+    case AT.GET_LOGISTICS_PROVIDERS_REJECTED: {
+      return {
+        ...state,
+        logisticsProvidersFetching: false
+      }
+    }
+
+    /* CREATE_LOGISTICS_ACCOUNT */
+
+    case AT.CREATE_LOGISTICS_ACCOUNT_FULFILLED: {
+      return {
+        ...state,
+        logisticsAccounts: [].concat([payload], state.logisticsAccounts)
+      }
+    }
+
+    /* UPDATE_LOGSITICS_ACCOUNT */
+
+    case AT.UPDATE_LOGISTICS_ACCOUNT_FULFILLED: {
+      let logisticsAccounts = state.logisticsAccounts.slice()
+      logisticsAccounts[state.logisticsAccounts.findIndex((el) => el.id === payload.id)] = payload
+
+      return {
+        ...state,
+        logisticsAccounts
+      }
+    }
+
+    /* DELETE_LOGISTICS_ACCOUNT */
+    
+    case AT.DELETE_LOGISTICS_ACCOUNT_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
+    case AT.DELETE_LOGISTICS_ACCOUNT_FULFILLED: {
+      return {
+        ...state,
+        loading: false,
+        logisticsAccounts: state.logisticsAccounts.filter((el) => el.id !== payload)
+      }
+    }
+
+    case AT.DELETE_LOGISTICS_ACCOUNT_REJECTED: {
+      return {
+        ...state,
+        loading: false
       }
     }
 

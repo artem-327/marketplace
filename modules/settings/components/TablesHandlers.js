@@ -40,6 +40,10 @@ const textsTable = {
   'delivery-addresses': {
     BtnAddText: 'Delivery Address',
     SearchText: 'Search delivery address ...'
+  },
+  'logistics': {
+    BtnAddText: 'Logistics',
+    SearchText: 'Search logistics ...'
   }
 }
 

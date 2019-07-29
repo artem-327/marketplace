@@ -108,7 +108,7 @@ export function handlerSubmitUserEditPopup(payload, id) {
   return async dispatch => {
     removeEmpty(payload)
     const response = await api.patchUser(id, payload)
-    
+
     dispatch({
       type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
       payload: response
@@ -913,3 +913,13 @@ export const addTab = (payload) => ({ type: AT.ADD_TAB, payload })
 export const tabChanged = (tab) => ({ type: AT.TAB_CHANGED, payload: tab })
 
 export const resendWelcomeEmail = (userId) => ({ type: AT.SETTINGS_RESEND_WELCOME_EMAIL, payload: api.resendWelcomeEmail(userId) })
+
+export const getLogisticsProviders = () => ({ type: AT.GET_LOGISTICS_PROVIDERS, payload: api.getLogisticsProviders() })
+
+export const createLogisticsAccount = payload => ({ type: AT.CREATE_LOGISTICS_ACCOUNT, payload: api.createLogisticsAccount(payload) })
+
+export const getLogisticsAccounts = () => ({ type: AT.GET_LOGISTICS_ACCOUNTS, payload: api.getLogisticsAccounts() })
+
+export const updateLogisticsAccount = payload => ({ type: AT.UPDATE_LOGISTICS_ACCOUNT, payload: api.updateLogisticsAccount(payload) })
+
+export const deleteLogisticsAccount = id => ({ type: AT.DELETE_LOGISTICS_ACCOUNT, payload: api.deleteLogisticsAccount(id) })

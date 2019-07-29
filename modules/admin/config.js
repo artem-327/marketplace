@@ -19,7 +19,7 @@ export const config = {
   },
 
   'Companies': {
-    addEditText: <FormattedMessage id='admin.company' defaultMessage='COMPENY' />,
+    addEditText: <FormattedMessage id='admin.company' defaultMessage='Company' />,
     formattedMessageName: 'company',
     searchText: 'admin.searchCompany',
     display: {
@@ -29,6 +29,7 @@ export const config = {
         { name: 'primaryContact', title: 'Primary Contact', sortPath: 'ClientCompany.primaryBranch.contactName' },
         { name: 'contactEmail', title: 'Contact E-mail', sortPath: 'ClientCompany.primaryBranch.contactEmail' },
         { name: 'hasDwollaAccount', title: 'Dwolla Account' },
+        { name: 'hasLogisticsAccounts', title: 'Logistics Accounts' }
       ]
     }
   },
@@ -124,7 +125,7 @@ export const config = {
 
   'Manufacturers': {
     tableName: 'admin_manufacturers',
-    addEditText: <FormattedMessage id='admin.manufacturer' />, 
+    addEditText: <FormattedMessage id='admin.manufacturer' />,
     formattedMessageName: 'manufacturer',
     searchText: 'admin.searchManufacturer',
     display: {
