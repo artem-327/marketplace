@@ -235,10 +235,10 @@ class ConfirmationPage extends Component {
               <Grid>
                 <Grid.Row>
                   <Grid.Column aligned='right' textAlign='right'>
-                    <Button style={{ marginRight: '1em' }} onClick={() => {isAdmin ? Router.push('/admin') : Router.push('/inventory/my')}}>
+                    <Button style={{ marginRight: '1em' }} onClick={() => {isAdmin ? Router.push('/admin') : Router.push('/inventory/my')}} data-test='auth_confirm_cancel'>
                       <FormattedMessage id='laststep.cancel' defaultMessage='Cancel' />
                     </Button>
-                    <Button.Submit color='blue'>
+                    <Button.Submit color='blue' data-test='auth_confirm_enter'>
                       <FormattedMessage id='laststep.submit' defaultMessage='Enter Echo Exchange' />
                     </Button.Submit>
                   </Grid.Column>

@@ -310,6 +310,7 @@ class Broadcast extends Component {
                             </GridColumn>
                             <GridColumn computer={5}>
                               <Button
+                                data-test='broadcast_modal_delete'
                                 onClick={() => this.handleTemplateDelete(props.setFieldValue)}
                                 disabled={!this.state.selectedTemplate}
                                 loading={this.props.templateDeleting}
@@ -369,10 +370,9 @@ class Broadcast extends Component {
           </Grid>
         </Modal.Content>
         <Modal.Actions>
-          <Button onClick={() => closeBroadcast()}><FormattedMessage id='global.cancel' /></Button>
+          <Button onClick={() => closeBroadcast()} data-test='broadcast_modal_close'><FormattedMessage id='global.cancel' /></Button>
           <Button primary
             onClick={async () => {
-              console.log(treeData.model)
               await saveRules(id, treeData.model)
               toastManager.add(generateToastMarkup(
                 'Saved successfully!',
@@ -381,6 +381,7 @@ class Broadcast extends Component {
                   appearance: 'success'
                 })
             }}
+            data-test='broadcast_modal_save'
           >
             <FormattedMessage id='global.save' />
           </Button>

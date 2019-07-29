@@ -151,7 +151,7 @@ class SavedFilters extends Component {
                             <Notifications values={values} />
                             <ActionRow>
                               <GridColumn computer={4} floated='right'>
-                                <Button onClick={submitForm} loading={this.props.savedFilterUpdating} fluid positive basic><FormattedMessage id='global.save' defaultMessage='Save' /></Button>
+                                <Button onClick={submitForm} loading={this.props.savedFilterUpdating} fluid positive basic data-test='filter_notification_save'><FormattedMessage id='global.save' defaultMessage='Save' /></Button>
                               </GridColumn>
                             </ActionRow>
                           </Grid>

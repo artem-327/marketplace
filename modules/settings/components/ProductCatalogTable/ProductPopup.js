@@ -105,7 +105,6 @@ class ProductPopup extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps)
     if (nextProps.popupValues && nextProps.popupValues.packagingUnit) {
       this.filterPackagingTypes(nextProps.popupValues.packagingUnit, nextProps.unitsAll, nextProps.packagingTypesAll)
     }
@@ -303,7 +302,6 @@ class ProductPopup extends React.Component {
             onSubmit={this.handlerSubmit}
           >
             {({ values, setFieldValue }) => {
-              console.log(values)
               return (<>
                 <FormGroup widths='equal'>
                   <Input type='text' label='Product Name' name='productName' />

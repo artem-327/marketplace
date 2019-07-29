@@ -154,7 +154,6 @@ class Map extends Component {
     const selectedMap = this.props.maps.filter(map => {
       return map.id === value
     })
-    console.log(selectedMap)
     this.props.selectSavedMap(selectedMap[0])
   }
 

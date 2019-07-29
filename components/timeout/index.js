@@ -93,10 +93,10 @@ export default class TimeoutWarning extends Component {
             </p>
           </Modal.Content>
           <Modal.Actions>
-            <Button basic color="blue" onClick={() => Router.push(`/auth/logout`)}>
+            <Button basic data-test='logout_timeout_logout' color="blue" onClick={() => Router.push(`/auth/logout`)}>
               <FormattedMessage id="auth.sessionTimeout.buttonLogOut" defaultMessage="Log Out" />
             </Button>
-            <Button primary onClick={this.resetIdleTimer}>
+            <Button primary data-test='logout_timeout_keep_working' onClick={this.resetIdleTimer}>
               <FormattedMessage id="auth.sessionTimeout.buttonKeepWorking" defaultMessage="Keep Working" />
             </Button>
           </Modal.Actions>

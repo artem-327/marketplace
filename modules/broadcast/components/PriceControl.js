@@ -36,8 +36,6 @@ export default class PriceControl extends Component {
   }
 
   componentWillReceiveProps({ rule }) {
-    // console.log('receive props:', model)
-
     this.setState({
       //type: model.priceAddition > 0 ? 'addition' : model.priceMultiplier > 0 ? 'multiplier' : '',
       value: rule.priceAddition !== 0 ? rule.priceAddition : rule.priceMultiplier !== 0 ? rule.priceMultiplier : ''

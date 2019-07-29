@@ -22,7 +22,7 @@ const asignFiltersDescription = (filter, params) => {
           try {
             filter.tagDescription = datagridValues[key].tagDescription(filter.values, params)
           } catch (_) {
-            filter.tagDescripxtion = datagridValues[key].valuesDescription(filter.values, params)
+            filter.tagDescription = datagridValues[key].valuesDescription(filter.values, params)
           }
         }
       })
@@ -40,6 +40,8 @@ export const initialState = {
   isFilterApplying: false,
   autocompleteData: [],
   autocompleteDataLoading: false,
+  autocompleteWarehouse: [],
+  autocompleteWarehouseLoading: false,
   savedFilters: [],
   appliedFilter: [],
   savedFiltersLoading: false,
@@ -92,11 +94,24 @@ export default typeToReducer({
 
     let { data } = payload
     let autocompleteData = []
+    let autocompleteWarehouse = []
 
     data.forEach(element => {
       element = asignFiltersDescription(element, state.params)
 
       element.filters.forEach(filter => {
+
+
+        if (filter.path === paths.productOffers.warehouseId) {
+          let parsed = JSON.parse(filter.values[0].description)
+          autocompleteWarehouse = [{
+            id: parseInt(filter.values[0].value),
+            name: parsed.name,
+            text: parsed.text
+          }]
+        }
+
+
         if (filter.path === paths.productOffers.productId) {
           filter.values.forEach(element => {
             let parsed = JSON.parse(element.description)
@@ -114,6 +129,7 @@ export default typeToReducer({
       savedFiltersLoading: false,
       savedFilters: data,
       autocompleteData: uniqueArrayByKey(autocompleteData.concat(state.autocompleteData), 'id'),
+      autocompleteWarehouse: uniqueArrayByKey(autocompleteWarehouse.concat(state.autocompleteWarehouse), 'id'),
     }
   },
   [a.getSavedFilters.rejected]: (state) => {
@@ -144,6 +160,30 @@ export default typeToReducer({
       ...state,
       autocompleteDataLoading: false,
       autocompleteData: []
+    }
+  },
+
+
+  /* GET_AUTOCOMPLETE_WAREHOUSE_DATA */
+
+  [a.getAutocompleteWarehouse.pending]: (state) => {
+    return {
+      ...state,
+      autocompleteWarehouseLoading: true
+    }
+  },
+  [a.getAutocompleteWarehouse.fulfilled]: (state, { payload }) => {
+    return {
+      ...state,
+      autocompleteWarehouseLoading: false,
+      autocompleteWarehouse: uniqueArrayByKey(payload.concat(state.autocompleteWarehouse), 'id'),
+    }
+  },
+  [a.getAutocompleteWarehouse.rejected]: (state) => {
+    return {
+      ...state,
+      autocompleteWarehouseLoading: false,
+      autocompleteWarehouse: []
     }
   },
 

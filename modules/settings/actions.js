@@ -107,17 +107,45 @@ export function openEditPopup(rows) {
 export function handlerSubmitUserEditPopup(payload, id) {
   return async dispatch => {
     removeEmpty(payload)
-    const response = await api.patchUser(id, payload)
+    try {
+      const response = await api.patchUser(id, payload)
+      dispatch({
+        type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
+        payload: response
+      })
+      Datagrid.updateRow(id, () => response.data)
 
-    dispatch({
-      type: AT.HANDLE_SUBMIT_USER_EDIT_POPUP,
-      payload: response
-    })
-
-    Datagrid.updateRow(id, () => response.data)
-    dispatch(closePopup())
+      dispatch(closePopup())
+    } catch(e) {
+      // TODO
+      console.error(e)
+    }
   }
 }
+export function putNewUserRoleRequest(payload, id) {
+  // return dispatch => ({
+  //   type: AT.PUT_NEW_USER_ROLES_REQUEST,
+  //   async payload() {
+  //     const response = await api.patchUserRole(id, roles)
+  //     dispatch(closeRolesPopup())
+  //     return response
+  //   }
+  // })
+  return async dispatch => {
+    await dispatch({
+      type: AT.PUT_NEW_USER_ROLES_REQUEST,
+      async payload(){
+        const response = await api.patchUserRole(id, payload)
+        Datagrid.updateRow(id, () => response.data)
+        return response
+      }
+    })
+    dispatch(closeRolesPopup())
+    //dispatch(getUsersDataRequest())
+    
+  }
+}
+
 export function handleEditPopup(rows) {
   return {
     type: AT.OPEN_EDIT_POPUP,
@@ -611,17 +639,6 @@ export function postNewCreditCardRequest(payload) {
   return {
     type: AT.POST_NEW_CREDIT_CARD_REQUEST,
     payload: api.postNewCreditCard(dataBody)
-  }
-}
-
-export function putNewUserRoleRequest(payload, id) {
-  return async dispatch => {
-    await dispatch({
-      type: AT.PUT_NEW_USER_ROLES_REQUEST,
-      payload: api.patchUserRole(id, payload)
-    })
-    //dispatch(getUsersDataRequest())
-    dispatch(closeRolesPopup())
   }
 }
 
