@@ -32,7 +32,8 @@ import {
   AccordionItem, AccordionContent,
   WhiteSegment, GraySegment,
   Title, BottomMargedDropdown,
-  LessPaddedRow
+  LessPaddedRow, SaveFilterRow,
+  SaveFilterTitle, SaveFilterClose
 } from '../constants/layout'
 
 class Filter extends Component {
@@ -317,7 +318,7 @@ class Filter extends Component {
     </AccordionTitle>
   )
 
-  toggleSaveFilter = (e, data) => {
+  toggleSaveFilter = (e) => {
     e.preventDefault()
     this.setState(prevState => ({ openedSaveFilter: !prevState.openedSaveFilter }))
   }
@@ -375,11 +376,14 @@ class Filter extends Component {
       <>
         <Grid verticalAlign='top'>
           {/* Save Filter */}
-          <GridRow>
-            <GridColumn>
-              <Title><FormattedMessage id='filter.saveFilter' defaultMessage='Save Filter' /></Title>
+          <SaveFilterRow>
+            <GridColumn width={13}>
+              <SaveFilterTitle><FormattedMessage id='filter.saveFilter' defaultMessage='Save Filter' /></SaveFilterTitle>
             </GridColumn>
-          </GridRow>
+            <GridColumn width={3} textAlign='right'>
+              <SaveFilterClose name='close' size='large' onClick={this.toggleSaveFilter} />
+            </GridColumn>
+          </SaveFilterRow>
 
           <GridRow>
             <GridColumn computer={12}>
