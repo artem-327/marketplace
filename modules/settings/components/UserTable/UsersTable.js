@@ -163,7 +163,7 @@ const mapStateToProps = (state, { datagrid }) => {
       homeBranch: user.homeBranch && user.homeBranch.id,
       additionalBranches: user.additionalBranches && user.additionalBranches.map(b => b.id),
       enabled: user.enabled,
-      preferredCurrency: (user.preferredCurrency || {}).id || 0,
+      preferredCurrency: (user.preferredCurrency || {}).id || undefined,
       homeBranchName: user.homeBranch && user.homeBranch.name,
       permissions: user.roles ? user.roles.name : "", // ! ! array?
       id: user.id,

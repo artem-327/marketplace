@@ -100,7 +100,7 @@ class UsersPopup extends React.Component {
       name = "",
       email = "",
       homeBranch = undefined,
-      preferredCurrency = "",
+      preferredCurrency = undefined,
       additionalBranches = [],
       jobTitle = "",
       phone = "",
