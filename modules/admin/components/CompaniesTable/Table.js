@@ -77,6 +77,7 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
     currentTab: admin.currentTab,
     rows: datagrid.rows.map(c => ({
       ...c,
+      hasLogisticsAccounts: c.logisticsAccount ? 'Yes' : 'No',
       hasDwollaAccount: c.hasDwollaAccount ? 'Yes' : 'No',
       primaryBranchAddress: c.primaryBranch && c.primaryBranch.address ?
         c.primaryBranch.address.streetAddress + ', ' +
@@ -89,7 +90,7 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
         : '',
       contactEmail: c.primaryUser ?
         c.primaryUser.email
-        : '',
+        : ''
     })),
     confirmMessage: admin.confirmMessage,
     deleteRowById: admin.deleteRowById,

@@ -19,8 +19,13 @@ import CreditCardsPopup from './CreditCardsTable/CreditCardsPopup'
 import BankAccountsPopup from './BankAccountsTable/BankAccountsPopup'
 import TablesHandlers from './TablesHandlers'
 import ProductImportPopup from './ProductCatalogTable/ProductImportPopup'
+
 import DeliveryAddressesTable from './DeliveryAddressesTable/DeliveryAddressesTable'
 import DeliveryAddressesPopup from './DeliveryAddressesTable/DeliveryAddressesPopup'
+
+import LogisticsTable from './LogisticsTable/LogisticsTable'
+import LogisticsPopup from './LogisticsTable/LogisticsPopup'
+
 import DwollaAccount from './DwollaAccountComponent'
 import { CompanyForm } from '~/modules/company-form/'
 import { companyDetailsTab } from '../contants'
@@ -101,6 +106,7 @@ class Settings extends Component {
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
       'delivery-addresses': <DeliveryAddressesTable />,
+      'logistics': <LogisticsTable />
     }
 
     const popupForm = {
@@ -110,7 +116,8 @@ class Settings extends Component {
       'products': <EditProductPopup />,
       'bank-accounts': <BankAccountsPopup />,
       'credit-cards': <CreditCardsPopup />,
-      'delivery-addresses': <DeliveryAddressesPopup />
+      'delivery-addresses': <DeliveryAddressesPopup />,
+      'logistics': <LogisticsPopup />
     }
 
     const popup2Form = {
