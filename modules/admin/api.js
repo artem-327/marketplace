@@ -159,3 +159,5 @@ export const takeOverCompany = (id) => api.patch(`/prodex/api/admin/company/${id
 export const takeOverCompanyFinish = () => api.patch('/prodex/api/admin/company/take-over/finish').then(response => response.data)
 
 export const resendWelcomeEmail = (userId) => api.get(`/prodex/api/users/id/${userId}/email/welcome`).then(response => response.data).catch(e => console.error(e.clientMessage))
+
+export const reviewRequestedSwitch = (companyId, reviewRequested) => api.patch(`/prodex/api/companies/review-requested`, {companyId, reviewRequested})

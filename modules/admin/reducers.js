@@ -371,6 +371,18 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_REVIEW_REQUESTED_REJECTED: {
+      return {
+        ...state,
+        companiesRows: state.companiesRows.map(company => {
+          return {
+            ...company,
+            reviewRequested: !company.reviewRequested
+          }
+        })
+      }
+    }
+
     case AT.ADMIN_POST_NEW_PRODUCT_NAME_REJECTED:
     case AT.ADMIN_UPDATE_PRODUCT_NAME_REJECTED:
     case AT.ADMIN_DELETE_PRODUCT_NAME_REJECTED:

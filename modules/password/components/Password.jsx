@@ -6,9 +6,9 @@ import Logo from '~/assets/images/logos/logo-dark.png'
 import { Input, Button, Checkbox } from 'formik-semantic-ui'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Link from 'next/link'
+import Router from 'next/router'
 
 import { setPassword } from '../api'
-
 
 import { LoginSegment, LogoImage, StyledForm, BottomMargedRow } from '../constants/layout'
 import { initialValues, validationSchema } from '../constants/validation'
@@ -17,8 +17,7 @@ import { initialValues, validationSchema } from '../constants/validation'
 class Password extends Component {
 
   render() {
-    let { forgottenPassword, intl } = this.props
-    const { formatMessage } = intl
+    let { forgottenPassword, intl: { formatMessage }, toastManager } = this.props
 
     let hello = <FormattedMessage id={`verification.${forgottenPassword ? 'helloAgain' : 'hello'}`} />
     let header = <FormattedMessage id={`verification.${forgottenPassword ? 'provideSecurityCode' : 'verification'}`} />
@@ -38,11 +37,12 @@ class Password extends Component {
                 newPassword: values.password,
                 securityCode: values.securityCode
               })
+
+              Router.push('/auth/login')
+
             } catch (_) { } finally {
               setSubmitting(false)
             }
-
-
           }}
           enableReinitialize={true}>
           {(props) => {

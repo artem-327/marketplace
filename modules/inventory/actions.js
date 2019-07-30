@@ -1,6 +1,8 @@
 import * as AT from './action-types'
 import * as api from './api'
 
+import { createAsyncAction } from 'redux-promise-middleware-actions'
+
 import { toggleFilter, filterSaving, filterApplying } from '~/modules/filter/actions'
 
 export function initProductOfferEdit(id) {
@@ -348,3 +350,5 @@ export function uploadDocuments(isLot, productOfferId, fileIds) {
       }).then(loop.bind(null, j + 1))
     })(0)
 }
+
+export const getAutocompleteData = ({ searchUrl }) => ({ type: AT.GET_AUTOCOMPLETE_DATA, payload: api.getAutocompleteData(searchUrl) })

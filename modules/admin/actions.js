@@ -471,3 +471,10 @@ export const resendWelcomeEmail = (userId) => {
 		payload: api.resendWelcomeEmail(userId)
 	}
 }
+
+export const reviewRequestedSwitch = (companyId, data) => {
+	return {
+		type: AT.ADMIN_REVIEW_REQUESTED,
+		payload: api.reviewRequestedSwitch(companyId, data.checked)
+	}
+}

@@ -46,6 +46,9 @@ const GlobalTableOverrideStyle = createGlobalStyle`
       padding: .5rem;
     }
   }
+  .bootstrapiso > .flex-column {
+    flex: 0 0 auto !important;
+  }
   .group-row {
     position: relative;
     background: #EEE;
