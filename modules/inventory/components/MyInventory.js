@@ -81,12 +81,12 @@ class MyInventory extends Component {
                   data-test='my_inventory_broadcast'
                   toggle
                   defaultChecked={r.status.toLowerCase() === 'broadcasting'}
-                  className={cn({error: r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'})}
+                  className={cn({ error: r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped' })}
                   disabled={r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped'}
                   onChange={(e, data) => {
                     e.preventDefault()
                     this.props.patchBroadcast(data.checked, r.id, r.status)
-                  }} 
+                  }}
                 />
               }
               content={title}
@@ -128,7 +128,10 @@ class MyInventory extends Component {
       rows,
       datagrid,
       openImportPopup,
-      isOpenImportPopup
+      isOpenImportPopup,
+      autocompleteData,
+      getAutocompleteData,
+      autocompleteDataLoading
     } = this.props
     const { columns, selectedRows } = this.state
 
@@ -234,6 +237,9 @@ class MyInventory extends Component {
         </div>
         <Broadcast />
         <Filter
+          autocompleteData={autocompleteData}
+          getAutocompleteData={getAutocompleteData}
+          autocompleteDataLoading={autocompleteDataLoading}
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}
           savedUrl='/prodex/api/product-offers/own/datagrid/saved-filters'

@@ -12,7 +12,9 @@ export const operators = {
 }
 
 export const filterTypes = {
-  PRODUCT_OFFERS: 'product-offers'
+  INVENTORY: 'inventory',
+  MARKETPLACE: 'marketplace'
+
 }
 
 export const paths = {
@@ -28,7 +30,10 @@ export const paths = {
     assayFrom: 'ProductOffer.assayMin',
     assayTo: 'ProductOffer.assayMax',
     manufacturedDate: 'ProductOffer.manufacturedDate',
-    warehouseId: 'ProductOffer.warehouse.id'
+    warehouseId: 'ProductOffer.warehouse.id',
+  },
+  casProduct: {
+    id: 'CasProduct.id'
   }
 }
 
@@ -59,7 +64,7 @@ const checkboxesToFormik = (values, checkboxes) => {
 
 export const datagridValues = {
   warehouse: {
-    path: paths.productOffers.warehouseId,
+    paths: [paths.productOffers.warehouseId],
     description: 'Warehouse',
     operator: operators.EQUALS,
 
@@ -77,12 +82,12 @@ export const datagridValues = {
       }
       else {
         let parsed = JSON.parse(values)
-        data = [{value: parsed.id, description: JSON.stringify({ name: parsed.name, text: parsed.text })}]
+        data = [{ value: parsed.id, description: JSON.stringify({ name: parsed.name, text: parsed.text }) }]
       }
 
       return {
         operator: this.operator,
-        path: this.path,
+        path: this.paths[0],
         values: data,
         description: this.description
       }
@@ -100,32 +105,50 @@ export const datagridValues = {
     },
 
     toFormik: function ({ values }) {
-      let parsed = JSON.parse(values[0].description)
-      return JSON.stringify({ id: parseInt(values[0].value), name: parsed.name, text: parsed.text})
+      return JSON.stringify({ id: parseInt(values[0].value), name: values[0].description, text: values[0].description })
     }
   },
 
   search: {
-    path: paths.productOffers.productId,
+    paths: [paths.productOffers.productId, paths.casProduct.id],
     description: 'Chemical Name',
     operator: operators.EQUALS,
 
-    toFilter: function (values) {
+    toFilter: function (values, filterType = filterTypes.INVENTORY) {
+
+      let modifiedValues = values.map((val) => {
+        let parsed = JSON.parse(val)
+        return {
+          value: parsed.id,
+          description: JSON.stringify({ name: parsed.name, casNumberCombined: parsed.casNumber || null })
+        }
+      })
+
+
+      switch (filterType) {
+        case filterTypes.INVENTORY: {
+          var path = paths.productOffers.productId
+          break
+        }
+
+        case filterTypes.MARKETPLACE: {
+          var path = paths.casProduct.id
+          break
+        }
+
+        default: break
+
+      }
+      
       return {
         operator: this.operator,
-        path: this.path,
-        values: values.map((val) => {
-          let parsed = JSON.parse(val)
-          return {
-            value: parsed.id,
-            description: JSON.stringify({ name: parsed.name, casNumberCombined: parsed.casNumberCombined || null })
-          }
-        }),
+        path,
+        values: modifiedValues,
         description: this.description
       }
     },
 
-    valuesDescription: function (values) {
+    valuesDescription: function (values, params) {
       return values.map((val) => {
         let parsed = JSON.parse(val.description)
         if (parsed.casNumberCombined) var text = `${parsed.name} (${parsed.casNumberCombined})`
@@ -142,21 +165,21 @@ export const datagridValues = {
     toFormik: function ({ values }) {
       return values.map((val) => {
         let parsed = JSON.parse(val.description)
-        return JSON.stringify({ id: val.value, name: parsed.name, casNumberCombined: parsed.casNumberCombined || null })
+        return JSON.stringify({ id: val.value, name: parsed.name, casNumber: parsed.casNumberCombined || null })
       })
     }
   },
 
 
   quantityFrom: {
-    path: paths.productOffers.quantity,
+    paths: [paths.productOffers.quantity],
     description: 'Quantity From',
     operator: operators.GREATER_THAN_OR_EQUAL_TO,
 
     toFilter: function (values) {
       return {
         operator: this.operator,
-        path: this.path,
+        path: this.paths[0],
         values: [{ value: values, description: values }],
         description: this.description
       }
@@ -175,14 +198,14 @@ export const datagridValues = {
 
 
   quantityTo: {
-    path: paths.productOffers.quantity,
+    paths: [paths.productOffers.quantity],
     description: 'Quantity To',
     operator: operators.LESS_THAN_OR_EQUAL_TO,
 
     toFilter: function (values) {
       return ({
         operator: this.operator,
-        path: this.path,
+        path: this.paths[0],
         values: [{ value: values, description: values }],
         description: this.description
       })
@@ -200,14 +223,14 @@ export const datagridValues = {
   },
 
   priceFrom: {
-    path: paths.productOffers.price,
+    paths: [paths.productOffers.price],
     description: 'Price From',
     operator: operators.GREATER_THAN_OR_EQUAL_TO,
 
     toFilter: function (values) {
       return ({
         operator: this.operator,
-        path: this.path,
+        path: this.paths[0],
         values: [{ value: values, description: values }],
         description: this.description
       })
@@ -224,14 +247,14 @@ export const datagridValues = {
     }
   },
   priceTo: {
-    path: paths.productOffers.price,
+    paths: [paths.productOffers.price],
     description: 'Price To',
     operator: operators.LESS_THAN_OR_EQUAL_TO,
 
     toFilter: function (values) {
       return ({
         operator: this.operator,
-        path: this.path,
+        path: this.paths[0],
         values: [{ value: values, description: values }],
         description: this.description
       })
@@ -248,14 +271,14 @@ export const datagridValues = {
     }
   },
   packagingTypes: {
-    path: paths.productOffers.packagingTypes,
+    paths: [paths.productOffers.packagingTypes],
     description: 'Packaging Types',
     operator: operators.EQUALS,
 
     toFilter: function (values, valuesDescription) {
       return ({
         operator: this.operator,
-        path: this.path,
+        path: this.paths[0],
         values: values.map((val, i) => ({ value: val, description: valuesDescription[i] }))
       })
     },
@@ -275,14 +298,14 @@ export const datagridValues = {
     nested: true
   },
   productConditions: {
-    path: paths.productOffers.productConditions,
+    paths: [paths.productOffers.productConditions],
     description: 'Product Conditions',
     operator: operators.EQUALS,
 
     toFilter: function (values, valuesDescription) {
       return {
         operator: this.operator,
-        path: this.path,
+        path: this.paths[0],
         values: values.map((val, i) => ({ value: val, description: valuesDescription[i] }))
       }
     },
@@ -302,14 +325,14 @@ export const datagridValues = {
     nested: true
   },
   productGrade: {
-    path: paths.productOffers.productGrade,
+    paths: [paths.productOffers.productGrade],
     description: 'Product Grades',
     operator: operators.EQUALS,
 
     toFilter: function (values, valuesDescription) {
       return {
         operator: this.operator,
-        path: this.path,
+        path: this.paths[0],
         values: values.map((val, i) => ({ value: val, description: valuesDescription[i] }))
       }
     },
@@ -330,13 +353,13 @@ export const datagridValues = {
   },
   productForms: {
     operator: operators.EQUALS,
-    path: paths.productOffers.productForms,
+    paths: [paths.productOffers.productForms],
     description: 'Product Forms',
 
     toFilter: function (values, valuesDescription) {
       return {
         operator: this.operator,
-        path: this.path,
+        path: this.paths[0],
         values: values.map((val, i) => ({ value: val, description: valuesDescription[i] }))
       }
     },
@@ -359,14 +382,14 @@ export const datagridValues = {
 
   expirationFrom: {
     operator: operators.GREATER_THAN,
-    path: paths.productOffers.expirationDate,
+    paths: [paths.productOffers.expirationDate],
     description: 'Expiration From',
 
     toFilter: function (values) {
       let date = moment().add(values, 'days')
       return {
         operator: this.operator,
-        path: this.path,
+        path: this.paths[0],
         values: [{ value: date.format(), description: date.format(dateFormat) }],
       }
     },
@@ -384,14 +407,14 @@ export const datagridValues = {
   },
   expirationTo: {
     operator: operators.LESS_THAN,
-    path: paths.productOffers.expirationDate,
+    paths: [paths.productOffers.expirationDate],
     description: 'Expiration To',
 
     toFilter: function (values) {
       let date = moment().add(values, 'days')
       return {
         operator: this.operator,
-        path: this.path,
+        path: this.paths[0],
         values: [{ value: date.format(), description: date.format(dateFormat) }],
       }
     },
@@ -410,14 +433,14 @@ export const datagridValues = {
 
   mfgFrom: {
     operator: operators.LESS_THAN,
-    path: paths.productOffers.manufacturedDate,
+    paths: [paths.productOffers.manufacturedDate],
     description: 'Manufactured Date From',
 
     toFilter: function (values) {
       let date = moment().subtract(values, 'days')
       return {
         operator: this.operator,
-        path: this.path,
+        path: this.paths[0],
         values: [{ value: date.format(), description: date.format(dateFormat) }],
       }
     },
@@ -436,14 +459,14 @@ export const datagridValues = {
 
   mfgTo: {
     operator: operators.GREATER_THAN,
-    path: paths.productOffers.manufacturedDate,
+    paths: [paths.productOffers.manufacturedDate],
     description: 'Manufactured Date To',
 
     toFilter: function (values) {
       let date = moment().subtract(values, 'days')
       return {
         operator: this.operator,
-        path: this.path,
+        path: this.paths[0],
         values: [{ value: date.format(), description: date.format(dateFormat) }],
       }
     },
@@ -462,13 +485,13 @@ export const datagridValues = {
 
   assayFrom: {
     operator: operators.GREATER_THAN_OR_EQUAL_TO,
-    path: paths.productOffers.assayFrom,
+    paths: [paths.productOffers.assayFrom],
     description: 'Assay Min.',
 
     toFilter: function (values) {
       return {
         operator: this.operator,
-        path: this.path,
+        path: this.paths[0],
         values: [{ value: values, description: values }]
       }
     },
@@ -486,14 +509,14 @@ export const datagridValues = {
   },
   assayTo: {
     operator: operators.LESS_THAN_OR_EQUAL_TO,
-    path: paths.productOffers.assayTo,
+    paths: [paths.productOffers.assayTo],
     description: 'Assay Max.',
 
     toFilter: function (values) {
 
       return {
         operator: this.operator,
-        path: this.path,
+        path: this.paths[0],
         values: [{ value: values, description: values }]
       }
     },
@@ -543,7 +566,7 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
     tagDescription: (from, to) => `${from}% - ${to}% `
   },
 
-  // {
+    // {
     //   description: 'Expiration',
     //   from: {
     //     path: paths.productOffers.expirationDate, operator: operators.GREATER_THAN_OR_EQUAL_TO
@@ -554,7 +577,7 @@ export const groupFilters = (appliedFilters, { currencyCode } = '$') => {
     //   tagDescription: (from, to) => `Exp. ${from} - ${to} `
     // },
   ]
-  
+
 
   // Create copy so we dont mutate original filters
   let filters = appliedFilters.slice()

@@ -20,14 +20,13 @@ export const uniqueArrayByKey = (array, key) => {
     let unique = []
 
     if (!array[0] || !array[0][key]) {
-        console.error(`Array does not contain key: ${key}`)
         return array
     }
 
     for (let i = 0; i < array.length; i++) {
         let exists = false
         for (let j = 0; j < unique.length; j++) {
-            if (unique[j][key] === array[i][key]) exists = true
+            if (unique[j][key] == array[i][key]) exists = true
         }
         if (!exists) unique.push(array[i])
     }
@@ -52,3 +51,14 @@ export const getSafe = (fn, defaultValue = null) => {
         return defaultValue
     }
 }
+
+export const mapAutocompleteData = autocomplateData => autocomplateData.map((product) => {
+    if (product.casNumberCombined) var text = `${product.productName} (${product.casNumberCombined})`
+    else var text = product.productName
+
+    return {
+        key: product.id,
+        text,
+        value: JSON.stringify({ id: product.id, name: product.productName, casNumber: product.casNumberCombined || null }),
+    }
+})
