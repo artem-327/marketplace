@@ -29,7 +29,8 @@ export const config = {
         { name: 'primaryContact', title: 'Primary Contact', sortPath: 'ClientCompany.primaryBranch.contactName' },
         { name: 'contactEmail', title: 'Contact E-mail', sortPath: 'ClientCompany.primaryBranch.contactEmail' },
         { name: 'hasDwollaAccount', title: 'Dwolla Account' },
-        { name: 'hasLogisticsAccounts', title: 'Logistics Accounts' }
+        { name: 'hasLogisticsAccounts', title: 'Logistics Accounts' },
+        { name: 'reviewRequested', title: 'Review Requested' }
       ]
     }
   },

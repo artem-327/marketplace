@@ -4,6 +4,7 @@ import confirm from '~/src/components/Confirmable/confirm'
 import { injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
+import { Checkbox } from 'semantic-ui-react'
 
 import { FormattedMessage } from 'react-intl'
 
@@ -11,6 +12,15 @@ import * as Actions from '../../actions'
 
 
 class CompaniesTable extends Component {
+
+  getRows = (rows) => {
+    return rows.map((row) => {
+      return {
+        ...row,
+        reviewRequested: <Checkbox key={`review${row.id}`} toggle={true} defaultChecked={row.reviewRequested} onClick={(e, data) => this.props.reviewRequestedSwitch(row.id, data)} />
+      }
+    })
+  }
 
   render() {
     const {
@@ -39,7 +49,7 @@ class CompaniesTable extends Component {
           {...datagrid.tableProps}
           tableName='admin_companies'
           columns={columns}
-          rows={rows}
+          rows={this.getRows(rows)}
           rowActions={[
             { text: formatMessage({ id: 'global.edit', defaultMessage: 'Edit' }), callback: (row) => openEditCompany(row.id, row) },
             {
@@ -90,7 +100,8 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
         : '',
       contactEmail: c.primaryUser ?
         c.primaryUser.email
-        : ''
+        : '',
+      reviewRequested: c.reviewRequested
     })),
     confirmMessage: admin.confirmMessage,
     deleteRowById: admin.deleteRowById,
