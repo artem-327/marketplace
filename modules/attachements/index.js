@@ -1,0 +1,1 @@
+export { default as AttachementsManager } from './components/AttachementManager'
