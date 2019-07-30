@@ -468,6 +468,8 @@
   "addInventory.uploadSpecSheet.description1": "The Spec Sheet, also known as a Technical Data Sheet (TDS), is required for a product offer to broadcast to the marketplace.",
   "addInventory.uploadSpecSheet.description2": "You can drag and drop a file from your computer or click on the box to search for the file as well.",
   "addInventory.uploadSpecSheet.description3": "IMPORTANT! Your company name and contact information cannot be listed on this document and non compliance is against Echo's Terms and Conditions.",
+  "addInventory.fobPrice": "FOB Price",
+  "addInventory.level": "Level",
   "administration": "ADMINISTRATION",
   "administration.newCompanyName": "New Company Name",
   "administration.companies": "Companies",

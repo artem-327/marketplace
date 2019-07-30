@@ -434,10 +434,10 @@ class AddInventoryForm extends Component {
     return (
       <>
         <BottomUnpaddedRow>
-          <GridColumn computer={2}>Level</GridColumn>
+          <GridColumn computer={2}><FormattedMessage id='addInventory.level' defaultMessage='Level' /></GridColumn>
           <GridColumn computer={1} />
-          <GridColumn computer={6}>Minimum OQ</GridColumn>
-          <GridColumn computer={6}>FOB Price</GridColumn>
+          <GridColumn computer={6}><FormattedMessage id='global.quantity' defaultMessage='Quantity' /></GridColumn>
+          <GridColumn computer={6}><FormattedMessage id='addInventory.fobPrice' defaultMessage='FOB Price' /></GridColumn>
         </BottomUnpaddedRow>
         {tiers}
       </>
