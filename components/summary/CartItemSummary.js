@@ -37,20 +37,6 @@ export default class CartItemSummary extends Component {
             </HeaderTextRow>
 
 
-            <RelaxedRow>
-              <GridColumn>
-                <FormattedMessage
-                  id='cart.merchant'
-                  defaultMessage='Merchant'
-                />
-              </GridColumn>
-
-              <GridColumn floated='right'>
-                {productOffer.owner && productOffer.owner.displayName}
-              </GridColumn>
-            </RelaxedRow>
-
-
             <RelaxedRow >
               <GridColumn>
                 <FormattedMessage
