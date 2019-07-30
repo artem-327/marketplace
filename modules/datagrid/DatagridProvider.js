@@ -146,7 +146,6 @@ export class DatagridProvider extends Component {
   setSearch = (value, reload = true) => {
     const { apiConfig: { searchToFilter, params } } = this.props
 
-
     this.setState(s => ({
       datagridParams: { ...s.datagridParams, ...params }
     }), () => {
@@ -154,9 +153,6 @@ export class DatagridProvider extends Component {
         filters: searchToFilter(value),
       }, reload)
     })
-
-
-
   }
 
   setLoading = (loading) => {
