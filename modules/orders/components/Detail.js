@@ -161,10 +161,10 @@ class Detail extends Component {
                     <Grid.Column>
                       <Grid verticalAlign='middle' columns='equal'>
                         <Grid.Column>
-                          <Button primary fluid size='large' value={order.id} onClick={() => this.props.confirmOrder(order.id)}>Accept</Button>
+                          <Button primary fluid size='large' value={order.id} onClick={() => this.props.confirmOrder(order.id)} data-test='orders_accept_btn' >Accept</Button>
                         </Grid.Column>
                         <Grid.Column>
-                          <Button basic fluid size='large' value={order.id} onClick={() => this.props.rejectOrder(order.id)}>Decline</Button>
+                          <Button basic fluid size='large' value={order.id} onClick={() => this.props.rejectOrder(order.id)} data-test='orders_decline_btn' >Decline</Button>
                         </Grid.Column>
                       </Grid>
                     </Grid.Column>

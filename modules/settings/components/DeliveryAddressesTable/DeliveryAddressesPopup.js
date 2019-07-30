@@ -183,8 +183,8 @@ class DeliveryAddressesPopup extends React.Component {
                     <Input type="text" label="Contact Phone" name="phoneNumber" />
                   </FormGroup>
                   <div style={{ textAlign: 'right' }}>
-                    <Button.Reset>Cancel</Button.Reset>
-                    <Button.Submit>Save</Button.Submit>
+                    <Button.Reset data-test='settings_delivery_address_reset_btn'>Cancel</Button.Reset>
+                    <Button.Submit data-test='settings_delivery_address_submit_btn'>Save</Button.Submit>
                   </div>
                 </>)
             }}

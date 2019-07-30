@@ -263,8 +263,8 @@ class AddNewPopupCasProducts extends React.Component {
                 </Form>
               </Segment>
               <Modal.Actions>
-                <Button.Reset data-test='admin_popup_company_dwolla_cancel' onClick={props.handleReset}><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
-                <Button.Submit data-test='admin_popup_company_dwolla_save' onClick={props.handleSubmit}><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
+                <Button.Reset data-test='admin_popup_company_dwolla_cancel_btn' onClick={props.handleReset}><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
+                <Button.Submit data-test='admin_popup_company_dwolla_save_btn' onClick={props.handleSubmit}><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
               </Modal.Actions>
             </Modal>
           )

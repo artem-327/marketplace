@@ -131,7 +131,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
 
                     <>
                       <Message attached='top' className='header-table-fields'>
-                        <Button type='button' data-test='admin_popup_alt_cas_name_add' icon='plus' color='blue' size='small' floated='right' style={{ marginTop: '-0.5em' }}
+                        <Button type='button' data-test='admin_popup_alt_cas_name_add_btn' icon='plus' color='blue' size='small' floated='right' style={{ marginTop: '-0.5em' }}
                           onClick={() => this.handleAddName(arrayHelpers)} />
                         {`${popupValues.data.casNumber} ${popupValues.data.casIndexName}`}
                       </Message>
@@ -199,7 +199,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
                   )}
                 />
                 <div style={{ textAlign: 'right' }}>
-                  <Button.Reset data-test='admin_popup_alt_cas_name_close'><FormattedMessage id='global.close' defaultMessage='Close' /></Button.Reset>
+                  <Button.Reset data-test='admin_popup_alt_cas_name_close_btn'><FormattedMessage id='global.close' defaultMessage='Close' /></Button.Reset>
                 </div>
               </>
             )}

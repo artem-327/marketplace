@@ -80,11 +80,11 @@ class MyProfile extends Component {
             Last login at: {popupValues && popupValues.lastLoginAt}
 
             <div style={{ textAlign: 'right' }}>
-              <Button style={{ "margin-bottom": '10px' }} onClick={this.handleChangePassword} >Change Password</Button>
+              <Button style={{ "margin-bottom": '10px' }} onClick={this.handleChangePassword} data-test='my_profile_change_password_btn'>Change Password</Button>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <Button.Reset>Cancel</Button.Reset>
-              <Button.Submit>Save</Button.Submit>
+              <Button.Reset data-test='my_profile_reset_btn'>Cancel</Button.Reset>
+              <Button.Submit data-test='my_profile_submit_btn'>Save</Button.Submit>
             </div>
           </Form>
         </Modal.Content>

@@ -118,6 +118,7 @@ class TablesHandlers extends Component {
                   style={{ marginLeft: 10 }}
                   primary
                   onClick={() => openDwollaPopup()}
+                  data-test='settings_dwolla_open_popup_btn'
                 >
                   Register Dwolla Account
               </Button>
@@ -127,6 +128,7 @@ class TablesHandlers extends Component {
                 style={{ marginLeft: 10 }}
                 primary
                 onClick={() => openPopup()}
+                data-test='settings_open_popup_btn'
               >
                 Add {textsTable[currentTab.type].BtnAddText}
               </Button>
@@ -136,6 +138,7 @@ class TablesHandlers extends Component {
                   style={{ marginLeft: 10 }}
                   primary
                   onClick={() => openImportPopup()}
+                  data-test='settings_open_import_popup_btn'
                 >
                   Import {textsTable[currentTab.type].BtnImportText}
                 </Button>

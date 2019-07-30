@@ -53,10 +53,10 @@ class MerchantDetail extends Component {
     }
     const footerComponent = (
       <React.Fragment>
-        <Button color="red" onClick={() => deleteMerchant(id)}>
+        <Button color="red" onClick={() => deleteMerchant(id)} data-test='administration_merchant_detail_delete_btn'>
           Delete
         </Button>
-        <Button color="blue" onClick={() => putMerchantEdit(editBody)}>
+        <Button color="blue" onClick={() => putMerchantEdit(editBody)} data-test='administration_merchant_detail_edit_btn'>
           Edit
         </Button>
       </React.Fragment>

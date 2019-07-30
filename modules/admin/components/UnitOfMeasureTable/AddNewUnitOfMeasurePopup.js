@@ -71,8 +71,8 @@ class AddNewUnitOfMeasurePopup extends React.Component {
               <Dropdown label={config.edit[2].title} options={measureOptions} name='val2' />
             </FormGroup>
             <div style={{ textAlign: 'right' }}>
-              <Button.Reset data-test='admin_add_unit_measure_cancel'><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
-              <Button.Submit data-test='admin_add_unit_measure_save'><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
+              <Button.Reset data-test='admin_add_unit_measure_cancel_btn'><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
+              <Button.Submit data-test='admin_add_unit_measure_save_btn'><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
             </div>
           </Form>
         </Modal.Content>

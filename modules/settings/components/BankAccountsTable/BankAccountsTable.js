@@ -58,8 +58,8 @@ const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
           </Segment>
         </Modal.Content>
         <Modal.Actions>
-          <Button primary inverted onClick={handleReset}>Cancel</Button>
-          <Button primary onClick={handleSubmit}>Confirm</Button>
+          <Button primary inverted onClick={handleReset} data-test='settings_bank_account_cancel_btn'>Cancel</Button>
+          <Button primary onClick={handleSubmit} data-test='settings_bank_account_confirm_btn'>Confirm</Button>
         </Modal.Actions>
       </Modal>
     )}

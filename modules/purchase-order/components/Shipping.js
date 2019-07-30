@@ -67,14 +67,16 @@ class Shipping extends Component {
                   type='button'
                   disabled={this.props.shippingQuotesAreFetching}
                   onClick={() => this.handleToggleChange(true)}
-                  active={this.props.otherAddresses}>
+                  active={this.props.otherAddresses}
+                  data-test='purchase_order_address_btn'>
                   <FormattedMessage id='cart.addresses' defaultMessage='Addresses' /></Button>
                 <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
                 <Button
                   type='button'
                   disabled={this.props.shippingQuotesAreFetching}
                   onClick={() => this.handleToggleChange(false)}
-                  active={!this.props.otherAddresses}>
+                  active={!this.props.otherAddresses}
+                  data-test='purchase_order_branches_btn'>
                   <FormattedMessage id='cart.branches' defaultMessage='Branches' /></Button>
               </Button.Group>
             </GridColumn>

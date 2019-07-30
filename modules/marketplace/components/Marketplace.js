@@ -125,7 +125,7 @@ class Marketplace extends Component {
                 <FilterTags filters={datagrid.filters} onClick={this.removeFilter} />
               </Menu.Item>
               {selectedRows.length === 0 ? null :
-                <Button primary onClick={() => this.setState({ open: true })}>
+                <Button primary onClick={() => this.setState({ open: true })} data-test='marketplace_shipping_quote_btn'>
                   <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote' />
                 </Button>
 

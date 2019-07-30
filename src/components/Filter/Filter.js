@@ -587,14 +587,16 @@ class Filter extends Component {
 
         <FlexContent>
           <div className="filter-switch">
-            <Button attached={this.props.savingFilters ? 'left' : ''} onClick={() => this.switchFilter(true)} primary={this.state.filterSwitch}>
+            <Button attached={this.props.savingFilters ? 'left' : ''} onClick={() => this.switchFilter(true)} primary={this.state.filterSwitch}
+                    data-test='filter_set_filters_btn'>
               <FormattedMessage
                 id='filter.setFilters'
                 defaultMessage='SET FILTERS'
               />
             </Button>
             {this.props.savingFilters ? (
-              <Button attached="right" onClick={() => this.switchFilter(false)} primary={!this.state.filterSwitch}>
+              <Button attached="right" onClick={() => this.switchFilter(false)} primary={!this.state.filterSwitch}
+                      data-test='filter_saved_filters_btn'>
                 <FormattedMessage
                   id='filter.savedFilter'
                   defaultMessage='SAVED FILTERS'
@@ -643,7 +645,8 @@ class Filter extends Component {
                             basic={!this.state.saveFilter}
                             primary={this.state.saveFilter}
                             positive={!this.state.saveFilter}
-                            loading={this.state.saving}>
+                            loading={this.state.saving}
+                            data-test='filter_save_filter_btn'>
                             <FormattedMessage id={this.state.saveFilter ? 'filter.saved' : 'global.save'} />
                           </Button>
                         </GridColumn>
@@ -741,7 +744,8 @@ class Filter extends Component {
                   floated='right'
                   size='large'
                   color='grey'
-                  onClick={(e) => { this.handleReset(e) }}>
+                  onClick={(e) => { this.handleReset(e) }}
+                  data-test='filter_clear_filter_btn'>
                   <FormattedMessage
                     id='filter.clearFilter'
                     defaultMessage='Clear Filter'
@@ -757,6 +761,7 @@ class Filter extends Component {
                   onClick={(e) => {
                     document.getElementById('filter-form').submit()
                   }}
+                  data-test='filter_submit_filter_btn'
                 >
                   <FormattedMessage
                     id='global.apply'

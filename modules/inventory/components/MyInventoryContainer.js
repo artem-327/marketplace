@@ -21,7 +21,7 @@ const transformLotNumbers = lots => {
     return (
       <div>
         <Popup
-          data-test="my_inventory_lot_number"
+          data-test="my_inventory_lot_number_btn"
           content={<List items={onMouseoverTest} />}
           trigger={<Label>Multiple</Label>}
         />

@@ -171,7 +171,7 @@ class ShippingEdit extends Component {
                     <GridColumn>
                       <Grid>
                         <GridColumn floated='right' computer={4}>
-                          <Button fieldProps={{ width: 4 }} onClick={() => shippingChanged({ isShippingEdit: false })} fluid >
+                          <Button fieldProps={{ width: 4 }} onClick={() => shippingChanged({ isShippingEdit: false })} fluid data-test='purchase_order_shipping_edit_cancel_btn'>
                             <FormattedMessage
                               id='global.cancel'
                               defaultMessage='Cancel'
@@ -179,7 +179,7 @@ class ShippingEdit extends Component {
                           </Button>
                         </GridColumn>
                         <GridColumn computer={4}>
-                          <Button.Submit loading={this.props.isFetching} primary fluid type='submit'>
+                          <Button.Submit loading={this.props.isFetching} primary fluid type='submit' data-test='purchase_order_shipping_edit_submit_btn'>
                             <FormattedMessage
                               id={`global.${!isNewAddress ? 'edit' : 'addNew'}`}
                               defaultMessage={!isNewAddress ? 'Edit' : 'Add New'}

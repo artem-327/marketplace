@@ -125,7 +125,8 @@ class EditAltNamesProductPopup extends React.Component {
                     <>
                       <Message attached='top' className='header-table-fields'>
                         <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{marginTop: '-0.5em'}}
-                                onClick={() => this.handleAddName(arrayHelpers)}/>
+                                onClick={() => this.handleAddName(arrayHelpers)}
+                                data-test='settings_product_alt_name_add_btn'/>
                         {`${popupValues.productNumber} ${popupValues.productName}`}
                       </Message>
 
@@ -188,7 +189,7 @@ class EditAltNamesProductPopup extends React.Component {
                   )}
                 />
                 <div style={{ textAlign: 'right' }}>
-                  <Button.Reset>Close</Button.Reset>
+                  <Button.Reset data-test='settings_product_alt_name_reset_btn'>Close</Button.Reset>
                 </div>
               </>
             )}

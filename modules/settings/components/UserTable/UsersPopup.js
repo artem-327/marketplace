@@ -185,10 +185,11 @@ class UsersPopup extends React.Component {
                 <div style={{ textAlign: "right" }}>
                   <Button.Reset
                     onClick={userEditRoles ? closeRolesPopup : closePopup}
+                    data-test='settings_users_popup_reset_btn'
                   >
                     Cancel
                   </Button.Reset>
-                  <Button.Submit>Save</Button.Submit>
+                  <Button.Submit data-test='settings_users_popup_submit_btn'>Save</Button.Submit>
                 </div>
               </>
             )}

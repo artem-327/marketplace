@@ -25,7 +25,7 @@ class MerchantTableRow extends Component {
                   disabled={true}
                 />
                 </td>
-                <td className="merch-row-item"><Button onClick={this.openDetail}>Detail</Button></td>
+                <td className="merch-row-item"><Button onClick={this.openDetail} data-test='administration_merchant_detail_btn'>Detail</Button></td>
             </tr>
         )
     }

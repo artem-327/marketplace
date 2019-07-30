@@ -79,7 +79,7 @@ class TablesHandlers extends Component {
               value={this.state.filterValue} />
           </Menu.Item>
           <Menu.Item>
-            <Button size='large' data-test='admin_table_add' primary onClick={() => openPopup()}>
+            <Button size='large' data-test='admin_table_add_btn' primary onClick={() => openPopup()}>
               <FormattedMessage id='global.add' defaultMessage='Add' /> {config[currentTab].addEditText}
             </Button>
           </Menu.Item>

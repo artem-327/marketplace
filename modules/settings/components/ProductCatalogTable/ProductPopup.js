@@ -362,7 +362,8 @@ class ProductPopup extends React.Component {
                               <Button basic icon onClick={() => {
                                 arrayHelpers.remove(index)
                                 this.props.removeCasProductsIndex(index)
-                              }}>
+                              }}
+                                data-test={`settings_product_popup_remove_${index}_btn`}>
                                 <Icon name='minus' />
                               </Button>
                             ) : ''}
@@ -370,7 +371,8 @@ class ProductPopup extends React.Component {
                               <Button basic icon color='green' onClick={() => {
                                 arrayHelpers.push({ casProduct: '', minimumConcentration: 0, maximumConcentration: 0 })
                                 this.props.newCasProductsIndex()
-                              }}>
+                              }}
+                                data-test='settings_product_popup_add_btn'>
                                 <Icon name='plus' />
                               </Button>
                             ) : ''}
@@ -527,8 +529,8 @@ class ProductPopup extends React.Component {
                   </FormField>
                 </FormGroup>
                 <div style={{ textAlign: 'right' }}>
-                  <Button.Reset onClick={closePopup}>Cancel</Button.Reset>
-                  <Button.Submit>Save</Button.Submit>
+                  <Button.Reset onClick={closePopup} data-test='settings_product_popup_reset_btn'>Cancel</Button.Reset>
+                  <Button.Submit data-test='settings_product_popup_submit_btn'>Save</Button.Submit>
                 </div>
               </>
               )
