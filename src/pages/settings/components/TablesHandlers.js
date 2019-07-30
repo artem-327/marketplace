@@ -112,7 +112,8 @@ class TablesHandlers extends Component {
             />
           </Menu.Item>
           <Menu.Item>
-            <Button size="large" primary onClick={() => openPopup()}>
+            <Button size="large" primary onClick={() => openPopup()}
+                    data-test='settings_tables_handlers_add_btn'>
               Add {this.currentTabTitle(currentTab)}
             </Button>
             {currentTab === "Product catalog" && (
@@ -121,6 +122,7 @@ class TablesHandlers extends Component {
                 style={{ marginLeft: 10 }}
                 primary
                 onClick={() => openImportPopup()}
+                data-test='settings_tables_handlers_import_btn'
               >
                 Import {this.currentTabTitle(currentTab)}
               </Button>

@@ -822,7 +822,7 @@ class AddBroadcast extends Component {
 
     const footerComponent = (
       <>
-        <Button color="grey-white" onClick={removePopup}>
+        <Button color="grey-white" onClick={removePopup} data-test='my_inventory_broadcast_cancel_btn'>
           <FormattedMessage
             id='global.cancel'
             defaultMessage='Cancel'
@@ -831,7 +831,7 @@ class AddBroadcast extends Component {
         {/*<Button color="green-white" size="large-2x" onClick={() => removePopup()}>*/}
         {/*Save As Template*/}
         {/*</Button>*/}
-        <Button color="blue" onClick={this.handleContinue}>
+        <Button color="blue" onClick={this.handleContinue} data-test='my_inventory_broadcast_continue_btn'>
           <FormattedMessage
             id='global.apply'
             defaultMessage='Apply'
@@ -981,14 +981,14 @@ class AddBroadcast extends Component {
         </Modal.Content>
 
         <Modal.Actions>
-          <Button onClick={() => this.props.closeModal()}>
+          <Button onClick={() => this.props.closeModal()} data-test='my_inventory_broadcast_cancel_btn'>
             <FormattedMessage
               id='global.cancel'
               defaultMessage='Cancel'
             />
           </Button>
 
-          <Button primary onClick={this.handleContinue}>
+          <Button primary onClick={this.handleContinue} data-test='my_inventory_broadcast_continue_btn'>
             <FormattedMessage
               id='global.apply'
               defaultMessage='Apply'

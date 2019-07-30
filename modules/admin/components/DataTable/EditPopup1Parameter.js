@@ -66,8 +66,8 @@ class EditPopup1Parameter extends React.Component {
             </FormGroup>
 
             <div style={{ textAlign: 'right' }}>
-              <Button.Reset data-test={`admin_edit_${config.formattedMessageName}_cancel`}><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
-              <Button.Submit data-test={`admin_edit_${config.formattedMessageName}_save`}><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
+              <Button.Reset data-test={`admin_edit_${config.formattedMessageName}_cancel_btn`}><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
+              <Button.Submit data-test={`admin_edit_${config.formattedMessageName}_save_btn`}><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
             </div>
           </Form>
         </Modal.Content>

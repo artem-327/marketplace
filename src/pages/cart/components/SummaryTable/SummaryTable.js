@@ -20,7 +20,8 @@ const SummaryTable = ({hasButton, children, title, handleContinue}) => {
             primary
             fluid
             attached="bottom"
-            onClick={handleContinue}>
+            onClick={handleContinue}
+            data-test='cart_summary_continue_btn'>
           {hasButton === true ? (
                 <FormattedMessage
                     id='global.continue'

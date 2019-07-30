@@ -66,8 +66,8 @@ class CreditCardsPopup extends React.Component {
               />
             </FormGroup>
             <div style={{ textAlign: 'right' }}>
-              <Button.Reset onClick={closePopup}>Cancel</Button.Reset>
-              <Button.Submit>Save</Button.Submit>
+              <Button.Reset onClick={closePopup} data-test='settings_credit_card_reset_btn'>Cancel</Button.Reset>
+              <Button.Submit data-test='settings_credit_card_submit_btn'>Save</Button.Submit>
             </div>
           </Form>
         </Modal.Content>

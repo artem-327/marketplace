@@ -59,8 +59,8 @@ class ChangePassword extends Component {
             <Input type="text" label="Re-type Password" name="newPasswordRetype" />
 
             <div style={{ textAlign: 'right' }}>
-              <Button.Reset>Cancel</Button.Reset>
-              <Button.Submit>Save</Button.Submit>
+              <Button.Reset data-test='profile_change_password_reset_btn'>Cancel</Button.Reset>
+              <Button.Submit data-test='profile_change_password_submit_btn'>Save</Button.Submit>
             </div>
           </Form>
         </Modal.Content>

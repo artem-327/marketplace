@@ -86,7 +86,7 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth,
             </Menu.Item>
           }
           <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
-            <Dropdown.Menu data-test="navigation_menu_user">
+            <Dropdown.Menu data-test="navigation_menu_user_drpdn">
               <Dropdown.Item as={Menu.Item} onClick={() => openProfilePopup()}>{formatMessage({ id: 'global.myProfile', defaultMessage: 'My Profile' })}</Dropdown.Item>
               {getSafe(() => auth.identity.isAdmin, false) && takeover &&
                 <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()}>{formatMessage({ id: 'global.returnToAdmin', defaultMessage: 'Return To Admin' })}</Dropdown.Item>

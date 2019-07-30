@@ -231,8 +231,8 @@ class BankAccountsPopup extends React.Component {
               </Accordion.Content>
             </Accordion>
             <div style={{ textAlign: 'right' }}>
-              <Button.Reset onClick={closeDwollaPopup}>Cancel</Button.Reset>
-              <Button.Submit>Save</Button.Submit>
+              <Button.Reset onClick={closeDwollaPopup} data-test='settings_dwolla_account_reset_btn'>Cancel</Button.Reset>
+              <Button.Submit data-test='settings_dwolla_account_submit_btn'>Save</Button.Submit>
             </div>
           </Form>
         </Modal.Content>

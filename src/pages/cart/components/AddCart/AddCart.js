@@ -325,15 +325,18 @@ export default class AddCart extends Component {
           <Grid>
             <GridRow className='action' columns={2}>
               <GridColumn>
-                <Button fluid floated='right' onClick={() => this.props.sidebarChanged({ isOpen: false })}>Cancel</Button>
+                <Button fluid floated='right' onClick={() => this.props.sidebarChanged({ isOpen: false })}
+                        data-test='add_cart_cancel_btn'>Cancel</Button>
               </GridColumn>
 
               <GridColumn>
                 {!isEdit
-                  ? <Button disabled={!canProceed} fluid floated='right' primary onClick={this.createOrder}>
+                  ? <Button disabled={!canProceed} fluid floated='right' primary onClick={this.createOrder}
+                            data-test='add_cart_create_order_btn'>
                     Continue
               </Button>
-                  : <Button disabled={!canProceed} fluid floated='right' primary onClick={this.editOrder}>
+                  : <Button disabled={!canProceed} fluid floated='right' primary onClick={this.editOrder}
+                            data-test='add_cart_edit_order_btn'>
                     Save
                 </Button>
                 }
