@@ -17,9 +17,11 @@ import {
   Transition
 } from 'semantic-ui-react'
 
+import { uniqueArrayByKey } from '~/utils/functions'
+
 import confirm from '~/src/components/Confirmable/confirm'
 
-import { datagridValues, replaceAmbigiousCharacters, dateFormat, dateDropdownOptions } from '../constants/filter'
+import { datagridValues, replaceAmbigiousCharacters, dateFormat, dateDropdownOptions, filterTypes } from '../constants/filter'
 import { initialValues, validationSchema } from '../constants/validation'
 
 import SavedFilters from './SavedFilters'
@@ -41,7 +43,7 @@ class Filter extends Component {
   state = {
     savedFiltersActive: false,
     openedSaveFilter: false,
-    inactiveAccordion: { },
+    inactiveAccordion: {},
     dateDropdown: {
       expiration: dateDropdownOptions[0].value,
       mfg: dateDropdownOptions[0].value
@@ -64,7 +66,7 @@ class Filter extends Component {
 
 
     this.handleGetSavedFilters()
-    setParams({ currencyCode: this.props.preferredCurrency.code })
+    setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
     Promise.all([
       this.fetchIfNoData(fetchProductConditions, 'productConditions'),
@@ -102,7 +104,7 @@ class Filter extends Component {
 
     keys.forEach((key) => {
       if (inputs[key] && inputs[key] !== '' && Object.keys(inputs[key]).length > 0) {
-        
+
         if (datagridValues[key] && !!datagridValues[key].nested) {
           var ids = [], names = []
 
@@ -118,7 +120,7 @@ class Filter extends Component {
         }
         else {
           try {
-            let filter = datagridValues[key].toFilter(inputs[key])
+            let filter = datagridValues[key].toFilter(inputs[key], this.props.filterType)
             if (!(filter.values instanceof Array)) filter.values = [filter.values]  // We need values to be an array
 
             datagridFilter.filters.push(filter)
@@ -257,7 +259,7 @@ class Filter extends Component {
     for (let i = 0; i < filters.length; i++) {
       datagridKeys.forEach(key => {
         let datagrid = datagridValues[key]
-        if (filters[i].path === datagrid.toFilter([]).path && filters[i].operator === datagrid.toFilter([]).operator) {
+        if (datagrid.paths.includes(filters[i].path) && filters[i].operator === datagrid.operator) {
           formikValues[key] = datagrid.toFormik(filters[i], datagrid.nested && this.props[key])
         }
       })
@@ -279,17 +281,15 @@ class Filter extends Component {
 
 
     Object.keys(formikValues)
-      .forEach(key => {
-        setFieldValue(key, formikValues[key])
-      })
+      .forEach(key => setFieldValue(key, formikValues[key]))
 
     this.handleSubmit(formikValues)
   }
-  
+
 
   handleGetSavedFilters = () => {
     let { packagingTypes, productConditions, productGrade, productForms } = this.props
-    this.props.getSavedFilters(this.props.savedUrl, { packagingTypes, productConditions, productGrade, productForms }, this.props.apiUrl)
+    this.props.getSavedFilters(this.props.savedUrl, { packagingTypes, productConditions, productGrade, productForms }, this.props.apiUrl, this.props.filterType)
   }
 
 
@@ -300,13 +300,16 @@ class Filter extends Component {
   }
 
   handleSearch = debounce(({ searchQuery, name }) => {
-    if (searchQuery.length > 1) this.props.getAutocompleteData(this.props.searchUrl(searchQuery))
+    if (searchQuery.length > 1) {
+      let params = { searchUrl: this.props.searchUrl(searchQuery), searchQuery }
+      this.props.getAutocompleteData(params)
+    }
   }, 250)
 
   handleSearchWarehouse = debounce(({ searchQuery, name }) => {
     if (searchQuery.length > 1) {
       this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(searchQuery))
-      this.setState({searchWarehouseQuery: searchQuery})
+      this.setState({ searchWarehouseQuery: searchQuery })
     }
 
   }, 250)
@@ -395,8 +398,8 @@ class Filter extends Component {
                 e.preventDefault()
                 if (!values.name) setFieldError('name', <FormattedMessage id='validation.required' />)
                 else this.handleFilterSave(values)
-              }} positive basic loading={isFilterSaving} style={{marginRight: '0'}}
-              data-test='filter_name_save'>Save</Button>
+              }} positive basic loading={isFilterSaving} style={{ marginRight: '0' }}
+                data-test='filter_name_save'>Save</Button>
             </GridColumn>
           </GridRow>
 
@@ -417,14 +420,20 @@ class Filter extends Component {
     )
   }
 
+  // {"id":"431210","name":"1,2-dibromo-3,3,3-trifluoropropane","casNumber":"431-21-0"}
+  //  {"id":"431210","name":"1,2-dibromo-3,3,3-trifluoropropane","casNumberCombined":"431-21-0"}
+
   formMarkup = ({ values, setFieldValue, handleChange, errors, setFieldError }) => {
     let {
       productConditions, productForms, packagingTypes,
       productGrade, intl, isFilterSaving,
       autocompleteData, autocompleteDataLoading,
       autocompleteWarehouse, autocompleteWarehouseLoading,
-      layout
+      layout, savedAutocompleteData
     } = this.props
+
+
+    console.log()
 
     const { formatMessage } = intl
 
@@ -443,23 +452,12 @@ class Filter extends Component {
       selection: true,
       multiple: true,
       fluid: true,
-      options: autocompleteData.map((product) => {
-        if (product.casNumberCombined) var text = `${product.productName} (${product.casNumberCombined})`
-        else var text = product.productName
-
-        return {
-          key: product.id,
-          text,
-          value: JSON.stringify({ id: product.id, name: product.productName, casNumberCombined: product.casNumberCombined || null }),
-        }
-      }),
+      options: uniqueArrayByKey(savedAutocompleteData.concat(autocompleteData), 'id'),
       loading: autocompleteDataLoading,
       name: 'search',
       placeholder: <FormattedMessage id='filter.searchProducts' defaultMessage='Search Products' />,
       noResultsMessage,
-      onSearchChange: (_, data) => {
-        this.handleSearch(data)
-      },
+      onSearchChange: (_, data) => this.handleSearch(data),
       value: values.search,
       onChange: (e, data) => setFieldValue(data.name, data.value.length !== 0 ? data.value : null),
     }
@@ -481,22 +479,22 @@ class Filter extends Component {
           text = warehouse.text
           :
           text = warehouse.name +
-            (warehouse.address ?
-                ', ' + warehouse.address.streetAddress +
-                ', ' + warehouse.address.city +
-                ', ' + warehouse.address.zip.zip +
-                (
-                  warehouse.address.province ?
-                    ', ' + warehouse.address.province.name : ''
-                ) +
-                ', ' + warehouse.address.country.name
-                :
-                ''
-            )
+          (warehouse.address ?
+            ', ' + warehouse.address.streetAddress +
+            ', ' + warehouse.address.city +
+            ', ' + warehouse.address.zip.zip +
+            (
+              warehouse.address.province ?
+                ', ' + warehouse.address.province.name : ''
+            ) +
+            ', ' + warehouse.address.country.name
+            :
+            ''
+          )
         return {
           key: warehouse.id,
           text: text,
-          value: JSON.stringify({ id: warehouse.id, name: warehouse.name, text: text}),
+          value: JSON.stringify({ id: warehouse.id, name: warehouse.name, text: text }),
         }
       }),
       loading: autocompleteWarehouseLoading,
@@ -519,7 +517,7 @@ class Filter extends Component {
       <Accordion>
         <Segment basic>
           {(layout === 'MyInventory') && (<AccordionItem>
-            {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse'/>)}
+            {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
             <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
               <BottomMargedDropdown {...dropdownWarehouseProps} />
             </AccordionContent>
@@ -560,7 +558,6 @@ class Filter extends Component {
             <AccordionContent active={!this.state.inactiveAccordion.price}>
               <FormGroup>
                 <FormField width={8}>
-
                   <Input inputProps={{
                     label: currencySymbol,
                     labelPosition: 'left',
@@ -717,20 +714,20 @@ class Filter extends Component {
                 </Button>
               </FiltersContainer>
               <FlexContent>
-              <Segment basic>
-                {!this.state.savedFiltersActive
-                  ? this.formMarkup(props)
-                  : (
-                    <SavedFilters
-                      params={this.props.params}
-                      onApply={(filter) => this.handleSavedFilterApply(filter, props)}
-                      savedFilters={this.props.savedFilters}
-                      savedFiltersLoading={this.props.savedFiltersLoading}
-                      getSavedFilters={this.handleGetSavedFilters}
-                      deleteFilter={this.props.deleteFilter}
-                      updateFilterNotifications={this.props.updateFilterNotifications}
-                      savedFilterUpdating={this.props.savedFilterUpdating} />
-                  )}
+                <Segment basic>
+                  {!this.state.savedFiltersActive
+                    ? this.formMarkup(props)
+                    : (
+                      <SavedFilters
+                        params={this.props.params}
+                        onApply={(filter) => this.handleSavedFilterApply(filter, props)}
+                        savedFilters={this.props.savedFilters}
+                        savedFiltersLoading={this.props.savedFiltersLoading}
+                        getSavedFilters={this.handleGetSavedFilters}
+                        deleteFilter={this.props.deleteFilter}
+                        updateFilterNotifications={this.props.updateFilterNotifications}
+                        savedFilterUpdating={this.props.savedFilterUpdating} />
+                    )}
                 </Segment>
               </FlexContent>
               <GraySegment basic style={{ position: 'relative', overflow: 'visible', height: '4.57142858em', margin: '0' }}>
@@ -745,7 +742,7 @@ class Filter extends Component {
                       <Button
                         size='large'
                         onClick={this.toggleSaveFilter}
-                        inputProps={{type: 'button'}}
+                        inputProps={{ type: 'button' }}
                         data-test='filter_save_new'>
                         <FormattedMessage id='filter.saveFilter' defaultMessage='Save Filter' />
                       </Button>
@@ -759,7 +756,7 @@ class Filter extends Component {
                           toggleFilter(false)
                           this.props.onClear(e, data)
                         }}
-                        inputProps={{type: 'button'}}
+                        inputProps={{ type: 'button' }}
                         data-test='filter_clear'>
                         <FormattedMessage id='filter.clearFilter' defaultMessage='Clear Filter' />
                       </Button>
@@ -769,7 +766,7 @@ class Filter extends Component {
                         loading={isFilterApplying}
                         primary
                         onClick={() => this.submitForm()}
-                        inputProps={{type: 'button'}}
+                        inputProps={{ type: 'button' }}
                         data-test='filter_apply'>
                         <FormattedMessage id='global.apply' defaultMessage='Apply' />
                       </Button>
@@ -805,7 +802,8 @@ Filter.propTypes = {
   savedUrl: string,
   searchUrl: func,
   searchWarehouseUrl: func,
-  layout: string
+  layout: string,
+  filterType: string
 }
 
 Filter.defaultProps = {
@@ -819,7 +817,8 @@ Filter.defaultProps = {
   autocompleteWarehouse: [],
   savedFilters: [],
   savedFiltersLoading: false,
-  layout: ''
+  layout: '',
+  filterType: filterTypes.INVENTORY
 }
 
 export default withToastManager(injectIntl(Filter))

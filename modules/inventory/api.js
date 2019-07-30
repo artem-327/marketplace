@@ -94,3 +94,5 @@ export async function searchOrigins(text, limit) {
 export function updateProductOffer(poId, values) {
   return api.patch(`/prodex/api/product-offers/${poId}`, values)
 }
+
+export const getAutocompleteData = searchUrl => api.get(searchUrl).then(response => response.data)

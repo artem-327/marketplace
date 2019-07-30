@@ -2,7 +2,7 @@
 import * as a from './actions'
 import typeToReducer from 'type-to-reducer'
 
-import { uniqueArrayByKey } from '~/utils/functions'
+import { uniqueArrayByKey, mapAutocompleteData } from '~/utils/functions'
 
 import { datagridValues, paths } from './constants/filter'
 
@@ -15,8 +15,8 @@ const asignFiltersDescription = (filter, params) => {
     filters.forEach(filter => {
       datagridKeys.forEach(key => {
         let datagrid = datagridValues[key]
-
-        if (datagrid.path === filter.path && datagrid.operator === filter.operator) {
+        
+        if (datagrid.paths.includes(filter.path) && datagrid.operator === filter.operator) {
           filter.description = datagrid.description
           filter.valuesDescription = datagridValues[key].valuesDescription(filter.values, params)
           try {
@@ -40,14 +40,13 @@ export const initialState = {
   isOpen: false,
   isFilterSaving: false,
   isFilterApplying: false,
-  autocompleteData: [],
-  autocompleteDataLoading: false,
   autocompleteWarehouse: [],
   autocompleteWarehouseLoading: false,
   savedFilters: [],
   appliedFilter: [],
   savedFiltersLoading: false,
   savedFilterUpdating: false,
+  savedAutocompleteData: [],
   params: {
     currencyCode: 'USD'
   }
@@ -96,25 +95,11 @@ export default typeToReducer({
 
     let { data } = payload
     let autocompleteData = []
-    let autocompleteWarehouse = []
 
     data.forEach(element => {
       element = asignFiltersDescription(element, state.params)
       element.filters.forEach(filter => {
-        
-        if (filter.path === paths.productOffers.warehouseId) {
-          // let parsed = JSON.parse(filter.values[0].description)
-          autocompleteWarehouse = [{
-            id: parseInt(filter.values[0].value),
-            name: filter.values[0].description,
-            text: filter.values[0].description
-          }]
-        }
-
-
-
-
-        if (filter.path === paths.productOffers.productId) {
+        if (filter.path === paths.productOffers.productId || filter.path === paths.casProduct.id) {
           filter.values.forEach(element => {
             let parsed = JSON.parse(element.description)
             let { name, casNumberCombined } = parsed
@@ -125,13 +110,11 @@ export default typeToReducer({
 
     })
 
-
     return {
       ...state,
       savedFiltersLoading: false,
       savedFilters: data,
-      autocompleteData: uniqueArrayByKey(autocompleteData.concat(state.autocompleteData), 'id'),
-      autocompleteWarehouse: uniqueArrayByKey(autocompleteWarehouse.concat(state.autocompleteWarehouse), 'id'),
+      savedAutocompleteData: uniqueArrayByKey(mapAutocompleteData(autocompleteData).concat(state.savedAutocompleteData), 'key'),
     }
   },
   [a.getSavedFilters.rejected]: (state) => {
@@ -144,26 +127,26 @@ export default typeToReducer({
 
   /* GET_AUTOCOMPLETE_DATA */
 
-  [a.getAutocompleteData.pending]: (state) => {
-    return {
-      ...state,
-      autocompleteDataLoading: true
-    }
-  },
-  [a.getAutocompleteData.fulfilled]: (state, { payload }) => {
-    return {
-      ...state,
-      autocompleteDataLoading: false,
-      autocompleteData: uniqueArrayByKey(payload.concat(state.autocompleteData), 'id'),
-    }
-  },
-  [a.getAutocompleteData.rejected]: (state) => {
-    return {
-      ...state,
-      autocompleteDataLoading: false,
-      autocompleteData: []
-    }
-  },
+  // [a.getAutocompleteData.pending]: (state) => {
+  //   return {
+  //     ...state,
+  //     autocompleteDataLoading: true
+  //   }
+  // },
+  // [a.getAutocompleteData.fulfilled]: (state, { payload }) => {
+  //   return {
+  //     ...state,
+  //     autocompleteDataLoading: false,
+  //     autocompleteData: uniqueArrayByKey(payload.concat(state.autocompleteData), 'id'),
+  //   }
+  // },
+  // [a.getAutocompleteData.rejected]: (state) => {
+  //   return {
+  //     ...state,
+  //     autocompleteDataLoading: false,
+  //     autocompleteData: []
+  //   }
+  // },
 
 
   /* GET_AUTOCOMPLETE_WAREHOUSE_DATA */
