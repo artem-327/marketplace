@@ -1,6 +1,6 @@
 import * as AT from './action-types'
 
-import { uniqueArrayByKey } from '~/utils/functions'
+import { uniqueArrayByKey, mapAutocompleteData } from '~/utils/functions'
 
 export const initialState = {
   fileIds: [],
@@ -20,6 +20,8 @@ export const initialState = {
   searchedProductsLoading: false,
   warehousesList: [],
   loading: false,
+  autocompleteData: [],
+  autocompleteDataLoading: false,
 }
 
 export default function reducer(state = initialState, action) {
@@ -318,6 +320,31 @@ export default function reducer(state = initialState, action) {
     //     })
     //   }
     // }
+
+
+    /* GET_AUTOCOMPLETE_DATA */
+
+    case AT.GET_AUTOCOMPLETE_DATA_PENDING: {
+      return {
+        ...state,
+        autocompleteDataLoading: true
+      }
+    }
+
+    case AT.GET_AUTOCOMPLETE_DATA_FULFILLED: {
+      return {
+        ...state,
+        autocompleteDataLoading: false,
+        autocompleteData: uniqueArrayByKey(mapAutocompleteData(payload).concat(state.autocompleteData), 'key'),
+      }
+    }
+
+    case AT.GET_AUTOCOMPLETE_DATA_REJECTED: {
+      return {
+        ...state,
+        autocompleteDataLoading: false
+      }
+    }
 
 
     default: {

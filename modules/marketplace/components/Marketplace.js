@@ -7,6 +7,7 @@ import { Filter } from '~/modules/filter'
 import ProdexGrid from '~/components/table'
 import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
+import { filterTypes } from '~/modules/filter/constants/filter'
 
 import { UnitOfPackaging } from '~/components/formatted-messages'
 
@@ -88,7 +89,7 @@ class Marketplace extends Component {
 
 
   render() {
-    const { datagrid, intl } = this.props
+    const { datagrid, intl, getAutocompleteData, autocompleteData, autocompleteDataLoading } = this.props
     const { columns, selectedRows } = this.state
     const rows = this.getRows()
 
@@ -176,6 +177,10 @@ class Marketplace extends Component {
           />
         </div>
         <Filter
+          filterType={filterTypes.MARKETPLACE}
+          getAutocompleteData={getAutocompleteData}
+          autocompleteData={autocompleteData}
+          autocompleteDataLoading={autocompleteDataLoading}
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}
           savedUrl='/prodex/api/product-offers/broadcasted/datagrid/saved-filters'

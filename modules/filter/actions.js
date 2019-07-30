@@ -10,12 +10,12 @@ export const filterApplying = createAction('FILTER_APPLYING', (isApplying) => is
 export const applyFilter = createAction('APPLY_FILTER', (filter) => filter)
 export const setParams = createAction('SET_PARAMS', (params) => params)
 
-export const getSavedFilters = createAsyncAction('GET_SAVED_FILTERS', async (savedUrl, productInfo, apiUrl, filterType = filterTypes.PRODUCT_OFFERS) => {
+export const getSavedFilters = createAsyncAction('GET_SAVED_FILTERS', async (savedUrl, productInfo, apiUrl, filterType = filterTypes.INVENTORY) => {
   let data = await api.getSavedFilters(savedUrl)
 
   return { data, productInfo, filterType }
 })
-export const getAutocompleteData = createAsyncAction('GET_AUTOCOMPLETE_DATA', searchUrl => api.getAutocompleteData(searchUrl))
+// export const getAutocompleteData = createAsyncAction('GET_AUTOCOMPLETE_DATA', searchUrl => api.getAutocompleteData(searchUrl))
 
 export const getAutocompleteWarehouse = createAsyncAction('GET_AUTOCOMPLETE_WAREHOUSE_DATA', url => api.getAutocompleteWarehouse(url))
 
