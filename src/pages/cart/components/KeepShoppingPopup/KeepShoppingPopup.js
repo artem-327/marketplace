@@ -18,8 +18,8 @@ export default class KeepShopping extends Component {
         </Modal.Content>
 
         <Modal.Actions>
-          <Button onClick={handleClose} primary>Cancel</Button>
-          <Button onClick={handleContinue} positive>Yes</Button>
+          <Button onClick={handleClose} primary data-test='cart_keep_shopping_close_btn'>Cancel</Button>
+          <Button onClick={handleContinue} positive data-test='cart_keep_shopping_continue_btn'>Yes</Button>
         </Modal.Actions>
       </Modal>
     )

@@ -361,7 +361,7 @@ class AddInventoryForm extends Component {
                 <Grid>
                   <Grid.Row>
                     <Grid.Column width={3} floated='right'>
-                      <Button color='blue' floated='right' onClick={() => this.setState({ openedDocuments: false })} data-test='add_inventory_documents_ok'><FormattedMessage id='global.ok' defaultMessage='Ok' /></Button>
+                      <Button color='blue' floated='right' onClick={() => this.setState({ openedDocuments: false })} data-test='add_inventory_documents_ok_btn'><FormattedMessage id='global.ok' defaultMessage='Ok' /></Button>
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>
@@ -530,14 +530,14 @@ class AddInventoryForm extends Component {
             <Grid verticalAlign='middle'>
               <GridRow>
                 <ResponsiveColumn computer={6} mobile={16}>
-                  <Button fluid size='big' floated='left' data-test='new_inventory_cancel' onClick={() => this.goToList()} data-test='new_inventory_cancel'>
+                  <Button fluid size='big' floated='left' data-test='new_inventory_cancel_btn' onClick={() => this.goToList()} data-test='new_inventory_cancel'>
                     <FormattedMessage id='addInventory.cancel' defaultMessage='Cancel' /></Button>
                 </ResponsiveColumn>
                 <GridColumn computer={10} mobile={16}>
                   <Button.Submit fluid
                     size='big'
                     floated='right'
-                    data-test='new_inventory_submit'
+                    data-test='new_inventory_submit_btn'
                     onClick={(e, data = { data, validateForm }) => {
                       validateForm()
                         .then(r => {
@@ -796,9 +796,9 @@ class AddInventoryForm extends Component {
                   )}
                   <Modal.Actions>
                     {this.props.edit ? '' : (
-                      <Button icon='add' labelPosition='right' content='Add another one' onClick={this.resetForm} data-test='new_inventory_add_one'/>
+                      <Button icon='add' labelPosition='right' content='Add another one' onClick={this.resetForm} data-test='new_inventory_add_one_btn'/>
                     )}
-                    <Button primary icon='checkmark' labelPosition='right' content='Go to My Inventory' onClick={this.goToList} data-test='new_inventory_go'/>
+                    <Button primary icon='checkmark' labelPosition='right' content='Go to My Inventory' onClick={this.goToList} data-test='new_inventory_go_btn'/>
                   </Modal.Actions>
                 </Modal>
                 <div className='flex stretched'>
@@ -1173,7 +1173,7 @@ class AddInventoryForm extends Component {
                                   <>
                                     <Message attached='top' className='header-table-fields'>
                                       <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{ marginTop: '-0.5em' }} onClick={() => arrayHelpers.push({ lotNumber: null, pkgAmount: null, manufacturedDate: '', expirationDate: '' })}
-                                              data-test='new_inventory_add_lot'
+                                              data-test='new_inventory_add_lot_btn'
                                       />
                                       Lot Details <Popup content={`This is where you can track lot(s) that make up your product offer. For example if your product offer consists of three separate lots then hit the plus button to the right twice to add two more lots. Then enter the Lot # for each, the amount of packages that are associated to that lot within this product offer, the MFG date, the expiration date, and the associated Certificate of Analysis. This does not have to be completed when listing a product offer but it is required to designate lot info and CofA's within 48 hours of an order being shipped.`}
                                         trigger={<Icon name='info circle' color='blue' />}
@@ -1269,7 +1269,7 @@ class AddInventoryForm extends Component {
                                       <>
                                         <Message attached='top' className='header-table-fields'>
                                           <Button type='button' icon='plus' color='blue' size='small' disabled={!values.trackSubCosts} floated='right' style={{ marginTop: '-0.5em' }} onClick={() => arrayHelpers.push({ description: '', lot: 0, cost: null, costUom: null })}
-                                                  data-test='new_inventory_add_sub_cost'
+                                                  data-test='new_inventory_add_sub_cost_btn'
                                           />
                                           Sub-Cost Breakdown
                                     </Message>

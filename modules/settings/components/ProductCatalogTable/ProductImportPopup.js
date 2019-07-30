@@ -103,13 +103,14 @@ class ProductImportPopup extends Component {
         <Modal.Actions>
           {currentStep !== "confirmation" && (
             <div style={{ textAlign: "right" }}>
-              <Button basic onClick={() => closeImportPopupCancel(csvFileId)}>
+              <Button basic onClick={() => closeImportPopupCancel(csvFileId)} data-test='settings_product_import_cancel_btn'>
                 Cancel
               </Button>
               <Button
                 primary
                 onClick={this.submitHandler}
                 disabled={!csvFileId}
+                data-test='settings_product_import_submit_btn'
               >
                 {`${currentStep === "preview" ? "Save" : "Next"}`}
               </Button>

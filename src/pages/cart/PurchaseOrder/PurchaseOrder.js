@@ -132,7 +132,8 @@ class PurchaseOrder extends Component {
 
               <Menu.Menu position='right'>
                 <Menu.Item>
-                  <Button icon basic labelPosition='left' onClick={() => Router.push('/cart')}>
+                  <Button icon basic labelPosition='left' onClick={() => Router.push('/cart')}
+                          data-test='cart_purchase_back_btn'>
                     <Icon name='chevron left' />
                     <FormattedMessage id='cart.backToShoppingCart'
                       defaultMessage='Back to Shopping Cart' />
@@ -240,7 +241,8 @@ class PurchaseOrder extends Component {
               additionalContent={
                 <GridRow centered>
                   <GridColumn>
-                    <Button fluid primary onClick={this.handleContinue}>
+                    <Button fluid primary onClick={this.handleContinue}
+                            data-test='cart_purchase_place_order_btn'>
                       <FormattedMessage
                         id='cart.placeOrder'
                         defaultMessage='Place Order1' />

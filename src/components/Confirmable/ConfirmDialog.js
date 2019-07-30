@@ -12,8 +12,8 @@ const ConfirmDialog = ({ show, proceed, dismiss, cancel, title, confirmation, op
       <Modal.Content>{confirmation}</Modal.Content>
 
       <Modal.Actions>
-        <Button primary inverted onClick={cancel}>{cancelText}</Button>
-        <Button onClick={proceed} primary>{proceedText}</Button>
+        <Button primary inverted onClick={cancel} data-test='confirm_dialog_cancel_btn'>{cancelText}</Button>
+        <Button onClick={proceed} primary data-test='confirm_dialog_proceed_btn'>{proceedText}</Button>
       </Modal.Actions>
     </Modal>
   )

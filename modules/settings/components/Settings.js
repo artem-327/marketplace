@@ -82,7 +82,7 @@ class Settings extends Component {
                   <CompanyForm />
                   <Grid>
                     <GridColumn floated='right' computer={4}>
-                      <Button.Submit fluid><FormattedMessage id='global.save' /></Button.Submit>
+                      <Button.Submit fluid data-test='company_details_submit_btn'><FormattedMessage id='global.save' /></Button.Submit>
                     </GridColumn>
                   </Grid>
                 </Segment>

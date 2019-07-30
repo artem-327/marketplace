@@ -83,13 +83,15 @@ class CompaniesDetailAdmin extends Component {
             />
             <Button
                 color="red"
-                onClick={() => this.props.deleteCompany(this.props.company.id, () => this.props.history.push('/administration/companies/'))}>
+                onClick={() => this.props.deleteCompany(this.props.company.id, () => this.props.history.push('/administration/companies/'))}
+                data-test='administration_companies_delete_btn'>
                     <FormattedMessage
                         id='global.delete'
                         defaultMessage='Delete'
                     />
             </Button>
-            <Button color="blue" onClick={() => this.props.putCompanyEdit(Object.assign({}, this.props.company, { name: this.state.name }))}>
+            <Button color="blue" onClick={() => this.props.putCompanyEdit(Object.assign({}, this.props.company, { name: this.state.name }))}
+                    data-test='administration_companies_edit_btn'>
               <FormattedMessage
                 id='global.edit'
                 defaultMessage='Edit'
@@ -135,6 +137,7 @@ class CompaniesDetailAdmin extends Component {
           <Button
             color="green"
             onClick={() => this.props.putOfficeEdit(this.getOfficePayload(this.state.officeId), () => { })}
+            data-test='administration_companies_add_btn'
           >
               <FormattedMessage
                 id='global.addNew'

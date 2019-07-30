@@ -95,18 +95,18 @@ class LoginForm extends Component {
                 {this.state.resetPassword && <FormattedMessage id='auth.resetPasswordInstructions' />}
               </InstructionsDiv>
 
-              <Form.Field error={usernameError} data-test="login_username">
+              <Form.Field error={usernameError} data-test="login_username_inp">
                 <label><FormattedMessage id='auth.username' defaultMessage='Username' /></label>
                 <input placeholder={formatMessage({ id: 'auth.username', defaultMessage: 'Password' })} name='username' />
               </Form.Field>
               {
                 !this.state.resetPassword &&
-                <Form.Field error={passwordError} data-test="login_password">
+                <Form.Field error={passwordError} data-test="login_password_inp">
                   <label><FormattedMessage id='auth.password' defaultMessage='Password' /></label>
                   <input placeholder={formatMessage({ id: 'auth.password', defaultMessage: 'Password' })} type='password' name='password' />
                 </Form.Field>
               }
-              <Button type='submit' primary fluid size='large' data-test="login_submit" data-test='auth_login_or_reset_btn'>
+              <Button type='submit' primary fluid size='large' data-test="login_submit_btn">
                 {this.state.resetPassword
                   ? <FormattedMessage id='auth.resetPassword' defaultMessage='Reset Password' />
                   : <FormattedMessage id='auth.login' defaultMessage='Log in' />}
@@ -118,7 +118,7 @@ class LoginForm extends Component {
             <Grid>
               <GridRow>
                 <GridColumn computer={12}>
-                  <ToggleLabel onClick={this.toggleResetPassword} data-test="login_reset_toggle">
+                  <ToggleLabel onClick={this.toggleResetPassword} data-test="login_reset_toggle_btn">
                     {this.state.resetPassword
                       ? <FormattedMessage id='auth.cancelPasswordReset' />
                       : <FormattedMessage id='auth.resetMyPassword' defaultMessage='Password Reset' />
