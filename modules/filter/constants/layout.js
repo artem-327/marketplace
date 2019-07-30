@@ -145,3 +145,25 @@ export const LessPaddedRow = styled(GridRow)`
 export const BottomMargedDropdown = styled(Dropdown)`
   margin-bottom: 15px;
 `
+
+export const SaveFilterRow = styled(GridRow)`
+  min-width: calc(100% + 2rem) !important;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  border-top: 1px solid #dedede;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  background-color: #eee;
+`
+
+export const SaveFilterTitle = styled(Title)`
+  margin: 0;
+`
+
+export const SaveFilterClose = styled(Icon)`
+  position: absolute;
+  top: -1px;
+  right: 2rem;
+  margin: 0 !important;
+  cursor: pointer;
+`

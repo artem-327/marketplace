@@ -108,7 +108,7 @@ export default {
   uploadCSVFile: body => {
     const formData = new FormData()
     formData.append('file', new Blob([body], { type: 'text/plain' }))
-    
+
     return api
       .post('/prodex/api/imports/temporary-files', formData, {
         headers: {
@@ -171,6 +171,10 @@ export default {
   removeAttachmentLink: (itemId, aId) => {
     return api.delete(`/prodex/api/attachment-links/to-product?attachmentId=${aId}&productId=${itemId}`)
   },
-  resendWelcomeEmail: (userId) => api.get(`/prodex/api/users/id/${userId}/email/welcome`).then(response => response.data).catch(e => console.error(e.clientMessage))
-
+  resendWelcomeEmail: userId => api.get(`/prodex/api/users/id/${userId}/email/welcome`).then(response => response.data).catch(e => console.error(e.clientMessage)),
+  getLogisticsProviders: () => api.get('/prodex/api/logistics-providers/').then(response => response.data),
+  createLogisticsAccount: payload => api.post('/prodex/api/logistics-accounts/', payload).then(response => response.data),
+  getLogisticsAccounts: () => api.get('/prodex/api/logistics-accounts/').then(response => response.data),
+  updateLogisticsAccount: payload => api.put(`/prodex/api/logistics-accounts/id/${payload.id}`, payload).then(response => response.data),
+  deleteLogisticsAccount: id => api.delete(`/prodex/api/logistics-accounts/id/${id}`).then(() => id)
 }

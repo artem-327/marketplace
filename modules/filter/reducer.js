@@ -22,8 +22,10 @@ const asignFiltersDescription = (filter, params) => {
           try {
             filter.tagDescription = datagridValues[key].tagDescription(filter.values, params)
           } catch (_) {
+            console.log(_)
             filter.tagDescription = datagridValues[key].valuesDescription(filter.values, params)
           }
+          console.log(filter)
         }
       })
     })
@@ -98,18 +100,18 @@ export default typeToReducer({
 
     data.forEach(element => {
       element = asignFiltersDescription(element, state.params)
-
       element.filters.forEach(filter => {
-
-
+        
         if (filter.path === paths.productOffers.warehouseId) {
-          let parsed = JSON.parse(filter.values[0].description)
+          // let parsed = JSON.parse(filter.values[0].description)
           autocompleteWarehouse = [{
             id: parseInt(filter.values[0].value),
-            name: parsed.name,
-            text: parsed.text
+            name: filter.values[0].description,
+            text: filter.values[0].description
           }]
         }
+
+
 
 
         if (filter.path === paths.productOffers.productId) {
