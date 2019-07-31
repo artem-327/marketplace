@@ -10,7 +10,7 @@ import UploadLot from './upload/UploadLot'
 import { FieldArray } from 'formik'
 import { debounce } from 'lodash'
 import confirm from '~/src/components/Confirmable/confirm'
-
+import { AttachmentManager } from '~/modules/attachments'
 import { generateToastMarkup } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
 
@@ -291,9 +291,6 @@ class AddInventoryForm extends Component {
       setFieldValue(`additional`, filteredAdditional)
     }
   }
-
-
-
 
   renderEditDocuments = (values, setFieldValue) => {
     const { edit, removeAttachment, removeAttachmentLink } = this.props
@@ -718,6 +715,9 @@ class AddInventoryForm extends Component {
                 <FormattedMessage id={this.props.edit ? 'addInventory.editInventory' : 'addInventory.addInventory'}
                   defaultMessage={this.props.edit ? 'EDIT INVENTORY' : 'ADD INVENTORY'} />
               </Header>
+            </Menu.Item>
+            <Menu.Item>
+              <AttachmentManager />
             </Menu.Item>
           </Menu>
         </div>

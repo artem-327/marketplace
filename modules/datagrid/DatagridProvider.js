@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import api from '~/api'
+import pt from 'prop-types'
 export const DatagridContext = React.createContext({})
 
 const initialState = {
@@ -19,6 +20,13 @@ const initialState = {
 export let Datagrid
 
 export class DatagridProvider extends Component {
+
+  static propTypes = {
+    apiConfig: pt.shape({
+      url: pt.string.isRequired,
+      method: pt.oneOf(['POST', 'GET'])
+    }).isRequired
+  }
 
   constructor(props) {
     super(props)
@@ -162,16 +170,18 @@ export class DatagridProvider extends Component {
   }
 
   onTableReady = () => {
+    console.log('ready in datagrid')
     this.setState({ ready: true })
     this.loadData()
   }
 
   render() {
     const { rows, loading, datagridParams: { filters } } = this.state
-
+    
     return (
       <DatagridContext.Provider
         value={{
+          apiConfig: this.props.apiConfig,
           rows,
           loading,
           filters,

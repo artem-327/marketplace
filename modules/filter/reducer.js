@@ -22,10 +22,8 @@ const asignFiltersDescription = (filter, params) => {
           try {
             filter.tagDescription = datagridValues[key].tagDescription(filter.values, params)
           } catch (_) {
-            console.log(_)
             filter.tagDescription = datagridValues[key].valuesDescription(filter.values, params)
           }
-          console.log(filter)
         }
       })
     })
