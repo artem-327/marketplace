@@ -3,7 +3,7 @@ import Marketplace from './Marketplace'
 import * as Actions from '../actions'
 import { sidebarChanged } from '~/src/modules/cart'
 import { getProductOffer } from '~/modules/purchase-order/actions'
-import moment from "moment/moment"
+import moment from 'moment/moment'
 import { getLocationString } from '~/src/utils/functions'
 import { withDatagrid } from '~/modules/datagrid'
 import { applyFilter } from '~/modules/filter/actions'
@@ -39,9 +39,9 @@ function mapStateToProps(store, { datagrid }) {
           ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price} /> -  <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price} /> </>
           : <FormattedNumber style='currency' currency={currency} value={po.pricing.price} />,
         // fobPrice: po.pricingTiers.length > 1 ?
-        //   ("$" + po.pricingTiers[po.pricingTiers.length - 1].price.formatMoney(3)
-        //     + ' - ' + "$" + po.pricingTiers[0].price.formatMoney(3))
-        //   : po.pricing.price ? ("$" + po.pricing.price.formatMoney(3)) : 'N/A',
+        //   ('$' + po.pricingTiers[po.pricingTiers.length - 1].price.formatMoney(3)
+        //     + ' - ' + '$' + po.pricingTiers[0].price.formatMoney(3))
+        //   : po.pricing.price ? ('$' + po.pricing.price.formatMoney(3)) : 'N/A',
         tradeName: '',
         manufacturer: getSafe(() => po.manufacturer.name, 'N/A'),
         origin: getSafe(() => po.origin.name),
