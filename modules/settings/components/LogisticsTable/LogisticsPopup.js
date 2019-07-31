@@ -90,6 +90,7 @@ class LogisticsPopup extends Component {
                       }
                       label={formatMessage({ id: 'logistics.label.logisticsProvider', defaultMessage: 'Logistics Provider' })}
                       inputProps={{
+                        'data-test': 'logistics_table_provider_drpdn',
                         placeholder: formatMessage({ id: 'logistics.placeholder.logisticsProvider', label: 'Select Logistics Provider' }),
                         loading: logisticsProvidersFetching
                       }} />

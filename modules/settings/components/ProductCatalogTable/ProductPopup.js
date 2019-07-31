@@ -337,6 +337,7 @@ class ProductPopup extends React.Component {
                                 }
                               }) : []}
                               inputProps={{
+                                'data-test': `settings_product_popup_cas_${index}_drpdn`,
                                 size: 'large',
                                 minCharacters: 3,
                                 icon: 'search',
@@ -396,6 +397,7 @@ class ProductPopup extends React.Component {
                     name='packagingUnit'
                     options={productsUnitsType}
                     inputProps={{
+                      'data-test': 'settings_product_popup_packagingUnit_drpdn',
                       onChange: (e, d) => {
                         setFieldValue('packagingType', '')
                         this.handleUnitChange(d.value, this.props.unitsAll, this.props.packagingTypesAll)
@@ -406,6 +408,7 @@ class ProductPopup extends React.Component {
                     label='Packaging Type'
                     name='packagingType'
                     options={packagingTypesReduced}
+                    inputProps={{ 'data-test': 'settings_product_popup_packagingType_drpdn' }}
                   />
                 </FormGroup>
                 <FormGroup widths='equal'>
@@ -453,6 +456,7 @@ class ProductPopup extends React.Component {
                   <Dropdown label='Freight Class'
                     name='freightClass'
                     options={freightClasses}
+                    inputProps={{ 'data-test': 'settings_product_popup_freightClass_drpdn' }}
                   />
                 </FormGroup>
                 <FormGroup widths='equal'>
@@ -460,6 +464,7 @@ class ProductPopup extends React.Component {
                     name='hazardClass'
                     options={hazardClasses}
                     inputProps={{
+                      'data-test': 'settings_product_popup_hazardClass_drpdn',
                       multiple: true,
                       selection: true,
                       search: true,
@@ -469,6 +474,7 @@ class ProductPopup extends React.Component {
                   <Dropdown label='Packaging Group'
                     name='packagingGroup'
                     options={packagingGroups}
+                    inputProps={{ 'data-test': 'settings_product_popup_packagingGroup_drpdn' }}
                   />
                 </FormGroup>
                 <FormGroup widths='equal'>
@@ -477,6 +483,7 @@ class ProductPopup extends React.Component {
                       name={`attachmentType`}
                       options={this.props.documentTypes}
                       style={{ paddingBottom: '2em' }}
+                      inputProps={{ 'data-test': 'settings_product_popup_attachmentType_drpdn' }}
                     />
                     <DateInput label='Expiration Date'
                       name='expirationDate'
