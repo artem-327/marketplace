@@ -14,15 +14,15 @@ context("Inventory Broadcasting", () => {
         cy.get(".table-responsive").scrollTo("right")
         cy.waitForUI()
 
-        cy.get("[data-test=my_inventory_broadcast]").eq(0).should("not.have.class", "checked")
-        cy.get("[data-test=my_inventory_broadcast]").eq(0).click()
+        cy.get("[data-test=my_inventory_broadcast_btn]").eq(0).should("not.have.class", "checked")
+        cy.get("[data-test=my_inventory_broadcast_btn]").eq(0).click()
         cy.wait("@broadcast")
-        cy.get("[data-test=my_inventory_broadcast]").eq(0).should("have.class", "checked")
+        cy.get("[data-test=my_inventory_broadcast_btn]").eq(0).should("have.class", "checked")
         cy.waitForUI()
 
-        cy.get("[data-test=my_inventory_broadcast]").eq(0).click()
+        cy.get("[data-test=my_inventory_broadcast_btn]").eq(0).click()
         cy.wait("@broadcast")
-        cy.get("[data-test=my_inventory_broadcast]").eq(0).should("not.have.class", "checked")
+        cy.get("[data-test=my_inventory_broadcast_btn]").eq(0).should("not.have.class", "checked")
     })
 
     it('Set custom broadcasting', () => {

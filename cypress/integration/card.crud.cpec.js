@@ -11,7 +11,9 @@ context("Shopping cart CRUD",() => {
 
         cy.wait('@inventoryLoading')
         cy.contains("Marketplace").click()
-        cy.get("[data-test=navigation_menu_marketplace]").click()
+        cy.get("[data-test=navigation_menu_marketplace_drpdn]").within(() => {
+            cy.contains("Marketplace").click()
+        })
 
         cy.wait("@marketplaceLoading")
     })
@@ -35,7 +37,7 @@ context("Shopping cart CRUD",() => {
         cy.contains("Marketplace").click()
         cy.contains("Shopping Cart").click()
 
-        cy.get("[data-test='shopping_cart_edit']").click()
+        cy.get("[data-test='item_cart_edit_btn']").click()
         cy.get("input").clear()
         cy.get("input").type("2")
 
@@ -55,7 +57,7 @@ context("Shopping cart CRUD",() => {
 
                 cy.get(".item-cart-body-section-name").should('have.text', '610-71-9 & 89-99-6 Dibromobenzoic')
 
-                cy.get("[data-test=shopping_cart_back]").click()
+                cy.get("[data-test=shopping_cart_back_btn]").click()
 
                 cy.waitForUI()
                 cy.get('[data-test=action_' + (parseInt(itemId,10)+1) + ']').click({force: true})
