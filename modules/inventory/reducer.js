@@ -201,7 +201,8 @@ export default function reducer(state = initialState, action) {
           pricingTiers: data.pricingTiers.map((pricingTier, index) => {
             return {
               ...pricingTier,
-              quantityFrom: !index ? data.minimum : pricingTier.quantityFrom
+              quantityFrom: !index ? data.minimum : pricingTier.quantityFrom,
+              manuallyModified: 1
             }
           }),
           processingTimeDays: 1,
@@ -269,7 +270,8 @@ export default function reducer(state = initialState, action) {
           ...action.payload.data,
           pricingTiers: [{
             quantityFrom: 1,
-            price: 0.001
+            price: 0.001,
+            manuallyModified: 0
           }]
         }
       }

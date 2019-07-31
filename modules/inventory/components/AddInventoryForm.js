@@ -91,6 +91,24 @@ val.addMethod(val.object, 'uniqueProperty', function (propertyName, message) {
   })
 })
 
+val.addMethod(val.number, 'divisibleBy', function (ref, message) {
+  return this.test({
+    name: 'divisibleBy',
+    exclusive: false,
+    message: message || '${path} must be divisible by ${reference}',
+    params: {
+      reference: ref.path
+    },
+    test: function(value) {
+      const divisedBy = parseInt(this.resolve(ref))
+      if (!divisedBy || isNaN(divisedBy))
+        return false
+
+      return !(value % divisedBy)
+    }
+  })
+})
+
 const validationScheme = val.object().shape({
   costs: val.array().of(val.object().shape({
     description: val.string(),
@@ -113,15 +131,16 @@ const validationScheme = val.object().shape({
   })).nullable(),
   manufacturer: val.number().nullable().moreThan(0, 'Manufacturer value is invalid'),
   minimumRequirement: val.bool(),
-  minimum: val.number().nullable().moreThan(0, 'Must be greater than 0'),
-  splits: val.number().nullable().moreThan(0, 'Must be greater than 0'),
+  minimum: val.number().divisibleBy(val.ref('splits'), 'Value is not divisible by Splits'),
+  splits: val.number().moreThan(0, 'Must be greater than 0'),
   origin: val.number().nullable().moreThan(0, 'Origin value is invalid'),
   priceTiers: val.number(),
-  pricingTiers: val.array().of(val.object().shape({
+  pricingTiers: val.array().of(val.object().uniqueProperty('quantityFrom', 'Quantity has to be unique').shape({
     quantityFrom: val.number().typeError('must be number').nullable().moreThan(0, 'Must be greater than 0').required('Minimum quantity must be set'),
     price: val.number().typeError('must be number').nullable().moreThan(0, 'Must be greater than 0').required('required').test('maxdec', 'There can be maximally 3 decimal places.', val => {
       return !val || val.toString().indexOf('.') === -1 || val.toString().split('.')[1].length <= 3
-    })
+    }),
+    manuallyModified: val.number().min(0).max(1)
   })),
   touchedLot: val.bool(),
   warehouse: val.number('required').nullable('required').moreThan(0, 'required').required('required')
@@ -260,6 +279,46 @@ class AddInventoryForm extends Component {
     element.click()
   }
 
+  handleQuantities = (setFieldValue, values, splits, quantity = 0) => {
+    // be sure that splits is integer and larger than 0
+    splits = parseInt(splits)
+    if (splits < 1 || isNaN(splits)) return false
+
+    // correct quantity before anchor calculation
+    if (quantity > 0) quantity -= splits
+
+    const prices = values.pricingTiers
+
+    for (let i = 0; i < prices.length; i++) {
+      const qtyFrom = parseInt(prices[i].quantityFrom)
+
+      // get level quantity (must be larger than previous level quantity)
+      let anchor = Math.max(qtyFrom, ++quantity)
+      if (!parseInt(values.pricingTiers[i].manuallyModified)) {
+        // if not manually modified then change quantity value
+        quantity = Math.ceil(anchor / splits) * splits
+        setFieldValue(`pricingTiers[${i}].quantityFrom`, quantity)
+      } else {
+        // if manually modified or loaded from BE then do not change already set value - just remember largest anchor
+        quantity = Math.max(qtyFrom, quantity)
+      }
+    }
+  }
+
+  onSplitsChange = (value, values, setFieldValue) => {
+    value = parseInt(value)
+    const minimum = parseInt(values.minimum)
+
+    this.handleQuantities(setFieldValue, values, value)
+
+    if (isNaN(value) || isNaN(minimum))
+      return false
+
+    if (minimum !== value && ((minimum % value) !== 0)) {
+      setFieldValue('minimum', value)
+    }
+  }
+
   removeAttachment = async (isLot, documentName, documentId, connectedId, values, setFieldValue) => {
     const { removeAttachment, removeAttachmentLink } = this.props
     await removeAttachmentLink(isLot, connectedId, documentId).then(() => removeAttachment(documentId))
@@ -373,7 +432,7 @@ class AddInventoryForm extends Component {
     )
   }
 
-  renderPricingTiers = (count) => {
+  renderPricingTiers = (count, setFieldValue) => {
     let tiers = []
 
     for (let i = 0; i < count; i++) {
@@ -389,46 +448,18 @@ class AddInventoryForm extends Component {
           </TopMargedColumn>
 
           <GridColumn computer={6}>
-            <Input name={`pricingTiers[${i}].quantityFrom`} inputProps={{ type: 'number', min: 1, value: null }} />
+            <Input name={`pricingTiers[${i}].quantityFrom`} inputProps={{ type: 'number', min: 1, value: null, onChange: () => setFieldValue(`pricingTiers[${i}].manuallyModified`, 1) }} />
           </GridColumn>
 
           <GridColumn computer={6}>
             <Input name={`pricingTiers[${i}].price`} inputProps={{ type: 'number', step: '0.001', min: 0.001, value: null }} />
           </GridColumn>
+
+          <GridColumn computer={1}>
+            <Input name={`pricingTiers[%{i}].manuallyModified`} inputProps={{ type: 'hidden', value: 0 }} />
+          </GridColumn>
         </GridRow>
       )
-
-
-      // tiers.push(
-      //   <Grid.Row key={i}>
-      //     <Grid.Column width={2}>
-      //       {i !== 0 ? (
-      //         <Label name={`pricingTiers[${i}].level`}>{i + 1}</Label>
-      //       ) : (
-      //           <div className='field'>
-      //             <label>Level</label>
-      //             <Label name={`pricingTiers[${i}].level`}>{i + 1}</Label>
-      //           </div>
-      //         )}
-      //     </Grid.Column>
-      //     <Grid.Column width={1}>
-      //       <Icon.Group>
-      //         <Icon name='chevron right' />
-      //         <Icon name='window minimize outline' />
-      //       </Icon.Group>
-      //     </Grid.Column>
-      //     <Grid.Column width={10}>
-      //       <FormGroup widths='equal'>
-      //         <FormField width={8}>
-      //           <Input name={`pricingTiers[${i}].quantityFrom`} label={i ? '' : 'Minimum OQ'} inputProps={{ type: 'number', readOnly: i === 0, value: null }} />
-      //         </FormField>
-      //         <Form.Field width={8}>
-      //           <Input name={`pricingTiers[${i}].price`} label={i ? '' : 'FOB Price'} inputProps={{ type: 'number', step: '0.001', value: null }} />
-      //         </Form.Field>
-      //       </FormGroup>
-      //     </Grid.Column>
-      //   </Grid.Row>
-      // )
     }
 
     return (
@@ -940,17 +971,23 @@ class AddInventoryForm extends Component {
                                     <GridRow>
                                       <GridColumn computer={8} tablet={16}>
                                         <Input label='Minimum OQ' name='minimum' inputProps={{
-                                          type: 'number', min: 1, onChange: (e, data) => {
-                                            if (data.value > 1) {
+                                          type: 'number', min: 1, onChange: (e, { value }) => {
+                                            value = parseInt(value)
+                                            if (value > 1 && !isNaN(value)) {
                                               setFieldValue('minimumRequirement', true)
-                                              setFieldValue('pricingTiers[0].quantityFrom', data.value)
+                                              setFieldValue('pricingTiers[0].quantityFrom', value)
+                                              //this.handleQuantities(setFieldValue, values, values.splits, (data.value ? data.value : 0))
                                             }
                                           }
                                         }} />
                                       </GridColumn>
 
                                       <GridColumn computer={8} tablet={16}>
-                                        <Input label='Splits' name='splits' inputProps={{ type: 'number', min: 1 }} />
+                                        <Input label='Splits' name='splits' inputProps={{
+                                            type: 'number',
+                                            min: 1,
+                                            onChange: debounce((e, {value}) => this.onSplitsChange(value, values, setFieldValue), 500)
+                                          }} />
                                       </GridColumn>
                                     </GridRow>
                                     <GridRow>
@@ -996,7 +1033,7 @@ class AddInventoryForm extends Component {
                                       </GridColumn>
                                     </GridRow>
                                     {/* <Grid> */}
-                                    {this.renderPricingTiers(values.priceTiers)}
+                                    {this.renderPricingTiers(values.priceTiers, setFieldValue)}
                                     {/* </Grid> */}
                                     <GridRow>
                                       <GridColumn>
