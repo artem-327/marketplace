@@ -146,7 +146,7 @@ context("Inventory CRUD",() => {
 		cy.get("#field_dropdown_productForm").click()
 		cy.contains("Fiber").click()
 
-        cy.contains("Lot Details ").children("button").click()
+        cy.contains("Lot Details").children("button").click()
 
         cy.get("input[name='lots[0].pkgAmount']")
             .clear()

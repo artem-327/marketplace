@@ -68,9 +68,7 @@ context("Login and logout",() => {
         cy.get(".right.menu .user.circle").click("center");
         cy.get(".right.menu .item.dropdown").should("have.class","visible");
         cy.get(".right.menu .item.dropdown").contains("Logout").click("center");
-        cy.url().should("include","/login");
-        cy.visit("admin");
-        cy.url().should("include","/login");
+        cy.url().should("include","/inventory");
     });
 
     it('Normal user login and logout',() => {
@@ -109,9 +107,7 @@ context("Login and logout",() => {
         cy.get(".right.menu .user.circle").click("center");
         cy.get(".right.menu .item.dropdown").should("have.class","visible");
         cy.get(".right.menu .item.dropdown").contains("Logout").click("center");
-        cy.url().should("include","/login");
-        cy.visit("dashboard");
-        cy.url().should("include","/login");
+        cy.url().should("include","/inventory")
     });
 
     it('Disabled user login',() => {
