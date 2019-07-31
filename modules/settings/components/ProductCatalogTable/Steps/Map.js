@@ -139,6 +139,7 @@ class Map extends Component {
                       }
                       disabled={!!this.props.selectedSavedMap}
                       onChange={this.selectMapping}
+                      data-test='settings_product_import_csv_column_drpdn'
                     />
                   </Table.Cell>
                 </Table.Row>

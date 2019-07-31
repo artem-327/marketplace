@@ -53,7 +53,8 @@ class BroadcastRule extends Component {
               <Dropdown opns={this.props.selections}
                 onChange={(type) => this.props.setFilter(type)}
                 placeholder='Select filter'
-                currentValue={this.props.currentSelected} />
+                currentValue={this.props.currentSelected}
+                data-test='my_inventory_broadcast_select_filter_drpdn'/>
             </span>
           </div>
         </div>
@@ -61,7 +62,7 @@ class BroadcastRule extends Component {
           <BroadcastTargets targetGroups={this.props.targetGroups} filter={this.props.currentSelected} getData={(data) => this.setState({ rawData: data })} />
         </div>
         <div className="br-buttons-wr">
-          <button className='button br-apply' onClick={() => this.submitBroadcastData()}>Apply</button>
+          <button className='button br-apply' onClick={() => this.submitBroadcastData()} data-test='my_inventory_broadcast_submit_btn' >Apply</button>
           <div className="clearfix" />
         </div>
       </div>

@@ -21,7 +21,8 @@ class Payment extends Component {
               placeholder={formatMessage({
                 id: 'cart.selectCreditCard',
                 defaultMessage: 'Select Credit Card'
-              })} />
+              })}
+              data-test='cart_purchase_orders_payments_credit_card_drpdn'/>
           </GridColumn>
         </GridRow>
 

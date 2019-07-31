@@ -163,6 +163,7 @@ class ConfirmationPage extends Component {
                                     name='address.country'
                                     options={confirmationForm.address.availableCountries}
                                     inputProps={{
+                                      'data-test': 'auth_confirm_country_drpdn',
                                       search: options => options,
                                       onSearchChange: (e, {searchQuery}) => searchCountries(searchQuery),
                                       onChange: async (e, {value}) => {
@@ -188,6 +189,7 @@ class ConfirmationPage extends Component {
                                     name='address.province'
                                     options={confirmationForm.address.availableProvinces}
                                     inputProps={{
+                                      'data-test': 'auth_confirm_state_drpdn',
                                       selection: true,
                                       value: 0
                                     }} />

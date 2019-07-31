@@ -540,7 +540,7 @@ class AddInventoryForm extends Component {
             <Grid verticalAlign='middle'>
               <GridRow>
                 <ResponsiveColumn computer={6} mobile={16}>
-                  <Button fluid size='big' floated='left' data-test='new_inventory_cancel_btn' onClick={() => this.goToList()} data-test='new_inventory_cancel'>
+                  <Button fluid size='big' floated='left' data-test='new_inventory_cancel_btn' onClick={() => this.goToList()}>
                     <FormattedMessage id='addInventory.cancel' defaultMessage='Cancel' /></Button>
                 </ResponsiveColumn>
                 <GridColumn computer={10} mobile={16}>
@@ -877,6 +877,7 @@ class AddInventoryForm extends Component {
                                     name='product'
                                     options={this.state.searchedProducts}
                                     inputProps={{
+                                      'data-test': 'new_inventory_product_search_drpdn',
                                       style: { width: '300px' },
                                       size: 'large',
                                       minCharacters: 3,
@@ -912,6 +913,7 @@ class AddInventoryForm extends Component {
                               <FormGroup>
                                 <FormField width={10}>
                                   <Dropdown label='Processing Time' name='processingTimeDays' options={this.getProcessingTimes(14)}
+                                            inputProps={{ 'data-test': 'new_inventory_processing_time_drpdn' }}
                                   />
                                 </FormField>
                               </FormGroup>
@@ -961,7 +963,8 @@ class AddInventoryForm extends Component {
                                     options={warehousesList} inputProps={{
                                       selection: true,
                                       value: 0
-                                    }} />
+                                    }}
+                                    inputProps={{ 'data-test': 'new_inventory_warehouse_drpdn' }}/>
                                 </FormField>
                               </FormGroup>
 
@@ -1085,6 +1088,7 @@ class AddInventoryForm extends Component {
                                           name='priceTiers'
                                           options={this.getPriceTiers(10)}
                                           inputProps={{
+                                            'data-test': 'new_inventory_price_tiers_drpdn',
                                             fluid: true,
                                             onChange: (e, { value }) => setFieldValue(
                                               'pricingTiers',
@@ -1228,6 +1232,7 @@ class AddInventoryForm extends Component {
                                       name='origin'
                                       options={searchedOrigins}
                                       inputProps={{
+                                        'data-test': 'new_inventory_origin_drpdn',
                                         size: 'large',
                                         minCharacters: 0,
                                         icon: 'search',
@@ -1246,6 +1251,7 @@ class AddInventoryForm extends Component {
                                       name='manufacturer'
                                       options={searchedManufacturers}
                                       inputProps={{
+                                        'data-test': 'new_inventory_manufacturer_drpdn',
                                         size: 'large',
                                         minCharacters: 0,
                                         icon: 'search',
@@ -1270,20 +1276,23 @@ class AddInventoryForm extends Component {
                                     <Dropdown
                                       label={formatMessage({ id: 'addInventory.form', defaultMessage: 'Form' })}
                                       name='productForm'
-                                      options={listForms} />
+                                      options={listForms}
+                                      inputProps={{ 'data-test': 'new_inventory_form_drpdn' }}/>
                                   </FormField>
                                   <FormGroup>
                                     <FormField width={8}>
                                       <Dropdown
                                         label={formatMessage({ id: 'addInventory.condition', defaultMessage: 'Condition' })}
                                         name='productCondition'
-                                        options={listConditions} />
+                                        options={listConditions}
+                                        inputProps={{ 'data-test': 'new_inventory_condition_drpdn' }}/>
                                     </FormField>
                                     <FormField width={8}>
                                       <Dropdown
                                         label={formatMessage({ id: 'addInventory.grade', defaultMessage: 'Grade' })}
                                         name='productGrade'
-                                        options={listGrades} />
+                                        options={listGrades}
+                                        inputProps={{ 'data-test': 'new_inventory_grade_drpdn' }}/>
                                     </FormField>
                                   </FormGroup>
                                   <FormGroup>
@@ -1491,6 +1500,7 @@ class AddInventoryForm extends Component {
                                                       }) : [])
                                                       }
                                                       inputProps={{
+                                                        'data-test': `new_inventory_cost_${index}_drpdn`,
                                                         onChange: (e, { value }) => {
                                                           let count = parseInt(value)
                                                             ? parseFloat(values.lots[value - 1].pkgAmount)
@@ -1587,7 +1597,7 @@ class AddInventoryForm extends Component {
                                     <label>
                                       <FormattedMessage id='addInventory.documentType' defaultMessage={'Document Type'} />
                                     </label>
-                                    <Dropdown name={`additionalType`} options={listDocumentTypes} />
+                                    <Dropdown name={`additionalType`} options={listDocumentTypes} inputProps={{ 'data-test': 'new_inventory_doc_type_drpdn' }}/>
                                   </FormField>
                                 </GridColumn>
                               </Grid>
