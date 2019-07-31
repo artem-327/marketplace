@@ -335,6 +335,8 @@ export default class _Table extends Component {
     const { onTableReady, columns } = this.props
     const { columnsSettings: { sorting: [s] } } = this.state
     const column = s ? columns.find(c => c.name === s.columnName) : {}
+    
+    console.log('handle ready', this.props.tableName)
 
     onTableReady({
       sortPath: column.sortPath,

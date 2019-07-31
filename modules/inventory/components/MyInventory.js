@@ -128,10 +128,7 @@ class MyInventory extends Component {
       rows,
       datagrid,
       openImportPopup,
-      isOpenImportPopup,
-      autocompleteData,
-      getAutocompleteData,
-      autocompleteDataLoading
+      isOpenImportPopup
     } = this.props
     const { columns, selectedRows } = this.state
 
@@ -236,9 +233,6 @@ class MyInventory extends Component {
         </div>
         <Broadcast />
         <Filter
-          autocompleteData={autocompleteData}
-          getAutocompleteData={getAutocompleteData}
-          autocompleteDataLoading={autocompleteDataLoading}
           onApply={this.handleFilterApply}
           onClear={this.handleFilterClear}
           savedUrl='/prodex/api/product-offers/own/datagrid/saved-filters'

@@ -432,9 +432,6 @@ class Filter extends Component {
       layout, savedAutocompleteData
     } = this.props
 
-
-    console.log()
-
     const { formatMessage } = intl
 
     let packagingTypesRows = this.generateCheckboxes(packagingTypes, values, 'packagingTypes')

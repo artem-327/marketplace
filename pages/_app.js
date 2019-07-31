@@ -21,20 +21,11 @@ Router.events.on('routeChangeError', () => NProgress.done())
 
 class ProdexApp extends App {
 
-  state = {
-    key: shortid.generate()
-  }
-
-  componentDidMount() {
-    Router.events.on('routeChangeComplete', () => this.setState({ key: shortid.generate() }))
-  }
-
-
   render() {
     const { Component, pageProps, store } = this.props
 
     return (
-      <Container key={this.state.key}>
+      <Container>
         <IntlProvider locale="en" messages={EN}>
           <ToastProvider pauseOnHover autoDismiss autoDismissTimeout={10 * 1000}>
             <Provider store={store}>
