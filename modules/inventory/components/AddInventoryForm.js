@@ -1455,7 +1455,7 @@ class AddInventoryForm extends Component {
                                                     name: files.name
                                                   }
                                                 )}
-                                                emptyContent={(<FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' />)}
+                                                emptyContent={(<FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' tagName='A' />)}
                                               />
                                             </TableCell>
                                             <TableCell><Icon name='trash alternate outline' size='large' onClick={() => this.removeLot(arrayHelpers, setFieldValue, { costs: values.costs, lots: values.lots }, index)} /></TableCell>
