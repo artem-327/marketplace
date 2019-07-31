@@ -93,7 +93,7 @@ class BankAccountsPopup extends React.Component {
                 label="Account Number"
                 name="accountNumber"
               />
-              <Dropdown label="Account Type" name="bankAccountType" options={bankAccountType} />
+              <Dropdown label="Account Type" name="bankAccountType" options={bankAccountType} inputProps={{ 'data-test': 'settings_bank_account_popup_type_drpdn' }} />
             </FormGroup>
             <FormGroup widths="equal">
               <Input

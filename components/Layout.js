@@ -87,11 +87,11 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth,
           }
           <Dropdown item icon={{ name: 'user circle outline', size: 'large' }}>
             <Dropdown.Menu data-test="navigation_menu_user_drpdn">
-              <Dropdown.Item as={Menu.Item} onClick={() => openProfilePopup()}>{formatMessage({ id: 'global.myProfile', defaultMessage: 'My Profile' })}</Dropdown.Item>
+              <Dropdown.Item as={Menu.Item} onClick={() => openProfilePopup()} data-test="navigation_menu_user_my_profile_drpdn">{formatMessage({ id: 'global.myProfile', defaultMessage: 'My Profile' })}</Dropdown.Item>
               {getSafe(() => auth.identity.isAdmin, false) && takeover &&
-                <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()}>{formatMessage({ id: 'global.returnToAdmin', defaultMessage: 'Return To Admin' })}</Dropdown.Item>
+                <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()} data-test="navigation_menu_user_return_to_admin_drpdn">{formatMessage({ id: 'global.returnToAdmin', defaultMessage: 'Return To Admin' })}</Dropdown.Item>
               }
-              <Dropdown.Item as={MenuLink} to='/auth/logout'>{formatMessage({ id: 'global.logout', defaultMessage: 'Logout' })}</Dropdown.Item>
+              <Dropdown.Item as={MenuLink} to='/auth/logout' data-test="navigation_menu_user_logout_drpdn">{formatMessage({ id: 'global.logout', defaultMessage: 'Logout' })}</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </Menu.Menu>

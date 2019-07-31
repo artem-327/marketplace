@@ -75,7 +75,7 @@ class MyProfile extends Component {
 
             <Input type="text" label="Phone" name="phone" />
             <Input type="text" label="Title" name="jobTitle" inputProps={{ readOnly: true }} />
-            <Dropdown label="Currency" name="preferredCurrency" options={currencies} />
+            <Dropdown label="Currency" name="preferredCurrency" options={currencies} inputProps={{ 'data-test': 'my_profile_currency_drpdn' }} />
 
             Last login at: {popupValues && popupValues.lastLoginAt}
 

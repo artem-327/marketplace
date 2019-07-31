@@ -1,5 +1,5 @@
-import React, { Component } from "react"
-import { Container, Menu, Header, Button, MenuItem, Popup, List } from "semantic-ui-react"
+import React, { Component } from 'react'
+import { Container, Menu, Header, Button, MenuItem, Popup, List } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { ShippingQuotes } from '~/modules/shipping'
 import SubMenu from '~/src/components/SubMenu'
@@ -17,18 +17,18 @@ class Marketplace extends Component {
       { name: 'productName', disabled: true },
       { name: 'productNumber', disabled: true },
       // { name: 'merchant', title: 'Merchant', width: 250 },
-      { name: 'available', title: 'Available', width: 80 },
-      { name: 'packaging', title: 'Packaging', width: 140 },
-      { name: 'quantity', title: 'Quantity', width: 140 },
-      { name: 'fobPrice', title: 'FOB Price', width: 160 },
-      { name: 'tradeName', title: 'Trade Name', width: 140 },
-      { name: 'manufacturer', title: 'MFR.', width: 120 },
-      { name: 'origin', title: 'Origin', width: 120 },
-      { name: 'expiration', title: 'Expiration', width: 120 },
-      { name: 'assay', title: 'Assay', width: 80 },
-      { name: 'condition', title: 'Condition', width: 100 },
-      { name: 'form', title: 'Form', width: 100 },
-      { name: 'location', title: 'Location', width: 160 }
+      { name: 'available', title: <FormattedMessage id='marketplace.available' defaultMessage='Available' />, width: 80 },
+      { name: 'packaging', title: <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging' />, width: 140 },
+      { name: 'quantity', title: <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity' />, width: 140 },
+      { name: 'fobPrice', title: <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price' />, width: 160 },
+      { name: 'tradeName', title: <FormattedMessage id='marketplace.tradeName' defaultMessage='Trade Name' />, width: 140 },
+      { name: 'manufacturer', title: <FormattedMessage id='marketplace.mfr' defaultMessage='MFR.' />, width: 120 },
+      { name: 'origin', title: <FormattedMessage id='marketplace.origin' defaultMessage='Origin' />, width: 120 },
+      { name: 'expiration', title: <FormattedMessage id='marketplace.expiration' defaultMessage='Expiration' />, width: 120 },
+      { name: 'assay', title: <FormattedMessage id='marketplace.assay' defaultMessage='Assay' />, width: 80 },
+      { name: 'condition', title: <FormattedMessage id='marketplace.condition' defaultMessage='Condition' />, width: 100 },
+      { name: 'form', title: <FormattedMessage id='marketplace.form' defaultMessage='Form' />, width: 100 },
+      { name: 'location', title: <FormattedMessage id='marketplace.location' defaultMessage='Location' />, width: 160 }
     ],
     selectedRows: [],
     pageNumber: 0,
@@ -137,9 +137,9 @@ class Marketplace extends Component {
             </Menu.Menu>
           </Menu>
         </Container>
-        <div class="flex stretched" style={{ padding: '10px 32px' }}>
+        <div class='flex stretched' style={{ padding: '10px 32px' }}>
           <ProdexGrid
-            tableName="marketplace_grid"
+            tableName='marketplace_grid'
             {...datagrid.tableProps}
             rows={rows}
             columns={columns}
@@ -160,7 +160,7 @@ class Marketplace extends Component {
               const numberArray = number.split(' & ')
               return (
                 <span>
-                  <span style={{ color: '#2599d5' }}>{numberArray.length > 1 ? (<Popup content={<List items={numberArray.map(n => { return n })} />} trigger={<span>Blend</span>} />) : number}</span>&nbsp;&nbsp; {name} <span className="right">Product offerings: {count}</span>
+                  <span style={{ color: '#2599d5' }}>{numberArray.length > 1 ? (<Popup content={<List items={numberArray.map(n => { return n })} />} trigger={<span>Blend</span>} />) : number}</span>&nbsp;&nbsp; {name} <span className='right'>Product offerings: {count}</span>
                 </span>
               )
             }}

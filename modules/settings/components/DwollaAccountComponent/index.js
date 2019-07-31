@@ -167,19 +167,20 @@ class BankAccountsPopup extends React.Component {
               <FormGroup widths="equal">
                 <Input label="City" name="beneficialOwner.address.city" />
                 <Input label="Birth" name="beneficialOwner.dateOfBirth" />
-                <Dropdown label="Passport Country" name="beneficialOwner.passport.country" options={countriesDropDown}/>
+                <Dropdown label="Passport Country" name="beneficialOwner.passport.country" options={countriesDropDown} inputProps={{ 'data-test': 'settings_dwolla_account_beneficialOwner_passport_country_drpdn' }} />
                 <Input label="Passport Number" name="beneficialOwner.passport.number" />
               </FormGroup>
 
               <FormGroup widths="equal">
                 <Dropdown label="Country" name="beneficialOwner.address.country" options={countriesDropDown}
                     inputProps={{
-                    search: true, onChange: (e, d) => {
+                      'data-test': 'settings_dwolla_account_beneficialOwner_address_country_drpdn',
+                      search: true, onChange: (e, d) => {
                         this.handleCountry(e, d)
                     }
                 }} />
                 <Dropdown label="State/Province" name="beneficialOwner.address.stateProvinceRegion" options={provincesDropDown}
-                        inputProps={{search: true, disabled: !this.state.hasProvinces, clearable: true}} />
+                        inputProps={{search: true, disabled: !this.state.hasProvinces, clearable: true, 'data-test': 'settings_dwolla_account_beneficialOwner_address_province_drpdn'}} />
               </FormGroup>
 
               <FormGroup widths="equal">
@@ -208,17 +209,18 @@ class BankAccountsPopup extends React.Component {
                   <Input label="Postal Code" name="dwollaController.address.postalCode" />
                   <Dropdown label="Country" name="dwollaController.address.country" options={countriesDropDown}
                       inputProps={{
-                      search: true, onChange: (e, d) => {
+                        'data-test': 'settings_dwolla_account_dwollaController_address_country_drpdn',
+                        search: true, onChange: (e, d) => {
                           this.handleCountry(e, d)
                       }
                   }} />
                   <Dropdown label="State/Province" name="dwollaController.address.stateProvinceRegion" options={provincesDropDown}
-                          inputProps={{search: true, disabled: !this.state.hasProvinces, clearable: true}} />
+                          inputProps={{search: true, disabled: !this.state.hasProvinces, clearable: true, 'data-test': 'settings_dwolla_account_dwollaController_address_province_drpdn'}} />
                 </FormGroup>
                 <FormGroup widths="equal">
                     <Input label="First Name" name="dwollaController.firstName" />
                     <Input label="Last Name" name="dwollaController.lastName" />
-                    <Dropdown label="Passport Country" name="dwollaController.passport.country" options={countriesDropDown}/>
+                    <Dropdown label="Passport Country" name="dwollaController.passport.country" options={countriesDropDown} inputProps={{ 'data-test': 'settings_dwolla_account_dwollaController_passport_country_drpdn' }} />
                     <Input label="Passport Number" name="dwollaController.passport.number" />
                 </FormGroup>
                 <FormGroup widths="equal">

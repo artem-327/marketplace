@@ -223,6 +223,7 @@ class Broadcast extends Component {
                     <Form.Field>
                       <label><FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' /></label>
                       <Dropdown
+                        data-test='broadcast_modal_category_drpdn'
                         selection
                         name='category'
                         value={filter.category}
@@ -245,7 +246,7 @@ class Broadcast extends Component {
                   <Formik
                     initialValues={templateInitialValues}
                     validationSchema={templateValidation()}
-                    validateOnChange={false}
+                    validateOnChange={true}
                     enableReinitialize
                     onSubmit={async (values, { setSubmitting }) => {
                       let payload = {
@@ -295,6 +296,7 @@ class Broadcast extends Component {
                           <GridRow>
                             <GridColumn computer={11}>
                               <Dropdown
+                                data-test='broadcast_modal_template_drpdn'
                                 fluid selection
                                 value={this.state.selectedTemplate.id}
                                 onChange={(e, data) => {

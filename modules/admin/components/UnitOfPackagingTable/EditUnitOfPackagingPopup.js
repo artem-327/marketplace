@@ -62,7 +62,7 @@ class EditUnitOfPackagingPopup extends React.Component {
                             <Input type={config.edit[0].type} label={config.edit[0].title} name="val0" />
                         </FormGroup>
                         <FormGroup widths="equal">
-                            <Dropdown label={config.edit[1].title} options={measureOptions} name="val1" />
+                            <Dropdown label={config.edit[1].title} options={measureOptions} name="val1" inputProps={{ 'data-test': 'admin_edit_unit_packaging_type_drpdn' }} />
                         </FormGroup>
                         <div style={{ textAlign: 'right' }}>
                             <Button.Reset data-test='admin_edit_unit_packaging_cancel_btn'><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>

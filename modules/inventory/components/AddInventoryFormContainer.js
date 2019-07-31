@@ -12,4 +12,4 @@ function mapStateToProps(store) {
     }
 }
 
-export default connect(mapStateToProps, { ...Actions, getAutocompleteData })(withToastManager(AddInventoryForm))
+export default connect(mapStateToProps, { ...Actions })(withToastManager(AddInventoryForm))

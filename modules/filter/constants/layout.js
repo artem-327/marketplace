@@ -12,9 +12,6 @@ export const FlexSidebar = styled(Sidebar)`
   box-shadow: -3px 4px 4px 0px rgba(0, 0, 0, 0.075);
   z-index: 4;
   text-align: left;
-  .title {
-    font-family: "Cabin", sans-serif !important;
-  }
 `
 
 export const FlexContent = styled.div`

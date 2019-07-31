@@ -1,5 +1,5 @@
-import React, { Component } from "react"
-import { Container, Menu, Header, Checkbox, Icon, Popup, List, Button } from "semantic-ui-react"
+import React, { Component } from 'react'
+import { Container, Menu, Header, Checkbox, Icon, Popup, List, Button } from 'semantic-ui-react'
 import SubMenu from '~/src/components/SubMenu'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import Router from 'next/router'
@@ -16,19 +16,19 @@ import ProductImportPopup from '~/modules/settings/components/ProductCatalogTabl
 class MyInventory extends Component {
   state = {
     columns: [
-      { name: "productName", title: "Product Name", width: 250, sortPath: 'ProductOffer.product.productName' },
-      { name: "productNumber", title: "Product Number", width: 160 },
-      { name: "casNumberCombined", title: "CAS Number(s)" },
-      { name: "warehouse", title: "Warehouse", width: 180, sortPath: 'ProductOffer.warehouse.warehouse' },
-      { name: "available", title: "Available", width: 80, sortPath: 'ProductOffer.quantity' },
-      { name: "packaging", title: "Packaging", sortPath: 'ProductOffer.product.packagingType.name' },
-      { name: "pkgAmount", title: "Pkg. Size", sortPath: 'ProductOffer.pkgAmount' },
-      { name: "quantity", title: "Quantity" },
-      { name: "cost", title: "Cost" },
-      { name: "fobPrice", title: "FOB Price", sortPath: 'ProductOffer.pricingPrice' },
-      { name: "manufacturer", title: "MFR.", width: 220 },
-      { name: "lotNumber", title: "Lot #", width: 100 },
-      { name: "broadcast", title: "Broadcast", width: 120, align: 'right', sortPath: 'ProductOffer.broadcasted' }
+      { name: 'productName', title: <FormattedMessage id='myInventory.productName' defaultMessage='Product Name' />, width: 250, sortPath: 'ProductOffer.product.productName' },
+      { name: 'productNumber', title: <FormattedMessage id='myInventory.productNumber' defaultMessage='Product Number' />, width: 160 },
+      { name: 'casNumberCombined', title: <FormattedMessage id='myInventory.casNumber' defaultMessage='CAS Number(s)' /> },
+      { name: 'warehouse', title: <FormattedMessage id='myInventory.warehouse' defaultMessage='Warehouse' />, width: 180, sortPath: 'ProductOffer.warehouse.warehouse' },
+      { name: 'available', title: <FormattedMessage id='myInventory.available' defaultMessage='Available' />, width: 80, sortPath: 'ProductOffer.quantity' },
+      { name: 'packaging', title: <FormattedMessage id='myInventory.packaging' defaultMessage='Packaging' />, sortPath: 'ProductOffer.product.packagingType.name' },
+      { name: 'pkgAmount', title: <FormattedMessage id='myInventory.pkgSize' defaultMessage='Pkg. Size' />, sortPath: 'ProductOffer.pkgAmount' },
+      { name: 'quantity', title: <FormattedMessage id='myInventory.quantity' defaultMessage='Quantity' /> },
+      { name: 'cost', title: <FormattedMessage id='myInventory.cost' defaultMessage='Cost' /> },
+      { name: 'fobPrice', title: <FormattedMessage id='myInventory.fobPrice' defaultMessage='FOB Price' />, sortPath: 'ProductOffer.pricingPrice' },
+      { name: 'manufacturer', title: <FormattedMessage id='myInventory.mfr' defaultMessage='MFR.' />, width: 220 },
+      { name: 'lotNumber', title: <FormattedMessage id='myInventory.lot' defaultMessage='Lot #' />, width: 100 },
+      { name: 'broadcast', title: <FormattedMessage id='myInventory.broadcast' defaultMessage='Broadcast' />, width: 120, align: 'right', sortPath: 'ProductOffer.broadcasted' }
     ],
     selectedRows: [],
     pageNumber: 0
@@ -56,16 +56,16 @@ class MyInventory extends Component {
     return rows.map(r => {
       switch (r.status.toLowerCase()) {
         case 'broadcasting':
-          title = 'Broadcasting now, switch off to stop broadcasting.'
+          title = <FormattedMessage id='myInventory.broadcasting.active' defaultMessage='Broadcasting now, switch off to stop broadcasting.' />
           break
         case 'not broadcasting':
-          title = 'Not Broadcasting now, switch on to start broadcasting.'
+          title = <FormattedMessage id='myInventory.broadcasting.inactive' defaultMessage='Not Broadcasting now, switch on to start broadcasting.' />
           break
         case 'incomplete':
-          title = 'Incomplete, please enter all required values first.'
+          title = <FormattedMessage id='myInventory.broadcasting.incomplete' defaultMessage='Incomplete, please enter all required values first.' />
           break
         case 'unmapped':
-          title = 'Unmapped, please make sure related Product is mapped first.'
+          title = <FormattedMessage id='myInventory.broadcasting.unmapped' defaultMessage='Unmapped, please make sure related Product is mapped first.' />
           break
         default:
           title = ''
@@ -142,8 +142,7 @@ class MyInventory extends Component {
           <Menu secondary>
             <Menu.Item header>
               <Header as='h1' size='medium'>
-                <FormattedMessage id='myInventory.myInventory'
-                  defaultMessage='MY INVENTORY' />
+                <FormattedMessage id='myInventory.myInventory' defaultMessage='MY INVENTORY' />
               </Header>
             </Menu.Item>
             {selectedRows.length > 0 ? (
@@ -156,15 +155,15 @@ class MyInventory extends Component {
               </Menu.Item>
             ) : null}
 
-            <Menu.Menu position="right">
+            <Menu.Menu position='right'>
               <Menu.Item>
                 <Button
-                  size="large"
+                  size='large'
                   primary
                   onClick={() => openImportPopup()}
                   data-test='my_inventory_import_btn'
                 >
-                  Import
+                  <FormattedMessage id='myInventory.import' defaultMessage='Import' />
                 </Button>
               </Menu.Item>
               <Menu.Item>
@@ -177,11 +176,11 @@ class MyInventory extends Component {
           </Menu>
         </Container>
 
-        <div class="flex stretched" style={{ padding: '10px 32px' }}>
+        <div class='flex stretched' style={{ padding: '10px 32px' }}>
 
           <ProdexTable
             {...datagrid.tableProps}
-            tableName="my_inventory_grid"
+            tableName='my_inventory_grid'
             columns={columns}
             rows={this.getRows(rows)}
             // rowSelection
@@ -200,7 +199,7 @@ class MyInventory extends Component {
               const numberArray = number.split(' & ')
               return (
                 <span>
-                  <span style={{ color: '#2599d5' }}>{numberArray.length > 1 ? (<Popup content={<List items={numberArray.map(n => { return n })} />} trigger={<span>Blend</span>} />) : number}</span>&nbsp;&nbsp; {name} <span className="right">Product offerings: {count}</span>
+                  <span style={{ color: '#2599d5' }}>{numberArray.length > 1 ? (<Popup content={<List items={numberArray.map(n => { return n })} />} trigger={<span>Blend</span>} />) : number}</span>&nbsp;&nbsp; {name} <span className='right'>Product offerings: {count}</span>
                 </span>
               )
             }}

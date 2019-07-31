@@ -37,7 +37,7 @@ export default class Payment extends Component {
                   fluid
                   selection
                   name='payment'
-                  inputProps={{ placeholder: <FormattedMessage id='cart.selectBankAccount' /> }}
+                  inputProps={{ placeholder: <FormattedMessage id='cart.selectBankAccount' />, 'data-test': 'purchase_order_payment_drpdn' }}
                 />
             }
 
