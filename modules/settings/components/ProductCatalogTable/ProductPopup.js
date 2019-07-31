@@ -464,7 +464,7 @@ class ProductPopup extends React.Component {
                     name='hazardClass'
                     options={hazardClasses}
                     inputProps={{
-                      'data-test': 'settings_product_popup_hazardClass_drpdn'
+                      'data-test': 'settings_product_popup_hazardClass_drpdn',
                       multiple: true,
                       selection: true,
                       search: true,
