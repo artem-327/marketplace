@@ -313,7 +313,7 @@ class AddInventoryForm extends Component {
     }
   }
 
-  onSplitsChange = (value, values, setFieldValue) => {
+  onSplitsChange = debounce((value, values, setFieldValue) => {
     value = parseInt(value)
     const minimum = parseInt(values.minimum)
 
@@ -325,7 +325,7 @@ class AddInventoryForm extends Component {
     if (minimum !== value && ((minimum % value) !== 0)) {
       setFieldValue('minimum', value)
     }
-  }
+  }, 500)
 
   removeAttachment = async (isLot, documentName, documentId, connectedId, values, setFieldValue) => {
     const { removeAttachment, removeAttachmentLink } = this.props
@@ -1090,7 +1090,7 @@ class AddInventoryForm extends Component {
                                           inputProps={{
                                             type: 'number',
                                             min: 1,
-                                            onChange: debounce((e, {value}) => this.onSplitsChange(value, values, setFieldValue), 500)
+                                            onChange: (e, {value}) => this.onSplitsChange(value, values, setFieldValue)
                                           }} />
                                       </GridColumn>
                                     </GridRow>
