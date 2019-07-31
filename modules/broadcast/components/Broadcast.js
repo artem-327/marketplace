@@ -246,7 +246,7 @@ class Broadcast extends Component {
                   <Formik
                     initialValues={templateInitialValues}
                     validationSchema={templateValidation()}
-                    validateOnChange={false}
+                    validateOnChange={true}
                     enableReinitialize
                     onSubmit={async (values, { setSubmitting }) => {
                       let payload = {
