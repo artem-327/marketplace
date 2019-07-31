@@ -9,7 +9,7 @@ import { Label, Popup, List } from 'semantic-ui-react'
 import { openImportPopup } from '~/modules/settings/actions'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import { applyFilter } from '~/modules/filter/actions'
-import { FormattedNumber } from 'react-intl'
+import { FormattedNumber, FormattedMessage } from 'react-intl'
 
 
 import { FormattedUnit, UnitOfPackaging } from '~/components/formatted-messages'
@@ -21,9 +21,9 @@ const transformLotNumbers = lots => {
     return (
       <div>
         <Popup
-          data-test="my_inventory_lot_number_btn"
+          data-test='my_inventory_lot_number_btn'
           content={<List items={onMouseoverTest} />}
-          trigger={<Label>Multiple</Label>}
+          trigger={<Label><FormattedMessage id='myInventory.multiple' defaultMessage='Multiple' /></Label>}
         />
       </div>
     )
