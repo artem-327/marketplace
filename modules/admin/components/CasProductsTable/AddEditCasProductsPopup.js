@@ -187,7 +187,8 @@ class AddEditCasProductsPopup extends React.Component {
                         selection: true,
                         search: true,
                         placeholder: <FormattedMessage id='global.chooseOption' defaultMessage='Choose an option' />,
-                        clearable: true
+                        clearable: true,
+                        'data-test': 'admin_popup_cas_package_drpdn',
                       }}
                     />
                   </FormGroup>
@@ -201,6 +202,7 @@ class AddEditCasProductsPopup extends React.Component {
                         multiple: true,
                         selection: true,
                         search: true,
+                        'data-test': 'admin_popup_cas_hazard_drpdn',
                       }}
                     />
                   </FormGroup>

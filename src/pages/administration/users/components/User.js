@@ -38,6 +38,7 @@ class User extends Component {
                             opns={this.props.offices}
                             placeholder="Select Office"
                             onChange={(value) => this.setState({office: value})}
+                            data-test='administration_users_Offices_drpdn'
                         />
                         {this.state.office ?
                             <React.Fragment>
@@ -75,6 +76,7 @@ class User extends Component {
                           opns={[{id: MERCHANT, name: 'Merchant'}, {id: OPERATOR, name: 'Operator'}]}
                           onChange={(value) => this.setState({mode: value})}
                           currentValue={this.state.mode}
+                          data-test='administration_users_merchants_drpdn'
                       />
                       {this.renderMode()}
                     </td>

@@ -91,6 +91,7 @@ class Shipping extends Component {
                 onChange={(e, { value }) => getAddress(value)}
                 value={selectedAddress ? selectedAddress.id : null}
                 placeholder={<FormattedMessage id='global.selectLocation' defaultMessage='Select Location' />}
+                data-test='purchase_order_location_drpdn'
               />
             </GridColumn>
           </GridRow>

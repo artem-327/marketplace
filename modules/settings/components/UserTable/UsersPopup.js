@@ -165,6 +165,7 @@ class UsersPopup extends React.Component {
                           name="homeBranch"
                           options={branchesAll}
                           fieldProps={{ width: 7 }}
+                          inputProps={{ 'data-test': 'settings_users_popup_homeBranch_drpdn' }}
                         />
                         <Dropdown
                           label="Additional Branches"
@@ -172,10 +173,11 @@ class UsersPopup extends React.Component {
                           options={branchesAll}
                           fieldProps={{ width: 7 }}
                           inputProps={{
+                            'data-test': 'settings_users_popup_additionalBranches_drpdn',
                             multiple: true
                           }}
                         />
-                        <Dropdown label="Currency" name="preferredCurrency" options={currencies} fieldProps={{ width: 2 }} />
+                        <Dropdown label="Currency" name="preferredCurrency" options={currencies} fieldProps={{ width: 2 }} inputProps={{ 'data-test': 'settings_users_popup_preferredCurrency_drpdn' }} />
                       </FormGroup>
                       {/* <pre>
                         {JSON.stringify(values, null, 2)}

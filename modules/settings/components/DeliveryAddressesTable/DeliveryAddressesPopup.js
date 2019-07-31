@@ -167,12 +167,13 @@ class DeliveryAddressesPopup extends React.Component {
                       type="text" label="Zip" name="address.zip" />
                     <Dropdown label="Country" name="address.country" options={countriesDropDown}
                       inputProps={{
+                        'data-test': 'settings_delivery_address_country_drpdn',
                         search: true, onChange: (e, d) => {
                           setFieldValue('address.province', ''); this.handleCountry(e, d)
                         }
                       }} />
                     <Dropdown label="State/Province" name="address.province" options={provincesDropDown}
-                      inputProps={{ search: true, disabled: !this.state.hasProvinces }} />
+                      inputProps={{ search: true, disabled: !this.state.hasProvinces, 'data-test': 'settings_delivery_address_province_drpdn', }} />
                   </FormGroup>
                   <Header as='h3'>Contact Info</Header>
                   <FormGroup>

@@ -885,6 +885,7 @@ class AddBroadcast extends Component {
                       placeholder='All Regions'
                       onChange={(e, { value }) => this.setState({ categoryFilter: value })}
                       selection
+                      data-test='my_inventory_broadcast_category_filter_drpdn'
                     />
                   </GridColumn>
                 </GridRow>
@@ -915,7 +916,8 @@ class AddBroadcast extends Component {
                       selection
                       fluid
                       options={[]}
-                      disabled={templatesOptions.length === 0} placeholder='Select Template' />
+                      disabled={templatesOptions.length === 0} placeholder='Select Template'
+                      data-test='my_inventory_broadcast_template_drpdn' />
                   </GridColumn>
                 </GridRow>
 
@@ -1031,6 +1033,7 @@ class AddBroadcast extends Component {
                 opns={categoryFilterOptions}
                 placeholder="All Regions"
                 onChange={value => this.setState({ categoryFilter: value })}
+                data-test='my_inventory_broadcast_category_filter_drpdn'
               />
             </div>
 
@@ -1047,7 +1050,7 @@ class AddBroadcast extends Component {
             <hr />
             <div className="group-item-wr smaller">
               <label>Templates ({templatesOptions.length})</label>
-              <Dropdown opns={[]} placeholder="Select Template" disabled={templatesOptions.length === 0 ? true : false} />
+              <Dropdown opns={[]} placeholder="Select Template" disabled={templatesOptions.length === 0 ? true : false} data-test='my_inventory_broadcast_template_drpdn' />
             </div>
           </div>
 

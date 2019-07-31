@@ -126,6 +126,7 @@ export default class ShippingEdit extends Component {
 
           <Dropdown
             inputProps={{
+              'data-test': 'cart_shipping_edit_country_drpdn',
               onChange: (e, { value }) => {
                 this.handleStateChange(value)
                 setFieldValue('address.province.name', '')
@@ -146,6 +147,7 @@ export default class ShippingEdit extends Component {
 
           <Dropdown
             inputProps={{
+              'data-test': 'cart_shipping_edit_province_drpdn',
               disabled: !this.state.hasProvinces,
               onChange: (e, { value }) => this.setState({ selectedProvince: value }),
               loading: location.provincesAreFetching,

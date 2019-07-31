@@ -132,6 +132,7 @@ class CompaniesDetailAdmin extends Component {
             onChange={value => {
               this.setState({ officeId: value })
             }}
+            data-test='administration_companies_addNewOffice_drpdn'
           />
 
           <Button
