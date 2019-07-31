@@ -75,7 +75,7 @@ context("Shopping cart CRUD",() => {
         cy.contains("Marketplace").click()
         cy.contains("Shopping Cart").click()
 
-        cy.get("[data-test=shopping_cart_remove]").eq(1).click()
+        cy.get("[data-test=item_cart_remove_btn]").eq(1).click()
         cy.contains("Yes").click()
 
         cy.get(".item-cart-body-section-name").should("have.length","1")
