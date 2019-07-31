@@ -510,7 +510,8 @@ class Pricing extends Component {
                 defaultValue={this.state.showIncrementalPricing}
                 dispatch={this.props.dispatch}
                 model={'forms.addProductOffer.incrementalSelected'}
-                onChange={value => this.setState({ showIncrementalPricing: value })} />
+                onChange={value => this.setState({ showIncrementalPricing: value })}
+                data-test='inventory_add_pricing_chckb'/>
             </div>
           </div>
 

@@ -360,7 +360,7 @@ class AddNewPopupCasProducts extends React.Component {
                             <Input label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />} name='primaryBranch.contactPhone' />
                           </FormGroup>
                           <FormGroup widths='equal'>
-                            <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='primaryBranch.warehouse' />
+                            <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='primaryBranch.warehouse' inputProps={{ 'data-test': 'admin_popup_company_primaryBranch_warehouse_chckb' }} />
                           </FormGroup>
                           <AddressForm values={values} setFieldValue={setFieldValue} prefix='primaryBranch' />
                         </Accordion.Content>
@@ -382,7 +382,7 @@ class AddNewPopupCasProducts extends React.Component {
                             <Input label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />} name='mailingBranch.contactPhone' />
                           </FormGroup>
                           <FormGroup widths='equal'>
-                            <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='mailingBranch.warehouse' />
+                            <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='mailingBranch.warehouse' inputProps={{ 'data-test': 'admin_popup_company_mailingBranch_warehouse_chckb' }} />
                           </FormGroup>
                           <AddressForm values={values} setFieldValue={setFieldValue} prefix='mailingBranch' datalistName='mailingAddresses' />
                         </Accordion.Content>

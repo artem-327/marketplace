@@ -98,7 +98,7 @@ class Map extends Component {
                 <Input placeholder="Map Name" onChange={this.inputMapName} />
               </Grid.Column>
               <Grid.Column textAlign="center" verticalAlign="middle">
-                <Checkbox label="Save my map" onChange={this.checkboxChange} />
+                <Checkbox label="Save my map" onChange={this.checkboxChange}  data-test='settings_product_import_csv_save_chckb' />
               </Grid.Column>
             </Grid.Row>
           </Grid>

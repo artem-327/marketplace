@@ -114,6 +114,7 @@ class TablesHandlers extends Component {
                   label='Unmapped only'
                   defaultChecked={productCatalogUnmappedValue}
                   onChange={(e, { checked }) => Datagrid.setQuery({ unmappedOnly: checked })}
+                  data-test='settings_dwolla_unmapped_only_chckb'
                 />
               )}
               {isDwollaAccountVisible && (

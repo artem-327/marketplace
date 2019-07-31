@@ -64,7 +64,7 @@ class ProductOffers extends Component {
           const mfr = (typeof productOffer.manufacturer !== 'undefined' ? productOffer.manufacturer.name : '')
           /* temporarily removed */ //const condition = productOffer.productCondition.name
           /* temporarily removed */ //const mfgDate = productOffer.creationDate ? moment(productOffer.creationDate).format(DATE_FORMAT) : 'none'
-          const broadcast = <Checkbox toggle checked={productOffer.broadcasted} offerId={productOfferId} onChange={(event, data) => this.props.offerBroadcast(data)} />
+          const broadcast = <Checkbox toggle checked={productOffer.broadcasted} offerId={productOfferId} onChange={(event, data) => this.props.offerBroadcast(data)} data-test='inventory_my_product_offers_broadcast_chckb' />
 
           return ({
             id: productOfferId,
