@@ -134,6 +134,7 @@ const userEnableDisableStatus = (r, currentUserId) => (
           defaultChecked={r.enabled}
           disabled={r.id === currentUserId}
           onChange={() => handleSwitchEnabled(r.id)}
+          data-test={`settings_user_enabled_${r.id}_chckb`}
         />
       }
       content={

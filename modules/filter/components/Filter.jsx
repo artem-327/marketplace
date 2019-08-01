@@ -513,14 +513,6 @@ class Filter extends Component {
     return (
       <Accordion>
         <Segment basic>
-          {(layout === 'MyInventory') && (<AccordionItem>
-            {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
-            <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
-              <BottomMargedDropdown {...dropdownWarehouseProps} />
-            </AccordionContent>
-          </AccordionItem>
-          )}
-
           <AccordionItem>
             {this.accordionTitle('chemicalType', <FormattedMessage id='filter.chemicalType' />)}
             <AccordionContent active={!this.state.inactiveAccordion.chemicalType}>
@@ -582,6 +574,14 @@ class Filter extends Component {
               </FormGroup>
             </AccordionContent>
           </AccordionItem>
+
+          {(layout === 'MyInventory') && (<AccordionItem>
+              {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
+              <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
+                <BottomMargedDropdown {...dropdownWarehouseProps} />
+              </AccordionContent>
+            </AccordionItem>
+          )}
 
           <AccordionItem>
             {this.accordionTitle('packaging', <FormattedMessage id='filter.packaging' />)}

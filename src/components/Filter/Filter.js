@@ -136,7 +136,8 @@ class Filter extends Component {
               name='email'
               checked={this.state.checkboxes.email}
               onChange={this.handleCheckboxChange}
-              label={formatMessage({ id: 'filter.notifications.email', defaultMessage: 'Email Notifications:' })} />
+              label={formatMessage({ id: 'filter.notifications.email', defaultMessage: 'Email Notifications:' })}
+              data-test='filter_email_chckb' />
           </GridColumn>
           {
             this.state.checkboxes.email && (
@@ -159,7 +160,8 @@ class Filter extends Component {
               name='phone'
               checked={this.state.checkboxes.phone}
               onChange={this.handleCheckboxChange}
-              label={formatMessage({ id: 'filter.notifications.mobile', defaultMessage: 'Mobile Notifications:' })} />
+              label={formatMessage({ id: 'filter.notifications.mobile', defaultMessage: 'Mobile Notifications:' })}
+              data-test='filter_phone_chckb'/>
           </GridColumn>
           {
             this.state.checkboxes.phone && (
@@ -182,7 +184,8 @@ class Filter extends Component {
               name='system'
               checked={this.state.checkboxes.system}
               onChange={this.handleCheckboxChange}
-              label={formatMessage({ id: 'filter.notifications.system', defaultMessage: 'System Notifications:' })} />
+              label={formatMessage({ id: 'filter.notifications.system', defaultMessage: 'System Notifications:' })}
+              data-test='filter_system_chckb' />
           </GridColumn>
         </GridRow>
 
@@ -657,7 +660,8 @@ class Filter extends Component {
                             label={formatMessage({ id: 'filter.automaticallyApply', defaultMessage: 'Automatically apply' })}
                             onChange={this.handleCheckboxChange}
                             name='automaticallyApply'
-                            checked={this.state.checkboxes.automaticallyApply} />
+                            checked={this.state.checkboxes.automaticallyApply}
+                            data-test='filter_automaticallyApply_chckb' />
                         </GridColumn>
                       </GridRow>
 
@@ -667,7 +671,8 @@ class Filter extends Component {
                             name='notifications'
                             label={formatMessage({ id: 'filter.notifications', defaultMessage: 'Notifications' })}
                             onChange={this.handleCheckboxChange}
-                            checked={this.state.checkboxes.notifications} />
+                            checked={this.state.checkboxes.notifications}
+                            data-test='filter_notifications_chckb' />
                         </GridColumn>
                       </GridRow>
 

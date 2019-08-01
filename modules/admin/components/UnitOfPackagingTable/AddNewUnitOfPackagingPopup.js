@@ -56,7 +56,7 @@ class AddNewUnitOfPackagingPopup extends React.Component {
             }}
 
           >
-            <FormGroup widths='equal'>
+            <FormGroup widths='equal' data-test='admin_add_unit_packaging_name_inp' >
               <Input type={config.edit[0].type} label={config.edit[0].title} name='val0' />
             </FormGroup>
             <FormGroup widths='equal'>

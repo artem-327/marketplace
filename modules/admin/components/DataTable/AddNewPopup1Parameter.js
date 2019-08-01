@@ -60,7 +60,7 @@ class AddNewPopup1Parameter extends React.Component {
               }
             }}
           >
-            <FormGroup widths='equal'>
+            <FormGroup widths='equal' data-test={`admin_add_${config.formattedMessageName}_inp`} >
               <Input type={config.edit[0].type} label={config.edit[0].title} name='val0' />
             </FormGroup>
 

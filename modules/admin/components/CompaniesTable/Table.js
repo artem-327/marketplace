@@ -17,7 +17,11 @@ class CompaniesTable extends Component {
     return rows.map((row) => {
       return {
         ...row,
-        reviewRequested: <Checkbox key={`review${row.id}`} toggle={true} defaultChecked={row.reviewRequested} onClick={(e, data) => this.props.reviewRequestedSwitch(row.id, data)} />
+        reviewRequested: <Checkbox key={`review${row.id}`}
+                                   toggle={true}
+                                   defaultChecked={row.reviewRequested}
+                                   onClick={() => this.props.reviewRequest(row.id)}
+                                   data-test={`admin_company_table_${row.id}_chckb`} />
       }
     })
   }

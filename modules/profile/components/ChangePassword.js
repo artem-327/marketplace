@@ -53,6 +53,7 @@ class ChangePassword extends Component {
               this.props.changePassword(values)
               actions.setSubmitting(false)
             }}
+            data-test='profile_change_password_inp'
           >
             <Input type="text" label="Current Password" name="oldPassword" />
             <Input type="text" label="New Password" name="newPassword" />

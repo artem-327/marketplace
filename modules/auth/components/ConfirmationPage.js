@@ -128,11 +128,11 @@ class ConfirmationPage extends Component {
                     </Header>
                     <Grid>
                       <Grid.Row columns={2}>
-                        <Grid.Column>
+                        <Grid.Column data-test='auth_confirm_companyName_inp' >
                           <Input label={formatMessage({ id: 'laststep.company.name', defaultMessage: 'Company Legal Name *' })}
                                  name='name' />
                         </Grid.Column>
-                        <Grid.Column>
+                        <Grid.Column data-test='auth_confirm_companyDBA_inp' >
                           <Input label={formatMessage({ id: 'laststep.company.dba', defaultMessage: 'DBA' })}
                                  name='dba' />
                         </Grid.Column>
@@ -144,17 +144,17 @@ class ConfirmationPage extends Component {
                     </Header>
                     <Grid>
                       <Grid.Row columns={2}>
-                        <Grid.Column>
+                        <Grid.Column data-test='auth_confirm_addressStreet_inp' >
                           <Input label={formatMessage({ id: 'laststep.address.street', defaultMessage: 'Street Address 1 *' })}
                                  name='address.streetAddress' />
                         </Grid.Column>
-                        <Grid.Column>
+                        <Grid.Column data-test='auth_confirm_addressCity_inp' >
                           <Input label={formatMessage({ id: 'laststep.address.city', defaultMessage: 'City *' })}
                                  name='address.city' />
                         </Grid.Column>
                       </Grid.Row>
                       <Grid.Row columns={3}>
-                        <Grid.Column>
+                        <Grid.Column data-test='auth_confirm_addressZip_inp'>
                           <Input label={formatMessage({ id: 'laststep.address.zip', defaultMessage: 'Zip *' })}
                                  name='address.zip' />
                         </Grid.Column>
@@ -196,11 +196,11 @@ class ConfirmationPage extends Component {
                         </Grid.Column>
                       </Grid.Row>
                       <Grid.Row columns={2}>
-                        <Grid.Column>
+                        <Grid.Column data-test='auth_confirm_addressEIN_inp' >
                           <Input label={formatMessage({ id: 'laststep.address.ein', defaultMessage: 'EIN Number *' })}
                                  name='tin' />
                         </Grid.Column>
-                        <Grid.Column>
+                        <Grid.Column data-test='auth_confirm_addressDUNS_inp'>
                           <Input label={formatMessage({ id: 'laststep.address.duns', defaultMessage: 'DUNS Number' })}
                                  name='dunsNumber' />
                         </Grid.Column>
@@ -212,21 +212,21 @@ class ConfirmationPage extends Component {
                     </Header>
                     <Grid>
                       <Grid.Row columns={2}>
-                        <Grid.Column>
+                        <Grid.Column data-test='auth_confirm_adminName_inp' >
                           <Input label={formatMessage({ id: 'laststep.admin.name', defaultMessage: 'Name *' })}
                                  name='companyAdminUser.name' />
                         </Grid.Column>
-                        <Grid.Column>
+                        <Grid.Column data-test='auth_confirm_adminTitle_inp'>
                           <Input label={formatMessage({ id: 'laststep.admin.title', defaultMessage: 'Title' })}
                                  name='companyAdminUser.jobTitle' />
                         </Grid.Column>
                       </Grid.Row>
                       <Grid.Row columns={2}>
-                        <Grid.Column>
+                        <Grid.Column data-test='auth_confirm_adminPhone_inp'>
                           <Input label={formatMessage({ id: 'laststep.admin.phone', defaultMessage: 'Phone *' })}
                                  name='companyAdminUser.phone' />
                         </Grid.Column>
-                        <Grid.Column>
+                        <Grid.Column data-test='auth_confirm_adminEmail_inp'>
                           <Input label={formatMessage({ id: 'laststep.admin.email', defaultMessage: 'E-Mail *' })}
                                  name='companyAdminUser.email' />
                         </Grid.Column>

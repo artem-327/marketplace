@@ -408,7 +408,7 @@ class AddInventoryForm extends Component {
                         <Table.Cell>{document.name}</Table.Cell>
                         <Table.Cell>{document.documentType.name}</Table.Cell>
                         <Table.Cell width={2} textAlign='right'>
-                          <Icon name='download' size='large' style={{ cursor: 'pointer' }} onClick={() => this.downloadAttachment(document.name, document.id)} />
+                          <Icon name='download' size='large' style={{ cursor: 'pointer' }} onClick={() => this.downloadAttachment(document.name, document.id)} data-test='add_inventory_documents_download_btn' />
                           <Icon name='remove circle' size='large' style={{ cursor: 'pointer' }} onClick={() => this.removeAttachment(
                             document.lotId ? true : false, // isLot
                             document.name, // documentName
@@ -416,7 +416,8 @@ class AddInventoryForm extends Component {
                             document.lotId ? document.lotId : this.props.id, // connectedId
                             values,
                             setFieldValue
-                          )} />
+                          )}
+                          data-test='add_inventory_documents_remove_btn'/>
                         </Table.Cell>
                       </Table.Row>
                     ))}
@@ -452,15 +453,15 @@ class AddInventoryForm extends Component {
             <Icon name='greater than equal' />
           </TopMargedColumn>
 
-          <GridColumn computer={6}>
+          <GridColumn computer={6} data-test={`add_inventory_quantityFrom_${i}_inp`} >
             <Input name={`pricingTiers[${i}].quantityFrom`} inputProps={{ type: 'number', min: 1, value: null, onChange: () => setFieldValue(`pricingTiers[${i}].manuallyModified`, 1) }} />
           </GridColumn>
 
-          <GridColumn computer={6}>
+          <GridColumn computer={6} data-test={`add_inventory_price_${i}_inp`} >
             <Input name={`pricingTiers[${i}].price`} inputProps={{ type: 'number', step: '0.001', min: 0.001, value: null }} />
           </GridColumn>
 
-          <GridColumn computer={1}>
+          <GridColumn computer={1} data-test={`add_inventory_manuallyModified_${i}_inp`} >
             <Input name={`pricingTiers[%{i}].manuallyModified`} inputProps={{ type: 'hidden', value: 0 }} />
           </GridColumn>
         </GridRow>
@@ -494,7 +495,7 @@ class AddInventoryForm extends Component {
             attached={values.product ? false : 'top'}
             style={{ padding: '1.5em' }}>
             <Accordion>
-              <Accordion.Title active={activeIndex === 0} index={0} onClick={this.accClick}>
+              <Accordion.Title active={activeIndex === 0} index={0} onClick={this.accClick} data-test='add_inventory_documents_details_btn' >
                 <Header as='h4'>
 
                   <FormattedMessage id='addInventory.productDetails' defaultMessage='PRODUCT DETAILS'>
@@ -965,7 +966,7 @@ class AddInventoryForm extends Component {
                                 <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='doesExpire' />
                               </FormGroup>
                               <FormGroup>
-                                <FormField width={10}>
+                                <FormField width={10} data-test='add_inventory_product_expirationDate_inp' >
                                   <DateInput
                                     inputProps={{ disabled: !values.doesExpire }}
                                     label={formatMessage({ id: 'addInventory.expirationDate', defaultMessage: 'Expiration Date' })}
@@ -1009,7 +1010,7 @@ class AddInventoryForm extends Component {
                                 </FormattedMessage>
                               </Header>
                               <FormGroup>
-                                <FormField width={10}>
+                                <FormField width={10} data-test='add_inventory_product_totalPackages_inp' >
                                   <Input
                                     label={formatMessage({ id: 'addInventory.totalPackages', defaultMessage: 'Total Packages' })}
                                     inputProps={{ type: 'number', min: 1 }}
@@ -1065,7 +1066,7 @@ class AddInventoryForm extends Component {
                                     </GridRow>
 
                                     <GridRow>
-                                      <GridColumn computer={8} tablet={16}>
+                                      <GridColumn computer={8} tablet={16} data-test='add_inventory_product_minimumOQ_inp' >
                                         <Input
                                           label={formatMessage({ id: 'addInventory.minimumOQ', defaultMessage: 'Minimum OQ' })}
                                           name='minimum'
@@ -1083,7 +1084,7 @@ class AddInventoryForm extends Component {
                                           }} />
                                       </GridColumn>
 
-                                      <GridColumn computer={8} tablet={16}>
+                                      <GridColumn computer={8} tablet={16} data-test='add_inventory_product_splits_inp' >
                                         <Input
                                           label={formatMessage({ id: 'addInventory.splits', defaultMessage: 'Splits' })}
                                           name='splits'
@@ -1301,7 +1302,7 @@ class AddInventoryForm extends Component {
                                       }}
                                     />
                                   </FormField>
-                                  <FormField width={16}>
+                                  <FormField width={16} data-test='add_inventory_product_tradeName_inp' >
                                     <Input
                                       label={formatMessage({ id: 'addInventory.tradeName', defaultMessage: 'Trade Name' })}
                                       name='tradeName'
@@ -1333,14 +1334,14 @@ class AddInventoryForm extends Component {
                                     </FormField>
                                   </FormGroup>
                                   <FormGroup>
-                                    <FormField width={8}>
+                                    <FormField width={8} data-test='add_inventory_product_assayMin_inp' >
                                       <Input
                                         name='assayMin'
                                         label={formatMessage({ id: 'addInventory.assayMin', defaultMessage: 'Assay Min %' })}
                                         inputProps={{ type: 'number', step: '0.001', value: null }}
                                       />
                                     </FormField>
-                                    <FormField width={8}>
+                                    <FormField width={8} data-test='add_inventory_product_assayMax_inp' >
                                       <Input
                                         name='assayMax'
                                         label={formatMessage({ id: 'addInventory.assayMax', defaultMessage: 'Assay Max %' })}
@@ -1424,8 +1425,8 @@ class AddInventoryForm extends Component {
                                       <Table.Body>
                                         {values.lots && values.lots.length ? values.lots.map((lot, index) => (
                                           <Table.Row key={index}>
-                                            <TableCell><Input name={`lots[${index}].lotNumber`} inputProps={{ onClick: () => setFieldValue('touchedLot', true) }} /></TableCell>
-                                            <TableCell><Input name={`lots[${index}].pkgAmount`} inputProps={{
+                                            <TableCell data-test={`add_inventory_product_lotNumber_${index}_inp`} ><Input name={`lots[${index}].lotNumber`} inputProps={{ onClick: () => setFieldValue('touchedLot', true) }} /></TableCell>
+                                            <TableCell data-test={`add_inventory_product_pkgAmount_${index}_inp`} ><Input name={`lots[${index}].pkgAmount`} inputProps={{
                                               onClick: () => setFieldValue('touchedLot', true),
                                               onChange: (e, data) => this.modifyCosts(setFieldValue, {
                                                 costs: values.costs,
@@ -1455,10 +1456,11 @@ class AddInventoryForm extends Component {
                                                     name: files.name
                                                   }
                                                 )}
-                                                emptyContent={(<FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' />)}
+                                                emptyContent={(<FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' tagName='A' />)}
                                               />
                                             </TableCell>
-                                            <TableCell><Icon name='trash alternate outline' size='large' onClick={() => this.removeLot(arrayHelpers, setFieldValue, { costs: values.costs, lots: values.lots }, index)} /></TableCell>
+                                            <TableCell><Icon name='trash alternate outline' size='large' onClick={() => this.removeLot(arrayHelpers, setFieldValue, { costs: values.costs, lots: values.lots }, index)}
+                                                             data-test='add_inventory_removeLot_btn' /></TableCell>
                                           </Table.Row>
                                         )) : null
                                         }
@@ -1471,7 +1473,7 @@ class AddInventoryForm extends Component {
                               <Header as='h3'><FormattedMessage id='addInventory.productCost' defaultMessage='PRODUCT COST' /></Header>
                               <Grid>
                                 <GridColumn width={4}>
-                                  <FormField width={12}>
+                                  <FormField width={12} data-test='add_inventory_costUOM_inp' >
                                     <Input
                                       name='cost'
                                       label={formatMessage({ id: 'addInventory.costUOM', defaultMessage: 'Cost/UOM' })}
@@ -1519,7 +1521,8 @@ class AddInventoryForm extends Component {
                                           <Table.Body>
                                             {values.costs && values.costs.length ? values.costs.map((costRow, index) => (
                                               <Table.Row key={index}>
-                                                <TableCell width={4}><FormField width={16}><Input inputProps={{ disabled: !values.trackSubCosts }} name={`costs[${index}].description`} /></FormField></TableCell>
+                                                <TableCell width={4}><FormField width={16} data-test={`add_inventory_trackSubCosts_${index}_inp`} >
+                                                  <Input inputProps={{ disabled: !values.trackSubCosts }} name={`costs[${index}].description`} /></FormField></TableCell>
                                                 <TableCell width={2}>
                                                   <FormField width={16}>
                                                     <Dropdown
@@ -1551,7 +1554,8 @@ class AddInventoryForm extends Component {
                                                     />
                                                   </FormField>
                                                 </TableCell>
-                                                <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].cost`} inputProps={{
+                                                <TableCell width={3}><FormField width={16} data-test={`add_inventory_cost_${index}_inp`} >
+                                                  <Input name={`costs[${index}].cost`} inputProps={{
                                                   type: 'number', step: '1', value: null, min: 0, disabled: !values.trackSubCosts, onChange: (e, { value }) => {
                                                     let count = parseInt(values.costs[index].lot)
                                                       ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAmount)
@@ -1560,7 +1564,8 @@ class AddInventoryForm extends Component {
                                                     setFieldValue(`costs[${index}].costUom`, (count / parseFloat(value)).toFixed(3))
                                                   }
                                                 }} /></FormField></TableCell>
-                                                <TableCell width={3}><FormField width={16}><Input name={`costs[${index}].costUom`} inputProps={{ type: 'text', step: '0.01', value: null, min: 0, disabled: true }} /></FormField></TableCell>
+                                                <TableCell width={3}><FormField width={16} data-test={`add_inventory_costUom_${index}_inp`}>
+                                                  <Input name={`costs[${index}].costUom`} inputProps={{ type: 'text', step: '0.01', value: null, min: 0, disabled: true }} /></FormField></TableCell>
                                                 <TableCell width={3}>
                                                   <UploadLot {...this.props}
                                                     attachments={values.costs[index].attachments}

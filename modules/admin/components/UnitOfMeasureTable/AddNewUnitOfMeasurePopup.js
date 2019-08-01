@@ -61,10 +61,10 @@ class AddNewUnitOfMeasurePopup extends React.Component {
               setSubmitting(false)
             }}
           >
-            <FormGroup widths='equal'>
+            <FormGroup widths='equal' data-test='admin_add_unit_measure_name_inp' >
               <Input type={config.edit[0].type} label={config.edit[0].title} name='val0' />
             </FormGroup>
-            <FormGroup widths='equal'>
+            <FormGroup widths='equal' data-test='admin_add_unit_measure_nameAbb_inp' >
               <Input type={config.edit[1].type} label={config.edit[1].title} name='val1' />
             </FormGroup>
             <FormGroup widths='equal'>

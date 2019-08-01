@@ -1,13 +1,107 @@
 import React, { Component } from 'react'
 import { array, string, func } from 'prop-types'
-import { FormattedMessage, FormattedNumber } from 'react-intl'
-import { Grid, GridRow, GridColumn, Header, Divider, Segment } from 'semantic-ui-react'
+import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
+import { Grid, GridRow, GridColumn, Header, Divider, Segment, Icon } from 'semantic-ui-react'
 
 import './styles.scss'
-import { RelaxedRow, HeaderTextRow } from './styledComponents'
+import { RelaxedRow, HeaderTextRow, WiderPopup, CustomSpan, CustomHeader } from './styledComponents'
 import { FormattedUnit } from '~/components/formatted-messages'
+import { Form, Input, Checkbox } from 'formik-semantic-ui'
 
-export default class CartItemSummary extends Component {
+
+class CartItemSummary extends Component {
+
+  state = {
+    edittingHazmatInfo: false
+  }
+
+  handleHazBtnClick = () => {
+    if (!this.state.edittingHazmatInfo) this.setState({ edittingHazmatInfo: true })
+    else {
+      //save
+
+
+
+      this.setState({ edittingHazmatInfo: false })
+    }
+  }
+
+  hazmatMarkup = (item) => {
+    let { intl: { formatMessage } } = this.props
+    let { productOffer: { product } } = item
+
+    let initialValues = {
+      hazardClass: product.hazardClasses.toString(), // TODO - no data - dunno what's there...
+      packaging: product.packagingGroup.groupCode,
+      stackable: product.stackable
+    }
+
+    let disabled = !this.state.edittingHazmatInfo
+    return (
+      <Form initialValues={initialValues}>
+        <Segment basic>
+          <Grid verticalAlign='middle'>
+            <GridRow>
+              <GridColumn computer={12}>
+                <CustomHeader as='h2'>
+                  <FormattedMessage id='cart.hazmatInfo' defaultMessage='Hazmat Information' />
+                </CustomHeader>
+              </GridColumn>
+
+              <GridColumn computer={4}>
+                <CustomSpan positive={this.state.edittingHazmatInfo}
+                  onClick={this.handleHazBtnClick}>
+                  <FormattedMessage id={`global.${this.state.edittingHazmatInfo ? 'save' : 'edit'}`} />
+                </CustomSpan>
+              </GridColumn>
+            </GridRow>
+
+            <GridRow>
+              <GridColumn>
+                <Input inputProps={{ disabled }} name='unCode' label={formatMessage({ id: 'cart.unCode', defaultMessage: 'UN Code' })} />
+              </GridColumn>
+            </GridRow>
+
+            <GridRow>
+              <GridColumn>
+                <Input inputProps={{ disabled }} name='packaging' label={formatMessage({ id: 'cart.packagingGroup', defaultMessage: 'Packaging Group' })} />
+              </GridColumn>
+            </GridRow>
+
+
+            <GridRow>
+              <GridColumn>
+                <Input inputProps={{ disabled }} name='hazardClass' label={formatMessage({ id: 'cart.hazardClass', defaultMessage: 'Hazard Class' })} />
+              </GridColumn>
+            </GridRow>
+
+            <GridRow>
+              <GridColumn>
+                <Input inputProps={{ disabled }} name='freightClass' label={formatMessage({ id: 'cart.freightClass', defaultMessage: 'Freight Class' })} />
+              </GridColumn>
+            </GridRow>
+
+            <GridRow>
+              <GridColumn>
+                <Input inputProps={{ disabled }} name='nmfcNumber' label={formatMessage({ id: 'cart.nmfcNumber', defaultMessage: 'NMFC Number' })} />
+              </GridColumn>
+            </GridRow>
+
+
+            <GridRow>
+              <GridColumn>
+                <Checkbox inputProps={{ disabled }} name='stackable' label={formatMessage({ id: 'cart.stackable', defaultMessage: 'Stackable' })} />
+              </GridColumn>
+            </GridRow>
+
+          </Grid>
+        </Segment>
+      </Form>
+
+
+    )
+
+  }
 
   renderItem = ({ item, lastChild }) => {
     let { productOffer } = item
@@ -50,6 +144,24 @@ export default class CartItemSummary extends Component {
               </GridColumn>
             </RelaxedRow>
 
+            <RelaxedRow columns={2}>
+              <GridColumn>
+                <FormattedMessage id='cart.hazmatInfo' defaultMessage='Hazmat Information' />
+              </GridColumn>
+
+              <GridColumn floated='right'>
+                <WiderPopup
+                  wide
+                  onClose={() => this.setState({ edittingHazmatInfo: false })}
+                  position='left center'
+                  on='click'
+                  trigger={
+                    <Icon name='info circle' color='blue' />
+                  }
+                  content={this.hazmatMarkup(item)} />
+              </GridColumn>
+            </RelaxedRow>
+
 
 
             <RelaxedRow >
@@ -65,7 +177,7 @@ export default class CartItemSummary extends Component {
                   unit={productOffer.product.packagingType.name}
                   separator=' '
                   value={item.quantity}
-                /> 
+                />
               </GridColumn>
             </RelaxedRow>
 
@@ -169,3 +281,6 @@ CartItemSummary.defaultProps = {
   header: <FormattedMessage id='cart.yourOrder' defaultMessage='YOUR ORDER' />,
   currency: 'USD'
 }
+
+
+export default injectIntl(CartItemSummary)

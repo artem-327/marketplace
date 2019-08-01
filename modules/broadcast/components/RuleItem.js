@@ -51,6 +51,7 @@ const RuleItem = (props) => {
 
         <Rule.Toggle>
           <Checkbox
+            data-test='broadcast_rule_toggle_chckb'
             toggle
             fitted
             indeterminate={nodeBroadcast === 2}
@@ -59,7 +60,8 @@ const RuleItem = (props) => {
             onClick={(e) => !toggleDisabled && handleChange('broadcast', e)}
           />
         </Rule.Toggle>
-        <PriceControl 
+        <PriceControl
+          data-test='broadcast_price_control'
           offer={offer} 
           disabled={priceDisabled} 
           rootRule={parentBroadcasted ? parentBroadcasted.model.rule : null} 
@@ -70,6 +72,7 @@ const RuleItem = (props) => {
 
       {(item.model.expanded || rule.type === 'root') && item.children.map((i, idx) => (
         <RuleItem
+          data-test={`broadcast_rule_item_${i}`}
           key={idx}
           item={i}
           offer={offer}

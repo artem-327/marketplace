@@ -200,7 +200,8 @@ class SaveFilterItem extends Component {
           onMouseLeave={() => {
             show('toolTip', index);
           }}
-          className="filter-name">
+          className="filter-name"
+          data-test='filter_fill'>
           <TooltipFilter
             selected={selected}
             index={index}
@@ -209,7 +210,8 @@ class SaveFilterItem extends Component {
             content={toolTipContent} />
         </div>
         <div
-          className='filter-delete'>
+          className='filter-delete'
+          data-test='filter_delete'>
           <span
             className='bell'
             onMouseEnter={() => {
