@@ -103,6 +103,7 @@ class MerchantDetail extends Component {
                 onChange={value => {
                   console.log(value)
                 }}
+                data-test='administration_merchant_detail_approved_chckb'
               />
             </div>
           </div>

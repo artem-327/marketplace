@@ -23,6 +23,7 @@ class MerchantTableRow extends Component {
                   name="approved"
                   defaultValue={merchantData.approved}
                   disabled={true}
+                  data-test='administration_merchant_table_approved_chckb'
                 />
                 </td>
                 <td className="merch-row-item"><Button onClick={this.openDetail} data-test='administration_merchant_detail_btn'>Detail</Button></td>

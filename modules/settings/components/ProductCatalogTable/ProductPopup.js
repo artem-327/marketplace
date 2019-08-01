@@ -413,22 +413,22 @@ class ProductPopup extends React.Component {
                 </FormGroup>
                 <FormGroup widths='equal'>
                   <FormField>
-                    <Checkbox label='Stackable' name='stackable' />
+                    <Checkbox label='Stackable' name='stackable' inputProps={{ 'data-test': 'settings_product_popup_stackable_chckb' }} />
                   </FormField>
                   <FormField>
-                    <Checkbox label='Hazardous' name='hazardous' />
+                    <Checkbox label='Hazardous' name='hazardous' inputProps={{ 'data-test': 'settings_product_popup_hazardous_chckb' }} />
                   </FormField>
                   <FormField>
-                    <Checkbox label='Non HAP' name='nonHap' />
+                    <Checkbox label='Non HAP' name='nonHap' inputProps={{ 'data-test': 'settings_product_popup_nonHap_chckb' }} />
                   </FormField>
                   <FormField>
-                    <Checkbox label='VOC Exempt' name='vocExempt' />
+                    <Checkbox label='VOC Exempt' name='vocExempt' inputProps={{ 'data-test': 'settings_product_popup_vocExempt_chckb' }} />
                   </FormField>
                   <FormField>
-                    <Checkbox label='Prop 65 Exempt' name='prop65Exempt' />
+                    <Checkbox label='Prop 65 Exempt' name='prop65Exempt' inputProps={{ 'data-test': 'settings_product_popup_prop65Exempt_chckb' }} />
                   </FormField>
                   <FormField>
-                    <Checkbox label='Safer Choice' name='saferChoice' />
+                    <Checkbox label='Safer Choice' name='saferChoice' inputProps={{ 'data-test': 'settings_product_popup_saferChoice_chckb' }} />
                   </FormField>
                 </FormGroup>
                 <FormGroup widths='equal'>

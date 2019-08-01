@@ -78,7 +78,7 @@ class MyInventory extends Component {
             <Popup id={r.id}
               trigger={
                 <Checkbox
-                  data-test='my_inventory_broadcast_btn'
+                  data-test='my_inventory_broadcast_chckb'
                   toggle
                   defaultChecked={r.status.toLowerCase() === 'broadcasting'}
                   className={cn({ error: r.status.toLowerCase() === 'incomplete' || r.status.toLowerCase() === 'unmapped' })}

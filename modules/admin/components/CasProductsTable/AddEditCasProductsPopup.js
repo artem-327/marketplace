@@ -160,10 +160,10 @@ class AddEditCasProductsPopup extends React.Component {
             {(props) => {
               return (
                 <>
-                  <FormGroup widths='equal'>
+                  <FormGroup widths='equal' data-test='admin_popup_cas_casIndexName_inp'>
                     <Input type='text' label={config.display.columns[0].title} name='casIndexName' />
                   </FormGroup>
-                  <FormGroup widths='equal'>
+                  <FormGroup widths='equal' data-test='admin_popup_cas_casNumber_inp'>
                     <Input type='text' label={config.display.columns[1].title} name='casNumber' />
                     <Input type='text' label={config.display.columns[2].title} name='chemicalName' />
                   </FormGroup>
@@ -176,6 +176,7 @@ class AddEditCasProductsPopup extends React.Component {
                         onSearchChange={this.handleSearchUnNumber}
                         results={unNumbersFiltered}
                         defaultValue={popupValues && popupValues.unNumberCode ? popupValues.unNumberCode : ''}
+                        data-test='admin_popup_cas_unNumber_inp'
                       />
                     </FormField>
                   </FormGroup>

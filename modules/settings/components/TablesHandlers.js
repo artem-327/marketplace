@@ -98,7 +98,7 @@ class TablesHandlers extends Component {
         </Menu.Item>
         {!currentTab.hideHandler &&
           <Menu.Menu position="right">
-            <Menu.Item>
+            <Menu.Item data-test='settings_table_search_inp' >
               <Input
                 style={{ width: 340 }}
                 size="large"
@@ -114,6 +114,7 @@ class TablesHandlers extends Component {
                   label='Unmapped only'
                   defaultChecked={productCatalogUnmappedValue}
                   onChange={(e, { checked }) => Datagrid.setQuery({ unmappedOnly: checked })}
+                  data-test='settings_dwolla_unmapped_only_chckb'
                 />
               )}
               {isDwollaAccountVisible && (

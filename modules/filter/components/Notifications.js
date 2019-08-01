@@ -22,19 +22,19 @@ class Notifications extends Component {
           <GridColumn computer={3}>
             <FormikCheckbox
               name='checkboxes.notificationEnabled'
-              inputProps={{ toggle: true, style: { marginBottom: '-4px' } }} />
+              inputProps={{ toggle: true, style: { marginBottom: '-4px' }, 'data-test': 'filter_notifications_enabled_chckb' }} />
           </GridColumn>
         </LessPaddedRow>
 
         <LessPaddedRow>
           <GridColumn computer={7}>
             <FormikCheckbox
-              inputProps={{ disabled }}
+              inputProps={{ disabled, 'data-test': 'filter_notifications_notifyMail_chckb' }}
               name='checkboxes.notifyMail'
               label={formatMessage({ id: 'filter.notifications.email', defaultMessage: 'Email Notifications:' })} />
           </GridColumn>
           {
-            <GridColumn computer={9}>
+            <GridColumn computer={9} data-test='filter_notifications_email_inp'>
               <Input
                 fluid
                 fieldProps={{ disabled: !(values.checkboxes && values.checkboxes.notifyMail) || disabled }}
@@ -48,7 +48,7 @@ class Notifications extends Component {
         <LessPaddedRow>
           <GridColumn computer={7}>
             <FormikCheckbox
-              inputProps={{ disabled }}
+              inputProps={{ disabled, 'data-test': 'filter_notifications_notifyPhone_chckb' }}
               name='checkboxes.notifyPhone'
               label={formatMessage({ id: 'filter.notifications.mobile', defaultMessage: 'Mobile Notifications:' })} />
           </GridColumn>
@@ -56,7 +56,7 @@ class Notifications extends Component {
         <LessPaddedRow>
           <GridColumn computer={7}>
             <FormikCheckbox
-              inputProps={{ disabled }}
+              inputProps={{ disabled, 'data-test': 'filter_notifications_notifySystem_chckb' }}
               name='checkboxes.notifySystem'
               label={formatMessage({ id: 'filter.notifications.system', defaultMessage: 'System Notifications:' })} />
           </GridColumn>

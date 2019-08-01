@@ -153,7 +153,7 @@ class DeliveryAddressesPopup extends React.Component {
                 <>
                   {AddressSuggestInput}
                   <Header as='h3'>Address</Header>
-                  <FormGroup widths="equal">
+                  <FormGroup widths="equal" data-test='settings_delivery_address_streetCity_inp' >
                     <Input
                       inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
                       type="text" label="Street Address" name="address.streetAddress" />
@@ -161,7 +161,7 @@ class DeliveryAddressesPopup extends React.Component {
                       inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
                       type="text" label="City" name="address.city" />
                   </FormGroup>
-                  <FormGroup widths="equal">
+                  <FormGroup widths="equal" data-test='settings_delivery_address_zipCountry_inp' >
                     <Input
                       inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
                       type="text" label="Zip" name="address.zip" />
@@ -176,10 +176,10 @@ class DeliveryAddressesPopup extends React.Component {
                       inputProps={{ search: true, disabled: !this.state.hasProvinces, 'data-test': 'settings_delivery_address_province_drpdn', }} />
                   </FormGroup>
                   <Header as='h3'>Contact Info</Header>
-                  <FormGroup>
+                  <FormGroup data-test='settings_delivery_address_name_inp'>
                     <Input type="text" label="Name" name="name" fieldProps={{ width: 8 }} />
                   </FormGroup>
-                  <FormGroup widths="equal">
+                  <FormGroup widths="equal" data-test='settings_delivery_address_emailPhone_inp'>
                     <Input type="text" label="Contact Email" name="email" />
                     <Input type="text" label="Contact Phone" name="phoneNumber" />
                   </FormGroup>

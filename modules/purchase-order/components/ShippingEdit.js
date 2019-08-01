@@ -59,14 +59,14 @@ class ShippingEdit extends Component {
   markup = ({ setFieldValue, values }) => {
     return (
       <>
-        <FormGroup widths='equal'>
+        <FormGroup widths='equal' data-test='purchase_order_shipping_edit_name_inp' >
           <Input
             label={<FormattedMessage id='global.name' default='Name' />}
             name='name' />
         </FormGroup>
         <AddressForm displayHeader={false} values={values} setFieldValue={setFieldValue} />
 
-        <FormGroup widths='equal'>
+        <FormGroup widths='equal' data-test='purchase_order_shipping_edit_emailPhone_inp'>
           <Input
             label={<FormattedMessage id='global.email' defaultMessage='E-mail Address' />}
             name='email' />
