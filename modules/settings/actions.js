@@ -940,3 +940,5 @@ export const getLogisticsAccounts = () => ({ type: AT.GET_LOGISTICS_ACCOUNTS, pa
 export const updateLogisticsAccount = payload => ({ type: AT.UPDATE_LOGISTICS_ACCOUNT, payload: api.updateLogisticsAccount(payload) })
 
 export const deleteLogisticsAccount = id => ({ type: AT.DELETE_LOGISTICS_ACCOUNT, payload: api.deleteLogisticsAccount(id) })
+
+export const resetSettings = () => ({ type: AT.RESET_SETTINGS, payload: true })

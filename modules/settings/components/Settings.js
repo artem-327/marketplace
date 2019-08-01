@@ -31,7 +31,7 @@ import { CompanyForm } from '~/modules/company-form/'
 import { companyDetailsTab } from '../contants'
 import Router from 'next/router'
 
-import { addTab, tabChanged } from '../actions'
+import { addTab, tabChanged, resetSettings } from '../actions'
 import { updateCompany } from '~/modules/admin/actions'
 import { validationSchema } from '~/modules/company-form/constants'
 
@@ -44,10 +44,15 @@ const TopMargedGrid = styled(Grid)`
 `
 
 class Settings extends Component {
+
+  componentWillMount() {
+    this.props.resetSettings()
+  }
+
   componentDidMount() {
     let { isCompanyAdmin, addTab, tabsNames, tabChanged, currentTab } = this.props
     if (isCompanyAdmin) addTab(companyDetailsTab)
-    let queryTab = Router && Router.router ? tabsNames.find(tab => tab.type === Router.router.query.type) || companyDetailsTab || tabsNames[0] : tabsNames[0]
+    let queryTab = (Router && Router.router ? tabsNames.find(tab => tab.type === Router.router.query.type) : false) || (isCompanyAdmin ? companyDetailsTab : tabsNames.find(tab => tab.type !== companyDetailsTab.type))
 
     if (!queryTab.type !== currentTab.type) tabChanged(queryTab)
   }
@@ -207,8 +212,7 @@ class Settings extends Component {
     const { currentTab } = this.props
 
     return (
-      <DatagridProvider apiConfig={this.getApiConfig()}
-      >
+      <DatagridProvider apiConfig={this.getApiConfig()}>
         <Container fluid className='flex stretched'>
           <Container fluid style={{ padding: '0 32px' }}>
             <TablesHandlers currentTab={currentTab} />
@@ -240,5 +244,5 @@ const mapStateToProps = ({ settings, auth }) => {
 
 export default connect(
   mapStateToProps,
-  { addTab, updateCompany, tabChanged }
+  { addTab, updateCompany, tabChanged, resetSettings }
 )(withToastManager(Settings))

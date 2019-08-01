@@ -1056,6 +1056,11 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.RESET_SETTINGS: {
+      return {
+        ...initialState
+      }
+    }
 
     default: {
       return state
