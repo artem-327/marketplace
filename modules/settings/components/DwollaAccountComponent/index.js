@@ -158,13 +158,13 @@ class BankAccountsPopup extends React.Component {
           >
 
             <Accordion exclusive={false}>
-              <FormGroup widths="equal">
+              <FormGroup widths="equal" data-test='settings_dwolla_beneficialOwner_address123_inp'>
                 <Input label="Address 1" name="beneficialOwner.address.address1" />
                 <Input label="Address 2" name="beneficialOwner.address.address2" />
                 <Input label="Address 3" name="beneficialOwner.address.address3" />
               </FormGroup>
 
-              <FormGroup widths="equal">
+              <FormGroup widths="equal" data-test='settings_dwolla_beneficialOwner_addressDatePassport_inp'>
                 <Input label="City" name="beneficialOwner.address.city" />
                 <Input label="Birth" name="beneficialOwner.dateOfBirth" />
                 <Dropdown label="Passport Country" name="beneficialOwner.passport.country" options={countriesDropDown} inputProps={{ 'data-test': 'settings_dwolla_account_beneficialOwner_passport_country_drpdn' }} />
@@ -183,11 +183,11 @@ class BankAccountsPopup extends React.Component {
                         inputProps={{search: true, disabled: !this.state.hasProvinces, clearable: true, 'data-test': 'settings_dwolla_account_beneficialOwner_address_province_drpdn'}} />
               </FormGroup>
 
-              <FormGroup widths="equal">
+              <FormGroup widths="equal" data-test='settings_dwolla_beneficialOwner_namePostal_inp'>
                 <Input label="Postal Code" name="beneficialOwner.address.postalCode" />
                 <Input label="First Name"  name="beneficialOwner.firstName" />
               </FormGroup>
-              <FormGroup widths="equal">
+              <FormGroup widths="equal" data-test='settings_dwolla_beneficialOwner_nameSsn_inp'>
                   <Input label="Last Name" name="beneficialOwner.lastName" />
                   <Input label="SSN" name="beneficialOwner.ssn" />
               </FormGroup>
@@ -199,12 +199,12 @@ class BankAccountsPopup extends React.Component {
                 </AccordionHeader>
               </Accordion.Title>
               <Accordion.Content active={accordionActive.controllerAddress}>
-                <FormGroup widths="equal">
+                <FormGroup widths="equal" data-test='settings_dwolla_dwollaController_address123_inp'>
                   <Input label="Address 1" name="dwollaController.address.address1" />
                   <Input label="Address 2" name="dwollaController.address.address2" />
                   <Input label="Address 3" name="dwollaController.address.address3" />
                 </FormGroup>
-                <FormGroup widths="equal">
+                <FormGroup widths="equal" data-test='settings_dwolla_dwollaController_address_inp'>
                   <Input label="City" name="dwollaController.address.city" />
                   <Input label="Postal Code" name="dwollaController.address.postalCode" />
                   <Dropdown label="Country" name="dwollaController.address.country" options={countriesDropDown}
@@ -217,17 +217,17 @@ class BankAccountsPopup extends React.Component {
                   <Dropdown label="State/Province" name="dwollaController.address.stateProvinceRegion" options={provincesDropDown}
                           inputProps={{search: true, disabled: !this.state.hasProvinces, clearable: true, 'data-test': 'settings_dwolla_account_dwollaController_address_province_drpdn'}} />
                 </FormGroup>
-                <FormGroup widths="equal">
+                <FormGroup widths="equal" data-test='settings_dwolla_dwollaController_name_inp'>
                     <Input label="First Name" name="dwollaController.firstName" />
                     <Input label="Last Name" name="dwollaController.lastName" />
                     <Dropdown label="Passport Country" name="dwollaController.passport.country" options={countriesDropDown} inputProps={{ 'data-test': 'settings_dwolla_account_dwollaController_passport_country_drpdn' }} />
                     <Input label="Passport Number" name="dwollaController.passport.number" />
                 </FormGroup>
-                <FormGroup widths="equal">
+                <FormGroup widths="equal" data-test='settings_dwolla_dwollaController_ssnTitle_inp'>
                     <Input label="SSN" name="dwollaController.ssn" />
                     <Input label="Title" name="dwollaController.title" />
                 </FormGroup>
-                <FormGroup widths="equal">
+                <FormGroup widths="equal" data-test='settings_dwolla_dwollaController_dateOfBirth_inp'>
                   <Input label="Birth" name="dwollaController.dateOfBirth" />
                 </FormGroup>
               </Accordion.Content>

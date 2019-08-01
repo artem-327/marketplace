@@ -70,7 +70,7 @@ class TablesHandlers extends Component {
         </Menu.Item>
 
         <Menu.Menu position='right'>
-          <Menu.Item>
+          <Menu.Item data-test='admin_table_search_inp'>
             <Input style={{ width: 340 }} size='large' icon='search' placeholder={formatMessage({ id: config[currentTab].searchText })}
               onChange={(e, { value }) => {
                 this.setState({ filterValue: value })

@@ -234,7 +234,7 @@ class Broadcast extends Component {
                         ]}
                       />
                     </Form.Field>
-                    <Form.Field>
+                    <Form.Field data-test='broadcast_modal_search_inp' >
                       <label><FormattedMessage id='broadcast.filter' defaultMessage='Filter' /></label>
                       <Input
                         name='search' icon='search'
@@ -325,12 +325,13 @@ class Broadcast extends Component {
                               <FormikInput
                                 inputProps={{
                                   fluid: true,
-                                  placeholder: formatMessage({ id: 'broadcast.templateName', defaultMessage: 'Template Name' })
+                                  placeholder: formatMessage({ id: 'broadcast.templateName', defaultMessage: 'Template Name' }),
+                                  'data-test': 'broadcast_modal_templateName_inp'
                                 }} name='name' />
                             </GridColumn>
 
                             <GridColumn computer={5}>
-                              <FormikButton.Submit loading={this.props.templateSaving} fluid positive basic><FormattedMessage id='global.save' defaultMessage='Save' /></FormikButton.Submit>
+                              <FormikButton.Submit loading={this.props.templateSaving} fluid positive basic data-test='broadcast_modal_submit_btn'><FormattedMessage id='global.save' defaultMessage='Save' /></FormikButton.Submit>
                             </GridColumn>
                           </GridRow>
                         </Grid>

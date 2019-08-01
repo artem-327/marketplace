@@ -87,7 +87,7 @@ class BankAccountsPopup extends React.Component {
             validateOnChange={false}
             validateOnBlur={false}
           >
-            <FormGroup widths="equal">
+            <FormGroup widths="equal" data-test='settings_bank_account_accountNumber_inp'>
               <Input
                 type="text"
                 label="Account Number"
@@ -95,7 +95,7 @@ class BankAccountsPopup extends React.Component {
               />
               <Dropdown label="Account Type" name="bankAccountType" options={bankAccountType} inputProps={{ 'data-test': 'settings_bank_account_popup_type_drpdn' }} />
             </FormGroup>
-            <FormGroup widths="equal">
+            <FormGroup widths="equal" data-test='settings_bank_account_nameNumber_inp'>
               <Input
                 type="text"
                 label="Name"

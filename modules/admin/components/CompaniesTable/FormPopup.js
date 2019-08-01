@@ -328,11 +328,11 @@ class AddNewPopupCasProducts extends React.Component {
                             </AccordionHeader>
                           </Accordion.Title>
                           <Accordion.Content active={accordionActive.companyAdmin}>
-                            <FormGroup widths='equal'>
+                            <FormGroup widths='equal' data-test='admin_popup_company_primaryUserNameEmail_inp'>
                               <Input label={<FormattedMessage id='global.name' defaultMessage='Name' />} name='primaryUser.name' />
                               <Input label={<FormattedMessage id='global.email' defaultMessage='Email' />} name='primaryUser.email' />
                             </FormGroup>
-                            <FormGroup widths='equal'>
+                            <FormGroup widths='equal' data-test='admin_popup_company_primaryUserTitlePhone_inp'>
                               <Input label={<FormattedMessage id='global.jobTitle' defaultMessage='Job Title' />} name='primaryUser.jobTitle' />
                               <Input label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='primaryUser.phone' />
                             </FormGroup>
@@ -351,10 +351,10 @@ class AddNewPopupCasProducts extends React.Component {
                           </AccordionHeader>
                         </Accordion.Title>
                         <Accordion.Content active={accordionActive.billingAddress}>
-                          <FormGroup widths='equal'>
+                          <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchName_inp' >
                             <Input label={<FormattedMessage id='global.name' defaultMessage='Name' />} name='primaryBranch.name' />
                           </FormGroup>
-                          <FormGroup widths='equal'>
+                          <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchNameEmailPhone_inp' >
                             <Input label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='primaryBranch.contactName' />
                             <Input label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />} name='primaryBranch.contactEmail' />
                             <Input label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />} name='primaryBranch.contactPhone' />
@@ -373,7 +373,7 @@ class AddNewPopupCasProducts extends React.Component {
                           </AccordionHeader>
                         </Accordion.Title>
                         <Accordion.Content active={accordionActive.mailingAddress}>
-                          <FormGroup widths='equal'>
+                          <FormGroup widths='equal' data-test='admin_popup_company_mailingBranchNameEmailPhone_inp'>
                             <Input label={<FormattedMessage id='global.name' defaultMessage='Name' />} name='mailingBranch.name' />
                           </FormGroup>
                           <FormGroup widths='equal'>

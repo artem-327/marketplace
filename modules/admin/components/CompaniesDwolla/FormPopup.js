@@ -228,12 +228,12 @@ class AddNewPopupCasProducts extends React.Component {
                       </Header>
 
                       <Accordion.Content active={accordionActive.controllerAddress}>
-                        <FormGroup widths='equal'>
+                        <FormGroup widths='equal' data-test='admin_popup_company_dwolla_name_inp'>
                           <Input label={<FormattedMessage id='global.firstName2' defaultMessage='First Name' />} name='dwollaController.firstName' />
                           <Input label={<FormattedMessage id='global.lastName2' defaultMessage='Last Name' />} name='dwollaController.lastName' />
                           <Input label={<FormattedMessage id='global.title' defaultMessage='Job Title' />} name='dwollaController.jobTitle' />
                         </FormGroup>
-                        <FormGroup widths='equal'>
+                        <FormGroup widths='equal' data-test='admin_popup_company_dwolla_birth_inp'>
                           <DateInput label={<FormattedMessage id='global.dateOfBirth2' defaultMessage='Birth' />} name='dwollaController.dateOfBirth' />
                           <Input label={<FormattedMessage id='global.ssn2' defaultMessage='SSN' />} name='dwollaController.ssn' />
                         </FormGroup>

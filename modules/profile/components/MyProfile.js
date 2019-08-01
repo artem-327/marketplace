@@ -69,6 +69,7 @@ class MyProfile extends Component {
               this.props.updateMyProfile(values)
               actions.setSubmitting(false)
             }}
+            data-test='my_profile_userData_inp'
           >
             <Input type="text" label="E-mail" name="email" inputProps={{ readOnly: true }} />
             <Input type="text" label="Name" name="name" />

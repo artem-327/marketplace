@@ -98,7 +98,7 @@ class TablesHandlers extends Component {
         </Menu.Item>
         {!currentTab.hideHandler &&
           <Menu.Menu position="right">
-            <Menu.Item>
+            <Menu.Item data-test='settings_table_search_inp' >
               <Input
                 style={{ width: 340 }}
                 size="large"

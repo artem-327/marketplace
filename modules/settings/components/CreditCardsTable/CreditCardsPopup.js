@@ -49,11 +49,11 @@ class CreditCardsPopup extends React.Component {
             onReset={closePopup}
             onSubmit={postNewCreditCardRequest}
           >
-            <FormGroup widths="equal">
+            <FormGroup widths="equal" data-test='settings_credit_card_cardNumberCvc_inp' >
               <Input type="text" label="Card Number" name="cardNumber" />
               <Input type="text" label="CVC" name="cvc" />
             </FormGroup>
-            <FormGroup widths="equal">
+            <FormGroup widths="equal" data-test='settings_credit_card_expiration_inp'>
               <Input
                 type="text"
                 label="Expiration Month"

@@ -148,7 +148,7 @@ class EditAltNamesCasProductsPopup extends React.Component {
                           {values && values.casAlternativeNames.length ? values.casAlternativeNames.map((val, index, vals) => (
                             <Table.Row key={index}>
                               <TableCell width={16}>
-                                <FormField>
+                                <FormField data-test='admin_popup_alt_cas_name_inp'>
                                   <Input name={`casAlternativeNames[${index}].alternativeName`}
                                     inputProps={{
                                       onChange: (e, d) => {
@@ -173,7 +173,8 @@ class EditAltNamesCasProductsPopup extends React.Component {
                                         setFieldValue(`casAlternativeNames[${index}].canSave`, false)
                                       }
                                     }}
-                                    color={val.color} />}
+                                    color={val.color}
+                                    data-test={`admin_popup_alt_cas_name_${index}_save`} />}
                                 />
                               ) : (
                                   <Icon name='save outline'
@@ -186,10 +187,12 @@ class EditAltNamesCasProductsPopup extends React.Component {
                                         setFieldValue(`casAlternativeNames[${index}].canSave`, false)
                                       }
                                     }}
-                                    color={val.color} />
+                                    color={val.color}
+                                    data-test={`admin_popup_alt_cas_name_${index}_save`}/>
                                 )}</TableCell>
                               <TableCell width={1}><Icon name='trash alternate outline' size='large'
-                                onClick={() => this.handleDeleteName(popupValues.data.id, arrayHelpers, val, index)} /></TableCell>
+                                onClick={() => this.handleDeleteName(popupValues.data.id, arrayHelpers, val, index)}
+                                                         data-test={`admin_popup_alt_cas_name_${index}_delete`}/></TableCell>
                             </Table.Row>
                           )) : null
                           }
