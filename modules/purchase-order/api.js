@@ -20,3 +20,4 @@ export const getStates = (search) => api.get(`/prodex/api/countries`, { params: 
 export const getProvinces = ({ countryId }) => api.get(`/prodex/api/provinces/country/${countryId}`).then(response => response.data)
 export const getStateDetail = (id) => api.get(`/prodex/api/companies/?entityId=${id}&entityType=country`).then(response => response.data)
 export const getBranches = () => api.get('/prodex/api/branches').then(response => response.data)
+export const getWarehouses = () => api.get('/prodex/api/branches/warehouses').then(response => response.data)

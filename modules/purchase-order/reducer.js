@@ -16,11 +16,13 @@ export const initialState = {
   offerDetailIsFetching: true,
   isPurchasing: false,
   branchesAreFetching: false,
+  warehousesFetching: false,
   selectedAddressId: null,
   selectedCardId: null,
   states: [],
   branches: [],
   provinces: [],
+  warehouses: [],
   // TODO remove shippingQuotes, keep them in shipping obj only
   shippingQuotes: [],
   sidebar: {
@@ -357,7 +359,7 @@ export default function reducer(state = initialState, action) {
 
       return {
         ...state,
-        cart: calculateTotalPrice(cart) 
+        cart: calculateTotalPrice(cart)
       }
     }
 
@@ -413,6 +415,31 @@ export default function reducer(state = initialState, action) {
         shipping: { ...state.shipping, ...action.payload }
       }
     }
+
+    /* GET_WAREHOUSES */
+
+    case AT.GET_WAREHOUSES_PENDING: {
+      return {
+        ...state,
+        warehousesFetching: true
+      }
+    }
+
+    case AT.GET_WAREHOUSES_FULFILLED: {
+      return {
+        ...state,
+        warehouses: action.payload,
+        warehousesFetching: false
+      }
+    }
+
+    case AT.GET_WAREHOUSES_REJECTED: {
+      return {
+        ...state,
+        warehousesFetching: false
+      }
+    }
+
     default: {
       return state
     }
