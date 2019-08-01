@@ -472,9 +472,9 @@ export const resendWelcomeEmail = (userId) => {
 	}
 }
 
-export const reviewRequestedSwitch = (companyId, data) => {
+export const reviewRequest = (companyId) => {
 	return {
 		type: AT.ADMIN_REVIEW_REQUESTED,
-		payload: api.reviewRequestedSwitch(companyId, data.checked)
+		payload: api.reviewRequest(companyId)
 	}
 }
