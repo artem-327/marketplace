@@ -1,47 +1,42 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Modal, FormGroup, Divider, ButtonToolbar } from 'semantic-ui-react'
-import { Form, Input, Button, Dropdown } from "formik-semantic-ui";
-import * as Yup from "yup"
+import { Modal } from 'semantic-ui-react'
+import { Form, Input, Button } from 'formik-semantic-ui'
+import * as Yup from 'yup'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-import {
-  changePassword,
-  closeChangePasswordPopup
-} from '../actions'
+import { changePassword, closeChangePasswordPopup } from '../actions'
+import { errorMessages, passwordValidation } from '~/constants/yupValidation'
 
 const initialFormValues = {
-  'oldPassword':        '',
-  'newPassword':        '',
-  'newPasswordRetype':  ''
+  oldPassword: '',
+  newPassword: '',
+  newPasswordRetype: ''
 }
 
-const formValidation = () => Yup.object().shape({
-  oldPassword: Yup.string().trim()
-    .min(3, "Too short")
-    .required("Current Password is required"),
-  newPassword: Yup.string().trim()
-    .min(8, "Too short")
-    .required("New Password is required")
-    .matches(/[a-z]/, 'at least one lowercase char')
-    .matches(/[A-Z]/, 'at least one uppercase char')
-    .matches(/[^a-zA-Z\s]+/, 'at least 1 number or special char (@,!,#, etc).'),
-  newPasswordRetype: Yup.string().trim()
-    .required("New Password is required")
-    .test('Passwords match', 'Passwords must match', function(value) {
-      return this.parent.newPassword === value;
+
+
+const formValidation = () => (
+  Yup.lazy((values) => (
+    Yup.object().shape({
+      oldPassword: Yup.string().trim()
+        .min(3, errorMessages.minLength(3))
+        .required(errorMessages.requiredMessage),
+      newPassword: passwordValidation(),
+      newPasswordRetype: Yup.string(errorMessages.passwordsMustMatch).oneOf([values.newPassword], errorMessages.passwordsMustMatch)
     })
-})
+  ))
+)
+
 
 class ChangePassword extends Component {
 
   render() {
-    const {
-      closeChangePasswordPopup
-    } = this.props
+    const { closeChangePasswordPopup, intl: { formatMessage } } = this.props
 
     return (
-      <Modal open centered={false} size="small">
-        <Modal.Header>Change Password</Modal.Header>
+      <Modal open centered={false} size='small'>
+        <Modal.Header><FormattedMessage id='password.change' defaultMessage='Change Password' /></Modal.Header>
         <Modal.Content>
           <Form
             enableReinitialize
@@ -53,15 +48,26 @@ class ChangePassword extends Component {
               this.props.changePassword(values)
               actions.setSubmitting(false)
             }}
-            data-test='profile_change_password_inp'
-          >
-            <Input type="text" label="Current Password" name="oldPassword" />
-            <Input type="text" label="New Password" name="newPassword" />
-            <Input type="text" label="Re-type Password" name="newPasswordRetype" />
+            data-test='profile_change_password_inp'>
+            <Input
+              inputProps={{ type: 'password' }}
+              type='text'
+              label={formatMessage({ id: 'password.current', defaultMessage: 'Current Password' })}
+              name='oldPassword' />
+            <Input
+              inputProps={{ type: 'password' }}
+              type='text'
+              label={formatMessage({ id: 'password.new', defaultMessage: 'New Password' })}
+              name='newPassword' />
+            <Input
+              inputProps={{ type: 'password' }}
+              type='text'
+              label={formatMessage({ id: 'password.retype', defaultMessage: 'Re-type Password' })}
+              name='newPasswordRetype' />
 
             <div style={{ textAlign: 'right' }}>
-              <Button.Reset data-test='profile_change_password_reset_btn'>Cancel</Button.Reset>
-              <Button.Submit data-test='profile_change_password_submit_btn'>Save</Button.Submit>
+              <Button.Reset data-test='profile_change_password_reset_btn'><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
+              <Button.Submit data-test='profile_change_password_submit_btn'><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
             </div>
           </Form>
         </Modal.Content>
@@ -75,4 +81,4 @@ const mapDispatchToProps = {
   closeChangePasswordPopup
 }
 
-export default connect(null, mapDispatchToProps)(ChangePassword)
+export default injectIntl(connect(null, mapDispatchToProps)(ChangePassword))
