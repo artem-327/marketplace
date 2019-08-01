@@ -578,6 +578,7 @@
   "cart.productOfferings": "PRODUCT OFFERINGS",
   "cart.backToProductPurchaseInfo": "Back to Product/Purchase info",
   "cart.addresses": "Addresses",
+  "cart.warehouses": "Warehouses",
   "cart.branches": "Branches",
   "order.deleteHeader": "Delete Order",
   "order.deleteBody": "You are about to delete last item of order. Doing so will redirect you to Shopping cart. Do you wish to continue?",

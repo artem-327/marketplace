@@ -45,8 +45,8 @@ class PurchaseOrder extends Component {
   }
 
   getAddress = (selectedAddressId) => {
-    let { deliveryAddresses, branches } = this.props
-    let addresses = this.state.otherAddresses ? deliveryAddresses : branches
+    let { deliveryAddresses, warehouses, branches } = this.props
+    let addresses = this.state.otherAddresses ? deliveryAddresses : warehouses //branches
     let selectedAddress = addresses.find(i => i.id === selectedAddressId)
 
     this.props.shippingChanged({ selectedAddress })
@@ -174,6 +174,9 @@ class PurchaseOrder extends Component {
                   getBranches={this.props.getBranches}
                   branchesAreFetching={this.props.branchesAreFetching}
                   branches={this.props.branches}
+                  getWarehouses={this.props.getWarehouses}
+                  warehousesFetching={this.props.warehousesFetching}
+                  warehouses={this.props.warehouses}
                   handleToggleChange={this.handleToggleChange}
                   shippingQuotesAreFetching={this.props.shippingQuotesAreFetching}
                 />

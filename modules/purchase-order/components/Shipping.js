@@ -9,21 +9,22 @@ import ShippingAddress from './ShippingAddress'
 class Shipping extends Component {
   handleToggleChange = (otherAddresses) => {
     if (otherAddresses !== this.props.otherAddresses) {
-      let { branches, getBranches } = this.props
+      let { branches, getBranches, warehouses, getWarehouses } = this.props
 
       this.props.handleToggleChange(otherAddresses)
         .then(() => {
-          if (branches.length === 0 && !this.props.otherAddresses) getBranches()
+          // if (branches.length === 0 && !this.props.otherAddresses) getBranches()
+          if (warehouses.length === 0 && !this.props.otherAddresses) getWarehouses()
         })
 
     }
   }
 
   render() {
-    let { deliveryAddresses, branches, getAddress, selectedAddress, intl } = this.props
+    let { deliveryAddresses, branches, warehouses, getAddress, selectedAddress, intl } = this.props
     let { formatMessage } = intl
 
-    let addresses = this.props.otherAddresses ? deliveryAddresses : branches
+    let addresses = this.props.otherAddresses ? deliveryAddresses : warehouses // branches
 
     let dropdownOptions = addresses.map(i => ({
       text: `${i.address.streetAddress}, ${i.address.city}`,
@@ -77,7 +78,7 @@ class Shipping extends Component {
                   onClick={() => this.handleToggleChange(false)}
                   active={!this.props.otherAddresses}
                   data-test='purchase_order_branches_btn'>
-                  <FormattedMessage id='cart.branches' defaultMessage='Branches' /></Button>
+                  <FormattedMessage id='cart.warehouses' defaultMessage='Warehouses' /></Button>
               </Button.Group>
             </GridColumn>
           </GridRow>
