@@ -10,5 +10,5 @@ export const defaultTabs = [
   { name: 'Logistics', id: 13, type: 'logistics' }
 ]
 
-export const companyDetailsTab = { name: 'Company Details', id: 13, type: 'company-details', hideHandler: true }
+export const companyDetailsTab = { name: 'Company Details', id: 14, type: 'company-details', hideHandler: true }
 

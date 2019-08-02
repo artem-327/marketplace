@@ -9,13 +9,15 @@ import {
   putBankAccountRequest,
   postNewBankAccountRequest
 } from '../../actions'
+
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
-import Router from "next/router"
+import Router from 'next/router'
 import * as Yup from 'yup'
+import { FormattedMessage, injectIntl } from 'react-intl'
+
 
 import { generateToastMarkup } from '~/utils/functions'
-import { FormattedMessage } from 'react-intl'
-
+import { errorMessages } from '~/constants/yupValidation'
 
 const initialFormValues = {
   accountNumber: '',
@@ -24,22 +26,23 @@ const initialFormValues = {
   routingNumber: ''
 }
 
+
 const formValidation = Yup.object().shape({
-  accountNumber: Yup.string().trim().min(3, 'Too short').required('Required'),
-  bankAccountType: Yup.string().trim().min(3, 'Too short').required('Required'),
-  name: Yup.string().trim().min(3, 'Too short').required('Required'),
-  routingNumber: Yup.string().trim().matches(/^\d{9}$/, 'Routing number must be 9 characters long').required('Required')
+  accountNumber: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+  bankAccountType: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+  name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+  routingNumber: Yup.string().trim().matches(/^\d{9}$/, errorMessages.exactLength(9)).required(errorMessages.requiredMessage)
 })
 
 const bankAccountType = [
   {
     key: 1,
-    text: 'Checking',
+    text: <FormattedMessage id='settings.checking' defaultMessage='Checking' />,
     value: 'checking',
   },
   {
     key: 2,
-    text: 'Savings',
+    text: <FormattedMessage id='settings.savings' defaultMessage='Savings' />,
     value: 'savings',
   }
 ]
@@ -65,14 +68,15 @@ class BankAccountsPopup extends React.Component {
   render() {
     const {
       closePopup,
-      popupValues
+      popupValues,
+      intl: { formatMessage }
     } = this.props
     const title = popupValues ? 'Edit' : 'Add'
 
     return (
       <Modal open centered={false}>
         <Modal.Header>
-          {`${title} `} Bank Account
+          {`${title} `} <FormattedMessage id='settings.bankAcc' defaultMessage='Bank Account' />
         </Modal.Header>
         <Modal.Content>
           <Form
@@ -87,29 +91,37 @@ class BankAccountsPopup extends React.Component {
             validateOnChange={false}
             validateOnBlur={false}
           >
-            <FormGroup widths="equal" data-test='settings_bank_account_accountNumber_inp'>
+            <FormGroup widths='equal' data-test='settings_bank_account_accountNumber_inp'>
               <Input
-                type="text"
-                label="Account Number"
-                name="accountNumber"
+                type='text'
+                label={formatMessage({ id: 'settings.accountNumber', defaultMessage: 'Account Number' })}
+                name='accountNumber'
               />
-              <Dropdown label="Account Type" name="bankAccountType" options={bankAccountType} inputProps={{ 'data-test': 'settings_bank_account_popup_type_drpdn' }} />
+              <Dropdown
+                label={formatMessage({ id: 'settings.accountType', defaultMessage: 'Account Type' })}
+                name='bankAccountType'
+                options={bankAccountType}
+                inputProps={{ 'data-test': 'settings_bank_account_popup_type_drpdn' }} />
             </FormGroup>
-            <FormGroup widths="equal" data-test='settings_bank_account_nameNumber_inp'>
+            <FormGroup widths='equal' data-test='settings_bank_account_nameNumber_inp'>
               <Input
-                type="text"
-                label="Name"
-                name="name"
+                type='text'
+                label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
+                name='name'
               />
               <Input
-                type="text"
-                label="Routing Number"
-                name="routingNumber"
+                type='text'
+                label={formatMessage({ id: 'settings.routingNumber', defaultMessage: 'Routing Number' })}
+                name='routingNumber'
               />
             </FormGroup>
             <div style={{ textAlign: 'right' }}>
-              <Button.Reset onClick={closePopup} data-test='settings_bank_account_popup_reset_btn'>Cancel</Button.Reset>
-              <Button.Submit data-test='settings_bank_account_popup_submit_btn'>Save</Button.Submit>
+              <Button.Reset onClick={closePopup} data-test='settings_bank_account_popup_reset_btn'>
+                <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
+              </Button.Reset>
+              <Button.Submit data-test='settings_bank_account_popup_submit_btn'>
+                <FormattedMessage id='global.save' defaultMessage='Save' />
+              </Button.Submit>
             </div>
           </Form>
         </Modal.Content>
@@ -133,7 +145,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
+export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(withToastManager(BankAccountsPopup))
+)(withToastManager(BankAccountsPopup)))

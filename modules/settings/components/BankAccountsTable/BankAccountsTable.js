@@ -5,8 +5,8 @@ import { Header, Modal, Form, Segment, Label } from 'semantic-ui-react'
 import { createConfirmation, confirmable } from 'react-confirm'
 import confirm from '~/src/components/Confirmable/confirm'
 import { Formik } from 'formik'
-import { Input, Button } from "formik-semantic-ui"
-import * as Yup from "yup"
+import { Input, Button } from 'formik-semantic-ui'
+import * as Yup from 'yup'
 
 import {
   openPopup,
@@ -19,19 +19,22 @@ import {
   dwollaFinalizeVerification,
   dwollaFinalizeVerificationConfirmOpen
 } from '../../actions'
-import Router from "next/router"
+import Router from 'next/router'
 
-import { injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
+import { errorMessages } from '~/constants/yupValidation'
+
+const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss, intl: { formatMessage } }) => (
+
   <Formik
     initialValues={{
       amount1: '',
       amount2: ''
     }}
     validationSchema={Yup.object().shape({
-      amount1: Yup.number('Amount mus be a number').required("Amount must be set."),
-      amount2: Yup.number('Amount mus be a number').required("Amount must be set.")
+      amount1: Yup.number(errorMessages.mustBeNumber).required(errorMessages.requiredMessage),
+      amount2: Yup.number(errorMessages.mustBeNumber).required(errorMessages.requiredMessage)
     })}
     onSubmit={(values) => {
       proceed(values)
@@ -43,23 +46,25 @@ const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
     {({ handleReset, handleSubmit, isSubmitting }) => (
       <Modal size='tiny' centered={false} open={show} onClose={dismiss}>
         <Modal.Header>
-          Finalize Verification
+          <FormattedMessage id='settings.finalizeVerification' defaultMessage='Finalize Verification' />
         </Modal.Header>
         <Modal.Content>
           <Segment basic loading={isSubmitting}>
             <Form>
-              <Header as='h3'>Please provide amounts that were transferred to you account:</Header>
+              <Header as='h3'>
+                <FormattedMessage id='settings.provideAmounts' defaultMessage='Please provide amounts that were transferred to you account' />:
+                </Header>
               <Form.Group widths='equal' data-test='settings_bank_account_amounts_inp'>
-                <Input label="Amount 1" name="amount1" type="number" min="0" />
-                <Input label="Amount 2" name="amount2" type="number" min="0" />
+                <Input label={formatMessage({ id: 'settings.amountNum', defaultMessage: 'Amount 1' }, { num: 1 })} name='amount1' type='number' min='0' />
+                <Input label={formatMessage({ id: 'settings.amountNum', defaultMessage: 'Amount 2' }, { num: 2 })} name='amount2' type='number' min='0' />
               </Form.Group>
 
             </Form>
           </Segment>
         </Modal.Content>
         <Modal.Actions>
-          <Button primary inverted onClick={handleReset} data-test='settings_bank_account_cancel_btn'>Cancel</Button>
-          <Button primary onClick={handleSubmit} data-test='settings_bank_account_confirm_btn'>Confirm</Button>
+          <Button primary inverted onClick={handleReset} data-test='settings_bank_account_cancel_btn'><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button>
+          <Button primary onClick={handleSubmit} data-test='settings_bank_account_confirm_btn'><FormattedMessage id='global.confirm' defaultMessage='Confirm' /></Button>
         </Modal.Actions>
       </Modal>
     )}
@@ -67,17 +72,18 @@ const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
   </Formik>
 ))
 
-const finalizeConfirm = createConfirmation(FinalizeConfirmDialog)
+
+const finalizeConfirm = injectIntl(createConfirmation(FinalizeConfirmDialog))
 
 class ProductCatalogTable extends Component {
   state = {
     amount1: 0,
     amount2: 0,
     columns: [
-      { name: 'name', title: 'Account Name' },
-      { name: 'bankAccountType', title: 'Account Type' },
-      { name: 'bankName', title: 'Bank Name' },
-      { name: 'statusLabel', title: 'Status' },
+      { name: 'name', title: <FormattedMessage id='settings.accountName' defaultMessage='Account Name' /> },
+      { name: 'bankAccountType', title: <FormattedMessage id='settings.accountType' defaultMessage='Account Type' /> },
+      { name: 'bankName', title: <FormattedMessage id='settings.bankName' defaultMessage='Bank Name' /> },
+      { name: 'statusLabel', title: <FormattedMessage id='settings.status' defaultMessage='Status' /> },
     ]
   }
 
@@ -104,7 +110,7 @@ class ProductCatalogTable extends Component {
     return (
       <React.Fragment>
         <ProdexTable
-          tableName="settings_bankaccounts"
+          tableName='settings_bankaccounts'
           rows={rows}
           loading={loading}
           columns={columns}
@@ -128,9 +134,7 @@ class ProductCatalogTable extends Component {
             {
               text: formatMessage({ id: 'settings.finalizeVerification', defaultMessage: 'Finalize Verification' }),
               callback: row => {
-                finalizeConfirm().then(v => {
-                  dwollaFinalizeVerification(row.id, v.amount1, v.amount2)
-                })
+                finalizeConfirm().then(v => dwollaFinalizeVerification(row.id, v.amount1, v.amount2))
               },
               hidden: row => row.status !== 'verification_in_process'
             },
@@ -154,10 +158,12 @@ const mapDispatchToProps = {
   dwollaFinalizeVerificationConfirmOpen,
 }
 
+  // ---- TODO ---- React-intl refactor ended here
+
 const statusToLabel = {
-  "verified": <Label color='green' horizontal>Verified</Label>,
-  "unverified": <Label color='red' horizontal>Unverified</Label>,
-  "verification_in_process": <Label color='orange' horizontal>Verification in process</Label>
+  'verified': <Label color='green' horizontal>Verified</Label>,
+  'unverified': <Label color='red' horizontal>Unverified</Label>,
+  'verification_in_process': <Label color='orange' horizontal>Verification in process</Label>
 }
 const mapStateToProps = state => {
   return {

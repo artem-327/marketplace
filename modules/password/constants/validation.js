@@ -29,7 +29,7 @@ export const validationSchema = () => Yup.lazy(values => {
   }
 
   if (!values.passwordConfirm) {
-    validation.passwordConfirm = Yup.string('requiired').required('Required')
+    validation.passwordConfirm = Yup.string('required').required('Required')
   }
   else if (values.password !== values.passwordConfirm) {
     validation.passwordConfirm = Yup.string('must match').oneOf([values.password], messages.passwordsMatch)

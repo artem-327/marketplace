@@ -109,6 +109,23 @@ val.addMethod(val.number, 'divisibleBy', function (ref, message) {
   })
 })
 
+val.addMethod(val.string, 'minDateComparedTo', function (propertyName, message) {
+  return this.test('minDateComparedTo', message, function (value) {
+    const comparedDate = this.parent[propertyName]
+    if (!value || !comparedDate) {
+      return true
+    }
+
+    const valueInt = parseInt(value.split('-').join(''))
+    const comparedInt = parseInt(comparedDate.split('-').join(''))
+    if (valueInt < comparedInt) {
+      return false
+    }
+
+    return true
+  })
+})
+
 const validationScheme = val.object().shape({
   costs: val.array().of(val.object().shape({
     description: val.string(),
@@ -130,7 +147,7 @@ const validationScheme = val.object().shape({
     lotNumber: val.string().nullable().required(errorMessages.requiredMessage),
     pkgAmount: val.number().nullable().moreThan(0, errorMessages.greaterThan(0)).required(errorMessages.requiredMessage),
     manufacturedDate: val.string().nullable().matches(/^([0-9]{4}\-[0-9]{2}\-[0-9]{2})?$/, { message: errorMessages.invalidDate }),
-    expirationDate: val.string().nullable().matches(/^([0-9]{4}\-[0-9]{2}\-[0-9]{2})?$/, { message: errorMessages.invalidDate })
+    expirationDate: val.string().nullable().matches(/^([0-9]{4}\-[0-9]{2}\-[0-9]{2})?$/, { message: errorMessages.invalidDate }).minDateComparedTo('manufacturedDate', 'Date has to be larger than MFG Date')
   })).nullable(),
   manufacturer: val.number().nullable().moreThan(0, 'Manufacturer value is invalid'),
   minimumRequirement: val.bool(),
@@ -153,6 +170,9 @@ const validationScheme = val.object().shape({
     .moreThan(0, errorMessages.requiredMessage)
     .required(errorMessages.requiredMessage)
 })
+
+const tab1 = ['inStock', 'product', 'processingTimeDays', 'doesExpire', 'pkgAmount', 'validityDate', 'minimumRequirement', 'minimum', 'splits', 'priceTiers', 'pricingTiers', 'warehouse']
+const tab2 = ['costs', 'lots', 'origin', 'touchedLot', 'manufacturer']
 
 class AddInventoryForm extends Component {
 
@@ -481,7 +501,7 @@ class AddInventoryForm extends Component {
     )
   }
 
-  renderProductDetails = (values, validateForm) => {
+  renderProductDetails = (values, validateForm, setFieldValue) => {
     const {
       activeIndex
     } = this.state
@@ -495,7 +515,7 @@ class AddInventoryForm extends Component {
             attached={values.product ? false : 'top'}
             style={{ padding: '1.5em' }}>
             <Accordion>
-              <Accordion.Title active={activeIndex === 0} index={0} onClick={this.accClick} data-test='add_inventory_documents_details_btn' >
+              <Accordion.Title active={activeIndex === 0} index={0} onClick={this.accClick} data-test='add_inventory_documents_details_btn'>
                 <Header as='h4'>
 
                   <FormattedMessage id='addInventory.productDetails' defaultMessage='PRODUCT DETAILS'>
@@ -580,12 +600,18 @@ class AddInventoryForm extends Component {
                         .then(r => {
                           // stop when errors found
                           if (Object.keys(r).length) {
+                            if (Object.keys(r).some(r => tab1.includes(r))) {
+                              this.switchTab(0, values, setFieldValue)
+                            }
+                            if (Object.keys(r).some(r => tab2.includes(r))) {
+                              this.switchTab(1, values, setFieldValue)
+                            }
                             toastManager.add(generateToastMarkup(
                               <FormattedMessage id='addInventory.invalidForm' defaultMessage='Form is invalid' />,
                               <FormattedMessage id='addInventory.fixErrorsBeforeSubmit' defaultMessage='There are errors on current tab. Please, fix them before submit.' />,
                             ), {
-                                appearance: 'error'
-                              })
+                              appearance: 'error'
+                            })
                           }
                         }).catch(e => {
                           console.error('CATCH', e)
@@ -854,7 +880,7 @@ class AddInventoryForm extends Component {
                           validateForm()
                             .then(r => {
                               // stop when errors found
-                              if (Object.keys(r).length) {
+                              if (Object.keys(r).length && Object.keys(r).some(r => tab2.includes(r))) {
                                 submitForm() // show errors
                                 return false
                               }
@@ -1233,7 +1259,7 @@ class AddInventoryForm extends Component {
                             </GridColumn>
 
                             <GridColumn width={5}>
-                              {this.renderProductDetails(values, validateForm)}
+                              {this.renderProductDetails(values, validateForm, setFieldValue)}
                             </GridColumn>
                           </Grid>
                         </Tab.Pane>
@@ -1245,7 +1271,7 @@ class AddInventoryForm extends Component {
                           validateForm()
                             .then(r => {
                               // stop when errors found
-                              if (Object.keys(r).length) {
+                              if (Object.keys(r).length && Object.keys(r).some(r => tab1.includes(r))) {
                                 submitForm() // show errors
                                 return false
                               }

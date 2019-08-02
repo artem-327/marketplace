@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Modal, FormGroup, Divider, ButtonToolbar, Label } from 'semantic-ui-react'
-import { Form, Input, Button, Dropdown } from "formik-semantic-ui";
-import * as Yup from "yup"
+import { Modal } from 'semantic-ui-react'
+import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
+import * as Yup from 'yup'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 
 import { getSafe } from '~/utils/functions'
 
 import { FormattedDateTime } from '~/components/formatted-messages/'
+import { errorMessages, phoneValidation } from '~/constants/yupValidation'
 
 import {
   closePopup,
@@ -16,6 +18,8 @@ import {
   updateMyProfile,
   openChangePasswordPopup
 } from '../actions'
+
+
 
 const initialFormValues = {
   'name': '',
@@ -27,13 +31,9 @@ const initialFormValues = {
 
 const formValidation = Yup.object().shape({
   name: Yup.string().trim()
-    .min(3, "Too short")
-    .required("Name is required"),
-  phone: Yup.string().trim()
-    .min(3, "Too short")
-    .matches(
-      /([0-9\(\)\-\+\s])/
-      , 'Please, enter valid phone number (numbers and \'+-()\' characters can be used)')
+    .min(3, errorMessages.minLength(3))
+    .required(errorMessages.requiredMessage),
+  phone: phoneValidation()
 })
 
 class MyProfile extends Component {
@@ -51,12 +51,13 @@ class MyProfile extends Component {
     const {
       closePopup,
       currencies,
-      popupValues
+      popupValues,
+      intl: { formatMessage }
     } = this.props
 
     return (
-      <Modal open centered={false} size="small">
-        <Modal.Header>My Profile</Modal.Header>
+      <Modal open centered={false} size='small'>
+        <Modal.Header><FormattedMessage id='profile.myProfile' defaultMessage='My Profile' /></Modal.Header>
         <Modal.Content>
           <Form
             enableReinitialize
@@ -71,21 +72,39 @@ class MyProfile extends Component {
             }}
             data-test='my_profile_userData_inp'
           >
-            <Input type="text" label="E-mail" name="email" inputProps={{ readOnly: true }} />
-            <Input type="text" label="Name" name="name" />
+            <Input
+              type='text'
+              label={formatMessage({ id: 'global.email', defaultMessage: 'E-mail' })}
+              name='email' inputProps={{ readOnly: true }} />
+            <Input
+              type='text'
+              label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
+              name='name' />
+            <Input
+              type='text'
+              label={formatMessage({ id: 'global.phone', defaultMessage: 'Phone' })}
+              name='phone' />
+            <Input
+              type='text'
+              label={formatMessage({ id: 'global.title', defaultMessage: 'Title' })}
+              name='jobTitle'
+              inputProps={{ readOnly: true }} />
+            <Dropdown
+              label={formatMessage({ id: 'global.currency', defaultMessage: 'Currency' })}
+              name='preferredCurrency'
+              options={currencies}
+              inputProps={{ 'data-test': 'my_profile_currency_drpdn' }} />
 
-            <Input type="text" label="Phone" name="phone" />
-            <Input type="text" label="Title" name="jobTitle" inputProps={{ readOnly: true }} />
-            <Dropdown label="Currency" name="preferredCurrency" options={currencies} inputProps={{ 'data-test': 'my_profile_currency_drpdn' }} />
-
-            Last login at: {popupValues && popupValues.lastLoginAt}
+            <FormattedMessage id='profile.lastLoginAt' defaultMessage='Last login at:' /> {popupValues && popupValues.lastLoginAt}
 
             <div style={{ textAlign: 'right' }}>
-              <Button style={{ "margin-bottom": '10px' }} onClick={this.handleChangePassword} data-test='my_profile_change_password_btn'>Change Password</Button>
+              <Button style={{ 'margin-bottom': '10px' }} onClick={this.handleChangePassword} data-test='my_profile_change_password_btn'>
+                <FormattedMessage id='password.change' defaultMessage='Change Password' />
+              </Button>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <Button.Reset data-test='my_profile_reset_btn'>Cancel</Button.Reset>
-              <Button.Submit data-test='my_profile_submit_btn'>Save</Button.Submit>
+              <Button.Reset data-test='my_profile_reset_btn'><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
+              <Button.Submit data-test='my_profile_submit_btn'><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
             </div>
           </Form>
         </Modal.Content>
@@ -124,4 +143,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyProfile)
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(MyProfile))

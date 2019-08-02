@@ -6,9 +6,7 @@ import ChangePassword from './ChangePassword'
 
 class Profile extends Component {
   renderContent = () => {
-    const {
-      changePasswordPopup
-    } = this.props
+    const { changePasswordPopup } = this.props
 
     return (
       <>
@@ -21,15 +19,13 @@ class Profile extends Component {
   render() {
 
     return (
-      <>
-        {this.renderContent()}
-      </>
+      this.renderContent()
     )
   }
 }
 
-const mapStateToProps = state => {
-  return { ...state.profile }
+const mapStateToProps = ({ profile }) => {
+  return { ...profile }
 }
 
 export default connect(mapStateToProps, null)(Profile)
