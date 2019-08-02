@@ -45,6 +45,27 @@ const BottomUnpaddedRow = styled(GridRow)`
   padding-bottom: 0px !important;
 `
 
+const TableCellBig = styled(TableCell)`
+  @media (min-width: 768px) {
+    width: 15%;
+    max-width: 15%;
+  }
+`
+
+const TableCellSmall = styled(TableCell)`
+  @media (min-width: 768px) {
+    width: 10%;
+    max-width: 10%;
+  }
+`
+
+const TableCellMini = styled(TableCell)`
+  @media (min-width: 768px) {
+    width: 5%;
+    max-width: 5%;
+  }
+`
+
 const initValues = {
   additionalType: 'Unspecified',
   costs: [],
@@ -387,7 +408,7 @@ class AddInventoryForm extends Component {
       return false
 
     let documents = attachments.concat(additional, lots.reduce(function (filtered, lot) {
-      if (lot.attachments.length) {
+      if (lot.attachments && lot.attachments.length) {
         lot.attachments.map(attachment => {
           let lotAttachment = {
             ...attachment,
@@ -898,7 +919,7 @@ class AddInventoryForm extends Component {
                       pane: (
                         <Tab.Pane style={{ padding: '0 32px' }}>
                           <Grid divided style={{ marginTop: '2rem' }}>
-                            <Grid.Column width={5}>
+                            <Grid.Column computer={5} tablet={5} mobile={7}>
                               <Header as='h3'>
                                 <FormattedMessage id='addInventory.whatToList' defaultMessage='What product do you want to list?'>
                                   {(text) =>
@@ -1045,7 +1066,7 @@ class AddInventoryForm extends Component {
                               </FormGroup>
 
                             </Grid.Column>
-                            <GridColumn width={6}>
+                            <GridColumn computer={5} tablet={5} mobile={8}>
                               <Grid centered>
                                 <GridColumn width={12}>
                                   <Grid>
@@ -1258,7 +1279,7 @@ class AddInventoryForm extends Component {
                               </Grid>
                             </GridColumn>
 
-                            <GridColumn width={5}>
+                            <GridColumn computer={5} tablet={5} mobile={16}>
                               {this.renderProductDetails(values, validateForm, setFieldValue)}
                             </GridColumn>
                           </Grid>
@@ -1289,7 +1310,7 @@ class AddInventoryForm extends Component {
                       pane: (
                         <Tab.Pane style={{ padding: '0 32px' }}>
                           <Grid style={{ marginTop: '2rem' }}>
-                            <GridColumn width={11}>
+                            <GridColumn computer={11} tablet={11} mobile={16}>
                               <Grid columns={3} centered>
                                 <GridColumn width={5} floated='left'>
                                   <FormField width={16}>
@@ -1453,8 +1474,8 @@ class AddInventoryForm extends Component {
                                       <Table.Body>
                                         {values.lots && values.lots.length ? values.lots.map((lot, index) => (
                                           <Table.Row key={index}>
-                                            <TableCell data-test={`add_inventory_product_lotNumber_${index}_inp`} ><Input name={`lots[${index}].lotNumber`} inputProps={{ onClick: () => setFieldValue('touchedLot', true) }} /></TableCell>
-                                            <TableCell data-test={`add_inventory_product_pkgAmount_${index}_inp`} ><Input name={`lots[${index}].pkgAmount`} inputProps={{
+                                            <TableCellBig data-test={`add_inventory_product_lotNumber_${index}_inp`} ><Input name={`lots[${index}].lotNumber`} inputProps={{ onClick: () => setFieldValue('touchedLot', true) }} /></TableCellBig>
+                                            <TableCellSmall data-test={`add_inventory_product_pkgAmount_${index}_inp`} ><Input name={`lots[${index}].pkgAmount`} inputProps={{
                                               onClick: () => setFieldValue('touchedLot', true),
                                               onChange: (e, data) => this.modifyCosts(setFieldValue, {
                                                 costs: values.costs,
@@ -1464,12 +1485,12 @@ class AddInventoryForm extends Component {
                                                   }
                                                 })
                                               })
-                                            }} /></TableCell>
-                                            <TableCell>0</TableCell>
-                                            <TableCell>0</TableCell>
-                                            <TableCell><DateInput name={`lots[${index}].manufacturedDate`} /></TableCell>
-                                            <TableCell><DateInput name={`lots[${index}].expirationDate`} /></TableCell>
-                                            <TableCell>
+                                            }} /></TableCellSmall>
+                                            <TableCellSmall>0</TableCellSmall>
+                                            <TableCellSmall>0</TableCellSmall>
+                                            <TableCellBig><DateInput name={`lots[${index}].manufacturedDate`} /></TableCellBig>
+                                            <TableCellBig><DateInput name={`lots[${index}].expirationDate`} /></TableCellBig>
+                                            <TableCellBig>
                                               <UploadLot {...this.props}
                                                 attachments={values.lots[index].attachments}
                                                 name={`lots[${index}].attachments`}
@@ -1486,9 +1507,9 @@ class AddInventoryForm extends Component {
                                                 )}
                                                 emptyContent={(<FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' tagName='A' />)}
                                               />
-                                            </TableCell>
-                                            <TableCell><Icon name='trash alternate outline' size='large' onClick={() => this.removeLot(arrayHelpers, setFieldValue, { costs: values.costs, lots: values.lots }, index)}
-                                                             data-test='add_inventory_removeLot_btn' /></TableCell>
+                                            </TableCellBig>
+                                            <TableCellMini textAlign='center'><Icon name='trash alternate outline' size='large' style={{ 'margin': 0 }} onClick={() => this.removeLot(arrayHelpers, setFieldValue, { costs: values.costs, lots: values.lots }, index)}
+                                                             data-test='add_inventory_removeLot_btn' /></TableCellMini>
                                           </Table.Row>
                                         )) : null
                                         }
@@ -1676,7 +1697,7 @@ class AddInventoryForm extends Component {
 
                             </GridColumn>
 
-                            <GridColumn width={5}>
+                            <GridColumn computer={5} tablet={5} mobile={16}>
                               {this.renderProductDetails(values, validateForm)}
                             </GridColumn>
                           </Grid>

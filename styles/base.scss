@@ -110,6 +110,15 @@ i.icon.thick {
   }
 }
 
+@media (max-width: 767px) {
+  .product-details {
+
+    .segment-fixed {
+      width: calc(100% - 100px);
+    }
+  }
+}
+
 .ui.grid.data-grid {
   margin-top: 0;
   margin-bottom: 0;
@@ -458,12 +467,32 @@ table.ui.table.table-fields {
   }
 
   tbody tr td {
+    position: relative;
     height: 2.85714286em;
     border-width: 0 1px 1px;
     border-style: solid;
     border-color: #ccc;
     padding: 0.67857143em 0.78571429em;
     vertical-align: middle;
+
+    > .field {
+      position: absolute;
+      top: 0.60714286em;
+      left: 0.78571429em;
+      right: 0.78571429em;
+      bottom: 0.60714286em;
+
+      .ui.icon.input  {
+
+        >input {
+          padding-right: 2em !important;
+        }
+
+        > i.icon.calendar {
+          width: 1.2em;
+        }
+      }
+    }
 
     input {
       width: calc(100% + 1.57142858em);
