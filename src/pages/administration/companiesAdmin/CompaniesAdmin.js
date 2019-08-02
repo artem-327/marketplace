@@ -66,6 +66,7 @@ class CompaniesAdmin extends Component {
                 id: 'administration.newCompanyName',
                 defaultMessage: 'New Company Name'
             })}
+            data-test='administration_company_name_inp'
           />
           <i
             className="fas fa-plus"
@@ -73,6 +74,7 @@ class CompaniesAdmin extends Component {
             onClick={() =>
               postNewCompany(this.state.name, () => this.setState({ name: "" }))
             }
+            data-test='administration_company_new_btn'
           />
         </div>
       </>

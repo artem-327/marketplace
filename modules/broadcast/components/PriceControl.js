@@ -94,10 +94,11 @@ export default class PriceControl extends Component {
           onClick={e => { e.preventDefault(); e.stopPropagation() }}
           onChange={this.handleChange}
           size='small'
+          data-test='broadcast_price_control_price_inp'
         />
         <ControlBox>
-          <Radio disabled={disabled} label='%' checked={type === 'multiplier'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'multiplier' })} />
-          <Radio disabled={disabled} label='$' checked={type === 'addition'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'addition' })} />
+          <Radio disabled={disabled} label='%' checked={type === 'multiplier'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'multiplier' })} data-test='broadcast_price_control_multiplier_rad'/>
+          <Radio disabled={disabled} label='$' checked={type === 'addition'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'addition' })} data-test='broadcast_price_control_addition_rad'/>
         </ControlBox>
         <ControlBox>
           <FobPrice disabled={disabled}>{prices.low} -</FobPrice>

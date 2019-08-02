@@ -39,7 +39,7 @@ class ImportXLS extends Component {
                 <DragDropFile handleFile={this.handleFile}>
                     <div style={{margin: '20px'}} className="row">
                         <div className="col-xs-12">
-                            <FileSelector accept={accept} handleFile={this.handleFile}/>
+                            <FileSelector accept={accept} handleFile={this.handleFile} data-test='file_selector_inp'/>
                         </div>
                     </div>
                 </DragDropFile>

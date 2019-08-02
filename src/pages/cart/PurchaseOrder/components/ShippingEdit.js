@@ -94,7 +94,7 @@ export default class ShippingEdit extends Component {
     let { errors, setFieldValue, values } = props
     return (
       <>
-        <FormGroup>
+        <FormGroup data-test='cart_shipping_edit_name_inp'>
           <Input
             fieldProps={{ width: 8 }}
             label={<FormattedMessage id='global.firstName' default='First Name' />}
@@ -106,7 +106,7 @@ export default class ShippingEdit extends Component {
             name='lastName' />
         </FormGroup>
 
-        <FormGroup>
+        <FormGroup data-test='cart_shipping_edit_streetZip_inp'>
           <Input
             fieldProps={{ width: 10 }}
             label={<FormattedMessage id='global.address' defaultMessage='Address' />}
@@ -119,7 +119,7 @@ export default class ShippingEdit extends Component {
 
         </FormGroup>
 
-        <FormGroup widths='equal'>
+        <FormGroup widths='equal' data-test='cart_shipping_edit_city_inp'>
           <Input
             label={<FormattedMessage id='global.city' defaultMessage='City' />}
             name='address.city' />
@@ -167,7 +167,7 @@ export default class ShippingEdit extends Component {
 
         </FormGroup>
 
-        <FormGroup widths='equal'>
+        <FormGroup widths='equal' data-test='cart_shipping_edit_emailPhone_inp'>
           <Input
             label={<FormattedMessage id='global.email' defaultMessage='E-mail Address' />}
             name='email' />
@@ -243,6 +243,7 @@ export default class ShippingEdit extends Component {
                       checked={isNewAddress}
                       disabled={!selectedAddress}
                       label={<label><FormattedMessage id='global.savedAddress' defaultMessage='Saved Address' /> </label>}
+                      data-test='cart_shipping_edit_savedAddress_rad'
                     />
                   </Form.Field>
 
@@ -251,6 +252,7 @@ export default class ShippingEdit extends Component {
                       onChange={() => shippingChanged({ isNewAddress: false })}
                       checked={!isNewAddress}
                       label={<label><FormattedMessage id='global.addNewAddress' defaultMessage='Add New' /> </label>}
+                      data-test='cart_shipping_edit_addNewAddress_rad'
                     />
                   </Form.Field>
                 </FormGroup>

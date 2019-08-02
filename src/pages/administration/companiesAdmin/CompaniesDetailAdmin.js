@@ -80,6 +80,7 @@ class CompaniesDetailAdmin extends Component {
               value={this.state.name}
               handleChange={this.handleChange}
               name="name"
+              data-test='administration_companies_name_inp'
             />
             <Button
                 color="red"

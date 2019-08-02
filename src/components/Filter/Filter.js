@@ -632,7 +632,7 @@ class Filter extends Component {
                         </GridColumn>
                       </RelaxedRow>
                       <GridRow>
-                        <GridColumn computer={12}>
+                        <GridColumn computer={12} data-test='filter_set_name_inp'>
                           <Input
                             size='large'
                             fluid

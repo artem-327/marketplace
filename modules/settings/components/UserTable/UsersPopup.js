@@ -151,11 +151,11 @@ class UsersPopup extends React.Component {
                   ))
                 ) : (
                     <>
-                      <FormGroup widths="equal">
+                      <FormGroup widths="equal" data-test='settings_users_popup_nameTitle_inp'>
                         <Input type="text" label="Name" name="name" />
                         <Input type="text" label="Job Title" name="jobTitle" />
                       </FormGroup>
-                      <FormGroup widths="equal">
+                      <FormGroup widths="equal" data-test='settings_users_popup_emailPhone_inp'>
                         <Input type="text" label="Email" name="email" />
                         <Input type="text" label="Phone" name="phone" />
                       </FormGroup>

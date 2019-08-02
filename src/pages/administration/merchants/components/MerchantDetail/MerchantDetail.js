@@ -67,16 +67,16 @@ class MerchantDetail extends Component {
           <div className="add-cart-body-section">
             <div>MERCHANT INFO:</div>
             <div>
-              First Name: <InputControlled value={this.state.firstname} handleChange={this.handleChange} name="firstname" />
+              First Name: <InputControlled value={this.state.firstname} handleChange={this.handleChange} name="firstname" data-test='administration_merchant_detail_firstname_inp' />
             </div>
             <div>
-              Middle Name: <InputControlled value={this.state.middlename} handleChange={this.handleChange} name="middlename" />
+              Middle Name: <InputControlled value={this.state.middlename} handleChange={this.handleChange} name="middlename" data-test='administration_merchant_detail_middlename_inp' />
             </div>
             <div>
-              Last Name: <InputControlled value={this.state.lastname} handleChange={this.handleChange} name="lastname" />
+              Last Name: <InputControlled value={this.state.lastname} handleChange={this.handleChange} name="lastname" data-test='administration_merchant_detail_lastname_inp' />
             </div>
             <div>
-              Email: <InputControlled value={this.state.email} handleChange={this.handleChange} name="email" />
+              Email: <InputControlled value={this.state.email} handleChange={this.handleChange} name="email" data-test='administration_merchant_detail_email_inp' />
             </div>
             <div>OFFICE:</div>
             <div>
@@ -85,6 +85,7 @@ class MerchantDetail extends Component {
                 handleChange={this.handleChange}
                 name="country"
                 disabled={true}
+                data-test='administration_merchant_detail_country_inp'
               />
             </div>
             <div>
@@ -93,6 +94,7 @@ class MerchantDetail extends Component {
                 handleChange={this.handleChange}
                 name="state"
                 disabled={true}
+                data-test='administration_merchant_detail_state_inp'
               />
             </div>
             <div>

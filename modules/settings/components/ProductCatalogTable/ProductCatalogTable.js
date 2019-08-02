@@ -19,7 +19,7 @@ class ProductCatalogTable extends Component {
   state = {
     columns: [
       { name: 'productName', title: 'Product Name', sortPath: 'Product.productName' },
-      { name: 'productNumber', title: 'Product Number', sortPath: 'Product.productCode' },
+      { name: 'productCode', title: 'Product Number', sortPath: 'Product.productCode' },
       { name: 'casNumber', title: 'CAS Number' },
       { name: 'casName', title: 'CAS Name' },
       { name: 'packagingSizeFormatted', title: 'Packaging Size' },

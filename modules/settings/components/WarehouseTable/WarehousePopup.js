@@ -167,7 +167,7 @@ class WarehousePopup extends React.Component {
             onSubmit={this.submitHandler} >
             {({ setFieldValue, values }) => (
               <>
-                <FormGroup widths='equal'>
+                <FormGroup widths='equal' data-test='settings_warehouse_popup_name_inp'>
                   <Input type='text' label={name} name='name' />
                 </FormGroup>
                 <AddressForm
@@ -175,10 +175,10 @@ class WarehousePopup extends React.Component {
                   values={values} />
 
                 <Header as='h3'>Contact Info</Header>
-                <FormGroup>
+                <FormGroup data-test='settings_warehouse_popup_contactName_inp'>
                   <Input type='text' label='Contact Name' name='contactName' fieldProps={{ width: 8 }} />
                 </FormGroup>
-                <FormGroup widths='equal'>
+                <FormGroup widths='equal' data-test='settings_warehouse_popup_phoneEmail_inp'>
                   <Input type='text' label='Phone' name='contactPhone' />
                   <Input type='text' label='Email' name='contactEmail' />
                 </FormGroup>

@@ -892,7 +892,7 @@ class AddBroadcast extends Component {
 
 
                 <GridRow>
-                  <GridColumn>
+                  <GridColumn data-test='my_inventory_broadcast_search_inp'>
                     <Input
                       fluid
                       value={this.state.filterInput}
@@ -1037,7 +1037,7 @@ class AddBroadcast extends Component {
               />
             </div>
 
-            <div className="group-item-wr search">
+            <div className="group-item-wr search" data-test='my_inventory_broadcast_search_inp'>
               <i className="search" />
               <InputControlled
                 value={this.state.filterInput}

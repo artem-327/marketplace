@@ -924,8 +924,8 @@ class AddInventoryForm extends Component {
 
                               <Header as='h3'><FormattedMessage id='addInventory.isInStock' defaultMessage='Is this product in stock?' /></Header>
                               <FormGroup inline>
-                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='inStock' />
-                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='inStock' />
+                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='inStock' data-test='add_inventory_instock_no_rad' />
+                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='inStock' data-test='add_inventory_instock_yes_rad' />
                               </FormGroup>
                               <Header as='h3'>
                                 <FormattedMessage id='addInventory.pickupDays' defaultMessage='How many business days to pick up?'>{(text) => (
@@ -962,8 +962,8 @@ class AddInventoryForm extends Component {
                                 </FormattedMessage>
                               </Header>
                               <FormGroup inline>
-                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='doesExpire' />
-                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='doesExpire' />
+                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='doesExpire' data-test='add_inventory_expire_no_rad'/>
+                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='doesExpire' data-test='add_inventory_expire_yes_rad' />
                               </FormGroup>
                               <FormGroup>
                                 <FormField width={10} data-test='add_inventory_product_expirationDate_inp' >
@@ -1055,13 +1055,15 @@ class AddInventoryForm extends Component {
                                               setFieldValue('minimum', 1)
                                               setFieldValue('pricingTiers[0].quantityFrom', 1)
                                             }
-                                          }} />
+                                          }}
+                                          data-test='add_inventory_minimumRequirement_no_rad'/>
                                       </GridColumn>
                                       <GridColumn computer={8} tablet={16}>
                                         <Radio
                                           label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })}
                                           value={true}
-                                          name='minimumRequirement' />
+                                          name='minimumRequirement'
+                                          data-test='add_inventory_minimumRequirement_yes_rad'/>
                                       </GridColumn>
                                     </GridRow>
 
@@ -1486,13 +1488,15 @@ class AddInventoryForm extends Component {
                                         <Radio
                                           label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })}
                                           value={true}
-                                          name='trackSubCosts' />
+                                          name='trackSubCosts'
+                                          data-test='add_inventory_trackSubCosts_yes_rad' />
                                       </FormField>
                                       <FormField width={5}>
                                         <Radio
                                           label={formatMessage({ id: 'global.no', defaultMessage: 'No' })}
                                           value={false}
-                                          name='trackSubCosts' />
+                                          name='trackSubCosts'
+                                          data-test='add_inventory_trackSubCosts_no_rad'/>
                                       </FormField>
                                     </FormGroup>
                                   </FormField>

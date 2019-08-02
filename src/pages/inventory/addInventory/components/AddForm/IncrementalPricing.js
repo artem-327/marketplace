@@ -36,10 +36,10 @@ const IncrementalPricing = (props) => {
             const grossMargin = calculateGrossMargin(index)
             const lastPriceLevel = index === incrementalPricing.length-1
             const plusButton = (item.quantityTo !== '' && item.price !== '' && lastPriceLevel) && grossMargin !== ' ' 
-              ? <button onClick={e => addNewIncrementalPricing(e, index)} className='incremental-button add'>+</button> 
+              ? <button onClick={e => addNewIncrementalPricing(e, index)} className='incremental-button add' data-test={`add_inventory_add_${index}_btn`}>+</button>
               : null
             const minusButton = (index !== 0) 
-              ? <button onClick={e => removeIncrementalPricing(e, index)} className='incremental-button remove'>-</button> 
+              ? <button onClick={e => removeIncrementalPricing(e, index)} className='incremental-button remove' data-test={`add_inventory_remove_${index}_btn`}>-</button>
               : null
 
             if (typeof item.margin === 'undefined' && item.price) {
@@ -92,16 +92,16 @@ const IncrementalPricing = (props) => {
             return <tr key={index}>
 
                 {/*<td><span className='incremental-index'><span>{index + 1}</span></span></td>*/}
-                <td>
+                <td data-test={`add_inventory_quantityFrom_${index}_inp`}>
                   {quantityFrom}
                 </td>
-                <td>
+                <td data-test={`add_inventory_quantityTo_${index}_inp`}>
                   {quantityTo}
                 </td>
-                <td>
+                <td data-test={`add_inventory_price_${index}_inp`}>
                   {price}
                 </td>
-                <td>
+                <td data-test={`add_inventory_margin_${index}_inp`}>
                   {margin}
                 </td>
 

@@ -94,7 +94,7 @@ class Map extends Component {
                   onChange={this.selectSavedMap}
                 />
               </Grid.Column>
-              <Grid.Column textAlign="center">
+              <Grid.Column textAlign="center" data-test='settings_product_import_csv_name_inp'>
                 <Input placeholder="Map Name" onChange={this.inputMapName} />
               </Grid.Column>
               <Grid.Column textAlign="center" verticalAlign="middle">

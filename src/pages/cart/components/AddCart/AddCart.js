@@ -265,7 +265,7 @@ export default class AddCart extends Component {
               <GridColumn>
                 Select Quantity:
               </GridColumn>
-              <GridColumn>
+              <GridColumn data-test='add_cart_quantity_inp'>
                 <Input
                   step={offer.splits}
                   error={!!error}

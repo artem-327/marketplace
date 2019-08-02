@@ -49,7 +49,7 @@ const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
           <Segment basic loading={isSubmitting}>
             <Form>
               <Header as='h3'>Please provide amounts that were transferred to you account:</Header>
-              <Form.Group widths='equal'>
+              <Form.Group widths='equal' data-test='settings_bank_account_amounts_inp'>
                 <Input label="Amount 1" name="amount1" type="number" min="0" />
                 <Input label="Amount 2" name="amount2" type="number" min="0" />
               </Form.Group>

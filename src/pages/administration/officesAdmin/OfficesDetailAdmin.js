@@ -53,6 +53,7 @@ class OfficesDetailAdmin extends Component {
                     </div>
 
                     <InputEdit
+                        data-test='administration_offices_detail_name_inp'
                         value={office.name}
                         onSave={(text) => {
                         putOfficeEdit({"id": office.id, "name": text, "baseLocation": office.baseLocation.id, "company": office.companyResponse.id})

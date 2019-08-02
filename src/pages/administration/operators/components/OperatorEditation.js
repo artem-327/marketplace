@@ -30,34 +30,39 @@ class OperatorEditation extends Component {
                     value={this.state.firstname}
                     handleChange={this.handleChange}
                     name="firstname"
+                    data-test='administration_operators_firstname_inp'
                 /></td>
                 <td>
                 <InputControlled
                     value={this.state.middlename}
                     handleChange={this.handleChange}
                     name="middlename"
+                    data-test='administration_operators_middlename_inp'
                 /></td>
                 <td>
                 <InputControlled
                     value={this.state.lastname}
                     handleChange={this.handleChange}
                     name="lastname"
+                    data-test='administration_operators_lastname_inp'
                 /></td>
                 <td>
                 <InputControlled
                     value={this.state.email}
                     handleChange={this.handleChange}
                     name="email"
+                    data-test='administration_operators_email_inp'
                 /></td>
                 <td>
                 <InputControlled
                     value={this.state.login}
                     handleChange={this.handleChange}
                     name="login"
+                    data-test='administration_operators_login_inp'
                 /></td>
                 <td>
-                    <button className="button small green" onClick={this.saveEditation}>Save</button>
-                    <button className="button small" onClick={toogleEditation}>Cancel</button>
+                    <button className="button small green" onClick={this.saveEditation} data-test='administration_operators_save_btn'>Save</button>
+                    <button className="button small" onClick={toogleEditation} data-test='administration_operators_cancel_btn'>Cancel</button>
                 </td>
             </tr>
         )

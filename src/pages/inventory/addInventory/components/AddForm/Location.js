@@ -157,9 +157,11 @@ class Location extends Component {
     renderSavedLocation() {
         const disabled = this.state.warehouseIndex === '';
         const button = this.state.edit ?
-            <button onClick={(e) => this.updateLocation(e)} className='edit-location'>Save</button> :
+            <button onClick={(e) => this.updateLocation(e)} className='edit-location'
+                    data-test='add_inventory_location_saved_save_btn'>Save</button> :
             <button className={'edit-location' + classnames({" disabled": (disabled)})}
-                    onClick={(e) => this.changeMode(e)}>Edit</button>;
+                    onClick={(e) => this.changeMode(e)}
+                    data-test='add_inventory_location_saved_edit_btn'>Edit</button>;
 
         const { formatMessage } = this.props.intl;
 
@@ -192,12 +194,13 @@ class Location extends Component {
                                     id: 'global.selectLocation',
                                     defaultMessage: 'Select Location'
                                 })}
+                                data-test='add_inventory_location_location_drpdn'
                             />
                     </div>
                 </div>
                     <React.Fragment>
                         <div>
-                            <div className='group-item-wr'>
+                            <div className='group-item-wr' data-test='add_inventory_location_streetAddress_inp'>
                                 {(this.state.isSubmitted && this.state.street === '') ?
                                     <div className='warehouse-val'>
                                         <span>
@@ -221,7 +224,7 @@ class Location extends Component {
                                            this.handleInputs(e.target.value, 'street')
                                        }}/>
                             </div>
-                            <div className='group-item-wr'>
+                            <div className='group-item-wr' data-test='add_inventory_location_city_inp'>
                                 {(this.state.isSubmitted && this.state.city === '') ?
                                     <div className='warehouse-val'>
                                         <span>
@@ -289,9 +292,10 @@ class Location extends Component {
                                                     if (location.country) return location.country.name;
                                                     else if (location.province) return location.province.name;
                                                     else return 'no province or country';
-                                                }} />
+                                                }}
+                                                data-test='add_inventory_location_state_drpdn'/>
                             </div>
-                            <div className='group-item-wr'>
+                            <div className='group-item-wr' data-test='add_inventory_location_zip_inp'>
                                 {(this.state.isSubmitted && this.state.zip === '') ?
                                     <div className='warehouse-val'>
                                         <span>
@@ -318,7 +322,7 @@ class Location extends Component {
                             </div>
                         </div>
                         <div>
-                            <div className='group-item-wr'>
+                            <div className='group-item-wr' data-test='add_inventory_location_contactName_inp'>
                                 {(this.state.isSubmitted && this.state.contact === '') ?
                                     <div className='warehouse-val'>
                                         <span>
@@ -342,7 +346,7 @@ class Location extends Component {
                                            this.handleInputs(e.target.value, 'contact')
                                        }}/>
                             </div>
-                            <div className='group-item-wr'>
+                            <div className='group-item-wr' data-test='add_inventory_location_phoneNumber_inp'>
                                 {(this.state.isSubmitted && this.state.phone === '') ?
                                     <div className='warehouse-val'>
                                         <span>
@@ -366,7 +370,7 @@ class Location extends Component {
                                            this.handleInputs(e.target.value, 'phone')
                                        }}/>
                             </div>
-                            <div className='group-item-wr'>
+                            <div className='group-item-wr' data-test='add_inventory_location_email_inp'>
                                 {(this.state.isSubmitted && this.state.email === '') ?
                                     <div className='warehouse-val'>
                                         <span>
@@ -413,7 +417,7 @@ class Location extends Component {
         const { formatMessage } = this.props.intl;
 
         let button =
-            <button onClick={(e) => this.saveLocation(e, false)} className='edit-location'>
+            <button onClick={(e) => this.saveLocation(e, false)} className='edit-location' data-test='add_inventory_location_new_save_btn'>
                 <FormattedMessage
                     id='addInventory.save'
                     defaultMessage='Save'
@@ -422,7 +426,7 @@ class Location extends Component {
         return (
             <div>
                 <div>
-                    <div className='group-item-wr'>
+                    <div className='group-item-wr' data-test='add_inventory_location_warehouseName_inp'>
                         {(this.state.isSubmitted && this.state.warehouseName === '') ?
                             <div className='warehouse-val'>
                                 <span className="warehouse-val-fm">
@@ -446,7 +450,7 @@ class Location extends Component {
                                }}
                         />
                     </div>
-                    <div className='group-item-wr'>
+                    <div className='group-item-wr' data-test='add_inventory_location_streetAddress_inp'>
                         {(this.state.isSubmitted && this.state.street === '') ?
                             <div className='warehouse-val'>
                                 <span className="warehouse-val-fm">
@@ -469,7 +473,7 @@ class Location extends Component {
                                    this.handleInputs(e.target.value, 'street')
                                }}/>
                     </div>
-                    <div className='group-item-wr'>
+                    <div className='group-item-wr' data-test='add_inventory_location_city_inp'>
                         {(this.state.isSubmitted && this.state.city === '') ?
                             <div className='warehouse-val'>
                                 <span className="warehouse-val-fm">
@@ -530,9 +534,10 @@ class Location extends Component {
                                             if (location.country) return location.country.name;
                                             else if (location.province) return location.province.name;
                                             else return 'no province or country';
-                                        }} />
+                                        }}
+                                        data-test='add_inventory_location_state_drpdn'/>
                     </div>
-                    <div className='group-item-wr'>
+                    <div className='group-item-wr' data-test='add_inventory_location_zip_inp'>
                         {(this.state.isSubmitted && this.state.zip === '') ?
                             <div className='warehouse-val'>
                                 <span className="warehouse-val-fm">
@@ -560,7 +565,7 @@ class Location extends Component {
                     </div>
                 </div>
                 <div>
-                    <div className='group-item-wr'>
+                    <div className='group-item-wr' data-test='add_inventory_location_contactName_inp'>
                     {(this.state.isSubmitted && this.state.contact === '') ?
                             <div className='warehouse-val'>
                                 <span className="warehouse-val-fm">
@@ -583,7 +588,7 @@ class Location extends Component {
                                    this.handleInputs(e.target.value, 'contact')
                                }}/>
                     </div>
-                    <div className='group-item-wr'>
+                    <div className='group-item-wr' data-test='add_inventory_location_phoneNumber_inp'>
                     {(this.state.isSubmitted && this.state.phone === '') ?
                             <div className='warehouse-val'>
                                 <span className="warehouse-val-fm">
@@ -606,7 +611,7 @@ class Location extends Component {
                                    this.handleInputs(e.target.value, 'phone')
                                }}/>
                     </div>
-                    <div className='group-item-wr'>
+                    <div className='group-item-wr' data-test='add_inventory_location_email_inp'>
                         {(this.state.isSubmitted && this.state.email === '') ?
                             <div className='warehouse-val'>
                                 <span className="warehouse-val-fm">
@@ -706,7 +711,8 @@ class Location extends Component {
                     <div className={'location-submenu ' + this.state.location}>
                         <div
                             className='saved'
-                            onClick={() => this.changeLocation('saved')}>
+                            onClick={() => this.changeLocation('saved')}
+                            data-test='add_inventory_location_saved_btn'>
                             <FormattedMessage
                                 id='addInventory.savedWarehouse'
                                 defaultMessage='SAVED WAREHOUSE'
@@ -714,7 +720,8 @@ class Location extends Component {
                         </div>
                         <div
                             className='new'
-                            onClick={() => this.changeLocation('new')}>
+                            onClick={() => this.changeLocation('new')}
+                            data-test='add_inventory_location_new_btn'>
                             <FormattedMessage
                                 id='addInventory.newWarehouse'
                                 defaultMessage='NEW WAREHOUSE'

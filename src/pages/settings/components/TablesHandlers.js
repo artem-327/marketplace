@@ -102,7 +102,7 @@ class TablesHandlers extends Component {
         </Menu.Item>
 
         <Menu.Menu position="right">
-          <Menu.Item>
+          <Menu.Item data-test='settings_tables_handlers_search_inp'>
             <Input
               style={{ width: 340 }}
               size="large"

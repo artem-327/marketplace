@@ -37,7 +37,7 @@ export default class ShippingQuote extends Component {
     return (
       <>
         <RelaxedRow key={index}>
-          <GridColumn computer={1}><Radio checked={selectedShippingQuote && selectedShippingQuote.index === index} onChange={() => handleQuoteSelect(index)} /></GridColumn>
+          <GridColumn computer={1}><Radio checked={selectedShippingQuote && selectedShippingQuote.index === index} onChange={() => handleQuoteSelect(index)} data-test={`cart_purchase_order_shipping_quote_${index}_rad`} /></GridColumn>
           <GridColumn computer={4}>{item.carrierName}</GridColumn>
           <GridColumn computer={2}><FormattedNumber style='currency' currency={'USD'} value={item.estimatedPrice} /></GridColumn>
           <GridColumn computer={4}>{deliveryTime}</GridColumn>

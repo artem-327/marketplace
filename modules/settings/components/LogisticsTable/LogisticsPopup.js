@@ -79,7 +79,7 @@ class LogisticsPopup extends Component {
               this.handleSubmit = submitForm
               return (
                 <>
-                  <FormGroup widths='equal'>
+                  <FormGroup widths='equal' data-test='settings_logistics_apikey_inp'>
                     <Dropdown name='provider'
                       options={
                         logisticsProviders.map((provider) => ({
@@ -90,7 +90,7 @@ class LogisticsPopup extends Component {
                       }
                       label={formatMessage({ id: 'logistics.label.logisticsProvider', defaultMessage: 'Logistics Provider' })}
                       inputProps={{
-                        'data-test': 'logistics_table_provider_drpdn',
+                        'data-test': 'settings_logistics_provider_drpdn',
                         placeholder: formatMessage({ id: 'logistics.placeholder.logisticsProvider', label: 'Select Logistics Provider' }),
                         loading: logisticsProvidersFetching
                       }} />
@@ -100,7 +100,7 @@ class LogisticsPopup extends Component {
                       inputProps={{ placeholder: formatMessage({ id: 'logistics.placeholder.apiKey', defaultMessage: 'Enter your API key' }) }} />
                   </FormGroup>
 
-                  <FormGroup widths='equal'>
+                  <FormGroup widths='equal' data-test='settings_logistics_namePassword_inp'>
                     <Input
                       name='username'
                       label={formatMessage({ id: 'logistics.label.username', defaultMessage: 'User Name' })}
@@ -117,8 +117,8 @@ class LogisticsPopup extends Component {
           </Form>
         </Modal.Content>
         <Modal.Actions>
-          <Button onClick={closePopup}><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button>
-          <Button onClick={() => this.handleSubmit()} positive>{message}</Button>
+          <Button onClick={closePopup} data-test='settings_logistics_cancel_btn'><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button>
+          <Button onClick={() => this.handleSubmit()} positive data-test='settings_logistics_submit_btn'>{message}</Button>
         </Modal.Actions>
       </Modal>
     )

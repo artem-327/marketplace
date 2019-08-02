@@ -57,32 +57,32 @@ class CartItemSummary extends Component {
             </GridRow>
 
             <GridRow>
-              <GridColumn>
+              <GridColumn data-test='shopping_cart_unCode_inp'>
                 <Input inputProps={{ disabled }} name='unCode' label={formatMessage({ id: 'cart.unCode', defaultMessage: 'UN Code' })} />
               </GridColumn>
             </GridRow>
 
             <GridRow>
-              <GridColumn>
+              <GridColumn data-test='shopping_cart_packagingGroup_inp'>
                 <Input inputProps={{ disabled }} name='packaging' label={formatMessage({ id: 'cart.packagingGroup', defaultMessage: 'Packaging Group' })} />
               </GridColumn>
             </GridRow>
 
 
             <GridRow>
-              <GridColumn>
+              <GridColumn data-test='shopping_cart_hazardClass_inp'>
                 <Input inputProps={{ disabled }} name='hazardClass' label={formatMessage({ id: 'cart.hazardClass', defaultMessage: 'Hazard Class' })} />
               </GridColumn>
             </GridRow>
 
             <GridRow>
-              <GridColumn>
+              <GridColumn data-test='shopping_cart_freightClass_inp'>
                 <Input inputProps={{ disabled }} name='freightClass' label={formatMessage({ id: 'cart.freightClass', defaultMessage: 'Freight Class' })} />
               </GridColumn>
             </GridRow>
 
             <GridRow>
-              <GridColumn>
+              <GridColumn data-test='shopping_cart_nmfcNumber_inp'>
                 <Input inputProps={{ disabled }} name='nmfcNumber' label={formatMessage({ id: 'cart.nmfcNumber', defaultMessage: 'NMFC Number' })} />
               </GridColumn>
             </GridRow>
@@ -90,7 +90,7 @@ class CartItemSummary extends Component {
 
             <GridRow>
               <GridColumn>
-                <Checkbox inputProps={{ disabled }} name='stackable' label={formatMessage({ id: 'cart.stackable', defaultMessage: 'Stackable' })} />
+                <Checkbox inputProps={{ disabled, 'data-test': 'shopping_cart_stackable_chckb' }} name='stackable' label={formatMessage({ id: 'cart.stackable', defaultMessage: 'Stackable' })} />
               </GridColumn>
             </GridRow>
 
@@ -121,7 +121,8 @@ class CartItemSummary extends Component {
               <GridColumn floated='right'>
                 <span
                   className='headerAddtext'
-                  onClick={() => deleteCart(item.id)}>
+                  onClick={() => deleteCart(item.id)}
+                  data-test={`shopping_cart_remove_${item.id}_btn`}>
                   <FormattedMessage
                     id='global.remove'
                     defaultMessage='Remove'

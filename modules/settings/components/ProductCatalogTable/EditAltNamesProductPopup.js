@@ -127,7 +127,7 @@ class EditAltNamesProductPopup extends React.Component {
                         <Button type='button' icon='plus' color='blue' size='small' floated='right' style={{marginTop: '-0.5em'}}
                                 onClick={() => this.handleAddName(arrayHelpers)}
                                 data-test='settings_product_alt_name_add_btn'/>
-                        {`${popupValues.productNumber} ${popupValues.productName}`}
+                        {`${popupValues.productCode} ${popupValues.productName}`}
                       </Message>
 
                       <Table attached='bottom' className='table-fields'>
@@ -142,7 +142,7 @@ class EditAltNamesProductPopup extends React.Component {
                           {values && values.productAltNames.length ? values.productAltNames.map((val, index, vals) => (
                             <Table.Row key={index}>
                               <TableCell width={16}>
-                                <FormField>
+                                <FormField data-test={`settings_product_alt_name_name_${index}_inp`}>
                                   <Input name={`productAltNames[${index}].tradeName`}
                                          inputProps={{
                                            onChange: (e, d) => {
@@ -165,7 +165,8 @@ class EditAltNamesProductPopup extends React.Component {
                                                         setFieldValue(`productAltNames[${index}].description`, '')
                                                         setFieldValue(`productAltNames[${index}].canSave`, false)
                                                       }}}
-                                                      color={val.color} />}
+                                                      color={val.color}
+                                                      data-test={`settings_product_alt_name_save_${index}_btn`}/>}
                                 />
                               ) : (
                                 <Icon name='save outline'
@@ -176,10 +177,12 @@ class EditAltNamesProductPopup extends React.Component {
                                         setFieldValue(`productAltNames[${index}].description`, '')
                                         setFieldValue(`productAltNames[${index}].canSave`, false)
                                       }}}
-                                      color={val.color} />
+                                      color={val.color}
+                                      data-test={`settings_product_alt_name_save_${index}_btn`}/>
                               )}</TableCell>
                               <TableCell width={1}><Icon name='trash alternate outline' size='large'
-                                                         onClick={() => this.handleDeleteName(popupValues.id, arrayHelpers, val, index)} /></TableCell>
+                                                         onClick={() => this.handleDeleteName(popupValues.id, arrayHelpers, val, index)}
+                                                         data-test={`settings_product_alt_name_delete_${index}_btn`}/></TableCell>
                             </Table.Row>
                           )) : ''
                           }

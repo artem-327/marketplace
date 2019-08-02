@@ -26,10 +26,11 @@ class OperatorEditation extends Component {
                     value={this.state.firstname}
                     handleChange={this.handleChange}
                     name="name"
+                    data-test='administration_offices_edit_firstname_inp'
                 /></td>
                 <td>
-                    <button className="button small green" onClick={this.saveEditation}>Save</button>
-                    <button className="button small" onClick={toogleEditation}>Cancel</button>
+                    <button className="button small green" onClick={this.saveEditation} data-test='administration_offices_detail_save_btn'>Save</button>
+                    <button className="button small" onClick={toogleEditation} data-test='administration_offices_detail_cancel_btn'>Cancel</button>
                 </td>
             </tr>
         )

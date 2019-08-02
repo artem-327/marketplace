@@ -153,6 +153,7 @@ class ShippingEdit extends Component {
                       checked={!isNewAddress}
                       disabled={!selectedAddress}
                       label={formatMessage({ id: 'global.savedAddress', defaultMessage: 'Saved Address' })}
+                      data-test='purchase_order_shipping_edit_savedAddress_rad'
                     />
                   </Form.Field>
 
@@ -161,6 +162,7 @@ class ShippingEdit extends Component {
                       onChange={() => shippingChanged({ isNewAddress: true })}
                       checked={isNewAddress}
                       label={formatMessage({ id: 'global.addNewAddress', defaultMessage: 'Add New' })}
+                      data-test='purchase_order_shipping_edit_addNewAddress_rad'
                     />
                   </Form.Field>
                 </FormGroup>

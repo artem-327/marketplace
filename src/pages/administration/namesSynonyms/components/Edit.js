@@ -43,7 +43,7 @@ class NamesSynonyms extends Component {
                         defaultMessage='Primary Name'
                     />
                 </h3>
-                <InputEdit value={this.state.primaryName} onSave={(text) => this.setState({primaryName: text})}/>
+                <InputEdit value={this.state.primaryName} onSave={(text) => this.setState({primaryName: text})} data-test='administration_name_synonyms_primaryName_inp'/>
                 <h3>
                     <FormattedMessage
                         id='namesSynonyms.synonyms'
@@ -57,11 +57,12 @@ class NamesSynonyms extends Component {
                             key={item.id}
                             value={item.alternativeName}
                             onSave={(text) => this.saveNewName(text, index)}
+                            data-test='administration_name_synonyms_alternativeName_inp'
                         />
                     );
                 })}
                 </ul>
-                <button className="button">
+                <button className="button" data-test='administration_name_synonyms_save_btn'>
                     <FormattedMessage
                         id='global.save'
                         defaultMessage='Save'

@@ -303,7 +303,7 @@ class ProductPopup extends React.Component {
           >
             {({ values, setFieldValue }) => {
               return (<>
-                <FormGroup widths='equal'>
+                <FormGroup widths='equal' data-test='settings_product_popup_nameCodeInci_inp'>
                   <Input type='text' label='Product Name' name='productName' />
                   <Input type='text' label='Product Number' name='productCode' />
                   <Input type='text' label='INCI Name' name='inciName' />
@@ -352,10 +352,10 @@ class ProductPopup extends React.Component {
                               defaultValue={casProduct && casProduct.casNumber ? casProduct.casNumber : ''}
                             />
                           </FormField>
-                          <FormField width={3}>
+                          <FormField width={3} data-test='settings_product_popup_minimumConcentration_inp'>
                             <Input type='text' name={`casProducts[${index}].minimumConcentration`} />
                           </FormField>
-                          <FormField width={3}>
+                          <FormField width={3} data-test='settings_product_popup_maximumConcentration_inp'>
                             <Input type='text' name={`casProducts[${index}].maximumConcentration`} />
                           </FormField>
                           <FormField width={2}>
@@ -390,7 +390,7 @@ class ProductPopup extends React.Component {
                     />
                   </FormField>
                 </FormGroup>
-                <FormGroup widths='equal'>
+                <FormGroup widths='equal' data-test='settings_product_popup_packagingSize_inp'>
                   <Input type='text' label='Packaging Size' name='packagingSize' />
                   <Dropdown
                     label='Unit'
@@ -445,9 +445,10 @@ class ProductPopup extends React.Component {
                         }
                       })}
                       defaultValue={unNumber && unNumber.unNumberCode ? unNumber.unNumberCode : ''}
+                      data-test='settings_product_popup_unNumberCode_inp'
                     />
                   </FormField>
-                  <FormField>
+                  <FormField data-test='settings_product_popup_nmfcNumber_inp'>
                     <Input type='number'
                       label='NMFC Code'
                       name='nmfcNumber'

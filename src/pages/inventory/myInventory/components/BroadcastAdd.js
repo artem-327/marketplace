@@ -31,10 +31,10 @@ class BroadcastAdd extends Component {
     render() {
         this.props.active(this.state.brActive);
         return (
-            <div className='br-rules-add'>
+            <div className='br-rules-add' data-test='my_inventory_broadcast_name_inp'>
                 <label>Rules name</label>
                 <input name="name" value={this.state.name} onChange={(e)=>this.handleInput("name", e.target.value)} /><br />
-                <button className="button green" onClick={()=>this.submitRules()}>{this.state.fulfilled}</button>
+                <button className="button green" onClick={()=>this.submitRules()} data-test='my_inventory_broadcast_submit_btn'>{this.state.fulfilled}</button>
             </div>
         );
     }
