@@ -70,8 +70,7 @@ export default class ShippingQuote extends Component {
           <Grid>
             <GridRow>
               <GridColumn computer={16}>
-                <FormattedMessage id='cart.nothing' defaultMessage='Nothing to show'
-                />
+                <FormattedMessage id='cart.nothing' defaultMessage='Nothing to show' />
               </GridColumn>
             </GridRow>
           </Grid>
@@ -81,42 +80,35 @@ export default class ShippingQuote extends Component {
 
     return (
       <>
-
         <RelaxedColumn computer={16}>
-
           <Grid padded>
             <GridColumn computer={1} />
             <GridColumn computer={4}>
               <Header as='h4'>
-                <FormattedMessage id='cart.carrier' defaultMessage='Carrier'
-                />
+                <FormattedMessage id='cart.carrier' defaultMessage='Carrier' />
               </Header>
             </GridColumn>
             <GridColumn computer={2}>
               <Header as='h4'>
-                <FormattedMessage id='cart.cost' defaultMessage='Cost'
-                />
+                <FormattedMessage id='cart.cost' defaultMessage='Cost' />
               </Header>
             </GridColumn>
 
             <GridColumn computer={4}>
               <Header as='h4'>
-                <FormattedMessage id='cart.estimatedDelivery' defaultMessage='Estimated Delivery'
-                />
+                <FormattedMessage id='cart.estimatedDelivery' defaultMessage='Estimated Delivery' />
               </Header>
             </GridColumn>
 
             <GridColumn computer={2}>
               <Header as='h4'>
-                <FormattedMessage id='cart.etd' defaultMessage='ETD'
-                />
+                <FormattedMessage id='cart.etd' defaultMessage='ETD' />
               </Header>
             </GridColumn>
 
             <GridColumn computer={3}>
               <Header as='h4'>
-                <FormattedMessage id='cart.serviceType' defaultMessage='Service Type'
-                />
+                <FormattedMessage id='cart.serviceType' defaultMessage='Service Type' />
               </Header>
             </GridColumn>
           </Grid>

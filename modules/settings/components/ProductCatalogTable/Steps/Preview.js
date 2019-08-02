@@ -1,50 +1,50 @@
-import React, { Component } from "react"
-import { connect } from "react-redux"
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
-import { Table } from "semantic-ui-react"
+import { Table } from 'semantic-ui-react'
 
-import { dataHeaderCSV, postCSVMapProductOffer } from "../../../actions"
-import _invert from "lodash/invert"
+import { dataHeaderCSV, postCSVMapProductOffer } from '../../../actions'
+import _invert from 'lodash/invert'
 
 const mapProduct = {
-  "CAS Number": "casNumberMapper",
-  "Packaging Minimum": "packagingMinimumMapper",
-  "Packaging Size": "packagingSizeMapper",
-  "Packaging Splits": "packagingSplitsMapper",
-  "Packaging Type": "packagingTypeNameMapper",
-  Unit: "packagingUnitNameMaper",
-  "Product Name": "productNameMapper"
+  'CAS Number': 'casNumberMapper',
+  'Packaging Minimum': 'packagingMinimumMapper',
+  'Packaging Size': 'packagingSizeMapper',
+  'Packaging Splits': 'packagingSplitsMapper',
+  'Packaging Type': 'packagingTypeNameMapper',
+  Unit: 'packagingUnitNameMaper',
+  'Product Name': 'productNameMapper'
 }
 
 const mapProductOffer = {
-  "Assay Max": "assayMaxMapper",
-  "Assay Min": "assayMinMapper",
-  "CAS Product Number": "casProductNumberMapper",
-  "Expiration Date": "expirationDateMapper",
-  "External Notes": "externalNotesMapper",
-  "Hazard Class": "hazardClassMapper",
-  "Internal Notes": "internalNotesMapper",
-  "Lot Manufactured Date": "lotManufacturedDateMapper",
-  "Lot Number": "lotNumberMapper",
-  "Lot Pkg Amount": "lotPkgAmountMapper",
-  "Manufacturer Name": "manufacturerNameMapper",
-  "Origin Name": "originNameMapper",
-  "Packaging Group": "packagingGroupMapper",
-  "Packaging Minimum": "packagingMinimumMapper",
-  "Packaging Size": "packagingSizeMapper",
-  "Packaging Splits": "packagingSplitsMapper",
-  "Packaging Type Name": "packagingTypeNameMapper",
-  "Packaging Unit Name": "packagingUnitNameMapper",
-  "Pricing Cost": "pricingCostMapper",
-  "Pricing Price": "pricingPriceMapper",
-  "Product Code": "productCodeMapper",
-  "Product Condition Name": "productConditionNameMapper",
-  "Product Form Name": "productFormNameMapper",
-  "Product Grade Name": "productGradeNameMapper",
-  "Product Name": "productNameMapper",
-  "Trade Name": "tradeNameMapper",
-  "UN Number": "unNumberMapper",
-  "Warehouse Name": "warehouseNameMapper"
+  'Assay Max': 'assayMaxMapper',
+  'Assay Min': 'assayMinMapper',
+  'CAS Product Number': 'casProductNumberMapper',
+  'Expiration Date': 'expirationDateMapper',
+  'External Notes': 'externalNotesMapper',
+  'Hazard Class': 'hazardClassMapper',
+  'Internal Notes': 'internalNotesMapper',
+  'Lot Manufactured Date': 'lotManufacturedDateMapper',
+  'Lot Number': 'lotNumberMapper',
+  'Lot Pkg Amount': 'lotPkgAmountMapper',
+  'Manufacturer Name': 'manufacturerNameMapper',
+  'Origin Name': 'originNameMapper',
+  'Packaging Group': 'packagingGroupMapper',
+  'Packaging Minimum': 'packagingMinimumMapper',
+  'Packaging Size': 'packagingSizeMapper',
+  'Packaging Splits': 'packagingSplitsMapper',
+  'Packaging Type Name': 'packagingTypeNameMapper',
+  'Packaging Unit Name': 'packagingUnitNameMapper',
+  'Pricing Cost': 'pricingCostMapper',
+  'Pricing Price': 'pricingPriceMapper',
+  'Product Code': 'productCodeMapper',
+  'Product Condition Name': 'productConditionNameMapper',
+  'Product Form Name': 'productFormNameMapper',
+  'Product Grade Name': 'productGradeNameMapper',
+  'Product Name': 'productNameMapper',
+  'Trade Name': 'tradeNameMapper',
+  'UN Number': 'unNumberMapper',
+  'Warehouse Name': 'warehouseNameMapper'
 }
 
 const invertedMapProductOffer = _invert(mapProductOffer)
@@ -101,7 +101,7 @@ class Preview extends Component {
           },
           {
             headerLine: true,
-            mapName: this.props.mapName || "Uno"
+            mapName: this.props.mapName || 'Uno'
           }
         )
       data && this.props.dataHeaderCSV(data)
@@ -119,7 +119,7 @@ class Preview extends Component {
     const { filteredHeader } = this.state
 
     return (
-      <Table celled padded textAlign="center">
+      <Table celled padded textAlign='center'>
         <Table.Header>
           <Table.Row>
             {filteredHeader &&

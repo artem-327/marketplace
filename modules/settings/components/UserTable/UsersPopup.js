@@ -1,7 +1,7 @@
-import React from "react"
-import { connect } from "react-redux"
+import React from 'react'
+import { connect } from 'react-redux'
 import { withToastManager } from 'react-toast-notifications'
-import { Modal, FormGroup } from "semantic-ui-react"
+import { Modal, FormGroup } from 'semantic-ui-react'
 import {
   closePopup,
   closeRolesPopup,
@@ -9,27 +9,29 @@ import {
   postNewUserRequest,
   putNewUserRoleRequest,
   getCurrencies
-} from "../../actions"
-import { Form, Input, Button, Dropdown, Checkbox } from "formik-semantic-ui"
+} from '../../actions'
+import { Form, Input, Button, Dropdown, Checkbox } from 'formik-semantic-ui'
 import { CheckboxWithValue } from '~/components/custom-formik'
-import * as Yup from "yup"
-import { FormattedMessage, injectIntl } from "react-intl"
+import * as Yup from 'yup'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { generateToastMarkup } from '~/utils/functions'
 
-const userFormValidation = popupValues => Yup.object().shape({
+import { errorMessages } from '~/constants/yupValidation'
+
+const userFormValidation = () => Yup.object().shape({
   name: Yup.string().trim()
-    .min(3, "Too short")
-    .required("Name is required"),
+    .min(3, errorMessages.minLength(3))
+    .required(errorMessages.requiredMessage),
   email: Yup.string().trim()
-    .email("Invalid email")
-    .required("Emails is required"),
+    .email(errorMessages.invalidEmail)
+    .required(errorMessages.requiredMessage),
   homeBranch: Yup.number()
-    .required('Home Branch is required'),
+    .required(errorMessages.requiredMessage),
   additionalBranches: Yup.array(),
   jobTitle: Yup.string().trim()
-    .min(3, "Too short"),
+    .min(3, errorMessages.minLength(3)),
   phone: Yup.string().trim()
-    .min(3, "Too short"),
+    .min(3, errorMessages.minLength(3)),
 })
 
 const rolesFormValidation = Yup.object().shape({
@@ -75,9 +77,7 @@ class UsersPopup extends React.Component {
     toastManager.add(generateToastMarkup(
       <FormattedMessage id={`notifications.${status}.header`} />,
       <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
-    ), {
-        appearance: 'success'
-      })
+    ), { appearance: 'success' })
 
     actions.setSubmitting(false)
   }
@@ -93,17 +93,17 @@ class UsersPopup extends React.Component {
       roles,
       userRoles,
       currencies,
-      intl
+      intl: { formatMessage }
     } = this.props
 
     const {
-      name = "",
-      email = "",
+      name = '',
+      email = '',
       homeBranch = undefined,
       preferredCurrency = undefined,
       additionalBranches = [],
-      jobTitle = "",
-      phone = "",
+      jobTitle = '',
+      phone = '',
     } = popupValues || {}
 
     const initialFormValues = {
@@ -117,16 +117,14 @@ class UsersPopup extends React.Component {
       roles: userRoles
     }
 
-    const { formatMessage } = intl
-
     return (
-      <Modal open centered={false} size={userEditRoles ? "mini" : null}>
+      <Modal open centered={false} size={userEditRoles ? 'mini' : null}>
         <Modal.Header>
           {(userEditRoles
-            ? formatMessage({ id: 'settings.assignUserRoles', defaultMessage: "Assign User Roles" })
+            ? formatMessage({ id: 'settings.assignUserRoles', defaultMessage: 'Assign User Roles' })
             : (popupValues
-              ? formatMessage({ id: 'settings.editUser', defaultMessage: "Edit User" })
-              : formatMessage({ id: 'settings.addUser', defaultMessage: "Add User" })
+              ? formatMessage({ id: 'settings.editUser', defaultMessage: 'Edit User' })
+              : formatMessage({ id: 'settings.addUser', defaultMessage: 'Add User' })
             )
           )}
         </Modal.Header>
@@ -143,7 +141,7 @@ class UsersPopup extends React.Component {
                   roles.map((role, i) => (
                     <FormGroup key={i}>
                       <CheckboxWithValue
-                        name="roles"
+                        name='roles'
                         label={role.name}
                         value={role.id}
                       />
@@ -151,25 +149,37 @@ class UsersPopup extends React.Component {
                   ))
                 ) : (
                     <>
-                      <FormGroup widths="equal" data-test='settings_users_popup_nameTitle_inp'>
-                        <Input type="text" label="Name" name="name" />
-                        <Input type="text" label="Job Title" name="jobTitle" />
+                      <FormGroup widths='equal' data-test='settings_users_popup_nameTitle_inp'>
+                        <Input
+                          type='text'
+                          label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
+                          name='name' />
+                        <Input
+                          type='text'
+                          label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}
+                          name='jobTitle' />
                       </FormGroup>
-                      <FormGroup widths="equal" data-test='settings_users_popup_emailPhone_inp'>
-                        <Input type="text" label="Email" name="email" />
-                        <Input type="text" label="Phone" name="phone" />
+                      <FormGroup widths='equal' data-test='settings_users_popup_emailPhone_inp'>
+                        <Input
+                          type='text'
+                          label={formatMessage({ id: 'global.email', defaultMessage: 'Email' })}
+                          name='email' />
+                        <Input
+                          type='text'
+                          label={formatMessage({ id: 'global.phone', defaultMessage: 'Phone' })}
+                          name='phone' />
                       </FormGroup>
                       <FormGroup>
                         <Dropdown
-                          label="Home Branch"
-                          name="homeBranch"
+                          label={formatMessage({ id: 'global.homeBranch', defaultMessage: 'Home Branch' })}
+                          name='homeBranch'
                           options={branchesAll}
                           fieldProps={{ width: 7 }}
                           inputProps={{ 'data-test': 'settings_users_popup_homeBranch_drpdn' }}
                         />
                         <Dropdown
-                          label="Additional Branches"
-                          name="additionalBranches"
+                          label={formatMessage({ id: 'global.additionalBranches', defaultMessage: 'Additional Branches' })}
+                          name='additionalBranches'
                           options={branchesAll}
                           fieldProps={{ width: 7 }}
                           inputProps={{
@@ -177,21 +187,26 @@ class UsersPopup extends React.Component {
                             multiple: true
                           }}
                         />
-                        <Dropdown label="Currency" name="preferredCurrency" options={currencies} fieldProps={{ width: 2 }} inputProps={{ 'data-test': 'settings_users_popup_preferredCurrency_drpdn' }} />
+                        <Dropdown
+                          label={formatMessage({ id: 'global.currency', defaultMessage: 'Currency' })}
+                          name='preferredCurrency'
+                          options={currencies}
+                          fieldProps={{ width: 2 }}
+                          inputProps={{ 'data-test': 'settings_users_popup_preferredCurrency_drpdn' }} />
                       </FormGroup>
                       {/* <pre>
                         {JSON.stringify(values, null, 2)}
                       </pre> */}
                     </>
                   )}
-                <div style={{ textAlign: "right" }}>
+                <div style={{ textAlign: 'right' }}>
                   <Button.Reset
                     onClick={userEditRoles ? closeRolesPopup : closePopup}
                     data-test='settings_users_popup_reset_btn'
                   >
-                    Cancel
+                    <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
                   </Button.Reset>
-                  <Button.Submit data-test='settings_users_popup_submit_btn'>Save</Button.Submit>
+                  <Button.Submit data-test='settings_users_popup_submit_btn'><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
                 </div>
               </>
             )}

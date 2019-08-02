@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Confirm } from 'semantic-ui-react'
+
 
 import ProdexGrid from '~/components/table'
 import confirm from '~/src/components/Confirmable/confirm'
-import { injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 
 // import { TablePopUp } from '~/components/tablePopup'
+
+import { getSafe } from '~/utils/functions'
 
 import {
   getDeliveryAddressesByFilterRequest,
@@ -21,11 +23,11 @@ import Router from "next/router"
 class DeliveryAddressesTable extends Component {
   state = {
     columns: [
-      { name: 'streetAddress', title: 'Street Name' },
-      { name: 'city', title: 'City' },
-      { name: 'province', title: 'State/Province' },
-      { name: 'country', title: 'Country' },
-      { name: 'zip', title: 'ZIP Code' },
+      { name: 'streetAddress', title: <FormattedMessage id='global.streetName' defaultMessage='Street Name' /> },
+      { name: 'city', title: <FormattedMessage id='global.city' defaultMessage='City' /> },
+      { name: 'province', title: <FormattedMessage id='global.stateProvince' defaultMessage='State/Province' /> },
+      { name: 'country', title: <FormattedMessage id='global.country' defaultMessage='Country' /> },
+      { name: 'zip', title: <FormattedMessage id='global.zipCode' defaultMessage='ZIP Code' /> },
     ]
   }
 
@@ -71,8 +73,8 @@ class DeliveryAddressesTable extends Component {
                 formatMessage(
                   { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.streetAddress}?` },
                   { item: row.streetAddress })
-              ).then(() => { 
-                deleteDeliveryAddress(row.id) 
+              ).then(() => {
+                deleteDeliveryAddress(row.id)
               })
 
             }
@@ -100,11 +102,11 @@ const mapStateToProps = (state, { datagrid }) => {
       return {
         data: d,   // all row data, used for edit popup
         id: d.id,
-        streetAddress: d.address ? d.address.streetAddress : '',
-        city: d.address ? d.address.city : '',
-        province: !!d.address.province ? d.address.province.name : '',
-        country: d.address ? d.address.country.name : '',
-        zip: d.address ? d.address.zip.zip : '',
+        streetAddress: getSafe(() => d.address.streetAddress, ''),
+        city: getSafe(() => d.address.city, ''),
+        province: getSafe(() => d.address.province.name, ''),
+        country: getSafe(() => d.address.country.name, ''),
+        zip: getSafe(() => d.address.zip.zip, ''),
       }
     }),
     // reloadFilter is used to reload Delivery addresses list after Edit / Add new Delivery address

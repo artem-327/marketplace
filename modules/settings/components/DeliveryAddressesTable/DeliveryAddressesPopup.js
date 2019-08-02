@@ -9,94 +9,57 @@ import {
   createDeliveryAddress,
   getCountries,
   getProvinces,
-  getAddressSearch,
-  removeEmpty
+  getAddressSearch
 } from '../../actions'
 
 import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
-import Router from "next/router"
-import { FormattedMessage } from 'react-intl'
+import Router from 'next/router'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
-import { generateToastMarkup } from '~/utils/functions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
+import { errorMessages, provinceObjectRequired } from '~/constants/yupValidation'
+
+import { AddressForm } from '~/modules/address-form'
+
 
 const initialFormValues = {
-  'name': '',
-  'email': '',
-  'phoneNumber': '',
-  'address': {
-    'city': '',
-    'country': '',
-    'province': '',
-    'streetAddress': '',
-    'zip': '',
+  name: '',
+  email: '',
+  phoneNumber: '',
+  address: {
+    city: '',
+    country: '',
+    province: '',
+    streetAddress: '',
+    zip: '',
   }
 }
 
-const formValidation = hasProvinces => Yup.object().shape({
-  name: Yup.string().trim()
-    .min(3, 'Too short')
-    .required('Required'),
-  email: Yup.string().trim()
-    .email('Invalid email')
-    .required('Emails is required'),
-  phoneNumber: Yup.string().trim()
-    .min(3, 'Too short')
-    .required('Required'),
-  address: Yup.object().shape({
-    city: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-    streetAddress: Yup.string().trim().min(3, 'Enter at least 2 characters').required('Enter at least 2 characters'),
-    zip: Yup.string().trim().required('Enter zip code'),
-    country: Yup.number().required(),
-    province: hasProvinces && Yup.number('').required('Province is required')
+
+
+const formValidation = () => Yup.lazy((values) => (
+  Yup.object().shape({
+    name: Yup.string().trim()
+      .min(3, errorMessages.minLength(3))
+      .required(errorMessages.requiredMessage),
+    email: Yup.string().trim()
+      .email(errorMessages.invalidEmail)
+      .required(errorMessages.requiredMessage),
+    phoneNumber: Yup.string().trim()
+      .min(3, errorMessages.minLength(3))
+      .required(errorMessages.requiredMessage),
+    address: Yup.object().shape({
+      city: Yup.string().trim().min(3, errorMessages.minLength(2)).required(errorMessages.requiredMessage),
+      streetAddress: Yup.string().trim().min(3, errorMessages.minLength(2)).required(errorMessages.requiredMessage),
+      zip: Yup.string().trim().required(errorMessages.requiredMessage),
+      country: Yup.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage),
+      province: provinceObjectRequired(getSafe(() => JSON.parse(values.address.country).hasProvinces))
+    })
   })
-})
+))
 
 class DeliveryAddressesPopup extends React.Component {
-  state = {
-    hasProvinces: this.props.hasProvinces,
-  }
-
-  componentDidMount() {
-    this.props.getCountries()
-    this.props.popupValues && this.props.hasProvinces && this.props.getProvinces(this.props.popupValues.address.country)
-  }
-
-  handleCountry = (e, d) => {
-    let country = this.props.countries.find(obj => obj.id === d.value);
-    if (country.hasProvinces) {
-      this.props.getProvinces(country.id)
-    }
-    this.setState({ hasProvinces: country.hasProvinces })
-  }
-
-  handleAddressSelect = (d, values, setFieldValue) => {
-    const i = this.props.AddressSuggestOptions.indexOf(d.value)
-    if (i >= 0) {
-      setFieldValue('address.streetAddress', this.props.AddressSuggestData[i].streetAddress)
-      setFieldValue('address.city', this.props.AddressSuggestData[i].city)
-      setFieldValue('address.zip', this.props.AddressSuggestData[i].zip && this.props.AddressSuggestData[i].zip.zip)
-      setFieldValue('address.country', this.props.AddressSuggestData[i].country.id)
-      setFieldValue('address.province', this.props.AddressSuggestData[i].province ? this.props.AddressSuggestData[i].province.id : '')
-      this.setState({ hasProvinces: this.props.AddressSuggestData[i].country.hasProvinces })
-      if (this.props.AddressSuggestData[i].country.hasProvinces) this.props.getProvinces(this.props.AddressSuggestData[i].country.id)
-    }
-    else {
-      let newValues = { ...values.address, [d.name.split('.')[1]]: d.value }
-
-      const body = {
-        city: newValues.city,
-        countryId: newValues.country,
-        provinceId: newValues.province,
-        streetAddress: newValues.streetAddress,
-        zip: newValues.zip
-      }
-      removeEmpty(body)
-      if (Object.entries(body).length === 0) return
-      this.props.getAddressSearch(body)
-    }
-  }
-
   render() {
     const {
       closePopup,
@@ -104,42 +67,42 @@ class DeliveryAddressesPopup extends React.Component {
       rowId,
       updateDeliveryAddresses,
       createDeliveryAddress,
-      countriesDropDown,
-      provincesDropDown,
       reloadFilter,
-      AddressSuggestInput,
-      toastManager
+      toastManager,
+      intl: { formatMessage }
     } = this.props
 
-    const {
-      hasProvinces,
-    } = this.state
 
     return (
-      <Modal open centered={false} size="small">
-        <Modal.Header>{popupValues ? ('Edit') : ('Add')} Delivery Address</Modal.Header>
+      <Modal open centered={false} size='small'>
+        <Modal.Header>
+          <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} defaultMessage={`global.${popupValues ? 'Edit' : 'Add'}`} /> <FormattedMessage id='settings.deliveryAddress' defaultMessage='!Delivery Address' /></Modal.Header>
         <Modal.Content>
           <Form
             enableReinitialize
             initialValues={popupValues ? popupValues : initialFormValues}
-            validationSchema={formValidation(hasProvinces)}
+            validationSchema={formValidation()}
             onReset={closePopup}
             onSubmit={async (values, { setSubmitting }) => {
+              let payload = {
+                ...values,
+                address: {
+                  ...values.address,
+                  country: JSON.parse(values.address.country).countryId
+                }
+              }
               try {
 
-                if (values.address.province === '') delete values.address['province']
-                if (popupValues) await updateDeliveryAddresses(rowId, values, reloadFilter)
-                else await createDeliveryAddress(values, reloadFilter)
+                if (values.address.province === '') delete payload.address['province']
+                if (popupValues) await updateDeliveryAddresses(rowId, payload, reloadFilter)
+                else await createDeliveryAddress(payload, reloadFilter)
 
                 let status = popupValues ? 'deliveryAddressUpdated' : 'deliveryAddressCreated'
 
                 toastManager.add(generateToastMarkup(
                   <FormattedMessage id={`notifications.${status}.header`} />,
                   <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.name }} />
-                ),
-                  {
-                    appearance: 'success'
-                  })
+                ), { appearance: 'success' })
               }
               catch { }
               finally {
@@ -151,41 +114,42 @@ class DeliveryAddressesPopup extends React.Component {
             {({ values, errors, setFieldValue }) => {
               return (
                 <>
-                  {AddressSuggestInput}
-                  <Header as='h3'>Address</Header>
-                  <FormGroup widths="equal" data-test='settings_delivery_address_streetCity_inp' >
+                  {/* {AddressSuggestInput} */}
+                  <Header as='h3'><FormattedMessage id='global.address' defaultMessage='Address' /></Header>
+                  <AddressForm values={values} displayHeader={false} setFieldValue={setFieldValue} />
+                  {/* <FormGroup widths='equal' data-test='settings_delivery_address_streetCity_inp' >
                     <Input
                       inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
-                      type="text" label="Street Address" name="address.streetAddress" />
+                      type='text' label='Street Address' name='address.streetAddress' />
                     <Input
                       inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
-                      type="text" label="City" name="address.city" />
+                      type='text' label='City' name='address.city' />
                   </FormGroup>
-                  <FormGroup widths="equal" data-test='settings_delivery_address_zipCountry_inp' >
+                  <FormGroup widths='equal' data-test='settings_delivery_address_zipCountry_inp' >
                     <Input
                       inputProps={{ list: 'addresses', onChange: (e, d) => { this.handleAddressSelect(d, values, setFieldValue) } }}
-                      type="text" label="Zip" name="address.zip" />
-                    <Dropdown label="Country" name="address.country" options={countriesDropDown}
+                      type='text' label='Zip' name='address.zip' />
+                    <Dropdown label='Country' name='address.country' options={countriesDropDown}
                       inputProps={{
                         'data-test': 'settings_delivery_address_country_drpdn',
                         search: true, onChange: (e, d) => {
                           setFieldValue('address.province', ''); this.handleCountry(e, d)
                         }
                       }} />
-                    <Dropdown label="State/Province" name="address.province" options={provincesDropDown}
+                    <Dropdown label='State/Province' name='address.province' options={provincesDropDown}
                       inputProps={{ search: true, disabled: !this.state.hasProvinces, 'data-test': 'settings_delivery_address_province_drpdn', }} />
-                  </FormGroup>
-                  <Header as='h3'>Contact Info</Header>
+                  </FormGroup> */}
+                  <Header as='h3'><FormattedMessage id='settings.contactInfo' defaultMessage='Contact Info' /></Header>
                   <FormGroup data-test='settings_delivery_address_name_inp'>
-                    <Input type="text" label="Name" name="name" fieldProps={{ width: 8 }} />
+                    <Input type='text' label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })} name='name' fieldProps={{ width: 8 }} />
                   </FormGroup>
-                  <FormGroup widths="equal" data-test='settings_delivery_address_emailPhone_inp'>
-                    <Input type="text" label="Contact Email" name="email" />
-                    <Input type="text" label="Contact Phone" name="phoneNumber" />
+                  <FormGroup widths='equal' data-test='settings_delivery_address_emailPhone_inp'>
+                    <Input type='text' label={formatMessage({ id: 'settings.contactEmail', defaultMessage: 'Contact Email' })} name='email' />
+                    <Input type='text' label={formatMessage({ id: 'settings.contactPhone', defaultMessage: 'Contact Phone' })} name='phoneNumber' />
                   </FormGroup>
                   <div style={{ textAlign: 'right' }}>
-                    <Button.Reset data-test='settings_delivery_address_reset_btn'>Cancel</Button.Reset>
-                    <Button.Submit data-test='settings_delivery_address_submit_btn'>Save</Button.Submit>
+                    <Button.Reset data-test='settings_delivery_address_reset_btn'><FormattedMessage id='global.cancel' defaultMessage='!Cancel' /></Button.Reset>
+                    <Button.Submit data-test='settings_delivery_address_submit_btn'><FormattedMessage id='global.save' defaultMessage='!Save' /></Button.Submit>
                   </div>
                 </>)
             }}
@@ -205,35 +169,39 @@ const mapDispatchToProps = {
   getAddressSearch
 }
 
-const prepareAddressSuggest = (AddressSuggestOptions) => (
-  <datalist id='addresses'>
-    {AddressSuggestOptions.map((a, id) => <option key={id} value={a} />)}
-  </datalist>
-)
+// const prepareAddressSuggest = (AddressSuggestOptions) => (
+//   <datalist id='addresses'>
+//     {AddressSuggestOptions.map((a, id) => <option key={id} value={a} />)}
+//   </datalist>
+// )
 
 const mapStateToProps = state => {
-  const popupValues = state.settings.popupValues
-  const AddressSuggestOptions = state.settings.addressSearch.map((a) => (
-    a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
-  ))
+  const { popupValues } = state.settings
+  let address = getSafe(() => popupValues.address)
+  // const AddressSuggestOptions = state.settings.addressSearch.map((a) => (
+  //   a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
+  // ))
+
+
   return {
-    AddressSuggestInput: prepareAddressSuggest(AddressSuggestOptions),
-    AddressSuggestOptions: AddressSuggestOptions,
+    // AddressSuggestInput: prepareAddressSuggest(AddressSuggestOptions),
+    // AddressSuggestOptions: AddressSuggestOptions,
     AddressSuggestData: state.settings.addressSearch,
-    rowId: popupValues ? popupValues.id : null,
-    hasProvinces: popupValues ? popupValues.address.country.hasProvinces : false,
-    popupValues: popupValues ? {
-      firstName: popupValues.firstName,
-      lastName: popupValues.lastName,
+    rowId: getSafe(() => popupValues.id),
+    // hasProvinces: getSafe(() => address.country.hasProvinces, false),
+    popupValues: popupValues && address ? {
+      // firstName: popupValues.firstName,
+      // lastName: popupValues.lastName,
       name: popupValues.name,
       email: popupValues.email,
       phoneNumber: popupValues.phoneNumber,
       address: {
-        city: popupValues.address.city,
-        country: popupValues.address.country.id,
-        province: !!popupValues.address.province ? popupValues.address.province.id : '',
-        streetAddress: popupValues.address.streetAddress,
-        zip: popupValues.address.zip.zip
+        city: address.city,
+        country: JSON.stringify({ countryId: getSafe(() => address.country.id), hasProvinces: getSafe(() => address.country.hasProvinces, false) }),
+        province: !!address.province ? address.province.id : '',
+        streetAddress: address.streetAddress,
+        zip: address.zip.zip
+
       }
     } : null,
     countriesDropDown: state.settings.countriesDropDown,
@@ -250,7 +218,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
+export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(withToastManager(DeliveryAddressesPopup))
+)(withToastManager(DeliveryAddressesPopup)))

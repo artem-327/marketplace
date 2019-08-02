@@ -173,11 +173,16 @@ export default class AddressForm extends Component {
             inputProps={{
               search: true, onChange: async (e, data) => {
                 let values = JSON.parse(data.value)
+                let fieldName = prefix ? `${prefix.province}` : 'address.province'
 
-                setFieldValue(`${prefix}.province`, '')
+                setFieldValue(fieldName, '')
 
-                this.handleChange(e, data)
-                this.fetchProvinces(values.countryId, values.hasProvinces)
+
+                // this.handleChange(e, data)
+                this.setState({ hasProvinces: values.hasProvinces })
+                if (values.hasProvinces) {
+                  this.fetchProvinces(values.countryId, values.hasProvinces)
+                }
               }
             }} />
           <Dropdown label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />}

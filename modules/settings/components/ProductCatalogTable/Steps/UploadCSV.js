@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import Dropzone from 'react-dropzone'
-import { Grid, Segment, Header, Icon, Button, Form } from 'semantic-ui-react'
+import { Grid, Segment, Header, Icon, Form } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
 
 import { uploadCSVFile } from '../../../actions'
 
@@ -61,11 +62,11 @@ class UploadCSV extends Component {
               <StyledSegment placeholder>
                 <Header icon>
                   <Icon name='file' className='csv' />
-                  Drag and drop or browse computer to upload your .csv file
+                  <FormattedMessage id='settings.dragAndDrop' defaultMessage='Drag and drop or browse computer to upload your .csv file' /> 
               </Header>
                 <Segment.Inline>
                   {uploadedFile && uploadedFile.name}
-                  {hasError && <p style={{ color: 'red' }}>Invalid type file</p>}
+                  {hasError && <p style={{ color: 'red' }}><FormattedMessage id='settings.invalidFileType' defaultMessage='Invalid file type' /> </p>}
                 </Segment.Inline>
               </StyledSegment>
             </StyledDropzone>

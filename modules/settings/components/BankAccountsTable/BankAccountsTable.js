@@ -36,9 +36,7 @@ const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss, intl: { for
       amount1: Yup.number(errorMessages.mustBeNumber).required(errorMessages.requiredMessage),
       amount2: Yup.number(errorMessages.mustBeNumber).required(errorMessages.requiredMessage)
     })}
-    onSubmit={(values) => {
-      proceed(values)
-    }}
+    onSubmit={(values) => proceed(values)}
     onReset={dismiss}
     validateOnBlur={false}
     validateOnChange={false}
@@ -158,12 +156,10 @@ const mapDispatchToProps = {
   dwollaFinalizeVerificationConfirmOpen,
 }
 
-  // ---- TODO ---- React-intl refactor ended here
-
 const statusToLabel = {
-  'verified': <Label color='green' horizontal>Verified</Label>,
-  'unverified': <Label color='red' horizontal>Unverified</Label>,
-  'verification_in_process': <Label color='orange' horizontal>Verification in process</Label>
+  'verified': <Label color='green' horizontal><FormattedMessage id='settings.verified' defaultMessage='Verified' /></Label>,
+  'unverified': <Label color='red' horizontal><FormattedMessage id='settings.unverified' defaultMessage='Unverified' /></Label>,
+  'verification_in_process': <Label color='orange' horizontal><FormattedMessage id='settings.verificationInProcess' defaultMessage='Verification in process' /></Label>
 }
 const mapStateToProps = state => {
   return {

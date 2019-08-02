@@ -1,5 +1,7 @@
-import React, { Component } from "react"
-import { connect } from "react-redux"
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import {
   Table,
@@ -8,7 +10,7 @@ import {
   Input,
   Select,
   Checkbox
-} from "semantic-ui-react"
+} from 'semantic-ui-react'
 
 import {
   changeHeadersCSV,
@@ -16,47 +18,47 @@ import {
   handleChangeMapCSVName,
   getCSVMapProductOffer,
   selectSavedMap
-} from "../../../actions"
+} from '../../../actions'
 
 const mappingProduct = [
-  { text: "CAS Number", value: "CAS Number" },
-  { text: "Packaging Minimum", value: "Packaging Minimum" },
-  { text: "Packaging Size", value: "Packaging Size" },
-  { text: "Packaging Splits", value: "Packaging Splits" },
-  { text: "Packaging Type", value: "Packaging Type" },
-  { text: "Unit", value: "Unit" },
-  { text: "Product Name", value: "Product Name" }
+  { text: <FormattedMessage id='global.casNumber' defaultMessage='CAS Number' />, value: 'CAS Number' },
+  { text: <FormattedMessage id='global.packagingMinimum' defaultMessage='Packaging Minimum' />, value: 'Packaging Minimum' },
+  { text: <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size' />, value: 'Packaging Size' },
+  { text: <FormattedMessage id='global.packagingSplits' defaultMessage='Packaging Splits' />, value: 'Packaging Splits' },
+  { text: <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type' />, value: 'Packaging Type' },
+  { text: <FormattedMessage id='global.unit' defaultMessage='Unit' />, value: 'Unit' },
+  { text: <FormattedMessage id='global.productName' defaultMessage='Product Name' />, value: 'Product Name' }
 ]
 
 const mappingProductOffer = [
-  { text: "Assay Max", value: "Assay Max" },
-  { text: "Assay Min", value: "Assay Min" },
-  { text: "CAS Product Number", value: "CAS Product Number" },
-  { text: "Expiration Date", value: "Expiration Date" },
-  { text: "External Notes", value: "External Notes" },
-  { text: "Hazard Class", value: "Hazard Class" },
-  { text: "Internal Notes", value: "Internal Notes" },
-  { text: "Lot Manufactured Date", value: "Lot Manufactured Date" },
-  { text: "Lot Number", value: "Lot Number" },
-  { text: "Lot Pkg Amount", value: "Lot Pkg Amount" },
-  { text: "Manufacturer Name", value: "Manufacturer Name" },
-  { text: "Origin Name", value: "Origin Name" },
-  { text: "Packaging Group", value: "Packaging Group" },
-  { text: "Packaging Minimum", value: "Packaging Minimum" },
-  { text: "Packaging Size", value: "Packaging Size" },
-  { text: "Packaging Splits", value: "Packaging Splits" },
-  { text: "Packaging Type Name", value: "Packaging Type Name" },
-  { text: "Packaging Unit Name", value: "Packaging Unit Name" },
-  { text: "Pricing Cost", value: "Pricing Cost" },
-  { text: "Pricing Price", value: "Pricing Price" },
-  { text: "Product Code", value: "Product Code" },
-  { text: "Product Condition Name", value: "Product Condition Name" },
-  { text: "Product Form Name", value: "Product Form Name" },
-  { text: "Product Grade Name", value: "Product Grade Name" },
-  { text: "Product Name", value: "Product Name" },
-  { text: "Trade Name", value: "Trade Name" },
-  { text: "UN Number", value: "UN Number" },
-  { text: "Warehouse Name", value: "Warehouse Name" }
+  { text: <FormattedMessage id='global.assayMax' defaultMessage='Assay Max' />, value: 'Assay Max' },
+  { text: <FormattedMessage id='global.assayMin' defaultMessage='Assay Min' />, value: 'Assay Min' },
+  { text: <FormattedMessage id='global.casProductNumber' defaultMessage='CAS Product Number' />, value: 'CAS Product Number' },
+  { text: <FormattedMessage id='global.expirationDate' defaultMessage='Expiration Date' />, value: 'Expiration Date' },
+  { text: <FormattedMessage id='global.externalNotes' defaultMessage='External Notes' />, value: 'External Notes' },
+  { text: <FormattedMessage id='global.hazardClass' defaultMessage='Hazard Class' />, value: 'Hazard Class' },
+  { text: <FormattedMessage id='global.internalNotes' defaultMessage='Internal Notes' />, value: 'Internal Notes' },
+  { text: <FormattedMessage id='global.lotManufacturedDate' defaultMessage='Lot Manufactured Date' />, value: 'Lot Manufactured Date' },
+  { text: <FormattedMessage id='global.lotNumber' defaultMessage='Lot Number' />, value: 'Lot Number' },
+  { text: <FormattedMessage id='global.lotPkgAmount' defaultMessage='Lot Pkg Amount' />, value: 'Lot Pkg Amount' },
+  { text: <FormattedMessage id='global.manufacturedName' defaultMessage='Manufacturer Name' />, value: 'Manufacturer Name' },
+  { text: <FormattedMessage id='global.originName' defaultMessage='Origin Name' />, value: 'Origin Name' },
+  { text: <FormattedMessage id='global.packagingGroup' defaultMessage='Packaging Group' />, value: 'Packaging Group' },
+  { text: <FormattedMessage id='global.packagingMinimum' defaultMessage='Packaging Minimum' />, value: 'Packaging Minimum' },
+  { text: <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size' />, value: 'Packaging Size' },
+  { text: <FormattedMessage id='global.packagingSplits' defaultMessage='Packaging Splits' />, value: 'Packaging Splits' },
+  { text: <FormattedMessage id='global.packagingTypeName' defaultMessage='Packaging Type Name' />, value: 'Packaging Type Name' },
+  { text: <FormattedMessage id='global.packagingUnitName' defaultMessage='Packaging Unit Name' />, value: 'Packaging Unit Name' },
+  { text: <FormattedMessage id='global.pricingCost' defaultMessage='Pricing Cost' />, value: 'Pricing Cost' },
+  { text: <FormattedMessage id='global.pricingPrice' defaultMessage='Pricing Price' />, value: 'Pricing Price' },
+  { text: <FormattedMessage id='global.productCode' defaultMessage='Product Code' />, value: 'Product Code' },
+  { text: <FormattedMessage id='global.productConditionName' defaultMessage='Product Condition Name' />, value: 'Product Condition Name' },
+  { text: <FormattedMessage id='global.productFormName' defaultMessage='Product Form Name' />, value: 'Product Form Name' },
+  { text: <FormattedMessage id='global.productGradeName' defaultMessage='Product Grade Name' />, value: 'Product Grade Name' },
+  { text: <FormattedMessage id='global.productName' defaultMessage='Product Name' />, value: 'Product Name' },
+  { text: <FormattedMessage id='global.tradeName' defaultMessage='Trade Name' />, value: 'Trade Name' },
+  { text: <FormattedMessage id='global.unNumber' defaultMessage='UN Number' />, value: 'UN Number' },
+  { text: <FormattedMessage id='global.warehouseName' defaultMessage='Warehouse Name' />, value: 'Warehouse Name' }
 ]
 
 class Map extends Component {
@@ -71,7 +73,7 @@ class Map extends Component {
   }
 
   render() {
-    const { CSV } = this.props
+    const { CSV, intl: { formatMessage } } = this.props
 
     const optionMaps =
       this.props.maps &&
@@ -84,31 +86,31 @@ class Map extends Component {
       <React.Fragment>
         {this.props.productOffer && (
           <Grid centered padded>
-            <Grid.Row verticalAlign="middle" columns={3}>
-              <Grid.Column textAlign="center">
+            <Grid.Row verticalAlign='middle' columns={3}>
+              <Grid.Column textAlign='center'>
                 <Select
-                  placeholder="Select your saved map"
+                  placeholder={formatMessage({ id: 'settings.selectSavedMap', defaultMessage: 'Select your saved map' })}
                   options={optionMaps}
                   clearable
                   //disabled={!optionMaps}
                   onChange={this.selectSavedMap}
                 />
               </Grid.Column>
-              <Grid.Column textAlign="center" data-test='settings_product_import_csv_name_inp'>
-                <Input placeholder="Map Name" onChange={this.inputMapName} />
+              <Grid.Column textAlign='center' data-test='settings_product_import_csv_name_inp'>
+                <Input placeholder={formatMessage({ id: 'settings.', defaultMessage: 'Map Name' })} onChange={this.inputMapName} />
               </Grid.Column>
-              <Grid.Column textAlign="center" verticalAlign="middle">
-                <Checkbox label="Save my map" onChange={this.checkboxChange}  data-test='settings_product_import_csv_save_chckb' />
+              <Grid.Column textAlign='center' verticalAlign='middle'>
+                <Checkbox label={formatMessage({ id: 'settings.saveMyMap', defaultMessage: 'Save my map' })} onChange={this.checkboxChange} data-test='settings_product_import_csv_save_chckb' />
               </Grid.Column>
             </Grid.Row>
           </Grid>
         )}
-        <Table celled padded textAlign="center">
+        <Table celled padded textAlign='center'>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>CSV Columns</Table.HeaderCell>
-              <Table.HeaderCell>CSV Preview</Table.HeaderCell>
-              <Table.HeaderCell>Mapping</Table.HeaderCell>
+              <Table.HeaderCell><FormattedMessage id='settings.csvColumns' defaultMessage='CSV Columns' /></Table.HeaderCell>
+              <Table.HeaderCell><FormattedMessage id='settings.csvPreview' defaultMessage='CSV Preview' /></Table.HeaderCell>
+              <Table.HeaderCell><FormattedMessage id='settings.mapping' defaultMessage='Mapping' /></Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           {CSV && (
@@ -121,14 +123,14 @@ class Map extends Component {
                       return line.columns.map(lineBody => {
                         return (
                           lineHeader.columnNumber === lineBody.columnNumber &&
-                          lineBody.content + " "
+                          lineBody.content + ' '
                         )
                       })
                     })}
                   </Table.Cell>
                   <Table.Cell>
                     <Dropdown
-                      placeholder="Select Column"
+                      placeholder={formatMessage({ id: 'settings.selectColumn', defaultMessage: 'Select Column' })}
                       column_number={lineHeader.columnNumber}
                       selection
                       clearable
@@ -172,7 +174,7 @@ class Map extends Component {
       : [...this.state.newHeaders]
     const newHeaders = mappedHeader.map(line => {
       if (column_number === line.columnNumber) {
-        line["header"] = value
+        line['header'] = value
         return line
       }
       return line
@@ -199,7 +201,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
+export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(Map)
+)(Map))

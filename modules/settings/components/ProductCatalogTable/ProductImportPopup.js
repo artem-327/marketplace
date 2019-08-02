@@ -1,8 +1,9 @@
-import React, { Component } from "react"
-import { connect } from "react-redux"
-import styled from "styled-components"
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import styled from 'styled-components'
 
-import { Modal, Icon, Step, ModalContent, Button } from "semantic-ui-react"
+import { Modal, Icon, Step, ModalContent, Button } from 'semantic-ui-react'
+import { FormattedMessage } from 'react-intl'
 
 import {
   closeImportPopup,
@@ -11,12 +12,12 @@ import {
   clearDataOfCSV,
   closeImportPopupCancel,
   postImportProductOfferCSV
-} from "../../actions"
+} from '../../actions'
 
-import Upload from "./Steps/UploadCSV"
-import Map from "./Steps/Map"
-import Preview from "./Steps/Preview"
-import ConfirmationPage from "./Steps/ConfirmationPage"
+import Upload from './Steps/UploadCSV'
+import Map from './Steps/Map'
+import Preview from './Steps/Preview'
+import ConfirmationPage from './Steps/ConfirmationPage'
 
 const StyledModal = styled(ModalContent)`
   height: 500px;
@@ -25,7 +26,7 @@ const StyledModal = styled(ModalContent)`
 
 class ProductImportPopup extends Component {
   state = {
-    currentStep: "upload",
+    currentStep: 'upload',
     isFinishUpload: false,
     isFinishMap: false,
     isFinishPreview: false
@@ -39,7 +40,7 @@ class ProductImportPopup extends Component {
 
   toUpload = () => {
     this.setState({
-      currentStep: "upload",
+      currentStep: 'upload',
       isFinishUpload: false,
       isFinishMap: false,
       isFinishPreview: false
@@ -71,40 +72,39 @@ class ProductImportPopup extends Component {
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>.CSV Mapping</Modal.Header>
+        <Modal.Header><FormattedMessage id='global.csvMapping' defaultMessage='.CSV Mapping' /></Modal.Header>
         <StyledModal>
           <Step.Group widths={3}>
-            <Step active={currentStep === "upload"} completed={isFinishUpload}>
-              <Icon name="upload" />
+            <Step active={currentStep === 'upload'} completed={isFinishUpload}>
+              <Icon name='upload' />
               <Step.Content>
-                <Step.Title>Upload</Step.Title>
+                <Step.Title><FormattedMessage id='global.upload' defaultMessage='Upload' /></Step.Title>
               </Step.Content>
             </Step>
 
-            <Step active={currentStep === "map"} completed={isFinishMap}>
-              <Icon name="table" />
+            <Step active={currentStep === 'map'} completed={isFinishMap}>
+              <Icon name='table' />
               <Step.Content>
-                <Step.Title>Map</Step.Title>
+                <Step.Title><FormattedMessage id='global.map' defaultMessage='Map' /></Step.Title>
               </Step.Content>
             </Step>
 
             <Step
-              active={currentStep === "preview"}
-              completed={isFinishPreview}
-            >
-              <Icon name="eye" />
+              active={currentStep === 'preview'}
+              completed={isFinishPreview} >
+              <Icon name='eye' />
               <Step.Content>
-                <Step.Title>Preview</Step.Title>
+                <Step.Title><FormattedMessage id='global.preview' defaultMessage='Preview' /></Step.Title>
               </Step.Content>
             </Step>
           </Step.Group>
           {this.steps[currentStep]}
         </StyledModal>
         <Modal.Actions>
-          {currentStep !== "confirmation" && (
-            <div style={{ textAlign: "right" }}>
+          {currentStep !== 'confirmation' && (
+            <div style={{ textAlign: 'right' }}>
               <Button basic onClick={() => closeImportPopupCancel(csvFileId)} data-test='settings_product_import_cancel_btn'>
-                Cancel
+                <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
               </Button>
               <Button
                 primary
@@ -112,7 +112,7 @@ class ProductImportPopup extends Component {
                 disabled={!csvFileId}
                 data-test='settings_product_import_submit_btn'
               >
-                {`${currentStep === "preview" ? "Save" : "Next"}`}
+                {`${currentStep === 'preview' ? 'Save' : 'Next'}`}
               </Button>
             </div>
           )}
@@ -126,18 +126,18 @@ class ProductImportPopup extends Component {
     const { currentStep } = this.state
 
     switch (currentStep) {
-      case "upload":
-        this.setState({ currentStep: "map", isFinishUpload: true })
+      case 'upload':
+        this.setState({ currentStep: 'map', isFinishUpload: true })
         break
-      case "map":
-        this.setState({ currentStep: "preview", isFinishMap: true })
+      case 'map':
+        this.setState({ currentStep: 'preview', isFinishMap: true })
         break
-      case "preview":
+      case 'preview':
         this.props.productOffer
           ? this.props.postImportProductOfferCSV(mappedDataHeaderCSV, csvFileId)
           : this.props.postImportProductCSV(mappedDataHeaderCSV, csvFileId)
 
-        this.setState({ currentStep: "confirmation", isFinishPreview: true })
+        this.setState({ currentStep: 'confirmation', isFinishPreview: true })
         break
     }
   }

@@ -15,13 +15,16 @@ export const errorMessages = {
   minLength: (min) => <FormattedMessage id='validation.minLength' defaultMessage={`Minimum length is ${min}`} values={{ min }} />,
   enterPhoneNumber: <FormattedMessage id='validation.enterPhoneNumber' defaultMessage='Enter phone number' />,
   minDigits: (min) => <FormattedMessage id='validation.minDigits' defaultMessage={`Must have ${min} digits`} values={{ min }} />,
+  // exactDigits: (num) => <FormattedMessage id='validation.exactDigits' defaultMessage={`There has to be exactly ${value} digits`} />,  
   greaterThan: (value) => <FormattedMessage id='validation.greaterThan' values={{ value }} defaultMessage={`Must be greater than ${value}`} />,
   maxDecimals: (max) => <FormattedMessage id='validation.maxDecimals' values={{ max }} defaultMessage={`There can be maximally ${max} decimal places`} />,
   oneLowercaseChar: <FormattedMessage id='validation.oneLowercaseChar' defaultMessage='At least one lowercase char' />,
   oneUppercaseChar: <FormattedMessage id='validation.oneUppercaseChar' defaultMessage='At least one uppercase char' />,
   oneSpecialChar: <FormattedMessage id='validation.oneSpecialChar' defaultMessage='At least one number or special char (@,!,#, etc)' />,
   passwordsMustMatch: <FormattedMessage id='validation.passwordMatch' defaultMessage='Passwords must match' />,
-  exactLength: (len) => <FormattedMessage id='validation.exactLength' defaultMessage={`Must be ${len} characters long`} values={{ len }} />
+  exactLength: (len) => <FormattedMessage id='validation.exactLength' defaultMessage={`Must be ${len} characters long`} values={{ len }} />,
+  unique: (name = '') => <FormattedMessage id='validation.unique' defaultMessage={`${name} has to be unique`} values={{ name }} />
+
 }
 
 export const provinceObjectRequired = (hasProvinces) => (

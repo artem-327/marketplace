@@ -8,14 +8,14 @@ import {
   closeConfirmPopup,
   deleteConfirmation
 } from '../../actions'
-import Router from "next/router"
-import {injectIntl} from "react-intl"
+import Router from 'next/router'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 class ProductCatalogTable extends Component {
   state = {
     columns: [
-      { name: 'cardNumber', title: 'Card Number' },
-      { name: 'expMonthYear', title: 'expMonth / expYear' }
+      { name: 'cardNumber', title: <FormattedMessage id='settings.cardNumber' defaultMessage='Card Number' /> },
+      { name: 'expMonthYear', title: <FormattedMessage id='settings.expMonthYear' defaultMessage='Expiration month/year' /> }
     ]
   }
 
@@ -34,24 +34,22 @@ class ProductCatalogTable extends Component {
       deleteRowById,
       currentTab,
       loading,
-      intl
+      intl: { formatMessage }
     } = this.props
 
     const { columns } = this.state
 
-    let { formatMessage } = intl
-
     return (
       <React.Fragment>
         <Confirm
-          size="tiny"
-          content="Do you really want to delete this Credit Card?"
+          size='tiny'
+          content={formatMessage({ id: 'settings.deleteCreditCardConfirm', defaultMessage: 'Do you really want to delete this Credit Card?' })}
           open={confirmMessage}
           onCancel={closeConfirmPopup}
           onConfirm={() => deleteConfirmation(deleteRowById, currentTab)}
         />
         <ProdexTable
-          tableName="settings_credit_cards"
+          tableName='settings_credit_cards'
           rows={rows}
           loading={loading}
           columns={columns}
@@ -83,7 +81,7 @@ const mapStateToProps = state => {
     confirmMessage: state.settings.confirmMessage,
     deleteRowById: state.settings.deleteRowById,
     currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
-        state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+      state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
   }
 }
 

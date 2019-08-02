@@ -8,7 +8,7 @@ import * as Actions from '../../actions'
 import Router from 'next/router'
 
 import confirm from '~/src/components/Confirmable/confirm'
-import { injectIntl, FormattedNumber } from 'react-intl'
+import { injectIntl, FormattedNumber, FormattedMessage } from 'react-intl'
 
 import { UnitOfPackaging } from '~/components/formatted-messages'
 import { getSafe } from '~/utils/functions'
@@ -18,13 +18,13 @@ class ProductCatalogTable extends Component {
 
   state = {
     columns: [
-      { name: 'productName', title: 'Product Name', sortPath: 'Product.productName' },
-      { name: 'productCode', title: 'Product Number', sortPath: 'Product.productCode' },
-      { name: 'casNumber', title: 'CAS Number' },
-      { name: 'casName', title: 'CAS Name' },
-      { name: 'packagingSizeFormatted', title: 'Packaging Size' },
-      { name: 'unit', title: 'Unit' },
-      { name: 'packagingTypeName', title: 'Packaging Type' }
+      { name: 'productName', title: <FormattedMessage id='global.productName' defaultMessage='Product Name' />, sortPath: 'Product.productName' },
+      { name: 'productCode', title: <FormattedMessage id='global.productNumber' defaultMessage='Product Number' />, sortPath: 'Product.productCode' },
+      { name: 'casNumber', title: <FormattedMessage id='global.casNumber' defaultMessage='CAS Number' /> },
+      { name: 'casName', title: <FormattedMessage id='global.casName' defaultMessage='CAS Name' /> },
+      { name: 'packagingSizeFormatted', title: <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size' /> },
+      { name: 'unit', title: <FormattedMessage id='global.unit' defaultMessage='Unit' /> },
+      { name: 'packagingTypeName', title: <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type' /> }
     ]
   }
 
