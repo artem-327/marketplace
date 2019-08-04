@@ -38,6 +38,7 @@ context("Prodex Bank Account CRUD", () => {
             .type("123103729")
             .should("have.value","123103729")
 
+        cy.waitForUI()
         cy.clickSave()
 
         cy.contains("Created Bank Account")
