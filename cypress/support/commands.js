@@ -200,6 +200,20 @@ Cypress.Commands.add("getFirstAddressIdWithFilter", (token,filter) => {
     })
 })
 
+Cypress.Commands.add("getFirstCasProductWithFilter", (token,filter) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/cas-products/datagrid',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, filters: filter, pageSize: 50, orOperator:true}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body[0].id
+    })
+})
+
 Cypress.Commands.add("deleteWholeCart", (token) => {
     cy.request({
         method: 'DELETE',
