@@ -123,6 +123,8 @@ context("Inventory CRUD",() => {
 	})
 
     it('Create item with optional info',() => {
+        cy.viewport(1280, 800)
+
 		cy.contains("Inventory").click()
 		cy.contains("Add Inventory").click()
 
@@ -167,8 +169,9 @@ context("Inventory CRUD",() => {
 
         cy.get(".table-responsive").scrollTo("right")
         cy.waitForUI()
-        cy.get(".ui .label").eq(1).trigger("mouseover")
-        cy.get('[data-test=my_inventory_lot_number]').should("be.visible")
+
+        cy.contains('Multiple').trigger("mouseover")
+        cy.get('[data-test=my_inventory_lot_number_btn]').should("be.visible")
         cy.get("div[role='listitem']").should("have.length",2)
     })
 
