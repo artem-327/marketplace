@@ -123,7 +123,7 @@ class Marketplace extends Component {
 
             <Menu.Menu position='right'>
               <Menu.Item>
-                <FilterTags filters={datagrid.filters} onClick={this.removeFilter} />
+                <FilterTags filters={datagrid.filters} onClick={this.removeFilter} data-test='marketplace_remove_filter' />
               </Menu.Item>
               {selectedRows.length === 0 ? null :
                 <Button primary onClick={() => this.setState({ open: true })} data-test='marketplace_shipping_quote_btn'>

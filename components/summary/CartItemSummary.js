@@ -50,7 +50,8 @@ class CartItemSummary extends Component {
 
               <GridColumn computer={4}>
                 <CustomSpan positive={this.state.edittingHazmatInfo}
-                  onClick={this.handleHazBtnClick}>
+                  onClick={this.handleHazBtnClick}
+                  data-test='shopping_cart_hazmat'>
                   <FormattedMessage id={`global.${this.state.edittingHazmatInfo ? 'save' : 'edit'}`} />
                 </CustomSpan>
               </GridColumn>

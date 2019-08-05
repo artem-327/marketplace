@@ -29,7 +29,8 @@ class FilterTags extends Component {
             <FilterTag key={i} >
               <span> {filter.description} ({tagDescription.length})...
                   <Icon onClick={() => this.removeFilter(filter)}
-                  name='delete' />
+                  name='delete'
+                  data-test='filter_tags_remove_filter'/>
               </span>
             </FilterTag>
           }>
@@ -47,7 +48,8 @@ class FilterTags extends Component {
         return <FilterTag key={i}>
           <span>{tagDescription} 
             <Icon onClick={() => this.removeFilter(filter)}
-              name='delete' />
+              name='delete'
+              data-test='filter_tags_remove_filter'/>
           </span>
         </FilterTag>
       }

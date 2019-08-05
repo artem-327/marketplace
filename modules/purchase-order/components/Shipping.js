@@ -51,7 +51,8 @@ class Shipping extends Component {
                 <GridColumn floated='right'>
                   <span
                     className='headerAddtext'
-                    onClick={() => this.props.shippingChanged({ isShippingEdit: true, isNewAddress: !!selectedAddress })}>
+                    onClick={() => this.props.shippingChanged({ isShippingEdit: true, isNewAddress: !!selectedAddress })}
+                    data-test='purchase_order_edit_address'>
                     <FormattedMessage
                       id='global.edit'
                       defaultMessage='Edit'

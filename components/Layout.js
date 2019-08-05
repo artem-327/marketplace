@@ -81,7 +81,7 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth,
 
         <Menu.Menu position='right' className='black'>
           {auth && auth.identity && !auth.identity.isAdmin &&
-            <Menu.Item onClick={() => Router.push('/cart')}>
+            <Menu.Item onClick={() => Router.push('/cart')} data-test="navigation_menu_cart">
               <MiniCart />
             </Menu.Item>
           }

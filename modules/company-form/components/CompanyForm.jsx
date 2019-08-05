@@ -16,7 +16,7 @@ class CompanyForm extends Component {
 
     return (
       <>
-        <FormGroup widths='equal'>
+        <FormGroup widths='equal' data-test='company_form_legalCompanyName_inp'>
           <Input label={<FormattedMessage id='company.legalCompanyName' defaultMessage='Legal Company Name' />} name='name' />
           <Dropdown
             options={data.map((type) => ({
@@ -28,15 +28,16 @@ class CompanyForm extends Component {
               loading,
             }}
             label={<FormattedMessage id='company.businessType' defaultMessage='Business Type' />}
-            name='businessType.id' />
+            name='businessType.id'
+            data-test='company_form_businessType_drpdn'/>
         </FormGroup>
-        <FormGroup widths='equal'>
+        <FormGroup widths='equal' data-test='company_form_dbaDuns_inp'>
           <Input label={<FormattedMessage id='company.dba' defaultMessage='Doing Business As' />} name='dba' />
           <Input label={<FormattedMessage id='company.duns' defaultMessage='DUNS Number' />} name='dunsNumber' />
         </FormGroup>
 
 
-        <FormGroup widths='equal'>
+        <FormGroup widths='equal' data-test='company_form_tinCin_inp'>
           <Input label={
             <Popup
               content={<FormattedMessage id='company.tooltip.orEin' defaultMessage='or Employer Identification Number' />}
@@ -52,14 +53,15 @@ class CompanyForm extends Component {
             name='cin' />
         </FormGroup>
 
-        <FormGroup widths='equal'>
+        <FormGroup widths='equal' data-test='company_form_websiteUrlPhone_inp'>
           <Input label={<FormattedMessage id='global.websiteUrl' defaultMessage='Website URL' />} name='website' />
           <Input label={<FormattedMessage id='global.phone' defaultMessage='Phone' />} name='phone' />
         </FormGroup>
 
 
         <FormGroup widths='equal'>
-          <Checkbox label={formatMessage({ id: 'global.nacdNumber', defaultMessage: 'NACD Number' })} name='nacdMember' />
+          <Checkbox label={formatMessage({ id: 'global.nacdNumber', defaultMessage: 'NACD Number' })} name='nacdMember'
+                    data-test='company_form_nacdNumber_chckb'/>
         </FormGroup>
       </>
     )

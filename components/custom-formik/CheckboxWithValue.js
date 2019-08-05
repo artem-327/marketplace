@@ -39,7 +39,7 @@ class FormikCheckbox extends Component {
                 <Checkbox
                   {...safeInputProps}
                   id={this.id}
-                  data-test={`FormikCheckbox_${this.id}`}
+                  data-test={`FormikCheckbox_${this.id}_chckb`}
                   label={label}
                   name={name}
                   checked={field.value.includes(propValue)}

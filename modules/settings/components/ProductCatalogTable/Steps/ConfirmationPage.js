@@ -34,14 +34,14 @@ class ConfirmationPage extends Component {
             ))}
 
         <Grid.Row>
-          <StyledButton basic primary onClick={() => this.props.closeImportPopup(reloadFilter)}>
+          <StyledButton basic primary onClick={() => this.props.closeImportPopup(reloadFilter)} data-test='settings_product_close_import'>
             <FormattedMessage
               id={`settings.view${this.props.productOffer ? 'MyInventory' : 'Product'}`}
               defaultMessage={`View ${this.props.productOffer ? 'My Inventory' : 'Products'}`} />
           </StyledButton>
         </Grid.Row>
         <Grid.Row>
-          <StyledButton primary onClick={this.props.toUpload}>
+          <StyledButton primary onClick={this.props.toUpload} data-test='settings_product_to_upload'>
             <FormattedMessage id='settings.uploadMore' defaultMessage='Upload more files' />
           </StyledButton>
         </Grid.Row>

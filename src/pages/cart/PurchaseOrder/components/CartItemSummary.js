@@ -41,7 +41,8 @@ export default class CartItemSummary extends Component {
           <GridColumn floated='right'>
             <span
               className='headerAddtext'
-              onClick={() => deleteCart(productOffer.id)}>
+              onClick={() => deleteCart(productOffer.id)}
+              data-test={`cart_delete_item_${i}`}>
               <FormattedMessage
                 id='global.remove'
                 defaultMessage='Remove'

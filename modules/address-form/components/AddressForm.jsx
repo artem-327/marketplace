@@ -147,7 +147,7 @@ export default class AddressForm extends Component {
           {this.getOptions(values).filter((el) => el !== null).map((el, i) => <option key={i} value={el} />)}
         </datalist >
         {displayHeader && <Header as='h3'><FormattedMessage id='global.address' defaultMessage='Address' /></Header>}
-        <DatalistGroup widths='equal'>
+        <DatalistGroup widths='equal' data-test='address_form_streetCity_inp'>
           <Input
             inputProps={{ icon: 'dropdown', list: datalistName, onChange: this.handleChange }}
             label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />}
@@ -163,6 +163,7 @@ export default class AddressForm extends Component {
           <ZipDropdown
             onChange={this.handleChange}
             name={fields.zip} countryId={countryId} initialZipCodes={initialZipCodes}
+            data-test='address_form_zip_drpdn'
           />
           <Dropdown label={<FormattedMessage id='global.country' defaultMessage='Country' />} name={fields.country}
             options={countries.map((country) => ({
@@ -171,6 +172,7 @@ export default class AddressForm extends Component {
               value: JSON.stringify({ countryId: country.id, hasProvinces: country.hasProvinces })
             }))}
             inputProps={{
+              'data-test': 'address_form_country_drpdn',
               search: true, onChange: async (e, data) => {
                 let values = JSON.parse(data.value)
                 let fieldName = prefix ? `${prefix.province}` : 'address.province'
@@ -192,6 +194,7 @@ export default class AddressForm extends Component {
               value: province.id
             }))}
             inputProps={{
+              'data-test': 'address_form_province_drpdn',
               search: true, disabled: !this.state.hasProvinces,
               loading: provincesAreFetching, onChange: this.handleChange
             }} />

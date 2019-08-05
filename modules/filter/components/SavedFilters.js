@@ -50,7 +50,7 @@ class SavedFilters extends Component {
         <Grid>
           <GridRow>
             <Popup trigger={
-              <GridColumn computer={10} onClick={() => this.handleFilterApply(filter)}>
+              <GridColumn computer={10} onClick={() => this.handleFilterApply(filter)} data-test={`filter_activateFilter_${i}`}>
                 {name}
               </GridColumn>
             } position='top center'>
@@ -58,7 +58,7 @@ class SavedFilters extends Component {
             </Popup>
 
             <Popup trigger={
-              <GridColumn computer={2} onClick={() => this.toggle(id)}>
+              <GridColumn computer={2} onClick={() => this.toggle(id)} data-test={`filter_editNotifications_${i}`}>
                 <SavedFilterIcon
                   name='bell'
                   className={this.state.activeIndex === id && 'thick'}
@@ -68,7 +68,7 @@ class SavedFilters extends Component {
               <FormattedMessage id='filter.editNotifications' />
             </Popup>
             <Popup trigger={
-              <GridColumn onClick={() => this.toggle(i, 'activeTooltip')} computer={2}>
+              <GridColumn onClick={() => this.toggle(i, 'activeTooltip')} computer={2} data-test={`filter_activeTooltip_${i}`}>
                 <SavedFilterIcon color={this.state.activeTooltip === i ? 'blue' : 'black'} name='info circle' />
               </GridColumn>
             } position='left center'>
@@ -90,7 +90,7 @@ class SavedFilters extends Component {
               </GridColumn>
             </Popup>
             <Popup trigger={
-              <GridColumn onClick={() => this.props.deleteFilter(id)} computer={2}>
+              <GridColumn onClick={() => this.props.deleteFilter(id)} computer={2} data-test={`filter_deleteFilter_${i}`}>
                 <SavedFilterIcon name='remove' />
               </GridColumn>
             } position='left center'>
@@ -151,7 +151,7 @@ class SavedFilters extends Component {
                             <Notifications values={values} />
                             <ActionRow>
                               <GridColumn computer={4} floated='right'>
-                                <Button onClick={submitForm} loading={this.props.savedFilterUpdating} fluid positive basic data-test='filter_notification_save_btn'><FormattedMessage id='global.save' defaultMessage='Save' /></Button>
+                                <Button onClick={submitForm} loading={this.props.savedFilterUpdating} fluid positive basic data-test='filter_save_btn'><FormattedMessage id='global.save' defaultMessage='Save' /></Button>
                               </GridColumn>
                             </ActionRow>
                           </Grid>

@@ -496,6 +496,7 @@ class ProductPopup extends React.Component {
                     <DateInput
                       label={formatMessage({ id: 'global.expirationDate', defaultMessage: 'Expiration Date' })}
                       name='expirationDate'
+                      inputProps={{ 'data-test': 'settings_product_popup_expirationDate_dtin' }}
                     />
                   </FormField>
                   <FormField>

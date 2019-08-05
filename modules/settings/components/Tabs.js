@@ -25,6 +25,7 @@ class Tabs extends Component {
               onClick={() => this.handleTabClick(tab)}
               name={tab.name.toUpperCase()}
               active={currentTab.type === tab.type}
+              data-test='tabs_tab_click'
             />
           </Link>
         ))}

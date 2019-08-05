@@ -321,7 +321,7 @@ class AddNewPopupCasProducts extends React.Component {
                       {!popupValues && (
                         <>
                           <Divider />
-                          <Accordion.Title active={accordionActive.companyAdmin} onClick={this.handleAccordionChange} name='companyAdmin'>
+                          <Accordion.Title active={accordionActive.companyAdmin} onClick={this.handleAccordionChange} name='companyAdmin' data-test='admin_popup_company_accordion_companyAdmin'>
                             <AccordionHeader as='h4'>
                               <Icon color={accordionActive.companyAdmin && 'blue'} name={accordionActive.companyAdmin ? 'chevron down' : 'chevron right'} />
                               <FormattedMessage id='global.companyAdmin' defaultMessage='Company Admin (Primary User)' />
@@ -344,7 +344,7 @@ class AddNewPopupCasProducts extends React.Component {
                         {/* {AddressSuggestPrimaryBranchInput}
                         {AddressSuggestMailingBranchInput} */}
                         <Divider />
-                        <Accordion.Title active={accordionActive.billingAddress} onClick={this.handleAccordionChange} name='billingAddress'>
+                        <Accordion.Title active={accordionActive.billingAddress} onClick={this.handleAccordionChange} name='billingAddress' data-test='admin_popup_company_accordion_primaryBranch'>
                           <AccordionHeader as='h4'>
                             <Icon color={accordionActive.billingAddress && 'blue'} name={accordionActive.billingAddress ? 'chevron down' : 'chevron right'} />
                             <FormattedMessage id='global.primaryBranch' defaultMessage='Primary Branch (Billing Address)' />
@@ -366,7 +366,7 @@ class AddNewPopupCasProducts extends React.Component {
                         </Accordion.Content>
                         <Divider />
 
-                        <Accordion.Title active={accordionActive.mailingAddress} onClick={this.handleAccordionChange} name='mailingAddress'>
+                        <Accordion.Title active={accordionActive.mailingAddress} onClick={this.handleAccordionChange} name='mailingAddress' data-test='admin_popup_company_accordion_mailingBranch'>
                           <AccordionHeader as='h4'>
                             <Icon color={accordionActive.mailingAddress && 'blue'} name={accordionActive.mailingAddress ? 'chevron down' : 'chevron right'} />
                             <FormattedMessage id='global.mailingBranch' defaultMessage='Mailing Branch (optional)' />

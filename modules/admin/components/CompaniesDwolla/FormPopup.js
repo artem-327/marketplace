@@ -234,7 +234,8 @@ class AddNewPopupCasProducts extends React.Component {
                           <Input label={<FormattedMessage id='global.title' defaultMessage='Job Title' />} name='dwollaController.jobTitle' />
                         </FormGroup>
                         <FormGroup widths='equal' data-test='admin_popup_company_dwolla_birth_inp'>
-                          <DateInput label={<FormattedMessage id='global.dateOfBirth2' defaultMessage='Birth' />} name='dwollaController.dateOfBirth' />
+                          <DateInput label={<FormattedMessage id='global.dateOfBirth2' defaultMessage='Birth' />} name='dwollaController.dateOfBirth'
+                                     inputProps={{ 'data-test': 'admin_popup_company_dwolla_birth_dtin' }} />
                           <Input label={<FormattedMessage id='global.ssn2' defaultMessage='SSN' />} name='dwollaController.ssn' />
                         </FormGroup>
 

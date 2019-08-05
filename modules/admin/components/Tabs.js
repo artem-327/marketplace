@@ -15,6 +15,7 @@ function Tabs(props) {
           key={tab.id}
           onClick={() => handleActiveTab(tab.name)}
           active={currentTab === tab.name}
+          data-test={`tabs_menu_item_${tab.id}`}
         />
       ))}
     </Menu>

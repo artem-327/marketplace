@@ -194,7 +194,7 @@ class BankAccountsPopup extends React.Component {
                 <Input label={formatMessage({ id: 'settings.ssn', defaultMessage: 'SSN' })} name='beneficialOwner.ssn' />
               </FormGroup>
 
-              <Accordion.Title active={accordionActive.controllerAddress} onClick={this.handleAccordionChange} name='controllerAddress'>
+              <Accordion.Title active={accordionActive.controllerAddress} onClick={this.handleAccordionChange} name='controllerAddress' data-test='settings_dwolla_accordion_change'>
                 <AccordionHeader as='h4'>
                   <Icon color={accordionActive.controllerAddress && 'blue'} name={accordionActive.controllerAddress ? 'chevron down' : 'chevron right'} />
                   <FormattedMessage id='global.controller' defaultMessage='Controlling Person' />

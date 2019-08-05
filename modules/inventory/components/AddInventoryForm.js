@@ -912,7 +912,8 @@ class AddInventoryForm extends Component {
                             .catch(e => {
                               console.log('CATCH', e)
                             })
-                        }}>
+                        }}
+                          data-test='new_inventory_productOffer'>
                           <FormattedMessage id='addInventory.productOffer' defaultMessage='PRODUCT OFFER' />
                         </Menu.Item>
                       ),
@@ -1013,11 +1014,11 @@ class AddInventoryForm extends Component {
                                 <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='doesExpire' data-test='add_inventory_expire_yes_rad' />
                               </FormGroup>
                               <FormGroup>
-                                <FormField width={10} data-test='add_inventory_product_expirationDate_inp' >
+                                <FormField width={10} >
                                   <DateInput
-                                    inputProps={{ disabled: !values.doesExpire }}
+                                    inputProps={{ disabled: !values.doesExpire, 'data-test': 'add_inventory_product_expirationDate_dtin' }}
                                     label={formatMessage({ id: 'addInventory.expirationDate', defaultMessage: 'Expiration Date' })}
-                                    name='validityDate' />
+                                    name='validityDate'/>
                                 </FormField>
                               </FormGroup>
 
@@ -1303,7 +1304,8 @@ class AddInventoryForm extends Component {
                             .catch(e => {
                               console.log('CATCH', e)
                             })
-                        }}>
+                        }}
+                          data-test='new_inventory_productOptional'>
                           <FormattedMessage id='addInventory.optionalProductInfo' defaultMessage='OPTIONAL PRODUCT INFO' />
                         </Menu.Item>
                       ),
@@ -1488,8 +1490,8 @@ class AddInventoryForm extends Component {
                                             }} /></TableCellSmall>
                                             <TableCellSmall>0</TableCellSmall>
                                             <TableCellSmall>0</TableCellSmall>
-                                            <TableCellBig><DateInput name={`lots[${index}].manufacturedDate`} /></TableCellBig>
-                                            <TableCellBig><DateInput name={`lots[${index}].expirationDate`} /></TableCellBig>
+                                            <TableCellBig><DateInput name={`lots[${index}].manufacturedDate`} inputProps={{ 'data-test': 'add_inventory_product_manufacturedDate_dtin' }} /></TableCellBig>
+                                            <TableCellBig><DateInput name={`lots[${index}].expirationDate`}  inputProps={{ 'data-test': 'add_inventory_product_expirationDate_dtin' }} /></TableCellBig>
                                             <TableCellBig>
                                               <UploadLot {...this.props}
                                                 attachments={values.lots[index].attachments}
@@ -1641,7 +1643,8 @@ class AddInventoryForm extends Component {
                                                     )}
                                                   />
                                                 </TableCell>
-                                                <TableCell width={1}><Icon name='trash alternate outline' size='large' disabled={!values.trackSubCosts} onClick={() => arrayHelpers.remove(index)} /></TableCell>
+                                                <TableCell width={1}><Icon name='trash alternate outline' size='large' disabled={!values.trackSubCosts} onClick={() => arrayHelpers.remove(index)}
+                                                                           data-test={`add_inventory_delete_${index}`}/></TableCell>
                                               </Table.Row>
                                             )) : null
                                             }
