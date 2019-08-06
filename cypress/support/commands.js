@@ -214,6 +214,21 @@ Cypress.Commands.add("getFirstCasProductWithFilter", (token,filter) => {
     })
 })
 
+Cypress.Commands.add("getFirstPackagingUnitWithFilter", (token,filter) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/packaging-types/datagrid',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, filters: filter, pageSize: 50}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body[0].id
+    })
+})
+
+
 Cypress.Commands.add("deleteWholeCart", (token) => {
     cy.request({
         method: 'DELETE',
