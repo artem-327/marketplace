@@ -1,10 +1,12 @@
 import { connect } from 'react-redux'
 import CompanyForm from './CompanyForm'
 import * as Actions from '../actions'
+import { getSafe } from '~/utils/functions'
 
-function mapStateToProps({ businessTypes }) {
+function mapStateToProps(state) {
   return {
-    ...businessTypes
+    ...state.businessTypes,
+    companyId: getSafe(() => state.auth.identity.company.id, false)
   }
 }
 

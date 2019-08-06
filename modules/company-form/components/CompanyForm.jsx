@@ -1,12 +1,47 @@
 import React, { Component } from 'react'
-import { FormGroup, Popup } from 'semantic-ui-react'
+import { FormGroup, FormField, Popup, Image } from 'semantic-ui-react'
 import { Input, Checkbox, Dropdown } from 'formik-semantic-ui'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 
 class CompanyForm extends Component {
 
   componentDidMount() {
+    this.props.getCompanyLogo(this.props.companyId)
     if (this.props.data.length === 0) this.props.getBusinessTypes()
+  }
+
+  getCompanyLogo = () => {
+    if (this.props.companyLogo) {
+      const file = new Blob([this.props.companyLogo], { type: this.props.companyLogo.type })
+      let fileURL = URL.createObjectURL(file)
+
+      return (
+        <FormField>
+          <label><span>Preview</span></label>
+          <Image src={fileURL} size='small' />
+        </FormField>
+      )
+    }
+
+    return null
+  }
+
+  getMimeType = (documentName) => {
+    const documentExtension = documentName.substr(documentName.lastIndexOf('.') + 1)
+    switch (documentExtension) {
+      case 'gif':
+        return 'image/gif'
+      case 'png':
+        return 'image/png'
+      case 'jpg':
+      case 'jpeg':
+        return 'image/jpeg'
+      case 'svg':
+        return 'image/svg'
+      default:
+        return 'image/png'
+    }
   }
 
   render() {
@@ -62,6 +97,20 @@ class CompanyForm extends Component {
         <FormGroup widths='equal'>
           <Checkbox label={formatMessage({ id: 'global.nacdNumber', defaultMessage: 'NACD Number' })} name='nacdMember'
                     data-test='company_form_nacdNumber_chckb'/>
+        </FormGroup>
+
+        <FormGroup>
+          <FormField className='upload-input' width={8}>
+            <label for="field_input_phone"><span>Company Logo</span></label>
+            <UploadLot {...this.props}
+                       attachments={this.props.companyLogo ? [this.props.companyLogo] : []}
+                       name={`logo`}
+                       filesLimit={1}
+                       fileMaxSize={20}
+                       emptyContent={(<FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' tagName='A' />)}
+            />
+          </FormField>
+          {this.getCompanyLogo()}
         </FormGroup>
       </>
     )

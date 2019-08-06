@@ -176,7 +176,7 @@ class UploadLot extends Component {
                       <File key={file.id} onRemove={() => {
                         this.removeFile(file)
                         arrayHelpers.remove(index)
-                      }} className='file lot' name={file.name} index={index} />
+                      }} className='file lot' name={file.name ? file.name : this.props.name} index={index} />
                     )) : ''}
                   </>
                 )} />
