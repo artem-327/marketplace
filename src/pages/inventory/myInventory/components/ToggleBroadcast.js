@@ -23,6 +23,7 @@ class ToggleBroadcast extends Component {
           <span
               onClick={() => this.toggleBroadcasted(offerId)}
               className={`slider round ${this.state.active ? "brc-radio active" : "brc-radio"} `}
+              data-test='my_inventory_toggle_broadcast_switch'
             />
           </label>
         </div>

@@ -140,7 +140,8 @@ class BroadcastTargetGroup extends Component {
                                  amount={itemValues[2]}
                                  changeUpdateType={(id, value)=>this.handleChangeUpdateTypeItem(id, value)}
                                  changeAmount={(id, value)=>this.handleChangeAmountItem(id, value)}
-                                 changeBrConfig={(id, value)=>this.handleChangeItem(id, value)}/>
+                                 changeBrConfig={(id, value)=>this.handleChangeItem(id, value)}
+                                 data-test={`my_inventory_broadcast_config_index_${index}`}/>
                 <div className='clearfix' > </div>
             </div>)
         })
@@ -154,7 +155,7 @@ class BroadcastTargetGroup extends Component {
     render() {
         return (
             <div>
-               <div className='br-group-header' onClick={(e)=>this.toggleGroup(e)}>
+               <div className='br-group-header' onClick={(e)=>this.toggleGroup(e)} data-test='my_inventory_broadcast_target_group_toggle'>
                    <div className='left-group'>
                        {this.state.isOpen ? <i className="icon fas fa-angle-up"/> : <i className="icon fas fa-angle-down"/>}
                        {this.props.name}
@@ -169,7 +170,8 @@ class BroadcastTargetGroup extends Component {
                            amount={this.state.groupAmount}
                            changeUpdateType={(id, value)=>this.handleChangeUpdateTypeGroup(id, value)}
                            changeAmount={(id, value)=>this.handleChangeAmountGroup(id, value)}
-                           changeBrConfig={(id, value)=>this.handleChangeGroup(id, value)}/>
+                           changeBrConfig={(id, value)=>this.handleChangeGroup(id, value)}
+                           data-test='my_inventory_broadcast_config'/>
                        <div className='clearfix' > </div>
                    </span>
                </div>

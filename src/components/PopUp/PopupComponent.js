@@ -8,7 +8,7 @@ const PopupComponent = ({removePopup, headerTitle, children, footerComponent}) =
         <div className="popup-component">
         <header>
           <h1>{headerTitle}</h1>
-          <i className="fas fa-times close-mark" onClick={removePopup} />
+          <i className="fas fa-times close-mark" onClick={removePopup} data-test='PopupComponent_remove_popup' />
         </header>
         <div className="popup-component-body">
           <PerfectScrollbar>

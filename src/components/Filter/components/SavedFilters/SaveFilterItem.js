@@ -172,6 +172,7 @@ class SaveFilterItem extends Component {
                   show('active', index);
                 }}
                 className={`slider round ${active ? "brc-radio active" : "brc-radio"} `}
+                data-test='saved_filters_notifications_toggle'
               />
             </label>
           </div>
@@ -201,7 +202,8 @@ class SaveFilterItem extends Component {
             show('toolTip', index);
           }}
           className="filter-name"
-          data-test='filter_fill'>
+          data-test='filter_fill'
+          data-test='saved_filters_fill_filter'>
           <TooltipFilter
             selected={selected}
             index={index}
@@ -229,7 +231,8 @@ class SaveFilterItem extends Component {
           </span>
           <span
             className="close test"
-            onClick={() => deleteSaveFilter(this.props.id)}>
+            onClick={() => deleteSaveFilter(this.props.id)}
+            data-test='saved_filters_delete_filter'>
             <img src={close} alt='close' />
           </span>
         </div>

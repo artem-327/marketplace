@@ -124,7 +124,7 @@ class FilterTag extends Component {
         if(Array.isArray(this.props.value) && this.props.value.length === 0) return null;
         return (
             <div className="filterTag"><span>{this.checkName(this.props.name)}: {this.chooseFilter(this.props.name)}</span>
-              <Icon name='times' onClick={()=>{this.props.resetForm('forms.filter.' + this.props.name);this.props.close()}} />
+              <Icon name='times' onClick={()=>{this.props.resetForm('forms.filter.' + this.props.name);this.props.close()}} data-test='FilterTag_filter_reset'/>
             </div>
     )}
 }

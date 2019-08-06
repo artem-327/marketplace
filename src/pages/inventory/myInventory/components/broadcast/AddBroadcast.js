@@ -851,12 +851,13 @@ class AddBroadcast extends Component {
                   <GridColumn>
                     <div className="add-broadcast">
                       <div className="broadcast-nav">
-                        <div className={isClientList ? "active" : ""} onClick={this.switchToList}>
+                        <div className={isClientList ? "active" : ""} onClick={this.switchToList} data-test='my_inventory_add_broadcast_switchToList'>
                           Client List
                       </div>
                         <div
                           className={!isClientList ? "active" : ""}
-                          onClick={this.switchToPrice}>
+                          onClick={this.switchToPrice}
+                          data-test='my_inventory_add_broadcast_switchToPrice'>
                           Price List
                       </div>
                       </div>
@@ -1012,12 +1013,13 @@ class AddBroadcast extends Component {
       >
         <div className="add-broadcast">
           <div className="broadcast-nav">
-            <div className={isClientList ? "active" : ""} onClick={this.switchToList}>
+            <div className={isClientList ? "active" : ""} onClick={this.switchToList} data-test='my_inventory_add_broadcast_switchToList'>
               Client List
             </div>
             <div
               className={!isClientList ? "active" : ""}
               onClick={this.switchToPrice}
+              data-test='my_inventory_add_broadcast_switchToPrice'
             >
               Price List
             </div>

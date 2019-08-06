@@ -63,14 +63,14 @@ class Orders extends Component {
       <div id='page' className='flex stretched scrolling'>
         <Container fluid style={{ padding: '0 32px' }}>
           <Menu pointing secondary horizontal>
-            <Menu.Item name={formatMessage({ id: 'order.menu.all', defaultMessage: 'ALL' })} onClick={() => this.loadData(endpointType, { ...this.props.filterData, status: 'All' })} active={!activeStatus || activeStatus === 'All'} />
-            <Menu.Item name={formatMessage({ id: 'order.menu.pending', defaultMessage: 'PENDING' })} onClick={() => this.loadData(endpointType, { ...this.props.filterData, status: 'Pending' })} active={activeStatus === 'Pending'} />
-            <Menu.Item name={formatMessage({ id: 'order.menu.inTransit', defaultMessage: 'IN TRANSIT' })} onClick={() => this.loadData(endpointType, { ...this.props.filterData, status: 'In Transit' })} active={activeStatus === 'In Transit'} />
-            <Menu.Item name={formatMessage({ id: 'order.menu.review', defaultMessage: 'REVIEW' })} onClick={() => this.loadData(endpointType, { ...this.props.filterData, status: 'Review' })} active={activeStatus === 'Review'} />
-            <Menu.Item name={formatMessage({ id: 'order.menu.credit', defaultMessage: 'CREDIT' })} onClick={() => this.loadData(endpointType, { ...this.props.filterData, status: 'Credit' })} active={activeStatus === 'Credit'} />
-            <Menu.Item name={formatMessage({ id: 'order.menu.completed', defaultMessage: 'COMPLETED' })} onClick={() => this.loadData(endpointType, { ...this.props.filterData, status: 'Completed' })} active={activeStatus === 'Completed'} />
-            <Menu.Item name={formatMessage({ id: 'order.menu.returned', defaultMessage: 'RETURNED' })} onClick={() => this.loadData(endpointType, { ...this.props.filterData, status: 'Returned' })} active={activeStatus === 'Returned'} />
-            <Menu.Item name={formatMessage({ id: 'order.menu.declined', defaultMessage: 'DECLINED' })} onClick={() => this.loadData(endpointType, { ...this.props.filterData, status: 'Declined' })} active={activeStatus === 'Declined'} />
+            <Menu.Item name={formatMessage({ id: 'order.menu.all', defaultMessage: 'ALL' })} onClick={() => this.loadData(endpointType, { ...this.props.filterData, status: 'All' })} active={!activeStatus || activeStatus === 'All'} data-test='menu_orders_all'/>
+            <Menu.Item name={formatMessage({ id: 'order.menu.pending', defaultMessage: 'PENDING' })} onClick={() => this.loadData(endpointType, { ...this.props.filterData, status: 'Pending' })} active={activeStatus === 'Pending'} data-test='menu_orders_pending'/>
+            <Menu.Item name={formatMessage({ id: 'order.menu.inTransit', defaultMessage: 'IN TRANSIT' })} onClick={() => this.loadData(endpointType, { ...this.props.filterData, status: 'In Transit' })} active={activeStatus === 'In Transit'} data-test='menu_orders_inTransit'/>
+            <Menu.Item name={formatMessage({ id: 'order.menu.review', defaultMessage: 'REVIEW' })} onClick={() => this.loadData(endpointType, { ...this.props.filterData, status: 'Review' })} active={activeStatus === 'Review'} data-test='menu_orders_review'/>
+            <Menu.Item name={formatMessage({ id: 'order.menu.credit', defaultMessage: 'CREDIT' })} onClick={() => this.loadData(endpointType, { ...this.props.filterData, status: 'Credit' })} active={activeStatus === 'Credit'} data-test='menu_orders_credit'/>
+            <Menu.Item name={formatMessage({ id: 'order.menu.completed', defaultMessage: 'COMPLETED' })} onClick={() => this.loadData(endpointType, { ...this.props.filterData, status: 'Completed' })} active={activeStatus === 'Completed'} data-test='menu_orders_completed'/>
+            <Menu.Item name={formatMessage({ id: 'order.menu.returned', defaultMessage: 'RETURNED' })} onClick={() => this.loadData(endpointType, { ...this.props.filterData, status: 'Returned' })} active={activeStatus === 'Returned'} data-test='menu_orders_returned'/>
+            <Menu.Item name={formatMessage({ id: 'order.menu.declined', defaultMessage: 'DECLINED' })} onClick={() => this.loadData(endpointType, { ...this.props.filterData, status: 'Declined' })} active={activeStatus === 'Declined'} data-test='menu_orders_declined'/>
             <Menu.Menu position='right'>
               <Menu.Item name={formatMessage({ id: 'order.menu.filter', defaultMessage: 'Filter' })}><SubMenu /></Menu.Item>
             </Menu.Menu>
@@ -88,6 +88,7 @@ class Orders extends Component {
             searchUrl={(text) => `/prodex/api/products/own/search?pattern=${text}&onlyMapped=false`}
             apiUrl={datagrid.apiUrl}
             filters={datagrid.filters}
+            data-test='menu_orders_filter'
           />
           {isFetching ? <Spinner /> :
 

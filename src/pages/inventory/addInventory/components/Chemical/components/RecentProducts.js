@@ -8,7 +8,7 @@ export default class RecentProducts extends Component {
 
     renderRecentProducts() {
         return this.props.recentProducts.map((product, index)=>{
-            return <div key={index} className='recent-product' onClick={()=>{this.props.setProduct(this.props.recentProducts[index])}}>
+            return <div key={index} className='recent-product' onClick={()=>{this.props.setProduct(this.props.recentProducts[index])}} data-test={`add_inventory_set_product_index_${index}`}>
                 {product.primaryName}
             </div>
         });

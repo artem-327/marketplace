@@ -40,7 +40,8 @@ class PopUp extends Component {
         return isOpen ?
             <div className={classNames("popup-wr", specialClass)} onClick={(e) => {
                 this.closePopup(e)
-            }}>
+            }}
+            data-test='PopUp_close_popup'>
                 <div className='popup'>{component}</div>
             </div> : null
     }

@@ -103,7 +103,8 @@ class Nav extends Component {
         return (
             <div
                 className={"dropdown-nav parent " + activeClass}
-                onClick={()=>this.openDropdown(id)}>
+                onClick={()=>this.openDropdown(id)}
+                data-test={`Nav_dropdown_open_dropdown_${id}`}>
                 <span
                     className='dropdown-link-center'>
                     <FormattedMessage
@@ -158,7 +159,8 @@ class Nav extends Component {
                 to={link.url}
                 className='dropdown-nav-item'
                 onClick={this.props.logout}
-                activeClassName='active'>
+                activeClassName='active'
+                data-test='Nav_my_account_logout'>
                     <FormattedMessage
                         id={'nav.' + link.name}
                         defaultMessage={link.name}
@@ -172,7 +174,7 @@ class Nav extends Component {
             )}
             
             </div>;
-        return <div className={"dropdown-nav " + activeClass} onClick={()=>this.openDropdown(id)}>
+        return <div className={"dropdown-nav " + activeClass} onClick={()=>this.openDropdown(id)} data-test='Nav_dropdown_open_dropdown'>
             <span className='dropdown-link-center'><img src={myAccount} alt='Logout'></img></span>
             {this.state.dropdown[id] ? dropdown : null}
         </div>

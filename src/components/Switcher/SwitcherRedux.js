@@ -19,6 +19,7 @@ const SwitcherRedux = (props) => {
         isrounded,
         partlybrc: partlybrc
       }}
+      data-test='SwitcherRedux_action_chckb'
       {...props}
     />
   );

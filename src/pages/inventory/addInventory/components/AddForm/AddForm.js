@@ -270,7 +270,8 @@ export default class AddForm extends Component {
         let cancelButton = this.props.edit ?
             <button
                 onClick={this.cancelEdit}
-                className={classnames('button add-inventory big')}>
+                className={classnames('button add-inventory big')}
+                data-test='add_inventory_cancel_edit_btn'>
                     <FormattedMessage
                         id='addInventory.cancelEdit'
                         defaultMessage='Cancel Edit'
@@ -280,7 +281,8 @@ export default class AddForm extends Component {
         let submitButton =
             <button
                 disabled={this.props.disable}
-                className={classnames('button add-inventory big', {'disabled' : this.props.disable})}>
+                className={classnames('button add-inventory big', {'disabled' : this.props.disable})}
+                data-test='add_inventory_submit_edit_btn'>
                     <FormattedMessage
                         id='addInventory.save'
                         defaultMessage='Save'

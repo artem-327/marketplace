@@ -8,7 +8,7 @@ class KeepShopping extends Component {
             <div className="message">
                 <div className="shopping-header">
                     <div className="shopping-header-text">KEEP SHOPPING</div>
-                    <div className="fas fa-times close-mark" onClick={()=>this.props.removePopup()}> </div>
+                    <div className="fas fa-times close-mark" onClick={()=>this.props.removePopup()} data-test='KeepShopping_remove_popup'> </div>
                 </div>
                 <div className="line-break"></div>
                 <div className="shopping-message">

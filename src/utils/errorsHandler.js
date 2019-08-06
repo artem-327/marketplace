@@ -9,7 +9,7 @@ class errorWrapper extends React.Component {
   renderErrors() {
     let errors = this.props.messages.map((message, index) => {
       return <div key={index} className="error-item">
-        <p><span className="error-close" onClick={() => this.props.closeMessage(index)} />{message}</p>
+        <p><span className="error-close" onClick={() => this.props.closeMessage(index)} data-test='error_handler_close_message'/>{message}</p>
       </div>
     });
     return <div className="errors-handler">{errors}</div>

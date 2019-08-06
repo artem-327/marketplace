@@ -35,7 +35,7 @@ class GroupRow extends Component {
         const isAllInventory = tableType === "allInventoryTable";
         return (
             <React.Fragment>
-                <tr className="data-table-group-header" onClick={(e) => this.toggleGroup(e)}>
+                <tr className="data-table-group-header" onClick={(e) => this.toggleGroup(e)} data-test='GroupRow_toggle_Group'>
                     {
                         this.props.selectable ?
                             <td className="data-table-select"
@@ -86,7 +86,8 @@ class GroupRow extends Component {
                                     data={this.props.rows.rows[opns.index].data}
                                     selectFunc={this.props.selectFunc}
                                     groupId={this.props.rowsOpns.index}
-                                    key={index} />
+                                    key={index}
+                                    data-test={`GroupRow_row_index_${index}_action`}/>
                             )
                         }
                     }

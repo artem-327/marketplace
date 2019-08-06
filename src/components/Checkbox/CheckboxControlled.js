@@ -6,7 +6,7 @@ class CheckboxControlled extends Component {
 
     render() {
         return (
-            <label className={"input-checkbox " + (this.props.inputClass || '')}><p>{this.props.label}</p>
+            <label className={"input-checkbox " + (this.props.inputClass || '')} data-test='checkbox_controlled_inp'><p>{this.props.label}</p>
                 <input type="checkbox" name={this.props.name}
                        onChange={() => this.props.onChange(!this.props.value)}
                        onClick={typeof this.props.onClick == 'function' ? e => this.props.onClick(e) : () => {}}

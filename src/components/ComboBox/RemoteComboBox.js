@@ -100,6 +100,7 @@ class RemoteComboBox extends Component {
                   }
                 );
               }}
+              data-test={`RemoteComboBox_item_${index}_action`}
             >
               <span className="combo-cas">
                 {this.props.displayName
@@ -160,6 +161,7 @@ class RemoteComboBox extends Component {
           "comboBox " + (this.props.className ? this.props.className : "")
         }
         ref={this.comboRef}
+        data-test='RemoteComboBox_inp'
       >
         <label>{this.props.label}</label>
         <i className="search combo-icon" />

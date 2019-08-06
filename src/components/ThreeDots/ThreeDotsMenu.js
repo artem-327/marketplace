@@ -7,7 +7,7 @@ class ThreeDotsMenu extends Component {
     renderLinks() {
         if (!this.props.links) return;
         let links = this.props.links.map((link, index) => {
-            return <li key={index} onClick={(e)=>link.action(this.props.id, this.props.callback, e)}>
+            return <li key={index} onClick={(e)=>link.action(this.props.id, this.props.callback, e)} data-test={`ThreeDotsMenu_index_${index}_action`}>
                 <FormattedMessage
                     id={'dataTable.' + link.label}
                     defaultMessage={link.label}

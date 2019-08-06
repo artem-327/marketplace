@@ -10,6 +10,7 @@ const CheckboxBroadcastRedux = (props) => {
       model={model}
       component={CheckboxBroadcast}
       onClick={e => onClick(e)}
+      data-test='checkbox_broadcast_redux_chckb'
       mapProps={{
         value: (props) => props.viewValue,
       }}

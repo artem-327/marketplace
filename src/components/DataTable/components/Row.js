@@ -72,7 +72,7 @@ class Row extends Component {
                 otherschecked={this.props.othersChecked}
                 onChange={
                   (event, data) => {
-                    console.log('onChane!')
+                    console.log('onChange!')
                     this.props.selectFunc({
                       groupId: data.groupid,
                       rowId: data.rowindex,
@@ -82,6 +82,7 @@ class Row extends Component {
                     })
                   }
                 }
+                data-test='Row_data_table_select_chckb'
               />
             </td>
           ) : null}
@@ -91,6 +92,7 @@ class Row extends Component {
                 className="data-table-context-td"
                 ref={this.row}
                 onClick={e => this.handleClick(e)}
+                data-test='Row_data_table_context_click'
               >
                 <Icon name='ellipsis vertical' color={this.state.openContext ? 'blue' : 'black'} size='large' />
               </td>
@@ -132,7 +134,8 @@ class Row extends Component {
                 onClick={isAllInventory ? () => this.props.onRowClick(this.props.id, this.props.history) : () => { }}
                 key={index}
                 title={cellName && cellName.length > 14 ? cell : ''}
-                className={cellAlign}>
+                className={cellAlign}
+                data-test='Row_data_table_row_click'>
                 {/*Decide if it will be formatted also through react-intl*/}
                 {cellName}
               </td>

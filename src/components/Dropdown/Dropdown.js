@@ -57,7 +57,7 @@ class Dropdown extends Component {
     renderDropdown(opt){
         if(this.props.disabled) return;
         return opt.map((option, index)=>{
-            return <li key={index + 'dropdown'} onClick={()=>{this.setCurrentValue(option.id, option.name || option.warehouseName)}}>{option.name || option.warehouseName}</li>
+            return <li key={index + 'dropdown'} onClick={()=>{this.setCurrentValue(option.id, option.name || option.warehouseName)}} data-test={`Dropdown_index_${index}_set`}>{option.name || option.warehouseName}</li>
         });
     }
 
@@ -94,7 +94,8 @@ class Dropdown extends Component {
                         }
                         )
                 }
-                     onClick={()=>this.toggleDropdown()}>
+                     onClick={()=>this.toggleDropdown()}
+                     data-test='Dropdown_toggle_dropdown'>
                     <div className="dropdown-current-placeholder">{currentValue || this.props.placeholder || 'Select'}{arrow}</div>
                 </div>
                 {options}

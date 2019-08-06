@@ -10,7 +10,8 @@ const RadioBroadcastRedux = (props) => {
       component={Radio}
       model={props.model}
       value={props.value}
-      onClick={e => props.onClick(e)} id={props.id} />
+      onClick={e => props.onClick(e)} id={props.id}
+      data-test={`RadioBroadcastRedux_id_${props.id}_action`}/>
   )
   {/* <span className={"radiomark"} /> */ }
 }

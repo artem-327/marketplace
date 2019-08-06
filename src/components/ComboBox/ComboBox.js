@@ -53,7 +53,8 @@ class ComboBox extends Component {
                     if (this.props.onChange) this.props.onChange(this.state.fulltext);
                     if (this.props.getObject) this.props.getObject(combo);
                 })
-            }}>
+            }}
+            data-test={`comboBox_item_${combo.id}_action`}>
                 <span className='combo-cas'>{combo.name}</span>
             </div>
         ));
@@ -80,7 +81,7 @@ class ComboBox extends Component {
         let {fulltext} = this.state;
         let results = this.renderResults();
         return (
-            <div className={'comboBox ' + this.props.className} ref={this.comboRef}>
+            <div className={'comboBox ' + this.props.className} ref={this.comboRef} data-test='comboBox_inp'>
                 <label>{this.props.label}</label>
                 <i className="fas fa-search combo-icon"/>
                 <input value={fulltext} onChange={(e) => this.handleChange(e)} disabled={this.props.disabled || false}

@@ -28,7 +28,7 @@ export default class AddGroup extends Component {
         let styleOpen = this.state.open ? ' open' : '';
         return (
             <div className="add-group">
-                <div className={'header-group' + styleOpen} onClick={() => this.handleOpen()}>
+                <div className={'header-group' + styleOpen} onClick={() => this.handleOpen()} data-test='add_inventory_add_group'>
                     {this.state.open ?
                         <img src={dropdown} alt='drop'/>
                         : <img src={dropdownClose} alt='drop-close'/>

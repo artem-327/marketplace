@@ -101,6 +101,7 @@ class Header extends Component {
                             key={index}
                             className={(item.name ? item.name.toLowerCase().replace(' ', '_').replace(/[^a-z_]/g, '') : item.name) + ' ' + item.align}>
                             {item.name}
+                            data-test={`Header_index_${index}_action`}
                             <div className={'fix-header'}>
                                 <FormattedMessage
                                     id={'dataTable.' + item.name}
@@ -109,7 +110,7 @@ class Header extends Component {
                                 {this.state.open[item.name] ?
                                     <ul className="data-table-context-th">
                                         {/*<li onClick={() => this.props.sortFunc(item.name)}>Sort</li>*/}
-                                        <li onClick={() => this.props.toggleColumn(item.index, false)}>Hide</li>
+                                        <li onClick={() => this.props.toggleColumn(item.index, false)} data-test={`GroupRow_row_index_${index}_toggle_column`}>Hide</li>
                                     </ul> : null}
                             </div>
                         </th> : null

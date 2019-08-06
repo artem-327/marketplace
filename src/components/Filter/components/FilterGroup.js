@@ -294,7 +294,8 @@ class FilterGroup extends Component {
       <div className={classnames('filter-group', { 'split': (this.props.split) })}>
         <div
           className='header'
-          onClick={() => this.props.onOpen(!this.state.isOpen)}>
+          onClick={() => this.props.onOpen(!this.state.isOpen)}
+          data-test='FilterGroup_open_toggle'>
           <div className='dropdown-icon'>
             <Icon name={isOpen ? 'chevron down' : 'chevron right'} color={isOpen ? 'blue' : 'black'} />
           </div>

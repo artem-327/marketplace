@@ -45,7 +45,7 @@ class BroadcastRule extends Component {
             <span className="left header-section">
               <h1 className='br-header'>CUSTOM BROADCAST</h1>
               <div className='br-target'>Broadcasting to: x/x</div>
-              <i className="fas fa-times close-mark-br" onClick={() => this.closeBroadcastRule()} />
+              <i className="fas fa-times close-mark-br" onClick={() => this.closeBroadcastRule()} data-test='my_inventory_broadcast_close_broadcast_rule' />
             </span>
           </div>
           <div>

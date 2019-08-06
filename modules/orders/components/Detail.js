@@ -107,7 +107,7 @@ class Detail extends Component {
               <div className='header-top clean left detail-align'>
                 <Header as='h1' className='header inv-header' style={{ marginBottom: '0.5rem', textTransform: 'uppercase', fontSize: '1.14285714em', fontWeight: '500' }}>{ordersType}
                   <FormattedMessage id='order' defaultMessage='Order' /> {isDetailFetching ? '' : '# ' + order.id}</Header>
-                <a onClick={() => this.downloadOrder()} style={{ fontSize: '1.14285714em', cursor: 'pointer' }}><Icon name='download' style={{ verticalAlign: 'top' }} color='blue' />
+                <a onClick={() => this.downloadOrder()} style={{ fontSize: '1.14285714em', cursor: 'pointer' }} data-test='orders_detail_download_order'><Icon name='download' style={{ verticalAlign: 'top' }} color='blue' />
                   <FormattedMessage id='order.downloadOrder' defaultMessage={`Download ${order.orderType} Order`} values={{ orderType: order.orderType }} />
                 </a>
               </div>
@@ -170,12 +170,12 @@ class Detail extends Component {
                     <Grid.Column>
                       <Grid verticalAlign='middle' columns='equal'>
                         <Grid.Column>
-                          <Button primary fluid size='large' value={order.id} onClick={() => this.props.confirmOrder(order.id)} data-test='orders_accept_btn' >
+                          <Button primary fluid size='large' value={order.id} onClick={() => this.props.confirmOrder(order.id)} data-test='orders_detail_accept_btn' >
                             <FormattedMessage id='global.accept' defaultMessage='Accept' />
                           </Button>
                         </Grid.Column>
                         <Grid.Column>
-                          <Button basic fluid size='large' value={order.id} onClick={() => this.props.rejectOrder(order.id)} data-test='orders_decline_btn' >
+                          <Button basic fluid size='large' value={order.id} onClick={() => this.props.rejectOrder(order.id)} data-test='orders_detail_decline_btn' >
                             <FormattedMessage id='global.decline' defaultMessage='Decline' />
                           </Button>
                         </Grid.Column>
@@ -187,7 +187,7 @@ class Detail extends Component {
 
               <Divider hidden />
               <Accordion defaultActiveIndex={[0, 1]} styled fluid style={{ width: 'calc(100% - 64px)', margin: '0 32px' }}>
-                <AccordionTitle active={activeIndexes[0]} index={0} onClick={this.handleClick}>
+                <AccordionTitle active={activeIndexes[0]} index={0} onClick={this.handleClick} data-test='orders_detail_order_info'>
                   <Icon name={'chevron ' + (activeIndexes[0] ? 'down' : 'right')} size='large' color={activeIndexes[0] ? 'blue' : 'black'} />
                   <FormattedMessage id='order.orderInfo' defaultMessage='Order Info' />
                 </AccordionTitle>
@@ -224,7 +224,7 @@ class Detail extends Component {
                   </Grid>
                 </Accordion.Content>
 
-                <AccordionTitle active={activeIndexes[1]} index={1} onClick={this.handleClick}>
+                <AccordionTitle active={activeIndexes[1]} index={1} onClick={this.handleClick} data-test='orders_detail_product_info'>
                   <Icon name={'chevron ' + (activeIndexes[1] ? 'down' : 'right')} size='large' color={activeIndexes[1] ? 'blue' : 'black'} />
                   <FormattedMessage id='order.productInfo' defaultMessage='Product Info' />
                 </AccordionTitle>
@@ -352,7 +352,7 @@ class Detail extends Component {
                   </Grid>
                 </Accordion.Content>
 
-                <AccordionTitle active={activeIndexes[2]} index={2} onClick={this.handleClick}>
+                <AccordionTitle active={activeIndexes[2]} index={2} onClick={this.handleClick} data-test='orders_detail_pickup_info'>
                   <Icon name={'chevron ' + (activeIndexes[2] ? 'down' : 'right')} size='large' color={activeIndexes[2] ? 'blue' : 'black'} />
                   <FormattedMessage id='order.pickupInfo' defaultMessage='Pick Up Info' />
                 </AccordionTitle>
@@ -379,7 +379,7 @@ class Detail extends Component {
                   </Grid>
                 </Accordion.Content>
 
-                <AccordionTitle active={activeIndexes[3]} index={3} onClick={this.handleClick}>
+                <AccordionTitle active={activeIndexes[3]} index={3} onClick={this.handleClick} data-test='orders_detail_shipping'>
                   <Icon name={'chevron ' + (activeIndexes[3] ? 'down' : 'right')} size='large' color={activeIndexes[3] ? 'blue' : 'black'} />
                   <FormattedMessage id='order.shipping' defaultMessage='Shipping' />
                 </AccordionTitle>
@@ -420,7 +420,7 @@ class Detail extends Component {
                   </Grid>
                 </Accordion.Content>
 
-                <AccordionTitle active={activeIndexes[4]} index={4} onClick={this.handleClick}>
+                <AccordionTitle active={activeIndexes[4]} index={4} onClick={this.handleClick} data-test='orders_detail_payment'>
                   <Icon name={'chevron ' + (activeIndexes[4] ? 'down' : 'right')} size='large' color={activeIndexes[4] ? 'blue' : 'black'} />
                   <FormattedMessage id='order.payment' defaultMessage='Payment' /> / {order.paymentType}
                 </AccordionTitle>

@@ -102,6 +102,7 @@ const GridRoot = props => <Grid.Root {...props} style={{ height: '100%', flex: 1
 const SortLabel = ({ onSort, children, direction }) => (
   <span
     onClick={onSort}
+    data-test='table_sort_action'
   >
     {children}
     {(direction && <Icon className="thick" name={direction === 'asc' ? 'sort up' : 'sort down'} />)}
@@ -116,6 +117,7 @@ const Row = ({ tableRow, selected, onToggle, onClick, ...restProps }) => {
     <Table.Row
       {...restProps}
       onClick={rowAction}
+      data-test='table_row_action'
     />
   )
 }
@@ -415,7 +417,8 @@ export default class _Table extends Component {
           ref={c => c && (this.gridWrapper = c)}
         >
           <ColumnsSetting
-            onClick={() => this.setState({ columnSettingOpen: !columnSettingOpen })} />
+            onClick={() => this.setState({ columnSettingOpen: !columnSettingOpen })}
+            data-test='table_columns_setting_action'/>
           <ColumnsSettingModal
             columns={columnsFiltered}
             open={columnSettingOpen}

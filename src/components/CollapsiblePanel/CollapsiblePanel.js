@@ -21,7 +21,7 @@ export default class CollapsiblePanel extends Component {
 
         return (
             <div className="add-group">
-                <div className={'header-group' + styleOpen} onClick={() => this.setState({open: !open})}>
+                <div className={'header-group' + styleOpen} onClick={() => this.setState({open: !open})} data-test='collapsible_panel_toggle'>
                     {open ?
                         <img src={dropdown} alt='drop'/>
                         : <img src={dropdownClose} alt='drop-close'/>
