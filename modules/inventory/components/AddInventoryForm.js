@@ -1067,7 +1067,7 @@ class AddInventoryForm extends Component {
                               </FormGroup>
 
                             </Grid.Column>
-                            <GridColumn computer={5} tablet={5} mobile={8}>
+                            <GridColumn computer={6} tablet={6} mobile={8}>
                               <Grid centered>
                                 <GridColumn width={12}>
                                   <Grid>
