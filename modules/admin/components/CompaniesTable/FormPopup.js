@@ -271,11 +271,10 @@ class AddNewPopupCasProducts extends React.Component {
 
               Object.keys(values)
                 .forEach(key => {
+                  if (values[key].$$typeof !== 'undefined') return false // TODO: try to have reviewRequested in values not as React.element
                   if (typeof values[key] === 'string') newValues[key] = values[key].trim()
                   else newValues[key] = values[key]
                 })
-
-              //await updateCompany(popupValues.id, { ...newValues, businessType: newValues.businessType && newValues.businessType.id })
 
               if (this.state.companyLogo) {
                 let reader = new FileReader()
