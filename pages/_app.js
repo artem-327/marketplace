@@ -26,7 +26,7 @@ class ProdexApp extends App {
 
     return (
       <Container>
-        <IntlProvider locale="en" messages={EN}>
+        <IntlProvider locale="en" messages={EN} textComponent={({children}) => <label>{children}</label>}>
           <ToastProvider pauseOnHover autoDismiss autoDismissTimeout={10 * 1000}>
             <Provider store={store}>
               <Component {...pageProps} />

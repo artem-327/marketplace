@@ -117,7 +117,7 @@
     "filter.location": "Location",
     "dataTable.ProductName": "Product Name",
     "dataTable.ProductNumber": "Product Number",
-    "dataTable.Available": "Available",
+    "dataTable.Available": "Available PKGs",
     "dataTable.Packaging": "Packaging",
     "dataTable.Pkg.size": "Pkg. size",
     "dataTable.Quantity": "Quantity",

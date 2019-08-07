@@ -15,6 +15,7 @@ class RemoteComboBoxRedux extends Component {
             component={RemoteComboBox}
             disabled={this.props.disabled}
             validators={this.props.validators}
+            data-test='RemoteComboBoxRedux_control'
             {...this.props}
         />
 

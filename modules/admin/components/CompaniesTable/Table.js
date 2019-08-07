@@ -5,7 +5,8 @@ import { injectIntl } from 'react-intl'
 import { withDatagrid } from '~/modules/datagrid'
 import ProdexTable from '~/components/table'
 import { Checkbox } from 'semantic-ui-react'
-
+import { generateToastMarkup } from '~/utils/functions'
+import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage } from 'react-intl'
 
 import * as Actions from '../../actions'
@@ -18,10 +19,10 @@ class CompaniesTable extends Component {
       return {
         ...row,
         reviewRequested: <Checkbox key={`review${row.id}`}
-                                   toggle={true}
-                                   defaultChecked={row.reviewRequested}
-                                   onClick={() => this.props.reviewRequest(row.id)}
-                                   data-test={`admin_company_table_${row.id}_chckb`} />
+          toggle={true}
+          defaultChecked={row.reviewRequested}
+          onClick={() => this.props.reviewRequest(row.id)}
+          data-test={`admin_company_table_${row.id}_chckb`} />
       }
     })
   }
@@ -42,7 +43,8 @@ class CompaniesTable extends Component {
       openRegisterDwollaAccount,
       takeOverCompany,
       resendWelcomeEmail,
-      intl
+      intl,
+      toastManager
     } = this.props
 
     const { formatMessage } = intl
@@ -73,7 +75,16 @@ class CompaniesTable extends Component {
             },
             {
               text: <FormattedMessage id='admin.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
-              callback: (row) => resendWelcomeEmail(row.primaryUser.id),
+              callback: async (row) => {
+                const { value } = await resendWelcomeEmail(row.primaryUser.id)
+                
+                toastManager.add(generateToastMarkup(
+                  null,
+                  value.clientMessage
+                ), {
+                  appearance: 'success'
+                })
+              },
               hidden: row => !row.reviewRequested || !row.primaryUser
             }
           ]}
@@ -112,4 +123,4 @@ const mapStateToProps = ({ admin }, { datagrid }) => {
   }
 }
 
-export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(CompaniesTable)))
+export default withDatagrid(connect(mapStateToProps, Actions)(injectIntl(withToastManager(CompaniesTable))))

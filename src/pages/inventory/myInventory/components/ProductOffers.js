@@ -96,7 +96,7 @@ class ProductOffers extends Component {
       { name: 'ProductName' },
       { name: 'ProductNumber' },
       { name: 'Warehouse' },
-      { name: 'Available' },
+      { name: 'Available PKGs' },
       { name: 'Packaging' },
       { name: 'Pkg.size' },
       { name: 'Quantity' },

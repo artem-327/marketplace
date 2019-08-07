@@ -43,6 +43,7 @@ class FormikInput extends Component {
 
               {/* <InputRef inputRef={inputRef}> */}
                 <DateInput
+                  data-test={`FormikInput_${this.id}_DateInput`}
                   closable
                   id={this.id}
                   name={name}

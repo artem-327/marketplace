@@ -163,8 +163,7 @@ const mapStateToProps = (state) => {
   return {
     dwollaAccount: company,
     isCompanyAdmin,
-    currentTab: Router && Router.router ? state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) || state.settings.tabsNames[0] : state.settings.tabsNames[0],
-
+    currentTab: state.settings.currentTab,
     productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
     productsFilter: state.settings.productsFilter,

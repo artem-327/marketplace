@@ -355,6 +355,7 @@ class Pricing extends Component {
               placeholder="$"
               defaultValue={this.props.edit ? this.props.productOffer.pricing.price : ''}
               step="0.001"
+              data-test='inventory_add_pricing_price_control'
             />
           </div>
           <div className='group-item-wr'>
@@ -381,7 +382,8 @@ class Pricing extends Component {
               onChange={(e) => this.calculatePricing(e)}
               //onBlur={()=>this.checkFilledInputs()}
               placeholder="$"
-              step="0.001" />
+              step="0.001"
+              data-test='inventory_add_pricing_cost_control' />
           </div>
 
 
@@ -410,6 +412,7 @@ class Pricing extends Component {
                   //onBlur={()=>this.checkFilledInputs()}
                   placeholder="%"
                   step="0.001"
+                  data-test='inventory_add_pricing_marginPr_control'
                 />
               </div>
             </div>
@@ -456,6 +459,7 @@ class Pricing extends Component {
                 className='splits'
                 type='number'
                 min={'1'}
+                data-test='inventory_add_pricing_splits_control'
               />
             </div>
             <div className='group-item-wr'>
@@ -486,7 +490,8 @@ class Pricing extends Component {
                 onBlur={() => this.validateMinimum('minimum')}
                 className='minimum'
                 type='number'
-                min={'0'} />
+                min={'0'}
+                data-test='inventory_add_pricing_packaging_minimum_control'/>
             </div>
             {/*<div className='group-item-wr inputs-align'>
                             <Control.checkbox 

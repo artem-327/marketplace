@@ -59,8 +59,8 @@ function mapStateToProps(store, { datagrid }) {
         pricingTiers: po.pricingTiers,
         pricing: po.pricing,
         fobPrice: po.pricingTiers.length > 1
-          ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price} /> -  <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price} /> </>
-          : <FormattedNumber style='currency' currency={currency} value={po.pricing.price} />,
+          ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price} /> -  <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price} /> {qtyPart && (`/ ${qtyPart}`)} </>
+          : <> <FormattedNumber style='currency' currency={currency} value={po.pricing.price} /> {qtyPart && (`/ ${qtyPart}`)} </>,
         manufacturer: getSafe(() => po.manufacturer.name, 'N/A'),
         broadcasted: po.broadcasted,
         lotNumber: transformLotNumbers(po.lots),

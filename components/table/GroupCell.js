@@ -40,6 +40,7 @@ const Cell = ({
           indeterminate={indeterminate}
           onChange={groupCheckboxClick}
           onClick={e => { e.stopPropagation(); e.preventDefault() }}
+          data-test='GroupCheckbox_onChange_chckb'
         />
       )}
       <Content
@@ -52,6 +53,7 @@ const Cell = ({
         expanded={expanded}
         onToggle={onToggle}
         className="mr-2"
+        data-test='GroupCheckbox_onToggle_icon'
       />
     </td>
   )

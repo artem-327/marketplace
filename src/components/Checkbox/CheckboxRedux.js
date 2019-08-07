@@ -18,6 +18,7 @@ class CheckboxRedux extends Component {
             style={this.props.style}
             defaultValue={this.props.defaultValue}
             onChange={value => this.handleChange(value)}
+            data-test='CheckboxRedux_chckb'
         />
     }
 }

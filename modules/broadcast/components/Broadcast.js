@@ -364,6 +364,7 @@ class Broadcast extends Component {
                       onRowClick={this.handleRowClick}
                       onPriceChange={this.handlePriceChange}
                       onChange={this.handleChange}
+                      data-test='broadcast_modal_rule_action'
                     />
                     {loading && <Dimmer active inverted><Loader active /></Dimmer>}
                   </Rule.Content>

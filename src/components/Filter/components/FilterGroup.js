@@ -154,7 +154,8 @@ class FilterGroup extends Component {
                     model={input.model}
                     list='searched-products'
                     id={input.model}
-                    placeholder={input.placeholder} />
+                    placeholder={input.placeholder}
+                    data-test='FilterGroup_search_product'/>
                   {
                     this.props.searchedProducts && (
                       <datalist id='searched-products'>
