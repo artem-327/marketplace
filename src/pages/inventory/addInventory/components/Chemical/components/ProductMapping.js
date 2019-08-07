@@ -224,6 +224,7 @@ export default class ProductMapping extends Component {
                                       id=".measurements"
                                       onChange={this.props.measureHandler}
                                       //defaultValue=""
+                                      data-test='inventory_add_product_map_size_drpdn'
                                       />
                     </div>
                     <div className='group-item-wr'>
@@ -247,6 +248,7 @@ export default class ProductMapping extends Component {
                                        dispatch={this.props.dispatch}
                                        onChange={(value)=>this.selectedMeasurementUnit(value)}
                                        //defaultValue=""
+                                       data-test='inventory_add_product_map_unit_drpdn'
                                        />
                     </div>
                     <div className='group-item-wr'>
@@ -269,6 +271,7 @@ export default class ProductMapping extends Component {
                                        dispatch={this.props.dispatch}
                                        validators={{required}}
                                        onChange={(value)=>this.selectedPackagingUnit(value)}
+                                       data-test='inventory_add_product_map_packagingType_drpdn'
                                        />
                     </div>
                     {!this.props.edit ?

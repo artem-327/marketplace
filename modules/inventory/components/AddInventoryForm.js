@@ -997,7 +997,7 @@ class AddInventoryForm extends Component {
                               </FormGroup>
 
                               <Header as='h3'>
-                                <FormattedMessage id='addInventory.expiration' defaultMessage='Does this product expire?'>
+                                <FormattedMessage id='addInventory.expiration' defaultMessage='Does this o expire?'>
                                   {(text) => (
                                     <>
                                       {text}
@@ -1259,6 +1259,7 @@ class AddInventoryForm extends Component {
                                           name: files.name
                                         }
                                       )}
+                                      data-test='new_inventory_attachments_drop'
                                       emptyContent={(
                                         <label>
                                           <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop ' + this.props.type + ' file here'} values={{ docType: this.props.type }} />
@@ -1507,6 +1508,7 @@ class AddInventoryForm extends Component {
                                                     name: files.name
                                                   }
                                                 )}
+                                                data-test={`add_inventory_lots_${index}_attachments`}
                                                 emptyContent={(<FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' tagName='A' />)}
                                               />
                                             </TableCellBig>
@@ -1635,6 +1637,7 @@ class AddInventoryForm extends Component {
                                                         name: files.name
                                                       }
                                                     )}
+                                                    data-test={`add_inventory_costs_${index}_attachments`}
                                                     emptyContent={(
                                                       <FormattedMessage
                                                         id='addInventory.clickUpload'
@@ -1672,6 +1675,7 @@ class AddInventoryForm extends Component {
                                         name: files.name
                                       }
                                     )}
+                                    data-test='add_inventory_additional_attachments'
                                     emptyContent={(
                                       <label>
                                         <FormattedMessage id='addInventory.dragDropAdditional' defaultMessage={'Drop additional documents here'} />

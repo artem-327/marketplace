@@ -20,6 +20,7 @@ export const SelectionControl = ({
     }}
     onClick={e => e.stopPropagation()}
     {...restProps}
+    data-test='SelectionControl_action'
   />
 )
 

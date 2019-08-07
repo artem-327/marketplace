@@ -516,6 +516,7 @@ class ProductPopup extends React.Component {
                           name: files.name
                         }
                       )}
+                      data-test='settings_product_import_attachments'
                       emptyContent={(
                         <label>
                           <FormattedMessage id='addInventory.dragDropAdditional' defaultMessage='Drop additional documents here' />

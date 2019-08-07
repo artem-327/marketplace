@@ -247,6 +247,7 @@ class ProductOffering extends Component {
                                           maxPercent
                                     }}
                                     step="0.001"
+                                    data-test='inventory_add_offering_assayMin_control'
                                 />
                                 <div className="warning">{this.state.minWarning}</div>
                             </div>
@@ -278,6 +279,7 @@ class ProductOffering extends Component {
                                         maxPercent
                                       }}
                                     step="0.001"
+                                    data-test='inventory_add_offering_assayMax_control'
                                 />
                                 <div className="warning">{this.state.maxWarning}</div>
                             </div>
@@ -410,6 +412,7 @@ class ProductOffering extends Component {
                                 validators={{min: (val) => min(val, 0), isNumber, required}}
                                 id=".pkgAmount"
                                 onChange={this.props.totalPackagesHandler}
+                                data-test='inventory_add_offering_pkgAmount_control'
                             />
                         </div>
                         <div className='group-item-wr'>
@@ -445,7 +448,8 @@ class ProductOffering extends Component {
                                 maxDate={moment().subtract(1, "days")}
                                 dispatch={this.props.dispatch}
                                 onChange={(value) => console.log(value)}
-                                model='forms.productOffering.creationDate'/>
+                                model='forms.productOffering.creationDate'
+                                data-test='inventory_add_offering_creationDate_control'/>
                         </div>
                         <div className='group-item-wr'>
                             <label htmlFor=".expirationDate">
@@ -459,7 +463,8 @@ class ProductOffering extends Component {
                                 minDate={moment().add(1, "days")}
                                 dispatch={this.props.dispatch}
                                 onChange={(value) => console.log(value)}
-                                model='forms.productOffering.expirationDate'/>
+                                model='forms.productOffering.expirationDate'
+                                data-test='inventory_add_offering_expirationDate_control'/>
                         </div>
                         <div className='group-item-wr'>
                             {button}

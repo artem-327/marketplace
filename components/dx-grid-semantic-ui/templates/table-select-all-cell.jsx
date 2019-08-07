@@ -23,6 +23,7 @@ export const TableSelectAllCell = ({
       checked={allSelected}
       indeterminate={someSelected}
       onChange={onToggle}
+      data-test='TableSelectAllCell_onToggle'
     />
   </th>
 )
