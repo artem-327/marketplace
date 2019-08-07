@@ -34,7 +34,6 @@ const transformLotNumbers = lots => {
 }
 
 function mapStateToProps(store, { datagrid }) {
-  console.log('!!!! datagrid.rows', datagrid.rows);
   return {
     ...store.simpleAdd,
     appliedFilter: store.filter.filter.appliedFilter,
