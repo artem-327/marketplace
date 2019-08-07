@@ -97,23 +97,27 @@ class UploadLot extends Component {
     }
 
     // upload new files as temporary attachments
-    (function loop(j) {
-      if (j < files.length) new Promise((resolve, reject) => {
-        loadFile(files[j]).then(file => {
-          addAttachment(file.value, parseInt(type), expiration).then((aId) => {
-            onUploadSuccess(aId.value.data)
+    if (loadFile && addAttachment) {
+      (function loop(j) {
+        if (j < files.length) new Promise((resolve, reject) => {
+          loadFile(files[j]).then(file => {
+            addAttachment(file.value, parseInt(type), expiration).then((aId) => {
+              onUploadSuccess(aId.value.data)
 
-            resolve()
+              resolve()
+            }).catch(e => {
+              onUploadFail(files[j].name)
+              resolve()
+            })
           }).catch(e => {
             onUploadFail(files[j].name)
             resolve()
           })
-        }).catch(e => {
-          onUploadFail(files[j].name)
-          resolve()
-        })
-      }).then(loop.bind(null, j + 1))
-    })(0)
+        }).then(loop.bind(null, j + 1))
+      })(0)
+    } else {
+      onUploadSuccess(files)
+    }
   }
 
   render() {

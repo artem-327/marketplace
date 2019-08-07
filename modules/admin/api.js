@@ -1,4 +1,5 @@
 import api from '~/api'
+import axios from 'axios'
 
 /*
 https://test.echoexchange.net/prodex/api/dev/swagger-diff?oldAppVersion=0.8.6&newAppVersion=0.8.6
@@ -124,8 +125,8 @@ export async function createCompany(formData) {
 }
 
 export async function updateCompany(id, formData) {
-  //const {data} = await api.put(`/prodex/api/companies/${id}`, formData)
   const { data } = await api.patch(`/prodex/api/companies/id/${id}`, formData)
+
   return data
 }
 

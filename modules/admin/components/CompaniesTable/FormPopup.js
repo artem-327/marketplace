@@ -92,7 +92,8 @@ class AddNewPopupCasProducts extends React.Component {
       companyAdmin: true,
       billingAddress: true,
       mailingAddress: false
-    }
+    },
+    companyLogo: null
   }
 
   // componentDidMount() {
@@ -221,6 +222,14 @@ class AddNewPopupCasProducts extends React.Component {
   //   }
   // }
 
+  selectLogo = (logo) => {
+    this.setState({ companyLogo: logo })
+  }
+
+  removeLogo = () => {
+    this.setState({ companyLogo: null })
+  }
+
   render() {
     const {
       closePopup,
@@ -237,7 +246,9 @@ class AddNewPopupCasProducts extends React.Component {
       toastManager
     } = this.props
 
-    let { accordionActive } = this.state
+    const {selectLogo, removeLogo } = this
+
+    let { accordionActive, companyLogo } = this.state
 
     const { formatMessage } = intl
     // const {
@@ -264,7 +275,18 @@ class AddNewPopupCasProducts extends React.Component {
                   else newValues[key] = values[key]
                 })
 
-              await updateCompany(popupValues.id, { ...newValues, businessType: newValues.businessType && newValues.businessType.id })
+              //await updateCompany(popupValues.id, { ...newValues, businessType: newValues.businessType && newValues.businessType.id })
+
+              if (this.state.companyLogo) {
+                let reader = new FileReader()
+                reader.onload = async function () {
+                  const loadedLogo = btoa(reader.result)
+                  await updateCompany(popupValues.id, { ...newValues, businessType: getSafe(() => newValues.businessType.id, null), logo: loadedLogo })
+                }
+                reader.readAsBinaryString(this.state.companyLogo)
+              } else {
+                await updateCompany(popupValues.id, { ...newValues, businessType: newValues.businessType && newValues.businessType.id })
+              }
 
             }
             else {
@@ -286,7 +308,18 @@ class AddNewPopupCasProducts extends React.Component {
                 if (country) payload[branch].address.country = country
               })
 
-              await createCompany(payload)
+              //await createCompany(payload)
+
+              if (this.state.companyLogo) {
+                let reader = new FileReader()
+                reader.onload = async function () {
+                  const loadedLogo = btoa(reader.result)
+                  await createCompany({ ...payload, logo: loadedLogo })
+                }
+                reader.readAsBinaryString(this.state.companyLogo)
+              } else {
+                await createCompany(payload)
+              }
             }
             let status = popupValues ? 'companyUpdated' : 'companyCreated'
 
@@ -317,7 +350,7 @@ class AddNewPopupCasProducts extends React.Component {
                 <Form loading={isSubmitting}>
                   <Accordion exclusive={false}>
                     <Modal.Content>
-                      <CompanyForm />
+                      <CompanyForm selectLogo={selectLogo} removeLogo={removeLogo} companyLogo={companyLogo} />
                       {!popupValues && (
                         <>
                           <Divider />
