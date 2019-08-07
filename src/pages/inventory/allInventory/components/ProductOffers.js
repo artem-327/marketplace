@@ -80,7 +80,7 @@ class ProductOffers extends Component {
         sortFunc={(nameColumn) => console.log(nameColumn)}
         headerInit={[
           { name: 'Merchant' },
-          { name: 'Available' },
+          { name: 'Available PKGs' },
           { name: 'Packaging' },
           { name: 'Quantity' },
           { name: 'FOBPrice' },

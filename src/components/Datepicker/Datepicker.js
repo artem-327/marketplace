@@ -30,6 +30,7 @@ class Datepicker extends React.Component {
                         dateFormat="YYYY-MM-DD"
                         selected={value && value!=="" ? moment(value, 'YYYY-MM-DD') : null}
                         onChange={this.handleChange}
+                        data-test='Datepicker_change_action'
                     />
                </label>
             </div>

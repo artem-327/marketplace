@@ -21,6 +21,7 @@ class DropdownRedux extends Component {
             validators={this.props.validators}
             onChange={this.handleChange}
             updateOn={[]} // handle onChange manually as redux is not able to get value from semantic Dropdown
+            data-test='DropdownRedux_change_control'
             {...this.props}
         />
 

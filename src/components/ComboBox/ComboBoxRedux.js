@@ -22,6 +22,7 @@ class ComboBoxRedux extends Component {
             disabled={this.props.disabled}
             validators={this.props.validators}
             onChange={value => this.handleChange(value)}
+            data-test='ComboBoxRedux_control'
             {...this.props}
         />
 

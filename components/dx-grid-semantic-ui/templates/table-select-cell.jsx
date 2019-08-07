@@ -18,6 +18,7 @@ export const TableSelectCell = ({
     <SelectionControl
       checked={selected}
       onChange={onToggle}
+      data-test='TableSelectCell_onToggle'
     />
   </td>
 )

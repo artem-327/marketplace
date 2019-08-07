@@ -94,6 +94,7 @@ class Map extends Component {
                   clearable
                   //disabled={!optionMaps}
                   onChange={this.selectSavedMap}
+                  data-test='settings_product_import_select_map'
                 />
               </Grid.Column>
               <Grid.Column textAlign='center' data-test='settings_product_import_csv_name_inp'>

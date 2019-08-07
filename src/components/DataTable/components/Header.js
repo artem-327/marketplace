@@ -67,11 +67,13 @@ class Header extends Component {
                             <CheckboxControlled
                                 value={this.isSelected()}
                                 onChange={(value)=>this.selectTable(value)}
+                                data-test='table_header_select_chckb'
                             />
                             <div className={'fix-header'}>
                                 <CheckboxControlled
                                     value={this.isSelected()}
                                     onChange={(value)=>this.selectTable(value)}
+                                    data-test='table_header_select_chckb'
                                 />
                             </div>
                         </th>
@@ -101,7 +103,7 @@ class Header extends Component {
                             key={index}
                             className={(item.name ? item.name.toLowerCase().replace(' ', '_').replace(/[^a-z_]/g, '') : item.name) + ' ' + item.align}>
                             {item.name}
-                            data-test={`Header_index_${index}_action`}
+                            data-test={`table_header_index_${index}_action`}
                             <div className={'fix-header'}>
                                 <FormattedMessage
                                     id={'dataTable.' + item.name}
@@ -110,7 +112,7 @@ class Header extends Component {
                                 {this.state.open[item.name] ?
                                     <ul className="data-table-context-th">
                                         {/*<li onClick={() => this.props.sortFunc(item.name)}>Sort</li>*/}
-                                        <li onClick={() => this.props.toggleColumn(item.index, false)} data-test={`GroupRow_row_index_${index}_toggle_column`}>Hide</li>
+                                        <li onClick={() => this.props.toggleColumn(item.index, false)} data-test={`table_header_row_index_${index}_toggle_column`}>Hide</li>
                                     </ul> : null}
                             </div>
                         </th> : null

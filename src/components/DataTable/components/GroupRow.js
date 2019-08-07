@@ -44,6 +44,7 @@ class GroupRow extends Component {
                                     disabled={this.props.disabled}
                                     disabling={isAllInventory}
                                     onChange={(event, data) => this.selectGroup(data.checked, data.disabling)}
+                                    data-test='GroupRow_select_drpdn'
                                 />
                             </td>
                             : null

@@ -222,7 +222,8 @@ class Filter extends Component {
             }}
             component={Checkbox}
             checked={!!values[groupName] && values[groupName][name]}
-            name={path} label={el.name} />
+            name={path} label={el.name}
+            data-test='filter_FormikField_change'/>
         </FormField>
       )
     }
@@ -335,6 +336,7 @@ class Filter extends Component {
           <Dropdown name={name} options={dateDropdownOptions} selection
             onChange={handleChange}
             inputProps={{
+              'data-test': 'filter_dateField_drpdn',
               value: this.state.dateDropdown[name],
               onChange: (_, data) => {
                 Object.keys(values)
@@ -354,7 +356,7 @@ class Filter extends Component {
             }} />
         </FormField>
 
-        <FormField>
+        <FormField data-test='filter_dateField_inp'>
           <Input
             name={inputName}
             onChange={handleChange}
@@ -389,7 +391,7 @@ class Filter extends Component {
           </SaveFilterRow>
 
           <GridRow>
-            <GridColumn computer={12}>
+            <GridColumn computer={12} data-test='filter_name_inp'>
               <Input inputProps={{ placeholder: formatMessage({ id: 'filter.enterFilterName', defaultMessage: 'Enter Filter Name' }) }} name='name' fluid />
             </GridColumn>
 
@@ -523,7 +525,7 @@ class Filter extends Component {
           <AccordionItem>
             {this.accordionTitle('quantity', <FormattedMessage id='filter.quantity' />)}
             <AccordionContent active={!this.state.inactiveAccordion.quantity}>
-              <FormGroup widths='equal'>
+              <FormGroup widths='equal' data-test='filter_quantity_inp'>
                 <Input inputProps={{
                   type: 'number',
                   placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }),
@@ -546,7 +548,7 @@ class Filter extends Component {
             {this.accordionTitle('price', <FormattedMessage id='filter.price' />)}
             <AccordionContent active={!this.state.inactiveAccordion.price}>
               <FormGroup>
-                <FormField width={8}>
+                <FormField width={8} data-test='filter_price_inp'>
                   <Input inputProps={{
                     label: currencySymbol,
                     labelPosition: 'left',
@@ -624,7 +626,7 @@ class Filter extends Component {
           <AccordionItem>
             {this.accordionTitle('assay', <FormattedMessage id='filter.assay' />)}
             <AccordionContent active={!this.state.inactiveAccordion.assay}>
-              <FormGroup widths='equal'>
+              <FormGroup widths='equal' data-test='filter_assay_inp'>
                 <Input
                   inputProps={{ type: 'number', min: 0, placeholder: formatMessage({ id: 'global.enterValue', defaultMessage: 'Enter Value' }) }}
                   label={<FormattedMessage id='filter.Minimum(%)' defaultMessage='Minimum' />} name='assayFrom' />

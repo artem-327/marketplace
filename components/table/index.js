@@ -428,6 +428,7 @@ export default class _Table extends Component {
               this.handleColumnsSettings({ hiddenColumnNames })
               this.setState({ columnSettingOpen: false })
             }}
+            data-test='table_columns_setting_modal'
           />
           <Grid
             rows={rows}

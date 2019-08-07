@@ -60,6 +60,7 @@ export default class ZipDropdown extends Component {
         options={codes.concat(initialZipCodes)}
         label={label}
         inputProps={{
+          'data-test': 'ZipDropdown_drpdn',
           onChange: this.handleChange,
           onSearchChange: (e, data) => {
             this.props.onSearchChange(e, data)
@@ -87,7 +88,6 @@ ZipDropdown.propTypes = {
   additionalInputProps: object,
   codes: array,
   label: string,
-  onAddition: func,
   handleChange: func,
   onSearchChange: func,
   countryId: number,
