@@ -171,6 +171,7 @@ class Marketplace extends Component {
                 this.tableRowClicked(row.id)
               }
             }}
+            data-test='marketplace_row_action'
             rowActions={[
               { text: formatMessage({ id: 'marketplace.buy', defaultMessage: 'Buy Product Offer' }), callback: (row) => this.tableRowClicked(row.id) }
             ]}

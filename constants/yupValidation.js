@@ -1,5 +1,6 @@
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
+import React from "react";
 
 
 export const errorMessages = {
@@ -23,8 +24,11 @@ export const errorMessages = {
   oneSpecialChar: <FormattedMessage id='validation.oneSpecialChar' defaultMessage='At least one number or special char (@,!,#, etc)' />,
   passwordsMustMatch: <FormattedMessage id='validation.passwordMatch' defaultMessage='Passwords must match' />,
   exactLength: (len) => <FormattedMessage id='validation.exactLength' defaultMessage={`Must be ${len} characters long`} values={{ len }} />,
-  unique: (name = '') => <FormattedMessage id='validation.unique' defaultMessage={`${name} has to be unique`} values={{ name }} />
-
+  unique: (name = '') => <FormattedMessage id='validation.unique' defaultMessage={`${name} has to be unique`} values={{ name }} />,
+  minimum: (min) => <FormattedMessage id='validation.minimum' values={{ min }} />,
+  maximum: (max) => <FormattedMessage id='validation.maximum' values={{ max }} />,
+  minUpToMax: <FormattedMessage id='validation.minUpToMax' defaultMessage='Min value should be less or equal to Max value' />,
+  maxAtLeastMin: <FormattedMessage id='validation.maxAtLeastMin' defaultMessage='Max value should be greater or equal to Min value' />
 }
 
 export const provinceObjectRequired = (hasProvinces) => (

@@ -66,12 +66,12 @@ export default class ShippingQuotes extends Component {
           this.getShipingQuotes(values)
         }}
       >
-        <FormGroup widths='equal'>
+        <FormGroup widths='equal' data-test='ShippingQuotes_quantity_inp'>
 
           <Input
             name='destination.quantity' type='number' label='Shipping Quantity'
             inputProps={{ onChange: (_, { value }) => this.setState({ quantity: value }) }} />
-          <Dropdown name='destination.zip' label='Zip Code' inputProps={{ search: true }} options={zipCodes} />
+          <Dropdown name='destination.zip' label='Zip Code' inputProps={{ search: true }} options={zipCodes} data-test='ShippingQuotes_zip_drpdn' />
 
           <Dropdown
             name='destination.maxTransit'
@@ -84,10 +84,11 @@ export default class ShippingQuotes extends Component {
               { value: 7, text: '7 days' },
               { value: 14, text: '14 days' }
             ]}
+            data-test='ShippingQuotes_maxTransit_drpdn'
           />
           <FormField>
             <label>&nbsp;</label>
-            <Button type='submit' fluid loading={loading}>Calculate</Button>
+            <Button type='submit' fluid loading={loading} data-test='ShippingQuotes_calculate'>Calculate</Button>
           </FormField>
         </FormGroup>
 
@@ -127,7 +128,9 @@ export default class ShippingQuotes extends Component {
                       radio
                       checked={this.state.selectedIndex === i}
                       onChange={() => this.setState({ selectedIndex: i, sQuote })}
-                      value={i} />
+                      value={i}
+                      data-test={`ShippingQuotes_row_${i}_chckb`}
+                    />
                   </Table.Cell>
                   <Table.Cell>{sQuote.shipmentRate.carrierName}</Table.Cell>
                   <Table.Cell>{etd + (etd == 1 ? ' Day' : ' Days')}</Table.Cell>
@@ -183,10 +186,10 @@ export default class ShippingQuotes extends Component {
           {this.renderForm()}
         </Modal.Content>
         <Modal.Actions>
-          <Button onClick={closeModal}>
+          <Button onClick={closeModal} data-test='ShippingQuotes_closeModal'>
             Close
           </Button>
-          <Button loading={this.props.isPurchasing} disabled={!(this.state.quantity && this.state.sQuote)} primary onClick={this.createOrder}>
+          <Button loading={this.props.isPurchasing} disabled={!(this.state.quantity && this.state.sQuote)} primary onClick={this.createOrder} data-test='ShippingQuotes_createOrder'>
             Purchase
           </Button>
         </Modal.Actions>

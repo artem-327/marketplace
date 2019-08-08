@@ -682,6 +682,8 @@
   "validation.oneSpecialChar": "At least one number or special char (@,!,#, etc).",
   "validation.exactLength": "Must be {len} characters long",
   "validation.unique": "{name} has to be unique",
+  "validation.minUpToMax": "Min value should be less or equal to Max value",
+  "validation.maxAtLeastMin": "Max value should be greater or equal to Min value",
   "password.change": "Change Password",
   "password.current": "Current Password",
   "password.new": "New Password",

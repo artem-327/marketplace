@@ -189,7 +189,16 @@ const validationScheme = val.object().shape({
   warehouse: val.number(errorMessages.requiredMessage)
     .nullable(errorMessages.required)
     .moreThan(0, errorMessages.requiredMessage)
-    .required(errorMessages.requiredMessage)
+    .required(errorMessages.requiredMessage),
+  assayMin: val.number().nullable().min(0, errorMessages.minimum(0)).test('match', errorMessages.minUpToMax,
+    function(assayMin) {
+      return (typeof this.parent.assayMax === 'undefined') || (assayMin <= this.parent.assayMax)
+    }),
+  assayMax: val.number().nullable().min(0, errorMessages.minimum(0))
+    .test('match', errorMessages.maxAtLeastMin,
+      function(assayMax) {
+        return (typeof this.parent.assayMin === 'undefined') || (assayMax >= this.parent.assayMin)
+    }),
 })
 
 const tab1 = ['inStock', 'product', 'processingTimeDays', 'doesExpire', 'pkgAmount', 'validityDate', 'minimumRequirement', 'minimum', 'splits', 'priceTiers', 'pricingTiers', 'warehouse']
@@ -230,16 +239,27 @@ class AddInventoryForm extends Component {
     }
   }
 
-  getProcessingTimes = (max) => {
+  getProcessingTimes = () => {
     let processingTimes = []
 
-    for (let i = 1; i <= max; i++) {
+    for (let i = 1; i <= 13; i++) {
       processingTimes.push({
         value: i,
         key: i,
         text: i + ' Day' + (i > 1 ? 's' : '')
       })
     }
+
+    processingTimes.splice(6,1)     // remove 7 days, will add 1 week
+
+    for (let i = 1; i <= 10; i++) {
+      processingTimes.push({
+        value: i*7,
+        key: i*7,
+        text: i + ' Week' + (i > 1 ? 's' : '')
+      })
+    }
+    processingTimes.sort(function(a, b){return a.value - b.value})
 
     return processingTimes
   }
@@ -990,7 +1010,7 @@ class AddInventoryForm extends Component {
                               </Header>
                               <FormGroup>
                                 <FormField width={10}>
-                                  <Dropdown label='Processing Time' name='processingTimeDays' options={this.getProcessingTimes(14)}
+                                  <Dropdown label='Processing Time' name='processingTimeDays' options={this.getProcessingTimes()}
                                             inputProps={{ 'data-test': 'new_inventory_processing_time_drpdn' }}
                                   />
                                 </FormField>
@@ -1390,14 +1410,14 @@ class AddInventoryForm extends Component {
                                       <Input
                                         name='assayMin'
                                         label={formatMessage({ id: 'addInventory.assayMin', defaultMessage: 'Assay Min %' })}
-                                        inputProps={{ type: 'number', step: '0.001', value: null }}
+                                        inputProps={{ type: 'number', min: 0, step: '0.001', value: null }}
                                       />
                                     </FormField>
                                     <FormField width={8} data-test='add_inventory_product_assayMax_inp' >
                                       <Input
                                         name='assayMax'
                                         label={formatMessage({ id: 'addInventory.assayMax', defaultMessage: 'Assay Max %' })}
-                                        inputProps={{ type: 'number', step: '0.001', value: null }} />
+                                        inputProps={{ type: 'number', min: 0, step: '0.001', value: null }} />
                                     </FormField>
                                   </FormGroup>
                                 </GridColumn>

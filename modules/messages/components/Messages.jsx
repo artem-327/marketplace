@@ -65,7 +65,7 @@ export default class Messages extends Component {
     return (
       <StyledMessage floating key={index} color={color} size='large'>
         <Icon size='big' name={iconName} /> {content}
-        <CloseIcon size='large' name='x' onClick={() => this.handleMessageDismiss(index)} />
+        <CloseIcon size='large' name='x' onClick={() => this.handleMessageDismiss(index)} data-test='messages_dismiss_icon' />
       </StyledMessage>
     )
   }
