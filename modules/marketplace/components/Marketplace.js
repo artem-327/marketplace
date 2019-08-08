@@ -165,12 +165,13 @@ class Marketplace extends Component {
               )
             }}
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
+            /* COMMENTED #30916
             onRowClick={(e, row) => {
               const targetTag = e.target.tagName.toLowerCase()
               if (targetTag !== 'input' && targetTag !== 'label') {
                 this.tableRowClicked(row.id)
               }
-            }}
+            }}*/
             data-test='marketplace_row_action'
             rowActions={[
               { text: formatMessage({ id: 'marketplace.buy', defaultMessage: 'Buy Product Offer' }), callback: (row) => this.tableRowClicked(row.id) }
