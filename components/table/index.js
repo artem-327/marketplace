@@ -83,8 +83,15 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
         }}
         onReset={onClose}
       >
-        {columns.map(c => <Checkbox key={c.name} disabled={c.disabled} name={c.name} label={c.title}
-                                    inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }} />)}
+        {columns.map(c => (
+          <Checkbox 
+            key={c.name} 
+            disabled={c.disabled} 
+            name={c.name} 
+            label={c.title}
+            inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }} 
+          />
+        ))}
         <Divider />
         <div style={{ textAlign: 'right' }}>
           <Button.Reset data-test='table_setting_cancel_btn'>Cancel</Button.Reset>

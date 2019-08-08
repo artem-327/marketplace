@@ -72,27 +72,25 @@ export default function reducer(state = initialState, action) {
         })
       }
 
-      
-
       return {
         ...state,
         confirmationForm: getSafe(() => payload.identity.company.reviewRequested, false) ? {
           address: {
-            city: payload.identity.branches[0].address.city,
-            country: payload.identity.branches[0].address.country.id,
+            city: payload.identity.homeBranch.address.city,
+            country: payload.identity.homeBranch.address.country.id,
             availableCountries: [{
-              key: payload.identity.branches[0].address.country.id,
-              text: payload.identity.branches[0].address.country.name,
-              value: payload.identity.branches[0].address.country.id
+              key: payload.identity.homeBranch.address.country.id,
+              text: payload.identity.homeBranch.address.country.name,
+              value: payload.identity.homeBranch.address.country.id
             }],
-            province: payload.identity.branches[0].address.province.id,
-            availableProvinces: [{
-              key: payload.identity.branches[0].address.province.id,
-              text: payload.identity.branches[0].address.province.name,
-              value: payload.identity.branches[0].address.province.id
-            }],
-            streetAddress: payload.identity.branches[0].address.streetAddress,
-            zip: payload.identity.branches[0].address.zip.zip,
+            province: payload.identity.homeBranch.address.province ? payload.identity.homeBranch.address.province.id : null,
+            availableProvinces: payload.identity.homeBranch.address.province ? [{
+              key: payload.identity.homeBranch.address.province.id,
+              text: payload.identity.homeBranch.address.province.name,
+              value: payload.identity.homeBranch.address.province.id
+            }] : [],
+            streetAddress: payload.identity.homeBranch.address.streetAddress,
+            zip: payload.identity.homeBranch.address.zip.zip,
           },
           companyAdminUser: {
             name: payload.identity.name,

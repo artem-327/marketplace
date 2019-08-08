@@ -7,8 +7,17 @@ import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 class CompanyForm extends Component {
 
   componentDidMount() {
-    this.props.getCompanyLogo(this.props.companyId)
+    this.loadCompanyLogo()
     if (this.props.data.length === 0) this.props.getBusinessTypes()
+  }
+
+  loadCompanyLogo = async () => {
+    if (this.props.selectLogo && this.props.getCompanyLogo) {
+      const companyLogo = await this.props.getCompanyLogo(this.props.companyId)
+
+      if (companyLogo.value.data.size)
+        this.props.selectLogo(companyLogo.value.data)
+    }
   }
 
   getCompanyLogo = () => {
@@ -45,7 +54,7 @@ class CompanyForm extends Component {
   }
 
   render() {
-    let { intl, loading, data } = this.props
+    let { intl, loading, data, selectLogo, removeLogo } = this.props
 
     const { formatMessage } = intl
 
@@ -104,9 +113,11 @@ class CompanyForm extends Component {
             <label for="field_input_phone"><span>Company Logo</span></label>
             <UploadLot {...this.props}
                        attachments={this.props.companyLogo ? [this.props.companyLogo] : []}
-                       name={`logo`}
+                       name={`companyLogo`}
                        filesLimit={1}
-                       fileMaxSize={20}
+                       fileMaxSize={0.2}
+                       onChange={(files) => selectLogo(files[0])}
+                       removeAttachment={removeLogo}
                        emptyContent={(<FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' tagName='A' />)}
             />
           </FormField>

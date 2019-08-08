@@ -43,7 +43,7 @@ class Navigation extends Component {
             <Dropdown.Item as={MenuLink} to='/orders?type=purchase' data-test='navigation_menu_orders_purchase_drpdn'><FormattedMessage id='navigation.purchaseOrders' defaultMessage='Purchase Orders' /></Dropdown.Item>
           </Dropdown.Menu>
         </DropdownItem>
-        <MenuLink to='/settings' data-test='navigation_menu_settings_lnk'><FormattedMessage id='navigation.settings' /></MenuLink>
+        {getSafe(() => auth.identity.isCompanyAdmin, false) && <MenuLink to='/settings' data-test='navigation_menu_settings_lnk'><FormattedMessage id='navigation.settings' /></MenuLink>}
         {isAdmin && <MenuLink to='/admin' data-test='navigation_menu_admin_lnk'><FormattedMessage id='navigation.admin' /></MenuLink>}
       </> : isAdmin && <MenuLink to='/admin' data-test='navigation_menu_admin_lnk'><FormattedMessage id='navigation.admin' /></MenuLink>
     )

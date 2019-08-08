@@ -31,7 +31,7 @@ import { CompanyForm } from '~/modules/company-form/'
 import { companyDetailsTab } from '../contants'
 import Router from 'next/router'
 
-import { addTab, tabChanged, resetSettings } from '../actions'
+import { addTab, tabChanged, resetSettings, loadLogo } from '../actions'
 import { updateCompany } from '~/modules/admin/actions'
 import { validationSchema } from '~/modules/company-form/constants'
 
@@ -45,6 +45,10 @@ const TopMargedGrid = styled(Grid)`
 
 class Settings extends Component {
 
+  state = {
+    companyLogo: null
+  }
+
   componentWillMount() {
     this.props.resetSettings()
   }
@@ -57,8 +61,26 @@ class Settings extends Component {
     if (!queryTab.type !== currentTab.type) tabChanged(queryTab)
   }
 
+  companyUpdated = (name) => {
+    let { toastManager } = this.props
+
+    toastManager.add(
+      <div>
+        <strong><FormattedMessage id='notifications.companyUpdated' defaultMessage='Company updated' values={{ name: values.name }} /></strong>
+      </div>, { appearance: 'success', pauseOnHover: true })
+  }
+
+  selectLogo = (logo) => {
+    this.setState({ companyLogo: logo })
+  }
+
+  removeLogo = () => {
+    this.setState({ companyLogo: null })
+  }
+
   companyDetails = () => {
     let { toastManager } = this.props
+    const { selectLogo, removeLogo, companyUpdated } = this
     return (
       <TopMargedGrid relaxed='very' centered>
         <GridColumn computer={12}>
@@ -67,12 +89,22 @@ class Settings extends Component {
             validationSchema={validationSchema}
             onSubmit={async (values, { setSubmitting }) => {
               try {
-                await this.props.updateCompany(values.id, { ...values, businessType: values.businessType.id })
+                const { updateCompany } = this.props
 
-                toastManager.add(
-                  <div>
-                    <strong><FormattedMessage id='notifications.companyUpdated' defaultMessage='Company updated' values={{ name: values.name }} /></strong>
-                  </div>, { appearance: 'success', pauseOnHover: true })
+                if (this.state.companyLogo) {
+                  let reader = new FileReader()
+                  reader.onload = async function () {
+                    const loadedLogo = btoa(reader.result)
+                    await updateCompany(values.id, { ...values, businessType: values.businessType.id, logo: loadedLogo })
+
+                    companyUpdated(values.name)
+                  }
+                  reader.readAsBinaryString(this.state.companyLogo)
+                } else {
+                  await updateCompany(values.id, { ...values, businessType: values.businessType.id })
+
+                  companyUpdated(values.name)
+                }
               } catch (err) {
                 console.error(err)
               }
@@ -84,7 +116,7 @@ class Settings extends Component {
             {({ values, errors, setFieldValue }) => {
               return (
                 <Segment basic>
-                  <CompanyForm />
+                  <CompanyForm selectLogo={selectLogo} removeLogo={removeLogo} companyLogo={this.state.companyLogo} />
                   <Grid>
                     <GridColumn floated='right' computer={4}>
                       <Button.Submit fluid data-test='company_details_submit_btn'><FormattedMessage id='global.save' /></Button.Submit>
@@ -244,5 +276,5 @@ const mapStateToProps = ({ settings, auth }) => {
 
 export default connect(
   mapStateToProps,
-  { addTab, updateCompany, tabChanged, resetSettings }
+  { addTab, updateCompany, tabChanged, resetSettings, loadLogo }
 )(withToastManager(Settings))

@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { injectIntl, FormattedMessage } from 'react-intl'
+import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
-
 import { FormattedDateTime } from '~/components/formatted-messages/'
 
 import ProdexGrid from '~/components/table'
@@ -74,6 +74,7 @@ class UsersTable extends Component {
       datagrid,
       deleteUser,
       resendWelcomeEmail,
+      toastManager
       // confirmMessage,
       // handleOpenConfirmPopup,
       // closeConfirmPopup,
@@ -105,7 +106,16 @@ class UsersTable extends Component {
             },
             {
               text: <FormattedMessage id='settings.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
-              callback: (row) => resendWelcomeEmail(row.id),
+              callback: async (row) => {
+                const { value } = await resendWelcomeEmail(row.id)
+                
+                toastManager.add(generateToastMarkup(
+                  null,
+                  value.clientMessage
+                ), {
+                  appearance: 'success'
+                })
+              },
               hidden: row => !!row.lastLoginAt
             }
           ]}
