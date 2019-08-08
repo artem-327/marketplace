@@ -45,7 +45,7 @@ export function login(username, password) {
         }
       })
 
-      if (!getSafe(() => identity.company.reviewRequested, false)) {
+      if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.name === 'CompanyAdmin')) {
         isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
       }
       
