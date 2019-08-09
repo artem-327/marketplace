@@ -553,8 +553,6 @@ class AddInventoryForm extends Component {
 
     const { toastManager } = this.props
 
-    console.log('!!!! bla values', values)
-
     return (
       <Grid className='product-details' centered>
         <CustomPaddedColumn>
@@ -1289,16 +1287,28 @@ class AddInventoryForm extends Component {
                                       data-test='new_inventory_attachments_drop'
                                       emptyContent={(
                                         <label>
-                                          <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop ' + this.props.type + ' file here'} values={{ docType: this.props.type }} />
+                                          <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
                                           <br />
-                                          <FormattedMessage id='addInventory.dragDropOr' defaultMessage={'or select from computer'} />
+                                          <FormattedMessage id='addInventory.dragDropOr'
+                                                            defaultMessage={'or {link} to select from computer'}
+                                                            values={{ link: (
+                                                              <a>
+                                                                <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                                              </a>
+                                                            ) }} />
                                         </label>
                                       )}
                                       uploadedContent={(
                                         <label>
-                                          <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop ' + this.props.type + ' file here'} values={{ docType: this.props.type }} />
+                                          <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
                                           <br />
-                                          <FormattedMessage id='addInventory.dragDropOr' defaultMessage={'or select from computer'} />
+                                          <FormattedMessage id='addInventory.dragDropOr'
+                                                            defaultMessage={'or {link} to select from computer'}
+                                                            values={{ link: (
+                                                              <a>
+                                                                <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                                              </a>
+                                                            ) }} />
                                         </label>
                                       )}
                                     />

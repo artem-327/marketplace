@@ -519,18 +519,28 @@ class ProductPopup extends React.Component {
                       data-test='settings_product_import_attachments'
                       emptyContent={(
                         <label>
-                          <FormattedMessage id='addInventory.dragDropAdditional' defaultMessage='Drop additional documents here' />
+                          <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
                           <br />
-                          <FormattedMessage id='addInventory.dragDropOr' defaultMessage='or select from computer' />
+                          <FormattedMessage id='addInventory.dragDropOr'
+                                            defaultMessage={'or {link} to select from computer'}
+                                            values={{ link: (
+                                              <a>
+                                                <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                              </a>
+                                            ) }} />
                         </label>
                       )}
                       uploadedContent={(
                         <label>
-                          <FormattedMessage id='addInventory.dragDropAdditional' defaultMessage='Drop additional documents here'
-                          />
+                          <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
                           <br />
-                          <FormattedMessage id='addInventory.dragDropOr' defaultMessage='or select from computer'
-                          />
+                          <FormattedMessage id='addInventory.dragDropOr'
+                                            defaultMessage={'or {link} to select from computer'}
+                                            values={{ link: (
+                                              <a>
+                                                <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                              </a>
+                                            ) }} />
                         </label>
                       )}
                     />
