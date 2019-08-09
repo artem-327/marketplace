@@ -608,7 +608,7 @@
   "cart.estimatedDelivery": "Estimated Delivery",
   "cart.estimatedTax": "Estimated Tax",
   "cart.total": "Total",
-  "cart.purchaseOrder": "PURCHASE ORDER",
+  "cart.checkout": "Checkout",
   "cart.backToProductOfferings": "Back to Product Offerings",
   "cart.backToShoppingCart": "Back to Shopping Cart",
   "cart.1shipping": "1. Shipping",

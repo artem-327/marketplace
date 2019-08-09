@@ -126,7 +126,7 @@ class PurchaseOrder extends Component {
             <Menu secondary>
               <Menu.Item header>
                 <Header as='h1' size='medium'>
-                  <FormattedMessage id='cart.purchaseOrder' defaultMessage='PURCHASE ORDER' />
+                  <FormattedMessage id='cart.checkout' defaultMessage='Checkout' />
                 </Header>
               </Menu.Item>
 

@@ -180,6 +180,23 @@ export default class AddCart extends Component {
               </GridColumn>
             </GridRow> */}
 
+            <GridRow>
+              <GridColumn computer={6}>
+                Chemical Name:
+              </GridColumn>
+              <GridColumn computer={10}>
+                {offer.product.productName}
+              </GridColumn>
+            </GridRow>
+
+            <GridRow>
+              <GridColumn computer={6}>
+                CAS Number(s):
+              </GridColumn>
+              <GridColumn computer={10}>
+                {(offer.product.casProducts.length ? offer.product.casNumberCombined : '')}
+              </GridColumn>
+            </GridRow>
 
             <GridRow>
               <GridColumn computer={6}>

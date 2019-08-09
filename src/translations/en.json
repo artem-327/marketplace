@@ -241,7 +241,7 @@
     "cart.estimatedDelivery": "Estimated Delivery",
     "cart.estimatedTax": "Estimated Tax",
     "cart.total": "Total",
-    "cart.purchaseOrder": "PURCHASE ORDER",
+    "cart.checkout": "Checkout",
     "cart.backToProductOfferings": "Back to Product Offerings",
     "cart.1shipping": "1. Shipping",
     "cart.shippingAddress": "Shipping Address",

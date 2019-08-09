@@ -383,7 +383,11 @@ class AddInventoryForm extends Component {
     if (isNaN(value) || isNaN(minimum))
       return false
 
-    if (minimum !== value && ((minimum % value) !== 0)) {
+    if (values.minimumRequirement) {
+      if (minimum !== value && ((minimum % value) !== 0)) {
+        setFieldValue('minimum', value)
+      }
+    } else {
       setFieldValue('minimum', value)
     }
   }, 500)
@@ -548,6 +552,8 @@ class AddInventoryForm extends Component {
     } = this.state
 
     const { toastManager } = this.props
+
+    console.log('!!!! bla values', values)
 
     return (
       <Grid className='product-details' centered>
@@ -1120,8 +1126,8 @@ class AddInventoryForm extends Component {
                                           name='minimumRequirement'
                                           inputProps={{
                                             onClick: () => {
-                                              setFieldValue('minimum', 1)
-                                              setFieldValue('pricingTiers[0].quantityFrom', 1)
+                                              //setFieldValue('minimum', 1)
+                                              //setFieldValue('pricingTiers[0].quantityFrom', 1)
                                             }
                                           }}
                                           data-test='add_inventory_minimumRequirement_no_rad'/>
@@ -1141,6 +1147,7 @@ class AddInventoryForm extends Component {
                                           label={formatMessage({ id: 'addInventory.minimumOQ', defaultMessage: 'Minimum OQ' })}
                                           name='minimum'
                                           inputProps={{
+                                            disabled: !values.minimumRequirement,
                                             type: 'number',
                                             min: 1,
                                             onChange: (e, { value }) => {
