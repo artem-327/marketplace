@@ -80,7 +80,7 @@ class LoginForm extends Component {
 
     return (
       <>
-        {getSafe(() => identity.company.reviewRequested, false) ? (
+        {getSafe(() => identity.company.reviewRequested, false) && getSafe(() => identity.isCompanyAdmin, false) ? (
             <>
               <ConfirmationPage />
             </>
