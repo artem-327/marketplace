@@ -107,7 +107,7 @@ context("Prodex User CRUD", () => {
             .click({force: true})
             .should("not.selected")
 
-        cy.get("button[class='ui primary button']").click()
+        cy.get("button[class='ui primary button']").click({force: true})
 
         cy.waitForUI()
 
@@ -127,7 +127,7 @@ context("Prodex User CRUD", () => {
         cy.get(".error")
             .should("have.length",3)
             .find(".sui-error-message").each((element) => {
-            expect(element.text()).to.match(/(is required)/i)
+            expect(element.text()).to.match(/(Required)/i)
         })
     })
 

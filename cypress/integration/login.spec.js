@@ -16,7 +16,7 @@ context("Login and logout",() => {
         cy.get("input[name=password]")
             .type("test")
             .should("have.value","test")
-        cy.get("button[type=submit]").click()
+        cy.get("button[type=submit]").click({force: true})
 
         cy.wait('@login')
 
@@ -46,7 +46,7 @@ context("Login and logout",() => {
         cy.get("input[name=password]")
             .type("echopass123")
             .should("have.value","echopass123")
-        cy.get("button[type=submit]").click()
+        cy.get("button[type=submit]").click({force: true})
 
         cy.wait('@login')
 
@@ -88,7 +88,7 @@ context("Login and logout",() => {
         cy.get("input[name=password]")
             .type("echopass123")
             .should("have.value","echopass123")
-        cy.get("button[type=submit]").click()
+        cy.get("button[type=submit]").click({force: true})
 
         cy.wait('@login')
 
@@ -129,7 +129,7 @@ context("Login and logout",() => {
         cy.get("input[name=password]")
             .type("echopass123")
             .should("have.value","echopass123")
-        cy.get("button[type=submit]").click()
+        cy.get("button[type=submit]").click({force: true})
 
         cy.wait('@login')
 
