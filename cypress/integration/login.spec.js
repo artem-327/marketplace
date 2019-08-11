@@ -133,6 +133,6 @@ context("Login and logout",() => {
 
         cy.wait('@login')
 
-        cy.contains("User is disabled")
+        cy.contains("Bad credentials")
     })
 })
