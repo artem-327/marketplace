@@ -34,9 +34,11 @@ context("Prodex Branches CRUD", () => {
 
         cy.waitForUI()
 
-        cy.get("input[id='field_input_address.zip']")
+        cy.selectFromDropdown("div[id='field_dropdown_address.zip']","75000")
+       /* cy.get()
+            .children("input")
             .type("75000")
-            .should("have.value","75000")
+            .should("have.value","75000")*/
 
         cy.get("#field_input_name")
             .type("Marie Currie")
