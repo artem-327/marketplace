@@ -34,7 +34,7 @@ Cypress.Commands.add("login", (email, password) => {
         .type(email)
     cy.get("input[name=password]")
         .type(password)
-    cy.get("button[type=submit]").click()
+    cy.get("[data-test=login_submit_btn]").click({force: true})
 
     cy.wait('@login')
 
@@ -228,6 +228,33 @@ Cypress.Commands.add("getFirstPackagingUnitWithFilter", (token,filter) => {
     })
 })
 
+Cypress.Commands.add("getFirstDocumentTypeWithFilter", (token,filter) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/document-types/datagrid',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, filters: filter, pageSize: 50}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body[0].id
+    })
+})
+
+Cypress.Commands.add("getFirstMarketSegmentWithFilter", (token,filter) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/market-segments/datagrid',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, filters: filter, pageSize: 50}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body[0].id
+    })
+})
 
 Cypress.Commands.add("deleteWholeCart", (token) => {
     cy.request({

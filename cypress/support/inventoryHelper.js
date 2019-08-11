@@ -37,7 +37,7 @@ Cypress.Commands.add("assertProductDetail", (index,value) => {
 })
 
 Cypress.Commands.add("clickSave", () => {
-    cy.get("button[class='ui primary button']").click()
+    cy.get("button[class='ui primary button']").click({force: true})
     cy.wait(1000)
 })
 
