@@ -30,9 +30,9 @@ function mapStateToProps(store, { datagrid }) {
         productNumber: getSafe(() => po.product.casNumberCombined, 'Unmapped'),
         merchant: po.warehouse.warehouseName,
         available: <FormattedNumber value={po.pkgAmount} minimumFractionDigits={0} />,
-        packagingType: getSafe(() => po.product.packagingType.name, null),
-        packagingUnit: getSafe(() => po.product.packagingUnit.nameAbbreviation, null),
-        packagingSize: getSafe(() => po.product.packagingSize, null),
+        packagingType: getSafe(() => po.product.packagingType.name, ''),
+        packagingUnit: getSafe(() => po.product.packagingUnit.nameAbbreviation, ''),
+        packagingSize: getSafe(() => po.product.packagingSize, ''),
         quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.pkgAmount * po.product.packagingSize} /> : 'N/A',
         // qtyPart ? `${(parseInt(po.pkgAmount, 10) * parseInt(po.product.packagingSize, 10)).formatNumber()} ${qtyPart}` : 'N/A',
         fobPrice: po.pricingTiers.length > 1

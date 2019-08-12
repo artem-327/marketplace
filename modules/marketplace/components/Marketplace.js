@@ -9,7 +9,12 @@ import AddCart from '~/src/pages/cart/components/AddCart'
 import FilterTags from '~/modules/filter/components/FitlerTags'
 import { filterTypes } from '~/modules/filter/constants/filter'
 
-import { UnitOfPackaging } from '~/components/formatted-messages'
+//import { UnitOfPackaging } from '~/components/formatted-messages'
+import styled from "styled-components";
+
+const CapitalizedText = styled.span`
+  text-transform: capitalize;
+`
 
 class Marketplace extends Component {
   state = {
@@ -49,7 +54,8 @@ class Marketplace extends Component {
 
     return rows.map(r => ({
       ...r,
-      packaging: <UnitOfPackaging value={r.packagingType} />,
+      //packaging: <UnitOfPackaging value={r.packagingType} />, TODO: delete
+      packaging: <>{`${r.packagingSize} ${r.packagingUnit} `}<CapitalizedText>{r.packagingType}</CapitalizedText> </>,
     }))
   }
 

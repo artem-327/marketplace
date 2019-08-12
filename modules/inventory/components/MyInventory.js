@@ -17,6 +17,7 @@ class MyInventory extends Component {
   state = {
     columns: [
       { name: 'productName', title: <FormattedMessage id='myInventory.productName' defaultMessage='Product Name' />, width: 250, sortPath: 'ProductOffer.product.productName' },
+      { name: 'tradeName', title: <FormattedMessage id='myInventory.TradeName' defaultMessage='Trade Name' />, width: 160 },
       { name: 'productNumber', title: <FormattedMessage id='myInventory.productNumber' defaultMessage='Product Number' />, width: 160 },
       { name: 'casNumberCombined', title: <FormattedMessage id='myInventory.casNumber' defaultMessage='CAS Number(s)' /> },
       { name: 'warehouse', title: <FormattedMessage id='myInventory.warehouse' defaultMessage='Warehouse' />, width: 180, sortPath: 'ProductOffer.warehouse.warehouse' },
@@ -28,7 +29,21 @@ class MyInventory extends Component {
       { name: 'fobPrice', title: <FormattedMessage id='myInventory.fobPrice' defaultMessage='FOB Price' />, sortPath: 'ProductOffer.pricingPrice' },
       { name: 'manufacturer', title: <FormattedMessage id='myInventory.mfr' defaultMessage='MFR.' />, width: 220 },
       { name: 'lotNumber', title: <FormattedMessage id='myInventory.lot' defaultMessage='Lot #' />, width: 100 },
-      { name: 'broadcast', title: <FormattedMessage id='myInventory.broadcast' defaultMessage='Broadcast' />, width: 120, align: 'right', sortPath: 'ProductOffer.broadcasted' }
+      { name: 'broadcast', title: <FormattedMessage id='myInventory.broadcast' defaultMessage='Broadcast' />, width: 120, align: 'right', sortPath: 'ProductOffer.broadcasted' },
+
+      /* temporarily commented!
+      { name: 'minOrderQuantity', title: <FormattedMessage id='myInventory.minOrderQuantity' defaultMessage='Min Order Q.' />, width: 100 },
+      { name: 'splits', title: <FormattedMessage id='myInventory.splits' defaultMessage='Splits' />, width: 100 },
+      { name: 'condition', title: <FormattedMessage id='myInventory.condition' defaultMessage='Condition' />, width: 100 },
+      { name: 'grade', title: <FormattedMessage id='myInventory.grade' defaultMessage='Grade' />, width: 100 },
+      { name: 'origin', title: <FormattedMessage id='myInventory.origin' defaultMessage='Origin' />, width: 100 },
+      { name: 'form', title: <FormattedMessage id='myInventory.form' defaultMessage='Form' />, width: 100 },
+      { name: 'assay', title: <FormattedMessage id='myInventory.assay' defaultMessage='Assay' />, width: 100 },
+      { name: 'mfgDate', title: <FormattedMessage id='myInventory.mfgDate' defaultMessage='MFG Date' />, width: 100 },
+      { name: 'expDate', title: <FormattedMessage id='myInventory.expDate' defaultMessage='EXP Date' />, width: 100 },
+      { name: 'allocatedPkg', title: <FormattedMessage id='myInventory.allocatedPkg' defaultMessage='Allocated PKG' />, width: 100 },
+      { name: 'offerExpiration', title: <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Offer EXP' />, width: 100 },
+      */
     ],
     selectedRows: [],
     pageNumber: 0

@@ -94,6 +94,7 @@ class ProductOffers extends Component {
 
     const headerInit = [
       { name: 'ProductName' },
+      { name: 'Trade Name test 1 ! !' },
       { name: 'ProductNumber' },
       { name: 'Warehouse' },
       { name: 'Available PKGs' },

@@ -14,6 +14,7 @@ import { FormattedNumber, FormattedMessage } from 'react-intl'
 
 import { FormattedUnit, UnitOfPackaging } from '~/components/formatted-messages'
 import { getSafe } from '~/utils/functions'
+import moment from 'moment/moment'
 
 const transformLotNumbers = lots => {
   if (lots.length > 1) {
@@ -34,6 +35,8 @@ const transformLotNumbers = lots => {
 }
 
 function mapStateToProps(store, { datagrid }) {
+
+  //console.log('!!!!!!!! datagrid.rows', datagrid.rows);
   return {
     ...store.simpleAdd,
     appliedFilter: store.filter.filter.appliedFilter,
@@ -45,6 +48,7 @@ function mapStateToProps(store, { datagrid }) {
         id: po.id,
         product: po.product,
         productName: po.product.productName,
+        tradeName: getSafe(() => po.tradeName, 'N/A'),
         productNumber: getSafe(() => po.product.productCode, 'N/A'),
         casNumberCombined: getSafe(() => po.product.casNumberCombined, 'Unmapped'),
         chemicalName: getSafe(() => po.product.casProduct.chemicalName, po.product.productName),
@@ -64,7 +68,20 @@ function mapStateToProps(store, { datagrid }) {
         manufacturer: getSafe(() => po.manufacturer.name, 'N/A'),
         broadcasted: po.broadcasted,
         lotNumber: transformLotNumbers(po.lots),
-        status: po.status // new broadcasted
+        status: po.status,// new broadcasted
+
+        minOrderQuantity: getSafe(() => po.minimum, ''),
+        splits: getSafe(() => po.splits, ''),
+        condition: getSafe(() => po.productCondition.name, ''),
+        grade: po.productGrades && po.productGrades.length ? po.productGrades[0].name : '',  // ! ! array productGrades
+        origin: getSafe(() => po.origin.name, ''),
+        form: getSafe(() => po.productForm.name, ''),
+        assay: po.assayMin && po.assayMax ?
+          po.assayMin + '/' + po.assayMax : '',
+        mfgDate: getSafe(() => moment(po.manufacturedDate).format('MM/DD/YYYY'), ''),
+        expDate: getSafe(() => moment(po.expirationDate).format('MM/DD/YYYY'), ''),
+        allocatedPkg: 'TODO', // ! ! kterou promennou?
+        offerExpiration: 'TODO',  // ! ! kterou promennou?
       }
     }),
     isOpenImportPopup: store.settings.isOpenImportPopup

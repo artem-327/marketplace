@@ -553,8 +553,6 @@ class AddInventoryForm extends Component {
 
     const { toastManager } = this.props
 
-    console.log('!!!! bla values', values)
-
     return (
       <Grid className='product-details' centered>
         <CustomPaddedColumn>

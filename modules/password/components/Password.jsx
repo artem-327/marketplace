@@ -13,6 +13,8 @@ import { setPassword } from '../api'
 import { LoginSegment, LogoImage, StyledForm, BottomMargedRow } from '../constants/layout'
 import { initialValues, validationSchema } from '../constants/validation'
 
+import { withToastManager } from 'react-toast-notifications'
+import { generateToastMarkup } from '~/utils/functions'
 
 class Password extends Component {
 
@@ -37,6 +39,11 @@ class Password extends Component {
                 newPassword: values.password,
                 securityCode: values.securityCode
               })
+
+              toastManager.add(generateToastMarkup(
+                <FormattedMessage id='notifications.passwordResetSuccess.header' />,
+                <FormattedMessage id='notifications.passwordResetSuccess.content' />
+              ), { appearance: 'success' })
 
               Router.push('/auth/login')
 
@@ -110,4 +117,4 @@ Password.defaultProps = {
   forgottenPassword: false
 }
 
-export default injectIntl(Password)
+export default injectIntl(withToastManager(Password))
