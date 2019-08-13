@@ -37,13 +37,17 @@ export default class AddressForm extends Component {
   }
 
   asignPrefix = () => {
-    let { prefix, streetAddress, city, country, zip, province } = this.props
+    let { prefix, streetAddress, city, country, zip, province, values, index } = this.props
     let fields = { streetAddress, city, country, zip, province }
 
     Object.keys(fields)
       .forEach(key => {
         if (prefix) {
-          fields[key] = `${prefix && `${prefix}.`}address.${fields[key].name}`
+          if (index !== undefined) {
+            fields[key] = `${prefix && `${prefix}`}[${index}].address.${fields[key].name}`
+          } else {
+            fields[key] = `${prefix && `${prefix}`}.address.${fields[key].name}`
+          }
         } else {
           fields[key] = `address.${fields[key].name}`
         }
@@ -54,7 +58,7 @@ export default class AddressForm extends Component {
   componentDidMount() {
     let { countries, values, prefix } = this.props
     const { addZip } = this.props
-    let { address } = prefix ? values[prefix] : values
+    let { address } = this.getValues()
 
     if (countries.length === 0) this.props.getCountries()
     if (address.zip) addZip({ zip: address.zip, id: address.zip })
@@ -111,7 +115,7 @@ export default class AddressForm extends Component {
   getOptions = (values) => {
     let { prefix, addressDatalistData } = this.props
 
-    let { address } = prefix ? values[prefix] : values
+    let { address } = this.getValues()
 
     return addressDatalistData.map((a) => {
       if (a.streetAddress.startsWith(address.streetAddress) && a.city.startsWith(address.city)) {
@@ -123,6 +127,11 @@ export default class AddressForm extends Component {
 
       return null
     })
+  }
+
+  getValues = () => {
+    let { prefix, values } = this.props
+    return prefix ? (values[prefix] instanceof Array ? values[prefix][this.props.index] : values[prefix]) : values
   }
 
 
@@ -137,9 +146,7 @@ export default class AddressForm extends Component {
 
     let fields = this.asignPrefix()
 
-
     let { provinces, countryId, provincesAreFetching } = this.state
-
 
     return (
       <>
@@ -176,9 +183,8 @@ export default class AddressForm extends Component {
               search: true, onChange: async (e, data) => {
                 let values = JSON.parse(data.value)
                 let fieldName = prefix ? `${prefix.province}` : 'address.province'
-
+                
                 setFieldValue(fieldName, '')
-
 
                 // this.handleChange(e, data)
                 this.setState({ hasProvinces: values.hasProvinces })
