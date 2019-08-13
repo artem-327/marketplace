@@ -522,12 +522,14 @@ class ProductPopup extends React.Component {
                           <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
                           <br />
                           <FormattedMessage id='addInventory.dragDropOr'
-                                            defaultMessage={'or {link} to select from computer'}
-                                            values={{ link: (
-                                              <a>
-                                                <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                                              </a>
-                                            ) }} />
+                            defaultMessage={'or {link} to select from computer'}
+                            values={{
+                              link: (
+                                <a>
+                                  <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                </a>
+                              )
+                            }} />
                         </label>
                       )}
                       uploadedContent={(
@@ -535,12 +537,14 @@ class ProductPopup extends React.Component {
                           <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
                           <br />
                           <FormattedMessage id='addInventory.dragDropOr'
-                                            defaultMessage={'or {link} to select from computer'}
-                                            values={{ link: (
-                                              <a>
-                                                <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                                              </a>
-                                            ) }} />
+                            defaultMessage={'or {link} to select from computer'}
+                            values={{
+                              link: (
+                                <a>
+                                  <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                </a>
+                              )
+                            }} />
                         </label>
                       )}
                     />
