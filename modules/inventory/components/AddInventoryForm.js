@@ -690,7 +690,18 @@ class AddInventoryForm extends Component {
       return true
 
     for (let i = 0; i < values.costs.length; i++) {
-      setFieldValue(`costs[${i}].costUom`, +(parseFloat(values.costs[i].cost) * (parseInt(values.costs[i].lot) > 0 ? parseFloat(values.lots[parseInt(values.costs[i].lot) - 1].pkgAmount) : (parseInt(values.costs[i].lot) < 0 ? 0 : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0))).toFixed(3)))
+      setFieldValue(`costs[${i}].costUom`,
+        +(
+          parseFloat(values.costs[i].cost / values.packagingSize) /
+
+          (parseInt(values.costs[i].lot) > 0 ?
+            parseFloat(values.lots[parseInt(values.costs[i].lot) - 1].pkgAmount)
+            :
+            (parseInt(values.costs[i].lot) < 0 ?
+              0
+              :
+              values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0)))
+        ).toFixed(3))
     }
   }
 
@@ -1523,7 +1534,8 @@ class AddInventoryForm extends Component {
                                                   return {
                                                     pkgAmount: bIndex === index ? data.value : bLot.pkgAmount
                                                   }
-                                                })
+                                                }),
+                                                packagingSize: values.product.packagingSize
                                               })
                                             }} /></TableCellSmall>
                                             <TableCellSmall>0</TableCellSmall>
@@ -1549,7 +1561,7 @@ class AddInventoryForm extends Component {
                                                 emptyContent={(<FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' tagName='A' />)}
                                               />
                                             </TableCellBig>
-                                            <TableCellMini textAlign='center'><Icon name='trash alternate outline' size='large' style={{ 'margin': 0 }} onClick={() => this.removeLot(arrayHelpers, setFieldValue, { costs: values.costs, lots: values.lots }, index)}
+                                            <TableCellMini textAlign='center'><Icon name='trash alternate outline' size='large' style={{ 'margin': 0 }} onClick={() => this.removeLot(arrayHelpers, setFieldValue, { costs: values.costs, lots: values.lots, packagingSize: values.product.packagingSize }, index)}
                                                              data-test='add_inventory_removeLot_btn' /></TableCellMini>
                                           </Table.Row>
                                         )) : null
@@ -1638,7 +1650,7 @@ class AddInventoryForm extends Component {
                                                             ? parseFloat(values.lots[value - 1].pkgAmount)
                                                             : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0)
 
-                                                          setFieldValue(`costs[${index}].costUom`, (count / parseFloat(values.costs[index].cost)).toFixed(3))
+                                                          setFieldValue(`costs[${index}].costUom`, (parseFloat(values.costs[index].cost) / (count * values.product.packagingSize)).toFixed(3))
                                                         },
                                                         //setFieldValue(`costs[${index}].costUom`, this.getCostUOM(values, index, values.costs[index].cost)),
                                                         disabled: !values.trackSubCosts
@@ -1653,7 +1665,7 @@ class AddInventoryForm extends Component {
                                                       ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAmount)
                                                       : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0)
 
-                                                    setFieldValue(`costs[${index}].costUom`, (count / parseFloat(value)).toFixed(3))
+                                                      setFieldValue(`costs[${index}].costUom`, (parseFloat(value) / (count * values.product.packagingSize)).toFixed(3))
                                                   }
                                                 }} /></FormField></TableCell>
                                                 <TableCell width={3}><FormField width={16} data-test={`add_inventory_costUom_${index}_inp`}>

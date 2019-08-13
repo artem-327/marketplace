@@ -182,7 +182,7 @@ export default class AddCart extends Component {
 
             <GridRow>
               <GridColumn computer={6}>
-                Chemical Name:
+                Product Name:
               </GridColumn>
               <GridColumn computer={10}>
                 {offer.product.productName}
@@ -191,10 +191,28 @@ export default class AddCart extends Component {
 
             <GridRow>
               <GridColumn computer={6}>
+                Product Code:
+              </GridColumn>
+              <GridColumn computer={10}>
+                {offer.product.productCode}
+              </GridColumn>
+            </GridRow>
+
+            <GridRow>
+              <GridColumn computer={6}>
+                Chemical Name:
+              </GridColumn>
+              <GridColumn computer={10}>
+                {this.props.casProductsChemNames}
+              </GridColumn>
+            </GridRow>
+
+            <GridRow>
+              <GridColumn computer={6}>
                 CAS Number(s):
               </GridColumn>
               <GridColumn computer={10}>
-                {(offer.product.casProducts.length ? offer.product.casNumberCombined : '')}
+                {this.props.casProductsCasNumbers}
               </GridColumn>
             </GridRow>
 
@@ -385,6 +403,8 @@ AddCart.propTypes = {
   offer: object,
   order: object,
   postNewOrder: func,
+  casProductsChemNames: object,
+  casProductsCasNumbers: object,
   // id: number,
   // quantity: number,
   // pricing: object,

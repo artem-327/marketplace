@@ -150,7 +150,7 @@ class UploadLot extends Component {
         ) : (hasFile ?
           <React.Fragment>
             {this.props.uploadedContent ? (
-              <ReactDropzone className='dropzoneLot'
+              <ReactDropzone className='dropzoneLotHasFile'
                 activeClassName='active'
                 onDrop={acceptedFiles => {
                   if (acceptedFiles.length) {
