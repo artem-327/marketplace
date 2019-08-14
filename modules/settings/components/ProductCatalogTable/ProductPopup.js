@@ -76,9 +76,8 @@ const formValidation = Yup.object().shape({
     .required(errorMessages.requiredMessage),
   nmfcNumber: Yup.number()
     .typeError(errorMessages.mustBeNumber)
-    .nullable()
     .required(errorMessages.requiredMessage)
-    .test('len', errorMessages.exactLength(5), val => val.toString().length === 5),
+    .test('len', errorMessages.exactLength(5), val => getSafe(() => val.toString().length, 0) === 5),
   casProducts: Yup.array().of(Yup.object().uniqueProperty('casProduct', errorMessages.unique('CAS Product')).shape({
     casProduct: Yup.number().nullable().typeError(errorMessages.invalidString),
     minimumConcentration: Yup.number().nullable().min(0).max(100),
@@ -251,14 +250,12 @@ class ProductPopup extends React.Component {
       casProducts: [{ casProduct: undefined, minimumConcentration: 100, maximumConcentration: 100 }],
       description: '',
       freightClass: null,
-      hazardClass: null,
+      hazardClass: [],
       hazardous: false,
-      nmfcNumber: null,
+      nmfcNumber: undefined,
       productName: '',
       productCode: '',
-      packagingSize: '',
       packagingGroup: null,
-      packagingType: '',
       stackable: false,
       nonHap: null,
       vocExempt: null,
@@ -266,7 +263,10 @@ class ProductPopup extends React.Component {
       saferChoice: null,
       packagingUnit: '',
       expirationDate: '',
-      ...popupValues
+      ...popupValues,
+      packagingSize: getSafe(() => popupValues.packagingSize, 'N/A') === 'N/A' ? undefined : popupValues.packagingSize,
+      packagingType: getSafe(() => popupValues.packagingType, 'N/A') === 'N/A' ? undefined : popupValues.packagingType,
+      unit: getSafe(() => popupValues.unit, 'N/A') === 'N/A' ? undefined : popupValues.unit
     }
     if (initialValues.casProducts.length === 0) {
       initialValues.casProducts = [{ casProduct: undefined, minimumConcentration: 100, maximumConcentration: 100 }]
