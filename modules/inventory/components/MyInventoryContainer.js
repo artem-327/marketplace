@@ -24,7 +24,7 @@ const transformLotNumbers = lots => {
         <Popup
           data-test='my_inventory_lot_number_btn'
           content={<List items={onMouseoverTest} />}
-          trigger={<Label><FormattedMessage id='myInventory.multiple' defaultMessage='Multiple' /></Label>}
+          trigger={<Label><FormattedMessage id='global.multiple' defaultMessage='Multiple' /></Label>}
         />
       </div>
     )
@@ -36,7 +36,6 @@ const transformLotNumbers = lots => {
 
 function mapStateToProps(store, { datagrid }) {
 
-  //console.log('!!!!!!!! datagrid.rows', datagrid.rows);
   return {
     ...store.simpleAdd,
     appliedFilter: store.filter.filter.appliedFilter,
@@ -63,13 +62,12 @@ function mapStateToProps(store, { datagrid }) {
         pricingTiers: po.pricingTiers,
         pricing: po.pricing,
         fobPrice: po.pricingTiers.length > 1
-          ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price} /> -  <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price} /> {qtyPart && (`/ ${qtyPart}`)} </>
+          ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price} /> - <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price} /> {qtyPart && (`/ ${qtyPart}`)} </>
           : <> <FormattedNumber style='currency' currency={currency} value={po.pricing.price} /> {qtyPart && (`/ ${qtyPart}`)} </>,
         manufacturer: getSafe(() => po.manufacturer.name, 'N/A'),
         broadcasted: po.broadcasted,
         lotNumber: transformLotNumbers(po.lots),
         status: po.status,// new broadcasted
-
         minOrderQuantity: getSafe(() => po.minimum, ''),
         splits: getSafe(() => po.splits, ''),
         condition: getSafe(() => po.productCondition.name, ''),

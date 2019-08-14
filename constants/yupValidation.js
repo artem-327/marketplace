@@ -28,7 +28,8 @@ export const errorMessages = {
   minimum: (min) => <FormattedMessage id='validation.minimum' values={{ min }} />,
   maximum: (max) => <FormattedMessage id='validation.maximum' values={{ max }} />,
   minUpToMax: <FormattedMessage id='validation.minUpToMax' defaultMessage='Min value should be less or equal to Max value' />,
-  maxAtLeastMin: <FormattedMessage id='validation.maxAtLeastMin' defaultMessage='Max value should be greater or equal to Min value' />
+  maxAtLeastMin: <FormattedMessage id='validation.maxAtLeastMin' defaultMessage='Max value should be greater or equal to Min value' />,
+  integer: <FormattedMessage id='validation.integer' defaultMessage='Number value should be integer' />,
 }
 
 export const provinceObjectRequired = (hasProvinces) => (

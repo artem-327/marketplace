@@ -162,11 +162,11 @@ const validationScheme = val.object().shape({
   product: val.string().required(errorMessages.requiredMessage),
   processingTimeDays: val.number().required(errorMessages.requiredMessage),
   doesExpire: val.bool(),
-  pkgAmount: val.number().typeError(errorMessages.mustBeNumber).nullable().moreThan(0, errorMessages.greaterThan(0)).required(errorMessages.requiredMessage),
+  pkgAmount: val.number().typeError(errorMessages.mustBeNumber).nullable().moreThan(0, errorMessages.greaterThan(0)).required(errorMessages.requiredMessage).integer(errorMessages.integer),
   validityDate: val.string().matches(/[0-9]{4}\-[0-9]{2}\-[0-9]{2}/, { message: errorMessages.invalidDate }),
   lots: val.array().of(val.object().uniqueProperty('lotNumber', errorMessages.lotUnique).shape({
     lotNumber: val.string().nullable().required(errorMessages.requiredMessage),
-    pkgAmount: val.number().nullable().moreThan(0, errorMessages.greaterThan(0)).required(errorMessages.requiredMessage),
+    pkgAmount: val.number().nullable().moreThan(0, errorMessages.greaterThan(0)).required(errorMessages.requiredMessage).integer(errorMessages.integer),
     manufacturedDate: val.string().nullable().matches(/^([0-9]{4}\-[0-9]{2}\-[0-9]{2})?$/, { message: errorMessages.invalidDate }),
     expirationDate: val.string().nullable().matches(/^([0-9]{4}\-[0-9]{2}\-[0-9]{2})?$/, { message: errorMessages.invalidDate }).minDateComparedTo('manufacturedDate', 'Date has to be larger than MFG Date')
   })).nullable(),
@@ -1096,7 +1096,7 @@ class AddInventoryForm extends Component {
                                 <FormField width={10} data-test='add_inventory_product_totalPackages_inp' >
                                   <Input
                                     label={formatMessage({ id: 'addInventory.totalPackages', defaultMessage: 'Total Packages' })}
-                                    inputProps={{ type: 'number', min: 1 }}
+                                    inputProps={{ type: 'number', min: '1', step: '1' }}
                                     name='pkgAmount' />
                                 </FormField>
                               </FormGroup>
@@ -1135,7 +1135,7 @@ class AddInventoryForm extends Component {
                                           name='minimumRequirement'
                                           inputProps={{
                                             onClick: () => {
-                                              //setFieldValue('minimum', 1)
+                                              setFieldValue('minimum', values.splits)
                                               //setFieldValue('pricingTiers[0].quantityFrom', 1)
                                             }
                                           }}
@@ -1527,6 +1527,9 @@ class AddInventoryForm extends Component {
                                           <Table.Row key={index}>
                                             <TableCellBig data-test={`add_inventory_product_lotNumber_${index}_inp`} ><Input name={`lots[${index}].lotNumber`} inputProps={{ onClick: () => setFieldValue('touchedLot', true) }} /></TableCellBig>
                                             <TableCellSmall data-test={`add_inventory_product_pkgAmount_${index}_inp`} ><Input name={`lots[${index}].pkgAmount`} inputProps={{
+                                              type: 'number',
+                                              min: '1',
+                                              step: '1',
                                               onClick: () => setFieldValue('touchedLot', true),
                                               onChange: (e, data) => this.modifyCosts(setFieldValue, {
                                                 costs: values.costs,
@@ -1536,7 +1539,7 @@ class AddInventoryForm extends Component {
                                                   }
                                                 }),
                                                 packagingSize: values.product.packagingSize
-                                              })
+                                              }),
                                             }} /></TableCellSmall>
                                             <TableCellSmall>0</TableCellSmall>
                                             <TableCellSmall>0</TableCellSmall>

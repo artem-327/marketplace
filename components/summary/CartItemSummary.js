@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { array, string, func } from 'prop-types'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
-import { Grid, GridRow, GridColumn, Header, Divider, Segment, Icon } from 'semantic-ui-react'
+import {Grid, GridRow, GridColumn, Header, Divider, Segment, Icon, Popup, List, Label} from 'semantic-ui-react'
 
 import './styles.scss'
 import { RelaxedRow, HeaderTextRow, WiderPopup, CustomSpan, CustomHeader } from './styledComponents'
@@ -104,6 +104,26 @@ class CartItemSummary extends Component {
 
   }
 
+  casArrayToMultiple = (obj)=> {
+    if (!obj || obj.length === 0) return <div></div>
+    if (obj.length > 1) {
+      let onMouseoverText = obj.map(d => (d.casProduct.casNumber + ' / ' + d.casProduct.chemicalName))
+      return (
+        <div>
+          <Popup
+            wide='very'
+            data-test='add_cart_product_info_onMouseoverText'
+            content={<List items={onMouseoverText} />}
+            trigger={<Label><FormattedMessage id='global.multiple' defaultMessage='Multiple' /></Label>}
+          />
+        </div>
+      )
+    }
+    else {
+      return <div> {obj[0].casProduct.casNumber + ' / ' + obj[0].casProduct.chemicalName} </div>
+    }
+  }
+
   renderItem = ({ item, lastChild }) => {
     let { productOffer } = item
     let { deleteCart, currency } = this.props
@@ -114,9 +134,7 @@ class CartItemSummary extends Component {
           <Grid columns={2} className='light-gray cart-item-summary'>
             <HeaderTextRow>
               <GridColumn>
-                {productOffer.product.casProducts.length ? productOffer.product.casProducts.map(cp => {
-                  return cp.casProduct.casIndexName
-                }).join(' & ') : ('Unmapped' + ' ' + productOffer.product.productName)}
+                {productOffer.product.productCode + ' ' + productOffer.product.productName}
               </GridColumn>
 
               <GridColumn floated='right'>
@@ -132,6 +150,18 @@ class CartItemSummary extends Component {
               </GridColumn>
             </HeaderTextRow>
 
+            <RelaxedRow >
+              <GridColumn>
+                <FormattedMessage
+                  id='global.CASChemicalName'
+                  defaultMessage='CAS # / Chemical name'
+                />
+              </GridColumn>
+
+              <GridColumn floated='right'>
+                {this.casArrayToMultiple(productOffer.product.casProducts)}
+              </GridColumn>
+            </RelaxedRow>
 
             <RelaxedRow >
               <GridColumn>

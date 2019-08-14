@@ -13,6 +13,7 @@ import styled from 'styled-components'
 import { FormattedMessage } from 'react-intl'
 import { checkToken } from '../../../utils/auth'
 import { Container, Menu, Header, Button, Icon } from 'semantic-ui-react'
+import { Label, Popup, List } from 'semantic-ui-react'
 import Router from 'next/router'
 
 
@@ -46,6 +47,26 @@ export default class ShoppingCart extends Component {
     this.props.sidebarChanged({ isOpen: true, id, quantity })
   }
 
+  casArrayToMultiple = (obj)=> {
+    if (!obj || obj.length === 0) return <div></div>
+    if (obj.length > 1) {
+      let onMouseoverText = obj.map(d => (d.casProduct.casNumber + ' ' + d.casProduct.chemicalName))
+      return (
+        <div>
+          <Popup
+            wide='very'
+            data-test='add_cart_product_info_onMouseoverText'
+            content={<List items={onMouseoverText} />}
+            trigger={<Label><FormattedMessage id='global.multiple' defaultMessage='Multiple' /></Label>}
+          />
+        </div>
+      )
+    }
+    else {
+      return <div> {obj[0].casProduct.casNumber + ' ' + obj[0].casProduct.chemicalName} </div>
+    }
+  }
+
   render() {
     const { cart, deleteCartItem, history, cartIsFetching, sidebarChanged } = this.props
     let { cartItems, totalPrice } = cart
@@ -62,6 +83,7 @@ export default class ShoppingCart extends Component {
             key={cartItem.id}
             cartItem={cartItem}
             deleteCartItem={deleteCartItem}
+            casNumberChemName={this.casArrayToMultiple(cartItem.productOffer.product.casProducts)}
           />
         </>
       )

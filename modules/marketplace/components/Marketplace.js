@@ -22,7 +22,7 @@ class Marketplace extends Component {
       { name: 'productName', disabled: true },
       { name: 'productNumber', disabled: true },
       // { name: 'merchant', title: 'Merchant', width: 250 },
-      { name: 'available', title: <FormattedMessage id='marketplace.available' defaultMessage='Available PKGs' />, width: 80 },
+      { name: 'available', title: <FormattedMessage id='marketplace.available' defaultMessage='Available PKGs' />, width: 140 },
       { name: 'packaging', title: <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging' />, width: 140 },
       { name: 'quantity', title: <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity' />, width: 140 },
       { name: 'fobPrice', title: <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price' />, width: 160 },
