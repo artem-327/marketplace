@@ -36,7 +36,7 @@ function mapStateToProps(store, { datagrid }) {
         quantity: qtyPart ? <FormattedUnit unit={qtyPart} separator=' ' value={po.pkgAmount * po.product.packagingSize} /> : 'N/A',
         // qtyPart ? `${(parseInt(po.pkgAmount, 10) * parseInt(po.product.packagingSize, 10)).formatNumber()} ${qtyPart}` : 'N/A',
         fobPrice: po.pricingTiers.length > 1
-          ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price} /> -  <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price} /> {qtyPart && (`/ ${qtyPart}`)} </>
+          ? <> <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[po.pricingTiers.length - 1].price} /> -  <FormattedNumber style='currency' currency={currency} value={po.pricingTiers[0].price} /> {qtyPart && (`/ ${qtyPart}`)} </>
           : <> <FormattedNumber style='currency' currency={currency} value={po.pricing.price} /> {qtyPart && (`/ ${qtyPart}`)} </>,
         // fobPrice: po.pricingTiers.length > 1 ?
         //   ('$' + po.pricingTiers[po.pricingTiers.length - 1].price.formatMoney(3)

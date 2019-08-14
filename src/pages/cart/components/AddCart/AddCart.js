@@ -209,7 +209,7 @@ export default class AddCart extends Component {
 
             <GridRow>
               <GridColumn computer={6}>
-                CAS Number(s):
+                CAS Number:
               </GridColumn>
               <GridColumn computer={10}>
                 {this.props.casProductsCasNumbers}

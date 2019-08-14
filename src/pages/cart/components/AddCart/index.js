@@ -19,7 +19,7 @@ const arrayToMultiple = (obj, field )=> {
           <Popup
             data-test='add_cart_product_info_onMouseoverText'
             content={<List items={onMouseoverText} />}
-            trigger={<Label><FormattedMessage id='myInventory.multiple' defaultMessage='Multiple' /></Label>}
+            trigger={<Label><FormattedMessage id='global.multiple' defaultMessage='Multiple' /></Label>}
           />
         </div>
       )

@@ -7,12 +7,13 @@ export default class FormattedDateTime extends Component {
   render() {
     let { dateTime, separator } = this.props
 
-    let [date] = dateTime.split(separator)
-
     return (
+      dateTime ? (
       <>
-        <FormattedDate value={date} /> <FormattedTime value={new Date(dateTime)} />
+        <FormattedDate value={dateTime.split(separator)[0]} /> <FormattedTime value={new Date(dateTime)} />
       </>
+      ) : null
+
     )
   }
 }

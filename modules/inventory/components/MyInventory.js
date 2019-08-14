@@ -21,7 +21,7 @@ class MyInventory extends Component {
       { name: 'productNumber', title: <FormattedMessage id='myInventory.productNumber' defaultMessage='Product Number' />, width: 160 },
       { name: 'casNumberCombined', title: <FormattedMessage id='myInventory.casNumber' defaultMessage='CAS Number(s)' /> },
       { name: 'warehouse', title: <FormattedMessage id='myInventory.warehouse' defaultMessage='Warehouse' />, width: 180, sortPath: 'ProductOffer.warehouse.warehouse' },
-      { name: 'available', title: <FormattedMessage id='myInventory.available' defaultMessage='Available PKGs' />, width: 80, sortPath: 'ProductOffer.quantity' },
+      { name: 'available', title: <FormattedMessage id='myInventory.available' defaultMessage='Available PKGs' />, width: 120, sortPath: 'ProductOffer.quantity' },
       { name: 'packaging', title: <FormattedMessage id='myInventory.packaging' defaultMessage='Packaging' />, sortPath: 'ProductOffer.product.packagingType.name' },
       { name: 'pkgAmount', title: <FormattedMessage id='myInventory.pkgSize' defaultMessage='Pkg. Size' />, sortPath: 'ProductOffer.pkgAmount' },
       { name: 'quantity', title: <FormattedMessage id='myInventory.quantity' defaultMessage='Quantity' /> },

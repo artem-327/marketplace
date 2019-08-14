@@ -8,7 +8,7 @@ import { FormattedUnit } from '~/components/formatted-messages'
 
 export default class ItemCartBody extends Component {
   render() {
-    let { cartItem, deleteCartItem } = this.props
+    let { cartItem, deleteCartItem, casNumberChemName } = this.props
     let { productOffer } = cartItem
 
     let unitName = productOffer.product.packagingUnit.nameAbbreviation
@@ -17,8 +17,13 @@ export default class ItemCartBody extends Component {
       <div className='item-cart'>
         <div className='item-cart-body'>
           <div className='item-cart-body-section'>
+
             <div className='item-cart-body-section-name'>
-              {(productOffer.product.casProducts.length ? productOffer.product.casNumberCombined : 'Unmapped') + ' ' + productOffer.product.productName}
+              {productOffer.product.productCode + ' ' + productOffer.product.productName}
+            </div>
+
+            <div className='item-cart-body-section-name'>
+              {casNumberChemName}
             </div>
             <div>
               {/* <FormattedMessage
@@ -118,5 +123,6 @@ export default class ItemCartBody extends Component {
 ItemCartBody.propTypes = {
   cartItem: object,
   editCart: func,
-  deleteCartItem: func
+  deleteCartItem: func,
+  casNumberChemName: object
 }
