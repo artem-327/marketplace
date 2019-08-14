@@ -87,7 +87,7 @@ export default {
   postNewProduct: (body) => api.post('/prodex/api/products', body),
   updateProduct: (id, body) => api.put(`/prodex/api/products/id/${id}`, body),
 
-  postNewDwollaAccount: async body => { return await api.post('/prodex/api/payments/dwolla/register', body) },
+  postNewDwollaAccount: body => api.post('/prodex/api/payments/dwolla/register', body),
 
   postImportProductCSV: (body, id) => {
     return api
