@@ -5,6 +5,8 @@ import { Grid, Segment, Accordion, Table, List, Label, Button, Icon, Divider, He
 import { FormattedMessage } from 'react-intl'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from 'styled-components'
+import ActionsRequired from './components/ActionsRequired'
+import AssignLots from './components/AssignLots'
 
 const AccordionTitle = styled(Accordion.Title)`
   text-transform: uppercase;
@@ -70,6 +72,10 @@ class Detail extends Component {
     }
   }
 
+  openAssignLots = (order) => {
+    this.props.openAssignLots()
+  }
+
   downloadOrder = async () => {
     let endpointType = this.props.router.query.type === 'sales' ? 'sale' : this.props.router.query.type
     let pdf = await this.props.downloadPdf(endpointType, this.props.order.id)
@@ -94,7 +100,7 @@ class Detail extends Component {
   }
 
   render() {
-    const { router, order, action, isDetailFetching } = this.props
+    const { router, order, action, isDetailFetching, openedAssignLots } = this.props
     const { activeIndexes } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
 
@@ -158,33 +164,8 @@ class Detail extends Component {
           </Grid>
           {isDetailFetching ? <Spinner /> : (
             <>
-              {action && (ordersType === 'Sales') ? /* This action is not prepared for Purchase Orders yet! */ (
-                <Segment color='blue' style={{ marginLeft: '32px', marginRight: '32px' }}>
-                  <Grid verticalAlign='middle' columns='equal'>
-                    <Grid.Column width={13}>
-                      <Header as='h3' style={{ margin: '0 0 0.3571429rem' }}>
-                        <FormattedMessage id='order.actionRequired' defaultMessage='Action Required' />
-                      </Header>
-                      <FormattedMessage id='order.confirm.description' defaultMessage='This order is in pending status. Please select accept to move forward with the order. If you press reject the order will be cancelled.' />
-                    </Grid.Column>
-                    <Grid.Column>
-                      <Grid verticalAlign='middle' columns='equal'>
-                        <Grid.Column>
-                          <Button primary fluid size='large' value={order.id} onClick={() => this.props.confirmOrder(order.id)} data-test='orders_detail_accept_btn' >
-                            <FormattedMessage id='global.accept' defaultMessage='Accept' />
-                          </Button>
-                        </Grid.Column>
-                        <Grid.Column>
-                          <Button basic fluid size='large' value={order.id} onClick={() => this.props.rejectOrder(order.id)} data-test='orders_detail_decline_btn' >
-                            <FormattedMessage id='global.decline' defaultMessage='Decline' />
-                          </Button>
-                        </Grid.Column>
-                      </Grid>
-                    </Grid.Column>
-                  </Grid>
-                </Segment>
-              ) : null}
-
+              <ActionsRequired order={order} ordersType={ordersType} />
+              {openedAssignLots ? <AssignLots /> : null}
               <Divider hidden />
               <Accordion defaultActiveIndex={[0, 1]} styled fluid style={{ width: 'calc(100% - 64px)', margin: '0 32px' }}>
                 <AccordionTitle active={activeIndexes[0]} index={0} onClick={this.handleClick} data-test='orders_detail_order_info'>

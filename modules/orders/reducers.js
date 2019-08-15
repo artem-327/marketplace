@@ -12,7 +12,8 @@ const initialState = {
     reloadPage: false,
     selectedIndex: -1,
     statusFilter: null,
-    searchedCompanies: []
+    searchedCompanies: [],
+    openedAssignLots: false
 }
 
 export default function(state = initialState, action) {
@@ -102,6 +103,34 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 searchedCompanies: action.payload.data
+            }
+        case AT.ORDER_OPEN_ASSIGN_LOTS:
+            return {
+              ...state,
+              openedAssignLots: true
+            }
+        case AT.ORDER_CLOSE_ASSIGN_LOTS:
+            return {
+                ...state,
+                openedAssignLots: false
+            }
+        case AT.ORDER_GET_LOTS_FULFILLED:
+            return {
+                ...state,
+                detail: {
+                    ...state.detail,
+                    lots: action.payload.data.lots.map(lot => {
+                        return {
+                            lotNumber: lot.lotNumber,
+                            total: lot.originalPkgAmount,
+                            available: lot.pkgAmount,
+                            allocated: 0,
+                            mfgDate: lot.manufacturedDate,
+                            expirationDate: lot.expirationDate,
+                            cOfA: ''
+                        }
+                    })
+                }
             }
         default:
             return state
