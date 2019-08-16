@@ -82,6 +82,8 @@ const initValues = {
   ],
   product: '',
   processingTimeDays: 1,
+  processingTimeDW: 1,
+  processingTimeNum: 1,
   splits: 1,
   touchedLot: false,
   trackSubCosts: true,
@@ -242,25 +244,13 @@ class AddInventoryForm extends Component {
   getProcessingTimes = () => {
     let processingTimes = []
 
-    for (let i = 1; i <= 13; i++) {
+    for (let i = 1; i <= 10; i++) {
       processingTimes.push({
         value: i,
         key: i,
-        text: i + ' Day' + (i > 1 ? 's' : '')
+        text: i
       })
     }
-
-    processingTimes.splice(6,1)     // remove 7 days, will add 1 week
-
-    for (let i = 1; i <= 10; i++) {
-      processingTimes.push({
-        value: i*7,
-        key: i*7,
-        text: i + ' Week' + (i > 1 ? 's' : '')
-      })
-    }
-    processingTimes.sort(function(a, b){return a.value - b.value})
-
     return processingTimes
   }
 
@@ -1025,9 +1015,27 @@ class AddInventoryForm extends Component {
                               </Header>
                               <FormGroup>
                                 <FormField width={10}>
-                                  <Dropdown label='Processing Time' name='processingTimeDays' options={this.getProcessingTimes()}
-                                            inputProps={{ 'data-test': 'new_inventory_processing_time_drpdn' }}
-                                  />
+                                  <Grid>
+                                    <GridRow>
+                                      <GridColumn computer={8} tablet={16}>
+
+
+                                    <Dropdown label='Processing Time' name='processingTimeNum' options={this.getProcessingTimes()}
+                                              inputProps={{
+                                                'data-test': 'new_inventory_processing_time_days_weeks_drpdn',
+                                                onChange: (e, {value}) => {setFieldValue(`processingTimeDays`, value * values.processingTimeDW)
+                                                }}}
+                                    />
+                                      </GridColumn>
+                                      <GridColumn computer={8} tablet={16}>
+                                    <Dropdown label='Days / Weeks' name='processingTimeDW' options={[{value: 1, key: 1, text: 'Days'}, {value: 5, key: 5, text: 'Weeks'}]}
+                                              inputProps={{ 'data-test': 'new_inventory_processing_time_value_drpdn',
+                                                onChange: (e, {value}) => {setFieldValue(`processingTimeDays`, values.processingTimeNum * value)
+                                                }}}
+                                    />
+                                      </GridColumn>
+                                    </GridRow>
+                                  </Grid>
                                 </FormField>
                               </FormGroup>
 

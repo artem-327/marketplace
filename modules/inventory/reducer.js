@@ -153,6 +153,8 @@ export default function reducer(state = initialState, action) {
         }]
       }
 
+      let days = 1  // ! ! temporary (missing data from BE)
+
       return {
         ...state,
         ...action.payload.data,
@@ -205,7 +207,9 @@ export default function reducer(state = initialState, action) {
               manuallyModified: 1
             }
           }),
-          processingTimeDays: 1,
+          processingTimeDays: days,
+          processingTimeDW: days % 5 ? 1 : 5,
+          processingTimeNum: days % 5 ? days : days / 5,
           product: data.product,
           productCondition: data.productCondition ? data.productCondition.id : null,
           productForm: data.productForm ? data.productForm.id : null,
