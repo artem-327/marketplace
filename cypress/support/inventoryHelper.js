@@ -12,41 +12,8 @@ Cypress.Commands.add("selectChemical", (chemical) => {
     cy.get('div[role=option]').eq(0).click({force: true})
 })
 
-Cypress.Commands.add("selectFromDropdown", (selector,value) => {
-    cy.get(selector)
-        .children("input")
-        .type(value)
-        .should("have.value",value)
-
-    cy.wait(1000)
-    cy.get("div[class='selected item']").eq(0).click({force: true})
-})
-
-Cypress.Commands.add("setNumberInput", (selector,number) => {
-    cy.get(selector)
-        .scrollIntoView()
-        .clear()
-        .type(number)
-        .should("have.value",number)
-})
-
-Cypress.Commands.add("enterText", (selector,text) => {
-    cy.get(selector)
-        .type(text)
-        .should("have.value",text)
-})
-
 Cypress.Commands.add("assertProductDetail", (index,value) => {
     cy.get(".data-grid")
         .children()
         .eq(index).contains(value)
-})
-
-Cypress.Commands.add("clickSave", () => {
-    cy.get("button[class='ui primary button']").click({force: true})
-    cy.wait(1000)
-})
-
-Cypress.Commands.add("clickAdd", () => {
-    cy.get("button[class='ui large primary button']").click({force: true})
 })

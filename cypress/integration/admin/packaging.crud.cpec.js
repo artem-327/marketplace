@@ -21,9 +21,7 @@ context("Units of packaging CRUD", () => {
     it("Creates a package unit", () => {
         cy.clickAdd()
 
-        cy.get("#field_input_val0")
-            .type("Test package")
-            .should("have.value","Test package")
+        cy.enterText("#field_input_val0","Test package")
 
         cy.get("#field_dropdown_val1").click()
         cy.get("#2").click()
@@ -49,7 +47,6 @@ context("Units of packaging CRUD", () => {
 
     it("Edits a package unit", () => {
         cy.get('[data-test=action_' + packageId + ']').click()
-
         cy.get('[data-test=action_' + packageId + '_0]').click()
 
         cy.get("#field_input_val0")

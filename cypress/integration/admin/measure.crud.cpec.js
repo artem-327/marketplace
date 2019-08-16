@@ -19,13 +19,8 @@ context("Units of measure CRUD", () => {
     it("Creates an unit of measure", () => {
         cy.clickAdd()
 
-        cy.get("#field_input_val0")
-            .type("Test measure")
-            .should("have.value","Test measure")
-
-        cy.get("#field_input_val1")
-            .type("tmr")
-            .should("have.value","tmr")
+        cy.enterText("#field_input_val0","Test measure")
+        cy.enterText("#field_input_val1","tmr")
 
         cy.get("#field_dropdown_val2").click()
         cy.get("#2").click()
@@ -80,7 +75,7 @@ context("Units of measure CRUD", () => {
     })
 
     it("Deletes an unit of measure", () => {
-        cy.get("input[type=text]").type("Test")
+        cy.searchInList("Test")
 
         cy.waitForUI()
 

@@ -16,14 +16,18 @@ context("Document types CRUD", () => {
         cy.get('[data-test="tabs_menu_item_9"]').click()
 
         cy.wait('@documents')
+        cy.waitForUI()
+
+        cy.reload()
+        cy.get('[data-test="tabs_menu_item_9"]').click()
+
+        cy.wait('@documents')
     })
 
     it("Creates a document type", () => {
         cy.clickAdd()
 
-        cy.get("#field_input_val0")
-            .type("Test document")
-            .should("have.value","Test document")
+        cy.enterText("#field_input_val0","Test document")
 
         cy.clickSave()
 
@@ -56,6 +60,7 @@ context("Document types CRUD", () => {
         cy.clickSave()
 
         cy.contains("Updated Document Type")
+        cy.waitForUI()
 
         cy.get('[data-test=action_' + documentId + ']').click()
         cy.get('[data-test=action_' + documentId + '_0]').click()

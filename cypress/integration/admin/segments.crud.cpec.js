@@ -21,9 +21,7 @@ context("Market Segments CRUD", () => {
     it("Creates a market segment", () => {
         cy.clickAdd()
 
-        cy.get("#field_input_val0")
-            .type("Test segment")
-            .should("have.value","Test segment")
+        cy.enterText("#field_input_val0","Test segment")
 
         cy.clickSave()
 
@@ -49,7 +47,6 @@ context("Market Segments CRUD", () => {
         cy.get("input[type=text]").type("Test")
 
         cy.get('[data-test=action_' + documentId + ']').click()
-
         cy.get('[data-test=action_' + documentId + '_0]').click()
 
         cy.get("#field_input_val0")
@@ -86,7 +83,7 @@ context("Market Segments CRUD", () => {
     })
 
     it("Deletes a market segment", () => {
-        cy.get("input[type=text]").type("Great")
+        cy.searchInList("Great")
 
         cy.get('[data-test=action_' + documentId + ']').click()
         cy.get('[data-test=action_' + documentId + '_1]').click()

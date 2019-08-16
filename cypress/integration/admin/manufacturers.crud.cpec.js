@@ -21,9 +21,7 @@ context("Manufacturers CRUD", () => {
     it("Creates a manufacturer", () => {
         cy.clickAdd()
 
-        cy.get("#field_input_val0")
-            .type("Test manufacturer")
-            .should("have.value","Test manufacturer")
+        cy.enterText("#field_input_val0","Test manufacturer")
 
         cy.clickSave()
 
@@ -86,7 +84,7 @@ context("Manufacturers CRUD", () => {
     })
 
     it("Deletes a market segment", () => {
-        cy.get("input[type=text]").type("Artio")
+        cy.searchInList("Artio")
 
         cy.get('[data-test=action_' + manufacturerId + ']').click()
         cy.get('[data-test=action_' + manufacturerId + '_1]').click()

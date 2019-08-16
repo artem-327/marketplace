@@ -24,17 +24,9 @@ context("Prodex User CRUD", () => {
     it("Creates a user", () => {
         cy.clickAdd()
 
-        cy.get("#field_input_name")
-            .type("John Automator")
-            .should("have.value", "John Automator")
-
-        cy.get("#field_input_jobTitle")
-            .type("Automatior")
-            .should("have.value", "Automatior")
-
-        cy.get("#field_input_email")
-            .type("automation@example.com")
-            .should("have.value", "automation@example.com")
+        cy.enterText("#field_input_name", "John Automator")
+        cy.enterText("#field_input_jobTitle", "Automatior")
+        cy.enterText("#field_input_email", "automation@example.com")
 
         cy.get("#field_dropdown_homeBranch").click()
         cy.waitForUI()
@@ -78,7 +70,6 @@ context("Prodex User CRUD", () => {
         cy.waitForUI()
 
         cy.get('[data-test=action_' + userID + ']').click()
-
         cy.get('[data-test=action_' + userID + '_0]').click()
 
         cy.get("#field_input_name")
@@ -100,7 +91,6 @@ context("Prodex User CRUD", () => {
         cy.waitForUI()
 
         cy.get('[data-test=action_' + userID + ']').click()
-
         cy.get('[data-test=action_' + userID + '_1]').click()
 
         cy.get("#field_checkbox_roles_3")
@@ -112,7 +102,6 @@ context("Prodex User CRUD", () => {
         cy.waitForUI()
 
         cy.get('[data-test=action_' + userID + ']').click()
-
         cy.get('[data-test=action_' + userID + '_1]').click()
 
         cy.get("#field_checkbox_roles_3")
@@ -135,7 +124,6 @@ context("Prodex User CRUD", () => {
         cy.waitForUI()
 
         cy.get('[data-test=action_' + userID + ']').click()
-
         cy.get('[data-test=action_' + userID + '_2]').click()
 
         cy.clickSave()

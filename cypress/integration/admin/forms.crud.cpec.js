@@ -21,9 +21,7 @@ context("Form CRUD", () => {
     it("Creates a form", () => {
         cy.clickAdd()
 
-        cy.get("#field_input_val0")
-            .type("Liquor")
-            .should("have.value","Liquor")
+        cy.enterText("#field_input_val0","Liquor")
 
         cy.clickSave()
 
@@ -45,7 +43,6 @@ context("Form CRUD", () => {
 
     it("Edits a form", () => {
         cy.get('[data-test=action_' + formId + ']').click()
-
         cy.get('[data-test=action_' + formId + '_0]').click()
 
         cy.get("#field_input_val0")

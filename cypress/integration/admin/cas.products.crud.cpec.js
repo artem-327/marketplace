@@ -15,17 +15,9 @@ context("CAS products CRUD", () => {
     it("Creates a CAS product", () => {
         cy.get("button[class='ui large primary button']").eq(0).click({force: true})
 
-        cy.get("#field_input_casIndexName")
-            .type("testinonium")
-            .should("have.value", "testinonium")
-
-        cy.get("#field_input_casNumber")
-            .type("100-95")
-            .should("have.value", "100-95")
-
-        cy.get("#field_input_chemicalName")
-            .type("Testinonium")
-            .should("have.value", "Testinonium")
+        cy.enterText("#field_input_casIndexName", "testinonium")
+        cy.enterText("#field_input_casNumber", "100-95")
+        cy.enterText("#field_input_chemicalName", "Testinonium")
 
         cy.get("#field_dropdown_hazardClassesId").click()
         cy.get("#field_dropdown_hazardClassesId").within(() => {
@@ -120,7 +112,6 @@ context("CAS products CRUD", () => {
         cy.waitForUI()
 
         cy.get('[data-test=action_' + productId + ']').click()
-
         cy.get('[data-test=action_' + productId + '_1]').click()
 
         cy.wait("@nameGetting")
@@ -139,7 +130,6 @@ context("CAS products CRUD", () => {
             .type("Testerium")
 
         cy.get('[data-test=action_' + productId + ']').click()
-
         cy.get('[data-test=action_' + productId + '_1]').click()
 
         cy.get("input[id='field_input_casAlternativeNames[0].alternativeName']")
@@ -157,7 +147,6 @@ context("CAS products CRUD", () => {
         cy.waitForUI()
 
         cy.get('[data-test=action_' + productId + ']').click()
-
         cy.get('[data-test=action_' + productId + '_1]').click()
 
         cy.wait("@nameGetting")

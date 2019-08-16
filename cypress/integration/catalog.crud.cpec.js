@@ -22,17 +22,9 @@ context("Prodex Product Catalog CRUD", () => {
     it("Creates a product", () => {
         cy.get("button[class='ui large primary button']").eq(0).click({force: true})
 
-        cy.get("#field_input_productName")
-            .type("Bondonium")
-            .should("have.value", "Bondonium")
-
-        cy.get("#field_input_productCode")
-            .type("007B")
-            .should("have.value", "007B")
-
-        cy.get("#field_input_packagingSize")
-            .type("1")
-            .should("have.value", "1")
+        cy.enterText("#field_input_productName", "Bondonium")
+        cy.enterText("#field_input_productCode", "007B")
+        cy.enterText("#field_input_packagingSize", "1")
 
         cy.get("#field_dropdown_packagingUnit").click()
         cy.get("#field_dropdown_packagingUnit").within(() => {
@@ -44,9 +36,7 @@ context("Prodex Product Catalog CRUD", () => {
             cy.contains("Steel drums").click()
         })
 
-        cy.get("#field_input_nmfcNumber")
-            .type("79547")
-            .should("have.value", "79547")
+        cy.enterText("#field_input_nmfcNumber", "79547")
 
         cy.get("#field_dropdown_hazardClass").click()
         cy.get("#field_dropdown_hazardClass").within(() => {
@@ -90,7 +80,6 @@ context("Prodex Product Catalog CRUD", () => {
 
     it("Edits a product", () => {
         cy.get('[data-test=action_' + productId + ']').click()
-
         cy.get('[data-test=action_' + productId + '_0]').click()
 
         cy.get("#field_input_productName")
@@ -101,7 +90,6 @@ context("Prodex Product Catalog CRUD", () => {
         cy.clickSave()
 
         cy.get('[data-test=action_' + productId + ']').click()
-
         cy.get('[data-test=action_' + productId + '_0]').click()
 
         cy.get("#field_input_productName")
@@ -113,15 +101,12 @@ context("Prodex Product Catalog CRUD", () => {
         cy.route("GET", "/prodex/api/products/trade-names/***").as("nameGetting")
 
         cy.get('[data-test=action_' + productId + ']').click()
-
         cy.get('[data-test=action_' + productId + '_1]').click()
 
         cy.get("button[class='ui blue small icon right floated button']")
             .click()
 
-        cy.get("input[id='field_input_productAltNames[0].tradeName']")
-            .type("007onium")
-            .should("have.value","007onium")
+        cy.enterText("input[id='field_input_productAltNames[0].tradeName']","007onium")
 
         cy.get("i[class='green save outline large icon']").click()
 
@@ -132,7 +117,6 @@ context("Prodex Product Catalog CRUD", () => {
         cy.waitForUI()
 
         cy.get('[data-test=action_' + productId + ']').click()
-
         cy.get('[data-test=action_' + productId + '_1]').click()
 
         cy.wait("@nameGetting")

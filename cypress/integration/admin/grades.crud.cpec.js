@@ -21,9 +21,7 @@ context("Grades CRUD", () => {
     it("Creates a grade", () => {
         cy.clickAdd()
 
-        cy.get("#field_input_val0")
-            .type("Test grade")
-            .should("have.value","Test grade")
+        cy.enterText("#field_input_val0","Test grade")
 
         cy.clickSave()
 

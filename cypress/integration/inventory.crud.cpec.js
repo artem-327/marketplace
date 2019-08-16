@@ -26,10 +26,9 @@ context("Inventory CRUD",() => {
 		cy.get("div[name='Test 2']").first().click()
 
         cy.setNumberInput("#field_input_pkgAmount","5")
-
         cy.setNumberInput("input[name='pricingTiers[0].price']","5")
 
-		cy.contains("Add Product Offer").click()
+		cy.contains("Add Product Offer").click({force:true})
 		cy.contains("Go to My Inventory").click()
 
 		cy.wait("@inventoryLoading")
@@ -74,6 +73,7 @@ context("Inventory CRUD",() => {
 		cy.get("#field_dropdown_warehouse").click()
 		cy.wait(500)
 		cy.get("div[name='Bayport']").first().click()
+
         cy.setNumberInput("#field_input_pkgAmount","10")
 
 		cy.contains("Save Product Offer").click()
@@ -108,7 +108,7 @@ context("Inventory CRUD",() => {
 		cy.wait("@addingLoading")
 		cy.url().should("include","add")
 
-		cy.contains("Add Product Offer").click()
+		cy.contains("Add Product Offer").click({force:true})
 		cy.get(".error")
 			.should("have.length",2)
 			.find(".sui-error-message").each((element) => {
@@ -140,7 +140,7 @@ context("Inventory CRUD",() => {
 
         cy.setNumberInput("input[name='pricingTiers[0].price']","5")
 
-        cy.contains("OPTIONAL PRODUCT INFO").click()
+        cy.get("[data-test=new_inventory_productOptional]").click()
 
 		cy.get("#field_dropdown_origin").click()
 		cy.contains("Dominican Republic").click()
