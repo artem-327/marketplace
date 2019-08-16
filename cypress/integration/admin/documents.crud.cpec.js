@@ -18,9 +18,10 @@ context("Document types CRUD", () => {
         cy.wait('@documents')
         cy.waitForUI()
 
-        cy.reload()
+        //TODO Workaroud, list won't load
+        cy.get('[data-test="tabs_menu_item_2"]').click()
+        cy.waitForUI()
         cy.get('[data-test="tabs_menu_item_9"]').click()
-
         cy.wait('@documents')
     })
 
