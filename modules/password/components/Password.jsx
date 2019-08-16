@@ -37,7 +37,8 @@ class Password extends Component {
               await setPassword({
                 email: values.email,
                 newPassword: values.password,
-                securityCode: values.securityCode
+                securityCode: values.securityCode,
+                ...(values.termsOfAgreement && { approveTOS: true })
               })
 
               toastManager.add(generateToastMarkup(
