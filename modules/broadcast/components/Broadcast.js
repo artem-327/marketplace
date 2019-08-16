@@ -43,7 +43,8 @@ class Broadcast extends Component {
   state = {
     filterSearch: '',
     tree: new TreeModel().parse({ model: { rule: {} } }),
-    selectedTemplate: { name: null, id: null }
+    selectedTemplate: { name: null, id: null },
+    broadcastingTo: 0
   }
 
   constructor(props) {
@@ -65,6 +66,23 @@ class Broadcast extends Component {
 
   handlePriceChange = () => {
     this.setState({ tree: this.state.tree })
+  }
+
+  calculateBroadcastingCnt = () => {
+    let broadcastingTo = 0
+
+    this.props.treeData.walk((node) => {
+      if (!node.isRoot() &&
+        (!node.hasChildren() || node.all((n) => n.model.type === 'company' || n.model.type === 'branch')) &&
+        node.model.type === 'state' && node.model.broadcast !== 0) broadcastingTo++
+    })
+
+    if (this.state.broadcastingTo !== broadcastingTo) this.setState({ broadcastingTo })
+
+  }
+
+  componentDidUpdate() {
+    this.calculateBroadcastingCnt()
   }
 
   handleChange = (node) => {
@@ -208,12 +226,6 @@ class Broadcast extends Component {
 
     // console.log({ treeData })
 
-    treeData.walk((node) => {
-      if (!node.isRoot() &&
-        (!node.hasChildren() || node.all((n) => n.model.type === 'company' || n.model.type === 'branch')) &&
-        node.model.type === 'state' && node.model.broadcast !== 0) broadcastingTo++
-    })
-
     // const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
 
     const { formatMessage } = intl
@@ -230,7 +242,7 @@ class Broadcast extends Component {
                     <Popup trigger={
                       <Icon name='info circle' />
                     } content={<FormattedMessage id='broadcast.broadcastingTooltip' defaultMessage='Shows number of company branches your are currently broadcasting to out of the total number of company branches.' />} />
-                    <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Broadcasting To' />: <strong>{broadcastingTo}/{total}</strong>
+                    <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Broadcasting To' />: <strong>{this.state.broadcastingTo}/{total}</strong>
                   </Message>
                   <Form>
                     <Form.Field>
