@@ -62,6 +62,7 @@
   "broadcast.markUpDown": "Mark-up/down",
   "broadcast.fobHiLo": "FOB high/low",
   "broadcast.selectTemplate": "Select template",
+  "broadcast.broadcastingTooltip": "Shows number of company branches your are currently broadcasting to out of the total number of company branches.",
   "errors.fileTooLarge.header": "Too large file",
   "errors.fileTooLarge.content": "File '{name}' is larger than maximal allowed size: {size} MB",
   "errors.fileNotUploaded.header": "File not uploaded",
