@@ -270,6 +270,48 @@ Cypress.Commands.add("getFirstManufacturerWithFilter", (token,filter) => {
     })
 })
 
+Cypress.Commands.add("getFirstConditionWithFilter", (token,filter) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/product-conditions/datagrid',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, filters: filter, pageSize: 50}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body[0].id
+    })
+})
+
+Cypress.Commands.add("getFirstGradeWithFilter", (token,filter) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/product-grades/datagrid',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, filters: filter, pageSize: 50}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body[0].id
+    })
+})
+
+Cypress.Commands.add("getFirstFormWithFilter", (token,filter) => {
+    cy.request({
+        method: 'POST',
+        url: '/prodex/api/product-forms/datagrid',
+        headers: {
+            authorization: "Bearer " + token
+        },
+        body: {pageNumber: 0, filters: filter, pageSize: 50}
+    }).then((response) => {
+        expect(response.status).to.eq(200)
+        return response.body[0].id
+    })
+})
+
 Cypress.Commands.add("deleteWholeCart", (token) => {
     cy.request({
         method: 'DELETE',
