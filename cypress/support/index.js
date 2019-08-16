@@ -16,5 +16,7 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 import './inventoryHelper'
+import './formHelper'
+import './requestHelper'
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

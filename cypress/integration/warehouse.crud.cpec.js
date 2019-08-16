@@ -22,35 +22,17 @@ context("Prodex Warehouse CRUD", () => {
     it("Creates a warehouse", () => {
         cy.clickAdd()
 
-        cy.get("#field_input_name")
-            .type("Central branch")
-            .should("have.value", "Central branch")
-
-        cy.get("input[id='field_input_address.streetAddress']")
-            .type("125 N G St")
-            .should("have.value", "125 N G St")
-
-        cy.get("input[id='field_input_address.city']")
-            .type("Harlingen")
-            .should("have.value", "Harlingen")
+        cy.enterText("#field_input_name", "Central branch")
+        cy.enterText("input[id='field_input_address.streetAddress']", "125 N G St")
+        cy.enterText("input[id='field_input_address.city']", "Harlingen")
 
         cy.selectFromDropdown("div[id='field_dropdown_address.country']","Bahamas")
-
         cy.waitForUI()
-
         cy.selectFromDropdown("div[id='field_dropdown_address.zip']","75000")
 
-        cy.get("input[id='field_input_contactName']")
-            .type("David Cameron")
-            .should("have.value","David Cameron")
-
-        cy.get("input[id='field_input_contactPhone']")
-            .type("123456789")
-            .should("have.value","123456789")
-
-        cy.get("input[id='field_input_contactEmail']")
-            .type("test@central.com")
-            .should("have.value","test@central.com")
+        cy.enterText("input[id='field_input_contactName']","David Cameron")
+        cy.enterText("input[id='field_input_contactPhone']","123456789")
+        cy.enterText("input[id='field_input_contactEmail']","test@central.com")
 
         cy.clickSave()
 
@@ -85,7 +67,6 @@ context("Prodex Warehouse CRUD", () => {
 
     it("Edits a warehouse", () => {
         cy.get('[data-test=action_' + branchId + ']').click()
-
         cy.get('[data-test=action_' + branchId + '_0]').click()
 
         cy.get("#field_input_contactName")
@@ -96,7 +77,6 @@ context("Prodex Warehouse CRUD", () => {
         cy.clickSave()
 
         cy.get('[data-test=action_' + branchId + ']').click()
-
         cy.get('[data-test=action_' + branchId + '_0]').click()
 
         cy.get("#field_input_contactName")
@@ -117,7 +97,6 @@ context("Prodex Warehouse CRUD", () => {
 
     it("Deletes a warehouse", () => {
         cy.get('[data-test=action_' + branchId + ']').click()
-
         cy.get('[data-test=action_' + branchId + '_1]').click()
 
         cy.clickSave()

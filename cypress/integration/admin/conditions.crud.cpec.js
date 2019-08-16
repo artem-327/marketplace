@@ -21,9 +21,7 @@ context("Conditions CRUD", () => {
     it("Creates a condition", () => {
         cy.clickAdd()
 
-        cy.get("#field_input_val0")
-            .type("Half")
-            .should("have.value","Half")
+        cy.enterText("#field_input_val0","Half")
 
         cy.clickSave()
 

@@ -30,13 +30,8 @@ context("Prodex Bank Account CRUD", () => {
             cy.get("div[role='option']").eq(0).click()
         })
 
-        cy.get("#field_input_name")
-            .type("David Tester")
-            .should("have.value","David Tester")
-
-        cy.get("#field_input_routingNumber")
-            .type("123103729")
-            .should("have.value","123103729")
+        cy.enterText("#field_input_name","David Tester")
+        cy.enterText("#field_input_routingNumber","123103729")
 
         cy.waitForUI()
         cy.clickSave()
@@ -77,7 +72,7 @@ context("Prodex Bank Account CRUD", () => {
     })
 
     it("Deletes a bank account", () => {
-        cy.get("input[type=text]").type("David Tester")
+        cy.searchInList("David Tester")
 
         cy.waitForUI()
 

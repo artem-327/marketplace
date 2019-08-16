@@ -28,33 +28,11 @@ context("Company CRUD", () => {
         cy.enterText('input[id="field_input_primaryBranch.contactName"]',"James Duckling")
         cy.enterText('input[id="field_input_primaryBranch.contactEmail"]',"james@duck.com")
         cy.enterText('input[id="field_input_primaryBranch.contactPhone"]',"123456789")
+        cy.enterText("input[id='field_input_primaryBranch.address.streetAddress']","125 N G St")
+        cy.enterText("input[id='field_input_primaryBranch.address.city']","Harlingen")
+        cy.selectFromDropdown("div[id='field_dropdown_primaryBranch.address.country']","Bahamas")
+        cy.selectFromDropdown("div[id='field_dropdown_primaryBranch.address.zip']","75000")
 
-        cy.get("input[id='field_input_primaryBranch.address.streetAddress']")
-            .type("125 N G St")
-            .should("have.value", "125 N G St")
-
-        cy.get("input[id='field_input_primaryBranch.address.city']")
-            .type("Harlingen")
-            .should("have.value", "Harlingen")
-
-        cy.get("div[id='field_dropdown_primaryBranch.address.country']")
-            .children("input")
-            .type("Bahamas")
-            .should("have.value","Bahamas")
-        cy.wait(1000)
-        cy.get("div[id='field_dropdown_primaryBranch.address.country']").within(() => {
-            cy.get("div[class='selected item']").click({force: true})
-        })
-        cy.wait(1000)
-
-        cy.get("div[id='field_dropdown_primaryBranch.address.zip']")
-            .children("input")
-            .type("75000")
-            .should("have.value","75000")
-        cy.wait(1000)
-        cy.get("div[id='field_dropdown_primaryBranch.address.zip']").within(() => {
-            cy.get("div[class='selected item']").click({force: true})
-        })
         cy.waitForUI()
 
         cy.clickSave()
@@ -116,7 +94,7 @@ context("Company CRUD", () => {
     })
 
     it("Deletes a company", () => {
-        cy.get("input[type=text]").type("Donald and Co.")
+        cy.searchInList("Donald and Co.")
         cy.waitForUI()
 
         cy.get('[data-test=action_' + companyId + ']').click()
