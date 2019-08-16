@@ -12,6 +12,9 @@ context("Units of packaging CRUD", () => {
         cy.url().should("include", "admin")
 
         cy.wait('@loading')
+        //TODO Workaroud, list won't load
+        cy.get('[data-test="tabs_menu_item_9"]').click()
+        cy.waitForUI()
 
         cy.get('[data-test="tabs_menu_item_2"]').click()
 
