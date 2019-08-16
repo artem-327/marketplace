@@ -118,7 +118,6 @@ export default typeToReducer({
 
     return ({
       ...state,
-      id,
       data: mappedBroadcastRules,
       loading: false
     })

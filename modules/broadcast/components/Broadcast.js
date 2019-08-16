@@ -3,7 +3,7 @@ import pt from 'prop-types'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import * as Actions from '../actions'
-import { Modal, Grid, Icon, Button, Form, Input, Dropdown, Dimmer, Loader, Message, Menu, Divider, Header, GridRow, GridColumn } from 'semantic-ui-react'
+import { Modal, Grid, Icon, Button, Form, Input, Dropdown, Dimmer, Loader, Message, Menu, Divider, Header, GridRow, GridColumn, Popup } from 'semantic-ui-react'
 import { Formik } from 'formik'
 import { Input as FormikInput, Button as FormikButton, Dropdown as FormikDropdown } from 'formik-semantic-ui'
 import { withToastManager } from 'react-toast-notifications'
@@ -26,6 +26,7 @@ const BottomUnpaddedRow = styled(GridRow)`
   padding-bottom: 0px !important;
 `
 
+let printed = false
 
 const templateInitialValues = {
   name: ''
@@ -37,14 +38,13 @@ const templateValidation = () => (
   })
 )
 
-
-
 class Broadcast extends Component {
 
   state = {
     filterSearch: '',
     tree: new TreeModel().parse({ model: { rule: {} } }),
-    selectedTemplate: { name: null, id: null }
+    selectedTemplate: { name: null, id: null },
+    broadcastingTo: 0
   }
 
   constructor(props) {
@@ -68,12 +68,30 @@ class Broadcast extends Component {
     this.setState({ tree: this.state.tree })
   }
 
+  calculateBroadcastingCnt = () => {
+    let broadcastingTo = 0
+
+    this.props.treeData.walk((node) => {
+      if (!node.isRoot() &&
+        (!node.hasChildren() || node.all((n) => n.model.type === 'company' || n.model.type === 'branch')) &&
+        node.model.type === 'state' && node.model.broadcast !== 0) broadcastingTo++
+    })
+
+    if (this.state.broadcastingTo !== broadcastingTo) this.setState({ broadcastingTo })
+
+  }
+
+  componentDidUpdate() {
+    this.calculateBroadcastingCnt()
+  }
+
   handleChange = (node) => {
     this.setState({ tree: this.state.tree })
   }
 
   handleRowClick = (node) => {
     node.model.expanded = !node.model.expanded
+
     if (!node.model.expanded) node.all(n => n.model.expanded = false)
 
     this.setState({ tree: this.state.tree })
@@ -87,7 +105,6 @@ class Broadcast extends Component {
 
   handleFilterChange = (e, { name, value }) => {
     const { updateFilter, filter } = this.props
-
     updateFilter({
       ...filter,
       [name]: value
@@ -97,6 +114,7 @@ class Broadcast extends Component {
   getFilteredTree = (treeData, filter) => {
     const fs = filter.search.toLowerCase()
     const { intl: { formatMessage } } = this.props
+
     const searchFn = (n => {
       var found = false
       const name = n.model.name.toLowerCase()
@@ -203,7 +221,12 @@ class Broadcast extends Component {
       templates, intl, updateTemplate,
       deleteTemplate } = this.props
 
-    const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
+    let broadcastingTo = 0, total = treeData.all(n => n.model.type === 'state').length
+
+
+    // console.log({ treeData })
+
+    // const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
 
     const { formatMessage } = intl
 
@@ -216,8 +239,10 @@ class Broadcast extends Component {
               <Grid.Column width={6}>
                 <div>
                   <Message info size='large' style={{ padding: '6px 15px' }}>
-                    <Icon name='info circle' />
-                    <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Broadcasting To' />: <strong>{broadcastToBranches}</strong>
+                    <Popup trigger={
+                      <Icon name='info circle' />
+                    } content={<FormattedMessage id='broadcast.broadcastingTooltip' defaultMessage='Shows number of company branches your are currently broadcasting to out of the total number of company branches.' />} />
+                    <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Broadcasting To' />: <strong>{this.state.broadcastingTo}/{total}</strong>
                   </Message>
                   <Form>
                     <Form.Field>
