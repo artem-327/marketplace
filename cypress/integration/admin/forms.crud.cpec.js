@@ -63,7 +63,7 @@ context("Form CRUD", () => {
         cy.get("#field_input_val0").should('have.value', "Finest")
     })
 
-    xit("Use a grade", () => {
+    xit("Use a form", () => {
 
     })
 
@@ -79,7 +79,7 @@ context("Form CRUD", () => {
         })
     })
 
-    it("Deletes a grade", () => {
+    it("Deletes a form", () => {
         cy.get('[data-test=action_' + formId + ']').click()
         cy.get('[data-test=action_' + formId + '_1]').click()
 
