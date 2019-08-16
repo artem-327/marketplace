@@ -30,6 +30,12 @@ Cypress.Commands.add("setNumberInput", (selector,number) => {
         .should("have.value",number)
 })
 
+Cypress.Commands.add("enterText", (selector,text) => {
+    cy.get(selector)
+        .type(text)
+        .should("have.value",text)
+})
+
 Cypress.Commands.add("assertProductDetail", (index,value) => {
     cy.get(".data-grid")
         .children()
