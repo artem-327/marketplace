@@ -35,7 +35,6 @@ const transformLotNumbers = lots => {
 }
 
 function mapStateToProps(store, { datagrid }) {
-
   return {
     ...store.simpleAdd,
     appliedFilter: store.filter.filter.appliedFilter,
@@ -78,8 +77,8 @@ function mapStateToProps(store, { datagrid }) {
           po.assayMin + '/' + po.assayMax : '',
         mfgDate: getSafe(() => moment(po.manufacturedDate).format('MM/DD/YYYY'), ''),
         expDate: getSafe(() => moment(po.expirationDate).format('MM/DD/YYYY'), ''),
-        allocatedPkg: 'TODO', // ! ! kterou promennou?
-        offerExpiration: 'TODO',  // ! ! kterou promennou?
+        allocatedPkg: getSafe(() => po.pkgAllocated, ''),
+        offerExpiration: getSafe(() => moment(po.validityDate).format('MM/DD/YYYY'), ''),
       }
     }),
     isOpenImportPopup: store.settings.isOpenImportPopup
