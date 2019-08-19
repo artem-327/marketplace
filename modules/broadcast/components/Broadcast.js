@@ -253,7 +253,9 @@ class Broadcast extends Component {
               <Grid.Column width={6}>
                 <div>
                   <Message info size='large' style={{ padding: '6px 15px' }}>
-                    <Icon name='info circle' />
+                    <Popup trigger={
+                      <Icon name='info circle' />
+                    } content={<FormattedMessage id='broadcast.broadcastingTooltip' defaultMessage='Shows number of company branches your are currently broadcasting to out of the total number of company branches.' />} />
                     <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Broadcasting To' />: <strong>{this.state.broadcastingTo}/{total}</strong>
                   </Message>
                   <Form>
