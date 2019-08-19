@@ -26,8 +26,6 @@ const BottomUnpaddedRow = styled(GridRow)`
   padding-bottom: 0px !important;
 `
 
-let printed = false
-
 const templateInitialValues = {
   name: ''
 }
@@ -64,7 +62,26 @@ class Broadcast extends Component {
     })
   }
 
-  handlePriceChange = () => {
+  handlePriceChange = (node) => {
+    if (node.hasChildren()) {
+      node.walk((n) => {
+        let nodePath = n.getPath()
+        let parent = nodePath[nodePath.length - 2]
+
+        if (!n.model.rule.priceOverride && (!getSafe(() => parent.model.rule.priceOverride, 0) || node.model.rule.id === parent.model.rule.id)) {
+          n.model.rule.priceAddition = node.model.rule.priceAddition
+          n.model.rule.priceMultiplier = node.model.rule.priceMultiplier
+        }
+      })
+    }
+
+    let path = node.getPath()
+
+    for (let i = 0; i < path.length - 1; i++) {
+      let { priceAddition, priceMultiplier } = path[i].model.rule
+      if (priceAddition || priceMultiplier) node.model.rule.priceOverride = 1
+    }
+
     this.setState({ tree: this.state.tree })
   }
 
@@ -221,10 +238,7 @@ class Broadcast extends Component {
       templates, intl, updateTemplate,
       deleteTemplate } = this.props
 
-    let broadcastingTo = 0, total = treeData.all(n => n.model.type === 'state').length
-
-
-    // console.log({ treeData })
+    let total = treeData.all(n => n.model.type === 'state').length
 
     // const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
 
@@ -239,9 +253,7 @@ class Broadcast extends Component {
               <Grid.Column width={6}>
                 <div>
                   <Message info size='large' style={{ padding: '6px 15px' }}>
-                    <Popup trigger={
-                      <Icon name='info circle' />
-                    } content={<FormattedMessage id='broadcast.broadcastingTooltip' defaultMessage='Shows number of company branches your are currently broadcasting to out of the total number of company branches.' />} />
+                    <Icon name='info circle' />
                     <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Broadcasting To' />: <strong>{this.state.broadcastingTo}/{total}</strong>
                   </Message>
                   <Form>

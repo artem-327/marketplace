@@ -679,6 +679,14 @@ table.order-total.ui[class*="very basic"]:not(.sortable):not(.striped) {
   background-color: #e7e7e7;
 }
 
+
+.ui.toggle.checkbox.independent input:checked ~ .box:before,
+.ui.toggle.checkbox.independent input:checked ~ label:before,
+.ui.toggle.checkbox.independent input:focus:checked ~ .box:before,
+.ui.toggle.checkbox.independent input:focus:checked ~ label:before {
+  background-color: #2599d5 !important;
+}
+
 .ui.toggle.checkbox.error input[disabled] ~ .box:after,
 .ui.toggle.checkbox.error input[disabled] ~ label:after {
   border-color: #e74c3c;

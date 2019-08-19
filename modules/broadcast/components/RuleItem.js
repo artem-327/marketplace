@@ -1,6 +1,7 @@
-import { Checkbox, Icon } from 'semantic-ui-react'
+import { Icon, Checkbox } from 'semantic-ui-react'
 import PriceControl from './PriceControl'
 import { Rule } from './Broadcast.style'
+
 
 const EmptyIconSpace = () => <span style={{ width: '1.18em', display: 'inline-block', marginRight: '0.25rem' }}>&nbsp;</span>
 
@@ -25,8 +26,8 @@ const RuleItem = (props) => {
       item.walk((node) => {
         node.model.rule.broadcast = newValue
       })
-    } 
-    
+    }
+
     rule[propertyName] = newValue
 
     onChange(rule)
@@ -49,7 +50,6 @@ const RuleItem = (props) => {
 
     if (allChildrenBroadcasting) item.model.rule.broadcast = 1
     else if (!anyChildBroadcasting) item.model.rule.broadcast = 0
-    else item.model.rule.broadcast = 2
   }
 
   const broadcastedParents = nodePath.reverse().slice(1).filter(n => n.model.rule.broadcast === 1)
@@ -58,7 +58,7 @@ const RuleItem = (props) => {
 
 
   // const toggleDisabled = !!parentBroadcasted
-  const priceDisabled = !(rule.broadcast === 1 && !parentBroadcasted) //allChildrenBroadcasting || rule.broadcast !== 1 || toggleDisabled
+  const priceDisabled = rule.broadcast === 0 //!(rule.broadcast === 1 && !parentBroadcasted) //allChildrenBroadcasting || rule.broadcast !== 1 || toggleDisabled
 
 
   return (
@@ -71,6 +71,7 @@ const RuleItem = (props) => {
 
         <Rule.Toggle>
           <Checkbox
+            className={(rule.priceOverride && nodeBroadcast === 1) && 'independent'}
             data-test='broadcast_rule_toggle_chckb'
             toggle
             fitted
@@ -86,6 +87,7 @@ const RuleItem = (props) => {
           disabled={priceDisabled}
           rootRule={parentBroadcasted ? parentBroadcasted.model.rule : null}
           rule={rule}
+          item={item}
           onChange={onPriceChange}
         />
       </Rule.Row>
