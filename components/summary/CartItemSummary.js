@@ -5,7 +5,7 @@ import {Grid, GridRow, GridColumn, Header, Divider, Segment, Icon, Popup, List, 
 
 import './styles.scss'
 import { RelaxedRow, HeaderTextRow, WiderPopup, CustomSpan, CustomHeader } from './styledComponents'
-import { FormattedUnit } from '~/components/formatted-messages'
+import { FormattedUnit, ArrayToMultiple } from '~/components/formatted-messages'
 import { Form, Input, Checkbox } from 'formik-semantic-ui'
 
 
@@ -104,26 +104,6 @@ class CartItemSummary extends Component {
 
   }
 
-  casArrayToMultiple = (obj)=> {
-    if (!obj || obj.length === 0) return <div></div>
-    if (obj.length > 1) {
-      let onMouseoverText = obj.map(d => (d.casProduct.casNumber + ' / ' + d.casProduct.chemicalName))
-      return (
-        <div>
-          <Popup
-            wide='very'
-            data-test='add_cart_product_info_onMouseoverText'
-            content={<List items={onMouseoverText} />}
-            trigger={<Label><FormattedMessage id='global.multiple' defaultMessage='Multiple' /></Label>}
-          />
-        </div>
-      )
-    }
-    else {
-      return <div> {obj[0].casProduct.casNumber + ' / ' + obj[0].casProduct.chemicalName} </div>
-    }
-  }
-
   renderItem = ({ item, lastChild }) => {
     let { productOffer } = item
     let { deleteCart, currency } = this.props
@@ -159,7 +139,7 @@ class CartItemSummary extends Component {
               </GridColumn>
 
               <GridColumn floated='right'>
-                {this.casArrayToMultiple(productOffer.product.casProducts)}
+                <ArrayToMultiple values={productOffer.product.casProducts.map(d => (d.casProduct.casNumber + ' / ' + d.casProduct.chemicalName))} />
               </GridColumn>
             </RelaxedRow>
 
