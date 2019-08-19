@@ -64,7 +64,9 @@ class Filter extends Component {
       setParams
     } = this.props
 
-    this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
+    if (this.props.searchWarehouseUrl)
+      this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
+
     this.handleGetSavedFilters()
     setParams({ currencyCode: this.props.preferredCurrency, filterType: this.props.filterType })
 
