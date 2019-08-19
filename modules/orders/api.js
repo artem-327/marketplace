@@ -17,5 +17,8 @@ export default {
   searchCompany: (companyText) => api.get(`/prodex/api/companies/search?pattern=${companyText}`),
   searchProducts: (productText) => api.get(`/prodex/api/products/search?limit=30&search=${productText}`),
   getLots: (poId) => api.get(`/prodex/api/product-offers/${poId}`),
-  assignLots: (orderId, orderItemId, assignedLots) => api.patch(`/prodex/api/sale-orders/${orderId}/order-item/${orderItemId}/assign-lots`, assignedLots)
+  assignLots: (orderId, orderItemId, assignedLots) => api.patch(`/prodex/api/sale-orders/${orderId}/order-item/${orderItemId}/assign-lots`, assignedLots),
+  linkAttachment: (lotId, aId) => api.post(`/prodex/api/attachment-links/to-lot?attachmentId=${aId}&lotId=${lotId}`),
+  removeAttachment: (aId) => api.delete('/prodex/api/attachments/' + aId),
+  removeAttachmentLink: (lotId, aId) => api.delete(`/prodex/api/attachment-links/to-lot?attachmentId=${aId}&lotId=${lotId}`)
 }

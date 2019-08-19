@@ -1,4 +1,5 @@
 import * as AT from './action-types'
+import { INVENTORY_LINK_ATTACHMENT } from '~/modules/inventory/action-types'
 
 const initialState = {
     data: [],
@@ -121,13 +122,58 @@ export default function(state = initialState, action) {
                     ...state.detail,
                     lots: action.payload.data.lots.map(lot => {
                         return {
+                            id: lot.id,
                             lotNumber: lot.lotNumber,
                             total: lot.originalPkgAmount,
                             available: lot.pkgAmount,
                             allocated: 0,
                             mfgDate: lot.manufacturedDate,
                             expirationDate: lot.expirationDate,
-                            cOfA: ''
+                            attachments: lot.attachments.map(att => {
+                                return {
+                                    ...att,
+                                    linked: true
+                                }
+                            })
+                        }
+                    })
+                }
+            }
+        case AT.ORDER_LINK_ATTACHMENT_FULFILLED:
+            return {
+                ...state,
+                detail: {
+                    ...state.detail,
+                    lots: state.detail.lots.map(lot => {
+                        if (lot.id === action.payload.lotId) {
+                            return {
+                                ...lot,
+                                attachments: [{
+                                  ...action.payload.file,
+                                  linked: true
+                                }]
+                            }
+                        } else {
+                            return lot
+                        }
+                    })
+                }
+            }
+        case AT.ORDER_REMOVE_ATTACHMENT_FULFILLED:
+            return {
+                ...state,
+                detail: {
+                    ...state.detail,
+                    lots: state.detail.lots.map(lot => {
+                        return {
+                            ...lot,
+                            attachments: lot.attachments.filter(att => {
+                              if (att.id === action.payload.fileId) {
+                                return false
+                              } else {
+                                return true
+                              }
+                            })
                         }
                     })
                 }
