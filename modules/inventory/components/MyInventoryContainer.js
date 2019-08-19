@@ -12,27 +12,9 @@ import { applyFilter } from '~/modules/filter/actions'
 import { FormattedNumber, FormattedMessage } from 'react-intl'
 
 
-import { FormattedUnit, UnitOfPackaging } from '~/components/formatted-messages'
+import { FormattedUnit, UnitOfPackaging, ArrayToMultiple } from '~/components/formatted-messages'
 import { getSafe } from '~/utils/functions'
 import moment from 'moment/moment'
-
-const transformLotNumbers = lots => {
-  if (lots.length > 1) {
-    let onMouseoverTest = lots.map(d => (d.lotNumber))
-    return (
-      <div>
-        <Popup
-          data-test='my_inventory_lot_number_btn'
-          content={<List items={onMouseoverTest} />}
-          trigger={<Label><FormattedMessage id='global.multiple' defaultMessage='Multiple' /></Label>}
-        />
-      </div>
-    )
-  }
-  else {
-    return lots[0].lotNumber
-  }
-}
 
 function mapStateToProps(store, { datagrid }) {
   return {
@@ -65,12 +47,12 @@ function mapStateToProps(store, { datagrid }) {
           : <> <FormattedNumber style='currency' currency={currency} value={po.pricing.price} /> {qtyPart && (`/ ${qtyPart}`)} </>,
         manufacturer: getSafe(() => po.manufacturer.name, 'N/A'),
         broadcasted: po.broadcasted,
-        lotNumber: transformLotNumbers(po.lots),
+        lotNumber: <ArrayToMultiple values={po.lots.map(d => (d.lotNumber))} />,
         status: po.status,// new broadcasted
         minOrderQuantity: getSafe(() => po.minimum, ''),
         splits: getSafe(() => po.splits, ''),
         condition: getSafe(() => po.productCondition.name, ''),
-        grade: po.productGrades && po.productGrades.length ? po.productGrades[0].name : '',  // ! ! array productGrades
+        grade: po.productGrades && po.productGrades.length ? <ArrayToMultiple values={po.productGrades.map(d => (d.name))} /> : '',
         origin: getSafe(() => po.origin.name, ''),
         form: getSafe(() => po.productForm.name, ''),
         assay: po.assayMin && po.assayMax ?

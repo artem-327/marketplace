@@ -6,7 +6,7 @@ import Shipping from "./Shipping"
 import ShippingEdit from './ShippingEdit'
 import ShippingQuote from "./ShippingQuote"
 import Payment from './Payment'
-import { Container, Menu, Header, Button, Icon, Grid, GridColumn, GridRow, Segment } from 'semantic-ui-react'
+import { Container, Menu, Header, Button, Icon, Grid, GridColumn, GridRow, Segment, Popup } from 'semantic-ui-react'
 import { Form } from 'formik-semantic-ui'
 import styled from 'styled-components'
 import { FormattedMessage, injectIntl } from 'react-intl'
@@ -99,10 +99,11 @@ class PurchaseOrder extends Component {
 
   handlePurchase() {
     // TODO: do purchase
+    window.alert('not implemented')
   }
 
   render() {
-    const { dispatch, postNewDeliveryAddress, updateDeliveryAddress, preferredBankAccountId } = this.props
+    const { dispatch, postNewDeliveryAddress, updateDeliveryAddress, preferredBankAccountId, intl: { formatMessage } } = this.props
     let { cart, deliveryAddresses, payments, cartIsFetching, shippingQuotes, shipping } = this.props
 
     if (cartIsFetching) return <Spinner />
@@ -236,14 +237,21 @@ class PurchaseOrder extends Component {
             <Summary
               additionalContent={
                 <GridRow centered>
-                  <GridColumn>
-                    <Button fluid primary onClick={this.handleContinue} data-test='purchase_order_place_order_btn'>
-                      <FormattedMessage id='cart.placeOrder' defaultMessage='Place Order1' />
-                    </Button>
-                  </GridColumn>
+                  <Popup trigger={
+                    <GridColumn>
+                      <Button disabled={!this.props.logisticsAccount} fluid primary onClick={this.handlePurchase} data-test='purchase_order_place_order_btn'>
+                        {/* <FormattedMessage id='cart.placeOrder' defaultMessage='Place Order1' /> */}
+                        {formatMessage({ id: 'cart.placeOrder', defaultMessage: 'Place Order1' })}
+                      </Button>
+                    </GridColumn>
+                  } content={
+                    <FormattedMessage
+                      id='cart.purchaseOrder.logisticAccRequired'
+                      defaultMessage='To !be able to complete Order, your Company needs to have Logistics account defined. This can be done in Settings.' />}
+                    disabled={this.props.logisticsAccount} />
                 </GridRow>
               }
-              handleContinue={this.handlePurchase}
+              logisticsAccount={this.props.logisticsAccount}
               cart={cart}
               totalPrice={this.props.cart.totalPrice}
             />

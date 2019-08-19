@@ -64,12 +64,27 @@ const mappingProductOffer = [
 class Map extends Component {
   state = {
     newHeaders: null,
-    isSavedMap: false
+    isSavedMap: false,
+    options: [],
+    values: []
   }
 
   componentDidMount() {
     // this.props.getCSVMapProductOffer()
     this.setState({ newHeaders: this.props.CSV.headerCSV })
+
+    let a = (this.props.productOffer ? mappingProductOffer : mappingProduct).sort(function (a, b) {
+      let x = a.value.toLowerCase()
+      let y = b.value.toLowerCase()
+      if (x < y) { return -1 }
+      if (x > y) { return 1 }
+      return 0
+    })
+
+    let ar = []
+    for (let i = 0; i < a.length; i++) ar.push(Array.from(a))
+
+    this.setState({ options: ar, values:  Array(a.length).fill('') })
   }
 
   render() {
@@ -116,7 +131,7 @@ class Map extends Component {
           </Table.Header>
           {CSV && (
             <Table.Body>
-              {CSV.headerCSV.map(lineHeader => (
+              {CSV.headerCSV.map((lineHeader) => (
                 <Table.Row key={lineHeader.columnNumber}>
                   <Table.Cell>{lineHeader.content}</Table.Cell>
                   <Table.Cell>
@@ -136,9 +151,7 @@ class Map extends Component {
                       selection
                       clearable
                       options={
-                        this.props.productOffer
-                          ? mappingProductOffer
-                          : mappingProduct
+                        this.state.options[lineHeader.columnNumber]
                       }
                       disabled={!!this.props.selectedSavedMap}
                       onChange={this.selectMapping}
@@ -181,6 +194,35 @@ class Map extends Component {
       return line
     })
     this.props.changeHeadersCSV(newHeaders)
+
+    let newOptions = Array.from(this.state.options)
+    let newValues = this.state.values
+
+    let previousValue = newValues[column_number]
+    newValues[column_number] = value
+
+
+    let opts = this.props.productOffer ? mappingProductOffer : mappingProduct
+    let indexAdd = opts.findIndex(obj => obj.value === previousValue)
+
+    for (let i = 0; i < opts.length; i++) {
+      if (i !== column_number) {
+        // Add previous value to all dropdowns options
+        if (indexAdd >= 0) newOptions[i].push(opts[indexAdd])
+        // Remove new value from all dropdowns options
+        let indexRemove = newOptions[i].findIndex(obj => obj.value === value)
+        if (indexRemove >= 0) newOptions[i].splice(indexRemove, 1)
+        // Sort alphabetically
+        newOptions[i].sort(function (a, b) {
+          let x = a.value.toLowerCase()
+          let y = b.value.toLowerCase()
+          if (x < y) { return -1 }
+          if (x > y) { return 1 }
+          return 0
+        })
+      }
+    }
+    this.setState({ options: newOptions, values:  newValues })
   }
 }
 

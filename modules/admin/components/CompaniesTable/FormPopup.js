@@ -271,9 +271,11 @@ class AddNewPopupCasProducts extends React.Component {
 
               Object.keys(values)
                 .forEach(key => {
-                  if (values[key].$$typeof !== 'undefined') return false // TODO: try to have reviewRequested in values not as React.element
-                  if (typeof values[key] === 'string') newValues[key] = values[key].trim()
-                  else newValues[key] = values[key]
+                  // TODO: try to have reviewRequested in values not as React.element
+                  if (typeof values[key].$$typeof === 'undefined') {
+                    if (typeof values[key] === 'string') newValues[key] = values[key].trim()
+                    else newValues[key] = values[key]
+                  }
                 })
 
               if (this.state.companyLogo) {
