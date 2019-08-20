@@ -110,7 +110,7 @@ export const reviewCompany = (values) => {
       const identity = await api.getIdentity()
       const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
 
-      isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
+      // isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
 
       return response
     }

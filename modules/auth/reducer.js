@@ -2,6 +2,20 @@ import * as AT from './action-types'
 import { ROLES_ENUM } from '../../src/utils/constants'
 import { getSafe } from '~/utils/functions'
 
+
+
+const getAccessRights = (roles) => {
+  let accessRights = {}
+
+  if (roles) {
+    ROLES_ENUM.forEach(role => {
+      accessRights[role.propertyName] = !!roles.find((el) => el.id === role.id)
+    })
+  }
+
+  return accessRights
+}
+
 export const initialState = {
   confirmationForm: {
     address: {
@@ -64,13 +78,9 @@ export default function reducer(state = initialState, action) {
       }
     }
     case AT.LOGIN_FULFILLED: {
-      let accessRights = {}
 
-      if(payload.identity.roles) {
-        ROLES_ENUM.forEach(role => {
-          accessRights[role.propertyName] = !!payload.identity.roles.find((el) => el.id === role.id)
-        })
-      }
+
+
 
       return {
         ...state,
@@ -105,7 +115,7 @@ export default function reducer(state = initialState, action) {
         } : state.confirmationForm,
         identity: {
           ...payload.identity,
-          ...accessRights
+          ...getAccessRights(payload.identity.roles)
         },
         loginForm: {
           ...loginForm,
@@ -120,16 +130,10 @@ export default function reducer(state = initialState, action) {
     }
 
     case AT.UPDATE_IDENTITY: {
-      let accessRights = {}
-      if(payload.roles) {
-        ROLES_ENUM.forEach(role => {
-          accessRights[role.propertyName] = !!payload.roles.find((el) => el.id === role.id)
-        })
-      }
-      
+
       return {
         ...state,
-        identity: { ...payload, ...accessRights }
+        identity: { ...payload, ...getAccessRights(payload.roles) }
       }
     }
 
@@ -216,6 +220,15 @@ export default function reducer(state = initialState, action) {
           company: payload
         }
 
+      }
+    }
+
+    /* GET_IDENTITY */
+
+    case AT.GET_IDENTITY_FULFILLED: {
+      return {
+        ...state,
+        identity: { ...payload, ...getAccessRights(payload.roles) }
       }
     }
 
