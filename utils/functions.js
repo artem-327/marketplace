@@ -1,5 +1,4 @@
 
-
 export const transformRequestOptions = params => {
     let options = ''
     for (const key in params) {
@@ -62,3 +61,14 @@ export const mapAutocompleteData = autocomplateData => autocomplateData.map((pro
         value: JSON.stringify({ id: product.id, name: product.productName, casNumber: product.casNumberCombined || null }),
     }
 })
+
+export const deepSearch = (obj, searchFn) => {
+    let found = false
+    Object.entries(obj).forEach(([key, val]) => {
+        if (val && typeof val === 'object') deepSearch(val, searchFn)
+
+        else if (searchFn(val, key)) found = true
+    })
+
+    return found
+}

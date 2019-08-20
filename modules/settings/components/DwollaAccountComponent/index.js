@@ -18,7 +18,7 @@ import { AddressForm } from '~/modules/address-form/'
 
 import { errorMessages, dateValidation, ssnValidation } from '~/constants/yupValidation'
 import { addressValidationSchema } from '~/modules/address-form/constants'
-import { generateToastMarkup } from '~/utils/functions'
+import { generateToastMarkup, deepSearch } from '~/utils/functions'
 
 
 const AccordionHeader = styled(Header)`
@@ -53,12 +53,20 @@ const maxBeneficialOwners = 4
 
 const formValidation = Yup.object().shape({
 
-  beneficialOwners: Yup.array().of(Yup.object().shape({
-    address: addressValidationSchema(),
-    dateOfBirth: dateValidation(),
-    firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-    lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-    ssn: ssnValidation()
+  beneficialOwners: Yup.array().of(Yup.lazy((values) => {
+    let isAnyValueFilled = deepSearch(values, (val, key) => val !== '' && key !== 'country')
+
+    if (!isAnyValueFilled) return Yup.mixed().notRequired()
+
+    return (
+      Yup.object().shape({
+        address: addressValidationSchema(),
+        dateOfBirth: dateValidation(),
+        firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+        lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+        ssn: ssnValidation()
+      })
+    )
   })),
   dwollaController: Yup.object().shape({
     address: addressValidationSchema(),
@@ -82,7 +90,7 @@ class BankAccountsPopup extends React.Component {
   state = {
     hasProvinces: this.props.hasProvinces,
     accordionActive: {
-      controllerAddress: false
+      controllerAddress: true
     },
     beneficialOwnersCount: 1,
     initialFormValues: {
@@ -227,15 +235,22 @@ class BankAccountsPopup extends React.Component {
               }
 
               values.beneficialOwners.forEach((owner, i) => {
-                payload.beneficialOwners.push({
-                  ...owner,
-                  ...owner.address,
-                  country: JSON.parse(owner.address.country).countryId
-                })
-                delete payload.beneficialOwners[i].address
+                // If we find any value that is empty it means all values are empty, due to validation
+                // so we dont care about such beneficialOwner...
+                if (!deepSearch(owner, (val, key) => val === '' && key !== 'country')) {
+                  payload.beneficialOwners.push({
+                    ...owner,
+                    ...owner.address,
+                    country: JSON.parse(owner.address.country).countryId
+                  })
+                  delete payload.beneficialOwners[i].address
+                }
               })
 
               delete payload.dwollaController.address
+
+
+              if(payload.beneficialOwners.length === 0) delete payload.beneficialOwners
 
               try {
                 await postDwollaAccount(payload)
@@ -394,7 +409,7 @@ class BankAccountsPopup extends React.Component {
           >
           </Form>
         </Modal.Content>
-      </Modal>
+      </Modal >
     )
   }
 }
