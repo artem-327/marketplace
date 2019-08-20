@@ -66,6 +66,9 @@ export default class PriceControl extends Component {
     }
     rule.priceType === value
 
+    console.log(name, value)
+    if(name === 'value' && value < 0) value *= -1
+
 
     this.setState({ [name]: value }, () => {
       const { value, type } = this.state
@@ -93,9 +96,13 @@ export default class PriceControl extends Component {
     const r = rule //rootRule || rule
     const calc = (p) => (p * (r.priceMultiplier + 100) / 100) + r.priceAddition
 
+    let low = calc(offer.pricingTiers[0].price), high = calc(offer.pricingTiers[offer.pricingTiers.length - 1].price)
+
+
+
     return {
-      high: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={calc(offer.pricingTiers[0].price)} />,
-      low: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={calc(offer.pricingTiers[offer.pricingTiers.length - 1].price)} />
+      high: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={low ? low : 0} />,
+      low: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={high ? high : 0} />
     }
   }
 
@@ -110,6 +117,7 @@ export default class PriceControl extends Component {
           disabled={disabled}
           name='value'
           type='number'
+          min={0}
           value={value}
           onClick={e => { e.stopPropagation() }}
           onChange={this.handleChange}
