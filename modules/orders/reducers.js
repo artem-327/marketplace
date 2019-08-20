@@ -134,7 +134,8 @@ export default function(state = initialState, action) {
                                     ...att,
                                     linked: true
                                 }
-                            })
+                            }),
+                            selected: false
                         }
                     })
                 }
