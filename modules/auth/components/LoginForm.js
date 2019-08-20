@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import {withRouter} from 'next/router'
-import { Segment, Form, Image, Button, Message, Grid, GridRow, GridColumn } from 'semantic-ui-react'
+import { Segment, Image, Button, Message, Grid, GridRow, GridColumn } from 'semantic-ui-react'
+import { Form, Input } from 'formik-semantic-ui'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 import ConfirmationPage from '~/modules/auth/components/ConfirmationPage'
 import { getSafe } from '~/utils/functions'
+import * as val from 'yup'
+import { errorMessages } from '~/constants/yupValidation'
 
 import Logo from '~/assets/images/login/logo_echo.png'
 
@@ -32,6 +35,9 @@ const InstructionsDiv = styled.div`
   font-size: 0.9rem;
 `
 
+const validationScheme = val.object().shape({
+  username: val.string().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
+})
 
 class LoginForm extends Component {
 
@@ -90,27 +96,49 @@ class LoginForm extends Component {
               <LogoImage src={Logo} />
             </Segment>
 
-            <StyledForm onSubmit={this.handleSubmit}>
-              <InstructionsDiv>
-                {this.state.resetPassword && <FormattedMessage id='auth.resetPasswordInstructions' />}
-              </InstructionsDiv>
+            <StyledForm validateOnChange={true}
+                        validationSchema={validationScheme}
+                        onSubmit={(values, actions) => {
+                          const { username, password } = values
+                          const { login, resetPasswordRequest } = this.props
 
-              <Form.Field error={usernameError} data-test="login_username_inp">
-                <label><FormattedMessage id='auth.username' defaultMessage='Username' /></label>
-                <input placeholder={formatMessage({ id: 'auth.username', defaultMessage: 'Password' })} name='username' />
-              </Form.Field>
-              {
-                !this.state.resetPassword &&
-                <Form.Field error={passwordError} data-test="login_password_inp">
-                  <label><FormattedMessage id='auth.password' defaultMessage='Password' /></label>
-                  <input placeholder={formatMessage({ id: 'auth.password', defaultMessage: 'Password' })} type='password' name='password' />
-                </Form.Field>
-              }
-              <Button type='submit' primary fluid size='large' data-test="login_submit_btn">
-                {this.state.resetPassword
-                  ? <FormattedMessage id='auth.resetPassword' defaultMessage='Reset Password' />
-                  : <FormattedMessage id='auth.login' defaultMessage='Log in' />}
-              </Button>
+                          let inputsState = {
+                            passwordError: this.state.resetPassword ? false : password.length < 3,
+                            usernameError: username.length < 3
+                          }
+
+                          if (!inputsState.passwordError && !inputsState.usernameError) {
+                            if (this.state.resetPassword) resetPasswordRequest(username)
+                            else login(username, password)
+                          }
+                          else this.setState(inputsState)
+                        }}>
+              {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
+                return (
+                  <>
+                    <InstructionsDiv>
+                      {this.state.resetPassword && <FormattedMessage id='auth.resetPasswordInstructions' />}
+                    </InstructionsDiv>
+
+                    <Form.Field error={usernameError} data-test="login_username_inp">
+                      <label><FormattedMessage id='auth.username' defaultMessage='Username' /></label>
+                      <Input name='username' inputProps={{placeholder: formatMessage({ id: 'auth.username', defaultMessage: 'Password' })}} />
+                    </Form.Field>
+                    {
+                      !this.state.resetPassword &&
+                      <Form.Field error={passwordError} data-test="login_password_inp">
+                        <label><FormattedMessage id='auth.password' defaultMessage='Password' /></label>
+                        <Input name='password' inputProps={{placeholder: formatMessage({ id: 'auth.password', defaultMessage: 'Password' }), type: 'password'}} />
+                      </Form.Field>
+                    }
+                    <Button type='submit' primary fluid size='large' data-test="login_submit_btn">
+                      {this.state.resetPassword
+                        ? <FormattedMessage id='auth.resetPassword' defaultMessage='Reset Password' />
+                        : <FormattedMessage id='auth.login' defaultMessage='Log in' />}
+                    </Button>
+                  </>
+                )
+              }}
             </StyledForm>
 
             <Message error content={message} hidden={!message} />
