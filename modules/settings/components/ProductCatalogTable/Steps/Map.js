@@ -82,9 +82,9 @@ class Map extends Component {
     })
 
     let ar = []
-    for (let i = 0; i < a.length; i++) ar.push(Array.from(a))
+    for (let i = 0; i < this.props.CSV.headerCSV.length; i++) ar.push(Array.from(a))
 
-    this.setState({ options: ar, values:  Array(a.length).fill('') })
+    this.setState({ options: ar, values:  Array(this.props.CSV.headerCSV.length).fill('') })
   }
 
   render() {
@@ -193,27 +193,25 @@ class Map extends Component {
       }
       return line
     })
-    this.props.changeHeadersCSV(newHeaders)
 
-    let newOptions = Array.from(this.state.options)
-    let newValues = this.state.values
+    let options = this.state.options
+    let values = this.state.values
 
-    let previousValue = newValues[column_number]
-    newValues[column_number] = value
-
+    let previousValue = values[column_number]
+    values[column_number] = value
 
     let opts = this.props.productOffer ? mappingProductOffer : mappingProduct
     let indexAdd = opts.findIndex(obj => obj.value === previousValue)
 
-    for (let i = 0; i < opts.length; i++) {
+    for (let i = 0; i < options.length; i++) {
       if (i !== column_number) {
         // Add previous value to all dropdowns options
-        if (indexAdd >= 0) newOptions[i].push(opts[indexAdd])
+        if (indexAdd >= 0) options[i].push(opts[indexAdd])
         // Remove new value from all dropdowns options
-        let indexRemove = newOptions[i].findIndex(obj => obj.value === value)
-        if (indexRemove >= 0) newOptions[i].splice(indexRemove, 1)
+        let indexRemove = options[i].findIndex(obj => obj.value === value)
+        if (indexRemove >= 0) options[i].splice(indexRemove, 1)
         // Sort alphabetically
-        newOptions[i].sort(function (a, b) {
+        options[i].sort(function (a, b) {
           let x = a.value.toLowerCase()
           let y = b.value.toLowerCase()
           if (x < y) { return -1 }
@@ -222,7 +220,9 @@ class Map extends Component {
         })
       }
     }
-    this.setState({ options: newOptions, values:  newValues })
+    this.setState({ options: options, values:  values })
+
+    this.props.changeHeadersCSV(newHeaders)
   }
 }
 

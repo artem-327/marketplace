@@ -364,7 +364,7 @@ class AddInventoryForm extends Component {
     }
   }
 
-  onSplitsChange = debounce((value, values, setFieldValue) => {
+  onSplitsChange = debounce(async (value, values, setFieldValue, validateForm) => {
     value = parseInt(value)
     const minimum = parseInt(values.minimum)
 
@@ -375,11 +375,12 @@ class AddInventoryForm extends Component {
 
     if (values.minimumRequirement) {
       if (minimum !== value && ((minimum % value) !== 0)) {
-        setFieldValue('minimum', value)
+        await setFieldValue('minimum', value)
       }
     } else {
-      setFieldValue('minimum', value)
+      await setFieldValue('minimum', value)
     }
+    validateForm()
   }, 500)
 
   removeAttachment = async (isLot, documentName, documentId, connectedId, values, setFieldValue) => {
@@ -948,6 +949,9 @@ class AddInventoryForm extends Component {
                         <Tab.Pane style={{ padding: '0 32px' }}>
                           <Grid divided style={{ marginTop: '2rem' }}>
                             <Grid.Column computer={5} tablet={5} mobile={7}>
+
+
+
                               <Header as='h3'>
                                 <FormattedMessage id='addInventory.whatToList' defaultMessage='What product do you want to list?'>
                                   {(text) =>
@@ -1192,7 +1196,7 @@ class AddInventoryForm extends Component {
                                           inputProps={{
                                             type: 'number',
                                             min: 1,
-                                            onChange: (e, { value }) => this.onSplitsChange(value, values, setFieldValue)
+                                            onChange: (e, {value}) => this.onSplitsChange(value, values, setFieldValue, validateForm)
                                           }} />
                                       </GridColumn>
                                     </GridRow>

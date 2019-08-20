@@ -9,7 +9,7 @@ import { withDatagrid } from '~/modules/datagrid'
 import { applyFilter } from '~/modules/filter/actions'
 import { FormattedNumber } from 'react-intl'
 
-import { FormattedUnit } from '~/components/formatted-messages'
+import { FormattedUnit, FormattedAssay } from '~/components/formatted-messages'
 
 import { getSafe } from '~/utils/functions'
 
@@ -46,7 +46,7 @@ function mapStateToProps(store, { datagrid }) {
         manufacturer: getSafe(() => po.manufacturer.name, 'N/A'),
         origin: getSafe(() => po.origin.name),
         expiration: moment(po.expirationDate).format('MM/DD/YYYY'),
-        assay: po.assayMin + '/' + po.assayMax,
+        assay: <FormattedAssay min={po.assayMin} max={po.assayMax} />,
         condition: getSafe(() => po.productCondition.name),
         form: getSafe(() => po.productForm.name),
         location: getLocationString(po)

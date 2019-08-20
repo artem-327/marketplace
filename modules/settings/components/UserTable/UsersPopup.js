@@ -15,8 +15,8 @@ import { CheckboxWithValue } from '~/components/custom-formik'
 import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import { generateToastMarkup } from '~/utils/functions'
-
 import { errorMessages } from '~/constants/yupValidation'
+import { PhoneNumber } from '~/components/PhoneNumber'
 
 const userFormValidation = () => Yup.object().shape({
   name: Yup.string().trim()
@@ -149,6 +149,12 @@ class UsersPopup extends React.Component {
                   ))
                 ) : (
                     <>
+                      {false && <FormGroup widths='equal' data-test='settings_users_popup_nameTitle_inp'>
+                        <PhoneNumber
+                          label={formatMessage({ id: 'global.phone', defaultMessage: 'Phone number' })}
+                          name='phone' />
+                      </FormGroup>}
+
                       <FormGroup widths='equal' data-test='settings_users_popup_nameTitle_inp'>
                         <Input
                           type='text'
