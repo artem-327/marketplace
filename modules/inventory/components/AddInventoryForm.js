@@ -122,7 +122,7 @@ val.addMethod(val.number, 'divisibleBy', function (ref, message) {
     params: {
       reference: ref.path
     },
-    test: function(value) {
+    test: function (value) {
       const divisedBy = parseInt(this.resolve(ref))
       if (!divisedBy || isNaN(divisedBy))
         return false
@@ -193,14 +193,14 @@ const validationScheme = val.object().shape({
     .moreThan(0, errorMessages.requiredMessage)
     .required(errorMessages.requiredMessage),
   assayMin: val.number().nullable().min(0, errorMessages.minimum(0)).test('match', errorMessages.minUpToMax,
-    function(assayMin) {
+    function (assayMin) {
       return (typeof this.parent.assayMax === 'undefined') || (assayMin <= this.parent.assayMax)
     }),
   assayMax: val.number().nullable().min(0, errorMessages.minimum(0))
     .test('match', errorMessages.maxAtLeastMin,
-      function(assayMax) {
+      function (assayMax) {
         return (typeof this.parent.assayMin === 'undefined') || (assayMax >= this.parent.assayMin)
-    }),
+      }),
 })
 
 const tab1 = ['inStock', 'product', 'processingTimeDays', 'doesExpire', 'pkgAmount', 'validityDate', 'minimumRequirement', 'minimum', 'splits', 'priceTiers', 'pricingTiers', 'warehouse']
@@ -473,7 +473,7 @@ class AddInventoryForm extends Component {
                             values,
                             setFieldValue
                           )}
-                          data-test='add_inventory_documents_remove_btn'/>
+                            data-test='add_inventory_documents_remove_btn' />
                         </Table.Cell>
                       </Table.Row>
                     ))}
@@ -646,8 +646,8 @@ class AddInventoryForm extends Component {
                               <FormattedMessage id='addInventory.invalidForm' defaultMessage='Form is invalid' />,
                               <FormattedMessage id='addInventory.fixErrorsBeforeSubmit' defaultMessage='There are errors on current tab. Please, fix them before submit.' />,
                             ), {
-                              appearance: 'error'
-                            })
+                                appearance: 'error'
+                              })
                           }
                         }).catch(e => {
                           console.error('CATCH', e)
@@ -815,6 +815,8 @@ class AddInventoryForm extends Component {
       //initialState,
       activeIndex
     } = this.state
+
+    console.log({ initValues, initialState })
 
     return (
       <div id='page' className='flex stretched'>
@@ -1024,19 +1026,24 @@ class AddInventoryForm extends Component {
                                       <GridColumn computer={8} tablet={16}>
 
 
-                                    <Dropdown label='Processing Time' name='processingTimeNum' options={this.getProcessingTimes()}
-                                              inputProps={{
-                                                'data-test': 'new_inventory_processing_time_days_weeks_drpdn',
-                                                onChange: (e, {value}) => {setFieldValue(`processingTimeDays`, value * values.processingTimeDW)
-                                                }}}
-                                    />
+                                        <Dropdown label='Processing Time' name='processingTimeNum' options={this.getProcessingTimes()}
+                                          inputProps={{
+                                            'data-test': 'new_inventory_processing_time_days_weeks_drpdn',
+                                            onChange: (e, { value }) => {
+                                              setFieldValue(`processingTimeDays`, value * values.processingTimeDW)
+                                            }
+                                          }}
+                                        />
                                       </GridColumn>
                                       <GridColumn computer={8} tablet={16}>
-                                    <Dropdown label='Days / Weeks' name='processingTimeDW' options={[{value: 1, key: 1, text: 'Days'}, {value: 5, key: 5, text: 'Weeks'}]}
-                                              inputProps={{ 'data-test': 'new_inventory_processing_time_value_drpdn',
-                                                onChange: (e, {value}) => {setFieldValue(`processingTimeDays`, values.processingTimeNum * value)
-                                                }}}
-                                    />
+                                        <Dropdown label='Days / Weeks' name='processingTimeDW' options={[{ value: 1, key: 1, text: 'Days' }, { value: 5, key: 5, text: 'Weeks' }]}
+                                          inputProps={{
+                                            'data-test': 'new_inventory_processing_time_value_drpdn',
+                                            onChange: (e, { value }) => {
+                                              setFieldValue(`processingTimeDays`, values.processingTimeNum * value)
+                                            }
+                                          }}
+                                        />
                                       </GridColumn>
                                     </GridRow>
                                   </Grid>
@@ -1057,7 +1064,7 @@ class AddInventoryForm extends Component {
                                 </FormattedMessage>
                               </Header>
                               <FormGroup inline>
-                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='doesExpire' data-test='add_inventory_expire_no_rad'/>
+                                <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.no', defaultMessage: 'No' })} value={false} name='doesExpire' data-test='add_inventory_expire_no_rad' />
                                 <Radio fieldProps={{ width: 5 }} label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })} value={true} name='doesExpire' data-test='add_inventory_expire_yes_rad' />
                               </FormGroup>
                               <FormGroup>
@@ -1065,7 +1072,7 @@ class AddInventoryForm extends Component {
                                   <DateInput
                                     inputProps={{ disabled: !values.doesExpire, 'data-test': 'add_inventory_product_expirationDate_dtin' }}
                                     label={formatMessage({ id: 'addInventory.expirationDate', defaultMessage: 'Expiration Date' })}
-                                    name='validityDate'/>
+                                    name='validityDate' />
                                 </FormField>
                               </FormGroup>
 
@@ -1089,7 +1096,7 @@ class AddInventoryForm extends Component {
                                       selection: true,
                                       value: 0
                                     }}
-                                    inputProps={{ 'data-test': 'new_inventory_warehouse_drpdn' }}/>
+                                    inputProps={{ 'data-test': 'new_inventory_warehouse_drpdn' }} />
                                 </FormField>
                               </FormGroup>
 
@@ -1151,14 +1158,14 @@ class AddInventoryForm extends Component {
                                               //setFieldValue('pricingTiers[0].quantityFrom', 1)
                                             }
                                           }}
-                                          data-test='add_inventory_minimumRequirement_no_rad'/>
+                                          data-test='add_inventory_minimumRequirement_no_rad' />
                                       </GridColumn>
                                       <GridColumn computer={8} tablet={16}>
                                         <Radio
                                           label={formatMessage({ id: 'global.yes', defaultMessage: 'Yes' })}
                                           value={true}
                                           name='minimumRequirement'
-                                          data-test='add_inventory_minimumRequirement_yes_rad'/>
+                                          data-test='add_inventory_minimumRequirement_yes_rad' />
                                       </GridColumn>
                                     </GridRow>
 
@@ -1313,12 +1320,14 @@ class AddInventoryForm extends Component {
                                           <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
                                           <br />
                                           <FormattedMessage id='addInventory.dragDropOr'
-                                                            defaultMessage={'or {link} to select from computer'}
-                                                            values={{ link: (
-                                                              <a>
-                                                                <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                                                              </a>
-                                                            ) }} />
+                                            defaultMessage={'or {link} to select from computer'}
+                                            values={{
+                                              link: (
+                                                <a>
+                                                  <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                                </a>
+                                              )
+                                            }} />
                                         </label>
                                       )}
                                       uploadedContent={(
@@ -1326,12 +1335,14 @@ class AddInventoryForm extends Component {
                                           <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
                                           <br />
                                           <FormattedMessage id='addInventory.dragDropOr'
-                                                            defaultMessage={'or {link} to select from computer'}
-                                                            values={{ link: (
-                                                              <a>
-                                                                <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
-                                                              </a>
-                                                            ) }} />
+                                            defaultMessage={'or {link} to select from computer'}
+                                            values={{
+                                              link: (
+                                                <a>
+                                                  <FormattedMessage id='global.clickHere' defaultMessage={'click here'} />
+                                                </a>
+                                              )
+                                            }} />
                                         </label>
                                       )}
                                     />
@@ -1427,7 +1438,7 @@ class AddInventoryForm extends Component {
                                       label={formatMessage({ id: 'addInventory.form', defaultMessage: 'Form' })}
                                       name='productForm'
                                       options={listForms}
-                                      inputProps={{ 'data-test': 'new_inventory_form_drpdn' }}/>
+                                      inputProps={{ 'data-test': 'new_inventory_form_drpdn' }} />
                                   </FormField>
                                   <FormGroup>
                                     <FormField width={8}>
@@ -1435,14 +1446,14 @@ class AddInventoryForm extends Component {
                                         label={formatMessage({ id: 'addInventory.condition', defaultMessage: 'Condition' })}
                                         name='productCondition'
                                         options={listConditions}
-                                        inputProps={{ 'data-test': 'new_inventory_condition_drpdn' }}/>
+                                        inputProps={{ 'data-test': 'new_inventory_condition_drpdn' }} />
                                     </FormField>
                                     <FormField width={8}>
                                       <Dropdown
                                         label={formatMessage({ id: 'addInventory.grade', defaultMessage: 'Grade' })}
                                         name='productGrade'
                                         options={listGrades}
-                                        inputProps={{ 'data-test': 'new_inventory_grade_drpdn' }}/>
+                                        inputProps={{ 'data-test': 'new_inventory_grade_drpdn' }} />
                                     </FormField>
                                   </FormGroup>
                                   <FormGroup>
@@ -1556,7 +1567,7 @@ class AddInventoryForm extends Component {
                                             <TableCellSmall>0</TableCellSmall>
                                             <TableCellSmall>0</TableCellSmall>
                                             <TableCellBig><DateInput name={`lots[${index}].manufacturedDate`} inputProps={{ 'data-test': 'add_inventory_product_manufacturedDate_dtin' }} /></TableCellBig>
-                                            <TableCellBig><DateInput name={`lots[${index}].expirationDate`}  inputProps={{ 'data-test': 'add_inventory_product_expirationDate_dtin' }} /></TableCellBig>
+                                            <TableCellBig><DateInput name={`lots[${index}].expirationDate`} inputProps={{ 'data-test': 'add_inventory_product_expirationDate_dtin' }} /></TableCellBig>
                                             <TableCellBig>
                                               <UploadLot {...this.props}
                                                 attachments={values.lots[index].attachments}
@@ -1577,7 +1588,7 @@ class AddInventoryForm extends Component {
                                               />
                                             </TableCellBig>
                                             <TableCellMini textAlign='center'><Icon name='trash alternate outline' size='large' style={{ 'margin': 0 }} onClick={() => this.removeLot(arrayHelpers, setFieldValue, { costs: values.costs, lots: values.lots, packagingSize: values.product.packagingSize }, index)}
-                                                             data-test='add_inventory_removeLot_btn' /></TableCellMini>
+                                              data-test='add_inventory_removeLot_btn' /></TableCellMini>
                                           </Table.Row>
                                         )) : null
                                         }
@@ -1611,7 +1622,7 @@ class AddInventoryForm extends Component {
                                           label={formatMessage({ id: 'global.no', defaultMessage: 'No' })}
                                           value={false}
                                           name='trackSubCosts'
-                                          data-test='add_inventory_trackSubCosts_no_rad'/>
+                                          data-test='add_inventory_trackSubCosts_no_rad' />
                                       </FormField>
                                     </FormGroup>
                                   </FormField>
@@ -1675,14 +1686,14 @@ class AddInventoryForm extends Component {
                                                 </TableCell>
                                                 <TableCell width={3}><FormField width={16} data-test={`add_inventory_cost_${index}_inp`} >
                                                   <Input name={`costs[${index}].cost`} inputProps={{
-                                                  type: 'number', step: '1', value: null, min: 0, disabled: !values.trackSubCosts, onChange: (e, { value }) => {
-                                                    let count = parseInt(values.costs[index].lot)
-                                                      ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAmount)
-                                                      : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0)
+                                                    type: 'number', step: '1', value: null, min: 0, disabled: !values.trackSubCosts, onChange: (e, { value }) => {
+                                                      let count = parseInt(values.costs[index].lot)
+                                                        ? parseFloat(values.lots[parseInt(values.costs[index].lot) - 1].pkgAmount)
+                                                        : values.lots.reduce((all, lot) => all + parseFloat(lot.pkgAmount), 0)
 
                                                       setFieldValue(`costs[${index}].costUom`, (parseFloat(value) / (count * values.product.packagingSize)).toFixed(3))
-                                                  }
-                                                }} /></FormField></TableCell>
+                                                    }
+                                                  }} /></FormField></TableCell>
                                                 <TableCell width={3}><FormField width={16} data-test={`add_inventory_costUom_${index}_inp`}>
                                                   <Input name={`costs[${index}].costUom`} inputProps={{ type: 'text', step: '0.01', value: null, min: 0, disabled: true }} /></FormField></TableCell>
                                                 <TableCell width={3}>
@@ -1711,7 +1722,7 @@ class AddInventoryForm extends Component {
                                                   />
                                                 </TableCell>
                                                 <TableCell width={1}><Icon name='trash alternate outline' size='large' disabled={!values.trackSubCosts} onClick={() => arrayHelpers.remove(index)}
-                                                                           data-test={`add_inventory_delete_${index}`}/></TableCell>
+                                                  data-test={`add_inventory_delete_${index}`} /></TableCell>
                                               </Table.Row>
                                             )) : null
                                             }
@@ -1761,7 +1772,7 @@ class AddInventoryForm extends Component {
                                     <label>
                                       <FormattedMessage id='addInventory.documentType' defaultMessage={'Document Type'} />
                                     </label>
-                                    <Dropdown name={`additionalType`} options={listDocumentTypes} inputProps={{ 'data-test': 'new_inventory_doc_type_drpdn' }}/>
+                                    <Dropdown name={`additionalType`} options={listDocumentTypes} inputProps={{ 'data-test': 'new_inventory_doc_type_drpdn' }} />
                                   </FormField>
                                 </GridColumn>
                               </Grid>
