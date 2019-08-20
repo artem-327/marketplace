@@ -205,6 +205,20 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+
+    /* UPDATE_COMPANY */
+
+    case AT.UPDATE_COMPANY_FULFILLED: {
+      return {
+        ...state,
+        identity: {
+          ...state.identity,
+          company: payload
+        }
+
+      }
+    }
+
     default: {
       return state
     }

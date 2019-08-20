@@ -11,3 +11,5 @@ export const reviewCompany = values => api.patch(`/prodex/api/companies/review`,
 export const searchCountries = searchQuery => api.get(`/prodex/api/countries/search?pattern=${searchQuery}`)
 
 export const searchProvinces = countryId => api.get(`/prodex/api/provinces/country/${countryId}`)
+
+export const updateCompany = (id, payload) => api.patch(`/prodex/api/companies/id/${id}`, payload).then(response => response.data)
