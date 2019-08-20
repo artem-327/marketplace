@@ -65,8 +65,7 @@ export default class PriceControl extends Component {
       })
     }
     rule.priceType === value
-
-    console.log(name, value)
+    
     if(name === 'value' && value < 0) value *= -1
 
 
