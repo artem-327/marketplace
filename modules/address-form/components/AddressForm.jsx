@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { Input, Dropdown } from 'formik-semantic-ui'
 import { FormattedMessage } from 'react-intl'
-import { FormGroup, Header } from 'semantic-ui-react'
+import { FormGroup, Header, Popup, Dropdown as SemanticDropdown, FormField } from 'semantic-ui-react'
 
 import { ZipDropdown } from '~/modules/zip-dropdown'
-import { func, string, shape, array, bool } from 'prop-types'
+import { func, string, shape, array, bool, object, oneOfType, node } from 'prop-types'
 
 import styled from 'styled-components'
 
@@ -56,17 +56,18 @@ export default class AddressForm extends Component {
   }
 
   componentDidMount() {
-    let { countries, values, prefix } = this.props
+    let { countries } = this.props
     const { addZip } = this.props
-    let { address } = this.getValues()
 
-    if (countries.length === 0) this.props.getCountries()
-    if (address.zip) addZip({ zip: address.zip, id: address.zip })
     try {
+      let { address } = this.getValues()
+
+      if (countries.length === 0) this.props.getCountries()
+      if (address.zip) addZip({ zip: address.zip, id: address.zip })
       let { countryId, hasProvinces } = JSON.parse(getSafe(() => address.country, { countryId: null, hasProvinces: null }))
 
       this.fetchProvinces(countryId, hasProvinces)
-    } catch { }
+    } catch (e) { console.error(e) }
   }
 
   handleChange = (_, { name, value }) => {
@@ -113,24 +114,26 @@ export default class AddressForm extends Component {
 
 
   getOptions = (values) => {
-    let { prefix, addressDatalistData } = this.props
+    let { addressDatalistData } = this.props
+    try {
+      let { address } = this.getValues()
+      return addressDatalistData.map((a) => {
+        if (a.streetAddress.startsWith(address.streetAddress) && a.city.startsWith(address.city)) {
+          let element = a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
 
-    let { address } = this.getValues()
+          return element
+        }
+      })
+    } catch (e) {
+      console.error(e)
+      return []
+    }
 
-    return addressDatalistData.map((a) => {
-      if (a.streetAddress.startsWith(address.streetAddress) && a.city.startsWith(address.city)) {
-
-        let element = a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
-
-        return element
-      }
-
-      return null
-    })
   }
 
-  getValues = () => {
-    let { prefix, values } = this.props
+  getValues = (values = this.props.values) => {
+    let { prefix } = this.props
+
     return prefix ? (values[prefix] instanceof Array ? values[prefix][this.props.index] : values[prefix]) : values
   }
 
@@ -140,9 +143,10 @@ export default class AddressForm extends Component {
     let {
       countries, prefix,
       initialZipCodes, displayHeader,
-      values, datalistName
+      values, datalistName,
+      additionalCountryInputProps,
+      countryPopup
     } = this.props
-
 
     let fields = this.asignPrefix()
 
@@ -160,11 +164,13 @@ export default class AddressForm extends Component {
             label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />}
             name={fields.streetAddress}
           />
-          <Input
-            inputProps={{ icon: 'dropdown', list: datalistName, onChange: this.handleChange }}
-            label={<FormattedMessage id='global.city' defaultMessage='City' />}
-            name={fields.city}
-          />
+          <Popup trigger={
+            <Input
+              inputProps={{ icon: 'dropdown', list: datalistName, onChange: this.handleChange }}
+              label={<FormattedMessage id='global.city' defaultMessage='City' />}
+              name={fields.city}
+            />
+          } content='abcd' />
         </DatalistGroup>
         <FormGroup widths='equal'>
           <ZipDropdown
@@ -172,27 +178,38 @@ export default class AddressForm extends Component {
             name={fields.zip} countryId={countryId} initialZipCodes={initialZipCodes}
             data-test='address_form_zip_drpdn'
           />
-          <Dropdown label={<FormattedMessage id='global.country' defaultMessage='Country' />} name={fields.country}
-            options={countries.map((country) => ({
-              key: country.id,
-              text: country.name,
-              value: JSON.stringify({ countryId: country.id, hasProvinces: country.hasProvinces })
-            }))}
-            inputProps={{
-              'data-test': 'address_form_country_drpdn',
-              search: true, onChange: async (e, data) => {
-                let values = JSON.parse(data.value)
-                let fieldName = prefix ? `${prefix.province}` : 'address.province'
-                
-                setFieldValue(fieldName, '')
+          <FormField name={fields.country}>
+            <Popup trigger={<label><FormattedMessage id='global.country' defaultMessage='Country' /></label>}
+              disabled={countryPopup.disabled} content={countryPopup.content}
+            />
 
-                // this.handleChange(e, data)
-                this.setState({ hasProvinces: values.hasProvinces })
-                if (values.hasProvinces) {
-                  this.fetchProvinces(values.countryId, values.hasProvinces)
-                }
-              }
-            }} />
+            <Dropdown name={fields.country}
+              options={countries.map((country) => ({
+                key: country.id,
+                text: country.name,
+                value: JSON.stringify({ countryId: country.id, hasProvinces: country.hasProvinces })
+              }))}
+
+              inputProps={{
+                'data-test': 'address_form_country_drpdn',
+                search: true, onChange: async (e, data) => {
+                  let values = JSON.parse(data.value)
+                  let fieldName = prefix ? `${prefix.province}` : 'address.province'
+
+                  setFieldValue(fieldName, '')
+
+                  // this.handleChange(e, data)
+                  this.setState({ hasProvinces: values.hasProvinces })
+                  if (values.hasProvinces) {
+                    this.fetchProvinces(values.countryId, values.hasProvinces)
+                  }
+                },
+                ...additionalCountryInputProps
+              }}
+           
+            />
+          </FormField>
+
           <Dropdown label={<FormattedMessage id='global.stateProvince' defaultMessage='State/Province' />}
             name={fields.province} options={provinces.map((province) => ({
               key: province.id,
@@ -232,7 +249,14 @@ AddressForm.propTypes = {
   province: shape({
     name: string.isRequired
   }),
-  initialZipCodes: array
+  countryPopup: shape({
+    disabled: bool,
+    content: oneOfType([string, node])
+  }),
+  initialZipCodes: array,
+  additionalCountryInputProps: object,
+  fixedCountries: array,
+  handleChange: func
 }
 
 AddressForm.defaultProps = {
@@ -257,8 +281,18 @@ AddressForm.defaultProps = {
   province: {
     name: 'province'
   },
+  countryPopup: {
+    disabled: true,
+    content: ''
+  },
+
+  //  TODO - implement support for more field popups if needed...
+
   initialZipCodes: [],
-  values: null
+  values: null,
+  additionalCountryInputProps: {},
+  fixedCountries: [],
+  handleChange: () => console.error('handleChange function not provided in AddressForm.jsx!')
 }
 
 
