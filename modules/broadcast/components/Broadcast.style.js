@@ -50,7 +50,7 @@ const Content = styled.div`
 `
 
 const RowContent = styled.div`
-  flex: 1 1 300px;
+  flex: 1 1 250px;
 `
 
 const Toggle = styled.div`

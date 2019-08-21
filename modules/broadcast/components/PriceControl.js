@@ -65,20 +65,25 @@ export default class PriceControl extends Component {
       })
     }
     rule.priceType === value
-    
-    if(name === 'value' && value < 0) value *= -1
+
+    let minimum = name === 'type' ? this.calculateMinimum(value) : this.calculateMinimum()
+
+
+    if (name === 'value' && value < minimum) value = minimum
+    if (name === 'type' && this.state.value < minimum) this.setState({ value: minimum })
+
 
 
     this.setState({ [name]: value }, () => {
       const { value, type } = this.state
 
       if (type === 'addition') {
-        rule.priceAddition = value !== 0 ? parseInt(value, 10) : 0
+        rule.priceAddition = value ? parseFloat(value, 10) : 0
         rule.priceMultiplier = 0
 
         this.onChange(item)
       } else if (type === 'multiplier') {
-        rule.priceMultiplier = value !== 0 ? parseInt(value, 10) : 0
+        rule.priceMultiplier = value ? parseFloat(value, 10) : 0
         rule.priceAddition = 0
 
         this.onChange(item)
@@ -88,6 +93,9 @@ export default class PriceControl extends Component {
     return false
   }
 
+
+  calculateMinimum = (type = this.state.type) => type === 'multiplier' ? -99.9 : -1 * (this.props.offer.pricingTiers[this.props.offer.pricingTiers.length - 1].price) + 0.001
+
   getPrices = () => {
     const { offer, item, rootRule } = this.props
     const { model: { rule } } = item
@@ -95,18 +103,21 @@ export default class PriceControl extends Component {
     const r = rule //rootRule || rule
     const calc = (p) => (p * (r.priceMultiplier + 100) / 100) + r.priceAddition
 
-    let low = calc(offer.pricingTiers[0].price), high = calc(offer.pricingTiers[offer.pricingTiers.length - 1].price)
+    let high = calc(offer.pricingTiers[0].price), low = calc(offer.pricingTiers[offer.pricingTiers.length - 1].price)
 
 
 
     return {
-      high: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={low ? low : 0} />,
-      low: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={high ? high : 0} />
+      highStr: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={high ? high : 0} />,
+      lowStr: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={low ? low : 0} />,
+      low,
+      high
     }
   }
 
+
   render() {
-    const { disabled } = this.props
+    const { disabled, offer } = this.props
     const { type, value } = this.state
     const prices = this.getPrices()
 
@@ -116,8 +127,9 @@ export default class PriceControl extends Component {
           disabled={disabled}
           name='value'
           type='number'
-          min={0}
+          min={this.calculateMinimum()}
           value={value}
+          step={type === 'multiplier' ? 0.1 : 0.001}
           onClick={e => { e.stopPropagation() }}
           onChange={this.handleChange}
           size='small'
@@ -128,8 +140,8 @@ export default class PriceControl extends Component {
           <Radio disabled={disabled} label='$' checked={type === 'addition'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'addition' })} data-test='broadcast_price_control_addition_rad' />
         </ControlBox>
         <ControlBox>
-          <FobPrice disabled={disabled}>{prices.low} -</FobPrice>
-          <FobPrice disabled={disabled}>{prices.high}</FobPrice>
+          <FobPrice disabled={disabled}>{prices.lowStr} -</FobPrice>
+          <FobPrice disabled={disabled}>{prices.highStr}</FobPrice>
         </ControlBox>
       </Box>
     )
@@ -139,7 +151,7 @@ export default class PriceControl extends Component {
 
 const PriceInput = styled(Input)`
   padding: 5px;
-  width: 80px;
+  width: 110px;
 `
 
 const ControlBox = styled.div`
