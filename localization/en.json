@@ -680,6 +680,7 @@
   "validation.invalidValueFormat": "Invalid value format. Format should be {example}",
   "validation.invalidString": "Invalid value",
   "validation.minLength": "Field should have at least {min} characters",
+  "validaiton.maxLength": "Field should have max {max} characters",
   "validation.zipCode": "Enter zip code",
   "validation.enterPhoneNumber": "Enter phone number",
   "validation.minimum": "Minimum is {min}",

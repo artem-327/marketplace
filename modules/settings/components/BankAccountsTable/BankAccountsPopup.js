@@ -28,7 +28,11 @@ const initialFormValues = {
 
 
 const formValidation = Yup.object().shape({
-  accountNumber: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+  accountNumber: Yup.string().trim()
+    .min(4, errorMessages.minLength(4))
+    .max(17, errorMessages.maxLength(17))
+    .test('numeric-string', errorMessages.mustBeNumber, (value) => /^[0-9]*$/gm.test(value))
+    .required(errorMessages.requiredMessage),
   bankAccountType: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
   name: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
   routingNumber: Yup.string().trim().matches(/^\d{9}$/, errorMessages.exactLength(9)).required(errorMessages.requiredMessage)
@@ -88,7 +92,7 @@ class BankAccountsPopup extends React.Component {
             validationSchema={formValidation}
             onReset={closePopup}
             onSubmit={this.submitHandler}
-            validateOnChange={false}
+            // validateOnChange={false}
             validateOnBlur={false}
           >
             <FormGroup widths='equal' data-test='settings_bank_account_accountNumber_inp'>
