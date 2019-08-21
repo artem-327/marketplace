@@ -812,6 +812,8 @@
   "notifications.passwordResetSuccess.content": "Password was reset successfully, you can log-in now.",
   "notifications.dwollaAccountCreated.header": "Dwolla account created",
   "notifications.dwollaAccountCreated.content": "Dwolla account successfully created",
+  "notifications.hazardInfoUpdated.header": "Hazardous informations for {name} updated",
+  "notifications.hazardInfoUpdated.content": "Hazardous informations successfully updated",
   "laststep.address.city": "City *",
   "laststep.address.country": "Country *",
   "laststep.address.duns": "DUNS Number",

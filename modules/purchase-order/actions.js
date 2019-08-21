@@ -51,3 +51,5 @@ export const getProvinces = (countryId, search = null) => ({ type: AT.PROVINCES_
 export const getStates = (search = null) => ({ type: AT.STATES_FETCH, payload: api.getStates(search) })
 
 export const getWarehouses = () => ({ type: AT.GET_WAREHOUSES, payload: api.getWarehouses() })
+
+export const updateHazmatInfo = (cartItemId, payload) => ({ type: AT.UPDATE_HAZMAT_INFO, payload: api.updateHazmatInfo(cartItemId, payload) })

@@ -229,6 +229,7 @@ class PurchaseOrder extends Component {
 
           <GridColumn computer={5}>
             <CartItemSummary
+              updateHazmatInfo={this.props.updateHazmatInfo}
               currency={currency}
               cartItems={cart.cartItems}
               deleteCart={this.deleteCart}

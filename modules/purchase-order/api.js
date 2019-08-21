@@ -21,3 +21,5 @@ export const getProvinces = ({ countryId }) => api.get(`/prodex/api/provinces/co
 export const getStateDetail = (id) => api.get(`/prodex/api/companies/?entityId=${id}&entityType=country`).then(response => response.data)
 export const getBranches = () => api.get('/prodex/api/branches').then(response => response.data)
 export const getWarehouses = () => api.get('/prodex/api/branches/warehouses').then(response => response.data)
+
+export const updateHazmatInfo = (cartItemId, payload) => api.patch(`/prodex/api/cart/items/${cartItemId}/hazard-info`, payload).then(response => response.data)
