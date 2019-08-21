@@ -246,7 +246,7 @@ class AddNewPopupCasProducts extends React.Component {
       toastManager
     } = this.props
 
-    const {selectLogo, removeLogo } = this
+    const { selectLogo, removeLogo } = this
 
     let { accordionActive, companyLogo } = this.state
 
@@ -345,7 +345,7 @@ class AddNewPopupCasProducts extends React.Component {
 
           return (
             <Modal open centered={false} size='small'>
-              
+
               <Modal.Header><FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} /> {config.addEditText}</Modal.Header>
               <Segment basic padded>
                 <Form loading={isSubmitting}>
@@ -389,9 +389,9 @@ class AddNewPopupCasProducts extends React.Component {
                             <Input label={<FormattedMessage id='global.name' defaultMessage='Name' />} name='primaryBranch.name' />
                           </FormGroup>
                           <FormGroup widths='equal' data-test='admin_popup_company_primaryBranchNameEmailPhone_inp' >
-                            <Input label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='primaryBranch.contactName' />
-                            <Input label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />} name='primaryBranch.contactEmail' />
-                            <Input label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />} name='primaryBranch.contactPhone' />
+                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='primaryBranch.contactName' />
+                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact email' />} name='primaryBranch.contactEmail' />
+                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />} name='primaryBranch.contactPhone' />
                           </FormGroup>
                           <FormGroup widths='equal'>
                             <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='primaryBranch.warehouse' inputProps={{ 'data-test': 'admin_popup_company_primaryBranch_warehouse_chckb' }} />
@@ -411,9 +411,9 @@ class AddNewPopupCasProducts extends React.Component {
                             <Input label={<FormattedMessage id='global.name' defaultMessage='Name' />} name='mailingBranch.name' />
                           </FormGroup>
                           <FormGroup widths='equal'>
-                            <Input label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact Email' />} name='mailingBranch.contactEmail' />
-                            <Input label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='mailingBranch.contactName' />
-                            <Input label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />} name='mailingBranch.contactPhone' />
+                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactEmail' defaultMessage='Contact Email' />} name='mailingBranch.contactEmail' />
+                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name' />} name='mailingBranch.contactName' />
+                            <Input inputProps={{ fluid: true }} label={<FormattedMessage id='addCompany.contactPhone' defaultMessage='Contact Phone' />} name='mailingBranch.contactPhone' />
                           </FormGroup>
                           <FormGroup widths='equal'>
                             <Checkbox label={formatMessage({ id: 'global.warehouse', defaultMessage: 'Warehouse' })} name='mailingBranch.warehouse' inputProps={{ 'data-test': 'admin_popup_company_mailingBranch_warehouse_chckb' }} />
