@@ -58,7 +58,8 @@ function mapStateToProps(store, { datagrid }) {
         assay: <FormattedAssay min={po.assayMin} max={po.assayMax} />,
         mfgDate: getSafe(() => moment(po.manufacturedDate).format('MM/DD/YYYY'), ''),
         expDate: getSafe(() => moment(po.expirationDate).format('MM/DD/YYYY'), ''),
-        allocatedPkg: getSafe(() => po.pkgAllocated, ''),
+        allocatedPkg: po.pkgAllocated,
+        processingTimeDays: po.processingTimeDays,
         offerExpiration: getSafe(() => moment(po.validityDate).format('MM/DD/YYYY'), ''),
       }
     }),

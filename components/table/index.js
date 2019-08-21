@@ -6,6 +6,7 @@ import { Segment, Icon, Dropdown, Modal, Divider } from 'semantic-ui-react'
 import { Form, Checkbox, Button } from 'formik-semantic-ui'
 import _ from 'lodash'
 import GroupCell from './GroupCell'
+import { injectIntl } from 'react-intl'
 
 import {
   SearchState,
@@ -69,7 +70,7 @@ const SettingButton = styled(Icon)`
 const ColumnsSetting = ({ onClick }) => (
   <SettingButton onClick={onClick} data-test='table_setting_btn' name="setting" />
 )
-const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, open }) => (
+const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, open, formatMessage }) => (
   <Modal open={open} centered={false} size="tiny" style={{ width: 300 }}>
     <Modal.Content>
       <Form
@@ -84,12 +85,17 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
         onReset={onClose}
       >
         {columns.map(c => (
-          <Checkbox 
-            key={c.name} 
-            disabled={c.disabled} 
-            name={c.name} 
-            label={c.title}
-            inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }} 
+          <Checkbox
+            key={c.name}
+            disabled={c.disabled}
+            name={c.name}
+            label={
+              typeof c.title === 'string' ?
+                c.title
+                :
+                formatMessage({ id: c.title.props.id, defaultMessage: c.title.props.defaultMessage })
+            }
+            inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }}
           />
         ))}
         <Divider />
@@ -101,6 +107,7 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
     </Modal.Content>
   </Modal>
 )
+
 
 // const TableGroupRow = props => <TableGroupRow {...props} />
 const TableCells = props => <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions' : ''} />
@@ -133,7 +140,7 @@ const MESSAGES = {
   noData: 'No records found.'
 }
 
-export default class _Table extends Component {
+class _Table extends Component {
 
   static propTypes = {
     columns: pt.arrayOf(
@@ -407,6 +414,8 @@ export default class _Table extends Component {
       ...restProps
     } = this.props
 
+    const { intl: { formatMessage } } = this.props
+
     const { columnSettingOpen, expandedGroups, columnsSettings, loaded } = this.state
     const grouping = groupBy.map(g => ({ columnName: g }))
     const columnsFiltered = columns.filter(c => !c.disabled && (showColumnsWhenGrouped || !groupBy.includes(c.name)))
@@ -429,6 +438,7 @@ export default class _Table extends Component {
           <ColumnsSettingModal
             columns={columnsFiltered}
             open={columnSettingOpen}
+            formatMessage={formatMessage}
             hiddenColumnNames={columnsSettings.hiddenColumnNames || []}
             onClose={() => this.setState({ columnSettingOpen: false })}
             onChange={(hiddenColumnNames) => {
@@ -555,3 +565,5 @@ export default class _Table extends Component {
     )
   }
 }
+
+export default injectIntl(_Table)

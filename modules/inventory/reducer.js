@@ -153,7 +153,7 @@ export default function reducer(state = initialState, action) {
         }]
       }
 
-      let days = 1  // ! ! temporary (missing data from BE)
+      let days = data.processingTimeDays
 
       return {
         ...state,
@@ -165,8 +165,6 @@ export default function reducer(state = initialState, action) {
         }).concat(state.fileIds),
         poCreated: false,
         ...searchedLists,
-
-
 
         initialState: {
           additional: filteredAdditional,
@@ -208,7 +206,7 @@ export default function reducer(state = initialState, action) {
             }
           }),
           processingTimeDays: days,
-          processingTimeDW: days % 5 ? 1 : 5,
+          processingTimeDW: typeof days === "undefined" ? 1 : (days % 5 ? 1 : 5),
           processingTimeNum: days % 5 ? days : days / 5,
           product: data.product,
           productCondition: data.productCondition ? data.productCondition.id : null,
