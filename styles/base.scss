@@ -641,6 +641,10 @@ table.ui.table.table-fields.basic {
 
     input {
       text-align: center;
+
+      &[readonly] {
+        opacity: 0.45;
+      }
     }
   }
 }

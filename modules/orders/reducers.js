@@ -116,28 +116,35 @@ export default function(state = initialState, action) {
                 openedAssignLots: false
             }
         case AT.ORDER_GET_LOTS_FULFILLED:
+            // prepare lots for used product offers
+            let poLots = (state.detail.lots ? state.detail.lots : [])
+            poLots.push({
+                id: action.payload.data.id,
+                lots: action.payload.data.lots.map(lot => {
+                    return {
+                        id: lot.id,
+                        lotNumber: lot.lotNumber,
+                        total: lot.originalPkgAmount,
+                        available: lot.pkgAmount,
+                        allocated: 0,
+                        mfgDate: lot.manufacturedDate,
+                        expirationDate: lot.expirationDate,
+                        attachments: lot.attachments.map(att => {
+                            return {
+                              ...att,
+                              linked: true
+                            }
+                        }),
+                        selected: false
+                    }
+                })
+            })
+
             return {
                 ...state,
                 detail: {
                     ...state.detail,
-                    lots: action.payload.data.lots.map(lot => {
-                        return {
-                            id: lot.id,
-                            lotNumber: lot.lotNumber,
-                            total: lot.originalPkgAmount,
-                            available: lot.pkgAmount,
-                            allocated: 0,
-                            mfgDate: lot.manufacturedDate,
-                            expirationDate: lot.expirationDate,
-                            attachments: lot.attachments.map(att => {
-                                return {
-                                    ...att,
-                                    linked: true
-                                }
-                            }),
-                            selected: false
-                        }
-                    })
+                    poLots: poLots
                 }
             }
         case AT.ORDER_LINK_ATTACHMENT_FULFILLED:
