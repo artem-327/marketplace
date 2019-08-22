@@ -6,13 +6,14 @@ import { loadFile, addAttachment} from "~/modules/inventory/actions"
 import { Modal, Table, Grid, Header, Button, Segment, Tab, TabPane } from "semantic-ui-react"
 import { Form, Input, Checkbox } from 'formik-semantic-ui'
 import { FieldArray } from 'formik'
-import { getSafe } from '~/utils/functions'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage, FormattedDate, injectIntl } from 'react-intl'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
 import confirm from '~/src/components/Confirmable/confirm'
 import styled from 'styled-components'
 import * as val from 'yup'
 import { errorMessages } from '~/constants/yupValidation'
+import { withToastManager } from 'react-toast-notifications'
 
 const TabMenu = styled(Tab)`
   .ui.pointing.secondary.menu {
@@ -37,11 +38,14 @@ const TableWrapper = styled(Segment)`
 `
 
 const initValues = {
-  lots: []
+  tabLots: [{
+    orderItemId: 0,
+    lots: []
+  }]
 }
 
 val.addMethod(val.object, 'lessThanOrdered', function (propertyName, message) {
-  return this.test('moreThan', message, function (value) {
+  return this.test('lessThan', message, function (value) {
     if (!value || !value[propertyName]) {
       return true
     }
@@ -91,10 +95,13 @@ val.addMethod(val.object, 'moreThanOrdered', function (propertyName, message) {
 })
 
 const validationScheme = val.object().shape({
-  lots: val.array().of(val.object().lessThanOrdered('allocated', 'Less than ordered').moreThanOrdered('allocated', 'More than ordered').shape({
-    allocated: val.number(errorMessages.mustBeNumber).min(0).required(errorMessages.requiredMessage),
-    amount: val.number(), // helper for allocated validation
-    selected: val.bool()
+  tabLots: val.array().of(val.object().shape({
+    orderItemId: val.number(),
+    lots: val.array().of(val.object().lessThanOrdered('allocated', errorMessages.lessThanOrdered).moreThanOrdered('allocated', errorMessages.moreThanOrdered).shape({
+      allocated: val.number(errorMessages.mustBeNumber).min(0).required(errorMessages.requiredMessage),
+      amount: val.number(), // helper for allocated validation
+      selected: val.bool()
+    }))
   }))
 })
 
@@ -111,7 +118,10 @@ class AssignLots extends React.Component {
       let allocated = this.state.allocated
       let alreadyLoadedLots = []
       orderItems.forEach(orderItem => {
-        allocated.push(0)
+        const sumAllocated = orderItem.lots.reduce(function(sum, lot) {
+          return sum + lot.amount
+        }, 0)
+        allocated.push(sumAllocated)
         if (!alreadyLoadedLots.includes(orderItem.productOffer)) {
           this.props.loadLotsToAssign(orderItem.productOffer)
           alreadyLoadedLots.push(orderItem.productOffer)
@@ -121,192 +131,139 @@ class AssignLots extends React.Component {
     }
   }
 
-  renderTab(tabIndex, orderItemId, productOfferId, tabAmount) {
-    const { poLots, orderId, intl } = this.props
-
-    let { formatMessage } = intl
+  renderTab(tabIndex, orderItem, lots, setFieldValue, values) {
+    const { poLots, orderId } = this.props
 
     if (!getSafe(() => poLots.length, 0))
       return (<></>)
 
-    const productOffer = poLots.find(po => po.id === productOfferId)
-
-    const lots = productOffer.lots.map(lot => {
-      return {
-        ...lot,
-        amount: tabAmount
-      }
-    })
-    const lotsList = { lots }
-
     return (
       <LotsTab active={this.state.activeTab === tabIndex}>
-        <Form
-          enableReinitialize
-          validateOnChange={true}
-          initialValues={{ ...initValues, ...lotsList }}
-          validationSchema={validationScheme}
-          onSubmit={(values, actions) => {
-            let missingFile = false
-            const preparedLots = values.lots.reduce(function(filtered, lot) {
-              if (lot.selected) {
-                if (lot.attachments.length === 0)
-                  missingFile = true
-
-                filtered.push({ lotNumber: lot.lotNumber, pkgAmount: lot.allocated })
-              }
-              return filtered
-            }, [])
-
-            // confirm to assign when missing attachment(s) for assigned lot(s)
-            if (missingFile) {
-              confirm (
-                formatMessage({ id: 'confirm.missingCOfA', defaultMessage: 'Missing C of A' }),
-                formatMessage({
-                  id: 'confirm.assignMisconfiguration',
-                  defaultMessage: 'Selected lots should have uploaded C of A document. Do you really want to proceed and assign lots?'
-                })
-              ).then(
-                () => {
-                  // confirm
-                  this.props.assignLots(orderId, orderItemId, preparedLots).then(r => {
-                    actions.setSubmitting(false)
-                    this.props.closeAssignLots()
-                  })
-                },
-                () => {
-                  // cancel
-                  actions.setSubmitting(false)
-                }
-              )
-            } else {
-              this.props.assignLots(orderId, orderItemId, preparedLots).then(r => {
-                actions.setSubmitting(false)
-                this.props.closeAssignLots()
-              })
-            }
-          }}
-          className='flex stretched'
-          style={{ padding: '0' }}
-        >
-          {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
-            return (
-              <>
-                <TableWrapper>
-                  <Table className='table-fields basic'>
-                    <Table.Header>
-                      <Table.Row>
-                        <Table.HeaderCell></Table.HeaderCell>
-                        <Table.HeaderCell>Lot Number</Table.HeaderCell>
-                        <Table.HeaderCell textAlign='center'>Total</Table.HeaderCell>
-                        <Table.HeaderCell textAlign='center'>Available</Table.HeaderCell>
-                        <Table.HeaderCell textAlign='center'>Allocated</Table.HeaderCell>
-                        <Table.HeaderCell textAlign='center'>MFG Date</Table.HeaderCell>
-                        <Table.HeaderCell textAlign='center'>Expiration Date</Table.HeaderCell>
-                        <Table.HeaderCell textAlign='center'>C of A</Table.HeaderCell>
+        <TableWrapper>
+          <Table className='table-fields basic'>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell></Table.HeaderCell>
+                <Table.HeaderCell><FormattedMessage id='order.assignLots.header.lotNumber' defaultMessage='Lot Number' /></Table.HeaderCell>
+                <Table.HeaderCell textAlign='center'><FormattedMessage id='order.assignLots.header.total' defaultMessage='Total' /></Table.HeaderCell>
+                <Table.HeaderCell textAlign='center'><FormattedMessage id='order.assignLots.header.available' defaultMessage='Available' /></Table.HeaderCell>
+                <Table.HeaderCell textAlign='center'><FormattedMessage id='order.assignLots.header.allocated' defaultMessage='Allocated' /></Table.HeaderCell>
+                <Table.HeaderCell textAlign='center'><FormattedMessage id='order.assignLots.header.mfgDate' defaultMessage='MFG Date' /></Table.HeaderCell>
+                <Table.HeaderCell textAlign='center'><FormattedMessage id='order.assignLots.header.expirationDate' defaultMessage='Expiration Date' /></Table.HeaderCell>
+                <Table.HeaderCell textAlign='center'><FormattedMessage id='order.assignLots.header.cOfA' defaultMessage='C of A' /></Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              <Input name={`tabLots[${tabIndex}].orderItemId`} inputProps={{ type: 'hidden', defaultValue: orderItem.id }} />
+              <FieldArray
+                name={`tabLots[${tabIndex}].lots`}
+                render={arrayHelpers => (
+                  <>
+                    {lots.map((lot, index) => (
+                      <Table.Row key={lot.lotNumber}>
+                        <Table.Cell>
+                          <Input name={`tabLots[${tabIndex}].lots[${index}].amount`} inputProps={{ type: 'hidden', defaultValue: orderItem.amount }} />
+                          <Checkbox name={`tabLots[${tabIndex}].lots[${index}].selected`}
+                                    value={lot.lotNumber}
+                                    inputProps={{
+                                      onClick: (e, {checked}) => {
+                                        setFieldValue(`tabLots[${tabIndex}].lots[${index}].selected`, checked)
+                                        const stateAllocated = this.state.allocated
+                                        const needAmount = ((orderItem.amount - stateAllocated[tabIndex]) > 0 ? orderItem.amount - stateAllocated[tabIndex] : 0)
+                                        if (checked) {
+                                          const allocated = values.tabLots[tabIndex].lots[index].available > needAmount ? needAmount : values.tabLots[tabIndex].lots[index].available
+                                          setFieldValue(`tabLots[${tabIndex}].lots[${index}].allocated`, allocated)
+                                          stateAllocated[tabIndex] += allocated
+                                          this.setState({ allocated: stateAllocated })
+                                        } else {
+                                          const allocated = values.tabLots[tabIndex].lots[index].allocated
+                                          setFieldValue(`tabLots[${tabIndex}].lots[${index}].allocated`, 0)
+                                          stateAllocated[tabIndex] -= allocated
+                                          this.setState({ allocated: stateAllocated })
+                                        }
+                                      },
+                                      id: `tab${tabIndex}_lot${index}`
+                                    }} />
+                        </Table.Cell>
+                        <Table.Cell>{lot.lotNumber}</Table.Cell>
+                        <Table.Cell textAlign='center'>{lot.total}</Table.Cell>
+                        <Table.Cell textAlign='center'>{lot.available}</Table.Cell>
+                        <Table.Cell textAlign='center'>
+                          <Input name={`tabLots[${tabIndex}].lots[${index}].allocated`}
+                                 inputProps={{
+                                   type: 'number',
+                                   min: 0,
+                                   max: lot.available,
+                                   readOnly: getSafe(() => values.tabLots[tabIndex].lots[index].selected, false) ? false : true,
+                                   defaultValue: lot.allocated,
+                                   onChange: (e, {value}) => {
+                                     let stateAllocated = this.state.allocated
+                                     stateAllocated[tabIndex] += (value - values.tabLots[tabIndex].lots[index].allocated)
+                                     this.setState({allocated: stateAllocated })
+                                   }
+                                 }} />
+                        </Table.Cell>
+                        <Table.Cell textAlign='center'>{getSafe(() => <FormattedDate value={lot.mfgDate.split('T')[0]} />, 'N/A')}</Table.Cell>
+                        <Table.Cell textAlign='center'>{getSafe(() => <FormattedDate value={lot.expirationDate.split('T')[0]} />, 'N/A')}</Table.Cell>
+                        <Table.Cell textAlign='center'>
+                          <UploadLot {...this.props}
+                                     attachments={lot.attachments}
+                                     name={`tabLots[${tabIndex}].lots[${index}].attachments`}
+                                     type={1}
+                                     lot={lot}
+                                     filesLimit={1}
+                                     fileMaxSize={20}
+                                     onChange={(files) => this.props.linkAttachment(lot.id, files)}
+                                     data-test={`assign_lots_${index}_attachments`}
+                                     emptyContent={(<FormattedMessage id='global.upUpload' defaultMessage='\u2191 upload' tagName='a' />)}
+                          />
+                        </Table.Cell>
                       </Table.Row>
-                    </Table.Header>
-                    <Table.Body>
-                      <FieldArray
-                        name='lots'
-                        render={arrayHelpers => (
-                          <>
-                            {lots.map((lot, index) => (
-                              <Table.Row key={lot.lotNumber}>
-                                <Table.Cell>
-                                  <Input name={`lots[${index}].amount`} inputProps={{ type: 'hidden', defaultValue: tabAmount }} />
-                                  <Checkbox key={lot.lotNumber}
-                                            name={`lots[${index}].selected`}
-                                            value={lot.lotNumber}
-                                            inputProps={{
-                                              onClick: (e, {checked}) => {
-                                                setFieldValue(`lots[${index}].selected`, checked)
-                                                const stateAllocated = this.state.allocated
-                                                const needAmount = ((tabAmount - stateAllocated[tabIndex]) > 0 ? tabAmount - stateAllocated[tabIndex] : 0)
-                                                if (checked) {
-                                                  const allocated = values.lots[index].available > needAmount ? needAmount : values.lots[index].available
-                                                  setFieldValue(`lots[${index}].allocated`, allocated)
-                                                  stateAllocated[tabIndex] += allocated
-                                                  this.setState({ allocated: stateAllocated })
-                                                } else {
-                                                  const allocated = values.lots[index].allocated
-                                                  setFieldValue(`lots[${index}].allocated`, 0)
-                                                  stateAllocated[tabIndex] -= allocated
-                                                  this.setState({ allocated: stateAllocated })
-                                                }
-                                              },
-                                              id: `tab${tabIndex}_lot${index}`
-                                            }} />
-                                </Table.Cell>
-                                <Table.Cell>{lot.lotNumber}</Table.Cell>
-                                <Table.Cell textAlign='center'>{lot.total}</Table.Cell>
-                                <Table.Cell textAlign='center'>{lot.available}</Table.Cell>
-                                <Table.Cell textAlign='center'>
-                                  <Input name={`lots[${index}].allocated`}
-                                         inputProps={{
-                                           type: 'number',
-                                           min: 0,
-                                           max: lot.available,
-                                           readOnly: getSafe(() => values.lots[index].selected, false) ? false : true,
-                                           defaultValue: lot.allocated,
-                                           onChange: (e, {value}) => {
-                                             let stateAllocated = this.state.allocated
-                                             stateAllocated[tabIndex] += (value - values.lots[index].allocated)
-                                             this.setState({allocated: stateAllocated })
-                                           }
-                                         }} />
-                                </Table.Cell>
-                                <Table.Cell textAlign='center'>{getSafe(() => <FormattedDate value={lot.mfgDate.split('T')[0]} />, 'N/A')}</Table.Cell>
-                                <Table.Cell textAlign='center'>{getSafe(() => <FormattedDate value={lot.expirationDate.split('T')[0]} />, 'N/A')}</Table.Cell>
-                                <Table.Cell textAlign='center'>
-                                  <UploadLot {...this.props}
-                                             attachments={lot.attachments}
-                                             name={`lots[${index}].attachments`}
-                                             type={1}
-                                             lot={lot}
-                                             filesLimit={1}
-                                             fileMaxSize={20}
-                                             onChange={(files) => this.props.linkAttachment(lot.id, files)}
-                                             data-test={`assign_lots_${index}_attachments`}
-                                             emptyContent={(<FormattedMessage id='global.upUpload' defaultMessage='\u2191 upload' tagName='a' />)}
-                                  />
-                                </Table.Cell>
-                              </Table.Row>
-                            ))}
-                          </>
-                        )} />
-                    </Table.Body>
-                  </Table>
-                </TableWrapper>
-                <Grid>
-                  <Grid.Column width={10}></Grid.Column>
-                  <Grid.Column floated='right' width={3}>
-                    <Button basic fluid onClick={() => this.props.closeAssignLots()}>
-                      <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' />
-                    </Button>
-                  </Grid.Column>
-                  <Grid.Column floated='right' width={3}>
-                    <Button primary fluid>
-                      <FormattedMessage id='order.assignLots' defaultMessage='Assign Lots' tagName='span' />
-                    </Button>
-                  </Grid.Column>
-                </Grid>
-              </>
-            )
-          }}
-        </Form>
+                    ))}
+                  </>
+                )} />
+            </Table.Body>
+          </Table>
+        </TableWrapper>
+        <Grid>
+          <Grid.Column width={10}></Grid.Column>
+          <Grid.Column floated='right' width={3}>
+            <Button basic fluid onClick={() => this.props.closeAssignLots()}>
+              <FormattedMessage id='global.cancel' defaultMessage='Cancel' tagName='span' />
+            </Button>
+          </Grid.Column>
+          <Grid.Column floated='right' width={3}>
+            <Button primary fluid>
+              <FormattedMessage id='order.assignLots' defaultMessage='Assign Lots' tagName='span' />
+            </Button>
+          </Grid.Column>
+        </Grid>
       </LotsTab>
     )
   }
 
   render() {
-    const { lots, orderId, orderItems } = this.props
-    const panes = orderItems.map((orderItem, index) => {
+    const { orderId, orderItems, intl, poLots, toastManager } = this.props
+
+    let { formatMessage } = intl
+
+    const tabLots = orderItems.map(orderItem => {
+      const productOffer = poLots.find(po => po.id === orderItem.productOffer)
       return {
-        menuItem: 'Order Item '+(index+1),
-        pane: () => this.renderTab(index, orderItem.id, orderItem.productOffer, orderItem.amount)
+        orderItemId: orderItem.id,
+        lots: getSafe(() => productOffer.lots.map(lot => {
+          const lotSelected = orderItem.lots.find(orderLot => orderLot.lotNumber === lot.lotNumber)
+          return {
+            ...lot,
+            selected: lotSelected ? true : false,
+            allocated: lotSelected ? lotSelected.amount : 0,
+            amount: orderItem.amount
+          }
+        }), [])
       }
     })
+
+    const lotsList = { tabLots }
 
     return (
       <>
@@ -319,7 +276,93 @@ class AssignLots extends React.Component {
           </Modal.Header>
           <Modal.Content>
             <Modal.Description>
-              <TabMenu menu={{ secondary: true, pointing: true }} panes={panes} renderActiveOnly={false} activeIndex={this.state.activeTab} onTabChange={(e, {activeIndex}) => this.setState({ activeTab: activeIndex})} />
+              <Form
+                enableReinitialize
+                validateOnChange={true}
+                initialValues={{ ...initValues, ...lotsList }}
+                validationSchema={validationScheme}
+                onSubmit={(values, actions) => {
+                  const tabLots = values.tabLots
+
+                  // check that all tabs have selected at least one lot
+                  const missingLots = values.tabLots.find(tab => (typeof tab.lots.find(lot => lot.selected) === 'undefined'))
+                  if (missingLots) {
+                    toastManager.add(generateToastMarkup(
+                      <FormattedMessage id='errors.noLotsSelected.header' defaultMessage='No Lots Selected' />,
+                      <FormattedMessage id='errors.noLotsSelected.content' defaultMessage='Please check that all order items have selected at least one lot.' />,
+                    ), {
+                      appearance: 'error'
+                    })
+                    actions.setSubmitting(false)
+                    return false
+                  }
+
+                  // check if any selected and allocated lot is without file
+                  const missingFile = !!values.tabLots.find(tab => (tab.lots.find(lot => (lot.selected && lot.allocated && lot.attachments.length === 0))))
+
+                  const orderItemId = this.props.orderItems[this.state.activeTab].id
+
+                  // confirm to assign when missing attachment(s) for assigned lot(s)
+                  if (missingFile) {
+                    confirm (
+                      formatMessage({ id: 'confirm.missingCOfA.title', defaultMessage: 'Missing C of A' }),
+                      formatMessage({
+                        id: 'confirm.missingCOfA.content',
+                        defaultMessage: 'You have allocated packages on lot without C of A document. Do you really want to proceed and assign lots?'
+                      })
+                    ).then(
+                      async () => {
+                        // confirm
+                        await this.props.assignLots(orderId, tabLots).then(r => {
+                          // TODO: only when success
+                          toastManager.add(generateToastMarkup(
+                            <FormattedMessage id='order.assignLots.success.header' defaultMessage='Lots Assigned' />,
+                            <FormattedMessage id='order.assignLots.success.content' defaultMessage='Selected Lots were assigned and available packages allocated' />,
+                          ), {
+                            appearance: 'success'
+                          })
+                          actions.setSubmitting(false)
+                          this.props.closeAssignLots()
+                        }).catch(e => {
+                          actions.setSubmitting(false)
+                        })
+                      },
+                      () => {
+                        // cancel
+                        actions.setSubmitting(false)
+                      }
+                    )
+                  } else {
+                    this.props.assignLots(orderId, tabLots).then(r => {
+                      // TODO: only when success
+                      toastManager.add(generateToastMarkup(
+                        <FormattedMessage id='order.assignLots.success.header' defaultMessage='Lots Assigned' />,
+                        <FormattedMessage id='order.assignLots.success.content' defaultMessage='Selected Lots were assigned and available packages allocated' />,
+                      ), {
+                        appearance: 'success'
+                      })
+                      actions.setSubmitting(false)
+                      this.props.closeAssignLots()
+                    }).catch(e => {
+                      actions.setSubmitting(false)
+                    })
+                  }
+                }}
+                className='flex stretched'
+                style={{ padding: '0' }}
+              >
+                {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
+                  const panes = orderItems.map((orderItem, index) => {
+                    return {
+                      menuItem: 'Order Item '+(index+1),
+                      pane: () => this.renderTab(index, orderItem, tabLots[index].lots, setFieldValue, values)
+                    }
+                  })
+                  return (
+                    <TabMenu menu={{ secondary: true, pointing: true }} panes={panes} renderActiveOnly={false} activeIndex={this.state.activeTab} onTabChange={(e, {activeIndex}) => this.setState({ activeTab: activeIndex})} />
+                  )
+                }}
+              </Form>
             </Modal.Description>
           </Modal.Content>
         </Modal>
@@ -337,6 +380,7 @@ function mapStateToProps(state) {
     orderItems: detail.orderItems.map(orderItem => {
       return {
         id: orderItem.id,
+        lots: orderItem.lots,
         amount: orderItem.amount,
         productOffer: orderItem.productOffer
       }
@@ -348,4 +392,4 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({...Actions, loadFile, addAttachment}, dispatch)
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AssignLots))
+export default connect(mapStateToProps, mapDispatchToProps)(withToastManager(injectIntl(AssignLots)))

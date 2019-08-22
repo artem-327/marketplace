@@ -30,6 +30,8 @@ export const errorMessages = {
   minUpToMax: <FormattedMessage id='validation.minUpToMax' defaultMessage='Min value should be less or equal to Max value' />,
   maxAtLeastMin: <FormattedMessage id='validation.maxAtLeastMin' defaultMessage='Max value should be greater or equal to Min value' />,
   integer: <FormattedMessage id='validation.integer' defaultMessage='Number value should be integer' />,
+  lessThanOrdered: <FormattedMessage id='validation.lessThanOrdered' defaultMessage='Less than ordered' />,
+  moreThanOrdered: <FormattedMessage id='validation.moreThanOrdered' defaultMessage='More than ordered' />
 }
 
 export const provinceObjectRequired = (hasProvinces) => (
