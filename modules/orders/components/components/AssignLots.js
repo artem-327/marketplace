@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from "redux"
 import * as Actions from "../../actions"
 import { loadFile, addAttachment} from "~/modules/inventory/actions"
-import { Modal, Table, Grid, Header, Button, Segment, Tab, TabPane, Menu } from "semantic-ui-react"
+import { Modal, ModalContent, Table, Grid, Header, Button, Segment, Tab, TabPane, Menu } from "semantic-ui-react"
 import { Form, Input, Checkbox } from 'formik-semantic-ui'
 import { FieldArray } from 'formik'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
@@ -14,6 +14,10 @@ import styled from 'styled-components'
 import * as val from 'yup'
 import { errorMessages } from '~/constants/yupValidation'
 import { withToastManager } from 'react-toast-notifications'
+
+const ModalBody = styled(ModalContent)`
+  padding: 0 1.5rem 1.5rem !important;
+`
 
 const TabMenu = styled(Tab)`
   .ui.pointing.secondary.menu {
@@ -274,7 +278,7 @@ class AssignLots extends React.Component {
               <FormattedMessage id='order.assignLots.subtitle' defaultMessage='Assign lots and upload C of A for Sales Order #' />{orderId}
             </Subtitle>
           </Modal.Header>
-          <Modal.Content>
+          <ModalBody>
             <Modal.Description>
               <Form
                 enableReinitialize
@@ -314,7 +318,6 @@ class AssignLots extends React.Component {
                       async () => {
                         // confirm
                         await this.props.assignLots(orderId, tabLots).then(r => {
-                          // TODO: only when success
                           toastManager.add(generateToastMarkup(
                             <FormattedMessage id='order.assignLots.success.header' defaultMessage='Lots Assigned' />,
                             <FormattedMessage id='order.assignLots.success.content' defaultMessage='Selected Lots were assigned and available packages allocated' />,
@@ -334,7 +337,6 @@ class AssignLots extends React.Component {
                     )
                   } else {
                     this.props.assignLots(orderId, tabLots).then(r => {
-                      // TODO: only when success
                       toastManager.add(generateToastMarkup(
                         <FormattedMessage id='order.assignLots.success.header' defaultMessage='Lots Assigned' />,
                         <FormattedMessage id='order.assignLots.success.content' defaultMessage='Selected Lots were assigned and available packages allocated' />,
@@ -386,7 +388,7 @@ class AssignLots extends React.Component {
                 }}
               </Form>
             </Modal.Description>
-          </Modal.Content>
+          </ModalBody>
         </Modal>
       </>
     )
