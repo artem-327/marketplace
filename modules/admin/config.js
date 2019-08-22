@@ -2,54 +2,54 @@ import { FormattedMessage } from 'react-intl'
 
 export const config = {
   'CAS Products': {
-    addEditText: <FormattedMessage id='admin.casProduct' defaultMessage='CAS Product' />,
+    addEditText: <FormattedMessage id='admin.casProduct' defaultMessage='CAS Product'>{(text) => text}</FormattedMessage>,
     formattedMessageName: 'casProduct',
     addEditText2: <FormattedMessage id='admin.casProductAltNames' />,
     searchText: 'admin.searchCasProduct',
     display: {
       columns: [
-        { name: 'casIndexName', title: 'Index Name', width: 375, sortPath: 'CasProduct.casIndexName' },
-        { name: 'casNumber', title: 'CAS Number', width: 150, sortPath: 'CasProduct.casNumber' },
-        { name: 'chemicalName', title: 'Chemical Name', width: 375, sortPath: 'CasProduct.chemicalName' },
-        { name: 'unNumberCode', title: 'UN Number', width: 150, sortPath: 'CasProduct.unNumber.unNumberCode' },
-        { name: 'packagingGroup', title: 'Packaging Group', width: 150, sortPath: 'CasProduct.packagingGroup.groupCode' },
-        { name: 'hazardClasses', title: 'Hazard Classes', width: 150 },
+        { name: 'casIndexName', title: <FormattedMessage id='global.indexName' defaultMessage='Index Name'>{text => text}</FormattedMessage>, width: 375, sortPath: 'CasProduct.casIndexName' },
+        { name: 'casNumber', title: <FormattedMessage id='global.casNumber' defaultMessage='CAS Number'>{text => text}</FormattedMessage>, width: 150, sortPath: 'CasProduct.casNumber' },
+        { name: 'chemicalName', title: <FormattedMessage id='global.chemicalName' defaultMessage='Chemical Name'>{text => text}</FormattedMessage>, width: 375, sortPath: 'CasProduct.chemicalName' },
+        { name: 'unNumberCode', title: <FormattedMessage id='global.unNumber' defaultMessage='UN Number'>{text => text}</FormattedMessage>, width: 150, sortPath: 'CasProduct.unNumber.unNumberCode' },
+        { name: 'packagingGroup', title: <FormattedMessage id='global.packagingGroup' defaultMessage='Packaging Group'>{text => text}</FormattedMessage>, width: 150, sortPath: 'CasProduct.packagingGroup.groupCode' },
+        { name: 'hazardClasses', title: <FormattedMessage id='global.hazardClasses' defaultMessage='Hazard Classes'>{text => text}</FormattedMessage>, width: 150 },
       ],
     },
   },
 
   'Companies': {
-    addEditText: <FormattedMessage id='admin.company' defaultMessage='Company' />,
+    addEditText: <FormattedMessage id='admin.company' defaultMessage='Company'>{text => text}</FormattedMessage>,
     formattedMessageName: 'company',
     searchText: 'admin.searchCompany',
     display: {
       columns: [
-        { name: 'displayName', title: 'Company Name', sortPath: 'Company.name' },
-        { name: 'primaryBranchAddress', title: 'Headquarters Address', sortPath: 'Company.primaryBranch.address.streetAddress' },
-        { name: 'primaryContact', title: 'Primary Contact', sortPath: 'ClientCompany.primaryBranch.contactName' },
-        { name: 'contactEmail', title: 'Contact E-mail', sortPath: 'ClientCompany.primaryBranch.contactEmail' },
-        { name: 'hasDwollaAccount', title: 'Dwolla Account' },
-        { name: 'hasLogisticsAccounts', title: 'Logistics Accounts' },
-        { name: 'reviewRequested', title: 'Review Requested' }
+        { name: 'displayName', title: <FormattedMessage id='global.companyName' defaultMessage='Company Name'>{text => text}</FormattedMessage>, sortPath: 'Company.name' },
+        { name: 'primaryBranchAddress', title: <FormattedMessage id='global.headquaterAddress' defaultMessage='Headquarters Address'>{text => text}</FormattedMessage>, sortPath: 'Company.primaryBranch.address.streetAddress' },
+        { name: 'primaryContact', title: <FormattedMessage id='global.primaryContact' defaultMessage='Primary Contact'>{text => text}</FormattedMessage>, sortPath: 'ClientCompany.primaryBranch.contactName' },
+        { name: 'contactEmail', title: <FormattedMessage id='global.contactEmail' defaultMessage='Contact E-mail'>{text => text}</FormattedMessage>, sortPath: 'ClientCompany.primaryBranch.contactEmail' },
+        { name: 'hasDwollaAccount', title: <FormattedMessage id='global.dwollaAccount' defaultMessage='Dwolla Account'>{text => text}</FormattedMessage> },
+        { name: 'hasLogisticsAccounts', title: <FormattedMessage id='global.logisticAccounts' defaultMessage='Logistics Accounts'>{text => text}</FormattedMessage> },
+        { name: 'reviewRequested', title: <FormattedMessage id='global.reviewRequested' defaultMessage='Review Requested'>{text => text}</FormattedMessage> }
       ]
     }
   },
 
   'Units of Measure': {
-    addEditText: <FormattedMessage id='admin.unitOfMeasure' />,
+    addEditText: <FormattedMessage id='admin.unitOfMeasure'>{text => text}</FormattedMessage>,
     formattedMessageName: 'unitOfMeasurement',
     searchText: 'admin.searchUnitOfMeasure',
     display: {
       columns: [
-        { name: 'name', title: 'Name' },
-        { name: 'nameAbbreviation', title: 'Name Abbreviation' },
-        { name: 'measureType', title: 'Measure Type' },
+        { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage> },
+        { name: 'nameAbbreviation', title: <FormattedMessage id='global.nameAbbreviation' defaultMessage='Name Abbreviation'>{text => text}</FormattedMessage> },
+        { name: 'measureType', title: <FormattedMessage id='global.measureType' defaultMessage='Measure Type'>{text => text}</FormattedMessage> },
       ],
     },
     edit: [
-      { name: 'name', title: 'Name', type: 'text', required: true },
-      { name: 'nameAbbreviation', title: 'Name Abbreviation', type: 'text', required: true },
-      { name: 'measureType', title: 'Measure Type', type: 'text', required: true },
+      { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, type: 'text', required: true },
+      { name: 'nameAbbreviation', title: <FormattedMessage id='global.nameAbbreviation' defaultMessage='Name Abbreviation'>{text => text}</FormattedMessage>, type: 'text', required: true },
+      { name: 'measureType', title: <FormattedMessage id='global.measureType' defaultMessage='Measure Type'>{text => text}</FormattedMessage>, type: 'text', required: true },
     ],
     api: {
       get: {
@@ -74,18 +74,18 @@ export const config = {
   },
 
   'Units of Packaging': {
-    addEditText: <FormattedMessage id='admin.unitOfPackaging' />,
+    addEditText: <FormattedMessage id='admin.unitOfPackaging'>{text => text}</FormattedMessage>,
     formattedMessageName: 'unitOfPackaging',
     searchText: 'admin.searchUnitOfPackaging',
     display: {
       columns: [
-        { name: 'name', title: 'Name', sortPath: 'PackagingType.name' },
-        { name: 'measureType', title: 'Measure Type', sortPath: 'PackagingType.measureType.name' },
+        { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, sortPath: 'PackagingType.name' },
+        { name: 'measureType', title: <FormattedMessage id='global.measureType' defaultMessage='Measure Type'>{text => text}</FormattedMessage>, sortPath: 'PackagingType.measureType.name' },
       ],
     },
     edit: [
-      { name: 'name', title: 'Name', type: 'text', required: true },
-      { name: 'measureType', title: 'Measure Type', type: 'text', required: true },
+      { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, type: 'text', required: true },
+      { name: 'measureType', title: <FormattedMessage id='global.measureType' defaultMessage='Measure Type'>{text => text}</FormattedMessage>, type: 'text', required: true },
     ],
     api: {
       get: {
@@ -126,16 +126,16 @@ export const config = {
 
   'Manufacturers': {
     tableName: 'admin_manufacturers',
-    addEditText: <FormattedMessage id='admin.manufacturer' />,
+    addEditText: <FormattedMessage id='admin.manufacturer'>{text => text}</FormattedMessage>,
     formattedMessageName: 'manufacturer',
     searchText: 'admin.searchManufacturer',
     display: {
       columns: [
-        { name: 'name', title: 'Name', sortPath: 'Manufacturer.name' },
+        { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, sortPath: 'Manufacturer.name' },
       ],
     },
     edit: [
-      { name: 'name', title: 'Name', type: 'text', required: true },
+      { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, type: 'text', required: true },
     ],
     api: {
       get: {
@@ -175,16 +175,16 @@ export const config = {
 
   'Grades': {
     tableName: 'admin_grades',
-    addEditText: <FormattedMessage id='admin.grade' defaultMessage='Grade' />,
+    addEditText: <FormattedMessage id='admin.grade' defaultMessage='Grade'>{text => text}</FormattedMessage>,
     formattedMessageName: 'grade',
     searchText: 'admin.searchGrade',
     display: {
       columns: [
-        { name: 'name', title: 'Name', sortPath: 'ProductGrade.name' },
+        { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, sortPath: 'ProductGrade.name' },
       ],
     },
     edit: [
-      { name: 'name', title: 'Name', type: 'text', required: true },
+      { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, type: 'text', required: true },
     ],
     api: {
       get: {
@@ -210,16 +210,16 @@ export const config = {
 
   'Forms': {
     tableName: 'admin_forms',
-    addEditText: <FormattedMessage id='admin.form' defaultMessage='Form' />,
+    addEditText: <FormattedMessage id='admin.form' defaultMessage='Form'>{text => text}</FormattedMessage>,
     formattedMessageName: 'form',
     searchText: 'admin.searchForm',
     display: {
       columns: [
-        { name: 'name', title: 'Name', sortPath: 'ProductForm.name' },
+        { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, sortPath: 'ProductForm.name' },
       ],
     },
     edit: [
-      { name: 'name', title: 'Name', type: 'text', required: true },
+      { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, type: 'text', required: true },
     ],
     api: {
       get: {
@@ -245,16 +245,16 @@ export const config = {
 
   'Conditions': {
     tableName: 'admin_conditions',
-    addEditText: <FormattedMessage id='admin.condition' defaultMessage='Condition' />,
+    addEditText: <FormattedMessage id='admin.condition' defaultMessage='Condition'>{text => text}</FormattedMessage>,
     formattedMessageName: 'condition',
     searchText: 'admin.searchCondition',
     display: {
       columns: [
-        { name: 'name', title: 'Name', sortPath: 'ProductCondition.name' },
+        { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, sortPath: 'ProductCondition.name' },
       ],
     },
     edit: [
-      { name: 'name', title: 'Name', type: 'text', required: true },
+      { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, type: 'text', required: true },
     ],
     api: {
       get: {
@@ -280,16 +280,16 @@ export const config = {
 
   'Document Types': {
     tableName: 'admin_document_types',
-    addEditText: <FormattedMessage id='admin.documentType' defaultMessage='Document Type' />,
+    addEditText: <FormattedMessage id='admin.documentType' defaultMessage='Document Type'>{text => text}</FormattedMessage>,
     formattedMessageName: 'documentType',
     searchText: 'admin.searchDocumentType',
     display: {
       columns: [
-        { name: 'name', title: 'Name', sortPath: 'DocumentType.name' },
+        { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, sortPath: 'DocumentType.name' },
       ],
     },
     edit: [
-      { name: 'name', title: 'Name', type: 'text', required: true },
+      { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, type: 'text', required: true },
     ],
     api: {
       get: {
@@ -315,16 +315,16 @@ export const config = {
 
   'Market Segments': {
     tableName: 'admin_market_segments',
-    addEditText: <FormattedMessage id='admin.marketSegment' defaultMessage='Market Segment' />,
+    addEditText: <FormattedMessage id='admin.marketSegment' defaultMessage='Market Segment'>{text => text}</FormattedMessage>,
     formattedMessageName: 'marketSegment',
     searchText: 'admin.searchMarketSegment',
     display: {
       columns: [
-        { name: 'name', title: 'Name', sortPath: 'MarketSegment.name' }
+        { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, sortPath: 'MarketSegment.name' }
       ]
     },
     edit: [
-      { name: 'name', title: 'Name', type: 'text', required: true }
+      { name: 'name', title: <FormattedMessage id='global.name' defaultMessage='Name'>{text => text}</FormattedMessage>, type: 'text', required: true }
     ],
     api: {
       get: {

@@ -96,7 +96,7 @@ class CartItemSummary extends Component {
                       this.setState({ edittingHazmatInfo: !this.state.edittingHazmatInfo })
                     }}
                     data-test='shopping_cart_hazmat'>
-                    <FormattedMessage id={`global.${this.state.edittingHazmatInfo ? 'save' : 'edit'}`} />
+                    <FormattedMessage id={`global.${this.state.edittingHazmatInfo ? 'save' : 'edit'}`}>{(text) => text}</FormattedMessage>
                   </CustomSpan>
                 </GridColumn>
               </GridRow>
@@ -200,10 +200,7 @@ class CartItemSummary extends Component {
                   className='headerAddtext'
                   onClick={() => deleteCart(item.id)}
                   data-test={`shopping_cart_remove_${item.id}_btn`}>
-                  <FormattedMessage
-                    id='global.remove'
-                    defaultMessage='Remove'
-                  />
+                  <FormattedMessage id='global.remove' defaultMessage='Remove'>{(text) => text}</FormattedMessage>
                 </span>
               </GridColumn>
             </HeaderTextRow>

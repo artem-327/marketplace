@@ -121,10 +121,10 @@ class BankAccountsPopup extends React.Component {
             </FormGroup>
             <div style={{ textAlign: 'right' }}>
               <Button.Reset onClick={closePopup} data-test='settings_bank_account_popup_reset_btn'>
-                <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
+                <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
               </Button.Reset>
               <Button.Submit data-test='settings_bank_account_popup_submit_btn'>
-                <FormattedMessage id='global.save' defaultMessage='Save' />
+                <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
               </Button.Submit>
             </div>
           </Form>

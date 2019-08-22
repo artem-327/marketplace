@@ -135,7 +135,7 @@ class PurchaseOrder extends Component {
                 <Menu.Item>
                   <Button icon basic labelPosition='left' onClick={() => Router.push('/cart')} data-test='purchase_order_back_to_cart_btn'>
                     <Icon name='chevron left' />
-                    <FormattedMessage id='cart.backToShoppingCart' defaultMessage='Back to Shopping Cart' />
+                    <FormattedMessage id='cart.backToShoppingCart' defaultMessage='Back to Shopping Cart'>{(text) => text}</FormattedMessage>
                   </Button>
                 </Menu.Item>
               </Menu.Menu>

@@ -40,16 +40,16 @@ export default class ItemCartBody extends Component {
               />
             </div>
             <div>
-              <span>Price per {unitName}: </span>
+              <FormattedMessage id='global.pricePer' defaultMessage={`Price per ${unitName}`} values={{ unit: unitName }} />:{' '}
               <FormattedNumber
                 id='cart.pricePer'
                 style='currency'
                 currency={cartItem.productOffer.price.currency.code}
-                value={cartItem.pricing.price}
+              value={cartItem.pricing.price}
               />
             </div>
             <div>
-              <span>Total Weight: </span>
+              <FormattedMessage id='global.totalWeight' defaultMessage='Total Weight' />:{' '}
               <FormattedUnit
                 value={cartItem.quantity * productOffer.product.packagingSize}
                 unit={unitName} separator=''
@@ -100,19 +100,13 @@ export default class ItemCartBody extends Component {
               }
               )}
             data-test='item_cart_remove_btn'>
-            <FormattedMessage
-              id='global.remove'
-              defaultMessage='Remove'
-            />
+            <FormattedMessage id='global.remove' defaultMessage='Remove'>{(text) => text}</FormattedMessage>
           </Button>
           <Button control={Button}
             color='blue'
             onClick={() => this.props.editCart(cartItem)}
             data-test='item_cart_edit_btn'>
-            <FormattedMessage
-              id='global.edit'
-              defaultMessage='Edit'
-            />
+            <FormattedMessage id='global.edit' defaultMessage='Edit'>{(text) => text}</FormattedMessage>
           </Button>
         </footer>
       </div>

@@ -174,18 +174,12 @@ class ShippingEdit extends Component {
                       <Grid>
                         <GridColumn floated='right' computer={4}>
                           <Button fieldProps={{ width: 4 }} onClick={() => shippingChanged({ isShippingEdit: false })} fluid data-test='purchase_order_shipping_edit_cancel_btn'>
-                            <FormattedMessage
-                              id='global.cancel'
-                              defaultMessage='Cancel'
-                            />
+                            <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
                           </Button>
                         </GridColumn>
                         <GridColumn computer={4}>
                           <Button.Submit loading={this.props.isFetching} primary fluid type='submit' data-test='purchase_order_shipping_edit_submit_btn'>
-                            <FormattedMessage
-                              id={`global.${!isNewAddress ? 'edit' : 'addNew'}`}
-                              defaultMessage={!isNewAddress ? 'Edit' : 'Add New'}
-                            />
+                            <FormattedMessage id={`global.${!isNewAddress ? 'edit' : 'addNew'}`} defaultMessage={!isNewAddress ? 'Edit' : 'Add New'}>{(text) => text}</FormattedMessage>
                           </Button.Submit>
                         </GridColumn>
                       </Grid>

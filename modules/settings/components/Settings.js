@@ -119,7 +119,7 @@ class Settings extends Component {
                   <CompanyForm selectLogo={selectLogo} removeLogo={removeLogo} companyLogo={this.state.companyLogo} />
                   <Grid>
                     <GridColumn floated='right' computer={4}>
-                      <Button.Submit fluid data-test='company_details_submit_btn'><FormattedMessage id='global.save' /></Button.Submit>
+                      <Button.Submit fluid data-test='company_details_submit_btn'><FormattedMessage id='global.save'>{(text) => text}</FormattedMessage></Button.Submit>
                     </GridColumn>
                   </Grid>
                 </Segment>

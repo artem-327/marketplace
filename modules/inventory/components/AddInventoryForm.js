@@ -542,7 +542,7 @@ class AddInventoryForm extends Component {
       activeIndex
     } = this.state
 
-    const { toastManager } = this.props
+    const { toastManager, intl: { formatMessage } } = this.props
 
     return (
       <Grid className='product-details' centered>
@@ -624,7 +624,9 @@ class AddInventoryForm extends Component {
               <GridRow>
                 <ResponsiveColumn computer={6} mobile={16}>
                   <Button fluid size='big' floated='left' data-test='new_inventory_cancel_btn' onClick={() => this.goToList()}>
-                    <FormattedMessage id='addInventory.cancel' defaultMessage='Cancel' /></Button>
+                    {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+                  </Button>
+
                 </ResponsiveColumn>
                 <GridColumn computer={10} mobile={16}>
                   <Button.Submit fluid
@@ -653,10 +655,12 @@ class AddInventoryForm extends Component {
                           console.error('CATCH', e)
                         })
                     }}
-                    style={{ paddingLeft: '1em', paddingRight: '1em' }}
-                  >
-                    <FormattedMessage id={this.props.edit ? 'addInventory.editButton' : 'addInventory.addButton'}
-                      defaultMessage={this.props.edit ? 'Save Product Offer' : 'Add Product Offer'} />
+                    style={{ paddingLeft: '1em', paddingRight: '1em' }}>
+                      
+                    {formatMessage({
+                      id: this.props.edit ? 'addInventory.editButton' : 'addInventory.addButton',
+                      defaultMessage: this.props.edit ? 'Save Product Offer' : 'Add Product Offer'
+                    })}
                   </Button.Submit>
                 </GridColumn>
               </GridRow>
@@ -942,16 +946,13 @@ class AddInventoryForm extends Component {
                             })
                         }}
                           data-test='new_inventory_productOffer'>
-                          <FormattedMessage id='addInventory.productOffer' defaultMessage='PRODUCT OFFER' />
+                          {formatMessage({ id: 'addInventory.productOffer', defaultMessage: 'PRODUCT OFFER' })}
                         </Menu.Item>
                       ),
                       pane: (
                         <Tab.Pane style={{ padding: '0 32px' }}>
                           <Grid divided style={{ marginTop: '2rem' }}>
                             <Grid.Column computer={5} tablet={5} mobile={7}>
-
-
-
                               <Header as='h3'>
                                 <FormattedMessage id='addInventory.whatToList' defaultMessage='What product do you want to list?'>
                                   {(text) =>
@@ -1196,7 +1197,7 @@ class AddInventoryForm extends Component {
                                           inputProps={{
                                             type: 'number',
                                             min: 1,
-                                            onChange: (e, {value}) => this.onSplitsChange(value, values, setFieldValue, validateForm)
+                                            onChange: (e, { value }) => this.onSplitsChange(value, values, setFieldValue, validateForm)
                                           }} />
                                       </GridColumn>
                                     </GridRow>
@@ -1316,8 +1317,8 @@ class AddInventoryForm extends Component {
                                       )}
                                       data-test='new_inventory_attachments_drop'
                                       emptyContent={(
-                                        <label>
-                                          <FormattedMessage id='addInventory.dragDrop' defaultMessage={'Drag and drop to add file here'} />
+                                        <>
+                                          {formatMessage({ id: 'addInventory.dragDrop' })}
                                           <br />
                                           <FormattedMessage id='addInventory.dragDropOr'
                                             defaultMessage={'or {link} to select from computer'}
@@ -1328,7 +1329,7 @@ class AddInventoryForm extends Component {
                                                 </a>
                                               )
                                             }} />
-                                        </label>
+                                        </>
                                       )}
                                       uploadedContent={(
                                         <label>
@@ -1378,7 +1379,7 @@ class AddInventoryForm extends Component {
                             })
                         }}
                           data-test='new_inventory_productOptional'>
-                          <FormattedMessage id='addInventory.optionalProductInfo' defaultMessage='OPTIONAL PRODUCT INFO' />
+                          {formatMessage({ id: 'addInventory.optionalProductInfo', defaultMessage: 'OPTIONAL PRODUCT INFO' })}
                         </Menu.Item>
                       ),
                       pane: (

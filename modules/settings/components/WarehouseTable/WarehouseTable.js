@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexGrid from '~/components/table'
 import { withDatagrid } from '~/modules/datagrid'
-import { injectIntl } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import {
   getWarehousesDataRequest,
   getBranchesDataRequest,
@@ -21,14 +21,14 @@ import confirm from '~/src/components/Confirmable/confirm'
 class WarehouseTable extends Component {
   state = {
     columns: [
-      { name: 'name', title: 'Warehouse Name' },
-      { name: 'streetAddress', title: 'Street Address' },
-      { name: 'city', title: 'City' },
-      { name: 'provinceName', title: 'State/Province' },
-      { name: 'countryName', title: 'Country' },
-      { name: 'contactName', title: 'Contact Name' },
-      { name: 'phone', title: 'Phone' },
-      { name: 'email', title: 'E-mail' }
+      { name: 'name', title: <FormattedMessage id='global.warehouseName' defaultMessage='Warehouse Name'>{(text) => text}</FormattedMessage> },
+      { name: 'streetAddress', title: <FormattedMessage id='global.streetAddress' defaultMessage='Street Address'>{(text) => text}</FormattedMessage> },
+      { name: 'city', title: <FormattedMessage id='global.city' defaultMessage='City'>{(text) => text}</FormattedMessage> },
+      { name: 'provinceName', title: <FormattedMessage id='global.stateProvince' defaultMessage='State/Province'>{(text) => text}</FormattedMessage> },
+      { name: 'countryName', title: <FormattedMessage id='global.country' defaultMessage='Country'>{(text) => text}</FormattedMessage> },
+      { name: 'contactName', title: <FormattedMessage id='addCompany.contactName' defaultMessage='Contact Name'>{(text) => text}</FormattedMessage> },
+      { name: 'phone', title: <FormattedMessage id='global.phone' defaultMessage='Phone'>{(text) => text}</FormattedMessage> },
+      { name: 'email', title: <FormattedMessage id='global.email' defaultMessage='E-mail'>{(text) => text}</FormattedMessage> }
     ],
     tab: ''
   }

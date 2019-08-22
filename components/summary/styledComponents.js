@@ -27,7 +27,8 @@ export const WiderPopup = styled(Popup)`
 `
 
 export const CustomSpan = styled.span`
-  color: ${props => props.positive ? '#21BA45' : '#2599d5'}
+  color: ${props => props.positive ? '#21BA45' : '#2599d5'};
+  cursor: pointer;
 `
 
 export const CustomHeader = styled(Header)`

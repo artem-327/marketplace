@@ -133,8 +133,8 @@ class LoginForm extends Component {
                       }
                       <Button type='submit' primary fluid size='large' data-test="login_submit_btn">
                         {this.state.resetPassword
-                          ? <FormattedMessage id='auth.resetPassword' defaultMessage='Reset Password' />
-                          : <FormattedMessage id='auth.login' defaultMessage='Log in' />}
+                          ? <FormattedMessage id='auth.resetPassword' defaultMessage='Reset Password'>{(text) => text}</FormattedMessage>
+                          : <FormattedMessage id='auth.login' defaultMessage='Log in'>{(text) => text}</FormattedMessage>}
                       </Button>
                     </>
                   )
@@ -148,15 +148,15 @@ class LoginForm extends Component {
                   <GridColumn computer={12}>
                     <ToggleLabel onClick={this.toggleResetPassword} data-test="login_reset_toggle_btn">
                       {this.state.resetPassword
-                        ? <FormattedMessage id='auth.cancelPasswordReset' />
-                        : <FormattedMessage id='auth.resetMyPassword' defaultMessage='Password Reset' />
+                        ? <FormattedMessage id='auth.cancelPasswordReset' defaultMessage='Cancel Password Reset'>{(text) => text}</FormattedMessage>
+                        : <FormattedMessage id='auth.resetMyPassword' defaultMessage='Password Reset'>{(text) => text}</FormattedMessage>
                       }
 
                     </ToggleLabel>
                   </GridColumn>
 
                   <GridColumn computer={4} textAlign='right'>
-                    v{version}
+                    {version && `v${version}`}
                   </GridColumn>
                 </GridRow>
               </Grid>

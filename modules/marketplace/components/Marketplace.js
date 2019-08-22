@@ -22,18 +22,18 @@ class Marketplace extends Component {
       { name: 'productName', disabled: true },
       { name: 'productNumber', disabled: true },
       // { name: 'merchant', title: 'Merchant', width: 250 },
-      { name: 'available', title: <FormattedMessage id='marketplace.available' defaultMessage='Available PKGs' />, width: 140 },
-      { name: 'packaging', title: <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging' />, width: 140 },
-      { name: 'quantity', title: <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity' />, width: 140 },
-      { name: 'fobPrice', title: <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price' />, width: 160 },
-      { name: 'tradeName', title: <FormattedMessage id='marketplace.tradeName' defaultMessage='Trade Name' />, width: 140 },
-      { name: 'manufacturer', title: <FormattedMessage id='marketplace.mfr' defaultMessage='MFR.' />, width: 120 },
-      { name: 'origin', title: <FormattedMessage id='marketplace.origin' defaultMessage='Origin' />, width: 120 },
-      { name: 'expiration', title: <FormattedMessage id='marketplace.expiration' defaultMessage='Expiration' />, width: 120 },
-      { name: 'assay', title: <FormattedMessage id='marketplace.assay' defaultMessage='Assay' />, width: 80 },
-      { name: 'condition', title: <FormattedMessage id='marketplace.condition' defaultMessage='Condition' />, width: 100 },
-      { name: 'form', title: <FormattedMessage id='marketplace.form' defaultMessage='Form' />, width: 100 },
-      { name: 'location', title: <FormattedMessage id='marketplace.location' defaultMessage='Location' />, width: 160 }
+      { name: 'available', title: <FormattedMessage id='marketplace.available' defaultMessage='Available PKGs'>{(text) => text}</FormattedMessage>, width: 140 },
+      { name: 'packaging', title: <FormattedMessage id='marketplace.packaging' defaultMessage='Packaging'>{(text) => text}</FormattedMessage>, width: 140 },
+      { name: 'quantity', title: <FormattedMessage id='marketplace.quantity' defaultMessage='Quantity'>{(text) => text}</FormattedMessage>, width: 140 },
+      { name: 'fobPrice', title: <FormattedMessage id='marketplace.fobPrice' defaultMessage='FOB Price'>{(text) => text}</FormattedMessage>, width: 160 },
+      { name: 'tradeName', title: <FormattedMessage id='marketplace.tradeName' defaultMessage='Trade Name'>{(text) => text}</FormattedMessage>, width: 140 },
+      { name: 'manufacturer', title: <FormattedMessage id='marketplace.mfr' defaultMessage='MFR.'>{(text) => text}</FormattedMessage>, width: 120 },
+      { name: 'origin', title: <FormattedMessage id='marketplace.origin' defaultMessage='Origin'>{(text) => text}</FormattedMessage>, width: 120 },
+      { name: 'expiration', title: <FormattedMessage id='marketplace.expiration' defaultMessage='Expiration'>{(text) => text}</FormattedMessage>, width: 120 },
+      { name: 'assay', title: <FormattedMessage id='marketplace.assay' defaultMessage='Assay'>{(text) => text}</FormattedMessage>, width: 80 },
+      { name: 'condition', title: <FormattedMessage id='marketplace.condition' defaultMessage='Condition'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'form', title: <FormattedMessage id='marketplace.form' defaultMessage='Form'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'location', title: <FormattedMessage id='marketplace.location' defaultMessage='Location'>{(text) => text}</FormattedMessage>, width: 160 }
     ],
     selectedRows: [],
     pageNumber: 0,
@@ -133,7 +133,7 @@ class Marketplace extends Component {
               </Menu.Item>
               {selectedRows.length === 0 ? null :
                 <Button primary onClick={() => this.setState({ open: true })} data-test='marketplace_shipping_quote_btn'>
-                  <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote' />
+                  <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>{(text) => text}</FormattedMessage>
                 </Button>
 
               }
