@@ -18,13 +18,13 @@ class ProductCatalogTable extends Component {
 
   state = {
     columns: [
-      { name: 'productName', title: <FormattedMessage id='global.productName' defaultMessage='Product Name' />, sortPath: 'Product.productName' },
-      { name: 'productCode', title: <FormattedMessage id='global.productNumber' defaultMessage='Product Number' />, sortPath: 'Product.productCode' },
-      { name: 'casNumber', title: <FormattedMessage id='global.casNumber' defaultMessage='CAS Number' /> },
-      { name: 'casName', title: <FormattedMessage id='global.casName' defaultMessage='CAS Name' /> },
-      { name: 'packagingSizeFormatted', title: <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size' /> },
+      { name: 'productName', title: <FormattedMessage id='global.productName' defaultMessage='Product Name'>{(text) => text}</FormattedMessage>, sortPath: 'Product.productName' },
+      { name: 'productCode', title: <FormattedMessage id='global.productNumber' defaultMessage='Product Number'>{(text) => text}</FormattedMessage>, sortPath: 'Product.productCode' },
+      { name: 'casNumber', title: <FormattedMessage id='global.casNumber' defaultMessage='CAS Number'>{(text) => text}</FormattedMessage> },
+      { name: 'casName', title: <FormattedMessage id='global.casName' defaultMessage='CAS Name'>{(text) => text}</FormattedMessage> },
+      { name: 'packagingSizeFormatted', title: <FormattedMessage id='global.packagingSize' defaultMessage='Packaging Size'>{(text) => text}</FormattedMessage> },
       { name: 'unit', title: <FormattedMessage id='global.unit' defaultMessage='Unit' /> },
-      { name: 'packagingTypeName', title: <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type' /> }
+      { name: 'packagingTypeName', title: <FormattedMessage id='global.packagingType' defaultMessage='Packaging Type'>{(text) => text}</FormattedMessage> }
     ]
   }
 

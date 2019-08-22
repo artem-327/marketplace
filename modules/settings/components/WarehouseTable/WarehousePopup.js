@@ -145,11 +145,11 @@ class WarehousePopup extends React.Component {
 
 
     const { closePopup, popupValues, country, currentTab, provincesDropDown } = this.props
-    const title = popupValues ? 'Edit ' : 'Add'
+    const title = <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} defaultMessage={popupValues ? 'Edit ' : 'Add'}>{(text) => text}</FormattedMessage>
 
 
     const name = currentTab.type === 'branches' ? 'Branch Name' : 'Warehouse Name'
-    const modalTitle = currentTab.type === 'branches' ? 'Branch' : 'Warehouse'
+    const modalTitle = <FormattedMessage id={`global.${currentTab.type === 'branches' ? 'branch' : 'warehouse'}`} defaultMessage={currentTab.type === 'branches' ? 'Branch' : 'Warehouse'}>{(text) => text}</FormattedMessage>
     let initialValues = this.getInitialFormValues()
 
 
@@ -174,7 +174,7 @@ class WarehousePopup extends React.Component {
                   setFieldValue={setFieldValue}
                   values={values} />
 
-                <Header as='h3'>Contact Info</Header>
+                <Header as='h3'><FormattedMessage id='settings.contactInfo' defaultMessage='Contact Info' /></Header>
                 <FormGroup data-test='settings_warehouse_popup_contactName_inp'>
                   <Input type='text' label='Contact Name' name='contactName' fieldProps={{ width: 8 }} />
                 </FormGroup>
@@ -183,8 +183,12 @@ class WarehousePopup extends React.Component {
                   <Input type='text' label='Email' name='contactEmail' />
                 </FormGroup>
                 <div style={{ textAlign: 'right' }}>
-                  <Button.Reset onClick={closePopup} data-test='settings_warehouse_popup_reset_btn'>Cancel</Button.Reset>
-                  <Button.Submit data-test='settings_warehouse_popup_submit_btn'>Save</Button.Submit>
+                  <Button.Reset onClick={closePopup} data-test='settings_warehouse_popup_reset_btn'>
+                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
+                  </Button.Reset>
+                  <Button.Submit data-test='settings_warehouse_popup_submit_btn'>
+                    <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
+                  </Button.Submit>
                 </div>
               </>)}
           </Form>

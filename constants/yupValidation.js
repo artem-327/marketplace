@@ -1,6 +1,6 @@
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
-import React from "react";
+import moment from 'moment'
 
 
 export const errorMessages = {
@@ -13,10 +13,11 @@ export const errorMessages = {
   requiredMessage: <FormattedMessage id='validation.required' defaultMessage='Required' />,
   invalidPhoneNumber: <FormattedMessage id='validation.phoneNumber' defaultMessage={`Please, enter valid phone number (numbers and \'+-()\' characters can be used)`} />,
   zipCode: <FormattedMessage id='validation.zipCode' defaultMessage='Enter zip code' />,
-  minLength: (min) => <FormattedMessage id='validation.minLength' defaultMessage={`Minimum length is ${min}`} values={{ min }} />,
+  minLength: (min) => <FormattedMessage id='validation.minLength' defaultMessage={`Field should have at least ${min} characters`} values={{ min }} />,
+  maxLength: (max) => <FormattedMessage id='validation.maxLength' defaultMessage={`Field should have max ${max} characters`} values={{ max }} />,
   enterPhoneNumber: <FormattedMessage id='validation.enterPhoneNumber' defaultMessage='Enter phone number' />,
   minDigits: (min) => <FormattedMessage id='validation.minDigits' defaultMessage={`Must have ${min} digits`} values={{ min }} />,
-  // exactDigits: (num) => <FormattedMessage id='validation.exactDigits' defaultMessage={`There has to be exactly ${value} digits`} />,  
+  exactDigits: (num) => <FormattedMessage id='validation.exactDigits' defaultMessage={`There has to be exactly ${num} digits`} />,
   greaterThan: (value) => <FormattedMessage id='validation.greaterThan' values={{ value }} defaultMessage={`Must be greater than ${value}`} />,
   maxDecimals: (max) => <FormattedMessage id='validation.maxDecimals' values={{ max }} defaultMessage={`There can be maximally ${max} decimal places`} />,
   oneLowercaseChar: <FormattedMessage id='validation.oneLowercaseChar' defaultMessage='At least one lowercase char' />,
@@ -30,6 +31,8 @@ export const errorMessages = {
   minUpToMax: <FormattedMessage id='validation.minUpToMax' defaultMessage='Min value should be less or equal to Max value' />,
   maxAtLeastMin: <FormattedMessage id='validation.maxAtLeastMin' defaultMessage='Max value should be greater or equal to Min value' />,
   integer: <FormattedMessage id='validation.integer' defaultMessage='Number value should be integer' />,
+  invalidDateFormat: (example = 'YYYY-MM-DD') => <FormattedMessage id='validation.invalidDateFormat' defaultMessage={`Invalid date format. Date should match ${example}`} values={{ example }} />,
+  invalidValueFormat: (example) => <FormattedMessage id='validation.invalidValueFormat' defaultMessage={`Invalid value format. Format should match ${example}`} values={{ example }} />,
   lessThanOrdered: <FormattedMessage id='validation.lessThanOrdered' defaultMessage='Less than ordered' />,
   moreThanOrdered: <FormattedMessage id='validation.moreThanOrdered' defaultMessage='More than ordered' />
 }
@@ -55,4 +58,14 @@ export const phoneValidation = () => (
   Yup.string().trim()
     .min(3, errorMessages.minLength(3))
     .matches(/([0-9\(\)\-\+\s])/, errorMessages.invalidPhoneNumber)
+)
+
+export const dateValidation = () => (
+  Yup.string()
+    .test('date-format', errorMessages.invalidDateFormat(), (value) => moment(value, 'YYYY-MM-DD', true).isValid()).required(errorMessages.requiredMessage)
+)
+
+export const ssnValidation = () => (
+  Yup.string()
+    .test('ssn', errorMessages.invalidValueFormat('123-45-6789'), (value) => /^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$/.test(value)).required(errorMessages.requiredMessage)
 )

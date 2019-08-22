@@ -31,7 +31,7 @@ export function login(username, password) {
 
       let accessRights = {}
 
-      if(identity.roles) {
+      if (identity.roles) {
         ROLES_ENUM.forEach(role => {
           accessRights[role.propertyName] = !!identity.roles.find((el) => el.id === role.id)
         })
@@ -48,7 +48,7 @@ export function login(username, password) {
       if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.name === 'CompanyAdmin')) {
         isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
       }
-      
+
       return {
         auth,
         identity,
@@ -110,7 +110,7 @@ export const reviewCompany = (values) => {
       const identity = await api.getIdentity()
       const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
 
-      isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
+      // isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
 
       return response
     }
@@ -122,3 +122,5 @@ export const searchCountries = (searchQuery) => ({ type: AT.AUTH_SEARCH_COUNTRIE
 export const searchProvinces = (countryId) => ({ type: AT.AUTH_SEARCH_PROVINCES, payload: api.searchProvinces(countryId) })
 
 export const updateIdentity = (payload) => ({ type: AT.UPDATE_IDENTITY, payload })
+
+export const updateCompany = (id, payload) => ({ type: AT.UPDATE_COMPANY, payload: api.updateCompany(id, payload) })

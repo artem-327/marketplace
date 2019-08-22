@@ -551,8 +551,12 @@ class ProductPopup extends React.Component {
                   </FormField>
                 </FormGroup>
                 <div style={{ textAlign: 'right' }}>
-                  <Button.Reset onClick={closePopup} data-test='settings_product_popup_reset_btn'>Cancel</Button.Reset>
-                  <Button.Submit data-test='settings_product_popup_submit_btn'>Save</Button.Submit>
+                  <Button.Reset onClick={closePopup} data-test='settings_product_popup_reset_btn'>
+                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
+                  </Button.Reset>
+                  <Button.Submit data-test='settings_product_popup_submit_btn'>
+                    <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
+                  </Button.Submit>
                 </div>
               </>
               )

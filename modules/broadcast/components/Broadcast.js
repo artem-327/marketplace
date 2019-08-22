@@ -26,8 +26,6 @@ const BottomUnpaddedRow = styled(GridRow)`
   padding-bottom: 0px !important;
 `
 
-let printed = false
-
 const templateInitialValues = {
   name: ''
 }
@@ -64,7 +62,26 @@ class Broadcast extends Component {
     })
   }
 
-  handlePriceChange = () => {
+  handlePriceChange = (node) => {
+    if (node.hasChildren()) {
+      node.walk((n) => {
+        let nodePath = n.getPath()
+        let parent = nodePath[nodePath.length - 2]
+
+        if (!n.model.rule.priceOverride && (!getSafe(() => parent.model.rule.priceOverride, 0) || node.model.rule.id === parent.model.rule.id)) {
+          n.model.rule.priceAddition = node.model.rule.priceAddition
+          n.model.rule.priceMultiplier = node.model.rule.priceMultiplier
+        }
+      })
+    }
+
+    let path = node.getPath()
+
+    for (let i = 0; i < path.length - 1; i++) {
+      let { priceAddition, priceMultiplier } = path[i].model.rule
+      if (priceAddition || priceMultiplier) node.model.rule.priceOverride = 1
+    }
+
     this.setState({ tree: this.state.tree })
   }
 
@@ -218,17 +235,12 @@ class Broadcast extends Component {
       filter, closeBroadcast, saveRules,
       id, mode, switchMode,
       saveTemplate, toastManager, offer,
-      templates, intl, updateTemplate,
-      deleteTemplate } = this.props
+      templates, updateTemplate, deleteTemplate,
+      intl: { formatMessage } } = this.props
 
-    let broadcastingTo = 0, total = treeData.all(n => n.model.type === 'state').length
-
-
-    // console.log({ treeData })
+    let total = treeData.all(n => n.model.type === 'state').length
 
     // const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
-
-    const { formatMessage } = intl
 
     return (
       <Modal open={open} onClose={closeBroadcast} centered={false} size='large'>
@@ -341,7 +353,9 @@ class Broadcast extends Component {
                                 onClick={() => this.handleTemplateDelete(props.setFieldValue)}
                                 disabled={!this.state.selectedTemplate}
                                 loading={this.props.templateDeleting}
-                                type='button' basic fluid negative><FormattedMessage id='global.delete' /></Button>
+                                type='button' basic fluid negative>
+                                {formatMessage({ id: 'global.delete', defaultMessage: 'Delete' })}
+                              </Button>
                             </GridColumn>
                           </GridRow>
 
@@ -356,7 +370,9 @@ class Broadcast extends Component {
                             </GridColumn>
 
                             <GridColumn computer={5}>
-                              <FormikButton.Submit loading={this.props.templateSaving} fluid positive basic data-test='broadcast_modal_submit_btn'><FormattedMessage id='global.save' defaultMessage='Save' /></FormikButton.Submit>
+                              <FormikButton.Submit loading={this.props.templateSaving} fluid positive basic data-test='broadcast_modal_submit_btn'>
+                                {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+                              </FormikButton.Submit>
                             </GridColumn>
                           </GridRow>
                         </Grid>
@@ -399,7 +415,9 @@ class Broadcast extends Component {
           </Grid>
         </Modal.Content>
         <Modal.Actions>
-          <Button onClick={() => closeBroadcast()} data-test='broadcast_modal_close_btn'><FormattedMessage id='global.cancel' /></Button>
+          <Button onClick={() => closeBroadcast()} data-test='broadcast_modal_close_btn'>
+            {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+          </Button>
           <Button primary
             onClick={async () => {
               await saveRules(id, treeData.model)
@@ -410,9 +428,8 @@ class Broadcast extends Component {
                   appearance: 'success'
                 })
             }}
-            data-test='broadcast_modal_save_btn'
-          >
-            <FormattedMessage id='global.save' />
+            data-test='broadcast_modal_save_btn'>
+            {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
           </Button>
         </Modal.Actions>
       </Modal >

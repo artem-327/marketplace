@@ -97,7 +97,9 @@ class Password extends Component {
 
                   <GridRow>
                     <GridColumn>
-                      <Button.Submit disabled={!!!values.termsOfAgreement && !forgottenPassword} size='big' fluid><FormattedMessage id='verification.nextStep' /></Button.Submit>
+                      <Button.Submit disabled={!!!values.termsOfAgreement && !forgottenPassword} size='big' fluid>
+                        <FormattedMessage id='verification.nextStep' defaultMessage='Next Step'>{(text) => text}</FormattedMessage>
+                      </Button.Submit>
                     </GridColumn>
                   </GridRow>
                 </Grid>

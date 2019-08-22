@@ -32,7 +32,7 @@ import { companyDetailsTab } from '../contants'
 import Router from 'next/router'
 
 import { addTab, tabChanged, resetSettings, loadLogo } from '../actions'
-import { updateCompany } from '~/modules/admin/actions'
+import { updateCompany } from '~/modules/auth/actions'
 import { validationSchema } from '~/modules/company-form/constants'
 
 import { DatagridProvider } from '~/modules/datagrid'
@@ -66,7 +66,7 @@ class Settings extends Component {
 
     toastManager.add(
       <div>
-        <strong><FormattedMessage id='notifications.companyUpdated' defaultMessage='Company updated' values={{ name: values.name }} /></strong>
+        <strong><FormattedMessage id='notifications.companyUpdated' defaultMessage='Company updated' values={{ name }} /></strong>
       </div>, { appearance: 'success', pauseOnHover: true })
   }
 
@@ -119,7 +119,7 @@ class Settings extends Component {
                   <CompanyForm selectLogo={selectLogo} removeLogo={removeLogo} companyLogo={this.state.companyLogo} />
                   <Grid>
                     <GridColumn floated='right' computer={4}>
-                      <Button.Submit fluid data-test='company_details_submit_btn'><FormattedMessage id='global.save' /></Button.Submit>
+                      <Button.Submit fluid data-test='company_details_submit_btn'><FormattedMessage id='global.save'>{(text) => text}</FormattedMessage></Button.Submit>
                     </GridColumn>
                   </Grid>
                 </Segment>

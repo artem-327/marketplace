@@ -5,6 +5,11 @@
   font-size: 1.4285714rem;
   color: #cccccc;
   width: 100%;
+  cursor: pointer;
+
+  * {
+    cursor: pointer;
+  }
 
   .dropzoneLot {
     border: 2px dashed #cccccc;

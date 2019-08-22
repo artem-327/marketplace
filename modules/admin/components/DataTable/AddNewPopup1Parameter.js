@@ -33,7 +33,7 @@ class AddNewPopup1Parameter extends React.Component {
 
     return (
       <Modal open centered={false}>
-        <Modal.Header><FormattedMessage id='global.add' defaultMessage='Add'/> {config.addEditText}</Modal.Header>
+        <Modal.Header><FormattedMessage id='global.add' defaultMessage='Add' /> {config.addEditText}</Modal.Header>
         <Modal.Content>
           <Form
             initialValues={initialFormValues}
@@ -65,8 +65,12 @@ class AddNewPopup1Parameter extends React.Component {
             </FormGroup>
 
             <div style={{ textAlign: 'right' }}>
-              <Button.Reset data-test={`admin_add_${config.formattedMessageName}_cancel_btn`} ><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
-              <Button.Submit data-test={`admin_add_${config.formattedMessageName}_save_btn`}><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
+              <Button.Reset data-test={`admin_add_${config.formattedMessageName}_cancel_btn`} >
+                <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage>
+              </Button.Reset>
+              <Button.Submit data-test={`admin_add_${config.formattedMessageName}_save_btn`}>
+                <FormattedMessage id='global.save' defaultMessage='Save'>{text => text}</FormattedMessage>
+              </Button.Submit>
             </div>
           </Form>
         </Modal.Content>

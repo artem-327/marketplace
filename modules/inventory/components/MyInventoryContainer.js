@@ -12,7 +12,7 @@ import { applyFilter } from '~/modules/filter/actions'
 import { FormattedNumber, FormattedMessage } from 'react-intl'
 
 
-import { FormattedUnit, UnitOfPackaging, ArrayToMultiple } from '~/components/formatted-messages'
+import { FormattedUnit, UnitOfPackaging, ArrayToMultiple, FormattedAssay } from '~/components/formatted-messages'
 import { getSafe } from '~/utils/functions'
 import moment from 'moment/moment'
 
@@ -55,11 +55,11 @@ function mapStateToProps(store, { datagrid }) {
         grade: po.productGrades && po.productGrades.length ? <ArrayToMultiple values={po.productGrades.map(d => (d.name))} /> : '',
         origin: getSafe(() => po.origin.name, ''),
         form: getSafe(() => po.productForm.name, ''),
-        assay: po.assayMin && po.assayMax ?
-          po.assayMin + '/' + po.assayMax : '',
+        assay: <FormattedAssay min={po.assayMin} max={po.assayMax} />,
         mfgDate: getSafe(() => moment(po.manufacturedDate).format('MM/DD/YYYY'), ''),
         expDate: getSafe(() => moment(po.expirationDate).format('MM/DD/YYYY'), ''),
-        allocatedPkg: getSafe(() => po.pkgAllocated, ''),
+        allocatedPkg: po.pkgAllocated,
+        processingTimeDays: po.processingTimeDays,
         offerExpiration: getSafe(() => moment(po.validityDate).format('MM/DD/YYYY'), ''),
       }
     }),

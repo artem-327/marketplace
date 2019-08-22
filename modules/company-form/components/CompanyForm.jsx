@@ -27,7 +27,7 @@ class CompanyForm extends Component {
 
       return (
         <FormField>
-          <label><span>Preview</span></label>
+          <FormattedMessage id='global.preview' defaultMessage='Preview' />
           <Image src={fileURL} size='small' />
         </FormField>
       )

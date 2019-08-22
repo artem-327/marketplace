@@ -80,7 +80,7 @@ class TablesHandlers extends Component {
           </Menu.Item>
           <Menu.Item>
             <Button size='large' data-test='admin_table_add_btn' primary onClick={() => openPopup()}>
-              <FormattedMessage id='global.add' defaultMessage='Add' /> {config[currentTab].addEditText}
+              <FormattedMessage id='global.add' defaultMessage='Add'>{text => `${text} `}</FormattedMessage>{config[currentTab].addEditText}
             </Button>
           </Menu.Item>
         </Menu.Menu>

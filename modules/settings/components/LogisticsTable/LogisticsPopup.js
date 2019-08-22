@@ -41,7 +41,7 @@ class LogisticsPopup extends Component {
       popupValues, closePopup, logisticsProviders,
       logisticsProvidersFetching, createLogisticsAccount, updateLogisticsAccount, intl: { formatMessage }, toastManager } = this.props
 
-    let message = <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} />
+    let message = <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`}>{(text) => text}</FormattedMessage>
 
     return (
       <Modal open centered={false}>
@@ -117,8 +117,10 @@ class LogisticsPopup extends Component {
           </Form>
         </Modal.Content>
         <Modal.Actions>
-          <Button onClick={closePopup} data-test='settings_logistics_cancel_btn'><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button>
-          <Button onClick={() => this.handleSubmit()} positive data-test='settings_logistics_submit_btn'>{message}</Button>
+          <Button basic onClick={closePopup} data-test='settings_logistics_cancel_btn'>
+            <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
+          </Button>
+          <Button onClick={() => this.handleSubmit()} primary data-test='settings_logistics_submit_btn'>{message}</Button>
         </Modal.Actions>
       </Modal>
     )

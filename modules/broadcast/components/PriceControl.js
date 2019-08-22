@@ -23,11 +23,13 @@ export default class PriceControl extends Component {
   constructor(props) {
     super(props)
 
-    this.onChange = _.debounce(props.onChange, 250)
+    this.onChange = this.props.onChange
+    // this.onChange = _.debounce(props.onChange, 250)
   }
 
   componentWillMount() {
-    const { rule } = this.props
+    const { item } = this.props
+    const { model: { rule } } = item
 
     this.setState({
       type: rule.priceAddition !== 0 ? 'addition' : rule.priceMultiplier !== 0 ? 'multiplier' : 'multiplier',
@@ -42,45 +44,80 @@ export default class PriceControl extends Component {
     })
   }
 
+  componentDidUpdate({ item }, next) {
+    let { rule } = item.model
+    if (rule.priceType && rule.priceType !== this.state.type) this.setState({ type: rule.priceType })
+  }
+
   handleChange = (e, { name, value }) => {
     e.preventDefault()
     e.stopPropagation()
 
-    const { rule } = this.props
+    const { item } = this.props
+    const { model: { rule } } = item
+
+
+    if (name === 'type' && item.hasChildren()) {
+      item.walk((n) => {
+        if (!n.model.rule.priceOverride && !n.hasChildren()) {
+          n.model.rule.priceType = value
+        }
+      })
+    }
+    rule.priceType === value
+
+    let minimum = name === 'type' ? this.calculateMinimum(value) : this.calculateMinimum()
+
+
+    if (name === 'value' && value < minimum) value = minimum
+    if (name === 'type' && this.state.value < minimum) this.setState({ value: minimum })
+
+
 
     this.setState({ [name]: value }, () => {
       const { value, type } = this.state
 
       if (type === 'addition') {
-        rule.priceAddition = value !== 0 ? parseInt(value, 10) : 0
+        rule.priceAddition = value ? parseFloat(value, 10) : 0
         rule.priceMultiplier = 0
 
-        this.onChange(rule)
+        this.onChange(item)
       } else if (type === 'multiplier') {
-        rule.priceMultiplier = value !== 0 ? parseInt(value, 10) : 0
+        rule.priceMultiplier = value ? parseFloat(value, 10) : 0
         rule.priceAddition = 0
 
-        this.onChange(rule)
+        this.onChange(item)
       }
     })
 
     return false
   }
 
-  getPrices = () => {
-    const { offer, rule, rootRule } = this.props
 
-    const r = rootRule || rule
+  calculateMinimum = (type = this.state.type) => type === 'multiplier' ? -99.9 : -1 * (this.props.offer.pricingTiers[this.props.offer.pricingTiers.length - 1].price) + 0.001
+
+  getPrices = () => {
+    const { offer, item, rootRule } = this.props
+    const { model: { rule } } = item
+
+    const r = rule //rootRule || rule
     const calc = (p) => (p * (r.priceMultiplier + 100) / 100) + r.priceAddition
 
+    let high = calc(offer.pricingTiers[0].price), low = calc(offer.pricingTiers[offer.pricingTiers.length - 1].price)
+
+
+
     return {
-      high: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={calc(offer.pricingTiers[0].price)} />,
-      low: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={calc(offer.pricingTiers[offer.pricingTiers.length - 1].price)} />
+      highStr: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={high ? high : 0} />,
+      lowStr: <FormattedNumber style='currency' currency={offer.currency || 'USD'} value={low ? low : 0} />,
+      low,
+      high
     }
   }
 
+
   render() {
-    const { disabled } = this.props
+    const { disabled, offer } = this.props
     const { type, value } = this.state
     const prices = this.getPrices()
 
@@ -90,19 +127,21 @@ export default class PriceControl extends Component {
           disabled={disabled}
           name='value'
           type='number'
+          min={this.calculateMinimum()}
           value={value}
-          onClick={e => { e.preventDefault(); e.stopPropagation() }}
+          step={type === 'multiplier' ? 0.1 : 0.001}
+          onClick={e => { e.stopPropagation() }}
           onChange={this.handleChange}
           size='small'
           data-test='broadcast_price_control_price_inp'
         />
         <ControlBox>
-          <Radio disabled={disabled} label='%' checked={type === 'multiplier'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'multiplier' })} data-test='broadcast_price_control_multiplier_rad'/>
-          <Radio disabled={disabled} label='$' checked={type === 'addition'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'addition' })} data-test='broadcast_price_control_addition_rad'/>
+          <Radio disabled={disabled} label='%' checked={type === 'multiplier'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'multiplier' })} data-test='broadcast_price_control_multiplier_rad' />
+          <Radio disabled={disabled} label='$' checked={type === 'addition'} onClick={(e) => this.handleChange(e, { name: 'type', value: 'addition' })} data-test='broadcast_price_control_addition_rad' />
         </ControlBox>
         <ControlBox>
-          <FobPrice disabled={disabled}>{prices.low} -</FobPrice>
-          <FobPrice disabled={disabled}>{prices.high}</FobPrice>
+          <FobPrice disabled={disabled}>{prices.lowStr} -</FobPrice>
+          <FobPrice disabled={disabled}>{prices.highStr}</FobPrice>
         </ControlBox>
       </Box>
     )
@@ -112,7 +151,7 @@ export default class PriceControl extends Component {
 
 const PriceInput = styled(Input)`
   padding: 5px;
-  width: 80px;
+  width: 110px;
 `
 
 const ControlBox = styled.div`

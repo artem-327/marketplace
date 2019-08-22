@@ -32,7 +32,6 @@ class Shipping extends Component {
       key: i.id
     }))
 
-
     return (
       <Segment>
         <Grid className='bottom-padded'>
@@ -51,12 +50,9 @@ class Shipping extends Component {
                 <GridColumn floated='right'>
                   <span
                     className='headerAddtext'
-                    onClick={() => this.props.shippingChanged({ isShippingEdit: true, isNewAddress: !!selectedAddress })}
+                    onClick={() => this.props.shippingChanged({ isShippingEdit: true, isNewAddress: !selectedAddress })}
                     data-test='purchase_order_edit_address'>
-                    <FormattedMessage
-                      id='global.edit'
-                      defaultMessage='Edit'
-                    />
+                    <FormattedMessage id='global.edit' defaultMessage='Edit'>{(text) => text}</FormattedMessage>
                   </span>
                 </GridColumn>
               )
@@ -71,7 +67,7 @@ class Shipping extends Component {
                   onClick={() => this.handleToggleChange(true)}
                   active={this.props.otherAddresses}
                   data-test='purchase_order_address_btn'>
-                  <FormattedMessage id='cart.addresses' defaultMessage='Addresses' /></Button>
+                  <FormattedMessage id='cart.addresses' defaultMessage='Addresses'>{(text) => text}</FormattedMessage></Button>
                 <Button.Or text={formatMessage({ id: 'global.or', defaultMessage: 'or' })} />
                 <Button
                   type='button'
@@ -79,7 +75,7 @@ class Shipping extends Component {
                   onClick={() => this.handleToggleChange(false)}
                   active={!this.props.otherAddresses}
                   data-test='purchase_order_branches_btn'>
-                  <FormattedMessage id='cart.warehouses' defaultMessage='Warehouses' /></Button>
+                  <FormattedMessage id='cart.warehouses' defaultMessage='Warehouses'>{(text) => text}</FormattedMessage></Button>
               </Button.Group>
             </GridColumn>
           </GridRow>
