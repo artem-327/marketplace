@@ -1044,6 +1044,7 @@
   "order.assignLots.header.mfgDate": "MFG Date",
   "order.assignLots.header.expirationDate": "Expiration Date",
   "order.assignLots.header.cOfA": "C of A",
+  "order.assignLots.orderItem": "Order Item {num}",
   "order.ship": "Ship",
   "order.ship.description": "This order is in confirmed status. Please select ship to move forward with the order.",
   "profile.myProfile": "My Profile",

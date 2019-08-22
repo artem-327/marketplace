@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from "redux"
 import * as Actions from "../../actions"
 import { loadFile, addAttachment} from "~/modules/inventory/actions"
-import { Modal, Table, Grid, Header, Button, Segment, Tab, TabPane } from "semantic-ui-react"
+import { Modal, Table, Grid, Header, Button, Segment, Tab, TabPane, Menu } from "semantic-ui-react"
 import { Form, Input, Checkbox } from 'formik-semantic-ui'
 import { FieldArray } from 'formik'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
@@ -354,12 +354,34 @@ class AssignLots extends React.Component {
                 {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
                   const panes = orderItems.map((orderItem, index) => {
                     return {
-                      menuItem: 'Order Item '+(index+1),
+                      //menuItem: 'Order Item '+(index+1),
+                      menuItem: (
+                        <Menu.Item key={`orderItem${index}`}
+                                   onClick={(e, {index}) => {
+                                     validateForm()
+                                       .then(r => {
+                                         // stop when errors found on current tab
+                                         if (Object.keys(r).length && getSafe(() => !!r.tabLots[this.state.activeTab], false)) {
+                                           submitForm() // show errors
+                                           return false
+                                         }
+
+                                         // if validation is correct - switch tabs
+                                         this.setState({ activeTab: index })
+                                       })
+                                       .catch(e => {
+                                         console.log('CATCH', e)
+                                       })
+                                   }}
+                                   data-test={`order_assign_lots_tab${index}`}>
+                          <FormattedMessage id='order.assignLots.orderItem' defaultMessage='Order Item {num}' values={{num: index+1}} />
+                        </Menu.Item>
+                      ),
                       pane: () => this.renderTab(index, orderItem, tabLots[index].lots, setFieldValue, values)
                     }
                   })
                   return (
-                    <TabMenu menu={{ secondary: true, pointing: true }} panes={panes} renderActiveOnly={false} activeIndex={this.state.activeTab} onTabChange={(e, {activeIndex}) => this.setState({ activeTab: activeIndex})} />
+                    <TabMenu menu={{ secondary: true, pointing: true }} panes={panes} renderActiveOnly={false} activeIndex={this.state.activeTab} />
                   )
                 }}
               </Form>
