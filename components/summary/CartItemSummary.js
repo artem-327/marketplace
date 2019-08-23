@@ -53,7 +53,7 @@ class CartItemSummary extends Component {
 
 
     let initialValues = {
-      unNumber: getSafe(() => item.unNumber.id, product.unNumber && product.unNumber.id || ''),
+      unCode: getSafe(() => item.unNumber.id, product.unNumber && product.unNumber.id || ''),
       packagingGroup: getSafe(() => item.packagingGroup.id, product.packagingGroup ? product.packagingGroup.id : ''),
       hazardClasses: item.hazardClasses ? item.hazardClasses.map((c) => c.id) : product.hazardClasses.map((hazardClass) => hazardClass.id),
       freightClass: getSafe(() => item.freightClass, product.freightClass || ''),
@@ -124,7 +124,7 @@ class CartItemSummary extends Component {
                       selection: true,
                       onSearchChange: this.handleUnNumberChange
                     }}
-                    name='unNumber'
+                    name='unCode'
                     label={formatMessage({ id: 'global.unNumber', defaultMessage: 'UN Number' })} />
                 </GridColumn>
               </GridRow>
