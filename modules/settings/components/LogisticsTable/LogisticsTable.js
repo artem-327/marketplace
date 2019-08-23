@@ -10,9 +10,9 @@ import confirm from '~/src/components/Confirmable/confirm'
 import ProdexTable from '~/components/table'
 
 const columns = [
-  { name: 'logisticsProviderName', title: <FormattedMessage id='logistics.label.logisticsProvider' defaultMessage='Logistics Provider' /> },
-  { name: 'apiKey', title: <FormattedMessage id='logistics.label.apiKey' defaultMessage='API Key' /> },
-  { name: 'username', title: <FormattedMessage id='logistics.label.username' defaultMessage='User Name' /> }
+  { name: 'logisticsProviderName', title: <FormattedMessage id='logistics.label.logisticsProvider' defaultMessage='Logistics Provider'>{(text) => text}</FormattedMessage> },
+  { name: 'apiKey', title: <FormattedMessage id='logistics.label.apiKey' defaultMessage='API Key'>{(text) => text}</FormattedMessage> },
+  { name: 'username', title: <FormattedMessage id='logistics.label.username' defaultMessage='User Name'>{(text) => text}</FormattedMessage> }
 ]
 
 

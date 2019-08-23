@@ -50,6 +50,7 @@ export const initialState = {
   filterValue: '',
   filterCasIds: [],
   loading: false,
+  unNumbersFetching: false,
   config: config,
   addressSearchPrimaryBranch: [],
   addressSearchMailingBranch: [],
@@ -335,10 +336,19 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_GET_UN_NUMBERS_PENDING:
+    case AT.ADMIN_GET_UN_NUMBERS_BY_STRING_PENDING: {
+      return {
+        ...state,
+        unNumbersFetching: true,
+      }
+    }
+
     case AT.ADMIN_GET_UN_NUMBERS_BY_STRING_FULFILLED:
     case AT.ADMIN_GET_UN_NUMBERS_FULFILLED: {
       return {
         ...state,
+        unNumbersFetching: false,
         unNumbersFiltered: action.payload
       }
     }

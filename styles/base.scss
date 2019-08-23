@@ -629,6 +629,26 @@ table.ui.table.table-fields {
   }
 }
 
+table.ui.table.table-fields.basic {
+  border: 0 none;
+
+  thead tr th {
+    border: 0 none;
+  }
+
+  tbody tr td {
+    border-width: 0 0 1px;
+
+    input {
+      text-align: center;
+
+      &[readonly] {
+        opacity: 0.45;
+      }
+    }
+  }
+}
+
 table.order-total.ui[class*="very basic"]:not(.sortable):not(.striped) {
   min-width: 35%;
 

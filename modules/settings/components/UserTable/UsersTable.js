@@ -32,14 +32,14 @@ const handleSwitchEnabled = (id) => {
 class UsersTable extends Component {
   state = {
     columns: [
-      { name: 'name', title: <FormattedMessage id='global.user' defaultMessage='User' /> },
-      { name: 'jobTitle', title: <FormattedMessage id='global.jobTitle' defaultMessage='Job Title' /> },
-      { name: 'email', title: <FormattedMessage id='global.email' defaultMessage='E-mail' /> },
-      { name: 'phone', title: <FormattedMessage id='global.phone' defaultMessage='Phone' /> },
-      { name: 'homeBranchName', title: <FormattedMessage id='global.homeBranch' defaultMessage='Home Branch' /> },
-      { name: 'userRoles', title: <FormattedMessage id='global.roles' defaultMessage='Roles' />, width: 200 },
-      { name: 'lastLoginAt', title: <FormattedMessage id='global.lastLogin' defaultMessage='Last Login' />, width: 200 },
-      { name: 'switchEnable', title: <FormattedMessage id='global.enableUser' defaultMessage='Enable User' />, width: 120 }
+      { name: 'name', title: <FormattedMessage id='global.user' defaultMessage='User'>{(text) => text}</FormattedMessage> },
+      { name: 'jobTitle', title: <FormattedMessage id='global.jobTitle' defaultMessage='Job Title'>{(text) => text}</FormattedMessage> },
+      { name: 'email', title: <FormattedMessage id='global.email' defaultMessage='E-mail'>{(text) => text}</FormattedMessage> },
+      { name: 'phone', title: <FormattedMessage id='global.phone' defaultMessage='Phone'>{(text) => text}</FormattedMessage> },
+      { name: 'homeBranchName', title: <FormattedMessage id='global.homeBranch' defaultMessage='Home Branch'>{(text) => text}</FormattedMessage> },
+      { name: 'userRoles', title: <FormattedMessage id='global.roles' defaultMessage='Roles'>{(text) => text}</FormattedMessage>, width: 200 },
+      { name: 'lastLoginAt', title: <FormattedMessage id='global.lastLogin' defaultMessage='Last Login'>{(text) => text}</FormattedMessage>, width: 200 },
+      { name: 'switchEnable', title: <FormattedMessage id='global.enableUser' defaultMessage='Enable User'>{(text) => text}</FormattedMessage>, width: 120 }
     ]
   }
 

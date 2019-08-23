@@ -64,7 +64,7 @@ class Filter extends Component {
       setParams
     } = this.props
 
-    if (this.props.searchWarehouseUrl)
+    if (typeof this.props.searchWarehouseUrl !== 'undefined')
       this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
 
     this.handleGetSavedFilters()
@@ -225,7 +225,7 @@ class Filter extends Component {
             component={Checkbox}
             checked={!!values[groupName] && values[groupName][name]}
             name={path} label={el.name}
-            data-test='filter_FormikField_change'/>
+            data-test='filter_FormikField_change' />
         </FormField>
       )
     }
@@ -580,11 +580,11 @@ class Filter extends Component {
           </AccordionItem>
 
           {(layout === 'MyInventory') && (<AccordionItem>
-              {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
-              <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
-                <BottomMargedDropdown {...dropdownWarehouseProps} />
-              </AccordionContent>
-            </AccordionItem>
+            {this.accordionTitle('warehouse', <FormattedMessage id='filter.warehouse' />)}
+            <AccordionContent active={!this.state.inactiveAccordion.warehouse}>
+              <BottomMargedDropdown {...dropdownWarehouseProps} />
+            </AccordionContent>
+          </AccordionItem>
           )}
 
           <AccordionItem>
@@ -659,7 +659,8 @@ class Filter extends Component {
       direction,
       animation,
       additionalSidebarProps,
-      isFilterApplying
+      isFilterApplying,
+      intl: { formatMessage }
     } = this.props
 
     const {
@@ -701,17 +702,11 @@ class Filter extends Component {
               {...additionalSidebarProps}>
               <FiltersContainer>
                 <Button onClick={() => this.toggleFilter(false)} primary={!this.state.savedFiltersActive} data-test='filter_set_filters'>
-                  <FormattedMessage
-                    id='filter.setFilters'
-                    defaultMessage='SET FILTERS'
-                  />
+                  {formatMessage({ id: 'filter.setFilters', defaultMessage: 'SET FILTERS' })}
                 </Button>
 
                 <Button onClick={() => this.toggleFilter(true)} primary={this.state.savedFiltersActive} data-test='filter_saved_filters'>
-                  <FormattedMessage
-                    id='filter.savedFilter'
-                    defaultMessage='SAVED FILTERS'
-                  />
+                  {formatMessage({ id: 'filter.savedFilter', defaultMessage: 'SAVED FILTERS' })}
                 </Button>
               </FiltersContainer>
               <FlexContent>
@@ -745,7 +740,7 @@ class Filter extends Component {
                         onClick={this.toggleSaveFilter}
                         inputProps={{ type: 'button' }}
                         data-test='filter_save_new'>
-                        <FormattedMessage id='filter.saveFilter' defaultMessage='Save Filter' />
+                        {formatMessage({ id: 'filter.saveFilter', defaultMessage: 'Save Filter' })}
                       </Button>
                     </GridColumn>
                     <GridColumn computer={10} textAlign='right'>
@@ -759,9 +754,8 @@ class Filter extends Component {
                         }}
                         inputProps={{ type: 'button' }}
                         data-test='filter_clear'>
-                        <FormattedMessage id='filter.clearFilter' defaultMessage='Clear Filter' />
+                        {formatMessage({ id: 'filter.clearFilter', defaultMessage: 'Clear Filter' })}
                       </Button>
-
                       <Button
                         size='large'
                         loading={isFilterApplying}
@@ -769,7 +763,7 @@ class Filter extends Component {
                         onClick={() => this.submitForm()}
                         inputProps={{ type: 'button' }}
                         data-test='filter_apply'>
-                        <FormattedMessage id='global.apply' defaultMessage='Apply' />
+                        {formatMessage({ id: 'global.apply', defaultMessage: 'Apply' })}
                       </Button>
                     </GridColumn>
 

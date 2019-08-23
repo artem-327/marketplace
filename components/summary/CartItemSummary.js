@@ -1,13 +1,19 @@
 import React, { Component } from 'react'
 import { array, string, func } from 'prop-types'
 import { FormattedMessage, FormattedNumber, injectIntl } from 'react-intl'
-import {Grid, GridRow, GridColumn, Header, Divider, Segment, Icon, Popup, List, Label} from 'semantic-ui-react'
+import { Grid, GridRow, GridColumn, Header, Divider, Segment, Icon, Popup, List, Label } from 'semantic-ui-react'
 
 import './styles.scss'
 import { RelaxedRow, HeaderTextRow, WiderPopup, CustomSpan, CustomHeader } from './styledComponents'
 import { FormattedUnit, ArrayToMultiple } from '~/components/formatted-messages'
-import { Form, Input, Checkbox } from 'formik-semantic-ui'
+import { Form, Input, Checkbox, Dropdown } from 'formik-semantic-ui'
 
+import { withToastManager } from 'react-toast-notifications'
+import { connect } from 'react-redux'
+import { debounce } from 'lodash'
+
+import { getPackagingGroupsDataRequest, getHazardClassesDataRequest, getUnNumbersByString } from '~/modules/admin/actions'
+import { generateToastMarkup, getSafe } from '~/utils/functions'
 
 class CartItemSummary extends Component {
 
@@ -15,91 +21,163 @@ class CartItemSummary extends Component {
     edittingHazmatInfo: false
   }
 
-  handleHazBtnClick = () => {
-    if (!this.state.edittingHazmatInfo) this.setState({ edittingHazmatInfo: true })
-    else {
-      //save
+  componentDidMount() {
+    const {
+      hazardClasses, packagingGroups,
+      getHazardClassesDataRequest, getPackagingGroupsDataRequest } = this.props
 
+    if (hazardClasses.length === 0) getHazardClassesDataRequest()
+    if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
 
-
-      this.setState({ edittingHazmatInfo: false })
-    }
   }
 
+  handleUnNumberChange = debounce((_, { searchQuery }) => {
+    this.props.getUnNumbersByString(searchQuery)
+  }, 250)
+
   hazmatMarkup = (item) => {
-    let { intl: { formatMessage } } = this.props
+    const {
+      intl: { formatMessage }, hazardClasses,
+      packagingGroups, unNumbersFiltered,
+      unNumbersFetching, updateHazmatInfo,
+      toastManager } = this.props
     let { productOffer: { product } } = item
 
+
+    // TODO check if correct after BE changes (#31093)
+
     let initialValues = {
-      hazardClass: product.hazardClasses.toString(), // TODO - no data - dunno what's there...
-      packaging: product.packagingGroup.groupCode,
-      stackable: product.stackable
+      unNumber: getSafe(() => item.unNumber, product.unNumber || ''),
+      packagingGroup: getSafe(() => item.packagingGroup.id, product.packagingGroup ? product.packagingGroup.id : ''),
+      hazardClasses: item.hazardClasses ? item.hazardClasses.map((c) => c.id) : product.hazardClasses.map((hazardClass) => hazardClass.id),
+      freightClass: getSafe(() => item.freightClass, product.freightClass || ''),
+      nmfcNumber: getSafe(() => item.nmfcNumber, product.nmfcNumber || ''),
+      stackable: getSafe(() => item.stackable, product.stackable || false),
     }
 
     let disabled = !this.state.edittingHazmatInfo
+
     return (
-      <Form initialValues={initialValues}>
-        <Segment basic>
-          <Grid verticalAlign='middle'>
-            <GridRow>
-              <GridColumn computer={12}>
-                <CustomHeader as='h2'>
-                  <FormattedMessage id='cart.hazmatInfo' defaultMessage='Hazmat Information' />
-                </CustomHeader>
-              </GridColumn>
+      <Form
+        initialValues={initialValues}
+        onSubmit={async (values, { setSubmitting }) => {
+          try {
+            await updateHazmatInfo(item.id, values)
+            toastManager.add(generateToastMarkup(
+              <FormattedMessage
+                id='notifications.hazardInfoUpdated.header'
+                defaultMessage={`Hazardous informations for ${item.productOffer.tradeName} updated`}
+                values={{ name: item.productOffer.tradeName }} />,
+              <FormattedMessage
+                id='notifications.hazardInfoUpdated.content'
+                defaultMessage='Hazardous informations successfully updated'
+              />
+            ), { appearance: 'success' })
+          }
+          catch (e) { console.error(e) }
+          finally { setSubmitting(false) }
 
-              <GridColumn computer={4}>
-                <CustomSpan positive={this.state.edittingHazmatInfo}
-                  onClick={this.handleHazBtnClick}
-                  data-test='shopping_cart_hazmat'>
-                  <FormattedMessage id={`global.${this.state.edittingHazmatInfo ? 'save' : 'edit'}`} />
-                </CustomSpan>
-              </GridColumn>
-            </GridRow>
+        }}
+        children={({ handleSubmit }) => (
+          <Segment basic>
+            <Grid verticalAlign='middle'>
+              <GridRow>
+                <GridColumn computer={12}>
+                  <CustomHeader as='h2'>
+                    <FormattedMessage id='cart.hazmatInfo' defaultMessage='Hazmat Information' />
+                  </CustomHeader>
+                </GridColumn>
 
-            <GridRow>
-              <GridColumn data-test='shopping_cart_unCode_inp'>
-                <Input inputProps={{ disabled }} name='unCode' label={formatMessage({ id: 'cart.unCode', defaultMessage: 'UN Code' })} />
-              </GridColumn>
-            </GridRow>
+                <GridColumn computer={4}>
+                  <CustomSpan positive={this.state.edittingHazmatInfo}
+                    onClick={() => {
+                      if (this.state.edittingHazmatInfo) handleSubmit()
 
-            <GridRow>
-              <GridColumn data-test='shopping_cart_packagingGroup_inp'>
-                <Input inputProps={{ disabled }} name='packaging' label={formatMessage({ id: 'cart.packagingGroup', defaultMessage: 'Packaging Group' })} />
-              </GridColumn>
-            </GridRow>
+                      this.setState({ edittingHazmatInfo: !this.state.edittingHazmatInfo })
+                    }}
+                    data-test='shopping_cart_hazmat'>
+                    <FormattedMessage id={`global.${this.state.edittingHazmatInfo ? 'save' : 'edit'}`}>{(text) => text}</FormattedMessage>
+                  </CustomSpan>
+                </GridColumn>
+              </GridRow>
+
+              <GridRow>
+                <GridColumn data-test='shopping_cart_unCode_inp'>
+                  <Dropdown
+                    options={unNumbersFiltered.map((num) => ({
+                      id: num.id,
+                      value: num.id,
+                      text: num.unNumberCode
+                    }))}
+                    inputProps={{
+                      loading: unNumbersFetching,
+                      disabled,
+                      clearable: true,
+                      search: true,
+                      selection: true,
+                      onSearchChange: this.handleUnNumberChange
+                    }}
+                    name='unNumber'
+                    label={formatMessage({ id: 'global.unNumber', defaultMessage: '!UN Number' })} />
+                </GridColumn>
+              </GridRow>
+
+              <GridRow>
+                <GridColumn data-test='shopping_cart_packagingGroup_inp'>
+                  <Dropdown
+                    options={packagingGroups.map((grp) => ({
+                      key: grp.id,
+                      value: grp.id,
+                      text: grp.groupCode
+                    }))}
+                    inputProps={{
+                      disabled,
+                      clearable: true,
+                      selection: true,
+                      search: true
+                    }}
+                    name='packagingGroup'
+                    label={formatMessage({ id: 'cart.packagingGroup', defaultMessage: 'Packaging Group' })} />
+                </GridColumn>
+              </GridRow>
 
 
-            <GridRow>
-              <GridColumn data-test='shopping_cart_hazardClass_inp'>
-                <Input inputProps={{ disabled }} name='hazardClass' label={formatMessage({ id: 'cart.hazardClass', defaultMessage: 'Hazard Class' })} />
-              </GridColumn>
-            </GridRow>
+              <GridRow>
+                <GridColumn data-test='shopping_cart_hazardClass_inp'>
+                  <Dropdown
+                    options={hazardClasses.map((hazardClass) => ({
+                      key: hazardClass.id,
+                      value: hazardClass.id,
+                      text: `${hazardClass.classCode} - ${hazardClass.description}`
+                    }))}
+                    inputProps={{ disabled, search: true, multiple: true }}
+                    name='hazardClasses' label={formatMessage({ id: 'cart.hazardClass', defaultMessage: 'Hazard Class' })} />
+                </GridColumn>
+              </GridRow>
 
-            <GridRow>
-              <GridColumn data-test='shopping_cart_freightClass_inp'>
-                <Input inputProps={{ disabled }} name='freightClass' label={formatMessage({ id: 'cart.freightClass', defaultMessage: 'Freight Class' })} />
-              </GridColumn>
-            </GridRow>
+              <GridRow>
+                <GridColumn data-test='shopping_cart_freightClass_inp'>
+                  <Input inputProps={{ disabled }} name='freightClass' label={formatMessage({ id: 'cart.freightClass', defaultMessage: 'Freight Class' })} />
+                </GridColumn>
+              </GridRow>
 
-            <GridRow>
-              <GridColumn data-test='shopping_cart_nmfcNumber_inp'>
-                <Input inputProps={{ disabled }} name='nmfcNumber' label={formatMessage({ id: 'cart.nmfcNumber', defaultMessage: 'NMFC Number' })} />
-              </GridColumn>
-            </GridRow>
-
-
-            <GridRow>
-              <GridColumn>
-                <Checkbox inputProps={{ disabled, 'data-test': 'shopping_cart_stackable_chckb' }} name='stackable' label={formatMessage({ id: 'cart.stackable', defaultMessage: 'Stackable' })} />
-              </GridColumn>
-            </GridRow>
-
-          </Grid>
-        </Segment>
-      </Form>
+              <GridRow>
+                <GridColumn data-test='shopping_cart_nmfcNumber_inp'>
+                  <Input inputProps={{ disabled }} name='nmfcNumber' label={formatMessage({ id: 'cart.nmfcNumber', defaultMessage: 'NMFC Number' })} />
+                </GridColumn>
+              </GridRow>
 
 
+              <GridRow>
+                <GridColumn>
+                  <Checkbox inputProps={{ disabled, 'data-test': 'shopping_cart_stackable_chckb' }} name='stackable' label={formatMessage({ id: 'cart.stackable', defaultMessage: 'Stackable' })} />
+                </GridColumn>
+              </GridRow>
+
+            </Grid>
+          </Segment>
+        )}
+      />
     )
 
   }
@@ -122,10 +200,7 @@ class CartItemSummary extends Component {
                   className='headerAddtext'
                   onClick={() => deleteCart(item.id)}
                   data-test={`shopping_cart_remove_${item.id}_btn`}>
-                  <FormattedMessage
-                    id='global.remove'
-                    defaultMessage='Remove'
-                  />
+                  <FormattedMessage id='global.remove' defaultMessage='Remove'>{(text) => text}</FormattedMessage>
                 </span>
               </GridColumn>
             </HeaderTextRow>
@@ -295,4 +370,6 @@ CartItemSummary.defaultProps = {
 }
 
 
-export default injectIntl(CartItemSummary)
+export default withToastManager(connect(({ admin: { packagingGroups, hazardClasses, unNumbersFiltered, unNumbersFetching } }) =>
+  ({ packagingGroups, hazardClasses, unNumbersFiltered, unNumbersFetching }),
+  { getHazardClassesDataRequest, getPackagingGroupsDataRequest, getUnNumbersByString })(injectIntl(CartItemSummary)))

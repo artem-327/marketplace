@@ -16,34 +16,34 @@ import ProductImportPopup from '~/modules/settings/components/ProductCatalogTabl
 class MyInventory extends Component {
   state = {
     columns: [
-      { name: 'productName', title: <FormattedMessage id='myInventory.productName' defaultMessage='Product Name' />, width: 250, sortPath: 'ProductOffer.product.productName' },
-      { name: 'tradeName', title: <FormattedMessage id='myInventory.TradeName' defaultMessage='Trade Name' />, width: 160 },
-      { name: 'productNumber', title: <FormattedMessage id='myInventory.productNumber' defaultMessage='Product Number' />, width: 160 },
-      { name: 'casNumberCombined', title: <FormattedMessage id='myInventory.casNumber' defaultMessage='CAS Number(s)' /> },
-      { name: 'warehouse', title: <FormattedMessage id='myInventory.warehouse' defaultMessage='Warehouse' />, width: 180, sortPath: 'ProductOffer.warehouse.warehouse' },
-      { name: 'available', title: <FormattedMessage id='myInventory.available' defaultMessage='Available PKGs' />, width: 120, sortPath: 'ProductOffer.quantity' },
-      { name: 'packaging', title: <FormattedMessage id='myInventory.packaging' defaultMessage='Packaging' />, sortPath: 'ProductOffer.product.packagingType.name' },
-      { name: 'pkgAmount', title: <FormattedMessage id='myInventory.pkgSize' defaultMessage='Pkg. Size' />, sortPath: 'ProductOffer.pkgAmount' },
-      { name: 'quantity', title: <FormattedMessage id='myInventory.quantity' defaultMessage='Quantity' /> },
-      { name: 'cost', title: <FormattedMessage id='myInventory.cost' defaultMessage='Cost' /> },
-      { name: 'fobPrice', title: <FormattedMessage id='myInventory.fobPrice' defaultMessage='FOB Price' />, sortPath: 'ProductOffer.pricingPrice' },
-      { name: 'manufacturer', title: <FormattedMessage id='myInventory.mfr' defaultMessage='MFR.' />, width: 220 },
-      { name: 'lotNumber', title: <FormattedMessage id='myInventory.lot' defaultMessage='Lot #' />, width: 100 },
-      { name: 'broadcast', title: <FormattedMessage id='myInventory.broadcast' defaultMessage='Broadcast' />, width: 120, align: 'right', sortPath: 'ProductOffer.broadcasted' },
-
-      /* temporarily commented!
-      { name: 'minOrderQuantity', title: <FormattedMessage id='myInventory.minOrderQuantity' defaultMessage='Min Order Q.' />, width: 100 },
-      { name: 'splits', title: <FormattedMessage id='myInventory.splits' defaultMessage='Splits' />, width: 100 },
-      { name: 'condition', title: <FormattedMessage id='myInventory.condition' defaultMessage='Condition' />, width: 100 },
-      { name: 'grade', title: <FormattedMessage id='myInventory.grade' defaultMessage='Grade' />, width: 100 },
-      { name: 'origin', title: <FormattedMessage id='myInventory.origin' defaultMessage='Origin' />, width: 100 },
-      { name: 'form', title: <FormattedMessage id='myInventory.form' defaultMessage='Form' />, width: 100 },
-      { name: 'assay', title: <FormattedMessage id='myInventory.assay' defaultMessage='Assay' />, width: 100 },
-      { name: 'mfgDate', title: <FormattedMessage id='myInventory.mfgDate' defaultMessage='MFG Date' />, width: 100 },
-      { name: 'expDate', title: <FormattedMessage id='myInventory.expDate' defaultMessage='EXP Date' />, width: 100 },
-      { name: 'allocatedPkg', title: <FormattedMessage id='myInventory.allocatedPkg' defaultMessage='Allocated PKG' />, width: 100 },
-      { name: 'offerExpiration', title: <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Offer EXP' />, width: 100 },
+      { name: 'productName', title: <FormattedMessage id='myInventory.productName' defaultMessage='Product Name'>{(text) => text}</FormattedMessage>, width: 250, sortPath: 'ProductOffer.product.productName' },
+      { name: 'tradeName', title: <FormattedMessage id='myInventory.TradeName' defaultMessage='Trade Name'>{(text) => text}</FormattedMessage>, width: 160 },
+      { name: 'productNumber', title: <FormattedMessage id='myInventory.productNumber' defaultMessage='Product Number'>{(text) => text}</FormattedMessage>, width: 160 },
+      { name: 'casNumberCombined', title: <FormattedMessage id='myInventory.casNumber' defaultMessage='CAS Number(s)'>{(text) => text}</FormattedMessage> },
+      /*      { name: 'warehouse', title: <FormattedMessage id='myInventory.warehouse' defaultMessage='Warehouse' />, width: 180, sortPath: 'ProductOffer.warehouse.warehouse' },
+            { name: 'available', title: <FormattedMessage id='myInventory.available' defaultMessage='Available PKGs' />, width: 120, sortPath: 'ProductOffer.quantity' },
+            { name: 'packaging', title: <FormattedMessage id='myInventory.packaging' defaultMessage='Packaging' />, sortPath: 'ProductOffer.product.packagingType.name' },
+            { name: 'pkgAmount', title: <FormattedMessage id='myInventory.pkgSize' defaultMessage='Pkg. Size' />, sortPath: 'ProductOffer.pkgAmount' },
+            { name: 'quantity', title: <FormattedMessage id='myInventory.quantity' defaultMessage='Quantity' /> },
+            { name: 'cost', title: <FormattedMessage id='myInventory.cost' defaultMessage='Cost' /> },
+            { name: 'fobPrice', title: <FormattedMessage id='myInventory.fobPrice' defaultMessage='FOB Price' />, sortPath: 'ProductOffer.pricingPrice' },
+            { name: 'manufacturer', title: <FormattedMessage id='myInventory.mfr' defaultMessage='MFR.' />, width: 220 },
+            { name: 'lotNumber', title: <FormattedMessage id='myInventory.lot' defaultMessage='Lot #' />, width: 100 },
+            { name: 'broadcast', title: <FormattedMessage id='myInventory.broadcast' defaultMessage='Broadcast' />, width: 120, align: 'right', sortPath: 'ProductOffer.broadcasted' },
       */
+      //      /* temporarily commented!
+      { name: 'minOrderQuantity', title: <FormattedMessage id='myInventory.minOrderQuantity' defaultMessage='Min Order Q.'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'splits', title: <FormattedMessage id='myInventory.splits' defaultMessage='Splits'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'condition', title: <FormattedMessage id='myInventory.condition' defaultMessage='Condition'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'grade', title: <FormattedMessage id='myInventory.grade' defaultMessage='Grade'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'origin', title: <FormattedMessage id='myInventory.origin' defaultMessage='Origin'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'form', title: <FormattedMessage id='myInventory.form' defaultMessage='Form'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'assay', title: <FormattedMessage id='myInventory.assay' defaultMessage='Assay'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'mfgDate', title: <FormattedMessage id='myInventory.mfgDate' defaultMessage='MFG Date'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'expDate', title: <FormattedMessage id='myInventory.expDate' defaultMessage='EXP Date'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'allocatedPkg', title: <FormattedMessage id='myInventory.allocatedPkg' defaultMessage='Allocated PKG'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'offerExpiration', title: <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Offer EXP'>{(text) => text}</FormattedMessage>, width: 100 },
+      //      */
     ],
     selectedRows: [],
     pageNumber: 0
@@ -139,7 +139,7 @@ class MyInventory extends Component {
   render() {
     const {
       openBroadcast,
-      intl,
+      intl: { formatMessage },
       rows,
       datagrid,
       openImportPopup,
@@ -147,7 +147,6 @@ class MyInventory extends Component {
     } = this.props
     const { columns, selectedRows } = this.state
 
-    let { formatMessage } = intl
 
     return (
       <>
@@ -176,9 +175,8 @@ class MyInventory extends Component {
                   size='large'
                   primary
                   onClick={() => openImportPopup()}
-                  data-test='my_inventory_import_btn'
-                >
-                  <FormattedMessage id='myInventory.import' defaultMessage='Import' />
+                  data-test='my_inventory_import_btn'>
+                  {formatMessage({ id: 'myInventory.import', defaultMessage: 'Import' })}
                 </Button>
               </Menu.Item>
               <Menu.Item>
@@ -236,13 +234,13 @@ class MyInventory extends Component {
                 }
               }
             ]}
-            /* COMMENTED #30916
-            onRowClick={(e, row) => {
-              const targetTag = e.target.tagName.toLowerCase()
-              if (targetTag !== 'input' && targetTag !== 'label') {
-                Router.push({ pathname: '/inventory/edit', query: { id: row.id } })
-              }
-            }}*/
+          /* COMMENTED #30916
+          onRowClick={(e, row) => {
+            const targetTag = e.target.tagName.toLowerCase()
+            if (targetTag !== 'input' && targetTag !== 'label') {
+              Router.push({ pathname: '/inventory/edit', query: { id: row.id } })
+            }
+          }}*/
           />
 
 

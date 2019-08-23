@@ -396,10 +396,10 @@ class BankAccountsPopup extends React.Component {
                   </Accordion>
                   <RightAlignedDiv>
                     <Button.Reset onClick={closeDwollaPopup} data-test='settings_dwolla_account_reset_btn'>
-                      <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
+                      <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
                     </Button.Reset>
                     <Button.Submit data-test='settings_dwolla_account_submit_btn'>
-                      <FormattedMessage id='global.save' defaultMessage='Save' />
+                      <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
                     </Button.Submit>
                   </RightAlignedDiv>
                 </>

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 
 import { Modal, Icon, Step, ModalContent, Button } from 'semantic-ui-react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import {
   closeImportPopup,
@@ -62,7 +62,7 @@ class ProductImportPopup extends Component {
   }
 
   render() {
-    const { closeImportPopup, csvFileId, closeImportPopupCancel } = this.props
+    const { closeImportPopup, csvFileId, closeImportPopupCancel, intl: { formatMessage } } = this.props
     const {
       currentStep,
       isFinishUpload,
@@ -104,15 +104,14 @@ class ProductImportPopup extends Component {
           {currentStep !== 'confirmation' && (
             <div style={{ textAlign: 'right' }}>
               <Button basic onClick={() => closeImportPopupCancel(csvFileId)} data-test='settings_product_import_cancel_btn'>
-                <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
+                {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
               </Button>
               <Button
                 primary
                 onClick={this.submitHandler}
                 disabled={!csvFileId}
-                data-test='settings_product_import_submit_btn'
-              >
-                {`${currentStep === 'preview' ? 'Save' : 'Next'}`}
+                data-test='settings_product_import_submit_btn'>
+                {formatMessage({ id: `global.${currentStep === 'preview' ? 'save' : 'next'}`, defaultMessage: currentStep === 'preview' ? 'Save' : 'Next' })}
               </Button>
             </div>
           )}
@@ -159,7 +158,7 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
+export default injectIntl(connect(
   mapStateToProps,
   mapDispatchToProps
-)(ProductImportPopup)
+)(ProductImportPopup))

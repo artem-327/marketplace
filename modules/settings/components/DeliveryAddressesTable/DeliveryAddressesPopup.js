@@ -76,7 +76,7 @@ class DeliveryAddressesPopup extends React.Component {
     return (
       <Modal open centered={false} size='small'>
         <Modal.Header>
-          <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} defaultMessage={`global.${popupValues ? 'Edit' : 'Add'}`} /> <FormattedMessage id='settings.deliveryAddress' defaultMessage='!Delivery Address' /></Modal.Header>
+          <FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} defaultMessage={popupValues ? 'Edit' : 'Add'} /> <FormattedMessage id='settings.deliveryAddress' defaultMessage='Delivery Address' /></Modal.Header>
         <Modal.Content>
           <Form
             enableReinitialize
@@ -148,8 +148,12 @@ class DeliveryAddressesPopup extends React.Component {
                     <Input type='text' label={formatMessage({ id: 'settings.contactPhone', defaultMessage: 'Contact Phone' })} name='phoneNumber' />
                   </FormGroup>
                   <div style={{ textAlign: 'right' }}>
-                    <Button.Reset data-test='settings_delivery_address_reset_btn'><FormattedMessage id='global.cancel' defaultMessage='!Cancel' /></Button.Reset>
-                    <Button.Submit data-test='settings_delivery_address_submit_btn'><FormattedMessage id='global.save' defaultMessage='!Save' /></Button.Submit>
+                    <Button.Reset data-test='settings_delivery_address_reset_btn'>
+                      <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
+                    </Button.Reset>
+                    <Button.Submit data-test='settings_delivery_address_submit_btn'>
+                      <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
+                    </Button.Submit>
                   </div>
                 </>)
             }}

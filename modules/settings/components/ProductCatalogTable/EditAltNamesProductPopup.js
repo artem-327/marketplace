@@ -193,7 +193,9 @@ class EditAltNamesProductPopup extends React.Component {
                   )}
                 />
                 <div style={{ textAlign: 'right' }}>
-                  <Button.Reset data-test='settings_product_alt_name_reset_btn'><FormattedMessage id='global.close' defaultMessage='Close' /></Button.Reset>
+                  <Button.Reset data-test='settings_product_alt_name_reset_btn'>
+                    <FormattedMessage id='global.close' defaultMessage='Close'>{(text) => text}</FormattedMessage>
+                  </Button.Reset>
                 </div>
               </>
             )}

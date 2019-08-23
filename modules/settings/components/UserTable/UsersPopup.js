@@ -212,11 +212,12 @@ class UsersPopup extends React.Component {
                 <div style={{ textAlign: 'right' }}>
                   <Button.Reset
                     onClick={userEditRoles ? closeRolesPopup : closePopup}
-                    data-test='settings_users_popup_reset_btn'
-                  >
-                    <FormattedMessage id='global.cancel' defaultMessage='Cancel' />
+                    data-test='settings_users_popup_reset_btn'>
+                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
                   </Button.Reset>
-                  <Button.Submit data-test='settings_users_popup_submit_btn'><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
+                  <Button.Submit data-test='settings_users_popup_submit_btn'>
+                    <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
+                  </Button.Submit>
                 </div>
               </>
             )}

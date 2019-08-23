@@ -62,8 +62,12 @@ const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss, intl: { for
           </Segment>
         </Modal.Content>
         <Modal.Actions>
-          <Button primary inverted onClick={handleReset} data-test='settings_bank_account_cancel_btn'><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button>
-          <Button primary onClick={handleSubmit} data-test='settings_bank_account_confirm_btn'><FormattedMessage id='global.confirm' defaultMessage='Confirm' /></Button>
+          <Button primary inverted onClick={handleReset} data-test='settings_bank_account_cancel_btn'>
+            <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
+            </Button>
+          <Button primary onClick={handleSubmit} data-test='settings_bank_account_confirm_btn'>
+            <FormattedMessage id='global.confirm' defaultMessage='Confirm'>{(text) => text}</FormattedMessage>
+            </Button>
         </Modal.Actions>
       </Modal>
     )}
@@ -79,10 +83,10 @@ class ProductCatalogTable extends Component {
     amount1: 0,
     amount2: 0,
     columns: [
-      { name: 'name', title: <FormattedMessage id='settings.accountName' defaultMessage='Account Name' /> },
-      { name: 'bankAccountType', title: <FormattedMessage id='settings.accountType' defaultMessage='Account Type' /> },
-      { name: 'bankName', title: <FormattedMessage id='settings.bankName' defaultMessage='Bank Name' /> },
-      { name: 'statusLabel', title: <FormattedMessage id='settings.status' defaultMessage='Status' /> },
+      { name: 'name', title: <FormattedMessage id='settings.accountName' defaultMessage='Account Name'>{(text) => text}</FormattedMessage> },
+      { name: 'bankAccountType', title: <FormattedMessage id='settings.accountType' defaultMessage='Account Type'>{(text) => text}</FormattedMessage> },
+      { name: 'bankName', title: <FormattedMessage id='settings.bankName' defaultMessage='Bank Name'>{(text) => text}</FormattedMessage> },
+      { name: 'statusLabel', title: <FormattedMessage id='settings.status' defaultMessage='Status'>{(text) => text}</FormattedMessage> },
     ]
   }
 

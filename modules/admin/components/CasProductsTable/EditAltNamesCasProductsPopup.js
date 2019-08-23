@@ -188,11 +188,11 @@ class EditAltNamesCasProductsPopup extends React.Component {
                                       }
                                     }}
                                     color={val.color}
-                                    data-test={`admin_popup_alt_cas_name_${index}_save`}/>
+                                    data-test={`admin_popup_alt_cas_name_${index}_save`} />
                                 )}</TableCell>
                               <TableCell width={1}><Icon name='trash alternate outline' size='large'
                                 onClick={() => this.handleDeleteName(popupValues.data.id, arrayHelpers, val, index)}
-                                                         data-test={`admin_popup_alt_cas_name_${index}_delete`}/></TableCell>
+                                data-test={`admin_popup_alt_cas_name_${index}_delete`} /></TableCell>
                             </Table.Row>
                           )) : null
                           }
@@ -202,7 +202,9 @@ class EditAltNamesCasProductsPopup extends React.Component {
                   )}
                 />
                 <div style={{ textAlign: 'right' }}>
-                  <Button.Reset data-test='admin_popup_alt_cas_name_close_btn'><FormattedMessage id='global.close' defaultMessage='Close' /></Button.Reset>
+                  <Button.Reset data-test='admin_popup_alt_cas_name_close_btn'>
+                    <FormattedMessage id='global.close' defaultMessage='Close'>{(text) => text}</FormattedMessage>
+                  </Button.Reset>
                 </div>
               </>
             )}

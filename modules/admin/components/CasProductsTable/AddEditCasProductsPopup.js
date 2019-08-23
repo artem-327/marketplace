@@ -120,7 +120,7 @@ class AddEditCasProductsPopup extends React.Component {
 
     return (
       <Modal open centered={false}>
-        <Modal.Header>{<FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`} />} {config.addEditText}</Modal.Header>
+        <Modal.Header><FormattedMessage id={`global.${popupValues ? 'edit' : 'add'}`}>{(text) => text}</FormattedMessage> {config.addEditText}</Modal.Header>
         <Modal.Content>
           <Form
             enableReinitialize
@@ -149,8 +149,8 @@ class AddEditCasProductsPopup extends React.Component {
                 <FormattedMessage id={`notifications.${status}.header`} />,
                 <FormattedMessage id={`notifications.${status}.content`} values={{ name: values.casIndexName }} />
               ), {
-                appearance: 'success'
-              })
+                  appearance: 'success'
+                })
 
 
               setSubmitting(false)
@@ -208,8 +208,12 @@ class AddEditCasProductsPopup extends React.Component {
                     />
                   </FormGroup>
                   <div style={{ textAlign: 'right' }}>
-                    <Button.Reset data-test='admin_popup_cas_cancel_btn'><FormattedMessage id='global.cancel' defaultMessage='Cancel' /></Button.Reset>
-                    <Button.Submit data-test='admin_popup_cas_save_btn'><FormattedMessage id='global.save' defaultMessage='Save' /></Button.Submit>
+                    <Button.Reset data-test='admin_popup_cas_cancel_btn'>
+                      <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
+                    </Button.Reset>
+                    <Button.Submit data-test='admin_popup_cas_save_btn'>
+                      <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
+                    </Button.Submit>
                   </div>
                 </>
               )

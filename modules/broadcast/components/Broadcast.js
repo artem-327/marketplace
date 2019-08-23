@@ -235,14 +235,12 @@ class Broadcast extends Component {
       filter, closeBroadcast, saveRules,
       id, mode, switchMode,
       saveTemplate, toastManager, offer,
-      templates, intl, updateTemplate,
-      deleteTemplate } = this.props
+      templates, updateTemplate, deleteTemplate,
+      intl: { formatMessage } } = this.props
 
     let total = treeData.all(n => n.model.type === 'state').length
 
     // const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
-
-    const { formatMessage } = intl
 
     return (
       <Modal open={open} onClose={closeBroadcast} centered={false} size='large'>
@@ -355,7 +353,9 @@ class Broadcast extends Component {
                                 onClick={() => this.handleTemplateDelete(props.setFieldValue)}
                                 disabled={!this.state.selectedTemplate}
                                 loading={this.props.templateDeleting}
-                                type='button' basic fluid negative><FormattedMessage id='global.delete' /></Button>
+                                type='button' basic fluid negative>
+                                {formatMessage({ id: 'global.delete', defaultMessage: 'Delete' })}
+                              </Button>
                             </GridColumn>
                           </GridRow>
 
@@ -370,7 +370,9 @@ class Broadcast extends Component {
                             </GridColumn>
 
                             <GridColumn computer={5}>
-                              <FormikButton.Submit loading={this.props.templateSaving} fluid positive basic data-test='broadcast_modal_submit_btn'><FormattedMessage id='global.save' defaultMessage='Save' /></FormikButton.Submit>
+                              <FormikButton.Submit loading={this.props.templateSaving} fluid positive basic data-test='broadcast_modal_submit_btn'>
+                                {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+                              </FormikButton.Submit>
                             </GridColumn>
                           </GridRow>
                         </Grid>
@@ -413,7 +415,9 @@ class Broadcast extends Component {
           </Grid>
         </Modal.Content>
         <Modal.Actions>
-          <Button onClick={() => closeBroadcast()} data-test='broadcast_modal_close_btn'><FormattedMessage id='global.cancel' /></Button>
+          <Button onClick={() => closeBroadcast()} data-test='broadcast_modal_close_btn'>
+            {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+          </Button>
           <Button primary
             onClick={async () => {
               await saveRules(id, treeData.model)
@@ -424,9 +428,8 @@ class Broadcast extends Component {
                   appearance: 'success'
                 })
             }}
-            data-test='broadcast_modal_save_btn'
-          >
-            <FormattedMessage id='global.save' />
+            data-test='broadcast_modal_save_btn'>
+            {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
           </Button>
         </Modal.Actions>
       </Modal >

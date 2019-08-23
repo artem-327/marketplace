@@ -69,8 +69,8 @@ export default class AllInventory extends Component {
             <Menu.Menu position='right'>
               {selectedRows.length === 0 ? null :
                 <Button primary onClick={() => this.setState({ open: true })}
-                        data-test='all_inventory_shipping_quote_btn'>
-                  <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote' />
+                  data-test='all_inventory_shipping_quote_btn'>
+                  <FormattedMessage id='allInventory.shippingQuote' defaultMessage='Shipping Quote'>{(text) => text}</FormattedMessage>
                 </Button>
 
               }

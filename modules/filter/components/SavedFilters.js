@@ -9,7 +9,7 @@ import { SavedFilterItem, SavedFilterTitle, SavedFiltersSegment, SavedFilterIcon
 import styled from 'styled-components'
 
 import Notifications from './Notifications'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 import { savedFilterValidation } from '../constants/validation'
 import { groupFilters } from '../constants/filter'
 
@@ -103,6 +103,8 @@ class SavedFilters extends Component {
   }
 
   render() {
+    const { intl: { formatMessage } } = this.props
+
     if (this.props.savedFiltersLoading) {
       return (
         <Segment basic>
@@ -151,7 +153,9 @@ class SavedFilters extends Component {
                             <Notifications values={values} />
                             <ActionRow>
                               <GridColumn computer={4} floated='right'>
-                                <Button onClick={submitForm} loading={this.props.savedFilterUpdating} fluid positive basic data-test='filter_save_btn'><FormattedMessage id='global.save' defaultMessage='Save' /></Button>
+                                <Button onClick={submitForm} loading={this.props.savedFilterUpdating} fluid positive basic data-test='filter_save_btn'>
+                                  {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+                                </Button>
                               </GridColumn>
                             </ActionRow>
                           </Grid>
@@ -185,4 +189,4 @@ SavedFilters.defaultProps = {
 }
 
 
-export default withToastManager(SavedFilters)
+export default injectIntl(withToastManager(SavedFilters))
