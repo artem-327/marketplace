@@ -11,6 +11,7 @@ import * as Yup from 'yup'
 import {
   openPopup,
   getBankAccountsDataRequest,
+  getDwollaAccBalance,
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteConfirmation,
@@ -87,6 +88,7 @@ class ProductCatalogTable extends Component {
 
   componentDidMount() {
     this.props.getBankAccountsDataRequest()
+    if (this.props.company.hasDwollaAccount) this.props.getDwollaAccBalance()
   }
 
   render() {
@@ -148,6 +150,7 @@ class ProductCatalogTable extends Component {
 const mapDispatchToProps = {
   openPopup,
   getBankAccountsDataRequest,
+  getDwollaAccBalance,
   handleOpenConfirmPopup,
   closeConfirmPopup,
   deleteBankAccount,
@@ -174,6 +177,7 @@ const mapStateToProps = state => {
     deleteRowById: state.settings.deleteRowById,
     currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
       state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
+    company: state.auth.identity.company && state.auth.identity && state.auth.identity.company,
   }
 }
 

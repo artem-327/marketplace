@@ -17,6 +17,8 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import { generateToastMarkup } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
 
+import { PhoneNumber } from '~/modules/phoneNumber'
+
 const userFormValidation = () => Yup.object().shape({
   name: Yup.string().trim()
     .min(3, errorMessages.minLength(3))
@@ -134,7 +136,7 @@ class UsersPopup extends React.Component {
             onReset={userEditRoles ? closeRolesPopup : closePopup}
             onSubmit={userEditRoles ? this.submitRoles : this.submitUser}
           >
-            {({ values }) => (
+            {({ values, setFieldValue }) => (
               <>
                 {userEditRoles ? (
                   roles.map((role, i) => (
@@ -148,6 +150,15 @@ class UsersPopup extends React.Component {
                   ))
                 ) : (
                     <>
+                      { false && (
+                      <FormGroup data-test='settings_users_popup_nameTitle_inp'>
+                        <PhoneNumber
+                          name='phone'
+                          values={values}
+                          setFieldValue={setFieldValue}
+                        />
+                      </FormGroup>)}
+
                       <FormGroup widths='equal' data-test='settings_users_popup_nameTitle_inp'>
                         <Input
                           type='text'

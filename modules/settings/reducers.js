@@ -66,6 +66,7 @@ export const initialState = {
   logisticsAccounts: [],
   logisticsProviders: [],
   logisticsProvidersFetching: false,
+  dwollaAccBalance: null
 }
 
 export default function reducer(state = initialState, action) {
@@ -461,6 +462,14 @@ export default function reducer(state = initialState, action) {
         bankAccountsRows: bankAccountsData,
         country: newCountryFormat,
         currency: newCurrencyFormat
+      }
+    }
+
+    case AT.SETTINGS_GET_DWOLLA_BALANCE_FULFILLED: {
+      //console.log('BankAccountTable - reducer Dwolla balance', action.payload);
+      return {
+        ...state,
+        dwollaAccBalance: action.payload
       }
     }
 

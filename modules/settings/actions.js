@@ -601,6 +601,13 @@ export function getBankAccountsDataRequest() {
   }
 }
 
+export function getDwollaAccBalance() {
+  return {
+    type: AT.SETTINGS_GET_DWOLLA_BALANCE,
+    payload: api.getDwollaAccBalance()
+  }
+}
+
 export function getProductsWithRequiredParam(payload) {
   return {
     type: AT.GET_PRODUCTS_WITH_REQUIRED_PARAM,
