@@ -12,7 +12,7 @@ import { withToastManager } from 'react-toast-notifications'
 import { connect } from 'react-redux'
 import { debounce } from 'lodash'
 
-import { getPackagingGroupsDataRequest, getHazardClassesDataRequest, getUnNumbersByString } from '~/modules/admin/actions'
+import { getPackagingGroupsDataRequest, getHazardClassesDataRequest, getUnNumbersByString, addUnNumber } from '~/modules/admin/actions'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
 
 class CartItemSummary extends Component {
@@ -21,11 +21,19 @@ class CartItemSummary extends Component {
     edittingHazmatInfo: false
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {
-      hazardClasses, packagingGroups,
-      getHazardClassesDataRequest, getPackagingGroupsDataRequest } = this.props
+      hazardClasses, packagingGroups, cartItems,
+      getHazardClassesDataRequest, getPackagingGroupsDataRequest, addUnNumber } = this.props
+    let initialUnNumbers = []
+    cartItems.forEach(item => {
+      let unNumber = getSafe(() => item.unNumber, item.productOffer.product.unNumber || '')
+      if (unNumber && !initialUnNumbers.find((num) => num.id === unNumber.id)) {
+        initialUnNumbers.push(unNumber)
+      }
+    })
 
+    if (initialUnNumbers.length !== 0) await addUnNumber(initialUnNumbers)
     if (hazardClasses.length === 0) getHazardClassesDataRequest()
     if (packagingGroups.length === 0) getPackagingGroupsDataRequest()
 
@@ -44,10 +52,8 @@ class CartItemSummary extends Component {
     let { productOffer: { product } } = item
 
 
-    // TODO check if correct after BE changes (#31093)
-
     let initialValues = {
-      unNumber: getSafe(() => item.unNumber, product.unNumber || ''),
+      unNumber: getSafe(() => item.unNumber.id, product.unNumber && product.unNumber.id || ''),
       packagingGroup: getSafe(() => item.packagingGroup.id, product.packagingGroup ? product.packagingGroup.id : ''),
       hazardClasses: item.hazardClasses ? item.hazardClasses.map((c) => c.id) : product.hazardClasses.map((hazardClass) => hazardClass.id),
       freightClass: getSafe(() => item.freightClass, product.freightClass || ''),
@@ -56,6 +62,7 @@ class CartItemSummary extends Component {
     }
 
     let disabled = !this.state.edittingHazmatInfo
+
 
     return (
       <Form
@@ -118,7 +125,7 @@ class CartItemSummary extends Component {
                       onSearchChange: this.handleUnNumberChange
                     }}
                     name='unNumber'
-                    label={formatMessage({ id: 'global.unNumber', defaultMessage: '!UN Number' })} />
+                    label={formatMessage({ id: 'global.unNumber', defaultMessage: 'UN Number' })} />
                 </GridColumn>
               </GridRow>
 
@@ -236,17 +243,16 @@ class CartItemSummary extends Component {
                 <FormattedMessage id='cart.hazmatInfo' defaultMessage='Hazmat Information' />
               </GridColumn>
 
-              <GridColumn floated='right'>
                 <WiderPopup
                   wide
                   onClose={() => this.setState({ edittingHazmatInfo: false })}
                   position='left center'
                   on='click'
                   trigger={
-                    <Icon name='info circle' color='blue' />
+                    <GridColumn floated='right'><Icon name='info circle' color='blue' /></GridColumn>
                   }
                   content={this.hazmatMarkup(item)} />
-              </GridColumn>
+              
             </RelaxedRow>
 
 
@@ -372,4 +378,4 @@ CartItemSummary.defaultProps = {
 
 export default withToastManager(connect(({ admin: { packagingGroups, hazardClasses, unNumbersFiltered, unNumbersFetching } }) =>
   ({ packagingGroups, hazardClasses, unNumbersFiltered, unNumbersFetching }),
-  { getHazardClassesDataRequest, getPackagingGroupsDataRequest, getUnNumbersByString })(injectIntl(CartItemSummary)))
+  { getHazardClassesDataRequest, getPackagingGroupsDataRequest, getUnNumbersByString, addUnNumber })(injectIntl(CartItemSummary)))

@@ -440,6 +440,19 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    /* UPDATE_HAZMAT_INFO */
+
+    case AT.UPDATE_HAZMAT_INFO_FULFILLED: {
+      let cartItems = []
+      for (let i = 0; i < state.cart.cartItems.length; i++) {
+        cartItems.push({ ...state.cart.cartItems[i], ...action.payload.cartItems[i] })
+      }
+      return {
+        ...state,
+        cart: { ...state.cart, ...action.payload, cartItems }
+      }
+    }
+
     default: {
       return state
     }

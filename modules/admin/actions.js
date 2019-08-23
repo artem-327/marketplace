@@ -478,3 +478,6 @@ export const reviewRequest = (companyId) => {
 		payload: api.reviewRequest(companyId)
 	}
 }
+
+
+export const addUnNumber = payload => ({ type: AT.ADMIN_ADD_UN_NUMBER, payload })
