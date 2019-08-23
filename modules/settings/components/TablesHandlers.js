@@ -6,6 +6,7 @@ import * as Actions from '../actions'
 import Router from 'next/router'
 import { debounce } from 'lodash'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
+import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
 
 const textsTable = {
   'users': {
@@ -83,11 +84,13 @@ class TablesHandlers extends Component {
       dwollaAccount,
       openDwollaPopup,
       isCompanyAdmin,
+      dwollaAccBalance
     } = this.props
 
     const { filterValue } = this.state
 
     const isDwollaAccountVisible = isCompanyAdmin && dwollaAccount && !dwollaAccount.hasDwollaAccount && currentTab.type === 'bank-accounts'
+    const isDwollaBalanceVisible = false && isCompanyAdmin && dwollaAccount && dwollaAccount.hasDwollaAccount && currentTab.type === 'bank-accounts'
 
     return (
       <Menu secondary>
@@ -127,6 +130,12 @@ class TablesHandlers extends Component {
                 >
                   Register Dwolla Account
               </Button>
+              )}
+              {isDwollaBalanceVisible && (
+                <>
+                  <FormattedMessage id='settings.dwollaAccBalance' defaultMessage='Dwolla Balance:' />
+                  <FormattedNumber style='currency' currency={'USD'} value={100} />
+                </>
               )}
               <Button
                 size="large"
@@ -168,10 +177,11 @@ const mapStateToProps = (state) => {
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
     productsFilter: state.settings.productsFilter,
     filterValue: state.settings.filterValue,
+    dwollaAccBalance: state.settings.dwollaAccBalance
   }
 }
 
 export default withDatagrid(connect(
   mapStateToProps,
   Actions
-)(TablesHandlers))
+)(injectIntl(TablesHandlers)))

@@ -64,7 +64,7 @@ class Filter extends Component {
       setParams
     } = this.props
 
-    if (this.props.searchWarehouseUrl)
+    if (typeof this.props.searchWarehouseUrl !== 'undefined')
       this.props.getAutocompleteWarehouse(this.props.searchWarehouseUrl(''))
 
     this.handleGetSavedFilters()

@@ -4,9 +4,11 @@ import Detail from './Detail'
 import * as Actions from '../actions'
 import * as OrdersHelper from "~/src/helpers/Orders"
 import moment from "moment/moment"
+import { getSafe } from "~/utils/functions"
 
 function actionRequired(data) {
-    return (data.orderStatus === 1)
+    // return statuses code
+    return getSafe(() => data.orderStatus.toString(), 0) + getSafe(() => data.shippingStatus.toString(), 0)
 }
 
 function prepareDetail(data, type) {
@@ -45,6 +47,7 @@ function prepareDetail(data, type) {
       pickUpAddress: data.sellerCompanyAddressStreet + ', ' + data.sellerCompanyAddressCity + ', ' + data.sellerCompanyAddressZip + ', ' + data.sellerCompanyAddressCountry,
       productCode: data.orderItems[0].productCode ? data.orderItems[0].productCode : 'N/A',
       productName: (typeof data.orderItems[0].name !== 'undefined' ? data.orderItems[0].name : 'N/A'),
+      productOfferIds: data.orderItems.map(orderItem => orderItem.productOffer),
       proNumber: 'N/A',
       quantityOrdered: data.orderItems[0].amount * data.orderItems[0].packagingSize,
       refundDate: (typeof data.refundDate !== 'undefined' ? moment(data.refundDate).format('MMM Do, YYYY h:mm:ss A') : 'N/A'),
@@ -86,6 +89,7 @@ function mapStateToProps(state, ownProps) {
 
     return {
         order: prepareDetail(orders.detail, ownProps.router.query.type),
+        openedAssignLots: orders.openedAssignLots,
         action: actionRequired(orders.detail),
         reloadPage: orders.reloadPage
     }

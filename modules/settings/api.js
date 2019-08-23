@@ -32,6 +32,10 @@ export default {
     api
       .get('/prodex/api/payments/bank-accounts')
       .then(response => response.data),
+  getDwollaAccBalance: () =>
+    api
+      .get('/prodex/api/payments/bank-accounts')  // ! ! temporary - waiting for BE endpoint
+      .then(response => response.data),
   getProductsCatalogByString: async (data, limit = 30) => {
     return await
       api.get(`/prodex/api/products/search?limit=${limit}&onlyMapped=${data.unmapped}&search=${data.body}`).then(response => response.data)

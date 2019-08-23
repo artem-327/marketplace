@@ -1,4 +1,5 @@
 import * as AT from './action-types'
+import { INVENTORY_LINK_ATTACHMENT } from '~/modules/inventory/action-types'
 
 const initialState = {
     data: [],
@@ -12,7 +13,8 @@ const initialState = {
     reloadPage: false,
     selectedIndex: -1,
     statusFilter: null,
-    searchedCompanies: []
+    searchedCompanies: [],
+    openedAssignLots: false
 }
 
 export default function(state = initialState, action) {
@@ -102,6 +104,115 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 searchedCompanies: action.payload.data
+            }
+        case AT.ORDER_OPEN_ASSIGN_LOTS:
+            return {
+              ...state,
+              openedAssignLots: true
+            }
+        case AT.ORDER_CLOSE_ASSIGN_LOTS:
+            return {
+                ...state,
+                openedAssignLots: false
+            }
+        case AT.ORDER_GET_LOTS_FULFILLED:
+            // prepare lots for used product offers
+            let poLots = (state.detail.lots ? state.detail.lots : [])
+            poLots.push({
+                id: action.payload.data.id,
+                lots: action.payload.data.lots.map(lot => {
+                    return {
+                        id: lot.id,
+                        lotNumber: lot.lotNumber,
+                        total: lot.originalPkgAmount,
+                        available: lot.pkgAmount,
+                        allocated: 0,
+                        mfgDate: lot.manufacturedDate,
+                        expirationDate: lot.expirationDate,
+                        attachments: lot.attachments.map(att => {
+                            return {
+                              ...att,
+                              linked: true
+                            }
+                        }),
+                        selected: false
+                    }
+                })
+            })
+
+            return {
+                ...state,
+                detail: {
+                    ...state.detail,
+                    poLots: poLots
+                }
+            }
+        case AT.ORDER_LINK_ATTACHMENT_FULFILLED:
+            return {
+                ...state,
+                detail: {
+                    ...state.detail,
+                    poLots: state.detail.poLots.map(poLot => {
+                        return {
+                            ...poLot,
+                            lots: poLot.lots.map(lot => {
+                                if (lot.id === action.payload.lotId) {
+                                    return {
+                                        ...lot,
+                                        attachments: [{
+                                            ...action.payload.file,
+                                            linked: true
+                                        }]
+                                    }
+                                } else {
+                                    return lot
+                                }
+                            })
+                        }
+                    })
+                }
+            }
+        case AT.ORDER_REMOVE_ATTACHMENT_FULFILLED:
+            return {
+                ...state,
+                detail: {
+                    ...state.detail,
+                    poLots: state.detail.poLots.map(poLot => {
+                        return {
+                            ...poLot,
+                            lots: poLot.lots.map(lot => {
+                                return {
+                                    ...lot,
+                                    attachments: lot.attachments.filter(att => {
+                                        if (att.id === action.payload.fileId) {
+                                            return false
+                                        } else {
+                                            return true
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            }
+        case AT.ORDER_ASSIGN_LOTS_FULFILLED:
+            return {
+                ...state,
+                detail: {
+                    ...state.detail,
+                    orderItems: state.detail.orderItems.map(orderItem => {
+                        let foundOrderItem = action.payload.find(oi => oi.id === orderItem.id)
+                        if (foundOrderItem) {
+                            return {
+                              ...foundOrderItem
+                            }
+                        }
+                        return {
+                            ...orderItem
+                        }
+                  })
+                }
             }
         default:
             return state

@@ -32,7 +32,9 @@ export const errorMessages = {
   maxAtLeastMin: <FormattedMessage id='validation.maxAtLeastMin' defaultMessage='Max value should be greater or equal to Min value' />,
   integer: <FormattedMessage id='validation.integer' defaultMessage='Number value should be integer' />,
   invalidDateFormat: (example = 'YYYY-MM-DD') => <FormattedMessage id='validation.invalidDateFormat' defaultMessage={`Invalid date format. Date should match ${example}`} values={{ example }} />,
-  invalidValueFormat: (example) => <FormattedMessage id='validation.invalidValueFormat' defaultMessage={`Invalid value format. Format should match ${example}`} values={{ example }} />
+  invalidValueFormat: (example) => <FormattedMessage id='validation.invalidValueFormat' defaultMessage={`Invalid value format. Format should match ${example}`} values={{ example }} />,
+  lessThanOrdered: <FormattedMessage id='validation.lessThanOrdered' defaultMessage='Less than ordered' />,
+  moreThanOrdered: <FormattedMessage id='validation.moreThanOrdered' defaultMessage='More than ordered' />
 }
 
 export const provinceObjectRequired = (hasProvinces) => (

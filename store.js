@@ -61,6 +61,7 @@ import auth from '~/modules/auth/reducer'
 import broadcast from '~/modules/broadcast/reducer'
 
 import messages from '~/modules/messages/reducer'
+import phoneNumber from '~/modules/phoneNumber/reducer'
 
 const reducer = combineReducers({
   auth,
@@ -111,6 +112,7 @@ const reducer = combineReducers({
   settings,
   profile,
   broadcast,
+  phoneNumber,
 })
 
 const logger = createLogger({

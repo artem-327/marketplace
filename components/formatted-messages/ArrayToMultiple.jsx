@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
 import { Label, Popup, List } from 'semantic-ui-react'
-import { string, object} from "prop-types";
+import { string, array } from "prop-types";
 
 import { FormattedMessage } from 'react-intl'
 
@@ -30,7 +30,7 @@ export default class ArrayToMultiple extends Component {
 }
 
 ArrayToMultiple.propTypes = {
-  values: object
+  values: array
 }
 
 ArrayToMultiple.defaultProps = {
