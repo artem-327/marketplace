@@ -492,6 +492,20 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.ADMIN_ADD_UN_NUMBER: {
+      let copy = state.unNumbersFiltered.slice()
+      if (!(payload instanceof Array)) payload = [payload]
+
+      payload.forEach(element => {
+        if (!copy.find((e) => e.id === element.id)) copy.push(element)
+      })
+
+      return {
+        ...state,
+        unNumbersFiltered: copy
+      }
+    }
+
     default: {
       for (let groupName in config) {
         if (typeof config[groupName].api !== 'undefined') {
@@ -523,7 +537,9 @@ export default function reducer(state = initialState, action) {
             }
           }
         }
+
       }
+
 
       return state
     }

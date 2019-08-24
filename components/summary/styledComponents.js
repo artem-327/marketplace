@@ -23,7 +23,10 @@ export const Title = styled(HeaderTextRow)`
 `
 
 export const WiderPopup = styled(Popup)`
-  width: 300px !important;
+  width: 350px !important;
+  max-height: 80vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 `
 
 export const CustomSpan = styled.span`
