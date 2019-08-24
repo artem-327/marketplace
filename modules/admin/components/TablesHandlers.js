@@ -27,7 +27,8 @@ class TablesHandlers extends Component {
       this.setState({
         filterValueKey: ++filterValueKey
       })
-    } if (prevProps.currentTab !== this.props.currentTab) {
+    }
+    if (prevProps.currentTab !== this.props.currentTab) {
       this.setState({ filterValue: '' })
       this.props.handleFiltersValue(this.props, '')
     }

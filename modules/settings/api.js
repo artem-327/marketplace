@@ -34,7 +34,7 @@ export default {
       .then(response => response.data),
   getDwollaAccBalance: () =>
     api
-      .get('/prodex/api/payments/bank-accounts')  // ! ! temporary - waiting for BE endpoint
+      .get('/prodex/api/payments/dwolla/balance')
       .then(response => response.data),
   getProductsCatalogByString: async (data, limit = 30) => {
     return await

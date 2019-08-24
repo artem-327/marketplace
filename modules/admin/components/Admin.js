@@ -97,6 +97,12 @@ const datagridConfig = {
     searchToFilter: v => ([
       { operator: 'LIKE', path: 'PackagingType.name', values: [`%${v}%`] }
     ])
+  },
+  'Units of Measure': {
+    url: '/prodex/api/units/datagrid',
+    searchToFilter: v => ([
+      { operator: 'LIKE', path: 'Unit.name', values: [`%${v}%`] }
+    ])
   }
 }
 
