@@ -98,7 +98,7 @@ class LoginForm extends Component {
 
               <StyledForm validateOnChange={true}
                 validationSchema={validationScheme}
-                onSubmit={(values, actions) => {
+                onSubmit={async (values, actions ) => {
                   const { username, password } = values
                   const { login, resetPasswordRequest } = this.props
 
@@ -107,11 +107,16 @@ class LoginForm extends Component {
                     usernameError: username.length < 3
                   }
 
-                  if (!inputsState.passwordError && !inputsState.usernameError) {
-                    if (this.state.resetPassword) resetPasswordRequest(username)
-                    else login(username, password)
+                  try {
+                    if (!inputsState.passwordError && !inputsState.usernameError) {
+                      if (this.state.resetPassword) await resetPasswordRequest(username)
+                      else await login(username, password)
+                    } else this.setState(inputsState)
                   }
-                  else this.setState(inputsState)
+                  catch { }
+                  finally {
+                    actions.setSubmitting(false)
+                  }
                 }}>
                 {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
                   return (

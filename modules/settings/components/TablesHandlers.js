@@ -54,11 +54,17 @@ class TablesHandlers extends Component {
     super(props)
 
     this.state = {
-      filterValue: props.filterValue
+      filterFieldCurrentValue: 'None',
+      filterValue: ''
     }
-
     this.handleFiltersValue = debounce(this.handleFiltersValue, 250)
+  }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.currentTab !== this.props.currentTab) {
+      this.setState({ filterValue: '' })
+      this.handleFiltersValue('')
+    }
   }
 
   handleFiltersValue = (value) => {
@@ -90,7 +96,7 @@ class TablesHandlers extends Component {
     const { filterValue } = this.state
 
     const isDwollaAccountVisible = isCompanyAdmin && dwollaAccount && !dwollaAccount.hasDwollaAccount && currentTab.type === 'bank-accounts'
-    const isDwollaBalanceVisible = false && isCompanyAdmin && dwollaAccount && dwollaAccount.hasDwollaAccount && currentTab.type === 'bank-accounts'
+    const isDwollaBalanceVisible = isCompanyAdmin && dwollaAccount && dwollaAccount.hasDwollaAccount && currentTab.type === 'bank-accounts'
 
     return (
       <Menu secondary>
@@ -133,8 +139,8 @@ class TablesHandlers extends Component {
               )}
               {isDwollaBalanceVisible && (
                 <>
-                  <FormattedMessage id='settings.dwollaAccBalance' defaultMessage='Dwolla Balance:' />
-                  <FormattedNumber style='currency' currency={'USD'} value={100} />
+                  <FormattedMessage id='settings.dwollaAccBalance' defaultMessage='Dwolla Balance: ' />&nbsp;
+                  <FormattedNumber style='currency' currency={dwollaAccBalance.currency} value={dwollaAccBalance.value} />
                 </>
               )}
               <Button
@@ -177,7 +183,8 @@ const mapStateToProps = (state) => {
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
     productsFilter: state.settings.productsFilter,
     filterValue: state.settings.filterValue,
-    dwollaAccBalance: state.settings.dwollaAccBalance
+    dwollaAccBalance: state.settings.dwollaAccBalance ?
+      state.settings.dwollaAccBalance.balance : {value: '', currency: 'USD'}
   }
 }
 

@@ -31,10 +31,6 @@ class DeliveryAddressesTable extends Component {
     ]
   }
 
-  componentDidMount() {
-    this.props.getDeliveryAddressesByFilterRequest(this.props.deliveryAddressesFilter)
-  }
-
   render() {
     const {
       datagrid,

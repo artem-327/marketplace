@@ -12,10 +12,10 @@ import {
   getMeasureTypesDataRequest,
   deleteUnit
 } from '../../actions'
+import { withDatagrid } from '~/modules/datagrid'
 
 class UnitOfMeasureTable extends Component {
   componentDidMount() {
-    this.props.getDataRequest(this.props.config)
     this.props.getMeasureTypesDataRequest()
   }
 
@@ -24,19 +24,23 @@ class UnitOfMeasureTable extends Component {
       intl,
       loading,
       rows,
+      datagrid,
       filterValue,
       openEditPopup,
       deleteUnit,
     } = this.props
 
     const { formatMessage } = intl
+    const { tableName } = this.props.config
     const { columns } = this.props.config.display
 
     return (
       <React.Fragment>
         <ProdexTable
+          tableName={tableName}
+          {...datagrid.tableProps}
           filterValue={filterValue}
-          loading={loading}
+          loading={datagrid.loading || loading}
           columns={columns}
           rows={rows}
           rowActions={[
@@ -66,12 +70,12 @@ const mapDispatchToProps = {
   deleteUnit
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, { datagrid }) => {
   let cfg = state.admin.config[state.admin.currentTab]
 
   return {
     config: cfg,
-    rows: state.admin[cfg.api.get.dataName].map(d => {
+    rows: datagrid.rows.map(d => {
       return {
         id: d.id,
         name: d.name,
@@ -88,4 +92,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(UnitOfMeasureTable))
+export default withDatagrid(connect(mapStateToProps, mapDispatchToProps)(injectIntl(UnitOfMeasureTable)))

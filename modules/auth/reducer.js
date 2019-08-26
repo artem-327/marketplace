@@ -62,7 +62,7 @@ export default function reducer(state = initialState, action) {
         ...state,
         loginForm: {
           ...loginForm,
-          isLoading: true,
+          isLoading: false,
           message: null
         }
       }

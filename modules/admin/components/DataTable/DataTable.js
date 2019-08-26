@@ -12,10 +12,6 @@ import {
 import { withDatagrid } from '~/modules/datagrid'
 
 class DataTable extends Component {
-  componentDidMount() {
-    this.props.getDataRequest(this.props.config)
-  }
-
   render() {
     const {
       config,

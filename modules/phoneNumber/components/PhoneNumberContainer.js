@@ -9,8 +9,8 @@ function mapStateToProps({ phoneNumber }) {
     phoneCountryCodes: phoneNumber.phoneCountryCodes.map(d => {
       return {
         id: d.id,
-        text: '' + d.id + ' ' + d.name,
-        value: '' + d.id,
+        text: '+' + d.phoneCode + ' ' + d.name,
+        value: '+' + d.phoneCode,
         //description: d.name
       }
     }),
