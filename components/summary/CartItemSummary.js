@@ -11,9 +11,17 @@ import { Form, Input, Checkbox, Dropdown } from 'formik-semantic-ui'
 import { withToastManager } from 'react-toast-notifications'
 import { connect } from 'react-redux'
 import { debounce } from 'lodash'
+import * as Yup from 'yup'
 
 import { getPackagingGroupsDataRequest, getHazardClassesDataRequest, getUnNumbersByString, addUnNumber } from '~/modules/admin/actions'
 import { generateToastMarkup, getSafe } from '~/utils/functions'
+import { nmfcValidation, freightClassValidation } from '~/constants/yupValidation'
+
+const validationSchema = Yup.object().shape({
+  nmfcNumber: nmfcValidation(),
+  freightClass: freightClassValidation()
+})
+
 
 class CartItemSummary extends Component {
 
@@ -67,8 +75,11 @@ class CartItemSummary extends Component {
     return (
       <Form
         initialValues={initialValues}
+        validationSchema={validationSchema}
+        enableReinitialize
         onSubmit={async (values, { setSubmitting }) => {
           try {
+            this.setState({ edittingHazmatInfo: false })
             await updateHazmatInfo(item.id, values)
             toastManager.add(generateToastMarkup(
               <FormattedMessage
@@ -85,7 +96,7 @@ class CartItemSummary extends Component {
           finally { setSubmitting(false) }
 
         }}
-        children={({ handleSubmit }) => (
+        children={({ handleSubmit, errors }) => (
           <Segment basic>
             <Grid verticalAlign='middle'>
               <GridRow>
@@ -99,8 +110,7 @@ class CartItemSummary extends Component {
                   <CustomSpan positive={this.state.edittingHazmatInfo}
                     onClick={() => {
                       if (this.state.edittingHazmatInfo) handleSubmit()
-
-                      this.setState({ edittingHazmatInfo: !this.state.edittingHazmatInfo })
+                      else this.setState({ edittingHazmatInfo: !this.state.edittingHazmatInfo })
                     }}
                     data-test='shopping_cart_hazmat'>
                     <FormattedMessage id={`global.${this.state.edittingHazmatInfo ? 'save' : 'edit'}`}>{(text) => text}</FormattedMessage>
@@ -243,16 +253,16 @@ class CartItemSummary extends Component {
                 <FormattedMessage id='cart.hazmatInfo' defaultMessage='Hazmat Information' />
               </GridColumn>
 
-                <WiderPopup
-                  wide
-                  onClose={() => this.setState({ edittingHazmatInfo: false })}
-                  position='left center'
-                  on='click'
-                  trigger={
-                    <GridColumn floated='right'><Icon name='info circle' color='blue' /></GridColumn>
-                  }
-                  content={this.hazmatMarkup(item)} />
-              
+              <WiderPopup
+                wide
+                onClose={() => this.setState({ edittingHazmatInfo: false })}
+                position='left center'
+                on='click'
+                trigger={
+                  <GridColumn floated='right'><Icon name='info circle' color='blue' /></GridColumn>
+                }
+                content={this.hazmatMarkup(item)} />
+
             </RelaxedRow>
 
 

@@ -2,6 +2,8 @@ import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 
+const allowedFreightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500]
+
 
 export const errorMessages = {
   invalidString: <FormattedMessage id='validation.invalidString' defaultMessage='Invalid value' />,
@@ -16,7 +18,8 @@ export const errorMessages = {
   minLength: (min) => <FormattedMessage id='validation.minLength' defaultMessage={`Field should have at least ${min} characters`} values={{ min }} />,
   maxLength: (max) => <FormattedMessage id='validation.maxLength' defaultMessage={`Field should have max ${max} characters`} values={{ max }} />,
   enterPhoneNumber: <FormattedMessage id='validation.enterPhoneNumber' defaultMessage='Enter phone number' />,
-  minDigits: (min) => <FormattedMessage id='validation.minDigits' defaultMessage={`Must have ${min} digits`} values={{ min }} />,
+  minDigits: (min) => <FormattedMessage id='validation.minDigits' defaultMessage={`Must have at least ${min} digits`} values={{ min }} />,
+  maxDigits: (max) => <FormattedMessage id='validation.maxDigits' defaultMessage={`Must have max ${max} digits`} values={{ max }} />,
   exactDigits: (num) => <FormattedMessage id='validation.exactDigits' defaultMessage={`There has to be exactly ${num} digits`} />,
   greaterThan: (value) => <FormattedMessage id='validation.greaterThan' values={{ value }} defaultMessage={`Must be greater than ${value}`} />,
   maxDecimals: (max) => <FormattedMessage id='validation.maxDecimals' values={{ max }} defaultMessage={`There can be maximally ${max} decimal places`} />,
@@ -34,7 +37,8 @@ export const errorMessages = {
   invalidDateFormat: (example = 'YYYY-MM-DD') => <FormattedMessage id='validation.invalidDateFormat' defaultMessage={`Invalid date format. Date should match ${example}`} values={{ example }} />,
   invalidValueFormat: (example) => <FormattedMessage id='validation.invalidValueFormat' defaultMessage={`Invalid value format. Format should match ${example}`} values={{ example }} />,
   lessThanOrdered: <FormattedMessage id='validation.lessThanOrdered' defaultMessage='Less than ordered' />,
-  moreThanOrdered: <FormattedMessage id='validation.moreThanOrdered' defaultMessage='More than ordered' />
+  moreThanOrdered: <FormattedMessage id='validation.moreThanOrdered' defaultMessage='More than ordered' />,
+  oneOf: (arr) => <FormattedMessage id='validation.oneOf' defaultMessage={`Must be one of ${arr.toString()}`} values={{ values: arr.toString() }} />
 }
 
 export const provinceObjectRequired = (hasProvinces) => (
@@ -68,4 +72,17 @@ export const dateValidation = () => (
 export const ssnValidation = () => (
   Yup.string()
     .test('ssn', errorMessages.invalidValueFormat('123-45-6789'), (value) => /^[0-9]{3}\-[0-9]{2}\-[0-9]{4}$/.test(value)).required(errorMessages.requiredMessage)
+)
+
+export const nmfcValidation = () => (
+  Yup.number(errorMessages.mustBeNumber)
+    .typeError(errorMessages.mustBeNumber)
+    .test('min-len', errorMessages.minDigits(5), (value) => (value + '').length >= 5)
+    .test('max-len', errorMessages.maxDigits(6), (value) => (value + '').length <= 6)
+)
+
+export const freightClassValidation = () => (
+  Yup.number(errorMessages.mustBeNumber)
+    .typeError(errorMessages.mustBeNumber)
+    .oneOf(allowedFreightClasses, errorMessages.oneOf(allowedFreightClasses))
 )
