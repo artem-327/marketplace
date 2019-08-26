@@ -869,6 +869,7 @@
   "orders.detail": "Detail",
   "settings.addUser": "Add User",
   "settings.system.allDisabled": "There is nothing to save as none of the values can be changed.",
+  "settings.onlyLastFourNumbers": "Enter only last four digits",
   "settings.user.enabled": "User enabled",
   "settings.systemSettings": "System Settings",
   "settings.user.disabled": "User disabled",

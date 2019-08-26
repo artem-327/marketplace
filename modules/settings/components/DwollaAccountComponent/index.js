@@ -12,7 +12,7 @@ import { Form, Input, Button, Dropdown } from 'formik-semantic-ui'
 import * as Yup from 'yup'
 import styled from 'styled-components'
 import { withToastManager } from 'react-toast-notifications'
-
+import { DateInput } from '~/components/custom-formik'
 
 import { AddressForm } from '~/modules/address-form/'
 
@@ -71,8 +71,8 @@ const formValidation = Yup.object().shape({
   dwollaController: Yup.object().shape({
     address: addressValidationSchema(),
     dateOfBirth: dateValidation(),
-    firstName: Yup.string().trim().min(3, errorMessages.minLength(3)),
-    lastName: Yup.string().trim().min(3, errorMessages.minLength(3)),
+    firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+    lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
     // passport: Yup.object().shape({
     //   country: Yup.string().required(errorMessages.requiredMessage),
     //   number: Yup.string().required(errorMessages.requiredMessage),
@@ -82,7 +82,7 @@ const formValidation = Yup.object().shape({
       .positive(errorMessages.mustBeNumber)
       .test('num-length', errorMessages.exactDigits(4), (value) => (value + '').length === 4)
       .required(errorMessages.requiredMessage),
-    title: Yup.string().trim().min(3, errorMessages.minLength(3))
+    jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage)
   })
 })
 
@@ -106,7 +106,8 @@ class BankAccountsPopup extends React.Component {
         dateOfBirth: '',
         firstName: '',
         lastName: '',
-        ssn: ''
+        ssn: '',
+        jobTitle: ''
       }
     }
   }
@@ -154,8 +155,13 @@ class BankAccountsPopup extends React.Component {
             additionalCountryInputProps={{ disabled: true }} />
 
           <FormGroup widths='equal' data-test='settings_dwolla_beneficialOwner_nameSsn_inp'>
-            <Input inputProps={{ placeholder: '123-45-6789' }} label={formatMessage({ id: 'settings.ssn', defaultMessage: 'SSN' })} name={`beneficialOwners[${i}].ssn`} />
-            <Input inputProps={{ placeholder: 'YYYY-MM-DD' }} label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })} name={`beneficialOwners[${i}].dateOfBirth`} />
+            <Input
+              inputProps={{ placeholder: '123-45-6789' }}
+              label={formatMessage({ id: 'settings.ssn', defaultMessage: 'SSN' })}
+              name={`beneficialOwners[${i}].ssn`} />
+            <DateInput
+              label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
+              name={`beneficialOwners[${i}].dateOfBirth`} />
           </FormGroup>
         </>
       )
@@ -250,7 +256,7 @@ class BankAccountsPopup extends React.Component {
               delete payload.dwollaController.address
 
 
-              if(payload.beneficialOwners.length === 0) delete payload.beneficialOwners
+              if (payload.beneficialOwners.length === 0) delete payload.beneficialOwners
 
               try {
                 await postDwollaAccount(payload)
@@ -386,9 +392,21 @@ class BankAccountsPopup extends React.Component {
                         prefix='dwollaController'
                       />
                       <FormGroup widths='equal' data-test='settings_dwolla_dwollaController_ssnTitle_inp'>
-                        <Input label={formatMessage({ id: 'settings.ssn', defaultMessage: 'SSN' })} name='dwollaController.ssn' />
+                        <Input label={
+                          <FormattedMessage id='settings.ssn' defaultMessage='SSN'>{(text) => (
+                            <>
+                              <Popup trigger={<Icon name='info circle' color='blue' />}
+                                content={<FormattedMessage id='settings.lastFourDigits' defaultMessage='Enter only last four digits' />
+                                } />
+                              {text}
+                            </>
+                          )}</FormattedMessage>
+                        } name='dwollaController.ssn' />
                         <Input label={formatMessage({ id: 'global.title', defaultMessage: 'Title' })} name='dwollaController.jobTitle' />
-                        <Input inputProps={{ placeholder: 'YYYY-MM-DD' }} label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })} name='dwollaController.dateOfBirth' />
+                        {/* <Input inputProps={{ placeholder: 'YYYY-MM-DD' }} label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })} name='dwollaController.dateOfBirth' /> */}
+                        <DateInput
+                          label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
+                          name='dwollaController.dateOfBirth' />
                       </FormGroup>
                       {/* <FormGroup widths='equal' data-test='settings_dwolla_dwollaController_dateOfBirth_inp'>
                     </FormGroup> */}
