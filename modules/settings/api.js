@@ -34,7 +34,7 @@ export default {
       .then(response => response.data),
   getDwollaAccBalance: () =>
     api
-      .get('/prodex/api/payments/bank-accounts')  // ! ! temporary - waiting for BE endpoint
+      .get('/prodex/api/payments/dwolla/balance')
       .then(response => response.data),
   getProductsCatalogByString: async (data, limit = 30) => {
     return await
@@ -180,5 +180,7 @@ export default {
   createLogisticsAccount: payload => api.post('/prodex/api/logistics-accounts/', payload).then(response => response.data),
   getLogisticsAccounts: () => api.get('/prodex/api/logistics-accounts/').then(response => response.data),
   updateLogisticsAccount: payload => api.put(`/prodex/api/logistics-accounts/id/${payload.id}`, payload).then(response => response.data),
-  deleteLogisticsAccount: id => api.delete(`/prodex/api/logistics-accounts/id/${id}`).then(() => id)
+  deleteLogisticsAccount: id => api.delete(`/prodex/api/logistics-accounts/id/${id}`).then(() => id),
+  getSettings: role => api.get(`/prodex/api/settings/${role}`).then(response => response.data),
+  updateSettings: (role, payload) => api.patch(`/prodex/api/settings/${role}`, payload).then(response => response.data),
 }

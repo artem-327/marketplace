@@ -421,9 +421,25 @@ export function closePopup() {
 	}
 }
 
-export const deleteCasProduct = id => ({ type: AT.ADMIN_CAS_DELETE_PRODUCT, payload: api.deleteCasProduct(id) })
+export const deleteCasProduct = (id) => {
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_CAS_DELETE_PRODUCT,
+			payload: api.deleteCasProduct(id)
+		})
+		Datagrid.removeRow(id)
+	}
+}
 
-export const deleteUnit = id => ({ type: AT.ADMIN_DELETE_UNIT, payload: api.deleteUnit(id) })
+export const deleteUnit = (id) => {
+	return async dispatch => {
+		await dispatch({
+			type: AT.ADMIN_DELETE_UNIT,
+			payload: api.deleteUnit(id)
+		})
+		Datagrid.removeRow(id)
+	}
+}
 
 export const deleteUnitOfPackaging = (id) => {
 	return async dispatch => {
