@@ -26,6 +26,8 @@ import DeliveryAddressesPopup from './DeliveryAddressesTable/DeliveryAddressesPo
 import LogisticsTable from './LogisticsTable/LogisticsTable'
 import LogisticsPopup from './LogisticsTable/LogisticsPopup'
 
+import SystemSettings from '~/components/settings'
+
 import DwollaAccount from './DwollaAccountComponent'
 import { CompanyForm } from '~/modules/company-form/'
 import { companyDetailsTab } from '../contants'
@@ -143,7 +145,12 @@ class Settings extends Component {
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
       'delivery-addresses': <DeliveryAddressesTable />,
-      'logistics': <LogisticsTable />
+      'logistics': <LogisticsTable />,
+      'system-settings': (
+        <Segment basic padded='very'>
+          <SystemSettings asModal={false} inputsInGroup={3} />
+        </Segment>
+      )
     }
 
     const popupForm = {

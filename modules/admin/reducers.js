@@ -498,6 +498,8 @@ export default function reducer(state = initialState, action) {
 
       payload.forEach(element => {
         if (!copy.find((e) => e.id === element.id)) copy.push(element)
+        
+
       })
 
       return {
