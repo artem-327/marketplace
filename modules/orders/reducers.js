@@ -147,55 +147,6 @@ export default function(state = initialState, action) {
                     poLots: poLots
                 }
             }
-        case AT.ORDER_LINK_ATTACHMENT_FULFILLED:
-            return {
-                ...state,
-                detail: {
-                    ...state.detail,
-                    poLots: state.detail.poLots.map(poLot => {
-                        return {
-                            ...poLot,
-                            lots: poLot.lots.map(lot => {
-                                if (lot.id === action.payload.lotId) {
-                                    return {
-                                        ...lot,
-                                        attachments: [{
-                                            ...action.payload.file,
-                                            linked: true
-                                        }]
-                                    }
-                                } else {
-                                    return lot
-                                }
-                            })
-                        }
-                    })
-                }
-            }
-        case AT.ORDER_REMOVE_ATTACHMENT_FULFILLED:
-            return {
-                ...state,
-                detail: {
-                    ...state.detail,
-                    poLots: state.detail.poLots.map(poLot => {
-                        return {
-                            ...poLot,
-                            lots: poLot.lots.map(lot => {
-                                return {
-                                    ...lot,
-                                    attachments: lot.attachments.filter(att => {
-                                        if (att.id === action.payload.fileId) {
-                                            return false
-                                        } else {
-                                            return true
-                                        }
-                                    })
-                                }
-                            })
-                        }
-                    })
-                }
-            }
         case AT.ORDER_ASSIGN_LOTS_FULFILLED:
             return {
                 ...state,

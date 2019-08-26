@@ -112,7 +112,8 @@ const validationScheme = val.object().shape({
 class AssignLots extends React.Component {
   state = {
     activeTab: 0,
-    allocated: []
+    allocated: [],
+    poLots: []
   }
 
   componentDidMount() {
@@ -135,8 +136,36 @@ class AssignLots extends React.Component {
     }
   }
 
+  linkAttachment = (lotId, files, data) => {
+    const { values, setFieldValue, lotNumber, productOfferId } = data
+    this.props.linkAttachment(lotId, files).then(r => {
+      const affectedOrderItems = values.tabLots.forEach((tab, tabIndex) => {
+        if (tab.productOfferId === productOfferId) {
+          const lotIndex = tab.lots.findIndex(lot => lot.lotNumber === lotNumber)
+          const attachments = values.tabLots[tabIndex].lots[lotIndex].attachments
+          setFieldValue(`tabLots[${tabIndex}].lots[${lotIndex}].attachments[${attachments.length ? attachments.length : 0}]`, {
+            id: r.value.file.id,
+            name: r.value.file.name,
+            linked: true
+          })
+        }
+      })
+    })
+  }
+
+  removeAttachment = (fileId, data) => {
+    const { values, setFieldValue } = data
+    values.tabLots.forEach((tab, tabIndex) => {
+      const lotIndex = tab.lots.findIndex(lot => getSafe(() => lot.attachments[0].id, 0) === fileId)
+      if (lotIndex) {
+        setFieldValue(`tabLots[${tabIndex}].lots[${lotIndex}].attachments`, [])
+      }
+    })
+    this.props.removeAttachment(fileId)
+  }
+
   renderTab(tabIndex, orderItem, lots, setFieldValue, values) {
-    const { poLots, orderId } = this.props
+    const { poLots } = this.props
 
     if (!getSafe(() => poLots.length, 0))
       return (<></>)
@@ -159,6 +188,7 @@ class AssignLots extends React.Component {
             </Table.Header>
             <Table.Body>
               <Input name={`tabLots[${tabIndex}].orderItemId`} inputProps={{ type: 'hidden', defaultValue: orderItem.id }} />
+              <Input name={`tabLots[${tabIndex}].productOfferId`} inputProps={{ type: 'hidden', defaultValue: orderItem.productOffer }} />
               <FieldArray
                 name={`tabLots[${tabIndex}].lots`}
                 render={arrayHelpers => (
@@ -211,13 +241,14 @@ class AssignLots extends React.Component {
                         <Table.Cell textAlign='center'>{getSafe(() => <FormattedDate value={lot.expirationDate.split('T')[0]} />, 'N/A')}</Table.Cell>
                         <Table.Cell textAlign='center'>
                           <UploadLot {...this.props}
-                                     attachments={lot.attachments}
+                                     removeAttachment={(fileId) => this.removeAttachment(fileId, {values, setFieldValue})}
+                                     attachments={getSafe(() => values.tabLots[tabIndex].lots[index].attachments, lot.attachments)}
                                      name={`tabLots[${tabIndex}].lots[${index}].attachments`}
                                      type={1}
                                      lot={lot}
                                      filesLimit={1}
                                      fileMaxSize={20}
-                                     onChange={(files) => this.props.linkAttachment(lot.id, files)}
+                                     onChange={(files) => this.linkAttachment(lot.id, files, {values, setFieldValue, lotNumber: lot.lotNumber, productOfferId: orderItem.productOffer})}
                                      data-test={`assign_lots_${index}_attachments`}
                                      emptyContent={(<FormattedMessage id='global.upUpload' defaultMessage='\u2191 upload' tagName='a' />)}
                           />
@@ -247,7 +278,7 @@ class AssignLots extends React.Component {
   }
 
   render() {
-    const { orderId, orderItems, intl, poLots, toastManager } = this.props
+    const { orderId, orderItems, intl, toastManager, poLots } = this.props
 
     let { formatMessage } = intl
 
@@ -255,6 +286,7 @@ class AssignLots extends React.Component {
       const productOffer = poLots.find(po => po.id === orderItem.productOffer)
       return {
         orderItemId: orderItem.id,
+        productOfferId: orderItem.productOffer,
         lots: getSafe(() => productOffer.lots.map(lot => {
           const lotSelected = orderItem.lots.find(orderLot => orderLot.lotNumber === lot.lotNumber)
           return {
@@ -282,7 +314,7 @@ class AssignLots extends React.Component {
             <Modal.Description>
               <Form
                 enableReinitialize
-                validateOnChange={true}
+                validateOnChange={false}
                 initialValues={{ ...initValues, ...lotsList }}
                 validationSchema={validationScheme}
                 onSubmit={(values, actions) => {
@@ -356,7 +388,6 @@ class AssignLots extends React.Component {
                 {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
                   const panes = orderItems.map((orderItem, index) => {
                     return {
-                      //menuItem: 'Order Item '+(index+1),
                       menuItem: (
                         <Menu.Item key={`orderItem${index}`}
                                    onClick={(e, {index}) => {
