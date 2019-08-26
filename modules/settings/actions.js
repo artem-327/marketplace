@@ -116,7 +116,7 @@ export function handlerSubmitUserEditPopup(payload, id) {
       Datagrid.updateRow(id, () => response.data)
 
       dispatch(closePopup())
-    } catch(e) {
+    } catch (e) {
       // TODO
       console.error(e)
     }
@@ -134,7 +134,7 @@ export function putNewUserRoleRequest(payload, id) {
   return async dispatch => {
     await dispatch({
       type: AT.PUT_NEW_USER_ROLES_REQUEST,
-      async payload(){
+      async payload() {
         const response = await api.patchUserRole(id, payload)
         Datagrid.updateRow(id, () => response.data)
         return response
@@ -142,7 +142,7 @@ export function putNewUserRoleRequest(payload, id) {
     })
     dispatch(closeRolesPopup())
     //dispatch(getUsersDataRequest())
-    
+
   }
 }
 
@@ -949,3 +949,9 @@ export const updateLogisticsAccount = payload => ({ type: AT.UPDATE_LOGISTICS_AC
 export const deleteLogisticsAccount = id => ({ type: AT.DELETE_LOGISTICS_ACCOUNT, payload: api.deleteLogisticsAccount(id) })
 
 export const resetSettings = () => ({ type: AT.RESET_SETTINGS, payload: true })
+
+export const getSettings = role => ({ type: AT.GET_SETTINGS, payload: api.getSettings(role) })
+
+export const updateSettings = (role, payload) => ({ type: AT.UPDATE_SETTINGS, payload: api.updateSettings(role, payload) })
+
+export const triggerSystemSettingsModal = (force = null) => ({ type: AT.TRIGGER_SYSTEM_SETTINGS_MODAL, payload: force })

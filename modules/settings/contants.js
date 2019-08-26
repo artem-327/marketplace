@@ -7,8 +7,11 @@ export const defaultTabs = [
   //{ name: 'Credit Cards', id: 7, type: 'credit-cards' },
   { name: 'Bank Accounts', id: 8, type: 'bank-accounts' },
   { name: 'Delivery Addresses', id: 12, type: 'delivery-addresses' },
-  { name: 'Logistics', id: 13, type: 'logistics' }
+  { name: 'Logistics', id: 13, type: 'logistics' },
+  { name: 'Settings', id: 14, type: 'system-settings', hideHandler: true }
 ]
 
-export const companyDetailsTab = { name: 'Company Details', id: 14, type: 'company-details', hideHandler: true }
+// TODO FORMATTED MESSAGE
+
+export const companyDetailsTab = { name: 'Company Details', id: 0, type: 'company-details', hideHandler: true }
 

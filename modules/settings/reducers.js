@@ -33,7 +33,10 @@ export const initialState = {
   country: [],
   currency: [],
   currentUser: null,
-
+  systemSettings: [],
+  systemSettingsLoading: false,
+  systemSettingsModalOpen: false,
+  sysSettingsUpdating: false,
   tabsNames: defaultTabs,
   currentTab: defaultTabs[0],
   isOpenImportPopup: false,
@@ -1042,7 +1045,7 @@ export default function reducer(state = initialState, action) {
     }
 
     /* DELETE_LOGISTICS_ACCOUNT */
-    
+
     case AT.DELETE_LOGISTICS_ACCOUNT_PENDING: {
       return {
         ...state,
@@ -1068,6 +1071,62 @@ export default function reducer(state = initialState, action) {
     case AT.RESET_SETTINGS: {
       return {
         ...initialState
+      }
+    }
+
+    case AT.GET_SETTINGS_PENDING: {
+      return {
+        ...state,
+        systemSettingsLoading: true
+      }
+    }
+
+    case AT.GET_SETTINGS_FULFILLED: {
+      return {
+        ...state,
+        systemSettings: payload,
+        systemSettingsLoading: false
+      }
+    }
+
+    case AT.GET_SETTINGS_REJECTED: {
+      return {
+        ...state,
+        systemSettingsLoading: false
+      }
+    }
+
+    case AT.UPDATE_SETTINGS_PENDING: {
+      return {
+        ...state,
+        sysSettingsUpdating: true
+      }
+    }
+
+    case AT.UPDATE_SETTINGS_FULFILLED: {
+      return {
+        ...state,
+        systemSettings: payload,
+        sysSettingsUpdating: false
+      }
+    }
+
+    case AT.UPDATE_SETTINGS_REJECTED: {
+      return {
+        ...state,
+        sysSettingsUpdating: false
+      }
+    }
+
+    /* TRIGGER_SYSTEM_SETTINGS_MODAL */
+
+    case AT.TRIGGER_SYSTEM_SETTINGS_MODAL: {
+      let isOpen = !state.systemSettingsModalOpen
+      if (payload !== null) isOpen = payload
+
+      return {
+        ...state,
+        systemSettingsModalOpen: isOpen
       }
     }
 
