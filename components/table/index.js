@@ -6,7 +6,7 @@ import { Segment, Icon, Dropdown, Modal, Divider } from 'semantic-ui-react'
 import { Form, Checkbox, Button } from 'formik-semantic-ui'
 import _ from 'lodash'
 import GroupCell from './GroupCell'
-import { injectIntl } from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 import {
   SearchState,
@@ -84,7 +84,8 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
         }}
         onReset={onClose}
       >
-        {columns.map(c => (
+        {columns.map(c => {
+          return (
           <Checkbox
             key={c.name}
             disabled={c.disabled}
@@ -97,11 +98,15 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
             }
             inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }}
           />
-        ))}
+        )})}
         <Divider />
         <div style={{ textAlign: 'right' }}>
-          <Button.Reset data-test='table_setting_cancel_btn'>Cancel</Button.Reset>
-          <Button.Submit data-test='table_setting_save_btn'>Save</Button.Submit>
+          <Button.Reset data-test='table_setting_cancel_btn'>
+            <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
+          </Button.Reset>
+          <Button.Submit data-test='table_setting_save_btn'>
+            <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
+          </Button.Submit>
         </div>
       </Form>
     </Modal.Content>
