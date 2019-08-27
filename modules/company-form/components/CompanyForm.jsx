@@ -3,6 +3,9 @@ import { FormGroup, FormField, Popup, Image } from 'semantic-ui-react'
 import { Input, Checkbox, Dropdown } from 'formik-semantic-ui'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import UploadLot from '~/modules/inventory/components/upload/UploadLot'
+import { withToastManager } from 'react-toast-notifications'
+
+import { generateToastMarkup } from '~/utils/functions'
 
 class CompanyForm extends Component {
 
@@ -49,12 +52,31 @@ class CompanyForm extends Component {
       case 'svg':
         return 'image/svg'
       default:
-        return 'image/png'
+        return false
     }
   }
 
+  selectLogo = (file) => {
+    if (this.getMimeType(file.name)) {
+      this.props.postCompanyLogo(this.props.companyId, file)
+      this.props.selectLogo(file)
+    } else {
+      this.props.toastManager.add(generateToastMarkup(
+        <FormattedMessage id='errors.notImage.header' defaultMessage='File not Uploaded' />,
+        <FormattedMessage id='errors.notImage.content' defaultMessage={`File ${file.name} you are uploading is not in the desired format. Please select a picture in format: (gif, jpg, png, svg)`} values={{ name: file.name }} />
+      ), {
+        appearance: 'error'
+      })
+    }
+  }
+
+  removeLogo = (file) => {
+    this.props.removeLogo(file)
+  }
+
   render() {
-    let { intl, loading, data, selectLogo, removeLogo } = this.props
+    let { intl, loading, data } = this.props
+    let { selectLogo, removeLogo } = this
 
     const { formatMessage } = intl
 
@@ -116,7 +138,7 @@ class CompanyForm extends Component {
                        name={`companyLogo`}
                        filesLimit={1}
                        fileMaxSize={0.2}
-                       onChange={(files) => selectLogo(files[0])}
+                       onChange={(files) => files.length ? selectLogo(files[0]) : null}
                        removeAttachment={removeLogo}
                        emptyContent={(<FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' tagName='A' />)}
             />
@@ -129,4 +151,4 @@ class CompanyForm extends Component {
 }
 
 
-export default injectIntl(CompanyForm)
+export default withToastManager(injectIntl(CompanyForm))
