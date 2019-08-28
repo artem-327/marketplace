@@ -26,7 +26,7 @@ import { provinceObjectRequired, errorMessages } from '~/constants/yupValidation
 
 import { CompanyForm } from '~/modules/company-form/'
 import { AddressForm } from '~/modules/address-form/'
-import { addressValidationSchema } from '~/modules/address-form/constants'
+import { addressValidationSchema } from '~/constants/yupValidation'
 
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 

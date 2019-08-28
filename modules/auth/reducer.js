@@ -78,10 +78,6 @@ export default function reducer(state = initialState, action) {
       }
     }
     case AT.LOGIN_FULFILLED: {
-
-
-
-
       return {
         ...state,
         confirmationForm: getSafe(() => payload.identity.company.reviewRequested, false) ? {

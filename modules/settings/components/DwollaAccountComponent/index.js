@@ -16,10 +16,12 @@ import { DateInput } from '~/components/custom-formik'
 
 import { AddressForm } from '~/modules/address-form/'
 
-import { errorMessages, dateValidation, ssnValidation } from '~/constants/yupValidation'
-import { addressValidationSchema } from '~/modules/address-form/constants'
-import { generateToastMarkup, deepSearch } from '~/utils/functions'
+import { dwollaControllerValidation, beneficialOwnersValidation } from '~/constants/yupValidation'
 
+import { generateToastMarkup, deepSearch } from '~/utils/functions'
+import { beneficialOwner, USA } from '~/constants/beneficialOwners'
+
+import { BeneficialOwnersForm } from '~/components/custom-formik'
 
 const AccordionHeader = styled(Header)`
   font-size: 18px;
@@ -33,62 +35,17 @@ const RightAlignedDiv = styled.div`
   text-align: right !important;
 `
 
-const USA = JSON.stringify({ countryId: 1, hasProvinces: true })
 
-let beneficialOwner = {
-  address: {
-    streetAddress: '',
-    city: '',
-    country: USA,
-    zip: '',
-    province: ''
-  },
-  dateOfBirth: '',
-  firstName: '',
-  lastName: '',
-  ssn: ''
-}
-
-const maxBeneficialOwners = 4
 
 const formValidation = Yup.object().shape({
-
-  beneficialOwners: Yup.array().of(Yup.lazy((values) => {
-    let isAnyValueFilled = deepSearch(values, (val, key) => val !== '' && key !== 'country')
-
-    if (!isAnyValueFilled) return Yup.mixed().notRequired()
-
-    return (
-      Yup.object().shape({
-        address: addressValidationSchema(),
-        dateOfBirth: dateValidation(),
-        firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-        lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-        ssn: ssnValidation()
-      })
-    )
-  })),
-  dwollaController: Yup.object().shape({
-    address: addressValidationSchema(),
-    dateOfBirth: dateValidation(),
-    firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-    lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
-    // passport: Yup.object().shape({
-    //   country: Yup.string().required(errorMessages.requiredMessage),
-    //   number: Yup.string().required(errorMessages.requiredMessage),
-    // }),
-    ssn: Yup.number()
-      .typeError(errorMessages.mustBeNumber)
-      .positive(errorMessages.mustBeNumber)
-      .test('num-length', errorMessages.exactDigits(4), (value) => (value + '').length === 4)
-      .required(errorMessages.requiredMessage),
-    jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage)
-  })
+  beneficialOwners: beneficialOwnersValidation(),
+  dwollaController: dwollaControllerValidation()
 })
+
+
 
 class BankAccountsPopup extends React.Component {
   state = {
-    hasProvinces: this.props.hasProvinces,
     accordionActive: {
       controllerAddress: true
     },
@@ -131,80 +88,6 @@ class BankAccountsPopup extends React.Component {
   }
 
 
-  getBeneficialOwners = (values, setFieldValue) => {
-    let beneficialOwners = []
-    let { intl: { formatMessage }, countries } = this.props
-
-    for (let i = 0; i < this.state.beneficialOwnersCount; i++) {
-      beneficialOwners.push(
-        <>
-          <FormGroup widths='equal' data-test='settings_dwolla_beneficialOwner_namePostal_inp'>
-            <Input label={formatMessage({ id: 'global.firstName', defaultMessage: 'First Name' })} name={`beneficialOwners[${i}].firstName`} />
-            <Input label={formatMessage({ id: 'global.lastName', defaultMessage: 'Last Name' })} name={`beneficialOwners[${i}].lastName`} />
-          </FormGroup>
-          <AddressForm
-            countryPopup={{
-              disabled: false,
-              content: <FormattedMessage id='settings.dwollaOnlyForUSA' defaultMessage='Dwolla is only supported for companies located in USA.' />
-            }}
-            values={values}
-            setFieldValue={setFieldValue}
-            index={i}
-            prefix={`beneficialOwners`}
-            displayHeader={false}
-            additionalCountryInputProps={{ disabled: true }} />
-
-          <FormGroup widths='equal' data-test='settings_dwolla_beneficialOwner_nameSsn_inp'>
-            <Input
-              inputProps={{ placeholder: '123-45-6789' }}
-              label={formatMessage({ id: 'settings.ssn', defaultMessage: 'SSN' })}
-              name={`beneficialOwners[${i}].ssn`} />
-            <DateInput
-              label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
-              name={`beneficialOwners[${i}].dateOfBirth`} />
-          </FormGroup>
-        </>
-      )
-    }
-
-    return beneficialOwners
-  }
-
-  handleOwnerCountChange = (direction = 0, values, resetForm) => {
-    let { beneficialOwnersCount } = this.state
-    if ((beneficialOwnersCount + direction) > 0 && (beneficialOwnersCount + direction) <= maxBeneficialOwners) {
-      let { beneficialOwners } = this.state.initialFormValues
-      direction === -1 ? beneficialOwners.pop() : beneficialOwners.push(beneficialOwner)
-
-      this.setState({
-        beneficialOwnersCount: beneficialOwnersCount + direction,
-        initialFormValues: {
-          ...this.state.initialFormValues,
-          beneficialOwners
-        },
-      }, () => {
-        this.handleFormReset(values, resetForm)
-        // setFieldValue(`beneficialOwners[${this.state.beneficialOwnersCount - 1}].firstName`, direction === 1 ? '' : null)
-      })
-    }
-  }
-
-
-  handleFormReset = (values, resetForm) => {
-    let beneficialOwners = values.beneficialOwners.slice()
-    if (beneficialOwners.length === this.state.beneficialOwnersCount) return
-
-    beneficialOwners.length < this.state.beneficialOwnersCount ? beneficialOwners.push(beneficialOwner) : beneficialOwners.pop()
-
-    let nextValues = {
-      beneficialOwners,
-      dwollaController: values.dwollaController,
-    }
-
-    resetForm(nextValues)
-  }
-
-
   render() {
     const {
       closeDwollaPopup,
@@ -225,7 +108,7 @@ class BankAccountsPopup extends React.Component {
         <Modal.Content>
           <Form
             initialValues={this.state.initialFormValues}
-            // enableReinitialize={true}
+            enableReinitialize
             validationSchema={formValidation}
             onReset={() => closeDwollaPopup()}
             validateOnChange={true}
@@ -270,43 +153,23 @@ class BankAccountsPopup extends React.Component {
               finally { setSubmitting(false) }
             }}
             render={({ values, errors, setFieldValue, resetForm }) => {
-
               return (
                 <>
-                  {this.getBeneficialOwners(values, setFieldValue).map((owner, i) =>
-                    <>
-                      {/* <pre>{JSON.stringify(errors, null, 2)}</pre> */}
-                      <Header as='h3'>
-                        <FormattedMessage
-                          id='settings.beneficialOwnerNum'
-                          defaultMessage={`Beneficial owner # ${i + 1}`}
-                          values={{ num: i + 1 }}
-                        /></Header>
-                      {owner}
-                    </>
-                  )}
+                  <BeneficialOwnersForm
+                    handleOwnerCountChange={(values) => {
+                      this.setState({
+                        initialFormValues: {
+                          ...this.state.initialFormValues,
+                          beneficialOwners: values.beneficialOwners
+                        },
+                        beneficialOwnersCount: values.beneficialOwners.length
+                      }, () => resetForm(values))
+                    }}
+                    beneficialOwnersCount={this.state.beneficialOwnersCount}
 
-                  <RightAlignedDiv>
-                    <Popup trigger={
-                      <Button
-                        negative
-                        disabled={this.state.beneficialOwnersCount === 1}
-                        onClick={() => this.handleOwnerCountChange(-1, values, resetForm)}
-                        icon>
-                        <Icon name='minus' />
-                      </Button>
-                    } content={<FormattedMessage id='settings.removeBeneficialOwner' defaultMessage='Remove beneficial owner' />} />
+                    values={values}
+                    setFieldValue={setFieldValue} />
 
-                    <Popup trigger={
-                      <Button
-                        positive
-                        disabled={this.state.beneficialOwnersCount === maxBeneficialOwners}
-                        onClick={() => this.handleOwnerCountChange(1, values, resetForm)}
-                        icon>
-                        <Icon name='plus' />
-                      </Button>
-                    } content={<FormattedMessage id='settings.addBeneficialOwner' defaultMessage='Add beneficial owner' />} />
-                  </RightAlignedDiv>
                   {/* <FormGroup widths='equal' data-test='settings_dwolla_beneficialOwner_address123_inp'>
                   <Input label={formatMessage({ id: 'settings.addressNum', defaultMessage: 'Address 1' }, { num: 1 })} name='beneficialOwner.address.address1' />
                   <Input label={formatMessage({ id: 'settings.addressNum', defaultMessage: 'Address 2' }, { num: 2 })} name='beneficialOwner.address.address2' />

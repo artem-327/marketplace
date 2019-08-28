@@ -17,9 +17,8 @@ export default class ZipDropdown extends Component {
   handleAddition = (e, data) => {
     let { onAddition, addZip } = this.props
 
-    addZip(data.value)
+    addZip({ zip: data.value, id: data.value })
     this.handleChange(e, data)
-
 
     onAddition(e, data)
   }
@@ -33,7 +32,6 @@ export default class ZipDropdown extends Component {
     if (this.props.countryId) params.countryId = this.props.countryId
 
     this.props.getZipCodes(params)
-
   }
 
   handleChange = (e, data) => {
@@ -61,14 +59,13 @@ export default class ZipDropdown extends Component {
         label={label}
         inputProps={{
           'data-test': 'ZipDropdown_drpdn',
-          onChange: this.handleChange,
+          // onChange: this.handleChange,
           onSearchChange: (e, data) => {
             this.props.onSearchChange(e, data)
             this.debouncedRef(e, data)
           },
           loading,
           selection,
-          value: this.state.value,
           search,
           allowAdditions,
           onAddItem: this.handleAddition,

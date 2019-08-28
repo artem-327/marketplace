@@ -72,3 +72,5 @@ export const deepSearch = (obj, searchFn) => {
 
     return found
 }
+
+export const getDeeply = (p, o) => p.reduce((xs, x) => (xs && xs[x]) ? xs[x] : null, o)

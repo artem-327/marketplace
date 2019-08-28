@@ -18,10 +18,9 @@ import Router from 'next/router'
 import { generateToastMarkup } from '~/utils/functions'
 import { FormattedMessage } from 'react-intl'
 
-import { provinceObjectRequired, errorMessages } from '~/constants/yupValidation'
+import { addressValidationSchema, errorMessages } from '~/constants/yupValidation'
 
 import { AddressForm } from '~/modules/address-form/'
-import { addressValidationSchema } from '~/modules/address-form/constants'
 
 import { getSafe } from '~/utils/functions'
 

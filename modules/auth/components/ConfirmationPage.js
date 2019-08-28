@@ -8,8 +8,8 @@ import styled from 'styled-components'
 import * as val from 'yup'
 import Router from 'next/router'
 import Logo from '~/assets/images/logos/logo-dark.png'
-import { getSafe } from '~/utils/functions'
 
+import { getSafe } from '~/utils/functions'
 const ConfirmSegment = styled(Segment.Group)`
   position: relative;
   display: flex !important;
@@ -103,145 +103,147 @@ class ConfirmationPage extends Component {
 
     return (
       <Form initialValues={{ ...initValues, ...confirmationForm }}
-            validationSchema={validationScheme}
-            onSubmit={(values, actions) => {
-              reviewCompany(values)
-              actions.setSubmitting(false)
-            }}
-            className='flex stretched'
-            style={{ padding: '20px' }}>
+        validationSchema={validationScheme}
+        onSubmit={async (values, actions) => {
+          await reviewCompany(values)
+          actions.setSubmitting(false)
+          Router.push('/dwolla-register')
+
+        }}
+        className='flex stretched'
+        style={{ padding: '20px' }}>
         {({ values, setFieldValue, validateForm, submitForm }) => (
           <ConfirmSegment raised compact>
             <Segment padded='very' style={{ position: 'static', paddingTop: '0' }}>
               <LogoWrapper basic textAlign='center'>
                 <LogoImage src={Logo} />
               </LogoWrapper>
-                    <Header as='h2' textAlign='center'>
-                      <FormattedMessage id='laststep.header' defaultMessage='Last Step' />
-                    </Header>
-                    <Header as='h2' textAlign='center' style={{ marginTop: '0', paddingTop: '0.5em', fontSize: '1.14285714em' }}>
-                      <FormattedMessage id='laststep.subheader' defaultMessage='Please verify the company information below.' />
-                    </Header>
+              <Header as='h2' textAlign='center'>
+                <FormattedMessage id='laststep.header' defaultMessage='Last Step' />
+              </Header>
+              <Header as='h2' textAlign='center' style={{ marginTop: '0', paddingTop: '0.5em', fontSize: '1.14285714em' }}>
+                <FormattedMessage id='laststep.subheader' defaultMessage='Please verify the company information below.' />
+              </Header>
 
-                    <Header as='h3'>
-                      <FormattedMessage id='laststep.company.header' defaultMessage='Company Profile' />
-                    </Header>
-                    <Grid>
-                      <Grid.Row columns={2}>
-                        <Grid.Column data-test='auth_confirm_companyName_inp' >
-                          <Input label={formatMessage({ id: 'laststep.company.name', defaultMessage: 'Company Legal Name *' })}
-                                 name='name' />
-                        </Grid.Column>
-                        <Grid.Column data-test='auth_confirm_companyDBA_inp' >
-                          <Input label={formatMessage({ id: 'laststep.company.dba', defaultMessage: 'DBA' })}
-                                 name='dba' />
-                        </Grid.Column>
-                      </Grid.Row>
-                    </Grid>
+              <Header as='h3'>
+                <FormattedMessage id='laststep.company.header' defaultMessage='Company Profile' />
+              </Header>
+              <Grid>
+                <Grid.Row columns={2}>
+                  <Grid.Column data-test='auth_confirm_companyName_inp' >
+                    <Input label={formatMessage({ id: 'laststep.company.name', defaultMessage: 'Company Legal Name *' })}
+                      name='name' />
+                  </Grid.Column>
+                  <Grid.Column data-test='auth_confirm_companyDBA_inp' >
+                    <Input label={formatMessage({ id: 'laststep.company.dba', defaultMessage: 'DBA' })}
+                      name='dba' />
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
 
-                    <Header as='h3'>
-                      <FormattedMessage id='laststep.address.header' defaultMessage='Company Primary Address' />
-                    </Header>
-                    <Grid>
-                      <Grid.Row columns={2}>
-                        <Grid.Column data-test='auth_confirm_addressStreet_inp' >
-                          <Input label={formatMessage({ id: 'laststep.address.street', defaultMessage: 'Street Address 1 *' })}
-                                 name='address.streetAddress' />
-                        </Grid.Column>
-                        <Grid.Column data-test='auth_confirm_addressCity_inp' >
-                          <Input label={formatMessage({ id: 'laststep.address.city', defaultMessage: 'City *' })}
-                                 name='address.city' />
-                        </Grid.Column>
-                      </Grid.Row>
-                      <Grid.Row columns={3}>
-                        <Grid.Column data-test='auth_confirm_addressZip_inp'>
-                          <Input label={formatMessage({ id: 'laststep.address.zip', defaultMessage: 'Zip *' })}
-                                 name='address.zip' />
-                        </Grid.Column>
-                        <Grid.Column>
-                          <Dropdown label={formatMessage({ id: 'laststep.address.country', defaultMessage: 'Country *' })}
-                                    name='address.country'
-                                    options={confirmationForm.address.availableCountries}
-                                    inputProps={{
-                                      'data-test': 'auth_confirm_country_drpdn',
-                                      search: options => options,
-                                      onSearchChange: (e, {searchQuery}) => searchCountries(searchQuery),
-                                      onChange: async (e, {value}) => {
-                                        setFieldValue('address.province', 0)
+              <Header as='h3'>
+                <FormattedMessage id='laststep.address.header' defaultMessage='Company Primary Address' />
+              </Header>
+              <Grid>
+                <Grid.Row columns={2}>
+                  <Grid.Column data-test='auth_confirm_addressStreet_inp' >
+                    <Input label={formatMessage({ id: 'laststep.address.street', defaultMessage: 'Street Address 1 *' })}
+                      name='address.streetAddress' />
+                  </Grid.Column>
+                  <Grid.Column data-test='auth_confirm_addressCity_inp' >
+                    <Input label={formatMessage({ id: 'laststep.address.city', defaultMessage: 'City *' })}
+                      name='address.city' />
+                  </Grid.Column>
+                </Grid.Row>
+                <Grid.Row columns={3}>
+                  <Grid.Column data-test='auth_confirm_addressZip_inp'>
+                    <Input label={formatMessage({ id: 'laststep.address.zip', defaultMessage: 'Zip *' })}
+                      name='address.zip' />
+                  </Grid.Column>
+                  <Grid.Column>
+                    <Dropdown label={formatMessage({ id: 'laststep.address.country', defaultMessage: 'Country *' })}
+                      name='address.country'
+                      options={confirmationForm.address.availableCountries}
+                      inputProps={{
+                        'data-test': 'auth_confirm_country_drpdn',
+                        search: options => options,
+                        onSearchChange: (e, { searchQuery }) => searchCountries(searchQuery),
+                        onChange: async (e, { value }) => {
+                          setFieldValue('address.province', 0)
 
-                                        const searchedProvinces = await searchProvinces(value)
-                                        setFieldValue('address.availableProvinces', searchedProvinces.value.data.map(province => ({
-                                          key: province.id,
-                                          text: province.name,
-                                          value: province.id
-                                        })))
-                                        validateForm().then(r => {
-                                          // stop when errors found
-                                          if (Object.keys(r).length) {
-                                            submitForm() // show errors
-                                          }
-                                        })
-                                      }
-                                    }} />
-                        </Grid.Column>
-                        <Grid.Column>
-                          <Dropdown label={formatMessage({ id: 'laststep.address.state', defaultMessage: 'Province *' })}
-                                    name='address.province'
-                                    options={confirmationForm.address.availableProvinces}
-                                    inputProps={{
-                                      'data-test': 'auth_confirm_state_drpdn',
-                                      selection: true,
-                                      value: 0
-                                    }} />
-                        </Grid.Column>
-                      </Grid.Row>
-                      <Grid.Row columns={2}>
-                        <Grid.Column data-test='auth_confirm_addressEIN_inp' >
-                          <Input label={formatMessage({ id: 'laststep.address.ein', defaultMessage: 'EIN Number *' })}
-                                 name='tin' />
-                        </Grid.Column>
-                        <Grid.Column data-test='auth_confirm_addressDUNS_inp'>
-                          <Input label={formatMessage({ id: 'laststep.address.duns', defaultMessage: 'DUNS Number' })}
-                                 name='dunsNumber' />
-                        </Grid.Column>
-                      </Grid.Row>
-                    </Grid>
+                          const searchedProvinces = await searchProvinces(value)
+                          setFieldValue('address.availableProvinces', searchedProvinces.value.data.map(province => ({
+                            key: province.id,
+                            text: province.name,
+                            value: province.id
+                          })))
+                          validateForm().then(r => {
+                            // stop when errors found
+                            if (Object.keys(r).length) {
+                              submitForm() // show errors
+                            }
+                          })
+                        }
+                      }} />
+                  </Grid.Column>
+                  <Grid.Column>
+                    <Dropdown label={formatMessage({ id: 'laststep.address.state', defaultMessage: 'Province *' })}
+                      name='address.province'
+                      options={confirmationForm.address.availableProvinces}
+                      inputProps={{
+                        'data-test': 'auth_confirm_state_drpdn',
+                        selection: true,
+                        value: 0
+                      }} />
+                  </Grid.Column>
+                </Grid.Row>
+                <Grid.Row columns={2}>
+                  <Grid.Column data-test='auth_confirm_addressEIN_inp' >
+                    <Input label={formatMessage({ id: 'laststep.address.ein', defaultMessage: 'EIN Number *' })}
+                      name='tin' />
+                  </Grid.Column>
+                  <Grid.Column data-test='auth_confirm_addressDUNS_inp'>
+                    <Input label={formatMessage({ id: 'laststep.address.duns', defaultMessage: 'DUNS Number' })}
+                      name='dunsNumber' />
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
 
-                    <Header as='h3'>
-                      <FormattedMessage id='laststep.admin.header' defaultMessage='Company Admin Profile' />
-                    </Header>
-                    <Grid>
-                      <Grid.Row columns={2}>
-                        <Grid.Column data-test='auth_confirm_adminName_inp' >
-                          <Input label={formatMessage({ id: 'laststep.admin.name', defaultMessage: 'Name *' })}
-                                 name='companyAdminUser.name' />
-                        </Grid.Column>
-                        <Grid.Column data-test='auth_confirm_adminTitle_inp'>
-                          <Input label={formatMessage({ id: 'laststep.admin.title', defaultMessage: 'Title' })}
-                                 name='companyAdminUser.jobTitle' />
-                        </Grid.Column>
-                      </Grid.Row>
-                      <Grid.Row columns={2}>
-                        <Grid.Column data-test='auth_confirm_adminPhone_inp'>
-                          <Input label={formatMessage({ id: 'laststep.admin.phone', defaultMessage: 'Phone *' })}
-                                 name='companyAdminUser.phone' />
-                        </Grid.Column>
-                        <Grid.Column data-test='auth_confirm_adminEmail_inp'>
-                          <Input label={formatMessage({ id: 'laststep.admin.email', defaultMessage: 'E-Mail *' })}
-                                 name='companyAdminUser.email' />
-                        </Grid.Column>
-                      </Grid.Row>
-                    </Grid>
+              <Header as='h3'>
+                <FormattedMessage id='laststep.admin.header' defaultMessage='Company Admin Profile' />
+              </Header>
+              <Grid>
+                <Grid.Row columns={2}>
+                  <Grid.Column data-test='auth_confirm_adminName_inp' >
+                    <Input label={formatMessage({ id: 'laststep.admin.name', defaultMessage: 'Name *' })}
+                      name='companyAdminUser.name' />
+                  </Grid.Column>
+                  <Grid.Column data-test='auth_confirm_adminTitle_inp'>
+                    <Input label={formatMessage({ id: 'laststep.admin.title', defaultMessage: 'Title' })}
+                      name='companyAdminUser.jobTitle' />
+                  </Grid.Column>
+                </Grid.Row>
+                <Grid.Row columns={2}>
+                  <Grid.Column data-test='auth_confirm_adminPhone_inp'>
+                    <Input label={formatMessage({ id: 'laststep.admin.phone', defaultMessage: 'Phone *' })}
+                      name='companyAdminUser.phone' />
+                  </Grid.Column>
+                  <Grid.Column data-test='auth_confirm_adminEmail_inp'>
+                    <Input label={formatMessage({ id: 'laststep.admin.email', defaultMessage: 'E-Mail *' })}
+                      name='companyAdminUser.email' />
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
             </Segment>
             <Segment padded='very'>
               <Grid>
                 <Grid.Row>
                   <Grid.Column aligned='right' textAlign='right'>
-                    <Button style={{ marginRight: '1em' }} onClick={() => {isAdmin ? Router.push('/admin') : Router.push('/inventory/my')}} data-test='auth_confirm_cancel_btn'>
-                      <FormattedMessage id='laststep.cancel' defaultMessage='Cancel' />
+                    <Button style={{ marginRight: '1em' }} onClick={() => { isAdmin ? Router.push('/admin') : Router.push('/inventory/my') }} data-test='auth_confirm_cancel_btn'>
+                      <FormattedMessage id='laststep.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
                     </Button>
                     <Button.Submit color='blue' data-test='auth_confirm_submit_btn'>
-                      <FormattedMessage id='laststep.submit' defaultMessage='Enter Echo Exchange' />
+                      <FormattedMessage id='laststep.submit' defaultMessage='Enter Echo Exchange'>{(text) => text}</FormattedMessage>
                     </Button.Submit>
                   </Grid.Column>
                 </Grid.Row>
@@ -254,6 +256,6 @@ class ConfirmationPage extends Component {
   }
 }
 
-const stateToProps = ({ auth: { confirmationForm, identity } }) => ({confirmationForm, identity})
+const stateToProps = ({ auth: { confirmationForm, identity } }) => ({ confirmationForm, identity })
 
 export default connect(stateToProps, Actions)(injectIntl(ConfirmationPage))

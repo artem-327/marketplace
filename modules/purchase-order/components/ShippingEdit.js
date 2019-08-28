@@ -16,7 +16,7 @@ const BottomMargedGrid = styled(Grid)`
 `
 
 import { AddressForm } from '~/modules/address-form'
-import { addressValidationSchema } from '~/modules/address-form/constants'
+import { addressValidationSchema } from '~/constants/yupValidation'
 import { generateToastMarkup } from '~/utils/functions'
 
 const initialValues = {
