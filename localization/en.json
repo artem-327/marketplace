@@ -72,6 +72,8 @@
   "errors.fileNotUploaded.limitExceeded.content": "You can't upload more than {count} document(s)",
   "errors.noLotsSelected.header": "No Lots Selected",
   "errors.noLotsSelected.content": "Please check that all order items have selected at least one lot.",
+  "errors.notImage.header": "File not Uploaded",
+  "errors.notImage.content": "File {name} you are uploading is not in the desired format. Please select a picture in format: (gif, jpg, png, svg)",
   "navigation.inventory": "Inventory",
   "navigation.orders": "Orders",
   "navigation.myInventory": "My Inventory",

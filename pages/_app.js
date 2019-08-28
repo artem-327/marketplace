@@ -14,12 +14,21 @@ import '~/styles/base.scss'
 import 'nprogress/nprogress.css'
 import shortid from 'shortid'
 import { ToastProvider } from 'react-toast-notifications'
+import TagManager from 'react-gtm-module'
+
+const tagManagerArgs = {
+  gtmId: 'GTM-NH6D5JN'
+}
 
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
 Router.events.on('routeChangeError', () => NProgress.done())
 
 class ProdexApp extends App {
+
+  componentDidMount() {
+    TagManager.initialize(tagManagerArgs)
+  }
 
   render() {
     const { Component, pageProps, store } = this.props
