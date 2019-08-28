@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import {string, array, object, bool, func} from "prop-types";
+import {string, array, object, bool, func} from "prop-types"
 import { FormGroup, FormField, Dropdown, Input } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
+// stahnout import { InputMask } from 'react-input-mask'
 
 function deref(obj, s) {
   var i = 0;
@@ -65,6 +66,8 @@ export default class PhoneNumber extends Component {
       phoneNumber,
     } = this.state
 
+    console.log('!!!!!!!! phoneCountryCodes', phoneCountryCodes)
+
     return (
       <div>
         <FormGroup>
@@ -74,7 +77,7 @@ export default class PhoneNumber extends Component {
               options={phoneCountryCodes}
               onChange={(e, data) => this.handleChange('phoneCountryCode', data.value)}
               selection
-              fluid
+              floating
               search
               placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: 'Phone CCC' })}
               value={phoneCountryCode}
