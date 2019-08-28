@@ -14,14 +14,13 @@ import * as Yup from 'yup'
 import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { validationSchema } from '~/modules/company-form/constants'
-import { errorMessages } from '~/constants/yupValidation'
-
-
-
+import { errorMessages, addressValidationSchema } from '~/constants/yupValidation'
 
 
 import { AddressForm } from '~/modules/address-form'
-import { addressValidationSchema } from '~/modules/address-form/constants'
+
+
+
 
 const formValidationNew = Yup.object().shape({
 

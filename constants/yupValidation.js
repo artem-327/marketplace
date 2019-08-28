@@ -1,6 +1,8 @@
 import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
+import { getSafe, deepSearch } from '~/utils/functions'
+
 
 const allowedFreightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500]
 
@@ -86,3 +88,57 @@ export const freightClassValidation = () => (
     .typeError(errorMessages.mustBeNumber)
     .oneOf(allowedFreightClasses, errorMessages.oneOf(allowedFreightClasses))
 )
+
+export const beneficialOwnersValidation = () =>
+  Yup.array().of(Yup.lazy((values) => {
+    let isAnyValueFilled = deepSearch(values, (val, key) => val !== '' && key !== 'country')
+
+    if (!isAnyValueFilled) return Yup.mixed().notRequired()
+
+    return (
+      Yup.object().shape({
+        address: addressValidationSchema(),
+        dateOfBirth: dateValidation(),
+        firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+        lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+        ssn: ssnValidation()
+      })
+    )
+  }))
+
+
+
+export const addressValidationSchema = () => {
+  const minLength = errorMessages.minLength(2)
+
+  return (
+    Yup.lazy((values) =>
+      Yup.object().shape({
+        city: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
+        streetAddress: Yup.string().trim().min(2, minLength).required(errorMessages.requiredMessage),
+        zip: Yup.string().trim().required(errorMessages.requiredMessage),
+        country: Yup.string().required(errorMessages.requiredMessage),
+        province: provinceObjectRequired(getSafe(() => JSON.parse(values.country).hasProvinces, false))
+      })
+    )
+
+  )
+}
+
+
+export const dwollaControllerValidation = () => Yup.object().shape({
+  address: addressValidationSchema(),
+  dateOfBirth: dateValidation(),
+  firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+  lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
+  // passport: Yup.object().shape({
+  //   country: Yup.string().required(errorMessages.requiredMessage),
+  //   number: Yup.string().required(errorMessages.requiredMessage),
+  // }),
+  ssn: Yup.number()
+    .typeError(errorMessages.mustBeNumber)
+    .positive(errorMessages.mustBeNumber)
+    .test('num-length', errorMessages.exactDigits(4), (value) => (value + '').length === 4)
+    .required(errorMessages.requiredMessage),
+  jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage)
+})

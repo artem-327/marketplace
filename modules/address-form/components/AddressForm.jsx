@@ -11,7 +11,7 @@ import styled from 'styled-components'
 
 import { getProvinces } from '../api'
 
-import { getSafe } from '~/utils/functions'
+import { getSafe, getDeeply } from '~/utils/functions'
 
 const DatalistGroup = styled(FormGroup)`
   input::-webkit-calendar-picker-indicator {
@@ -63,7 +63,7 @@ export default class AddressForm extends Component {
       let { address } = this.getValues()
 
       if (countries.length === 0) this.props.getCountries()
-      if (address.zip) addZip({ zip: address.zip, id: address.zip })
+      if (address.zip) addZip(JSON.parse(address.zip))
       let { countryId, hasProvinces } = JSON.parse(getSafe(() => address.country, { countryId: null, hasProvinces: null }))
 
       this.fetchProvinces(countryId, hasProvinces)
@@ -132,9 +132,16 @@ export default class AddressForm extends Component {
   }
 
   getValues = (values = this.props.values) => {
-    let { prefix } = this.props
+    let value = getDeeply(this.props.prefix.split('.'), values)
 
-    return prefix ? (values[prefix] instanceof Array ? values[prefix][this.props.index] : values[prefix]) : values
+
+    // TODO check wheter this works for array...
+    if (value instanceof Array) return value[this.props.index]
+    else return value
+
+
+
+    // return prefix ? (values[prefix] instanceof Array ? values[prefix][this.props.index] : values[prefix]) : values
   }
 
 
@@ -151,6 +158,7 @@ export default class AddressForm extends Component {
     let fields = this.asignPrefix()
 
     let { provinces, countryId, provincesAreFetching } = this.state
+    //  TODO - check whether fluid didnt mess up ui somewhere else
 
     return (
       <>
@@ -160,20 +168,21 @@ export default class AddressForm extends Component {
         {displayHeader && <Header as='h3'><FormattedMessage id='global.address' defaultMessage='Address' /></Header>}
         <DatalistGroup widths='equal' data-test='address_form_streetCity_inp'>
           <Input
-            inputProps={{ icon: 'dropdown', list: datalistName, onChange: this.handleChange }}
+            inputProps={{ icon: 'dropdown', list: datalistName, onChange: this.handleChange, fluid: true }}
             label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />}
             name={fields.streetAddress}
           />
-          <Popup trigger={
-            <Input
-              inputProps={{ icon: 'dropdown', list: datalistName, onChange: this.handleChange }}
-              label={<FormattedMessage id='global.city' defaultMessage='City' />}
-              name={fields.city}
-            />
-          } content='abcd' />
+
+          <Input
+            inputProps={{ icon: 'dropdown', list: datalistName, onChange: this.handleChange, fluid: true }}
+            label={<FormattedMessage id='global.city' defaultMessage='City' />}
+            name={fields.city}
+          />
+
         </DatalistGroup>
         <FormGroup widths='equal'>
           <ZipDropdown
+            onAddition={(e, data) => setFieldValue(fields[this.props.zip.name], JSON.stringify({ id: data.value, zip: data.value }))}
             onChange={this.handleChange}
             name={fields.zip} countryId={countryId} initialZipCodes={initialZipCodes}
             data-test='address_form_zip_drpdn'
@@ -194,9 +203,9 @@ export default class AddressForm extends Component {
                 'data-test': 'address_form_country_drpdn',
                 search: true, onChange: async (e, data) => {
                   let values = JSON.parse(data.value)
-                  let fieldName = prefix ? `${prefix.province}` : 'address.province'
-
-                  setFieldValue(fieldName, '')
+                  // let fieldName = prefix ? `${prefix.province}` : 'address.province'
+                  
+                  setFieldValue(fields[this.props.province.name], '')
 
                   // this.handleChange(e, data)
                   this.setState({ hasProvinces: values.hasProvinces })
@@ -206,7 +215,7 @@ export default class AddressForm extends Component {
                 },
                 ...additionalCountryInputProps
               }}
-           
+
             />
           </FormField>
 

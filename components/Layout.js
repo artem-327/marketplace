@@ -95,7 +95,7 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth,
               }
               {getSafe(() => !auth.identity.isAdmin && !auth.identity.isCompanyAdmin, false) && (
                 <Menu.Item onClick={() => triggerSystemSettingsModal(true)}>
-                  {formatMessage({ id: 'settings.systemSettings', defaultMessage: '!System Settings' })}
+                  {formatMessage({ id: 'settings.systemSettings', defaultMessage: 'System Settings' })}
                 </Menu.Item>
               )}
               <Settings />

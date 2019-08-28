@@ -13,3 +13,5 @@ export const searchCountries = searchQuery => api.get(`/prodex/api/countries/sea
 export const searchProvinces = countryId => api.get(`/prodex/api/provinces/country/${countryId}`)
 
 export const updateCompany = (id, payload) => api.patch(`/prodex/api/companies/id/${id}`, payload).then(response => response.data)
+
+export const getCompanyDetails = id => api.get(`/prodex/api/companies/id/${id}/all-info`).then(response => response.data)

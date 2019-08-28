@@ -5,11 +5,14 @@ import { getSafe } from '~/utils/functions'
 const mergeAndFilterCodes = (newCodes, oldCodes) => {
   if (!(newCodes instanceof Array)) newCodes = [newCodes]
 
+
   let newZips = newCodes.map((code) => ({
     text: getSafe(() => code.zip, code),
-    value: getSafe(() => code.zip, code),
+    value: JSON.stringify({ id: code.id, zip: code.zip }),
     key: getSafe(() => code.id, code)
   }))
+
+
 
   let codes = newZips.concat(oldCodes)
 
