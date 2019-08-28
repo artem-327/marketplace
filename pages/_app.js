@@ -16,9 +16,9 @@ import shortid from 'shortid'
 import { ToastProvider } from 'react-toast-notifications'
 import TagManager from 'react-gtm-module'
 
-const tagManagerArgs = {
-  gtmId: 'GTM-NH6D5JN'
-}
+const gtmId = process.env.GTM_ID
+
+const tagManagerArgs = { gtmId: gtmId }
 
 Router.events.on('routeChangeStart', () => NProgress.start())
 Router.events.on('routeChangeComplete', () => NProgress.done())
@@ -27,7 +27,8 @@ Router.events.on('routeChangeError', () => NProgress.done())
 class ProdexApp extends App {
 
   componentDidMount() {
-    TagManager.initialize(tagManagerArgs)
+    if (gtmId)
+      TagManager.initialize(tagManagerArgs)
   }
 
   render() {
