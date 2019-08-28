@@ -151,7 +151,7 @@ class UsersPopup extends React.Component {
                 ) : (
                     <>
                       { false && (
-                      <FormGroup data-test='settings_users_popup_nameTitle_inp'>
+                      <FormGroup>
                         <PhoneNumber
                           name='phone'
                           values={values}

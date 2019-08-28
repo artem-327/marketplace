@@ -1052,12 +1052,12 @@ class AddInventoryForm extends Component {
                               </FormGroup>
 
                               <Header as='h3'>
-                                <FormattedMessage id='addInventory.expiration' defaultMessage='Does this o expire?'>
+                                <FormattedMessage id='addInventory.expiration' defaultMessage='Does this offer expire?'>
                                   {(text) => (
                                     <>
                                       {text}
                                       <Popup
-                                        content={<FormattedMessage id='addInventory.expirationDescription' defaultValue='If the product you are listing has an expiration then you are required to disclose that date. If you sell a product that is not represented correctly the buyer has the right to request a return of the order and the cost of shipping to/from will be the sellers responsibility.' />}
+                                        content={<FormattedMessage id='addInventory.expirationDescription' defaultValue='If you would like to limit this pricing for a certain time period then enter the last date that you would like to make this offer available. After the date this product will not be available on the Marketplace until you adjust the date till into the future.' />}
                                         trigger={<Icon name='info circle' color='blue' />}
                                         wide />
                                     </>

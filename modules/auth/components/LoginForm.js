@@ -113,10 +113,7 @@ class LoginForm extends Component {
                       else await login(username, password)
                     } else this.setState(inputsState)
                   }
-                  catch { }
-                  finally {
-                    actions.setSubmitting(false)
-                  }
+                  catch { actions.setSubmitting(false) }
                 }}>
                 {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
                   return (
