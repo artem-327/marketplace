@@ -16,7 +16,7 @@ import shortid from 'shortid'
 import { ToastProvider } from 'react-toast-notifications'
 import TagManager from 'react-gtm-module'
 
-const gtmId = process.env.REACT_APP_GTM_ID
+const gtmId = process.env.REACT_APP_GTM_ID || 'GTM-MKSVRW4'
 
 const tagManagerArgs = { gtmId: gtmId }
 
