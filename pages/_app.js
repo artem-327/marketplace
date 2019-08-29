@@ -16,7 +16,7 @@ import shortid from 'shortid'
 import { ToastProvider } from 'react-toast-notifications'
 import TagManager from 'react-gtm-module'
 
-const gtmId = process.env.GTM_ID
+const gtmId = process.env.REACT_APP_GTM_ID
 
 const tagManagerArgs = { gtmId: gtmId }
 
@@ -33,7 +33,6 @@ class ProdexApp extends App {
     } else {
       console.log('GTM not initialized, GTM ID: '+gtmId)
     }
-    console.log('test PORT: '+process.env.PORT)
   }
 
   render() {
