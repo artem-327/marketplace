@@ -1,11 +1,19 @@
 import React, { Component } from 'react'
-import {string, array, object, bool, func} from "prop-types"
-import { FormGroup, FormField, Dropdown, Input } from 'semantic-ui-react'
+import { string, array, object, bool, func } from "prop-types"
+import { FormGroup, FormField, Dropdown, Input, Grid } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
+import styled from 'styled-components'
 // stahnout import { InputMask } from 'react-input-mask'
 
+const StyledDropdown = styled(Dropdown)`
+  min-width: 150px !important;
+  .default.text {
+    font-weight: normal;
+  }
+`
+
 function deref(obj, s) {
-  var i = 0;
+  var i = 0
   s = s.split('.')
   while (obj && i < s.length)
     obj = obj[s[i++]]
@@ -24,7 +32,7 @@ function splitPhoneNumber(phone, phoneCountryCodes) {
     }
   }
   else {
-    return {phoneCountryCode: '', phoneNumber: phone}
+    return { phoneCountryCode: '', phoneNumber: phone }
   }
 }
 
@@ -39,14 +47,14 @@ export default class PhoneNumber extends Component {
     if (!this.props.phoneCountryCodes.length) await this.props.getCountryCodes()
 
     phone = splitPhoneNumber(phone, this.props.phoneCountryCodes)
-    this.setState({phoneCountryCode: phone.phoneCountryCode, phoneNumber: phone.phoneNumber})
+    this.setState({ phoneCountryCode: phone.phoneCountryCode, phoneNumber: phone.phoneNumber })
   }
 
   handleChange = async (fieldName, value) => {
     const { name, setFieldValue } = this.props
 
-    this.setState({[fieldName]: value})
-    const phone = { ...this.state, ...{[fieldName]: value}}
+    this.setState({ [fieldName]: value })
+    const phone = { ...this.state, ...{ [fieldName]: value } }
 
     setFieldValue(name, phone.phoneCountryCode ? phone.phoneCountryCode + phone.phoneNumber : phone.phoneNumber)
   }
@@ -69,31 +77,27 @@ export default class PhoneNumber extends Component {
     console.log('!!!!!!!! phoneCountryCodes', phoneCountryCodes)
 
     return (
-      <div>
-        <FormGroup>
-          <FormField>
-            <label><FormattedMessage id='global.phoneCCC' defaultMessage='Phone CCC' /></label>
-            <Dropdown
+      <FormField>
+        <label><FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' /></label>
+        <Input
+          type='text'
+          label={
+            <StyledDropdown
               options={phoneCountryCodes}
               onChange={(e, data) => this.handleChange('phoneCountryCode', data.value)}
               selection
-              floating
               search
-              placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: 'Phone CCC' })}
+              compact
+              placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+XXX' })}
               value={phoneCountryCode}
             />
-          </FormField>
-          <FormField>
-            <label><FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' /></label>
-            <Input
-              type='text'
-              onChange={(e, data) => this.handleChange('phoneNumber', data.value)}
-              value={phoneNumber}
-              placeholder={formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
-            />
-          </FormField>
-        </FormGroup>
-      </div>
+          }
+          labelPosition='left'
+          onChange={(e, data) => this.handleChange('phoneNumber', data.value)}
+          value={phoneNumber}
+          placeholder={formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
+        />
+      </FormField>
     )
   }
 }

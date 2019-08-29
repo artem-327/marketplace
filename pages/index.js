@@ -8,6 +8,7 @@ import { getSafe } from '~/utils/functions'
 class Index extends Component {
   async componentDidMount() {
     let { isAdmin } = this.props
+
     
     if (isAdmin === null) await this.props.getIdentity()
     if (isAdmin) Router.push('/admin')

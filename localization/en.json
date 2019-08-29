@@ -730,6 +730,7 @@
   "cart.nmfcNumber": "NMFC Number",
   "cart.purchaseOrder.logisticAccRequired": "To be able to complete Order, your Company needs to have Logistics account defined. This can be done in Settings.",
   "validation.required": "Required",
+  "validation.aboveAge": "Must be at least {age} years old",
   "validation.invalidEmail": "Invalid e-mail address",
   "validation.invalidDateFormat": "Invalid date format. Date should match format {example}",
   "validation.phoneNumber": "Please, enter valid phone number (numbers and '+-()' characters can be used)",

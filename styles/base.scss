@@ -212,7 +212,7 @@ i.icon.clickable:hover {
   display: block;
 }
 
-.fields .field .selection.dropdown {
+.fields .field .selection.dropdown:not(.label) {
   max-width: 100%;
   min-width: 100%;
 }

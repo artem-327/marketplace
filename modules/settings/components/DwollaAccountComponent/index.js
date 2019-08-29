@@ -19,7 +19,7 @@ import { AddressForm } from '~/modules/address-form/'
 import { dwollaControllerValidation, beneficialOwnersValidation } from '~/constants/yupValidation'
 
 import { generateToastMarkup, deepSearch } from '~/utils/functions'
-import { beneficialOwner, USA } from '~/constants/beneficialOwners'
+import { beneficialOwner, USA, ownersToPayload } from '~/constants/beneficialOwners'
 
 import { BeneficialOwnersForm } from '~/components/custom-formik'
 
@@ -115,29 +115,13 @@ class BankAccountsPopup extends React.Component {
             onSubmit={async (values, { setSubmitting }) => {
 
               let payload = {
-                beneficialOwners: [],
+                beneficialOwners: ownersToPayload(values.beneficialOwners),
                 dwollaController: {
                   ...values.dwollaController,
                   ...values.dwollaController.address,
                   country: JSON.parse(values.dwollaController.address.country).countryId
                 }
               }
-
-              values.beneficialOwners.forEach((owner, i) => {
-                // If we find any value that is empty it means all values are empty, due to validation
-                // so we dont care about such beneficialOwner...
-                if (!deepSearch(owner, (val, key) => val === '' && key !== 'country')) {
-                  payload.beneficialOwners.push({
-                    ...owner,
-                    ...owner.address,
-                    country: JSON.parse(owner.address.country).countryId
-                  })
-                  delete payload.beneficialOwners[i].address
-                }
-              })
-
-              delete payload.dwollaController.address
-
 
               if (payload.beneficialOwners.length === 0) delete payload.beneficialOwners
 
@@ -166,7 +150,6 @@ class BankAccountsPopup extends React.Component {
                       }, () => resetForm(values))
                     }}
                     beneficialOwnersCount={this.state.beneficialOwnersCount}
-
                     values={values}
                     setFieldValue={setFieldValue} />
 

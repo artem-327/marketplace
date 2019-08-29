@@ -1,13 +1,19 @@
 import { connect } from 'react-redux'
 import DwollaRegister from './DwollaRegister'
-// import * as Actions from '../actions'
-import { getSafe } from '~/utils/functions'
+import { getBusinessClassifications, postDwollaAccount } from '~/modules/settings/actions'
+import { getBusinessTypes } from '~/modules/company-form/actions'
 
-console.log('type', typeof DwollaRegister)
+const mapStateToProps = (store) => ({
+  identity: store.auth.identity,
+  businessTypes: store.businessTypes,
+  businessClassifications: store.settings.businessClassifications,
+  dwollaSaving: store.settings.dwollaSaving
+})
 
-
-function mapStateToProps(state, props) {
-  return {}
+const mapDispatchToProps = {
+  getBusinessClassifications,
+  getBusinessTypes,
+  postDwollaAccount
 }
 
-export default connect(mapStateToProps, null)(DwollaRegister)
+export default connect(mapStateToProps, mapDispatchToProps)(DwollaRegister)
