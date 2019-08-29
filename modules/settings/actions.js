@@ -955,3 +955,5 @@ export const getSettings = role => ({ type: AT.GET_SETTINGS, payload: api.getSet
 export const updateSettings = (role, payload) => ({ type: AT.UPDATE_SETTINGS, payload: api.updateSettings(role, payload) })
 
 export const triggerSystemSettingsModal = (force = null) => ({ type: AT.TRIGGER_SYSTEM_SETTINGS_MODAL, payload: force })
+
+export const getBusinessClassifications = () => ({ type: AT.GET_BUSINESS_CLASSIFICATIONS, payload: api.getBusinessClassifications() })

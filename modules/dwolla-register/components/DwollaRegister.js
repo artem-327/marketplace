@@ -4,17 +4,15 @@ import styled from 'styled-components'
 import { Formik } from 'formik'
 import { Input, Dropdown, Checkbox } from 'formik-semantic-ui'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { connect } from 'react-redux'
+
 import * as Yup from 'yup'
 import Router from 'next/router'
 
-
-import { getBusinessTypes } from '~/modules/company-form/actions'
-import { errorMessages, addressValidationSchema, beneficialOwnersValidation, dwollaControllerValidation } from '~/constants/yupValidation'
+import { errorMessages, addressValidationSchema, beneficialOwnersValidation, dwollaControllerValidation, einValidation } from '~/constants/yupValidation'
 import { BeneficialOwnersForm } from '~/components/custom-formik'
 import { getSafe } from '~/utils/functions'
 
-import { beneficialOwner, USA } from '~/constants/beneficialOwners'
+import { beneficialOwner, USA, ownersToPayload } from '~/constants/beneficialOwners'
 
 import { AddressForm } from '~/modules/address-form'
 import { ControllerForm } from '~/components/custom-formik'
@@ -28,6 +26,7 @@ const BiggerTextColumn = styled(GridColumn)`
 
 const Wrapper = styled.div`
   background-color: rgba(208, 224, 240, 0.3);
+  overflow-y: auto;
   height: 100%;
 `
 
@@ -65,8 +64,9 @@ class DwollaRegister extends Component {
   }
 
   componentDidMount() {
-    const { businessTypes, getBusinessTypes } = this.props
+    const { businessTypes, getBusinessTypes, getBusinessClassifications, businessClassifications } = this.props
     if (businessTypes.data.length === 0) getBusinessTypes()
+    if (businessClassifications.length === 0) getBusinessClassifications()
   }
 
 
@@ -85,20 +85,17 @@ class DwollaRegister extends Component {
 
     const validation = [
       {
-        primaryUser: Yup.object().shape({
-          firstName: commonValidations.basicString,
-          lastName: commonValidations.basicString,
-          email: commonValidations.email
-        }),
+        firstName: commonValidations.basicString,
+        lastName: commonValidations.basicString,
+        email: commonValidations.email
       },
       {
-        company: Yup.object().shape({
-          businessName: commonValidations.basicString,
-          businessType: commonValidations.basicNumber,
-          primaryBranch: Yup.object().shape({ address: addressValidationSchema() }),
-          businessClassification: commonValidations.basicNumber,
-          ein: commonValidations.basicString
-        })
+        businessName: commonValidations.basicString,
+        businessType: commonValidations.basicNumber,
+        address: addressValidationSchema(),
+        businessClassification: Yup.string(requiredMessage).required(requiredMessage),
+        industryClassification: Yup.string(requiredMessage).required(requiredMessage),
+        ein: einValidation()
       },
       {},
       { beneficialOwners: beneficialOwnersValidation() },
@@ -118,8 +115,15 @@ class DwollaRegister extends Component {
   }
 
   getContent = (formikProps) => {
-    const { values, setFieldValue, resetForm } = formikProps
-    const { intl: { formatMessage } } = this.props
+    const { values, setFieldValue, resetForm, submitForm } = formikProps
+    const { intl: { formatMessage }, businessClassifications, businessClassificationsLoading } = this.props
+
+    let selectedBusiness = businessClassifications.find((el) => el.id === values.businessClassification)
+    let industryOptions = selectedBusiness ? selectedBusiness.industryClassifications.map((el) => ({
+      key: el.id,
+      value: el.id,
+      text: el.name
+    })) : []
 
     switch (this.state.step) {
       case 1: {
@@ -152,9 +156,9 @@ class DwollaRegister extends Component {
 
                   <Header as='h4'><FormattedMessage id='dwolla.dwolla.confirmAcc' defaultMessage='Confirm Dwolla Account Admin Information' /></Header>
                   <Header as='h5'><FormattedMessage id='global.step' defaultMessage='Step' /> {' '} {this.state.step} / {numberOfSteps}</Header>
-                  <Input label={<FormattedMessage id='global.legalFirstName' defaultMessage='Legal First Name' />} inputProps={{ fluid: true }} name='primaryUser.firstName' />
-                  <Input label={<FormattedMessage id='global.legalLastName' defaultMessage='Legal Last Name' />} inputProps={{ fluid: true }} name='primaryUser.lastName' />
-                  <Input label={<FormattedMessage id='global.email' defaultMessage='E-Mail' />} inputProps={{ fluid: true }} name='primaryUser.email' />
+                  <Input label={<FormattedMessage id='global.legalFirstName' defaultMessage='Legal First Name' />} inputProps={{ fluid: true }} name='firstName' />
+                  <Input label={<FormattedMessage id='global.legalLastName' defaultMessage='Legal Last Name' />} inputProps={{ fluid: true }} name='lastName' />
+                  <Input label={<FormattedMessage id='global.email' defaultMessage='E-Mail' />} inputProps={{ fluid: true }} name='email' />
 
                   <RightAlignedDiv>
                     <Button onClick={() => this.nextStep(formikProps)} primary>
@@ -178,10 +182,10 @@ class DwollaRegister extends Component {
                 <Segment padded>
                   <Header as='h4'><FormattedMessage id='dwolla.confirmCompanyInfo' defaultMessage='Confirm Company Information' /></Header>
                   <Header as='h5'><FormattedMessage id='global.step' defaultMessage='Step' /> {' '} {this.state.step} / {numberOfSteps}</Header>
-                  <Input label={<FormattedMessage id='global.businessName' defaultMessage='Business Name' />} inputProps={{ fluid: true }} name='company.businessName' />
+                  <Input label={<FormattedMessage id='global.businessName' defaultMessage='Business Name' />} inputProps={{ fluid: true }} name='businessName' />
                   <Dropdown
                     loading={this.props.businessTypes.loading}
-                    name='company.businessType'
+                    name='businessType'
                     label={<FormattedMessage id='global.businessType' defaultMessage='Business Type' />}
                     options={this.props.businessTypes.data.map((el) => ({
                       key: el.id,
@@ -191,21 +195,28 @@ class DwollaRegister extends Component {
                   />
 
                   <AddressForm
-                    prefix='company.primaryBranch'
                     values={values}
                     setFieldValue={setFieldValue}
                     displayHeader={false} />
 
                   <Dropdown
-                    name='company.businessClassification'
+                    name='businessClassification'
                     label={<FormattedMessage id='global.businessClassification' defaultMessage='Business Classification' />}
-                    options={this.props.businessTypes.data.map((el) => ({
+                    inputProps={{ loading: businessClassificationsLoading, search: true }}
+                    options={businessClassifications.map((el) => ({
                       key: el.id,
                       value: el.id,
-                      text: el.id
+                      text: el.name
                     }))} />
 
-                  <Input name='company.ein' label={<FormattedMessage id='global.ein' defaultMessage='EIN' />} />
+                  <Dropdown
+                    name='industryClassification'
+                    label={<FormattedMessage id='global.industryClassification' defaultMessage='Industry Classification' />}
+                    inputProps={{ disabled: values.businessClassification === '', loading: businessClassificationsLoading, search: true }}
+                    options={industryOptions}
+                  />
+
+                  <Input name='ein' label={<FormattedMessage id='global.ein' defaultMessage='EIN' />} />
 
                   <RightAlignedDiv>
 
@@ -315,7 +326,6 @@ class DwollaRegister extends Component {
                       </Button>
                     </RightAlignedDiv>
 
-
                   </Segment>
 
                 </FormColumn>
@@ -414,12 +424,12 @@ class DwollaRegister extends Component {
                   </GridRow>
                   <GridRow>
                     <GridColumn>
-                      <Input label={<FormattedMessage id='global.legalFirstName' defaultMessage='Legal First Name' />} inputProps={{ fluid: true }} name='primaryUser.firstName' />
+                      <Input label={<FormattedMessage id='global.legalFirstName' defaultMessage='Legal First Name' />} inputProps={{ fluid: true }} name='firstName' />
                     </GridColumn>
                   </GridRow>
                   <GridRow>
                     <GridColumn>
-                      <Input label={<FormattedMessage id='global.legalLastName' defaultMessage='Legal Last Name' />} inputProps={{ fluid: true }} name='primaryUser.lastName' />
+                      <Input label={<FormattedMessage id='global.legalLastName' defaultMessage='Legal Last Name' />} inputProps={{ fluid: true }} name='lastName' />
                     </GridColumn>
                   </GridRow>
 
@@ -435,8 +445,8 @@ class DwollaRegister extends Component {
                         name='acceptance'
                         label={formatMessage({
                           id: 'dwolla.acceptance',
-                          defaultMessage: `I, ${getSafe(() => values.primaryUser.firstName, '') + ' ' + getSafe(() => values.primaryUser.lastName, '')}, hereby certify, to the best of my knowledge, that the information provided above is complete and correct.`
-                        }, { name: getSafe(() => values.primaryUser.firstName, '') + ' ' + getSafe(() => values.primaryUser.lastName, '') })}
+                          defaultMessage: `I, ${getSafe(() => values.firstName, '') + ' ' + getSafe(() => values.lastName, '')}, hereby certify, to the best of my knowledge, that the information provided above is complete and correct.`
+                        }, { name: getSafe(() => values.firstName, '') + ' ' + getSafe(() => values.lastName, '') })}
                       />
                     </GridColumn>
                   </GridRow>
@@ -448,7 +458,7 @@ class DwollaRegister extends Component {
                           <FormattedMessage id='global.back' defaultMessage='Back'>{text => text}</FormattedMessage>
                         </Button>
 
-                        <Button disabled={!values.acceptance} onClick={() => this.nextStep(formikProps)} primary>
+                        <Button disabled={!values.acceptance} onClick={() => submitForm()} primary>
                           <FormattedMessage id='global.complete' defaultMessage='Complete'>{text => text}</FormattedMessage>
                         </Button>
 
@@ -524,48 +534,45 @@ class DwollaRegister extends Component {
 
   render() {
     let initialValues = {}
-    const { identity } = this.props
+    const { identity, postDwollaAccount } = this.props
+
 
     if (identity) {
-      const { primaryUser, primaryBranch } = identity.company
+      const { primaryBranch } = identity.company
 
-      let [firstName, ...lastName] = primaryUser.name.split(' ')
-      // TODO - fill remaining values when BE provides them
-
+      let [firstName, ...lastName] = identity.name.split(' ')
+      
       initialValues = {
-        primaryUser: {
-          firstName,
-          lastName: lastName.toString().replace(',', ' '),
-          email: primaryUser.email
+
+        firstName,
+        lastName: lastName.toString().replace(',', ' '),
+        email: identity.email,
+        businessName: identity.company.name,
+        businessType: identity.company.businessType.id,
+        address: {
+          streetAddress: primaryBranch.address.streetAddress,
+          country: JSON.stringify({
+            countryId: primaryBranch.address.country.id,
+            hasProvinces: primaryBranch.address.country.hasProvinces
+          }),
+          province: primaryBranch.address.province.id,
+          zip: JSON.stringify({
+            id: primaryBranch.address.zip.id,
+            zip: primaryBranch.address.zip.zip
+          }),
+          city: primaryBranch.address.city
         },
-        company: {
-          businessName: '',
-          businessType: identity.company.businessType.id,
-          primaryBranch: {
-            address: {
-              streetAddress: primaryBranch.address.streetAddress,
-              country: JSON.stringify({
-                countryId: primaryBranch.address.country.id,
-                hasProvinces: primaryBranch.address.country.hasProvinces
-              }),
-              province: primaryBranch.address.province.id,
-              zip: JSON.stringify({
-                id: primaryBranch.address.zip.id,
-                zip: primaryBranch.address.zip.zip
-              }),
-              city: primaryBranch.address.city
-            }
-          },
-          businessClassification: '',
-          ein: ''
-        },
+        businessClassification: '',
+        industryClassification: '',
+        ein: identity.company.tin,
+
         dwollaController: {
           address: {
             streetAddress: '',
             city: '',
             country: USA,
             zip: '',
-            province: ''
+            province: 3
           },
           dateOfBirth: '',
           firstName: '',
@@ -577,14 +584,37 @@ class DwollaRegister extends Component {
         beneficialOwners: this.state.initialFormValues.beneficialOwners,
         acceptance: false
       }
-
-
     }
 
     return (
       <Wrapper>
         <Container>
           <Formik
+            onSubmit={async (values, { setSubmitting }) => {
+              let payload = {
+                ...values,
+                beneficialOwners: ownersToPayload(values.beneficialOwners),
+                city: values.address.city,
+                dwollaController: {
+                  ...values.dwollaController,
+                  ...values.address,
+                  country: JSON.parse(values.dwollaController.address.country).countryId,
+                  zip: JSON.parse(values.dwollaController.address.zip).zip
+                },
+                postalCode: JSON.parse(values.address.zip).zip,
+                address: values.address.streetAddress,
+              }
+
+              delete payload.dwollaController.address
+              delete payload.acceptance
+              delete payload.beneficialOwnersNotApplicable
+
+              if (payload.beneficialOwners.length === 0) delete payload.beneficialOwners
+              await postDwollaAccount(payload)
+
+              setSubmitting(false)
+              this.setState({ step: this.state.step + 1 })
+            }}
             enableReinitialize
             initialValues={initialValues}
             validationSchema={this.getValidationSchema()}
@@ -608,4 +638,4 @@ class DwollaRegister extends Component {
 
 
 
-export default injectIntl(connect((store) => ({ identity: store.auth.identity, businessTypes: store.businessTypes }), { getBusinessTypes })(DwollaRegister))
+export default injectIntl(DwollaRegister)
