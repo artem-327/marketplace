@@ -69,7 +69,9 @@ export const initialState = {
   logisticsAccounts: [],
   logisticsProviders: [],
   logisticsProvidersFetching: false,
-  dwollaAccBalance: null
+  dwollaAccBalance: null,
+  businessClassifications: [],
+  dwollaSaving: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -1127,6 +1129,48 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         systemSettingsModalOpen: isOpen
+      }
+    }
+
+
+    /* GET_BUSINESS_CLASSIFICATIONS */
+
+    case AT.GET_BUSINESS_CLASSIFICATIONS_PENDING: {
+      return {
+        ...state,
+        bussinessClassificationsLoading: true
+      }
+    }
+
+    case AT.GET_BUSINESS_CLASSIFICATIONS_FULFILLED: {
+      return {
+        ...state,
+        businessClassifications: payload,
+        bussinessClassificationsLoading: false,
+      }
+    }
+
+    case AT.GET_BUSINESS_CLASSIFICATIONS_REJECTED: {
+      return {
+        ...state,
+        bussinessClassificationsLoading: false
+      }
+    }
+
+    /* SETTINGS_CREATE_DWOLLA_ACCOUNT */
+
+    case AT.SETTINGS_CREATE_DWOLLA_ACCOUNT_PENDING: {
+      return {
+        ...state,
+        dwollaSaving: true
+      }
+    }
+
+    case AT.SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED:
+    case AT.SETTINGS_CREATE_DWOLLA_ACCOUNT_REJECTED: {
+      return {
+        ...state,
+        dwollaSaving: false
       }
     }
 

@@ -2,7 +2,7 @@ import * as Yup from 'yup'
 import { FormattedMessage } from 'react-intl'
 import moment from 'moment'
 import { getSafe, deepSearch } from '~/utils/functions'
-
+import { isValid } from 'ein-validator'
 
 const allowedFreightClasses = [50, 55, 60, 65, 70, 77.5, 85, 92.5, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500]
 
@@ -40,7 +40,8 @@ export const errorMessages = {
   invalidValueFormat: (example) => <FormattedMessage id='validation.invalidValueFormat' defaultMessage={`Invalid value format. Format should match ${example}`} values={{ example }} />,
   lessThanOrdered: <FormattedMessage id='validation.lessThanOrdered' defaultMessage='Less than ordered' />,
   moreThanOrdered: <FormattedMessage id='validation.moreThanOrdered' defaultMessage='More than ordered' />,
-  oneOf: (arr) => <FormattedMessage id='validation.oneOf' defaultMessage={`Must be one of ${arr.toString()}`} values={{ values: arr.toString() }} />
+  oneOf: (arr) => <FormattedMessage id='validation.oneOf' defaultMessage={`Must be one of ${arr.toString()}`} values={{ values: arr.toString() }} />,
+  aboveAge: age => <FormattedMessage id='validation.aboveAge' defaultMessage={`Must be at least ${age} years old`} values={{ age }} />
 }
 
 export const provinceObjectRequired = (hasProvinces) => (
@@ -98,7 +99,7 @@ export const beneficialOwnersValidation = () =>
     return (
       Yup.object().shape({
         address: addressValidationSchema(),
-        dateOfBirth: dateValidation(),
+        dateOfBirth: dateOfBirthValidation(),
         firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
         lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
         ssn: ssnValidation()
@@ -128,7 +129,7 @@ export const addressValidationSchema = () => {
 
 export const dwollaControllerValidation = () => Yup.object().shape({
   address: addressValidationSchema(),
-  dateOfBirth: dateValidation(),
+  dateOfBirth: dateOfBirthValidation(),
   firstName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
   lastName: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage),
   // passport: Yup.object().shape({
@@ -140,5 +141,15 @@ export const dwollaControllerValidation = () => Yup.object().shape({
     .positive(errorMessages.mustBeNumber)
     .test('num-length', errorMessages.exactDigits(4), (value) => (value + '').length === 4)
     .required(errorMessages.requiredMessage),
-  jobTitle: Yup.string().trim().min(3, errorMessages.minLength(3)).required(errorMessages.requiredMessage)
+  jobTitle: Yup.string().trim().required(errorMessages.requiredMessage)
 })
+
+export const dateOfBirthValidation = (minimumAge = 18) =>
+  Yup.string(errorMessages.requiredMessage)
+    .test('min-age', errorMessages.aboveAge(minimumAge), (val) => moment().diff(val, 'years') >= minimumAge)
+    .test('date-format', errorMessages.invalidDateFormat(), (value) => moment(value, 'YYYY-MM-DD', true).isValid())
+    .required(errorMessages.requiredMessage)
+
+export const einValidation = () =>
+  Yup.string(errorMessages.requiredMessage)
+    .test('ein', errorMessages.invalidString, (ein) => isValid(ein)).required(errorMessages.requiredMessage)

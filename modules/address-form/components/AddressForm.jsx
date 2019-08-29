@@ -61,7 +61,7 @@ export default class AddressForm extends Component {
 
     try {
       let { address } = this.getValues()
-
+      
       if (countries.length === 0) this.props.getCountries()
       if (address.zip) addZip(JSON.parse(address.zip))
       let { countryId, hasProvinces } = JSON.parse(getSafe(() => address.country, { countryId: null, hasProvinces: null }))
@@ -132,7 +132,7 @@ export default class AddressForm extends Component {
   }
 
   getValues = (values = this.props.values) => {
-    let value = getDeeply(this.props.prefix.split('.'), values)
+    let value = this.props.prefix ? getDeeply(this.props.prefix.split('.'), values) : values
 
 
     // TODO check wheter this works for array...
@@ -204,7 +204,7 @@ export default class AddressForm extends Component {
                 search: true, onChange: async (e, data) => {
                   let values = JSON.parse(data.value)
                   // let fieldName = prefix ? `${prefix.province}` : 'address.province'
-                  
+
                   setFieldValue(fields[this.props.province.name], '')
 
                   // this.handleChange(e, data)
