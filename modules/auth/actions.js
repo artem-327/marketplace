@@ -51,7 +51,8 @@ export function login(username, password) {
           accessRights[role.propertyName] = !!identity.roles.find((el) => el.id === role.id)
         })
       }
-      console.log({ authPayload, company })
+      
+      
       setAuth(authPayload)
 
       // if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.name === 'CompanyAdmin')) {
