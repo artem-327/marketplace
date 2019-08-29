@@ -26,20 +26,23 @@ export function login(username, password) {
       const auth = await authorize(username, password)
       setAuth(auth)
       const identity = await api.getIdentity()
-      let company = await api.getCompanyDetails(identity.company.id)
-      const preferredCurrency = identity.preferredCurrency
 
+      let company = identity.company ? await api.getCompanyDetails(identity.company.id) : null
+      const preferredCurrency = identity.preferredCurrency
+      
+      
       const authPayload = {
         ...auth,
         identity: {
           ...identity,
-          company: {
+          company: identity.company || company ? {
             ...identity.company,
             ...company
-          }
+          } : null
         },
         preferredCurrency
       }
+
 
 
       const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
@@ -51,7 +54,8 @@ export function login(username, password) {
           accessRights[role.propertyName] = !!identity.roles.find((el) => el.id === role.id)
         })
       }
-      console.log({ authPayload, company })
+
+
       setAuth(authPayload)
 
       // if (!getSafe(() => identity.company.reviewRequested, false) || !identity.roles.find(role => role.name === 'CompanyAdmin')) {
@@ -114,7 +118,7 @@ export const reviewCompany = (values) => {
     async payload() {
       const response = api.reviewCompany(values)
       const identity = await api.getIdentity()
-      const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
+      // const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
 
       // isAdmin ? Router.push('/admin') : Router.push('/inventory/my')
 

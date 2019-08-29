@@ -76,7 +76,7 @@ class Navigation extends Component {
   }
 }
 
-export default withAuth(connect(null, { triggerSystemSettingsModal })((injectIntl(Navigation))))
+export default withAuth(connect((store) => ({ auth: store.auth, isAdmin: getSafe(() => store.auth.identity.isAdmin, false) }), { triggerSystemSettingsModal })((injectIntl(Navigation))))
 
 
 // export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddNewPopupCasProducts))
