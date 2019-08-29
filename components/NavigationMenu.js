@@ -24,7 +24,7 @@ const DropdownItem = ({ children, ...props }) => (
 class Navigation extends Component {
   render() {
     const { isAdmin, auth, takeover, intl: { formatMessage } } = this.props
-
+    
     return (
       !isAdmin || takeover ? <>
         <DropdownItem text={formatMessage({ id: 'navigation.inventory', defaultMessage: 'Inventory' })}>
@@ -76,7 +76,7 @@ class Navigation extends Component {
   }
 }
 
-export default withAuth(connect(null, { triggerSystemSettingsModal })((injectIntl(Navigation))))
+export default withAuth(connect((store) => ({ auth: store.auth, isAdmin: store.auth.identity.isAdmin }), { triggerSystemSettingsModal })((injectIntl(Navigation))))
 
 
 // export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddNewPopupCasProducts))
