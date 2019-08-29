@@ -8,9 +8,9 @@ const AttachmentModal = withDatagrid(class extends Component {
     const { datagrid } = this.props
 
     return (
-      <Modal centered={false} trigger={<Button basic>Attachements</Button>}>
+      <Modal centered={false} trigger={<Button basic type='button'>Attachements</Button>}>
         <Modal.Header>Attachements Manager</Modal.Header>
-        <Modal.Content>
+        <Modal.Content scrolling>
           <ProdexTable
             {...datagrid.tableProps}
             rows={datagrid.rows.map(r => ({
