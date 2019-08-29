@@ -152,11 +152,7 @@ class UsersPopup extends React.Component {
                     <>
                       {true && (
                         <FormGroup>
-                          <PhoneNumber
-                            name='phone'
-                            values={values}
-                            setFieldValue={setFieldValue}
-                          />
+                          
                         </FormGroup>
                       )}
 
@@ -165,6 +161,11 @@ class UsersPopup extends React.Component {
                           type='text'
                           label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
                           name='name' />
+                        <PhoneNumber
+                            name='phone'
+                            values={values}
+                            setFieldValue={setFieldValue}
+                          />
                         <Input
                           type='text'
                           label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}

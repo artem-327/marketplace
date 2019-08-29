@@ -7,6 +7,9 @@ import styled from 'styled-components'
 
 const StyledDropdown = styled(Dropdown)`
   min-width: 150px !important;
+  .default.text {
+    font-weight: normal;
+  }
 `
 
 function deref(obj, s) {
@@ -74,34 +77,27 @@ export default class PhoneNumber extends Component {
     console.log('!!!!!!!! phoneCountryCodes', phoneCountryCodes)
 
     return (
-      // <FormGroup>
-      //   <FormField width='2'>
-      //     <label><FormattedMessage id='global.phoneCCC' defaultMessage='+XXX' /></label>
-
-          
-      //   </FormField>
-        <FormField width='10'>
-          <label><FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' /></label>
-          <Input
-            type='text'
-            label={
-              <StyledDropdown
-                options={phoneCountryCodes}
-                onChange={(e, data) => this.handleChange('phoneCountryCode', data.value)}
-                selection
-                search
-                compact
-                placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+XXX' })}
-                value={phoneCountryCode}
-              />
-            }
-            labelPosition='left'
-            onChange={(e, data) => this.handleChange('phoneNumber', data.value)}
-            value={phoneNumber}
-            placeholder={formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
-          />
-        </FormField>
-      // </FormGroup>
+      <FormField>
+        <label><FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' /></label>
+        <Input
+          type='text'
+          label={
+            <StyledDropdown
+              options={phoneCountryCodes}
+              onChange={(e, data) => this.handleChange('phoneCountryCode', data.value)}
+              selection
+              search
+              compact
+              placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+XXX' })}
+              value={phoneCountryCode}
+            />
+          }
+          labelPosition='left'
+          onChange={(e, data) => this.handleChange('phoneNumber', data.value)}
+          value={phoneNumber}
+          placeholder={formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
+        />
+      </FormField>
     )
   }
 }
