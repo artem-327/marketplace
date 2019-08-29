@@ -4,6 +4,7 @@ import TablesHandlers from './TablesHandlers'
 import { Container, Grid, Divider } from 'semantic-ui-react'
 import Tabs from './Tabs'
 import { withAuth } from '~/hocs'
+import { FormattedMessage } from 'react-intl'
 
 import DataTable from './DataTable/DataTable'
 import UnitOfMeasureTable from './UnitOfMeasureTable/UnitOfMeasureTable'
@@ -23,6 +24,8 @@ import CasProductsTable from './CasProductsTable/CasProductsTable'
 import CompaniesTable from './CompaniesTable/Table'
 import CompaniesForm from './CompaniesTable/FormPopup'
 import CompaniesDwollaForm from './CompaniesDwolla/FormPopup'
+
+import { getSafe } from '~/utils/functions'
 
 import { DatagridProvider } from '~/modules/datagrid'
 
@@ -169,11 +172,11 @@ class Admin extends Component {
   }
 
   render() {
-    if (!!this.props.auth.identity && !this.props.auth.identity.isAdmin) return "Access denied!"
+    if (!getSafe(() => this.props.auth.identity.isAdmin, false)) return <FormattedMessage id='global.accessDenied' defaultMessage='Access Denied!' />
 
     return (
       <DatagridProvider apiConfig={this.getApiConfig()}>
-        <Container fluid className="flex stretched">
+        <Container fluid className='flex stretched'>
           <Container fluid style={{ padding: '0 32px' }}>
             <TablesHandlers />
           </Container>
@@ -182,7 +185,7 @@ class Admin extends Component {
               <Grid.Column width={3}>
                 <Tabs />
               </Grid.Column>
-              <Grid.Column key={this.props.currentTab} style={{ marginTop: '10px' }} className="flex stretched">
+              <Grid.Column key={this.props.currentTab} style={{ marginTop: '10px' }} className='flex stretched'>
                 {this.renderContent()}
               </Grid.Column>
             </Grid.Row>
@@ -193,6 +196,6 @@ class Admin extends Component {
   }
 }
 
-const mapStateToProps = state => ({ ...state.admin })
+const mapStateToProps = state => ({ ...state.admin, auth: state.auth })
 
 export default withAuth(connect(mapStateToProps, null)(Admin))

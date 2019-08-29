@@ -26,7 +26,8 @@ export function login(username, password) {
       const auth = await authorize(username, password)
       setAuth(auth)
       const identity = await api.getIdentity()
-      let company = await api.getCompanyDetails(identity.company.id)
+
+      let company = identity.company ? await api.getCompanyDetails(identity.company.id) : {}
       const preferredCurrency = identity.preferredCurrency
 
       const authPayload = {
@@ -40,6 +41,7 @@ export function login(username, password) {
         },
         preferredCurrency
       }
+
 
 
       const isAdmin = identity.roles.map(r => r.id).indexOf(1) > -1
