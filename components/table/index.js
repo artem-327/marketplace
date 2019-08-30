@@ -6,7 +6,7 @@ import { Segment, Icon, Dropdown, Modal, Divider } from 'semantic-ui-react'
 import { Form, Checkbox, Button } from 'formik-semantic-ui'
 import _ from 'lodash'
 import GroupCell from './GroupCell'
-import {FormattedMessage, injectIntl} from 'react-intl'
+import { FormattedMessage, injectIntl } from 'react-intl'
 
 import {
   SearchState,
@@ -70,48 +70,52 @@ const SettingButton = styled(Icon)`
 const ColumnsSetting = ({ onClick }) => (
   <SettingButton onClick={onClick} data-test='table_setting_btn' name="setting" />
 )
-const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, open, formatMessage }) => (
-  <Modal open={open} centered={false} size="tiny" style={{ width: 300 }}>
-    <Modal.Content>
-      <Form
-        initialValues={columns.reduce((acc, c) => { acc[c.name] = hiddenColumnNames.indexOf(c.name) === -1; return acc }, {})}
-        onSubmit={(values, actions) => {
-          onChange(columns.reduce((acc, c) => {
-            !values[c.name] && acc.push(c.name)
-            return acc
-          }, []))
-          actions.setSubmitting(false)
-        }}
-        onReset={onClose}
-      >
-        {columns.map(c => {
-          return (
-          <Checkbox
-            key={c.name}
-            disabled={c.disabled}
-            name={c.name}
-            label={
-              typeof c.title === 'string' ?
-                c.title
-                :
-                formatMessage({ id: c.title.props.id, defaultMessage: c.title.props.defaultMessage })
-            }
-            inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }}
-          />
-        )})}
-        <Divider />
-        <div style={{ textAlign: 'right' }}>
-          <Button.Reset data-test='table_setting_cancel_btn'>
-            <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
-          </Button.Reset>
-          <Button.Submit data-test='table_setting_save_btn'>
-            <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
-          </Button.Submit>
-        </div>
-      </Form>
-    </Modal.Content>
-  </Modal>
-)
+const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, open, formatMessage }) => {
+  console.log({ initialValues: columns.reduce((acc, c) => { acc[c.name] = hiddenColumnNames.indexOf(c.name) === -1; return acc }, {})})
+  return (
+    <Modal open={open} centered={false} size="tiny" style={{ width: 300 }}>
+      <Modal.Content>
+        <Form
+          initialValues={columns.reduce((acc, c) => { acc[c.name] = hiddenColumnNames.indexOf(c.name) === -1; return acc }, {})}
+          onSubmit={(values, actions) => {
+            onChange(columns.reduce((acc, c) => {
+              !values[c.name] && acc.push(c.name)
+              return acc
+            }, []))
+            actions.setSubmitting(false)
+          }}
+          onReset={onClose}
+        >
+          {columns.map(c => {
+            return (
+              <Checkbox
+                key={c.name}
+                disabled={c.disabled}
+                name={c.name}
+                label={
+                  typeof c.title === 'string' ?
+                    c.title
+                    :
+                    formatMessage({ id: c.title.props.id, defaultMessage: c.title.props.defaultMessage })
+                }
+                inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }}
+              />
+            )
+          })}
+          <Divider />
+          <div style={{ textAlign: 'right' }}>
+            <Button.Reset data-test='table_setting_cancel_btn'>
+              <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
+            </Button.Reset>
+            <Button.Submit data-test='table_setting_save_btn'>
+              <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
+            </Button.Submit>
+          </div>
+        </Form>
+      </Modal.Content>
+    </Modal>
+  )
+}
 
 
 // const TableGroupRow = props => <TableGroupRow {...props} />
@@ -357,8 +361,6 @@ class _Table extends Component {
     const { onTableReady, columns } = this.props
     const { columnsSettings: { sorting: [s] } } = this.state
     const column = s ? columns.find(c => c.name === s.columnName) : {}
-    
-    console.log('handle ready', this.props.tableName)
 
     onTableReady({
       sortPath: column.sortPath,
@@ -439,7 +441,7 @@ class _Table extends Component {
         >
           <ColumnsSetting
             onClick={() => this.setState({ columnSettingOpen: !columnSettingOpen })}
-            data-test='table_columns_setting_action'/>
+            data-test='table_columns_setting_action' />
           <ColumnsSettingModal
             columns={columnsFiltered}
             open={columnSettingOpen}

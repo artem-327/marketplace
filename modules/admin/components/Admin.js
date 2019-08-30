@@ -5,6 +5,7 @@ import { Container, Grid, Divider } from 'semantic-ui-react'
 import Tabs from './Tabs'
 import { withAuth } from '~/hocs'
 import { FormattedMessage } from 'react-intl'
+import Router from 'next/router'
 
 import DataTable from './DataTable/DataTable'
 import UnitOfMeasureTable from './UnitOfMeasureTable/UnitOfMeasureTable'
@@ -159,7 +160,7 @@ class Admin extends Component {
         {currentAddForm && addForms[currentTab]}
         {currentEditForm && editForms[currentTab]}
         {currentEdit2Form && edit2Forms[currentTab]}
-        {currentAddDwolla && addDwollaForms[currentTab]}
+        {currentAddDwolla && addDwollaForms[currentTab] && Router.push('/dwolla-register/')}
         {tables[currentTab] || <p>This page is still under construction</p>}
       </>
     )
