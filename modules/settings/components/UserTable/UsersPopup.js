@@ -150,20 +150,22 @@ class UsersPopup extends React.Component {
                   ))
                 ) : (
                     <>
-                      { false && (
-                      <FormGroup>
-                        <PhoneNumber
-                          name='phone'
-                          values={values}
-                          setFieldValue={setFieldValue}
-                        />
-                      </FormGroup>)}
+                      {true && (
+                        <FormGroup>
+                          
+                        </FormGroup>
+                      )}
 
                       <FormGroup widths='equal' data-test='settings_users_popup_nameTitle_inp'>
                         <Input
                           type='text'
                           label={formatMessage({ id: 'global.name', defaultMessage: 'Name' })}
                           name='name' />
+                        <PhoneNumber
+                            name='phone'
+                            values={values}
+                            setFieldValue={setFieldValue}
+                          />
                         <Input
                           type='text'
                           label={formatMessage({ id: 'global.jobTitle', defaultMessage: 'Job Title' })}
