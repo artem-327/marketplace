@@ -1,5 +1,8 @@
 import { createAction, createAsyncAction } from 'redux-promise-middleware-actions'
 import * as api from './api'
+import { getAllProductOffers } from '~/modules/inventory/api'
+
+import { getSafe } from '~/utils/functions'
 
 export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async (offer) => {
   const { data } = await api.loadRules(offer.id)
@@ -10,13 +13,47 @@ export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async (offer) =
     offer: {
       id: offer.id,
       pricingTiers: offer.pricingTiers,
-      currency: offer.cost.currency && offer.cost.currency.code,
+      currency: getSafe(() => offer.cost.currency.code, 'USD')
+    }
+  }
+})
+
+
+export const openGlobalBroadcast = createAsyncAction('GLOBAL_BROADCAST_OPEN', async () => {
+  let productOffers = await getAllProductOffers()
+  let data = await api.loadGeneralRules()
+  let pricingTiers = []
+
+  productOffers.forEach(po => {
+    let first = po.pricingTiers[0], last = po.pricingTiers[po.pricingTiers.length - 1]
+    if (first.price > 0 && last.price > 0) {
+      pricingTiers.push({ low: first, high: last })
+    }
+  })
+
+  let min = pricingTiers[0].low, max = pricingTiers[0].high
+
+  pricingTiers.forEach(tier => {
+    if (tier.low.price < min.price && tier.low.price > 0) min = tier.low
+    if (tier.high.price > max.price && tier.high.price > 0) max = tier.high
+  })
+
+
+
+  return {
+    data,
+    id: null,
+    offer: {
+      id: null,
+      pricingTiers: [max, min],
+      currency: getSafe(() => productOffers[0].cost.currency.code, 'USD'),
+
     }
   }
 })
 
 export const saveRules = createAsyncAction('BROADCAST_SAVE', async (id, rules) => {
-  await api.saveRules(id, rules)
+  id ? await api.saveRules(id, rules) : await api.saveGeneralRules(rules)
 })
 
 export const saveTemplate = createAsyncAction('BROADCAST_SAVE_TEMPLATE', payload => api.saveTemplate(payload))

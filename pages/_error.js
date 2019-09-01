@@ -25,7 +25,7 @@ export default class Error extends React.Component {
               <FormattedMessage id="error.apologize" />
             </h1><br />
             <Button size="massive" primary onClick={() => Router.push('/auth/login')} data-test='error_back_btn'>
-              <FormattedMessage id="error.backButtonText" />
+              <FormattedMessage id="error.backButtonText">{text => text}</FormattedMessage>
             </Button>
           </Message>
           <Footer>

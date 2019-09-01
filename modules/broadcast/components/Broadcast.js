@@ -240,6 +240,7 @@ class Broadcast extends Component {
 
     let total = treeData.all(n => n.model.type === 'state').length
 
+    
     // const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
 
     return (

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import get from 'lodash/get'
 import { Header, Menu, Button, Checkbox, Input, Dropdown } from 'semantic-ui-react'
 import * as Actions from '../actions'
+import { openGlobalBroadcast } from '~/modules/broadcast/actions'
 import Router from 'next/router'
 import { debounce } from 'lodash'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
@@ -27,7 +28,7 @@ const textsTable = {
     SearchText: 'Search product catalog by name, number ...'
   },
   'global-broadcast': {
-    BtnAddText: 'Global broadcast',
+    BtnAddText: 'Global Price Book',
     SearchText: 'Search global broadcast by name ...'
   },
   'credit-cards': {
@@ -90,13 +91,15 @@ class TablesHandlers extends Component {
       dwollaAccount,
       openDwollaPopup,
       isCompanyAdmin,
-      dwollaAccBalance
+      dwollaAccBalance,
+      openGlobalBroadcast
     } = this.props
 
     const { filterValue } = this.state
 
     const isDwollaAccountVisible = isCompanyAdmin && dwollaAccount && !dwollaAccount.hasDwollaAccount && currentTab.type === 'bank-accounts'
     const isDwollaBalanceVisible = isCompanyAdmin && dwollaAccount && dwollaAccount.hasDwollaAccount && currentTab.type === 'bank-accounts'
+
 
     return (
       <Menu secondary>
@@ -107,16 +110,18 @@ class TablesHandlers extends Component {
         </Menu.Item>
         {!currentTab.hideHandler &&
           <Menu.Menu position="right">
-            <Menu.Item data-test='settings_table_search_inp' >
-              <Input
-                style={{ width: 340 }}
-                size="large"
-                icon="search"
-                value={filterValue}
-                placeholder={textsTable[currentTab.type].SearchText}
-                onChange={this.handleFilterChange}
-              />
-            </Menu.Item>
+            {!currentTab.hideSearch &&
+              <Menu.Item data-test='settings_table_search_inp' >
+                <Input
+                  style={{ width: 340 }}
+                  size="large"
+                  icon="search"
+                  value={filterValue}
+                  placeholder={textsTable[currentTab.type].SearchText}
+                  onChange={this.handleFilterChange}
+                />
+              </Menu.Item>
+            }
             <Menu.Item>
               {currentTab.type === 'products' && (
                 <Checkbox
@@ -147,7 +152,10 @@ class TablesHandlers extends Component {
                 size="large"
                 style={{ marginLeft: 10 }}
                 primary
-                onClick={() => openPopup()}
+                onClick={() => {
+                  if (currentTab.type === 'global-broadcast') openGlobalBroadcast()
+                  else openPopup()
+                }}
                 data-test='settings_open_popup_btn'
               >
                 Add {textsTable[currentTab.type].BtnAddText}
@@ -184,11 +192,11 @@ const mapStateToProps = (state) => {
     productsFilter: state.settings.productsFilter,
     filterValue: state.settings.filterValue,
     dwollaAccBalance: state.settings.dwollaAccBalance ?
-      state.settings.dwollaAccBalance.balance : {value: '', currency: 'USD'}
+      state.settings.dwollaAccBalance.balance : { value: '', currency: 'USD' }
   }
 }
 
 export default withDatagrid(connect(
   mapStateToProps,
-  Actions
+  { ...Actions, openGlobalBroadcast }
 )(injectIntl(TablesHandlers)))

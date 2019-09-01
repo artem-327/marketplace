@@ -497,3 +497,5 @@ export const reviewRequest = (companyId) => {
 
 
 export const addUnNumber = payload => ({ type: AT.ADMIN_ADD_UN_NUMBER, payload })
+
+export const getCompanyDetails = id => ({ type: AT.ADMIN_GET_COMPANY_DETAILS, payload: api.getCompanyDetails(id) })

@@ -9,7 +9,7 @@ import { Label, Popup, List } from 'semantic-ui-react'
 import { openImportPopup } from '~/modules/settings/actions'
 import { openBroadcast } from '~/modules/broadcast/actions'
 import { applyFilter } from '~/modules/filter/actions'
-import { FormattedNumber, FormattedMessage } from 'react-intl'
+import { FormattedNumber } from 'react-intl'
 
 
 import { FormattedUnit, UnitOfPackaging, ArrayToMultiple, FormattedAssay } from '~/components/formatted-messages'
