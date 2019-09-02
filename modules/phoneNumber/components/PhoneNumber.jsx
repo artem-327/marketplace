@@ -3,7 +3,8 @@ import { string, array, object, bool, func } from "prop-types"
 import { FormGroup, FormField, Dropdown, Input, Grid } from 'semantic-ui-react'
 import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
-// stahnout import { InputMask } from 'react-input-mask'
+//import { InputMask } from 'react-input-mask'
+const InputMask = require("react-input-mask")
 
 const StyledDropdown = styled(Dropdown)`
   min-width: 150px !important;
@@ -53,6 +54,8 @@ export default class PhoneNumber extends Component {
   handleChange = async (fieldName, value) => {
     const { name, setFieldValue } = this.props
 
+    if (fieldName === 'phoneNumber') value = value.replace(/\s+/g, '')
+
     this.setState({ [fieldName]: value })
     const phone = { ...this.state, ...{ [fieldName]: value } }
 
@@ -61,10 +64,6 @@ export default class PhoneNumber extends Component {
 
   render() {
     let {
-      name,
-      dialCodes,
-      label,
-      search,
       phoneCountryCodes,
       intl: { formatMessage }
     } = this.props
@@ -74,29 +73,36 @@ export default class PhoneNumber extends Component {
       phoneNumber,
     } = this.state
 
-    console.log('!!!!!!!! phoneCountryCodes', phoneCountryCodes)
-
     return (
       <FormField>
-        <label><FormattedMessage id='global.phoneNumber' defaultMessage='Phone Number' /></label>
-        <Input
+        <label><FormattedMessage id='global.phone' defaultMessage='Phone' /></label>
+        <InputMask
+          mask="999 999 9999"
+          maskChar=" "
           type='text'
-          label={
-            <StyledDropdown
-              options={phoneCountryCodes}
-              onChange={(e, data) => this.handleChange('phoneCountryCode', data.value)}
-              selection
-              search
-              compact
-              placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+XXX' })}
-              value={phoneCountryCode}
+          value={phoneNumber}
+          onChange={(data) => this.handleChange('phoneNumber', data.target.value)}
+          >
+          {(inputProps) =>
+            <Input
+              {...inputProps}
+              type='text'
+              label={
+                <StyledDropdown
+                  options={phoneCountryCodes}
+                  onChange={(e, data) => this.handleChange('phoneCountryCode', data.value)}
+                  selection
+                  compact
+                  placeholder={formatMessage({ id: 'global.phoneCCC', defaultMessage: '+XXX' })}
+                  value={phoneCountryCode}
+                />
+              }
+              labelPosition='left'
+              placeholder={formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
             />
           }
-          labelPosition='left'
-          onChange={(e, data) => this.handleChange('phoneNumber', data.value)}
-          value={phoneNumber}
-          placeholder={formatMessage({ id: 'global.phoneNumber', defaultMessage: 'Phone Number' })}
-        />
+
+        </InputMask>
       </FormField>
     )
   }
