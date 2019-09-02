@@ -59,7 +59,9 @@ class Navigation extends Component {
           </Dropdown.Menu>
         </DropdownItem>
         {getSafe(() => auth.identity.isCompanyAdmin, false) && <MenuLink to='/settings' data-test='navigation_menu_settings_lnk'>
-          {formatMessage({ id: 'navigation.settings', defaultMessage: 'Settings' })}
+          <>
+            {formatMessage({ id: 'navigation.settings', defaultMessage: 'Settings' })}
+          </>
         </MenuLink>}
         {isAdmin && <MenuLink to='/admin' data-test='navigation_menu_admin_lnk'>
           {formatMessage({ id: 'navigation.admin', defaultMessage: 'Admin' })}
@@ -67,9 +69,6 @@ class Navigation extends Component {
       </> : isAdmin && (
         <>
           <MenuLink to='/admin' data-test='navigation_menu_admin_lnk'> {formatMessage({ id: 'navigation.admin', defaultMessage: 'Admin' })} </MenuLink>
-          {/* <MenuLink to='/system-settings'>{formatMessage({ id: 'navigation.settings', defaultMessage: 'Settings' })}</MenuLink> */}
-          <Settings />
-          <Menu.Item onClick={() => this.props.triggerSystemSettingsModal(true)}>{formatMessage({ id: 'navigation.settings', defaultMessage: 'Settings' })}</Menu.Item>
         </>
       )
     )

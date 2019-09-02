@@ -1076,49 +1076,49 @@ export default function reducer(state = initialState, action) {
       }
     }
 
-    case AT.GET_SETTINGS_PENDING: {
-      return {
-        ...state,
-        systemSettingsLoading: true
-      }
-    }
+    // case AT.GET_SETTINGS_PENDING: {
+    //   return {
+    //     ...state,
+    //     systemSettingsLoading: true
+    //   }
+    // }
 
-    case AT.GET_SETTINGS_FULFILLED: {
-      return {
-        ...state,
-        systemSettings: payload,
-        systemSettingsLoading: false
-      }
-    }
+    // case AT.GET_SETTINGS_FULFILLED: {
+    //   return {
+    //     ...state,
+    //     systemSettings: payload,
+    //     systemSettingsLoading: false
+    //   }
+    // }
 
-    case AT.GET_SETTINGS_REJECTED: {
-      return {
-        ...state,
-        systemSettingsLoading: false
-      }
-    }
+    // case AT.GET_SETTINGS_REJECTED: {
+    //   return {
+    //     ...state,
+    //     systemSettingsLoading: false
+    //   }
+    // }
 
-    case AT.UPDATE_SETTINGS_PENDING: {
-      return {
-        ...state,
-        sysSettingsUpdating: true
-      }
-    }
+    // case AT.UPDATE_SETTINGS_PENDING: {
+    //   return {
+    //     ...state,
+    //     sysSettingsUpdating: true
+    //   }
+    // }
 
-    case AT.UPDATE_SETTINGS_FULFILLED: {
-      return {
-        ...state,
-        systemSettings: payload,
-        sysSettingsUpdating: false
-      }
-    }
+    // case AT.UPDATE_SETTINGS_FULFILLED: {
+    //   return {
+    //     ...state,
+    //     systemSettings: payload,
+    //     sysSettingsUpdating: false
+    //   }
+    // }
 
-    case AT.UPDATE_SETTINGS_REJECTED: {
-      return {
-        ...state,
-        sysSettingsUpdating: false
-      }
-    }
+    // case AT.UPDATE_SETTINGS_REJECTED: {
+    //   return {
+    //     ...state,
+    //     sysSettingsUpdating: false
+    //   }
+    // }
 
     /* TRIGGER_SYSTEM_SETTINGS_MODAL */
 
