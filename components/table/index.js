@@ -70,48 +70,52 @@ const SettingButton = styled(Icon)`
 const ColumnsSetting = ({ onClick }) => (
   <SettingButton onClick={onClick} data-test='table_setting_btn' name="setting" />
 )
-const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, open, formatMessage }) => (
-  <Modal open={open} centered={false} size="tiny" style={{ width: 300 }}>
-    <Modal.Content>
-      <Form
-        initialValues={columns.reduce((acc, c) => { acc[c.name] = hiddenColumnNames.indexOf(c.name) === -1; return acc }, {})}
-        onSubmit={(values, actions) => {
-          onChange(columns.reduce((acc, c) => {
-            !values[c.name] && acc.push(c.name)
-            return acc
-          }, []))
-          actions.setSubmitting(false)
-        }}
-        onReset={onClose}
-      >
-        {columns.map(c => {
-          return (
-          <Checkbox
-            key={c.name}
-            disabled={c.disabled}
-            name={c.name}
-            label={
-              typeof c.title === 'string' ?
-                c.title
-                :
-                formatMessage({ id: c.title.props.id, defaultMessage: c.title.props.defaultMessage })
-            }
-            inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }}
-          />
-        )})}
-        <Divider />
-        <div style={{ textAlign: 'right' }}>
-          <Button.Reset data-test='table_setting_cancel_btn'>
-            <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
-          </Button.Reset>
-          <Button.Submit data-test='table_setting_save_btn'>
-            <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
-          </Button.Submit>
-        </div>
-      </Form>
-    </Modal.Content>
-  </Modal>
-)
+const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, open, formatMessage }) => {
+  return (
+    <Modal open={open} centered={false} size="tiny" style={{ width: 300 }}>
+      <Modal.Content>
+        <Form
+          initialValues={columns.reduce((acc, c) => { acc[c.name] = hiddenColumnNames.indexOf(c.name) === -1; return acc }, {})}
+          onSubmit={(values, actions) => {
+
+            onChange(columns.reduce((acc, c) => {
+              !values[c.name] && acc.push(c.name)
+              return acc
+            }, []))
+            actions.setSubmitting(false)
+          }}
+          onReset={onClose}
+        >
+          {columns.map(c => {
+            return (
+              <Checkbox
+                key={c.name}
+                disabled={c.disabled}
+                name={c.name}
+                label={
+                  typeof c.title === 'string' ?
+                    c.title
+                    :
+                    formatMessage({ id: c.title.props.id, defaultMessage: c.title.props.defaultMessage })
+                }
+                inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }}
+              />
+            )
+          })}
+          <Divider />
+          <div style={{ textAlign: 'right' }}>
+            <Button.Reset data-test='table_setting_cancel_btn'>
+              <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
+            </Button.Reset>
+            <Button.Submit data-test='table_setting_save_btn'>
+              <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
+            </Button.Submit>
+          </div>
+        </Form>
+      </Modal.Content>
+    </Modal>
+  )
+}
 
 
 // const TableGroupRow = props => <TableGroupRow {...props} />
@@ -187,6 +191,7 @@ class _Table extends Component {
     virtual: true,
     sorting: true,
     groupBy: [],
+    defaultHiddenColumns: [],
     onSelectionChange: () => { },
     onScrollToEnd: () => { },
     onTableReady: () => { }
@@ -211,7 +216,6 @@ class _Table extends Component {
 
   componentDidMount() {
     this.loadColumnsSettings()
-
     let table = this.gridWrapper.querySelector('.table-responsive')
     table.addEventListener('scroll', this.handleScroll)
 
@@ -315,8 +319,7 @@ class _Table extends Component {
   }
 
   loadColumnsSettings = () => {
-    const { tableName, columns, rowActions } = this.props
-
+    const { tableName, columns, rowActions, defaultHiddenColumns } = this.props
     // get column names from current table settings
     let colNames = columns.map(column => {
       return column.name
@@ -348,9 +351,17 @@ class _Table extends Component {
         }, this.handleTableReady)
         return
       }
+    } else {
+      this.setState({
+        columnsSettings: {
+          ...this.state.columnsSettings,
+          hiddenColumnNames: defaultHiddenColumns
+        }
+      }, () => {
+        localStorage[tableName] = JSON.stringify(this.state.columnsSettings)
+        this.handleTableReady()
+      })
     }
-
-    this.handleTableReady()
   }
 
   handleTableReady = () => {
@@ -419,7 +430,7 @@ class _Table extends Component {
       ...restProps
     } = this.props
 
-    const { intl: { formatMessage } } = this.props
+    const { intl: { formatMessage }, defaultHiddenColumns } = this.props
 
     const { columnSettingOpen, expandedGroups, columnsSettings, loaded } = this.state
     const grouping = groupBy.map(g => ({ columnName: g }))
@@ -444,7 +455,7 @@ class _Table extends Component {
             columns={columnsFiltered}
             open={columnSettingOpen}
             formatMessage={formatMessage}
-            hiddenColumnNames={columnsSettings.hiddenColumnNames || []}
+            hiddenColumnNames={this.state.columnsSettings.hiddenColumnNames}
             onClose={() => this.setState({ columnSettingOpen: false })}
             onChange={(hiddenColumnNames) => {
               this.handleColumnsSettings({ hiddenColumnNames })
