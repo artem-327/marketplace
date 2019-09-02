@@ -17,6 +17,8 @@ import { beneficialOwner, USA, ownersToPayload } from '~/constants/beneficialOwn
 import { AddressForm } from '~/modules/address-form'
 import { ControllerForm } from '~/components/custom-formik'
 
+import { postNewDwollaAccount } from '~/modules/admin/api'
+
 
 const BiggerTextColumn = styled(GridColumn)`
   font-size: 18px;
@@ -63,8 +65,11 @@ class DwollaRegister extends Component {
     }
   }
 
-  componentDidMount() {
-    const { businessTypes, getBusinessTypes, getBusinessClassifications, businessClassifications } = this.props
+  async componentDidMount() {
+    const { businessTypes, getBusinessTypes, getBusinessClassifications,
+      businessClassifications, getCompanyDetails, companyId } = this.props
+
+    if (companyId) await getCompanyDetails(companyId)
     if (businessTypes.data.length === 0) getBusinessTypes()
     if (businessClassifications.length === 0) getBusinessClassifications()
   }
@@ -124,6 +129,8 @@ class DwollaRegister extends Component {
       value: el.id,
       text: el.name
     })) : []
+
+    console.log({ values })
 
     switch (this.state.step) {
       case 1: {
@@ -534,37 +541,36 @@ class DwollaRegister extends Component {
 
   render() {
     let initialValues = {}
-    const { identity, postDwollaAccount } = this.props
+    const { identity, postDwollaAccount, companyId } = this.props
 
-
-    if (identity) {
+    if (identity && identity.company) {
       const { primaryBranch } = identity.company
 
-      let [firstName, ...lastName] = identity.name.split(' ')
-      
+      let [firstName, ...lastName] = identity.name ? identity.name.split(' ') : getSafe(() => identity.company.name.split(' '))
+
       initialValues = {
 
         firstName,
         lastName: lastName.toString().replace(',', ' '),
         email: identity.email,
-        businessName: identity.company.name,
-        businessType: identity.company.businessType.id,
+        businessName: getSafe(() => identity.company.name),
+        businessType: getSafe(() => identity.company.businessType.id),
         address: {
-          streetAddress: primaryBranch.address.streetAddress,
+          streetAddress: getSafe(() => primaryBranch.address.streetAddress),
           country: JSON.stringify({
-            countryId: primaryBranch.address.country.id,
-            hasProvinces: primaryBranch.address.country.hasProvinces
+            countryId: getSafe(() => primaryBranch.address.country.id),
+            hasProvinces: getSafe(() => primaryBranch.address.country.hasProvinces)
           }),
-          province: primaryBranch.address.province.id,
-          zip: JSON.stringify({
-            id: primaryBranch.address.zip.id,
-            zip: primaryBranch.address.zip.zip
-          }),
-          city: primaryBranch.address.city
+          province: getSafe(() => primaryBranch.address.province.id),
+          zip: getSafe(() => primaryBranch.address.zip.id, false) ? JSON.stringify({
+            id: getSafe(() => primaryBranch.address.zip.id),
+            zip: getSafe(() => primaryBranch.address.zip.zip)
+          }) : null,
+          city: getSafe(() => primaryBranch.address.city)
         },
-        businessClassification: '',
-        industryClassification: '',
-        ein: identity.company.tin,
+        businessClassification: '9ed35a3b-7d6f-11e3-83c8-5404a6144203',
+        industryClassification: '9ed38136-7d6f-11e3-bd75-5404a6144203',
+        ein: getSafe(() => identity.company.tin),
 
         dwollaController: {
           address: {
@@ -610,7 +616,8 @@ class DwollaRegister extends Component {
               delete payload.beneficialOwnersNotApplicable
 
               if (payload.beneficialOwners.length === 0) delete payload.beneficialOwners
-              await postDwollaAccount(payload)
+              if (companyId) await postNewDwollaAccount(payload, companyId)
+              else await postDwollaAccount(payload)
 
               setSubmitting(false)
               this.setState({ step: this.state.step + 1 })

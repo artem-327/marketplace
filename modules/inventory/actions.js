@@ -352,3 +352,5 @@ export function uploadDocuments(isLot, productOfferId, fileIds) {
 }
 
 export const getAutocompleteData = ({ searchUrl }) => ({ type: AT.GET_AUTOCOMPLETE_DATA, payload: api.getAutocompleteData(searchUrl) })
+
+export const getAllProductOffers = () => ({ type: AT.GET_ALL_PRODUCT_OFFERS, payload: api.getAllProductOffers() })

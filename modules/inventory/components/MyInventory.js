@@ -40,7 +40,7 @@ class MyInventory extends Component {
       { name: 'mfgDate', title: <FormattedMessage id='myInventory.mfgDate' defaultMessage='MFG Date'>{(text) => text}</FormattedMessage>, width: 100 },
       { name: 'expDate', title: <FormattedMessage id='myInventory.expDate' defaultMessage='EXP Date'>{(text) => text}</FormattedMessage>, width: 100 },
       { name: 'allocatedPkg', title: <FormattedMessage id='myInventory.allocatedPkg' defaultMessage='Allocated PKG'>{(text) => text}</FormattedMessage>, width: 120 },
-      { name: 'offerExpiration', title: <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Offer EXP'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'offerExpiration', title: <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Offer EXP'>{(text) => text}</FormattedMessage>, width: 100, disabled: true },
     ],
     selectedRows: [],
     pageNumber: 0
@@ -216,7 +216,7 @@ class MyInventory extends Component {
             onSelectionChange={selectedRows => this.setState({ selectedRows })}
             rowActions={[
               { text: formatMessage({ id: 'inventory.edit', defaultMessage: 'Edit Listing' }), callback: (row) => Router.push({ pathname: '/inventory/edit', query: { id: row.id } }) },
-              { text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => { openBroadcast(row) } },
+              { text: formatMessage({ id: 'inventory.broadcast', defaultMessage: 'Price Book' }), callback: (row) => openBroadcast(row) },
               {
                 text: formatMessage({ id: 'inventory.delete', defaultMessage: 'Delete Listing' }), callback: (row) => {
                   confirm(

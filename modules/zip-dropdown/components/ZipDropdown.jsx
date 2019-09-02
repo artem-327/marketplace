@@ -52,6 +52,8 @@ export default class ZipDropdown extends Component {
       label,
       initialZipCodes } = this.props
 
+    console.log({ name })
+
     return (
       <Dropdown
         name={name}

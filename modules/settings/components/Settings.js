@@ -31,9 +31,13 @@ import SystemSettings from '~/components/settings'
 import DwollaAccount from './DwollaAccountComponent'
 import { CompanyForm } from '~/modules/company-form/'
 import { companyDetailsTab } from '../contants'
+import PriceBook from './PriceBook'
+
 import Router from 'next/router'
 
-import { addTab, tabChanged, resetSettings, loadLogo } from '../actions'
+import { addTab, tabChanged, resetSettings, loadLogo, openPopup } from '../actions'
+
+
 import { updateCompany } from '~/modules/auth/actions'
 import { validationSchema } from '~/modules/company-form/constants'
 
@@ -134,7 +138,11 @@ class Settings extends Component {
   }
 
   renderContent = () => {
-    let { action, actionId, currentTab, isOpenPopup, isOpenPopup2, isOpenImportPopup, isDwollaOpenPopup } = this.props
+    const { action, actionId, currentTab,
+      isOpenPopup, isOpenPopup2, isOpenImportPopup,
+      isDwollaOpenPopup } = this.props
+
+
 
     const tables = {
       'company-details': this.companyDetails(),
@@ -142,6 +150,7 @@ class Settings extends Component {
       'branches': <WarehouseTable />,
       'warehouses': <WarehouseTable />,
       'products': <ProductCatalogTable />,
+      'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsTable />,
       'credit-cards': <CreditCardsTable />,
       'delivery-addresses': <DeliveryAddressesTable />,
@@ -158,10 +167,12 @@ class Settings extends Component {
       'branches': <EditWarehousePopup />,
       'warehouses': <EditWarehousePopup />,
       'products': <EditProductPopup />,
+      'global-broadcast': <PriceBook />,
       'bank-accounts': <BankAccountsPopup />,
       'credit-cards': <CreditCardsPopup />,
       'delivery-addresses': <DeliveryAddressesPopup />,
       'logistics': <LogisticsPopup />
+
     }
 
     const popup2Form = {
@@ -181,7 +192,7 @@ class Settings extends Component {
         {isOpenPopup && popupForm[currentTab.type]}
         {isOpenPopup2 && popup2Form[currentTab.type]}
         {isOpenImportPopup && importForm[currentTab.type]}
-        {isDwollaOpenPopup && addDwollaForms[currentTab.type]}
+        {isDwollaOpenPopup && addDwollaForms[currentTab.type] && Router.push('/dwolla-register')}
         {tables[currentTab.type] || <p>This page is still under construction</p>}
       </>
     )

@@ -664,6 +664,7 @@
   "administration.merchants": "Merchants: {merchants}",
   "administration.companyAdministration": "Company Administration - {company}",
   "administration.companyDetail": "Company Detail",
+  "attachments.attachSelected": "Attach Selected Files",
   "merchants.table": "MerchantsTable",
   "merchants.name": "Name",
   "namesSynonyms": "Names and Synonyms",

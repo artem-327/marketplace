@@ -8,6 +8,7 @@ import { Checkbox } from 'semantic-ui-react'
 import { generateToastMarkup } from '~/utils/functions'
 import { withToastManager } from 'react-toast-notifications'
 import { FormattedMessage } from 'react-intl'
+import Router from 'next/router'
 
 import * as Actions from '../../actions'
 
@@ -67,7 +68,11 @@ class CompaniesTable extends Component {
                 datagrid.removeRow(row.id)
               })
             },
-            { text: formatMessage({ id: 'admin.registerDwollaAccount', defaultMessage: 'Register Dwolla Account' }), callback: (row) => openRegisterDwollaAccount(row), hidden: row => row.hasDwollaAccount === 'Yes' },
+            {
+              text: formatMessage({ id: 'admin.registerDwollaAccount', defaultMessage: 'Register Dwolla Account' }), callback: async (row) => {
+                Router.push(`/admin/dwolla-register?companyId=${row.id}`)
+              }, hidden: row => row.hasDwollaAccount === 'Yes'
+            },
             {
               text: <FormattedMessage id='admin.takeOver' defaultMessage='Take-over as Company Admin' />,
               callback: (row) => takeOverCompany(row.id),
@@ -77,13 +82,13 @@ class CompaniesTable extends Component {
               text: <FormattedMessage id='admin.resendWelcomeEmail' defaultMessage='Resend Welcome Email' />,
               callback: async (row) => {
                 const { value } = await resendWelcomeEmail(row.primaryUser.id)
-                
+
                 toastManager.add(generateToastMarkup(
                   null,
                   value.clientMessage
                 ), {
-                  appearance: 'success'
-                })
+                    appearance: 'success'
+                  })
               },
               hidden: row => !row.reviewRequested || !row.primaryUser
             }
