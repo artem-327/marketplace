@@ -417,6 +417,10 @@ class AddInventoryForm extends Component {
     validateForm()
   }, 500)
 
+  attachDocuments = (newDocuments, values, setFieldValue) => {
+    setFieldValue(`additional`, values.additional.concat(newDocuments))
+  }
+
   removeAttachment = async (isLot, documentName, documentId, connectedId, values, setFieldValue) => {
     const { removeAttachment, removeAttachmentLink } = this.props
     await removeAttachmentLink(isLot, connectedId, documentId).then(() => removeAttachment(documentId))
@@ -490,7 +494,7 @@ class AddInventoryForm extends Component {
             <GridHeader as='h3'><FormattedMessage id='addInventory.productOfferDocuments' defaultMessage='Product Offer has these documents' /></GridHeader>
           </GridColumn>
           <GridColumn width={6} textAlign='right'>
-            <AttachmentManager />
+            <AttachmentManager returnSelectedRows={(rows) => this.attachDocuments(rows, values, setFieldValue)} lockSelection={documents.map(doc => doc.id)} />
           </GridColumn>
         </Grid>
         <Table>

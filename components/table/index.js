@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import pt from 'prop-types'
+import { Getter, Plugin } from '@devexpress/dx-react-core'
 import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css'
 import styled, { createGlobalStyle } from 'styled-components'
 import { Segment, Icon, Dropdown, Modal, Divider } from 'semantic-ui-react'
 import { Form, Checkbox, Button } from 'formik-semantic-ui'
 import _ from 'lodash'
 import GroupCell from './GroupCell'
-import { FormattedMessage, injectIntl } from 'react-intl'
+import {FormattedMessage, injectIntl} from 'react-intl'
 
 import {
   SearchState,
@@ -85,31 +86,36 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
           }}
           onReset={onClose}
         >
-          {columns.map(c => {
+          {({ submitForm: submitSettings }) => {
             return (
-              <Checkbox
-                key={c.name}
-                disabled={c.disabled}
-                name={c.name}
-                label={
-                  typeof c.title === 'string' ?
-                    c.title
-                    :
-                    formatMessage({ id: c.title.props.id, defaultMessage: c.title.props.defaultMessage })
-                }
-                inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }}
-              />
+              <>
+                {columns.map(c => {
+                  return (
+                  <Checkbox
+                    key={c.name}
+                    disabled={c.disabled}
+                    name={c.name}
+                    label={
+                      typeof c.title === 'string' ?
+                        c.title
+                        :
+                        formatMessage({ id: c.title.props.id, defaultMessage: c.title.props.defaultMessage })
+                    }
+                    inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }}
+                  />
+                )})}
+                <Divider />
+                <div style={{ textAlign: 'right' }}>
+                  <Button.Reset data-test='table_setting_cancel_btn'>
+                    <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
+                  </Button.Reset>
+                  <Button data-test='table_setting_save_btn' primary onClick={submitSettings} inputProps={{ type: 'button' }}>
+                    <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
+                  </Button>
+                </div>
+              </>
             )
-          })}
-          <Divider />
-          <div style={{ textAlign: 'right' }}>
-            <Button.Reset data-test='table_setting_cancel_btn'>
-              <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
-            </Button.Reset>
-            <Button.Submit data-test='table_setting_save_btn'>
-              <FormattedMessage id='global.save' defaultMessage='Save'>{(text) => text}</FormattedMessage>
-            </Button.Submit>
-          </div>
+          }}
         </Form>
       </Modal.Content>
     </Modal>
@@ -121,15 +127,58 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
 const TableCells = props => <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions' : ''} />
 const GridRoot = props => <Grid.Root {...props} style={{ height: '100%', flex: 1 }} />
 
-const SortLabel = ({ onSort, children, direction }) => (
+const SortLabel = ({column, onSort, children, direction }) => (
   <span
     onClick={onSort}
-    data-test='table_sort_action'
+    data-test={`table_sort_action_${column.name}`}
   >
     {children}
     {(direction && <Icon className="thick" name={direction === 'asc' ? 'sort up' : 'sort down'} />)}
   </span>
 )
+
+class PatchedIntegratedSelection extends React.PureComponent {
+  render() {
+    const { lockSelection, ...restProps } = this.props
+    var allRows = []
+    const rowSelectionEnabled = row => !lockSelection.includes(row.id)
+    return (
+      <Plugin>
+        <Getter
+          name="rows"
+          computed={({ rows }) => {
+            allRows = rows
+            return rows.filter(rowSelectionEnabled)
+          }}
+        />
+        <IntegratedSelection {...restProps} />
+        <Getter
+          name="rows"
+          computed={({ rows }) => {
+            return allRows
+          }}
+        />
+      </Plugin>
+    )
+  }
+};
+
+class PatchedTableSelection extends React.PureComponent {
+  render() {
+    const { lockSelection, ...restProps } = this.props
+    const rowSelectionEnabled = row => !lockSelection.includes(row.id)
+    return (
+      <TableSelection
+        cellComponent={(props) => rowSelectionEnabled(props.tableRow.row) ? (
+          <TableSelection.Cell {...props} />
+        ) : (
+          <Table.StubCell {...props} />
+        )}
+        {...restProps}
+      />
+    )
+  }
+}
 
 const Row = ({ tableRow, selected, onToggle, onClick, ...restProps }) => {
   const rowAction = (e, row) => {
@@ -424,6 +473,7 @@ class _Table extends Component {
       getChildGroups,
       tableName,
       showColumnsWhenGrouped = false,
+      lockSelection,
       ...restProps
     } = this.props
 
@@ -492,7 +542,9 @@ class _Table extends Component {
             {columnReordering && <DragDropProvider />}
 
             {rowSelection && <SelectionState selection={this.state.selection} onSelectionChange={this.handleSelectionChange} />}
-            {rowSelection && <IntegratedSelection />}
+            {rowSelection && lockSelection ? (
+              <PatchedIntegratedSelection lockSelection={lockSelection} />
+            ) : (rowSelection && <IntegratedSelection />)}
 
             <SearchState value={filterValue} />
             <IntegratedFiltering />
@@ -534,7 +586,14 @@ class _Table extends Component {
               />
             )}
 
-            {rowSelection && (
+            {rowSelection && lockSelection ? (
+              <PatchedTableSelection
+                showSelectAll={showSelectAll && !sameGroupSelectionOnly}
+                selectByRowClick={selectByRowClick}
+                lockSelection={lockSelection}
+              />
+            ) : (
+              rowSelection &&
               <TableSelection
                 showSelectAll={showSelectAll && !sameGroupSelectionOnly}
                 selectByRowClick={selectByRowClick}
