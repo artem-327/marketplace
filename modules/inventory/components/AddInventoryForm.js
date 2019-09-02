@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Router from 'next/router'
 import { Form, Input, Checkbox, Radio, Dropdown, Button, TextArea } from 'formik-semantic-ui'
 import { FormattedMessage, injectIntl } from 'react-intl'
-import { Modal, Icon, Segment, Dimmer, Loader, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab, Popup } from 'semantic-ui-react'
+import { Modal, Icon, Segment, Dimmer, Loader, Container, Menu, Header, Divider, Grid, GridRow, GridColumn, Table, TableCell, TableHeaderCell, FormGroup, FormField, Accordion, Message, Label, Tab, Popup, Dropdown as DropdownMenu } from 'semantic-ui-react'
 import styled from 'styled-components'
 import * as val from 'yup'
 import { DateInput } from '~/components/custom-formik'
@@ -11,8 +11,9 @@ import { FieldArray } from 'formik'
 import { debounce } from 'lodash'
 import confirm from '~/src/components/Confirmable/confirm'
 import { AttachmentManager } from '~/modules/attachments'
-import { generateToastMarkup } from '~/utils/functions'
+import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
+import ProdexTable from '~/components/table'
 
 const TopDivider = styled(Divider)`
   padding-bottom: 20px;
@@ -64,6 +65,11 @@ const TableCellMini = styled(TableCell)`
     width: 5%;
     max-width: 5%;
   }
+`
+
+const GridHeader = styled(Header)`
+  padding-top: 10px !important;
+  font-size: 1.142857em !important;
 `
 
 const initValues = {
@@ -203,8 +209,14 @@ const validationScheme = val.object().shape({
       }),
 })
 
-const tab1 = ['inStock', 'product', 'processingTimeDays', 'doesExpire', 'pkgAmount', 'validityDate', 'minimumRequirement', 'minimum', 'splits', 'priceTiers', 'pricingTiers', 'warehouse']
-const tab2 = ['costs', 'lots', 'origin', 'touchedLot', 'manufacturer']
+// validation array
+let tabs = []
+// 1st tab
+tabs.push(['inStock', 'product', 'processingTimeDays', 'doesExpire', 'pkgAmount', 'validityDate', 'minimumRequirement', 'minimum', 'splits', 'priceTiers', 'pricingTiers', 'warehouse'])
+// 2nd tab
+tabs.push(['costs', 'lots', 'origin', 'touchedLot', 'manufacturer'])
+// 3rd tab
+tabs.push([])
 
 class AddInventoryForm extends Component {
 
@@ -216,7 +228,15 @@ class AddInventoryForm extends Component {
     activeTab: 0,
     searchedProducts: [],
     documents: [],
-    openedDocuments: null
+    openedDocuments: null,
+    columns: [
+      { name: 'documentType', title: <FormattedMessage id='addInventory.documents.type' defaultMessage='Document Type'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'documentName', title: <FormattedMessage id='addInventory.documents.name' defaultMessage='Document Name'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'fileType', title: <FormattedMessage id='addInventory.documents.fileType' defaultMessage='File Type'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'expiration', title: <FormattedMessage id='addInventory.documents.expiration' defaultMessage='Expiration'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'info', title: <FormattedMessage id='addInventory.documents.info' defaultMessage='Info'>{(text) => text}</FormattedMessage>, width: 100 },
+      { name: 'lotId', title: <FormattedMessage id='addInventory.documents.lotId' defaultMessage='Lot ID'>{(text) => text}</FormattedMessage>, width: 100 }
+    ]
   }
 
   accClick = (e, titleProps) => {
@@ -324,7 +344,7 @@ class AddInventoryForm extends Component {
     }
   }
 
-  downloadAttachment = async (documentName, documentId) => {
+  prepareLinkToAttachment = async (documentName, documentId) => {
     let downloadedFile = await this.props.downloadAttachment(documentId)
     const mimeType = this.getMimeType(documentName)
 
@@ -333,6 +353,20 @@ class AddInventoryForm extends Component {
     let fileURL = URL.createObjectURL(file)
 
     element.href = fileURL
+    return element
+  }
+
+  viewAttachment = async (documentName, documentId) => {
+    const element = await this.prepareLinkToAttachment(documentName, documentId)
+
+    element.target = '_blank'
+    document.body.appendChild(element) // Required for this to work in FireFox
+    element.click()
+  }
+
+  downloadAttachment = async (documentName, documentId) => {
+    const element = await this.prepareLinkToAttachment(documentName, documentId)
+
     element.download = documentName
     document.body.appendChild(element) // Required for this to work in FireFox
     element.click()
@@ -383,6 +417,10 @@ class AddInventoryForm extends Component {
     validateForm()
   }, 500)
 
+  attachDocuments = (newDocuments, values, setFieldValue) => {
+    setFieldValue(`additional`, values.additional.concat(newDocuments))
+  }
+
   removeAttachment = async (isLot, documentName, documentId, connectedId, values, setFieldValue) => {
     const { removeAttachment, removeAttachmentLink } = this.props
     await removeAttachmentLink(isLot, connectedId, documentId).then(() => removeAttachment(documentId))
@@ -415,10 +453,24 @@ class AddInventoryForm extends Component {
     }
   }
 
-  renderEditDocuments = (values, setFieldValue) => {
-    const { edit, removeAttachment, removeAttachmentLink } = this.props
+  getDocumentRows = (rows, lots) => {
+    return rows.map(row => {
+      const lastDot = row.name.lastIndexOf('.')
+      return {
+        //id: row.id,
+        documentType: getSafe(() => row.documentType.name, null),
+        documentName: row.name.substr(0, lastDot),
+        fileType: row.name.substr(lastDot),
+        expiration: getSafe(() => lots.find(lot => lot.id === row.lotId).expirationDate, (row.documentType.id === 1 ? 'N/A' : '')),
+        info: '',
+        lotId: row.lotId
+      }
+    })
+  }
+
+  renderEditDocuments = (values, setFieldValue, validateForm) => {
+    const { edit, removeAttachment, removeAttachmentLink, intl: { formatMessage } } = this.props
     const { additional, attachments, lots } = values
-    let { openedDocuments } = this.state
     if (typeof attachments === 'undefined' || !edit)
       return false
 
@@ -435,61 +487,70 @@ class AddInventoryForm extends Component {
       return filtered
     }, []))
 
-    if (this.state.openedDocuments === null) {
-      if (documents.length > 0) {
-        this.setState({ openedDocuments: true })
-      } else {
-        this.setState({ openedDocuments: false })
-      }
-    }
-
     return (
       <>
-        {this.state.openedDocuments ? (
-          <Modal open={!!this.state.openedDocuments} onClose={() => this.setState({ openedDocuments: false })}>
-            <Modal.Header><FormattedMessage id='addInventory.productOfferDocuments' defaultMessage='Product Offer has these documents' /></Modal.Header>
-            <Modal.Content>
-              <Modal.Description>
-                <Table>
-                  <Table.Header>
-                    <Table.Row>
-                      <Table.HeaderCell><FormattedMessage id='addInventory.document' defaultMessage='Document' /></Table.HeaderCell>
-                      <Table.HeaderCell><FormattedMessage id='addInventory.type' defaultMessage='Type' /></Table.HeaderCell>
-                      <Table.HeaderCell></Table.HeaderCell>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {documents.map(document => (
-                      <Table.Row key={document.id}>
-                        <Table.Cell>{document.name}</Table.Cell>
-                        <Table.Cell>{document.documentType.name}</Table.Cell>
-                        <Table.Cell width={2} textAlign='right'>
-                          <Icon name='download' size='large' style={{ cursor: 'pointer' }} onClick={() => this.downloadAttachment(document.name, document.id)} data-test='add_inventory_documents_download_btn' />
-                          <Icon name='remove circle' size='large' style={{ cursor: 'pointer' }} onClick={() => this.removeAttachment(
-                            document.lotId ? true : false, // isLot
-                            document.name, // documentName
-                            document.id, // documentId
-                            document.lotId ? document.lotId : this.props.id, // connectedId
-                            values,
-                            setFieldValue
-                          )}
-                            data-test='add_inventory_documents_remove_btn' />
-                        </Table.Cell>
-                      </Table.Row>
-                    ))}
-                  </Table.Body>
-                </Table>
-                <Grid>
-                  <Grid.Row>
-                    <Grid.Column width={3} floated='right'>
-                      <Button color='blue' floated='right' onClick={() => this.setState({ openedDocuments: false })} data-test='add_inventory_documents_ok_btn'><FormattedMessage id='global.ok' defaultMessage='Ok' /></Button>
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
-              </Modal.Description>
-            </Modal.Content>
-          </Modal>
-        ) : null}
+        <Grid>
+          <GridColumn width={10}>
+            <GridHeader as='h3'><FormattedMessage id='addInventory.productOfferDocuments' defaultMessage='Product Offer has these documents' /></GridHeader>
+          </GridColumn>
+          <GridColumn width={6} textAlign='right'>
+            <AttachmentManager returnSelectedRows={(rows) => this.attachDocuments(rows, values, setFieldValue)} lockSelection={documents.map(doc => doc.id)} />
+          </GridColumn>
+        </Grid>
+        <Table>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell width={1}></Table.HeaderCell>
+              <Table.HeaderCell width={3}><FormattedMessage id='addInventory.documents.type' defaultMessage='Document Type' /></Table.HeaderCell>
+              <Table.HeaderCell width={3}><FormattedMessage id='addInventory.documents.name' defaultMessage='Document Name' /></Table.HeaderCell>
+              <Table.HeaderCell width={2}><FormattedMessage id='addInventory.documents.fileType' defaultMessage='File Type' /></Table.HeaderCell>
+              <Table.HeaderCell width={2}><FormattedMessage id='addInventory.documents.expiration' defaultMessage='Expiration' /></Table.HeaderCell>
+              <Table.HeaderCell width={5}></Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {documents.map(document => {
+              const lastDot = document.name.lastIndexOf('.')
+              const canView = ['pdf', 'png', 'jpg', 'svg', 'gif'].includes(document.name.substr(lastDot + 1))
+              return (
+                <Table.Row key={document.id}>
+                  <Table.Cell>
+                    <DropdownMenu icon={<Icon name='ellipsis vertical' size='large' />}>
+                      <DropdownMenu.Menu>
+                        {canView ? (
+                          <DropdownMenu.Item text={formatMessage({ id: 'addInventory.documents.view', defaultMessage: 'View'})} onClick={() => this.viewAttachment(document.name, document.id)} />
+                        ) : null}
+                        <DropdownMenu.Item text={formatMessage({ id: 'global.download', defaultMessage: 'Download'})} onClick={() => this.downloadAttachment(document.name, document.id)} />
+                        <DropdownMenu.Item text={formatMessage({ id: 'global.delete', defaultMessage: 'Delete'})} onClick={() => this.removeAttachment(
+                          document.lotId ? true : false, // isLot
+                          document.name, // documentName
+                          document.id, // documentId
+                          document.lotId ? document.lotId : this.props.id, // connectedId
+                          values,
+                          setFieldValue
+                        )} />
+                      </DropdownMenu.Menu>
+                    </DropdownMenu>
+                  </Table.Cell>
+                  <Table.Cell>{getSafe(() => document.documentType.name, null)}</Table.Cell>
+                  <Table.Cell>{document.name.substr(0, lastDot)}</Table.Cell>
+                  <Table.Cell>{document.name.substr(lastDot)}</Table.Cell>
+                  <Table.Cell>{getSafe(() => values.lots.find(lot => lot.id === document.lotId).expirationDate, (document.documentType.id === 1 ? 'N/A' : ''))}</Table.Cell>
+                  <Table.Cell width={5} textAlign='right'>
+                    {document.linked ? null : (
+                      <Popup content={<FormattedMessage id='addInventory.unlinked'
+                                                        defaultMessage='The file will be attached to Product Offer after you click the Save button' />}
+                             trigger={<Icon name='info circle'
+                                            size='large'
+                                            color='blue' />}
+                      />
+                    )}
+                  </Table.Cell>
+                </Table.Row>
+              )
+            })}
+          </Table.Body>
+        </Table>
       </>
     )
   }
@@ -820,8 +881,6 @@ class AddInventoryForm extends Component {
       activeIndex
     } = this.state
 
-    console.log({ initValues, initialState })
-
     return (
       <div id='page' className='flex stretched'>
         <Dimmer active={loading} inverted>
@@ -836,9 +895,6 @@ class AddInventoryForm extends Component {
                 <FormattedMessage id={this.props.edit ? 'addInventory.editInventory' : 'addInventory.addInventory'}
                   defaultMessage={this.props.edit ? 'EDIT INVENTORY' : 'ADD INVENTORY'} />
               </Header>
-            </Menu.Item>
-            <Menu.Item>
-              <AttachmentManager />
             </Menu.Item>
           </Menu>
         </div>
@@ -902,8 +958,6 @@ class AddInventoryForm extends Component {
           {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
             return (
               <>
-
-                {this.renderEditDocuments(values, setFieldValue)}
                 <Modal open={this.props.poCreated} closeOnDimmerClick={false} size='tiny'>
                   <Modal.Header>
                     <FormattedMessage id={this.props.edit ? 'addInventory.editDone' : 'addInventory.addDone'}
@@ -933,7 +987,7 @@ class AddInventoryForm extends Component {
                           validateForm()
                             .then(r => {
                               // stop when errors found
-                              if (Object.keys(r).length && Object.keys(r).some(r => tab2.includes(r))) {
+                              if (Object.keys(r).length && Object.keys(r).some(r => tabs[this.state.activeTab].includes(r))) {
                                 submitForm() // show errors
                                 return false
                               }
@@ -1312,7 +1366,8 @@ class AddInventoryForm extends Component {
                                         `attachments[${values.attachments && values.attachments.length ? values.attachments.length : 0}]`,
                                         {
                                           id: files.id,
-                                          name: files.name
+                                          name: files.name,
+                                          documentType: files.documentType
                                         }
                                       )}
                                       data-test='new_inventory_attachments_drop'
@@ -1366,7 +1421,7 @@ class AddInventoryForm extends Component {
                           validateForm()
                             .then(r => {
                               // stop when errors found
-                              if (Object.keys(r).length && Object.keys(r).some(r => tab1.includes(r))) {
+                              if (Object.keys(r).length && Object.keys(r).some(r => tabs[this.state.activeTab].includes(r))) {
                                 submitForm() // show errors
                                 return false
                               }
@@ -1581,7 +1636,8 @@ class AddInventoryForm extends Component {
                                                   `lots[${index}].attachments[${values.lots[index].attachments && values.lots[index].attachments.length ? values.lots[index].attachments.length : 0}]`,
                                                   {
                                                     id: files.id,
-                                                    name: files.name
+                                                    name: files.name,
+                                                    documentType: files.documentType
                                                   }
                                                 )}
                                                 data-test={`add_inventory_lots_${index}_attachments`}
@@ -1735,37 +1791,75 @@ class AddInventoryForm extends Component {
                                 </GridColumn>
                               </Grid>
 
+                            </GridColumn>
+
+                            <GridColumn computer={5} tablet={5} mobile={16}>
+                              {this.renderProductDetails(values, validateForm)}
+                            </GridColumn>
+                          </Grid>
+                        </Tab.Pane>
+                      )
+                    },
+                    {
+                      menuItem: (
+                        <Menu.Item key='productDocuments'
+                                   onClick={() => {
+                                     validateForm()
+                                       .then(r => {
+                                         // stop when errors found
+                                         if (Object.keys(r).length && Object.keys(r).some(r => tabs[this.state.activeTab].includes(r))) {
+                                           submitForm() // show errors
+                                           return false
+                                         }
+
+                                         // if validation is correct - switch tabs
+                                         this.switchTab(2, values, setFieldValue)
+                                       })
+                                       .catch(e => {
+                                         console.log('CATCH', e)
+                                       })
+                                   }}
+                                   data-test='new_inventory_productDocuments'>
+                          {formatMessage({ id: 'addInventory.productDocuments', defaultMessage: 'DOCUMENTS' })}
+                        </Menu.Item>
+                      ),
+                      pane: (
+                        <Tab.Pane style={{ padding: '0 32px' }}>
+                          <Grid style={{ marginTop: '2rem' }}>
+                            <GridColumn computer={11} tablet={11} mobile={16}>
+                              {this.renderEditDocuments(values, setFieldValue, validateForm)}
                               <Header as='h3'><FormattedMessage id='addInventory.additionalDocs' defaultMessage='ADDITIONAL DOCUMENTS' /></Header>
                               <Grid>
                                 <GridColumn width={10}>
                                   <UploadLot {...this.props}
-                                    attachments={values.additional}
-                                    name='additional'
-                                    type={values.additionalType}
-                                    unspecifiedTypes={['Unspecified']}
-                                    fileMaxSize={20}
-                                    onChange={(files) => setFieldValue(
-                                      `additional[${values.additional && values.additional.length ? values.additional.length : 0}]`,
-                                      {
-                                        id: files.id,
-                                        name: files.name
-                                      }
-                                    )}
-                                    data-test='add_inventory_additional_attachments'
-                                    emptyContent={(
-                                      <label>
-                                        <FormattedMessage id='addInventory.dragDropAdditional' defaultMessage={'Drop additional documents here'} />
-                                        <br />
-                                        <FormattedMessage id='addInventory.dragDropOr' defaultMessage='or select from computer' />
-                                      </label>
-                                    )}
-                                    uploadedContent={(
-                                      <label>
-                                        <FormattedMessage id='addInventory.dragDropAdditional' defaultMessage={'Drop additional documents here'} />
-                                        <br />
-                                        <FormattedMessage id='addInventory.dragDropOr' defaultMessage={'or select from computer'} />
-                                      </label>
-                                    )}
+                                             attachments={values.additional}
+                                             name='additional'
+                                             type={values.additionalType}
+                                             unspecifiedTypes={['Unspecified']}
+                                             fileMaxSize={20}
+                                             onChange={(files) => setFieldValue(
+                                               `additional[${values.additional && values.additional.length ? values.additional.length : 0}]`,
+                                               {
+                                                 id: files.id,
+                                                 name: files.name,
+                                                 documentType: files.documentType
+                                               }
+                                             )}
+                                             data-test='add_inventory_additional_attachments'
+                                             emptyContent={(
+                                               <label>
+                                                 <FormattedMessage id='addInventory.dragDropAdditional' defaultMessage={'Drop additional documents here'} />
+                                                 <br />
+                                                 <FormattedMessage id='addInventory.dragDropOr' defaultMessage='or select from computer' />
+                                               </label>
+                                             )}
+                                             uploadedContent={(
+                                               <label>
+                                                 <FormattedMessage id='addInventory.dragDropAdditional' defaultMessage={'Drop additional documents here'} />
+                                                 <br />
+                                                 <FormattedMessage id='addInventory.dragDropOr' defaultMessage={'or select from computer'} />
+                                               </label>
+                                             )}
                                   />
                                 </GridColumn>
                                 <GridColumn width={5}>
@@ -1777,11 +1871,9 @@ class AddInventoryForm extends Component {
                                   </FormField>
                                 </GridColumn>
                               </Grid>
-
                             </GridColumn>
-
                             <GridColumn computer={5} tablet={5} mobile={16}>
-                              {this.renderProductDetails(values, validateForm)}
+                              {this.renderProductDetails(values, validateForm, setFieldValue)}
                             </GridColumn>
                           </Grid>
                         </Tab.Pane>

@@ -507,7 +507,13 @@ export default function reducer(state = initialState, action) {
         unNumbersFiltered: copy
       }
     }
-
+    case AT.ADMIN_GET_COMPANY_DETAILS_FULFILLED: {
+      return {
+        ...state,
+        company: payload
+      }
+    }
+    
     default: {
       for (let groupName in config) {
         if (typeof config[groupName].api !== 'undefined') {
@@ -541,6 +547,7 @@ export default function reducer(state = initialState, action) {
         }
 
       }
+
 
 
       return state

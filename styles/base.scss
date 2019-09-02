@@ -32,7 +32,7 @@ body {
   z-index: 601;
 }
 
-.bootstrapiso .table-responsive {
+body > *:not(.modals) .bootstrapiso .table-responsive {
   width: calc(100% + 2.2857143em);
   margin-right: -2.2857143em;
   border: 0 none;
@@ -76,6 +76,10 @@ i.icon:not(.dropdown):not(.times):not(.sort):not(.unlink):not(.thick) {
 
 i.icon.thick {
   font-family: 'icons' !important;
+}
+
+i.icon.clickable:hover {
+  color: #4183C4;
 }
 
 .product-details {
@@ -455,8 +459,6 @@ div.inventory {
   overflow-y: auto;
   padding-left: 2.2857143rem;
   padding-right: 2.2857143rem;
-  
-  
 
   .ui.secondary.pointing.menu:not(.vertical) {
     border-bottom: 1px solid #d8d8d8;
