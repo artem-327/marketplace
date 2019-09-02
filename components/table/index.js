@@ -118,10 +118,10 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
 const TableCells = props => <Table.Cell {...props} className={props.column.name === '__actions' ? 'actions' : ''} />
 const GridRoot = props => <Grid.Root {...props} style={{ height: '100%', flex: 1 }} />
 
-const SortLabel = ({ onSort, children, direction }) => (
+const SortLabel = ({column, onSort, children, direction }) => (
   <span
     onClick={onSort}
-    data-test='table_sort_action'
+    data-test={`table_sort_action_${column.name}`}
   >
     {children}
     {(direction && <Icon className="thick" name={direction === 'asc' ? 'sort up' : 'sort down'} />)}
