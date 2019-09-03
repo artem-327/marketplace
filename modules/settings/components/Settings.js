@@ -157,7 +157,7 @@ class Settings extends Component {
       'logistics': <LogisticsTable />,
       'system-settings': (
         <Segment basic padded='very'>
-          <SystemSettings asModal={false} inputsInGroup={3} />
+          <SystemSettings asModal={false} inputsInGroup={3} role='company' />
         </Segment>
       )
     }

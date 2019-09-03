@@ -483,7 +483,7 @@ const mapStateToProps = ({ admin, zip }) => {
     // AddressSuggestMailingBranchOptions: AddressSuggestOptionsMailingBranch,
     // AddressSuggestMailingBranchData: admin.addressSearchMailingBranch,
     zip,
-    config: admin.config[admin.currentTab]
+    config: admin.config[admin.currentTab.name]
   }
 }
 

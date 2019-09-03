@@ -950,9 +950,9 @@ export const deleteLogisticsAccount = id => ({ type: AT.DELETE_LOGISTICS_ACCOUNT
 
 export const resetSettings = () => ({ type: AT.RESET_SETTINGS, payload: true })
 
-export const getSettings = role => ({ type: AT.GET_SETTINGS, payload: api.getSettings(role) })
+// export const getSettings = role => ({ type: AT.GET_SETTINGS, payload: api.getSettings(role) })
 
-export const updateSettings = (role, payload) => ({ type: AT.UPDATE_SETTINGS, payload: api.updateSettings(role, payload) })
+// export const updateSettings = (role, payload) => ({ type: AT.UPDATE_SETTINGS, payload: api.updateSettings(role, payload) })
 
 export const triggerSystemSettingsModal = (force = null) => ({ type: AT.TRIGGER_SYSTEM_SETTINGS_MODAL, payload: force })
 

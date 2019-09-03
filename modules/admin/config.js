@@ -346,5 +346,8 @@ export const config = {
         apiCall: '/prodex/api/market-segments/id/',
       }
     }
+  },
+  'Admin Settings': {
+    hideHandler: true,
   }
 }

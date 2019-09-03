@@ -62,7 +62,7 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = (state, {datagrid}) => {
-  let cfg = state.admin.config[state.admin.currentTab]
+  let cfg = state.admin.config[state.admin.currentTab.name]
   return {
     config: cfg,
     rows: datagrid.rows,

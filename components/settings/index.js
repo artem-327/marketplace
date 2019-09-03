@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { number, bool } from 'prop-types'
+import { number, bool, oneOf } from 'prop-types'
 import { connect } from 'react-redux'
 import { Formik } from 'formik'
 import { FormGroup, Form, Modal, Button, Popup } from 'semantic-ui-react'
@@ -8,11 +8,13 @@ import { withToastManager } from 'react-toast-notifications'
 
 
 import { getSafe, generateToastMarkup } from '~/utils/functions'
-import { getRole } from './constants'
-import { getSettings, updateSettings } from '~/modules/settings/actions'
+// import { getRole } from './constants'
+// import { getSettings, updateSettings } from '~/modules/settings/actions'
 import { triggerSystemSettingsModal } from '~/modules/settings/actions'
 import { FormattedMessage } from 'react-intl'
 import styled from 'styled-components'
+
+import api from '~/modules/settings/api'
 
 const RightAlignedDiv = styled.div`
   text-align: right !important;
@@ -22,14 +24,16 @@ const RightAlignedDiv = styled.div`
 class Settings extends Component {
 
   state = {
-    role: null
+    role: null,
+    systemSettings: [],
+    loading: true
   }
 
-  componentDidMount() {
-    let { getSettings, accessLevel } = this.props
-    let role = getRole(accessLevel)
-    this.setState({ role })
-    getSettings(role)
+  async componentDidMount() {
+    let { role } = this.props
+
+    let systemSettings = await api.getSettings(role)
+    this.setState({ loading: false, systemSettings })
   }
 
   wrapToGroup = (children, i) => (
@@ -39,7 +43,9 @@ class Settings extends Component {
   )
 
   handleSubmit = async (values, { setSubmitting }) => {
-    const { systemSettings, updateSettings, toastManager, triggerSystemSettingsModal, sysSettingsUpdating } = this.props
+    const { toastManager, triggerSystemSettingsModal } = this.props
+    let { systemSettings } = this.state
+    this.setState({ loading: true })
     let payload = {
       settings: []
     }
@@ -51,7 +57,7 @@ class Settings extends Component {
       })
 
     try {
-      await updateSettings(this.state.role, payload)
+      await api.updateSettings(this.props.role, payload)
 
       toastManager.add(generateToastMarkup(
         <FormattedMessage id='notifications.systemSettingsUpdated.header' defaultMessage='System settings updated' />,
@@ -61,14 +67,20 @@ class Settings extends Component {
       triggerSystemSettingsModal(false)
 
     } catch (e) { console.error(e) }
-    finally { setSubmitting(false) }
+    finally {
+      setSubmitting(false)
+      this.setState({ loading: false })
+    }
   }
 
   getButtons = allDisabled => (
     <RightAlignedDiv>
-      <Button basic onClick={() => this.props.triggerSystemSettingsModal(false)}>
+      {this.props.asModal && <Button basic onClick={(e) => {
+        e.stopPropagation()
+        this.props.triggerSystemSettingsModal(false)
+      }}>
         <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{text => text}</FormattedMessage>
-      </Button>
+      </Button>}
       <Popup trigger={
         <Button loading={this.props.sysSettingsUpdating} onClick={() => !allDisabled && this.submit()} primary disabled={allDisabled}>
           <FormattedMessage id='global.save' defaultMessage='Save'>{text => text}</FormattedMessage>
@@ -80,7 +92,8 @@ class Settings extends Component {
   )
 
   render() {
-    let { systemSettings, systemSettingsLoading, inputsInGroup, open, asModal } = this.props
+    let { inputsInGroup, open, asModal } = this.props
+    let { systemSettings, loading } = this.state
     let initialValues = {}
 
     systemSettings.forEach(el => initialValues[el.name] = el.value)
@@ -105,7 +118,7 @@ class Settings extends Component {
           this.submit = submitForm
 
           return (
-            <Form loading={systemSettingsLoading}>
+            <Form loading={loading}>
               {markup.map((el) => el)}
               {children}
             </Form>
@@ -140,7 +153,8 @@ class Settings extends Component {
 
 Settings.propTypes = {
   inputsInGroup: number,
-  asModal: bool
+  asModal: bool,
+  role: oneOf(['user', 'admin', 'company']).isRequired
 }
 
 Settings.defaultProps = {
@@ -151,13 +165,13 @@ Settings.defaultProps = {
 
 export default connect(
   ({ auth, settings }) => ({
-    systemSettings: settings.systemSettings,
-    settingsLoading: settings.systemSettingsLoading,
+    // systemSettings: settings.systemSettings,
+    // settingsLoading: settings.systemSettingsLoading,
     open: settings.systemSettingsModalOpen,
-    sysSettingsUpdating: settings.sysSettingsUpdating,
+    // sysSettingsUpdating: settings.sysSettingsUpdating,
     accessLevel: {
       isAdmin: getSafe(() => auth.identity.isAdmin, null),
       isCompanyAdmin: getSafe(() => auth.identity.isCompanyAdmin, null)
     }
   }),
-  { getSettings, updateSettings, triggerSystemSettingsModal })(withToastManager(Settings))
+  { triggerSystemSettingsModal })(withToastManager(Settings))

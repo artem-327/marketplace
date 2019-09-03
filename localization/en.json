@@ -83,6 +83,7 @@
   "navigation.salesOrders": "Sales Orders",
   "navigation.purchaseOrders": "Purchase Orders",
   "navigation.settings": "Settings",
+  "navigation.userSettings": "User Settings",
   "navigation.admin": "Admin",
   "dwolla.paymentPoweredBy": "Echo Global Chemical Exchange payment gateway is powered by:",
   "dwolla.confirmAcc": "Confirm Dwolla Account Admin Information",
