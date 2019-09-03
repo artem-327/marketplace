@@ -5,6 +5,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import styled from 'styled-components'
 //import { InputMask } from 'react-input-mask'
 const InputMask = require("react-input-mask")
+import get from 'lodash/get'
 
 const StyledDropdown = styled(Dropdown)`
   min-width: 150px !important;
@@ -12,14 +13,6 @@ const StyledDropdown = styled(Dropdown)`
     font-weight: normal;
   }
 `
-
-function deref(obj, s) {
-  var i = 0
-  s = s.split('.')
-  while (obj && i < s.length)
-    obj = obj[s[i++]]
-  return obj
-}
 
 function splitPhoneNumber(phone, phoneCountryCodes) {
   let i = phoneCountryCodes.findIndex(d => (
@@ -44,7 +37,7 @@ export default class PhoneNumber extends Component {
   }
 
   componentDidMount = async () => {
-    let phone = deref(this.props.values, this.props.name) || ''
+    let phone = get(this.props.values, this.props.name, '')
     if (!this.props.phoneCountryCodes.length) await this.props.getCountryCodes()
 
     phone = splitPhoneNumber(phone, this.props.phoneCountryCodes)

@@ -92,14 +92,14 @@ class TablesHandlers extends Component {
       openDwollaPopup,
       isCompanyAdmin,
       dwollaAccBalance,
-      openGlobalBroadcast
+      openGlobalBroadcast,
+      isAddButtonVisible
     } = this.props
 
     const { filterValue } = this.state
 
     const isDwollaAccountVisible = isCompanyAdmin && dwollaAccount && !dwollaAccount.hasDwollaAccount && currentTab.type === 'bank-accounts'
     const isDwollaBalanceVisible = isCompanyAdmin && dwollaAccount && dwollaAccount.hasDwollaAccount && currentTab.type === 'bank-accounts'
-
 
     return (
       <Menu secondary>
@@ -148,18 +148,20 @@ class TablesHandlers extends Component {
                   <FormattedNumber style='currency' currency={dwollaAccBalance.currency} value={dwollaAccBalance.value} />
                 </>
               )}
-              <Button
-                size="large"
-                style={{ marginLeft: 10 }}
-                primary
-                onClick={() => {
-                  if (currentTab.type === 'global-broadcast') openGlobalBroadcast()
-                  else openPopup()
-                }}
-                data-test='settings_open_popup_btn'
-              >
-                Add {textsTable[currentTab.type].BtnAddText}
-              </Button>
+              {isAddButtonVisible && (
+                <Button
+                  size="large"
+                  style={{marginLeft: 10}}
+                  primary
+                  onClick={() => {
+                    if (currentTab.type === 'global-broadcast') openGlobalBroadcast()
+                    else openPopup()
+                  }}
+                  data-test='settings_open_popup_btn'
+                >
+                  Add {textsTable[currentTab.type].BtnAddText}
+                </Button>
+              )}
               {currentTab.type === 'products' && (
                 <Button
                   size="large"
@@ -182,6 +184,7 @@ class TablesHandlers extends Component {
 const mapStateToProps = (state) => {
   const company = get(state, 'auth.identity.company', null)
   const isCompanyAdmin = get(state, 'auth.identity.isCompanyAdmin', null)
+  const bankAccounts = get(state, 'settings.bankAccountsRows', [])
 
   return {
     dwollaAccount: company,
@@ -192,7 +195,10 @@ const mapStateToProps = (state) => {
     productsFilter: state.settings.productsFilter,
     filterValue: state.settings.filterValue,
     dwollaAccBalance: state.settings.dwollaAccBalance ?
-      state.settings.dwollaAccBalance.balance : { value: '', currency: 'USD' }
+      state.settings.dwollaAccBalance.balance : { value: '', currency: 'USD' },
+    isAddButtonVisible: state.settings.currentTab.type === 'bank-accounts' ?
+      isCompanyAdmin && company && company.hasDwollaAccount && state.settings.currentTab.type === 'bank-accounts'
+      && bankAccounts.find(x => x.status === 'verified') : true,
   }
 }
 
