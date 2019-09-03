@@ -64,7 +64,6 @@ class TablesHandlers extends Component {
     // if (currentTab === 'Manufactures' || currentTab === 'CAS Products' || currentTab === 'Companies') var onChange = this.debouncedOnChange
     // else var onChange = this.handleChange
 
-    console.log({ currentTab })
 
     return (
       <Menu secondary>

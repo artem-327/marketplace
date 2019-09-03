@@ -71,7 +71,8 @@ export const initialState = {
   logisticsProvidersFetching: false,
   dwollaAccBalance: null,
   businessClassifications: [],
-  dwollaSaving: false
+  dwollaSaving: false,
+  countriesLoading: false
 }
 
 export default function reducer(state = initialState, action) {
@@ -783,10 +784,24 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_GET_ADDRESSES_SEARCH_PENDING: {
+      return {
+        ...state,
+        loading: true
+      }
+    }
+
     case AT.SETTINGS_GET_ADDRESSES_SEARCH_FULFILLED: {
       return {
         ...state,
         addressSearch: action.payload,
+        loading: false
+      }
+    }
+
+    case AT.SETTINGS_GET_ADDRESSES_SEARCH_REJECTED: {
+      return {
+        ...state,
         loading: false
       }
     }
@@ -811,10 +826,18 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.SETTINGS_GET_COUNTRIES_PENDING: {
+      return {
+        ...state,
+        countriesLoading: true
+      }
+    }
+
     case AT.SETTINGS_GET_COUNTRIES_FULFILLED: {
       return {
         ...state,
         countries: payload,
+        countriesLoading: false,
         countriesDropDown: payload.map(c => ({
           text: c.name,
           value: c.id,
@@ -822,6 +845,15 @@ export default function reducer(state = initialState, action) {
         }))
       }
     }
+
+    case AT.SETTINGS_GET_COUNTRIES_REJECTED: {
+      return {
+        ...state,
+        countriesLoading: false
+      }
+    }
+
+
 
     case AT.SETTINGS_GET_PROVINCES_FULFILLED: {
       return {
