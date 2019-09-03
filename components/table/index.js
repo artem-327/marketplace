@@ -3,7 +3,7 @@ import pt from 'prop-types'
 import { Getter, Plugin } from '@devexpress/dx-react-core'
 import '@devexpress/dx-react-grid-bootstrap4/dist/dx-react-grid-bootstrap4.css'
 import styled, { createGlobalStyle } from 'styled-components'
-import { Segment, Icon, Dropdown, Modal, Divider } from 'semantic-ui-react'
+import { Segment, Icon, Dropdown, Modal, Divider, Grid as GridSemantic } from 'semantic-ui-react'
 import { Form, Checkbox, Button } from 'formik-semantic-ui'
 import _ from 'lodash'
 import GroupCell from './GroupCell'
@@ -71,9 +71,39 @@ const SettingButton = styled(Icon)`
 const ColumnsSetting = ({ onClick }) => (
   <SettingButton onClick={onClick} data-test='table_setting_btn' name="setting" />
 )
-const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, open, formatMessage }) => {
+
+const getSettingColumn = (columns, formatMessage, columnWidth) => {
   return (
-    <Modal open={open} centered={false} size="tiny" style={{ width: 300 }}>
+    <GridSemantic.Column width={columnWidth}>
+      {columns.map(c => {
+        return (
+          <Checkbox
+            key={c.name}
+            disabled={c.disabled}
+            name={c.name}
+            label={
+              typeof c.title === 'string' ?
+                c.title
+                :
+                formatMessage({ id: c.title.props.id, defaultMessage: c.title.props.defaultMessage })
+            }
+            inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }}
+          />
+        )})}
+    </GridSemantic.Column>
+  )
+}
+
+const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, open, formatMessage }) => {
+  const GridColumns = columns.length > 12 ? 2 : 1
+  const modalWidth = GridColumns === 1 ? 300 : 500
+  const columnWidth = GridColumns === 1 ? 16 : 8
+
+  const column1 = columns.slice()
+  const column2 = GridColumns === 1 ? column1 : column1.splice(Math.ceil(column1.length / 2))
+
+  return (
+    <Modal open={open} centered={false} style={{ width: modalWidth }}>
       <Modal.Content>
         <Form
           initialValues={columns.reduce((acc, c) => { acc[c.name] = hiddenColumnNames.indexOf(c.name) === -1; return acc }, {})}
@@ -89,21 +119,12 @@ const ColumnsSettingModal = ({ columns, hiddenColumnNames, onChange, onClose, op
           {({ submitForm: submitSettings }) => {
             return (
               <>
-                {columns.map(c => {
-                  return (
-                  <Checkbox
-                    key={c.name}
-                    disabled={c.disabled}
-                    name={c.name}
-                    label={
-                      typeof c.title === 'string' ?
-                        c.title
-                        :
-                        formatMessage({ id: c.title.props.id, defaultMessage: c.title.props.defaultMessage })
-                    }
-                    inputProps={{ 'data-test': `table_setting_${c.name}_chckb` }}
-                  />
-                )})}
+                <div className="scrolling content">
+                  <GridSemantic padded>
+                    {getSettingColumn(column1, formatMessage, columnWidth)}
+                    {GridColumns === 2 && (getSettingColumn(column2, formatMessage, columnWidth))}
+                  </GridSemantic>
+                </div>
                 <Divider />
                 <div style={{ textAlign: 'right' }}>
                   <Button.Reset data-test='table_setting_cancel_btn'>
