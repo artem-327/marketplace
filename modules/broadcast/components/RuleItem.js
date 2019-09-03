@@ -14,7 +14,7 @@ const RuleItem = (props) => {
     offer,
     item: { model: { name, rule } }
   } = props
-
+  
   const handleChange = (propertyName, e) => {
     e.preventDefault()
     e.stopPropagation()

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import pt from 'prop-types'
+import pt, { node, bool, object } from 'prop-types'
 import { connect } from 'react-redux'
 import _ from 'lodash'
 import * as Actions from '../actions'
@@ -24,6 +24,11 @@ import { errorMessages } from '~/constants/yupValidation'
 
 const BottomUnpaddedRow = styled(GridRow)`
   padding-bottom: 0px !important;
+`
+
+const RightAlignedDiv = styled.div`
+  text-align: right;
+  margin-top: 20px;
 `
 
 const templateInitialValues = {
@@ -229,213 +234,260 @@ class Broadcast extends Component {
     ), { appearance: 'success' })
   }
 
-  render() {
-    const {
-      open, loading, treeData,
-      filter, closeBroadcast, saveRules,
-      id, mode, switchMode,
-      saveTemplate, toastManager, offer,
-      templates, updateTemplate, deleteTemplate,
-      intl: { formatMessage } } = this.props
+
+  getContent = () => {
+    let {
+      offer, templates, updateTemplate, mode,
+      saveTemplate, filter, loading, intl: { formatMessage },
+      treeData, toastManager, additionalGridProps,
+      asModal
+    } = this.props
+
 
     let total = treeData.all(n => n.model.type === 'state').length
 
-    
+
+    return (
+      <Grid className='flex stretched' {...additionalGridProps}>
+        <Grid.Row divided className='flex stretched'>
+          <Grid.Column width={6}>
+            <div>
+              <Message info size='large' style={{ padding: '6px 15px' }}>
+                <Popup trigger={
+                  <Icon name='info circle' />
+                } content={<FormattedMessage id='broadcast.broadcastingTooltip' defaultMessage='Shows number of company branches your are currently broadcasting to out of the total number of company branches.' />} />
+                <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Broadcasting To' />: <strong>{this.state.broadcastingTo}/{total}</strong>
+              </Message>
+              <Form>
+                <Form.Field>
+                  <label><FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' /></label>
+                  <Dropdown
+                    data-test='broadcast_modal_category_drpdn'
+                    selection
+                    name='category'
+                    value={filter.category}
+                    onChange={this.handleFilterChange}
+                    options={[
+                      { key: 'region', text: 'By Region', value: 'region' },
+                      { key: 'branch', text: 'By Company', value: 'branch' },
+                    ]}
+                  />
+                </Form.Field>
+                <Form.Field data-test='broadcast_modal_search_inp' >
+                  <label><FormattedMessage id='broadcast.filter' defaultMessage='Filter' /></label>
+                  <Input
+                    name='search' icon='search'
+                    iconPosition='left'
+                    value={this.state.filterSearch} onChange={this.handleSearchChange} />
+                </Form.Field>
+              </Form>
+              <Divider />
+              <Formik
+                initialValues={templateInitialValues}
+                validationSchema={templateValidation()}
+                validateOnChange={true}
+                enableReinitialize
+                onSubmit={async (values, { setSubmitting }) => {
+                  let payload = {
+                    mappedBroadcastRules: {
+                      ...treeData.model
+                    },
+                    ...values
+                  }
+
+
+                  if (templates.some((el) => el.name === values.name)) {
+                    let { name, id } = this.state.selectedTemplate
+
+                    await confirm(
+                      formatMessage({ id: 'broadcast.overwriteTemplate.header' }, { name }),
+                      formatMessage({ id: 'broadcast.overwriteTemplate.content' })
+                    )
+
+                    await updateTemplate(id, payload)
+                  }
+                  else {
+                    let { value } = await saveTemplate(payload)
+                    this.setState({ selectedTemplate: value })
+                  }
+
+
+                  let status = values.name === name ? 'Updated' : 'Saved'
+
+                  toastManager.add(generateToastMarkup(
+                    <FormattedMessage id={`notifications.template${status}.header`} />,
+                    <FormattedMessage id={`notifications.template${status}.content`} values={{ name: getSafe(() => values.name, name) }} />
+                  ), { appearance: 'success' })
+
+
+
+                  setSubmitting(false)
+                }}
+                render={props =>
+                  <Form onSubmit={props.handleSubmit}>
+                    <Grid>
+                      <BottomUnpaddedRow>
+                        <GridColumn computer={16}>
+                          <Header as='h4'><FormattedMessage id='broadcast.templates' defaultMessage='Templates' /></Header>
+                        </GridColumn>
+                      </BottomUnpaddedRow>
+
+                      <GridRow>
+                        <GridColumn computer={11}>
+                          <Dropdown
+                            data-test='broadcast_modal_template_drpdn'
+                            fluid selection
+                            value={this.state.selectedTemplate.id}
+                            onChange={(e, data) => {
+                              this.onTemplateSelected(e, data, props.setFieldValue)
+                              this.setState({ selectedTemplate: { id: data.value, name: data.options.find((el) => el.value === data.value).text } })
+                            }}
+                            options={templates.map((template) => ({
+                              key: template.id,
+                              text: template.name,
+                              value: template.id
+                            }))
+                            } />
+                        </GridColumn>
+                        <GridColumn computer={5}>
+                          <Button
+                            data-test='broadcast_modal_delete_btn'
+                            onClick={() => this.handleTemplateDelete(props.setFieldValue)}
+                            disabled={!this.state.selectedTemplate}
+                            loading={this.props.templateDeleting}
+                            type='button' basic fluid negative>
+                            {formatMessage({ id: 'global.delete', defaultMessage: 'Delete' })}
+                          </Button>
+                        </GridColumn>
+                      </GridRow>
+
+                      <GridRow>
+                        <GridColumn computer={11}>
+                          <FormikInput
+                            inputProps={{
+                              fluid: true,
+                              placeholder: formatMessage({ id: 'broadcast.templateName', defaultMessage: 'Template Name' }),
+                              'data-test': 'broadcast_modal_templateName_inp'
+                            }} name='name' />
+                        </GridColumn>
+
+                        <GridColumn computer={5}>
+                          <FormikButton.Submit loading={this.props.templateSaving} fluid positive basic data-test='broadcast_modal_submit_btn'>
+                            {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+                          </FormikButton.Submit>
+                        </GridColumn>
+                      </GridRow>
+                    </Grid>
+                  </Form>
+                }>
+              </Formik>
+            </div>
+          </Grid.Column>
+          <Grid.Column width={10} stretched>
+            <Rule.Root>
+              <Rule.Header>
+                <Rule.RowContent>
+                  <FormattedMessage id='broadcast.regionSelect' defaultMessage='Region select' />
+                </Rule.RowContent>
+                <Rule.Toggle>
+                  <FormattedMessage id='broadcast.include' defaultMessage='Include' />
+                </Rule.Toggle>
+                <Rule.Toggle>
+                  <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />
+                </Rule.Toggle>
+                <Rule.Toggle>
+                  <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB high/low' />
+                </Rule.Toggle>
+              </Rule.Header>
+              <Rule.Content>
+                <RuleItem
+                  item={this.state.tree}
+                  mode={mode}
+                  offer={offer}
+                  onRowClick={this.handleRowClick}
+                  onPriceChange={this.handlePriceChange}
+                  onChange={this.handleChange}
+                  data-test='broadcast_modal_rule_action'
+                />
+                {loading && <Dimmer active inverted><Loader active /></Dimmer>}
+              </Rule.Content>
+            </Rule.Root>
+            {!asModal &&
+              <RightAlignedDiv>
+                {this.getButtons()}
+              </RightAlignedDiv>
+            }
+          </Grid.Column>
+        </Grid.Row>
+      </Grid >
+    )
+  }
+
+  getButtons = () => {
+    const {
+      saveRules, treeData,
+      id, toastManager,
+      intl: { formatMessage }, closeBroadcast,
+      asModal
+    } = this.props
+
+    return (
+      <>
+        {asModal &&
+          <Button onClick={() => closeBroadcast()} data-test='broadcast_modal_close_btn' >
+            {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
+          </Button >
+        }
+        <Button primary
+          onClick={async () => {
+            await saveRules(id, treeData.model)
+            toastManager.add(generateToastMarkup(
+              'Saved successfully!',
+              'New broadcast rules have been saved.'
+            ), {
+                appearance: 'success'
+              })
+          }}
+          data-test='broadcast_modal_save_btn'>
+          {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
+        </Button>
+      </>
+    )
+  }
+
+  render() {
+    const { open, closeBroadcast, asModal, isPrepared } = this.props
+
+
     // const broadcastToBranches = treeData && `${treeData.all(n => n.model.type === 'state' && (n.all(_n => _n.model.broadcast === 1).length > 0 || n.getPath().filter(_n => _n.model.broadcast === 1).length > 0)).length}/${treeData.all(n => n.model.type === 'state').length}`
+    if (!asModal) {
+      if (!isPrepared) return null
+      return this.getContent()
+    }
 
     return (
       <Modal open={open} onClose={closeBroadcast} centered={false} size='large'>
         <Modal.Header><FormattedMessage id='inventory.broadcast' defaultMessage='Price Book' /></Modal.Header>
         <Modal.Content scrolling style={{ minHeight: '70vh' }} className='flex stretched'>
-          <Grid className='flex stretched'>
-            <Grid.Row divided className='flex stretched'>
-              <Grid.Column width={6}>
-                <div>
-                  <Message info size='large' style={{ padding: '6px 15px' }}>
-                    <Popup trigger={
-                      <Icon name='info circle' />
-                    } content={<FormattedMessage id='broadcast.broadcastingTooltip' defaultMessage='Shows number of company branches your are currently broadcasting to out of the total number of company branches.' />} />
-                    <FormattedMessage id='broadcast.broadcastingTo' defaultMessage='Broadcasting To' />: <strong>{this.state.broadcastingTo}/{total}</strong>
-                  </Message>
-                  <Form>
-                    <Form.Field>
-                      <label><FormattedMessage id='broadcast.categoryFilter' defaultMessage='Category filter' /></label>
-                      <Dropdown
-                        data-test='broadcast_modal_category_drpdn'
-                        selection
-                        name='category'
-                        value={filter.category}
-                        onChange={this.handleFilterChange}
-                        options={[
-                          { key: 'region', text: 'By Region', value: 'region' },
-                          { key: 'branch', text: 'By Company', value: 'branch' },
-                        ]}
-                      />
-                    </Form.Field>
-                    <Form.Field data-test='broadcast_modal_search_inp' >
-                      <label><FormattedMessage id='broadcast.filter' defaultMessage='Filter' /></label>
-                      <Input
-                        name='search' icon='search'
-                        iconPosition='left'
-                        value={this.state.filterSearch} onChange={this.handleSearchChange} />
-                    </Form.Field>
-                  </Form>
-                  <Divider />
-                  <Formik
-                    initialValues={templateInitialValues}
-                    validationSchema={templateValidation()}
-                    validateOnChange={true}
-                    enableReinitialize
-                    onSubmit={async (values, { setSubmitting }) => {
-                      let payload = {
-                        mappedBroadcastRules: {
-                          ...treeData.model
-                        },
-                        ...values
-                      }
-
-
-                      if (templates.some((el) => el.name === values.name)) {
-                        let { name, id } = this.state.selectedTemplate
-
-                        await confirm(
-                          formatMessage({ id: 'broadcast.overwriteTemplate.header' }, { name }),
-                          formatMessage({ id: 'broadcast.overwriteTemplate.content' })
-                        )
-
-                        await updateTemplate(id, payload)
-                      }
-                      else {
-                        let { value } = await saveTemplate(payload)
-                        this.setState({ selectedTemplate: value })
-                      }
-
-
-                      let status = values.name === name ? 'Updated' : 'Saved'
-
-                      toastManager.add(generateToastMarkup(
-                        <FormattedMessage id={`notifications.template${status}.header`} />,
-                        <FormattedMessage id={`notifications.template${status}.content`} values={{ name: getSafe(() => values.name, name) }} />
-                      ), { appearance: 'success' })
-
-
-
-                      setSubmitting(false)
-                    }}
-                    render={props =>
-                      <Form onSubmit={props.handleSubmit}>
-                        <Grid>
-                          <BottomUnpaddedRow>
-                            <GridColumn computer={16}>
-                              <Header as='h4'><FormattedMessage id='broadcast.templates' defaultMessage='Templates' /></Header>
-                            </GridColumn>
-                          </BottomUnpaddedRow>
-
-                          <GridRow>
-                            <GridColumn computer={11}>
-                              <Dropdown
-                                data-test='broadcast_modal_template_drpdn'
-                                fluid selection
-                                value={this.state.selectedTemplate.id}
-                                onChange={(e, data) => {
-                                  this.onTemplateSelected(e, data, props.setFieldValue)
-                                  this.setState({ selectedTemplate: { id: data.value, name: data.options.find((el) => el.value === data.value).text } })
-                                }}
-                                options={templates.map((template) => ({
-                                  key: template.id,
-                                  text: template.name,
-                                  value: template.id
-                                }))
-                                } />
-                            </GridColumn>
-                            <GridColumn computer={5}>
-                              <Button
-                                data-test='broadcast_modal_delete_btn'
-                                onClick={() => this.handleTemplateDelete(props.setFieldValue)}
-                                disabled={!this.state.selectedTemplate}
-                                loading={this.props.templateDeleting}
-                                type='button' basic fluid negative>
-                                {formatMessage({ id: 'global.delete', defaultMessage: 'Delete' })}
-                              </Button>
-                            </GridColumn>
-                          </GridRow>
-
-                          <GridRow>
-                            <GridColumn computer={11}>
-                              <FormikInput
-                                inputProps={{
-                                  fluid: true,
-                                  placeholder: formatMessage({ id: 'broadcast.templateName', defaultMessage: 'Template Name' }),
-                                  'data-test': 'broadcast_modal_templateName_inp'
-                                }} name='name' />
-                            </GridColumn>
-
-                            <GridColumn computer={5}>
-                              <FormikButton.Submit loading={this.props.templateSaving} fluid positive basic data-test='broadcast_modal_submit_btn'>
-                                {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
-                              </FormikButton.Submit>
-                            </GridColumn>
-                          </GridRow>
-                        </Grid>
-                      </Form>
-                    }>
-                  </Formik>
-                </div>
-              </Grid.Column>
-              <Grid.Column width={10} stretched>
-                <Rule.Root>
-                  <Rule.Header>
-                    <Rule.RowContent>
-                      <FormattedMessage id='broadcast.regionSelect' defaultMessage='Region select' />
-                    </Rule.RowContent>
-                    <Rule.Toggle>
-                      <FormattedMessage id='broadcast.include' defaultMessage='Include' />
-                    </Rule.Toggle>
-                    <Rule.Toggle>
-                      <FormattedMessage id='broadcast.markUpDown' defaultMessage='Mark-up/down' />
-                    </Rule.Toggle>
-                    <Rule.Toggle>
-                      <FormattedMessage id='broadcast.fobHiLo' defaultMessage='FOB high/low' />
-                    </Rule.Toggle>
-                  </Rule.Header>
-                  <Rule.Content>
-                    <RuleItem
-                      item={this.state.tree}
-                      mode={mode}
-                      offer={offer}
-                      onRowClick={this.handleRowClick}
-                      onPriceChange={this.handlePriceChange}
-                      onChange={this.handleChange}
-                      data-test='broadcast_modal_rule_action'
-                    />
-                    {loading && <Dimmer active inverted><Loader active /></Dimmer>}
-                  </Rule.Content>
-                </Rule.Root>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
+          {this.getContent()}
         </Modal.Content>
         <Modal.Actions>
-          <Button onClick={() => closeBroadcast()} data-test='broadcast_modal_close_btn'>
-            {formatMessage({ id: 'global.cancel', defaultMessage: 'Cancel' })}
-          </Button>
-          <Button primary
-            onClick={async () => {
-              await saveRules(id, treeData.model)
-              toastManager.add(generateToastMarkup(
-                'Saved successfully!',
-                'New broadcast rules have been saved.'
-              ), {
-                  appearance: 'success'
-                })
-            }}
-            data-test='broadcast_modal_save_btn'>
-            {formatMessage({ id: 'global.save', defaultMessage: 'Save' })}
-          </Button>
+          {this.getButtons()}
         </Modal.Actions>
       </Modal >
     )
   }
+}
+
+
+Broadcast.propTypes = {
+  asModal: bool,
+  additionalGridProps: object
+}
+
+Broadcast.defaultProps = {
+  asModal: true,
+  additionalGridProps: {}
 }
 
 export default injectIntl(withToastManager(connect(({ broadcast: { data, filter, ...rest } }) => {

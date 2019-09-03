@@ -19,7 +19,7 @@ export const openBroadcast = createAsyncAction('BROADCAST_OPEN', async (offer) =
 })
 
 
-export const openGlobalBroadcast = createAsyncAction('GLOBAL_BROADCAST_OPEN', async () => {
+export const initGlobalBroadcast = createAsyncAction('INIT_GLOBAL_BROADCAST', async () => {
   let productOffers = await getAllProductOffers()
   let data = await api.loadGeneralRules()
   let pricingTiers = []
@@ -37,8 +37,6 @@ export const openGlobalBroadcast = createAsyncAction('GLOBAL_BROADCAST_OPEN', as
     if (tier.low.price < min.price && tier.low.price > 0) min = tier.low
     if (tier.high.price > max.price && tier.high.price > 0) max = tier.high
   })
-
-
 
   return {
     data,

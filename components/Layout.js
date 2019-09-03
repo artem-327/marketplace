@@ -136,7 +136,6 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = state => {
-  console.log('takeover', getSafe(() => !!state.auth.identity.company.id, false))
   return {
     auth: state.auth,
     profile: state.profile,
