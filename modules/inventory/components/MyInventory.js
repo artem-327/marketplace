@@ -13,6 +13,11 @@ import cn from 'classnames'
 
 import ProductImportPopup from '~/modules/settings/components/ProductCatalogTable/ProductImportPopup'
 
+const defaultHiddenColumns = [
+  'minOrderQuantity', 'splits', 'condition', 'grade', 'origin', 'form', 'assay',
+  'mfgDate', 'expDate', 'allocatedPkg', 'offerExpiration', 'lotNumber', 'quantity'
+]
+
 class MyInventory extends Component {
   state = {
     columns: [
@@ -39,12 +44,14 @@ class MyInventory extends Component {
       { name: 'assay', title: <FormattedMessage id='myInventory.assay' defaultMessage='Assay'>{(text) => text}</FormattedMessage>, width: 100 },
       { name: 'mfgDate', title: <FormattedMessage id='myInventory.mfgDate' defaultMessage='MFG Date'>{(text) => text}</FormattedMessage>, width: 100 },
       { name: 'expDate', title: <FormattedMessage id='myInventory.expDate' defaultMessage='EXP Date'>{(text) => text}</FormattedMessage>, width: 100 },
-      { name: 'allocatedPkg', title: <FormattedMessage id='myInventory.allocatedPkg' defaultMessage='Allocated PKG'>{(text) => text}</FormattedMessage>, width: 120 },
-      { name: 'offerExpiration', title: <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Offer EXP'>{(text) => text}</FormattedMessage>, width: 100, disabled: true },
+      { name: 'allocatedPkg',  title: <FormattedMessage id='myInventory.allocatedPkg' defaultMessage='Allocated PKG'>{(text) => text}</FormattedMessage>, width: 120 },
+      { name: 'offerExpiration', title: <FormattedMessage id='myInventory.offerExpiration' defaultMessage='Offer EXP'>{(text) => text}</FormattedMessage>, width: 100 },
     ],
     selectedRows: [],
     pageNumber: 0
   }
+
+  
 
   filterInventory = async (filter) => {
     let productIds = []
@@ -189,6 +196,7 @@ class MyInventory extends Component {
         <div class='flex stretched' style={{ padding: '10px 32px' }}>
 
           <ProdexTable
+            defaultHiddenColumns={defaultHiddenColumns}
             {...datagrid.tableProps}
             tableName='my_inventory_grid'
             columns={columns}

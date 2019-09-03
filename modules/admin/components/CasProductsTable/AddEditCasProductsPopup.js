@@ -234,7 +234,7 @@ const mapDispatchToProps = {
 }
 
 const mapStateToProps = state => {
-  let cfg = state.admin.config[state.admin.currentTab]
+  let cfg = state.admin.config[state.admin.currentTab.name]
   return {
     config: cfg,
     currentTab: state.admin.currentTab,

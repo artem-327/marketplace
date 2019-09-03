@@ -3,7 +3,7 @@ import {
   openBroadcast, closeBroadcast, updateFilter,
   saveRules, switchMode, saveTemplate,
   getTemplates, getTemplate, updateTemplate,
-  deleteTemplate, openGlobalBroadcast
+  deleteTemplate, initGlobalBroadcast
 } from './actions'
 
 const initialState = {
@@ -164,17 +164,16 @@ export default typeToReducer({
     ...state,
     templateDeleting: false
   }),
-  [openGlobalBroadcast.pending]: (state) => ({
+  [initGlobalBroadcast.pending]: (state) => ({
     ...state,
-    open: true,
     loading: true
   }),
-  [openGlobalBroadcast.fulfilled]: (state, { payload }) => ({
+  [initGlobalBroadcast.fulfilled]: (state, { payload }) => ({
     ...state,
     ...payload,
     loading: false
   }),
-  [openGlobalBroadcast.rejected]: (state) => ({
+  [initGlobalBroadcast.rejected]: (state) => ({
     ...state,
     loading: false
   })

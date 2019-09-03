@@ -52,8 +52,6 @@ export default class ZipDropdown extends Component {
       label,
       initialZipCodes } = this.props
 
-    console.log({ name })
-
     return (
       <Dropdown
         name={name}
@@ -66,6 +64,7 @@ export default class ZipDropdown extends Component {
             this.props.onSearchChange(e, data)
             this.debouncedRef(e, data)
           },
+          onFocus: (e) => e.target.autocomplete = null,
           loading,
           selection,
           search,

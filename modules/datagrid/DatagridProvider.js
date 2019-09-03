@@ -170,7 +170,6 @@ export class DatagridProvider extends Component {
   }
 
   onTableReady = () => {
-    console.log('ready in datagrid')
     this.setState({ ready: true })
     this.loadData()
   }

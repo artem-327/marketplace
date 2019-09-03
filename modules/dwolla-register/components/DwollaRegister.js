@@ -52,14 +52,12 @@ const RightAlignedDiv = styled.div`
 
 const numberOfSteps = 7
 
-
-//  TODO - react-intl and add Controller Form to settings - register dwolla acc
-
 class DwollaRegister extends Component {
 
   state = {
     step: 1,
     beneficialOwnersCount: 1,
+    submitting: false,
     initialFormValues: {
       beneficialOwners: [beneficialOwner],
     }
@@ -227,7 +225,7 @@ class DwollaRegister extends Component {
 
                   <RightAlignedDiv>
 
-                    <Button onClick={() => this.setState({ step: this.state.step - 1 })}>
+                    <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
                       <FormattedMessage id='global.back' defaultMessage='Back'>{text => text}</FormattedMessage>
                     </Button>
 
@@ -283,7 +281,7 @@ class DwollaRegister extends Component {
                       <GridColumn>
                         <RightAlignedDiv>
 
-                          <Button onClick={() => this.setState({ step: this.state.step - 1 })}>
+                          <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
                             <FormattedMessage id='global.back' defaultMessage='Back'>{text => text}</FormattedMessage>
                           </Button>
 
@@ -324,7 +322,7 @@ class DwollaRegister extends Component {
 
                     <RightAlignedDiv>
 
-                      <Button onClick={() => this.setState({ step: this.state.step - 1 })}>
+                      <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
                         <FormattedMessage id='global.back' defaultMessage='Back'>{text => text}</FormattedMessage>
                       </Button>
 
@@ -392,7 +390,7 @@ class DwollaRegister extends Component {
                 <GridRow>
                   <GridColumn>
                     <RightAlignedDiv>
-                      <Button onClick={() => this.setState({ step: this.state.step - 1 })}>
+                      <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
                         <FormattedMessage id='global.back' defaultMessage='Back'>{text => text}</FormattedMessage>
                       </Button>
 
@@ -416,7 +414,7 @@ class DwollaRegister extends Component {
           <GridRow>
             <GridColumn computer={11} />
             <GridColumn computer={5}>
-              <Segment padded>
+              <Segment loading={this.state.submitting} padded>
                 <Grid>
                   <GridRow>
                     <GridColumn>
@@ -461,7 +459,7 @@ class DwollaRegister extends Component {
                   <GridRow>
                     <GridColumn>
                       <RightAlignedDiv>
-                        <Button onClick={() => this.setState({ step: this.state.step - 1 })}>
+                        <Button type='button' onClick={() => this.setState({ step: this.state.step - 1 })}>
                           <FormattedMessage id='global.back' defaultMessage='Back'>{text => text}</FormattedMessage>
                         </Button>
 
@@ -578,7 +576,7 @@ class DwollaRegister extends Component {
             city: '',
             country: USA,
             zip: '',
-            province: 3
+            province: ''
           },
           dateOfBirth: '',
           firstName: '',
@@ -596,7 +594,9 @@ class DwollaRegister extends Component {
       <Wrapper>
         <Container>
           <Formik
-            onSubmit={async (values, { setSubmitting }) => {
+            onSubmit={async (values) => {
+              this.setState({ submitting: true })
+
               let payload = {
                 ...values,
                 beneficialOwners: ownersToPayload(values.beneficialOwners),
@@ -614,19 +614,22 @@ class DwollaRegister extends Component {
               delete payload.dwollaController.address
               delete payload.acceptance
               delete payload.beneficialOwnersNotApplicable
+              try {
+                if (payload.beneficialOwners.length === 0) delete payload.beneficialOwners
+                if (companyId) await postNewDwollaAccount(payload, companyId)
+                else await postDwollaAccount(payload)
+                this.setState({ step: this.state.step + 1 })
+              }
+              catch { }
+              finally { this.setState({ submitting: false }) }
 
-              if (payload.beneficialOwners.length === 0) delete payload.beneficialOwners
-              if (companyId) await postNewDwollaAccount(payload, companyId)
-              else await postDwollaAccount(payload)
-
-              setSubmitting(false)
-              this.setState({ step: this.state.step + 1 })
             }}
             enableReinitialize
             initialValues={initialValues}
             validationSchema={this.getValidationSchema()}
             render={(formikProps) => {
-
+              if (!formikProps.isSubmitting) formikProps.setSubmitting(true)
+              console.log('isSubmitting', formikProps.isSubmitting)
               return (
                 <Form>
                   <Grid verticalAlign={this.state.step === 1 ? 'middle' : 'top'} padded='very' centered>

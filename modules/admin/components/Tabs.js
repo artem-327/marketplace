@@ -13,8 +13,8 @@ function Tabs(props) {
         <Menu.Item
           name={tab.name.toUpperCase()}
           key={tab.id}
-          onClick={() => handleActiveTab(tab.name)}
-          active={currentTab === tab.name}
+          onClick={() => handleActiveTab(tab)}
+          active={currentTab.name === tab.name}
           data-test={`tabs_menu_item_${tab.id}`}
         />
       ))}

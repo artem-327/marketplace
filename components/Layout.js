@@ -93,12 +93,19 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth,
               {getSafe(() => auth.identity.isAdmin, false) && takeover &&
                 <Dropdown.Item as={Menu.Item} onClick={() => takeOverCompanyFinish()} data-test='navigation_menu_user_return_to_admin_drpdn'>{formatMessage({ id: 'global.returnToAdmin', defaultMessage: 'Return To Admin' })}</Dropdown.Item>
               }
-              {getSafe(() => !auth.identity.isAdmin && !auth.identity.isCompanyAdmin, false) && (
+              {/* {getSafe(() => !auth.identity.isAdmin && !auth.identity.isCompanyAdmin, false) && (
                 <Menu.Item onClick={() => triggerSystemSettingsModal(true)}>
                   {formatMessage({ id: 'settings.systemSettings', defaultMessage: 'System Settings' })}
+
                 </Menu.Item>
-              )}
-              <Settings />
+              )} */}
+
+              {!getSafe(() => auth.identity.isAdmin, false) || takeover && <Menu.Item onClick={() => triggerSystemSettingsModal(true)} data-test='navigation_menu_settings_lnk'>
+                <>
+                  {formatMessage({ id: 'navigation.userSettings', defaultMessage: 'User Settings' })}
+                  <Settings role='user' />
+                </>
+              </Menu.Item>}
               <Dropdown.Item as={MenuLink} to='/auth/logout' data-test='navigation_menu_user_logout_drpdn'>{formatMessage({ id: 'global.logout', defaultMessage: 'Logout' })}</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
@@ -130,6 +137,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = state => {
   return {
+    auth: state.auth,
     profile: state.profile,
     cartItems: getSafe(() => state.cart.cart.cartItems.length, 0),
     takeover: getSafe(() => !!state.auth.identity.company.id, false)

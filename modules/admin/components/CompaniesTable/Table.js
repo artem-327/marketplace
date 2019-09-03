@@ -101,7 +101,7 @@ class CompaniesTable extends Component {
 
 const mapStateToProps = ({ admin }, { datagrid }) => {
   return {
-    columns: admin.config[admin.currentTab].display.columns,
+    columns: admin.config[admin.currentTab.name].display.columns,
     companyListDataRequest: admin.companyListDataRequest,
     filterValue: admin.filterValue,
     currentTab: admin.currentTab,

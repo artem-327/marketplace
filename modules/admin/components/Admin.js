@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import TablesHandlers from './TablesHandlers'
-import { Container, Grid, Divider } from 'semantic-ui-react'
+import { Container, Grid, Segment } from 'semantic-ui-react'
 import Tabs from './Tabs'
 import { withAuth } from '~/hocs'
 import { FormattedMessage } from 'react-intl'
@@ -29,6 +29,8 @@ import CompaniesDwollaForm from './CompaniesDwolla/FormPopup'
 import { getSafe } from '~/utils/functions'
 
 import { DatagridProvider } from '~/modules/datagrid'
+import Settings from '~/components/settings'
+
 
 const tables = {
   'Units of Measure': <UnitOfMeasureTable />,
@@ -40,7 +42,12 @@ const tables = {
   'CAS Products': <CasProductsTable />,
   'Companies': <CompaniesTable />,
   'Document Types': <DataTable />,
-  'Market Segments': <DataTable />
+  'Market Segments': <DataTable />,
+  'Admin Settings': (
+    <Segment basic padded='very'>
+      <Settings inputsInGroup={3} asModal={false} role='admin' />
+    </Segment>
+  )
 }
 
 const datagridConfig = {
@@ -120,7 +127,7 @@ const editForms = {
   'CAS Products': <AddEditCasProductsPopup />,
   'Companies': <CompaniesForm />,
   'Document Types': <EditPopup1Parameter />,
-  'Market Segments': <EditPopup1Parameter />
+  'Market Segments': <EditPopup1Parameter />,
 }
 
 const edit2Forms = {
@@ -157,11 +164,11 @@ class Admin extends Component {
 
     return (
       <>
-        {currentAddForm && addForms[currentTab]}
-        {currentEditForm && editForms[currentTab]}
-        {currentEdit2Form && edit2Forms[currentTab]}
-        {currentAddDwolla && addDwollaForms[currentTab] && Router.push('/dwolla-register/')}
-        {tables[currentTab] || <p>This page is still under construction</p>}
+        {currentAddForm && addForms[currentTab.name]}
+        {currentEditForm && editForms[currentTab.name]}
+        {currentEdit2Form && edit2Forms[currentTab.name]}
+        {currentAddDwolla && addDwollaForms[currentTab.name] && Router.push('/dwolla-register/')}
+        {tables[currentTab.name] || <p>This page is still under construction</p>}
       </>
     )
   }
@@ -169,7 +176,7 @@ class Admin extends Component {
   getApiConfig = () => {
     const { currentTab } = this.props
 
-    return datagridConfig[currentTab]
+    return datagridConfig[currentTab.name]
   }
 
   render() {

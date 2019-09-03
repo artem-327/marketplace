@@ -1,19 +1,26 @@
 import React, { Component } from 'react'
-import { openGlobalBroadcast } from '~/modules/broadcast/actions'
+import { initGlobalBroadcast } from '~/modules/broadcast/actions'
 import { connect } from 'react-redux'
 import { Broadcast } from '~/modules/broadcast'
-
-
+import { Segment } from 'semantic-ui-react'
 
 class PriceBook extends Component {
+  state = { loading: true }
+
   async componentDidMount() {
-    await this.props.openGlobalBroadcast()
+    await this.props.initGlobalBroadcast()
+    this.setState({ loading: false })
   }
   render() {
-    return <Broadcast />
+    return (
+      <Segment loading={this.state.loading} padded='very' basic>
+        <Broadcast additionalGridProps={{ celled: true }} isPrepared={!this.state.loading} asModal={false} />
+      </Segment>
+    )
+
   }
 }
 
 
 
-export default connect(null, { openGlobalBroadcast })(PriceBook)
+export default connect(null, { initGlobalBroadcast })(PriceBook)

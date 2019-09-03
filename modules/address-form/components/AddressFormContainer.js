@@ -11,13 +11,13 @@ function mapStateToProps({ settings }) {
   let addressDatalistOptions = settings.addressSearch.map((a) => (
     a.streetAddress + ', ' + a.city + ', ' + a.zip.zip + ', ' + a.country.name + (a.province ? ', ' + a.province.name : '')
   ))
- 
+
   return {
     countries,
+    countriesLoading: settings.countriesLoading,
     addressDatalistOptions,
     addressDatalistData: settings.addressSearch,
-    
-
+    loading: settings.loading
   }
 }
 

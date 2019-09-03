@@ -61,7 +61,7 @@ export default class AddressForm extends Component {
 
     try {
       let { address } = this.getValues()
-      
+
       if (countries.length === 0) this.props.getCountries()
       if (address.zip) addZip(JSON.parse(address.zip))
       let { countryId, hasProvinces } = JSON.parse(getSafe(() => address.country, { countryId: null, hasProvinces: null }))
@@ -78,9 +78,7 @@ export default class AddressForm extends Component {
 
     let fields = this.asignPrefix()
 
-
     let i = addressDatalistOptions.indexOf(value)
-
     if (i >= 0 && setFieldValue) {
       let suggest = this.props.addressDatalistData[i]
       let { hasProvinces } = suggest.country
@@ -94,7 +92,7 @@ export default class AddressForm extends Component {
       setFieldValue(fields.streetAddress, suggest.streetAddress)
       setFieldValue(fields.city, suggest.city)
       setFieldValue(fields.country, JSON.stringify({ countryId: suggest.country.id, hasProvinces }))
-      setFieldValue(fields.zip, suggest.zip && suggest.zip.zip)
+      setFieldValue(fields.zip, suggest.zip && JSON.stringify({ id: suggest.zip.id, zip: suggest.zip.zip }))
       setFieldValue(fields.province, suggest.province ? suggest.province.id : '')
     }
     else {
@@ -104,7 +102,7 @@ export default class AddressForm extends Component {
         countryId: getSafe(() => JSON.parse(newValues.address.country).countryId),
         provinceId: getSafe(() => newValues.address.province),
         streetAddress: getSafe(() => newValues.address.streetAddress),
-        zip: newValues.address.zip
+        zip: JSON.parse(newValues.address.zip).zip
       }
 
       if (Object.entries(body).length === 0) return
@@ -136,6 +134,7 @@ export default class AddressForm extends Component {
 
 
     // TODO check wheter this works for array...
+
     if (value instanceof Array) return value[this.props.index]
     else return value
 
@@ -152,7 +151,8 @@ export default class AddressForm extends Component {
       initialZipCodes, displayHeader,
       values, datalistName,
       additionalCountryInputProps,
-      countryPopup
+      countryPopup, countriesLoading,
+      loading
     } = this.props
 
     let fields = this.asignPrefix()
@@ -168,13 +168,27 @@ export default class AddressForm extends Component {
         {displayHeader && <Header as='h3'><FormattedMessage id='global.address' defaultMessage='Address' /></Header>}
         <DatalistGroup widths='equal' data-test='address_form_streetCity_inp'>
           <Input
-            inputProps={{ icon: 'dropdown', list: datalistName, onChange: this.handleChange, fluid: true }}
+            inputProps={{
+              onFocus: (e) => e.target.autocomplete = null,
+              icon: 'dropdown',
+              list: datalistName,
+              onChange: this.handleChange,
+              fluid: true,
+              loading
+            }}
             label={<FormattedMessage id='global.streetAddress' defaultMessage='Street Address' />}
             name={fields.streetAddress}
           />
 
           <Input
-            inputProps={{ icon: 'dropdown', list: datalistName, onChange: this.handleChange, fluid: true }}
+            inputProps={{
+              onFocus: (e) => e.target.autocomplete = null,
+              icon: 'dropdown',
+              list: datalistName,
+              onChange: this.handleChange,
+              fluid: true,
+              loading
+            }}
             label={<FormattedMessage id='global.city' defaultMessage='City' />}
             name={fields.city}
           />
@@ -184,6 +198,7 @@ export default class AddressForm extends Component {
           <ZipDropdown
             onAddition={(e, data) => setFieldValue(fields[this.props.zip.name], JSON.stringify({ id: data.value, zip: data.value }))}
             onChange={this.handleChange}
+            additionalInputProps={{ loading }}
             name={fields.zip} countryId={countryId} initialZipCodes={initialZipCodes}
             data-test='address_form_zip_drpdn'
           />
@@ -200,6 +215,8 @@ export default class AddressForm extends Component {
               }))}
 
               inputProps={{
+                loading: countriesLoading,
+                onFocus: (e) => e.target.autocomplete = null,
                 'data-test': 'address_form_country_drpdn',
                 search: true, onChange: async (e, data) => {
                   let values = JSON.parse(data.value)
@@ -226,6 +243,7 @@ export default class AddressForm extends Component {
               value: province.id
             }))}
             inputProps={{
+              onFocus: (e) => e.target.autocomplete = null,
               'data-test': 'address_form_province_drpdn',
               search: true, disabled: !this.state.hasProvinces,
               loading: provincesAreFetching, onChange: this.handleChange

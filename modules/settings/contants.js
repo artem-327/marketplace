@@ -8,7 +8,7 @@ export const defaultTabs = [
   { name: 'Bank Accounts', id: 8, type: 'bank-accounts' },
   { name: 'Delivery Addresses', id: 12, type: 'delivery-addresses' },
   { name: 'Logistics', id: 13, type: 'logistics' },
-  { name: 'Settings', id: 14, type: 'system-settings', hideHandler: true }
+  { name: 'Company Settings', id: 14, type: 'system-settings', hideHandler: true }
 ]
 
 // TODO FORMATTED MESSAGE

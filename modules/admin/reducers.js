@@ -34,10 +34,11 @@ export const initialState = {
     { name: 'Forms', id: 5 },
     { name: 'Conditions', id: 6 },
     { name: 'Document Types', id: 9 },
-    { name: 'Market Segments', id: 10 }
+    { name: 'Market Segments', id: 10 },
+    { name: 'Admin Settings', id: 11, hideHandler: true }
   ],
 
-  currentTab: 'CAS Products',
+  currentTab: { name: 'CAS Products', id: 7 },
   casListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: "ASC", sortPath: "CasProduct.chemicalName" },
   companyListDataRequest: { pageSize: 50, pageNumber: 0, sortDirection: "ASC", sortPath: "Company.name" },
   currentEditForm: null,
@@ -498,7 +499,7 @@ export default function reducer(state = initialState, action) {
 
       payload.forEach(element => {
         if (!copy.find((e) => e.id === element.id)) copy.push(element)
-        
+
 
       })
 
@@ -513,7 +514,7 @@ export default function reducer(state = initialState, action) {
         company: payload
       }
     }
-    
+
     default: {
       for (let groupName in config) {
         if (typeof config[groupName].api !== 'undefined') {
