@@ -943,7 +943,13 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         loading: false,
-        bankAccountsRows: action.payload
+        bankAccountsRows: state.bankAccountsRows.map(baRow => {
+          if (baRow.id === action.payload.id) {
+            return action.payload
+          } else {
+            return baRow
+          }
+        })
       }
     }
 

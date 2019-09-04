@@ -928,7 +928,7 @@
   "settings.accountType": "Account Type",
   "settings.bankName": "Bank Name",
   "settings.routingNumber": "Routing Number",
-  "settings.provideAmounts": "Please provide amounts that were transferred to you account",
+  "settings.provideAmounts": "Please provide amounts that were transferred to your account",
   "settings.amountNum": "Amount {num}",
   "settings.accountName": "Account Name",
   "settings.verified": "Verified",
