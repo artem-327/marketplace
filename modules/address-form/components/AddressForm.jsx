@@ -92,17 +92,19 @@ export default class AddressForm extends Component {
       setFieldValue(fields.streetAddress, suggest.streetAddress)
       setFieldValue(fields.city, suggest.city)
       setFieldValue(fields.country, JSON.stringify({ countryId: suggest.country.id, hasProvinces }))
-      setFieldValue(fields.zip, suggest.zip && JSON.stringify({ id: suggest.zip.id, zip: suggest.zip.zip }))
+      setFieldValue(fields.zip, suggest.zip && suggest.zip.zip)
       setFieldValue(fields.province, suggest.province ? suggest.province.id : '')
     }
     else {
-      let newValues = { ...values, address: { ...values.address, [name]: value } }
+      const parts = name.split('.')
+      let newValues = { ...values, address: { ...values.address, [parts.pop()]: value } }
+
       const body = {
         city: getSafe(() => newValues.address.city),
         countryId: getSafe(() => JSON.parse(newValues.address.country).countryId),
         provinceId: getSafe(() => newValues.address.province),
         streetAddress: getSafe(() => newValues.address.streetAddress),
-        zip: JSON.parse(newValues.address.zip).zip
+        zip: getSafe(() => newValues.address.zip)
       }
 
       if (Object.entries(body).length === 0) return
@@ -196,7 +198,7 @@ export default class AddressForm extends Component {
         </DatalistGroup>
         <FormGroup widths='equal'>
           <ZipDropdown
-            onAddition={(e, data) => setFieldValue(fields[this.props.zip.name], JSON.stringify({ id: data.value, zip: data.value }))}
+            onAddition={(e, data) => setFieldValue(fields[this.props.zip.name], data.value)}
             onChange={this.handleChange}
             additionalInputProps={{ loading }}
             name={fields.zip} countryId={countryId} initialZipCodes={initialZipCodes}

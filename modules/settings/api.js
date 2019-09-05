@@ -162,7 +162,7 @@ export default {
   },
   updateDeliveryAddresses: (id, value) => api.put(`/prodex/api/delivery-addresses/id/${id}`, value),
   dwollaInitiateVerification: async (id) => {
-    return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify/initialize`)
+    return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify/initialize`).then(response => response.data)
   },
   dwollaFinalizeVerification: async (id, value1, value2) => {
     return await api.post(`/prodex/api/payments/bank-accounts/${id}/verify?value1=${value1}&value2=${value2}`)

@@ -8,7 +8,7 @@ const mergeAndFilterCodes = (newCodes, oldCodes) => {
 
   let newZips = newCodes.map((code) => ({
     text: getSafe(() => code.zip, code),
-    value: JSON.stringify({ id: code.id, zip: code.zip }),
+    value: getSafe(() => code.zip, code),
     key: getSafe(() => code.id, code)
   }))
 

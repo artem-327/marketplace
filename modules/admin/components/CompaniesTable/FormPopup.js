@@ -307,8 +307,6 @@ class AddNewPopupCasProducts extends React.Component {
               branches.forEach(branch => {
                 let country = getSafe(() => JSON.parse(payload[branch].address.country).countryId)
                 if (country) payload[branch].address.country = country
-                let zip = getSafe(() => JSON.parse(payload[branch].address.zip).zip)
-                if (zip) payload[branch].address.zip = zip
               })
 
               if (this.state.companyLogo) {

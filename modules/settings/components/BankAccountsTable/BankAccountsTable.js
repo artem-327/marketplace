@@ -27,7 +27,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 
 import { errorMessages } from '~/constants/yupValidation'
 
-const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss, intl: { formatMessage } }) => (
+const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
 
   <Formik
     initialValues={{
@@ -52,11 +52,11 @@ const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss, intl: { for
           <Segment basic loading={isSubmitting}>
             <Form>
               <Header as='h3'>
-                <FormattedMessage id='settings.provideAmounts' defaultMessage='Please provide amounts that were transferred to you account' />:
+                <FormattedMessage id='settings.provideAmounts' defaultMessage='Please provide amounts that were transferred to your account' />:
                 </Header>
               <Form.Group widths='equal' data-test='settings_bank_account_amounts_inp'>
-                <Input label={formatMessage({ id: 'settings.amountNum', defaultMessage: 'Amount 1' }, { num: 1 })} name='amount1' type='number' min='0' />
-                <Input label={formatMessage({ id: 'settings.amountNum', defaultMessage: 'Amount 2' }, { num: 2 })} name='amount2' type='number' min='0' />
+                <Input label={<FormattedMessage id='settings.amountNum' defaultMessage='Amount 1' values={{ num: 1 }} />} name='amount1' type='number' min='0' />
+                <Input label={<FormattedMessage id='settings.amountNum' defaultMessage='Amount 2' values={{ num: 2 }} />} name='amount2' type='number' min='0' />
               </Form.Group>
 
             </Form>
@@ -77,7 +77,7 @@ const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss, intl: { for
 ))
 
 
-const finalizeConfirm = injectIntl(createConfirmation(FinalizeConfirmDialog))
+const finalizeConfirm = createConfirmation(FinalizeConfirmDialog)
 
 export const bankAccountsConfig = {
   none: {
@@ -186,7 +186,8 @@ class BankAccountsTable extends Component {
                   formatMessage(
                     { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` },
                     { item: row.name })
-                ).then(() => deleteBankAccount(row.id))
+                ).then(() => deleteBankAccount(row.id)),
+                disabled: row => row.status === 'verification_in_process'
               },
               {
                 text: formatMessage({ id: 'settings.initiateVerification', defaultMessage: 'Initiate Verification' }),

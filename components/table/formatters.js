@@ -1,5 +1,6 @@
 import React from 'react'
 import { Dropdown, Icon } from 'semantic-ui-react'
+import { getSafe } from '~/utils/functions'
 
 export function rowActionsCellFormatter({ column: { actions }, row }) {
   return (
@@ -10,9 +11,10 @@ export function rowActionsCellFormatter({ column: { actions }, row }) {
       <Dropdown.Menu>
         {actions.map((a, i) => 'hidden' in a && typeof a.hidden === 'function' && a.hidden(row) ? null : (
           <Dropdown.Item
-            data-test={`action_${row.id}_${i}`}  
+            data-test={`action_${row.id}_${i}`}
             key={i}
             text={a.text}
+            disabled={getSafe(() => a.disabled(row), false)}
             onClick={() => a.callback(row)}
           />
         ))}

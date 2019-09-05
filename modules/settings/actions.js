@@ -53,8 +53,7 @@ export function dwollaInitiateVerification(id) {
   return {
     type: AT.DWOLLA_START_VERIFICATION,
     async payload() {
-      await api.dwollaInitiateVerification(id)
-      const data = await api.getBankAccountsData()
+      const data = await api.dwollaInitiateVerification(id)
 
       return data
     }
