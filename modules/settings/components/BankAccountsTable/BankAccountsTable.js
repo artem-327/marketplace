@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProdexTable from '~/components/table'
-import { Header, Modal, Form, Segment, Label } from 'semantic-ui-react'
+import { Header, Modal, Form, Segment, Label, Table } from 'semantic-ui-react'
 import { createConfirmation, confirmable } from 'react-confirm'
 import confirm from '~/src/components/Confirmable/confirm'
 import { Formik } from 'formik'
 import { Input, Button } from 'formik-semantic-ui'
 import * as Yup from 'yup'
+import get from "lodash/get";
 
 import {
   openPopup,
@@ -78,7 +79,60 @@ const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
 
 const finalizeConfirm = createConfirmation(FinalizeConfirmDialog)
 
-class ProductCatalogTable extends Component {
+export const bankAccountsConfig = {
+  none: {
+    registerButton: true,
+    addButton: false,
+    dwollaBalance: false,
+    searchField: false,
+    accountStatus: true,
+    bankAccountList: false,
+    uploadDocumentsButton: false,
+    documentStatus: false
+  },
+  retry: {
+    registerButton: true,
+    addButton: false,
+    dwollaBalance: false,
+    searchField: false,
+    accountStatus: true,
+    bankAccountList: false,
+    uploadDocumentsButton: false,
+    documentStatus: false
+  },
+  document: {
+    registerButton: false,
+    addButton: false,
+    dwollaBalance: false,
+    searchField: false,
+    accountStatus: true,
+    bankAccountList: false,
+    uploadDocumentsButton: true,
+    documentStatus: true
+  },
+  verified: {
+    registerButton: false,
+    addButton: true,
+    dwollaBalance: true,
+    searchField: true,
+    accountStatus: false,
+    bankAccountList: true,
+    uploadDocumentsButton: false,
+    documentStatus: false
+  },
+  suspended: {
+    registerButton: false,
+    addButton: false,
+    dwollaBalance: false,
+    searchField: false,
+    accountStatus: true,
+    bankAccountList: false,
+    uploadDocumentsButton: false,
+    documentStatus: false
+  },
+}
+
+class BankAccountsTable extends Component {
   state = {
     amount1: 0,
     amount2: 0,
@@ -105,7 +159,10 @@ class ProductCatalogTable extends Component {
       dwollaInitiateVerification,
       dwollaFinalizeVerification,
       getBankAccountsDataRequest,
-      intl
+      intl,
+      bankAccounts,
+      dwollaAccountStatus,
+      dwollaDocumentRequired
     } = this.props
 
     let { columns } = this.state
@@ -113,44 +170,83 @@ class ProductCatalogTable extends Component {
 
     return (
       <React.Fragment>
-        <ProdexTable
-          tableName='settings_bankaccounts'
-          rows={rows}
-          loading={loading}
-          columns={columns}
-          filterValue={filterValue}
-          rowActions={[
-            // { text: 'Edit', callback: row => openPopup(row) },
-            {
-              text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
-              callback: row => confirm(
-                formatMessage({ id: 'confirm.deleteBankAccount', defaultMessage: 'Delete Bank Account' }),
-                formatMessage(
-                  { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` },
-                  { item: row.name })
-              ).then(() => deleteBankAccount(row.id)),
-              disabled: row => row.status === 'verification_in_process'
-            },
-            {
-              text: formatMessage({ id: 'settings.initiateVerification', defaultMessage: 'Initiate Verification' }),
-              callback: row => dwollaInitiateVerification(row.id),
-              hidden: row => row.status !== 'unverified'
-            },
-            {
-              text: formatMessage({ id: 'settings.finalizeVerification', defaultMessage: 'Finalize Verification' }),
-              callback: row => {
-                finalizeConfirm().then(v => dwollaFinalizeVerification(row.id, v.amount1, v.amount2))
+        {bankAccounts.bankAccountList && (
+          <ProdexTable
+            tableName='settings_bankaccounts'
+            rows={rows}
+            loading={loading}
+            columns={columns}
+            filterValue={filterValue}
+            rowActions={[
+              // { text: 'Edit', callback: row => openPopup(row) },
+              {
+                text: formatMessage({ id: 'global.delete', defaultMessage: 'Delete' }),
+                callback: row => confirm(
+                  formatMessage({ id: 'confirm.deleteBankAccount', defaultMessage: 'Delete Bank Account' }),
+                  formatMessage(
+                    { id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${row.name}?` },
+                    { item: row.name })
+                ).then(() => deleteBankAccount(row.id)),
+                disabled: row => row.status === 'verification_in_process'
               },
-              hidden: row => row.status !== 'verification_in_process'
-            },
-          ]}
-        />
+              {
+                text: formatMessage({ id: 'settings.initiateVerification', defaultMessage: 'Initiate Verification' }),
+                callback: row => dwollaInitiateVerification(row.id),
+                hidden: row => row.status !== 'unverified'
+              },
+              {
+                text: formatMessage({ id: 'settings.finalizeVerification', defaultMessage: 'Finalize Verification' }),
+                callback: row => {
+                  finalizeConfirm().then(v => dwollaFinalizeVerification(row.id, v.amount1, v.amount2))
+                },
+                hidden: row => row.status !== 'verification_in_process'
+              },
+            ]}
+          />
+        )}
 
+        {bankAccounts.accountStatus && (
+          <>
+            <Table style={{ marginTop: 30, marginBottom: 30 }}>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell width={1}></Table.HeaderCell>
+                  <Table.HeaderCell width={4}><FormattedMessage id='dwolla.registrationStatus' defaultMessage='Dwolla Registration Status' /></Table.HeaderCell>
+                  <Table.HeaderCell width={10}><FormattedMessage id='dwolla.info' defaultMessage='Info' /></Table.HeaderCell>
+                  <Table.HeaderCell width={1}></Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                <Table.Row>
+                  <Table.Cell></Table.Cell>
+                  <Table.Cell><FormattedMessage id={`dwolla.registrationStatus.${dwollaAccountStatus}`} /></Table.Cell>
+                  <Table.Cell>
+                    {bankAccounts.documentStatus ? (
+                      <>
+                        <FormattedMessage id={`dwolla.info.${dwollaAccountStatus}`}/>&nbsp;
+                        <FormattedMessage id={`dwolla.document.${dwollaDocumentRequired}`}/>
+                      </>
+                      ) : (
+                      <FormattedMessage id={`dwolla.info.${dwollaAccountStatus}`}/>
+                      )}
+
+                  </Table.Cell>
+                  <Table.Cell></Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            </Table>
+          </>
+        )}
+
+        {bankAccounts.documentStatus && (
+          <>
+            <FormattedMessage id='dwolla.document.explanatoryText' >{(text) => text.split('\n').map ((item, i) => <p key={i}>{item}</p>)}</FormattedMessage>
+          </>
+        )}
       </React.Fragment>
     )
   }
 }
-
 
 const mapDispatchToProps = {
   openPopup,
@@ -170,7 +266,17 @@ const statusToLabel = {
   'verification_in_process': <Label color='orange' horizontal><FormattedMessage id='settings.verificationInProcess' defaultMessage='Verification in process' /></Label>
 }
 const mapStateToProps = state => {
+  const company = get(state, 'auth.identity.company', null)
+  let dwollaDocumentRequired = company && company.dwollaDocumentRequired ? company.dwollaDocumentRequired : 'verify-with-document'
+  // ! ! Temporary, until 'dwollaAccountStatus' is returned from BE
+  const dwollaAccountStatus = company && company.dwollaAccountStatus ? company.dwollaAccountStatus : (company && company.hasDwollaAccount ? 'verified' : 'none')
+
+  dwollaDocumentRequired = dwollaDocumentRequired.replace(/-/g, '')
+
   return {
+    bankAccounts: bankAccountsConfig[dwollaAccountStatus],
+    dwollaAccountStatus,
+    dwollaDocumentRequired,
     loading: state.settings.loading,
     rows: state.settings.bankAccountsRows.map(r => ({
       ...r,
@@ -182,11 +288,11 @@ const mapStateToProps = state => {
     deleteRowById: state.settings.deleteRowById,
     currentTab: Router && Router.router && Router.router.query && Router.router.query.type ?
       state.settings.tabsNames.find(tab => tab.type === Router.router.query.type) : state.settings.tabsNames[0],
-    company: state.auth.identity.company && state.auth.identity && state.auth.identity.company,
+    company: company,
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(injectIntl(ProductCatalogTable))
+)(injectIntl(BankAccountsTable))

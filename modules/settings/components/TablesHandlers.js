@@ -8,6 +8,7 @@ import Router from 'next/router'
 import { debounce } from 'lodash'
 import { withDatagrid, Datagrid } from '~/modules/datagrid'
 import { FormattedNumber, FormattedMessage, injectIntl } from 'react-intl'
+import { bankAccountsConfig } from './BankAccountsTable/BankAccountsTable'
 
 const textsTable = {
   'users': {
@@ -88,18 +89,14 @@ class TablesHandlers extends Component {
       openImportPopup,
       handleProductCatalogUnmappedValue,
       productCatalogUnmappedValue,
-      dwollaAccount,
       openDwollaPopup,
-      isCompanyAdmin,
       dwollaAccBalance,
       openGlobalBroadcast,
-      isAddButtonVisible
+      bankAccounts
     } = this.props
 
     const { filterValue } = this.state
-
-    const isDwollaAccountVisible = isCompanyAdmin && dwollaAccount && !dwollaAccount.hasDwollaAccount && currentTab.type === 'bank-accounts'
-    const isDwollaBalanceVisible = isCompanyAdmin && dwollaAccount && dwollaAccount.hasDwollaAccount && currentTab.type === 'bank-accounts'
+    const bankAccTab = currentTab.type === 'bank-accounts'
 
     return (
       <Menu secondary>
@@ -110,7 +107,7 @@ class TablesHandlers extends Component {
         </Menu.Item>
         {!currentTab.hideHandler &&
           <Menu.Menu position="right">
-            {!currentTab.hideSearch &&
+            {!currentTab.hideSearch && (!bankAccTab || bankAccounts.searchField) &&
               <Menu.Item data-test='settings_table_search_inp' >
                 <Input
                   style={{ width: 340 }}
@@ -131,7 +128,7 @@ class TablesHandlers extends Component {
                   data-test='settings_dwolla_unmapped_only_chckb'
                 />
               )}
-              {isDwollaAccountVisible && (
+              {(bankAccTab && bankAccounts.registerButton) && (
                 <Button
                   size="large"
                   style={{ marginLeft: 10 }}
@@ -142,13 +139,23 @@ class TablesHandlers extends Component {
                   Register Dwolla Account
               </Button>
               )}
-              {isDwollaBalanceVisible && (
+              {(bankAccTab && bankAccounts.uploadDocumentsButton) && (
+                <Button
+                  size="large"
+                  style={{ marginLeft: 10 }}
+                  primary
+                  data-test='settings_dwolla_upload_documents_btn'
+                >
+                  Upload Documents
+                </Button>
+              )}
+              {(bankAccTab && bankAccounts.dwollaBalance) && (
                 <>
-                  <FormattedMessage id='settings.dwollaAccBalance' defaultMessage='Dwolla Balance: ' />&nbsp;
+                  &nbsp;<FormattedMessage id='settings.dwollaAccBalance' defaultMessage='Dwolla Balance: ' />&nbsp;
                   <FormattedNumber style='currency' currency={dwollaAccBalance.currency} value={dwollaAccBalance.value} />
                 </>
               )}
-              {isAddButtonVisible && (
+              {(!bankAccTab || bankAccounts.addButton) && (
                 <Button
                   size="large"
                   style={{marginLeft: 10}}
@@ -183,12 +190,11 @@ class TablesHandlers extends Component {
 
 const mapStateToProps = (state) => {
   const company = get(state, 'auth.identity.company', null)
-  const isCompanyAdmin = get(state, 'auth.identity.isCompanyAdmin', null)
-  const bankAccounts = get(state, 'settings.bankAccountsRows', [])
+  // ! ! Temporary, until 'dwollaAccountStatus' is returned from BE
+  const dwollaAccountStatus = company && company.dwollaAccountStatus ? company.dwollaAccountStatus : (company && company.hasDwollaAccount ? 'verified' : 'none')
 
   return {
-    dwollaAccount: company,
-    isCompanyAdmin,
+    bankAccounts: bankAccountsConfig[dwollaAccountStatus],
     currentTab: state.settings.currentTab,
     productCatalogUnmappedValue: state.settings.productCatalogUnmappedValue,
     deliveryAddressesFilter: state.settings.deliveryAddressesFilter,
@@ -196,9 +202,6 @@ const mapStateToProps = (state) => {
     filterValue: state.settings.filterValue,
     dwollaAccBalance: state.settings.dwollaAccBalance ?
       state.settings.dwollaAccBalance.balance : { value: '', currency: 'USD' },
-    isAddButtonVisible: state.settings.currentTab.type === 'bank-accounts' ?
-      isCompanyAdmin && company && company.hasDwollaAccount && state.settings.currentTab.type === 'bank-accounts'
-      && bankAccounts.find(x => x.status === 'verified') : true,
   }
 }
 

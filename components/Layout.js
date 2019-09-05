@@ -106,6 +106,7 @@ const Layout = ({ children, router: { pathname }, title = 'Echo exchange', auth,
                   <Settings role='user' />
                 </>
               </Menu.Item>}
+              <Dropdown.Item as={MenuLink} to='/legal/terms-of-service' data-test='navigation_menu_user_terms_of_service_drpdn'>{formatMessage({ id: 'global.termsOfService', defaultMessage: 'Terms of Service' })}</Dropdown.Item>
               <Dropdown.Item as={MenuLink} to='/auth/logout' data-test='navigation_menu_user_logout_drpdn'>{formatMessage({ id: 'global.logout', defaultMessage: 'Logout' })}</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
