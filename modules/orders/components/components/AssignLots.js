@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from "redux"
 import * as Actions from "../../actions"
 import { loadFile, addAttachment} from "~/modules/inventory/actions"
-import { Modal, ModalContent, Table, Grid, Header, Button, Segment, Tab, TabPane, Menu } from "semantic-ui-react"
+import { Modal, ModalContent, Table, Grid, Header, Button, Segment, Tab, TabPane, Menu, Label } from "semantic-ui-react"
 import { Form, Input, Checkbox } from 'formik-semantic-ui'
 import { FieldArray } from 'formik'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
@@ -172,6 +172,20 @@ class AssignLots extends React.Component {
 
     return (
       <LotsTab active={this.state.activeTab === tabIndex}>
+        <Grid style={{ marginTop: '0.5em' }}>
+          <Grid.Column width={14}>
+            <FormattedMessage id='order.assignLots.orderItem.amount' defaultMessage='Allocated packages: {allocated} / {amount}' values={{ allocated: this.state.allocated[tabIndex], amount: orderItem.amount }} />
+            {this.state.allocated[tabIndex] > orderItem.amount ? (
+              <Label circular color='red' empty style={{ marginLeft: '0.5em' }} />
+            ) : null }
+          </Grid.Column>
+          <Grid.Column width={1}>
+            <Input name={`tabLots[${tabIndex}].orderItemId`} inputProps={{ type: 'hidden', defaultValue: orderItem.id }} />
+          </Grid.Column>
+          <Grid.Column width={1}>
+            <Input name={`tabLots[${tabIndex}].productOfferId`} inputProps={{ type: 'hidden', defaultValue: orderItem.productOffer }} />
+          </Grid.Column>
+        </Grid>
         <TableWrapper>
           <Table className='table-fields basic'>
             <Table.Header>
@@ -187,8 +201,6 @@ class AssignLots extends React.Component {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              <Input name={`tabLots[${tabIndex}].orderItemId`} inputProps={{ type: 'hidden', defaultValue: orderItem.id }} />
-              <Input name={`tabLots[${tabIndex}].productOfferId`} inputProps={{ type: 'hidden', defaultValue: orderItem.productOffer }} />
               <FieldArray
                 name={`tabLots[${tabIndex}].lots`}
                 render={arrayHelpers => (

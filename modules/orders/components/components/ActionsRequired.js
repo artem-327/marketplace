@@ -64,7 +64,7 @@ class ActionsRequired extends React.Component {
       <>
         {ordersType === 'Sales' ? (
           <>
-            {action === '10' ? this.renderSegment(
+            {action === '100' ? this.renderSegment(
               13,
               'order.confirm.description',
               [{
@@ -80,18 +80,7 @@ class ActionsRequired extends React.Component {
               }]
             ) : null}
 
-            {action === '21' ? this.renderSegment(
-              14,
-              'order.ship.description',
-              [{
-                buttonType: 'primary',
-                onClick: this.shipOrder,
-                dataTest: 'orders_detail_ship_btn',
-                text: 'order.ship'
-              }]
-            ) : null}
-
-            {action === '22' ? this.renderSegment(
+            {action === '210' ? this.renderSegment(
               14,
               'order.assignLots.description',
               [{
@@ -99,6 +88,22 @@ class ActionsRequired extends React.Component {
                 onClick: this.openAssignLots,
                 dataTest: 'orders_detail_assign_lots_btn',
                 text: 'order.assignLots'
+              }]
+            ) : null}
+
+            {action === '211' ? this.renderSegment(
+              12,
+              'order.ship.description',
+              [{
+                buttonType: 'primary',
+                onClick: this.openAssignLots,
+                dataTest: 'orders_detail_assign_lots_btn',
+                text: 'order.assignLots.re'
+              }, {
+                buttonType: 'primary',
+                onClick: this.shipOrder,
+                dataTest: 'orders_detail_ship_btn',
+                text: 'order.ship'
               }]
             ) : null}
           </>
@@ -109,8 +114,12 @@ class ActionsRequired extends React.Component {
 }
 
 function actionRequired(data) {
-  // return statuses code
-  return getSafe(() => data.orderStatus.toString(), 0) + getSafe(() => data.shippingStatus.toString(), 0)
+  // return merged status codes
+  // orderStatus + shippingStatus + assignedLots
+  const statusCode = getSafe(() => data.orderStatus.toString(), 0) +
+                     getSafe(() => data.shippingStatus.toString(), 0) +
+                     getSafe(() => data.orderItems.filter(orderItem => { return orderItem.amount === orderItem.lots.reduce(function(allocated, lot) { return allocated + lot.amount }, 0) }).length === data.orderItems.length ? 1 : 0, 0)
+  return statusCode
 }
 
 function mapStateToProps(state, ownProps) {
