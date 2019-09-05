@@ -15,3 +15,4 @@ export const postCompanyLogo = (companyId, companyLogo) => {
     }
   })
 }
+export const deleteCompanyLogo = (companyId) => api.delete(`/prodex/api/companies/id/${companyId}/logo`)

@@ -8,7 +8,8 @@ function mapStateToProps(state, props) {
     ...state.businessTypes,
     companyId: getSafe(() => state.admin.popupValues.id, getSafe(() => state.auth.identity.company.id, false)),
     selectLogo: props.selectLogo,
-    companyLogo: props.companyLogo
+    companyLogo: props.companyLogo,
+    hasLogo: getSafe(() => state.auth.identity.company.hasLogo, false)
   }
 }
 

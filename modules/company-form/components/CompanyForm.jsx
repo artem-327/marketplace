@@ -15,7 +15,7 @@ class CompanyForm extends Component {
   }
 
   loadCompanyLogo = async () => {
-    if (this.props.selectLogo && this.props.getCompanyLogo) {
+    if (this.props.hasLogo && this.props.selectLogo && this.props.getCompanyLogo) {
       const companyLogo = await this.props.getCompanyLogo(this.props.companyId)
 
       if (companyLogo.value.data.size)
@@ -70,8 +70,9 @@ class CompanyForm extends Component {
     }
   }
 
-  removeLogo = (file) => {
-    this.props.removeLogo(file)
+  removeLogo = () => {
+    this.props.deleteCompanyLogo(this.props.companyId)
+    this.props.removeLogo()
   }
 
   render() {
@@ -140,7 +141,7 @@ class CompanyForm extends Component {
                        fileMaxSize={0.2}
                        onChange={(files) => files.length ? selectLogo(files[0]) : null}
                        removeAttachment={removeLogo}
-                       emptyContent={(<FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' tagName='A' />)}
+                       emptyContent={(<FormattedMessage id='addInventory.clickUpload' defaultMessage='Click to upload' tagName='a' />)}
             />
           </FormField>
           {this.getCompanyLogo()}

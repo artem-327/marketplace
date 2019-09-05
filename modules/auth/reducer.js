@@ -228,6 +228,32 @@ export default function reducer(state = initialState, action) {
       }
     }
 
+    case AT.POST_COMPANY_LOGO_FULFILLED: {
+      return {
+        ...state,
+        identity: {
+          ...state.identity,
+          company: {
+            ...state.identity.company,
+            hasLogo: true
+          }
+        }
+      }
+    }
+
+    case AT.DELETE_COMPANY_LOGO_FULFILLED: {
+      return {
+        ...state,
+        identity: {
+          ...state.identity,
+          company: {
+            ...state.identity.company,
+            hasLogo: false
+          }
+        }
+      }
+    }
+
     default: {
       return state
     }
