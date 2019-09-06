@@ -374,6 +374,9 @@ h3.ui.header {
   font-size: 1.142857em;
 
   i.info.circle {
+    // hack to center for popup arrow
+    margin: 0 0 0 -0.38em;
+    padding: 0 0 0 0.88em;
     vertical-align: top;
     font-size: 0.875em;
   }
@@ -382,6 +385,11 @@ h3.ui.header {
 .ui.form .field > label {
   font-size: 1em;
   font-weight: 400;
+}
+
+.ui.form .field > .selection.dropdown {
+  max-width: 100%;
+  min-width: 100%;
 }
 
 .ui.form .field > .field + .field {

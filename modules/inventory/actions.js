@@ -39,14 +39,18 @@ export function addProductOffer(values, poId = false) {
     }]
   }
 
+  const attachments = values.attachments && values.attachments.length ? values.attachments.map(att => {
+    return att.id
+  }) : []
+
+  const additional = values.additional && values.additional.length ? values.additional.map(add => {
+    return add.id
+  }) : []
+
   let params = {
     assayMin: values.assayMin ? parseFloat(values.assayMin) : null,
     assayMax: values.assayMax ? parseFloat(values.assayMax) : null,
-    attachments: values.attachments && values.attachments.length ? values.attachments.map(att => {
-      return att.id
-    }).concat(values.additional && values.additional.length ? values.additional.map(add => {
-      return add.id
-    }) : []) : null,
+    attachments: attachments.concat(additional),
     cost: values.cost ? parseInt(values.cost) : null,
     costRecords: values.trackSubCosts && values.costs ? values.costs.map(cost => {
       return {
