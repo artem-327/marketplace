@@ -6,6 +6,8 @@ export function getOrderStatus(orderStatus) {
             return 'Confirmed'
         case 3:
             return 'Rejected'
+        case 4:
+            return 'Draft'
         default:
             return 'N/A'
     }

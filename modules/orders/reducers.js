@@ -16,7 +16,8 @@ const initialState = {
     statusFilter: null,
     searchedCompanies: [],
     openedAssignLots: false,
-    openedReinitiateTransfer: false
+    openedReinitiateTransfer: false,
+    bankAccounts: []
 }
 
 export default function(state = initialState, action) {
@@ -125,11 +126,18 @@ export default function(state = initialState, action) {
         case AT.ORDER_CLOSE_REINITIATE_TRANSFER:
             return {
                 ...state,
-              openedReinitiateTransfer: false
+                openedReinitiateTransfer: false
             }
         case AT.ORDER_LOAD_BANK_ACCOUNTS_FULFILLED:
             return {
-                ...state
+                ...state,
+                bankAccounts: action.payload.data.map(bankAccount => {
+                    return {
+                        id: bankAccount.id,
+                        text: bankAccount.name,
+                        value: bankAccount.id
+                    }
+                })
             }
         case AT.ORDER_GET_LOTS_FULFILLED:
             // prepare lots for used product offers

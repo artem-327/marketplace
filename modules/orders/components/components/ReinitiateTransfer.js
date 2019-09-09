@@ -22,13 +22,11 @@ const Subtitle = styled(Header)`
 `
 
 const initValues = {
-  paymentAccounts: []
+  paymentAccount: undefined
 }
 
 const validationScheme = val.object().shape({
-  paymentAccounts: val.array().of(val.object().shape({
-    id: val.number().min(0)
-  }))
+  paymentAccount: val.string(errorMessages.requiredMessage).required(errorMessages.requiredMessage)
 })
 
 class ReinitiateTransfer extends React.Component {
@@ -38,7 +36,7 @@ class ReinitiateTransfer extends React.Component {
   }
 
   render() {
-    const { intl: { formatMessage} } = this.props
+    const { intl: { formatMessage}, bankAccounts, orderId, toastManager } = this.props
 
     return (
       <>
@@ -57,17 +55,28 @@ class ReinitiateTransfer extends React.Component {
                 initialValues={{ ...initValues }}
                 validationSchema={validationScheme}
                 onSubmit={(values, actions) => {
-                  actions.setSubmitting(false)
+                  this.props.payOrder(orderId, values.paymentAccount).then(r => {
+                    actions.setSubmitting(false)
+                    toastManager.add(generateToastMarkup(
+                      <FormattedMessage id='order.reinitiateTransfer.success.header' defaultMessage='Reinitiated Transfer' />,
+                      <FormattedMessage id='order.reinitiateTransfer.success.content' defaultMessage='Selected Lots were assigned and available packages allocated' />,
+                    ), {
+                      appearance: 'success'
+                    })
+                    this.props.closeReinitiateTransfer()
+                  }).catch(e => {
+                    actions.setSubmitting(false)
+                  })
                 }}
                 className='flex stretched'
                 style={{ padding: '0' }}
               >
-                {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
+                {({ values, submitForm }) => {
                   return (
                     <>
                       <Grid>
                         <Grid.Column width={6}>
-                          <Dropdown name='paymentAccounts' inputProps={{ placeholder: formatMessage({ id: 'order.reinitiateTransfer.dropdownPlaceholder', defaultMessage: '-- select payment account --' }) }} />
+                          <Dropdown name='paymentAccount' options={bankAccounts} inputProps={{ placeholder: formatMessage({ id: 'order.reinitiateTransfer.dropdownPlaceholder', defaultMessage: '-- select payment account --' }) }} />
                         </Grid.Column>
                         <Grid.Column width={4}></Grid.Column>
                         <Grid.Column floated='right' width={3}>
@@ -94,7 +103,10 @@ class ReinitiateTransfer extends React.Component {
 }
 
 function mapStateToProps(state) {
-  return {}
+  return {
+    orderId: state.orders.detail.id,
+    bankAccounts: state.orders.bankAccounts
+  }
 }
 
 function mapDispatchToProps(dispatch) {

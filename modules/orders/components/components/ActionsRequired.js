@@ -46,7 +46,7 @@ class ActionsRequired extends React.Component {
                             color={color ? color : null}
                             onClick={() => button.onClick()}
                             data-test={button.dataTest}>
-                      <FormattedMessage id={button.text} />
+                      <FormattedMessage id={button.text} tagName='span' />
                     </Button>
                   </Grid.Column>
                 )
@@ -59,7 +59,7 @@ class ActionsRequired extends React.Component {
   }
 
   render() {
-    const { action, ordersType, detail, openReinitiateTransfer } = this.props
+    const { action, ordersType, detail, openReinitiateTransfer, cancelOrder } = this.props
 
     return (
       <>
@@ -118,14 +118,19 @@ class ActionsRequired extends React.Component {
           <>
             {detail.paymentStatus === 5 ? this.renderSegment(
               'red',
-              14,
+              12,
               null,
               'order.payment.failed.description',
               [{
-                buttonType: null,
+                buttonType: 'primary',
                 onClick: openReinitiateTransfer,
                 dataTest: 'orders_detail_reinitiate_transfer',
                 text: 'order.reinitiateTransfer'
+              }, {
+                buttonType: 'secondary',
+                onClick: cancelOrder,
+                dataTest: 'orders_detail_cancel_order',
+                text: 'order.cancelOrder'
               }]
             ) : null}
           </>
