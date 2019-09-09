@@ -629,7 +629,7 @@ class DwollaRegister extends Component {
             validationSchema={this.getValidationSchema()}
             render={(formikProps) => {
               if (!formikProps.isSubmitting) formikProps.setSubmitting(true)
-              console.log('isSubmitting', formikProps.isSubmitting)
+              
               return (
                 <Form>
                   <Grid verticalAlign={this.state.step === 1 ? 'middle' : 'top'} padded='very' centered>

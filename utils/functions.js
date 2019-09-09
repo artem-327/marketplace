@@ -74,3 +74,33 @@ export const deepSearch = (obj, searchFn) => {
 }
 
 export const getDeeply = (p, o) => p.reduce((xs, x) => (xs && xs[x]) ? xs[x] : null, o)
+
+export const generateQueryString = params => {
+    if (typeof params !== 'object') return ''
+    let keys = Object.keys(params)
+    if (keys.length === 0) return ''
+
+    let queryParams = `?${keys[0]}=${params[keys[0]]}`
+
+    for (let i = 1; i < keys.length; i++) {
+        queryParams += `&${keys[i]}=${params[keys[i]]}`
+    }
+
+    return queryParams
+}
+
+
+export const removeEmpty = (obj) =>
+    Object.entries(obj).forEach(([key, val]) => {
+        if (val && typeof val === 'object') {
+            removeEmpty(val)
+            // if (Object.entries(val).length === 0) delete obj[key]
+        }
+        else {
+            if (val == null) delete obj[key]
+            else if (typeof val === 'string') {
+                if (val.trim() === '') delete obj[key]
+                else obj[key] = val.trim()
+            }
+        }
+    })

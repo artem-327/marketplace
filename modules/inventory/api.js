@@ -1,11 +1,18 @@
 import api from '~/api'
 import axios from 'axios'
+import { generateQueryString } from '~/utils/functions'
 
-export function addAttachment(attachment, docType) {
+export function addAttachment(attachment, docType, additionalParams = {}) {
+  let defaultParams = {
+    isTemporary: true
+  }
+  let params = { ...defaultParams, ...additionalParams, type: docType }
   const formData = new FormData()
   formData.append('file', attachment)
 
-  return api.post(`/prodex/api/attachments?type=${docType}&isTemporary=true`, formData, {
+  let queryParams = generateQueryString(params)
+
+  return api.post(`/prodex/api/attachments${queryParams}`, formData, {
     headers: {
       'accept': 'application/json',
       'Accept-Language': 'en-US,en;q=0.8',
@@ -19,8 +26,10 @@ export function addProductOffer(values) {
 }
 
 export function downloadAttachment(id) {
-  return api.get(`/prodex/api/attachments/${id}/download`, {responseType: 'blob'})
+  return api.get(`/prodex/api/attachments/${id}/download`, { responseType: 'blob' })
 }
+
+export const updateAttachment = (id, params) => api.put(`/prodex/api/attachments/${id}${generateQueryString(params)}`)
 
 export function findProducts(search) {
   return api.get(`/prodex/api/products/search?search=${search}`)
@@ -81,12 +90,12 @@ export function removeAttachmentLink(isLot, itemId, aId) {
 }
 
 export async function searchManufacturers(text, limit) {
-  const response = await api.get(`/prodex/api/manufacturers/search?search=${text}${Number.isInteger(limit) ? '&limit='+(limit > 30 ? 30 : limit) : ''}`)
+  const response = await api.get(`/prodex/api/manufacturers/search?search=${text}${Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''}`)
   return response
 }
 
 export async function searchOrigins(text, limit) {
-  const response = await api.get(`/prodex/api/countries/search?pattern=${text}${Number.isInteger(limit) ? '&limit='+(limit > 30 ? 30 : limit) : ''}`)
+  const response = await api.get(`/prodex/api/countries/search?pattern=${text}${Number.isInteger(limit) ? '&limit=' + (limit > 30 ? 30 : limit) : ''}`)
   return response
 }
 

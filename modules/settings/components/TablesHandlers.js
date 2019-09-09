@@ -47,6 +47,10 @@ const textsTable = {
   'logistics': {
     BtnAddText: 'Logistics',
     SearchText: 'Search logistics ...'
+  },
+  'documents': {
+    BtnAddText: 'Document',
+    SearchText: 'Search Documents ...'
   }
 }
 

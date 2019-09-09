@@ -39,6 +39,11 @@ const validationScheme = val.object().shape({
   username: val.string().email(errorMessages.invalidEmail).required(errorMessages.requiredMessage)
 })
 
+const initialValues = {
+  username: '',
+  password: ''
+}
+
 class LoginForm extends Component {
 
   state = {
@@ -96,9 +101,11 @@ class LoginForm extends Component {
                 <LogoImage src={Logo} />
               </Segment>
 
-              <StyledForm validateOnChange={true}
+              <StyledForm 
+              initialValues={initialValues}
+              validateOnChange={true}
                 validationSchema={validationScheme}
-                onSubmit={async (values, actions ) => {
+                onSubmit={async (values, actions) => {
                   const { username, password } = values
                   const { login, resetPasswordRequest } = this.props
 
@@ -116,6 +123,7 @@ class LoginForm extends Component {
                   catch { actions.setSubmitting(false) }
                 }}>
                 {({ values, errors, setFieldValue, validateForm, validate, submitForm }) => {
+                  
                   return (
                     <>
                       <InstructionsDiv>

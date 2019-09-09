@@ -4,6 +4,7 @@ import * as api from './api'
 import { createAsyncAction } from 'redux-promise-middleware-actions'
 
 import { toggleFilter, filterSaving, filterApplying } from '~/modules/filter/actions'
+import { Datagrid } from '~/modules/datagrid'
 
 export function initProductOfferEdit(id) {
 
@@ -23,12 +24,20 @@ export function initProductOfferEdit(id) {
   }
 }
 
-export function addAttachment(attachment, type) {
-  return {
-    type: AT.INVENTORY_ADD_ATTACHMENT,
-    payload: api.addAttachment(attachment, type)
+export function addAttachment(attachment, type, additionalParams = {}) {
+  return async dispatch => {
+    await dispatch({ type: AT.INVENTORY_ADD_ATTACHMENT, payload: api.addAttachment(attachment, type, additionalParams) })
+    Datagrid.loadData()
   }
 }
+
+export const updateAttachment = (id, payload) => {
+  return async dispatch => {
+    await dispatch({ type: AT.INVENTORY_UPDATE_ATTACHMENT, payload: api.updateAttachment(id, payload) })
+    Datagrid.loadData()
+  }
+}
+
 
 export function addProductOffer(values, poId = false) {
 
@@ -263,9 +272,9 @@ export function removeAttachmentLink(isLot, itemId, aId) {
 }
 
 export function removeAttachment(aId) {
-  return {
-    type: AT.INVENTORY_REMOVE_ATTACHMENT,
-    payload: api.removeAttachment(aId)
+  return async dispatch => {
+    await dispatch({ type: AT.INVENTORY_REMOVE_ATTACHMENT, payload: api.removeAttachment(aId) })
+    Datagrid.removeRow(aId)
   }
 }
 

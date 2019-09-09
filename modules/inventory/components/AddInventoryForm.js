@@ -471,6 +471,7 @@ class AddInventoryForm extends Component {
   renderEditDocuments = (values, setFieldValue, validateForm) => {
     const { edit, removeAttachment, removeAttachmentLink, intl: { formatMessage } } = this.props
     const { additional, attachments, lots } = values
+    console.log({ edit, type: typeof attachments })
     if (typeof attachments === 'undefined' || !edit)
       return false
 
@@ -494,7 +495,10 @@ class AddInventoryForm extends Component {
             <GridHeader as='h3'><FormattedMessage id='addInventory.productOfferDocuments' defaultMessage='Product Offer has these documents' /></GridHeader>
           </GridColumn>
           <GridColumn width={6} textAlign='right'>
-            <AttachmentManager returnSelectedRows={(rows) => this.attachDocuments(rows, values, setFieldValue)} lockSelection={documents.map(doc => doc.id)} />
+            <AttachmentManager
+              returnSelectedRows={(rows) => this.attachDocuments(rows, values, setFieldValue)}
+              lockSelection={documents.map(doc => doc.id)}
+            />
           </GridColumn>
         </Grid>
         <Table>
@@ -518,10 +522,10 @@ class AddInventoryForm extends Component {
                     <DropdownMenu icon={<Icon name='ellipsis vertical' size='large' />}>
                       <DropdownMenu.Menu>
                         {canView ? (
-                          <DropdownMenu.Item text={formatMessage({ id: 'addInventory.documents.view', defaultMessage: 'View'})} onClick={() => this.viewAttachment(document.name, document.id)} />
+                          <DropdownMenu.Item text={formatMessage({ id: 'addInventory.documents.view', defaultMessage: 'View' })} onClick={() => this.viewAttachment(document.name, document.id)} />
                         ) : null}
-                        <DropdownMenu.Item text={formatMessage({ id: 'global.download', defaultMessage: 'Download'})} onClick={() => this.downloadAttachment(document.name, document.id)} />
-                        <DropdownMenu.Item text={formatMessage({ id: 'global.delete', defaultMessage: 'Delete'})} onClick={() => this.removeAttachment(
+                        <DropdownMenu.Item text={formatMessage({ id: 'global.download', defaultMessage: 'Download' })} onClick={() => this.downloadAttachment(document.name, document.id)} />
+                        <DropdownMenu.Item text={formatMessage({ id: 'global.delete', defaultMessage: 'Delete' })} onClick={() => this.removeAttachment(
                           document.lotId ? true : false, // isLot
                           document.name, // documentName
                           document.id, // documentId
@@ -539,10 +543,10 @@ class AddInventoryForm extends Component {
                   <Table.Cell width={5} textAlign='right'>
                     {document.linked ? null : (
                       <Popup content={<FormattedMessage id='addInventory.unlinked'
-                                                        defaultMessage='The file will be attached to Product Offer after you click the Save button' />}
-                             trigger={<Icon name='info circle'
-                                            size='large'
-                                            color='blue' />}
+                        defaultMessage='The file will be attached to Product Offer after you click the Save button' />}
+                        trigger={<Icon name='info circle'
+                          size='large'
+                          color='blue' />}
                       />
                     )}
                   </Table.Cell>
@@ -717,7 +721,7 @@ class AddInventoryForm extends Component {
                         })
                     }}
                     style={{ paddingLeft: '1em', paddingRight: '1em' }}>
-                      
+
                     {formatMessage({
                       id: this.props.edit ? 'addInventory.editButton' : 'addInventory.addButton',
                       defaultMessage: this.props.edit ? 'Save Product Offer' : 'Add Product Offer'
@@ -1803,23 +1807,23 @@ class AddInventoryForm extends Component {
                     {
                       menuItem: (
                         <Menu.Item key='productDocuments'
-                                   onClick={() => {
-                                     validateForm()
-                                       .then(r => {
-                                         // stop when errors found
-                                         if (Object.keys(r).length && Object.keys(r).some(r => tabs[this.state.activeTab].includes(r))) {
-                                           submitForm() // show errors
-                                           return false
-                                         }
+                          onClick={() => {
+                            validateForm()
+                              .then(r => {
+                                // stop when errors found
+                                if (Object.keys(r).length && Object.keys(r).some(r => tabs[this.state.activeTab].includes(r))) {
+                                  submitForm() // show errors
+                                  return false
+                                }
 
-                                         // if validation is correct - switch tabs
-                                         this.switchTab(2, values, setFieldValue)
-                                       })
-                                       .catch(e => {
-                                         console.log('CATCH', e)
-                                       })
-                                   }}
-                                   data-test='new_inventory_productDocuments'>
+                                // if validation is correct - switch tabs
+                                this.switchTab(2, values, setFieldValue)
+                              })
+                              .catch(e => {
+                                console.log('CATCH', e)
+                              })
+                          }}
+                          data-test='new_inventory_productDocuments'>
                           {formatMessage({ id: 'addInventory.productDocuments', defaultMessage: 'DOCUMENTS' })}
                         </Menu.Item>
                       ),
@@ -1832,34 +1836,34 @@ class AddInventoryForm extends Component {
                               <Grid>
                                 <GridColumn width={10}>
                                   <UploadLot {...this.props}
-                                             attachments={values.additional}
-                                             name='additional'
-                                             type={values.additionalType}
-                                             unspecifiedTypes={['Unspecified']}
-                                             fileMaxSize={20}
-                                             onChange={(files) => setFieldValue(
-                                               `additional[${values.additional && values.additional.length ? values.additional.length : 0}]`,
-                                               {
-                                                 id: files.id,
-                                                 name: files.name,
-                                                 documentType: files.documentType
-                                               }
-                                             )}
-                                             data-test='add_inventory_additional_attachments'
-                                             emptyContent={(
-                                               <label>
-                                                 <FormattedMessage id='addInventory.dragDropAdditional' defaultMessage={'Drop additional documents here'} />
-                                                 <br />
-                                                 <FormattedMessage id='addInventory.dragDropOr' defaultMessage='or select from computer' />
-                                               </label>
-                                             )}
-                                             uploadedContent={(
-                                               <label>
-                                                 <FormattedMessage id='addInventory.dragDropAdditional' defaultMessage={'Drop additional documents here'} />
-                                                 <br />
-                                                 <FormattedMessage id='addInventory.dragDropOr' defaultMessage={'or select from computer'} />
-                                               </label>
-                                             )}
+                                    attachments={values.additional}
+                                    name='additional'
+                                    type={values.additionalType}
+                                    unspecifiedTypes={['Unspecified']}
+                                    fileMaxSize={20}
+                                    onChange={(files) => setFieldValue(
+                                      `additional[${values.additional && values.additional.length ? values.additional.length : 0}]`,
+                                      {
+                                        id: files.id,
+                                        name: files.name,
+                                        documentType: files.documentType
+                                      }
+                                    )}
+                                    data-test='add_inventory_additional_attachments'
+                                    emptyContent={(
+                                      <label>
+                                        <FormattedMessage id='addInventory.dragDropAdditional' defaultMessage={'Drop additional documents here'} />
+                                        <br />
+                                        <FormattedMessage id='addInventory.dragDropOr' defaultMessage='or select from computer' />
+                                      </label>
+                                    )}
+                                    uploadedContent={(
+                                      <label>
+                                        <FormattedMessage id='addInventory.dragDropAdditional' defaultMessage={'Drop additional documents here'} />
+                                        <br />
+                                        <FormattedMessage id='addInventory.dragDropOr' defaultMessage={'or select from computer'} />
+                                      </label>
+                                    )}
                                   />
                                 </GridColumn>
                                 <GridColumn width={5}>
