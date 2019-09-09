@@ -191,6 +191,14 @@ export default function(state = initialState, action) {
                   })
                 }
             }
+        case AT.ORDER_PAY_ORDER_FULFILLED:
+            return {
+                ...state,
+                detail: {
+                    ...state.detail,
+                    ...action.payload.data
+                }
+            }
         default:
             return state
     }
