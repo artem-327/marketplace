@@ -59,7 +59,7 @@ class ReinitiateTransfer extends React.Component {
                     actions.setSubmitting(false)
                     toastManager.add(generateToastMarkup(
                       <FormattedMessage id='order.reinitiateTransfer.success.header' defaultMessage='Reinitiated Transfer' />,
-                      <FormattedMessage id='order.reinitiateTransfer.success.content' defaultMessage='Selected Lots were assigned and available packages allocated' />,
+                      <FormattedMessage id='order.reinitiateTransfer.success.content' defaultMessage='Transfer was successfully reinitiated' />,
                     ), {
                       appearance: 'success'
                     })
