@@ -9,6 +9,8 @@ import * as val from 'yup'
 import Router from 'next/router'
 import Logo from '~/assets/images/logos/logo-dark.png'
 
+import { dunsValidation } from '~/constants/yupValidation'
+
 import { getSafe } from '~/utils/functions'
 const ConfirmSegment = styled(Segment.Group)`
   position: relative;
@@ -73,7 +75,8 @@ const validationScheme = val.object().shape({
     email: val.string().email().required('required')
   }),
   dba: val.string(),
-  dunsNumber: val.number().moreThan(0, 'DUNS Number can not be negative'),
+  // dunsNumber: val.number().moreThan(0, 'DUNS Number can not be negative'),
+  dunsNumber: dunsValidation(),
   name: val.string().required('required'),
   tin: val.string().required('required')
 })

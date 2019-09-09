@@ -97,9 +97,13 @@ class PurchaseOrder extends Component {
     }
   }
 
-  handlePurchase() {
-    // TODO: do purchase
-    window.alert('not implemented')
+  handlePurchase(shipping) {
+    const data = {
+      deliveryAddressId: shipping.selectedAddress.id,
+      //shipmentQuoteId: shipping.selectedShippingQuote
+      shipmentQuoteId: 'someId'  // ! ! TODO - when data is available from BE
+    }
+    this.props.postPurchaseOrder(data)
   }
 
   render() {
@@ -240,7 +244,8 @@ class PurchaseOrder extends Component {
                 <GridRow centered>
                   <Popup trigger={
                     <GridColumn>
-                      <Button disabled={!this.props.logisticsAccount} fluid primary onClick={this.handlePurchase} data-test='purchase_order_place_order_btn'>
+                      <Button disabled={!this.props.logisticsAccount || !(shipping.selectedAddress /* ! ! Add Freight Selection checking when available -> && shipping.selectedShippingQuote */)}
+                              fluid primary onClick={() => this.handlePurchase(shipping)} data-test='purchase_order_place_order_btn'>
                         {/* <FormattedMessage id='cart.placeOrder' defaultMessage='Place Order1' /> */}
                         {formatMessage({ id: 'cart.placeOrder', defaultMessage: 'Place Order1' })}
                       </Button>
@@ -273,6 +278,7 @@ PurchaseOrder.propTypes = {
   dispatch: PropTypes.func,
   getCart: PropTypes.func,
   getDeliveryAddresses: PropTypes.func,
+  postPurchaseOrder: PropTypes.func,
   deleteCart: PropTypes.func,
   selectedAddressId: PropTypes.number,
   shippingQuotes: PropTypes.array
