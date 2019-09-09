@@ -8,7 +8,7 @@ import { FormattedMessage, injectIntl } from 'react-intl'
 import * as Yup from 'yup'
 import Router from 'next/router'
 
-import { errorMessages, addressValidationSchema, beneficialOwnersValidation, dwollaControllerValidation, einValidation } from '~/constants/yupValidation'
+import { errorMessages, addressValidationSchema, beneficialOwnersValidation, dwollaControllerValidation, einValidation, websiteValidation } from '~/constants/yupValidation'
 import { BeneficialOwnersForm } from '~/components/custom-formik'
 import { getSafe } from '~/utils/functions'
 
@@ -90,7 +90,8 @@ class DwollaRegister extends Component {
       {
         firstName: commonValidations.basicString,
         lastName: commonValidations.basicString,
-        email: commonValidations.email
+        email: commonValidations.email,
+        website: websiteValidation()
       },
       {
         businessName: commonValidations.basicString,
@@ -128,7 +129,6 @@ class DwollaRegister extends Component {
       text: el.name
     })) : []
 
-    console.log({ values })
 
     switch (this.state.step) {
       case 1: {
@@ -154,7 +154,7 @@ class DwollaRegister extends Component {
                 </Grid>
               </GridColumn>
 
-              <GridColumn computer={2} only='computer'/>
+              <GridColumn computer={2} only='computer' />
 
               <FormColumn computer={5} tablet={8}>
                 <Segment padded>
@@ -164,15 +164,16 @@ class DwollaRegister extends Component {
                   <Input label={<FormattedMessage id='global.legalFirstName' defaultMessage='Legal First Name' />} inputProps={{ fluid: true }} name='firstName' />
                   <Input label={<FormattedMessage id='global.legalLastName' defaultMessage='Legal Last Name' />} inputProps={{ fluid: true }} name='lastName' />
                   <Input label={<FormattedMessage id='global.email' defaultMessage='E-Mail' />} inputProps={{ fluid: true }} name='email' />
+                  <Input label={<FormattedMessage id='global.websiteURL' defaultMessage='Website URL' />} inputProps={{ fluid: true }} name='website' />
 
                   <RightAlignedDiv>
                     <Button onClick={() => this.nextStep(formikProps)} primary>
-                      <FormattedMessage id='global.saveAndContinue' defaultMessage='Save and Continue'>{text => text}</FormattedMessage>
-                    </Button>
+                    <FormattedMessage id='global.saveAndContinue' defaultMessage='Save and Continue'>{text => text}</FormattedMessage>
+                  </Button>
                   </RightAlignedDiv>
                 </Segment>
               </FormColumn>
-            </GridRow>
+          </GridRow>
           </>
         )
       }
@@ -551,6 +552,7 @@ class DwollaRegister extends Component {
         firstName,
         lastName: lastName.toString().replace(',', ' '),
         email: identity.email,
+        website: getSafe(() => identity.company.website, ''),
         businessName: getSafe(() => identity.company.name),
         businessType: getSafe(() => identity.company.businessType.id),
         address: {
@@ -568,7 +570,7 @@ class DwollaRegister extends Component {
         },
         businessClassification: '9ed35a3b-7d6f-11e3-83c8-5404a6144203',
         industryClassification: '9ed38136-7d6f-11e3-bd75-5404a6144203',
-        ein: getSafe(() => identity.company.tin),
+        ein: getSafe(() => identity.company.tin, ''),
 
         dwollaController: {
           address: {
@@ -605,9 +607,10 @@ class DwollaRegister extends Component {
                   ...values.dwollaController,
                   ...values.address,
                   country: JSON.parse(values.dwollaController.address.country).countryId,
-                  zip: JSON.parse(values.dwollaController.address.zip).zip
+                  // zip: JSON.parse(values.dwollaController.address.zip).zip
                 },
-                postalCode: JSON.parse(values.address.zip).zip,
+                // postalCode: JSON.parse(values.address.zip).zip,
+                postalCode: values.address.zip,
                 address: values.address.streetAddress,
               }
 
@@ -628,8 +631,7 @@ class DwollaRegister extends Component {
             initialValues={initialValues}
             validationSchema={this.getValidationSchema()}
             render={(formikProps) => {
-              if (!formikProps.isSubmitting) formikProps.setSubmitting(true)
-              console.log('isSubmitting', formikProps.isSubmitting)
+              
               return (
                 <Form>
                   <Grid verticalAlign={this.state.step === 1 ? 'middle' : 'top'} padded='very' centered>

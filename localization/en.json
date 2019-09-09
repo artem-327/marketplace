@@ -747,6 +747,7 @@
   "cart.nmfcNumber": "NMFC Number",
   "cart.purchaseOrder.logisticAccRequired": "To be able to complete Order, your Company needs to have Logistics account defined. This can be done in Settings.",
   "validation.required": "Required",
+  "validation.invalidURL": "Invalid Website URL",
   "validation.aboveAge": "Must be at least {age} years old",
   "validation.invalidEmail": "Invalid e-mail address",
   "validation.invalidDateFormat": "Invalid date format. Date should match format {example}",

@@ -41,7 +41,8 @@ export const errorMessages = {
   lessThanOrdered: <FormattedMessage id='validation.lessThanOrdered' defaultMessage='Less than ordered' />,
   moreThanOrdered: <FormattedMessage id='validation.moreThanOrdered' defaultMessage='More than ordered' />,
   oneOf: (arr) => <FormattedMessage id='validation.oneOf' defaultMessage={`Must be one of ${arr.toString()}`} values={{ values: arr.toString() }} />,
-  aboveAge: age => <FormattedMessage id='validation.aboveAge' defaultMessage={`Must be at least ${age} years old`} values={{ age }} />
+  aboveAge: age => <FormattedMessage id='validation.aboveAge' defaultMessage={`Must be at least ${age} years old`} values={{ age }} />,
+  invalidWebsite: <FormattedMessage id='validation.invalidURL' defaultMessage='Invalid Website URL' />
 }
 
 export const provinceObjectRequired = (hasProvinces) => (
@@ -159,9 +160,25 @@ export const dunsValidation = () => {
   return (
     Yup.string(errorMessages.requiredMessage)
       .test('duns', errorMessages.invalidValueFormat('12-345-6789 or 123456789'), (val) => {
-        console.log({ val })
         if (val.includes('-')) return /^[0-9]{2}\-[0-9]{3}\-[0-9]{4}$/.test(val)
         else return /^[0-9]{9}$/.test(val)
       })
   )
+}
+
+export const websiteValidation = () => (
+  Yup.string(errorMessages.requiredMessage)
+    .test('website', errorMessages.invalidWebsite, (val) => val ? validURL(val) : true)
+    .required(errorMessages.requiredMessage)
+)
+
+
+function validURL(str) {
+  var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+    '(\\#[-a-z\\d_]*)?$', 'i') // fragment locator
+  return !!pattern.test(str)
 }
