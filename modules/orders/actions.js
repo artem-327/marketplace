@@ -50,3 +50,4 @@ export const removeAttachment = (aId) => ({type: AT.ORDER_REMOVE_ATTACHMENT, asy
     fileId: aId
   }
 }})
+export const cancelPayment = (orderId) => ({type: AT.ORDER_CANCEL_PAYMENT, payload: Api.cancelPayment(orderId)})

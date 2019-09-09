@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import '~/src/pages/inventory/addInventory/AddInventory.scss'
 import Spinner from '~/src/components/Spinner/Spinner'
-import { Grid, Segment, Accordion, Table, List, Label, Button, Icon, Divider, Header } from 'semantic-ui-react'
+import { Grid, Segment, Accordion, Table, List, Label, Button, Icon, Divider, Header, Popup } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from 'styled-components'
 import ActionsRequired from './components/ActionsRequired'
 import AssignLots from './components/AssignLots'
+import confirm from '~/src/components/Confirmable/confirm'
 
 const AccordionTitle = styled(Accordion.Title)`
   text-transform: uppercase;
@@ -100,7 +101,7 @@ class Detail extends Component {
   }
 
   render() {
-    const { router, order, action, isDetailFetching, openedAssignLots } = this.props
+    const { router, order, action, isDetailFetching, openedAssignLots, cancelPayment } = this.props
     const { activeIndexes } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
 
@@ -156,7 +157,20 @@ class Detail extends Component {
                 <List.Item>
                   <List.Content>
                     <List.Header as='label'><FormattedMessage id='order.paymentStatus' defaultMessage='Payment Status' /></List.Header>
-                    <List.Description as='span'><Label circular empty color={order.paymentStatus !== 'N/A' ? 'blue' : false}></Label> {order.paymentStatus}</List.Description>
+                    <List.Description as='span'><Label circular empty color={order.paymentStatus !== 'N/A' ? 'blue' : false}></Label> {order.paymentStatus === 'Pending' ? (
+                      <Popup content={<FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />}
+                             trigger={
+                               <a onClick={() => confirm(
+                                   <FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />,
+                                   <FormattedMessage id='confirm.cancelPayment.content' defaultMessage='Do you really want to Cancel Payment for Order #{orderId}' values={{ orderId: order.id }} />
+                                  ).then(() => { cancelPayment(order.id) })}>
+                                  {order.paymentStatus}
+                                  <Icon name='trash alternate outline' color='black' style={{ marginLeft: '0.5em' }} />
+                                </a>
+                             } />
+                    ) : (
+                      <>{order.paymentStatus}</>
+                    )}</List.Description>
                   </List.Content>
                 </List.Item>
               </List>

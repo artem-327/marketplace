@@ -24,13 +24,13 @@ class ActionsRequired extends React.Component {
     this.props.shipOrder(this.props.order.id)
   }
 
-  renderSegment(columnWidth, description, buttons) {
+  renderSegment(color, columnWidth, title, description, buttons) {
     return (
-      <Segment color='blue' style={{ marginLeft: '32px', marginRight: '32px' }}>
+      <Segment color={color ? color : 'blue'} style={{ marginLeft: '32px', marginRight: '32px' }}>
         <Grid verticalAlign='middle' columns='equal'>
           <Grid.Column width={columnWidth}>
-            <Header as='h3' style={{ margin: '0 0 0.3571429rem' }}>
-              <FormattedMessage id='order.actionRequired' defaultMessage='Action Required' />
+            <Header as='h3' color={color ? color : 'black'} style={{ margin: '0 0 0.3571429rem' }}>
+              <FormattedMessage id={title ? title : 'order.actionRequired'} />
             </Header>
             <FormattedMessage id={description} />
           </Grid.Column>
@@ -43,6 +43,7 @@ class ActionsRequired extends React.Component {
                             basic={button.buttonType === 'basic'}
                             fluid
                             size='large'
+                            color={color ? color : null}
                             onClick={() => button.onClick()}
                             data-test={button.dataTest}>
                       <FormattedMessage id={button.text} />
@@ -65,7 +66,9 @@ class ActionsRequired extends React.Component {
         {ordersType === 'Sales' ? (
           <>
             {action === '100' ? this.renderSegment(
+              null,
               13,
+              null,
               'order.confirm.description',
               [{
                 buttonType: 'primary',
@@ -81,7 +84,9 @@ class ActionsRequired extends React.Component {
             ) : null}
 
             {action === '210' ? this.renderSegment(
+              null,
               14,
+              null,
               'order.assignLots.description',
               [{
                 buttonType: 'primary',
@@ -92,7 +97,9 @@ class ActionsRequired extends React.Component {
             ) : null}
 
             {action === '211' ? this.renderSegment(
+              null,
               12,
+              null,
               'order.ship.description',
               [{
                 buttonType: 'primary',
