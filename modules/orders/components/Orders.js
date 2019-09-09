@@ -26,7 +26,8 @@ class Orders extends Component {
       { name: 'sds', title: <FormattedMessage id='order.sds' defaultMessage='SDS' />, width: 80 },
       { name: 'cofA', title: <FormattedMessage id='order.cOfa' defaultMessage='C of A' />, width: 80 },
       { name: 'orderTotal', title: <FormattedMessage id='order.orderTotal' defaultMessage='Order Total' />, width: 160 }
-    ]
+    ],
+    LastEndpointType: ''
   }
 
   loadData(endpointType, filterData) {
@@ -47,6 +48,12 @@ class Orders extends Component {
     this.props.datagrid.setFilter(filter)
   }
 
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (this.state.LastEndpointType !== nextProps.endpointType) {
+      this.setState({LastEndpointType: nextProps.endpointType})
+      this.props.datagrid.setFilter({ filters: [] })
+    }
+  }
 
   handleFilterClear = () => {
     this.props.applyFilter({ filters: [] })
