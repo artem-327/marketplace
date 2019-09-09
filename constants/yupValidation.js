@@ -153,3 +153,15 @@ export const dateOfBirthValidation = (minimumAge = 18) =>
 export const einValidation = () =>
   Yup.string(errorMessages.requiredMessage)
     .test('ein', errorMessages.invalidString, (ein) => isValid(ein)).required(errorMessages.requiredMessage)
+
+export const dunsValidation = () => {
+
+  return (
+    Yup.string(errorMessages.requiredMessage)
+      .test('duns', errorMessages.invalidValueFormat('12-345-6789 or 123456789'), (val) => {
+        console.log({ val })
+        if (val.includes('-')) return /^[0-9]{2}\-[0-9]{3}\-[0-9]{4}$/.test(val)
+        else return /^[0-9]{9}$/.test(val)
+      })
+  )
+}

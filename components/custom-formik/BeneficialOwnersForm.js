@@ -25,8 +25,14 @@ class BeneficialOwnersForm extends Component {
       beneficialOwners.push(
         <>
           <FormGroup widths='equal' data-test='settings_dwolla_beneficialOwner_namePostal_inp'>
-            <Input label={formatMessage({ id: 'global.firstName', defaultMessage: 'First Name' })} name={`beneficialOwners[${i}].firstName`} />
-            <Input label={formatMessage({ id: 'global.lastName', defaultMessage: 'Last Name' })} name={`beneficialOwners[${i}].lastName`} />
+            <Input
+              inputProps={{ fluid: true }}
+              label={formatMessage({ id: 'global.firstName', defaultMessage: 'First Name' })}
+              name={`beneficialOwners[${i}].firstName`} />
+            <Input
+              inputProps={{ fluid: true }}
+              label={formatMessage({ id: 'global.lastName', defaultMessage: 'Last Name' })}
+              name={`beneficialOwners[${i}].lastName`} />
           </FormGroup>
           <AddressForm
             countryPopup={{
@@ -42,10 +48,11 @@ class BeneficialOwnersForm extends Component {
 
           <FormGroup widths='equal' data-test='settings_dwolla_beneficialOwner_nameSsn_inp'>
             <Input
-              inputProps={{ placeholder: '123-45-6789' }}
+              inputProps={{ placeholder: '123-45-6789', fluid: true }}
               label={formatMessage({ id: 'settings.ssn', defaultMessage: 'SSN' })}
               name={`beneficialOwners[${i}].ssn`} />
             <DateInput
+              inputProps={{ fluid: true }}
               label={formatMessage({ id: 'global.birth', defaultMessage: 'Birth' })}
               name={`beneficialOwners[${i}].dateOfBirth`} />
           </FormGroup>

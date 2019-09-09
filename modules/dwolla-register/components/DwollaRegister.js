@@ -135,7 +135,7 @@ class DwollaRegister extends Component {
         return (
           <>
             <GridRow>
-              <GridColumn computer={9}>
+              <GridColumn computer={9} tablet={8}>
                 <Grid textAlign='center'>
                   <GridRow>
                     <GridColumn computer={16}>
@@ -146,17 +146,17 @@ class DwollaRegister extends Component {
                   </GridRow>
 
                   <GridRow>
-                    <GridColumn>
+                    {/* <GridColumn>
                       LOGO
-                </GridColumn>
+                </GridColumn> */}
                   </GridRow>
 
                 </Grid>
               </GridColumn>
 
-              <GridColumn computer={2} />
+              <GridColumn computer={2} only='computer'/>
 
-              <FormColumn computer={5}>
+              <FormColumn computer={5} tablet={8}>
                 <Segment padded>
 
                   <Header as='h4'><FormattedMessage id='dwolla.dwolla.confirmAcc' defaultMessage='Confirm Dwolla Account Admin Information' /></Header>
@@ -182,8 +182,8 @@ class DwollaRegister extends Component {
         return (
           <>
             <GridRow>
-              <GridColumn computer={11} />
-              <FormColumn computer={5}>
+              <GridColumn computer={10} tablet={3} mobile={2} />
+              <FormColumn largeScreen={6} computer={8} tablet={8} mobile={10}>
                 <Segment padded>
                   <Header as='h4'><FormattedMessage id='dwolla.confirmCompanyInfo' defaultMessage='Confirm Company Information' /></Header>
                   <Header as='h5'><FormattedMessage id='global.step' defaultMessage='Step' /> {' '} {this.state.step} / {numberOfSteps}</Header>
@@ -303,7 +303,7 @@ class DwollaRegister extends Component {
           return (
             <>
               <GridRow>
-                <FormColumn computer={6}>
+                <FormColumn computer={8} tablet={12}>
                   <Segment padded>
                     <BeneficialOwnersForm
                       handleOwnerCountChange={(values) => {
