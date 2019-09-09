@@ -600,6 +600,10 @@ table.ui.table.table-fields {
       position: absolute;
       margin: -10px 0 0;
       font-size: 0.7142857rem;
+
+      label {
+        white-space: nowrap;
+      }
     }
 
     .uploadLot {

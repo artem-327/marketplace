@@ -136,6 +136,23 @@ class AssignLots extends React.Component {
     }
   }
 
+  componentDidUpdate(oldProps) {
+    if (getSafe(() => oldProps.poLots.length, 0) < getSafe(() => this.props.poLots.length, 0)){
+      const availability = this.props.poLots.map(poLot => {
+        return {
+          id: poLot.id,
+          lots: poLot.lots.map(lot => {
+            return {
+              id: lot.id,
+              available: lot.available
+            }
+          })
+        }
+      })
+      this.setState({ 'poLots': availability })
+    }
+  }
+
   linkAttachment = (lotId, files, data) => {
     const { values, setFieldValue, lotNumber, productOfferId } = data
     this.props.linkAttachment(lotId, files).then(r => {
@@ -166,6 +183,10 @@ class AssignLots extends React.Component {
 
   renderTab(tabIndex, orderItem, lots, setFieldValue, values) {
     const { poLots } = this.props
+    const statePoLots = this.state.poLots
+    let tabAvailability = []
+    if (statePoLots.length)
+      tabAvailability = getSafe(() => statePoLots.find(poLot => poLot.id === orderItem.productOffer).lots, [])
 
     if (!getSafe(() => poLots.length, 0))
       return (<></>)
@@ -215,17 +236,60 @@ class AssignLots extends React.Component {
                                       onClick: (e, {checked}) => {
                                         setFieldValue(`tabLots[${tabIndex}].lots[${index}].selected`, checked)
                                         const stateAllocated = this.state.allocated
+                                        const stateAvailability = this.state.poLots
                                         const needAmount = ((orderItem.amount - stateAllocated[tabIndex]) > 0 ? orderItem.amount - stateAllocated[tabIndex] : 0)
                                         if (checked) {
                                           const allocated = values.tabLots[tabIndex].lots[index].available > needAmount ? needAmount : values.tabLots[tabIndex].lots[index].available
                                           setFieldValue(`tabLots[${tabIndex}].lots[${index}].allocated`, allocated)
                                           stateAllocated[tabIndex] += allocated
-                                          this.setState({ allocated: stateAllocated })
+
+                                          const newAvailability = stateAvailability.map(po => {
+                                            if (po.id === orderItem.productOffer) {
+                                              return {
+                                                id: po.id,
+                                                lots: po.lots.map(pLot => {
+                                                  if (pLot.id === values.tabLots[tabIndex].lots[index].id) {
+                                                    return {
+                                                      id: pLot.id,
+                                                      available: pLot.available - allocated
+                                                    }
+                                                  } else {
+                                                    return pLot
+                                                  }
+                                                })
+                                              }
+                                            } else {
+                                              return po
+                                            }
+                                          })
+
+                                          this.setState({ poLots: newAvailability, allocated: stateAllocated })
                                         } else {
                                           const allocated = values.tabLots[tabIndex].lots[index].allocated
                                           setFieldValue(`tabLots[${tabIndex}].lots[${index}].allocated`, 0)
                                           stateAllocated[tabIndex] -= allocated
-                                          this.setState({ allocated: stateAllocated })
+
+                                          const newAvailability = stateAvailability.map(po => {
+                                            if (po.id === orderItem.productOffer) {
+                                              return {
+                                                id: po.id,
+                                                lots: po.lots.map(pLot => {
+                                                  if (pLot.id === values.tabLots[tabIndex].lots[index].id) {
+                                                    return {
+                                                      id: pLot.id,
+                                                      available: pLot.available + allocated
+                                                    }
+                                                  } else {
+                                                    return pLot
+                                                  }
+                                                })
+                                              }
+                                            } else {
+                                              return po
+                                            }
+                                          })
+
+                                          this.setState({ poLots: newAvailability, allocated: stateAllocated })
                                         }
                                       },
                                       id: `tab${tabIndex}_lot${index}`
@@ -233,7 +297,7 @@ class AssignLots extends React.Component {
                         </Table.Cell>
                         <Table.Cell>{lot.lotNumber}</Table.Cell>
                         <Table.Cell textAlign='center'>{lot.total}</Table.Cell>
-                        <Table.Cell textAlign='center'>{lot.available}</Table.Cell>
+                        <Table.Cell textAlign='center'>{getSafe(() => tabAvailability.find(avLot => avLot.id === lot.id).available, 0)}</Table.Cell>
                         <Table.Cell textAlign='center'>
                           <Input name={`tabLots[${tabIndex}].lots[${index}].allocated`}
                                  inputProps={{
@@ -243,9 +307,34 @@ class AssignLots extends React.Component {
                                    readOnly: getSafe(() => values.tabLots[tabIndex].lots[index].selected, false) ? false : true,
                                    defaultValue: lot.allocated,
                                    onChange: (e, {value}) => {
+                                     // manage allocated values
                                      let stateAllocated = this.state.allocated
-                                     stateAllocated[tabIndex] += (value - values.tabLots[tabIndex].lots[index].allocated)
-                                     this.setState({allocated: stateAllocated })
+                                     const allocNow = (value - values.tabLots[tabIndex].lots[index].allocated)
+                                     stateAllocated[tabIndex] += allocNow
+
+                                     // manage availability
+                                     let stateAvailability = this.state.poLots
+                                     const newAvailability = stateAvailability.map(po => {
+                                       if (po.id === orderItem.productOffer) {
+                                         return {
+                                           id: po.id,
+                                           lots: po.lots.map(pLot => {
+                                             if (pLot.id === values.tabLots[tabIndex].lots[index].id) {
+                                               return {
+                                                 id: pLot.id,
+                                                 available: pLot.available - allocNow
+                                               }
+                                             } else {
+                                               return pLot
+                                             }
+                                           })
+                                         }
+                                       } else {
+                                         return po
+                                       }
+                                     })
+
+                                     this.setState({ poLots: newAvailability, allocated: stateAllocated })
                                    }
                                  }} />
                         </Table.Cell>

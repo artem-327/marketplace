@@ -1,5 +1,6 @@
 import * as AT from './action-types'
 import { INVENTORY_LINK_ATTACHMENT } from '~/modules/inventory/action-types'
+import { getSafe } from '~/utils/functions'
 
 const initialState = {
     data: [],
@@ -140,11 +141,13 @@ export default function(state = initialState, action) {
                 })
             })
 
+            const statePoLots = getSafe(() => state.detail.poLots, [])
+
             return {
                 ...state,
                 detail: {
                     ...state.detail,
-                    poLots: poLots
+                    poLots: statePoLots.concat(poLots)
                 }
             }
         case AT.ORDER_ASSIGN_LOTS_FULFILLED:
