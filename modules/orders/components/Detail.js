@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import ActionsRequired from './components/ActionsRequired'
 import AssignLots from './components/AssignLots'
 import confirm from '~/src/components/Confirmable/confirm'
+import moment from 'moment/moment'
 
 const AccordionTitle = styled(Accordion.Title)`
   text-transform: uppercase;
@@ -105,6 +106,8 @@ class Detail extends Component {
     const { activeIndexes } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
 
+    let orderDate = moment(order.orderDate, 'MMM Do, YYYY h:mm:ss A')
+
     return (
       <div id='page' className='scrolling'>
         <PerfectScrollbar>
@@ -157,20 +160,20 @@ class Detail extends Component {
                 <List.Item>
                   <List.Content>
                     <List.Header as='label'><FormattedMessage id='order.paymentStatus' defaultMessage='Payment Status' /></List.Header>
-                    <List.Description as='span'><Label circular empty color={order.paymentStatus !== 'N/A' ? 'blue' : false}></Label> {order.paymentStatus === 'Pending' ? (
-                      <Popup content={<FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />}
-                             trigger={
-                               <a onClick={() => confirm(
+                    <List.Description as='span'>
+                      <Label circular empty color={order.paymentStatus !== 'N/A' ? 'blue' : false}></Label> {order.paymentStatus === 'Pending' && moment().isBefore(orderDate.add(1, 'days')) ? (
+                        <Popup content={<FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />}
+                               trigger={
+                                 <a onClick={() => confirm(
                                    <FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />,
                                    <FormattedMessage id='confirm.cancelPayment.content' defaultMessage='Do you really want to Cancel Payment for Order #{orderId}' values={{ orderId: order.id }} />
-                                  ).then(() => { cancelPayment(order.id) })}>
-                                  {order.paymentStatus}
-                                  <Icon name='trash alternate outline' color='black' style={{ marginLeft: '0.5em' }} />
-                                </a>
-                             } />
-                    ) : (
-                      <>{order.paymentStatus}</>
-                    )}</List.Description>
+                                 ).then(() => { cancelPayment(order.id) })}>
+                                   {order.paymentStatus}
+                                   <Icon name='trash alternate outline' color='black' style={{ marginLeft: '0.5em' }} />
+                                 </a>
+                               } />
+                      ) : order.paymentStatus}
+                    </List.Description>
                   </List.Content>
                 </List.Item>
               </List>
