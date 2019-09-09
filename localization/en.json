@@ -1114,6 +1114,11 @@
   "order.assignLots.orderItem.amount": "Allocated packages: {allocated} / {amount}",
   "order.ship": "Ship",
   "order.ship.description": "This order is in confirmed status. Please select ship to move forward with the order.",
+  "order.reinitiateTransfer": "Reinitiate Transfer",
+  "order.reinitiateTransfer.subtitle": "Please select another payment account and Transfer",
+  "order.reinitiateTransfer.transfer": "Transfer",
+  "order.payment.failed.description": "The payment for this order failed. Please select another payment account or cancel the order.",
+  "order.reinitiateTransfer.dropdownPlaceholder": "-- select payment account --",
   "profile.myProfile": "My Profile",
   "profile.lastLoginAt": "Last login at:"
 }

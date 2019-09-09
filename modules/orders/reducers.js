@@ -15,7 +15,8 @@ const initialState = {
     selectedIndex: -1,
     statusFilter: null,
     searchedCompanies: [],
-    openedAssignLots: false
+    openedAssignLots: false,
+    openedReinitiateTransfer: false
 }
 
 export default function(state = initialState, action) {
@@ -115,6 +116,20 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 openedAssignLots: false
+            }
+        case AT.ORDER_OPEN_REINITIATE_TRANSFER:
+            return {
+                ...state,
+                openedReinitiateTransfer: true
+            }
+        case AT.ORDER_CLOSE_REINITIATE_TRANSFER:
+            return {
+                ...state,
+              openedReinitiateTransfer: false
+            }
+        case AT.ORDER_LOAD_BANK_ACCOUNTS_FULFILLED:
+            return {
+                ...state
             }
         case AT.ORDER_GET_LOTS_FULFILLED:
             // prepare lots for used product offers

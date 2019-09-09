@@ -7,6 +7,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import styled from 'styled-components'
 import ActionsRequired from './components/ActionsRequired'
 import AssignLots from './components/AssignLots'
+import ReinitiateTransfer from './components/ReinitiateTransfer'
 import confirm from '~/src/components/Confirmable/confirm'
 import moment from 'moment/moment'
 
@@ -102,7 +103,7 @@ class Detail extends Component {
   }
 
   render() {
-    const { router, order, action, isDetailFetching, openedAssignLots, cancelPayment } = this.props
+    const { router, order, action, isDetailFetching, openedAssignLots, openedReinitiateTransfer, cancelPayment } = this.props
     const { activeIndexes } = this.state
     let ordersType = router.query.type.charAt(0).toUpperCase() + router.query.type.slice(1)
 
@@ -161,7 +162,7 @@ class Detail extends Component {
                   <List.Content>
                     <List.Header as='label'><FormattedMessage id='order.paymentStatus' defaultMessage='Payment Status' /></List.Header>
                     <List.Description as='span'>
-                      <Label circular empty color={order.paymentStatus !== 'N/A' ? 'blue' : false}></Label> {order.paymentStatus === 'Pending' && moment().isBefore(orderDate.add(1, 'days')) ? (
+                      <Label circular empty color={order.paymentStatus === 'Failed' ? 'red' : (order.paymentStatus !== 'N/A' ? 'blue' : false)}></Label> {order.paymentStatus === 'Pending' && moment().isBefore(orderDate.add(1, 'days')) ? (
                         <Popup content={<FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />}
                                trigger={
                                  <a onClick={() => confirm(
@@ -183,6 +184,7 @@ class Detail extends Component {
             <>
               <ActionsRequired order={order} ordersType={ordersType} />
               {openedAssignLots ? <AssignLots /> : null}
+              {openedReinitiateTransfer ? <ReinitiateTransfer /> : null}
               <Divider hidden />
               <Accordion defaultActiveIndex={[0, 1]} styled fluid style={{ width: 'calc(100% - 64px)', margin: '0 32px' }}>
                 <AccordionTitle active={activeIndexes[0]} index={0} onClick={this.handleClick} data-test='orders_detail_order_info'>

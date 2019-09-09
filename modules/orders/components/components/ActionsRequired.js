@@ -59,7 +59,7 @@ class ActionsRequired extends React.Component {
   }
 
   render() {
-    const { action, ordersType } = this.props
+    const { action, ordersType, detail, openReinitiateTransfer } = this.props
 
     return (
       <>
@@ -114,7 +114,22 @@ class ActionsRequired extends React.Component {
               }]
             ) : null}
           </>
-        ) : null}
+        ) : (
+          <>
+            {detail.paymentStatus === 5 ? this.renderSegment(
+              'red',
+              14,
+              null,
+              'order.payment.failed.description',
+              [{
+                buttonType: null,
+                onClick: openReinitiateTransfer,
+                dataTest: 'orders_detail_reinitiate_transfer',
+                text: 'order.reinitiateTransfer'
+              }]
+            ) : null}
+          </>
+        )}
       </>
     )
   }
@@ -135,6 +150,7 @@ function mapStateToProps(state, ownProps) {
   return {
     action: actionRequired(orders.detail),
     order: ownProps.order,
+    detail: orders.detail,
     ordersType: ownProps.ordersType
   }
 }
