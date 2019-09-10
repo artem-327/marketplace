@@ -562,10 +562,7 @@ class DwollaRegister extends Component {
             hasProvinces: getSafe(() => primaryBranch.address.country.hasProvinces)
           }),
           province: getSafe(() => primaryBranch.address.province.id),
-          zip: getSafe(() => primaryBranch.address.zip.id, false) ? JSON.stringify({
-            id: getSafe(() => primaryBranch.address.zip.id),
-            zip: getSafe(() => primaryBranch.address.zip.zip)
-          }) : null,
+          zip: getSafe(() => primaryBranch.address.zip.zip, false),
           city: getSafe(() => primaryBranch.address.city)
         },
         businessClassification: '9ed35a3b-7d6f-11e3-83c8-5404a6144203',

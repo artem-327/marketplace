@@ -55,18 +55,20 @@ export default class AddressForm extends Component {
     return fields
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     let { countries } = this.props
     const { addZip } = this.props
 
     try {
       let { address } = this.getValues()
-
-      if (countries.length === 0) this.props.getCountries()
-      if (address.zip) addZip(JSON.parse(address.zip))
+      
+      
+      if (countries.length === 0) await this.props.getCountries()
+      if (address.zip) await addZip(JSON.parse(address.zip))
       let { countryId, hasProvinces } = JSON.parse(getSafe(() => address.country, { countryId: null, hasProvinces: null }))
 
-      this.fetchProvinces(countryId, hasProvinces)
+      await this.fetchProvinces(countryId, hasProvinces)
+      
     } catch (e) { console.error(e) }
   }
 

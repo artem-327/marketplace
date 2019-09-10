@@ -5,7 +5,7 @@ import { Input } from 'formik-semantic-ui'
 import { DateInput } from '~/components/custom-formik'
 
 import { AddressForm } from '~/modules/address-form/'
-import { object, func } from 'prop-types';
+import { object, func } from 'prop-types'
 
 
 class ControllerForm extends Component {
