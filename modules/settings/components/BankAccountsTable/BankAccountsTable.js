@@ -7,7 +7,9 @@ import confirm from '~/src/components/Confirmable/confirm'
 import { Formik } from 'formik'
 import { Input, Button } from 'formik-semantic-ui'
 import * as Yup from 'yup'
-import get from "lodash/get";
+import get from 'lodash/get'
+
+import { getSafe } from '~/utils/functions'
 
 import {
   openPopup,
@@ -65,10 +67,10 @@ const FinalizeConfirmDialog = confirmable(({ proceed, show, dismiss }) => (
         <Modal.Actions>
           <Button primary inverted onClick={handleReset} data-test='settings_bank_account_cancel_btn'>
             <FormattedMessage id='global.cancel' defaultMessage='Cancel'>{(text) => text}</FormattedMessage>
-            </Button>
+          </Button>
           <Button primary onClick={handleSubmit} data-test='settings_bank_account_confirm_btn'>
             <FormattedMessage id='global.confirm' defaultMessage='Confirm'>{(text) => text}</FormattedMessage>
-            </Button>
+          </Button>
         </Modal.Actions>
       </Modal>
     )}
@@ -223,11 +225,11 @@ class BankAccountsTable extends Component {
                   <Table.Cell>
                     {bankAccounts.documentStatus ? (
                       <>
-                        <FormattedMessage id={`dwolla.info.${dwollaAccountStatus}`}/>&nbsp;
-                        <FormattedMessage id={`dwolla.document.${dwollaDocumentRequired}`}/>
+                        <FormattedMessage id={`dwolla.info.${dwollaAccountStatus}`} />&nbsp;
+                        <FormattedMessage id={`dwolla.document.${dwollaDocumentRequired}`} />
                       </>
-                      ) : (
-                      <FormattedMessage id={`dwolla.info.${dwollaAccountStatus}`}/>
+                    ) : (
+                        <FormattedMessage id={`dwolla.info.${dwollaAccountStatus}`} />
                       )}
 
                   </Table.Cell>
@@ -240,7 +242,7 @@ class BankAccountsTable extends Component {
 
         {bankAccounts.documentStatus && (
           <>
-            <FormattedMessage id='dwolla.document.explanatoryText' >{(text) => text.split('\n').map ((item, i) => <p key={i}>{item}</p>)}</FormattedMessage>
+            <FormattedMessage id='dwolla.document.explanatoryText' >{(text) => text.split('\n').map((item, i) => <p key={i}>{item}</p>)}</FormattedMessage>
           </>
         )}
       </React.Fragment>
@@ -268,9 +270,9 @@ const statusToLabel = {
 const mapStateToProps = state => {
   const company = get(state, 'auth.identity.company', null)
   let dwollaDocumentRequired = company && company.dwollaDocumentRequired ? company.dwollaDocumentRequired : 'verify-with-document'
-  // ! ! Temporary, until 'dwollaAccountStatus' is returned from BE
-  const dwollaAccountStatus = company && company.dwollaAccountStatus ? company.dwollaAccountStatus : (company && company.hasDwollaAccount ? 'verified' : 'none')
-
+  
+  const dwollaAccountStatus = getSafe(() => company.dwollaAccountStatus, 'none') 
+  
   dwollaDocumentRequired = dwollaDocumentRequired.replace(/-/g, '')
 
   return {

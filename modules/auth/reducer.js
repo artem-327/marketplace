@@ -2,7 +2,8 @@ import * as AT from './action-types'
 import { ROLES_ENUM } from '../../src/utils/constants'
 import { getSafe } from '~/utils/functions'
 
-
+import { ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '~/modules/admin/action-types'
+import { SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED } from '~/modules/settings/action-types'
 
 const getAccessRights = (roles) => {
   let accessRights = {}
@@ -250,6 +251,23 @@ export default function reducer(state = initialState, action) {
             ...state.identity.company,
             hasLogo: false
           }
+        }
+      }
+    }
+    
+    /* REGISTER_DWOLLA_ACCOUNT */
+    case SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED:
+    case ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED: {
+      return {
+        ...state,
+        identity: {
+          ...state.identity,
+          company: {
+            ...state.identity.company,
+            hasDwollaAccount: true,
+            dwollaAccountStatus: 'verified',
+          }
+
         }
       }
     }
