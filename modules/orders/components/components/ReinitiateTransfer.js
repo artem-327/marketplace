@@ -58,8 +58,8 @@ class ReinitiateTransfer extends React.Component {
                   this.props.payOrder(orderId, values.paymentAccount).then(r => {
                     actions.setSubmitting(false)
                     toastManager.add(generateToastMarkup(
-                      <FormattedMessage id='order.reinitiateTransfer.success.header' defaultMessage='Reinitiated Transfer' />,
-                      <FormattedMessage id='order.reinitiateTransfer.success.content' defaultMessage='Transfer was successfully reinitiated' />,
+                      <FormattedMessage id='order.reinitiateTransfer.success.header' defaultMessage='Initiate Payment' />,
+                      <FormattedMessage id='order.reinitiateTransfer.success.content' defaultMessage='Payment transfer for order #{orderId} was initiated successfully' values={{ orderId: orderId }} />,
                     ), {
                       appearance: 'success'
                     })

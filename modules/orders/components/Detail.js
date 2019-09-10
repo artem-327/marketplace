@@ -116,8 +116,7 @@ class Detail extends Component {
           <Grid verticalAlign='middle' columns='equal' style={{ padding: '0 32px' }}>
             <Grid.Column width={6}>
               <div className='header-top clean left detail-align'>
-                <Header as='h1' className='header inv-header' style={{ marginBottom: '0.5rem', textTransform: 'uppercase', fontSize: '1.14285714em', fontWeight: '500' }}>{ordersType}
-                  <FormattedMessage id='order' defaultMessage='Order' /> {isDetailFetching ? '' : '# ' + order.id}</Header>
+                <Header as='h1' className='header inv-header' style={{ marginBottom: '0.5rem', textTransform: 'uppercase', fontSize: '1.14285714em', fontWeight: '500' }}>{ordersType} <FormattedMessage id='order' defaultMessage='Order' /> {isDetailFetching ? '' : '# ' + order.id}</Header>
                 <a onClick={() => this.downloadOrder()} style={{ fontSize: '1.14285714em', cursor: 'pointer' }} data-test='orders_detail_download_order'><Icon name='download' style={{ verticalAlign: 'top' }} color='blue' />
                   <FormattedMessage id='order.downloadOrder' defaultMessage={`Download ${order.orderType} Order`} values={{ orderType: order.orderType }} />
                 </a>

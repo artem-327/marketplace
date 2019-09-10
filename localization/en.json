@@ -1137,8 +1137,8 @@
   "order.reinitiateTransfer.transfer": "Transfer",
   "order.payment.failed.description": "The payment for this order failed. Please select another payment account or cancel the order.",
   "order.reinitiateTransfer.dropdownPlaceholder": "-- select payment account --",
-  "order.reinitiateTransfer.success.header": "Reinitiated Transfer",
-  "order.reinitiateTransfer.success.content": "Transfer was successfully reinitiated",
+  "order.reinitiateTransfer.success.header": "Initiate Payment",
+  "order.reinitiateTransfer.success.content": "Payment transfer for order #{orderId} was initiated successfully",
   "order.cancelOrder": "Cancel Order",
   "profile.myProfile": "My Profile",
   "profile.lastLoginAt": "Last login at:"
