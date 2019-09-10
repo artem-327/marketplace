@@ -18,6 +18,9 @@ import Summary from '~/components/summary/Summary'
 import Spinner from '../../../src/components/Spinner/Spinner'
 import confirm from '~/src/components/Confirmable/confirm'
 import { checkToken } from '../../../src/utils/auth'
+import { withToastManager } from 'react-toast-notifications'
+
+import { generateToastMarkup } from '~/utils/functions'
 
 import '../styles/PurchaseOrder.scss'
 
@@ -31,7 +34,8 @@ const RelaxedGrid = styled(Grid)`
 
 class PurchaseOrder extends Component {
   state = {
-    otherAddresses: true
+    otherAddresses: true,
+    submitting: false
   }
   componentDidMount() {
     this.props.getCart()
@@ -97,13 +101,37 @@ class PurchaseOrder extends Component {
     }
   }
 
-  handlePurchase(shipping) {
+  handlePurchase = (shipping, selectedShipping) => {
+    if (this.state.submitting) return
+    this.setState({submitting: true})
+
+    const {toastManager } = this.props
     const data = {
       deliveryAddressId: shipping.selectedAddress.id,
-      //shipmentQuoteId: shipping.selectedShippingQuote
-      shipmentQuoteId: 'someId'  // ! ! TODO - when data is available from BE
+      shipmentQuoteId: selectedShipping.quote.quoteId
     }
-    this.props.postPurchaseOrder(data)
+
+    try {
+      this.props.postPurchaseOrder(data)
+
+      toastManager.add(generateToastMarkup(
+        <FormattedMessage id='notifications.purchaseOrderSuccess.header' defaultMessage='Order Placed' />,
+        <FormattedMessage id='notifications.purchaseOrderSuccess.content' defaultMessage='Order has been successfully placed.' />,
+      ), {
+        appearance: 'success'
+      })
+      Router.push('/orders?type=purchase')
+    } catch (e) {
+      console.error(e)
+
+      toastManager.add(generateToastMarkup(
+        <FormattedMessage id='notifications.purchaseOrderError.header' defaultMessage='Order Error' />,
+        <FormattedMessage id='notifications.purchaseOrderError.content' defaultMessage='Error occurred while placing an order.' />,
+      ), {
+        appearance: 'error'
+      })
+    }
+    this.setState({submitting: false})
   }
 
   render() {
@@ -244,10 +272,10 @@ class PurchaseOrder extends Component {
                 <GridRow centered>
                   <Popup trigger={
                     <GridColumn>
-                      <Button disabled={!this.props.logisticsAccount || !(shipping.selectedAddress /* ! ! Add Freight Selection checking when available -> && shipping.selectedShippingQuote */)}
-                              fluid primary onClick={() => this.handlePurchase(shipping)} data-test='purchase_order_place_order_btn'>
+                      <Button disabled={this.state.submitting || !this.props.logisticsAccount || !(shipping.selectedAddress && this.props.cart.selectedShipping)}
+                              fluid primary onClick={() => {this.handlePurchase(shipping, this.props.cart.selectedShipping)}} data-test='purchase_order_place_order_btn'>
                         {/* <FormattedMessage id='cart.placeOrder' defaultMessage='Place Order1' /> */}
-                        {formatMessage({ id: 'cart.placeOrder', defaultMessage: 'Place Order1' })}
+                        {formatMessage({ id: 'cart.placeOrder', defaultMessage: 'Place Order' })}
                       </Button>
                     </GridColumn>
                   } content={
@@ -270,7 +298,7 @@ class PurchaseOrder extends Component {
   }
 }
 
-export default injectIntl(PurchaseOrder)
+export default injectIntl(withToastManager(PurchaseOrder))
 
 PurchaseOrder.propTypes = {
   cartItem: PropTypes.object,
