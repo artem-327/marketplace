@@ -1,6 +1,5 @@
 import * as AT from './action-types'
 import Api from './api'
-import * as api from "../inventory/api";
 
 export const loadData = (endpointType, filter = null) => ({type: AT.ORDERS_FETCH, payload: {endpointType, filter}})
 export const loadDetail = (endpointType, selectedIndex) => ({type: AT.ORDERS_DETAIL_FETCH, payload: {endpointType, selectedIndex}})
@@ -51,3 +50,8 @@ export const removeAttachment = (aId) => ({type: AT.ORDER_REMOVE_ATTACHMENT, asy
   }
 }})
 export const cancelPayment = (orderId) => ({type: AT.ORDER_CANCEL_PAYMENT, payload: Api.cancelPayment(orderId)})
+export const openReinitiateTransfer = () => ({type: AT.ORDER_OPEN_REINITIATE_TRANSFER, payload: {}})
+export const closeReinitiateTransfer = () => ({type: AT.ORDER_CLOSE_REINITIATE_TRANSFER, payload: {}})
+export const loadBankAccounts = () => ({type: AT.ORDER_LOAD_BANK_ACCOUNTS, payload: Api.loadBankAccounts()})
+export const payOrder = (orderId, bankAccount) => ({type: AT.ORDER_PAY_ORDER, payload: Api.payOrder(orderId, bankAccount)})
+export const cancelOrder = () => ({type:AT.ORDER_CANCEL_ORDER, payload: {}})

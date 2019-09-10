@@ -90,6 +90,7 @@ function mapStateToProps(state, ownProps) {
     return {
         order: prepareDetail(orders.detail, ownProps.router.query.type),
         openedAssignLots: orders.openedAssignLots,
+        openedReinitiateTransfer: orders.openedReinitiateTransfer,
         action: actionRequired(orders.detail),
         reloadPage: orders.reloadPage
     }

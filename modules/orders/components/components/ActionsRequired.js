@@ -46,7 +46,7 @@ class ActionsRequired extends React.Component {
                             color={color ? color : null}
                             onClick={() => button.onClick()}
                             data-test={button.dataTest}>
-                      <FormattedMessage id={button.text} />
+                      <FormattedMessage id={button.text} tagName='span' />
                     </Button>
                   </Grid.Column>
                 )
@@ -59,7 +59,7 @@ class ActionsRequired extends React.Component {
   }
 
   render() {
-    const { action, ordersType } = this.props
+    const { action, ordersType, detail, openReinitiateTransfer, cancelOrder } = this.props
 
     return (
       <>
@@ -114,7 +114,27 @@ class ActionsRequired extends React.Component {
               }]
             ) : null}
           </>
-        ) : null}
+        ) : (
+          <>
+            {detail.paymentStatus === 5 ? this.renderSegment(
+              'red',
+              12,
+              null,
+              'order.payment.failed.description',
+              [{
+                buttonType: 'primary',
+                onClick: openReinitiateTransfer,
+                dataTest: 'orders_detail_reinitiate_transfer',
+                text: 'order.reinitiateTransfer'
+              }, {
+                buttonType: 'secondary',
+                onClick: cancelOrder,
+                dataTest: 'orders_detail_cancel_order',
+                text: 'order.cancelOrder'
+              }]
+            ) : null}
+          </>
+        )}
       </>
     )
   }
@@ -135,6 +155,7 @@ function mapStateToProps(state, ownProps) {
   return {
     action: actionRequired(orders.detail),
     order: ownProps.order,
+    detail: orders.detail,
     ordersType: ownProps.ordersType
   }
 }
