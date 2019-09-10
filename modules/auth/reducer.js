@@ -21,10 +21,8 @@ export const initialState = {
   confirmationForm: {
     address: {
       city: '',
-      country: undefined,
-      availableCountries: [],
-      province: undefined,
-      availableProvinces: [],
+      country: '',
+      province: '',
       streetAddress: '',
       zip: ''
     },
@@ -79,25 +77,16 @@ export default function reducer(state = initialState, action) {
       }
     }
     case AT.LOGIN_FULFILLED: {
+      let address = getSafe(() => payload.identity.homeBranch.address, null)
       return {
         ...state,
         confirmationForm: getSafe(() => payload.identity.company.reviewRequested, false) ? {
           address: {
             city: payload.identity.homeBranch.address.city,
-            country: payload.identity.homeBranch.address.country.id,
-            availableCountries: [{
-              key: payload.identity.homeBranch.address.country.id,
-              text: payload.identity.homeBranch.address.country.name,
-              value: payload.identity.homeBranch.address.country.id
-            }],
-            province: payload.identity.homeBranch.address.province ? payload.identity.homeBranch.address.province.id : null,
-            availableProvinces: payload.identity.homeBranch.address.province ? [{
-              key: payload.identity.homeBranch.address.province.id,
-              text: payload.identity.homeBranch.address.province.name,
-              value: payload.identity.homeBranch.address.province.id
-            }] : [],
-            streetAddress: payload.identity.homeBranch.address.streetAddress,
-            zip: payload.identity.homeBranch.address.zip.zip,
+            country: JSON.stringify({ countryId: address.country.id, hasProvinces: address.country.hasProvinces }),
+            province: address.province ? address.province.id : null,
+            streetAddress: address.streetAddress,
+            zip: address.zip.zip,
           },
           companyAdminUser: {
             name: payload.identity.name,
@@ -106,7 +95,7 @@ export default function reducer(state = initialState, action) {
             email: payload.identity.email
           },
           dba: '',
-          dunsNumber: payload.identity.company.tin,
+          dunsNumber: payload.identity.company.dunsNumber,
           name: payload.identity.company.name,
           tin: payload.identity.company.tin
         } : state.confirmationForm,
@@ -254,7 +243,7 @@ export default function reducer(state = initialState, action) {
         }
       }
     }
-    
+
     /* REGISTER_DWOLLA_ACCOUNT */
     case SETTINGS_CREATE_DWOLLA_ACCOUNT_FULFILLED:
     case ADMIN_CREATE_DWOLLA_ACCOUNT_FULFILLED: {
