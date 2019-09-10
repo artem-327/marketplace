@@ -35,7 +35,8 @@ const RelaxedForm = styled(Form)`
 class PurchaseOrder extends Component {
   state = {
     otherAddresses: true,
-    submitting: false
+    submitting: false,
+    addressId: 'deliveryAddressId'
   }
   componentDidMount() {
     this.props.getCart()
@@ -53,6 +54,7 @@ class PurchaseOrder extends Component {
     let addresses = this.state.otherAddresses ? deliveryAddresses : warehouses //branches
     let selectedAddress = addresses.find(i => i.id === selectedAddressId)
 
+    this.setState({ addressId: this.state.otherAddresses ? 'deliveryAddressId' : 'warehouseId' })
     this.props.shippingChanged({ selectedAddress })
     this.getShippingQuotes(selectedAddress)
   }
@@ -101,18 +103,18 @@ class PurchaseOrder extends Component {
     }
   }
 
-  handlePurchase = (shipping, selectedShipping) => {
+  handlePurchase = async (shipping, selectedShipping) => {
     if (this.state.submitting) return
     this.setState({ submitting: true })
 
     const { toastManager } = this.props
     const data = {
-      deliveryAddressId: shipping.selectedAddress.id,
+      [this.state.addressId]: shipping.selectedAddress.id,
       shipmentQuoteId: selectedShipping.quote.quoteId
     }
 
     try {
-      this.props.postPurchaseOrder(data)
+      await this.props.postPurchaseOrder(data)
 
       toastManager.add(generateToastMarkup(
         <FormattedMessage id='notifications.purchaseOrderSuccess.header' defaultMessage='Order Placed' />,
