@@ -162,7 +162,7 @@ class Detail extends Component {
                   <List.Content>
                     <List.Header as='label'><FormattedMessage id='order.paymentStatus' defaultMessage='Payment Status' /></List.Header>
                     <List.Description as='span'>
-                      <Label circular empty color={order.paymentStatus === 'Failed' ? 'red' : (order.paymentStatus !== 'N/A' ? 'blue' : false)}></Label> {order.paymentStatus === 'Pending' && moment().isBefore(orderDate.add(1, 'days')) ? (
+                      <Label circular empty color={order.paymentStatus === 'Failed' ? 'red' : (order.paymentStatus !== 'N/A' ? 'blue' : false)}></Label> {order.orderType === 'Purchase' && order.paymentStatus === 'Pending' && moment().isBefore(orderDate.add(1, 'days')) ? (
                         <Popup content={<FormattedMessage id='confirm.cancelPayment.title' defaultMessage='Cancel Payment' />}
                                trigger={
                                  <a onClick={() => confirm(
