@@ -170,7 +170,6 @@ class Detail extends Component {
                                    <FormattedMessage id='confirm.cancelPayment.content' defaultMessage='Do you really want to Cancel Payment for Order #{orderId}' values={{ orderId: order.id }} />
                                  ).then(() => { cancelPayment(order.id) })}>
                                    {order.paymentStatus}
-                                   <Icon name='trash alternate outline' color='black' style={{ marginLeft: '0.5em' }} />
                                  </a>
                                } />
                       ) : order.paymentStatus}
