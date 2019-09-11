@@ -128,7 +128,12 @@ class PurchaseOrder extends Component {
 
       toastManager.add(generateToastMarkup(
         <FormattedMessage id='notifications.purchaseOrderError.header' defaultMessage='Order Error' />,
-        <FormattedMessage id='notifications.purchaseOrderError.content' defaultMessage='Error occurred while placing an order.' />,
+        <FormattedMessage id='notifications.purchaseOrderError.contentWithText'
+                          defaultMessage='Error occurred while placing an order:'
+                          values={{ clientMessage: e.clientMessage, exceptionMessage: e.exceptionMessage }}
+        >
+          {(text) => text.split('\n').map ((item, i) => <p key={i}>{item}</p>)}
+        </FormattedMessage>,
       ), {
         appearance: 'error'
       })
