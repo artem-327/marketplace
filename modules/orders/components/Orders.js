@@ -35,9 +35,17 @@ class Orders extends Component {
     this.props.loadData(endpointType, filterData)
   }
 
+  failedWrapper = (value) => {
+    return (
+      <span style={{ color: '#DB2828' }}>{value}</span>
+    )
+  }
+
   getRows = () => {
     return this.props.rows.map(row => ({
       ...row,
+      globalStatus: row.globalStatus === 'Failed' ? this.failedWrapper(row.globalStatus) : row.globalStatus,
+      paymentStatus: row.paymentStatus === 'Failed' ? this.failedWrapper(row.paymentStatus) : row.paymentStatus,
       bl: <Icon name='file' className='unknown' />, // unknown / positive / negative
       sds: <Icon name='file' className='unknown' />,
       cofA: <Icon name='file' className='unknown' />

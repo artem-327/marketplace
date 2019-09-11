@@ -5,6 +5,7 @@ import * as Actions from "../../actions"
 import { Segment, Grid, Header, Button } from 'semantic-ui-react'
 import { FormattedMessage } from 'react-intl'
 import { getSafe } from "~/utils/functions"
+import moment from "moment/moment"
 
 class ActionsRequired extends React.Component {
 
@@ -60,6 +61,7 @@ class ActionsRequired extends React.Component {
 
   render() {
     const { action, ordersType, detail, openReinitiateTransfer, cancelOrder } = this.props
+    const repayUntil = moment(detail.orderDate)
 
     return (
       <>
@@ -116,9 +118,9 @@ class ActionsRequired extends React.Component {
           </>
         ) : (
           <>
-            {detail.paymentStatus === 5 ? this.renderSegment(
+            {detail.paymentStatus === 5 && moment().isBefore(repayUntil.add(3, 'days')) ? this.renderSegment(
               'red',
-              12,
+              14,
               null,
               'order.payment.failed.description',
               [{
@@ -126,11 +128,6 @@ class ActionsRequired extends React.Component {
                 onClick: openReinitiateTransfer,
                 dataTest: 'orders_detail_reinitiate_transfer',
                 text: 'order.reinitiateTransfer'
-              }, {
-                buttonType: 'secondary',
-                onClick: cancelOrder,
-                dataTest: 'orders_detail_cancel_order',
-                text: 'order.cancelOrder'
               }]
             ) : null}
           </>
