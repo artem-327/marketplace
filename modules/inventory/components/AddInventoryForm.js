@@ -13,7 +13,7 @@ import confirm from '~/src/components/Confirmable/confirm'
 import { AttachmentManager } from '~/modules/attachments'
 import { getSafe, generateToastMarkup } from '~/utils/functions'
 import { errorMessages } from '~/constants/yupValidation'
-import ProdexTable from '~/components/table'
+
 
 const TopDivider = styled(Divider)`
   padding-bottom: 20px;
@@ -536,10 +536,10 @@ class AddInventoryForm extends Component {
                     <DropdownMenu icon={<Icon name='ellipsis vertical' size='large' />}>
                       <DropdownMenu.Menu>
                         {canView ? (
-                          <DropdownMenu.Item text={formatMessage({ id: 'addInventory.documents.view', defaultMessage: 'View'})} onClick={() => this.viewAttachment(document.name, document.id)} />
+                          <DropdownMenu.Item text={formatMessage({ id: 'addInventory.documents.view', defaultMessage: 'View' })} onClick={() => this.viewAttachment(document.name, document.id)} />
                         ) : null}
-                        <DropdownMenu.Item text={formatMessage({ id: 'global.download', defaultMessage: 'Download'})} onClick={() => this.downloadAttachment(document.name, document.id)} />
-                        <DropdownMenu.Item text={formatMessage({ id: 'global.delete', defaultMessage: 'Delete'})} onClick={() => confirm(
+                        <DropdownMenu.Item text={formatMessage({ id: 'global.download', defaultMessage: 'Download' })} onClick={() => this.downloadAttachment(document.name, document.id)} />
+                        <DropdownMenu.Item text={formatMessage({ id: 'global.delete', defaultMessage: 'Delete' })} onClick={() => confirm(
                           formatMessage({ id: 'confirm.deleteAttachment', defaultMessage: 'Delete Attachment' }),
                           formatMessage({ id: 'confirm.deleteItem', defaultMessage: `Do you really want to delete ${document.name}?` }, { item: document.name })
                         ).then(() => {
@@ -562,10 +562,10 @@ class AddInventoryForm extends Component {
                   <Table.Cell width={5} textAlign='right'>
                     {document.linked ? null : (
                       <Popup content={<FormattedMessage id='addInventory.unlinked'
-                                                        defaultMessage='The file will be attached to Product Offer after you click the Save button' />}
-                             trigger={<Icon name='info circle'
-                                            size='large'
-                                            color='blue' />}
+                        defaultMessage='The file will be attached to Product Offer after you click the Save button' />}
+                        trigger={<Icon name='info circle'
+                          size='large'
+                          color='blue' />}
                       />
                     )}
                   </Table.Cell>
@@ -625,9 +625,11 @@ class AddInventoryForm extends Component {
     const {
       activeIndex
     } = this.state
+    console.log(values)
+    let defaultMessage = values.product ? 'N/A' : ''
 
     const { toastManager, intl: { formatMessage } } = this.props
-
+    let casProducts = getSafe(() => values.product.casProducts, '')
     return (
       <Grid className='product-details' centered>
         <CustomPaddedColumn>
@@ -646,52 +648,56 @@ class AddInventoryForm extends Component {
               <Accordion.Content active={activeIndex === 0}>
                 <Grid columns={2} className='data-grid'>
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.productName' defaultMessage='Product Name' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product ? values.product.productName : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.productName, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.productNumber' defaultMessage='Product Number' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product ? values.product.productCode : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.productCode, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.measurement' defaultMessage='Measurement' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product ? values.product.packagingSize : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.packagingSize, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.um' defaultMessage='U/M' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingUnit ? values.product.packagingUnit.name : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.packagingUnit.name, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.up' defaultMessage='U/P' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingType ? values.product.packagingType.name : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.packagingType.name, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.casIndexName' defaultMessage='CAS Index Name' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && values.product.casProduct ? values.product.casProduct.casIndexName : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}><p>{casProducts && (casProducts.length > 1 ? 'Blend' : casProducts[0].casProduct.casIndexName)}</p></GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.casNumber' defaultMessage='CAS Number' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && values.product.casProduct ? values.product.casProduct.casNumber : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.casNumberCombined, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.masterProduct' defaultMessage='Master Product' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product ? !!values.product.masterProduct : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.masterProduct.toString(), defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.chemicalName' defaultMessage='Chemical Name' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && values.product.casProduct ? values.product.casProduct.chemicalName : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{casProducts && (casProducts.length > 1 ? 'Blend' : casProducts[0].casProduct.chemicalName)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.hazaardous' defaultMessage='Hazaardous' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && values.product.hazaardous ? !!values.product.hazaardous : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{values.product && (getSafe(() => values.product.hazaardous.toString(), false) ? 'Yes' : 'No')}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.unCode' defaultMessage='UN Code' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && values.product.unNumber ? values.product.unNumber.unNumberCode : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.unNumber.unNumberCode, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.packGrp' defaultMessage='Packaging Group' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product && values.product.packagingGroup ? values.product.packagingGroup.groupCode : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.packagingGroup.groupCode, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.hazaardousClass' defaultMessage='Hazaardous Class' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}><Label.Group color='blue'>{values.product && values.product.hazardClasses ? values.product.hazardClasses.map(hClass => { return (<Popup content={hClass.description} trigger={<Label>{hClass.classCode}</Label>} />) }) : ''}</Label.Group></GridColumn>
+                  <GridColumn computer={8} mobile={16}><Label.Group color='blue'>{
+                    getSafe(() => values.product.hazardClasses.length > 0, false)
+                      ? values.product.hazardClasses.map(hClass => (<Popup content={hClass.description} trigger={<Label>{hClass.classCode}</Label>} />)) : defaultMessage}
+                  </Label.Group>
+                  </GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.stackable' defaultMessage='Stackable' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product ? values.product.stackable : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{values.product && (getSafe(() => values.product.stackable) ? 'Yes' : 'No')}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.freightClass' defaultMessage='Freight Class' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product ? values.product.freightClass : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.freightClass, defaultMessage)}</GridColumn>
 
                   <GridColumn computer={8} mobile={16}><FormattedMessage id='addInventory.nmfcNumber' defaultMessage='NMFC Number' /></GridColumn>
-                  <GridColumn computer={8} mobile={16}>{values.product ? values.product.nmfcNumber : ''}</GridColumn>
+                  <GridColumn computer={8} mobile={16}>{getSafe(() => values.product.nmfcNumber, defaultMessage)}</GridColumn>
                 </Grid>
               </Accordion.Content>
             </Accordion>
@@ -732,15 +738,15 @@ class AddInventoryForm extends Component {
                               <FormattedMessage id='addInventory.invalidForm' defaultMessage='Form is invalid' />,
                               <FormattedMessage id='addInventory.fixErrorsBeforeSubmit' defaultMessage='There are errors on current tab. Please, fix them before submit.' />,
                             ), {
-                                appearance: 'error'
-                              })
+                              appearance: 'error'
+                            })
                           }
                         }).catch(e => {
                           console.error('CATCH', e)
                         })
                     }}
                     style={{ paddingLeft: '1em', paddingRight: '1em' }}>
-                      
+
                     {formatMessage({
                       id: this.props.edit ? 'addInventory.editButton' : 'addInventory.addButton',
                       defaultMessage: this.props.edit ? 'Save Product Offer' : 'Add Product Offer'
@@ -1116,22 +1122,22 @@ class AddInventoryForm extends Component {
                                 <InnerRow>
                                   <GridColumn computer={5} tablet={8} mobile={16}>
                                     <Dropdown label='Processing Time' name='processingTimeNum' options={this.getProcessingTimes()}
-                                              inputProps={{
-                                                'data-test': 'new_inventory_processing_time_days_weeks_drpdn',
-                                                onChange: (e, { value }) => {
-                                                  setFieldValue(`processingTimeDays`, value * values.processingTimeDW)
-                                                }
-                                              }}
+                                      inputProps={{
+                                        'data-test': 'new_inventory_processing_time_days_weeks_drpdn',
+                                        onChange: (e, { value }) => {
+                                          setFieldValue(`processingTimeDays`, value * values.processingTimeDW)
+                                        }
+                                      }}
                                     />
                                   </GridColumn>
                                   <GridColumn computer={5} tablet={8} mobile={16}>
                                     <Dropdown label='Days / Weeks' name='processingTimeDW' options={[{ value: 1, key: 1, text: 'Days' }, { value: 5, key: 5, text: 'Weeks' }]}
-                                              inputProps={{
-                                                'data-test': 'new_inventory_processing_time_value_drpdn',
-                                                onChange: (e, { value }) => {
-                                                  setFieldValue(`processingTimeDays`, values.processingTimeNum * value)
-                                                }
-                                              }}
+                                      inputProps={{
+                                        'data-test': 'new_inventory_processing_time_value_drpdn',
+                                        onChange: (e, { value }) => {
+                                          setFieldValue(`processingTimeDays`, values.processingTimeNum * value)
+                                        }
+                                      }}
                                     />
                                   </GridColumn>
                                 </InnerRow>
@@ -1204,7 +1210,7 @@ class AddInventoryForm extends Component {
                                           <>
                                             {text}
                                             <Popup content={<FormattedMessage id='addInventory.availablePackages.description' defaultMessage='Total packages represents the number of drums, totes, super sacks etc that you will be listing for this product offer. Your packaging type and measurement for this product offer will populate on the right panel as soon as you select a product name/number.' />}
-                                                   trigger={<Icon name='info circle' color='blue' />} />
+                                              trigger={<Icon name='info circle' color='blue' />} />
                                           </>
                                         )}
                                       </FormattedMessage>
@@ -1853,23 +1859,23 @@ class AddInventoryForm extends Component {
                     {
                       menuItem: (
                         <Menu.Item key='productDocuments'
-                                   onClick={() => {
-                                     validateForm()
-                                       .then(r => {
-                                         // stop when errors found
-                                         if (Object.keys(r).length && Object.keys(r).some(r => tabs[this.state.activeTab].includes(r))) {
-                                           submitForm() // show errors
-                                           return false
-                                         }
+                          onClick={() => {
+                            validateForm()
+                              .then(r => {
+                                // stop when errors found
+                                if (Object.keys(r).length && Object.keys(r).some(r => tabs[this.state.activeTab].includes(r))) {
+                                  submitForm() // show errors
+                                  return false
+                                }
 
-                                         // if validation is correct - switch tabs
-                                         this.switchTab(2, values, setFieldValue)
-                                       })
-                                       .catch(e => {
-                                         console.log('CATCH', e)
-                                       })
-                                   }}
-                                   data-test='new_inventory_productDocuments'>
+                                // if validation is correct - switch tabs
+                                this.switchTab(2, values, setFieldValue)
+                              })
+                              .catch(e => {
+                                console.log('CATCH', e)
+                              })
+                          }}
+                          data-test='new_inventory_productDocuments'>
                           {formatMessage({ id: 'addInventory.productDocuments', defaultMessage: 'DOCUMENTS' })}
                         </Menu.Item>
                       ),
@@ -1882,34 +1888,34 @@ class AddInventoryForm extends Component {
                               <Grid>
                                 <GridColumn width={10}>
                                   <UploadLot {...this.props}
-                                             attachments={values.additional}
-                                             name='additional'
-                                             type={values.additionalType}
-                                             unspecifiedTypes={['Unspecified']}
-                                             fileMaxSize={20}
-                                             onChange={(files) => setFieldValue(
-                                               `additional[${values.additional && values.additional.length ? values.additional.length : 0}]`,
-                                               {
-                                                 id: files.id,
-                                                 name: files.name,
-                                                 documentType: files.documentType
-                                               }
-                                             )}
-                                             data-test='add_inventory_additional_attachments'
-                                             emptyContent={(
-                                               <label>
-                                                 <FormattedMessage id='addInventory.dragDropAdditional' defaultMessage={'Drop additional documents here'} />
-                                                 <br />
-                                                 <FormattedMessage id='addInventory.dragDropOr' defaultMessage='or select from computer' />
-                                               </label>
-                                             )}
-                                             uploadedContent={(
-                                               <label>
-                                                 <FormattedMessage id='addInventory.dragDropAdditional' defaultMessage={'Drop additional documents here'} />
-                                                 <br />
-                                                 <FormattedMessage id='addInventory.dragDropOr' defaultMessage={'or select from computer'} />
-                                               </label>
-                                             )}
+                                    attachments={values.additional}
+                                    name='additional'
+                                    type={values.additionalType}
+                                    unspecifiedTypes={['Unspecified']}
+                                    fileMaxSize={20}
+                                    onChange={(files) => setFieldValue(
+                                      `additional[${values.additional && values.additional.length ? values.additional.length : 0}]`,
+                                      {
+                                        id: files.id,
+                                        name: files.name,
+                                        documentType: files.documentType
+                                      }
+                                    )}
+                                    data-test='add_inventory_additional_attachments'
+                                    emptyContent={(
+                                      <label>
+                                        <FormattedMessage id='addInventory.dragDropAdditional' defaultMessage={'Drop additional documents here'} />
+                                        <br />
+                                        <FormattedMessage id='addInventory.dragDropOr' defaultMessage='or select from computer' />
+                                      </label>
+                                    )}
+                                    uploadedContent={(
+                                      <label>
+                                        <FormattedMessage id='addInventory.dragDropAdditional' defaultMessage={'Drop additional documents here'} />
+                                        <br />
+                                        <FormattedMessage id='addInventory.dragDropOr' defaultMessage={'or select from computer'} />
+                                      </label>
+                                    )}
                                   />
                                 </GridColumn>
                                 <GridColumn width={5}>
